@@ -1,0 +1,89 @@
+{
+  "x": 2899.0,
+  "y": 1121.0,
+  "z": 0,
+  "strength": 50,
+  "dexterity": 50,
+  "endurance": 50,
+  "intelligence": 50,
+  "wisdom": 50,
+  "armorClass": 0,
+  "gold": 61271,
+  "karma": 0,
+  "maxHp": 71,
+  "currentHp": 71,
+  "maxMana": 60,
+  "mana": 40,
+  "level": 15,
+  "currentXp": 11027,
+  "xpToNextLevel": 14988,
+  "statPoints": 5,
+  "skillPoints": 15,
+  "rebirthCount": 0,
+  "spells": [
+    "Fire dart",
+    "Light",
+    "Fervor",
+    "Heal light"
+  ],
+  "quickSlots": [
+    {
+      "slot": 1,
+      "spell": "Fire dart"
+    },
+    {
+      "slot": 6,
+      "spell": "Light"
+    }
+  ],
+  "activeBuffs": [],
+  "inventory": [
+    "Gem of Destiny",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Potion of mana",
+    "Ashwood longbow",
+    "Cloth pants",
+    "Cloth vest",
+    "Leather belt",
+    "Steel reinforced club",
+    "Rusted dirk",
+    "Rusted dirk",
+    "Torch",
+    "Torch",
+    "Light healing potion"
+  ],
+  "equipment": {
+    "WEAPON2": "Wooden arrow",
+    "HEAD": "Leather Helmet",
+    "WEAPON": "Ashwood reflex bow"
+  },
+  "skills": {
+    "powerful_blow": 37,
+    "dodge": 15,
+    "stun_blow": 500,
+    "attack": 38,
+    "archery": 47
+  },
+  "itemCharges": {
+    "Potion of mana": 13,
+    "Light healing potion": 1,
+    "Potion of healing": 4,
+    "Torch": 5
+  },
+  "questFlags": {},
+  "respawnPointDefined": false,
+  "respawnWorldX": 0.0,
+  "respawnWorldY": 0.0,
+  "respawnWorldZ": 0,
+  "hiddenRemainingMillis": 0,
+  "dayNightHour": 7.0
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+        Root is INFO so per-tile DEBUG logging (notably Tmpl3Regenerator, which
+        emits one formatted line per regenerated tile) does not dominate the cost
+        of a whole-map "Rebuild All Tmpl3". Raise an individual logger to DEBUG
+        below only when investigating that area.
+    -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <!-- Flip to DEBUG temporarily to inspect per-tile regeneration scoring. -->
+    <logger name="com.perso.T4C.tmpl3" level="INFO"/>
+</configuration>

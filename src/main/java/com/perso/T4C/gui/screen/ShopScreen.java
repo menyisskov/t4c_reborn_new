@@ -1,0 +1,415 @@
+package com.perso.T4C.gui.screen;
+
+import com.perso.T4C.gui.core.GuiClickZone;
+import com.perso.T4C.gui.core.GuiSprites;
+import com.perso.T4C.gui.widget.GuiAnimatedSprite;
+import com.perso.T4C.gui.widget.GuiBoxedText;
+import com.perso.T4C.gui.widget.GuiButton;
+import com.perso.T4C.gui.widget.GuiText;
+
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.perso.T4C.exception.GameException;
+import com.perso.T4C.helper.PlayerStateStore;
+import com.perso.T4C.helper.SpriteLoader;
+import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemIconRegistry;
+import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.npc.NpcDef;
+import com.perso.T4C.player.Player;
+import com.perso.T4C.ui.FontManager;
+import com.perso.T4C.ui.SystemMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Shop screen on the original T4C GUIBackBuy background (576×368, identical
+ * plaque layout to GUIBackSkill used by {@link LearnScreen}).
+ *
+ * All labels are {@link GuiBoxedText} zones centered on the background
+ * plaques: Item Name / Price / Qty columns, item rows, and the right GOLD
+ * panel (On Hand / Cost / Total) with the Buy plaque below it.
+ */
+public class ShopScreen extends GuiListScreen {
+
+    // Item list rows (image coords, y-down): 6 slots, bar tops measured on GUIBackBuy.
+    private static final int   ROWS_VISIBLE = 6;
+    private static final float ROW_0_Y      = 60f;
+    private static final float ROW_H_PITCH  = 46f;
+
+    // Boxed label zones {left, top, width, height}, matching the background plaques.
+    private static final float[] TITLE_BOX     = {237f, 2f, 101f, 19f};
+    private static final float[] HDR_NAME_BOX  = {114f, 40f, 104f, 16f};
+    private static final float[] HDR_PRICE_BOX = {272f, 40f, 41f, 16f};
+    private static final float[] HDR_QTY_BOX   = {332f, 40f, 41f, 16f};
+    // Row cells: y is the row top, added per row.
+    private static final float[] CELL_NAME  = {77f, 0f, 177f, 16f};
+    private static final float[] CELL_PRICE = {259f, 0f, 67f, 16f};
+    private static final float[] CELL_QTY   = {331f, 0f, 43f, 16f};
+
+    // Item icon socket: the left circle column, as a boxed zone the icon is centered in
+    // (same idiom and 40×40 size as LearnScreen's LAMP_BOX). dy is from the row top.
+    private static final float[] ICON_BOX = {21f, -12f, 40f, 40f};
+
+    // Wheel-scroll region: the six item rows plus the scrollbar column on their right,
+    // from the first row top down past the last one (ROW_0_Y + 6 × ROW_H_PITCH).
+    private static final float[] LIST_BOX = {10f, ROW_0_Y - 12f, 420f,
+            ROWS_VISIBLE * ROW_H_PITCH + 12f};
+
+    // Scrollbar arrow click zones (big arrows at x≈400-430)
+    private static final float SCROLL_X     = 400f;
+    private static final float SCROLL_W     = 30f;
+    private static final float SCROLL_UP_Y  = 30f;
+    private static final float SCROLL_DN_Y  = 280f;
+    private static final float SCROLL_BTN_H = 32f;
+
+    // GUI_ScrollTick thumb (24×22): page 0 puts it at THUMB_TOP_Y, the last page at
+    // THUMB_BOTTOM_Y. Both ends tuned in-game against the track on GUIBackBuy; the thumb
+    // never travels outside that span, whatever the page count.
+    private static final float THUMB_X        = 407f;
+    private static final float THUMB_TOP_Y    = 60f;
+    private static final float THUMB_BOTTOM_Y = 261f;
+
+    // Right GOLD panel plaques/boxes (x 457-550 on the background)
+    private static final float[] GOLD_HDR_BOX   = {457f, 44f, 94f, 17f};
+    private static final float[] ONHAND_LBL_BOX = {457f, 82f, 94f, 17f};
+    private static final float[] ONHAND_VAL_BOX = {457f, 102f, 94f, 15f};
+    private static final float[] COST_LBL_BOX   = {457f, 131f, 94f, 17f};
+    private static final float[] COST_VAL_BOX   = {457f, 151f, 94f, 15f};
+    private static final float[] TOTAL_LBL_BOX  = {457f, 180f, 94f, 17f};
+    private static final float[] TOTAL_VAL_BOX  = {457f, 200f, 94f, 15f};
+    // ACHETER button (60×32 GUI_Button* sprite), same socket as LearnScreen's APPRENDRE:
+    // both screens share the GUIBack* right-panel layout.
+    private static final float BUY_BTN_X = 472f;
+    private static final float BUY_BTN_Y = 284f;
+
+    // Per-row spin up/down buttons on the right column; dy from the row top.
+    // Same geometry as LearnScreen: both screens share the GUIBack* plaque layout.
+    private static final float SPIN_X     = 382f;
+    private static final float SPIN_UP_DY = -5f;
+    private static final float SPIN_DN_DY = 8f;
+
+    private static final float CLOSE_X = 552f;
+    private static final float CLOSE_Y = 0f;
+
+    private static final Color GOLD    = Color.valueOf("F2B705");
+    private static final Color WHITE   = Color.WHITE;
+    private static final Color BLOCKED = Color.valueOf("B03030");
+    private static final Color DIM     = Color.valueOf("888888");
+
+    private final Player player;
+    private final List<ShopEntry> entries    = new ArrayList<>();
+    private ShopEntry selected = null;
+
+    public ShopScreen(Player player, List<NpcDef.ShopItem> shopItems) {
+        this.player = player;
+        try {
+            background = SpriteLoader.getInstance().getRegionFromSpriteName("GUIBackBuy");
+        } catch (GameException ignored) {
+            background = null;
+        }
+        centerOnScreen();
+        addCloseButton();
+        addStaticLabels();
+        loadEntries(shopItems);
+        rebuildList();
+    }
+
+    // ── Static UI ─────────────────────────────────────────────────────────────
+
+    private void addCloseButton() {
+        addCloseButton(CLOSE_X, CLOSE_Y);
+    }
+
+    private void addStaticLabels() {
+        if (background == null) return;
+        BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
+        labels.add(boxed(chewy, TITLE_BOX, 0f, () -> I18n.t("ui.buy", "ui.buy"), GOLD).shrinkToFit());
+        labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.t("ui.gold", "ui.gold"), GOLD).shrinkToFit());
+
+        BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
+        labels.add(boxed(sm, HDR_NAME_BOX,  0f, () -> I18n.t("ui.item_name", "ui.item_name"), GOLD));
+        labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.t("ui.price", "ui.price"), GOLD));
+        labels.add(boxed(sm, HDR_QTY_BOX,   0f, () -> I18n.t("ui.quantity_short", "ui.quantity_short"), GOLD));
+
+        labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.t("ui.on_hand", "ui.on_hand"), GOLD));
+        labels.add(boxed(sm, COST_LBL_BOX,   0f, () -> I18n.t("ui.cost", "ui.cost"), GOLD));
+        labels.add(boxed(sm, TOTAL_LBL_BOX,  0f, () -> I18n.t("ui.total", "ui.total"), GOLD));
+    }
+
+    // ── Entries ───────────────────────────────────────────────────────────────
+
+    private void loadEntries(List<NpcDef.ShopItem> shopItems) {
+        entries.clear();
+        if (shopItems == null) return;
+        for (NpcDef.ShopItem si : shopItems) {
+            if (si == null || si.getItemKey() == null || si.getItemKey().isEmpty()) continue;
+            ItemDefinition def = ItemRegistry.findByKey(si.getItemKey());
+            if (def != null) {
+                long price = si.getPrice() > 0 ? si.getPrice() : def.getPrice();
+                entries.add(new ShopEntry(def, price));
+            }
+        }
+    }
+
+    // ── Dynamic list (rebuilt on page change / selection / purchase) ──────────
+
+    @Override
+    protected void rebuildList() {
+        labels.removeAll(dynLabels);
+        dynLabels.clear();
+        buttons.removeAll(dynButtons);
+        dynButtons.clear();
+        zones.clear();
+        animatedSprites.clear();
+
+        int total = entries.size();
+        int pages = Math.max(1, (total + ROWS_VISIBLE - 1) / ROWS_VISIBLE);
+        page = Math.min(page, pages - 1);
+        int start = page * ROWS_VISIBLE;
+        int end   = Math.min(start + ROWS_VISIBLE, total);
+
+        BitmapFont fontWh = FontManager.getInstance().getJetBrainsMonoFont(12, WHITE);
+        BitmapFont fontBl = FontManager.getInstance().getJetBrainsMonoFont(12, BLOCKED);
+        BitmapFont fontDm = FontManager.getInstance().getJetBrainsMonoFont(12, DIM);
+        BitmapFont fontGo = FontManager.getInstance().getJetBrainsMonoFont(12, GOLD);
+
+        for (int i = start; i < end; i++) {
+            ShopEntry entry = entries.get(i);
+            float rowY = ROW_0_Y + (i - start) * ROW_H_PITCH;
+            boolean isSelected = (entry == selected);
+            // Affordable = one more unit still fits in what the basket leaves.
+            boolean canAfford  = player.getGold() >= basketCost() + entry.effectivePrice;
+
+            // Left socket: the item's category icon, centered in the socket zone.
+            TextureRegion icon = loadIcon(entry.def);
+            if (icon != null) {
+                animatedSprites.add(new GuiAnimatedSprite(
+                        List.of(icon), x + ICON_BOX[0], y + rowY + ICON_BOX[1], 1f)
+                        .boxed(ICON_BOX[2], ICON_BOX[3]));
+            }
+
+            final String name  = I18n.item(entry.def.getName());
+            final String price = String.valueOf(entry.effectivePrice);
+            final String qty   = String.valueOf(entry.count);
+            addDyn(isSelected ? fontGo : fontWh, CELL_NAME, rowY, () -> name, isSelected ? GOLD : WHITE);
+            addDyn(canAfford ? fontWh : fontBl, CELL_PRICE, rowY, () -> price, canAfford ? WHITE : BLOCKED);
+            addDyn(entry.count > 0 ? fontGo : fontWh, CELL_QTY, rowY, () -> qty,
+                    entry.count > 0 ? GOLD : WHITE);
+
+            final ShopEntry e = entry;
+            // Narrower than the row: the spin buttons at x=382 must stay clickable.
+            zones.add(new GuiClickZone(x + 10f, y + rowY - 4f, 360f, ROW_H_PITCH - 4f,
+                    () -> { selected = e; rebuildList(); }));
+            addRowSpinButtons(rowY, e);
+        }
+
+        // Scrollbar arrows
+        if (page > 0) {
+            zones.add(new GuiClickZone(x + SCROLL_X, y + SCROLL_UP_Y,
+                    SCROLL_W, SCROLL_BTN_H, () -> scrollPages(-1)));
+        }
+        if (page < pages - 1) {
+            zones.add(new GuiClickZone(x + SCROLL_X, y + SCROLL_DN_Y,
+                    SCROLL_W, SCROLL_BTN_H, () -> scrollPages(1)));
+        }
+        addScrollThumb(pages);
+
+        // Right panel dynamic values
+        final long onHand = player.getGold();
+        final long cost   = basketCost();
+        final long left   = onHand - cost;
+        addDyn(fontGo, ONHAND_VAL_BOX, 0f, () -> String.valueOf(onHand), GOLD);
+        addDyn(cost > 0 ? fontGo : fontDm, COST_VAL_BOX, 0f,
+                () -> String.valueOf(cost), cost > 0 ? GOLD : DIM);
+        addDyn(left >= 0 ? fontGo : fontBl, TOTAL_VAL_BOX, 0f,
+                () -> String.valueOf(left), left >= 0 ? GOLD : BLOCKED);
+
+        addBuyButton(basketCount() > 0 && onHand >= cost);
+    }
+
+    /**
+     * ACHETER button: buys the whole basket, as LearnScreen's APPRENDRE does.
+     *
+     * <p>Rebuilt with the list because it carries the basket's state: an empty basket or
+     * one the player cannot afford keeps the disabled sprite and does nothing on click,
+     * which is how LearnScreen conveys the same thing (there is no enabled flag on
+     * {@link GuiButton}).
+     */
+    private void addBuyButton(boolean canBuy) {
+        var normal  = GuiSprites.load(canBuy ? "GUI_ButtonUp" : "GUI_ButtonDisabled");
+        var hover   = GuiSprites.load("GUI_ButtonHUp");
+        var pressed = GuiSprites.load("GUI_ButtonDown");
+        if (normal == null) {
+            return;
+        }
+        BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(14, canBuy ? GOLD : DIM);
+        GuiButton buy = new GuiButton(normal,
+                canBuy && hover != null ? hover : normal,
+                canBuy && pressed != null ? pressed : normal,
+                // A null callback, not a no-op: GuiButton only plays its click sound when
+                // it has one, so a disabled button stays silent too.
+                x + BUY_BTN_X, y + BUY_BTN_Y, canBuy ? this::buyBasket : null)
+                .withLabel(chewy, () -> I18n.t("ui.buy_action", "ui.buy_action"));
+        buttons.add(buy);
+        dynButtons.add(buy);
+    }
+
+    /**
+     * Scrollbar thumb, positioned along the track from the page number.
+     *
+     * <p>Travel is clamped to the track: page 0 puts it at {@link #THUMB_TOP_Y} and never
+     * higher, the last page at {@link #THUMB_BOTTOM_Y} and never lower. A single-page list
+     * pins it at the top, since there is nowhere to travel.
+     */
+    @Override
+    protected void addScrollThumb(int pages) {
+        var tick = GuiSprites.load("GUI_ScrollTick");
+        if (tick == null) {
+            return;
+        }
+        float travel = THUMB_BOTTOM_Y - THUMB_TOP_Y;
+        float ratio  = pages > 1 ? (float) page / (pages - 1) : 0f;
+        float thumbY = THUMB_TOP_Y + travel * ratio;
+        // Inert: paging is driven by the arrows and the wheel, the thumb only reports it.
+        GuiButton thumb = new GuiButton(tick, tick, tick, x + THUMB_X, y + thumbY, () -> { });
+        buttons.add(thumb);
+        dynButtons.add(thumb);
+    }
+
+    /** Total units queued across every row. */
+    private int basketCount() {
+        return entries.stream().mapToInt(e -> e.count).sum();
+    }
+
+    /** Gold the basket would cost as it stands. */
+    private long basketCost() {
+        return entries.stream().mapToLong(e -> (long) e.count * e.effectivePrice).sum();
+    }
+
+    /** Spin UP: queue one more unit, as long as the player can still pay for it. */
+    private void basketAdd(ShopEntry entry) {
+        if (basketCost() + entry.effectivePrice > player.getGold()) {
+            return;
+        }
+        entry.count++;
+        selected = entry;
+        rebuildList();
+    }
+
+    /** Spin DOWN: drop one queued unit. */
+    private void basketRemove(ShopEntry entry) {
+        if (entry.count > 0) {
+            entry.count--;
+            selected = entry;
+            rebuildList();
+        }
+    }
+
+    /**
+     * Generic category icon for a row, as the C++ buy dialog does it
+     * ({@code V3_BuyDlg.cpp}: {@code ItemIcons((*i).appearance)}).
+     *
+     * <p>The shop deliberately shows the coarse {@code 64kIcon*} category sprite, not the
+     * per-object {@code 64kInv*} inventory sprite: the icon socket is sized for it. Items
+     * with no binding fall back to their inventory sprite so a row is never iconless.
+     */
+    private TextureRegion loadIcon(ItemDefinition def) {
+        if (def == null) return null;
+        TextureRegion icon = GuiSprites.load(ItemIconRegistry.iconFor(def));
+        return icon != null ? icon : GuiSprites.load(def.getAppearanceInventory());
+    }
+
+    // ── Purchase ──────────────────────────────────────────────────────────────
+
+    /** Buys every queued unit in one go, then empties the basket. */
+    private void buyBasket() {
+        long cost = basketCost();
+        if (basketCount() == 0) {
+            return;
+        }
+        if (player.getGold() < cost) {
+            SystemMessage.showShared(I18n.message("message.not_enough_gold", "message.not_enough_gold"));
+            return;
+        }
+        player.setGold((int) (player.getGold() - cost));
+        List<String> inv = player.getInventory();
+        if (inv == null) { inv = new ArrayList<>(); player.setInventory(inv); }
+        // One line, whatever the basket holds: naming every item overflows the chat.
+        // A single item is worth naming; past that, only the totals are.
+        int units = basketCount();
+        String onlyName = null;
+        for (ShopEntry entry : entries) {
+            for (int n = 0; n < entry.count; n++) {
+                inv.add(entry.def.getKey());
+            }
+            if (entry.count > 0) {
+                onlyName = onlyName == null ? I18n.item(entry.def.getName()) : "";
+                entry.count = 0;
+            }
+        }
+        PlayerStateStore.save(player);
+        boolean single = units == 1 && onlyName != null && !onlyName.isEmpty();
+        SystemMessage.showShared(single
+                ? I18n.message("message.item_bought", "You bought %s!", onlyName)
+                : I18n.message("message.items_bought", "You bought %d items for %d gold.",
+                        units, cost));
+        selected = null;
+        rebuildList();
+    }
+
+    // ── Input ─────────────────────────────────────────────────────────────────
+
+    /**
+     * Mouse wheel over the item list pages through it, one page per notch.
+     *
+     * <p>Scrolling anywhere else on the panel is left to {@code super} so the wheel keeps
+     * working over an inventory, and the basket is untouched: paging only changes which
+     * rows are visible, never the queued quantities.
+     */
+    @Override
+    public void onScroll(float amountY, float screenX, float screenY) {
+        if (screenX >= x + LIST_BOX[0] && screenX <= x + LIST_BOX[0] + LIST_BOX[2]
+                && screenY >= y + LIST_BOX[1] && screenY <= y + LIST_BOX[1] + LIST_BOX[3]) {
+            scrollPages(amountY > 0 ? 1 : -1);
+            return;
+        }
+        super.onScroll(amountY, screenX, screenY);
+    }
+
+    // ── Inner types ───────────────────────────────────────────────────────────
+
+    @Override
+    protected List<? extends ListRow> rows() {
+        return entries;
+    }
+
+    @Override
+    protected void basketAdd(ListRow row) {
+        basketAdd((ShopEntry) row);
+    }
+
+    @Override
+    protected void basketRemove(ListRow row) {
+        basketRemove((ShopEntry) row);
+    }
+
+    private static final class ShopEntry implements ListRow {
+        final ItemDefinition def;
+        final long effectivePrice;
+        /** Units queued with the spin buttons, charged on Buy. */
+        int count;
+        ShopEntry(ItemDefinition d, long p) { def = d; effectivePrice = p; }
+
+        @Override public String nameText() { return I18n.item(def.getName()); }
+        @Override public String priceText() { return String.valueOf(effectivePrice); }
+        @Override public String thirdColumnText() { return String.valueOf(count); }
+        @Override public String iconSprite() { return ItemIconRegistry.iconFor(def); }
+        @Override public int getCount() { return count; }
+    }
+
+}

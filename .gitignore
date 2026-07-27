@@ -1,0 +1,59 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Graphify ###
+graphify-out/
+.graphify_*
+*dda
+*did
+*.tmp
+
+### Mac OS ###
+.DS_Store
+
+### Assets binaires volumineux (purges de l'historique Git) ###
+# Distribues hors Git : voir la copie locale /c/T4C/assets_keep
+assets/maps/**/*.mapbin
+assets/maps/**/*.mapbin.bak
+assets/maps/**/*.colbin
+assets/maps/**/*.decorbin
+assets/maps/*.mapbin
+assets/maps/*.mapbin.bak
+assets/maps/json/WorldMap.json
+assets/sprites/*.bin
+
+# Sons : non versionnes (copie locale /c/T4C/assets_keep/sounds)
+assets/sounds/

@@ -1,0 +1,5 @@
+# Aucun fichier n'est suivi par Git LFS.
+# Les assets volumineux (maps, sprites, sons) ne sont pas versionnes :
+# ils vivent sur disque et sont ignores (voir .gitignore).
+# Les petits .bin de donnees (items, monsters, npcs, mappings...)
+# sont stockes en clair.
