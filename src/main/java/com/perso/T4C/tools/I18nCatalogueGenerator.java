@@ -34,11 +34,10 @@ public final class I18nCatalogueGenerator {
 
     public static void main(String[] args) throws Exception {
         Map<String, String> discovered = discover();
-        merge(Path.of("assets/i18n/en.json"), localizedDefaults(Path.of("assets/i18n/en.json"), discovered));
-        merge(Path.of("assets/i18n/fr.json"), localizedDefaults(Path.of("assets/i18n/fr.json"), discovered));
-        System.out.println("Merged " + discovered.size() + " binary-data placeholders into each catalogue.");
+        merge(Path.of(I18n.CATALOGUE_PATH), discovered);
+        System.out.println("Merged " + discovered.size() + " binary-data placeholders into the catalogue.");
         if (java.util.Arrays.asList(args).contains("--rewrite-binaries")) {
-            I18n.reloadEnglishCatalogue();
+            I18n.reload();
             rewriteBinaries();
             System.out.println("Rewrote player-facing binary strings as ${i18n.keys}.");
         }
@@ -81,47 +80,21 @@ public final class I18nCatalogueGenerator {
         }
         for (NpcDef npc : NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin"))) {
             put(values, "npc", npc.getName(), npc.getDisplayName());
-            put(values, "npc.dialog", npc.getName(), npc.getDialogText());
-            put(values, "npc.keyword", npc.getName(), npc.getDialogKeyword());
+            String identity = com.perso.T4C.i18n.I18n.normalizedKey(npc.getName());
+            putRaw(values, "npc.welcome." + identity, npc.getWelcomeText());
+            for (int i = 0; i < npc.getTopics().size(); i++) {
+                NpcDef.DialogTopic topic = npc.getTopics().get(i);
+                putRaw(values, "npc.topic." + identity + "." + i, topic.getResponse());
+                for (int k = 0; k < topic.getKeywords().size(); k++) {
+                    putRaw(values, "npc.topic_keyword." + identity + "." + i + "." + k,
+                            topic.getKeywords().get(k));
+                }
+            }
         }
         for (ObjectMappingsBinaryIO.Entry entry : ObjectMappingsBinaryIO.read(new File("assets/objects/object_mappings.bin"))) {
             if (entry != null && entry.mapping != null) put(values, "object", entry.logicalName, entry.mapping.displayName);
         }
         return values;
-    }
-
-    private static Map<String, String> localizedDefaults(Path cataloguePath,
-                                                         Map<String, String> discovered) throws Exception {
-        Map<String, String> defaults = new TreeMap<>(discovered);
-        Map<String, String> existing;
-        try (FileReader reader = new FileReader(cataloguePath.toFile(), StandardCharsets.UTF_8)) {
-            existing = GSON.fromJson(reader, CATALOGUE_TYPE);
-        }
-        if (existing == null) existing = Map.of();
-        for (ItemDefinition item : ItemDefBinaryIO.read(new File("assets/items/items.bin"))) {
-            if (item == null || item.getKey() == null || item.getName() == null) continue;
-            String translated = existing.get("item." + normalized(item.getName()));
-            if (translated != null) defaults.put("item." + normalized(item.getKey()), translated);
-        }
-        for (MonsterDef monster : MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin"))) {
-            copyExistingTranslation(defaults, existing, "monster", monster.getName(), monster.getDisplayName());
-        }
-        for (NpcDef npc : NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin"))) {
-            copyExistingTranslation(defaults, existing, "npc", npc.getName(), npc.getDisplayName());
-        }
-        for (ObjectMappingsBinaryIO.Entry entry : ObjectMappingsBinaryIO.read(new File("assets/objects/object_mappings.bin"))) {
-            if (entry != null && entry.mapping != null) {
-                copyExistingTranslation(defaults, existing, "object", entry.logicalName, entry.mapping.displayName);
-            }
-        }
-        return defaults;
-    }
-
-    private static void copyExistingTranslation(Map<String, String> defaults, Map<String, String> existing,
-                                                String namespace, String identity, String previousIdentity) {
-        if (identity == null || previousIdentity == null) return;
-        String translated = existing.get(namespace + "." + normalized(previousIdentity));
-        if (translated != null) defaults.put(namespace + "." + normalized(identity), translated);
     }
 
     private static void putCodePlaceholders(Map<String, String> values) {
@@ -205,9 +178,21 @@ public final class I18nCatalogueGenerator {
         }
     }
 
+    /**
+     * Records the catalogue default for a binary field. A field already stored as a
+     * placeholder carries no text to seed with, so it is skipped rather than writing
+     * a literal "${...}" into the catalogue as if it were a translation.
+     */
     private static void put(Map<String, String> values, String namespace, String identity, String text) {
         if (identity == null || identity.isBlank() || text == null || text.isBlank()) return;
+        if (I18n.keyOf(text) != null) return;
         values.putIfAbsent(namespace + "." + normalized(identity), text);
+    }
+
+    /** Same guard as {@link #put} for entries whose key is already fully built. */
+    private static void putRaw(Map<String, String> values, String key, String text) {
+        if (text == null || text.isBlank() || I18n.keyOf(text) != null) return;
+        values.putIfAbsent(key, text);
     }
 
     private static String normalized(String value) {

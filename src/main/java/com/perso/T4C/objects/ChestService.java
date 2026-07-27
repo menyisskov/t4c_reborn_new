@@ -38,9 +38,11 @@ public final class ChestService {
     }
 
     public String message(Result result) {
-        String items = result.itemKeys().stream().map(I18n::item).reduce((a, b) -> a + ", " + b).orElse("");
-        if (result.gold() > 0) return I18n.message("message.chest_loot_gold", "message.chest_loot_gold", items, result.gold());
-        return I18n.message("message.chest_loot", "message.chest_loot", items);
+        String items = result.itemKeys().stream()
+                .map(key -> I18n.key("item." + I18n.normalizedKey(key), key))
+                .reduce((a, b) -> a + ", " + b).orElse("");
+        if (result.gold() > 0) return I18n.message("message.chest_loot_gold",  items, result.gold());
+        return I18n.message("message.chest_loot",  items);
     }
 
     private static List<String> drawOneFromEachGroup(List<ItemDefinition.ContainerLootGroup> groups) {

@@ -7,6 +7,7 @@ import com.perso.T4C.player.BodyPart;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 /**
  * Data-driven definition of an item type. Persisted in {@code assets/items/items.bin}
@@ -125,7 +126,7 @@ public class ItemDefinition {
             boolean canSummon, String lockName, int lockDiff, String signText,
             int containerGold, int globalRespawn, int localRespawn,
             List<ItemSpell> spells, List<ItemBoost> boosts, List<ContainerLootGroup> containerLootGroups) {
-        this.key = key;
+        this.key = normalizeKey(key);
         this.name = name;
         this.bodyPart = bodyPart;
         this.appearanceEquippedPrimary = appearanceEquippedPrimary;
@@ -163,6 +164,17 @@ public class ItemDefinition {
         this.spells = spells != null ? spells : Collections.emptyList();
         this.boosts = boosts != null ? List.copyOf(boosts) : Collections.emptyList();
         this.containerLootGroups = containerLootGroups != null ? List.copyOf(containerLootGroups) : Collections.emptyList();
+    }
+
+    /** Canonical item identity: namespace + lowercase alphanumeric name. */
+    public static String normalizeKey(String value) {
+        if (value == null || value.isBlank()) return value;
+        String raw = value.startsWith("item.") ? value.substring(5) : value;
+        String normalized = raw.toLowerCase(Locale.ROOT)
+                .replaceAll("[^a-z0-9_]", "_")
+                .replaceAll("_+", "_")
+                .replaceAll("^_|_$", "");
+        return "item." + normalized;
     }
 
     /** Legacy v1-v3 constructor (v4 fields default to 0/null/empty). */

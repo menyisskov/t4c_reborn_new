@@ -89,7 +89,7 @@ public class ObjectClickHandler extends InputAdapter {
 
             if (objectClicked) {
                 if (tileDistance > com.perso.T4C.config.GameConstants.OBJECT_MAX_INTERACTION_DISTANCE) {
-                    systemMessage.show(I18n.message("message.object_too_far", "message.object_too_far"));
+                    systemMessage.show(I18n.message("message.object_too_far"));
                     log.info("Object too far - Distance: {} tiles (max: {})", tileDistance, com.perso.T4C.config.GameConstants.OBJECT_MAX_INTERACTION_DISTANCE);
                 } else {
                     ChestService.Result chest = chestService.open(player, objectRenderer.getLastClickedObject(), groundItemManager);
@@ -98,7 +98,7 @@ public class ObjectClickHandler extends InputAdapter {
                         systemMessage.show(chestService.message(chest));
                     } else if (chest.failure() == ChestService.Failure.EMPTY
                             || chest.failure() == ChestService.Failure.COOLDOWN) {
-                        systemMessage.show(I18n.message("message.chest_empty", "message.chest_empty"));
+                        systemMessage.show(I18n.message("message.chest_empty"));
                     }
                     log.info("Object clicked and animation started at world coords ({}, {}, {})", worldCoords.x, worldCoords.y, coords.getZ());
                 }

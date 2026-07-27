@@ -64,8 +64,8 @@ public final class SpellBinaryIO {
     }
 
     private static SpellData readSpell(DataInputStream in, short version) throws IOException, GameException {
-        String name = I18n.english(readString(in));
-        String description = I18n.english(readString(in));
+        String name = readString(in);
+        String description = readString(in);
         String manaCost = readString(in);
         int radius = readIntLE(in);
         int minInt = readIntLE(in);
@@ -94,7 +94,7 @@ public final class SpellBinaryIO {
             List<SpellData.SpellEffect> effects = new ArrayList<>(effectCount);
             for (int i = 0; i < effectCount; i++) {
                 effects.add(new SpellData.SpellEffect(readString(in), readString(in), readString(in),
-                        I18n.english(readString(in))));
+                        readString(in)));
             }
             buff = new SpellData.SpellBuff(durationSeconds, unlimited, effects);
         }

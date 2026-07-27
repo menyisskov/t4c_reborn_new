@@ -17,7 +17,7 @@ class SpellEffectManagerBuffTest {
     @Test
     void manaShieldCreatesVisibleBuffAndRaisesElementalResistances() throws Exception {
         SpellData manaShield = SpellBinaryIO.read(new File("assets/spells/spells.bin")).stream()
-                .filter(spell -> "Mana shield".equals(spell.getName()))
+                .filter(spell -> "${spell.mana_shield}".equals(spell.getName()))
                 .findFirst()
                 .orElseThrow();
         Player player = new Player();
@@ -41,8 +41,10 @@ class SpellEffectManagerBuffTest {
         Player player = new Player();
         SpellEffectManager manager = new SpellEffectManager();
 
-        for (String spellName : List.of("Mana surge", "Light")) {
-            SpellData spell = spells.stream().filter(value -> spellName.equals(value.getName())).findFirst().orElseThrow();
+        // Spell definitions store their ${spell.x} identity, not the displayed name.
+        for (String spellName : List.of("${spell.mana_surge}", "${spell.light}")) {
+            SpellData spell = spells.stream()
+                    .filter(value -> spellName.equals(value.getName())).findFirst().orElseThrow();
             assertFalse(manager.resolvePlayerBuffEffects(spell, player).isEmpty(), spellName);
         }
     }
@@ -70,7 +72,7 @@ class SpellEffectManagerBuffTest {
     @Test
     void instantaneousManaRestoreProducesNoBuff() throws Exception {
         SpellData potion = SpellBinaryIO.read(new File("assets/spells/spells.bin")).stream()
-                .filter(spell -> "ITEM: Potion of mana".equals(spell.getName()))
+                .filter(spell -> "${spell.item_potion_of_mana}".equals(spell.getName()))
                 .findFirst()
                 .orElseThrow();
         Player player = new Player();
@@ -86,7 +88,7 @@ class SpellEffectManagerBuffTest {
     @Test
     void timedManaEffectRemainsAVisibleBuff() throws Exception {
         SpellData manabane = SpellBinaryIO.read(new File("assets/spells/spells.bin")).stream()
-                .filter(spell -> "Mob manabane spell".equals(spell.getName()))
+                .filter(spell -> "${spell.mob_manabane_spell}".equals(spell.getName()))
                 .findFirst()
                 .orElseThrow();
         Player player = new Player();

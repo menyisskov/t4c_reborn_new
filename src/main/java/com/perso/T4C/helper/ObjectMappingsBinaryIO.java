@@ -56,7 +56,7 @@ public final class ObjectMappingsBinaryIO {
                         readString(in),
                         readString(in),
                         in.readBoolean(),
-                        version >= 2 ? I18n.english(readString(in)) : "",
+                        version >= 2 ? readString(in) : "",
                         version >= 3 ? readIntLE(in) : 0);
                 entries.add(entry);
             }

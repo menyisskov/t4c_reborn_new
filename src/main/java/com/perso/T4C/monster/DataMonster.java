@@ -59,10 +59,14 @@ public class DataMonster extends BaseMonster {
         this.stationaryAnimationPauseSeconds = def.getStationaryAnimationPauseSeconds();
     }
 
-    /** Resolve at display time so a language loaded/reloaded after monster creation is respected. */
+    /** Resolved at display time: the definition stores a ${monster.x} placeholder. */
     @Override
     public String getName() {
-        return I18n.monster(translationIdentity, untranslatedDisplayName);
+        if (I18n.keyOf(untranslatedDisplayName) != null) {
+            return I18n.resolve(untranslatedDisplayName);
+        }
+        // Legacy definitions without a placeholder still resolve via their identity.
+        return I18n.key("monster." + I18n.normalizedKey(translationIdentity), untranslatedDisplayName);
     }
 
     @Override

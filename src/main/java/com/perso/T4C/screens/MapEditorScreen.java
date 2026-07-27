@@ -112,7 +112,6 @@ import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.MonsterRegistry;
 import com.perso.T4C.npc.BaseNPC;
 import com.perso.T4C.npc.DataNpc;
-import com.perso.T4C.npc.KeywordActionType;
 import com.perso.T4C.npc.NpcDef;
 import com.perso.T4C.npc.NpcRegistry;
 import com.perso.T4C.player.BodyPart;
@@ -251,10 +250,6 @@ public class MapEditorScreen implements Screen {
 
     private static final int MAP_SELECT_ITEM_HEIGHT = 22;
     private static final int GROUND_SELECT_WIDTH = 260;
-    private static final String MONSTER_SPAWNS_SUFFIX = ".monsters.json";
-    private static final String MONSTER_SPAWNS_BIN_SUFFIX = ".monsters.bin";
-    private static final String NPC_SPAWNS_SUFFIX = ".npcs.json";
-    private static final String NPC_SPAWNS_BIN_SUFFIX = ".npcs.bin";
     private static final String MUSIC_ZONES_SUFFIX = ".musiczones.json";
     private static final String MUSIC_ZONES_BIN_SUFFIX = ".musiczones.bin";
     private static final String[] AMBIENT_MUSIC_TYPES = {
@@ -17408,14 +17403,15 @@ public class MapEditorScreen implements Screen {
         private final List<NpcDef.Part> parts = new ArrayList<>();
         private final List<NpcDef.TaughtSpell> taughtSpells = new ArrayList<>();
 
-        // 0=key,1=display,2=spriteBase,3=dialogText,4=dialogKeyword,5=patrolTiles,6=actionParam1,7=actionParam2
-        private final StringBuilder[] fields = new StringBuilder[8];
+        // 0=key,1=display,2=spriteBase,3=greeting,5=patrolTiles
+        // Field 3 mirrors the greeting topic read-only; conversations are edited
+        // in the Content Studio dialogue graph, not here.
+        private final StringBuilder[] fields = new StringBuilder[6];
         private final String[] fieldLabels = {
-                "Key (name)", "Display name", "Single sprite base", "Dialog text", "Dialog keyword",
-                "Patrol radius (tiles)", "Heal min", "Heal max"
+                "Key (name)", "Display name", "Single sprite base", "Greeting (read-only)", "",
+                "Patrol radius (tiles)"
         };
-        private final com.badlogic.gdx.math.Rectangle[] fieldBounds = new com.badlogic.gdx.math.Rectangle[8];
-        private KeywordActionType action = KeywordActionType.NONE;
+        private final com.badlogic.gdx.math.Rectangle[] fieldBounds = new com.badlogic.gdx.math.Rectangle[6];
         private boolean dialogTab = false;
         private com.badlogic.gdx.math.Rectangle tabAppearanceBounds;
         private com.badlogic.gdx.math.Rectangle tabDialogBounds;
@@ -17433,10 +17429,6 @@ public class MapEditorScreen implements Screen {
         private final EditorButton btnNew = new EditorButton("New", this::newDef);
         private final EditorButton btnDelete = new EditorButton("Delete", this::deleteSelected);
 
-        private final EditorDropdownList<KeywordActionType> actionDropdown = new EditorDropdownList<KeywordActionType>()
-                .visibleRows(4)
-                .labelProvider(a -> a == null ? "NONE" : a.name());
-        private com.badlogic.gdx.math.Rectangle actionBounds;
         private final EditorDropdownList<String> singleSpriteDropdown = new EditorDropdownList<String>()
                 .visibleRows(10)
                 .labelProvider(s -> s == null || s.isEmpty() ? "(assembled body parts)" : s);
@@ -17484,11 +17476,6 @@ public class MapEditorScreen implements Screen {
                 fields[i] = new StringBuilder();
                 fieldBounds[i] = new com.badlogic.gdx.math.Rectangle();
             }
-            actionDropdown.setItems(java.util.Arrays.asList(KeywordActionType.values()));
-            actionDropdown.onSelection(a -> {
-                action = a == null ? KeywordActionType.NONE : a;
-                if (!loadingSelection) autoSave();
-            });
             singleSpriteDropdown.setItems(loadAnimatedSpriteBases());
             singleSpriteDropdown.onSelection(sprite -> {
                 set(fields[2], sprite);
@@ -17545,17 +17532,10 @@ public class MapEditorScreen implements Screen {
             fy -= TIGHT_ROW_PITCH;
             fieldBounds[3].set(formX, fy - 16f, formW, FIELD_HEIGHT);
             fy -= ROW_PITCH;
-            // keyword, action dropdown
-            fieldBounds[4].set(formX, fy - 16f, formW * 0.5f - 8f, FIELD_HEIGHT);
-            actionBounds = new com.badlogic.gdx.math.Rectangle(formX + formW * 0.5f + 8f, fy - 16f, formW * 0.5f - 8f, FIELD_HEIGHT);
             dialogTextBounds = new com.badlogic.gdx.math.Rectangle(formX, top - 246f, formW, 190f);
-            fieldBounds[4].set(formX, dialogTextBounds.y - 48f, formW * 0.5f - 8f, FIELD_HEIGHT);
-            actionBounds.set(formX + formW * 0.5f + 8f, dialogTextBounds.y - 48f, formW * 0.5f - 8f, FIELD_HEIGHT);
             fy -= ROW_PITCH;
-            // patrol, heal min, heal max
+            // patrol
             fieldBounds[5].set(formX, fy - 16f, formW / 3f - 8f, FIELD_HEIGHT);
-            fieldBounds[6].set(formX + formW / 3f + 4f, fy - 16f, formW / 3f - 8f, FIELD_HEIGHT);
-            fieldBounds[7].set(formX + 2f * formW / 3f + 8f, fy - 16f, formW / 3f - 8f, FIELD_HEIGHT);
             fy -= ROW_PITCH;
             // parts editor
             partBodyBounds = new com.badlogic.gdx.math.Rectangle(formX, fy - 16f, formW * 0.35f, FIELD_HEIGHT);
@@ -17582,7 +17562,6 @@ public class MapEditorScreen implements Screen {
             spellListBounds = new com.badlogic.gdx.math.Rectangle(formX, fy - spellListH, formW, spellListH);
             spellList.setBounds(spellListBounds.x, spellListBounds.y, spellListBounds.width, spellListBounds.height);
             float ddRows = 5.5f * ROW_HEIGHT;
-            actionDropdown.setBounds(actionBounds.x, actionBounds.y + actionBounds.height - ddRows, actionBounds.width, ddRows);
             singleSpriteDropdown.setBounds(singleSpriteBounds.x, singleSpriteBounds.y + singleSpriteBounds.height - 10f * ROW_HEIGHT,
                     singleSpriteBounds.width, 10f * ROW_HEIGHT);
             partBodyDropdown.setBounds(partBodyBounds.x, partBodyBounds.y + partBodyBounds.height - ddRows,
@@ -17606,15 +17585,11 @@ public class MapEditorScreen implements Screen {
             drawNpcTab(sr, tabDialogBounds, dialogTab);
             if (dialogTab) {
                 EditorPanelChrome.textField(sr, dialogTextBounds, activeField == 3);
-                EditorPanelChrome.textField(sr, fieldBounds[4], activeField == 4);
-                EditorPanelChrome.dropdownTrigger(sr, actionBounds, actionDropdown.isOpen());
             } else {
                 EditorPanelChrome.textField(sr, fieldBounds[0], activeField == 0);
                 EditorPanelChrome.textField(sr, fieldBounds[1], activeField == 1);
                 EditorPanelChrome.dropdownTrigger(sr, singleSpriteBounds, singleSpriteDropdown.isOpen());
                 EditorPanelChrome.textField(sr, fieldBounds[5], activeField == 5);
-                EditorPanelChrome.textField(sr, fieldBounds[6], activeField == 6);
-                EditorPanelChrome.textField(sr, fieldBounds[7], activeField == 7);
                 EditorPanelChrome.dropdownTrigger(sr, partBodyBounds, partBodyDropdown.isOpen());
                 EditorPanelChrome.darkSurface(sr, partSpriteBounds);
                 EditorPanelChrome.dropdownTrigger(sr, spellNameBounds, spellNameDropdown.isOpen());
@@ -17626,15 +17601,11 @@ public class MapEditorScreen implements Screen {
             EditorPanelChrome.border(sr, panelBounds);
             if (dialogTab) {
                 EditorPanelChrome.border(sr, dialogTextBounds);
-                EditorPanelChrome.border(sr, fieldBounds[4]);
-                EditorPanelChrome.border(sr, actionBounds);
             } else {
                 EditorPanelChrome.border(sr, fieldBounds[0]);
                 EditorPanelChrome.border(sr, fieldBounds[1]);
                 EditorPanelChrome.border(sr, singleSpriteBounds);
                 EditorPanelChrome.border(sr, fieldBounds[5]);
-                EditorPanelChrome.border(sr, fieldBounds[6]);
-                EditorPanelChrome.border(sr, fieldBounds[7]);
                 EditorPanelChrome.border(sr, partBodyBounds);
                 EditorPanelChrome.border(sr, partSpriteBounds);
                 EditorPanelChrome.border(sr, spellNameBounds);
@@ -17667,7 +17638,6 @@ public class MapEditorScreen implements Screen {
                 btnSpellAdd.render(batch, sr);
                 btnSpellDel.render(batch, sr);
             }
-            if (actionDropdown.isOpen()) actionDropdown.renderDropdown(batch, sr, font);
             if (!dialogTab && singleSpriteDropdown.isOpen()) singleSpriteDropdown.renderDropdown(batch, sr, font);
             if (!dialogTab && partBodyDropdown.isOpen()) partBodyDropdown.renderDropdown(batch, sr, font);
             if (!dialogTab && spellNameDropdown.isOpen()) spellNameDropdown.renderDropdown(batch, sr, font);
@@ -17693,8 +17663,6 @@ public class MapEditorScreen implements Screen {
             font.draw(batch, EditorPanelChrome.fitText(font, glyph, spriteLabel, singleSpriteBounds.width - 28f),
                     singleSpriteBounds.x + 6f, singleSpriteBounds.y + singleSpriteBounds.height * 0.5f + 6f);
             drawNpcField(batch, 5);
-            drawNpcField(batch, 6);
-            drawNpcField(batch, 7);
             font.setColor(UI_TEXT_FAINT);
             font.draw(batch, "Body parts", partListBounds.x + 2f, partListBounds.y + partListBounds.height + 14f);
             font.setColor(UI_TEXT);
@@ -17719,11 +17687,6 @@ public class MapEditorScreen implements Screen {
             font.draw(batch, fieldLabels[3], dialogTextBounds.x + 2f, dialogTextBounds.y + dialogTextBounds.height + 14f);
             font.setColor(UI_TEXT);
             drawMultilineText(batch, fields[3].toString(), dialogTextBounds);
-            drawNpcField(batch, 4);
-            font.setColor(UI_TEXT_FAINT);
-            font.draw(batch, "Keyword action", actionBounds.x + 2f, actionBounds.y + actionBounds.height + 14f);
-            font.setColor(UI_TEXT);
-            font.draw(batch, action.name(), actionBounds.x + 6f, actionBounds.y + actionBounds.height * 0.5f + 6f);
         }
 
         private void drawNpcField(SpriteBatch batch, int index) {
@@ -17778,11 +17741,6 @@ public class MapEditorScreen implements Screen {
             }
             layout(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             int y = Gdx.graphics.getHeight() - screenY;
-            if (actionDropdown.isOpen() && actionDropdown.contains(screenX, y)) {
-                actionDropdown.handleClick(screenX, y, button);
-                actionDropdown.setOpen(false);
-                return true;
-            }
             if (singleSpriteDropdown.isOpen() && singleSpriteDropdown.contains(screenX, y)) {
                 singleSpriteDropdown.handleClick(screenX, y, button);
                 singleSpriteDropdown.setOpen(false);
@@ -17798,7 +17756,6 @@ public class MapEditorScreen implements Screen {
                 spellNameDropdown.setOpen(false);
                 return true;
             }
-            actionDropdown.setOpen(false);
             singleSpriteDropdown.setOpen(false);
             partBodyDropdown.setOpen(false);
             spellNameDropdown.setOpen(false);
@@ -17817,7 +17774,6 @@ public class MapEditorScreen implements Screen {
                 activeField = -1;
                 partSpriteActive = false;
                 spellPriceActive = false;
-                actionDropdown.setOpen(false);
                 return true;
             }
             if (tabDialogBounds.contains(screenX, y)) {
@@ -17831,15 +17787,9 @@ public class MapEditorScreen implements Screen {
                 return true;
             }
             if (dialogTab) {
-                if (dialogTextBounds.contains(screenX, y)) { activeField = 3; partSpriteActive = false; spellPriceActive = false; return true; }
-                if (fieldBounds[4].contains(screenX, y)) { activeField = 4; partSpriteActive = false; spellPriceActive = false; return true; }
-                if (actionBounds.contains(screenX, y)) {
-                    activeField = -1;
-                    actionDropdown.setOpen(true);
-                    return true;
-                }
+                // Field 3 is a read-only mirror of the greeting topic, so it never takes focus.
             } else {
-                int[] visibleFields = {0, 1, 2, 5, 6, 7};
+                int[] visibleFields = {0, 1, 2, 5};
                 for (int i : visibleFields) {
                     if (i == 2) {
                         continue;
@@ -17905,7 +17855,6 @@ public class MapEditorScreen implements Screen {
         }
 
         public boolean handleKeyTyped(char character) {
-            if (actionDropdown.isOpen()) return actionDropdown.handleKeyTyped(character);
             if (singleSpriteDropdown.isOpen()) return singleSpriteDropdown.handleKeyTyped(character);
             if (partBodyDropdown.isOpen()) return partBodyDropdown.handleKeyTyped(character);
             if (spellNameDropdown.isOpen()) return spellNameDropdown.handleKeyTyped(character);
@@ -17926,7 +17875,6 @@ public class MapEditorScreen implements Screen {
 
         public boolean handleKeyDown(int keycode) {
             if (keycode == Input.Keys.ESCAPE) {
-                if (actionDropdown.isOpen()) { actionDropdown.setOpen(false); return true; }
                 if (singleSpriteDropdown.isOpen()) { singleSpriteDropdown.setOpen(false); return true; }
                 if (partBodyDropdown.isOpen()) { partBodyDropdown.setOpen(false); return true; }
                 if (spellNameDropdown.isOpen()) { spellNameDropdown.setOpen(false); return true; }
@@ -17951,9 +17899,9 @@ public class MapEditorScreen implements Screen {
             }
             if (keycode == Input.Keys.TAB) {
                 if (dialogTab) {
-                    activeField = activeField == 3 ? 4 : 3;
+                    activeField = 3;
                 } else {
-                    int[] visibleFields = {0, 1, 2, 5, 6, 7};
+                    int[] visibleFields = {0, 1, 2, 5};
                     int current = 0;
                     for (int i = 0; i < visibleFields.length; i++) {
                         if (visibleFields[i] == activeField) {
@@ -17983,13 +17931,11 @@ public class MapEditorScreen implements Screen {
             set(fields[0], d.getName());
             set(fields[1], d.getDisplayName());
             set(fields[2], d.getSpriteBase());
-            set(fields[3], d.getDialogText());
-            set(fields[4], d.getDialogKeyword());
+            set(fields[3], d.getDialogNodes().stream()
+                    .filter(NpcDef.DialogNode::isGreeting)
+                    .map(NpcDef.DialogNode::getResponse)
+                    .findFirst().orElse(""));
             set(fields[5], String.valueOf(d.getPatrolRadiusTiles()));
-            set(fields[6], String.valueOf(d.getActionParam1()));
-            set(fields[7], String.valueOf(d.getActionParam2()));
-            action = d.getAction() == null ? KeywordActionType.NONE : d.getAction();
-            selectActionInDropdown(action);
             selectSingleSpriteInDropdown(d.getSpriteBase());
             parts.clear();
             if (d.getParts() != null) parts.addAll(d.getParts());
@@ -17998,13 +17944,6 @@ public class MapEditorScreen implements Screen {
             if (d.getTaughtSpells() != null) taughtSpells.addAll(d.getTaughtSpells());
             spellList.setItems(taughtSpells);
             loadingSelection = false;
-        }
-
-        private void selectActionInDropdown(KeywordActionType a) {
-            KeywordActionType[] values = KeywordActionType.values();
-            for (int i = 0; i < values.length; i++) {
-                if (values[i] == a) { actionDropdown.select(i); return; }
-            }
         }
 
         private void selectSingleSpriteInDropdown(String spriteBase) {
@@ -18042,7 +17981,7 @@ public class MapEditorScreen implements Screen {
         private void newDef() {
             NpcDef d = new NpcDef("NewNpc", "New NPC",
                     new ArrayList<>(List.of(new NpcDef.Part(BodyPart.BODY, ""))),
-                    null, null, null, KeywordActionType.NONE, 0, 0, 0, new ArrayList<>());
+                    null, 0, List.of(), "", List.of());
             defs.add(d);
             defs.sort(Comparator.comparing(NpcDef::getName, String.CASE_INSENSITIVE_ORDER));
             list.setItems(defs);
@@ -18116,8 +18055,9 @@ public class MapEditorScreen implements Screen {
         }
 
         private NpcDef fromForm() {
-            // This form edits appearance/dialog only; shop, train and flee-shout
-            // data live outside it and must be carried over, not dropped.
+            // This form edits appearance only; shop, train, flee-shout and
+            // conversation data live outside it and must be carried over, not
+            // dropped. Field 3 is a read-only view of the greeting topic.
             String name = fields[0].toString().trim();
             NpcDef existing = NpcRegistry.findByName(name);
             return new NpcDef(
@@ -18125,16 +18065,12 @@ public class MapEditorScreen implements Screen {
                     fields[1].toString().trim(),
                     new ArrayList<>(parts),
                     emptyToNull(fields[2].toString()),
-                    emptyToNull(fields[3].toString()),
-                    emptyToNull(fields[4].toString()),
-                    action,
-                    parseInt(fields[6].toString(), 0),
-                    parseInt(fields[7].toString(), 0),
                     parseInt(fields[5].toString(), 0),
                     new ArrayList<>(taughtSpells),
                     existing == null ? List.of() : existing.getShopItems(),
                     existing == null ? List.of() : existing.getTrainableStats(),
-                    existing == null ? List.of() : existing.getFleeShouts());
+                    existing == null ? List.of() : existing.getFleeShouts(),
+                    existing == null ? List.of() : existing.getDialogNodes());
         }
 
         private void saveToDisk() {
@@ -19385,57 +19321,21 @@ public class MapEditorScreen implements Screen {
         return angled + "-a";
     }
 
-    private String getMonsterSpawnsPath() {
-        String mapName = getMapBaseName(currentMapPath);
-        File parent = new File(currentMapPath).getParentFile();
-        String baseDir = parent != null ? parent.getPath() : ".";
-        return baseDir + File.separator + mapName + MONSTER_SPAWNS_SUFFIX;
-    }
-
-    private String getMonsterSpawnsBinPath() {
-        String mapName = getMapBaseName(currentMapPath);
-        File parent = new File(currentMapPath).getParentFile();
-        String baseDir = parent != null ? parent.getPath() : ".";
-        return baseDir + File.separator + mapName + MONSTER_SPAWNS_BIN_SUFFIX;
-    }
-
     private void loadMonsterSpawns() {
         monsterSpawns.clear();
         File bin = new File(Paths.MONSTER_SPAWNS_BIN);
-        if (bin.exists()) {
-            try {
-                int z = getCurrentMapZ();
-                for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(bin)) {
-                    if (entry.z == z) {
-                        monsterSpawns.add(fromSpawnBinaryEntry(entry));
-                    }
-                }
-                monstersDirty = false;
-                return;
-            } catch (Exception e) {
-                log.warn("Failed to load global binary monster spawns, falling back to map-side file", e);
-            }
+        if (!bin.exists()) {
+            return;
         }
-        bin = new File(getMonsterSpawnsBinPath());
-        if (bin.exists()) {
-            try {
-                for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(bin)) {
+        try {
+            int z = getCurrentMapZ();
+            for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(bin)) {
+                if (entry.z == z) {
                     monsterSpawns.add(fromSpawnBinaryEntry(entry));
                 }
-                monstersDirty = false;
-                return;
-            } catch (Exception e) {
-                log.warn("Failed to load binary monster spawns, falling back to JSON", e);
             }
-        }
-        File f = new File(getMonsterSpawnsPath());
-        if (!f.exists()) return;
-        try (FileReader r = new FileReader(f)) {
-            Type t = new TypeToken<List<MonsterSpawnEntry>>() {}.getType();
-            List<MonsterSpawnEntry> loaded = new Gson().fromJson(r, t);
-            if (loaded != null) monsterSpawns.addAll(loaded);
         } catch (Exception e) {
-            log.warn("Failed to load monster spawns", e);
+            log.error("Failed to load monster spawns from {}", bin, e);
         }
         monstersDirty = false;
     }
@@ -19489,57 +19389,21 @@ public class MapEditorScreen implements Screen {
         }
     }
 
-    private String getNpcSpawnsPath() {
-        String mapName = getMapBaseName(currentMapPath);
-        File parent = new File(currentMapPath).getParentFile();
-        String baseDir = parent != null ? parent.getPath() : ".";
-        return baseDir + File.separator + mapName + NPC_SPAWNS_SUFFIX;
-    }
-
-    private String getNpcSpawnsBinPath() {
-        String mapName = getMapBaseName(currentMapPath);
-        File parent = new File(currentMapPath).getParentFile();
-        String baseDir = parent != null ? parent.getPath() : ".";
-        return baseDir + File.separator + mapName + NPC_SPAWNS_BIN_SUFFIX;
-    }
-
     private void loadNpcSpawns() {
         npcSpawns.clear();
         File bin = new File(Paths.NPC_SPAWNS_BIN);
-        if (bin.exists()) {
-            try {
-                int z = getCurrentMapZ();
-                for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(bin)) {
-                    if (entry.z == z) {
-                        npcSpawns.add(fromSpawnBinaryEntry(entry));
-                    }
-                }
-                npcsDirty = false;
-                return;
-            } catch (Exception e) {
-                log.warn("Failed to load global binary NPC spawns, falling back to map-side file", e);
-            }
+        if (!bin.exists()) {
+            return;
         }
-        bin = new File(getNpcSpawnsBinPath());
-        if (bin.exists()) {
-            try {
-                for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(bin)) {
+        try {
+            int z = getCurrentMapZ();
+            for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(bin)) {
+                if (entry.z == z) {
                     npcSpawns.add(fromSpawnBinaryEntry(entry));
                 }
-                npcsDirty = false;
-                return;
-            } catch (Exception e) {
-                log.warn("Failed to load binary NPC spawns, falling back to JSON", e);
             }
-        }
-        File f = new File(getNpcSpawnsPath());
-        if (!f.exists()) return;
-        try (FileReader r = new FileReader(f)) {
-            Type t = new TypeToken<List<MonsterSpawnEntry>>() {}.getType();
-            List<MonsterSpawnEntry> loaded = new Gson().fromJson(r, t);
-            if (loaded != null) npcSpawns.addAll(loaded);
         } catch (Exception e) {
-            log.warn("Failed to load NPC spawns", e);
+            log.error("Failed to load NPC spawns from {}", bin, e);
         }
         npcsDirty = false;
     }

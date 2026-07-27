@@ -10,7 +10,7 @@ public final class GameMessages {
 
     public static void showActionPrevented(SystemMessage systemMessage) {
         if (systemMessage != null) {
-            systemMessage.show(I18n.message("message.action_prevented", "message.action_prevented"));
+            systemMessage.show(I18n.message("message.action_prevented"));
         }
     }
 }

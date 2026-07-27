@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import com.perso.T4C.i18n.I18n;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -55,6 +57,12 @@ public class SpellData {
     private final boolean pvp;
     /** T4C original effect list (distinct from SpellBuff.effects). Never null. */
     private final List<T4cEffect> t4cEffects;
+
+    /** Stable catalogue identity, equivalent to an item's key. */
+    public String getKey() {
+        String key = I18n.keyOf(name);
+        return key != null ? key : name;
+    }
 
     /** Full v3 constructor. */
     public SpellData(

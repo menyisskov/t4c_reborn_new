@@ -435,7 +435,7 @@ public class Player extends Stats {
 
         // Show system message
         if (messageCallback != null) {
-            messageCallback.showMessage(I18n.message("message.spirit_rebirth", "message.spirit_rebirth"));
+            messageCallback.showMessage(I18n.message("message.spirit_rebirth"));
         }
         deathBeingHandled = false;
     }
@@ -519,7 +519,7 @@ public class Player extends Stats {
 
     void showLevelUpMessage(int newLevel) {
         if (messageCallback != null) {
-            messageCallback.showMessage(I18n.message("message.level_up", "message.level_up", newLevel));
+            messageCallback.showMessage(I18n.message("message.level_up",  newLevel));
         }
     }
 
@@ -622,8 +622,8 @@ public class Player extends Stats {
         this.combatMode = combatMode;
         if (messageCallback != null) {
             messageCallback.showMessage(combatMode
-                    ? I18n.message("message.combat.enter", "message.combat.enter")
-                    : I18n.message("message.combat.leave", "message.combat.leave"));
+                    ? I18n.message("message.combat.enter")
+                    : I18n.message("message.combat.leave"));
         }
     }
 

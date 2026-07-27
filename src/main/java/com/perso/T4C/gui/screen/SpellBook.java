@@ -133,7 +133,7 @@ public class SpellBook extends GuiScreenBase {
         var gold = Color.valueOf("F2B705");
         labels.add(new GuiBoxedText(FontManager.getInstance().getHaettenschweilerFont(18, gold),
                 x + 237f, y + 2f, 101f, 19f,
-                () -> I18n.t("ui.spellbook", "ui.spellbook"), () -> gold).shrinkToFit());
+                () -> I18n.key("ui.spellbook"), () -> gold).shrinkToFit());
     }
 
     private void loadSpells() {
@@ -154,7 +154,8 @@ public class SpellBook extends GuiScreenBase {
             return null;
         }
         ensureRegistry();
-        return spellByName.get(spellName);
+        SpellData data = spellByName.get(spellName);
+        return data != null ? data : SpellRegistry.findByName(spellName);
     }
 
     private void rebuildPage() {
@@ -200,26 +201,26 @@ public class SpellBook extends GuiScreenBase {
 
         var labelFont = FontManager.getInstance().getTahomaFont(12, LABEL_COLOR, true);
         var valueFont = FontManager.getInstance().getTahomaFont(12, VALUE_COLOR, false);
-        String name = I18n.spellName(spell.getName());
+        String name = I18n.resolve(spell.getName());
         String manaCost = spell.getManaCost() == null ? "" : spell.getManaCost();
         String type = spell.getAttackType() == SpellData.ATTACK_MENTAL
-                ? I18n.t("ui.spell_type.mental", "ui.spell_type.mental")
-                : I18n.t("ui.spell_type.physical", "ui.spell_type.physical");
+                ? I18n.key("ui.spell_type.mental")
+                : I18n.key("ui.spell_type.physical");
         String durationValue = spell.getDuration();
         String duration = durationValue == null || durationValue.isEmpty() ? "instant" : durationValue;
         String level = String.valueOf(spell.getMinLevel());
 
         // Each line is a pair of boxed zones: label (width LABEL_W) + value, all left-aligned.
         float topY = slotIndex < 2 ? TEXT_TOP_Y_UPPER : TEXT_TOP_Y_LOWER;
-        addPageBox(labelFont, slotX + LABEL_X, slotY + topY + NAME_DY, LABEL_W, LINE_H, () -> I18n.t("ui.spell_stat.name", "ui.spell_stat.name"), GuiBoxedText.Align.LEFT);
+        addPageBox(labelFont, slotX + LABEL_X, slotY + topY + NAME_DY, LABEL_W, LINE_H, () -> I18n.key("ui.spell_stat.name"), GuiBoxedText.Align.LEFT);
         addPageBox(valueFont, slotX + LABEL_X + LABEL_VALUE_GAP, slotY + topY + NAME_DY, VALUE_W, LINE_H, () -> name, GuiBoxedText.Align.LEFT);
-        addPageBox(labelFont, slotX + LABEL_X, slotY + topY + TYPE_DY, LABEL_W, LINE_H, () -> I18n.t("ui.spell_stat.type", "ui.spell_stat.type"), GuiBoxedText.Align.LEFT);
+        addPageBox(labelFont, slotX + LABEL_X, slotY + topY + TYPE_DY, LABEL_W, LINE_H, () -> I18n.key("ui.spell_stat.type"), GuiBoxedText.Align.LEFT);
         addPageBox(valueFont, slotX + LABEL_X + LABEL_VALUE_GAP, slotY + topY + TYPE_DY, VALUE_W, LINE_H, () -> type, GuiBoxedText.Align.LEFT);
-        addPageBox(labelFont, slotX + LABEL_X, slotY + topY + DURATION_DY, LABEL_W, LINE_H, () -> I18n.t("ui.spell_stat.duration", "ui.spell_stat.duration"), GuiBoxedText.Align.LEFT);
+        addPageBox(labelFont, slotX + LABEL_X, slotY + topY + DURATION_DY, LABEL_W, LINE_H, () -> I18n.key("ui.spell_stat.duration"), GuiBoxedText.Align.LEFT);
         addPageBox(valueFont, slotX + LABEL_X + LABEL_VALUE_GAP, slotY + topY + DURATION_DY, VALUE_W, LINE_H, () -> duration, GuiBoxedText.Align.LEFT);
-        addPageBox(labelFont, slotX + LABEL_X, slotY + topY + MANA_DY, LABEL_W, LINE_H, () -> I18n.t("ui.spell_stat.mana", "ui.spell_stat.mana"), GuiBoxedText.Align.LEFT);
+        addPageBox(labelFont, slotX + LABEL_X, slotY + topY + MANA_DY, LABEL_W, LINE_H, () -> I18n.key("ui.spell_stat.mana"), GuiBoxedText.Align.LEFT);
         addPageBox(valueFont, slotX + LABEL_X + LABEL_VALUE_GAP, slotY + topY + MANA_DY, VALUE_W, LINE_H, () -> manaCost, GuiBoxedText.Align.LEFT);
-        addPageBox(labelFont, slotX + LEVEL_X, slotY + topY + MANA_DY, LEVEL_LABEL_W, LINE_H, () -> I18n.t("ui.spell_stat.level", "ui.spell_stat.level"), GuiBoxedText.Align.LEFT);
+        addPageBox(labelFont, slotX + LEVEL_X, slotY + topY + MANA_DY, LEVEL_LABEL_W, LINE_H, () -> I18n.key("ui.spell_stat.level"), GuiBoxedText.Align.LEFT);
         addPageBox(valueFont, slotX + LEVEL_X + LEVEL_LABEL_VALUE_GAP, slotY + topY + MANA_DY, LEVEL_VALUE_W, LINE_H, () -> level, GuiBoxedText.Align.LEFT);
     }
 
@@ -403,6 +404,9 @@ public class SpellBook extends GuiScreenBase {
         for (SpellData data : SpellRegistry.load()) {
             if (data != null && data.getName() != null && !data.getName().isEmpty()) {
                 spellByName.put(data.getName(), data);
+                if (data.getKey() != null) {
+                    spellByName.put(data.getKey(), data);
+                }
             }
         }
     }

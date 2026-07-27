@@ -161,7 +161,7 @@ public class GroundItem {
         }
 
         if (isNameVisible()) {
-            NameRenderer.renderName(batch, I18n.item(describe()),
+            NameRenderer.renderName(batch, I18n.resolve(describe()),
                     position.x - 15f,
                     position.y + NAME_RENDERER_VERTICAL_OFFSET - NAME_LABEL_ABOVE_ITEM,
                     w, h);

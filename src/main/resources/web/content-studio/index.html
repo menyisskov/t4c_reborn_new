@@ -76,6 +76,11 @@
               <h3 id="editorTitle">No record selected</h3>
               <span id="dirtyBadge" class="dirty-badge hidden">Unsaved</span>
             </div>
+            <div id="editorTabs" class="editor-tabs hidden" role="tablist">
+              <button type="button" class="editor-tab is-active" data-tab="details" role="tab">Details</button>
+              <button type="button" class="editor-tab" data-tab="dialogue" role="tab">Dialogue graph</button>
+            </div>
+            <div id="editorTabDetails" class="editor-tab-panel">
             <div id="entityPreview" class="entity-preview hidden">
               <div class="entity-preview-stage">
                 <img id="entityPreviewImage" alt="Record preview">
@@ -103,6 +108,8 @@
                 <img id="placementPreviewImage" alt="Placement map preview">
               </div>
             </div>
+            </div>
+            <div id="editorTabDialogue" class="editor-tab-panel hidden"></div>
           </div>
         </section>
 

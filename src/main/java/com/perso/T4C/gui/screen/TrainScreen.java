@@ -50,33 +50,12 @@ public class TrainScreen extends GuiScreenBase {
     /** Primary stat → getter/setter pairs. */
     private static final Map<String, StatAccessor> STAT_ACCESSORS = new HashMap<>();
 
-    /** T4C skill ids → human-readable display names. */
-    static final Map<String, String> SKILL_DISPLAY_NAMES = new HashMap<>();
-
     static {
         STAT_ACCESSORS.put("strength",     new StatAccessor(Player::getStrength,     (p, v) -> p.setStrength(v)));
         STAT_ACCESSORS.put("dexterity",    new StatAccessor(Player::getDexterity,    (p, v) -> p.setDexterity(v)));
         STAT_ACCESSORS.put("endurance",    new StatAccessor(Player::getEndurance,    (p, v) -> p.setEndurance(v)));
         STAT_ACCESSORS.put("intelligence", new StatAccessor(Player::getIntelligence, (p, v) -> p.setIntelligence(v)));
         STAT_ACCESSORS.put("wisdom",       new StatAccessor(Player::getWisdom,       (p, v) -> p.setWisdom(v)));
-
-        SKILL_DISPLAY_NAMES.put("attack",            "Attack");
-        SKILL_DISPLAY_NAMES.put("archery",           "Archery");
-        SKILL_DISPLAY_NAMES.put("dodge",             "Dodge");
-        SKILL_DISPLAY_NAMES.put("peek",              "Peek");
-        SKILL_DISPLAY_NAMES.put("stun_blow",         "Stun Blow");
-        SKILL_DISPLAY_NAMES.put("powerful_blow",     "Powerful Blow");
-        SKILL_DISPLAY_NAMES.put("rapid_healing",     "Rapid Healing");
-        SKILL_DISPLAY_NAMES.put("first_aid",         "First Aid");
-        SKILL_DISPLAY_NAMES.put("parry",             "Parry");
-        SKILL_DISPLAY_NAMES.put("critical_strike",   "Critical Strike");
-        SKILL_DISPLAY_NAMES.put("hide",              "Hide");
-        SKILL_DISPLAY_NAMES.put("sneak",             "Sneak");
-        SKILL_DISPLAY_NAMES.put("search",            "Search");
-        SKILL_DISPLAY_NAMES.put("picklock",          "Picklock");
-        SKILL_DISPLAY_NAMES.put("armor_penetration", "Armor Penetration");
-        SKILL_DISPLAY_NAMES.put("two_weapons",       "Two Weapons");
-        SKILL_DISPLAY_NAMES.put("rob",               "Rob");
     }
 
     private final Player player;
@@ -116,12 +95,17 @@ public class TrainScreen extends GuiScreenBase {
         }
     }
 
+    /**
+     * Skills and stats are named by the catalogue, the same way Statistics and
+     * LearnScreen resolve them. The title-cased id is only a last resort for an
+     * id that has no entry yet.
+     */
     private static String resolveDisplayName(String statId) {
-        if (SKILL_DISPLAY_NAMES.containsKey(statId)) return SKILL_DISPLAY_NAMES.get(statId);
+        if (I18n.has("skill." + statId)) return I18n.key("skill." + statId);
         if (STAT_ACCESSORS.containsKey(statId)) {
-            return Character.toUpperCase(statId.charAt(0)) + statId.substring(1).toLowerCase();
+            return I18n.key("skill." + statId,
+                    Character.toUpperCase(statId.charAt(0)) + statId.substring(1).toLowerCase());
         }
-        // fallback: title-case with underscores replaced
         StringBuilder sb = new StringBuilder();
         for (String word : statId.split("_")) {
             if (!word.isEmpty()) {
@@ -154,7 +138,7 @@ public class TrainScreen extends GuiScreenBase {
             final String valueStr = String.valueOf(current);
             addRow(font, x + VALUE_X, ry, () -> valueStr, null);
 
-            final String costStr = entry.stat.getCostPerPoint() + "g/pt";
+            final String costStr = entry.stat.getCostPerPoint() + I18n.key("ui.gold_per_point");
             addRow(font, x + COST_X, ry, () -> costStr, canAfford ? ELIGIBLE_COLOR : BLOCKED_COLOR);
 
             Color plusColor = capped ? Color.WHITE : (canAfford ? ELIGIBLE_COLOR : BLOCKED_COLOR);
@@ -167,7 +151,7 @@ public class TrainScreen extends GuiScreenBase {
 
         BitmapFont goldFont = FontManager.getInstance().getJetBrainsMonoFont(12, ELIGIBLE_COLOR);
         GuiText goldLabel = new GuiText(goldFont, x + 10f, y + GOLD_LABEL_Y,
-                () -> "Gold: " + player.getGold());
+                () -> I18n.key("ui.gold_label") + " " + player.getGold());
         labels.add(goldLabel);
         rowLabels.add(goldLabel);
     }
@@ -201,17 +185,17 @@ public class TrainScreen extends GuiScreenBase {
     private void tryTrain(TrainEntry entry) {
         int current = getCurrent(entry);
         if (entry.stat.getMaxPoints() > 0 && current >= entry.stat.getMaxPoints()) {
-            SystemMessage.showShared(I18n.message("message.stat_at_maximum", "message.stat_at_maximum", entry.displayName));
+            SystemMessage.showShared(I18n.message("message.stat_at_maximum",  entry.displayName));
             return;
         }
         if (player.getGold() < entry.stat.getCostPerPoint()) {
-            SystemMessage.showShared(I18n.message("message.not_enough_gold", "message.not_enough_gold"));
+            SystemMessage.showShared(I18n.message("message.not_enough_gold"));
             return;
         }
         player.setGold(player.getGold() - entry.stat.getCostPerPoint());
         increment(entry, current);
         PlayerStateStore.save(player);
-        SystemMessage.showShared(I18n.message("message.stat_increased", "message.stat_increased", entry.displayName, current + 1));
+        SystemMessage.showShared(I18n.message("message.stat_increased",  entry.displayName, current + 1));
         rebuildList();
     }
 

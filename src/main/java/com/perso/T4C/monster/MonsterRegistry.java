@@ -2,6 +2,7 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.MonsterDefBinaryIO;
+import com.perso.T4C.i18n.I18n;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,7 +87,14 @@ public final class MonsterRegistry {
             if (def != null && def.getName() != null) {
                 map.put(def.getName(), def);
                 normalized.putIfAbsent(normalize(def.getName()), def);
-                if (def.getDisplayName() != null) normalized.putIfAbsent(normalize(def.getDisplayName()), def);
+                // displayName is a ${monster.x} placeholder, so index the key it
+                // points at rather than the placeholder text itself.
+                String displayKey = I18n.keyOf(def.getDisplayName());
+                if (displayKey != null) {
+                    normalized.putIfAbsent(normalize(displayKey.substring(displayKey.indexOf('.') + 1)), def);
+                } else if (def.getDisplayName() != null) {
+                    normalized.putIfAbsent(normalize(def.getDisplayName()), def);
+                }
             }
         }
         byName = map;

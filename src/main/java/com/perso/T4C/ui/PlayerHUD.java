@@ -353,7 +353,7 @@ public class PlayerHUD {
             return false;
         }
         tooltipBuff = null;
-        tooltip.show(I18n.spellName(spell.getName()), screenX, screenY);
+        tooltip.show(I18n.resolve(spell.getName()), screenX, screenY);
         return true;
     }
 
@@ -489,16 +489,16 @@ public class PlayerHUD {
     }
 
     private String buildBuffTooltipText(Player.ActiveBuff buff) {
-        String description = I18n.spellDescription(buff.getSpellName(), buff.getDescription());
+        String description = I18n.resolve(buff.getDescription());
         if (description == null || description.isEmpty()) {
-            description = I18n.spellName(buff.getSpellName());
+            description = I18n.resolve(buff.getSpellName());
         } else if (!description.contains(":")) {
-            description = I18n.spellName(buff.getSpellName()) + ": " + description;
+            description = I18n.resolve(buff.getSpellName()) + ": " + description;
         }
         while (description.endsWith(".")) {
             description = description.substring(0, description.length() - 1);
         }
-        return description + ". " + I18n.tooltipLabel("Time remaining") + ": " + formatBuffRemaining(buff);
+        return description + ". " + I18n.key("tooltip.time_remaining") + ": " + formatBuffRemaining(buff);
     }
 
     private String formatBuffRemaining(Player.ActiveBuff buff) {

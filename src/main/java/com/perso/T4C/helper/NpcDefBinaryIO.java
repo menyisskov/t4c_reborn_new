@@ -1,33 +1,25 @@
 package com.perso.T4C.helper;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.npc.KeywordActionType;
-import com.perso.T4C.npc.NpcDef;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.npc.ActionType;
+import com.perso.T4C.npc.NpcDef;
 import com.perso.T4C.player.BodyPart;
-import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Binary serialization for {@link NpcDef} lists. Mirrors {@link SpellBinaryIO}.
- */
-@Slf4j
+/** Binary persistence for the reset, non-branching NPC dialogue format. */
 public final class NpcDefBinaryIO {
     private static final byte[] MAGIC = "T4CNPC".getBytes(StandardCharsets.US_ASCII);
-    private static final short VERSION = 5;
-    private static final int MAX_STRING_BYTES = 16384;
+    private static final short VERSION = 10;
+    private static final int MAX_STRING_BYTES = 16_384;
 
     private NpcDefBinaryIO() {
     }
@@ -40,16 +32,14 @@ public final class NpcDefBinaryIO {
                 throw new GameException("Invalid NPC definition file: wrong magic header");
             }
             short version = BinaryIOUtils.readShortLE(in);
-            if (version < 1 || version > VERSION) {
-                throw new GameException("Unsupported NPC definition version: " + version);
+            if (version != VERSION) {
+                throw new GameException("Unsupported NPC definition version: " + version
+                        + " (expected " + VERSION + ")");
             }
-            int count = BinaryIOUtils.readIntLE(in);
-            if (count < 0) {
-                throw new GameException("Invalid NPC definition count: " + count);
-            }
+            int count = checkedCount(BinaryIOUtils.readIntLE(in), "definition");
             List<NpcDef> defs = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
-                defs.add(readDef(in, version));
+                defs.add(readDef(in));
             }
             return defs;
         }
@@ -57,181 +47,107 @@ public final class NpcDefBinaryIO {
 
     public static void write(File file, List<NpcDef> defs) throws IOException {
         File parent = file.getParentFile();
-        if (parent != null) {
-            parent.mkdirs();
-        }
+        if (parent != null) parent.mkdirs();
         try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
             out.write(MAGIC);
             BinaryIOUtils.writeShortLE(out, VERSION);
-            BinaryIOUtils.writeIntLE(out, defs == null ? 0 : defs.size());
-            if (defs == null) {
-                return;
-            }
-            for (NpcDef def : defs) {
-                writeDef(out, def);
-            }
+            List<NpcDef> safeDefs = defs == null ? List.of() : defs;
+            BinaryIOUtils.writeIntLE(out, safeDefs.size());
+            for (NpcDef def : safeDefs) writeDef(out, def);
         }
     }
 
-    private static NpcDef readDef(DataInputStream in, short version) throws IOException, GameException {
+    private static NpcDef readDef(DataInputStream in) throws IOException, GameException {
         String name = readString(in);
-        String displayName = I18n.english(readString(in));
-        int partCount = BinaryIOUtils.readIntLE(in);
-        if (partCount < 0) {
-            throw new GameException("Invalid NPC part count: " + partCount);
-        }
+        String displayName = readString(in);
+        int partCount = checkedCount(BinaryIOUtils.readIntLE(in), "part");
         List<NpcDef.Part> parts = new ArrayList<>(partCount);
         for (int i = 0; i < partCount; i++) {
-            String bodyPartName = readString(in);
-            String spriteBase = readString(in);
-            BodyPart bodyPart = parseBodyPart(bodyPartName);
-            if (bodyPart != null) {
-                parts.add(new NpcDef.Part(bodyPart, spriteBase));
-            } else {
-                log.warn("Skipping unknown NPC body part '{}' for NPC '{}'", bodyPartName, name);
+            String bodyPart = readString(in);
+            String sprite = readString(in);
+            try {
+                parts.add(new NpcDef.Part(BodyPart.valueOf(bodyPart), sprite));
+            } catch (IllegalArgumentException e) {
+                throw new GameException("Unknown NPC body part: " + bodyPart);
             }
         }
-        String spriteBase = version >= 3 ? readString(in) : "";
-        String dialogText = I18n.english(readString(in));
-        String dialogKeyword = I18n.english(readString(in));
-        KeywordActionType action = parseAction(readString(in));
-        int actionParam1 = BinaryIOUtils.readIntLE(in);
-        int actionParam2 = BinaryIOUtils.readIntLE(in);
-        int patrolRadiusTiles = BinaryIOUtils.readIntLE(in);
-        List<NpcDef.TaughtSpell> taughtSpells = new ArrayList<>();
-        if (version >= 2) {
-            int spellCount = BinaryIOUtils.readIntLE(in);
-            if (spellCount < 0) {
-                throw new GameException("Invalid NPC taught spell count: " + spellCount);
+        String spriteBase = emptyToNull(readString(in));
+        int patrolRadius = BinaryIOUtils.readIntLE(in);
+        int shoutCount = checkedCount(BinaryIOUtils.readIntLE(in), "flee shout");
+        List<String> shouts = new ArrayList<>(shoutCount);
+        for (int i = 0; i < shoutCount; i++) shouts.add(readString(in));
+        String welcome = readString(in);
+        int topicCount = checkedCount(BinaryIOUtils.readIntLE(in), "dialogue topic");
+        List<NpcDef.DialogTopic> topics = new ArrayList<>(topicCount);
+        for (int i = 0; i < topicCount; i++) topics.add(readTopic(in));
+        return new NpcDef(name, displayName, parts, spriteBase, patrolRadius, shouts, welcome, topics);
+    }
+
+    private static NpcDef.DialogTopic readTopic(DataInputStream in) throws IOException, GameException {
+        int keywordCount = checkedCount(BinaryIOUtils.readIntLE(in), "keyword");
+        List<String> keywords = new ArrayList<>(keywordCount);
+        for (int i = 0; i < keywordCount; i++) keywords.add(readString(in));
+        String response = readString(in);
+        int actionCount = checkedCount(BinaryIOUtils.readIntLE(in), "action");
+        List<NpcDef.Action> actions = new ArrayList<>(actionCount);
+        for (int i = 0; i < actionCount; i++) {
+            String rawType = readString(in);
+            ActionType type;
+            try {
+                type = ActionType.valueOf(rawType);
+            } catch (IllegalArgumentException e) {
+                throw new GameException("Unknown NPC dialogue action: " + rawType);
             }
-            for (int i = 0; i < spellCount; i++) {
-                String spellName = readString(in);
-                int price = BinaryIOUtils.readIntLE(in);
-                if (spellName != null && !spellName.isEmpty()) {
-                    taughtSpells.add(new NpcDef.TaughtSpell(spellName, price));
-                }
-            }
+            int targetCount = checkedCount(BinaryIOUtils.readIntLE(in), "action target");
+            List<String> targets = new ArrayList<>(targetCount);
+            for (int j = 0; j < targetCount; j++) targets.add(readString(in));
+            actions.add(new NpcDef.Action(type, targets));
         }
-        List<NpcDef.ShopItem> shopItems = new ArrayList<>();
-        List<NpcDef.TrainableStat> trainableStats = new ArrayList<>();
-        if (version >= 4) {
-            int shopCount = BinaryIOUtils.readIntLE(in);
-            if (shopCount < 0) {
-                throw new GameException("Invalid NPC shop item count: " + shopCount);
-            }
-            for (int i = 0; i < shopCount; i++) {
-                String itemKey = readString(in);
-                long price = BinaryIOUtils.readLongLE(in);
-                if (itemKey != null && !itemKey.isEmpty()) {
-                    shopItems.add(new NpcDef.ShopItem(itemKey, price));
-                }
-            }
-            int trainCount = BinaryIOUtils.readIntLE(in);
-            if (trainCount < 0) {
-                throw new GameException("Invalid NPC trainable stat count: " + trainCount);
-            }
-            for (int i = 0; i < trainCount; i++) {
-                String statId = readString(in);
-                int costPerPoint = BinaryIOUtils.readIntLE(in);
-                int maxPoints = BinaryIOUtils.readIntLE(in);
-                if (statId != null && !statId.isEmpty()) {
-                    trainableStats.add(new NpcDef.TrainableStat(statId, costPerPoint, maxPoints));
-                }
-            }
-        }
-        List<String> fleeShouts = new ArrayList<>();
-        if (version >= 5) {
-            int shoutCount = BinaryIOUtils.readIntLE(in);
-            if (shoutCount < 0) {
-                throw new GameException("Invalid NPC flee shout count: " + shoutCount);
-            }
-            for (int i = 0; i < shoutCount; i++) {
-                String shout = I18n.english(readString(in));
-                if (shout != null && !shout.isEmpty()) {
-                    fleeShouts.add(shout);
-                }
-            }
-        }
-        return new NpcDef(name, displayName, parts, emptyToNull(spriteBase), emptyToNull(dialogText), emptyToNull(dialogKeyword),
-                action, actionParam1, actionParam2, patrolRadiusTiles, taughtSpells, shopItems, trainableStats, fleeShouts);
+        return new NpcDef.DialogTopic(keywords, emptyToNull(response), actions);
     }
 
     private static void writeDef(DataOutputStream out, NpcDef def) throws IOException {
-        writeString(out, def == null ? "" : def.getName());
-        writeString(out, def == null ? "" : I18n.placeholderFor("npc", def.getName(), def.getDisplayName()));
-        List<NpcDef.Part> parts = def == null ? null : def.getParts();
-        BinaryIOUtils.writeIntLE(out, parts == null ? 0 : parts.size());
-        if (parts != null) {
-            for (NpcDef.Part part : parts) {
-                writeString(out, part == null || part.getBodyPart() == null ? "" : part.getBodyPart().name());
-                writeString(out, part == null ? "" : part.getSpriteBase());
-            }
+        writeString(out, def.getName());
+        writeString(out, I18n.placeholderFor("npc", def.getName(), def.getDisplayName()));
+        BinaryIOUtils.writeIntLE(out, def.getParts().size());
+        for (NpcDef.Part part : def.getParts()) {
+            writeString(out, part.getBodyPart().name());
+            writeString(out, part.getSpriteBase());
         }
-        writeString(out, def == null ? "" : def.getSpriteBase());
-        writeString(out, def == null ? "" : I18n.placeholderFor("npc.dialog", def.getName(), def.getDialogText()));
-        writeString(out, def == null ? "" : I18n.placeholderFor("npc.keyword", def.getName(), def.getDialogKeyword()));
-        KeywordActionType action = def == null || def.getAction() == null ? KeywordActionType.NONE : def.getAction();
-        writeString(out, action.name());
-        BinaryIOUtils.writeIntLE(out, def == null ? 0 : def.getActionParam1());
-        BinaryIOUtils.writeIntLE(out, def == null ? 0 : def.getActionParam2());
-        BinaryIOUtils.writeIntLE(out, def == null ? 0 : def.getPatrolRadiusTiles());
-        List<NpcDef.TaughtSpell> taughtSpells = def == null ? null : def.getTaughtSpells();
-        BinaryIOUtils.writeIntLE(out, taughtSpells == null ? 0 : taughtSpells.size());
-        if (taughtSpells != null) {
-            for (NpcDef.TaughtSpell spell : taughtSpells) {
-                writeString(out, spell == null ? "" : spell.getSpellName());
-                BinaryIOUtils.writeIntLE(out, spell == null ? 0 : spell.getPrice());
-            }
+        writeString(out, def.getSpriteBase());
+        BinaryIOUtils.writeIntLE(out, def.getPatrolRadiusTiles());
+        BinaryIOUtils.writeIntLE(out, def.getFleeShouts().size());
+        for (int i = 0; i < def.getFleeShouts().size(); i++) {
+            writeString(out, I18n.placeholderForKey("npc.flee_shout."
+                    + I18n.normalizedKey(def.getName()) + "." + i, def.getFleeShouts().get(i)));
         }
-        List<NpcDef.ShopItem> shopItems = def == null ? null : def.getShopItems();
-        BinaryIOUtils.writeIntLE(out, shopItems == null ? 0 : shopItems.size());
-        if (shopItems != null) {
-            for (NpcDef.ShopItem item : shopItems) {
-                writeString(out, item == null ? "" : item.getItemKey());
-                BinaryIOUtils.writeLongLE(out, item == null ? 0L : item.getPrice());
-            }
+        writeString(out, I18n.placeholderForKey("npc.welcome."
+                + I18n.normalizedKey(def.getName()), def.getWelcomeText()));
+        BinaryIOUtils.writeIntLE(out, def.getTopics().size());
+        for (int i = 0; i < def.getTopics().size(); i++) writeTopic(out, def, i, def.getTopics().get(i));
+    }
+
+    private static void writeTopic(DataOutputStream out, NpcDef def, int topicIndex,
+                                   NpcDef.DialogTopic topic) throws IOException {
+        BinaryIOUtils.writeIntLE(out, topic.getKeywords().size());
+        for (int i = 0; i < topic.getKeywords().size(); i++) {
+            writeString(out, I18n.placeholderForKey("npc.topic_keyword."
+                    + I18n.normalizedKey(def.getName()) + "." + topicIndex + "." + i,
+                    topic.getKeywords().get(i)));
         }
-        List<NpcDef.TrainableStat> trainableStats = def == null ? null : def.getTrainableStats();
-        BinaryIOUtils.writeIntLE(out, trainableStats == null ? 0 : trainableStats.size());
-        if (trainableStats != null) {
-            for (NpcDef.TrainableStat stat : trainableStats) {
-                writeString(out, stat == null ? "" : stat.getStatId());
-                BinaryIOUtils.writeIntLE(out, stat == null ? 0 : stat.getCostPerPoint());
-                BinaryIOUtils.writeIntLE(out, stat == null ? 0 : stat.getMaxPoints());
-            }
-        }
-        List<String> fleeShouts = def == null ? null : def.getFleeShouts();
-        BinaryIOUtils.writeIntLE(out, fleeShouts == null ? 0 : fleeShouts.size());
-        if (fleeShouts != null) {
-            for (int i = 0; i < fleeShouts.size(); i++) {
-                // Each shout gets its own indexed key, since a placeholder must
-                // round-trip back to this exact line and not to a sibling.
-                String key = "npc.flee_shout." + I18n.normalizedKey(def.getName()) + "." + i;
-                writeString(out, I18n.placeholderForKey(key, fleeShouts.get(i)));
-            }
+        writeString(out, I18n.placeholderForKey("npc.topic."
+                + I18n.normalizedKey(def.getName()) + "." + topicIndex, topic.getResponse()));
+        BinaryIOUtils.writeIntLE(out, topic.getActions().size());
+        for (NpcDef.Action action : topic.getActions()) {
+            writeString(out, action.getType().name());
+            BinaryIOUtils.writeIntLE(out, action.getTargets().size());
+            for (String target : action.getTargets()) writeString(out, target);
         }
     }
 
-    private static BodyPart parseBodyPart(String name) {
-        if (name == null || name.isEmpty()) {
-            return null;
-        }
-        try {
-            return BodyPart.valueOf(name);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
-    private static KeywordActionType parseAction(String name) {
-        if (name == null || name.isEmpty()) {
-            return KeywordActionType.NONE;
-        }
-        try {
-            return KeywordActionType.valueOf(name);
-        } catch (IllegalArgumentException e) {
-            return KeywordActionType.NONE;
-        }
+    private static int checkedCount(int count, String label) throws GameException {
+        if (count < 0) throw new GameException("Invalid NPC " + label + " count: " + count);
+        return count;
     }
 
     private static String readString(DataInputStream in) throws IOException {
@@ -239,7 +155,7 @@ public final class NpcDefBinaryIO {
     }
 
     private static void writeString(DataOutputStream out, String value) throws IOException {
-        BinaryIOUtils.writeString(out, value);
+        BinaryIOUtils.writeString(out, value == null ? "" : value);
     }
 
     private static String emptyToNull(String value) {

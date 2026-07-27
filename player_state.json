@@ -1,6 +1,6 @@
 {
-  "x": 2899.0,
-  "y": 1121.0,
+  "x": 2948.0,
+  "y": 1054.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,76 +8,91 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 61271,
+  "gold": 60537,
   "karma": 0,
   "maxHp": 71,
   "currentHp": 71,
   "maxMana": 60,
-  "mana": 40,
+  "mana": 29,
   "level": 15,
-  "currentXp": 11027,
+  "currentXp": 11172,
   "xpToNextLevel": 14988,
-  "statPoints": 5,
-  "skillPoints": 15,
+  "statPoints": 500,
+  "skillPoints": 490,
   "rebirthCount": 0,
   "spells": [
-    "Fire dart",
-    "Light",
-    "Fervor",
-    "Heal light"
+    "spell.flaming_arrow",
+    "spell.light"
   ],
   "quickSlots": [
     {
-      "slot": 1,
-      "spell": "Fire dart"
+      "slot": 6,
+      "spell": "spell.flaming_arrow"
     },
     {
-      "slot": 6,
-      "spell": "Light"
+      "slot": 5,
+      "spell": "spell.light"
     }
   ],
-  "activeBuffs": [],
+  "activeBuffs": [
+    {
+      "spellName": "${spell.light}",
+      "description": "${spell.description.light}",
+      "iconId": "64kSpellIconLightMain",
+      "remainingSeconds": 592,
+      "totalDurationSeconds": 600,
+      "unlimited": false,
+      "effects": [
+        {
+          "type": "ATTRIBUTE",
+          "attribute": "radiance",
+          "amount": "100"
+        }
+      ]
+    }
+  ],
   "inventory": [
-    "Gem of Destiny",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Potion of mana",
-    "Ashwood longbow",
-    "Cloth pants",
-    "Cloth vest",
-    "Leather belt",
-    "Steel reinforced club",
-    "Rusted dirk",
-    "Rusted dirk",
-    "Torch",
-    "Torch",
-    "Light healing potion"
+    "item.gem_of_destiny",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.ashwood_longbow",
+    "item.cloth_pants",
+    "item.cloth_vest",
+    "item.leather_belt",
+    "item.steel_reinforced_club",
+    "item.rusted_dirk",
+    "item.rusted_dirk",
+    "item.torch",
+    "item.torch",
+    "item.light_healing_potion",
+    "item.wooden_arrow",
+    "item.ashwood_reflex_bow",
+    "item.v2_2dague06"
   ],
   "equipment": {
-    "WEAPON2": "Wooden arrow",
-    "HEAD": "Leather Helmet",
-    "WEAPON": "Ashwood reflex bow"
+    "HEAD": "Leather Helmet"
   },
   "skills": {
-    "powerful_blow": 37,
+    "powerful_blow": 52,
     "dodge": 15,
     "stun_blow": 500,
     "attack": 38,
     "archery": 47
   },
   "itemCharges": {
-    "Potion of mana": 13,
-    "Light healing potion": 1,
-    "Potion of healing": 4,
-    "Torch": 5
+    "item.potion_of_healing": 4,
+    "item.potion_of_mana": 13,
+    "item.torch": 5,
+    "item.light_healing_potion": 1
   },
   "questFlags": {},
   "respawnPointDefined": false,
@@ -85,5 +100,5 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.0126023
 }

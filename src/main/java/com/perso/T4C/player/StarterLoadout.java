@@ -27,7 +27,8 @@ public final class StarterLoadout {
         // Include every registered High Elf/seraph-style armour piece available in the data set.
         for (ItemDefinition d : ItemRegistry.load()) {
             if (d == null || d.getKey() == null || d.getBodyPart() == null) continue;
-            String n = (d.getName() == null ? d.getKey() : d.getName()).toLowerCase(Locale.ROOT);
+            // Names are ${item.x} placeholders; the item key carries the same words.
+            String n = d.getKey().toLowerCase(Locale.ROOT);
             if (d.getArmorClass() > 0 && (n.contains("elf") || n.contains("seraph") || n.contains("plate")
                     || n.contains("robe") || n.contains("armor") || n.contains("helmet")
                     || n.contains("boots") || n.contains("gloves") || n.contains("gauntlet")
@@ -36,7 +37,8 @@ public final class StarterLoadout {
         // Spell data has no separate GM bit; GM entries are explicitly named in the source data.
         for (SpellData spell : SpellRegistry.load()) {
             if (spell == null || spell.getName() == null || spell.getName().isBlank()) continue;
-            String n = spell.getName().toLowerCase(Locale.ROOT);
+            // ${spell.x} identities keep the wording of the name in their key.
+            String n = spell.getName().toLowerCase(Locale.ROOT).replace('_', ' ');
             if (!n.contains("gm") && !n.startsWith("dev_") && !player.getSpells().contains(spell.getName())) {
                 player.getSpells().add(spell.getName());
             }

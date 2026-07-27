@@ -65,19 +65,19 @@ public class GroundItemClickHandler extends InputAdapter {
         switch (result.status) {
             case PICKED_UP:
                 if (systemMessage != null) {
-                    systemMessage.show(I18n.message("message.item_picked_up", "message.item_picked_up", I18n.item(result.label)));
+                    systemMessage.show(I18n.message("message.item_picked_up",  I18n.resolve(result.label)));
                 }
                 return true;
             case TOO_FAR:
                 if (systemMessage != null) {
-                    systemMessage.show(I18n.message("message.pickup_too_far", "message.pickup_too_far"));
+                    systemMessage.show(I18n.message("message.pickup_too_far"));
                 }
                 return true;
             case TOO_HEAVY:
-                if (systemMessage != null) systemMessage.show(I18n.message("message.item_too_heavy", "message.item_too_heavy"));
+                if (systemMessage != null) systemMessage.show(I18n.message("message.item_too_heavy"));
                 return true;
             case UNIQUE_ITEM:
-                if (systemMessage != null) systemMessage.show(I18n.message("message.unique_item_owned", "message.unique_item_owned"));
+                if (systemMessage != null) systemMessage.show(I18n.message("message.unique_item_owned"));
                 return true;
             case NONE:
             default:

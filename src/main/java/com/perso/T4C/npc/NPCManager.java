@@ -5,8 +5,6 @@ import com.perso.T4C.i18n.I18n;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.entity.NameableEntityHandler;
@@ -17,8 +15,6 @@ import com.perso.T4C.ui.SystemMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.FileReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +26,6 @@ import static com.perso.T4C.config.GameConstants.GRID_W;
  */
 @Slf4j
 public class NPCManager {
-    private static final String NPC_SPAWN_SUFFIX = ".npcs.json";
-    private static final String NPC_SPAWN_BIN_SUFFIX = ".npcs.bin";
-
     private final List<BaseNPC> npcs = new ArrayList<>();
     private final ShaderProgram outlineShader;
     private BaseNPC activeConversationNpc;
@@ -219,7 +212,7 @@ public class NPCManager {
                         player.getPositionVector(), npc.getPosition())) {
                     log.info("NPC {} is not in line of sight for interaction", npc.getName());
                     SystemMessage.showShared(
-                            I18n.message("message.target_no_line_of_sight", "message.target_no_line_of_sight"));
+                            I18n.message("message.target_no_line_of_sight"));
                 } else {
                     log.info("NPC {} is too far away for interaction", npc.getName());
                 }
@@ -240,7 +233,7 @@ public class NPCManager {
             return false;
         }
         if (systemMessage != null) {
-            systemMessage.show(I18n.message("message.attack_npc", "message.attack_npc", I18n.npc(npc.getName())));
+            systemMessage.show(I18n.message("message.attack_npc",  I18n.resolve(npc.getName())));
         }
         onNpcAttacked(npc);
         return true;
@@ -274,15 +267,17 @@ public class NPCManager {
             return List.of();
         }
         List<String> translated = new ArrayList<>(def.getFleeShouts().size());
-        for (int i = 0; i < def.getFleeShouts().size(); i++) {
-            translated.add(I18n.t("npc.flee_shout." + I18n.normalizedKey(def.getName()) + "." + i,
-                    def.getFleeShouts().get(i)));
+        for (String shout : def.getFleeShouts()) {
+            translated.add(I18n.resolve(shout));
         }
         return translated;
     }
 
+    /** Technical NPC identity from npcs.bin, never shown to the player. */
+    private static final String PASSIVE_ON_ATTACK_NPC = "Darkfang";
+
     private boolean isPassiveOnAttack(BaseNPC npc) {
-        return "Darkfang".equalsIgnoreCase(npc.getName());
+        return PASSIVE_ON_ATTACK_NPC.equalsIgnoreCase(npc.getName());
     }
 
     /**
@@ -379,32 +374,17 @@ public class NPCManager {
 
     private SpawnSource readSpawnsForMap(String mapPath) throws Exception {
         File globalSpawnFile = new File(Paths.NPC_SPAWNS_BIN);
-        if (globalSpawnFile.exists()) {
-            int z = resolveMapZ(mapPath);
-            List<NpcSpawnEntry> filtered = new ArrayList<>();
-            for (NpcSpawnEntry entry : readBinarySpawns(globalSpawnFile)) {
-                if (entry.z == z) {
-                    filtered.add(entry);
-                }
+        if (!globalSpawnFile.exists()) {
+            return null;
+        }
+        int z = resolveMapZ(mapPath);
+        List<NpcSpawnEntry> filtered = new ArrayList<>();
+        for (NpcSpawnEntry entry : readBinarySpawns(globalSpawnFile)) {
+            if (entry.z == z) {
+                filtered.add(entry);
             }
-            return new SpawnSource(globalSpawnFile.getPath(), filtered);
         }
-
-        File mapFile = new File(mapPath);
-        File parent = mapFile.getParentFile();
-        String mapName = mapFile.getName()
-                .replace(".mapbin", "")
-                .replace(".map", "")
-                .replace(".json.gz", "");
-        File spawnFile = new File(parent != null ? parent : new File("."), mapName + NPC_SPAWN_BIN_SUFFIX);
-        if (spawnFile.exists()) {
-            return new SpawnSource(spawnFile.getPath(), readBinarySpawns(spawnFile));
-        }
-        spawnFile = new File(parent != null ? parent : new File("."), mapName + NPC_SPAWN_SUFFIX);
-        if (spawnFile.exists()) {
-            return new SpawnSource(spawnFile.getPath(), readJsonSpawns(spawnFile));
-        }
-        return null;
+        return new SpawnSource(globalSpawnFile.getPath(), filtered);
     }
 
     private int resolveMapZ(String mapPath) {
@@ -432,16 +412,9 @@ public class NPCManager {
         return entries;
     }
 
-    private List<NpcSpawnEntry> readJsonSpawns(File spawnFile) throws Exception {
-        try (FileReader reader = new FileReader(spawnFile)) {
-            Type listType = new TypeToken<List<NpcSpawnEntry>>() {}.getType();
-            return new Gson().fromJson(reader, listType);
-        }
-    }
-/**
- * Class representing NpcSpawnEntry.
- */
-
+    /**
+     * Class representing NpcSpawnEntry.
+     */
     private static final class NpcSpawnEntry {
         String type;
         int x;

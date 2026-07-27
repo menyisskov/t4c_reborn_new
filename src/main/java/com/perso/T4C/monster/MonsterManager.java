@@ -9,13 +9,9 @@ import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.player.Player;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.FileReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,8 +29,6 @@ public class MonsterManager {
     private static final int DENSITY_RADIUS_TILES = 12;
     private static final long RESPAWN_MIN_MILLIS = 18_000L;
     private static final long RESPAWN_MAX_MILLIS = 30_000L;
-    private static final String MONSTER_SPAWN_SUFFIX = ".monsters.json";
-    private static final String MONSTER_SPAWN_BIN_SUFFIX = ".monsters.bin";
 
     private final List<BaseMonster> monsters = new ArrayList<>();
     private final List<BaseMonster> readonlyMonsters = Collections.unmodifiableList(monsters);
@@ -452,32 +446,17 @@ public class MonsterManager {
 
     private SpawnSource readSpawnsForMap(String mapPath) throws Exception {
         File globalSpawnFile = new File(Paths.MONSTER_SPAWNS_BIN);
-        if (globalSpawnFile.exists()) {
-            int z = resolveMapZ(mapPath);
-            List<MonsterSpawnEntry> filtered = new ArrayList<>();
-            for (MonsterSpawnEntry entry : readBinarySpawns(globalSpawnFile)) {
-                if (entry.z == z) {
-                    filtered.add(entry);
-                }
+        if (!globalSpawnFile.exists()) {
+            return null;
+        }
+        int z = resolveMapZ(mapPath);
+        List<MonsterSpawnEntry> filtered = new ArrayList<>();
+        for (MonsterSpawnEntry entry : readBinarySpawns(globalSpawnFile)) {
+            if (entry.z == z) {
+                filtered.add(entry);
             }
-            return new SpawnSource(globalSpawnFile.getPath(), filtered);
         }
-
-        File mapFile = new File(mapPath);
-        File parent = mapFile.getParentFile();
-        String mapName = mapFile.getName()
-                .replace(".mapbin", "")
-                .replace(".map", "")
-                .replace(".json.gz", "");
-        File spawnFile = new File(parent != null ? parent : new File("."), mapName + MONSTER_SPAWN_BIN_SUFFIX);
-        if (spawnFile.exists()) {
-            return new SpawnSource(spawnFile.getPath(), readBinarySpawns(spawnFile));
-        }
-        spawnFile = new File(parent != null ? parent : new File("."), mapName + MONSTER_SPAWN_SUFFIX);
-        if (spawnFile.exists()) {
-            return new SpawnSource(spawnFile.getPath(), readJsonSpawns(spawnFile));
-        }
-        return null;
+        return new SpawnSource(globalSpawnFile.getPath(), filtered);
     }
 
     private int resolveMapZ(String mapPath) {
@@ -509,16 +488,9 @@ public class MonsterManager {
         return entries;
     }
 
-    private List<MonsterSpawnEntry> readJsonSpawns(File spawnFile) throws Exception {
-        try (FileReader reader = new FileReader(spawnFile)) {
-            Type listType = new TypeToken<List<MonsterSpawnEntry>>() {}.getType();
-            return new Gson().fromJson(reader, listType);
-        }
-    }
-/**
- * Class representing MonsterSpawnEntry.
- */
-
+    /**
+     * Class representing MonsterSpawnEntry.
+     */
     private static final class MonsterSpawnEntry {
         String type;
         int x;

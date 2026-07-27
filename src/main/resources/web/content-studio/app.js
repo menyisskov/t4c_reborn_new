@@ -4,6 +4,7 @@ const state = {
   mapPath: "",
   items: [],
   selectedIndex: -1,
+  editorTab: "details",
   dirty: false,
   sprites: [],
   spriteBins: [],
@@ -35,6 +36,13 @@ const state = {
   collisionDefinedOnly: false,
   collisionPaintMode: "collision",
   collisionDragMode: null,
+  actionTypeOptions: [],
+  questFlagNameOptions: [],
+  dialogueEditorOptionsLoaded: false,
+  dialogueEditorOptionsLoading: false,
+  dialogueLayout: {},
+  dialogueLayoutFor: null,
+  dialogueSelectedNodeId: null,
 };
 
 const sectionGroups = [
@@ -51,10 +59,10 @@ const sectionGroups = [
   {
     title: "Entities",
     items: [
-      { id: "npcs", label: "NPC Editor", endpoint: "/api/npcs", key: "name", subtitle: "displayName" },
+      { id: "npcs", label: "NPC Editor", endpoint: "/api/npcs", key: "displayName", subtitle: "name" },
       { id: "monsters", label: "Monster Editor", endpoint: "/api/monsters", key: "name", subtitle: "displayName" },
       { id: "items", label: "Item Editor", endpoint: "/api/items", key: "key", subtitle: "name" },
-      { id: "spells", label: "Spell Editor", endpoint: "/api/spells", key: "name", subtitle: "description" },
+      { id: "spells", label: "Spell Editor", endpoint: "/api/spells", key: "key", subtitle: "name" },
       { id: "monsterSpawns", label: "Monster Placement", endpoint: "/api/spawns?kind=monster", key: "type", subtitle: "x,y,z", mapScoped: true },
       { id: "npcSpawns", label: "NPC Placement", endpoint: "/api/spawns?kind=npc", key: "type", subtitle: "x,y,z", mapScoped: true },
     ],
@@ -78,10 +86,10 @@ const sectionGroups = [
 ];
 
 const fields = {
-  npcs: ["name", "displayName", "spriteBase", "dialogKeyword", "action", "actionParam1:number", "actionParam2:number", "patrolRadiusTiles:number", "dialogText:textarea"],
+  npcs: ["name", "displayName", "spriteBase", "patrolRadiusTiles:number"],
   monsters: ["name", "displayName", "health:number", "mana:number", "xpPerHit:number", "xpOnDeath:number", "hitDamageMin:number", "hitDamageMax:number", "respawnTime:number", "walkPattern", "attackPattern", "deathPattern", "soundAttack", "soundDeath", "soundHit", "goldMin:number", "goldMax:number", "defaultAggressive:boolean", "animateWhileStationary:boolean", "stationaryAnimationPauseSeconds:number"],
   items: ["key", "name", "bodyPart", "appearanceEquippedPrimary", "appearanceInventory", "price:number", "weight:number", "armorClass:number", "dodgeLost:number", "minEnd:number", "reqAttack:number", "reqStr:number", "reqAgi:number", "minInt:number", "minWis:number", "dmgFormula", "atkDelay", "attackSpeed:number", "unique:boolean", "bow:boolean", "unlimitedUse:boolean", "canSummon:boolean", "radiance:number", "nbCharges:number", "lockName", "lockDiff:number", "signText", "containerGold:number", "globalRespawn:number", "localRespawn:number"],
-  spells: ["name", "description:textarea", "manaCost", "price:number", "radius:number", "minInt:number", "minWis:number", "minLevel:number", "attack:boolean", "lineOfSight:boolean", "iconId", "projectileSpell", "impactSpell", "minDamage:number", "maxDamage:number", "sound", "soundImpact", "cooldownSeconds:number", "duration"],
+  spells: ["key", "name", "description:textarea", "manaCost", "price:number", "radius:number", "minInt:number", "minWis:number", "minLevel:number", "attack:boolean", "lineOfSight:boolean", "iconId", "projectileSpell", "impactSpell", "minDamage:number", "maxDamage:number", "sound", "soundImpact", "cooldownSeconds:number", "duration"],
   monsterSpawns: ["type", "x:number", "y:number", "z:number", "stationary:boolean", "aggressive:boolean"],
   npcSpawns: ["type", "x:number", "y:number", "z:number", "stationary:boolean", "aggressive:boolean"],
   objects: ["logicalName", "sprite", "displayName", "clickAnimate:boolean", "mirror:boolean", "animateSound", "reverseAnimateSound", "alwaysBehindEntities:boolean", "depthTileOffsetY:number"],
@@ -123,12 +131,7 @@ const FIELD_META = {
   displayName: ["Display name", "Name shown to players in game."],
   description: ["Description", "Text shown in UI/tooltips or learning screens."],
   spriteBase: ["Sprite base", "Animation base used to resolve directional sprite frames."],
-  dialogKeyword: ["Dialog keyword", "Clickable keyword in the NPC dialog text."],
-  action: ["Keyword action", "Action triggered when the player clicks the dialog keyword."],
-  actionParam1: ["Heal minimum", "Minimum healing amount used by HEAL actions."],
-  actionParam2: ["Heal maximum", "Maximum healing amount used by HEAL actions."],
   patrolRadiusTiles: ["Patrol radius", "How far this NPC can wander from spawn, in tiles. 0 uses the engine default."],
-  dialogText: ["Dialog text", "Full text shown when interacting with this NPC."],
   health: ["Health", "Maximum hit points."],
   mana: ["Mana", "Maximum mana points."],
   xpPerHit: ["XP per hit", "Experience granted when the monster is hit."],
@@ -254,6 +257,9 @@ const el = {
   entityPreviewHint: document.getElementById("entityPreviewHint"),
   formFields: document.getElementById("formFields"),
   relationEditorBlock: document.getElementById("relationEditorBlock"),
+  editorTabs: document.getElementById("editorTabs"),
+  editorTabDetails: document.getElementById("editorTabDetails"),
+  editorTabDialogue: document.getElementById("editorTabDialogue"),
   jsonBlock: document.getElementById("jsonEditorBlock"),
   jsonEditor: document.getElementById("jsonEditor"),
   placementPreview: document.getElementById("placementPreview"),
@@ -793,9 +799,12 @@ function renderEditor() {
   el.relationEditorBlock.replaceChildren();
   el.jsonBlock.classList.add("hidden");
   el.entityPreview.classList.add("hidden");
+  el.editorTabDialogue.replaceChildren();
+  el.editorTabs.classList.add("hidden");
   if (!item) {
     el.editorTitle.textContent = "No record selected";
     el.selectedLabel.textContent = "None";
+    showEditorTab("details");
     return;
   }
   el.editorTitle.textContent = displayContentValue(item[config.key] ?? config.label);
@@ -851,14 +860,14 @@ function renderEditor() {
       }
     });
   }
-  if (state.section === "npcs" && item.action === "TEACH" && !state.spellNameOptions.length) {
+  if (state.section === "npcs" && !state.spellNameOptions.length) {
     ensureSpellNameOptions().then(() => {
       if (state.section === "npcs" && state.items[state.selectedIndex] === item) {
         renderEditor();
       }
     });
   }
-  if (state.section === "npcs" && (item.action === "SHOP" || item.action === "TRAIN")
+  if (state.section === "npcs"
       && (!state.itemKeyOptions.length || !state.trainableStatIdOptions.length)) {
     ensureNpcShopTrainOptions().then(() => {
       if (state.section === "npcs" && state.items[state.selectedIndex] === item) {
@@ -945,9 +954,6 @@ function renderEditor() {
     if (state.section === "spells" && ["sound", "soundImpact"].includes(name)) {
       input = document.createElement("select");
       appendOptions(input, ["", ...state.soundOptions], item[name] || "");
-    } else if (state.section === "npcs" && name === "action") {
-      input = document.createElement("select");
-      appendOptions(input, ["NONE", "HEAL", "SHOP", "WAGER", "TEACH", "TRAIN"], item[name] || "NONE");
     } else if (state.section === "monsters" && ["soundAttack", "soundDeath", "soundHit"].includes(name)) {
       input = document.createElement("select");
       appendOptions(input, ["", ...state.soundOptions], item[name] || "");
@@ -1075,13 +1081,18 @@ function renderEditor() {
     el.jsonEditor.value = JSON.stringify(item, null, 2);
   }
   renderRelationEditor(item);
+  renderDialogGraph(item);
+  // Keep the dialogue tab selected while browsing NPCs that have one, but fall
+  // back to details when the newly selected record has no graph.
+  showEditorTab(state.editorTab === "dialogue" && !el.editorTabs.classList.contains("hidden")
+    ? "dialogue" : "details");
   renderEntityPreview(item);
   renderPlacementPreview(item);
 }
 
 function shouldShowField(name, item) {
-  if (state.section === "npcs" && ["actionParam1", "actionParam2"].includes(name)) {
-    return item.action === "HEAL";
+  if (state.section === "npcs" && name === "welcomeText") {
+    return false;
   }
   if (state.section === "objects" && ["animateSound", "reverseAnimateSound"].includes(name)) {
     return Boolean(item.clickAnimate);
@@ -1105,34 +1116,21 @@ function shouldShowField(name, item) {
 }
 
 function shouldShowComplexKey(key, item) {
-  if (state.section === "npcs" && key === "taughtSpells") {
-    return item.action === "TEACH";
-  }
-  if (state.section === "npcs" && key === "shopItems") {
-    return item.action === "SHOP";
-  }
-  if (state.section === "npcs" && key === "trainableStats") {
-    return item.action === "TRAIN";
-  }
-  if (state.section === "npcs" && key === "parts") {
+  if (state.section === "npcs" && ["parts", "topics"].includes(key)) {
+    // Each has its own dedicated editor; raw JSON here would be unreadable.
     return false;
   }
   return true;
 }
 
 function shouldRerenderForContext(name) {
-  return (state.section === "npcs" && name === "action")
-    || (state.section === "objects" && name === "clickAnimate")
+  return (state.section === "objects" && name === "clickAnimate")
     || (state.section === "monsters" && name === "animateWhileStationary")
     || (state.section === "spells" && name === "attack")
     || (state.section === "items" && ["bodyPart", "bow"].includes(name));
 }
 
 function displayFieldName(name, item) {
-  if (state.section === "npcs" && item?.action === "HEAL") {
-    if (name === "actionParam1") return "healMin";
-    if (name === "actionParam2") return "healMax";
-  }
   return fieldMeta(name, item).label;
 }
 
@@ -1166,10 +1164,6 @@ function fieldMeta(name, item) {
   }
   if (state.section === "appearanceDefaults" && name === "sprite") {
     return { label: "Sprite", help: "Animated body-part base drawn when this slot is empty (e.g. PupNakedBody). Not an item key." };
-  }
-  if (state.section === "npcs" && item?.action === "HEAL") {
-    if (name === "actionParam1") return { label: "Heal minimum", help: "Minimum hit points restored by this NPC keyword." };
-    if (name === "actionParam2") return { label: "Heal maximum", help: "Maximum hit points restored by this NPC keyword." };
   }
   const [label, help] = FIELD_META[name] || [humanizeFieldName(name), "Editor field used by this content record."];
   return { label, help };
@@ -1287,13 +1281,847 @@ function renderRelationEditor(item) {
     });
   }
 
-  renderTaughtSpellsEditor(item);
-  renderShopItemsEditor(item);
-  renderTrainableStatsEditor(item);
+}
+
+/** Switches the editor between the record form and the dialogue graph. */
+function showEditorTab(tab) {
+  state.editorTab = tab;
+  el.editorTabDetails.classList.toggle("hidden", tab !== "details");
+  el.editorTabDialogue.classList.toggle("hidden", tab !== "dialogue");
+  el.editorTabs.querySelectorAll(".editor-tab").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.tab === tab);
+  });
+}
+
+/**
+ * Visual node graph for an NPC's dialogue (see {@code NpcDef.DialogNode} /
+ * {@code ActionType} on the Java side). Nodes are free-form draggable boxes
+ * connected by an SVG line per {@code GOTO_NODE} action or {@code fallbackNode}
+ * pointer; clicking a node opens a full-field inspector below the canvas.
+ *
+ * <p>Layout is session-only (never sent to the server): positions live in
+ * {@code state.dialogueLayout}, rebuilt with a simple auto-layout whenever a
+ * different NPC is selected. All edits mutate {@code item.dialogNodes} in
+ * place, picked up by the normal save flow like any other field.
+ */
+function renderDialogGraph(item) {
+  return renderSimpleDialogueEditor(item);
+  /* Legacy graph renderer kept below temporarily for source-history clarity; it
+     is unreachable and will be removed once the reset format has shipped. */
+  const nodes = item && Array.isArray(item.dialogNodes) ? item.dialogNodes : null;
+  if (!nodes) return;
+  el.editorTabs.classList.remove("hidden");
+  ensureDialogueEditorOptions();
+
+  if (state.dialogueLayoutFor !== item) {
+    state.dialogueLayout = autoLayoutDialogueNodes(nodes);
+    state.dialogueLayoutFor = item;
+    state.dialogueSelectedNodeId = nodes.length ? nodes[0].id : null;
+  }
+
+  const section = document.createElement("div");
+  section.className = "dialogue-editor";
+
+  const header = document.createElement("div");
+  header.className = "dialog-graph-header";
+  const strong = document.createElement("strong");
+  strong.textContent = `${nodes.length} node${nodes.length === 1 ? "" : "s"}`;
+  header.appendChild(strong);
+  const addButton = document.createElement("button");
+  addButton.type = "button";
+  addButton.className = "btn btn-outline-dark btn-sm";
+  addButton.textContent = "Add node";
+  addButton.addEventListener("click", () => addDialogueNode(item));
+  header.appendChild(addButton);
+  section.appendChild(header);
+
+  const canvas = document.createElement("div");
+  canvas.className = "dialogue-canvas";
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "dialogue-edges");
+  canvas.appendChild(svg);
+  nodes.forEach((node) => {
+    canvas.appendChild(dialogueNodeBox(item, node, svg, canvas));
+  });
+  section.appendChild(canvas);
+  el.editorTabDialogue.appendChild(section);
+
+  requestAnimationFrame(() => drawDialogueEdges(item, svg, canvas));
+
+  const inspector = document.createElement("div");
+  inspector.className = "dialogue-inspector";
+  section.appendChild(inspector);
+  renderDialogueInspector(item, inspector, svg, canvas);
+}
+
+function renderSimpleDialogueEditor(item) {
+  if (!item || !Array.isArray(item.topics)) return;
+  el.editorTabs.classList.remove("hidden");
+  ensureDialogueEditorOptions();
+
+  const editor = document.createElement("section");
+  editor.className = "dialogue-editor";
+
+  const welcome = document.createElement("label");
+  welcome.appendChild(createStaticFieldLabel("Welcome dialogue", "Text shown at the start of each conversation."));
+  const welcomeInput = document.createElement("textarea");
+  welcomeInput.className = "form-control dialogue-node-response-input";
+  welcomeInput.rows = 4;
+  welcomeInput.required = true;
+  welcomeInput.value = item.welcomeText || "";
+  welcomeInput.addEventListener("input", () => {
+    item.welcomeText = welcomeInput.value;
+    syncJsonEditor(item);
+    markDirty();
+  });
+  welcome.appendChild(welcomeInput);
+  editor.appendChild(welcome);
+
+  const header = document.createElement("div");
+  header.className = "dialog-graph-header";
+  const title = document.createElement("strong");
+  title.textContent = `${item.topics.length} topic${item.topics.length === 1 ? "" : "s"}`;
+  header.appendChild(title);
+  const addTopic = document.createElement("button");
+  addTopic.type = "button";
+  addTopic.className = "btn btn-outline-dark btn-sm";
+  addTopic.textContent = "Add topic";
+  addTopic.addEventListener("click", () => {
+    item.topics.push({ keywords: [], response: "", actions: [] });
+    markDirty();
+    renderEditor();
+  });
+  header.appendChild(addTopic);
+  editor.appendChild(header);
+
+  item.topics.forEach((topic, topicIndex) => {
+    const card = document.createElement("div");
+    card.className = "dialogue-inspector";
+    const topicHeader = document.createElement("div");
+    topicHeader.className = "relation-editor-header";
+    const topicTitle = document.createElement("strong");
+    topicTitle.textContent = `Topic ${topicIndex + 1}`;
+    topicHeader.appendChild(topicTitle);
+    topicHeader.appendChild(dialogueMoveButton("↑", topicIndex > 0, () => {
+      [item.topics[topicIndex - 1], item.topics[topicIndex]] = [item.topics[topicIndex], item.topics[topicIndex - 1]];
+      markDirty(); renderEditor();
+    }));
+    topicHeader.appendChild(dialogueMoveButton("↓", topicIndex < item.topics.length - 1, () => {
+      [item.topics[topicIndex + 1], item.topics[topicIndex]] = [item.topics[topicIndex], item.topics[topicIndex + 1]];
+      markDirty(); renderEditor();
+    }));
+    const removeTopic = dialogueMoveButton("Delete", true, () => {
+      item.topics.splice(topicIndex, 1); markDirty(); renderEditor();
+    });
+    removeTopic.className = "btn btn-danger btn-sm";
+    topicHeader.appendChild(removeTopic);
+    card.appendChild(topicHeader);
+
+    card.appendChild(dialogueTextField("Keywords (comma-separated)",
+      (topic.keywords || []).join(", "), (value) => {
+        topic.keywords = value.split(",").map((part) => part.trim()).filter(Boolean);
+        syncJsonEditor(item); markDirty();
+      }));
+    const response = document.createElement("label");
+    response.appendChild(createStaticFieldLabel("Optional response", "Shown before the actions."));
+    const responseInput = document.createElement("textarea");
+    responseInput.className = "form-control dialogue-node-response-input";
+    responseInput.rows = 2;
+    responseInput.value = topic.response || "";
+    responseInput.addEventListener("input", () => {
+      topic.response = responseInput.value; syncJsonEditor(item); markDirty();
+    });
+    response.appendChild(responseInput);
+    card.appendChild(response);
+
+    const actionHeader = document.createElement("div");
+    actionHeader.className = "relation-editor-header";
+    actionHeader.appendChild(createStaticFieldLabel("Actions", "Executed from top to bottom."));
+    const addAction = document.createElement("button");
+    addAction.type = "button";
+    addAction.className = "btn btn-outline-dark btn-sm";
+    addAction.textContent = "Add action";
+    addAction.addEventListener("click", () => {
+      if (!Array.isArray(topic.actions)) topic.actions = [];
+      topic.actions.push({ type: "OPEN_SPELL_LEARNING", targets: [] });
+      markDirty(); renderEditor();
+    });
+    actionHeader.appendChild(addAction);
+    card.appendChild(actionHeader);
+    (topic.actions || []).forEach((action, actionIndex) => {
+      card.appendChild(renderSimpleDialogueAction(item, topic, action, actionIndex));
+    });
+    editor.appendChild(card);
+  });
+  el.editorTabDialogue.appendChild(editor);
+}
+
+function dialogueMoveButton(text, enabled, handler) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn btn-outline-dark btn-sm";
+  button.textContent = text;
+  button.disabled = !enabled;
+  button.addEventListener("click", handler);
+  return button;
+}
+
+function renderSimpleDialogueAction(item, topic, action, index) {
+  const row = document.createElement("div");
+  row.className = "dialogue-action-row";
+  const type = document.createElement("select");
+  type.className = "form-control form-control-sm";
+  (state.actionTypeOptions.length ? state.actionTypeOptions : [action.type]).forEach((value) => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = ({
+      OPEN_SPELL_LEARNING: "Teach spells",
+      OPEN_SKILL_LEARNING: "Teach skills",
+      OPEN_SHOP: "Open shop",
+      GIVE_ITEM: "Give item",
+      END_CONVERSATION: "End conversation",
+      HEAL: "Heal player",
+    })[value] || value;
+    option.selected = value === action.type;
+    type.appendChild(option);
+  });
+  type.addEventListener("change", () => {
+    action.type = type.value; action.targets = []; markDirty(); renderEditor();
+  });
+  row.appendChild(type);
+
+  const choices = action.type === "OPEN_SPELL_LEARNING" ? state.spellNameOptions
+    : action.type === "OPEN_SKILL_LEARNING" ? state.trainableStatIdOptions
+      : ["OPEN_SHOP", "GIVE_ITEM"].includes(action.type) ? state.itemKeyOptions : null;
+  if (choices && action.type === "GIVE_ITEM") {
+    const select = document.createElement("select");
+    select.className = "form-control form-control-sm";
+    ["", ...choices].forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value; option.textContent = value || "(item)";
+      option.selected = value === (action.targets || [])[0];
+      select.appendChild(option);
+    });
+    select.addEventListener("change", () => {
+      action.targets = select.value ? [select.value] : []; syncJsonEditor(item); markDirty();
+    });
+    row.appendChild(select);
+  } else if (choices) {
+    row.appendChild(dialogueTargetPicker(item, action, choices));
+  }
+
+  row.appendChild(dialogueMoveButton("↑", index > 0, () => {
+    [topic.actions[index - 1], topic.actions[index]] = [topic.actions[index], topic.actions[index - 1]];
+    markDirty(); renderEditor();
+  }));
+  row.appendChild(dialogueMoveButton("↓", index < topic.actions.length - 1, () => {
+    [topic.actions[index + 1], topic.actions[index]] = [topic.actions[index], topic.actions[index + 1]];
+    markDirty(); renderEditor();
+  }));
+  const remove = dialogueMoveButton("Delete", true, () => {
+    topic.actions.splice(index, 1); markDirty(); renderEditor();
+  });
+  remove.className = "btn btn-danger btn-sm";
+  row.appendChild(remove);
+  return row;
+}
+
+function dialogueTargetPicker(item, action, choices) {
+  const picker = document.createElement("div");
+  picker.className = "dialogue-target-picker";
+  const selected = new Set(action.targets || []);
+  const title = document.createElement("div");
+  title.className = "dialogue-target-picker-title";
+  const count = document.createElement("strong");
+  const updateCount = () => {
+    count.textContent = `${selected.size} selected`;
+  };
+  updateCount();
+  title.appendChild(count);
+  const clear = document.createElement("button");
+  clear.type = "button"; clear.className = "btn btn-link btn-sm"; clear.textContent = "Clear all";
+  clear.addEventListener("click", () => {
+    selected.clear(); action.targets = []; updateCount(); renderChoices(""); syncJsonEditor(item); markDirty();
+  });
+  title.appendChild(clear); picker.appendChild(title);
+  const search = document.createElement("input");
+  search.type = "search"; search.className = "form-control form-control-sm";
+  search.placeholder = "Search by name or identifier…";
+  picker.appendChild(search);
+  const list = document.createElement("div");
+  list.className = "dialogue-target-picker-list"; picker.appendChild(list);
+  function renderChoices(filter) {
+    list.replaceChildren();
+    const needle = filter.trim().toLocaleLowerCase();
+    choices.filter(value => !needle || value.toLocaleLowerCase().includes(needle)).forEach(value => {
+      const label = document.createElement("label"); label.className = "dialogue-target-option";
+      label.title = value;
+      const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = selected.has(value);
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) selected.add(value); else selected.delete(value);
+        action.targets = Array.from(selected); updateCount(); syncJsonEditor(item); markDirty();
+      });
+      label.appendChild(checkbox); label.appendChild(document.createTextNode(value)); list.appendChild(label);
+    });
+    if (!list.children.length) { const empty = document.createElement("span"); empty.className = "muted"; empty.textContent = "No results"; list.appendChild(empty); }
+  }
+  search.addEventListener("input", () => renderChoices(search.value));
+  renderChoices("");
+  return picker;
+}
+
+/** Simple layered layout keyed by GOTO_NODE/fallbackNode edges; disconnected nodes fall back to a grid. */
+function autoLayoutDialogueNodes(nodes) {
+  const layout = {};
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+  const depth = new Map();
+  const targetsOf = (node) => {
+    const targets = (node.actions || [])
+      .filter((a) => a.type === "GOTO_NODE" && a.stringParam1)
+      .map((a) => a.stringParam1);
+    if (node.fallbackNode) targets.push(node.fallbackNode);
+    return targets.filter((id) => byId.has(id));
+  };
+  const visited = new Set();
+  const assignDepth = (id, d) => {
+    if (visited.has(id) || d > nodes.length) return;
+    visited.add(id);
+    depth.set(id, Math.max(depth.get(id) || 0, d));
+    targetsOf(byId.get(id)).forEach((targetId) => assignDepth(targetId, d + 1));
+  };
+  const greeting = nodes.find((n) => n.greeting);
+  (greeting ? [greeting, ...nodes.filter((n) => n !== greeting)] : nodes).forEach((n) => {
+    if (!visited.has(n.id)) assignDepth(n.id, 0);
+  });
+
+  const columnCounts = {};
+  const colWidth = 280;
+  const rowHeight = 150;
+  nodes.forEach((node) => {
+    const col = depth.get(node.id) || 0;
+    const row = columnCounts[col] || 0;
+    columnCounts[col] = row + 1;
+    layout[node.id] = { x: 24 + col * colWidth, y: 24 + row * rowHeight };
+  });
+  return layout;
+}
+
+function dialogueNodeBox(item, node, svg, canvas) {
+  const box = document.createElement("div");
+  box.className = "dialogue-node";
+  box.classList.toggle("is-greeting", Boolean(node.greeting));
+  box.classList.toggle("is-selected", state.dialogueSelectedNodeId === node.id);
+  box.dataset.nodeId = node.id;
+  const pos = state.dialogueLayout[node.id] || { x: 24, y: 24 };
+  box.style.left = `${pos.x}px`;
+  box.style.top = `${pos.y}px`;
+
+  const head = document.createElement("div");
+  head.className = "dialogue-node-head";
+  const idLabel = document.createElement("span");
+  idLabel.className = "dialogue-node-id";
+  idLabel.textContent = node.greeting ? `${node.id} (greeting)` : node.id;
+  head.appendChild(idLabel);
+  box.appendChild(head);
+
+  if ((node.keywords || []).length) {
+    const chips = document.createElement("div");
+    chips.className = "dialogue-node-keywords";
+    node.keywords.forEach((keyword) => {
+      const chip = document.createElement("span");
+      chip.className = "dialog-trigger";
+      chip.textContent = keyword;
+      chips.appendChild(chip);
+    });
+    box.appendChild(chips);
+  }
+
+  const response = document.createElement("p");
+  response.className = "dialogue-node-response-preview";
+  response.textContent = node.response || "(no reply)";
+  box.appendChild(response);
+
+  const actionCount = (node.actions || []).length;
+  if (actionCount) {
+    const summary = document.createElement("span");
+    summary.className = "dialog-tag dialog-tag-set";
+    summary.textContent = `${actionCount} action${actionCount === 1 ? "" : "s"}`;
+    box.appendChild(summary);
+  }
+
+  box.addEventListener("mousedown", (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    startDialogueNodeDrag(event, item, node, box, svg, canvas);
+  });
+  box.addEventListener("click", () => {
+    if (state.dialogueSelectedNodeId === node.id) return;
+    state.dialogueSelectedNodeId = node.id;
+    renderEditor();
+  });
+
+  return box;
+}
+
+function startDialogueNodeDrag(event, item, node, box, svg, canvas) {
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const origin = { ...(state.dialogueLayout[node.id] || { x: 24, y: 24 }) };
+  let moved = false;
+
+  function onMove(moveEvent) {
+    const dx = moveEvent.clientX - startX;
+    const dy = moveEvent.clientY - startY;
+    if (Math.abs(dx) > 2 || Math.abs(dy) > 2) moved = true;
+    const next = { x: Math.max(0, origin.x + dx), y: Math.max(0, origin.y + dy) };
+    state.dialogueLayout[node.id] = next;
+    box.style.left = `${next.x}px`;
+    box.style.top = `${next.y}px`;
+    drawDialogueEdges(item, svg, canvas);
+  }
+  function onUp() {
+    document.removeEventListener("mousemove", onMove);
+    document.removeEventListener("mouseup", onUp);
+    if (!moved) {
+      state.dialogueSelectedNodeId = node.id;
+      renderEditor();
+    }
+  }
+  document.addEventListener("mousemove", onMove);
+  document.addEventListener("mouseup", onUp);
+}
+
+/** Redraws one SVG line per GOTO_NODE action / fallbackNode pointer, anchored to each box's edges. */
+function drawDialogueEdges(item, svg, canvas) {
+  const nodes = item.dialogNodes || [];
+  const boxes = new Map();
+  canvas.querySelectorAll(".dialogue-node").forEach((box) => boxes.set(box.dataset.nodeId, box));
+  svg.replaceChildren();
+  svg.setAttribute("width", canvas.scrollWidth);
+  svg.setAttribute("height", canvas.scrollHeight);
+
+  const edges = [];
+  nodes.forEach((node) => {
+    (node.actions || []).forEach((action) => {
+      if (action.type === "GOTO_NODE" && action.stringParam1) {
+        edges.push({ from: node.id, to: action.stringParam1, dashed: false });
+      }
+    });
+    if (node.fallbackNode) {
+      edges.push({ from: node.id, to: node.fallbackNode, dashed: true });
+    }
+  });
+
+  edges.forEach(({ from, to, dashed }) => {
+    const fromBox = boxes.get(from);
+    const toBox = boxes.get(to);
+    if (!fromBox || !toBox) return;
+    const x1 = fromBox.offsetLeft + fromBox.offsetWidth;
+    const y1 = fromBox.offsetTop + fromBox.offsetHeight / 2;
+    const x2 = toBox.offsetLeft;
+    const y2 = toBox.offsetTop + toBox.offsetHeight / 2;
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const midX = (x1 + x2) / 2;
+    line.setAttribute("d", `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`);
+    line.setAttribute("class", dashed ? "dialogue-edge dialogue-edge-fallback" : "dialogue-edge");
+    line.setAttribute("marker-end", "url(#dialogue-arrow)");
+    svg.appendChild(line);
+  });
+
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  defs.innerHTML = `<marker id="dialogue-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 Z" class="dialogue-edge-arrowhead"></path>
+  </marker>`;
+  svg.prepend(defs);
+}
+
+async function ensureDialogueEditorOptions() {
+  if (state.dialogueEditorOptionsLoaded || state.dialogueEditorOptionsLoading) return;
+  state.dialogueEditorOptionsLoading = true;
+  let data;
+  try {
+    data = await apiJson("/api/npc-options");
+  } finally {
+    state.dialogueEditorOptionsLoading = false;
+    state.dialogueEditorOptionsLoaded = true;
+  }
+  if (!state.actionTypeOptions.length) {
+    state.actionTypeOptions = data.actionTypes || [];
+  }
+  if (!state.questFlagNameOptions.length) {
+    state.questFlagNameOptions = data.questFlagNames || [];
+  }
+  if (!state.itemKeyOptions.length) {
+    state.itemKeyOptions = (data.itemKeys || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
+  }
+  if (!state.spellNameOptions.length) {
+    state.spellNameOptions = (data.spells || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
+  }
+  if (state.editorTab === "dialogue") renderEditor();
+}
+
+function addDialogueNode(item) {
+  const id = `node-${Math.random().toString(36).slice(2, 8)}`;
+  item.dialogNodes.push({
+    id, keywords: [], response: "", requiredFlag: "", requiredFlagValue: 0,
+    requiredItem: "", greeting: false, fallbackNode: "", actions: [],
+  });
+  state.dialogueLayoutFor = null;
+  state.dialogueSelectedNodeId = id;
+  markDirty();
+  renderEditor();
+}
+
+/** Removes a node and strips any dangling reference to it elsewhere in the graph. */
+function deleteDialogueNode(item, nodeId) {
+  item.dialogNodes = item.dialogNodes.filter((n) => n.id !== nodeId);
+  item.dialogNodes.forEach((n) => {
+    if (n.fallbackNode === nodeId) n.fallbackNode = "";
+    n.actions = (n.actions || []).filter((a) => !(a.type === "GOTO_NODE" && a.stringParam1 === nodeId));
+  });
+  state.dialogueLayoutFor = null;
+  state.dialogueSelectedNodeId = item.dialogNodes.length ? item.dialogNodes[0].id : null;
+  markDirty();
+  renderEditor();
+}
+
+function renderDialogueInspector(item, container, svg, canvas) {
+  const node = (item.dialogNodes || []).find((n) => n.id === state.dialogueSelectedNodeId);
+  if (!node) return;
+
+  const rerenderGraph = () => {
+    if (!el.jsonBlock.classList.contains("hidden")) {
+      el.jsonEditor.value = JSON.stringify(item, null, 2);
+    }
+    markDirty();
+    const graphContainer = el.editorTabDialogue.querySelector(".dialogue-canvas");
+    if (graphContainer) drawDialogueEdges(item, svg, canvas);
+    const box = el.editorTabDialogue.querySelector(`.dialogue-node[data-node-id="${CSS.escape(node.id)}"]`);
+    if (box) {
+      const response = box.querySelector(".dialogue-node-response-preview");
+      if (response) response.textContent = node.response || "(no reply)";
+    }
+  };
+
+  const header = document.createElement("div");
+  header.className = "relation-editor-header";
+  const title = document.createElement("strong");
+  title.textContent = `Node: ${node.id}`;
+  header.appendChild(title);
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className = "btn btn-danger btn-sm";
+  deleteButton.textContent = "Delete node";
+  deleteButton.addEventListener("click", () => deleteDialogueNode(item, node.id));
+  header.appendChild(deleteButton);
+  container.appendChild(header);
+
+  container.appendChild(dialogueTextField("Keywords (comma-separated)", (node.keywords || []).join(", "), (value) => {
+    node.keywords = value.split(",").map((s) => s.trim()).filter(Boolean);
+    rerenderGraph();
+  }));
+
+  const responseLabel = document.createElement("label");
+  responseLabel.appendChild(createStaticFieldLabel("Response", "The line spoken when this node is entered."));
+  const responseInput = document.createElement("textarea");
+  responseInput.className = "form-control form-control-sm dialogue-node-response-input";
+  responseInput.rows = 3;
+  responseInput.value = node.response || "";
+  responseInput.addEventListener("input", () => {
+    node.response = responseInput.value;
+    rerenderGraph();
+  });
+  responseLabel.appendChild(responseInput);
+  container.appendChild(responseLabel);
+
+  container.appendChild(dialogueCheckboxField("Greeting", node.greeting, (value) => {
+    node.greeting = value;
+    markDirty();
+    renderList();
+  }));
+
+  container.appendChild(dialogueTextField("Required flag", node.requiredFlag || "", (value) => {
+    node.requiredFlag = value;
+    markDirty();
+  }, state.questFlagNameOptions));
+  container.appendChild(dialogueNumberField("Required flag value", node.requiredFlagValue || 0, (value) => {
+    node.requiredFlagValue = value;
+    markDirty();
+  }));
+  container.appendChild(dialogueTextField("Required item", node.requiredItem || "", (value) => {
+    node.requiredItem = value;
+    markDirty();
+  }, state.itemKeyOptions));
+  container.appendChild(dialogueSelectField("Fallback node (if nothing matched)", node.fallbackNode || "",
+    ["", ...item.dialogNodes.map((n) => n.id).filter((id) => id !== node.id)], (value) => {
+      node.fallbackNode = value;
+      rerenderGraph();
+    }));
+
+  container.appendChild(renderDialogueActionsEditor(item, node, rerenderGraph));
+}
+
+function dialogueTextField(labelText, value, onChange, datalistOptions) {
+  const label = document.createElement("label");
+  label.appendChild(createStaticFieldLabel(labelText, ""));
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "form-control form-control-sm";
+  input.value = value;
+  if (datalistOptions && datalistOptions.length) {
+    const listId = `dl-${Math.random().toString(36).slice(2, 8)}`;
+    input.setAttribute("list", listId);
+    const datalist = document.createElement("datalist");
+    datalist.id = listId;
+    datalistOptions.forEach((option) => {
+      const opt = document.createElement("option");
+      opt.value = option;
+      datalist.appendChild(opt);
+    });
+    label.appendChild(datalist);
+  }
+  input.addEventListener("input", () => onChange(input.value));
+  label.appendChild(input);
+  return label;
+}
+
+function dialogueNumberField(labelText, value, onChange) {
+  const label = document.createElement("label");
+  label.appendChild(createStaticFieldLabel(labelText, ""));
+  const input = document.createElement("input");
+  input.type = "number";
+  input.step = "any";
+  input.className = "form-control form-control-sm";
+  input.value = value;
+  input.addEventListener("input", () => onChange(Number(input.value || 0)));
+  label.appendChild(input);
+  return label;
+}
+
+function dialogueCheckboxField(labelText, checked, onChange) {
+  const label = document.createElement("label");
+  label.appendChild(createStaticFieldLabel(labelText, ""));
+  const input = document.createElement("input");
+  input.type = "checkbox";
+  input.checked = Boolean(checked);
+  input.addEventListener("change", () => onChange(input.checked));
+  label.appendChild(input);
+  return label;
+}
+
+function dialogueSelectField(labelText, value, options, onChange) {
+  const label = document.createElement("label");
+  label.appendChild(createStaticFieldLabel(labelText, ""));
+  const select = document.createElement("select");
+  select.className = "form-control form-control-sm";
+  options.forEach((option) => {
+    const opt = document.createElement("option");
+    opt.value = option;
+    opt.textContent = option || "(none)";
+    if (option === value) opt.selected = true;
+    select.appendChild(opt);
+  });
+  select.addEventListener("change", () => onChange(select.value));
+  label.appendChild(select);
+  return label;
+}
+
+/** Params relevant to each action type, so the row only shows inputs that mean something. */
+const ACTION_PARAM_FIELDS = {
+  HEAL: ["intParam1", "intParam2"],
+  GIVE_ITEM: ["stringParam1"],
+  TAKE_ITEM: ["stringParam1"],
+  SET_FLAG: ["stringParam1", "intParam1"],
+  LEARN: [],
+  TEACH: ["stringParam1"],
+  SHOP: [],
+  TRAIN: [],
+  CAST: ["stringParam1", "intParam1"],
+  KILL: [],
+  END_CONVERSATION: [],
+  GOTO_NODE: ["stringParam1"],
+};
+
+function renderDialogueActionsEditor(item, node, rerenderGraph) {
+  const section = document.createElement("div");
+  section.className = "relation-subsection";
+  const header = document.createElement("div");
+  header.className = "relation-editor-header";
+  const title = document.createElement("div");
+  title.appendChild(createStaticFieldLabel("Actions", "Effects fired, in order, when this node is entered."));
+  header.appendChild(title);
+  const addButton = document.createElement("button");
+  addButton.type = "button";
+  addButton.className = "btn btn-outline-dark btn-sm";
+  addButton.textContent = "Add action";
+  addButton.addEventListener("click", () => {
+    if (!Array.isArray(node.actions)) node.actions = [];
+    node.actions.push({ type: state.actionTypeOptions[0] || "SET_FLAG", stringParam1: "", stringParam2: "", intParam1: 0, intParam2: 0 });
+    markDirty();
+    renderEditor();
+  });
+  header.appendChild(addButton);
+  section.appendChild(header);
+
+  (node.actions || []).forEach((action, index) => {
+    section.appendChild(renderDialogueActionRow(item, node, action, index, rerenderGraph));
+  });
+
+  return section;
+}
+
+function renderDialogueActionRow(item, node, action, index, rerenderGraph) {
+  const row = document.createElement("div");
+  row.className = "dialogue-action-row";
+
+  const typeSelect = document.createElement("select");
+  typeSelect.className = "form-control form-control-sm";
+  (state.actionTypeOptions.length ? state.actionTypeOptions : [action.type]).forEach((type) => {
+    const opt = document.createElement("option");
+    opt.value = type;
+    opt.textContent = type;
+    if (type === action.type) opt.selected = true;
+    typeSelect.appendChild(opt);
+  });
+  typeSelect.addEventListener("change", () => {
+    action.type = typeSelect.value;
+    markDirty();
+    renderEditor();
+  });
+  row.appendChild(typeSelect);
+
+  const params = ACTION_PARAM_FIELDS[action.type] || [];
+  if (params.includes("stringParam1")) {
+    row.appendChild(dialogueActionParamInput(action, "stringParam1", stringParamOptionsFor(action.type, node, item), rerenderGraph));
+  }
+  if (params.includes("stringParam2")) {
+    row.appendChild(dialogueActionParamInput(action, "stringParam2", null, rerenderGraph));
+  }
+  if (params.includes("intParam1")) {
+    row.appendChild(dialogueActionNumberInput(action, "intParam1", rerenderGraph));
+  }
+  if (params.includes("intParam2")) {
+    row.appendChild(dialogueActionNumberInput(action, "intParam2", rerenderGraph));
+  }
+
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className = "btn btn-danger btn-sm";
+  deleteButton.textContent = "Delete";
+  deleteButton.addEventListener("click", () => {
+    node.actions.splice(index, 1);
+    rerenderGraph();
+    renderEditor();
+  });
+  row.appendChild(deleteButton);
+
+  const wrap = document.createElement("div");
+  wrap.appendChild(row);
+  if (action.type === "LEARN") {
+    wrap.appendChild(renderLearnCurriculumHint(item));
+  }
+  return wrap;
+}
+
+/**
+ * LEARN has no params of its own — DataNpc opens LearnScreen with the NPC's
+ * whole taughtSpells list (see renderTaughtSpellsEditor), so this shows that
+ * curriculum inline right where the action was added, instead of leaving the
+ * user hunting for the separate "Taught spells" section below the graph.
+ */
+function renderLearnCurriculumHint(item) {
+  if (!Array.isArray(item.taughtSpells)) item.taughtSpells = [];
+  const box = document.createElement("div");
+  box.className = "dialogue-learn-hint";
+
+  const label = document.createElement("div");
+  label.className = "dialogue-learn-hint-label";
+  label.textContent = "Spells offered by LEARN:";
+  box.appendChild(label);
+
+  if (!item.taughtSpells.length) {
+    const empty = document.createElement("span");
+    empty.className = "muted";
+    empty.textContent = "None yet — add one below.";
+    box.appendChild(empty);
+  } else {
+    const list = document.createElement("span");
+    list.textContent = item.taughtSpells.map((s) => s.spellName || "(unset)").join(", ");
+    box.appendChild(list);
+  }
+
+  const addButton = document.createElement("button");
+  addButton.type = "button";
+  addButton.className = "btn btn-outline-dark btn-sm";
+  addButton.textContent = "Add spell";
+  addButton.addEventListener("click", () => {
+    item.taughtSpells.push({ spellName: state.spellNameOptions[0] || "" });
+    syncJsonEditor(item);
+    markDirty();
+    renderEditor();
+  });
+  box.appendChild(addButton);
+
+  return box;
+}
+
+function stringParamOptionsFor(type, node, item) {
+  if (type === "GOTO_NODE") return item.dialogNodes.map((n) => n.id).filter((id) => id !== node.id);
+  if (type === "GIVE_ITEM" || type === "TAKE_ITEM") return state.itemKeyOptions;
+  if (type === "TEACH" || type === "CAST") return state.spellNameOptions;
+  if (type === "SET_FLAG") return state.questFlagNameOptions;
+  return [];
+}
+
+function dialogueActionParamInput(action, key, options, rerenderGraph) {
+  if (options && options.length) {
+    const select = document.createElement("select");
+    select.className = "form-control form-control-sm";
+    const current = action[key] || "";
+    if (!options.includes(current)) {
+      const blank = document.createElement("option");
+      blank.value = "";
+      blank.textContent = "(choose)";
+      select.appendChild(blank);
+    }
+    options.forEach((option) => {
+      const opt = document.createElement("option");
+      opt.value = option;
+      opt.textContent = option;
+      if (option === current) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.addEventListener("change", () => {
+      action[key] = select.value;
+      rerenderGraph();
+    });
+    return select;
+  }
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "form-control form-control-sm";
+  input.value = action[key] || "";
+  input.addEventListener("input", () => {
+    action[key] = input.value;
+    rerenderGraph();
+  });
+  return input;
+}
+
+function dialogueActionNumberInput(action, key, rerenderGraph) {
+  const input = document.createElement("input");
+  input.type = "number";
+  input.step = "any";
+  input.className = "form-control form-control-sm";
+  input.value = action[key] || 0;
+  input.addEventListener("input", () => {
+    action[key] = Number(input.value || 0);
+    rerenderGraph();
+  });
+  return input;
 }
 
 function renderTaughtSpellsEditor(item) {
-  if (item.action !== "TEACH") return;
   if (!Array.isArray(item.taughtSpells)) item.taughtSpells = [];
 
   const section = document.createElement("div");
@@ -1381,7 +2209,6 @@ async function ensureNpcShopTrainOptions() {
 }
 
 function renderShopItemsEditor(item) {
-  if (item.action !== "SHOP") return;
   if (!Array.isArray(item.shopItems)) item.shopItems = [];
 
   const section = document.createElement("div");
@@ -1468,7 +2295,6 @@ function renderShopItemsEditor(item) {
 }
 
 function renderTrainableStatsEditor(item) {
-  if (item.action !== "TRAIN") return;
   if (!Array.isArray(item.trainableStats)) item.trainableStats = [];
 
   const section = document.createElement("div");
@@ -2769,6 +3595,10 @@ el.spriteNextBtn.addEventListener("click", () => {
   renderSpriteList();
 });
 el.saveSpriteBtn.addEventListener("click", () => withLoader("Saving sprite...", saveSprite));
+el.editorTabs.addEventListener("click", (event) => {
+  const button = event.target.closest(".editor-tab");
+  if (button) showEditorTab(button.dataset.tab);
+});
 el.uploadZone.addEventListener("click", () => el.fileInput.click());
 el.fileInput.addEventListener("change", (event) => withLoader("Importing sprites...", () => handleFiles(Array.from(event.target.files || []))));
 el.uploadZone.addEventListener("dragover", (event) => {

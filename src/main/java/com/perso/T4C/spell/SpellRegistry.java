@@ -2,6 +2,7 @@ package com.perso.T4C.spell;
 
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.SpellBinaryIO;
+import com.perso.T4C.i18n.I18n;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +39,26 @@ public final class SpellRegistry {
         rebuild(spells);
     }
 
+    /**
+     * Looks a spell up by its stored identity ({@code ${spell.x}}), by the bare
+     * catalogue key, or by the text a player sees. Spell definitions carry a
+     * placeholder rather than prose, so callers hold whichever form their own
+     * source of truth recorded.
+     */
     public static synchronized SpellData findByName(String name) {
         load();
-        return name == null ? null : byName.get(name);
+        if (name == null || name.isBlank()) return null;
+        SpellData direct = byName.get(name);
+        if (direct != null) return direct;
+        return byName.get(identityOf(name));
+    }
+
+    /** Reduces any of the accepted spell designations to the registry's key. */
+    static String identityOf(String value) {
+        String key = I18n.keyOf(value);
+        if (key != null) return key;
+        String candidate = "spell." + I18n.normalizedKey(value);
+        return I18n.has(candidate) ? candidate : value;
     }
 
     public static synchronized SpellData findById(int spellId) {
@@ -67,6 +85,10 @@ public final class SpellRegistry {
         for (SpellData spell : cache) {
             if (spell != null && spell.getName() != null) {
                 map.put(spell.getName(), spell);
+                String key = spell.getKey();
+                if (key != null) {
+                    map.putIfAbsent(key, spell);
+                }
             }
         }
         byName = Map.copyOf(map);

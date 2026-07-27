@@ -774,8 +774,8 @@ public class ObjectRenderer {
             if (worldX >= info.px && worldX <= info.px + info.w && worldY >= info.py && worldY <= info.py + info.h) {
                 state.nameDisplayUntil = System.currentTimeMillis() + 4000L;
                 state.clickedDisplayName = (mapping.displayName != null && !mapping.displayName.isBlank())
-                        ? I18n.object(mapping.displayName)
-                        : I18n.object(humanizeLogicalName(logicalId));
+                        ? I18n.resolve(mapping.displayName)
+                        : I18n.resolve(humanizeLogicalName(logicalId));
                 return true;
             }
         }
@@ -799,7 +799,7 @@ public class ObjectRenderer {
         }
         String text = state.clickedDisplayName;
         if (text == null || text.isBlank()) {
-            text = I18n.object(mapping.displayName);
+            text = I18n.resolve(mapping.displayName);
         }
         if (text == null || text.isBlank()) {
             return;

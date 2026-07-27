@@ -45,7 +45,7 @@ public final class SpellCastingService {
         }
         SpellData spell = request.spell();
         Player caster = request.caster();
-        if (request.knownSpellRequired() && (caster.getSpells() == null || !caster.getSpells().contains(spell.getName()))) {
+        if (request.knownSpellRequired() && !hasLearnedSpell(caster, spell)) {
             return Result.failure(Failure.NOT_LEARNED);
         }
         if (!targetAccepted(spell.getTargetType(), request.targetKind())) return Result.failure(Failure.WRONG_TARGET);
@@ -80,17 +80,28 @@ public final class SpellCastingService {
         return Result.success(manaCost);
     }
 
+    /** The player state stores learned spells by their canonical key. */
+    private static boolean hasLearnedSpell(Player player, SpellData spell) {
+        if (player.getSpells() == null) return false;
+        for (String learned : player.getSpells()) {
+            if (learned != null && learned.equals(spell.getKey())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String message(Failure failure) {
         return switch (failure) {
-            case NOT_LEARNED -> I18n.message("message.spell_not_learned", "message.spell_not_learned");
-            case WRONG_TARGET -> I18n.message("message.spell_wrong_target", "message.spell_wrong_target");
-            case PVP_FORBIDDEN -> I18n.message("message.spell_pvp_forbidden", "message.spell_pvp_forbidden");
-            case OUT_OF_RANGE -> I18n.message("message.target_too_far", "message.target_too_far");
-            case NO_LINE_OF_SIGHT -> I18n.message("message.target_no_line_of_sight", "message.target_no_line_of_sight");
-            case COOLDOWN -> I18n.message("message.spell_cooldown", "message.spell_cooldown");
-            case EXHAUSTED -> I18n.message("message.spell_exhausted", "message.spell_exhausted");
-            case NOT_ENOUGH_MANA -> I18n.message("message.not_enough_mana", "message.not_enough_mana");
-            case ACTIVATION_FAILED -> I18n.message("message.spell_failed", "message.spell_failed");
+            case NOT_LEARNED -> I18n.message("message.spell_not_learned");
+            case WRONG_TARGET -> I18n.message("message.spell_wrong_target");
+            case PVP_FORBIDDEN -> I18n.message("message.spell_pvp_forbidden");
+            case OUT_OF_RANGE -> I18n.message("message.target_too_far");
+            case NO_LINE_OF_SIGHT -> I18n.message("message.target_no_line_of_sight");
+            case COOLDOWN -> I18n.message("message.spell_cooldown");
+            case EXHAUSTED -> I18n.message("message.spell_exhausted");
+            case NOT_ENOUGH_MANA -> I18n.message("message.not_enough_mana");
+            case ACTIVATION_FAILED -> I18n.message("message.spell_failed");
             case NONE -> "";
         };
     }

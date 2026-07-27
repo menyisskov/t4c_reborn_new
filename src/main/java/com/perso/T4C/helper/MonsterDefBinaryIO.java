@@ -76,7 +76,7 @@ public final class MonsterDefBinaryIO {
     private static MonsterDef readDef(DataInputStream in, short version) throws IOException, GameException {
         // v1 fields
         String name = readString(in);
-        String displayName = I18n.english(readString(in));
+        String displayName = readString(in);
         int health = BinaryIOUtils.readIntLE(in);
         int mana = BinaryIOUtils.readIntLE(in);
         int xpPerHit = BinaryIOUtils.readIntLE(in);

@@ -32,7 +32,7 @@ public final class ItemRegistry {
 
     public static synchronized ItemDefinition findByKey(String key) {
         load();
-        return key == null ? null : byKey.get(key);
+        return key == null ? null : byKey.get(ItemDefinition.normalizeKey(key));
     }
 
     public static synchronized Map<String, ItemDefinition> allByKey() {

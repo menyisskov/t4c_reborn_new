@@ -234,9 +234,9 @@ public class Inventory extends GuiScreenBase {
                     java.util.concurrent.ThreadLocalRandom.current());
             if (use.success()) PlayerStateStore.save(player);
             else if (use.failure() == ItemUseService.Failure.NO_HEALING_NEEDED) {
-                SystemMessage.showShared(I18n.message("message.no_healing_needed", "message.no_healing_needed"));
+                SystemMessage.showShared(I18n.message("message.no_healing_needed"));
             } else if (use.failure() == ItemUseService.Failure.NO_MANA_NEEDED) {
-                SystemMessage.showShared(I18n.message("message.no_mana_needed", "message.no_mana_needed"));
+                SystemMessage.showShared(I18n.message("message.no_mana_needed"));
             }
             return;
         }
@@ -294,7 +294,7 @@ public class Inventory extends GuiScreenBase {
         for (String item : player.getInventory()) if (hit.getItemName().equals(item)) count++;
         ItemDefinition def = ItemDefinition.get(hit.getItemName());
         String name = def != null && def.getName() != null ? def.getName() : hit.getItemName();
-        name = I18n.item(name);
+        name = I18n.resolve(name);
         hoverItemText = name + (count > 1 ? " x" + count : "");
     }
 
@@ -322,7 +322,7 @@ public class Inventory extends GuiScreenBase {
         var gold = Color.valueOf("F2B705");
         labels.add(new GuiBoxedText(FontManager.getInstance().getHaettenschweilerFont(18, gold),
                 x + 224f, y + 2f, 102f, 19f,
-                () -> I18n.t("ui.inventory", "ui.inventory"), () -> gold).shrinkToFit());
+                () -> I18n.key("ui.inventory"), () -> gold).shrinkToFit());
     }
 
     private void addStatLabels() {
@@ -347,7 +347,7 @@ public class Inventory extends GuiScreenBase {
                 () -> String.valueOf(player.getGold()), () -> Color.WHITE));
         // Bottom bar: GOLD plaque, gold value box, hover-item information box.
         labels.add(new GuiBoxedText(FontManager.getInstance().getHaettenschweilerFont(18, gold),
-                x + 28f, y + 397f, 55f, 18f, () -> I18n.t("ui.gold", "ui.gold"), () -> gold).shrinkToFit());
+                x + 28f, y + 397f, 55f, 18f, () -> I18n.key("ui.gold"), () -> gold).shrinkToFit());
         BitmapFont infoFont = FontManager.getInstance().getJetBrainsMonoFont(11, gold);
         labels.add(new GuiBoxedText(infoFont, x + 87f, y + 397f, 89f, 18f,
                 () -> String.valueOf(player.getGold()), () -> gold));
@@ -609,39 +609,40 @@ public class Inventory extends GuiScreenBase {
         }
 
         StringBuilder text = new StringBuilder();
-        text.append(I18n.item(def.getName() != null && !def.getName().isEmpty() ? def.getName() : itemName));
-        appendLine(text, "Type", formatBodyPart(def.getBodyPart()));
-        appendLine(text, "Price", def.getPrice() > 0 ? def.getPrice() + " gold" : null);
-        appendLine(text, "Weight", def.getWeight() > 0 ? String.valueOf(def.getWeight()) : null);
-        appendLine(text, "Armor Class", def.getArmorClass() != 0d ? formatDouble(def.getArmorClass()) : null);
-        appendLine(text, "Dodge penalty", def.getDodgeLost() != 0 ? String.valueOf(def.getDodgeLost()) : null);
-        appendLine(text, "Damage", nonBlank(def.getDmgFormula()));
-        appendLine(text, "Attack speed", def.getAttackSpeed() > 0d ? formatDouble(def.getAttackSpeed()) : null);
-        appendLine(text, "Attack delay", nonBlank(def.getAtkDelay()));
-        appendLine(text, "Req END", def.getMinEnd() > 0 ? String.valueOf(def.getMinEnd()) : null);
-        appendLine(text, "Req ATT", def.getReqAttack() > 0 ? String.valueOf(def.getReqAttack()) : null);
-        appendLine(text, "Req STR", def.getReqStr() > 0 ? String.valueOf(def.getReqStr()) : null);
-        appendLine(text, "Req AGI", def.getReqAgi() > 0 ? String.valueOf(def.getReqAgi()) : null);
-        appendLine(text, "Req INT", def.getMinInt() > 0 ? String.valueOf(def.getMinInt()) : null);
-        appendLine(text, "Req WIS", def.getMinWis() > 0 ? String.valueOf(def.getMinWis()) : null);
-        appendLine(text, "Charges", def.getNbCharges() > 0 ? String.valueOf(def.getNbCharges()) : null);
-        appendLine(text, "Radiance", def.getRadiance() > 0 ? String.valueOf(def.getRadiance()) : null);
-        if (def.isBow()) appendFlag(text, "Bow");
-        if (def.isUnique()) appendFlag(text, "Unique");
-        if (def.isUnlimitedUse()) appendFlag(text, "Unlimited use");
-        if (def.isCanSummon()) appendFlag(text, "Can summon");
+        text.append(I18n.resolve(def.getName() != null && !def.getName().isEmpty() ? def.getName() : itemName));
+        appendLine(text, "type", formatBodyPart(def.getBodyPart()));
+        appendLine(text, "price", def.getPrice() > 0 ? def.getPrice() + " gold" : null);
+        appendLine(text, "weight", def.getWeight() > 0 ? String.valueOf(def.getWeight()) : null);
+        appendLine(text, "armor_class", def.getArmorClass() != 0d ? formatDouble(def.getArmorClass()) : null);
+        appendLine(text, "dodge_penalty", def.getDodgeLost() != 0 ? String.valueOf(def.getDodgeLost()) : null);
+        appendLine(text, "damage", nonBlank(def.getDmgFormula()));
+        appendLine(text, "attack_speed", def.getAttackSpeed() > 0d ? formatDouble(def.getAttackSpeed()) : null);
+        appendLine(text, "attack_delay", nonBlank(def.getAtkDelay()));
+        appendLine(text, "req_end", def.getMinEnd() > 0 ? String.valueOf(def.getMinEnd()) : null);
+        appendLine(text, "req_att", def.getReqAttack() > 0 ? String.valueOf(def.getReqAttack()) : null);
+        appendLine(text, "req_str", def.getReqStr() > 0 ? String.valueOf(def.getReqStr()) : null);
+        appendLine(text, "req_agi", def.getReqAgi() > 0 ? String.valueOf(def.getReqAgi()) : null);
+        appendLine(text, "req_int", def.getMinInt() > 0 ? String.valueOf(def.getMinInt()) : null);
+        appendLine(text, "req_wis", def.getMinWis() > 0 ? String.valueOf(def.getMinWis()) : null);
+        appendLine(text, "charges", def.getNbCharges() > 0 ? String.valueOf(def.getNbCharges()) : null);
+        appendLine(text, "radiance", def.getRadiance() > 0 ? String.valueOf(def.getRadiance()) : null);
+        if (def.isBow()) appendFlag(text, "bow");
+        if (def.isUnique()) appendFlag(text, "unique");
+        if (def.isUnlimitedUse()) appendFlag(text, "unlimited_use");
+        if (def.isCanSummon()) appendFlag(text, "can_summon");
         return text.toString();
     }
 
-    private static void appendLine(StringBuilder text, String label, String value) {
+    /** {@code slug} is a tooltip.* catalogue key, never a display label. */
+    private static void appendLine(StringBuilder text, String slug, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }
-        text.append('\n').append(I18n.tooltipLabel(label)).append(": ").append(value);
+        text.append('\n').append(I18n.key("tooltip." + slug)).append(": ").append(value);
     }
 
-    private static void appendFlag(StringBuilder text, String label) {
-        text.append('\n').append(I18n.tooltipLabel(label));
+    private static void appendFlag(StringBuilder text, String slug) {
+        text.append('\n').append(I18n.key("tooltip." + slug));
     }
 
     private static String nonBlank(String value) {
@@ -704,18 +705,18 @@ public class Inventory extends GuiScreenBase {
         double exampleDamage = 20d;
         double exampleResult = Math.max(0d, exampleDamage - total);
 
-        StringBuilder text = new StringBuilder(I18n.tooltip("ac.title", "Armor Class (AC)"));
-        appendLine(text, "Equipment AC", formatDouble(equipment));
-        appendLine(text, "AC bonus", formatSignedDouble(bonus));
-        appendLine(text, "Total AC", formatDouble(total));
-        text.append("\n\n").append(I18n.tooltip("ac.reduction", "Flat physical damage reduction"));
-        text.append("\n").append(I18n.tooltip("ac.formula", "Damage taken = max(0, physical damage - AC)"));
+        StringBuilder text = new StringBuilder(I18n.key("ac.title"));
+        appendLine(text, "equipment_ac", formatDouble(equipment));
+        appendLine(text, "ac_bonus", formatSignedDouble(bonus));
+        appendLine(text, "total_ac", formatDouble(total));
+        text.append("\n\n").append(I18n.key("ac.reduction"));
+        text.append("\n").append(I18n.key("ac.formula"));
         text.append("\n").append(String.format(java.util.Locale.ROOT,
-                I18n.tooltip("ac.example", "Example: %s - %s = %s"), formatDouble(exampleDamage),
+                I18n.key("ac.example"), formatDouble(exampleDamage),
                 formatDouble(total), formatDouble(exampleResult)));
-        text.append(I18n.tooltip("ac.taken", " damage taken"));
-        text.append("\n").append(I18n.tooltip("ac.percent", "AC is subtracted from damage; it is not a percentage."));
-        text.append("\n").append(I18n.tooltip("ac.penetration", "Armor Penetration can ignore part of the target's AC."));
+        text.append(I18n.key("ac.taken"));
+        text.append("\n").append(I18n.key("ac.percent"));
+        text.append("\n").append(I18n.key("ac.penetration"));
         return text.toString();
     }
 
@@ -725,39 +726,39 @@ public class Inventory extends GuiScreenBase {
         String message;
         switch (result.failure()) {
             case REQUIREMENTS_NOT_MET -> message = requirementFailureMessage(def);
-            case WRONG_SLOT -> message = I18n.message("message.equip_wrong_slot", "message.equip_wrong_slot");
-            case ITEM_NOT_OWNED -> message = I18n.message("message.item_not_owned", "message.item_not_owned");
-            case UNKNOWN_ITEM -> message = I18n.message("message.item_not_equippable", "message.item_not_equippable");
-            default -> message = I18n.message("message.item_cannot_equip", "message.item_cannot_equip");
+            case WRONG_SLOT -> message = I18n.message("message.equip_wrong_slot");
+            case ITEM_NOT_OWNED -> message = I18n.message("message.item_not_owned");
+            case UNKNOWN_ITEM -> message = I18n.message("message.item_not_equippable");
+            default -> message = I18n.message("message.item_cannot_equip");
         }
         SystemMessage.showShared(message);
     }
 
     /** Mirrors Character::CanEquip: report the first missing item requirement. */
     private String requirementFailureMessage(ItemDefinition def) {
-        if (def == null) return I18n.message("message.item_cannot_equip", "message.item_cannot_equip");
-        String name = I18n.item(def.getName() == null || def.getName().isBlank() ? def.getKey() : def.getName());
+        if (def == null) return I18n.message("message.item_cannot_equip");
+        String name = I18n.resolve(def.getName() == null || def.getName().isBlank() ? def.getKey() : def.getName());
         if (player.getEndurance() < def.getMinEnd()) {
-            return I18n.message("message.equip_need_endurance", "message.equip_need_endurance", def.getMinEnd(), name);
+            return I18n.message("message.equip_need_endurance",  def.getMinEnd(), name);
         }
         if (player.getStrength() < def.getReqStr()) {
-            return I18n.message("message.equip_need_strength", "message.equip_need_strength", def.getReqStr(), name);
+            return I18n.message("message.equip_need_strength",  def.getReqStr(), name);
         }
         if (player.getDexterity() < def.getReqAgi()) {
-            return I18n.message("message.equip_need_agility", "message.equip_need_agility", def.getReqAgi(), name);
+            return I18n.message("message.equip_need_agility",  def.getReqAgi(), name);
         }
         if (player.getIntelligence() < def.getMinInt()) {
-            return I18n.message("message.equip_need_intelligence", "message.equip_need_intelligence", def.getMinInt(), name);
+            return I18n.message("message.equip_need_intelligence",  def.getMinInt(), name);
         }
         if (player.getWisdom() < def.getMinWis()) {
-            return I18n.message("message.equip_need_wisdom", "message.equip_need_wisdom", def.getMinWis(), name);
+            return I18n.message("message.equip_need_wisdom",  def.getMinWis(), name);
         }
         int attack = player.getSkillLevel("attack");
         if (attack <= 0) attack = player.getLevel() + player.getDexterity();
         if (attack < def.getReqAttack()) {
-            return I18n.message("message.equip_need_attack", "message.equip_need_attack", def.getReqAttack(), name);
+            return I18n.message("message.equip_need_attack",  def.getReqAttack(), name);
         }
-        return I18n.message("message.equip_requirements", "message.equip_requirements", name);
+        return I18n.message("message.equip_requirements",  name);
     }
 
     private TextureRegion resolveInventoryRegion(String itemName) {

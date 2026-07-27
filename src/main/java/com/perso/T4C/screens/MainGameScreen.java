@@ -489,7 +489,7 @@ public class MainGameScreen implements Screen {
             camera.position.set(x, y, 0);
             camera.update();
         }
-        showSystemMessage(I18n.message("message.teleport", "message.teleport"));
+        showSystemMessage(I18n.message("message.teleport"));
         log.info("Teleport {}: ({}, {}, {}) -> ({}, {}, {})", teleport.id,
                 teleport.sourceX, teleport.sourceY, teleport.sourceZ,
                 teleport.targetX, teleport.targetY, teleport.targetZ);
@@ -768,7 +768,7 @@ public class MainGameScreen implements Screen {
         });
         player.setItemDropCallback((index, itemKey) -> {
             if ("Gem of Destiny".equals(itemKey)) {
-                showSystemMessage("La pierre de destinée ne peut pas être jetée au sol.");
+                showSystemMessage(I18n.key("message.gem_of_destiny_undroppable"));
                 return false;
             }
             int remainingCharges = com.perso.T4C.item.InventoryService.chargesForNextInstance(player, itemKey);
@@ -870,7 +870,7 @@ public class MainGameScreen implements Screen {
             Vector2 pos = monster.getPosition();
             groundItemManager.spawnFromLoot(monster.getLootTable().roll(lootRandom), pos.x, pos.y, gold -> {
                 player.addGold(gold);
-                showSystemMessage(I18n.message("message.gold_gained", "message.gold_gained", gold));
+                showSystemMessage(I18n.message("message.gold_gained",  gold));
             });
         });
     }
@@ -975,7 +975,7 @@ public class MainGameScreen implements Screen {
             updateAmbientMusicForPlayer();
         } catch (Exception e) {
             log.error("Failed to switch map for Z={}", z, e);
-            showSystemMessage(I18n.message("message.map_load_failed", "message.map_load_failed", z));
+            showSystemMessage(I18n.message("message.map_load_failed",  z));
         }
     }
 
@@ -1207,15 +1207,15 @@ public class MainGameScreen implements Screen {
             return;
         }
         if (result.failure() == com.perso.T4C.item.ItemUseService.Failure.NO_HEALING_NEEDED) {
-            showSystemMessage(I18n.message("message.no_healing_needed", "message.no_healing_needed"));
+            showSystemMessage(I18n.message("message.no_healing_needed"));
         } else if (result.failure() == com.perso.T4C.item.ItemUseService.Failure.NO_MANA_NEEDED) {
-            showSystemMessage(I18n.message("message.no_mana_needed", "message.no_mana_needed"));
+            showSystemMessage(I18n.message("message.no_mana_needed"));
         } else if (result.failure() == com.perso.T4C.item.ItemUseService.Failure.NOT_OWNED) {
             // Quickbar entries deliberately remain assigned after their last
             // charge is consumed, so clearly explain why this click cannot run.
-            showSystemMessage(I18n.message("message.item_not_owned", "message.item_not_owned"));
+            showSystemMessage(I18n.message("message.item_not_owned"));
         } else {
-            showSystemMessage(I18n.message("message.item_cannot_use", "message.item_cannot_use", I18n.item(itemName)));
+            showSystemMessage(I18n.message("message.item_cannot_use",  I18n.resolve(itemName)));
         }
     }
 
@@ -1553,7 +1553,7 @@ public class MainGameScreen implements Screen {
         // GoN's Character::RangedAttack() requires a bow AND a quiver, both
         // equipped, before any arrow can be fired.
         if (!hasQuiverEquipped()) {
-            showSystemMessage(I18n.message("message.no_quiver_equipped", "message.no_quiver_equipped"));
+            showSystemMessage(I18n.message("message.no_quiver_equipped"));
             clearCurrentAttackTarget();
             return true;
         }
@@ -1627,17 +1627,17 @@ public class MainGameScreen implements Screen {
             return false;
         }
         if (!hasQuiverEquipped()) {
-            if (announce) showSystemMessage(I18n.message("message.no_quiver_equipped", "message.no_quiver_equipped"));
+            if (announce) showSystemMessage(I18n.message("message.no_quiver_equipped"));
             return false;
         }
         Vector2 playerPos = player.getPositionVector();
         Vector2 monsterPos = monster.getPosition();
         if (playerPos.dst(monsterPos) > BOW_ATTACK_RANGE) {
-            if (announce) showSystemMessage(I18n.message("message.target_too_far", "message.target_too_far"));
+            if (announce) showSystemMessage(I18n.message("message.target_too_far"));
             return false;
         }
         if (!hasLineOfSight(playerPos, monsterPos)) {
-            if (announce) showSystemMessage(I18n.message("message.target_no_line_of_sight", "message.target_no_line_of_sight"));
+            if (announce) showSystemMessage(I18n.message("message.target_no_line_of_sight"));
             return false;
         }
         return true;
@@ -1837,7 +1837,7 @@ public class MainGameScreen implements Screen {
         }
         if (candidates.isEmpty()) {
             clearSelectedMonster();
-            showSystemMessage(I18n.message("message.no_target_nearby", "message.no_target_nearby"));
+            showSystemMessage(I18n.message("message.no_target_nearby"));
             return false;
         }
         candidates.sort(java.util.Comparator.comparingDouble(m -> playerPos.dst2(m.getPosition())));
@@ -1940,8 +1940,8 @@ public class MainGameScreen implements Screen {
             return;
         }
         String label = result.parried()
-                ? I18n.message("combat.parried", "combat.parried")
-                : I18n.message("combat.missed", "combat.missed");
+                ? I18n.message("combat.parried")
+                : I18n.message("combat.missed");
         floatingDamage.spawnText(label, position.x, position.y, FloatingDamage.Type.MISS);
     }
 
@@ -2800,7 +2800,7 @@ public class MainGameScreen implements Screen {
             player.respawnAfterDeath();
             camera.position.set(respawnX, respawnY, 0f);
             camera.update();
-            showSystemMessage(I18n.message("message.player_died", "message.player_died",
+            showSystemMessage(I18n.message("message.player_died", 
                     penalties.xpLost(), penalties.droppedItems().size()));
             savePlayerState();
         });
@@ -3088,7 +3088,10 @@ public class MainGameScreen implements Screen {
         // Set up Monster input handler for monster interactions (pass player for distance checking)
         MonsterInputHandler monsterInputHandler = new MonsterInputHandler(camera, monsterManager, player, this::tryCastAttackSpell, this::tryBowAttack, systemMessage);
         monsterInputHandler.setOnAttackTargetSelected(this::beginAttackTarget);
-        monsterInputHandler.setOnClickedElsewhere(this::clearCurrentAttackTarget);
+        monsterInputHandler.setOnClickedElsewhere(() -> {
+            clearCurrentAttackTarget();
+            cancelActiveTargetedSpell();
+        });
 
         // Set up ground item pickup handler (loot dropped on the ground)
         GroundItemClickHandler groundItemClickHandler = new GroundItemClickHandler(camera, groundItemManager, player, systemMessage);
@@ -3109,9 +3112,11 @@ public class MainGameScreen implements Screen {
                     targetNearestMonster();
                     return true;
                 }
-                if (keycode == Input.Keys.ESCAPE && (currentAttackTarget != null || selectedMonster != null)) {
+                if (keycode == Input.Keys.ESCAPE && (currentAttackTarget != null || selectedMonster != null
+                        || selectedTargetedSpell != null)) {
                     clearCurrentAttackTarget();
                     clearSelectedMonster();
+                    cancelActiveTargetedSpell();
                     return true;
                 }
                 if (keycode == Input.Keys.F9) {

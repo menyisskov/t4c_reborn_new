@@ -47,7 +47,7 @@ public class GuiText extends AbstractGuiElement {
 
     public static GuiText translatedHeader(String key, String english, float x, float y) {
         return new GuiText(FontManager.getInstance().getHaettenschweilerFont(18, T4C_GOLD), x, y,
-                () -> I18n.t(key, key));
+                () -> I18n.key(key));
     }
 
     public static GuiText information(Supplier<String> text, float x, float y) {

@@ -10,29 +10,23 @@ class I18nTypographyTest {
 
     @Test
     void replacesCurlyApostrophesUnsupportedByBitmapFont() {
-        Lang previous = Lang.current();
-        try {
-            Lang.set(Lang.FR);
-            String translated = I18n.t("item.sign.sign_8", "fallback");
-            assertFalse(translated.contains("’"));
-            assertTrue(translated.contains("L'enseigne"));
-        } finally {
-            Lang.set(previous);
-        }
+        String translated = I18n.key("item.sign.sign_8");
+        assertFalse(translated.contains("’"));
+        assertTrue(translated.contains("L'enseigne"));
     }
 
     @Test
-    void resolvesIraltokDialogPlaceholderInFrench() {
-        Lang previous = Lang.current();
-        try {
-            Lang.set(Lang.FR);
+    void resolvesIraltokNamePlaceholder() {
+        assertEquals("Iraltok", I18n.resolve("${npc.iraltok}"));
+    }
 
-            assertEquals(
-                    "Moi, le chercheur de *connaissances*, vous salue, mon ami. "
-                            + "Je suis aussi un grand scribe arcanique et je peux vous enseigner plusieurs *sorts*.",
-                    I18n.npcDialog("Iraltok", "${npc.dialog.iraltok}"));
-        } finally {
-            Lang.set(previous);
-        }
+    @Test
+    void returnsPlainTextUnchanged() {
+        assertEquals("not a placeholder", I18n.resolve("not a placeholder"));
+    }
+
+    @Test
+    void keepsUnknownPlaceholderVisibleInsteadOfSilentlyBlanking() {
+        assertEquals("${npc.dialog.does_not_exist}", I18n.resolve("${npc.dialog.does_not_exist}"));
     }
 }

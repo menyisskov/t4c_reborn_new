@@ -1,7 +1,8 @@
-package com.perso.T4C.tools;
+package com.perso.T4C;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.AppearanceDefaultsBinaryIO;
 import com.perso.T4C.helper.AppearanceDefaultsCatalog;
@@ -26,7 +27,7 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.MonsterClan;
 import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.MonsterRegistry;
-import com.perso.T4C.npc.KeywordActionType;
+import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.NpcDef;
 import com.perso.T4C.npc.NpcRegistry;
 import com.perso.T4C.objects.ObjectPos;
@@ -709,15 +710,28 @@ public class T4CContentStudio {
             return;
         }
         if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-            List<NpcDef> defs = readItemsPayload(exchange).stream()
-                    .map(this::npcFromMap).filter(Objects::nonNull)
-                    .sorted(Comparator.comparing(NpcDef::getName, String.CASE_INSENSITIVE_ORDER))
-                    .toList();
+            List<NpcDef> defs;
+            try {
+                defs = readItemsPayload(exchange).stream()
+                        .map(this::npcFromMap).filter(Objects::nonNull)
+                        .sorted(Comparator.comparing(NpcDef::getName, String.CASE_INSENSITIVE_ORDER))
+                        .toList();
+            } catch (DialogValidationException e) {
+                sendBadRequest(exchange, e.getMessage());
+                return;
+            }
             NpcRegistry.save(defs);
             writeSaved(exchange, defs.size());
             return;
         }
         sendMethodNotAllowed(exchange);
+    }
+
+    /** Rejects a save whose dialogue graph is malformed (duplicate/dangling node ids, multiple greetings). */
+    private static final class DialogValidationException extends RuntimeException {
+        DialogValidationException(String message) {
+            super(message);
+        }
     }
 
     /**
@@ -732,7 +746,6 @@ public class T4CContentStudio {
             return;
         }
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("actions", Arrays.stream(KeywordActionType.values()).map(Enum::name).toList());
         response.put("bodyParts", Arrays.stream(BodyPart.values()).map(Enum::name).toList());
         response.put("spriteBases", loadAnimatedSpriteBases());
         response.put("spells", loadSpellNames());
@@ -747,7 +760,19 @@ public class T4CContentStudio {
                 "hide", "sneak", "search", "picklock", "armor_penetration", "two_weapons", "rob",
                 "strength", "dexterity", "endurance", "intelligence", "wisdom"
         ));
+        response.put("actionTypes", Arrays.stream(ActionType.values()).map(Enum::name).toList());
+        response.put("questFlagNames", loadQuestFlagNames());
         writeJson(exchange, response);
+    }
+
+    /**
+     * Suggestion list for the flag-name autocomplete in the dialogue editor,
+     * built from every {@code requiredFlag} and {@code SET_FLAG} action already
+     * in use across all NPCs. Not a validated registry — quest flags have no
+     * central definition, so a name outside this list is still accepted.
+     */
+    private List<String> loadQuestFlagNames() {
+        return List.of();
     }
 
     /**
@@ -931,17 +956,31 @@ public class T4CContentStudio {
         Map<String, String> query = parseQueryMap(exchange.getRequestURI().getRawQuery());
         String mapPath = query.getOrDefault("map", Paths.MAP);
         String kind = query.getOrDefault("kind", "monster");
-        File file = getSpawnFile(mapPath, kind);
+        File file = getSpawnFile(kind);
+        int mapZ = resolveMapZ(mapPath);
         if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-            List<SpawnBinaryIO.Entry> entries = readSpawns(file);
+            List<SpawnBinaryIO.Entry> entries = readSpawns(file).stream()
+                    .filter(entry -> entry.z == mapZ)
+                    .toList();
             writeCollection(exchange, entries.stream().map(this::spawnToMap).toList());
             return;
         }
         if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
             List<Map<String, Object>> items = readItemsPayload(exchange);
-            List<SpawnBinaryIO.Entry> entries = items.stream().map(item -> spawnFromMap(item, kind)).filter(Objects::nonNull).toList();
+            List<SpawnBinaryIO.Entry> edited = items.stream().map(item -> spawnFromMap(item, kind)).filter(Objects::nonNull).toList();
+            // Pin every edited spawn to the map being edited, so a new row left at the
+            // default z=0 is not filed under worldmap and then dropped by the merge below.
+            edited.forEach(entry -> entry.z = mapZ);
+            // The file spans every layer: keep the other maps' spawns, replace only this one's.
+            List<SpawnBinaryIO.Entry> entries = new ArrayList<>();
+            for (SpawnBinaryIO.Entry entry : readSpawns(file)) {
+                if (entry.z != mapZ) {
+                    entries.add(entry);
+                }
+            }
+            entries.addAll(edited);
             SpawnBinaryIO.write(file, entries);
-            writeSaved(exchange, entries.size());
+            writeSaved(exchange, edited.size());
             return;
         }
         sendMethodNotAllowed(exchange);
@@ -1452,7 +1491,7 @@ public class T4CContentStudio {
             String dropItem = str(drop.get("item")).trim();
             if (!dropItem.isEmpty()) loot.add(new MonsterDef.LootDrop(dropItem, flt(drop.get("chance"), 0f)));
         }
-        return new MonsterDef(name, I18n.english(str(item.get("displayName"))), integer(item.get("health"), 0),
+        return new MonsterDef(name, str(item.get("displayName")), integer(item.get("health"), 0),
                 integer(item.get("mana"), 0), integer(item.get("xpPerHit"), 0), integer(item.get("xpOnDeath"), 0),
                 integer(item.get("hitDamageMin"), 0), integer(item.get("hitDamageMax"), 0),
                 lng(item.get("respawnTime"), 0L), str(item.get("walkPattern")), emptyToNull(str(item.get("attackPattern"))),
@@ -1507,7 +1546,7 @@ public class T4CContentStudio {
     private ItemDefinition itemFromMap(Map<String, Object> item) {
         String key = str(item.get("key")).trim();
         if (key.isEmpty()) return null;
-        return new ItemDefinition(key, I18n.english(str(item.get("name"))), parseEnum(BodyPart.class, str(item.get("bodyPart")), null),
+        return new ItemDefinition(key, str(item.get("name")), parseEnum(BodyPart.class, str(item.get("bodyPart")), null),
                 emptyToNull(str(item.get("appearanceEquippedPrimary"))),
                 parseEnum(BodyPart.class, str(item.get("secondaryBodyPart")), null),
                 emptyToNull(str(item.get("appearanceEquippedSecondary"))),
@@ -1528,8 +1567,9 @@ public class T4CContentStudio {
 
     private Map<String, Object> spellToMap(SpellData spell) {
         Map<String, Object> item = new LinkedHashMap<>();
-        item.put("name", I18n.placeholder("spell", spell.getName()));
-        item.put("description", I18n.placeholderFor("spell.description", spell.getName(), spell.getDescription()));
+        item.put("key", spell.getKey());
+        item.put("name", I18n.resolve(spell.getName()));
+        item.put("description", I18n.resolve(spell.getDescription()));
         item.put("manaCost", spell.getManaCost());
         item.put("radius", spell.getRadius());
         item.put("minInt", spell.getMinInt());
@@ -1586,7 +1626,7 @@ public class T4CContentStudio {
     }
 
     private SpellData spellFromMap(Map<String, Object> item) {
-        String name = I18n.english(str(item.get("name"))).trim();
+        String name = str(item.get("name")).trim();
         if (name.isEmpty()) return null;
         SpellData.SpellBuff buff = null;
         if (item.get("buff") instanceof Map<?, ?> buffMap) {
@@ -1594,7 +1634,7 @@ public class T4CContentStudio {
             List<SpellData.SpellEffect> effects = new ArrayList<>();
             for (Map<String, Object> effect : listOfMaps(b.get("effects"))) {
                 effects.add(new SpellData.SpellEffect(str(effect.get("type")), str(effect.get("attribute")),
-                        str(effect.get("amount")), I18n.english(str(effect.get("description")))));
+                        str(effect.get("amount")), str(effect.get("description"))));
             }
             buff = new SpellData.SpellBuff(nullableInt(b.get("durationSeconds")), nullableBool(b.get("unlimited")), effects);
         }
@@ -1607,7 +1647,7 @@ public class T4CContentStudio {
             }
             originalEffects.add(new SpellData.T4cEffect(integer(effect.get("effectType"), 0), parameters));
         }
-        return new SpellData(name, I18n.english(str(item.get("description"))), str(item.get("manaCost")),
+        return new SpellData(name, str(item.get("description")), str(item.get("manaCost")),
                 integer(item.get("radius"), 0), integer(item.get("minInt"), 0), integer(item.get("minWis"), 0),
                 integer(item.get("minLevel"), 0), bool(item.get("attack"), false), bool(item.get("lineOfSight"), false),
                 str(item.get("iconId")), emptyToNull(str(item.get("projectileSpell"))), emptyToNull(str(item.get("impactSpell"))),
@@ -1678,7 +1718,10 @@ public class T4CContentStudio {
                     drawMapMarker(g, pos.x(), pos.y(), selectedX, selectedY, width, height, size, new Color(59, 130, 246), true);
                 }
             } else {
-                List<SpawnBinaryIO.Entry> spawns = readSpawns(getSpawnFile(mapFile.getPath(), kind));
+                int mapZ = resolveMapZ(mapFile.getPath());
+                List<SpawnBinaryIO.Entry> spawns = readSpawns(getSpawnFile(kind)).stream()
+                        .filter(spawn -> spawn.z == mapZ)
+                        .toList();
                 Color marker = "npc".equalsIgnoreCase(kind) || "npcs".equalsIgnoreCase(kind)
                         ? new Color(34, 197, 94)
                         : new Color(239, 68, 68);
@@ -1811,7 +1854,7 @@ public class T4CContentStudio {
         ObjectMapping mapping = new ObjectMapping(integer(item.get("id"), 0), str(item.get("sprite")),
                 bool(item.get("clickAnimate"), false), bool(item.get("mirror"), false),
                 str(item.get("animateSound")), str(item.get("reverseAnimateSound")),
-                bool(item.get("alwaysBehindEntities"), false), I18n.english(str(item.get("displayName"))),
+                bool(item.get("alwaysBehindEntities"), false), str(item.get("displayName")),
                 integer(item.get("depthTileOffsetY"), 0));
         return new ObjectMappingsBinaryIO.Entry(logicalName, mapping);
     }
@@ -1973,54 +2016,19 @@ public class T4CContentStudio {
     private Map<String, Object> npcToMap(NpcDef def) {
         Map<String, Object> item = new LinkedHashMap<>();
         item.put("name", def.getName());
-        item.put("displayName", I18n.placeholderFor("npc", def.getName(), def.getDisplayName()));
+        // The editor should show the human-readable value; persistence still
+        // converts it back to the localized placeholder when the NPC is saved.
+        item.put("displayName", I18n.resolve(def.getDisplayName()));
         item.put("spriteBase", def.getSpriteBase());
-        item.put("dialogText", I18n.placeholderFor("npc.dialog", def.getName(), def.getDialogText()));
-        item.put("dialogKeyword", I18n.placeholderFor("npc.keyword", def.getName(), def.getDialogKeyword()));
-        item.put("action", def.getAction() == null ? KeywordActionType.NONE.name() : def.getAction().name());
-        item.put("actionParam1", def.getActionParam1());
-        item.put("actionParam2", def.getActionParam2());
         item.put("patrolRadiusTiles", def.getPatrolRadiusTiles());
         List<Map<String, Object>> parts = new ArrayList<>();
-        if (def.getParts() != null) {
-            for (NpcDef.Part part : def.getParts()) {
-                Map<String, Object> partItem = new LinkedHashMap<>();
-                partItem.put("bodyPart", part.getBodyPart() == null ? BodyPart.BODY.name() : part.getBodyPart().name());
-                partItem.put("spriteBase", part.getSpriteBase());
-                parts.add(partItem);
-            }
+        for (NpcDef.Part part : def.getParts()) {
+            Map<String, Object> partItem = new LinkedHashMap<>();
+            partItem.put("bodyPart", part.getBodyPart() == null ? BodyPart.BODY.name() : part.getBodyPart().name());
+            partItem.put("spriteBase", part.getSpriteBase());
+            parts.add(partItem);
         }
         item.put("parts", parts);
-        List<Map<String, Object>> spells = new ArrayList<>();
-        if (def.getTaughtSpells() != null) {
-            for (NpcDef.TaughtSpell spell : def.getTaughtSpells()) {
-                Map<String, Object> spellItem = new LinkedHashMap<>();
-                spellItem.put("spellName", spell.getSpellName());
-                spells.add(spellItem);
-            }
-        }
-        item.put("taughtSpells", spells);
-        List<Map<String, Object>> shopItemsList = new ArrayList<>();
-        if (def.getShopItems() != null) {
-            for (NpcDef.ShopItem si : def.getShopItems()) {
-                Map<String, Object> row = new LinkedHashMap<>();
-                row.put("itemKey", si.getItemKey());
-                row.put("price", si.getPrice());
-                shopItemsList.add(row);
-            }
-        }
-        item.put("shopItems", shopItemsList);
-        List<Map<String, Object>> trainList = new ArrayList<>();
-        if (def.getTrainableStats() != null) {
-            for (NpcDef.TrainableStat ts : def.getTrainableStats()) {
-                Map<String, Object> row = new LinkedHashMap<>();
-                row.put("statId", ts.getStatId());
-                row.put("costPerPoint", ts.getCostPerPoint());
-                row.put("maxPoints", ts.getMaxPoints());
-                trainList.add(row);
-            }
-        }
-        item.put("trainableStats", trainList);
         List<String> fleeShouts = new ArrayList<>();
         for (int i = 0; i < def.getFleeShouts().size(); i++) {
             fleeShouts.add(I18n.placeholderForKey(
@@ -2028,6 +2036,23 @@ public class T4CContentStudio {
                     def.getFleeShouts().get(i)));
         }
         item.put("fleeShouts", fleeShouts);
+        item.put("welcomeText", I18n.resolve(def.getWelcomeText()));
+        List<Map<String, Object>> topics = new ArrayList<>();
+        for (NpcDef.DialogTopic topic : def.getTopics()) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("keywords", topic.getKeywords().stream().map(I18n::resolve).toList());
+            row.put("response", I18n.resolve(topic.getResponse()));
+            List<Map<String, Object>> actions = new ArrayList<>();
+            for (NpcDef.Action action : topic.getActions()) {
+                Map<String, Object> actionRow = new LinkedHashMap<>();
+                actionRow.put("type", action.getType() == null ? null : action.getType().name());
+                actionRow.put("targets", action.getTargets());
+                actions.add(actionRow);
+            }
+            row.put("actions", actions);
+            topics.add(row);
+        }
+        item.put("topics", topics);
         return item;
     }
 
@@ -2045,48 +2070,21 @@ public class T4CContentStudio {
                 parts.add(new NpcDef.Part(bodyPart, part.spriteBase.trim()));
             }
         }
-        List<NpcDef.TaughtSpell> taughtSpells = new ArrayList<>();
-        if (request.taughtSpells != null) {
-            for (NpcTaughtSpellRequest spell : request.taughtSpells) {
-                if (spell == null || spell.spellName == null || spell.spellName.trim().isEmpty()) {
-                    continue;
-                }
-                taughtSpells.add(new NpcDef.TaughtSpell(spell.spellName.trim(), 0));
-            }
-        }
-        List<NpcDef.ShopItem> shopItems = new ArrayList<>();
-        if (request.shopItems != null) {
-            for (NpcShopItemRequest si : request.shopItems) {
-                if (si == null || si.itemKey == null || si.itemKey.trim().isEmpty()) continue;
-                shopItems.add(new NpcDef.ShopItem(si.itemKey.trim(), si.price));
-            }
-        }
-        List<NpcDef.TrainableStat> trainableStats = new ArrayList<>();
-        if (request.trainableStats != null) {
-            for (NpcTrainableStatRequest ts : request.trainableStats) {
-                if (ts == null || ts.statId == null || ts.statId.trim().isEmpty()) continue;
-                trainableStats.add(new NpcDef.TrainableStat(ts.statId.trim(), ts.costPerPoint, Math.max(0, ts.maxPoints)));
-            }
-        }
-        KeywordActionType action = parseEnum(KeywordActionType.class, request.action, KeywordActionType.NONE);
-        // The web editor has no flee-shout field yet, so carry the stored value
-        // over instead of letting an unrelated edit clear it.
+        // The web editor has no flee-shout field yet, so it is carried over
+        // instead of letting an unrelated edit clear it. The dialogue graph is
+        // not reachable through this request type (see npcFromMap instead).
         NpcDef existing = NpcRegistry.findByName(request.name.trim());
         return new NpcDef(
                 request.name.trim(),
-                trimToEmpty(I18n.english(request.displayName)),
+                // Saved as sent: the editor round-trips the ${...} placeholder, and
+                // resolving here would bake display text back into npcs.bin.
+                trimToEmpty(request.displayName),
                 parts,
                 emptyToNull(request.spriteBase),
-                emptyToNull(I18n.english(request.dialogText)),
-                emptyToNull(I18n.english(request.dialogKeyword)),
-                action,
-                request.actionParam1,
-                request.actionParam2,
                 Math.max(0, request.patrolRadiusTiles),
-                taughtSpells,
-                shopItems,
-                trainableStats,
-                existing == null ? List.of() : existing.getFleeShouts()
+                existing == null ? List.of() : existing.getFleeShouts(),
+                existing == null ? "" : existing.getWelcomeText(),
+                existing == null ? List.of() : existing.getTopics()
         );
     }
 
@@ -2095,6 +2093,9 @@ public class T4CContentStudio {
         if (name.isEmpty()) {
             return null;
         }
+        if (str(item.get("welcomeText")).isBlank()) {
+            throw new DialogValidationException("NPC '" + name + "': welcomeText is required");
+        }
         List<NpcDef.Part> parts = new ArrayList<>();
         for (Map<String, Object> part : listOfMaps(item.get("parts"))) {
             String sprite = str(part.get("spriteBase")).trim();
@@ -2102,35 +2103,176 @@ public class T4CContentStudio {
                 parts.add(new NpcDef.Part(parseEnum(BodyPart.class, str(part.get("bodyPart")), BodyPart.BODY), sprite));
             }
         }
-        List<NpcDef.TaughtSpell> taughtSpells = new ArrayList<>();
-        for (Map<String, Object> spell : listOfMaps(item.get("taughtSpells"))) {
-            String spellName = str(spell.get("spellName")).trim();
-            if (!spellName.isEmpty()) {
-                taughtSpells.add(new NpcDef.TaughtSpell(spellName, 0));
+        NpcDef existing = NpcRegistry.findByName(name);
+        List<NpcDef.DialogTopic> topics = topicsFromMap(name,
+                existing == null ? List.of() : existing.getTopics(), listOfMaps(item.get("topics")));
+        Map<String, String> welcomeUpdate = new LinkedHashMap<>();
+        String welcome = resolveEditedText(existing == null ? null : existing.getWelcomeText(),
+                str(item.get("welcomeText")), "npc.welcome." + I18n.normalizedKey(name), welcomeUpdate);
+        if (!welcomeUpdate.isEmpty()) I18n.update(welcomeUpdate);
+        return new NpcDef(name, str(item.get("displayName")), parts, emptyToNull(str(item.get("spriteBase"))),
+                integer(item.get("patrolRadiusTiles"), 0), stringList(item.get("fleeShouts")),
+                welcome, topics);
+    }
+
+    private List<NpcDef.DialogTopic> topicsFromMap(String npcName, List<NpcDef.DialogTopic> existing,
+                                                    List<Map<String, Object>> rows) {
+        List<NpcDef.DialogTopic> topics = new ArrayList<>();
+        Map<String, String> catalogueUpdates = new LinkedHashMap<>();
+        for (int index = 0; index < rows.size(); index++) {
+            Map<String, Object> row = rows.get(index);
+            NpcDef.DialogTopic old = index < existing.size() ? existing.get(index) : null;
+            List<String> keywords = new ArrayList<>();
+            List<String> rawKeywords = stringList(row.get("keywords"));
+            for (int k = 0; k < rawKeywords.size(); k++) {
+                String oldKeyword = old != null && k < old.getKeywords().size() ? old.getKeywords().get(k) : null;
+                keywords.add(resolveEditedText(oldKeyword, rawKeywords.get(k),
+                        "npc.topic_keyword." + I18n.normalizedKey(npcName) + "." + index + "." + k,
+                        catalogueUpdates));
+            }
+            List<NpcDef.Action> actions = new ArrayList<>();
+            for (Map<String, Object> actionRow : listOfMaps(row.get("actions"))) {
+                ActionType type = parseEnum(ActionType.class, str(actionRow.get("type")), null);
+                if (type == null) throw new DialogValidationException("NPC '" + npcName + "': invalid action type");
+                List<String> targets = stringList(actionRow.get("targets")).stream()
+                        .map(String::trim).filter(value -> !value.isEmpty()).toList();
+                validateActionTargets(npcName, type, targets);
+                actions.add(new NpcDef.Action(type, targets));
+            }
+            String response = resolveEditedText(old == null ? null : old.getResponse(), str(row.get("response")),
+                    "npc.topic." + I18n.normalizedKey(npcName) + "." + index, catalogueUpdates);
+            topics.add(new NpcDef.DialogTopic(keywords, response, actions));
+        }
+        if (!catalogueUpdates.isEmpty()) I18n.update(catalogueUpdates);
+        return topics;
+    }
+
+    private void validateActionTargets(String npcName, ActionType type, List<String> targets) {
+        if (type == ActionType.GIVE_ITEM && targets.size() != 1) {
+            throw new DialogValidationException("NPC '" + npcName + "': GIVE_ITEM requires exactly one item");
+        }
+        if ((type == ActionType.HEAL || type == ActionType.END_CONVERSATION) && !targets.isEmpty()) {
+            throw new DialogValidationException("NPC '" + npcName + "': " + type + " accepts no target");
+        }
+        if (type == ActionType.OPEN_SPELL_LEARNING) {
+            for (String target : targets) if (SpellRegistry.findByName(target) == null)
+                throw new DialogValidationException("NPC '" + npcName + "': unknown spell '" + target + "'");
+        } else if (type == ActionType.OPEN_SHOP || type == ActionType.GIVE_ITEM) {
+            for (String target : targets) if (ItemRegistry.findByKey(target) == null)
+                throw new DialogValidationException("NPC '" + npcName + "': unknown item '" + target + "'");
+        } else if (type == ActionType.OPEN_SKILL_LEARNING) {
+            Set<String> valid = Set.of("attack", "archery", "dodge", "peek", "stun_blow", "powerful_blow",
+                    "rapid_healing", "first_aid", "parry", "critical_strike", "hide", "sneak", "search",
+                    "picklock", "armor_penetration", "two_weapons", "rob", "strength", "dexterity",
+                    "endurance", "intelligence", "wisdom");
+            for (String target : targets) if (!valid.contains(target))
+                throw new DialogValidationException("NPC '" + npcName + "': unknown skill '" + target + "'");
+        }
+    }
+
+    /**
+     * Builds the dialogue graph from the editor payload, validating structural
+     * integrity and writing edited reply/keyword text into the translation
+     * catalogue under each node's id-based key.
+     *
+     * <p>Unlike the other NPC fields, the graph editor can create, delete, and
+     * reconnect nodes, so the full node list is rebuilt from the payload rather
+     * than carried over from {@code existingNodes} — that list is consulted only
+     * to detect which response/keyword text actually changed.
+     *
+     * @throws DialogValidationException if a node id is missing/duplicated, a
+     *         GOTO_NODE/fallbackNode target does not resolve within the same
+     *         payload, or more than one node is marked as the greeting.
+     */
+    private List<NpcDef.DialogNode> dialogNodesFromMap(String npcName, List<NpcDef.DialogNode> existingNodes,
+                                                         List<Map<String, Object>> payloadNodes) {
+        if (payloadNodes.isEmpty()) {
+            return List.of();
+        }
+        Map<String, NpcDef.DialogNode> existingById = new LinkedHashMap<>();
+        for (NpcDef.DialogNode node : existingNodes) {
+            existingById.put(node.getId(), node);
+        }
+        Set<String> ids = new LinkedHashSet<>();
+        Set<String> greetings = new LinkedHashSet<>();
+        List<NpcDef.DialogNode> nodes = new ArrayList<>();
+        Map<String, String> catalogueUpdates = new LinkedHashMap<>();
+        for (Map<String, Object> row : payloadNodes) {
+            String id = str(row.get("id")).trim();
+            if (id.isEmpty()) {
+                throw new DialogValidationException("NPC '" + npcName + "': every dialogue node needs an id");
+            }
+            if (!ids.add(id)) {
+                throw new DialogValidationException("NPC '" + npcName + "': duplicate dialogue node id '" + id + "'");
+            }
+            boolean greeting = bool(row.get("greeting"), false);
+            if (greeting) {
+                greetings.add(id);
+            }
+            NpcDef.DialogNode existingNode = existingById.get(id);
+            String responseKey = "npc.topic." + I18n.normalizedKey(npcName) + "." + id;
+            String editedResponse = str(row.get("response"));
+            String response = resolveEditedText(existingNode == null ? null : existingNode.getResponse(),
+                    editedResponse, responseKey, catalogueUpdates);
+            List<String> keywords = new ArrayList<>();
+            List<String> rawKeywords = stringList(row.get("keywords"));
+            List<String> existingKeywords = existingNode == null ? List.of() : existingNode.getKeywords();
+            for (int k = 0; k < rawKeywords.size(); k++) {
+                String keywordKey = "npc.topic_keyword." + I18n.normalizedKey(npcName) + "." + id + "." + k;
+                String existingKeyword = k < existingKeywords.size() ? existingKeywords.get(k) : null;
+                keywords.add(resolveEditedText(existingKeyword, rawKeywords.get(k), keywordKey, catalogueUpdates));
+            }
+            List<NpcDef.Action> actions = new ArrayList<>();
+            for (Map<String, Object> actionRow : listOfMaps(row.get("actions"))) {
+                ActionType type = parseEnum(ActionType.class, str(actionRow.get("type")), null);
+                if (type == null) continue;
+                actions.add(new NpcDef.Action(type,
+                        emptyToNull(str(actionRow.get("stringParam1"))),
+                        emptyToNull(str(actionRow.get("stringParam2"))),
+                        integer(actionRow.get("intParam1"), 0),
+                        integer(actionRow.get("intParam2"), 0)));
+            }
+            nodes.add(new NpcDef.DialogNode(id, keywords, response,
+                    emptyToNull(str(row.get("requiredFlag"))), integer(row.get("requiredFlagValue"), 0),
+                    emptyToNull(str(row.get("requiredItem"))), greeting,
+                    emptyToNull(str(row.get("fallbackNode"))), actions));
+        }
+        if (greetings.size() > 1) {
+            throw new DialogValidationException("NPC '" + npcName + "': only one dialogue node may be the greeting");
+        }
+        for (NpcDef.DialogNode node : nodes) {
+            if (node.getFallbackNode() != null && !ids.contains(node.getFallbackNode())) {
+                throw new DialogValidationException("NPC '" + npcName + "': node '" + node.getId()
+                        + "' has a fallbackNode that does not exist: '" + node.getFallbackNode() + "'");
             }
         }
-        List<NpcDef.ShopItem> shopItems = new ArrayList<>();
-        for (Map<String, Object> si : listOfMaps(item.get("shopItems"))) {
-            String itemKey = str(si.get("itemKey")).trim();
-            if (!itemKey.isEmpty()) {
-                shopItems.add(new NpcDef.ShopItem(itemKey, longVal(si.get("price"), 0L)));
-            }
+        if (!catalogueUpdates.isEmpty()) {
+            I18n.update(catalogueUpdates);
         }
-        List<NpcDef.TrainableStat> trainableStats = new ArrayList<>();
-        for (Map<String, Object> ts : listOfMaps(item.get("trainableStats"))) {
-            String statId = str(ts.get("statId")).trim();
-            if (!statId.isEmpty()) {
-                trainableStats.add(new NpcDef.TrainableStat(statId,
-                        integer(ts.get("costPerPoint"), 0),
-                        Math.max(0, integer(ts.get("maxPoints"), 0))));
+        return nodes;
+    }
+
+    /**
+     * Resolves what a node's response/keyword text should be saved as: if the
+     * edited text differs from what the existing placeholder currently resolves
+     * to, the existing key is queued for a catalogue update (or a fresh key is
+     * minted when there was no placeholder yet); otherwise the original
+     * placeholder is kept untouched.
+     */
+    private String resolveEditedText(String existingPlaceholder, String editedText, String freshKey,
+                                      Map<String, String> catalogueUpdates) {
+        String existingKey = I18n.keyOf(existingPlaceholder);
+        if (existingKey != null) {
+            if (!editedText.equals(I18n.resolve(existingPlaceholder))) {
+                catalogueUpdates.put(existingKey, editedText);
             }
+            return existingPlaceholder;
         }
-        return new NpcDef(name, I18n.english(str(item.get("displayName"))), parts, emptyToNull(str(item.get("spriteBase"))),
-                emptyToNull(I18n.english(str(item.get("dialogText")))), emptyToNull(I18n.english(str(item.get("dialogKeyword")))),
-                parseEnum(KeywordActionType.class, str(item.get("action")), KeywordActionType.NONE),
-                integer(item.get("actionParam1"), 0), integer(item.get("actionParam2"), 0),
-                integer(item.get("patrolRadiusTiles"), 0), taughtSpells, shopItems, trainableStats,
-                stringList(item.get("fleeShouts")).stream().map(I18n::english).toList());
+        if (editedText == null || editedText.isBlank()) {
+            return editedText;
+        }
+        catalogueUpdates.put(freshKey, editedText);
+        return I18n.placeholder(freshKey);
     }
 
     private List<String> loadAnimatedSpriteBases() {
@@ -2163,7 +2305,8 @@ public class T4CContentStudio {
         List<String> names = new ArrayList<>();
         for (SpellData spell : SpellRegistry.load()) {
             if (spell != null && spell.getName() != null && !spell.getName().isBlank()) {
-                names.add(spell.getName());
+                String key = I18n.keyOf(spell.getName());
+                names.add(key == null ? spell.getName() : key);
             }
         }
         names.sort(String.CASE_INSENSITIVE_ORDER);
@@ -2506,12 +2649,28 @@ public class T4CContentStudio {
         return values;
     }
 
-    private File getSpawnFile(String mapPath, String kind) {
-        File mapFile = new File(mapPath == null || mapPath.isBlank() ? Paths.MAP : mapPath);
-        File parent = mapFile.getParentFile();
-        String baseName = stripExtension(mapFile.getName());
-        String suffix = "npc".equalsIgnoreCase(kind) || "npcs".equalsIgnoreCase(kind) ? ".npcs.bin" : ".monsters.bin";
-        return new File(parent != null ? parent : new File("."), baseName + suffix);
+    private static boolean isNpcKind(String kind) {
+        return "npc".equalsIgnoreCase(kind) || "npcs".equalsIgnoreCase(kind);
+    }
+
+    /**
+     * The shared multi-map spawn file the game reads, as in {@code NPCManager.readSpawnsForMap}.
+     * Entries for every layer live in one file, so callers must scope reads and writes by z.
+     */
+    private File getSpawnFile(String kind) {
+        return new File(isNpcKind(kind) ? Paths.NPC_SPAWNS_BIN : Paths.MONSTER_SPAWNS_BIN);
+    }
+
+    /** Layer index of {@code mapPath}, matching {@code NPCManager.resolveMapZ}. */
+    private int resolveMapZ(String mapPath) {
+        String normalized = new File(mapPath == null || mapPath.isBlank() ? Paths.MAP : mapPath)
+                .getPath().replace('\\', '/');
+        for (MapDefinition map : MapDefinition.values()) {
+            if (new File(map.getMapPath()).getPath().replace('\\', '/').equals(normalized)) {
+                return map.getZ();
+            }
+        }
+        return 0;
     }
 
     private List<SpawnBinaryIO.Entry> readSpawns(File file) {
@@ -2839,16 +2998,8 @@ public class T4CContentStudio {
         private String name;
         private String displayName;
         private String spriteBase;
-        private String dialogText;
-        private String dialogKeyword;
-        private String action;
-        private int actionParam1;
-        private int actionParam2;
         private int patrolRadiusTiles;
         private List<NpcPartRequest> parts;
-        private List<NpcTaughtSpellRequest> taughtSpells;
-        private List<NpcShopItemRequest> shopItems;
-        private List<NpcTrainableStatRequest> trainableStats;
     }
 
     /**
@@ -2864,25 +3015,6 @@ public class T4CContentStudio {
     private static class NpcPartRequest {
         private String bodyPart;
         private String spriteBase;
-    }
-
-    /**
-     * Represents a taught spell row in an NPC save request.
-     */
-    private static class NpcTaughtSpellRequest {
-        private String spellName;
-        private int price;
-    }
-
-    private static class NpcShopItemRequest {
-        private String itemKey;
-        private long price;
-    }
-
-    private static class NpcTrainableStatRequest {
-        private String statId;
-        private int costPerPoint;
-        private int maxPoints;
     }
 
     /**

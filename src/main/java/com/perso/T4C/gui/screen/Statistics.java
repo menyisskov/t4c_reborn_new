@@ -85,14 +85,14 @@ public class Statistics extends GuiScreenBase {
         var gold = Color.valueOf("F2B705");
         labels.add(new GuiBoxedText(FontManager.getInstance().getHaettenschweilerFont(18, gold),
                 x + 221f, y + 2f, 134f, 19f,
-                () -> com.perso.T4C.i18n.I18n.t("ui.character_sheet", "ui.character_sheet"), () -> gold).shrinkToFit());
+                () -> com.perso.T4C.i18n.I18n.key("ui.character_sheet"), () -> gold).shrinkToFit());
         // Stat bars on the left (x 51-140, pitch 43). Base includes any pending
         // (not-yet-applied) spin-up points so the number moves immediately on click.
-        labels.add(buffedStatLabel(font, "Strength",     "strength",     x + 51f, y + 50f,  90f, 16f, () -> player.getStrength() + pending("strength"),         player::getEffectiveStrength));
-        labels.add(buffedStatLabel(font, "Endurance",    "constitution", x + 51f, y + 93f,  90f, 16f, () -> player.getEndurance() + pending("endurance"),       player::getEffectiveEndurance));
-        labels.add(buffedStatLabel(font, "Dexterity",    "dexterity",    x + 51f, y + 136f, 90f, 16f, () -> player.getDexterity() + pending("dexterity"),       player::getEffectiveDexterity));
-        labels.add(buffedStatLabel(font, "Wisdom",       "wisdom",       x + 51f, y + 179f, 90f, 16f, () -> player.getWisdom() + pending("wisdom"),             player::getEffectiveWisdom));
-        labels.add(buffedStatLabel(font, "Intelligence", "intelligence", x + 51f, y + 222f, 90f, 16f, () -> player.getIntelligence() + pending("intelligence"), player::getEffectiveIntelligence));
+        labels.add(buffedStatLabel(font, I18n.key("ui.strength"),     "strength",     x + 51f, y + 50f,  90f, 16f, () -> player.getStrength() + pending("strength"),         player::getEffectiveStrength));
+        labels.add(buffedStatLabel(font, I18n.key("ui.endurance"),    "constitution", x + 51f, y + 93f,  90f, 16f, () -> player.getEndurance() + pending("endurance"),       player::getEffectiveEndurance));
+        labels.add(buffedStatLabel(font, I18n.key("ui.dexterity"),    "dexterity",    x + 51f, y + 136f, 90f, 16f, () -> player.getDexterity() + pending("dexterity"),       player::getEffectiveDexterity));
+        labels.add(buffedStatLabel(font, I18n.key("ui.wisdom"),       "wisdom",       x + 51f, y + 179f, 90f, 16f, () -> player.getWisdom() + pending("wisdom"),             player::getEffectiveWisdom));
+        labels.add(buffedStatLabel(font, I18n.key("ui.intelligence"), "intelligence", x + 51f, y + 222f, 90f, 16f, () -> player.getIntelligence() + pending("intelligence"), player::getEffectiveIntelligence));
         // Middle column: ornate AC plaque, level circle, HP and mana boxes.
         labels.add(new GuiBoxedText(font, x + 255f, y + 50f, 28f, 20f, () -> String.valueOf(player.getLevel()), () -> Color.WHITE));
         labels.add(new GuiBoxedText(font, x + 202f, y + 136f, 90f, 17f,
@@ -107,21 +107,21 @@ public class Statistics extends GuiScreenBase {
                 () -> String.valueOf(player.getCurrentXp()), () -> Color.WHITE));
         labels.add(new GuiBoxedText(font, x + 231f, y + 299f, 176f, 15f,
                 () -> String.valueOf(player.getXpToNextLevel()), () -> Color.WHITE));
-        labels.add(buffedStatLabel(font, "Armor Class", "armorclass", x + 217f, y + 52f, 35f, 15f,
+        labels.add(buffedStatLabel(font, I18n.key("ui.armor_class"), "armorclass", x + 217f, y + 52f, 35f, 15f,
                 () -> displayedArmorClass(ArmorClassRules.trueArmorClass(player)),
                 () -> displayedArmorClass(ArmorClassRules.effectiveArmorClass(player))));
         var infoFont = FontManager.getInstance().getJetBrainsMonoFont(11, gold);
         addCombatSkillRows(font);
         labels.add(new GuiBoxedText(infoFont, x + 37f, y + 278f, 176f, 17f,
-                () -> "Experience", () -> gold));
+                () -> I18n.key("ui.experience"), () -> gold));
         labels.add(new GuiBoxedText(infoFont, x + 231f, y + 278f, 176f, 17f,
-                () -> "XP to next Level", () -> gold));
+                () -> I18n.key("ui.xp_to_next_level"), () -> gold));
         labels.add(new GuiBoxedText(infoFont, x + 424f, y + 278f, 114f, 17f,
-                () -> "Karma", () -> gold));
+                () -> I18n.key("ui.karma"), () -> gold));
         labels.add(new GuiBoxedText(infoFont, x + 330f, y + 99f, 69f, 16f,
-                () -> "Stat Pts.", () -> gold));
+                () -> I18n.key("ui.stat_points_short"), () -> gold));
         labels.add(new GuiBoxedText(infoFont, x + 330f, y + 150f, 69f, 16f,
-                () -> "Skill Pts.", () -> gold));
+                () -> I18n.key("ui.skill_points_short"), () -> gold));
     }
 
     // Primary-attribute rows (green zones from the screenshot): spin up/down
@@ -177,7 +177,7 @@ public class Statistics extends GuiScreenBase {
         var chewy = FontManager.getInstance().getHaettenschweilerFont(13, gold);
         applyButton = new GuiButton(normal, hover != null ? hover : normal, pressed != null ? pressed : normal,
                 x + APPLY_BTN_X, y + APPLY_BTN_Y, this::applyPendingAllocations)
-                .withLabel(chewy, () -> com.perso.T4C.i18n.I18n.t("ui.apply", "ui.apply"));
+                .withLabel(chewy, () -> com.perso.T4C.i18n.I18n.key("ui.apply"));
         buttons.add(applyButton);
     }
 
@@ -267,7 +267,7 @@ public class Statistics extends GuiScreenBase {
             }
             float valueX = x + SKILL_VALUE_BOX[0];
             float valueY = y + SKILL_VALUE_BOX[1] + i * SKILL_ROW_PITCH;
-            String skillLabel = com.perso.T4C.i18n.I18n.t("skill." + skillId, "skill." + skillId);
+            String skillLabel = com.perso.T4C.i18n.I18n.key("skill." + skillId);
             labels.add(buffedStatLabel(font, skillLabel, "skill:" + skillId,
                     valueX, valueY, SKILL_VALUE_BOX[2], SKILL_VALUE_BOX[3],
                     () -> player.getSkillLevel(skillId), () -> player.getEffectiveSkillLevel(skillId)));
@@ -335,8 +335,8 @@ public class Statistics extends GuiScreenBase {
                 continue;
             }
             text.append('\n')
-                    .append(I18n.tooltipLabel("Buffed by")).append(' ')
-                    .append(I18n.spellName(buff.getSpellName()))
+                    .append(I18n.key("tooltip.buffed_by")).append(' ')
+                    .append(I18n.resolve(buff.getSpellName()))
                     .append(' ')
                     .append('(')
                     .append(amount > 0 ? "+" : "")

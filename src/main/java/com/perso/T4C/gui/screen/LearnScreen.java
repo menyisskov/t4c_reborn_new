@@ -17,7 +17,6 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
-import com.perso.T4C.npc.NpcDef;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
@@ -25,7 +24,6 @@ import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.SystemMessage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +35,7 @@ import java.util.Map;
  * {@link ShopScreen}'s GUI_BackBuy): a skill list with Skill Name / Price /
  * Pts. columns, selection lamps on the left, a scrollbar and a GOLD panel
  * (On Hand / Cost / Total) on the right. Clicking a row selects it (yellow
- * lamp + Cost update); double-clicking learns the spell or reports the
- * missing requirement via system message.
+ * lamp + Cost update); learning is confirmed with the APPRENDRE button.
  */
 public class LearnScreen extends GuiListScreen {
 
@@ -92,8 +89,6 @@ public class LearnScreen extends GuiListScreen {
     private static final float CLOSE_X = 552f;
     private static final float CLOSE_Y = 0f;
 
-    private static final float DOUBLE_CLICK_MS = 350f;
-
     private static final Color GOLD    = Color.valueOf("F2B705");
     private static final Color WHITE   = Color.WHITE;
     private static final Color BLOCKED = Color.valueOf("E33300");
@@ -104,11 +99,6 @@ public class LearnScreen extends GuiListScreen {
     private LearnEntry selected = null;
     // Basket: each spell or skill point queued with the spin buttons costs 5 skill points.
     private static final int SKILL_POINTS_PER_SPELL = 5;
-    private long lastClickTime;
-    private LearnEntry lastClickEntry;
-    private static final Map<String, SpellData> spellByName = new HashMap<>();
-    private static boolean registryReady = false;
-
     // Skill id → icon sprite, from the original client's SkillIcons table
     // (GoN VisualObjectList.cpp, SkillIcons.BindSprite calls).
     private static final Map<String, String> SKILL_ICONS = Map.ofEntries(
@@ -128,17 +118,16 @@ public class LearnScreen extends GuiListScreen {
             Map.entry("armor_penetration", "64kIconArmorPierce"),
             Map.entry("rob",               "64kIconRob"));
 
-    public LearnScreen(Player player, List<NpcDef.TaughtSpell> taughtSpells) {
-        this(player, taughtSpells, null);
+    public LearnScreen(Player player, List<String> spellIds) {
+        this(player, spellIds, null);
     }
 
     /** Same screen, fed with trainable skills instead of spells (e.g. Ortanalas). */
-    public static LearnScreen forTraining(Player player, List<NpcDef.TrainableStat> stats) {
-        return new LearnScreen(player, null, stats);
+    public static LearnScreen forTraining(Player player, List<String> skillIds) {
+        return new LearnScreen(player, null, skillIds);
     }
 
-    private LearnScreen(Player player, List<NpcDef.TaughtSpell> taughtSpells,
-                             List<NpcDef.TrainableStat> trainableStats) {
+    private LearnScreen(Player player, List<String> spellIds, List<String> skillIds) {
         this.player = player;
         try {
             background = SpriteLoader.getInstance().getRegionFromSpriteName("GUIBackSkill");
@@ -149,8 +138,8 @@ public class LearnScreen extends GuiListScreen {
         addCloseButton();
         addStaticLabels();
         addLearnButton();
-        loadEntries(taughtSpells);
-        loadSkillEntries(trainableStats);
+        loadEntries(spellIds);
+        loadSkillEntries(skillIds);
         if (!entries.isEmpty()) {
             selected = entries.get(0);
         }
@@ -168,18 +157,18 @@ public class LearnScreen extends GuiListScreen {
             return;
         }
         BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
-        labels.add(boxed(chewy, TITLE_BOX, 0f, () -> I18n.t("ui.learn", "ui.learn"), GOLD).shrinkToFit());
-        labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.t("ui.gold", "ui.gold"), GOLD).shrinkToFit());
+        labels.add(boxed(chewy, TITLE_BOX, 0f, () -> I18n.key("ui.learn"), GOLD).shrinkToFit());
+        labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.key("ui.gold"), GOLD).shrinkToFit());
 
         BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
-        labels.add(boxed(sm, HDR_NAME_BOX,  0f, () -> I18n.t("ui.skill_name", "ui.skill_name"), GOLD));
-        labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.t("ui.price", "ui.price"), GOLD));
-        labels.add(boxed(sm, HDR_PTS_BOX,   0f, () -> I18n.t("ui.pts_short", "ui.pts_short"), GOLD));
+        labels.add(boxed(sm, HDR_NAME_BOX,  0f, () -> I18n.key("ui.skill_name"), GOLD));
+        labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.key("ui.price"), GOLD));
+        labels.add(boxed(sm, HDR_PTS_BOX,   0f, () -> I18n.key("ui.pts_short"), GOLD));
 
-        labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.t("ui.on_hand", "ui.on_hand"), GOLD));
-        labels.add(boxed(sm, COST_LBL_BOX,   0f, () -> I18n.t("ui.cost", "ui.cost"), GOLD));
-        labels.add(boxed(sm, TOTAL_LBL_BOX,  0f, () -> I18n.t("ui.total", "ui.total"), GOLD));
-        labels.add(boxed(sm, SKILL_LBL_BOX,  0f, () -> I18n.t("ui.skill_points", "ui.skill_points"), GOLD).shrinkToFit());
+        labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.key("ui.on_hand"), GOLD));
+        labels.add(boxed(sm, COST_LBL_BOX,   0f, () -> I18n.key("ui.cost"), GOLD));
+        labels.add(boxed(sm, TOTAL_LBL_BOX,  0f, () -> I18n.key("ui.total"), GOLD));
+        labels.add(boxed(sm, SKILL_LBL_BOX,  0f, () -> I18n.key("ui.skill_points"), GOLD).shrinkToFit());
     }
 
     /** APPRENDRE button: learns every basketed spell (gold + skill points). */
@@ -194,37 +183,36 @@ public class LearnScreen extends GuiListScreen {
         buttons.add(new GuiButton(normal, hover != null ? hover : normal,
                 pressed != null ? pressed : normal,
                 x + LEARN_BTN_X, y + LEARN_BTN_Y, this::learnBasket)
-                .withLabel(chewy, () -> I18n.t("ui.learn", "ui.learn")));
+                .withLabel(chewy, () -> I18n.key("ui.learn")));
     }
 
     // ── Entries ───────────────────────────────────────────────────────────────
 
-    private void loadEntries(List<NpcDef.TaughtSpell> taughtSpells) {
+    private void loadEntries(List<String> spellIds) {
         entries.clear();
-        if (taughtSpells == null) {
+        if (spellIds == null) {
             return;
         }
-        ensureRegistry();
-        for (NpcDef.TaughtSpell taught : taughtSpells) {
-            if (taught == null || taught.getSpellName() == null || taught.getSpellName().isEmpty()) {
+        for (String spellId : spellIds) {
+            if (spellId == null || spellId.isEmpty()) {
                 continue;
             }
-            SpellData data = spellByName.get(taught.getSpellName());
+            SpellData data = SpellRegistry.findByName(spellId);
             if (data != null) {
-                entries.add(LearnEntry.forSpell(taught, data));
+                entries.add(LearnEntry.forSpell(spellId, data));
             }
         }
     }
 
-    private void loadSkillEntries(List<NpcDef.TrainableStat> trainableStats) {
-        if (trainableStats == null) {
+    private void loadSkillEntries(List<String> skillIds) {
+        if (skillIds == null) {
             return;
         }
-        for (NpcDef.TrainableStat stat : trainableStats) {
-            if (stat == null || stat.getStatId() == null || stat.getStatId().isEmpty()) {
+        for (String skillId : skillIds) {
+            if (skillId == null || skillId.isEmpty()) {
                 continue;
             }
-            entries.add(LearnEntry.forSkill(stat));
+            entries.add(LearnEntry.forSkill(skillId));
         }
     }
 
@@ -261,7 +249,7 @@ public class LearnScreen extends GuiListScreen {
 
             final String name = entry.isSkill()
                     ? skillName(entry)
-                    : I18n.spellName(entry.spell.getName());
+                    : I18n.resolve(entry.spell.getName());
             final String price = String.valueOf(priceOf(entry));
             // Skills show the player's current points (plus the queued ones),
             // as the original V3_TrainDlg does; spells show the 5-pt cost.
@@ -274,7 +262,7 @@ public class LearnScreen extends GuiListScreen {
 
             // Left socket: the spell's or skill's own icon (empty when it has none).
             TextureRegion socket = entry.isSkill()
-                    ? GuiSprites.load(SKILL_ICONS.get(entry.stat.getStatId()))
+                    ? GuiSprites.load(SKILL_ICONS.get(entry.id))
                     : GuiSprites.load(entry.spell.getIconId());
             if (socket != null) {
                 animatedSprites.add(new GuiAnimatedSprite(
@@ -320,7 +308,7 @@ public class LearnScreen extends GuiListScreen {
     }
 
     private int currentSkillLevel(LearnEntry entry) {
-        return player != null ? player.getSkillLevel(entry.stat.getStatId()) : 0;
+        return player != null ? player.getSkillLevel(entry.id) : 0;
     }
 
     /** Skill points consumed by the basket: 1 per skill point, 5 per spell (V3_TrainDlg). */
@@ -345,11 +333,11 @@ public class LearnScreen extends GuiListScreen {
         int cost = (int) basketGoldNeeded();
         int pts  = basketSkillPoints();
         if (player.getGold() < cost) {
-            SystemMessage.showShared(I18n.message("message.learn_not_enough_gold", "message.learn_not_enough_gold"));
+            SystemMessage.showShared(I18n.message("message.learn_not_enough_gold"));
             return;
         }
         if (player.getSkillPoints() < pts) {
-            SystemMessage.showShared(I18n.message("message.learn_not_enough_points", "message.learn_not_enough_points"));
+            SystemMessage.showShared(I18n.message("message.learn_not_enough_points"));
             return;
         }
         for (LearnEntry entry : entries) {
@@ -358,8 +346,8 @@ public class LearnScreen extends GuiListScreen {
             }
             String reason = blockReason(entry);
             if (reason != null) {
-                SystemMessage.showShared(I18n.message("message.spell_cannot_learn", "message.spell_cannot_learn",
-                        I18n.spellName(entry.spell.getName()), reason.toLowerCase()));
+                SystemMessage.showShared(I18n.message("message.spell_cannot_learn", 
+                        I18n.resolve(entry.spell.getName()), reason.toLowerCase()));
                 return;
             }
         }
@@ -376,21 +364,21 @@ public class LearnScreen extends GuiListScreen {
                 continue;
             }
             if (entry.isSkill()) {
-                int current = player.getSkillLevel(entry.stat.getStatId());
-                player.setSkillLevel(entry.stat.getStatId(), current + entry.count);
-                SystemMessage.showShared(I18n.message("message.stat_increased", "message.stat_increased",
+                int current = player.getSkillLevel(entry.id);
+                player.setSkillLevel(entry.id, current + entry.count);
+                SystemMessage.showShared(I18n.message("message.stat_increased", 
                         skillName(entry), current + entry.count));
             } else {
-                spells.add(entry.taught.getSpellName());
-                learnedNames.add(I18n.spellName(entry.spell.getName()));
+                spells.add(entry.id);
+                learnedNames.add(I18n.resolve(entry.spell.getName()));
             }
             entry.count = 0;
         }
         if (learnedNames.size() == 1) {
-            SystemMessage.showShared(I18n.message("message.spell_learned", "message.spell_learned",
+            SystemMessage.showShared(I18n.message("message.spell_learned", 
                     learnedNames.get(0)));
         } else if (learnedNames.size() > 1) {
-            SystemMessage.showShared(I18n.message("message.spells_learned", "message.spells_learned",
+            SystemMessage.showShared(I18n.message("message.spells_learned", 
                     learnedNames.size(), String.join(", ", learnedNames)));
         }
         PlayerStateStore.save(player);
@@ -402,9 +390,6 @@ public class LearnScreen extends GuiListScreen {
     private void basketAdd(LearnEntry entry) {
         if (entry.isSkill()) {
             int current = currentSkillLevel(entry);
-            if (entry.stat.getMaxPoints() > 0 && current + entry.count >= entry.stat.getMaxPoints()) {
-                return;
-            }
             // Each queued point consumes 1 skill point, as the original client does.
             if (player != null && basketSkillPoints() + 1 > player.getSkillPoints()) {
                 return;
@@ -431,17 +416,8 @@ public class LearnScreen extends GuiListScreen {
     // ── Learning ──────────────────────────────────────────────────────────────
 
     private void onRowClick(LearnEntry entry) {
-        long now = System.currentTimeMillis();
-        boolean doubleClick = entry == lastClickEntry && (now - lastClickTime) <= DOUBLE_CLICK_MS;
-        lastClickEntry = entry;
-        lastClickTime = now;
         selected = entry;
-        if (doubleClick) {
-            lastClickEntry = null;
-            tryLearn(entry);
-        } else {
-            rebuildList();
-        }
+        rebuildList();
     }
 
     private boolean isKnown(String spellName) {
@@ -451,10 +427,9 @@ public class LearnScreen extends GuiListScreen {
     /** Spell already known, or skill at its trainer cap. */
     private boolean isMaxed(LearnEntry entry) {
         if (entry.isSkill()) {
-            return player != null && entry.stat.getMaxPoints() > 0
-                    && player.getSkillLevel(entry.stat.getStatId()) >= entry.stat.getMaxPoints();
+            return false;
         }
-        return isKnown(entry.taught.getSpellName());
+        return isKnown(entry.id);
     }
 
     /** Returns the first unmet learning condition, or null when eligible. */
@@ -481,63 +456,17 @@ public class LearnScreen extends GuiListScreen {
         return null;
     }
 
-    private void tryLearn(LearnEntry entry) {
-        if (player == null) {
-            return;
-        }
-        if (entry.isSkill()) {
-            // Double-clicking a skill row just queues one more point.
-            basketAdd(entry);
-            return;
-        }
-        if (isKnown(entry.taught.getSpellName())) {
-            SystemMessage.showShared(I18n.message("message.spell_already_known", "message.spell_already_known", I18n.spellName(entry.spell.getName())));
-            return;
-        }
-        String reason = blockReason(entry);
-        if (reason != null) {
-            SystemMessage.showShared(I18n.message("message.spell_cannot_learn", "message.spell_cannot_learn",
-                    I18n.spellName(entry.spell.getName()), reason.toLowerCase()));
-            rebuildList();
-            return;
-        }
-        player.setGold(player.getGold() - priceOf(entry));
-        List<String> spells = player.getSpells();
-        if (spells == null) {
-            spells = new ArrayList<>();
-            player.setSpells(spells);
-        }
-        spells.add(entry.taught.getSpellName());
-        entry.count = 0;
-        PlayerStateStore.save(player);
-        SoundManager.animateSound("Page turning sound.wav");
-        SystemMessage.showShared(I18n.message("message.spell_learned", "message.spell_learned", I18n.spellName(entry.spell.getName())));
-        rebuildList();
-    }
-
     /** Localized skill name, falling back to the English display name. */
     private static String skillName(LearnEntry entry) {
-        return I18n.t("skill." + entry.stat.getStatId(), "skill." + entry.stat.getStatId());
+        return I18n.key("skill." + entry.id);
     }
 
     /** A trainer can override a spell's default catalogue price, as GoN does. */
     private static int priceOf(LearnEntry entry) {
         if (entry.isSkill()) {
-            return entry.stat.getCostPerPoint();
+            return 0;
         }
-        return entry.taught.getPrice() > 0 ? entry.taught.getPrice() : entry.spell.getPrice();
-    }
-
-    private static void ensureRegistry() {
-        if (registryReady) {
-            return;
-        }
-        registryReady = true;
-        for (SpellData data : SpellRegistry.load()) {
-            if (data != null && data.getName() != null && !data.getName().isEmpty()) {
-                spellByName.put(data.getName(), data);
-            }
-        }
+        return entry.spell.getPrice();
     }
 
     /** One list row: either a taught spell or a trainable skill. */
@@ -572,47 +501,46 @@ public class LearnScreen extends GuiListScreen {
     }
 
     private static final class LearnEntry implements ListRow {
-        private final NpcDef.TaughtSpell taught;   // null for skills
+        private final String id;
         private final SpellData spell;             // null for skills
-        private final NpcDef.TrainableStat stat;   // null for spells
+        private final boolean skill;
         private final String skillDisplayName;
         // Basketed quantity: 0/1 for a spell, any number of points for a skill.
         private int count;
 
-        private LearnEntry(NpcDef.TaughtSpell taught, SpellData spell,
-                           NpcDef.TrainableStat stat, String skillDisplayName) {
-            this.taught = taught;
+        private LearnEntry(String id, SpellData spell,
+                           boolean skill, String skillDisplayName) {
+            this.id = id;
             this.spell = spell;
-            this.stat = stat;
+            this.skill = skill;
             this.skillDisplayName = skillDisplayName;
         }
 
-        static LearnEntry forSpell(NpcDef.TaughtSpell taught, SpellData spell) {
-            return new LearnEntry(taught, spell, null, null);
+        static LearnEntry forSpell(String spellId, SpellData spell) {
+            return new LearnEntry(spellId, spell, false, null);
         }
 
-        static LearnEntry forSkill(NpcDef.TrainableStat stat) {
-            return new LearnEntry(null, null, stat, skillDisplayName(stat.getStatId()));
+        static LearnEntry forSkill(String skillId) {
+            return new LearnEntry(skillId, null, true, skillDisplayName(skillId));
         }
 
         boolean isSkill() {
-            return stat != null;
+            return skill;
         }
 
         @Override public String nameText() {
-            return isSkill() ? skillDisplayName : I18n.spellName(spell.getName());
+            return isSkill() ? skillDisplayName : I18n.resolve(spell.getName());
         }
         @Override public String priceText() { return String.valueOf(priceOf(this)); }
         @Override public String thirdColumnText() { return String.valueOf(count); }
         @Override public String iconSprite() {
-            return isSkill() ? SKILL_ICONS.get(stat.getStatId()) : spell.getIconId();
+            return isSkill() ? SKILL_ICONS.get(id) : spell.getIconId();
         }
         @Override public int getCount() { return count; }
 
         private static String skillDisplayName(String statId) {
-            String known = TrainScreen.SKILL_DISPLAY_NAMES.get(statId);
-            if (known != null) {
-                return known;
+            if (I18n.has("skill." + statId)) {
+                return I18n.key("skill." + statId);
             }
             StringBuilder sb = new StringBuilder();
             for (String word : statId.split("_")) {

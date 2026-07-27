@@ -20,7 +20,7 @@ public class GameConstants {
     public static final int GRID_H = 16;
 
     // Player movement speed in world pixels per second.
-    public static final float PLAYER_SPEED = 250f;
+    public static final float PLAYER_SPEED = 300f;
 
     // Unit::MoveUnit advances userSpeed=1 complete logical cell per request.
     public static final float PLAYER_MOVEMENT_RESERVATION_STEP_TILES = 1f;

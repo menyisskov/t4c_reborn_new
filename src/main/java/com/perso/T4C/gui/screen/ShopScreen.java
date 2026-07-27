@@ -18,7 +18,6 @@ import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemIconRegistry;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.npc.NpcDef;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.SystemMessage;
@@ -105,7 +104,7 @@ public class ShopScreen extends GuiListScreen {
     private final List<ShopEntry> entries    = new ArrayList<>();
     private ShopEntry selected = null;
 
-    public ShopScreen(Player player, List<NpcDef.ShopItem> shopItems) {
+    public ShopScreen(Player player, List<String> itemKeys) {
         this.player = player;
         try {
             background = SpriteLoader.getInstance().getRegionFromSpriteName("GUIBackBuy");
@@ -115,7 +114,7 @@ public class ShopScreen extends GuiListScreen {
         centerOnScreen();
         addCloseButton();
         addStaticLabels();
-        loadEntries(shopItems);
+        loadEntries(itemKeys);
         rebuildList();
     }
 
@@ -128,30 +127,29 @@ public class ShopScreen extends GuiListScreen {
     private void addStaticLabels() {
         if (background == null) return;
         BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
-        labels.add(boxed(chewy, TITLE_BOX, 0f, () -> I18n.t("ui.buy", "ui.buy"), GOLD).shrinkToFit());
-        labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.t("ui.gold", "ui.gold"), GOLD).shrinkToFit());
+        labels.add(boxed(chewy, TITLE_BOX, 0f, () -> I18n.key("ui.buy"), GOLD).shrinkToFit());
+        labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.key("ui.gold"), GOLD).shrinkToFit());
 
         BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
-        labels.add(boxed(sm, HDR_NAME_BOX,  0f, () -> I18n.t("ui.item_name", "ui.item_name"), GOLD));
-        labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.t("ui.price", "ui.price"), GOLD));
-        labels.add(boxed(sm, HDR_QTY_BOX,   0f, () -> I18n.t("ui.quantity_short", "ui.quantity_short"), GOLD));
+        labels.add(boxed(sm, HDR_NAME_BOX,  0f, () -> I18n.key("ui.item_name"), GOLD));
+        labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.key("ui.price"), GOLD));
+        labels.add(boxed(sm, HDR_QTY_BOX,   0f, () -> I18n.key("ui.quantity_short"), GOLD));
 
-        labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.t("ui.on_hand", "ui.on_hand"), GOLD));
-        labels.add(boxed(sm, COST_LBL_BOX,   0f, () -> I18n.t("ui.cost", "ui.cost"), GOLD));
-        labels.add(boxed(sm, TOTAL_LBL_BOX,  0f, () -> I18n.t("ui.total", "ui.total"), GOLD));
+        labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.key("ui.on_hand"), GOLD));
+        labels.add(boxed(sm, COST_LBL_BOX,   0f, () -> I18n.key("ui.cost"), GOLD));
+        labels.add(boxed(sm, TOTAL_LBL_BOX,  0f, () -> I18n.key("ui.total"), GOLD));
     }
 
     // ── Entries ───────────────────────────────────────────────────────────────
 
-    private void loadEntries(List<NpcDef.ShopItem> shopItems) {
+    private void loadEntries(List<String> itemKeys) {
         entries.clear();
-        if (shopItems == null) return;
-        for (NpcDef.ShopItem si : shopItems) {
-            if (si == null || si.getItemKey() == null || si.getItemKey().isEmpty()) continue;
-            ItemDefinition def = ItemRegistry.findByKey(si.getItemKey());
+        if (itemKeys == null) return;
+        for (String itemKey : itemKeys) {
+            if (itemKey == null || itemKey.isEmpty()) continue;
+            ItemDefinition def = ItemRegistry.findByKey(itemKey);
             if (def != null) {
-                long price = si.getPrice() > 0 ? si.getPrice() : def.getPrice();
-                entries.add(new ShopEntry(def, price));
+                entries.add(new ShopEntry(def, def.getPrice()));
             }
         }
     }
@@ -193,7 +191,7 @@ public class ShopScreen extends GuiListScreen {
                         .boxed(ICON_BOX[2], ICON_BOX[3]));
             }
 
-            final String name  = I18n.item(entry.def.getName());
+            final String name  = I18n.resolve(entry.def.getName());
             final String price = String.valueOf(entry.effectivePrice);
             final String qty   = String.valueOf(entry.count);
             addDyn(isSelected ? fontGo : fontWh, CELL_NAME, rowY, () -> name, isSelected ? GOLD : WHITE);
@@ -254,7 +252,7 @@ public class ShopScreen extends GuiListScreen {
                 // A null callback, not a no-op: GuiButton only plays its click sound when
                 // it has one, so a disabled button stays silent too.
                 x + BUY_BTN_X, y + BUY_BTN_Y, canBuy ? this::buyBasket : null)
-                .withLabel(chewy, () -> I18n.t("ui.buy_action", "ui.buy_action"));
+                .withLabel(chewy, () -> I18n.key("ui.buy_action"));
         buttons.add(buy);
         dynButtons.add(buy);
     }
@@ -333,7 +331,7 @@ public class ShopScreen extends GuiListScreen {
             return;
         }
         if (player.getGold() < cost) {
-            SystemMessage.showShared(I18n.message("message.not_enough_gold", "message.not_enough_gold"));
+            SystemMessage.showShared(I18n.message("message.not_enough_gold"));
             return;
         }
         player.setGold((int) (player.getGold() - cost));
@@ -348,7 +346,7 @@ public class ShopScreen extends GuiListScreen {
                 inv.add(entry.def.getKey());
             }
             if (entry.count > 0) {
-                onlyName = onlyName == null ? I18n.item(entry.def.getName()) : "";
+                onlyName = onlyName == null ? I18n.resolve(entry.def.getName()) : "";
                 entry.count = 0;
             }
         }
@@ -405,7 +403,7 @@ public class ShopScreen extends GuiListScreen {
         int count;
         ShopEntry(ItemDefinition d, long p) { def = d; effectivePrice = p; }
 
-        @Override public String nameText() { return I18n.item(def.getName()); }
+        @Override public String nameText() { return I18n.resolve(def.getName()); }
         @Override public String priceText() { return String.valueOf(effectivePrice); }
         @Override public String thirdColumnText() { return String.valueOf(count); }
         @Override public String iconSprite() { return ItemIconRegistry.iconFor(def); }

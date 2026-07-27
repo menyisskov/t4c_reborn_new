@@ -73,7 +73,7 @@ public final class ItemDefBinaryIO {
 
     private static ItemDefinition readDef(DataInputStream in, short version) throws IOException {
         String key = readString(in);
-        String name = I18n.english(readString(in));
+        String name = readString(in);
         if (version == 1) BinaryIOUtils.readLongLE(in); // legacy padding
         BodyPart bodyPart = readBodyPart(in);
         String appearanceEquippedPrimary = readString(in);
@@ -114,7 +114,7 @@ public final class ItemDefBinaryIO {
             canSummon = in.readBoolean();
             lockName = emptyToNull(readString(in));
             lockDiff = BinaryIOUtils.readIntLE(in);
-            signText = emptyToNull(I18n.english(readString(in)));
+            signText = emptyToNull(readString(in));
             containerGold = BinaryIOUtils.readIntLE(in);
             globalRespawn = BinaryIOUtils.readIntLE(in);
             localRespawn = BinaryIOUtils.readIntLE(in);
