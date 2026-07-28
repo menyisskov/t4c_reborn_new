@@ -57,6 +57,8 @@ import com.perso.T4C.combat.SeraphAuraService;
 import com.perso.T4C.death.DeathPenaltyService;
 import com.perso.T4C.render.ObjectRenderer;
 import com.perso.T4C.render.SpellRenderer;
+import com.perso.T4C.render.TeleportOverlayRenderer;
+import com.perso.T4C.render.CollisionOverlayRenderer;
 import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.widget.GuiMapZoneDisplay;
 import com.perso.T4C.ui.FloatingDamage;
@@ -155,6 +157,7 @@ public class MainGameScreen implements Screen {
     private final ShapeRenderer debugShapeRenderer = new ShapeRenderer();
     private final com.perso.T4C.world.DayNightCycle dayNightCycle = loadDayNightCycle();
     private boolean collisionDebugVisible = false;
+    private boolean teleportOverlayVisible = false;
     private boolean coordsHudVisible = false;
     private boolean attackCursorApplied = false;
     private boolean talkCursorApplied = false;
@@ -546,7 +549,7 @@ public class MainGameScreen implements Screen {
  * Class representing TeleportEntry.
  */
 
-    private static class TeleportEntry {
+    private static class TeleportEntry implements TeleportOverlayRenderer.Entry {
         int id;
         int sourceZ;
         int sourceX;
@@ -554,6 +557,8 @@ public class MainGameScreen implements Screen {
         int targetZ;
         int targetX;
         int targetY;
+        public int sourceZ() { return sourceZ; } public int sourceX() { return sourceX; } public int sourceY() { return sourceY; }
+        public int targetZ() { return targetZ; } public int targetX() { return targetX; } public int targetY() { return targetY; }
     }
 
     /**
@@ -791,6 +796,7 @@ public class MainGameScreen implements Screen {
             return;
         }
         inputHandler.setDebugOverlayToggle(this::toggleCollisionDebugOverlay);
+        inputHandler.setTeleportOverlayToggle(this::toggleTeleportOverlay);
         inputHandler.setCoordsHudToggle(this::toggleCoordsHud);
         inputHandler.setHudSupplier(() -> hud);
     }
@@ -1052,6 +1058,7 @@ public class MainGameScreen implements Screen {
 
         section("overlays", () -> {
             renderCollisionDebugOverlay();
+            renderTeleportOverlay();
             renderEntityPathDebugOverlay();
             renderDayNightOverlay();
         });
@@ -2267,6 +2274,22 @@ public class MainGameScreen implements Screen {
         showSystemMessage("Collision debug: " + (collisionDebugVisible ? "ON" : "OFF"));
     }
 
+    private void toggleTeleportOverlay() {
+        teleportOverlayVisible = !teleportOverlayVisible;
+        showSystemMessage("Teleport debug: " + (teleportOverlayVisible ? "ON" : "OFF"));
+    }
+
+    private void renderTeleportOverlay() {
+        if (!teleportOverlayVisible || teleports.isEmpty() || player == null) return;
+        int currentZ = player.getCoordinates().getZ();
+        debugShapeRenderer.setProjectionMatrix(camera.combined);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        TeleportOverlayRenderer.render(debugShapeRenderer, teleports, currentZ,
+                renderStartX, renderEndX, renderStartY, renderEndY);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+
     /**
      * Toggles the visibility of the player coordinates HUD.
      */
@@ -2308,21 +2331,10 @@ public class MainGameScreen implements Screen {
         debugShapeRenderer.setProjectionMatrix(camera.combined);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        CollisionOverlayRenderer.render(debugShapeRenderer, renderStartX, renderEndX, renderStartY, renderEndY,
+                (x, y) -> CollisionManager.getInstance().hasStaticCollisionAtGrid(x, y),
+                (x, y) -> new float[]{1f, 0.5f, 0f, 0.35f});
         debugShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        debugShapeRenderer.setColor(1f, 0.5f, 0f, 0.35f);
-
-        for (int y = renderStartY; y <= renderEndY; y++) {
-            for (int x = renderStartX; x <= renderEndX; x++) {
-                if (CollisionManager.getInstance().hasStaticCollisionAtGrid(x, y)) {
-                    debugShapeRenderer.rect(
-                            x * GRID_W,
-                            y * GRID_H,
-                            GRID_W,
-                            GRID_H
-                    );
-                }
-            }
-        }
 
         debugShapeRenderer.setColor(0f, 1f, 0f, 0.45f);
         var doorTiles = mapRenderer.getObjectRenderer().getClosedDoorBlockTiles(mapRenderer.getObjectPositions(), mapRenderer.getObjectMappings());
@@ -2709,7 +2721,12 @@ public class MainGameScreen implements Screen {
             npc.getRenderBounds(npcRenderBoundsTemp);
             ObjectRenderer.RenderItem item = addEntityRenderItem(
                     entityItems,
-                    npc.getTileY(),
+                    // NPCs use the same composite/player sprite footprint.  Their
+                    // decor overlap therefore starts two logical rows after the
+                    // anchor, just like the player.  Sorting on getTileY() alone
+                    // leaves them behind tall foreground decors (e.g. the rock at
+                    // the reported position).
+                    playerRenderDepth(npc.getTileY() * GRID_H),
                     () -> npc.render(batchDecor, outlineShader));
             item.revealThroughDecor = true;
             item.occlusionRevealAction = () -> npc.renderOcclusionReveal(batchDecor);

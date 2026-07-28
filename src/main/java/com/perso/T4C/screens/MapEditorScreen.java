@@ -565,7 +565,7 @@ public class MapEditorScreen implements Screen {
  * Class representing TeleportEntry.
  */
 
-    private static class TeleportEntry {
+    private static class TeleportEntry implements com.perso.T4C.render.TeleportOverlayRenderer.Entry {
         int id;
         int sourceZ;
         int sourceX;
@@ -573,6 +573,8 @@ public class MapEditorScreen implements Screen {
         int targetZ;
         int targetX;
         int targetY;
+        public int sourceZ() { return sourceZ; } public int sourceX() { return sourceX; } public int sourceY() { return sourceY; }
+        public int targetZ() { return targetZ; } public int targetX() { return targetX; } public int targetY() { return targetY; }
 
         TeleportEntry(int id, int sourceZ, int sourceX, int sourceY, int targetZ, int targetX, int targetY) {
             this.id = id;

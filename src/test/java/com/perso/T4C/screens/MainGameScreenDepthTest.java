@@ -13,4 +13,11 @@ class MainGameScreenDepthTest {
 
         assertEquals(1062f, MainGameScreen.playerRenderDepth(worldY));
     }
+
+    @Test
+    void npcDepthUsesTheSameOverlapAnchorAsPlayer() {
+        float npcWorldY = 1058f * GRID_H;
+
+        assertEquals(1060f, MainGameScreen.playerRenderDepth((int) npcWorldY / GRID_H * GRID_H));
+    }
 }

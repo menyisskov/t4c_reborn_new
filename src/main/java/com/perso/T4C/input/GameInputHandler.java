@@ -32,6 +32,7 @@ public class GameInputHandler {
     private final Player player;
     private Supplier<PlayerHUD> hudSupplier;
     private Runnable debugOverlayToggle;
+    private Runnable teleportOverlayToggle;
     private Runnable coordsHudToggle;
     private GmInputHandler gmInputHandler;
     private BooleanSupplier textInputActiveSupplier;
@@ -140,6 +141,11 @@ public class GameInputHandler {
                 debugOverlayToggle.run();
             }
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            if (teleportOverlayToggle != null) {
+                teleportOverlayToggle.run();
+            }
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
             if (coordsHudToggle != null) {
                 coordsHudToggle.run();
@@ -166,6 +172,10 @@ public class GameInputHandler {
 
     public void setDebugOverlayToggle(Runnable debugOverlayToggle) {
         this.debugOverlayToggle = debugOverlayToggle;
+    }
+
+    public void setTeleportOverlayToggle(Runnable teleportOverlayToggle) {
+        this.teleportOverlayToggle = teleportOverlayToggle;
     }
 
     public void setCoordsHudToggle(Runnable coordsHudToggle) {
