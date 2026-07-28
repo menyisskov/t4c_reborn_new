@@ -212,6 +212,10 @@ public class MonsterAnimations extends EntityAnimationsBase {
         int w = reg.getRegionWidth();
         int h = reg.getRegionHeight();
 
+        // Draw an optional standalone Shd sprite before the outlined entity.
+        batch.setShader(null);
+        renderShadow(batch, name, pos, flipX);
+
         // Apply outline shader if hovered
         if (isHovered && outlineShader != null && outlineShader.isCompiled()) {
             batch.setShader(outlineShader);

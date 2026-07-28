@@ -337,7 +337,7 @@ public class PlayerMovement {
             int moveX,
             int moveY,
             FootprintProbe probe) {
-        if (!collisionManager.canMove(fromX, fromY, toX, toY)) {
+        if (!collisionManager.canMoveForPlayer(fromX, fromY, toX, toY)) {
             return false;
         }
         int horizontalTiles = moveX == 0 ? 0 : PLAYER_COLLISION_FOOTPRINT_HORIZONTAL_TILES;
@@ -375,10 +375,21 @@ public class PlayerMovement {
             int moveX,
             int moveY) {
         boolean diagonal = moveX != 0 && moveY != 0;
+        boolean teleportDestination = collisionManager.isPlayerPassableTile(
+                (int) (toX / GRID_W), (int) (toY / GRID_H));
         return footprintAccepts(
                 collisionManager, fromX, fromY, toX, toY, moveX, moveY,
                 (offsetX, offsetY) -> {
-                    if (!collisionManager.hasCollision(toX + offsetX, toY + offsetY)) {
+                    // A teleport source may be painted on a blocked tile and
+                    // may have a blocked tile immediately above it. Ignore the
+                    // player's visual padding for this destination only; the
+                    // actual destination remains subject to dynamic collision.
+                    if (teleportDestination) {
+                        return false;
+                    }
+                    boolean destination = offsetX == 0f && offsetY == 0f;
+                    if (!(destination ? collisionManager.hasPlayerCollision(toX, toY)
+                            : collisionManager.hasCollision(toX + offsetX, toY + offsetY))) {
                         return false;
                     }
                     boolean verticalOnly = offsetX == 0f && offsetY != 0f;

@@ -221,6 +221,7 @@ public class MainGameScreen implements Screen {
         loadMusicZones(currentMap);
         loadTeleports();
         loadCollisionMap(currentMap);
+        CollisionManager.getInstance().setPlayerPassabilityProvider(this::isTeleportSourceTile);
         initializePlayer();
         updateAmbientMusicForPlayer();
 
@@ -956,6 +957,7 @@ public class MainGameScreen implements Screen {
             loadMap(currentMap);
             loadMusicZones(currentMap);
             loadCollisionMap(currentMap);
+            CollisionManager.getInstance().setPlayerPassabilityProvider(this::isTeleportSourceTile);
             if (mapRenderer != null) {
                 mapRenderer.dispose();
             }
@@ -1020,7 +1022,7 @@ public class MainGameScreen implements Screen {
         section("camera", () -> { updateCamera(); updateAmbientMusicForPlayer(); });
         section("dayNight", () -> {
             dayNightCycle.update(delta);
-            dayNightCycle.forceDaylight(player != null && player.hasBuff("Light"));
+            dayNightCycle.forceDaylight(player != null && player.hasRadianceBuff());
             // Only the surface world (Z=0) is lit by the sun; everywhere else is dark.
             dayNightCycle.setUnlitWorld(player != null && player.getCoordinates().getZ() != 0);
         });
@@ -2272,6 +2274,15 @@ public class MainGameScreen implements Screen {
     private void toggleCollisionDebugOverlay() {
         collisionDebugVisible = !collisionDebugVisible;
         showSystemMessage("Collision debug: " + (collisionDebugVisible ? "ON" : "OFF"));
+    }
+
+    private boolean isTeleportSourceTile(int tileX, int tileY) {
+        if (player == null) return false;
+        int z = player.getCoordinates().getZ();
+        for (TeleportEntry teleport : teleports) {
+            if (teleport.sourceZ == z && teleport.sourceX == tileX && teleport.sourceY == tileY) return true;
+        }
+        return false;
     }
 
     private void toggleTeleportOverlay() {

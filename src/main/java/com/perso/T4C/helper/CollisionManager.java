@@ -2,6 +2,7 @@ package com.perso.T4C.helper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.function.BiPredicate;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
@@ -16,6 +17,7 @@ public class CollisionManager {
 
     private CollisionReader collisionReader;
     private DynamicCollisionProvider dynamicProvider;
+    private BiPredicate<Integer, Integer> playerPassabilityProvider;
     private long lastDynamicLogAt = 0L;
 
     /**
@@ -94,11 +96,17 @@ public class CollisionManager {
     public void clear() {
         this.collisionReader = null;
         this.dynamicProvider = null;
+        this.playerPassabilityProvider = null;
         log.info("CollisionManager cleared");
     }
 
     public void setDynamicProvider(DynamicCollisionProvider provider) {
         this.dynamicProvider = provider;
+    }
+
+    /** Supplies player-only exceptions to static collision (e.g. teleport source tiles). */
+    public void setPlayerPassabilityProvider(BiPredicate<Integer, Integer> provider) {
+        this.playerPassabilityProvider = provider;
     }
 
     /**
@@ -219,12 +227,29 @@ public class CollisionManager {
      * Checks if a movement from (x1, y1) to (x2, y2) is valid
      */
     public boolean canMove(float fromX, float fromY, float toX, float toY) {
+        return canMoveInternal(fromX, fromY, toX, toY, false);
+    }
+
+    public boolean canMoveForPlayer(float fromX, float fromY, float toX, float toY) {
+        int targetX = (int) (toX / GRID_W);
+        int targetY = (int) (toY / GRID_H);
+        if (playerPassabilityProvider == null || !playerPassabilityProvider.test(targetX, targetY)) {
+            return canMove(fromX, fromY, toX, toY);
+        }
+        return canMoveInternal(fromX, fromY, toX, toY, true);
+    }
+
+    public boolean isPlayerPassableTile(int gridX, int gridY) {
+        return playerPassabilityProvider != null && playerPassabilityProvider.test(gridX, gridY);
+    }
+
+    private boolean canMoveInternal(float fromX, float fromY, float toX, float toY, boolean player) {
         if (collisionReader == null) {
             return true; // No collision data = allow movement
         }
 
         // Check destination
-        if (hasCollision(toX, toY)) {
+        if ((player ? hasPlayerCollision(toX, toY) : hasCollision(toX, toY))) {
             return false;
         }
 
@@ -241,12 +266,21 @@ public class CollisionManager {
             float t = (float) i / steps;
             float checkX = fromX + dx * t;
             float checkY = fromY + dy * t;
-            if (hasCollision(checkX, checkY)) {
+            if ((player ? hasPlayerCollision(checkX, checkY) : hasCollision(checkX, checkY))) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    public boolean hasPlayerCollision(float worldX, float worldY) {
+        if (dynamicProvider != null && dynamicProvider.blocks(worldX, worldY)) return true;
+        if (collisionReader == null) return false;
+        int gridX = (int) (worldX / GRID_W);
+        int gridY = (int) (worldY / GRID_H);
+        if (playerPassabilityProvider != null && playerPassabilityProvider.test(gridX, gridY)) return false;
+        return staticBlocksAtGrid(gridX, gridY);
     }
 
     public boolean isInitialized() {

@@ -10,6 +10,12 @@ uniform sampler2D u_texture;
 uniform vec2 u_texelSize;
 uniform vec4 u_outlineColor;
 
+bool isShadowPixel(vec4 color) {
+    // Native DDA Shd pixels are exported as 50%-alpha black.
+    return color.a > 0.45 && color.a < 0.55
+        && color.r < 0.01 && color.g < 0.01 && color.b < 0.01;
+}
+
 void main() {
     vec4 baseColor = texture2D(u_texture, v_texCoord);
 
@@ -20,7 +26,10 @@ void main() {
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 vec2 offset = vec2(x, y) * u_texelSize;
-                alpha = max(alpha, texture2D(u_texture, v_texCoord + offset).a);
+                vec4 neighbor = texture2D(u_texture, v_texCoord + offset);
+                if (!isShadowPixel(neighbor)) {
+                    alpha = max(alpha, neighbor.a);
+                }
             }
         }
         if (alpha > 0.1) {

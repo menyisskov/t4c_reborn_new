@@ -740,6 +740,20 @@ public class Player extends Stats {
         return false;
     }
 
+    /** Returns whether an active buff currently emits Radiance. */
+    public boolean hasRadianceBuff() {
+        for (ActiveBuff buff : activeBuffs) {
+            if (buff == null || buff.getEffects() == null) continue;
+            for (SpellData.SpellEffect effect : buff.getEffects()) {
+                if (effect != null && "radiance".equals(normalizeAttr(effect.getAttribute()))
+                        && parseEffectFloat(effect.getAmount()) > 0f) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void applyBuff(String spellName, String description, String iconId, Integer durationSeconds, boolean unlimited) {
         applyBuff(spellName, description, iconId, durationSeconds, unlimited, Collections.emptyList());
     }

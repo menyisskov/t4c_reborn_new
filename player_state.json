@@ -1,6 +1,6 @@
 {
-  "x": 2931.0,
-  "y": 1057.0,
+  "x": 2911.0,
+  "y": 1052.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 53397,
+  "gold": 53488,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 71,
-  "maxMana": 60,
-  "mana": 5,
+  "currentHp": 57,
+  "maxMana": 600,
+  "mana": 600,
   "level": 15,
-  "currentXp": 11221,
+  "currentXp": 11381,
   "xpToNextLevel": 14988,
   "statPoints": 500,
   "skillPoints": 485,
@@ -39,11 +39,25 @@
       "spell": "spell.spell_lesser_drain"
     }
   ],
-  "activeBuffs": [],
+  "activeBuffs": [
+    {
+      "spellName": "${spell.light}",
+      "description": "${spell.description.light}",
+      "iconId": "64kSpellIconLightMain",
+      "remainingSeconds": 240,
+      "totalDurationSeconds": 600,
+      "unlimited": false,
+      "effects": [
+        {
+          "type": "ATTRIBUTE",
+          "attribute": "radiance",
+          "amount": "100"
+        }
+      ]
+    }
+  ],
   "inventory": [
     "item.gem_of_destiny",
-    "item.potion_of_mana",
-    "item.potion_of_mana",
     "item.potion_of_mana",
     "item.potion_of_mana",
     "item.potion_of_mana",
@@ -63,12 +77,12 @@
     "item.torch",
     "item.torch",
     "item.light_healing_potion",
-    "item.wooden_arrow",
-    "item.ashwood_reflex_bow",
     "item.v2_2dague06"
   ],
   "equipment": {
-    "HEAD": "Leather Helmet"
+    "WEAPON2": "item.wooden_arrow",
+    "HEAD": "Leather Helmet",
+    "WEAPON": "item.ashwood_reflex_bow"
   },
   "skills": {
     "powerful_blow": 52,
@@ -79,7 +93,7 @@
   },
   "itemCharges": {
     "item.potion_of_healing": 4,
-    "item.potion_of_mana": 13,
+    "item.potion_of_mana": 9,
     "item.torch": 5,
     "item.light_healing_potion": 1
   },
