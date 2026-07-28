@@ -349,6 +349,7 @@ public class DecorRenderer {
         item.decorW = 0f;
         item.decorH = 0f;
         item.decorMirror = false;
+        item.occludesEntities = false;
         item.revealThroughDecor = false;
         item.occlusionRevealAction = null;
         item.revealX = 0f;

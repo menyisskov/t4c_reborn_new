@@ -1,6 +1,6 @@
 {
-  "x": 2904.0,
-  "y": 1067.0,
+  "x": 2954.0,
+  "y": 1049.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 48137,
+  "gold": 48289,
   "karma": 0,
   "maxHp": 71,
   "currentHp": 71,
   "maxMana": 600,
   "mana": 600,
   "level": 15,
-  "currentXp": 11578,
+  "currentXp": 11497,
   "xpToNextLevel": 14988,
   "statPoints": 500,
   "skillPoints": 485,
@@ -52,7 +52,7 @@
       "spellName": "${spell.light}",
       "description": "${spell.description.light}",
       "iconId": "64kSpellIconLightMain",
-      "remainingSeconds": 100,
+      "remainingSeconds": 592,
       "totalDurationSeconds": 600,
       "unlimited": false,
       "effects": [
@@ -77,7 +77,6 @@
     "item.ashwood_longbow",
     "item.cloth_pants",
     "item.cloth_vest",
-    "item.steel_reinforced_club",
     "item.rusted_dirk",
     "item.rusted_dirk",
     "item.torch",
@@ -91,20 +90,20 @@
     "item.potion_of_mana",
     "item.apple",
     "item.apple",
-    "item.torch",
     "item.torch",
     "item.torch",
     "item.torch",
     "item.studded_leather_belt",
     "item.wooden_shield",
-    "Leather Helmet"
+    "Leather Helmet",
+    "Light healing potion"
   ],
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
     "HEAD": "item.studded_leather_helmet",
     "RIGHT_HAND": "item.studded_leather_gloves",
-    "BELT": "item.leather_belt",
     "RING1": "item.iron_ring",
+    "BELT": "item.leather_belt",
     "LEGS": "item.studded_leather_pants",
     "BACK": "item.red_cape",
     "WEAPON": "item.ashwood_reflex_bow",
@@ -121,8 +120,9 @@
   },
   "itemCharges": {
     "item.potion_of_healing": 4,
-    "item.torch": 5,
-    "item.potion_of_mana": 8
+    "item.potion_of_mana": 8,
+    "Light healing potion": 1,
+    "item.torch": 5
   },
   "questFlags": {},
   "respawnPointDefined": false,
@@ -130,5 +130,5 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.122719
 }

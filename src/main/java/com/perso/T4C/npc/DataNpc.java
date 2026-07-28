@@ -8,6 +8,8 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spell.NpcCastVfxHook;
+import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.ui.SystemMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -155,8 +157,15 @@ public class DataNpc extends BaseNPC {
             showDialog(I18n.message("message.no_healing_needed"), 0L);
             return;
         }
+        int healthBefore = player.getCurrentHp();
         player.applyHeal(player.getMaxHp(), player.getMaxHp());
         player.setMana(player.getMaxMana());
+        if (player.getCurrentHp() > healthBefore) {
+            SpellData healingSpell = SpellRegistry.findByName("spell.healing");
+            if (healingSpell != null) {
+                NpcCastVfxHook.playOnPlayer(healingSpell, player, position);
+            }
+        }
         showDialog(I18n.message("message.healed_dialog"), 0L);
         SystemMessage.showShared(I18n.message("message.wounds_healed"));
     }

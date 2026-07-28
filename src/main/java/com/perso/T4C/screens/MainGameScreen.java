@@ -493,7 +493,6 @@ public class MainGameScreen implements Screen {
             camera.position.set(x, y, 0);
             camera.update();
         }
-        showSystemMessage(I18n.message("message.teleport"));
         log.info("Teleport {}: ({}, {}, {}) -> ({}, {}, {})", teleport.id,
                 teleport.sourceX, teleport.sourceY, teleport.sourceZ,
                 teleport.targetX, teleport.targetY, teleport.targetZ);
@@ -2428,6 +2427,12 @@ public class MainGameScreen implements Screen {
      * Updates the cursor state depending on the context of what is hovered.
      */
     private void updateAttackCursor() {
+        // The quick bar is a HUD control. An entity rendered underneath it must
+        // not affect the world-targeting cursor while the mouse is over the bar.
+        if (hud != null && hud.isQuickBarHit(Gdx.input.getX(), Gdx.input.getY())) {
+            applyDefaultCursor();
+            return;
+        }
         if (monsterManager == null) {
             applyDefaultCursor();
             return;
@@ -2957,6 +2962,7 @@ public class MainGameScreen implements Screen {
         item.decorW = 0f;
         item.decorH = 0f;
         item.decorMirror = false;
+        item.occludesEntities = false;
         item.revealThroughDecor = false;
         item.occlusionRevealAction = null;
         item.revealX = 0f;
@@ -2983,6 +2989,7 @@ public class MainGameScreen implements Screen {
             item.decorW = 0f;
             item.decorH = 0f;
             item.decorMirror = false;
+            item.occludesEntities = false;
             item.revealThroughDecor = false;
             item.occlusionRevealAction = null;
             item.revealX = 0f;

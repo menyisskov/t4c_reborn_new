@@ -33,6 +33,9 @@ public class ObjectRenderer {
     // The legacy client blends the occluding decor at 125/256 over the player.
     // Repainting the player over an opaque decor uses the complementary factor.
     private static final float OCCLUDED_ENTITY_ALPHA = 1f - (125f / 256f);
+    // A door anchored on the row immediately below an entity occupies the same
+    // foreground overlap band as the surrounding wall.
+    private static final float DOOR_OCCLUSION_DEPTH_OFFSET = 1f;
     private static final int OBJECT_CULL_MARGIN_TILES = 8;
 
     private final SpriteLoader spriteLoader;
@@ -453,7 +456,8 @@ public class ObjectRenderer {
                 RenderItem item = obtainRenderItem();
                 item.isObject = true;
                 item.objectInfo = info;
-                item.y = info.tileY;
+                item.occludesEntities = isDoorMapping(logicalId, mapping);
+                item.y = info.tileY + (item.occludesEntities ? DOOR_OCCLUSION_DEPTH_OFFSET : 0f);
                 combinedItems.add(item);
             }
         }
@@ -476,7 +480,7 @@ public class ObjectRenderer {
             }
             for (int decorIndex = entityIndex + 1; decorIndex < combinedItems.size(); decorIndex++) {
                 RenderItem decor = combinedItems.get(decorIndex);
-                if (decor.decorRegion != null && overlapsRevealBounds(entity, decor)) {
+                if (isEntityOccluder(decor) && overlapsRevealBounds(entity, decor)) {
                     entity.revealAfterDecor = decor;
                 }
             }
@@ -501,6 +505,11 @@ public class ObjectRenderer {
                     draw(batch, info.region, info.px, info.py, info.w, info.h, info.mirror);
                 }
                 renderObjectNameIfVisible(batch, info, info.mapping, info.state);
+                for (RenderItem entity : occlusionRevealItems) {
+                    if (entity.revealAfterDecor == item) {
+                        renderOcclusionReveal(batch, entity);
+                    }
+                }
             } else if (item.renderAction != null) {
                 item.renderAction.run();
             } else if (item.decorRegion != null) {
@@ -533,6 +542,7 @@ public class ObjectRenderer {
         public float decorW;
         public float decorH;
         public boolean decorMirror;
+        public boolean occludesEntities;
         public boolean revealThroughDecor;
         public Runnable occlusionRevealAction;
         public float revealX;
@@ -561,6 +571,7 @@ public class ObjectRenderer {
         item.decorW = 0f;
         item.decorH = 0f;
         item.decorMirror = false;
+        item.occludesEntities = false;
         resetOcclusionReveal(item);
         item.y = 0f;
         return item;
@@ -581,6 +592,7 @@ public class ObjectRenderer {
             item.decorW = 0f;
             item.decorH = 0f;
             item.decorMirror = false;
+            item.occludesEntities = false;
             resetOcclusionReveal(item);
             item.y = 0f;
             renderItemPool.addLast(item);
@@ -588,13 +600,22 @@ public class ObjectRenderer {
     }
 
     private static boolean overlapsRevealBounds(RenderItem entity, RenderItem decor) {
-        if (entity.revealW <= 0f || entity.revealH <= 0f || decor.decorW <= 0f || decor.decorH <= 0f) {
+        float occluderX = decor.decorRegion != null ? decor.decorX : decor.objectInfo.px;
+        float occluderY = decor.decorRegion != null ? decor.decorY : decor.objectInfo.py;
+        float occluderW = decor.decorRegion != null ? decor.decorW : decor.objectInfo.w;
+        float occluderH = decor.decorRegion != null ? decor.decorH : decor.objectInfo.h;
+        if (entity.revealW <= 0f || entity.revealH <= 0f || occluderW <= 0f || occluderH <= 0f) {
             return false;
         }
-        return entity.revealX < decor.decorX + decor.decorW
-                && entity.revealX + entity.revealW > decor.decorX
-                && entity.revealY < decor.decorY + decor.decorH
-                && entity.revealY + entity.revealH > decor.decorY;
+        return entity.revealX < occluderX + occluderW
+                && entity.revealX + entity.revealW > occluderX
+                && entity.revealY < occluderY + occluderH
+                && entity.revealY + entity.revealH > occluderY;
+    }
+
+    /** Doors are world objects, but occlude entities like foreground walls do. */
+    private static boolean isEntityOccluder(RenderItem item) {
+        return item.decorRegion != null || item.occludesEntities;
     }
 
     private static void renderOcclusionReveal(SpriteBatch batch, RenderItem entity) {
