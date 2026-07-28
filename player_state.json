@@ -1,6 +1,6 @@
 {
-  "x": 2911.0,
-  "y": 1052.0,
+  "x": 2904.0,
+  "y": 1067.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 53488,
+  "gold": 48137,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 57,
+  "currentHp": 71,
   "maxMana": 600,
   "mana": 600,
   "level": 15,
-  "currentXp": 11381,
+  "currentXp": 11578,
   "xpToNextLevel": 14988,
   "statPoints": 500,
   "skillPoints": 485,
@@ -37,6 +37,14 @@
     {
       "slot": 7,
       "spell": "spell.spell_lesser_drain"
+    },
+    {
+      "slot": 8,
+      "item": "item.light_healing_potion"
+    },
+    {
+      "slot": 9,
+      "item": "item.potion_of_mana"
     }
   ],
   "activeBuffs": [
@@ -44,7 +52,7 @@
       "spellName": "${spell.light}",
       "description": "${spell.description.light}",
       "iconId": "64kSpellIconLightMain",
-      "remainingSeconds": 240,
+      "remainingSeconds": 100,
       "totalDurationSeconds": 600,
       "unlimited": false,
       "effects": [
@@ -66,23 +74,43 @@
     "item.potion_of_mana",
     "item.potion_of_mana",
     "item.potion_of_mana",
-    "item.potion_of_mana",
     "item.ashwood_longbow",
     "item.cloth_pants",
     "item.cloth_vest",
-    "item.leather_belt",
     "item.steel_reinforced_club",
     "item.rusted_dirk",
     "item.rusted_dirk",
     "item.torch",
     "item.torch",
-    "item.light_healing_potion",
-    "item.v2_2dague06"
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.apple",
+    "item.apple",
+    "item.torch",
+    "item.torch",
+    "item.torch",
+    "item.torch",
+    "item.studded_leather_belt",
+    "item.wooden_shield",
+    "Leather Helmet"
   ],
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
-    "HEAD": "Leather Helmet",
-    "WEAPON": "item.ashwood_reflex_bow"
+    "HEAD": "item.studded_leather_helmet",
+    "RIGHT_HAND": "item.studded_leather_gloves",
+    "BELT": "item.leather_belt",
+    "RING1": "item.iron_ring",
+    "LEGS": "item.studded_leather_pants",
+    "BACK": "item.red_cape",
+    "WEAPON": "item.ashwood_reflex_bow",
+    "BODY": "item.studded_leather_armor",
+    "FEET": "item.studded_leather_boots",
+    "LEFT_HAND": "item.studded_leather_gloves"
   },
   "skills": {
     "powerful_blow": 52,
@@ -93,9 +121,8 @@
   },
   "itemCharges": {
     "item.potion_of_healing": 4,
-    "item.potion_of_mana": 9,
     "item.torch": 5,
-    "item.light_healing_potion": 1
+    "item.potion_of_mana": 8
   },
   "questFlags": {},
   "respawnPointDefined": false,

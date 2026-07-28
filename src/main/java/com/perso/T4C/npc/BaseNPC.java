@@ -41,6 +41,7 @@ import static com.perso.T4C.config.GameConstants.NPC_SPEED;
 @Slf4j
 @Getter
 public abstract class BaseNPC extends Stats implements Nameable {
+    private static final int DIALOG_CONTENT_LINES_PER_PAGE = 12;
 
     private static final long INTERACTION_RETRY_DELAY_MS = 5_000L;
 
@@ -631,12 +632,12 @@ public abstract class BaseNPC extends Stats implements Nameable {
         if (!dialogActive || dialogLines == null || dialogLines.isEmpty()) {
             return null;
         }
-        int start = dialogPageIndex * 14;
+        int start = dialogPageIndex * DIALOG_CONTENT_LINES_PER_PAGE;
         if (start >= dialogLines.size()) {
             dialogActive = false;
             return null;
         }
-        int end = Math.min(start + 14, dialogLines.size());
+        int end = Math.min(start + DIALOG_CONTENT_LINES_PER_PAGE, dialogLines.size());
         StringBuilder builder = new StringBuilder();
         for (int i = start; i < end; i++) {
             if (builder.length() > 0) {
@@ -644,6 +645,8 @@ public abstract class BaseNPC extends Stats implements Nameable {
             }
             builder.append(dialogLines.get(i));
         }
+        // CDisplayTextBox adds the farewell link after an empty line.
+        builder.append("\n\n> Adieu.");
         return builder.toString();
     }
 
@@ -652,7 +655,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
             return false;
         }
         dialogPageIndex++;
-        if (dialogPageIndex * 14 >= dialogLines.size()) {
+        if (dialogPageIndex * DIALOG_CONTENT_LINES_PER_PAGE >= dialogLines.size()) {
             dialogActive = false;
         }
         return true;
@@ -730,7 +733,13 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
     protected List<String> getDialogKeywords() {
         String keyword = getDialogKeyword();
-        return keyword == null || keyword.isBlank() ? List.of() : List.of(keyword);
+        if (keyword == null || keyword.isBlank()) {
+            return List.of("> Adieu.");
+        }
+        List<String> keywords = new ArrayList<>();
+        keywords.add(keyword);
+        keywords.add("> Adieu.");
+        return keywords;
     }
 
     protected boolean onDialogKeywordClick(String keyword, Player player) {

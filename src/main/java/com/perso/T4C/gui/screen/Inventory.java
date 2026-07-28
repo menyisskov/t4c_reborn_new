@@ -117,6 +117,12 @@ public class Inventory extends GuiScreenBase {
                             "GUI_BackInv", "GUI_BackInventory", "GUI_InventoryBack"));
         }
 
+        // The inventory draws its background in two parts, but the shared
+        // close-button helper also uses this field as the screen-availability
+        // guard. Keep one of the loaded regions there without changing the
+        // custom two-part rendering below.
+        background = backgroundTop != null ? backgroundTop : backgroundBottom;
+
         float widthTop = backgroundTop == null ? 0f : backgroundTop.getRegionWidth();
         float widthBottom = backgroundBottom == null ? 0f : backgroundBottom.getRegionWidth();
         float heightTop = backgroundTop == null ? 0f : backgroundTop.getRegionHeight();

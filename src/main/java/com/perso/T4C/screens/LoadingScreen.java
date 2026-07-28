@@ -15,7 +15,6 @@ import com.perso.T4C.MyGame;
 import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.gui.screen.WorldMap;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.ui.FontManager;
 
@@ -56,7 +55,6 @@ public class LoadingScreen implements Screen {
         this.viewport = new FitViewport(WINDOW_WIDTH, WINDOW_HEIGHT, camera);
 
         SpriteLoader.getInstance().loadSpriteBin(Paths.SPRITE_BIN);
-        WorldMap.preloadGeneratedMap(SpriteLoader.getInstance());
         initGameCursor();
 
         this.loadingImage = SpriteLoader.getInstance().getRegionFromSpriteName("Loading");

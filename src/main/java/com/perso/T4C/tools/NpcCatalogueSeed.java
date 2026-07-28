@@ -117,7 +117,7 @@ public final class NpcCatalogueSeed {
         defs.add(catalogueNpc("Dragon", "DarkFang"));
         defs.add(catalogueNpc("Edgar", "Edgar Gimplestratten"));
         defs.add(catalogueNpc("ElmertMerkiss", "Elmert Merkiss"));
-        defs.add(catalogueNpc("Fali", "Fali"));
+        defs.add(fali());
         defs.add(catalogueNpc("Geena", "Geena"));
         defs.add(catalogueNpc("Guardman", "A guardsman"));
         defs.add(catalogueNpc("Halam", "Halam"));
@@ -132,7 +132,7 @@ public final class NpcCatalogueSeed {
         defs.add(catalogueNpc("Murmuntag", "Murmuntag", List.of("attack")));
         defs.add(catalogueNpc("Ortanalas", "Ortanalas", List.of("attack", "archery", "stun_blow", "powerful_blow")));
         defs.add(catalogueNpc("Pig", "A pig"));
-        defs.add(catalogueNpc("Rolph", "Rolph"));
+        defs.add(rolph());
         defs.add(catalogueNpc("Shadow", "A dark figure...", List.of("peek")));
         defs.add(catalogueNpc("Sigfried", "Sigfried"));
         defs.add(catalogueNpc("TwinNevanis", "Nevanis"));
@@ -188,9 +188,59 @@ public final class NpcCatalogueSeed {
             case "Ortanalas" -> parts("PupLeatherArmor", "PupStuddedLegs", "PupLeatherBoots", "PupNormalSword", "PupRomanShield", "PupRedCape");
             case "Uranos" -> parts("PupNecromanRobe", "PupLeatherPants", "PupBlackLeatherBoots", "PupRedCape");
             case "Lothan", "TwinShovanis" -> parts("PupNecromanRobe", "PupLeatherPants", "PupBlackLeatherBoots");
-            case "Jalus", "Halam", "Kalastor", "MarnecSunim", "Fali", "Geena" -> parts("PupClothBody", "PupClothLegs", "PupLeatherBoots");
+            case "Fali" -> parts("WoClothBody", "WoClothRobe", "WoLeatherBoots");
+            case "Rolph" -> parts("PupBodyClothSet1", "PupLegsClothSet1", "PupLeatherBoots");
+            case "Jalus", "Halam", "Kalastor", "MarnecSunim", "Geena" -> parts("PupClothBody", "PupClothLegs", "PupLeatherBoots");
             default -> parts("PupClothBody", "PupNakedLegs", "PupNakedFoot");
         };
+    }
+
+    private static NpcDef fali() {
+        String welcome = "S'il y a une chose de bien avec tous ces gardes, c'est que personne n'a essayé de me voler quoi que ce soit depuis leur arrivée. Vous pouvez regarder, mais restons civilisés.";
+        String identity = "fali";
+        I18n.update(Map.ofEntries(
+                Map.entry("npc." + identity, "Fali"), Map.entry("npc.welcome." + identity, welcome),
+                Map.entry("npc.topic." + identity + ".0", "Je m'appelle Fali."),
+                Map.entry("npc.topic." + identity + ".1", "Je vends toutes sortes d'objets. N'hésitez pas à regarder."),
+                Map.entry("npc.topic." + identity + ".2", "Voici ce que j'ai en boutique."),
+                Map.entry("npc.topic_keyword." + identity + ".0.0", "nom"), Map.entry("npc.topic_keyword." + identity + ".0.1", "qui êtes-vous"),
+                Map.entry("npc.topic_keyword." + identity + ".1.0", "travail"), Map.entry("npc.topic_keyword." + identity + ".1.1", "métier"), Map.entry("npc.topic_keyword." + identity + ".1.2", "occupation"),
+                Map.entry("npc.topic_keyword." + identity + ".2.0", "regarder"), Map.entry("npc.topic_keyword." + identity + ".2.1", "acheter")));
+        return new NpcDef("Fali", "Fali", appearanceFor("Fali"), null, 0, List.of(), welcome,
+                List.of(
+                        topic(List.of("nom", "qui êtes-vous"), "Je m'appelle Fali."),
+                        topic(List.of("travail", "métier", "occupation"), "Je vends toutes sortes d'objets. N'hésitez pas à regarder."),
+                        shopTopic(List.of("regarder", "acheter"), "Voici ce que j'ai en boutique.",
+                                "item.apple", "item.torch", "item.light_healing_potion", "item.potion_of_mana", "item.potion_of_healing", "item.iron_ring")));
+    }
+
+    private static NpcDef rolph() {
+        String welcome = "Bienvenue ! Les affaires marchent bien depuis l'arrivée des gardes. Tout le monde achète des armures ces temps-ci.";
+        String identity = "rolph";
+        I18n.update(Map.ofEntries(
+                Map.entry("npc." + identity, "Rolph"), Map.entry("npc.welcome." + identity, welcome),
+                Map.entry("npc.topic." + identity + ".0", "Je m'appelle Rolph, le plus grand armurier du royaume !"),
+                Map.entry("npc.topic." + identity + ".1", "Je possède la meilleure armurerie de tout Goldmoon."),
+                Map.entry("npc.topic." + identity + ".2", "Je forge les armures les plus résistantes de Goldmoon."),
+                Map.entry("npc.topic_keyword." + identity + ".0.0", "nom"), Map.entry("npc.topic_keyword." + identity + ".0.1", "qui êtes-vous"),
+                Map.entry("npc.topic_keyword." + identity + ".1.0", "travail"), Map.entry("npc.topic_keyword." + identity + ".1.1", "métier"), Map.entry("npc.topic_keyword." + identity + ".1.2", "occupation"),
+                Map.entry("npc.topic_keyword." + identity + ".2.0", "achète"),
+                Map.entry("npc.topic_keyword." + identity + ".2.1", "armure")));
+        return new NpcDef("Rolph", "Rolph", appearanceFor("Rolph"), null, 0, List.of(), welcome,
+                List.of(
+                        topic(List.of("nom", "qui êtes-vous"), "Je m'appelle Rolph, le plus grand armurier du royaume !"),
+                        topic(List.of("travail", "métier", "occupation"), "Je possède la meilleure armurerie de tout Goldmoon."),
+                        shopTopic(List.of("achète", "armure"), "Je forge les armures les plus résistantes de Goldmoon.",
+                                "item.cloth_pants", "item.cloth_vest", "item.leather_belt", "item.leather_gloves", "item.leather_helmet", "item.leather_pants", "item.leather_boots", "item.leather_armor", "item.red_cape", "item.studded_leather_belt", "item.studded_leather_gloves", "item.studded_leather_helmet", "item.studded_leather_pants", "item.studded_leather_boots", "item.studded_leather_armor", "item.wooden_shield")));
+    }
+
+    private static NpcDef.DialogTopic topic(List<String> keywords, String response) {
+        return new NpcDef.DialogTopic(keywords, response, List.of());
+    }
+
+    private static NpcDef.DialogTopic shopTopic(List<String> keywords, String response, String... items) {
+        return new NpcDef.DialogTopic(keywords, response,
+                List.of(new NpcDef.Action(ActionType.OPEN_SHOP, List.of(items))));
     }
 
     private static List<NpcDef.Part> parts(String body, String legs, String feet, String... extras) {

@@ -33,6 +33,8 @@ public class SpriteLoader {
     private final Map<String, Sprite> metaByLowerName = new HashMap<>();
     private TextureRegion[] regionCacheById = new TextureRegion[0];
     private Texture[] textureCacheById = new Texture[0];
+    private final Map<String, TextureRegion> maskedRegionCache = new HashMap<>();
+    private final Map<String, Texture> maskedTextureCache = new HashMap<>();
     private volatile int textureGeneration = 0;
     private static float MAX_SUPPORTED_ANISO = -1f;
     private final List<Sprite> sprites = new ArrayList<>();
@@ -129,6 +131,57 @@ public class SpriteLoader {
         Integer id = nameToId.get(name.toLowerCase(Locale.ROOT));
         if (id == null) return null;
         return getRegionFromSpriteId(id);
+    }
+
+    /**
+     * Returns a sprite whose alpha channel is modulated by a companion mask.
+     *
+     * <p>This mirrors the original client's {@code TransAlphaImprovedMask}:
+     * mask value 0 keeps the sprite opaque and 255 makes it fully transparent.
+     */
+    public TextureRegion getMaskedRegionFromSpriteNames(String spriteName, String maskName)
+            throws GameException {
+        if (spriteName == null || maskName == null) return null;
+        String key = spriteName.toLowerCase(Locale.ROOT) + '\0'
+                + maskName.toLowerCase(Locale.ROOT);
+        TextureRegion cached = maskedRegionCache.get(key);
+        if (cached != null) return cached;
+
+        Pixmap sprite = null;
+        Pixmap mask = null;
+        try {
+            sprite = createPixmapForSprite(spriteName);
+            mask = createPixmapForSprite(maskName);
+            if (sprite == null || mask == null) return null;
+            if (mask.getWidth() < sprite.getWidth() || mask.getHeight() < sprite.getHeight()) {
+                throw new GameException("Mask is smaller than sprite: "
+                        + spriteName + " / " + maskName);
+            }
+            // Replacing alpha in-place must bypass Pixmap's default SourceOver
+            // compositing. Otherwise drawing a translucent pixel over the
+            // original opaque pixel produces an opaque result again.
+            sprite.setBlending(Pixmap.Blending.None);
+            for (int y = 0; y < sprite.getHeight(); y++) {
+                for (int x = 0; x < sprite.getWidth(); x++) {
+                    int pixel = sprite.getPixel(x, y);
+                    int sourceAlpha = pixel & 0xFF;
+                    int maskWeight = (mask.getPixel(x, y) >>> 24) & 0xFF;
+                    int alpha = sourceAlpha * (255 - maskWeight) / 255;
+                    sprite.drawPixel(x, y, (pixel & 0xFFFFFF00) | alpha);
+                }
+            }
+            Texture texture = new Texture(sprite);
+            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            texture.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
+            applyAnisotropy(texture);
+            TextureRegion region = new TextureRegion(texture);
+            maskedTextureCache.put(key, texture);
+            maskedRegionCache.put(key, region);
+            return region;
+        } finally {
+            if (sprite != null) sprite.dispose();
+            if (mask != null) mask.dispose();
+        }
     }
 
     /**
@@ -238,6 +291,7 @@ public class SpriteLoader {
 
     private void clearAll() {
         for (Texture t : textureCacheById) if (t != null) t.dispose();
+        clearMaskedTextureCaches();
         textureCacheById = new Texture[0];
         regionCacheById = new TextureRegion[0];
         sprites.clear();
@@ -263,10 +317,23 @@ public class SpriteLoader {
                 }
         } catch (Throwable ignored) {
         }
+        clearMaskedTextureCaches();
         textureCacheById = new Texture[sprites.size()];
         regionCacheById = new TextureRegion[sprites.size()];
         textureGeneration++;
         notifyReloadListeners();
+    }
+
+    private void clearMaskedTextureCaches() {
+        for (Texture texture : maskedTextureCache.values()) {
+            if (texture == null) continue;
+            try {
+                texture.dispose();
+            } catch (Throwable ignored) {
+            }
+        }
+        maskedTextureCache.clear();
+        maskedRegionCache.clear();
     }
 
     /**

@@ -258,10 +258,14 @@ public class NameRenderer {
         dialogSpritesLoaded = true;
         try {
             SpriteLoader loader = SpriteLoader.getInstance();
-            dialogBack = loader.getRegionFromSpriteName("V3_DialogBoxBack");
-            dialogBottom = loader.getRegionFromSpriteName("V3_DialogBoxBackBottom");
-            dialogRight = loader.getRegionFromSpriteName("V3_DialogBoxBackRight");
-            dialogBottomRight = loader.getRegionFromSpriteName("V3_DialogBoxBackBottomRight");
+            dialogBack = loader.getMaskedRegionFromSpriteNames(
+                    "V3_DialogBoxBack", "V3_DialogBoxBackMask");
+            dialogBottom = loader.getMaskedRegionFromSpriteNames(
+                    "V3_DialogBoxBackBottom", "V3_DialogBoxBackBottomMask");
+            dialogRight = loader.getMaskedRegionFromSpriteNames(
+                    "V3_DialogBoxBackRight", "V3_DialogBoxBackRightMask");
+            dialogBottomRight = loader.getMaskedRegionFromSpriteNames(
+                    "V3_DialogBoxBackBottomRight", "V3_DialogBoxBackBottomRightMask");
         } catch (Throwable t) {
             log.warn("Failed to load original NPC dialog-box sprites", t);
         }

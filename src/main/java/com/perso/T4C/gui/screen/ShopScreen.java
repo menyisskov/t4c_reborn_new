@@ -353,9 +353,8 @@ public class ShopScreen extends GuiListScreen {
         PlayerStateStore.save(player);
         boolean single = units == 1 && onlyName != null && !onlyName.isEmpty();
         SystemMessage.showShared(single
-                ? I18n.message("message.item_bought", "You bought %s!", onlyName)
-                : I18n.message("message.items_bought", "You bought %d items for %d gold.",
-                        units, cost));
+                ? I18n.message("message.item_bought", onlyName)
+                : I18n.message("message.items_bought", units, cost));
         selected = null;
         rebuildList();
     }
