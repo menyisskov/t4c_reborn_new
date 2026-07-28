@@ -1,6 +1,6 @@
 {
-  "x": 2919.0,
-  "y": 1089.0,
+  "x": 2643.0,
+  "y": 813.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -11,7 +11,7 @@
   "gold": 50521,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 46,
+  "currentHp": 27,
   "maxMana": 600,
   "mana": 330,
   "level": 16,
@@ -123,5 +123,5 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.094651
+  "dayNightHour": 7.0
 }

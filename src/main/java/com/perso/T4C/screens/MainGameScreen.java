@@ -66,6 +66,7 @@ import com.perso.T4C.gui.screen.SpellBook;
 import com.perso.T4C.gui.screen.Statistics;
 import com.perso.T4C.gui.screen.OptionsScreen;
 import com.perso.T4C.gui.screen.QuestScreen;
+import com.perso.T4C.gui.screen.MapScreen;
 import com.perso.T4C.gui.widget.GuiMapZoneDisplay;
 import com.perso.T4C.ui.FloatingDamage;
 import com.perso.T4C.ui.FontManager;
@@ -3121,6 +3122,13 @@ public class MainGameScreen implements Screen {
                 GuiManager.close();
             } else {
                 GuiManager.open(new QuestScreen(player));
+            }
+        });
+        hud.setMapAction(() -> {
+            if (GuiManager.isCurrent(MapScreen.class)) {
+                GuiManager.close();
+            } else {
+                GuiManager.open(new MapScreen());
             }
         });
         hud.setOptionsAction(() -> {

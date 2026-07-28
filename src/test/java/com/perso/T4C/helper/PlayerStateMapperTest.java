@@ -33,4 +33,5 @@ class PlayerStateMapperTest {
         assertEquals(1, restored.getQuestFlag("quest.lighthaven_samaritan_rats.status"));
         assertEquals(7, restored.getQuestFlag("quest.lighthaven_samaritan_rats.kills"));
     }
+
 }

@@ -79,6 +79,7 @@ public class PlayerHUD {
     private Runnable characterAction = () -> { };
     private Runnable spellBookAction = () -> { };
     private Runnable questAction = () -> { };
+    private Runnable mapAction = () -> { };
     private Runnable optionsAction = () -> { };
     private ChatBarButtonItem capturedChatBarButton;
     private ChatBarButtonItem draggedChatBarButton;
@@ -458,6 +459,10 @@ public class PlayerHUD {
         this.questAction = questAction == null ? () -> { } : questAction;
     }
 
+    public void setMapAction(Runnable mapAction) {
+        this.mapAction = mapAction == null ? () -> { } : mapAction;
+    }
+
     public void setOptionsAction(Runnable optionsAction) {
         this.optionsAction = optionsAction == null ? () -> { } : optionsAction;
     }
@@ -535,6 +540,8 @@ public class PlayerHUD {
                 () -> spellBookAction.run());
         addChatBarButton("Quest journal", 882f, "GUI_ChatBtnQuest",
                 () -> questAction.run());
+        addChatBarButton("World map", 928f, "GUI_ChatBtnMap",
+                () -> mapAction.run());
         addChatBarButton("Options", 974f, 101f, "GUI_ChatBtnOption",
                 () -> optionsAction.run());
     }

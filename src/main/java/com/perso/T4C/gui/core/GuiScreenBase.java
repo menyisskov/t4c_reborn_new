@@ -61,6 +61,10 @@ public abstract class GuiScreenBase {
         }
     }
 
+    /** Releases screen-owned GPU resources. Most GUI screens own none. */
+    public void dispose() {
+    }
+
     /** Bouton de fermeture standard GUI_X en (x + dx, y + dy). Null-safe. */
     protected void addCloseButton(float dx, float dy) {
         TextureRegion normal = GuiSprites.load("GUI_X_ButtonDown");

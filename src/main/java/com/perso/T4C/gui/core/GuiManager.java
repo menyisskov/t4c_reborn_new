@@ -12,10 +12,12 @@ public final class GuiManager {
     }
 
     public static void open(GuiScreenBase screen) {
+        if (current != null && current != screen) current.dispose();
         current = screen;
     }
 
     public static void close() {
+        if (current != null) current.dispose();
         current = null;
     }
 

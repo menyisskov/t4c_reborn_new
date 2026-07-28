@@ -3957,6 +3957,7 @@
   "item.yellow_crystal_shard": "Éclat de cristal jaune",
   "item.yellow_gem": "Gemme jaune",
   "item.yelloworb": "YellowOrb",
+  "map.position": "Position : %d, %d   Niveau : %d",
   "message.action_prevented": "Une force mystique vous empêche d'effectuer cette action.",
   "message.attack_npc": "Vous attaquez %s.",
   "message.chest_empty": "Ce coffre est vide.",
@@ -6476,7 +6477,7 @@
   "ui.total": "Total",
   "ui.training": "ENTRAÎNEMENT",
   "ui.wisdom": "Sagesse",
-  "ui.world_map": "CARTE DU MONDE",
+  "ui.world_map": "CARTE",
   "ui.xp_to_next_level": "XP au niveau suivant",
   "zone.lighthaven": "LIGHTHAVEN"
 }
