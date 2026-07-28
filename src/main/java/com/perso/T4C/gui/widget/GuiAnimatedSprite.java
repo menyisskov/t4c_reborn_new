@@ -3,6 +3,7 @@ package com.perso.T4C.gui.widget;
 import com.perso.T4C.gui.core.AbstractGuiElement;
 import com.perso.T4C.gui.core.GuiBoxedItem;
 import com.perso.T4C.gui.core.GuiDraw;
+import com.perso.T4C.gui.core.GuiResizable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,7 +15,7 @@ import java.util.Objects;
  * Class representing GuiAnimatedSprite.
  */
 
-public class GuiAnimatedSprite extends AbstractGuiElement {
+public class GuiAnimatedSprite extends AbstractGuiElement implements GuiResizable {
     private final List<TextureRegion> frames;
     private final float frameTime;
     private float timer;
@@ -37,9 +38,14 @@ public class GuiAnimatedSprite extends AbstractGuiElement {
 
     /** Centers each frame inside a {@code width}×{@code height} zone anchored at (x, y). */
     public GuiAnimatedSprite boxed(float width, float height) {
-        this.zoneWidth = width;
-        this.zoneHeight = height;
+        this.zoneWidth = Math.max(1f, width);
+        this.zoneHeight = Math.max(1f, height);
         return this;
+    }
+
+    @Override
+    public GuiAnimatedSprite setSize(float width, float height) {
+        return boxed(width, height);
     }
 
     public void render(SpriteBatch batch) {

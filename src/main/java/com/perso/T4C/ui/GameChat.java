@@ -9,8 +9,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Align;
+import com.perso.T4C.exception.GameException;
+import com.perso.T4C.gui.core.GuiDraw;
+import com.perso.T4C.gui.core.GuiElement;
+import com.perso.T4C.gui.core.GuiResizable;
+import com.perso.T4C.gui.core.GuiBoxedInteraction;
+import com.perso.T4C.gui.core.GuiBoxedItem;
+import com.perso.T4C.helper.SpriteLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +31,29 @@ public final class GameChat extends InputAdapter {
     private static final int MAX_ENTRIES = 500;
     private static final int MAX_HISTORY = 50;
     private static final int MAX_TEXT_LENGTH = 256;
-    private static final float WIDTH = 482f;
-    private static final float LOG_HEIGHT = 120f;
-    private static final float INPUT_HEIGHT = 25f;
-    private static final float MARGIN = 12f;
-    private static final Color BACKGROUND = new Color(0.025f, 0.035f, 0.045f, 0.42f);
-    private static final Color INPUT_BACKGROUND = new Color(0.04f, 0.055f, 0.07f, 0.58f);
-    private static final Color BORDER = new Color(0.42f, 0.36f, 0.25f, 0.65f);
-    private static final Color SYSTEM = Color.valueOf("8DE300");
+    private static final float BAR_WIDTH = 1024f;
+    private static final float BAR_HEIGHT = 150f;
+    private static final float LEFT_CAP_WIDTH = 8f;
+    private static final float LOG_X = 18f;
+    private static final float LOG_Y = 22f;
+    private static final float LOG_WIDTH = 596f;
+    private static final float LOG_HEIGHT = 86f;
+    private static final float LOG_TEXT_INSET_Y = 4f;
+    private static final float INPUT_X = 10f;
+    private static final float INPUT_Y = 120f;
+    private static final float INPUT_WIDTH = 714f;
+    private static final float INPUT_HEIGHT = 20f;
+    private static final float LINE_HEIGHT = 16f;
+    private static final float SCROLL_THUMB_X = 639f;
+    private static final float SCROLL_THUMB_TOP_Y = 28f;
+    private static final float SCROLL_THUMB_BOTTOM_Y = 66f;
+    private static final int WHEEL_SCROLL_LINES = 3;
+    private static final Color SYSTEM = SystemMessage.MESSAGE_COLOR;
     private static final Color LOCAL = Color.valueOf("E6D8BC");
 
     private record Entry(String text, Color color) {}
 
     private final BitmapFont font;
-    private final ShapeRenderer shapes = new ShapeRenderer();
     private final GlyphLayout layout = new GlyphLayout();
     private final List<Entry> entries = new ArrayList<>();
     private final List<String> history = new ArrayList<>();
@@ -49,6 +65,11 @@ public final class GameChat extends InputAdapter {
     private int cursor;
     private int historyIndex;
     private int scroll;
+    private int maximumScroll;
+    private final GuiBoxedInteraction boxedInteraction = new GuiBoxedInteraction();
+    private final ChatZone chatZone = new ChatZone();
+    private final ChatZone inputZone = new ChatZone();
+    private boolean chatLayoutInitialized;
 
     public GameChat(Consumer<String> submitHandler) {
         this.submitHandler = submitHandler == null ? text -> { } : submitHandler;
@@ -78,56 +99,141 @@ public final class GameChat extends InputAdapter {
 
     public void render(SpriteBatch batch, OrthographicCamera hudCamera) {
         if (!visible || batch == null || hudCamera == null) return;
-        float screenHeight = hudCamera.viewportHeight;
-        float x = Math.max(MARGIN, (hudCamera.viewportWidth - WIDTH) / 2f);
-        float logY = Math.max(MARGIN, screenHeight - LOG_HEIGHT - INPUT_HEIGHT - MARGIN);
-        float totalHeight = LOG_HEIGHT + (active ? INPUT_HEIGHT : 0f);
-
-        batch.end();
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapes.setProjectionMatrix(hudCamera.combined);
-        shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(BACKGROUND);
-        shapes.rect(x, logY, WIDTH, LOG_HEIGHT);
-        if (active) {
-            shapes.setColor(INPUT_BACKGROUND);
-            shapes.rect(x, logY + LOG_HEIGHT, WIDTH, INPUT_HEIGHT);
-        }
-        shapes.end();
-        shapes.begin(ShapeRenderer.ShapeType.Line);
-        shapes.setColor(BORDER);
-        shapes.rect(x, logY, WIDTH, totalHeight);
-        if (active) shapes.line(x, logY + LOG_HEIGHT, x + WIDTH, logY + LOG_HEIGHT);
-        shapes.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-        batch.begin();
-
-        List<Entry> lines = visualLines(WIDTH - 16f);
-        int visibleLines = Math.max(1, (int) ((LOG_HEIGHT - 8f) / 16f));
-        int maximumScroll = Math.max(0, lines.size() - visibleLines);
-        scroll = Math.max(0, Math.min(scroll, maximumScroll));
-        int last = lines.size() - scroll;
-        int first = Math.max(0, last - visibleLines);
-        float y = logY + 6f;
-        for (int i = first; i < last; i++) {
-            Entry line = lines.get(i);
-            font.setColor(line.color());
-            font.draw(batch, line.text(), x + 8f, y);
-            y += 16f;
+        float scale = Math.min(1f, hudCamera.viewportWidth / BAR_WIDTH);
+        float barWidth = BAR_WIDTH * scale;
+        float x = (hudCamera.viewportWidth - barWidth) * 0.5f;
+        float y = hudCamera.viewportHeight - BAR_HEIGHT * scale;
+        if (!chatLayoutInitialized) {
+            chatZone.setPosition(x + LOG_X * scale, y + LOG_Y * scale);
+            chatZone.setSize(LOG_WIDTH * scale, LOG_HEIGHT * scale);
+            inputZone.setPosition(x + INPUT_X * scale, y + INPUT_Y * scale);
+            inputZone.setSize(INPUT_WIDTH * scale, INPUT_HEIGHT * scale);
+            chatLayoutInitialized = true;
         }
 
-        if (active) {
-            String prompt = "> " + input;
-            font.setColor(LOCAL);
-            font.draw(batch, prompt, x + 8f, logY + LOG_HEIGHT + 5f);
-            if ((System.currentTimeMillis() / 350L & 1L) == 0L) {
-                String beforeCursor = "> " + input.substring(0, cursor);
-                layout.setText(font, beforeCursor);
-                font.draw(batch, "|", x + 8f + layout.width, logY + LOG_HEIGHT + 5f);
+        drawBackground(batch, x, y, scale);
+        GuiBoxedItem.drawDebugBorder(batch, chatZone.getX(), chatZone.getY(), chatZone.getWidth(), chatZone.getHeight());
+        GuiBoxedItem.drawDebugBorder(batch, inputZone.getX(), inputZone.getY(), inputZone.getWidth(), inputZone.getHeight());
+
+        float oldScaleX = font.getData().scaleX;
+        float oldScaleY = font.getData().scaleY;
+        font.getData().setScale(oldScaleX * scale, oldScaleY * scale);
+        try {
+            float logX = chatZone.getX();
+            float logY = chatZone.getY();
+            float logWidth = chatZone.getWidth();
+            float logHeight = chatZone.getHeight();
+            List<Entry> lines = visualLines(logWidth);
+            int visibleLines = Math.max(1, (int) (LOG_HEIGHT / LINE_HEIGHT));
+            maximumScroll = Math.max(0, lines.size() - visibleLines);
+            scroll = Math.max(0, Math.min(scroll, maximumScroll));
+            int last = lines.size() - scroll;
+            int first = Math.max(0, last - visibleLines);
+
+            beginScissor(batch, logX, logY, logWidth, logHeight, hudCamera.viewportHeight);
+            float textY = logY + LOG_TEXT_INSET_Y * scale;
+            for (int i = first; i < last; i++) {
+                Entry line = lines.get(i);
+                font.setColor(line.color());
+                font.draw(batch, line.text(), logX, textY);
+                textY += LINE_HEIGHT * scale;
             }
+            endScissor(batch);
+            drawScrollThumb(batch, x, y, scale);
+
+            if (active) {
+                float inputX = inputZone.getX();
+                float inputY = inputZone.getY();
+                float inputWidth = inputZone.getWidth();
+                beginScissor(batch, inputX, inputY, inputWidth,
+                        INPUT_HEIGHT * scale, hudCamera.viewportHeight);
+                String prompt = "> " + input;
+                font.setColor(LOCAL);
+                layout.setText(font, prompt);
+                float inputTextY = inputY + (inputZone.getHeight() - layout.height) / 2f;
+                font.draw(batch, prompt, inputX, inputTextY);
+                if ((System.currentTimeMillis() / 350L & 1L) == 0L) {
+                    String beforeCursor = "> " + input.substring(0, cursor);
+                    layout.setText(font, beforeCursor);
+                    font.draw(batch, "|", inputX + layout.width, inputTextY);
+                }
+                endScissor(batch);
+            }
+        } finally {
+            font.getData().setScale(oldScaleX, oldScaleY);
+            font.setColor(Color.WHITE);
         }
-        font.setColor(Color.WHITE);
+    }
+
+    public boolean boxedTouchDown(float x, float y) { return boxedInteraction.touchDown(List.of(chatZone, inputZone), x, y); }
+    public boolean boxedMouseMoved(float x, float y) { return boxedInteraction.dragged(x, y); }
+    public boolean boxedTouchUp() { return boxedInteraction.touchUp(); }
+
+    private static final class ChatZone implements GuiResizable {
+        private float x, y, w, h;
+        public void render(SpriteBatch b) { }
+        public boolean contains(float sx, float sy) { return sx >= x && sx <= x + w && sy >= y && sy <= y + h; }
+        public void setPosition(float x, float y) { this.x=x; this.y=y; }
+        public float getX(){return x;} public float getY(){return y;}
+        public GuiResizable setSize(float w,float h){this.w=Math.max(8,w);this.h=Math.max(8,h);return this;}
+        public float getWidth(){return w;} public float getHeight(){return h;}
+    }
+
+    private void drawBackground(SpriteBatch batch, float x, float y, float scale) {
+        SpriteLoader loader = SpriteLoader.getInstance();
+        TextureRegion left = null;
+        TextureRegion background = null;
+        try {
+            left = loader.getRegionFromSpriteName("GUI_backChatLeft");
+            background = loader.getRegionFromSpriteName("GUI_backChat");
+        } catch (GameException ignored) {
+            // Text remains usable when the optional GUI sprites cannot be decoded.
+        }
+        if (left != null) {
+            GuiDraw.drawRegionFlipped(batch, left, x, y,
+                    LEFT_CAP_WIDTH * scale, BAR_HEIGHT * scale);
+        }
+        if (background != null) {
+            GuiDraw.drawRegionFlipped(batch, background, x + LEFT_CAP_WIDTH * scale, y,
+                    (BAR_WIDTH - LEFT_CAP_WIDTH) * scale, BAR_HEIGHT * scale);
+        }
+    }
+
+    private void drawScrollThumb(SpriteBatch batch, float x, float y, float scale) {
+        TextureRegion thumb;
+        try {
+            thumb = SpriteLoader.getInstance().getRegionFromSpriteName("GUI_ScrollTick");
+        } catch (GameException ignored) {
+            return;
+        }
+        if (thumb == null) return;
+        float ratio = maximumScroll == 0 ? 0f : scroll / (float) maximumScroll;
+        float thumbY = SCROLL_THUMB_BOTTOM_Y
+                + (SCROLL_THUMB_TOP_Y - SCROLL_THUMB_BOTTOM_Y) * ratio;
+        GuiDraw.drawRegionFlipped(batch, thumb,
+                x + SCROLL_THUMB_X * scale, y + thumbY * scale,
+                thumb.getRegionWidth() * scale, thumb.getRegionHeight() * scale);
+        GuiBoxedItem.drawDebugBorder(batch,
+                x + SCROLL_THUMB_X * scale,
+                y + SCROLL_THUMB_TOP_Y * scale,
+                thumb.getRegionWidth() * scale,
+                (SCROLL_THUMB_BOTTOM_Y - SCROLL_THUMB_TOP_Y + thumb.getRegionHeight()) * scale);
+    }
+
+    private static void beginScissor(SpriteBatch batch, float x, float y, float width,
+                                     float height, float screenHeight) {
+        batch.flush();
+        Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
+        Gdx.gl.glScissor(
+                Math.max(0, Math.round(x)),
+                Math.max(0, Math.round(screenHeight - y - height)),
+                Math.max(0, Math.round(width)),
+                Math.max(0, Math.round(height)));
+    }
+
+    private static void endScissor(SpriteBatch batch) {
+        batch.flush();
+        Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
     }
 
     private List<Entry> visualLines(float width) {
@@ -226,6 +332,29 @@ public final class GameChat extends InputAdapter {
         return true;
     }
 
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+        float scale = Math.min(1f, width / BAR_WIDTH);
+        float x = (width - BAR_WIDTH * scale) * 0.5f;
+        float y = height - BAR_HEIGHT * scale;
+        float mouseX = Gdx.input.getX();
+        float mouseY = Gdx.input.getY();
+        if (mouseX < x + LOG_X * scale
+                || mouseX > x + (LOG_X + LOG_WIDTH) * scale
+                || mouseY < y + LOG_Y * scale
+                || mouseY > y + (LOG_Y + LOG_HEIGHT) * scale) {
+            return false;
+        }
+        int direction = amountY < 0f ? 1 : amountY > 0f ? -1 : 0;
+        if (direction != 0) {
+            scroll = Math.max(0, Math.min(maximumScroll,
+                    scroll + direction * WHEEL_SCROLL_LINES));
+        }
+        return true;
+    }
+
     private static boolean isEnter(int keycode) {
         return keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER;
     }
@@ -255,6 +384,6 @@ public final class GameChat extends InputAdapter {
     }
 
     public void dispose() {
-        shapes.dispose();
+        // Sprite textures and the shared font are owned by their respective managers.
     }
 }

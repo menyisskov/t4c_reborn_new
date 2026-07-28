@@ -7,6 +7,7 @@ import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.screen.Inventory;
 import com.perso.T4C.gui.screen.SpellBook;
 import com.perso.T4C.gui.screen.Statistics;
+import com.perso.T4C.gui.screen.QuestScreen;
 import com.perso.T4C.helper.ModifSprites;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.screens.MapRenderer;
@@ -125,6 +126,14 @@ public class GameInputHandler {
             } else {
                 PlayerHUD hud = hudSupplier == null ? null : hudSupplier.get();
                 GuiManager.open(new Inventory(player, hud));
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q) &&
+            (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))) {
+            if (GuiManager.isCurrent(QuestScreen.class)) {
+                GuiManager.close();
+            } else {
+                GuiManager.open(new QuestScreen(player));
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {

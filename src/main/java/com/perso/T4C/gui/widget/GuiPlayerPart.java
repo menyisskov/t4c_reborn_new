@@ -4,6 +4,7 @@ import com.perso.T4C.gui.core.AbstractGuiElement;
 import com.perso.T4C.gui.core.GuiBoxedItem;
 import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiSprites;
+import com.perso.T4C.gui.core.GuiResizable;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,14 +17,14 @@ import lombok.Getter;
  * Class representing GuiPlayerPart.
  */
 
-public class GuiPlayerPart extends AbstractGuiElement {
+public class GuiPlayerPart extends AbstractGuiElement implements GuiResizable {
     @Getter
     private final Player player;
     @Getter
     private final BodyPart part;
     // Slot zone: the equipped item's icon is centered inside this rectangle.
-    private final float zoneWidth;
-    private final float zoneHeight;
+    private float zoneWidth;
+    private float zoneHeight;
     private TextureRegion cachedRegion;
 
     public GuiPlayerPart(Player player, BodyPart part, float x, float y) {
@@ -36,6 +37,17 @@ public class GuiPlayerPart extends AbstractGuiElement {
         this.part = part;
         this.zoneWidth = zoneWidth;
         this.zoneHeight = zoneHeight;
+    }
+
+    @Override
+    public GuiPlayerPart setSize(float width, float height) {
+        this.zoneWidth = Math.max(1f, width);
+        this.zoneHeight = Math.max(1f, height);
+        return this;
+    }
+
+    public GuiPlayerPart boxed(float width, float height) {
+        return setSize(width, height);
     }
 
     /**

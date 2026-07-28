@@ -44,8 +44,10 @@ public class MyGame extends Game {
 
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        com.perso.T4C.config.GamePreferences preferences =
+                com.perso.T4C.config.GamePreferencesStore.get();
         config.setTitle("T4C Reborn");
-        if (com.perso.T4C.config.GameConstants.FULLSCREEN) {
+        if (preferences.isFullscreen()) {
             config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
         } else {
             config.setWindowedMode(
@@ -54,7 +56,7 @@ public class MyGame extends Game {
             );
         }
         config.setResizable(false);
-        config.useVsync(true);
+        config.useVsync(preferences.isVSync());
         config.setWindowIcon(
                 Files.FileType.Absolute,
                 Paths.get("App_icon.png").toAbsolutePath().toString()

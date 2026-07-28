@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.function.Consumer;
 
 /**
  * Displays system messages at the top center of the screen.
@@ -28,9 +29,15 @@ public class SystemMessage {
     private static final float OUTLINE_WIDTH = 1.2f;
     private static final Color OUTLINE_COLOR = Color.BLACK;
     private static SystemMessage shared;
+    private static Consumer<String> chatSink;
 
     public static void setShared(SystemMessage instance) {
         shared = instance;
+    }
+
+    /** Routes regular system notifications to the in-game chat. */
+    public static void setChatSink(Consumer<String> sink) {
+        chatSink = sink;
     }
 
     public static void showShared(String message) {
@@ -58,6 +65,10 @@ public class SystemMessage {
 
     public void show(String message) {
         if (message == null) {
+            return;
+        }
+        if (chatSink != null) {
+            chatSink.accept(message);
             return;
         }
         if (currentMessage == null) {

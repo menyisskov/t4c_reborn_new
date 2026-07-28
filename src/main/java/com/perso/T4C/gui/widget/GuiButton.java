@@ -3,6 +3,7 @@ package com.perso.T4C.gui.widget;
 import com.perso.T4C.gui.core.AbstractGuiElement;
 import com.perso.T4C.gui.core.GuiBoxedItem;
 import com.perso.T4C.gui.core.GuiDraw;
+import com.perso.T4C.gui.core.GuiResizable;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * Class representing GuiButton.
  */
 
-public class GuiButton extends AbstractGuiElement {
+public class GuiButton extends AbstractGuiElement implements GuiResizable {
     private final TextureRegion normal;
     private final TextureRegion hover;
     private final TextureRegion pressed;
@@ -22,6 +23,8 @@ public class GuiButton extends AbstractGuiElement {
     private boolean isPressed;
     private boolean visible = true;
     private boolean enabled = true;
+    private float renderedWidth;
+    private float renderedHeight;
     private com.badlogic.gdx.graphics.g2d.BitmapFont labelFont;
     private java.util.function.Supplier<String> labelText;
     private final com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout();
@@ -40,6 +43,15 @@ public class GuiButton extends AbstractGuiElement {
         this.hover = Objects.requireNonNull(hover);
         this.pressed = Objects.requireNonNull(pressed);
         this.callback = callback;
+        this.renderedWidth = normal.getRegionWidth();
+        this.renderedHeight = normal.getRegionHeight();
+    }
+
+    @Override
+    public GuiButton setSize(float width, float height) {
+        this.renderedWidth = Math.max(1f, width);
+        this.renderedHeight = Math.max(1f, height);
+        return this;
     }
 
     public void setVisible(boolean visible) {
@@ -72,12 +84,12 @@ public class GuiButton extends AbstractGuiElement {
         } else {
             region = normal;
         }
-        GuiDraw.drawRegionFlipped(batch, region, x, y);
+        GuiDraw.drawRegionFlipped(batch, region, x, y, renderedWidth, renderedHeight);
         if (labelFont != null && labelText != null) {
             String text = labelText.get();
             if (text != null && !text.isEmpty()) {
-                float w = normal.getRegionWidth();
-                float h = normal.getRegionHeight();
+                float w = renderedWidth;
+                float h = renderedHeight;
                 float prevScaleX = labelFont.getData().scaleX;
                 float prevScaleY = labelFont.getData().scaleY;
                 layout.setText(labelFont, text);
@@ -96,7 +108,7 @@ public class GuiButton extends AbstractGuiElement {
         }
         // Drawn after the sprite: the button fills its whole zone and would
         // cover a border drawn underneath.
-        GuiBoxedItem.drawDebugBorder(batch, x, y, normal.getRegionWidth(), normal.getRegionHeight());
+        GuiBoxedItem.drawDebugBorder(batch, x, y, renderedWidth, renderedHeight);
     }
 
     public void onTouchDown(float screenX, float screenY) {
@@ -106,7 +118,7 @@ public class GuiButton extends AbstractGuiElement {
 
     public void onTouchUp(float screenX, float screenY) {
         if (visible && enabled && isPressed && contains(screenX, screenY) && callback != null) {
-            SoundManager.animateSound("Generic pickup item.wav");
+            SoundManager.interfaceSound("Generic pickup item.wav");
             callback.run();
         }
         isPressed = false;
@@ -125,12 +137,12 @@ public class GuiButton extends AbstractGuiElement {
 
     @Override
     public float getWidth() {
-        return normal.getRegionWidth();
+        return renderedWidth;
     }
 
     @Override
     public float getHeight() {
-        return normal.getRegionHeight();
+        return renderedHeight;
     }
 
 }

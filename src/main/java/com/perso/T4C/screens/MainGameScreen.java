@@ -61,6 +61,11 @@ import com.perso.T4C.render.SpellRenderer;
 import com.perso.T4C.render.TeleportOverlayRenderer;
 import com.perso.T4C.render.CollisionOverlayRenderer;
 import com.perso.T4C.gui.core.GuiManager;
+import com.perso.T4C.gui.screen.Inventory;
+import com.perso.T4C.gui.screen.SpellBook;
+import com.perso.T4C.gui.screen.Statistics;
+import com.perso.T4C.gui.screen.OptionsScreen;
+import com.perso.T4C.gui.screen.QuestScreen;
 import com.perso.T4C.gui.widget.GuiMapZoneDisplay;
 import com.perso.T4C.ui.FloatingDamage;
 import com.perso.T4C.ui.FontManager;
@@ -1073,12 +1078,14 @@ public class MainGameScreen implements Screen {
             renderTeleportOverlay();
             renderEntityPathDebugOverlay();
             renderDayNightOverlay();
+            renderBrightnessOverlay();
         });
 
         section("hud", () -> {
             updateHudCamera();
             batch.setProjectionMatrix(hudCamera.combined);
             batch.begin();
+            if (gameChat != null) gameChat.render(batch, hudCamera);
             hud.render(batch, 20, 20);
             if (coordsHudVisible && coordsHud != null) coordsHud.render(batch, 10, 20);
             if (mapZoneDisplay != null) {
@@ -1086,7 +1093,6 @@ public class MainGameScreen implements Screen {
             }
             updateAttackCursor();
             GuiManager.render(batch);
-            if (gameChat != null) gameChat.render(batch, hudCamera);
             batch.end();
         });
 
@@ -2320,11 +2326,10 @@ public class MainGameScreen implements Screen {
     }
 
     private void showSystemMessage(String message) {
-        if (gameChat != null) {
-            gameChat.addSystemMessage(message);
-        }
         if (systemMessage != null) {
             systemMessage.show(message);
+        } else if (gameChat != null) {
+            gameChat.addSystemMessage(message);
         }
     }
 
@@ -2343,6 +2348,25 @@ public class MainGameScreen implements Screen {
         debugShapeRenderer.setColor(overlay);
         debugShapeRenderer.rect(0, 0, hudCamera.viewportWidth, hudCamera.viewportHeight);
         debugShapeRenderer.end();
+    }
+
+    /** Applies the user brightness to the world, before the HUD and options are drawn. */
+    private void renderBrightnessOverlay() {
+        float brightness = com.perso.T4C.config.GamePreferencesStore.get().getBrightness();
+        if (Math.abs(brightness - 1f) < 0.001f) return;
+        float alpha = brightness < 1f ? 1f - brightness : Math.min(0.25f, brightness - 1f);
+        debugShapeRenderer.setProjectionMatrix(hudCamera.combined);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        debugShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        if (brightness < 1f) {
+            debugShapeRenderer.setColor(0f, 0f, 0f, alpha);
+        } else {
+            debugShapeRenderer.setColor(1f, 1f, 1f, alpha);
+        }
+        debugShapeRenderer.rect(0, 0, hudCamera.viewportWidth, hudCamera.viewportHeight);
+        debugShapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     /**
@@ -3071,6 +3095,41 @@ public class MainGameScreen implements Screen {
      */
     private void initializeHud() {
         hud = new PlayerHUD(player, spriteLoader);
+        hud.setBackpackAction(() -> {
+            if (GuiManager.isCurrent(Inventory.class)) {
+                GuiManager.close();
+            } else {
+                GuiManager.open(new Inventory(player, hud));
+            }
+        });
+        hud.setCharacterAction(() -> {
+            if (GuiManager.isCurrent(Statistics.class)) {
+                GuiManager.close();
+            } else {
+                GuiManager.open(new Statistics(player));
+            }
+        });
+        hud.setSpellBookAction(() -> {
+            if (GuiManager.isCurrent(SpellBook.class)) {
+                GuiManager.close();
+            } else {
+                GuiManager.open(new SpellBook(player, hud));
+            }
+        });
+        hud.setQuestAction(() -> {
+            if (GuiManager.isCurrent(QuestScreen.class)) {
+                GuiManager.close();
+            } else {
+                GuiManager.open(new QuestScreen(player));
+            }
+        });
+        hud.setOptionsAction(() -> {
+            if (GuiManager.isCurrent(OptionsScreen.class)) {
+                GuiManager.close();
+            } else {
+                GuiManager.open(new OptionsScreen());
+            }
+        });
         coordsHud = new PlayerCoordsHud(player);
         systemMessage = new SystemMessage();
         gameChat = new GameChat(text -> {
@@ -3081,6 +3140,7 @@ public class MainGameScreen implements Screen {
         });
         gameChat.addSystemMessage(I18n.key("chat.help"));
         SystemMessage.setShared(systemMessage);
+        SystemMessage.setChatSink(gameChat::addSystemMessage);
         com.perso.T4C.spell.NpcCastVfxHook.setShared(this::playNpcCastVfx);
         mapZoneDisplay = new GuiMapZoneDisplay(I18n.key("zone.lighthaven"));
     }
@@ -3179,6 +3239,10 @@ public class MainGameScreen implements Screen {
                     cancelActiveTargetedSpell();
                     return true;
                 }
+                if (keycode == Input.Keys.ESCAPE && !isTextInputActive()) {
+                    GuiManager.open(new OptionsScreen());
+                    return true;
+                }
                 if (keycode == Input.Keys.F9) {
                     toggleProfilerEnabled();
                     return true;
@@ -3193,6 +3257,17 @@ public class MainGameScreen implements Screen {
 
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                boolean controlDown = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                        || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
+                if (button == Input.Buttons.LEFT && hud != null
+                        && hud.chatBarButtonsTouchDown(screenX, screenY, controlDown)) {
+                    return true;
+                }
+                if (button == Input.Buttons.LEFT && gameChat != null && gameChat.boxedTouchDown(screenX, screenY)) return true;
+                if (button == Input.Buttons.LEFT && hud != null
+                        && hud.boxedTouchDown(screenX, screenY, controlDown)) {
+                    return true;
+                }
                 if (button == Input.Buttons.RIGHT && hud != null && hud.showBuffTooltipAt(screenX, screenY)) {
                     return true;
                 }
@@ -3221,6 +3296,12 @@ public class MainGameScreen implements Screen {
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                if (button == Input.Buttons.LEFT && hud != null
+                        && hud.chatBarButtonsTouchUp(screenX, screenY)) {
+                    return true;
+                }
+                if (button == Input.Buttons.LEFT && hud != null && hud.boxedTouchUp()) return true;
+                if (button == Input.Buttons.LEFT && gameChat != null && gameChat.boxedTouchUp()) return true;
                 if (GuiManager.isOpen()) {
                     GuiManager.onTouchUp(screenX, screenY);
                     return true;
@@ -3230,6 +3311,11 @@ public class MainGameScreen implements Screen {
 
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
+                if (hud != null && hud.chatBarButtonsMouseMoved(screenX, screenY)) {
+                    return true;
+                }
+                if (hud != null && hud.boxedMouseMoved(screenX, screenY)) return true;
+                if (gameChat != null && gameChat.boxedMouseMoved(screenX, screenY)) return true;
                 if (GuiManager.isOpen()) {
                     GuiManager.onMouseMove(screenX, screenY);
                     return true;
@@ -3239,6 +3325,13 @@ public class MainGameScreen implements Screen {
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
+                if (hud != null && hud.chatBarButtonsTouchDragged(screenX, screenY)) {
+                    return true;
+                }
+                if (hud != null && hud.boxedMouseMoved(screenX, screenY)) {
+                    return true;
+                }
+                if (gameChat != null && gameChat.boxedMouseMoved(screenX, screenY)) return true;
                 if (GuiManager.isOpen()) {
                     GuiManager.onMouseMove(screenX, screenY);
                     return true;

@@ -10,6 +10,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.perso.T4C.MyGame;
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.gui.core.GuiBoxedItem;
+import com.perso.T4C.gui.widget.GuiButton;
+import com.perso.T4C.gui.widget.GuiBoxedText;
+import com.perso.T4C.gui.widget.GuiBar;
+import com.perso.T4C.gui.core.GuiBoxedInteraction;
+import com.perso.T4C.gui.core.GuiElement;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.model.QuickSlotEntry;
@@ -17,9 +23,12 @@ import com.perso.T4C.player.Player;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Heads-up display for the player showing HP/MP/XP bars.
@@ -33,20 +42,27 @@ public class PlayerHUD {
     private TextureRegion hpBar;
     private TextureRegion mpBar;
     private TextureRegion xpBar;
+    private TextureRegion emptyBar;
     private TextureRegion frame;
     private TextureRegion quickSlotFrame;
+    private final List<ChatBarButtonItem> chatBarButtons = new ArrayList<>();
     private TextureRegion buffBackground;
     private TextureRegion combatModeIcon;
     private final Player player;
     private final BitmapFont font;
+    private final BitmapFont statLabelFont;
     private final HudTooltip tooltip;
     private final SpriteLoader spriteLoader;
     private int lastTextureGen;
-    private final int quickSlotCount = 10;
-    private final int quickSlotRow = 2;
-    private final float quickSlotSize = 44f;
-    private final float quickBarMargin = 18f;
-    private final float quickSlotSpacing = 6f;
+    private static final int QUICK_SLOT_COUNT = 6;
+    private static final float CHAT_BAR_WIDTH = 1024f;
+    private static final float CHAT_BAR_HEIGHT = 150f;
+    private static final float QUICK_SLOT_X = 742f;
+    private static final float QUICK_SLOT_Y = 47f;
+    private static final float QUICK_SLOT_SIZE = 42f;
+    private static final float QUICK_SLOT_PITCH = 46f;
+    private static final float BACKPACK_BUTTON_X = 790f;
+    private static final float BACKPACK_BUTTON_Y = 102f;
     private final Map<String, TextureRegion> quickSlotIcons = new HashMap<>();
     private final Map<String, TextureRegion> buffIcons = new HashMap<>();
     private int selectedQuickSlot = 0;
@@ -54,17 +70,40 @@ public class PlayerHUD {
     private int draggedQuickSlot = 0;
     private float draggedQuickSlotX = 0f;
     private float draggedQuickSlotY = 0f;
+    private final float[] quickSlotGuiOffsetX = new float[QUICK_SLOT_COUNT];
+    private final float[] quickSlotGuiOffsetY = new float[QUICK_SLOT_COUNT];
+    private int draggedQuickSlotGuiItem;
+    private float quickSlotGuiGrabOffsetX;
+    private float quickSlotGuiGrabOffsetY;
+    private Runnable backpackAction = () -> { };
+    private Runnable characterAction = () -> { };
+    private Runnable spellBookAction = () -> { };
+    private Runnable questAction = () -> { };
+    private Runnable optionsAction = () -> { };
+    private ChatBarButtonItem capturedChatBarButton;
+    private ChatBarButtonItem draggedChatBarButton;
     private Player.ActiveBuff tooltipBuff;
+    private GuiBoxedText hpLabel;
+    private GuiBoxedText mpLabel;
+    private GuiBoxedText xpLabel;
+    private GuiBar hpGuiBar;
+    private GuiBar mpGuiBar;
+    private GuiBar xpGuiBar;
+    private final GuiBoxedInteraction boxedInteraction = new GuiBoxedInteraction();
+    private final List<GuiElement> hudBoxedElements = new ArrayList<>();
+    private boolean hudBarsPositioned;
 
     public PlayerHUD(Player player, SpriteLoader spriteLoader) throws GameException {
         this.player = player;
 
         this.spriteLoader = spriteLoader;
-        this.hpBar = spriteLoader.getRegionFromSpriteName("64kMainVitalityBar");
-        this.mpBar = spriteLoader.getRegionFromSpriteName("64kMainManaBar");
-        this.xpBar = spriteLoader.getRegionFromSpriteName("64kMainExperienceBar");
+        this.hpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_HP");
+        this.mpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_MP");
+        this.xpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_XP");
+        this.emptyBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_Empty");
         this.frame = spriteLoader.getRegionFromSpriteName("64kMainEmptyBar");
         this.quickSlotFrame = spriteLoader.getRegionFromSpriteName("64kMinimizedMacro");
+        loadChatBarButtons();
         this.buffBackground = spriteLoader.getRegionFromSpriteName("64kStatusBackGround");
         this.combatModeIcon = spriteLoader.getRegionFromSpriteName(COMBAT_ICON_SPRITE);
         this.lastTextureGen = spriteLoader.getTextureGeneration();
@@ -72,6 +111,22 @@ public class PlayerHUD {
         this.font = ((MyGame) Gdx.app.getApplicationListener()).customFont;
         this.font.getData().setScale(0.7f);
         this.font.setColor(Color.WHITE);
+        this.statLabelFont = FontManager.getInstance().getTahomaFont(12, Color.WHITE, true);
+        this.hpLabel = new GuiBoxedText(statLabelFont, 0f, 0f, 24f, 16f, () -> "PV", () -> Color.WHITE);
+        this.mpLabel = new GuiBoxedText(statLabelFont, 0f, 0f, 24f, 16f, () -> "PM", () -> Color.WHITE);
+        this.xpLabel = new GuiBoxedText(statLabelFont, 0f, 0f, 24f, 16f, () -> "XP", () -> Color.WHITE);
+        this.hpGuiBar = new GuiBar(emptyBar, hpBar, 0f, 0f, hpBar.getRegionWidth(), hpBar.getRegionHeight(),
+                () -> (float) player.getCurrentHp() / player.getMaxHp());
+        this.mpGuiBar = new GuiBar(emptyBar, mpBar, 0f, 0f, mpBar.getRegionWidth(), mpBar.getRegionHeight(),
+                () -> (float) player.getMana() / player.getMaxMana());
+        this.xpGuiBar = new GuiBar(emptyBar, xpBar, 0f, 0f, xpBar.getRegionWidth(), xpBar.getRegionHeight(),
+                () -> (float) player.getCurrentXp() / player.getXpToNextLevel());
+        hudBoxedElements.add(hpGuiBar);
+        hudBoxedElements.add(mpGuiBar);
+        hudBoxedElements.add(xpGuiBar);
+        hudBoxedElements.add(hpLabel);
+        hudBoxedElements.add(mpLabel);
+        hudBoxedElements.add(xpLabel);
         this.tooltip = new HudTooltip();
     }
 
@@ -80,44 +135,83 @@ public class PlayerHUD {
      */
     public void render(SpriteBatch batch, float offsetX, float offsetY) {
         if (spriteLoader.getTextureGeneration() != lastTextureGen) refreshRegions();
-        if (hpBar == null || mpBar == null || xpBar == null || frame == null) return;
+        if (hpBar == null || mpBar == null || xpBar == null) return;
 
         float hpPercent = (float) player.getCurrentHp() / player.getMaxHp();
         float mpPercent = (float) player.getMana() / player.getMaxMana();
         float xpPercent = (float) player.getCurrentXp() / player.getXpToNextLevel();
 
-        int barWidth = frame.getRegionWidth();
-        int barHeight = frame.getRegionHeight();
+        int barWidth = hpBar.getRegionWidth();
+        int barHeight = hpBar.getRegionHeight();
         int spacing = barWidth + 40;
 
         int totalWidth = spacing * 3;
         float startX = Gdx.graphics.getWidth() - totalWidth - offsetX;
-
-        font.draw(batch, "PV", startX - 5, offsetY - 10);
-        batch.draw(frame, startX + 25, offsetY - barHeight);
-        int hpVisible = (int) (hpBar.getRegionWidth() * hpPercent);
-        if (hpVisible > 0) {
-            batch.draw(hpBar.getTexture(), startX + 35, offsetY - barHeight + 1, hpVisible, barHeight, hpBar.getRegionX(), hpBar.getRegionY(), hpVisible, hpBar.getRegionHeight(), false, true);
+        if (!hudBarsPositioned) {
+            float baseY = offsetY - barHeight + 1;
+            hpGuiBar.setPosition(startX + 35f, baseY);
+            mpGuiBar.setPosition(startX + spacing + 35f, baseY);
+            xpGuiBar.setPosition(startX + spacing * 2f + 35f, baseY);
+            hpLabel.setPosition(startX + 9f, offsetY - 13f);
+            mpLabel.setPosition(startX + 152f, offsetY - 13f);
+            xpLabel.setPosition(startX + 296f, offsetY - 13f);
+            hudBarsPositioned = true;
         }
 
-        font.draw(batch, "PM", startX + spacing - 10, offsetY - 10);
-        batch.draw(frame, startX + spacing + 25, offsetY - barHeight);
-        int mpVisible = (int) (mpBar.getRegionWidth() * mpPercent);
-        if (mpVisible > 0) {
-            batch.draw(mpBar.getTexture(), startX + spacing + 35, offsetY - barHeight + 1, mpVisible, barHeight, mpBar.getRegionX(), mpBar.getRegionY(), mpVisible, mpBar.getRegionHeight(), false, true);
-        }
+        float hpBarX = hpGuiBar.getX();
+        float hpBarY = hpGuiBar.getY();
+        hpLabel.render(batch);
+        hpGuiBar.render(batch);
 
-        font.draw(batch, "XP", startX + spacing * 2 - 10, offsetY - 10);
-        batch.draw(frame, startX + spacing * 2 + 25, offsetY - barHeight);
-        int xpVisible = (int) (xpBar.getRegionWidth() * xpPercent);
-        if (xpVisible > 0) {
-            batch.draw(xpBar.getTexture(), startX + spacing * 2 + 35, offsetY - barHeight + 1, xpVisible, barHeight, xpBar.getRegionX(), xpBar.getRegionY(), xpVisible, xpBar.getRegionHeight(), false, true);
+        float mpBarX = mpGuiBar.getX();
+        float mpBarY = mpGuiBar.getY();
+        mpLabel.render(batch);
+        mpGuiBar.render(batch);
+
+        float xpBarX = xpGuiBar.getX();
+        float xpBarY = xpGuiBar.getY();
+        xpLabel.render(batch);
+        xpGuiBar.render(batch);
+
+        if (com.perso.T4C.config.GamePreferencesStore.get().isShowHudValues()) {
+            drawBarValue(batch, player.getCurrentHp() + "/" + player.getMaxHp(), hpBarX,
+                    offsetY - barHeight + 1, hpBar.getRegionWidth(), barHeight);
+            drawBarValue(batch, player.getMana() + "/" + player.getMaxMana(), mpBarX,
+                    offsetY - barHeight + 1, mpBar.getRegionWidth(), barHeight);
+            drawBarValue(batch, player.getCurrentXp() + "/" + player.getXpToNextLevel(), xpBarX,
+                    offsetY - barHeight + 1, xpBar.getRegionWidth(), barHeight);
         }
 
         renderActiveBuffs(batch);
         renderQuickBar(batch);
+        renderChatBarButtons(batch);
         renderBuffTooltip(batch);
         renderCombatModeIndicator(batch);
+    }
+
+    public boolean boxedTouchDown(float sx, float sy, boolean controlDown) {
+        return boxedInteraction.touchDown(hudBoxedElements, sx, sy);
+    }
+
+    public boolean boxedMouseMoved(float sx, float sy) {
+        return boxedInteraction.dragged(sx, sy);
+    }
+
+    public boolean boxedTouchUp() {
+        return boxedInteraction.touchUp();
+    }
+
+    private void drawBarValue(SpriteBatch batch, String value, float barX, float barY, float width, float height) {
+        GlyphLayout layout = new GlyphLayout(statLabelFont, value);
+        statLabelFont.draw(batch, value, barX + (width - layout.width) / 2f,
+                barY + (height - layout.height) / 2f);
+    }
+
+    private void drawEmptyBar(SpriteBatch batch, float x, float y, float width, float height) {
+        if (emptyBar != null) {
+            batch.draw(emptyBar, x, y, width, height);
+        }
+        GuiBoxedItem.drawDebugBorder(batch, x, y, width, height);
     }
 
     private void renderCombatModeIndicator(SpriteBatch batch) {
@@ -182,32 +276,24 @@ public class PlayerHUD {
 
     private void renderQuickBar(SpriteBatch batch) {
         TextureRegion slot = quickSlotFrame != null ? quickSlotFrame : frame;
-        if (slot == null) {
-            return;
-        }
-        int columns = Math.max(1, (int) Math.ceil(quickSlotCount / (float) quickSlotRow));
-        float totalWidth = columns * quickSlotSize + (columns - 1) * quickSlotSpacing;
-        float startX = (Gdx.graphics.getWidth() - totalWidth) * 0.5f;
-        float baseY = Gdx.graphics.getHeight() - quickBarMargin;
-        for (int i = 0; i < quickSlotCount; i++) {
-            int col = i % columns;
-            int row = i / columns;
-            float x = startX + col * (quickSlotSize + quickSlotSpacing);
-            float y = baseY - row * (quickSlotSize + quickSlotSpacing);
-            batch.draw(slot, x, y - quickSlotSize, quickSlotSize, quickSlotSize);
+        QuickBarLayout layout = quickBarLayout();
+        for (int i = 0; i < QUICK_SLOT_COUNT; i++) {
+            float x = quickSlotX(layout, i);
+            float y = quickSlotY(layout, i);
+            GuiBoxedItem.drawDebugBorder(batch, x, y, layout.size, layout.size);
             if (selectedQuickSlot == i + 1) {
                 Color previous = new Color(batch.getColor());
                 float t = TimeUtils.millis() / 1000f;
                 float pulse = 0.5f + 0.5f * MathUtils.sin(t * 14f);
                 float alpha = 0.3f + 0.7f * pulse;
-                float glowSize = quickSlotSize + 6f;
+                float glowSize = layout.size + 6f * layout.scale;
                 float glowX = x - 3f;
-                float glowY = y - quickSlotSize - 3f;
+                float glowY = y - 3f;
                 batch.setColor(1f, 0.9f, 0.15f, alpha);
                 batch.draw(slot, glowX, glowY, glowSize, glowSize);
-                float outerSize = quickSlotSize + 14f;
+                float outerSize = layout.size + 14f * layout.scale;
                 float outerX = x - 7f;
-                float outerY = y - quickSlotSize - 7f;
+                float outerY = y - 7f;
                 batch.setColor(1f, 0.8f, 0.1f, alpha * 0.6f);
                 batch.draw(slot, outerX, outerY, outerSize, outerSize);
                 batch.setColor(previous);
@@ -218,10 +304,13 @@ public class PlayerHUD {
             SpellData spell = getSpellData(spellName);
             TextureRegion icon = itemName == null ? resolveSpellIcon(spellName) : resolveItemIcon(itemName);
             if (icon != null) {
-                float iconW = icon.getRegionWidth();
-                float iconH = icon.getRegionHeight();
-                float iconX = x + (quickSlotSize - iconW) * 0.5f;
-                float iconY = y - quickSlotSize + (quickSlotSize - iconH) * 0.5f;
+                float iconScale = Math.min(1f, Math.min(
+                        (layout.size - 8f * layout.scale) / icon.getRegionWidth(),
+                        (layout.size - 8f * layout.scale) / icon.getRegionHeight()));
+                float iconW = icon.getRegionWidth() * iconScale;
+                float iconH = icon.getRegionHeight() * iconScale;
+                float iconX = x + (layout.size - iconW) * 0.5f;
+                float iconY = y + (layout.size - iconH) * 0.5f;
                 boolean onCooldown = spell != null && player.isSpellOnCooldown(spell.getName());
                 if (onCooldown) {
                     Color previous = new Color(batch.getColor());
@@ -229,9 +318,9 @@ public class PlayerHUD {
                     batch.draw(icon.getTexture(), iconX, iconY, iconW, iconH,
                             icon.getRegionX(), icon.getRegionY(), icon.getRegionWidth(), icon.getRegionHeight(), false, true);
                     batch.setColor(0f, 0f, 0f, 0.45f);
-                    batch.draw(slot, x, y - quickSlotSize, quickSlotSize, quickSlotSize);
+                    batch.draw(slot, x, y, layout.size, layout.size);
                     batch.setColor(previous);
-                    renderCooldownText(batch, x, y - quickSlotSize, quickSlotSize, spell);
+                    renderCooldownText(batch, x, y, layout.size, spell);
                 } else {
                     batch.draw(icon.getTexture(), iconX, iconY, iconW, iconH,
                             icon.getRegionX(), icon.getRegionY(), icon.getRegionWidth(), icon.getRegionHeight(), false, true);
@@ -257,25 +346,16 @@ public class PlayerHUD {
     }
 
     public int getQuickSlotAt(int screenX, int screenY) {
-        int columns = Math.max(1, (int) Math.ceil(quickSlotCount / (float) quickSlotRow));
-        float totalWidth = columns * quickSlotSize + (columns - 1) * quickSlotSpacing;
-        float startX = (Gdx.graphics.getWidth() - totalWidth) * 0.5f;
-        float baseY = Gdx.graphics.getHeight() - quickBarMargin;
-        float totalHeight = quickSlotRow * quickSlotSize + (quickSlotRow - 1) * quickSlotSpacing;
-        float left = startX;
-        float right = startX + totalWidth;
-        float top = baseY - totalHeight;
-        float bottom = baseY;
-        if (screenX < left || screenX > right || screenY < top || screenY > bottom) {
-            return 0;
+        QuickBarLayout layout = quickBarLayout();
+        for (int i = QUICK_SLOT_COUNT - 1; i >= 0; i--) {
+            float x = quickSlotX(layout, i);
+            float y = quickSlotY(layout, i);
+            if (screenX >= x && screenX <= x + layout.size
+                    && screenY >= y && screenY <= y + layout.size) {
+                return i + 1;
+            }
         }
-        int col = (int) ((screenX - startX) / (quickSlotSize + quickSlotSpacing));
-        int row = (int) ((baseY - screenY) / (quickSlotSize + quickSlotSpacing));
-        if (col < 0 || row < 0 || col >= columns || row >= quickSlotRow) {
-            return 0;
-        }
-        int slot = row * columns + col + 1;
-        return slot <= quickSlotCount ? slot : 0;
+        return 0;
     }
 
     public SpellData getSpellDataForSlot(int slotNumber) {
@@ -316,16 +396,181 @@ public class PlayerHUD {
     }
 
     public boolean isQuickBarHit(int screenX, int screenY) {
-        int columns = Math.max(1, (int) Math.ceil(quickSlotCount / (float) quickSlotRow));
-        float totalWidth = columns * quickSlotSize + (columns - 1) * quickSlotSpacing;
-        float startX = (Gdx.graphics.getWidth() - totalWidth) * 0.5f;
-        float baseY = Gdx.graphics.getHeight() - quickBarMargin;
-        float totalHeight = quickSlotRow * quickSlotSize + (quickSlotRow - 1) * quickSlotSpacing;
-        float left = startX;
-        float right = startX + totalWidth;
-        float top = baseY - totalHeight;
-        float bottom = baseY;
-        return screenX >= left && screenX <= right && screenY >= top && screenY <= bottom;
+        return getQuickSlotAt(screenX, screenY) > 0;
+    }
+
+    private QuickBarLayout quickBarLayout() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        float scale = Math.min(1f, screenWidth / CHAT_BAR_WIDTH);
+        float barX = (screenWidth - CHAT_BAR_WIDTH * scale) * 0.5f;
+        float barY = screenHeight - CHAT_BAR_HEIGHT * scale;
+        return new QuickBarLayout(
+                barX + QUICK_SLOT_X * scale,
+                barY + QUICK_SLOT_Y * scale,
+                QUICK_SLOT_SIZE * scale,
+                QUICK_SLOT_PITCH * scale,
+                scale);
+    }
+
+    private float quickSlotX(QuickBarLayout layout, int index) {
+        return layout.x + (index * layout.pitch + quickSlotGuiOffsetX[index] * layout.scale);
+    }
+
+    private float quickSlotY(QuickBarLayout layout, int index) {
+        return layout.y + quickSlotGuiOffsetY[index] * layout.scale;
+    }
+
+    private record QuickBarLayout(float x, float y, float size, float pitch, float scale) {}
+
+    private void renderChatBarButtons(SpriteBatch batch) {
+        QuickBarLayout layout = quickBarLayout();
+        for (ChatBarButtonItem item : chatBarButtons) {
+            item.button.setPosition(chatBarButtonX(layout, item), chatBarButtonY(layout, item));
+            item.button.setSize(40f * layout.scale, 40f * layout.scale);
+            item.button.render(batch);
+        }
+    }
+
+    private float chatBarButtonX(QuickBarLayout layout, ChatBarButtonItem item) {
+        return layout.x
+                + (item.baseX - QUICK_SLOT_X + item.offsetX) * layout.scale;
+    }
+
+    private float chatBarButtonY(QuickBarLayout layout, ChatBarButtonItem item) {
+        return layout.y
+                + (item.baseY - QUICK_SLOT_Y + item.offsetY) * layout.scale;
+    }
+
+    public void setBackpackAction(Runnable backpackAction) {
+        this.backpackAction = backpackAction == null ? () -> { } : backpackAction;
+    }
+
+    public void setCharacterAction(Runnable characterAction) {
+        this.characterAction = characterAction == null ? () -> { } : characterAction;
+    }
+
+    public void setSpellBookAction(Runnable spellBookAction) {
+        this.spellBookAction = spellBookAction == null ? () -> { } : spellBookAction;
+    }
+
+    public void setQuestAction(Runnable questAction) {
+        this.questAction = questAction == null ? () -> { } : questAction;
+    }
+
+    public void setOptionsAction(Runnable optionsAction) {
+        this.optionsAction = optionsAction == null ? () -> { } : optionsAction;
+    }
+
+    public boolean chatBarButtonsTouchDown(float screenX, float screenY, boolean controlDown) {
+        ChatBarButtonItem item = findChatBarButton(screenX, screenY);
+        if (item == null) return false;
+        if (controlDown) {
+            QuickBarLayout layout = quickBarLayout();
+            draggedChatBarButton = item;
+            item.grabOffsetX = screenX - chatBarButtonX(layout, item);
+            item.grabOffsetY = screenY - chatBarButtonY(layout, item);
+        } else {
+            capturedChatBarButton = item;
+            item.button.onTouchDown(screenX, screenY);
+        }
+        return true;
+    }
+
+    public boolean chatBarButtonsTouchDragged(float screenX, float screenY) {
+        if (draggedChatBarButton == null) return false;
+        QuickBarLayout layout = quickBarLayout();
+        ChatBarButtonItem item = draggedChatBarButton;
+        item.offsetX = (screenX - item.grabOffsetX - layout.x) / layout.scale
+                + QUICK_SLOT_X - item.baseX;
+        item.offsetY = (screenY - item.grabOffsetY - layout.y) / layout.scale
+                + QUICK_SLOT_Y - item.baseY;
+        return true;
+    }
+
+    public boolean chatBarButtonsTouchUp(float screenX, float screenY) {
+        if (draggedChatBarButton != null) {
+            ChatBarButtonItem item = draggedChatBarButton;
+            draggedChatBarButton = null;
+            Gdx.app.log("GuiScreen", String.format(Locale.ROOT,
+                    "%s button moved to x + %.1ff, y + %.1ff",
+                    item.logName, item.baseX + item.offsetX, item.baseY + item.offsetY));
+            item.button.onMouseMove(screenX, screenY);
+            return true;
+        }
+        if (capturedChatBarButton == null) return false;
+        ChatBarButtonItem item = capturedChatBarButton;
+        capturedChatBarButton = null;
+        item.button.onTouchUp(screenX, screenY);
+        return true;
+    }
+
+    public boolean chatBarButtonsMouseMoved(float screenX, float screenY) {
+        if (draggedChatBarButton != null) {
+            return chatBarButtonsTouchDragged(screenX, screenY);
+        }
+        boolean hovered = false;
+        for (ChatBarButtonItem item : chatBarButtons) {
+            item.button.onMouseMove(screenX, screenY);
+            hovered |= item.button.contains(screenX, screenY);
+        }
+        return hovered;
+    }
+
+    private ChatBarButtonItem findChatBarButton(float screenX, float screenY) {
+        for (int i = chatBarButtons.size() - 1; i >= 0; i--) {
+            ChatBarButtonItem item = chatBarButtons.get(i);
+            if (item.button.contains(screenX, screenY)) return item;
+        }
+        return null;
+    }
+
+    private void loadChatBarButtons() throws GameException {
+        chatBarButtons.clear();
+        addChatBarButton("Character", 744f, "GUI_ChatBtnCharCheet",
+                () -> characterAction.run());
+        addChatBarButton("Backpack", BACKPACK_BUTTON_X, "GUI_ChatBtnBackPack",
+                () -> backpackAction.run());
+        addChatBarButton("Spell book", 836f, "GUI_ChatBtnSpell",
+                () -> spellBookAction.run());
+        addChatBarButton("Quest journal", 882f, "GUI_ChatBtnQuest",
+                () -> questAction.run());
+        addChatBarButton("Options", 974f, 101f, "GUI_ChatBtnOption",
+                () -> optionsAction.run());
+    }
+
+    private void addChatBarButton(String logName, float x, String spriteBase, Runnable action)
+            throws GameException {
+        addChatBarButton(logName, x, BACKPACK_BUTTON_Y, spriteBase, action);
+    }
+
+    private void addChatBarButton(String logName, float x, float y, String spriteBase, Runnable action)
+            throws GameException {
+        TextureRegion normal = spriteLoader.getRegionFromSpriteName(spriteBase + "Up");
+        TextureRegion hover = spriteLoader.getRegionFromSpriteName(spriteBase + "HUp");
+        TextureRegion pressed = spriteLoader.getRegionFromSpriteName(spriteBase + "Down");
+        if (normal != null && hover != null && pressed != null) {
+            chatBarButtons.add(new ChatBarButtonItem(logName, x, y,
+                    new GuiButton(normal, hover, pressed, 0f, 0f, action)));
+        }
+    }
+
+    private static final class ChatBarButtonItem {
+        final String logName;
+        final float baseX;
+        final float baseY;
+        final GuiButton button;
+        float offsetX;
+        float offsetY;
+        float grabOffsetX;
+        float grabOffsetY;
+
+        ChatBarButtonItem(String logName, float baseX, float baseY, GuiButton button) {
+            this.logName = logName;
+            this.baseX = baseX;
+            this.baseY = baseY;
+            this.button = button;
+        }
     }
 
     public boolean showBuffTooltipAt(int screenX, int screenY) {
@@ -456,6 +701,41 @@ public class PlayerHUD {
         this.draggedQuickSlot = 0;
     }
 
+    public boolean startQuickSlotGuiItemDrag(int slotNumber, float screenX, float screenY) {
+        if (slotNumber <= 0 || slotNumber > QUICK_SLOT_COUNT
+                || (getSpellForSlot(slotNumber) == null && getItemForSlot(slotNumber) == null)) {
+            return false;
+        }
+        QuickBarLayout layout = quickBarLayout();
+        int index = slotNumber - 1;
+        draggedQuickSlotGuiItem = slotNumber;
+        quickSlotGuiGrabOffsetX = screenX - quickSlotX(layout, index);
+        quickSlotGuiGrabOffsetY = screenY - quickSlotY(layout, index);
+        return true;
+    }
+
+    public void updateQuickSlotGuiItemDrag(float screenX, float screenY) {
+        if (draggedQuickSlotGuiItem <= 0) return;
+        QuickBarLayout layout = quickBarLayout();
+        int index = draggedQuickSlotGuiItem - 1;
+        float targetX = screenX - quickSlotGuiGrabOffsetX;
+        float targetY = screenY - quickSlotGuiGrabOffsetY;
+        quickSlotGuiOffsetX[index] =
+                (targetX - layout.x) / layout.scale - index * QUICK_SLOT_PITCH;
+        quickSlotGuiOffsetY[index] = (targetY - layout.y) / layout.scale;
+    }
+
+    public void stopQuickSlotGuiItemDragAndLog() {
+        if (draggedQuickSlotGuiItem <= 0) return;
+        int index = draggedQuickSlotGuiItem - 1;
+        float relativeX = QUICK_SLOT_X + index * QUICK_SLOT_PITCH + quickSlotGuiOffsetX[index];
+        float relativeY = QUICK_SLOT_Y + quickSlotGuiOffsetY[index];
+        Gdx.app.log("GuiScreen", String.format(Locale.ROOT,
+                "Quick slot %d moved to x + %.1ff, y + %.1ff",
+                draggedQuickSlotGuiItem, relativeX, relativeY));
+        draggedQuickSlotGuiItem = 0;
+    }
+
     private void renderCooldownText(SpriteBatch batch, float slotX, float slotY, float size, SpellData spell) {
         if (spell == null) {
             return;
@@ -517,11 +797,12 @@ public class PlayerHUD {
 
     private void refreshRegions() {
         try {
-            this.hpBar = spriteLoader.getRegionFromSpriteName("64kMainVitalityBar");
-            this.mpBar = spriteLoader.getRegionFromSpriteName("64kMainManaBar");
-            this.xpBar = spriteLoader.getRegionFromSpriteName("64kMainExperienceBar");
+            this.hpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_HP");
+            this.mpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_MP");
+            this.xpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_XP");
             this.frame = spriteLoader.getRegionFromSpriteName("64kMainEmptyBar");
             this.quickSlotFrame = spriteLoader.getRegionFromSpriteName("64kMinimizedMacro");
+            loadChatBarButtons();
             this.buffBackground = spriteLoader.getRegionFromSpriteName("64kStatusBackGround");
             this.combatModeIcon = spriteLoader.getRegionFromSpriteName(COMBAT_ICON_SPRITE);
         } catch (Exception ignored) {

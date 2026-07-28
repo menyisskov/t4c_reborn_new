@@ -1,6 +1,6 @@
 {
-  "x": 2934.0,
-  "y": 1064.0,
+  "x": 2918.0,
+  "y": 1089.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 48528,
+  "gold": 49154,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 71,
+  "currentHp": 49,
   "maxMana": 600,
-  "mana": 600,
+  "mana": 531,
   "level": 15,
-  "currentXp": 12364,
+  "currentXp": 13267,
   "xpToNextLevel": 14988,
   "statPoints": 500,
   "skillPoints": 485,
@@ -27,16 +27,12 @@
   ],
   "quickSlots": [
     {
-      "slot": 6,
+      "slot": 2,
       "spell": "spell.flaming_arrow"
     },
     {
-      "slot": 5,
+      "slot": 1,
       "spell": "spell.light"
-    },
-    {
-      "slot": 7,
-      "spell": "spell.spell_lesser_drain"
     },
     {
       "slot": 8,
@@ -45,6 +41,10 @@
     {
       "slot": 9,
       "item": "item.potion_of_mana"
+    },
+    {
+      "slot": 3,
+      "spell": "spell.spell_lesser_drain"
     }
   ],
   "activeBuffs": [],
@@ -83,19 +83,19 @@
     "Light healing potion",
     "Light healing potion",
     "Rusted dirk",
-    "Rusted long sword"
+    "item.wooden_arrow",
+    "item.studded_leather_armor",
+    "item.studded_leather_boots",
+    "item.studded_leather_pants",
+    "item.studded_leather_helmet",
+    "item.red_cape",
+    "item.iron_ring",
+    "item.ashwood_reflex_bow"
   ],
   "equipment": {
-    "WEAPON2": "item.wooden_arrow",
-    "HEAD": "item.studded_leather_helmet",
     "RIGHT_HAND": "item.studded_leather_gloves",
-    "RING1": "item.iron_ring",
     "BELT": "item.leather_belt",
-    "LEGS": "item.studded_leather_pants",
-    "BACK": "item.red_cape",
-    "WEAPON": "item.ashwood_reflex_bow",
-    "BODY": "item.studded_leather_armor",
-    "FEET": "item.studded_leather_boots",
+    "WEAPON": "Rusted long sword",
     "LEFT_HAND": "item.studded_leather_gloves"
   },
   "skills": {
@@ -113,7 +113,7 @@
   },
   "questFlags": {
     "quest.lighthaven_samaritan_rats.status": 1,
-    "quest.lighthaven_samaritan_rats.kills": 5
+    "quest.lighthaven_samaritan_rats.kills": 7
   },
   "respawnPointDefined": false,
   "respawnWorldX": 0.0,

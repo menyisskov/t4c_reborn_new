@@ -30,8 +30,17 @@ public abstract class GuiScreenBase {
     protected final List<GuiPlayerPart> playerParts = new ArrayList<>();
     protected final List<GuiInventory> inventories = new ArrayList<>();
     private GuiElement draggedElement;
+    private final GuiBoxedInteraction boxedInteraction = new GuiBoxedInteraction();
+    private GuiResizable resizedElement;
     private float dragOffsetX;
     private float dragOffsetY;
+    private boolean resizeLeft;
+    private boolean resizeRight;
+    private boolean resizeTop;
+    private boolean resizeBottom;
+    private float resizeFixedRight;
+    private float resizeFixedBottom;
+    private static final float MIN_BOX_SIZE = 8f;
 
     protected void centerOnScreen() {
         if (background == null) {
@@ -64,6 +73,16 @@ public abstract class GuiScreenBase {
     }
 
     public void onTouchDown(float screenX, float screenY) {
+        if (boxedInteraction.touchDown(orderedElements(), screenX, screenY)) {
+            return;
+        }
+        if (isResizeModifierDown()) {
+            GuiElement candidate = findTopmostElement(screenX, screenY);
+            if (candidate instanceof GuiResizable resizable) {
+                beginResizeFromNearestEdge(resizable, screenX, screenY);
+                return;
+            }
+        }
         if (isDragModifierDown()) {
             GuiElement candidate = findTopmostElement(screenX, screenY);
             if (candidate != null) {
@@ -92,6 +111,13 @@ public abstract class GuiScreenBase {
     }
 
     public void onMouseMove(float screenX, float screenY) {
+        if (boxedInteraction.dragged(screenX, screenY)) {
+            return;
+        }
+        if (resizedElement != null) {
+            resizeTo(screenX, screenY);
+            return;
+        }
         if (draggedElement != null) {
             draggedElement.setPosition(screenX - dragOffsetX, screenY - dragOffsetY);
             return;
@@ -133,7 +159,36 @@ public abstract class GuiScreenBase {
                 || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
     }
 
+    private boolean isResizeModifierDown() {
+        return Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+                || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+    }
+
     protected boolean releaseDraggedElement() {
+        if (boxedInteraction.touchUp()) {
+            return true;
+        }
+        if (resizedElement != null) {
+            try {
+                Gdx.app.log(
+                        "GuiScreen",
+                        String.format(
+                                Locale.ROOT,
+                                "Element resized (window-relative x + %.1f, y + %.1f; screen x %.1f, y %.1f), %.1f x %.1f",
+                                resizedElement.getX() - x,
+                                resizedElement.getY() - y,
+                                resizedElement.getX(),
+                                resizedElement.getY(),
+                                resizedElement.getWidth(),
+                                resizedElement.getHeight()
+                        )
+                );
+            } catch (Throwable ignored) {
+            }
+            resizedElement = null;
+            clearResizeEdges();
+            return true;
+        }
         if (draggedElement == null) {
             return false;
         }
@@ -146,15 +201,72 @@ public abstract class GuiScreenBase {
                     "GuiScreen",
                     String.format(
                             Locale.ROOT,
-                            "Element moved to x + %.1ff, y + %.1ff",
+                            "Element moved (window-relative x + %.1f, y + %.1f; screen x %.1f, y %.1f)",
                             offsetX,
-                            offsetY
+                            offsetY,
+                            draggedElement.getX(),
+                            draggedElement.getY()
                     )
             );
         } catch (Throwable ignored) {
         }
         draggedElement = null;
         return true;
+    }
+
+    private void beginResizeFromNearestEdge(GuiResizable element, float screenX, float screenY) {
+        float left = element.getX();
+        float top = element.getY();
+        float right = left + element.getWidth();
+        float bottom = top + element.getHeight();
+        float leftDistance = Math.abs(screenX - left);
+        float rightDistance = Math.abs(right - screenX);
+        float topDistance = Math.abs(screenY - top);
+        float bottomDistance = Math.abs(bottom - screenY);
+        float nearest = Math.min(Math.min(leftDistance, rightDistance), Math.min(topDistance, bottomDistance));
+
+        clearResizeEdges();
+        if (nearest == leftDistance) {
+            resizeLeft = true;
+        } else if (nearest == rightDistance) {
+            resizeRight = true;
+        } else if (nearest == topDistance) {
+            resizeTop = true;
+        } else {
+            resizeBottom = true;
+        }
+        resizedElement = element;
+        resizeFixedRight = right;
+        resizeFixedBottom = bottom;
+    }
+
+    private void resizeTo(float screenX, float screenY) {
+        float newX = resizedElement.getX();
+        float newY = resizedElement.getY();
+        float newWidth = resizedElement.getWidth();
+        float newHeight = resizedElement.getHeight();
+
+        if (resizeLeft) {
+            newX = Math.min(screenX, resizeFixedRight - MIN_BOX_SIZE);
+            newWidth = resizeFixedRight - newX;
+        } else if (resizeRight) {
+            newWidth = Math.max(MIN_BOX_SIZE, screenX - newX);
+        }
+        if (resizeTop) {
+            newY = Math.min(screenY, resizeFixedBottom - MIN_BOX_SIZE);
+            newHeight = resizeFixedBottom - newY;
+        } else if (resizeBottom) {
+            newHeight = Math.max(MIN_BOX_SIZE, screenY - newY);
+        }
+        resizedElement.setPosition(newX, newY);
+        resizedElement.setSize(newWidth, newHeight);
+    }
+
+    private void clearResizeEdges() {
+        resizeLeft = false;
+        resizeRight = false;
+        resizeTop = false;
+        resizeBottom = false;
     }
 
     public void onScroll(float amountY, float screenX, float screenY) {

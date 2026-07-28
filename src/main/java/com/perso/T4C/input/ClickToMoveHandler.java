@@ -33,6 +33,7 @@ public class ClickToMoveHandler extends InputAdapter {
     private float pressedQuickbarX = 0f;
     private float pressedQuickbarY = 0f;
     private boolean draggingQuickbarSlot = false;
+    private boolean draggingQuickbarGuiItem = false;
 
     public ClickToMoveHandler(OrthographicCamera camera, MapReader reader, Player player, PlayerHUD hud,
             BiConsumer<SpellData, Integer> quickbarSpellCallback, BiConsumer<String, Integer> quickbarItemCallback) {
@@ -56,6 +57,12 @@ public class ClickToMoveHandler extends InputAdapter {
         if (hud != null) {
             int slot = hud.getQuickSlotAt(screenX, screenY);
             if (slot > 0) {
+                boolean controlDown = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                        || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
+                if (controlDown && hud.startQuickSlotGuiItemDrag(slot, screenX, screenY)) {
+                    draggingQuickbarGuiItem = true;
+                    return true;
+                }
                 pressedQuickbarSlot = slot;
                 pressedQuickbarX = screenX;
                 pressedQuickbarY = screenY;
@@ -69,6 +76,12 @@ public class ClickToMoveHandler extends InputAdapter {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (draggingQuickbarGuiItem) {
+            if (hud != null) {
+                hud.updateQuickSlotGuiItemDrag(screenX, screenY);
+            }
+            return true;
+        }
         if (pressedQuickbarSlot <= 0) {
             return false;
         }
@@ -88,6 +101,13 @@ public class ClickToMoveHandler extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT && draggingQuickbarGuiItem) {
+            draggingQuickbarGuiItem = false;
+            if (hud != null) {
+                hud.stopQuickSlotGuiItemDragAndLog();
+            }
+            return true;
+        }
         if (button != Input.Buttons.LEFT || pressedQuickbarSlot <= 0) {
             return false;
         }
@@ -100,8 +120,11 @@ public class ClickToMoveHandler extends InputAdapter {
         }
 
         if (wasDragging) {
-            if (hud != null && !hud.isQuickBarHit(screenX, screenY)) {
-                removeSpellFromQuickSlot(slot);
+            int targetSlot = hud == null ? 0 : hud.getQuickSlotAt(screenX, screenY);
+            if (targetSlot > 0) {
+                moveQuickSlot(slot, targetSlot);
+            } else {
+                removeQuickSlot(slot);
             }
             return true;
         }
@@ -136,7 +159,38 @@ public class ClickToMoveHandler extends InputAdapter {
         lastQuickbarClickMs = now;
     }
 
-    private void removeSpellFromQuickSlot(int slot) {
+    private void moveQuickSlot(int sourceSlot, int targetSlot) {
+        if (sourceSlot <= 0 || targetSlot <= 0 || sourceSlot == targetSlot) {
+            return;
+        }
+        List<QuickSlotEntry> quickSlots = player.getQuickSlots();
+        if (quickSlots == null || quickSlots.isEmpty()) {
+            return;
+        }
+        QuickSlotEntry source = null;
+        QuickSlotEntry target = null;
+        for (Iterator<QuickSlotEntry> it = quickSlots.iterator(); it.hasNext();) {
+            QuickSlotEntry entry = it.next();
+            if (entry == null) {
+                it.remove();
+            } else if (entry.getSlot() == sourceSlot) {
+                source = entry;
+            } else if (entry.getSlot() == targetSlot) {
+                target = entry;
+            }
+        }
+        if (source == null) {
+            return;
+        }
+        source.setSlot(targetSlot);
+        if (target != null) {
+            target.setSlot(sourceSlot);
+        }
+        resetQuickbarInteraction();
+        PlayerStateStore.save(player);
+    }
+
+    private void removeQuickSlot(int slot) {
         List<QuickSlotEntry> quickSlots = player.getQuickSlots();
         if (quickSlots == null || quickSlots.isEmpty()) {
             return;
@@ -150,12 +204,16 @@ public class ClickToMoveHandler extends InputAdapter {
             }
         }
         if (removed) {
-            if (hud != null) {
-                hud.setSelectedQuickSlot(0);
-            }
-            lastQuickbarSlot = 0;
-            lastQuickbarClickMs = 0L;
+            resetQuickbarInteraction();
             PlayerStateStore.save(player);
         }
+    }
+
+    private void resetQuickbarInteraction() {
+        if (hud != null) {
+            hud.setSelectedQuickSlot(0);
+        }
+        lastQuickbarSlot = 0;
+        lastQuickbarClickMs = 0L;
     }
 }
