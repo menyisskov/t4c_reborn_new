@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.combat.ArmorClassRules;
 import com.perso.T4C.helper.SpriteLoader;
+import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.ui.FontManager;
@@ -99,6 +100,9 @@ public class Statistics extends GuiScreenBase {
                 () -> player.getCurrentHp() + " / " + player.getMaxHp(), () -> Color.WHITE));
         labels.add(new GuiBoxedText(font, x + 202f, y + 179f, 90f, 17f,
                 () -> player.getMana() + " / " + player.getMaxMana(), () -> Color.WHITE));
+        labels.add(new GuiBoxedText(font, x + 202f, y + 222f, 90f, 17f,
+                () -> InventoryService.currentWeight(player) + " / " + InventoryService.maximumWeight(player),
+                () -> Color.WHITE).shrinkToFit());
         // Right column: Stat Pts / Skill Pts plaques and value boxes.
         labels.add(new GuiBoxedText(font, x + 330f, y + 118f, 69f, 14f,
                 () -> String.valueOf(player.getStatPoints() - spentPendingPoints()), () -> Color.WHITE));

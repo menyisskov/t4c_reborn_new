@@ -4,5 +4,5 @@
   "brightness": 0.875,
   "fullscreen": false,
   "vSync": true,
-  "showHudValues": false
+  "showHudValues": true
 }

@@ -54,4 +54,33 @@ class QuestRegistrySeedParityTest {
         assertTrue(matchingSpawns >= quest.getRequiredKills(),
                 "the configured objective area must contain enough Rat/Brown Rat spawns");
     }
+
+    @Test
+    void ortanalasGoblinQuestMatchesTheBridgeSpawns() throws Exception {
+        QuestDef quest = QuestDefBinaryIO.read(new File(Paths.QUESTS_BIN)).stream()
+                .filter(definition -> "ortanalas_bridge_goblins".equals(definition.getId()))
+                .findFirst()
+                .orElseThrow();
+
+        assertEquals("Ortanalas", quest.getGiverNpc());
+        assertEquals("Goblin", quest.getTargetMonster());
+        assertEquals(15, quest.getRequiredKills());
+        assertEquals(0, quest.getTargetWorldZ());
+        assertEquals(2760, quest.getAreaCenterX());
+        assertEquals(1010, quest.getAreaCenterY());
+        assertEquals(100, quest.getAreaRadiusTiles());
+
+        long matchingSpawns = SpawnBinaryIO.read(new File(Paths.MONSTER_SPAWNS_BIN)).stream()
+                .filter(spawn -> spawn.z == quest.getTargetWorldZ())
+                .filter(spawn -> quest.getTargetMonster().equals(spawn.type))
+                .filter(spawn -> {
+                    long dx = (long) spawn.x - quest.getAreaCenterX();
+                    long dy = (long) spawn.y - quest.getAreaCenterY();
+                    long radius = quest.getAreaRadiusTiles();
+                    return dx * dx + dy * dy <= radius * radius;
+                })
+                .count();
+        assertTrue(matchingSpawns >= quest.getRequiredKills(),
+                "the bridge objective area must contain at least 15 Goblin spawns");
+    }
 }

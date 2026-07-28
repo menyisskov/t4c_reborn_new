@@ -35,7 +35,7 @@ public final class InventoryService {
     /** Original T4C carrying capacity: STR * 500 / (100 + STR). */
     public static long maximumWeight(Player player) {
         if (player == null) return 0L;
-        long strength = Math.max(0, player.getStrength());
+        long strength = Math.max(0, player.getEffectiveStrength());
         return strength * 500L / (100L + strength);
     }
 

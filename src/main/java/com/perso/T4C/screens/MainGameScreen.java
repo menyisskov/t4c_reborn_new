@@ -3135,6 +3135,9 @@ public class MainGameScreen implements Screen {
         gameChat = new GameChat(text -> {
             if (player != null) {
                 player.showTalkText(text);
+                if (npcManager != null && npcManager.hasActiveConversation()) {
+                    npcManager.talkToActiveNpc(text, player);
+                }
             }
             // This callback is also the future network send point.
         });
@@ -3355,16 +3358,14 @@ public class MainGameScreen implements Screen {
             }
         };
         GmInputHandler gmInputHandler = new GmInputHandler(player, new GmCommandProcessor(xpCurve, npcManager, monsterManager));
-        NPCConversationInputHandler npcConversationInputHandler = new NPCConversationInputHandler(npcManager, player);
         inputHandler.setGmInputHandler(gmInputHandler);
         inputHandler.setTextInputActiveSupplier(
-                () -> npcConversationInputHandler.isActive() || (gameChat != null && gameChat.isActive()));
+                () -> gameChat != null && gameChat.isActive());
         this.textInputActiveSupplier =
-                () -> npcConversationInputHandler.isActive() || (gameChat != null && gameChat.isActive());
+                () -> gameChat != null && gameChat.isActive();
         multiplexer.addProcessor(gameChat);
         multiplexer.addProcessor(gmInputHandler);
         multiplexer.addProcessor(guiAdapter);
-        multiplexer.addProcessor(npcConversationInputHandler);
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(monsterInputHandler);  // Process monster interactions first
         multiplexer.addProcessor(npcInputHandler);  // Process NPC interactions

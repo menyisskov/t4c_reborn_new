@@ -16,12 +16,23 @@ class QuestCatalogueSeedTest {
         List<QuestDef> once = QuestCatalogueSeed.upsert(List.of());
         List<QuestDef> twice = QuestCatalogueSeed.upsert(once);
 
-        assertEquals(1, once.size());
-        assertEquals(1, twice.size());
-        assertEquals(QuestCatalogueSeed.QUEST_ID, twice.get(0).getId());
-        assertEquals(10, twice.get(0).getRequiredKills());
-        assertEquals(500, twice.get(0).getRewardGold());
-        assertEquals(300, twice.get(0).getRewardXp());
+        assertEquals(2, once.size());
+        assertEquals(2, twice.size());
+        QuestDef rats = twice.stream()
+                .filter(quest -> QuestCatalogueSeed.QUEST_ID.equals(quest.getId()))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(10, rats.getRequiredKills());
+        assertEquals(500, rats.getRewardGold());
+        assertEquals(300, rats.getRewardXp());
+
+        QuestDef goblins = twice.stream()
+                .filter(quest -> QuestCatalogueSeed.ORTANALAS_GOBLINS_QUEST_ID.equals(quest.getId()))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(15, goblins.getRequiredKills());
+        assertEquals(1_000, goblins.getRewardGold());
+        assertEquals(750, goblins.getRewardXp());
     }
 
     @Test
@@ -40,5 +51,19 @@ class QuestCatalogueSeedTest {
                         .map(part -> part.getBodyPart() + ":" + part.getSpriteBase()).toList(),
                 samaritan.getParts().stream()
                         .map(part -> part.getBodyPart() + ":" + part.getSpriteBase()).toList());
+    }
+
+    @Test
+    void npcCatalogueSeedAddsOrtanalasQuestWithoutRemovingTraining() {
+        NpcDef ortanalas = NpcCatalogueSeed.ortanalas();
+
+        assertEquals("Ortanalas", ortanalas.getName());
+        assertEquals(3, ortanalas.getTopics().size());
+        assertEquals(ActionType.OPEN_SKILL_LEARNING,
+                ortanalas.getTopics().get(1).getActions().get(0).getType());
+        assertEquals(ActionType.GIVE_QUEST,
+                ortanalas.getTopics().get(2).getActions().get(0).getType());
+        assertEquals(List.of(QuestCatalogueSeed.ORTANALAS_GOBLINS_QUEST_ID),
+                ortanalas.getTopics().get(2).getActions().get(0).getTargets());
     }
 }

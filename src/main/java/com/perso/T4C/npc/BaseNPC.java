@@ -10,6 +10,7 @@ import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.model.Stats;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.ui.SystemMessage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -606,6 +607,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
         dialogLines = wrapDialog(text, 52);
         dialogPageIndex = 0;
         dialogActive = true;
+        SystemMessage.showShared(text);
     }
 
     /**

@@ -130,7 +130,7 @@ public final class NpcCatalogueSeed {
         defs.add(catalogueNpc("MarnecSunim", "Marnec Sunim"));
         defs.add(catalogueNpc("Mithrand", "Mithrand"));
         defs.add(catalogueNpc("Murmuntag", "Murmuntag", List.of("attack")));
-        defs.add(catalogueNpc("Ortanalas", "Ortanalas", List.of("attack", "archery", "stun_blow", "powerful_blow")));
+        defs.add(ortanalas());
         defs.add(catalogueNpc("Pig", "A pig"));
         defs.add(rolph());
         defs.add(catalogueNpc("Shadow", "A dark figure...", List.of("peek")));
@@ -171,6 +171,12 @@ public final class NpcCatalogueSeed {
                 I18n.placeholder("npc.welcome.lighthavensamaritan"),
                 topics
         );
+    }
+
+    static NpcDef ortanalas() {
+        NpcDef base = catalogueNpc("Ortanalas", "Ortanalas",
+                List.of("attack", "archery", "stun_blow", "powerful_blow"));
+        return OrtanalasGoblinQuestMigration.update(base);
     }
 
     private static NpcDef catalogueNpc(String name, String displayName, String... targets) {

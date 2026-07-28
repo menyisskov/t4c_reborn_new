@@ -1,5 +1,5 @@
 {
-  "x": 2918.0,
+  "x": 2919.0,
   "y": 1089.0,
   "z": 0,
   "strength": 50,
@@ -8,17 +8,17 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 49154,
+  "gold": 50521,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 49,
+  "currentHp": 46,
   "maxMana": 600,
-  "mana": 531,
-  "level": 15,
-  "currentXp": 13267,
-  "xpToNextLevel": 14988,
-  "statPoints": 500,
-  "skillPoints": 485,
+  "mana": 330,
+  "level": 16,
+  "currentXp": 780,
+  "xpToNextLevel": 16889,
+  "statPoints": 505,
+  "skillPoints": 500,
   "rebirthCount": 0,
   "spells": [
     "spell.flaming_arrow",
@@ -90,7 +90,8 @@
     "item.studded_leather_helmet",
     "item.red_cape",
     "item.iron_ring",
-    "item.ashwood_reflex_bow"
+    "item.ashwood_reflex_bow",
+    "Light healing potion"
   ],
   "equipment": {
     "RIGHT_HAND": "item.studded_leather_gloves",
@@ -108,17 +109,19 @@
   "itemCharges": {
     "item.potion_of_healing": 4,
     "item.potion_of_mana": 8,
-    "Light healing potion": 2,
+    "Light healing potion": 3,
     "item.torch": 5
   },
   "questFlags": {
     "quest.lighthaven_samaritan_rats.status": 1,
-    "quest.lighthaven_samaritan_rats.kills": 7
+    "quest.lighthaven_samaritan_rats.kills": 7,
+    "quest.ortanalas_bridge_goblins.status": 2,
+    "quest.ortanalas_bridge_goblins.kills": 15
   },
   "respawnPointDefined": false,
   "respawnWorldX": 0.0,
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.094651
 }
