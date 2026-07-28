@@ -212,10 +212,6 @@ public class MonsterAnimations extends EntityAnimationsBase {
         int w = reg.getRegionWidth();
         int h = reg.getRegionHeight();
 
-        // The native client draws the optional RLE Shd mask before the frame.
-        // Keep it outside the hover shader: the shadow is not part of the hit outline.
-        renderShadow(batch, name, pos, flipX);
-
         // Apply outline shader if hovered
         if (isHovered && outlineShader != null && outlineShader.isCompiled()) {
             batch.setShader(outlineShader);
