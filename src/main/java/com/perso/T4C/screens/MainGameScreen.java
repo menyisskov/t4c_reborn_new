@@ -2120,6 +2120,9 @@ public class MainGameScreen implements Screen {
         } else if (healthDelta > 0) {
             monster.heal(healthDelta);
         }
+        if (impactResult.drainedHealth() > 0) {
+            player.applyHeal(impactResult.drainedHealth(), impactResult.drainedHealth());
+        }
         if (installHooks) spellEffectManager.installTimedHooks(spell, player, monster);
         applySummons(impactResult.summons(), monster.getPosition().x, monster.getPosition().y);
         String impact = spell.getImpactSpell();

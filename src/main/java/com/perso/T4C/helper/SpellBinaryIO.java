@@ -147,8 +147,8 @@ public final class SpellBinaryIO {
     }
 
     private static void writeSpell(DataOutputStream out, SpellData spell) throws IOException {
-        writeString(out, spell == null ? "" : I18n.placeholder("spell", spell.getName()));
-        writeString(out, spell == null ? "" : I18n.placeholderFor("spell.description", spell.getName(), spell.getDescription()));
+        writeString(out, spell == null ? "" : I18n.placeholder(spell.getKey()));
+        writeString(out, spell == null ? "" : I18n.placeholderForKey("spell.description." + spell.getKey().substring("spell.".length()), spell.getDescription()));
         writeString(out, spell == null ? "" : spell.getManaCost());
         writeIntLE(out, spell == null ? 0 : spell.getRadius());
         writeIntLE(out, spell == null ? 0 : spell.getMinInt());

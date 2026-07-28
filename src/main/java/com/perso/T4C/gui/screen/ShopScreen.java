@@ -396,6 +396,13 @@ public class ShopScreen extends GuiListScreen {
         basketRemove((ShopEntry) row);
     }
 
+    @Override
+    protected String blockedReason(ListRow row) {
+        ShopEntry entry = (ShopEntry) row;
+        return player.getGold() < basketCost() + entry.effectivePrice
+                ? I18n.key("message.not_enough_gold") : null;
+    }
+
     private static final class ShopEntry implements ListRow {
         final ItemDefinition def;
         final long effectivePrice;

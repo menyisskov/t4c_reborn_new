@@ -9,8 +9,12 @@ import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiText;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.ui.HudTooltip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +24,7 @@ import java.util.function.Supplier;
  * Shared mechanics and geometry for the 576x368 shop/learning list panels.
  */
 public abstract class GuiListScreen extends GuiScreenBase {
+    private final HudTooltip blockedTooltip = new HudTooltip();
     public interface ListRow {
         String nameText();
         String priceText();
@@ -84,6 +89,48 @@ public abstract class GuiListScreen extends GuiScreenBase {
         return false;
     }
 
+    /** Returns the reason why a row cannot currently be bought/learned. */
+    protected String blockedReason(ListRow row) {
+        return null;
+    }
+
+    /** Tooltip reason for rows that are blocked or already completed. */
+    protected String rowTooltipReason(ListRow row) {
+        return blockedReason(row);
+    }
+
+    protected String rowDisplayName(ListRow row) {
+        return row == null ? "" : row.nameText();
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        super.render(batch);
+        updateBlockedTooltip();
+        blockedTooltip.render(batch);
+    }
+
+    private void updateBlockedTooltip() {
+        float mouseX = Gdx.input.getX();
+        float mouseY = Gdx.input.getY();
+        int start = page * ROWS_VISIBLE;
+        int end = Math.min(start + ROWS_VISIBLE, rows().size());
+        for (int i = start; i < end; i++) {
+            float rowY = y + ROW_0_Y + (i - start) * ROW_H_PITCH;
+            if (mouseX < x + 10f || mouseX > x + rowZoneWidth()
+                    || mouseY < rowY - 4f || mouseY > rowY + ROW_H_PITCH - 8f) continue;
+            ListRow row = rows().get(i);
+            String reason = rowTooltipReason(row);
+            if (reason != null && !reason.isBlank()) {
+                blockedTooltip.show(rowDisplayName(row) + "\n" + reason, mouseX, mouseY);
+            } else {
+                blockedTooltip.clear();
+            }
+            return;
+        }
+        blockedTooltip.clear();
+    }
+
     protected void addScrollThumb(int pages) {
     }
 
@@ -112,6 +159,9 @@ public abstract class GuiListScreen extends GuiScreenBase {
                 x + SPIN_X, y + rowY + SPIN_UP_DY, () -> basketAdd(row));
         GuiButton down = new GuiButton(dnN, dnH != null ? dnH : dnN, dnH != null ? dnH : dnN,
                 x + SPIN_X, y + rowY + SPIN_DN_DY, () -> basketRemove(row));
+        boolean enabled = blockedReason(row) == null;
+        up.setEnabled(enabled);
+        down.setEnabled(enabled);
         buttons.add(up);
         buttons.add(down);
         dynButtons.add(up);

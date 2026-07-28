@@ -50,15 +50,32 @@ public final class SpellRegistry {
         if (name == null || name.isBlank()) return null;
         SpellData direct = byName.get(name);
         if (direct != null) return direct;
-        return byName.get(identityOf(name));
+        SpellData identified = byName.get(identityOf(name));
+        if (identified != null) return identified;
+        String requested = canonicalKey(name);
+        for (SpellData spell : cache) {
+            if (spell != null && requested.equals(canonicalKey(spell.getKey()))) return spell;
+        }
+        return null;
     }
 
     /** Reduces any of the accepted spell designations to the registry's key. */
     static String identityOf(String value) {
         String key = I18n.keyOf(value);
         if (key != null) return key;
+        if (value.startsWith("spell.")) return value;
         String candidate = "spell." + I18n.normalizedKey(value);
         return I18n.has(candidate) ? candidate : value;
+    }
+
+    private static String canonicalKey(String value) {
+        if (value == null) return "";
+        String key = I18n.keyOf(value);
+        if (key != null) value = key;
+        while (value.startsWith("spell.spell_")) {
+            value = "spell." + value.substring("spell.spell_".length());
+        }
+        return value;
     }
 
     public static synchronized SpellData findById(int spellId) {

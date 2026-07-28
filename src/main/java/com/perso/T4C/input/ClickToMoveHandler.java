@@ -11,6 +11,7 @@ import com.perso.T4C.model.QuickSlotEntry;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.PlayerHUD;
 import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.i18n.I18n;
 
 import java.util.Iterator;
 import java.util.List;
@@ -121,7 +122,9 @@ public class ClickToMoveHandler extends InputAdapter {
                 return;
             }
             SpellData spell = hud == null ? null : hud.getSpellDataForSlot(slot);
-            Gdx.app.log("ClickToMove", "DOUBLE CLICK detected! spell=" + (spell == null ? "null" : spell.getName()));
+            Gdx.app.log("ClickToMove", "DOUBLE CLICK detected! spell=" + (spell == null ? "null"
+                    : I18n.key(spell.getKey(), I18n.resolve(spell.getName()))
+                    + " [" + spell.getKey() + "]"));
             if (spell != null && quickbarSpellCallback != null) {
                 quickbarSpellCallback.accept(spell, slot);
             }

@@ -39,52 +39,12 @@ import java.util.Map;
  */
 public class LearnScreen extends GuiListScreen {
 
-    // Skill list rows (image coords, y-down): 6 slots, bar tops measured on GUIBackSkill.
-    private static final int   ROWS_VISIBLE = 6;
-    private static final float ROW_0_Y      = 60f;
-    private static final float ROW_H_PITCH  = 46f;
-
-    // Boxed label zones {left, top, width, height}, matching the background plaques.
-    private static final float[] TITLE_BOX    = {237f, 2f, 101f, 19f};
-    private static final float[] HDR_NAME_BOX = {114f, 40f, 104f, 16f};
-    private static final float[] HDR_PRICE_BOX = {272f, 40f, 41f, 16f};
-    private static final float[] HDR_PTS_BOX  = {332f, 40f, 41f, 16f};
-    // Row cells: y is the row top, added per row.
-    private static final float[] CELL_NAME  = {77f, 0f, 177f, 16f};
-    private static final float[] CELL_PRICE = {259f, 0f, 67f, 16f};
-    private static final float[] CELL_PTS   = {331f, 0f, 43f, 16f};
-
-    // Selection lamp zone {left, dy from row top, width, height}: the round socket,
-    // the 28×28 orb is centered inside it.
-    private static final float[] LAMP_BOX = {21f, -12f, 40f, 40f};
-
-    // Scrollbar arrow click zones (big arrows at x≈400-430)
-    private static final float SCROLL_X     = 400f;
-    private static final float SCROLL_W     = 30f;
-    private static final float SCROLL_UP_Y  = 30f;
-    private static final float SCROLL_DN_Y  = 280f;
-    private static final float SCROLL_BTN_H = 32f;
-
-    // Right GOLD panel plaques/boxes (x 457-550 on the background)
-    private static final float[] GOLD_HDR_BOX   = {457f, 44f, 94f, 17f};
-    private static final float[] ONHAND_LBL_BOX = {457f, 82f, 94f, 17f};
-    private static final float[] ONHAND_VAL_BOX = {457f, 102f, 94f, 15f};
-    private static final float[] COST_LBL_BOX   = {457f, 131f, 94f, 17f};
-    private static final float[] COST_VAL_BOX   = {457f, 151f, 94f, 15f};
-    private static final float[] TOTAL_LBL_BOX  = {457f, 180f, 94f, 17f};
-    private static final float[] TOTAL_VAL_BOX  = {457f, 200f, 94f, 15f};
     // Bottom pair of plaques: summed skill points of the basket.
     private static final float[] SKILL_LBL_BOX  = {457f, 233f, 94f, 17f};
     private static final float[] SKILL_VAL_BOX  = {457f, 253f, 94f, 15f};
     // APPRENDRE button under the skill-points plaques.
     private static final float LEARN_BTN_X = 472f;
     private static final float LEARN_BTN_Y = 284f;
-
-    // Per-row spin up/down buttons on the right column; dy from the row top
-    // (first row tuned in-game at y=55/68 with ROW_0_Y=60).
-    private static final float SPIN_X     = 382f;
-    private static final float SPIN_UP_DY = -5f;
-    private static final float SPIN_DN_DY = 8f;
 
     private static final float CLOSE_X = 552f;
     private static final float CLOSE_Y = 0f;
@@ -163,7 +123,7 @@ public class LearnScreen extends GuiListScreen {
         BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
         labels.add(boxed(sm, HDR_NAME_BOX,  0f, () -> I18n.key("ui.skill_name"), GOLD));
         labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.key("ui.price"), GOLD));
-        labels.add(boxed(sm, HDR_PTS_BOX,   0f, () -> I18n.key("ui.pts_short"), GOLD));
+        labels.add(boxed(sm, HDR_THIRD_BOX,   0f, () -> I18n.key("ui.pts_short"), GOLD));
 
         labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.key("ui.on_hand"), GOLD));
         labels.add(boxed(sm, COST_LBL_BOX,   0f, () -> I18n.key("ui.cost"), GOLD));
@@ -203,6 +163,7 @@ public class LearnScreen extends GuiListScreen {
             }
         }
     }
+
 
     private void loadSkillEntries(List<String> skillIds) {
         if (skillIds == null) {
@@ -249,7 +210,7 @@ public class LearnScreen extends GuiListScreen {
 
             final String name = entry.isSkill()
                     ? skillName(entry)
-                    : I18n.resolve(entry.spell.getName());
+                    : I18n.key(entry.spell.getKey(), I18n.resolve(entry.spell.getName()));
             final String price = String.valueOf(priceOf(entry));
             // Skills show the player's current points (plus the queued ones),
             // as the original V3_TrainDlg does; spells show the 5-pt cost.
@@ -258,7 +219,7 @@ public class LearnScreen extends GuiListScreen {
                     : String.valueOf(entry.count * SKILL_POINTS_PER_SPELL);
             addDyn(font, CELL_NAME,  rowY, () -> name, col);
             addDyn(font, CELL_PRICE, rowY, () -> price, col);
-            addDyn(font, CELL_PTS,   rowY, () -> pts, col);
+            addDyn(font, CELL_THIRD,   rowY, () -> pts, col);
 
             // Left socket: the spell's or skill's own icon (empty when it has none).
             TextureRegion socket = entry.isSkill()
@@ -266,8 +227,8 @@ public class LearnScreen extends GuiListScreen {
                     : GuiSprites.load(entry.spell.getIconId());
             if (socket != null) {
                 animatedSprites.add(new GuiAnimatedSprite(
-                        List.of(socket), x + LAMP_BOX[0], y + rowY + LAMP_BOX[1], 1f)
-                        .boxed(LAMP_BOX[2], LAMP_BOX[3]));
+                        List.of(socket), x + ICON_BOX[0], y + rowY + ICON_BOX[1], 1f)
+                        .boxed(ICON_BOX[2], ICON_BOX[3]));
             }
 
             final LearnEntry e = entry;
@@ -347,7 +308,7 @@ public class LearnScreen extends GuiListScreen {
             String reason = blockReason(entry);
             if (reason != null) {
                 SystemMessage.showShared(I18n.message("message.spell_cannot_learn", 
-                        I18n.resolve(entry.spell.getName()), reason.toLowerCase()));
+                        I18n.key(entry.spell.getKey(), I18n.resolve(entry.spell.getName())), reason.toLowerCase()));
                 return;
             }
         }
@@ -370,7 +331,7 @@ public class LearnScreen extends GuiListScreen {
                         skillName(entry), current + entry.count));
             } else {
                 spells.add(entry.id);
-                learnedNames.add(I18n.resolve(entry.spell.getName()));
+                learnedNames.add(I18n.key(entry.spell.getKey(), I18n.resolve(entry.spell.getName())));
             }
             entry.count = 0;
         }
@@ -435,25 +396,37 @@ public class LearnScreen extends GuiListScreen {
     /** Returns the first unmet learning condition, or null when eligible. */
     private String blockReason(LearnEntry entry) {
         if (player == null) {
-            return "Unavailable";
+            return I18n.message("message.learn_unavailable");
         }
         if (entry.isSkill()) {
-            return player.getGold() < priceOf(entry) ? "Not enough gold" : null;
+            return player.getGold() < priceOf(entry) ? I18n.message("message.learn_not_enough_gold") : null;
         }
         SpellData spell = entry.spell;
         if (player.getLevel() < spell.getMinLevel()) {
-            return "Requires level " + spell.getMinLevel();
+            return I18n.message("message.learn_need_level", spell.getMinLevel());
         }
         if (player.getIntelligence() < spell.getMinInt()) {
-            return "Requires " + spell.getMinInt() + " intelligence";
+            return I18n.message("message.learn_need_intelligence", spell.getMinInt());
         }
         if (player.getWisdom() < spell.getMinWis()) {
-            return "Requires " + spell.getMinWis() + " wisdom";
+            return I18n.message("message.learn_need_wisdom", spell.getMinWis());
         }
         if (player.getGold() < priceOf(entry)) {
-            return "Not enough gold";
+            return I18n.message("message.learn_not_enough_gold");
         }
         return null;
+    }
+
+    @Override
+    protected String blockedReason(ListRow row) {
+        LearnEntry entry = (LearnEntry) row;
+        return isMaxed(entry) ? null : blockReason(entry);
+    }
+
+    @Override
+    protected String rowTooltipReason(ListRow row) {
+        LearnEntry entry = (LearnEntry) row;
+        return isMaxed(entry) ? I18n.message("message.learn_already_known") : blockReason(entry);
     }
 
     /** Localized skill name, falling back to the English display name. */
@@ -529,7 +502,7 @@ public class LearnScreen extends GuiListScreen {
         }
 
         @Override public String nameText() {
-            return isSkill() ? skillDisplayName : I18n.resolve(spell.getName());
+            return isSkill() ? skillDisplayName : I18n.key(spell.getKey(), I18n.resolve(spell.getName()));
         }
         @Override public String priceText() { return String.valueOf(priceOf(this)); }
         @Override public String thirdColumnText() { return String.valueOf(count); }
@@ -555,3 +528,4 @@ public class LearnScreen extends GuiListScreen {
     }
 
 }
+

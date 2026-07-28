@@ -2135,7 +2135,10 @@ public class T4CContentStudio {
                 ActionType type = parseEnum(ActionType.class, str(actionRow.get("type")), null);
                 if (type == null) throw new DialogValidationException("NPC '" + npcName + "': invalid action type");
                 List<String> targets = stringList(actionRow.get("targets")).stream()
-                        .map(String::trim).filter(value -> !value.isEmpty()).toList();
+                        .map(String::trim).filter(value -> !value.isEmpty())
+                        .map(value -> type == ActionType.OPEN_SPELL_LEARNING
+                                ? canonicalSpellKey(value) : value)
+                        .toList();
                 validateActionTargets(npcName, type, targets);
                 actions.add(new NpcDef.Action(type, targets));
             }
@@ -2155,7 +2158,8 @@ public class T4CContentStudio {
             throw new DialogValidationException("NPC '" + npcName + "': " + type + " accepts no target");
         }
         if (type == ActionType.OPEN_SPELL_LEARNING) {
-            for (String target : targets) if (SpellRegistry.findByName(target) == null)
+            for (String target : targets) if (!target.startsWith("spell.")
+                    && SpellRegistry.findByName(target) == null)
                 throw new DialogValidationException("NPC '" + npcName + "': unknown spell '" + target + "'");
         } else if (type == ActionType.OPEN_SHOP || type == ActionType.GIVE_ITEM) {
             for (String target : targets) if (ItemRegistry.findByKey(target) == null)
@@ -2168,6 +2172,18 @@ public class T4CContentStudio {
             for (String target : targets) if (!valid.contains(target))
                 throw new DialogValidationException("NPC '" + npcName + "': unknown skill '" + target + "'");
         }
+    }
+
+    private String canonicalSpellKey(String value) {
+        SpellData spell = SpellRegistry.findByName(value);
+        if (spell != null) return spell.getKey();
+        String candidate = value;
+        while (candidate.startsWith("spell.spell_")) {
+            candidate = "spell." + candidate.substring("spell.spell_".length());
+            spell = SpellRegistry.findByName(candidate);
+            if (spell != null) return spell.getKey();
+        }
+        return value;
     }
 
     /**
@@ -2263,6 +2279,10 @@ public class T4CContentStudio {
                                       Map<String, String> catalogueUpdates) {
         String existingKey = I18n.keyOf(existingPlaceholder);
         if (existingKey != null) {
+            if (editedText == null || editedText.isBlank()) {
+                catalogueUpdates.put(existingKey, null);
+                return "";
+            }
             if (!editedText.equals(I18n.resolve(existingPlaceholder))) {
                 catalogueUpdates.put(existingKey, editedText);
             }
@@ -2304,9 +2324,8 @@ public class T4CContentStudio {
     private List<String> loadSpellNames() {
         List<String> names = new ArrayList<>();
         for (SpellData spell : SpellRegistry.load()) {
-            if (spell != null && spell.getName() != null && !spell.getName().isBlank()) {
-                String key = I18n.keyOf(spell.getName());
-                names.add(key == null ? spell.getName() : key);
+            if (spell != null && spell.getKey() != null && !spell.getKey().isBlank()) {
+                names.add(spell.getKey());
             }
         }
         names.sort(String.CASE_INSENSITIVE_ORDER);

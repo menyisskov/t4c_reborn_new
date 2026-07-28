@@ -1,6 +1,6 @@
 {
-  "x": 2948.0,
-  "y": 1054.0,
+  "x": 2975.0,
+  "y": 1056.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,21 +8,22 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 60537,
+  "gold": 53385,
   "karma": 0,
   "maxHp": 71,
   "currentHp": 71,
   "maxMana": 60,
-  "mana": 29,
+  "mana": 11,
   "level": 15,
   "currentXp": 11172,
   "xpToNextLevel": 14988,
   "statPoints": 500,
-  "skillPoints": 490,
+  "skillPoints": 485,
   "rebirthCount": 0,
   "spells": [
     "spell.flaming_arrow",
-    "spell.light"
+    "spell.light",
+    "spell.spell_lesser_drain"
   ],
   "quickSlots": [
     {
@@ -32,25 +33,13 @@
     {
       "slot": 5,
       "spell": "spell.light"
-    }
-  ],
-  "activeBuffs": [
+    },
     {
-      "spellName": "${spell.light}",
-      "description": "${spell.description.light}",
-      "iconId": "64kSpellIconLightMain",
-      "remainingSeconds": 592,
-      "totalDurationSeconds": 600,
-      "unlimited": false,
-      "effects": [
-        {
-          "type": "ATTRIBUTE",
-          "attribute": "radiance",
-          "amount": "100"
-        }
-      ]
+      "slot": 7,
+      "spell": "spell.spell_lesser_drain"
     }
   ],
+  "activeBuffs": [],
   "inventory": [
     "item.gem_of_destiny",
     "item.potion_of_mana",
@@ -100,5 +89,5 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0126023
+  "dayNightHour": 7.0
 }

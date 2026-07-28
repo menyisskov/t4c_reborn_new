@@ -21,6 +21,7 @@ public class GuiButton extends AbstractGuiElement {
     private boolean isHovered;
     private boolean isPressed;
     private boolean visible = true;
+    private boolean enabled = true;
     private com.badlogic.gdx.graphics.g2d.BitmapFont labelFont;
     private java.util.function.Supplier<String> labelText;
     private final com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout();
@@ -49,12 +50,22 @@ public class GuiButton extends AbstractGuiElement {
         return visible;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        if (!enabled) {
+            isHovered = false;
+            isPressed = false;
+        }
+    }
+
     public void render(SpriteBatch batch) {
         if (!visible) {
             return;
         }
         TextureRegion region;
-        if (isPressed) {
+        if (!enabled) {
+            region = normal;
+        } else if (isPressed) {
             region = pressed;
         } else if (isHovered) {
             region = hover;
@@ -89,12 +100,12 @@ public class GuiButton extends AbstractGuiElement {
     }
 
     public void onTouchDown(float screenX, float screenY) {
-        isHovered = visible && contains(screenX, screenY);
+        isHovered = visible && enabled && contains(screenX, screenY);
         isPressed = isHovered;
     }
 
     public void onTouchUp(float screenX, float screenY) {
-        if (visible && isPressed && contains(screenX, screenY) && callback != null) {
+        if (visible && enabled && isPressed && contains(screenX, screenY) && callback != null) {
             SoundManager.animateSound("Generic pickup item.wav");
             callback.run();
         }

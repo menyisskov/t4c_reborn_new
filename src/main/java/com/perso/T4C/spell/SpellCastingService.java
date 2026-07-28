@@ -84,7 +84,9 @@ public final class SpellCastingService {
     private static boolean hasLearnedSpell(Player player, SpellData spell) {
         if (player.getSpells() == null) return false;
         for (String learned : player.getSpells()) {
-            if (learned != null && learned.equals(spell.getKey())) {
+            if (learned != null && (learned.equals(spell.getKey())
+                    || (SpellRegistry.findByName(learned) != null
+                    && SpellRegistry.findByName(learned).getKey().equals(spell.getKey())))) {
                 return true;
             }
         }

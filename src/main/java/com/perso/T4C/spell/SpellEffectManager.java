@@ -14,7 +14,7 @@ public final class SpellEffectManager {
     public record SummonRequest(String type, String definitionKey) {
     }
 
-    public record Impact(int healthDelta, List<SummonRequest> summons) {
+    public record Impact(int healthDelta, List<SummonRequest> summons, int drainedHealth) {
     }
 
     public record PlayerUtility(Integer teleportTileX, Integer teleportTileY, Integer teleportWorldZ,
@@ -30,8 +30,9 @@ public final class SpellEffectManager {
     private final List<TimedHook> hooks = new ArrayList<>();
 
     public Impact resolve(SpellData spell, Player caster, BaseMonster target, double rangeFromCenter) {
-        if (spell == null || caster == null || target == null) return new Impact(0, List.of());
+        if (spell == null || caster == null || target == null) return new Impact(0, List.of(), 0);
         int delta = resolveHealthDelta(spell, caster, target, rangeFromCenter);
+        int drainedHealth = hasDrainLifeEffect(spell) ? Math.max(0, -delta) : 0;
         List<SummonRequest> summons = new ArrayList<>();
         for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
             if (effect == null) continue;
@@ -47,7 +48,7 @@ public final class SpellEffectManager {
                 }
             }
         }
-        return new Impact(delta, List.copyOf(summons));
+        return new Impact(delta, List.copyOf(summons), drainedHealth);
     }
 
     public int resolvePlayerHealthDelta(SpellData spell, Player caster) {
@@ -71,6 +72,11 @@ public final class SpellEffectManager {
         int low = Math.min(spell.getMinDamage(), spell.getMaxDamage());
         int high = Math.max(spell.getMinDamage(), spell.getMaxDamage());
         return low == high ? low : ThreadLocalRandom.current().nextInt(low, high + 1);
+    }
+
+    private static boolean hasDrainLifeEffect(SpellData spell) {
+        return spell.getT4cEffects().stream()
+                .anyMatch(effect -> effect != null && effect.getEffectType() == 10);
     }
 
     public int resolvePlayerManaDelta(SpellData spell, Player caster) {
@@ -231,7 +237,7 @@ public final class SpellEffectManager {
 
     private static int resolveHealthDelta(SpellData spell, Player caster, BaseMonster target, double range) {
         for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
-            if (effect != null && effect.getEffectType() == 1) {
+            if (effect != null && (effect.getEffectType() == 1 || effect.getEffectType() == 10)) {
                 String center = parameter(effect, 1);
                 String ranged = parameter(effect, 2);
                 String formula = range > 0d && ranged != null && !ranged.isBlank() ? ranged : center;

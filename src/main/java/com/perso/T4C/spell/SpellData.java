@@ -61,7 +61,30 @@ public class SpellData {
     /** Stable catalogue identity, equivalent to an item's key. */
     public String getKey() {
         String key = I18n.keyOf(name);
-        return key != null ? key : name;
+        if (key == null) return name;
+        // Older spell binaries were written with I18n.placeholder("spell", name)
+        // even when name already contained the spell namespace.
+        while (key.startsWith("spell.spell_")) {
+            key = "spell." + key.substring("spell.spell_".length());
+        }
+        return key;
+    }
+
+    /** Returns this definition with only its learning price changed. */
+    public SpellData withPrice(int newPrice) {
+        return new SpellData(name, description, manaCost, radius, minInt, minWis, minLevel,
+                isAttack, lineOfSight, iconId, projectileSpell, impactSpell, minDamage, maxDamage,
+                sound, soundImpact, cooldownSeconds, duration, frequency, newPrice, buff,
+                spellId, element, targetType, attackType, successRate, mentalExhaustion,
+                physicalExhaustion, attackExhaustion, visualEffect, visualEffectTarget, pvp, t4cEffects);
+    }
+
+    public SpellData withT4cEffects(List<T4cEffect> effects) {
+        return new SpellData(name, description, manaCost, radius, minInt, minWis, minLevel,
+                isAttack, lineOfSight, iconId, projectileSpell, impactSpell, minDamage, maxDamage,
+                sound, soundImpact, cooldownSeconds, duration, frequency, price, buff,
+                spellId, element, targetType, attackType, successRate, mentalExhaustion,
+                physicalExhaustion, attackExhaustion, visualEffect, visualEffectTarget, pvp, effects);
     }
 
     /** Full v3 constructor. */
