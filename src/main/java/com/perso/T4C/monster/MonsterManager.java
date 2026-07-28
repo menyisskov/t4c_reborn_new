@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
@@ -39,6 +41,9 @@ public class MonsterManager {
     private com.perso.T4C.helper.XpCurve xpCurve;
     private java.util.function.BiConsumer<Integer, Vector2> damageDealtCallback;
     private java.util.function.Consumer<BaseMonster> lootCallback;
+    private java.util.function.Consumer<BaseMonster> playerKillCallback;
+    private final Set<BaseMonster> notifiedPlayerKills =
+            Collections.newSetFromMap(new IdentityHashMap<>());
     /** Notified when a player attack fails to land, so the UI can float a miss/dodge label. */
     private java.util.function.BiConsumer<com.perso.T4C.combat.CombatResult, Vector2> attackMissedCallback;
     private java.util.function.BiConsumer<BaseMonster, com.perso.T4C.combat.CombatResult> playerAttackHitCallback;
@@ -71,6 +76,11 @@ public class MonsterManager {
         this.lootCallback = callback;
     }
 
+    /** Set the callback used by progression systems for player-attributed kills. */
+    public void setPlayerKillCallback(java.util.function.Consumer<BaseMonster> callback) {
+        this.playerKillCallback = callback;
+    }
+
     /** Invoked before primary damage when the player's physical attack successfully hits. */
     public void setPlayerAttackHitCallback(
             java.util.function.BiConsumer<BaseMonster, com.perso.T4C.combat.CombatResult> callback) {
@@ -78,12 +88,20 @@ public class MonsterManager {
     }
 
     /**
-     * Invoke the loot callback for a monster the player just killed.
-     * Exposed so other kill paths (e.g. attack spells) can trigger drops.
+     * Publishes one player-attributed death to loot and progression systems.
+     * Duplicate notifications for the same death are ignored until respawn.
+     * Exposed so every kill path (melee, bow, spell and area effect) converges
+     * here.
      */
     public void notifyKilledByPlayer(BaseMonster monster) {
-        if (lootCallback != null && monster != null) {
+        if (monster == null || !monster.isDead() || !notifiedPlayerKills.add(monster)) {
+            return;
+        }
+        if (lootCallback != null) {
             lootCallback.accept(monster);
+        }
+        if (playerKillCallback != null) {
+            playerKillCallback.accept(monster);
         }
     }
 
@@ -125,6 +143,7 @@ public class MonsterManager {
             // Respawn monster if respawn time has passed
             if (monster.shouldRespawn() && canRespawn(monster)) {
                 monster.respawn();
+                notifiedPlayerKills.remove(monster);
                 scheduleNextRespawn(monster);
             }
         }
@@ -145,6 +164,7 @@ public class MonsterManager {
             monster.update(delta, playerPosition, monsters);
             if (monster.shouldRespawn() && canRespawn(monster)) {
                 monster.respawn();
+                notifiedPlayerKills.remove(monster);
                 scheduleNextRespawn(monster);
             }
         }
@@ -393,6 +413,7 @@ public class MonsterManager {
     public void clear() {
         monsters.clear();
         pendingSpawns.clear();
+        notifiedPlayerKills.clear();
         log.info("Cleared all monsters");
     }
 

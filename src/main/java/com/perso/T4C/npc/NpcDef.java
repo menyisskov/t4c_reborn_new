@@ -71,8 +71,9 @@ public final class NpcDef {
     }
 
     /**
-     * Targets contain spell ids, skill ids, or item keys depending on the type.
-     * GIVE_ITEM uses exactly one target; HEAL and END_CONVERSATION use none.
+     * Targets contain spell ids, skill ids, item keys, or quest ids depending on
+     * the type. GIVE_ITEM and GIVE_QUEST use exactly one target; HEAL and
+     * END_CONVERSATION use none.
      */
     @Getter
     public static final class Action {

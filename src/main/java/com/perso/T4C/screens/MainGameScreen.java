@@ -44,6 +44,7 @@ import com.perso.T4C.npc.NPCManager;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.spell.SpellCastingService;
@@ -63,6 +64,7 @@ import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.widget.GuiMapZoneDisplay;
 import com.perso.T4C.ui.FloatingDamage;
 import com.perso.T4C.ui.FontManager;
+import com.perso.T4C.ui.GameChat;
 import com.perso.T4C.ui.PlayerCoordsHud;
 import com.perso.T4C.ui.PlayerHUD;
 import com.perso.T4C.ui.SystemMessage;
@@ -114,6 +116,7 @@ public class MainGameScreen implements Screen {
     private PlayerHUD hud;
     private PlayerCoordsHud coordsHud;
     private SystemMessage systemMessage;
+    private GameChat gameChat;
     private GuiMapZoneDisplay mapZoneDisplay;
 
     @Getter
@@ -123,6 +126,7 @@ public class MainGameScreen implements Screen {
     private ShaderProgram outlineShader;
     private NPCManager npcManager;
     private MonsterManager monsterManager;
+    private QuestService questService;
     private final com.perso.T4C.objects.GroundItemManager groundItemManager = new com.perso.T4C.objects.GroundItemManager();
     private final java.util.Random lootRandom = new java.util.Random();
 
@@ -223,6 +227,7 @@ public class MainGameScreen implements Screen {
         loadCollisionMap(currentMap);
         CollisionManager.getInstance().setPlayerPassabilityProvider(this::isTeleportSourceTile);
         initializePlayer();
+        questService = new QuestService(xpCurve, this::savePlayerState, this::showSystemMessage);
         updateAmbientMusicForPlayer();
 
         mapRenderer = createMapRenderer();
@@ -726,7 +731,7 @@ public class MainGameScreen implements Screen {
      * @return The created NPCManager.
      */
     private NPCManager createNpcManager() {
-        NPCManager manager = new NPCManager(outlineShader);
+        NPCManager manager = new NPCManager(outlineShader, questService);
         try {
             String mapPath = currentMap != null ? currentMap.getMapPath() : Paths.MAP;
             manager.initializeNpcsFromMap(mapPath);
@@ -879,6 +884,12 @@ public class MainGameScreen implements Screen {
                 showSystemMessage(I18n.message("message.gold_gained",  gold));
             });
         });
+        monsterManager.setPlayerKillCallback(monster -> questService.recordKill(
+                player,
+                monster.getCanonicalName(),
+                currentMap.getZ(),
+                monster.getTileX(),
+                monster.getTileY()));
     }
 
     /**
@@ -1075,6 +1086,7 @@ public class MainGameScreen implements Screen {
             }
             updateAttackCursor();
             GuiManager.render(batch);
+            if (gameChat != null) gameChat.render(batch, hudCamera);
             batch.end();
         });
 
@@ -2308,6 +2320,9 @@ public class MainGameScreen implements Screen {
     }
 
     private void showSystemMessage(String message) {
+        if (gameChat != null) {
+            gameChat.addSystemMessage(message);
+        }
         if (systemMessage != null) {
             systemMessage.show(message);
         }
@@ -3058,9 +3073,16 @@ public class MainGameScreen implements Screen {
         hud = new PlayerHUD(player, spriteLoader);
         coordsHud = new PlayerCoordsHud(player);
         systemMessage = new SystemMessage();
+        gameChat = new GameChat(text -> {
+            if (player != null) {
+                player.showTalkText(text);
+            }
+            // This callback is also the future network send point.
+        });
+        gameChat.addSystemMessage(I18n.key("chat.help"));
         SystemMessage.setShared(systemMessage);
         com.perso.T4C.spell.NpcCastVfxHook.setShared(this::playNpcCastVfx);
-        mapZoneDisplay = new GuiMapZoneDisplay("LIGHTHAVEN");
+        mapZoneDisplay = new GuiMapZoneDisplay(I18n.key("zone.lighthaven"));
     }
 
     /**
@@ -3242,8 +3264,11 @@ public class MainGameScreen implements Screen {
         GmInputHandler gmInputHandler = new GmInputHandler(player, new GmCommandProcessor(xpCurve, npcManager, monsterManager));
         NPCConversationInputHandler npcConversationInputHandler = new NPCConversationInputHandler(npcManager, player);
         inputHandler.setGmInputHandler(gmInputHandler);
-        inputHandler.setTextInputActiveSupplier(npcConversationInputHandler::isActive);
-        this.textInputActiveSupplier = npcConversationInputHandler::isActive;
+        inputHandler.setTextInputActiveSupplier(
+                () -> npcConversationInputHandler.isActive() || (gameChat != null && gameChat.isActive()));
+        this.textInputActiveSupplier =
+                () -> npcConversationInputHandler.isActive() || (gameChat != null && gameChat.isActive());
+        multiplexer.addProcessor(gameChat);
         multiplexer.addProcessor(gmInputHandler);
         multiplexer.addProcessor(guiAdapter);
         multiplexer.addProcessor(npcConversationInputHandler);
@@ -3297,6 +3322,9 @@ public class MainGameScreen implements Screen {
             SystemMessage.setShared(null);
             com.perso.T4C.spell.NpcCastVfxHook.setShared(null);
             systemMessage.dispose();
+        }
+        if (gameChat != null) {
+            gameChat.dispose();
         }
         if (hud != null) {
             hud.dispose();

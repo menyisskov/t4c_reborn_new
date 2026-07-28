@@ -1250,6 +1250,11 @@ public abstract class BaseMonster implements Nameable {
         return displayName;
     }
 
+    /** Stable definition identity used by gameplay systems (not the translated display name). */
+    public String getCanonicalName() {
+        return getName();
+    }
+
     /**
      * Allow subclasses to customize the display name.
      */

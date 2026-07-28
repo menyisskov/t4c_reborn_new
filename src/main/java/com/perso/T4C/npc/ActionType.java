@@ -6,6 +6,7 @@ public enum ActionType {
     OPEN_SKILL_LEARNING,
     OPEN_SHOP,
     GIVE_ITEM,
+    GIVE_QUEST,
     END_CONVERSATION,
     HEAL
 }

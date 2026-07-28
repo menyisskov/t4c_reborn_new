@@ -32,6 +32,8 @@ import com.perso.T4C.npc.NpcDef;
 import com.perso.T4C.npc.NpcRegistry;
 import com.perso.T4C.objects.ObjectPos;
 import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.quest.QuestDef;
+import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.render.ObjectMapping;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
@@ -113,6 +115,7 @@ public class T4CContentStudio {
         server.createContext("/api/npc-reload", this::handleNpcReload);
         server.createContext("/api/maps", this::handleMaps);
         server.createContext("/api/monsters", this::handleMonsters);
+        server.createContext("/api/quests", this::handleQuests);
         server.createContext("/api/items", this::handleItems);
         server.createContext("/api/spells", this::handleSpells);
         server.createContext("/api/spawns", this::handleSpawns);
@@ -761,6 +764,13 @@ public class T4CContentStudio {
                 "strength", "dexterity", "endurance", "intelligence", "wisdom"
         ));
         response.put("actionTypes", Arrays.stream(ActionType.values()).map(Enum::name).toList());
+        response.put("questIds", QuestRegistry.load().stream()
+                .filter(Objects::nonNull)
+                .map(QuestDef::getId)
+                .filter(Objects::nonNull)
+                .filter(id -> !id.isBlank())
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .toList());
         response.put("questFlagNames", loadQuestFlagNames());
         writeJson(exchange, response);
     }
@@ -905,6 +915,43 @@ public class T4CContentStudio {
                     .toList();
             MonsterRegistry.save(defs);
             writeSaved(exchange, defs.size());
+            return;
+        }
+        sendMethodNotAllowed(exchange);
+    }
+
+    private void handleQuests(HttpExchange exchange) throws IOException {
+        if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+            List<Map<String, Object>> items = QuestRegistry.load().stream()
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(QuestDef::getId, String.CASE_INSENSITIVE_ORDER))
+                    .map(this::questToMap)
+                    .toList();
+            writeCollection(exchange, items);
+            return;
+        }
+        if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            try {
+                List<Map<String, Object>> items = readItemsPayload(exchange);
+                Set<String> ids = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+                Map<String, String> catalogueUpdates = new LinkedHashMap<>();
+                List<QuestDef> definitions = new ArrayList<>();
+                for (Map<String, Object> item : items) {
+                    String id = str(item.get("id")).trim();
+                    if (!ids.add(id)) {
+                        throw new DialogValidationException("Duplicate quest id '" + id + "'");
+                    }
+                    definitions.add(questFromMap(item, catalogueUpdates));
+                }
+                definitions.sort(Comparator.comparing(QuestDef::getId, String.CASE_INSENSITIVE_ORDER));
+                if (!catalogueUpdates.isEmpty()) {
+                    I18n.update(catalogueUpdates);
+                }
+                QuestRegistry.save(definitions);
+                writeSaved(exchange, definitions.size());
+            } catch (DialogValidationException e) {
+                sendBadRequest(exchange, e.getMessage());
+            }
             return;
         }
         sendMethodNotAllowed(exchange);
@@ -1506,6 +1553,99 @@ public class T4CContentStudio {
                 bool(item.get("defaultAggressive"), true) ? 50 : 0, 0, 0, true, new java.util.ArrayList<>());
     }
 
+    Map<String, Object> questToMap(QuestDef definition) {
+        Map<String, Object> item = new LinkedHashMap<>();
+        item.put("id", definition.getId());
+        item.put("title", I18n.resolve(definition.getTitle()));
+        item.put("giverNpc", definition.getGiverNpc());
+        item.put("targetMonster", definition.getTargetMonster());
+        item.put("requiredKills", definition.getRequiredKills());
+        item.put("targetWorldZ", definition.getTargetWorldZ());
+        item.put("areaCenterX", definition.getAreaCenterX());
+        item.put("areaCenterY", definition.getAreaCenterY());
+        item.put("areaRadiusTiles", definition.getAreaRadiusTiles());
+        item.put("rewardGold", definition.getRewardGold());
+        item.put("rewardXp", definition.getRewardXp());
+        item.put("offerText", I18n.resolve(definition.getOfferText()));
+        item.put("completionText", I18n.resolve(definition.getCompletionText()));
+        item.put("completedText", I18n.resolve(definition.getCompletedText()));
+        return item;
+    }
+
+    private QuestDef questFromMap(Map<String, Object> item, Map<String, String> catalogueUpdates) {
+        String id = str(item.get("id")).trim();
+        if (id.isEmpty()) {
+            throw new DialogValidationException("Every quest needs an id");
+        }
+        if (!id.matches("[A-Za-z0-9][A-Za-z0-9_.-]*")) {
+            throw new DialogValidationException("Quest '" + id
+                    + "': id may contain only letters, digits, '.', '_' and '-'");
+        }
+
+        String title = requiredQuestText(id, "title", item.get("title"));
+        String offerText = requiredQuestText(id, "offerText", item.get("offerText"));
+        String completionText = requiredQuestText(id, "completionText", item.get("completionText"));
+        String completedText = requiredQuestText(id, "completedText", item.get("completedText"));
+        String giverNpc = str(item.get("giverNpc")).trim();
+        String targetMonster = str(item.get("targetMonster")).trim();
+        int requiredKills = integer(item.get("requiredKills"), 0);
+        int targetWorldZ = integer(item.get("targetWorldZ"), -1);
+        int areaRadiusTiles = integer(item.get("areaRadiusTiles"), 0);
+        int rewardGold = integer(item.get("rewardGold"), -1);
+        int rewardXp = integer(item.get("rewardXp"), -1);
+
+        if (NpcRegistry.findByName(giverNpc) == null) {
+            throw new DialogValidationException("Quest '" + id + "': unknown giver NPC '" + giverNpc + "'");
+        }
+        if (MonsterRegistry.findByName(targetMonster) == null) {
+            throw new DialogValidationException("Quest '" + id + "': unknown target monster '"
+                    + targetMonster + "'");
+        }
+        if (requiredKills <= 0) {
+            throw new DialogValidationException("Quest '" + id + "': requiredKills must be greater than 0");
+        }
+        if (targetWorldZ < 0) {
+            throw new DialogValidationException("Quest '" + id + "': targetWorldZ must be non-negative");
+        }
+        if (areaRadiusTiles <= 0) {
+            throw new DialogValidationException("Quest '" + id + "': areaRadiusTiles must be greater than 0");
+        }
+        if (rewardGold < 0 || rewardXp < 0) {
+            throw new DialogValidationException("Quest '" + id + "': rewards must be non-negative");
+        }
+
+        QuestDef existing = QuestRegistry.findById(id);
+        String keyPrefix = "quest." + I18n.normalizedKey(id);
+        return new QuestDef(
+                id,
+                resolveEditedText(existing == null ? null : existing.getTitle(),
+                        title, keyPrefix + ".title", catalogueUpdates),
+                giverNpc,
+                targetMonster,
+                requiredKills,
+                targetWorldZ,
+                integer(item.get("areaCenterX"), 0),
+                integer(item.get("areaCenterY"), 0),
+                areaRadiusTiles,
+                rewardGold,
+                rewardXp,
+                resolveEditedText(existing == null ? null : existing.getOfferText(),
+                        offerText, keyPrefix + ".offer", catalogueUpdates),
+                resolveEditedText(existing == null ? null : existing.getCompletionText(),
+                        completionText, keyPrefix + ".completion", catalogueUpdates),
+                resolveEditedText(existing == null ? null : existing.getCompletedText(),
+                        completedText, keyPrefix + ".completed", catalogueUpdates)
+        );
+    }
+
+    private String requiredQuestText(String questId, String field, Object value) {
+        String text = str(value).trim();
+        if (text.isEmpty()) {
+            throw new DialogValidationException("Quest '" + questId + "': " + field + " is required");
+        }
+        return text;
+    }
+
     private Map<String, Object> itemToMap(ItemDefinition def) {
         Map<String, Object> item = new LinkedHashMap<>();
         item.put("key", def.getKey());
@@ -2013,7 +2153,7 @@ public class T4CContentStudio {
         NpcRegistry.save(defs);
     }
 
-    private Map<String, Object> npcToMap(NpcDef def) {
+    Map<String, Object> npcToMap(NpcDef def) {
         Map<String, Object> item = new LinkedHashMap<>();
         item.put("name", def.getName());
         // The editor should show the human-readable value; persistence still
@@ -2150,9 +2290,12 @@ public class T4CContentStudio {
         return topics;
     }
 
-    private void validateActionTargets(String npcName, ActionType type, List<String> targets) {
+    void validateActionTargets(String npcName, ActionType type, List<String> targets) {
         if (type == ActionType.GIVE_ITEM && targets.size() != 1) {
             throw new DialogValidationException("NPC '" + npcName + "': GIVE_ITEM requires exactly one item");
+        }
+        if (type == ActionType.GIVE_QUEST && targets.size() != 1) {
+            throw new DialogValidationException("NPC '" + npcName + "': GIVE_QUEST requires exactly one quest");
         }
         if ((type == ActionType.HEAL || type == ActionType.END_CONVERSATION) && !targets.isEmpty()) {
             throw new DialogValidationException("NPC '" + npcName + "': " + type + " accepts no target");
@@ -2164,6 +2307,9 @@ public class T4CContentStudio {
         } else if (type == ActionType.OPEN_SHOP || type == ActionType.GIVE_ITEM) {
             for (String target : targets) if (ItemRegistry.findByKey(target) == null)
                 throw new DialogValidationException("NPC '" + npcName + "': unknown item '" + target + "'");
+        } else if (type == ActionType.GIVE_QUEST) {
+            for (String target : targets) if (QuestRegistry.findById(target) == null)
+                throw new DialogValidationException("NPC '" + npcName + "': unknown quest '" + target + "'");
         } else if (type == ActionType.OPEN_SKILL_LEARNING) {
             Set<String> valid = Set.of("attack", "archery", "dodge", "peek", "stun_blow", "powerful_blow",
                     "rapid_healing", "first_aid", "parry", "critical_strike", "hide", "sneak", "search",

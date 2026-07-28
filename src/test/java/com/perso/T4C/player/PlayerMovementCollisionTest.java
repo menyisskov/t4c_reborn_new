@@ -18,6 +18,7 @@ import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_ABOV
 import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_BELOW_TILES;
 import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_HORIZONTAL_TILES;
 import static com.perso.T4C.config.GameConstants.PLAYER_MOVEMENT_RESERVATION_STEP_TILES;
+import static com.perso.T4C.config.GameConstants.PLAYER_SPEED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -98,7 +99,8 @@ class PlayerMovementCollisionTest {
 
         // SE tries east before south in Character::MoveUnit. The diagonal
         // corner would introduce a collision, so only X is interpolated.
-        assertEquals(3f * GRID_W + 25f, player.getCoordinates().getX());
+        assertEquals(3f * GRID_W + 10f * PLAYER_SPEED * 0.01f,
+                player.getCoordinates().getX(), 0.001f);
         assertEquals(3f * GRID_H, player.getCoordinates().getY());
         assertTrue(player.getMovement().isMoving());
     }
@@ -115,7 +117,8 @@ class PlayerMovementCollisionTest {
         // The requested diagonal is blocked by its vertical leading edge.
         // NE's first fallback is north, whose full footprint is clear.
         assertEquals(3f * GRID_W, player.getCoordinates().getX());
-        assertEquals(5f * GRID_H - 1.25f, player.getCoordinates().getY());
+        assertEquals(5f * GRID_H - PLAYER_SPEED * 0.01f * GRID_H / GRID_W,
+                player.getCoordinates().getY(), 0.001f);
     }
 
     @Test

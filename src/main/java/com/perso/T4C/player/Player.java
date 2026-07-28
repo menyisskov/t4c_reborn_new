@@ -494,7 +494,12 @@ public class Player extends Stats {
     }
 
     public void addXp(int amount, XpCurve xpCurve) {
-        progression.addXp(this, amount, xpCurve);
+        progression.addXp(this, amount, xpCurve, true);
+    }
+
+    /** Grants an exact XP amount while still applying normal level-up handling. */
+    public void addXpExact(int amount, XpCurve xpCurve) {
+        progression.addXp(this, amount, xpCurve, false);
     }
 
     public com.perso.T4C.skill.SkillService.Result learnSkill(String skillId) {

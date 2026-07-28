@@ -11,6 +11,7 @@ import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.ui.SystemMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,13 +29,19 @@ import static com.perso.T4C.config.GameConstants.GRID_W;
 public class NPCManager {
     private final List<BaseNPC> npcs = new ArrayList<>();
     private final ShaderProgram outlineShader;
+    private final QuestService questService;
     private BaseNPC activeConversationNpc;
 
     /**
      * Create NPC manager.
      */
     public NPCManager(ShaderProgram outlineShader) {
+        this(outlineShader, null);
+    }
+
+    public NPCManager(ShaderProgram outlineShader, QuestService questService) {
         this.outlineShader = outlineShader;
+        this.questService = questService;
     }
 
     /**
@@ -69,7 +76,7 @@ public class NPCManager {
             return false;
         }
         try {
-            BaseNPC npc = new DataNpc(def);
+            BaseNPC npc = new DataNpc(def, questService);
             npc.setSpawnPosition(worldX, worldY);
             addNPC(npc);
             return true;
@@ -357,7 +364,7 @@ public class NPCManager {
                     continue;
                 }
                 try {
-                    BaseNPC npc = new DataNpc(def);
+                    BaseNPC npc = new DataNpc(def, questService);
                     npc.setSpawnPosition(entry.x * GRID_W, entry.y * GRID_H);
                     npc.setStationary(entry.stationary);
                     addNPC(npc);

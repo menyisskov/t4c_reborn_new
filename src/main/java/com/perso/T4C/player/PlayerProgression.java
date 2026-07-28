@@ -6,11 +6,13 @@ import com.perso.T4C.helper.XpCurve;
  */
 
 final class PlayerProgression {
-    void addXp(Player player, int amount, XpCurve xpCurve) {
+    void addXp(Player player, int amount, XpCurve xpCurve, boolean applyMultiplier) {
         if (player == null || amount <= 0) {
             return;
         }
-        amount = Math.round(amount * (1f + player.getBuffXpMultiplier()));
+        if (applyMultiplier) {
+            amount = Math.round(amount * (1f + player.getBuffXpMultiplier()));
+        }
         player.setCurrentXp(player.getCurrentXp() + amount);
         if (xpCurve == null) {
             return;

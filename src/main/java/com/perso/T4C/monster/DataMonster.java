@@ -75,6 +75,11 @@ public class DataMonster extends BaseMonster {
     }
 
     @Override
+    public String getCanonicalName() {
+        return translationIdentity;
+    }
+
+    @Override
     public void update(float delta, com.badlogic.gdx.math.Vector2 playerPosition, List<BaseMonster> nearbyMonsters) {
         super.update(delta, playerPosition, nearbyMonsters);
         if (humanoidAnimations != null) humanoidAnimations.update(delta, movement.isMoving());

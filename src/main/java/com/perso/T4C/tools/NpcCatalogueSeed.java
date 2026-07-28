@@ -138,7 +138,39 @@ public final class NpcCatalogueSeed {
         defs.add(catalogueNpc("TwinNevanis", "Nevanis"));
         defs.add(catalogueNpc("TwinShovanis", "Shovanis", List.of("spell.dust_devil", "spell.curse", "spell.word_of_recall")));
         defs.add(catalogueNpc("Uranos", "Uranos", List.of("spell.stone_shard", "spell.shatter")));
+        defs.add(lighthavenSamaritan());
         NpcDefBinaryIO.write(new File(Paths.NPCS_BIN), defs);
+    }
+
+    static NpcDef lighthavenSamaritan() {
+        int[] keywordCounts = {2, 3, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 5};
+        List<NpcDef.DialogTopic> topics = new ArrayList<>(keywordCounts.length);
+        for (int topicIndex = 0; topicIndex < keywordCounts.length; topicIndex++) {
+            List<String> keywords = new ArrayList<>(keywordCounts[topicIndex]);
+            for (int keywordIndex = 0; keywordIndex < keywordCounts[topicIndex]; keywordIndex++) {
+                keywords.add(I18n.placeholder("npc.topic_keyword.lighthavensamaritan."
+                        + topicIndex + "." + keywordIndex));
+            }
+            List<NpcDef.Action> actions = topicIndex == 1
+                    ? List.of(new NpcDef.Action(ActionType.GIVE_QUEST,
+                            List.of(QuestCatalogueSeed.QUEST_ID)))
+                    : List.of();
+            topics.add(new NpcDef.DialogTopic(
+                    keywords,
+                    topicIndex == 1 ? null
+                            : I18n.placeholder("npc.topic.lighthavensamaritan." + topicIndex),
+                    actions));
+        }
+        return new NpcDef(
+                LighthavenSamaritanQuestMigration.NPC_NAME,
+                I18n.placeholder("npc.lighthavensamaritan"),
+                LighthavenSamaritanAppearanceMigration.originalParts(),
+                null,
+                0,
+                List.of(),
+                I18n.placeholder("npc.welcome.lighthavensamaritan"),
+                topics
+        );
     }
 
     private static NpcDef catalogueNpc(String name, String displayName, String... targets) {

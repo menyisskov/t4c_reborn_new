@@ -1,6 +1,6 @@
 {
-  "x": 2954.0,
-  "y": 1049.0,
+  "x": 2934.0,
+  "y": 1064.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 48289,
+  "gold": 48528,
   "karma": 0,
   "maxHp": 71,
   "currentHp": 71,
   "maxMana": 600,
   "mana": 600,
   "level": 15,
-  "currentXp": 11497,
+  "currentXp": 12364,
   "xpToNextLevel": 14988,
   "statPoints": 500,
   "skillPoints": 485,
@@ -47,23 +47,7 @@
       "item": "item.potion_of_mana"
     }
   ],
-  "activeBuffs": [
-    {
-      "spellName": "${spell.light}",
-      "description": "${spell.description.light}",
-      "iconId": "64kSpellIconLightMain",
-      "remainingSeconds": 592,
-      "totalDurationSeconds": 600,
-      "unlimited": false,
-      "effects": [
-        {
-          "type": "ATTRIBUTE",
-          "attribute": "radiance",
-          "amount": "100"
-        }
-      ]
-    }
-  ],
+  "activeBuffs": [],
   "inventory": [
     "item.gem_of_destiny",
     "item.potion_of_mana",
@@ -96,7 +80,10 @@
     "item.studded_leather_belt",
     "item.wooden_shield",
     "Leather Helmet",
-    "Light healing potion"
+    "Light healing potion",
+    "Light healing potion",
+    "Rusted dirk",
+    "Rusted long sword"
   ],
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
@@ -121,14 +108,17 @@
   "itemCharges": {
     "item.potion_of_healing": 4,
     "item.potion_of_mana": 8,
-    "Light healing potion": 1,
+    "Light healing potion": 2,
     "item.torch": 5
   },
-  "questFlags": {},
+  "questFlags": {
+    "quest.lighthaven_samaritan_rats.status": 1,
+    "quest.lighthaven_samaritan_rats.kills": 5
+  },
   "respawnPointDefined": false,
   "respawnWorldX": 0.0,
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.122719
+  "dayNightHour": 7.0
 }

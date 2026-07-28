@@ -37,6 +37,7 @@ const state = {
   collisionPaintMode: "collision",
   collisionDragMode: null,
   actionTypeOptions: [],
+  questIdOptions: [],
   questFlagNameOptions: [],
   dialogueEditorOptionsLoaded: false,
   dialogueEditorOptionsLoading: false,
@@ -61,6 +62,7 @@ const sectionGroups = [
     items: [
       { id: "npcs", label: "NPC Editor", endpoint: "/api/npcs", key: "displayName", subtitle: "name" },
       { id: "monsters", label: "Monster Editor", endpoint: "/api/monsters", key: "name", subtitle: "displayName" },
+      { id: "quests", label: "Quest Editor", endpoint: "/api/quests", key: "id", subtitle: "title" },
       { id: "items", label: "Item Editor", endpoint: "/api/items", key: "key", subtitle: "name" },
       { id: "spells", label: "Spell Editor", endpoint: "/api/spells", key: "key", subtitle: "name" },
       { id: "monsterSpawns", label: "Monster Placement", endpoint: "/api/spawns?kind=monster", key: "type", subtitle: "x,y,z", mapScoped: true },
@@ -88,6 +90,7 @@ const sectionGroups = [
 const fields = {
   npcs: ["name", "displayName", "spriteBase", "patrolRadiusTiles:number"],
   monsters: ["name", "displayName", "health:number", "mana:number", "xpPerHit:number", "xpOnDeath:number", "hitDamageMin:number", "hitDamageMax:number", "respawnTime:number", "walkPattern", "attackPattern", "deathPattern", "soundAttack", "soundDeath", "soundHit", "goldMin:number", "goldMax:number", "defaultAggressive:boolean", "animateWhileStationary:boolean", "stationaryAnimationPauseSeconds:number"],
+  quests: ["id", "title", "giverNpc", "targetMonster", "requiredKills:number", "targetWorldZ:number", "areaCenterX:number", "areaCenterY:number", "areaRadiusTiles:number", "rewardGold:number", "rewardXp:number", "offerText:textarea", "completionText:textarea", "completedText:textarea"],
   items: ["key", "name", "bodyPart", "appearanceEquippedPrimary", "appearanceInventory", "price:number", "weight:number", "armorClass:number", "dodgeLost:number", "minEnd:number", "reqAttack:number", "reqStr:number", "reqAgi:number", "minInt:number", "minWis:number", "dmgFormula", "atkDelay", "attackSpeed:number", "unique:boolean", "bow:boolean", "unlimitedUse:boolean", "canSummon:boolean", "radiance:number", "nbCharges:number", "lockName", "lockDiff:number", "signText", "containerGold:number", "globalRespawn:number", "localRespawn:number"],
   spells: ["key", "name", "description:textarea", "manaCost", "price:number", "radius:number", "minInt:number", "minWis:number", "minLevel:number", "attack:boolean", "lineOfSight:boolean", "iconId", "projectileSpell", "impactSpell", "minDamage:number", "maxDamage:number", "sound", "soundImpact", "cooldownSeconds:number", "duration"],
   monsterSpawns: ["type", "x:number", "y:number", "z:number", "stationary:boolean", "aggressive:boolean"],
@@ -129,6 +132,20 @@ const FIELD_META = {
   key: ["Key", "Unique internal identifier used by references and saves."],
   name: ["Name", "Main display or lookup name for this record."],
   displayName: ["Display name", "Name shown to players in game."],
+  id: ["Identifier", "Stable internal identifier used by references and persistent state."],
+  title: ["Quest title", "Player-facing title of this quest."],
+  giverNpc: ["Giver / turn-in NPC", "NPC that gives the quest and receives it when complete."],
+  targetMonster: ["Target monster", "Canonical monster definition counted by this quest."],
+  requiredKills: ["Required kills", "Number of matching monsters the player must kill."],
+  targetWorldZ: ["Target world Z", "World layer on which matching kills count."],
+  areaCenterX: ["Area center X", "Horizontal tile coordinate at the center of the objective area."],
+  areaCenterY: ["Area center Y", "Vertical tile coordinate at the center of the objective area."],
+  areaRadiusTiles: ["Area radius", "Objective radius around the center, in tiles."],
+  rewardGold: ["Gold reward", "Exact amount of gold granted once at turn-in."],
+  rewardXp: ["XP reward", "Exact experience granted once at turn-in, without XP multipliers."],
+  offerText: ["Offer text", "Dialogue shown when the player accepts the quest."],
+  completionText: ["Completion text", "Dialogue shown when the reward is handed in."],
+  completedText: ["Already completed text", "Dialogue shown if the player asks for this one-time quest again."],
   description: ["Description", "Text shown in UI/tooltips or learning screens."],
   spriteBase: ["Sprite base", "Animation base used to resolve directional sprite frames."],
   patrolRadiusTiles: ["Patrol radius", "How far this NPC can wander from spawn, in tiles. 0 uses the engine default."],
@@ -832,6 +849,13 @@ function renderEditor() {
       }
     });
   }
+  if (state.section === "quests" && (!state.npcOptions.length || !state.monsterOptions.length)) {
+    Promise.all([ensureNpcOptions(), ensureMonsterOptions()]).then(() => {
+      if (state.section === "quests" && state.items[state.selectedIndex] === item) {
+        renderEditor();
+      }
+    });
+  }
   if (state.section === "monsters" && (!state.monsterPatternOptions.length || !state.soundOptions.length)) {
     ensureMonsterEditorOptions().then(() => {
       if (state.section === "monsters" && state.items[state.selectedIndex] === item) {
@@ -1050,6 +1074,12 @@ function renderEditor() {
           input.appendChild(option);
         });
       }
+    } else if (state.section === "quests" && name === "giverNpc") {
+      input = document.createElement("select");
+      appendOptions(input, ["", ...state.npcOptions], item[name] || "");
+    } else if (state.section === "quests" && name === "targetMonster") {
+      input = document.createElement("select");
+      appendOptions(input, ["", ...state.monsterOptions], item[name] || "");
     } else {
       input = document.createElement("input");
       input.type = type === "number" ? "number" : "text";
@@ -1479,6 +1509,7 @@ function renderSimpleDialogueAction(item, topic, action, index) {
       OPEN_SKILL_LEARNING: "Teach skills",
       OPEN_SHOP: "Open shop",
       GIVE_ITEM: "Give item",
+      GIVE_QUEST: "Give quest",
       END_CONVERSATION: "End conversation",
       HEAL: "Heal player",
     })[value] || value;
@@ -1492,13 +1523,15 @@ function renderSimpleDialogueAction(item, topic, action, index) {
 
   const choices = action.type === "OPEN_SPELL_LEARNING" ? state.spellNameOptions
     : action.type === "OPEN_SKILL_LEARNING" ? state.trainableStatIdOptions
-      : ["OPEN_SHOP", "GIVE_ITEM"].includes(action.type) ? state.itemKeyOptions : null;
-  if (choices && action.type === "GIVE_ITEM") {
+      : ["OPEN_SHOP", "GIVE_ITEM"].includes(action.type) ? state.itemKeyOptions
+        : action.type === "GIVE_QUEST" ? state.questIdOptions : null;
+  if (choices && ["GIVE_ITEM", "GIVE_QUEST"].includes(action.type)) {
     const select = document.createElement("select");
     select.className = "form-control form-control-sm";
     ["", ...choices].forEach((value) => {
       const option = document.createElement("option");
-      option.value = value; option.textContent = value || "(item)";
+      option.value = value;
+      option.textContent = value || (action.type === "GIVE_QUEST" ? "(quest)" : "(item)");
       option.selected = value === (action.targets || [])[0];
       select.appendChild(option);
     });
@@ -1751,6 +1784,9 @@ async function ensureDialogueEditorOptions() {
   if (!state.questFlagNameOptions.length) {
     state.questFlagNameOptions = data.questFlagNames || [];
   }
+  if (!state.questIdOptions.length) {
+    state.questIdOptions = (data.questIds || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
+  }
   if (!state.itemKeyOptions.length) {
     state.itemKeyOptions = (data.itemKeys || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
   }
@@ -1930,6 +1966,7 @@ function dialogueSelectField(labelText, value, options, onChange) {
 const ACTION_PARAM_FIELDS = {
   HEAL: ["intParam1", "intParam2"],
   GIVE_ITEM: ["stringParam1"],
+  GIVE_QUEST: ["stringParam1"],
   TAKE_ITEM: ["stringParam1"],
   SET_FLAG: ["stringParam1", "intParam1"],
   LEARN: [],
@@ -2068,6 +2105,7 @@ function renderLearnCurriculumHint(item) {
 function stringParamOptionsFor(type, node, item) {
   if (type === "GOTO_NODE") return item.dialogNodes.map((n) => n.id).filter((id) => id !== node.id);
   if (type === "GIVE_ITEM" || type === "TAKE_ITEM") return state.itemKeyOptions;
+  if (type === "GIVE_QUEST") return state.questIdOptions;
   if (type === "TEACH" || type === "CAST") return state.spellNameOptions;
   if (type === "SET_FLAG") return state.questFlagNameOptions;
   return [];
@@ -3284,6 +3322,12 @@ async function saveCurrent() {
   if (state.section === "appearanceDefaults") {
     // The NPC composite preview caches this table; drop it so it picks the new sprites up.
     nakedPartsLoaded = false;
+  }
+  if (state.section === "quests") {
+    // A quest may have been added, renamed or removed; reload GIVE_QUEST choices
+    // the next time the NPC dialogue editor is opened.
+    state.questIdOptions = [];
+    state.dialogueEditorOptionsLoaded = false;
   }
   state.dirty = false;
   el.dirtyBadge.classList.add("hidden");

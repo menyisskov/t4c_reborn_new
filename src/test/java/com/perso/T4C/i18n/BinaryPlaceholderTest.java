@@ -4,10 +4,12 @@ import com.perso.T4C.helper.ItemDefBinaryIO;
 import com.perso.T4C.helper.MonsterDefBinaryIO;
 import com.perso.T4C.helper.NpcDefBinaryIO;
 import com.perso.T4C.helper.ObjectMappingsBinaryIO;
+import com.perso.T4C.helper.QuestDefBinaryIO;
 import com.perso.T4C.helper.SpellBinaryIO;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.npc.NpcDef;
+import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.spell.SpellData;
 import org.junit.jupiter.api.Test;
 
@@ -65,6 +67,12 @@ class BinaryPlaceholderTest {
                     check("npc[" + def.getName() + "].topic[" + i + "].keyword", keyword);
                 }
             }
+        }
+        for (QuestDef quest : QuestDefBinaryIO.read(new File("assets/quests/quests.bin"))) {
+            check("quest[" + quest.getId() + "].title", quest.getTitle());
+            check("quest[" + quest.getId() + "].offerText", quest.getOfferText());
+            check("quest[" + quest.getId() + "].completionText", quest.getCompletionText());
+            check("quest[" + quest.getId() + "].completedText", quest.getCompletedText());
         }
         for (ObjectMappingsBinaryIO.Entry entry : ObjectMappingsBinaryIO.read(new File("assets/objects/object_mappings.bin"))) {
             if (entry != null && entry.mapping != null) {

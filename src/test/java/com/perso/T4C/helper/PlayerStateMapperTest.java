@@ -19,4 +19,18 @@ class PlayerStateMapperTest {
         assertEquals(3.5f, state.x);
         assertEquals(4.5f, state.y);
     }
+
+    @Test
+    void preservesQuestFlags() throws Exception {
+        Player source = new Player();
+        source.setQuestFlag("quest.lighthaven_samaritan_rats.status", 1);
+        source.setQuestFlag("quest.lighthaven_samaritan_rats.kills", 7);
+
+        PlayerStateDto state = PlayerStateMapper.fromPlayer(source);
+        Player restored = new Player();
+        PlayerStateMapper.applyToPlayer(state, restored);
+
+        assertEquals(1, restored.getQuestFlag("quest.lighthaven_samaritan_rats.status"));
+        assertEquals(7, restored.getQuestFlag("quest.lighthaven_samaritan_rats.kills"));
+    }
 }

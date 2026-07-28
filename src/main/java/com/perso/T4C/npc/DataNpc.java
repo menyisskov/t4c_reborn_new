@@ -8,6 +8,7 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.spell.NpcCastVfxHook;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
@@ -32,10 +33,16 @@ public class DataNpc extends BaseNPC {
             "search", "picklock", "armor_penetration", "two_weapons", "rob",
             "strength", "dexterity", "endurance", "intelligence", "wisdom");
     private final NpcDef def;
+    private final QuestService questService;
 
     public DataNpc(NpcDef def) throws GameException {
+        this(def, null);
+    }
+
+    public DataNpc(NpcDef def, QuestService questService) throws GameException {
         super(def.getName(), def.getSpriteBase(), buildParts(def));
         this.def = def;
+        this.questService = questService;
         if (def.getDisplayName() != null && !def.getDisplayName().isEmpty()) {
             String translatedName = I18n.resolve(def.getName());
             setDisplayName(translatedName.equals(def.getName())
@@ -56,6 +63,13 @@ public class DataNpc extends BaseNPC {
 
     @Override
     protected void onInteractStart(Player player) {
+        if (questService != null) {
+            String completion = questService.turnInReadyQuests(def.getName(), player);
+            if (completion != null && !completion.isBlank()) {
+                showDialog(completion, 0L);
+                return;
+            }
+        }
         if (def.getWelcomeText() != null && !def.getWelcomeText().isBlank()) {
             showDialog(I18n.resolve(def.getWelcomeText()), 0L);
         }
@@ -145,6 +159,19 @@ public class DataNpc extends BaseNPC {
                     log.warn("NPC '{}' references unknown gift item '{}'", def.getName(), itemKey);
                 } else {
                     InventoryService.add(player, itemKey);
+                }
+            }
+            case GIVE_QUEST -> {
+                if (action.getTargets().isEmpty() || questService == null) {
+                    if (questService == null) {
+                        log.warn("NPC '{}' cannot execute GIVE_QUEST without a quest service", def.getName());
+                    }
+                    return;
+                }
+                String response = questService.giveOrReport(
+                        action.getTargets().get(0), def.getName(), player);
+                if (response != null && !response.isBlank()) {
+                    showDialog(response, 0L);
                 }
             }
             case END_CONVERSATION -> endInteraction();
