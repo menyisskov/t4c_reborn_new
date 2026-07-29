@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Writes {@code assets/mappings/appearance_defaults.bin} from the values that used to be
+ * Writes {@code assets/mappings/appearance/appearance_defaults.bin} from the values that used to be
  * hardcoded in {@code PlayerAppearanceDefaults}, {@code NPCAnimations}, {@code MainGameScreen}
  * and the Content Studio front-end.
  *

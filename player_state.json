@@ -1,6 +1,6 @@
 {
-  "x": 2915.0,
-  "y": 1070.0,
+  "x": 2919.0,
+  "y": 1046.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -121,5 +121,5 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0028477
+  "dayNightHour": 7.0
 }

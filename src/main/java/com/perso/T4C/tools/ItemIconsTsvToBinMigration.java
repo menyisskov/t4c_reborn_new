@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 /**
  * One-shot converter from the legacy {@code item_icons.tsv} table to
- * {@code assets/mappings/item_icons.bin}.
+ * {@code assets/mappings/items/item_icons.bin}.
  *
  * <p>Reads the historical text format — {@code #} comment lines, then
  * {@code appearanceId<TAB>sprite} rows — and rewrites it through
@@ -20,10 +20,10 @@ import java.util.TreeMap;
  * {@link CppItemIconsMigration} regenerates the binary directly from the C++ sources.
  *
  * <p>Usage: {@code ItemIconsTsvToBinMigration [item_icons.tsv] [--dry-run]}
- * (defaults to {@code assets/mappings/item_icons.tsv}, relative to the repo root).
+ * (defaults to {@code assets/mappings/items/item_icons.tsv}, relative to the repo root).
  */
 public final class ItemIconsTsvToBinMigration {
-    private static final String DEFAULT_TSV = "assets/mappings/item_icons.tsv";
+    private static final String DEFAULT_TSV = "assets/mappings/items/item_icons.tsv";
 
     private ItemIconsTsvToBinMigration() {
     }

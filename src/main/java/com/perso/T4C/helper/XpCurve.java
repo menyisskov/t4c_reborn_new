@@ -1,20 +1,14 @@
 package com.perso.T4C.helper;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.perso.T4C.config.Paths;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,34 +27,42 @@ public final class XpCurve {
     }
 
     public static XpCurve loadDefault() {
-        return load(Paths.XP_CURVE);
+        return load(Paths.XP_CURVE_BIN);
     }
 
     public static XpCurve load(String path) {
-        Gson gson = new Gson();
-        try (Reader reader = openReader(path)) {
-            if (reader == null) {
+        File file = resolve(path);
+        try {
+            if (!file.exists()) {
                 log.warn("XP curve file not found: {}", path);
                 return new XpCurve(Collections.emptyMap());
             }
-            XpCurvePayload payload = gson.fromJson(reader, XpCurvePayload.class);
-            if (payload == null || payload.xpCurve == null) {
-                return new XpCurve(Collections.emptyMap());
-            }
             Map<Integer, Entry> map = new HashMap<>();
-            for (Entry entry : payload.xpCurve) {
+            for (Entry entry : XpCurveBinaryIO.read(file)) {
                 if (entry == null || entry.level <= 0) {
                     continue;
                 }
                 map.put(entry.level, entry);
             }
             return new XpCurve(map);
-        } catch (JsonSyntaxException e) {
-            log.warn("Invalid XP curve JSON: {}", path, e);
         } catch (Exception e) {
             log.warn("Failed to load XP curve: {}", path, e);
         }
         return new XpCurve(Collections.emptyMap());
+    }
+
+    public static void save(List<Entry> entries) throws IOException {
+        List<Entry> sorted = entries == null ? List.of() : entries.stream()
+                .filter(entry -> entry != null && entry.level > 0)
+                .sorted(Comparator.comparingInt(Entry::getLevel))
+                .toList();
+        XpCurveBinaryIO.write(resolve(Paths.XP_CURVE_BIN), sorted);
+    }
+
+    public List<Entry> entries() {
+        List<Entry> entries = new ArrayList<>(byLevel.values());
+        entries.sort(Comparator.comparingInt(Entry::getLevel));
+        return Collections.unmodifiableList(entries);
     }
 
     public int getXpToNextLevel(int level) {
@@ -88,33 +90,12 @@ public final class XpCurve {
         }
     }
 
-    private static Reader openReader(String path) {
-        try {
-            FileHandle handle = Gdx.files.internal(path);
-            if (handle.exists()) {
-                return new BufferedReader(new InputStreamReader(handle.read(), StandardCharsets.UTF_8));
-            }
-        } catch (Throwable ignored) {
-        }
+    private static File resolve(String path) {
         File file = new File(path);
         if (!file.isAbsolute()) {
             file = new File(System.getProperty("user.dir"), path);
         }
-        if (!file.exists()) {
-            return null;
-        }
-        try {
-            return new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-/**
- * Class representing XpCurvePayload.
- */
-
-    private static class XpCurvePayload {
-        private List<Entry> xpCurve;
+        return file;
     }
 /**
  * Class representing Entry.
@@ -122,8 +103,14 @@ public final class XpCurve {
 
     @Getter
     public static class Entry {
-        private int level;
-        private int xpToNextLevel;
-        private int totalXp;
+        private final int level;
+        private final int xpToNextLevel;
+        private final int totalXp;
+
+        public Entry(int level, int xpToNextLevel, int totalXp) {
+            this.level = level;
+            this.xpToNextLevel = xpToNextLevel;
+            this.totalXp = totalXp;
+        }
     }
 }

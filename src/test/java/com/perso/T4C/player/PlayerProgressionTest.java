@@ -35,7 +35,7 @@ class PlayerProgressionTest {
         player.setMana(40);
 
         new PlayerProgression(new Random(7)).addXp(
-                player, 100, XpCurve.load("assets/mappings/xp_curve.json"), false);
+                player, 100, XpCurve.load("assets/mappings/progression/xp_curve.bin"), false);
 
         int hpGain = player.getMaxHp() - 100;
         int manaGain = player.getMaxMana() - 100;

@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Regenerates {@code assets/mappings/item_icons.bin} from the C++ client sources.
+ * Regenerates {@code assets/mappings/items/item_icons.bin} from the C++ client sources.
  *
  * <p>Ports the {@code ItemIcons} table used by the buy/sell dialog: every
  * {@code ItemIcons.BindSprite(IXXX, __OBJGROUP_YYY)} call in {@code VisualObjectList.cpp}

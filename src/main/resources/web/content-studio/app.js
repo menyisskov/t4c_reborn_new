@@ -77,6 +77,7 @@ const sectionGroups = [
       { id: "clanRelations", label: "Clan Relations", endpoint: "/api/clan-relations", key: "source", subtitle: "target" },
       { id: "appearanceDefaults", label: "Naked Body Parts", endpoint: "/api/appearance-defaults", key: "bodyPart", subtitle: "gender,sprite" },
       { id: "concealmentRules", label: "Concealment Rules", endpoint: "/api/concealment", key: "appearance", subtitle: "triggerSlot,hiddenParts" },
+      { id: "xpCurve", label: "XP Curve", endpoint: "/api/xp-curve", key: "level", subtitle: "xpToNextLevel,totalXp" },
     ],
   },
   {
@@ -104,6 +105,7 @@ const fields = {
   appearanceDefaults: ["gender", "bodyPart", "sprite"],
   concealmentRules: ["triggerSlot", "appearance", "hiddenParts", "hidesExplicit:boolean"],
   groundMosaics: ["id", "width:number", "height:number", "frames:textarea"],
+  xpCurve: ["level:number", "xpToNextLevel:number", "totalXp:number"],
 };
 
 const NPC_PREVIEW_BODY_ORDER = [
@@ -3091,7 +3093,7 @@ function concealmentRulesFor(triggerSlot, appearance) {
   return CONCEALMENT_RULES.get(normalized) || [];
 }
 
-// Naked fallbacks come from assets/mappings/appearance_defaults.bin, the same table the game
+// Naked fallbacks come from assets/mappings/appearance/appearance_defaults.bin, the same table the game
 // reads, so the preview cannot drift from it. Cached because the composite preview is synchronous;
 // ensureNakedParts() primes it and is awaited before a preview renders.
 const NAKED_PARTS = { MALE: {}, FEMALE: {} };

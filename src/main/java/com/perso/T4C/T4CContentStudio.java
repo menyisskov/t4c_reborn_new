@@ -20,6 +20,7 @@ import com.perso.T4C.helper.ObjectPositionBinaryIO;
 import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.helper.SpriteBinIO;
 import com.perso.T4C.helper.TeleportBinaryIO;
+import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemIconRegistry;
 import com.perso.T4C.item.ItemRegistry;
@@ -118,6 +119,7 @@ public class T4CContentStudio {
         server.createContext("/api/quests", this::handleQuests);
         server.createContext("/api/items", this::handleItems);
         server.createContext("/api/spells", this::handleSpells);
+        server.createContext("/api/xp-curve", this::handleXpCurve);
         server.createContext("/api/spawns", this::handleSpawns);
         server.createContext("/api/valid-spawn-position", this::handleValidSpawnPosition);
         server.createContext("/api/map-preview", exchange -> {
@@ -999,6 +1001,41 @@ public class T4CContentStudio {
         sendMethodNotAllowed(exchange);
     }
 
+    private void handleXpCurve(HttpExchange exchange) throws IOException {
+        if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+            List<Map<String, Object>> items = XpCurve.loadDefault().entries().stream()
+                    .map(this::xpCurveEntryToMap)
+                    .toList();
+            writeCollection(exchange, items);
+            return;
+        }
+        if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            List<XpCurve.Entry> entries = readItemsPayload(exchange).stream()
+                    .map(this::xpCurveEntryFromMap)
+                    .sorted(Comparator.comparingInt(XpCurve.Entry::getLevel))
+                    .toList();
+            Set<Integer> levels = new HashSet<>();
+            for (XpCurve.Entry entry : entries) {
+                if (entry.getLevel() <= 0) {
+                    sendBadRequest(exchange, "XP curve levels must be greater than zero");
+                    return;
+                }
+                if (entry.getXpToNextLevel() < 0 || entry.getTotalXp() < 0) {
+                    sendBadRequest(exchange, "XP values cannot be negative");
+                    return;
+                }
+                if (!levels.add(entry.getLevel())) {
+                    sendBadRequest(exchange, "Duplicate XP curve level: " + entry.getLevel());
+                    return;
+                }
+            }
+            XpCurve.save(entries);
+            writeSaved(exchange, entries.size());
+            return;
+        }
+        sendMethodNotAllowed(exchange);
+    }
+
     private void handleSpawns(HttpExchange exchange) throws IOException {
         Map<String, String> query = parseQueryMap(exchange.getRequestURI().getRawQuery());
         String mapPath = query.getOrDefault("map", Paths.MAP);
@@ -1551,6 +1588,21 @@ public class T4CContentStudio {
                 1, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0,
                 bool(item.get("defaultAggressive"), true) ? 50 : 0, 0, 0, true, new java.util.ArrayList<>());
+    }
+
+    private Map<String, Object> xpCurveEntryToMap(XpCurve.Entry entry) {
+        Map<String, Object> item = new LinkedHashMap<>();
+        item.put("level", entry.getLevel());
+        item.put("xpToNextLevel", entry.getXpToNextLevel());
+        item.put("totalXp", entry.getTotalXp());
+        return item;
+    }
+
+    private XpCurve.Entry xpCurveEntryFromMap(Map<String, Object> item) {
+        return new XpCurve.Entry(
+                integer(item.get("level"), 0),
+                integer(item.get("xpToNextLevel"), 0),
+                integer(item.get("totalXp"), 0));
     }
 
     Map<String, Object> questToMap(QuestDef definition) {

@@ -20,10 +20,10 @@ public final class Paths {
     public static final String DUNGEON_MAPBIN = "assets/maps/dungeon/DungeonMap.mapbin";
     public static final String CAVERN_MAPBIN = "assets/maps/cavern/CavernMap.mapbin";
     public static final String UNDERWORLD_MAPBIN = "assets/maps/underworld/underworld.mapbin";
-    public static final String XP_CURVE = "assets/mappings/xp_curve.json";
-    public static final String ITEM_ICONS_BIN = "assets/mappings/item_icons.bin";
-    public static final String GROUND_MOSAICS_BIN = "assets/mappings/ground_mosaics.bin";
-    public static final String APPEARANCE_DEFAULTS_BIN = "assets/mappings/appearance_defaults.bin";
+    public static final String XP_CURVE_BIN = "assets/mappings/progression/xp_curve.bin";
+    public static final String ITEM_ICONS_BIN = "assets/mappings/items/item_icons.bin";
+    public static final String GROUND_MOSAICS_BIN = "assets/mappings/ground/ground_mosaics.bin";
+    public static final String APPEARANCE_DEFAULTS_BIN = "assets/mappings/appearance/appearance_defaults.bin";
     public static final String OBJECT_POSITIONS_BIN = "assets/objects/object_positions.bin";
     public static final String OBJECT_MAPPINGS_BIN = "assets/objects/object_mappings.bin";
     public static final String COLLISION_RULES = "assets/mappings/collision_rules.json";
