@@ -1,9 +1,9 @@
 package com.perso.T4C.config;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.perso.T4C.helper.DisplayModeToggle;
 
 import java.io.Reader;
 import java.io.Writer;
@@ -75,8 +75,7 @@ public final class GamePreferencesStore {
         Gdx.graphics.setVSync(settings.isVSync());
         boolean currentlyFullscreen = Gdx.graphics.isFullscreen();
         if (settings.isFullscreen() && !currentlyFullscreen) {
-            Graphics.DisplayMode mode = Gdx.graphics.getDisplayMode();
-            Gdx.graphics.setFullscreenMode(mode);
+            DisplayModeToggle.setFullscreen();
         } else if (!settings.isFullscreen() && currentlyFullscreen) {
             Gdx.graphics.setWindowedMode(GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
         }

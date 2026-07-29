@@ -15,7 +15,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.perso.T4C.MyGame;
 import com.perso.T4C.audio.SoundManager;
@@ -113,7 +112,7 @@ public class MainGameScreen implements Screen {
 
     private final OrthographicCamera camera;
     private final OrthographicCamera hudCamera;
-    private final FitViewport viewport;
+    private final ScreenViewport viewport;
     private final SpriteBatch batchSol;
     private final SpriteBatch batchDecor;
     private final SpriteBatch batch;
@@ -214,7 +213,7 @@ public class MainGameScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(true, WINDOW_WIDTH, WINDOW_HEIGHT);
-        viewport = new FitViewport(WINDOW_WIDTH, WINDOW_HEIGHT, camera);
+        viewport = new ScreenViewport(camera);
 
         hudCamera = new OrthographicCamera();
         updateHudCamera();

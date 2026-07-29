@@ -1,7 +1,7 @@
 {
-  "musicVolume": 0.041237112,
-  "effectsVolume": 0.5862069,
-  "brightness": 0.875,
+  "musicVolume": 0.0,
+  "effectsVolume": 0.0,
+  "brightness": 1.0,
   "fullscreen": false,
   "vSync": true,
   "showHudValues": true

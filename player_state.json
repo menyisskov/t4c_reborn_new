@@ -1,6 +1,6 @@
 {
-  "x": 2643.0,
-  "y": 813.0,
+  "x": 2915.0,
+  "y": 1070.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 50521,
+  "gold": 51063,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 27,
+  "currentHp": 55,
   "maxMana": 600,
-  "mana": 330,
+  "mana": 566,
   "level": 16,
-  "currentXp": 780,
+  "currentXp": 1256,
   "xpToNextLevel": 16889,
   "statPoints": 505,
   "skillPoints": 500,
@@ -27,7 +27,7 @@
   ],
   "quickSlots": [
     {
-      "slot": 2,
+      "slot": 3,
       "spell": "spell.flaming_arrow"
     },
     {
@@ -43,7 +43,7 @@
       "item": "item.potion_of_mana"
     },
     {
-      "slot": 3,
+      "slot": 2,
       "spell": "spell.spell_lesser_drain"
     }
   ],
@@ -65,8 +65,6 @@
     "item.rusted_dirk",
     "item.torch",
     "item.torch",
-    "item.potion_of_mana",
-    "item.potion_of_mana",
     "item.potion_of_mana",
     "item.potion_of_mana",
     "item.potion_of_mana",
@@ -113,8 +111,8 @@
     "item.torch": 5
   },
   "questFlags": {
-    "quest.lighthaven_samaritan_rats.status": 1,
-    "quest.lighthaven_samaritan_rats.kills": 7,
+    "quest.lighthaven_samaritan_rats.status": 2,
+    "quest.lighthaven_samaritan_rats.kills": 10,
     "quest.ortanalas_bridge_goblins.status": 2,
     "quest.ortanalas_bridge_goblins.kills": 15
   },
@@ -123,5 +121,5 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.0028477
 }

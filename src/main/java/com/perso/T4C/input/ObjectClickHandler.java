@@ -100,7 +100,8 @@ public class ObjectClickHandler extends InputAdapter {
                             || chest.failure() == ChestService.Failure.COOLDOWN) {
                         systemMessage.show(I18n.message("message.chest_empty"));
                     }
-                    log.info("Object clicked and animation started at world coords ({}, {}, {})", worldCoords.x, worldCoords.y, coords.getZ());
+                    log.info("Object interaction handled at world coords ({}, {}, {})",
+                            worldCoords.x, worldCoords.y, coords.getZ());
                 }
                 return true;
             }

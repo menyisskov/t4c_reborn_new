@@ -20,7 +20,7 @@ public class GameConstants {
     public static final int GRID_H = 16;
 
     // Player movement speed in world pixels per second.
-    public static final float PLAYER_SPEED = 1300f;
+    public static final float PLAYER_SPEED = 300f;
 
     // Unit::MoveUnit advances userSpeed=1 complete logical cell per request.
     public static final float PLAYER_MOVEMENT_RESERVATION_STEP_TILES = 1f;
@@ -35,7 +35,7 @@ public class GameConstants {
     public static final boolean ENABLE_SOUNDS = false;
 
     // Draws the border of GuiBoxedText zones so their position/size can be tuned.
-    public static final boolean DEBUG_GUI_TEXT_BOUNDS = true;
+    public static final boolean DEBUG_GUI_TEXT_BOUNDS = false;
 
     // Draws the planned paths for monsters and NPCs when enabled.
     public static final boolean DEBUG_ENTITY_PATHS = false;

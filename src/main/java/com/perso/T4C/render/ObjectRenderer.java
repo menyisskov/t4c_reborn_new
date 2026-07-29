@@ -107,6 +107,7 @@ public class ObjectRenderer {
         String reverseAnimateSound;
         long nameDisplayUntil;
         String clickedDisplayName;
+        long lastAnimationUpdateFrame = -1L;
     }
 
     /**
@@ -318,12 +319,14 @@ public class ObjectRenderer {
                 if (tileDistance <= maxInteractionDistance && mapping.clickAnimate) {
                     // Only start animation if not already playing
                     if (!state.playing) {
-                        log.debug("Starting animation for object: {}", uniqueKey);
                         state.playing = true;
                         state.reverse = false;
                         state.index = 0;
                         state.timer = 0f;
                         state.reverseDelay = -1f;
+                        state.lastAnimationUpdateFrame = Gdx.graphics.getFrameId();
+                        log.info("Started object animation: object={}, logicalId={}, sprite={}, frames={}",
+                                uniqueKey, logicalId, mapping.sprite, frames.size());
                         // Play animate sound if present
                         if (state.animateSound != null && !state.animateSound.trim().isEmpty()) {
                             SoundManager.animateSound(state.animateSound);
@@ -1183,6 +1186,11 @@ public class ObjectRenderer {
     }
 
     private void updateAnim(AnimState s, float delta, int frameCount) {
+        long frameId = Gdx.graphics.getFrameId();
+        if (s.lastAnimationUpdateFrame == frameId) {
+            return;
+        }
+        s.lastAnimationUpdateFrame = frameId;
         if (s.playing) {
             s.timer += delta;
             if (s.timer > 0.12f) {

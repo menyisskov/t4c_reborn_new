@@ -2,6 +2,7 @@ package com.perso.T4C.helper;
 
 import com.badlogic.gdx.Gdx;
 import com.perso.T4C.config.GameConstants;
+
 /**
  * Class representing DisplayModeToggle.
  */
@@ -15,8 +16,12 @@ public final class DisplayModeToggle {
             Gdx.graphics.setWindowedMode(GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
             return false;
         }
-        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        setFullscreen();
         return true;
+    }
+
+    public static void setFullscreen() {
+        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
     }
 
     public static String message(boolean fullscreen) {

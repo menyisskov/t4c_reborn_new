@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.perso.T4C.MyGame;
 import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.config.Paths;
@@ -32,7 +32,7 @@ public class LoadingScreen implements Screen {
 
     private final MyGame game;
     private final OrthographicCamera camera;
-    private final FitViewport viewport;
+    private final FillViewport viewport;
     private final SpriteBatch batch;
 
     private static final String SOUNDS_DIR = Paths.SOUNDS_DIR;
@@ -52,7 +52,7 @@ public class LoadingScreen implements Screen {
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        this.viewport = new FitViewport(WINDOW_WIDTH, WINDOW_HEIGHT, camera);
+        this.viewport = new FillViewport(WINDOW_WIDTH, WINDOW_HEIGHT, camera);
 
         SpriteLoader.getInstance().loadSpriteBin(Paths.SPRITE_BIN);
         initGameCursor();
