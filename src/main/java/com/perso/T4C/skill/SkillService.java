@@ -2,7 +2,6 @@ package com.perso.T4C.skill;
 
 import com.perso.T4C.player.Player;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /** Learning and active-use rules for the skills present in the original server. */
@@ -14,17 +13,15 @@ public final class SkillService {
         private static Result success(int level) { return new Result(true, Failure.NONE, level); }
     }
 
-    private static final Map<String, SkillDefinition> DEFINITIONS = createDefinitions();
-
     private SkillService() {
     }
 
     public static Map<String, SkillDefinition> definitions() {
-        return DEFINITIONS;
+        return SkillRegistry.load();
     }
 
     public static Result learn(Player player, String skillId) {
-        SkillDefinition definition = DEFINITIONS.get(skillId);
+        SkillDefinition definition = SkillRegistry.findById(skillId);
         int current = player == null ? 0 : player.getSkillLevel(skillId);
         if (player == null || definition == null) return Result.failure(Failure.UNKNOWN_SKILL, current);
         if (current > 0) return Result.failure(Failure.ALREADY_LEARNED, current);
@@ -45,7 +42,7 @@ public final class SkillService {
     /** Trains an already learned skill point-for-point, like Skills::TrainSkill. */
     public static Result train(Player player, String skillId, int points, int maximum) {
         int current = player == null ? 0 : player.getSkillLevel(skillId);
-        if (player == null || !DEFINITIONS.containsKey(skillId)) return Result.failure(Failure.UNKNOWN_SKILL, current);
+        if (player == null || SkillRegistry.findById(skillId) == null) return Result.failure(Failure.UNKNOWN_SKILL, current);
         if (current <= 0) return Result.failure(Failure.NOT_LEARNED, current);
         int quantity = Math.max(0, Math.min(points, Math.max(0, maximum - current)));
         if (quantity <= 0) return Result.success(current);
@@ -73,11 +70,8 @@ public final class SkillService {
     }
 
     public static Result use(Player player, String skillId) {
-        long cooldown = switch (skillId == null ? "" : skillId) {
-            case "rapid_healing" -> 5_000L;
-            case "sneak", "pick_lock", "rob" -> 1_000L;
-            default -> 0L;
-        };
+        SkillDefinition definition = SkillRegistry.findById(skillId);
+        long cooldown = definition == null ? 0L : Math.max(0L, definition.useCooldownMillis());
         return use(player, skillId, cooldown);
     }
 
@@ -87,28 +81,5 @@ public final class SkillService {
                 && player.getDexterity() >= definition.minimumAgility()
                 && player.getIntelligence() >= definition.minimumIntelligence()
                 && player.getWisdom() >= definition.minimumWisdom();
-    }
-
-    private static Map<String, SkillDefinition> createDefinitions() {
-        Map<String, SkillDefinition> skills = new LinkedHashMap<>();
-        add(skills, "attack", 1, 0, 0, 0, 0, 0, Map.of());
-        add(skills, "dodge", 1, 0, 0, 0, 0, 0, Map.of());
-        add(skills, "archery", 1, 0, 0, 0, 0, 0, Map.of());
-        add(skills, "powerful_blow", 15, 50, 0, 30, 0, 0, Map.of());
-        add(skills, "stun_blow", 3, 25, 0, 20, 0, 0, Map.of());
-        add(skills, "parry", 10, 0, 0, 30, 20, 0, Map.of());
-        add(skills, "armor_penetration", 25, 75, 0, 40, 30, 0, Map.of());
-        add(skills, "two_weapons", 25, 75, 0, 40, 30, 0, Map.of());
-        add(skills, "rapid_healing", 30, 0, 80, 0, 0, 0, Map.of());
-        add(skills, "pick_lock", 12, 0, 0, 40, 0, 0, Map.of());
-        add(skills, "peek", 1, 0, 0, 0, 0, 0, Map.of());
-        add(skills, "rob", 17, 0, 0, 50, 0, 0, Map.of("peek", 25));
-        add(skills, "sneak", 24, 0, 0, 75, 0, 0, Map.of());
-        return Map.copyOf(skills);
-    }
-
-    private static void add(Map<String, SkillDefinition> out, String id, int level, int str, int end,
-                            int agi, int intel, int wis, Map<String, Integer> prerequisites) {
-        out.put(id, new SkillDefinition(id, level, str, end, agi, intel, wis, 1, prerequisites));
     }
 }

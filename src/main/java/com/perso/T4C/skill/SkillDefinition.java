@@ -12,7 +12,8 @@ public record SkillDefinition(
         int minimumIntelligence,
         int minimumWisdom,
         int learningCost,
-        Map<String, Integer> prerequisites) {
+        Map<String, Integer> prerequisites,
+        long useCooldownMillis) {
 
     public SkillDefinition {
         prerequisites = prerequisites == null ? Map.of() : Map.copyOf(prerequisites);

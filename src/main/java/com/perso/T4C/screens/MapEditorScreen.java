@@ -8270,6 +8270,10 @@ public class MapEditorScreen implements Screen {
         rebuildAllTmpl("Tmpl1", viewportOnly);
     }
 
+    private void rebuildAllTmpl4(boolean viewportOnly) {
+        rebuildAllTmpl("Tmpl4", viewportOnly);
+    }
+
     /**
      * Build only the smoothing transitions allowed by the terrain rules. Every
      * existing Tmpl family is neutralized, then eligible boundaries are rebuilt as
@@ -8379,7 +8383,10 @@ public class MapEditorScreen implements Screen {
             for (int x = startX; x <= endX; x++) {
                 ResolvedSprite resolved = SpriteNameParser.parse(mapReader.getGroundSpriteName(x, y),
                         mapRenderer != null ? mapRenderer.getMetaByName() : null);
-                if (resolved != null && isAnySmoothingTemplateName(resolved.name)) {
+                // Only Tmpl3 is rebuilt by this pass: neutralizing a Tmpl1/Tmpl4 tile here
+                // would erase it and backfill it with concrete terrain since nothing later
+                // regenerates those families, silently deleting existing smoothing tiles.
+                if (resolved != null && "Tmpl3".equals(tmplFamilyName(resolved.name))) {
                     neutralTiles.add(tmpl3TileKey(x, y));
                 }
             }
@@ -8463,8 +8470,15 @@ public class MapEditorScreen implements Screen {
                         mapRenderer != null ? mapRenderer.getMetaByName() : null);
                 String existingTemplate = smoothingTerrainOverlay.containsKey(tileKey)
                         ? null
-                        : (resolved != null && isAnySmoothingTemplateName(resolved.name) ? "Tmpl3" : null);
+                        : (resolved != null ? tmplFamilyName(resolved.name) : null);
                 if (existingTemplate != null) {
+                    // Only Tmpl3 is rebuilt by this pass: an existing Tmpl1/Tmpl4 tile is left
+                    // as a neutral hole (already backfilled with concrete terrain via the
+                    // overlay) rather than reclassified into a family this pass does not
+                    // regenerate, which used to silently turn every Tmpl1 into Tmpl3.
+                    if (!"Tmpl3".equals(existingTemplate)) {
+                        continue;
+                    }
                     SmoothingBoundary boundary = smoothingBoundaryAround(x, y);
                     String classified = boundary != null ? boundary.templateName() : null;
                     if (boundary == null) {
@@ -8913,12 +8927,16 @@ public class MapEditorScreen implements Screen {
         int[][] cardinals = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
         for (int y = startY; y <= endY; y++) {
             for (int x = startX; x <= endX; x++) {
-                // Skip tiles that are already Tmpl3 on the ground layer (including those
-                // hidden under a decor).
+                // Skip tiles that already carry a smoothing transition of any family
+                // (including those hidden under a decor). A tile already resolved by
+                // Tmpl3/Tmpl4 must not be overwritten by a Tmpl1 rebuild (or vice versa):
+                // collectNewTmplBorderTiles has no notion of which family a given terrain
+                // pair should use, so without this guard every rebuild re-claims borders
+                // another family already legitimately owns.
                 ResolvedSprite groundResolved = SpriteNameParser.parse(
                         mapReader.getGroundSpriteName(x, y),
                         mapRenderer != null ? mapRenderer.getMetaByName() : null);
-                if (isResolvedTmpl(groundResolved, templateName)) {
+                if (isAnySmoothingTemplateName(groundResolved != null ? groundResolved.name : null)) {
                     continue;
                 }
                 String terrain = resolveConcreteGroundTerrainName(x, y);
@@ -8942,12 +8960,12 @@ public class MapEditorScreen implements Screen {
                         continue;
                     }
                     // Check the GROUND layer: a decor (e.g. a brick wall) can sit on top
-                    // of a Tmpl3 tile, and resolveSpriteAt would return the decor name,
+                    // of a Tmpl tile, and resolveSpriteAt would return the decor name,
                     // letting the borrowed terrain leak across the existing transition.
                     ResolvedSprite nGround = SpriteNameParser.parse(
                             mapReader.getGroundSpriteName(nx, ny),
                             mapRenderer != null ? mapRenderer.getMetaByName() : null);
-                    if (isResolvedTmpl(nGround, templateName)) {
+                    if (isAnySmoothingTemplateName(nGround != null ? nGround.name : null)) {
                         continue;
                     }
                     String nTerrain = resolveConcreteGroundTerrainName(nx, ny);
@@ -8957,6 +8975,15 @@ public class MapEditorScreen implements Screen {
                     String nFamily = extractBaseName(nTerrain);
                     if (nFamily == null || sameTerrainFamily(nFamily, family)) {
                         // Same visual terrain (incl. decorative sub-variants): no border.
+                        continue;
+                    }
+                    // Only claim this boundary for the family the real 1.25 map actually
+                    // uses to smooth this exact terrain pair (see TERRAIN_PAIR_TMPL_FAMILY).
+                    // Without this, e.g. a grass/RockFloor edge -- which the game always
+                    // smooths with Tmpl4 -- would be claimed by a Tmpl1 rebuild simply
+                    // because it is an unresolved boundary with no existing transition.
+                    String verifiedFamily = verifiedTmplFamilyForPair(family, nFamily);
+                    if (!templateName.equalsIgnoreCase(verifiedFamily)) {
                         continue;
                     }
                     // Against a protected neighbour (e.g. a road), this tile always
@@ -9039,6 +9066,61 @@ public class MapEditorScreen implements Screen {
             }
         }
         return false;
+    }
+
+    /**
+     * Which Tmpl family smooths a given pair of concrete terrain families, as
+     * observed on the deployed 1.25 worldmap (every pair below is >=100% dominant
+     * by one family across every occurrence with a meaningful sample size --
+     * see the reverse-engineering session that produced this table). A pair
+     * absent from this map has no verified precedent and is never claimed by
+     * any Rebuild Tmpl menu; only "Rebuild Tmpl3" falls back to its own
+     * per-tile classifier ({@link #smoothingBoundaryAround}) for those.
+     */
+    private static final Map<String, String> TERRAIN_PAIR_TMPL_FAMILY = Map.ofEntries(
+            Map.entry("64knormalgrass|cavernfloor", "Tmpl1"),
+            Map.entry("64knormalgrass|dgrass", "Tmpl1"),
+            Map.entry("64knormalgrass|earthtile", "Tmpl1"),
+            Map.entry("64knormalgrass|grass", "Tmpl1"),
+            Map.entry("64knormalgrass|hardrock", "Tmpl1"),
+            Map.entry("deserttile|hardrock", "Tmpl1"),
+            Map.entry("dgrass|earthtile", "Tmpl1"),
+            Map.entry("dgrass|grass", "Tmpl1"),
+            Map.entry("dgrass|hardrock", "Tmpl1"),
+            Map.entry("earthtile|grass", "Tmpl1"),
+            Map.entry("earthtile|hardrock", "Tmpl1"),
+            Map.entry("grass|hardrock", "Tmpl1"),
+            Map.entry("64knormalgrass|deserttile", "Tmpl3"),
+            Map.entry("64knormalgrass|floor: wooden", "Tmpl3"),
+            Map.entry("64knormalgrass|floor: wooden separation", "Tmpl3"),
+            Map.entry("64knormalgrass|ground_water", "Tmpl3"),
+            Map.entry("cavernfloor|ground_water", "Tmpl3"),
+            Map.entry("deserttile|earthtile", "Tmpl3"),
+            Map.entry("deserttile|floor: wooden", "Tmpl3"),
+            Map.entry("deserttile|grass", "Tmpl3"),
+            Map.entry("deserttile|ground_water", "Tmpl3"),
+            Map.entry("earthtile|ground_water", "Tmpl3"),
+            Map.entry("floor: wooden|floor: wooden separation", "Tmpl3"),
+            Map.entry("floor: wooden|grass", "Tmpl3"),
+            Map.entry("floor: wooden separation|grass", "Tmpl3"),
+            Map.entry("grass|ground_water", "Tmpl3"),
+            Map.entry("ground_water|hardrock", "Tmpl3"),
+            Map.entry("64knormalgrass|rockfloor", "Tmpl4"),
+            Map.entry("64knormalgrass|town road dale", "Tmpl4"),
+            Map.entry("hardrock|town road dale", "Tmpl4"));
+
+    /**
+     * The Tmpl family the observed worldmap uses to smooth this terrain pair, or
+     * null when the pair has no verified precedent (never claimed by a rebuild).
+     */
+    private String verifiedTmplFamilyForPair(String familyA, String familyB) {
+        if (familyA == null || familyB == null) {
+            return null;
+        }
+        String a = familyA.toLowerCase(Locale.ROOT);
+        String b = familyB.toLowerCase(Locale.ROOT);
+        String key = a.compareTo(b) <= 0 ? a + "|" + b : b + "|" + a;
+        return TERRAIN_PAIR_TMPL_FAMILY.get(key);
     }
 
     /**
@@ -14400,9 +14482,15 @@ public class MapEditorScreen implements Screen {
                 .add(new MenuItem("Toggle", this::toggleAutofill, () -> autofillEnabled))
                 .add(new MenuItem("Recalculate Map", this::recalculateAllGroundTextures))
                 .add(new MenuItem("Repair Missing Ground", this::repairMissingGroundUnderDecors)));
-        tools.items.add(new MenuItem("Build Smoothing Tile")
+        tools.items.add(new MenuItem("Rebuild Tmpl3")
                 .add(new MenuItem("Whole Map", () -> buildSmoothingTiles(false), () -> tmpl3Regenerating))
                 .add(new MenuItem("Viewport", () -> buildSmoothingTiles(true), () -> tmpl3Regenerating)));
+        tools.items.add(new MenuItem("Rebuild Tmpl1")
+                .add(new MenuItem("Whole Map", () -> rebuildAllTmpl1(false), () -> tmpl3Regenerating))
+                .add(new MenuItem("Viewport", () -> rebuildAllTmpl1(true), () -> tmpl3Regenerating)));
+        tools.items.add(new MenuItem("Rebuild Tmpl4")
+                .add(new MenuItem("Whole Map", () -> rebuildAllTmpl4(false), () -> tmpl3Regenerating))
+                .add(new MenuItem("Viewport", () -> rebuildAllTmpl4(true), () -> tmpl3Regenerating)));
 
         MenuTitle map = new MenuTitle("Map");
         for (int i = 0; i < availableMaps.size(); i++) {

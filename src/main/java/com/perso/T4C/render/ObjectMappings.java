@@ -18,36 +18,15 @@ public final class ObjectMappings {
     private ObjectMappings() {
     }
 
-    public static Map<String, ObjectMapping> loadDefaults() {
-        Map<String, ObjectMapping> mappings = new HashMap<>();
-        mappings.put("CLOSED_WOODEN_DOOR", new ObjectMapping(40842, "RockDoor%d$11", true, false,
-                "Open Wooden Door.wav", "Close Wooden Door.wav", false, ""));
-        mappings.put("CLOSED_WOODEN_DOOR_FLIP", new ObjectMapping(40842, "RockDoor%d$11", true, true,
-                "Open Wooden Door.wav", "Close Wooden Door.wav", false, ""));
-        mappings.put("ORACLE_DOOR_F", new ObjectMapping(130, "RockDoor%d$11", true, false,
-                "Open Wooden Door.wav", "Close Wooden Door.wav", false, ""));
-        mappings.put("MAP CAULDRON", new ObjectMapping(130, "RockDoor%d$11", false, false, "", "", false, ""));
-        return mappings;
-    }
-
     public static Map<String, ObjectMapping> load() {
         File file = new File(Paths.OBJECT_MAPPINGS_BIN);
         if (!file.exists()) {
-            Map<String, ObjectMapping> defaults = loadDefaults();
-            try {
-                save(defaults);
-            } catch (IOException ignored) {
-            }
-            return defaults;
+            return new HashMap<>();
         }
         try {
-            Map<String, ObjectMapping> loaded = fromEntries(ObjectMappingsBinaryIO.read(file));
-            for (Map.Entry<String, ObjectMapping> entry : loadDefaults().entrySet()) {
-                loaded.putIfAbsent(entry.getKey(), entry.getValue());
-            }
-            return loaded;
+            return fromEntries(ObjectMappingsBinaryIO.read(file));
         } catch (Exception ignored) {
-            return loadDefaults();
+            return new HashMap<>();
         }
     }
 

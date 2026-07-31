@@ -36,6 +36,8 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.render.ObjectMapping;
+import com.perso.T4C.skill.SkillDefinition;
+import com.perso.T4C.skill.SkillRegistry;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 
@@ -119,6 +121,7 @@ public class T4CContentStudio {
         server.createContext("/api/quests", this::handleQuests);
         server.createContext("/api/items", this::handleItems);
         server.createContext("/api/spells", this::handleSpells);
+        server.createContext("/api/skills", this::handleSkills);
         server.createContext("/api/xp-curve", this::handleXpCurve);
         server.createContext("/api/spawns", this::handleSpawns);
         server.createContext("/api/valid-spawn-position", this::handleValidSpawnPosition);
@@ -1001,6 +1004,27 @@ public class T4CContentStudio {
         sendMethodNotAllowed(exchange);
     }
 
+    private void handleSkills(HttpExchange exchange) throws IOException {
+        if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+            List<Map<String, Object>> items = SkillRegistry.load().values().stream()
+                    .sorted(Comparator.comparing(SkillDefinition::id, String.CASE_INSENSITIVE_ORDER))
+                    .map(this::skillToMap)
+                    .toList();
+            writeCollection(exchange, items);
+            return;
+        }
+        if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            List<Map<String, Object>> items = readItemsPayload(exchange);
+            List<SkillDefinition> defs = items.stream().map(this::skillFromMap).filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(SkillDefinition::id, String.CASE_INSENSITIVE_ORDER))
+                    .toList();
+            SkillRegistry.save(defs);
+            writeSaved(exchange, defs.size());
+            return;
+        }
+        sendMethodNotAllowed(exchange);
+    }
+
     private void handleXpCurve(HttpExchange exchange) throws IOException {
         if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
             List<Map<String, Object>> items = XpCurve.loadDefault().entries().stream()
@@ -1853,6 +1877,50 @@ public class T4CContentStudio {
                 emptyToNull(str(item.get("physicalExhaustion"))), emptyToNull(str(item.get("attackExhaustion"))),
                 integer(item.get("visualEffect"), 0), integer(item.get("visualEffectTarget"), 0),
                 bool(item.get("pvp"), false), originalEffects);
+    }
+
+    private Map<String, Object> skillToMap(SkillDefinition skill) {
+        Map<String, Object> item = new LinkedHashMap<>();
+        item.put("id", skill.id());
+        item.put("minimumLevel", skill.minimumLevel());
+        item.put("minimumStrength", skill.minimumStrength());
+        item.put("minimumEndurance", skill.minimumEndurance());
+        item.put("minimumAgility", skill.minimumAgility());
+        item.put("minimumIntelligence", skill.minimumIntelligence());
+        item.put("minimumWisdom", skill.minimumWisdom());
+        item.put("learningCost", skill.learningCost());
+        item.put("useCooldownMillis", skill.useCooldownMillis());
+        List<String> prerequisiteLines = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : skill.prerequisites().entrySet()) {
+            prerequisiteLines.add(entry.getKey() + ":" + entry.getValue());
+        }
+        item.put("prerequisites", String.join("\n", prerequisiteLines));
+        return item;
+    }
+
+    private SkillDefinition skillFromMap(Map<String, Object> item) {
+        String id = str(item.get("id")).trim();
+        if (id.isEmpty()) return null;
+        Map<String, Integer> prerequisites = new LinkedHashMap<>();
+        for (String line : str(item.get("prerequisites")).split("\\R")) {
+            String trimmed = line.trim();
+            if (trimmed.isEmpty()) continue;
+            int separator = trimmed.lastIndexOf(':');
+            if (separator <= 0) continue;
+            String skillId = trimmed.substring(0, separator).trim();
+            if (skillId.isEmpty()) continue;
+            prerequisites.put(skillId, integer(trimmed.substring(separator + 1).trim(), 0));
+        }
+        return new SkillDefinition(id,
+                integer(item.get("minimumLevel"), 0),
+                integer(item.get("minimumStrength"), 0),
+                integer(item.get("minimumEndurance"), 0),
+                integer(item.get("minimumAgility"), 0),
+                integer(item.get("minimumIntelligence"), 0),
+                integer(item.get("minimumWisdom"), 0),
+                integer(item.get("learningCost"), 0),
+                prerequisites,
+                longVal(item.get("useCooldownMillis"), 0L));
     }
 
     private Map<String, Object> spawnToMap(SpawnBinaryIO.Entry entry) {
