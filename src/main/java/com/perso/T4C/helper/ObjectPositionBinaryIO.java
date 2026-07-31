@@ -18,7 +18,7 @@ import java.util.List;
 
 public final class ObjectPositionBinaryIO {
     private static final byte[] MAGIC = "T4COBJ".getBytes(StandardCharsets.US_ASCII);
-    private static final short VERSION = 1;
+    private static final short VERSION = 2;
     private static final int MAX_NAME_BYTES = 4096;
 
     private ObjectPositionBinaryIO() {
@@ -32,7 +32,7 @@ public final class ObjectPositionBinaryIO {
                 throw new GameException("Invalid object positions binary file: wrong magic header");
             }
             short version = readShortLE(in);
-            if (version != VERSION) {
+            if (version != 1 && version != VERSION) {
                 throw new GameException("Unsupported object positions binary version: " + version);
             }
             int count = readIntLE(in);
@@ -46,7 +46,8 @@ public final class ObjectPositionBinaryIO {
                 int x = readIntLE(in);
                 int y = readIntLE(in);
                 int z = readIntLE(in);
-                entries.add(new ObjectPos(name, x, y, z));
+                boolean mirror = version >= 2 && in.readBoolean();
+                entries.add(new ObjectPos(name, x, y, z, mirror));
             }
             return entries;
         }
@@ -69,6 +70,7 @@ public final class ObjectPositionBinaryIO {
                 writeIntLE(out, entry == null ? 0 : (int) entry.x());
                 writeIntLE(out, entry == null ? 0 : (int) entry.y());
                 writeIntLE(out, entry == null ? 0 : (int) entry.z());
+                out.writeBoolean(entry != null && entry.mirror());
             }
         }
     }

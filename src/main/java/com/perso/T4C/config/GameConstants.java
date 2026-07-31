@@ -5,10 +5,10 @@ package com.perso.T4C.config;
 
 public class GameConstants {
     // Width of the game window in pixels.
-    public final static int WINDOW_WIDTH = 1024;
+    public final static int WINDOW_WIDTH = 1280;
 
     // Height of the game window in pixels.
-    public final static int WINDOW_HEIGHT = 768;
+    public final static int WINDOW_HEIGHT = 1024;
 
     // Launches the game in fullscreen mode when enabled.
     public static final boolean FULLSCREEN = false;

@@ -99,7 +99,7 @@ const fields = {
   monsterSpawns: ["type", "x:number", "y:number", "z:number", "stationary:boolean", "aggressive:boolean"],
   npcSpawns: ["type", "x:number", "y:number", "z:number", "stationary:boolean", "aggressive:boolean"],
   objects: ["logicalName", "sprite", "displayName", "clickAnimate:boolean", "mirror:boolean", "animateSound", "reverseAnimateSound", "alwaysBehindEntities:boolean", "depthTileOffsetY:number"],
-  objectPositions: ["name", "x:number", "y:number", "z:number"],
+  objectPositions: ["name", "x:number", "y:number", "z:number", "mirror:boolean"],
   teleports: ["id:number", "sourceZ:number", "sourceX:number", "sourceY:number", "targetZ:number", "targetX:number", "targetY:number"],
   clanRelations: ["source", "target"],
   decorRules: ["sprite"],

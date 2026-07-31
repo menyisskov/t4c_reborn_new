@@ -2185,6 +2185,19 @@ public class MapEditorScreen implements Screen {
                     }
                 }
 
+                if (keycode == Input.Keys.M && editorMode == EditorMode.OBJECT_POSITION_EDITOR
+                        && selectedObjectPositionIndex >= 0 && selectedObjectPositionIndex < objectPositions.size()) {
+                    ObjectPos old = objectPositions.get(selectedObjectPositionIndex);
+                    ObjectPos toggled = new ObjectPos(old.name(), old.x(), old.y(), old.z(), !old.mirror());
+                    objectPositions.set(selectedObjectPositionIndex, toggled);
+                    objectPositionsDirty = true;
+                    if (mapRenderer != null) {
+                        mapRenderer.setObjectPositionsForEditor(objectPositions);
+                    }
+                    showEditorMessage("Object mirror: " + (toggled.mirror() ? "ON" : "OFF"));
+                    return true;
+                }
+
                 if (keycode == Input.Keys.UP || keycode == Input.Keys.DOWN
                         || keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
                     if (selectedDecorInfo != null) {
@@ -2761,8 +2774,9 @@ public class MapEditorScreen implements Screen {
             return;
         }
 
-        float[] offsets = getSpriteDrawOffsets(frames[0], mapping.mirror);
-        ModifSprites.Offset off = mapping.mirror ? modifSprites.getOffset(frames[0] + "M")
+        boolean mirror = mapping.mirror ^ pos.mirror();
+        float[] offsets = getSpriteDrawOffsets(frames[0], mirror);
+        ModifSprites.Offset off = mirror ? modifSprites.getOffset(frames[0] + "M")
                 : modifSprites.getOffset(frames[0]);
         float w = region.getRegionWidth();
         float h = region.getRegionHeight();
@@ -2776,7 +2790,7 @@ public class MapEditorScreen implements Screen {
         outlineBatch.begin();
         outlineShader.setUniformf("u_outlineColor", r, g, b, a);
         outlineShader.setUniformf("u_texelSize", 1.0f / region.getTexture().getWidth(), 1.0f / region.getTexture().getHeight());
-        if (mapping.mirror) {
+        if (mirror) {
             outlineBatch.draw(region, renderX + w, renderY + h, -w, -h);
         } else {
             outlineBatch.draw(region, renderX, renderY + h, w, -h);
@@ -10767,7 +10781,7 @@ public class MapEditorScreen implements Screen {
         }
         if (selectedObjectPositionIndex >= 0 && selectedObjectPositionIndex < objectPositions.size()) {
             ObjectPos old = objectPositions.get(selectedObjectPositionIndex);
-            objectPositions.set(selectedObjectPositionIndex, new ObjectPos(old.name(), tileX, tileY, z));
+            objectPositions.set(selectedObjectPositionIndex, new ObjectPos(old.name(), tileX, tileY, z, old.mirror()));
             showEditorMessage("Object moved: " + old.name() + " (" + tileX + ", " + tileY + ")");
         } else {
             String type = objectPositionTypes.isEmpty() ? "CLOSED_WOODEN_DOOR" : objectPositionTypes.get(selectedObjectTypeIndex);
@@ -10911,8 +10925,9 @@ public class MapEditorScreen implements Screen {
             if (region == null) {
                 continue;
             }
-            float[] offsets = getSpriteDrawOffsets(frames[0], mapping.mirror);
-            ModifSprites.Offset off = mapping.mirror ? modifSprites.getOffset(frames[0] + "M")
+            boolean mirror = mapping.mirror ^ pos.mirror();
+            float[] offsets = getSpriteDrawOffsets(frames[0], mirror);
+            ModifSprites.Offset off = mirror ? modifSprites.getOffset(frames[0] + "M")
                     : modifSprites.getOffset(frames[0]);
             float w = region.getRegionWidth();
             float h = region.getRegionHeight();
@@ -10955,7 +10970,7 @@ public class MapEditorScreen implements Screen {
                     || objectDragState.originalTileY != objectDragState.targetTileY
                     || objectDragState.originalZ != objectDragState.targetZ) {
                 objectPositions.set(objectDragState.index, new ObjectPos(
-                        old.name(), objectDragState.targetTileX, objectDragState.targetTileY, objectDragState.targetZ));
+                        old.name(), objectDragState.targetTileX, objectDragState.targetTileY, objectDragState.targetZ, old.mirror()));
                 objectPositionsDirty = true;
                 selectedObjectPositionIndex = objectDragState.index;
                 saveObjectPositions();
@@ -10972,7 +10987,7 @@ public class MapEditorScreen implements Screen {
         }
         ObjectPos old = objectPositions.get(objectDragState.index);
         objectPositions.set(objectDragState.index, new ObjectPos(
-                old.name(), objectDragState.targetTileX, objectDragState.targetTileY, objectDragState.targetZ));
+                old.name(), objectDragState.targetTileX, objectDragState.targetTileY, objectDragState.targetZ, old.mirror()));
         if (mapRenderer != null) {
             mapRenderer.setObjectPositionsForEditor(objectPositions);
         }
@@ -11028,7 +11043,7 @@ public class MapEditorScreen implements Screen {
         }
         ObjectPos old = objectPositions.get(selectedObjectPositionIndex);
         objectPositions.set(selectedObjectPositionIndex, new ObjectPos(
-                objectPositionTypes.get(selectedObjectTypeIndex), old.x(), old.y(), old.z()));
+                objectPositionTypes.get(selectedObjectTypeIndex), old.x(), old.y(), old.z(), old.mirror()));
         objectPositionsDirty = true;
     }
 

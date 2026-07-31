@@ -2125,13 +2125,15 @@ public class T4CContentStudio {
         item.put("x", pos.x());
         item.put("y", pos.y());
         item.put("z", pos.z());
+        item.put("mirror", pos.mirror());
         return item;
     }
 
     private ObjectPos objectPosFromMap(Map<String, Object> item) {
         String name = str(item.get("name")).trim();
         if (name.isEmpty()) return null;
-        return new ObjectPos(name, lng(item.get("x"), 0L), lng(item.get("y"), 0L), lng(item.get("z"), 0L));
+        return new ObjectPos(name, lng(item.get("x"), 0L), lng(item.get("y"), 0L), lng(item.get("z"), 0L),
+                bool(item.get("mirror"), false));
     }
 
     private Map<String, Object> teleportToMap(TeleportBinaryIO.Entry entry) {

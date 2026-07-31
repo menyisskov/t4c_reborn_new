@@ -694,10 +694,12 @@ public class ObjectRenderer {
         String spriteName = spriteNames[Math.min(state.index, spriteNames.length - 1)];
         info.spriteName = spriteName;
 
-        SpriteLoader.Sprite meta = metaBySpriteName.computeIfAbsent(spriteName, n -> metaByName.get(lowerNameOf(n)));
-        ModifSprites.Offset off = getOffset(spriteName, mapping.mirror);
+        boolean mirror = mapping.mirror ^ pos.mirror();
 
-        float[] drawOffsets = getDrawOffsets(spriteName, meta, mapping.mirror);
+        SpriteLoader.Sprite meta = metaBySpriteName.computeIfAbsent(spriteName, n -> metaByName.get(lowerNameOf(n)));
+        ModifSprites.Offset off = getOffset(spriteName, mirror);
+
+        float[] drawOffsets = getDrawOffsets(spriteName, meta, mirror);
         float offX = drawOffsets[0] + off.x;
         float offY = drawOffsets[1] + off.y;
 
@@ -706,7 +708,7 @@ public class ObjectRenderer {
         info.h = region.getRegionHeight();
         info.px = pos.x() * GRID_W + offX;
         info.py = pos.y() * GRID_H + offY;
-        info.mirror = mapping.mirror;
+        info.mirror = mirror;
         info.tileY = pos.y() + mapping.depthTileOffsetY;  // Store anchor tile Y position for depth sorting
 
         return info;
