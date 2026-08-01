@@ -12,7 +12,6 @@ import com.perso.T4C.MyGame;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.AbstractGuiElement;
 import com.perso.T4C.gui.core.GuiBoxedItem;
-import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiResizable;
 import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiBoxedText;
@@ -40,24 +39,30 @@ public class PlayerHUD {
     private static final float BUFF_BAR_Y = 80f;
     private static final String COMBAT_ICON_SPRITE = "64kCursorAttack";
     private static final float COMBAT_ICON_MARGIN = 16f;
-    private static final float STAT_PANEL_WIDTH = 220f;
-    private static final float STAT_PANEL_HEIGHT = 94f;
-    private static final float STAT_PANEL_X = 803f;
-    private static final float STAT_PANEL_Y = 1f;
-    private static final float STAT_BAR_X = 104f;
-    private static final float STAT_BAR_WIDTH = 98f;
+    private static final float TOP_BAR_HEIGHT = 32f;
+    private static final float TOP_BAR_BORDER_HEIGHT = 6f;
+    private static final int TOP_BAR_BACKGROUND_X = 244;
+    private static final int TOP_BAR_BACKGROUND_Y = 41;
+    private static final int TOP_BAR_BACKGROUND_WIDTH = 272;
+    private static final int TOP_BAR_BACKGROUND_HEIGHT = 46;
+    private static final int TOP_BAR_BORDER_X = 64;
+    private static final int TOP_BAR_BORDER_Y = 0;
+    private static final int TOP_BAR_BORDER_WIDTH = 458;
+    private static final int TOP_BAR_BORDER_SOURCE_HEIGHT = 8;
+    private static final float STAT_PANEL_WIDTH = 449f;
+    private static final float STAT_PANEL_HEIGHT = 26f;
+    private static final float STAT_PANEL_Y = 0f;
+    private static final float STAT_BAR_WIDTH = 106f;
     private static final float STAT_BAR_HEIGHT = 11f;
-    private static final float STAT_LABEL_WIDTH = 24f;
+    private static final float STAT_LABEL_WIDTH = 25f;
     private static final float STAT_LABEL_HEIGHT = 12f;
-    private static final float[] STAT_BAR_Y = {34f, 52f, 72f};
-    private static final float[] STAT_LABEL_X = {75f, 75f, 74f};
-    private static final float[] STAT_LABEL_Y = {33f, 52f, 71f};
-    private static final float LEVEL_LABEL_X = 31f;
-    private static final float LEVEL_LABEL_Y = 7f;
-    private static final float LEVEL_LABEL_WIDTH = 42f;
-    private static final float LEVEL_LABEL_HEIGHT = 14f;
+    private static final float[] STAT_BAR_X = {27f, 178f, 329f};
+    private static final float[] STAT_BAR_Y = {7f, 7f, 7f};
+    private static final float[] STAT_LABEL_X = {0f, 151f, 302f};
+    private static final float[] STAT_LABEL_Y = {6f, 6f, 6f};
 
-    private TextureRegion statBackground;
+    private TextureRegion topBarBackground;
+    private TextureRegion topBarBorder;
     private TextureRegion hpBar;
     private TextureRegion mpBar;
     private TextureRegion xpBar;
@@ -106,20 +111,18 @@ public class PlayerHUD {
     private GuiBoxedText hpLabel;
     private GuiBoxedText mpLabel;
     private GuiBoxedText xpLabel;
-    private GuiBoxedText levelLabel;
     private GuiBar hpGuiBar;
     private GuiBar mpGuiBar;
     private GuiBar xpGuiBar;
     private final GuiBoxedInteraction boxedInteraction = new GuiBoxedInteraction();
     private final List<GuiElement> hudBoxedElements = new ArrayList<>();
     private final HudStatsPanel statsPanel;
-    private boolean statsPanelPositioned;
 
     public PlayerHUD(Player player, SpriteLoader spriteLoader) throws GameException {
         this.player = player;
 
         this.spriteLoader = spriteLoader;
-        this.statBackground = spriteLoader.getRegionFromSpriteName("GUI_BackChStat");
+        loadTopBarRegions();
         this.hpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_HP");
         this.mpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_MP");
         this.xpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_XP");
@@ -141,8 +144,6 @@ public class PlayerHUD {
                 () -> "PM", () -> Color.WHITE).shrinkToFit();
         this.xpLabel = new GuiBoxedText(statLabelFont, 0f, 0f, STAT_LABEL_WIDTH, STAT_LABEL_HEIGHT,
                 () -> "XP", () -> Color.WHITE).shrinkToFit();
-        this.levelLabel = new GuiBoxedText(statLabelFont, 0f, 0f, LEVEL_LABEL_WIDTH, LEVEL_LABEL_HEIGHT,
-                () -> String.valueOf(player.getLevel()), () -> Color.WHITE).shrinkToFit();
         createStatBars();
         this.statsPanel = new HudStatsPanel();
         statsPanel.initializeChildren();
@@ -155,12 +156,11 @@ public class PlayerHUD {
      */
     public void render(SpriteBatch batch, float offsetX, float offsetY) {
         if (spriteLoader.getTextureGeneration() != lastTextureGen) refreshRegions();
-        if (statBackground == null || hpBar == null || mpBar == null || xpBar == null) return;
+        if (topBarBackground == null || hpBar == null || mpBar == null || xpBar == null) return;
 
-        if (!statsPanelPositioned) {
-            statsPanel.setPosition(STAT_PANEL_X, STAT_PANEL_Y);
-            statsPanelPositioned = true;
-        }
+        renderTopBar(batch);
+        statsPanel.setSize(STAT_PANEL_WIDTH, STAT_PANEL_HEIGHT);
+        statsPanel.setPosition(Math.max(0f, (Gdx.graphics.getWidth() - STAT_PANEL_WIDTH) * 0.5f), STAT_PANEL_Y);
         statsPanel.render(batch);
 
         renderActiveBuffs(batch);
@@ -168,6 +168,43 @@ public class PlayerHUD {
         renderChatBarButtons(batch);
         renderBuffTooltip(batch);
         renderCombatModeIndicator(batch);
+    }
+
+    private void loadTopBarRegions() throws GameException {
+        TextureRegion chatBackground = spriteLoader.getRegionFromSpriteName("GUI_backChat");
+        if (chatBackground == null) {
+            topBarBackground = null;
+            topBarBorder = null;
+            return;
+        }
+        topBarBackground = subRegion(chatBackground, TOP_BAR_BACKGROUND_X, TOP_BAR_BACKGROUND_Y,
+                TOP_BAR_BACKGROUND_WIDTH, TOP_BAR_BACKGROUND_HEIGHT);
+        topBarBorder = subRegion(chatBackground, TOP_BAR_BORDER_X, TOP_BAR_BORDER_Y,
+                TOP_BAR_BORDER_WIDTH, TOP_BAR_BORDER_SOURCE_HEIGHT);
+    }
+
+    private static TextureRegion subRegion(TextureRegion parent, int x, int y, int width, int height) {
+        return new TextureRegion(parent.getTexture(), parent.getRegionX() + x, parent.getRegionY() + y,
+                width, height);
+    }
+
+    private void renderTopBar(SpriteBatch batch) {
+        float screenWidth = Gdx.graphics.getWidth();
+        drawTiled(batch, topBarBackground, 0f, 0f, screenWidth, TOP_BAR_HEIGHT);
+        drawTiled(batch, topBarBorder, 0f, TOP_BAR_HEIGHT - TOP_BAR_BORDER_HEIGHT,
+                screenWidth, TOP_BAR_BORDER_HEIGHT);
+    }
+
+    private static void drawTiled(SpriteBatch batch, TextureRegion region, float x, float y,
+                                  float width, float height) {
+        if (region == null || width <= 0f || height <= 0f) return;
+        float tileWidth = region.getRegionWidth() * height / region.getRegionHeight();
+        for (float drawn = 0f; drawn < width; drawn += tileWidth) {
+            float partWidth = Math.min(tileWidth, width - drawn);
+            int sourceWidth = Math.max(1, Math.round(region.getRegionWidth() * partWidth / tileWidth));
+            batch.draw(region.getTexture(), x + drawn, y, partWidth, height,
+                    region.getRegionX(), region.getRegionY(), sourceWidth, region.getRegionHeight(), false, true);
+        }
     }
 
     public boolean boxedTouchDown(float sx, float sy, boolean controlDown) {
@@ -237,13 +274,12 @@ public class PlayerHUD {
         hudBoxedElements.add(hpLabel);
         hudBoxedElements.add(mpLabel);
         hudBoxedElements.add(xpLabel);
-        hudBoxedElements.add(levelLabel);
     }
 
     /**
      * Boxed unit for the complete character-stat HUD. Its children use coordinates relative to
-     * the original 220x94 sprite, so Ctrl+drag and Shift+resize always keep the background,
-     * labels, bars and values together.
+     * the compact background, so Ctrl+drag and Shift+resize always keep the background, labels,
+     * bars and values together.
      */
     private final class HudStatsPanel extends AbstractGuiElement implements GuiResizable {
         private float width = STAT_PANEL_WIDTH;
@@ -255,15 +291,12 @@ public class PlayerHUD {
 
         @Override
         public void render(SpriteBatch batch) {
-            GuiDraw.drawRegionFlipped(batch, statBackground, x, y, width, height);
-
             hpGuiBar.render(batch);
             mpGuiBar.render(batch);
             xpGuiBar.render(batch);
             hpLabel.render(batch);
             mpLabel.render(batch);
             xpLabel.render(batch);
-            levelLabel.render(batch);
 
             if (com.perso.T4C.config.GamePreferencesStore.get().isShowHudValues()) {
                 drawBarValue(batch, player.getCurrentHp() + "/" + player.getMaxHp(),
@@ -280,12 +313,10 @@ public class PlayerHUD {
             layoutInitial(hpGuiBar, hpLabel, 0);
             layoutInitial(mpGuiBar, mpLabel, 1);
             layoutInitial(xpGuiBar, xpLabel, 2);
-            levelLabel.setPosition(x + LEVEL_LABEL_X, y + LEVEL_LABEL_Y);
-            levelLabel.setSize(LEVEL_LABEL_WIDTH, LEVEL_LABEL_HEIGHT);
         }
 
         private void layoutInitial(GuiBar bar, GuiBoxedText label, int row) {
-            bar.setPosition(x + STAT_BAR_X, y + STAT_BAR_Y[row]);
+            bar.setPosition(x + STAT_BAR_X[row], y + STAT_BAR_Y[row]);
             bar.setSize(STAT_BAR_WIDTH, STAT_BAR_HEIGHT);
             label.setPosition(x + STAT_LABEL_X[row], y + STAT_LABEL_Y[row]);
             label.setSize(STAT_LABEL_WIDTH, STAT_LABEL_HEIGHT);
@@ -302,7 +333,6 @@ public class PlayerHUD {
             translate(hpLabel, dx, dy);
             translate(mpLabel, dx, dy);
             translate(xpLabel, dx, dy);
-            translate(levelLabel, dx, dy);
         }
 
         @Override
@@ -317,7 +347,6 @@ public class PlayerHUD {
             scaleChild(hpLabel, scaleX, scaleY);
             scaleChild(mpLabel, scaleX, scaleY);
             scaleChild(xpLabel, scaleX, scaleY);
-            scaleChild(levelLabel, scaleX, scaleY);
             this.width = newWidth;
             this.height = newHeight;
             return this;
@@ -934,7 +963,7 @@ public class PlayerHUD {
 
     private void refreshRegions() {
         try {
-            this.statBackground = spriteLoader.getRegionFromSpriteName("GUI_BackChStat");
+            loadTopBarRegions();
             this.hpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_HP");
             this.mpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_MP");
             this.xpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_XP");

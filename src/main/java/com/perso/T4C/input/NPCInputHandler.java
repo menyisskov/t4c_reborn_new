@@ -54,8 +54,11 @@ public class NPCInputHandler extends InputAdapter {
             if (npc != null && offensiveSpellCastHandler != null && offensiveSpellCastHandler.apply(npc)) {
                 return true;
             }
-            if (player != null && player.isCombatMode() && npc != null) {
-                return npcManager.attackNpc(worldPos.x, worldPos.y, player, systemMessage);
+            // A declined attack (an ally companion) falls through to conversation,
+            // so the player can still give it orders while in combat mode.
+            if (player != null && player.isCombatMode() && npc != null
+                    && npcManager.attackNpc(worldPos.x, worldPos.y, player, systemMessage)) {
+                return true;
             }
             if (npcManager.handleDialogClick(worldPos.x, worldPos.y, player)) {
                 return true;

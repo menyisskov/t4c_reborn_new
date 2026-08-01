@@ -52,8 +52,8 @@ public final class QuestScreen extends GuiScreenBase {
     public QuestScreen(Player player) {
         this.player = player;
         background = GuiSprites.load("GUI_BackQuest");
-        listFont = FontManager.getInstance().getHaettenschweilerFont(14, GOLD);
-        detailFont = FontManager.getInstance().getJetBrainsMonoFont(11, WHITE);
+        listFont = FontManager.getInstance().getTahomaFont(12, GOLD, false);
+        detailFont = FontManager.getInstance().getTahomaFont(12, WHITE, false);
         centerOnScreen();
         addCloseButton(548f, 1f);
         loadPlayerQuests();

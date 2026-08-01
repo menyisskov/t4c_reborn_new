@@ -25,15 +25,12 @@ public final class NpcCatalogueSeed {
                 "npc.welcome.iraltok", welcome,
                 "npc.topic_keyword.iraltok.0.0", "sorts"
         ));
+        NpcOriginalAppearance.Appearance iraltokAppearance = NpcOriginalAppearance.forName("Iraltok");
         NpcDef iraltok = new NpcDef(
                 "Iraltok",
                 "Iraltok",
-                List.of(
-                        new NpcDef.Part(BodyPart.BODY, "PupNecromanRobe"),
-                        new NpcDef.Part(BodyPart.LEGS, "PupLeatherPants"),
-                        new NpcDef.Part(BodyPart.FEET, "PupBlackLeatherBoots")
-                ),
-                null,
+                iraltokAppearance.parts(),
+                iraltokAppearance.spriteBase(),
                 0,
                 List.of(),
                 welcome,
@@ -54,13 +51,10 @@ public final class NpcCatalogueSeed {
                 "npc.topic_keyword.moonrock.0.0", "soigner",
                 "npc.topic_keyword.moonrock.0.1", "heal"
         ));
+        NpcOriginalAppearance.Appearance moonrockAppearance = NpcOriginalAppearance.forName("Moonrock");
         NpcDef moonrock = new NpcDef(
                 "Moonrock", "Moonrock",
-                List.of(
-                        new NpcDef.Part(BodyPart.BODY, "WoWhiteRobe"),
-                        new NpcDef.Part(BodyPart.LEGS, "PupNakedLegs"),
-                        new NpcDef.Part(BodyPart.FEET, "PupNakedFoot")
-                ), null, 0,
+                moonrockAppearance.parts(), moonrockAppearance.spriteBase(), 0,
                 List.of("${npc.flee_shout.moonrock.0}", "${npc.flee_shout.moonrock.1}"),
                 moonrockWelcome,
                 List.of(new NpcDef.DialogTopic(
@@ -75,13 +69,10 @@ public final class NpcCatalogueSeed {
                 "npc.topic_keyword.khiliam.0.1", "light",
                 "npc.topic_keyword.khiliam.0.2", "sorts"
         ));
+        NpcOriginalAppearance.Appearance khiliamAppearance = NpcOriginalAppearance.forName("Khiliam");
         NpcDef khiliam = new NpcDef(
                 "Khiliam", "Khiliam",
-                List.of(
-                        new NpcDef.Part(BodyPart.BODY, "WoWhiteRobe"),
-                        new NpcDef.Part(BodyPart.LEGS, "PupNakedLegs"),
-                        new NpcDef.Part(BodyPart.FEET, "PupNakedFoot")
-                ), null, 0,
+                khiliamAppearance.parts(), khiliamAppearance.spriteBase(), 0,
                 List.of("${npc.flee_shout.moonrock.0}", "${npc.flee_shout.moonrock.1}"),
                 khiliamWelcome,
                 List.of(new NpcDef.DialogTopic(
@@ -96,16 +87,10 @@ public final class NpcCatalogueSeed {
                 "npc.topic_keyword.jagarkar.0.1", "entraînement",
                 "npc.topic_keyword.jagarkar.0.2", "enseigner"
         ));
+        NpcOriginalAppearance.Appearance jagarKarAppearance = NpcOriginalAppearance.forName("JagarKar");
         NpcDef jagarKar = new NpcDef(
                 "JagarKar", "JagarKar",
-                List.of(
-                        new NpcDef.Part(BodyPart.BODY, "PupPlateBody"),
-                        new NpcDef.Part(BodyPart.HEAD, "PupPlateHelm"),
-                        new NpcDef.Part(BodyPart.LEGS, "PupNakedLegs"),
-                        new NpcDef.Part(BodyPart.FEET, "PupNakedFoot"),
-                        new NpcDef.Part(BodyPart.WEAPON, "PupNormalSword"),
-                        new NpcDef.Part(BodyPart.SHIELD, "PupRomanShield")
-                ), null, 0, List.of(), jagarKarWelcome,
+                jagarKarAppearance.parts(), jagarKarAppearance.spriteBase(), 0, List.of(), jagarKarWelcome,
                 List.of(new NpcDef.DialogTopic(
                         List.of("skills", "entraînement", "enseigner"), null,
                         List.of(new NpcDef.Action(ActionType.OPEN_SKILL_LEARNING,
@@ -236,42 +221,9 @@ public final class NpcCatalogueSeed {
                 "npc.topic_keyword." + identity + ".0.1", "name",
                 "npc.topic_keyword." + identity + ".1.0", "travail",
                 "npc.topic_keyword." + identity + ".1.1", "work"));
-        return new NpcDef(name, displayName, appearanceFor(name),
-                spriteBaseFor(name), 0, List.of(), "Bonjour, je suis " + displayName + ".", topics);
-    }
-
-    /**
-     * Monster-style single-sprite-family appearance for NPCs that aren't humanoid.
-     * Values come from the NPC's original appearance override in its .cpp source
-     * (e.g. Murmuntag.cpp sets {@code npc.appearance = __NPC_ORC}).
-     */
-    private static String spriteBaseFor(String name) {
-        return switch (name) {
-            case "Murmuntag" -> "Orc";
-            case "Darkfang" -> "DragonSTMOV";
-            case "Pig" -> "Pig";
-            default -> null;
-        };
-    }
-
-    /** Appearance names translated from MonsterStatSetup.cpp. */
-    private static List<NpcDef.Part> appearanceFor(String name) {
-        return switch (name) {
-            case "Araknor" -> parts("PupNecromanRobe", "PupLeatherPants", "PupBlackLeatherBoots", "PupHornedHelmet");
-            case "Darkfang", "Murmuntag", "Balork", "Pig" -> List.of();
-            case "DelvarIrongrip" -> parts("PupChainMailBody", "PupChainMailLegs", "PupPlateBoots", "PupChainMailCoif", "PupNormalSword", "PupRomanShield", "PupRedCape");
-            case "Guardman" -> parts("PupChainMailBody", "PupChainMailLegs", "PupPlateBoots", "PupChainMailCoif", "PupNormalSword", "PupRomanShield", "PupRedCape");
-            case "Markam", "Isulgur" -> parts("PupChainMailBody", "PupLeatherPants", "PupPlateBoots", "PupChainMailCoif");
-            case "KirlorDhul" -> parts("PupChainMailBody", "PupChainMailLegs", "PupPlateBoots", "PupChainMailCoif", "PupRedCape");
-            case "Shadow" -> parts("PupLeatherArmor", "PupStuddedLegs", "PupLeatherBoots", "PupDagger", "PupRedCape");
-            case "Ortanalas" -> parts("PupLeatherArmor", "PupStuddedLegs", "PupLeatherBoots", "PupNormalSword", "PupRomanShield", "PupRedCape");
-            case "Uranos" -> parts("PupNecromanRobe", "PupLeatherPants", "PupBlackLeatherBoots", "PupRedCape");
-            case "Lothan", "TwinShovanis" -> parts("PupNecromanRobe", "PupLeatherPants", "PupBlackLeatherBoots");
-            case "Fali" -> parts("WoClothBody", "WoClothRobe", "WoLeatherBoots");
-            case "Rolph" -> parts("PupBodyClothSet1", "PupLegsClothSet1", "PupLeatherBoots");
-            case "Jalus", "Halam", "Kalastor", "MarnecSunim", "Geena" -> parts("PupClothBody", "PupClothLegs", "PupLeatherBoots");
-            default -> parts("PupClothBody", "PupNakedLegs", "PupNakedFoot");
-        };
+        NpcOriginalAppearance.Appearance appearance = NpcOriginalAppearance.forName(name);
+        return new NpcDef(name, displayName, appearance.parts(),
+                appearance.spriteBase(), 0, List.of(), "Bonjour, je suis " + displayName + ".", topics);
     }
 
     private static NpcDef fali() {
@@ -285,7 +237,8 @@ public final class NpcCatalogueSeed {
                 Map.entry("npc.topic_keyword." + identity + ".0.0", "nom"), Map.entry("npc.topic_keyword." + identity + ".0.1", "qui êtes-vous"),
                 Map.entry("npc.topic_keyword." + identity + ".1.0", "travail"), Map.entry("npc.topic_keyword." + identity + ".1.1", "métier"), Map.entry("npc.topic_keyword." + identity + ".1.2", "occupation"),
                 Map.entry("npc.topic_keyword." + identity + ".2.0", "regarder"), Map.entry("npc.topic_keyword." + identity + ".2.1", "acheter")));
-        return new NpcDef("Fali", "Fali", appearanceFor("Fali"), null, 0, List.of(), welcome,
+        NpcOriginalAppearance.Appearance appearance = NpcOriginalAppearance.forName("Fali");
+        return new NpcDef("Fali", "Fali", appearance.parts(), appearance.spriteBase(), 0, List.of(), welcome,
                 List.of(
                         topic(List.of("nom", "qui êtes-vous"), "Je m'appelle Fali."),
                         topic(List.of("travail", "métier", "occupation"), "Je vends toutes sortes d'objets. N'hésitez pas à regarder."),
@@ -305,7 +258,8 @@ public final class NpcCatalogueSeed {
                 Map.entry("npc.topic_keyword." + identity + ".1.0", "travail"), Map.entry("npc.topic_keyword." + identity + ".1.1", "métier"), Map.entry("npc.topic_keyword." + identity + ".1.2", "occupation"),
                 Map.entry("npc.topic_keyword." + identity + ".2.0", "achète"),
                 Map.entry("npc.topic_keyword." + identity + ".2.1", "armure")));
-        return new NpcDef("Rolph", "Rolph", appearanceFor("Rolph"), null, 0, List.of(), welcome,
+        NpcOriginalAppearance.Appearance appearance = NpcOriginalAppearance.forName("Rolph");
+        return new NpcDef("Rolph", "Rolph", appearance.parts(), appearance.spriteBase(), 0, List.of(), welcome,
                 List.of(
                         topic(List.of("nom", "qui êtes-vous"), "Je m'appelle Rolph, le plus grand armurier du royaume !"),
                         topic(List.of("travail", "métier", "occupation"), "Je possède la meilleure armurerie de tout Goldmoon."),
@@ -322,17 +276,4 @@ public final class NpcCatalogueSeed {
                 List.of(new NpcDef.Action(ActionType.OPEN_SHOP, List.of(items))));
     }
 
-    private static List<NpcDef.Part> parts(String body, String legs, String feet, String... extras) {
-        List<NpcDef.Part> result = new ArrayList<>();
-        result.add(new NpcDef.Part(BodyPart.BODY, body));
-        result.add(new NpcDef.Part(BodyPart.LEGS, legs));
-        result.add(new NpcDef.Part(BodyPart.FEET, feet));
-        for (String extra : extras) {
-            BodyPart slot = extra.contains("Helmet") || extra.contains("Coif") ? BodyPart.HEAD
-                    : extra.contains("Sword") || extra.contains("Dagger") ? BodyPart.WEAPON
-                    : extra.contains("Shield") ? BodyPart.SHIELD : BodyPart.CAPE;
-            result.add(new NpcDef.Part(slot, extra));
-        }
-        return result;
-    }
 }

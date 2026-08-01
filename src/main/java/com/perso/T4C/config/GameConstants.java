@@ -67,26 +67,15 @@ public class GameConstants {
     public static final int NPC_HOSTILE_DAMAGE_MIN = 2;
     public static final int NPC_HOSTILE_DAMAGE_MAX = 6;
 
-    // Companion NPC tuning (ally summoned by an NPC to fight alongside the player).
-    // Follow distances use a hysteresis band: the companion starts walking only past
-    // START and stops once back inside STOP, so it never jitters around the player.
     public static final float COMPANION_FOLLOW_START_DISTANCE = 2.5f * GRID_W;
     public static final float COMPANION_FOLLOW_STOP_DISTANCE = 1.2f * GRID_W;
-    // Slightly faster than a regular NPC so it can catch up after a combat detour.
-    public static final float COMPANION_SPEED = NPC_SPEED * 1.15f;
-    // Delay between two samples of the player trail the companion walks along.
     public static final float COMPANION_TRAIL_SAMPLE_INTERVAL = 0.3f;
     public static final int COMPANION_TRAIL_SAMPLES = 4;
-    public static final float COMPANION_ATTACK_COOLDOWN = 1.5f;
-    // Base damage roll, widened by the companion's level so it stays relevant
-    // against the tougher creatures a higher-level player fights.
-    public static final int COMPANION_DAMAGE_MIN = 3;
-    public static final int COMPANION_DAMAGE_MAX = 8;
-    public static final float COMPANION_DAMAGE_PER_LEVEL = 0.8f;
-    // Distance from the player past which the companion abandons its target.
     public static final float COMPANION_COMBAT_LEASH_RANGE = 15f * GRID_W;
-    public static final int COMPANION_BASE_HP = 40;
-    public static final int COMPANION_HP_PER_PLAYER_LEVEL = 8;
+    public static final long DEFAULT_CAST_MENTAL_EXHAUSTION_MS = 1000L;
+    public static final long DEFAULT_CAST_PHYSICAL_EXHAUSTION_MS = 750L;
+    public static final float COMPANION_AGGRESSIVE_DETECTION_RANGE = 8f * GRID_W;
+    public static final float COMPANION_AGGRESSIVE_SCAN_INTERVAL = 0.5f;
 
     // Player respawn tile coordinates.
     public static final int PLAYER_RESPAWN_TILE_X = 2951;

@@ -25,19 +25,40 @@ public final class CompanionCastVfxHook {
 
     @FunctionalInterface
     public interface HealEffect {
-        /** Plays {@code spell}'s impact visuals at the given world position. */
-        void play(SpellData spell, float worldX, float worldY);
+        /**
+         * Plays {@code spell} travelling from {@code casterPosition} to
+         * {@code castOn}: projectile then impact, as a healer NPC does. A null
+         * {@code castOn} means a self-heal, played on the spot.
+         */
+        void play(SpellData spell, com.perso.T4C.player.Player castOn,
+                  Vector2 casterPosition, float worldX, float worldY, Runnable onImpact);
+    }
+
+    @FunctionalInterface
+    public interface VanishEffect {
+        /** Plays the departure visuals at the world position the companion left. */
+        void play(float worldX, float worldY);
     }
 
     private static AttackEffect sharedAttack;
     private static HealEffect sharedHeal;
+    private static VanishEffect sharedVanish;
 
     private CompanionCastVfxHook() {
     }
 
-    public static void setShared(AttackEffect attackEffect, HealEffect healEffect) {
+    public static void setShared(AttackEffect attackEffect, HealEffect healEffect,
+                                 VanishEffect vanishEffect) {
         sharedAttack = attackEffect;
         sharedHeal = healEffect;
+        sharedVanish = vanishEffect;
+    }
+
+    /** Plays the companion's departure burst where it stood. */
+    public static void playVanish(float worldX, float worldY) {
+        if (sharedVanish != null) {
+            sharedVanish.play(worldX, worldY);
+        }
     }
 
     /** Returns false when no renderer is registered, so the caller can still apply the effect. */
@@ -50,9 +71,25 @@ public final class CompanionCastVfxHook {
         return true;
     }
 
-    public static void playHeal(SpellData spell, float worldX, float worldY) {
+    /**
+     * Plays a heal projected onto {@code castOn} from {@code casterPosition},
+     * running {@code onImpact} when it lands. Returns false when no renderer is
+     * registered, so the caller can still apply the heal itself.
+     */
+    public static boolean playHeal(SpellData spell, com.perso.T4C.player.Player castOn,
+                                   Vector2 casterPosition, Runnable onImpact) {
+        if (sharedHeal == null || castOn == null) {
+            return false;
+        }
+        Vector2 target = castOn.getPositionVector();
+        sharedHeal.play(spell, castOn, casterPosition, target.x, target.y, onImpact);
+        return true;
+    }
+
+    /** Plays a self-heal at the caster's own position, with no projectile. */
+    public static void playSelfHeal(SpellData spell, float worldX, float worldY) {
         if (sharedHeal != null) {
-            sharedHeal.play(spell, worldX, worldY);
+            sharedHeal.play(spell, null, null, worldX, worldY, null);
         }
     }
 }

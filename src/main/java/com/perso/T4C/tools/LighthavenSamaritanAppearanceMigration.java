@@ -3,15 +3,12 @@ package com.perso.T4C.tools;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.NpcDefBinaryIO;
 import com.perso.T4C.npc.NpcDef;
-import com.perso.T4C.player.BodyPart;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Applies the exact puppet outfit declared for Samaritan in the original
- * Arakas {@code MonsterStatSetup.cpp}.
+ * Applies the effective Samaritan appearance declared by the original Arakas DLL.
  */
 public final class LighthavenSamaritanAppearanceMigration {
     private LighthavenSamaritanAppearanceMigration() {
@@ -44,7 +41,7 @@ public final class LighthavenSamaritanAppearanceMigration {
                 definition.getName(),
                 definition.getDisplayName(),
                 originalParts(),
-                null,
+                NpcOriginalAppearance.forName(LighthavenSamaritanQuestMigration.NPC_NAME).spriteBase(),
                 definition.getPatrolRadiusTiles(),
                 definition.getFleeShouts(),
                 definition.getWelcomeText(),
@@ -53,11 +50,6 @@ public final class LighthavenSamaritanAppearanceMigration {
     }
 
     static List<NpcDef.Part> originalParts() {
-        return List.of(
-                new NpcDef.Part(BodyPart.BODY, "PupBodyClothSet1"),
-                new NpcDef.Part(BodyPart.FEET, "PupBlackLeatherBoots"),
-                new NpcDef.Part(BodyPart.HEAD, "PupElvenHat"),
-                new NpcDef.Part(BodyPart.LEGS, "PupLeatherPants")
-        );
+        return NpcOriginalAppearance.forName(LighthavenSamaritanQuestMigration.NPC_NAME).parts();
     }
 }

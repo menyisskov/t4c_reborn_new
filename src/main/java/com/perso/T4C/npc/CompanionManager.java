@@ -6,9 +6,13 @@ import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.BaseMonster;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spell.CompanionCastVfxHook;
 import com.perso.T4C.ui.SystemMessage;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILES;
 import static com.perso.T4C.config.GameConstants.GRID_W;
@@ -27,6 +31,9 @@ public class CompanionManager {
     private NPCManager npcManager;
     @Setter
     private XpCurve xpCurve;
+    /** Feeds AGGRESSIVE mode its target candidates; see CompanionNPC. */
+    @Setter
+    private Supplier<List<BaseMonster>> monsterSupplier;
     private CompanionNPC companion;
 
     public CompanionManager(NPCManager npcManager) {
@@ -60,6 +67,8 @@ public class CompanionManager {
         }
         try {
             CompanionNPC spawned = new CompanionNPC(def, owner, xpCurve);
+            spawned.setMonsterSupplier(monsterSupplier);
+            spawned.setDismissRequestHandler(this::dismissByPlayer);
             Vector2 spawnPosition = findFreeSpawnNear(sourcePosition);
             spawned.setSpawnPosition(spawnPosition.x, spawnPosition.y);
             npcManager.addNPC(spawned);
@@ -97,13 +106,30 @@ public class CompanionManager {
         }
     }
 
-    /** Removes the companion from the world. */
+    /** Removes the companion from the world without any farewell visuals. */
     public void dismiss() {
         if (companion == null) {
             return;
         }
         npcManager.removeNPC(companion);
         companion = null;
+    }
+
+    /**
+     * Sends the companion away at the player's request: it vanishes in a burst of
+     * light where it stood, the way a multi-part monster leaves the world.
+     */
+    public void dismissByPlayer() {
+        if (companion == null) {
+            return;
+        }
+        String name = I18n.resolve(companion.getName());
+        Vector2 lastPosition = new Vector2(companion.getPosition());
+        companion.endInteraction();
+        dismiss();
+        CompanionCastVfxHook.playVanish(lastPosition.x, lastPosition.y);
+        SystemMessage.showShared(I18n.message("message.companion_dismissed", name));
+        log.info("Companion {} dismissed by the player", name);
     }
 
     /**
@@ -116,6 +142,8 @@ public class CompanionManager {
             return;
         }
         Vector2 spawnPosition = findFreeSpawnNear(playerPosition);
+        // The MonsterManager was rebuilt with the map, so re-point the supplier.
+        companion.setMonsterSupplier(monsterSupplier);
         companion.warpTo(spawnPosition.x, spawnPosition.y);
         npcManager.addNPC(companion);
         log.info("Companion {} followed the player to the new map", companion.getName());

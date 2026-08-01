@@ -192,6 +192,8 @@ public class MainGameScreen implements Screen {
     private long profilerFrameIndex = 0;
     // ─────────────────────────────────────────────────────────────────────────
 
+    /** Spell whose visuals play when a companion is dismissed. */
+    private static final String COMPANION_VANISH_SPELL = "spell.light";
     private static final String MUSIC_ZONES_SUFFIX = ".musiczones.json";
     private static final String MUSIC_ZONES_BIN_SUFFIX = ".musiczones.bin";
     private final List<MusicZoneEntry> musicZones = new ArrayList<>();
@@ -245,6 +247,9 @@ public class MainGameScreen implements Screen {
         monsterManager = createMonsterManager();
         companionManager = new CompanionManager(npcManager);
         companionManager.setXpCurve(xpCurve);
+        // Read through the field so the supplier survives the map-change rebuild.
+        companionManager.setMonsterSupplier(
+                () -> monsterManager == null ? null : monsterManager.getMonsters());
         npcManager.setCompanionManager(companionManager);
 
         configureCallbacks();
@@ -3184,7 +3189,8 @@ public class MainGameScreen implements Screen {
         SystemMessage.setChatSink(gameChat::addSystemMessage);
         com.perso.T4C.spell.NpcCastVfxHook.setShared(this::playNpcCastVfx);
         com.perso.T4C.spell.CompanionCastVfxHook.setShared(
-                this::playCompanionAttackVfx, this::playCompanionHealVfx);
+                this::playCompanionAttackVfx, this::playCompanionHealVfx,
+                this::playCompanionVanishVfx);
         mapZoneDisplay = new GuiMapZoneDisplay(I18n.key("zone.lighthaven"));
     }
 
@@ -3194,7 +3200,19 @@ public class MainGameScreen implements Screen {
      * "casts on you" instead of casting on itself).
      */
     private void playNpcCastVfx(SpellData spell, Player castOn, Vector2 casterPosition) {
+        playNpcCastVfx(spell, castOn, casterPosition, null);
+    }
+
+    /**
+     * Same as above, additionally running {@code onLanded} when the cast reaches
+     * the player, so a caller can delay its gameplay effect until impact.
+     */
+    private void playNpcCastVfx(SpellData spell, Player castOn, Vector2 casterPosition,
+                                Runnable onLanded) {
         if (spell == null || castOn == null) {
+            if (onLanded != null) {
+                onLanded.run();
+            }
             return;
         }
         spellRenderer.playLaunchSound(spell.getSound());
@@ -3203,12 +3221,19 @@ public class MainGameScreen implements Screen {
             impact = spell.getProjectileSpell();
         }
         if (impact == null || impact.isEmpty()) {
+            // Nothing to show, but the effect must still happen.
+            if (onLanded != null) {
+                onLanded.run();
+            }
             return;
         }
         String projectileSpell = spell.getProjectileSpell();
         if (projectileSpell == null || projectileSpell.isEmpty() || casterPosition == null) {
             spellRenderer.playImpactSound(spell.getSoundImpact());
             spellRenderer.triggerImpactSpell(impact, castOn);
+            if (onLanded != null) {
+                onLanded.run();
+            }
             return;
         }
         Vector2 playerPos = castOn.getPositionVector();
@@ -3216,6 +3241,9 @@ public class MainGameScreen implements Screen {
         Runnable onImpact = () -> {
             spellRenderer.playImpactSound(spell.getSoundImpact());
             spellRenderer.triggerImpactSpell(impactEffect, castOn);
+            if (onLanded != null) {
+                onLanded.run();
+            }
         };
         boolean launched = false;
         if (spell.isLineOfSight()) {
@@ -3289,10 +3317,42 @@ public class MainGameScreen implements Screen {
     }
 
     /** Plays a companion heal's impact visuals at the healed target's position. */
-    private void playCompanionHealVfx(SpellData spell, float worldX, float worldY) {
-        if (spell == null) {
+    /**
+     * Plays the light spell's burst where a dismissed companion stood, mirroring
+     * the departure of a multi-part monster (which also vanishes with no death
+     * sprite of its own).
+     */
+    private void playCompanionVanishVfx(float worldX, float worldY) {
+        SpellData light = SpellRegistry.findByName(COMPANION_VANISH_SPELL);
+        if (light == null) {
             return;
         }
+        // Self-target spells such as Light keep their animation in the projectile
+        // slot and declare no impact; see tryCastSelfSpell.
+        String effect = light.getImpactSpell();
+        if (effect == null || effect.isEmpty()) {
+            effect = light.getProjectileSpell();
+        }
+        if (effect != null && !effect.isEmpty()) {
+            spellRenderer.triggerImpactSpell(effect, worldX, worldY, light.getSoundImpact());
+        }
+    }
+
+    private void playCompanionHealVfx(SpellData spell, Player castOn, Vector2 casterPosition,
+                                      float worldX, float worldY, Runnable onImpact) {
+        if (spell == null) {
+            if (onImpact != null) {
+                onImpact.run();
+            }
+            return;
+        }
+        // Healing the player is a cast travelling to them, exactly like a healer
+        // NPC's: reuse that path so the projectile plays before the impact.
+        if (castOn != null) {
+            playNpcCastVfx(spell, castOn, casterPosition, onImpact);
+            return;
+        }
+        // Self-heal: nothing travels, so only the impact plays.
         spellRenderer.playLaunchSound(spell.getSound());
         String impact = spell.getImpactSpell();
         if (impact == null || impact.isEmpty()) {
@@ -3521,7 +3581,7 @@ public class MainGameScreen implements Screen {
         if (systemMessage != null) {
             SystemMessage.setShared(null);
             com.perso.T4C.spell.NpcCastVfxHook.setShared(null);
-            com.perso.T4C.spell.CompanionCastVfxHook.setShared(null, null);
+            com.perso.T4C.spell.CompanionCastVfxHook.setShared(null, null, null);
             systemMessage.dispose();
         }
         if (gameChat != null) {

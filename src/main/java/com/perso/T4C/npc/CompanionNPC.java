@@ -7,6 +7,7 @@ import com.perso.T4C.combat.CombatResult;
 import com.perso.T4C.combat.PhysicalAttackRequest;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.CollisionManager;
+import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
@@ -15,6 +16,7 @@ import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.CompanionCastVfxHook;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
+import com.perso.T4C.ui.SystemMessage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,19 +26,17 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
-import static com.perso.T4C.config.GameConstants.COMPANION_ATTACK_COOLDOWN;
-import static com.perso.T4C.config.GameConstants.COMPANION_BASE_HP;
+import static com.perso.T4C.config.GameConstants.COMPANION_AGGRESSIVE_DETECTION_RANGE;
+import static com.perso.T4C.config.GameConstants.COMPANION_AGGRESSIVE_SCAN_INTERVAL;
 import static com.perso.T4C.config.GameConstants.COMPANION_COMBAT_LEASH_RANGE;
-import static com.perso.T4C.config.GameConstants.COMPANION_DAMAGE_MAX;
-import static com.perso.T4C.config.GameConstants.COMPANION_DAMAGE_MIN;
-import static com.perso.T4C.config.GameConstants.COMPANION_DAMAGE_PER_LEVEL;
 import static com.perso.T4C.config.GameConstants.COMPANION_FOLLOW_START_DISTANCE;
 import static com.perso.T4C.config.GameConstants.COMPANION_FOLLOW_STOP_DISTANCE;
-import static com.perso.T4C.config.GameConstants.COMPANION_HP_PER_PLAYER_LEVEL;
-import static com.perso.T4C.config.GameConstants.COMPANION_SPEED;
 import static com.perso.T4C.config.GameConstants.COMPANION_TRAIL_SAMPLE_INTERVAL;
 import static com.perso.T4C.config.GameConstants.COMPANION_TRAIL_SAMPLES;
+import static com.perso.T4C.config.GameConstants.DEFAULT_CAST_MENTAL_EXHAUSTION_MS;
+import static com.perso.T4C.config.GameConstants.DEFAULT_CAST_PHYSICAL_EXHAUSTION_MS;
 import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILES;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
@@ -61,8 +61,36 @@ public class CompanionNPC extends BaseNPC {
     /** Monster the companion is currently helping to fight; null while following. */
     private BaseMonster combatTarget;
 
+    /** Behaviour ordered by the player through dialogue. */
+    private CompanionMode mode = CompanionMode.SUPPORT;
+
+    /**
+     * Supplies the live monster list for AGGRESSIVE scanning. Resolved per frame
+     * rather than held, because the whole MonsterManager is rebuilt on map change.
+     */
+    @Setter
+    private Supplier<List<BaseMonster>> monsterSupplier;
+
+    /** Throttles the AGGRESSIVE target scan, which walks the whole monster list. */
+    private float aggressiveScanTimer;
+
+    /**
+     * Invoked when the player dismisses the companion in conversation. The
+     * manager owns despawning, so the NPC only reports the request.
+     */
+    @Setter
+    private Runnable dismissRequestHandler;
+
     /** Remaining cooldown per spell entry, indexed like {@code def.getSpells()}. */
     private final float[] spellCooldowns;
+
+    /**
+     * Casting exhaustion, mirroring the player's: mental gates the next cast,
+     * physical roots the caster in place. Both are wall-clock deadlines fed by
+     * the spell's own exhaustion formulas, so a companion pays what a player pays.
+     */
+    private long mentalExhaustionUntilMs;
+    private long physicalExhaustionUntilMs;
 
     // Follow state: the player's recent positions, oldest first.
     private final Deque<Vector2> playerTrail = new ArrayDeque<>();
@@ -103,13 +131,63 @@ public class CompanionNPC extends BaseNPC {
         return parts.toArray();
     }
 
-    /** Targets the monster the player just attacked, ignoring redundant retargets. */
+    /**
+     * Targets the monster the player just attacked, ignoring redundant retargets.
+     * A passive companion refuses the order and keeps following.
+     */
     public void setCombatTarget(BaseMonster monster) {
-        if (monster == null || monster.isDead() || combatTarget == monster) {
+        if (mode == CompanionMode.PASSIVE
+                || monster == null || monster.isDead() || combatTarget == monster) {
             return;
         }
         combatTarget = monster;
         clearPlannedPath();
+    }
+
+    /** Switches behaviour, dropping the current fight when going passive. */
+    public void setMode(CompanionMode newMode) {
+        if (newMode == null || newMode == mode) {
+            return;
+        }
+        mode = newMode;
+        if (mode == CompanionMode.PASSIVE) {
+            combatTarget = null;
+            clearPlannedPath();
+        }
+        log.info("Companion {} switched to {} mode", getName(), mode);
+    }
+
+    /**
+     * Picks the closest attackable monster around the player, so an aggressive
+     * companion opens fights on its own. Scanning is throttled and anchored on
+     * the player rather than the companion, which keeps it from wandering off.
+     */
+    private void acquireAggressiveTarget(float delta, Vector2 playerPosition) {
+        aggressiveScanTimer -= delta;
+        if (aggressiveScanTimer > 0f || monsterSupplier == null) {
+            return;
+        }
+        aggressiveScanTimer = COMPANION_AGGRESSIVE_SCAN_INTERVAL;
+        List<BaseMonster> monsters = monsterSupplier.get();
+        if (monsters == null) {
+            return;
+        }
+        BaseMonster closest = null;
+        float closestDistance = Float.MAX_VALUE;
+        for (BaseMonster monster : monsters) {
+            if (monster == null || monster.isDead() || !monster.canBeAttackedByPlayer()) {
+                continue;
+            }
+            float distance = playerPosition.dst(monster.getPosition());
+            if (distance <= COMPANION_AGGRESSIVE_DETECTION_RANGE && distance < closestDistance) {
+                closest = monster;
+                closestDistance = distance;
+            }
+        }
+        if (closest != null) {
+            combatTarget = closest;
+            clearPlannedPath();
+        }
     }
 
     /**
@@ -145,12 +223,33 @@ public class CompanionNPC extends BaseNPC {
         for (int i = 0; i < spellCooldowns.length; i++) {
             if (spellCooldowns[i] > 0) spellCooldowns[i] -= delta;
         }
+        // Stand still and face the player while taking orders, otherwise the
+        // follow logic would walk it out of range and end its own conversation.
+        if (isInteracting) {
+            movement.stop();
+            movement.faceToward(position, playerPosition);
+            clearPlannedPath();
+            animations.update(delta, false);
+            return;
+        }
+
         recordPlayerTrail(delta, playerPosition);
 
-        // Healing outranks fighting: a dead companion helps nobody.
+        // Healing outranks fighting: a dead companion helps nobody. A passive
+        // companion still heals -- "do nothing" means "do not fight".
         if (castFirstReadySupportSpell()) {
             animations.update(delta, movement.isMoving());
             return;
+        }
+
+        if (mode == CompanionMode.PASSIVE) {
+            combatTarget = null;
+            updateFollow(delta, playerPosition);
+            animations.update(delta, movement.isMoving());
+            return;
+        }
+        if (mode == CompanionMode.AGGRESSIVE && !isValidTarget(combatTarget, playerPosition)) {
+            acquireAggressiveTarget(delta, playerPosition);
         }
 
         if (isValidTarget(combatTarget, playerPosition)) {
@@ -275,6 +374,9 @@ public class CompanionNPC extends BaseNPC {
      * against keeping the owner alive.
      */
     private boolean castFirstReadySupportSpell() {
+        if (isMentallyExhausted()) {
+            return false;
+        }
         CompanionDef.SpellEntry best = null;
         int bestIndex = -1;
         for (int i = 0; i < def.getSpells().size(); i++) {
@@ -309,29 +411,45 @@ public class CompanionNPC extends BaseNPC {
     private void castSupportSpell(CompanionDef.SpellEntry entry) {
         SpellData spell = SpellRegistry.findByName(entry.getSpellKey());
         int amount = entry.rollAmount(ThreadLocalRandom.current(), level);
-        animations.startAttack(movement.getCurrentAngle());
+        // No attack pose while casting: the puppet sheets only ship melee ("A")
+        // and bow ("B") sequences, so reusing one makes a spell look like a
+        // sword swing. The player casts the same way -- VFX only. Clearing is
+        // required because a finished melee swing holds its last frame until
+        // the companion moves again.
+        animations.clearAttackPose();
+        applyCastExhaustion(spell);
 
         if (entry.getTrigger() == CompanionSpellTrigger.HEAL_SELF) {
             currentHp = Math.min(maxHp, currentHp + amount);
             if (spell != null) {
-                CompanionCastVfxHook.playHeal(spell, position.x, position.y);
+                CompanionCastVfxHook.playSelfHeal(spell, position.x, position.y);
             }
             log.info("Companion {} heals itself for {} ({}/{})", getName(), amount, currentHp, maxHp);
             return;
         }
 
         if (owner != null) {
-            int before = owner.getCurrentHp();
-            owner.applyHeal(amount, amount);
-            int healed = owner.getCurrentHp() - before;
-            // applyHeal does not notify, so the floating heal number needs this.
-            if (healed > 0) owner.notifyHealing(healed);
-            if (spell != null) {
-                Vector2 ownerPosition = owner.getPositionVector();
-                CompanionCastVfxHook.playHeal(spell, ownerPosition.x, ownerPosition.y);
+            // The heal now travels to the owner, so it must land with the
+            // projectile rather than the instant the cast starts.
+            if (spell != null && CompanionCastVfxHook.playHeal(
+                    spell, owner, position, () -> applyOwnerHeal(amount))) {
+                return;
             }
-            log.info("Companion {} heals its owner for {}", getName(), healed);
+            applyOwnerHeal(amount);
         }
+    }
+
+    /** Restores owner health and shows the floating number; runs on projectile impact. */
+    private void applyOwnerHeal(int amount) {
+        if (owner == null) {
+            return;
+        }
+        int before = owner.getCurrentHp();
+        owner.applyHeal(amount, amount);
+        int healed = owner.getCurrentHp() - before;
+        // applyHeal does not notify, so the floating heal number needs this.
+        if (healed > 0) owner.notifyHealing(healed);
+        log.info("Companion {} heals its owner for {}", getName(), healed);
     }
 
     /**
@@ -339,6 +457,9 @@ public class CompanionNPC extends BaseNPC {
      * target. Returns false so the caller falls back to melee.
      */
     private boolean castFirstReadyAttackSpell(float distanceToTarget) {
+        if (isMentallyExhausted()) {
+            return false;
+        }
         CompanionDef.SpellEntry best = null;
         int bestIndex = -1;
         for (int i = 0; i < def.getSpells().size(); i++) {
@@ -365,7 +486,9 @@ public class CompanionNPC extends BaseNPC {
     private void castAttackSpell(CompanionDef.SpellEntry entry, BaseMonster monster) {
         SpellData spell = SpellRegistry.findByName(entry.getSpellKey());
         int damage = entry.rollAmount(ThreadLocalRandom.current(), level);
-        animations.startAttack(movement.getCurrentAngle());
+        // Casting shows no melee pose, and drops any held one; see castSupportSpell.
+        animations.clearAttackPose();
+        applyCastExhaustion(spell);
         // Casting draws aggro just like a melee blow does.
         monster.aggroOnCompanion(this);
 
@@ -378,6 +501,48 @@ public class CompanionNPC extends BaseNPC {
                 monster.getName(), damage);
     }
 
+    /** True while a previous cast still forbids casting again. */
+    private boolean isMentallyExhausted() {
+        return mentalExhaustionUntilMs > System.currentTimeMillis();
+    }
+
+    /** True while a cast still roots the companion in place. */
+    private boolean isPhysicallyExhausted() {
+        return physicalExhaustionUntilMs > System.currentTimeMillis();
+    }
+
+    /**
+     * Charges the spell's own exhaustion, evaluated against the companion's level
+     * exactly as {@link com.perso.T4C.spell.SpellCastingService} does for the player.
+     * A missing spell still costs a default beat, so an unknown key cannot turn
+     * into a free unlimited-cast loop.
+     */
+    private void applyCastExhaustion(SpellData spell) {
+        long mental = DEFAULT_CAST_MENTAL_EXHAUSTION_MS;
+        long physical = DEFAULT_CAST_PHYSICAL_EXHAUSTION_MS;
+        if (spell != null) {
+            DiceFormula.Context context = new DiceFormula.Context(
+                    0, 0, 0, 0, 0, 0, 0, Math.max(1, level));
+            mental = evaluateExhaustionMillis(spell.getMentalExhaustion(), context, mental);
+            physical = evaluateExhaustionMillis(spell.getPhysicalExhaustion(), context, physical);
+        }
+        long now = System.currentTimeMillis();
+        mentalExhaustionUntilMs = Math.max(mentalExhaustionUntilMs, now + mental);
+        physicalExhaustionUntilMs = Math.max(physicalExhaustionUntilMs, now + physical);
+        if (physical > 0L) {
+            movement.stop();
+            clearPlannedPath();
+        }
+    }
+
+    private static long evaluateExhaustionMillis(String formula, DiceFormula.Context context,
+                                                 long fallback) {
+        if (formula == null || formula.isBlank()) {
+            return fallback;
+        }
+        return Math.max(0L, DiceFormula.of(formula).evaluate(context));
+    }
+
     /** Applies spell damage, credited to the owner so kills still grant XP and loot. */
     private void applySpellDamage(BaseMonster monster, int damage) {
         if (dead || monster.isDead() || damage <= 0) {
@@ -388,6 +553,11 @@ public class CompanionNPC extends BaseNPC {
 
     /** Walks one frame toward the target along the planned path, stopping at walls. */
     private void stepToward(float delta, Vector2 target) {
+        // Rooted mid-cast, exactly like the player: you cannot walk and cast.
+        if (isPhysicallyExhausted()) {
+            movement.stop();
+            return;
+        }
         Vector2 moveTarget = nextPathWaypoint(target);
         if (moveTarget == null) {
             movement.stop();
@@ -487,5 +657,55 @@ public class CompanionNPC extends BaseNPC {
     @Override
     public void provoke() {
         // Intentionally inert.
+    }
+
+    /** Greets the player with its current stance and the orders it accepts. */
+    @Override
+    protected void onInteractStart(Player player) {
+        showDialog(I18n.message("message.companion_greeting",
+                I18n.message(modeMessageKey(mode))), 0L);
+    }
+
+    @Override
+    protected List<String> getDialogKeywords() {
+        List<String> keywords = new ArrayList<>(super.getDialogKeywords());
+        for (CompanionMode candidate : CompanionMode.values()) {
+            keywords.add(I18n.message(modeKeywordKey(candidate)));
+        }
+        keywords.add(I18n.message("companion.dismiss.keyword"));
+        return keywords;
+    }
+
+    @Override
+    protected boolean onDialogKeywordClick(String keyword, Player player) {
+        if (I18n.message("companion.dismiss.keyword").equalsIgnoreCase(keyword)) {
+            // Say goodbye through the shared feed rather than the head bubble:
+            // the bubble would disappear with the companion on the same frame.
+            SystemMessage.showShared(I18n.message("companion.dismiss.ack"));
+            if (dismissRequestHandler != null) {
+                dismissRequestHandler.run();
+            }
+            return true;
+        }
+        for (CompanionMode candidate : CompanionMode.values()) {
+            if (I18n.message(modeKeywordKey(candidate)).equalsIgnoreCase(keyword)) {
+                setMode(candidate);
+                showDialog(I18n.message(modeAcknowledgeKey(candidate)), 0L);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static String modeKeywordKey(CompanionMode mode) {
+        return "companion.mode." + mode.name().toLowerCase(java.util.Locale.ROOT) + ".keyword";
+    }
+
+    private static String modeMessageKey(CompanionMode mode) {
+        return "companion.mode." + mode.name().toLowerCase(java.util.Locale.ROOT) + ".current";
+    }
+
+    private static String modeAcknowledgeKey(CompanionMode mode) {
+        return "companion.mode." + mode.name().toLowerCase(java.util.Locale.ROOT) + ".ack";
     }
 }
