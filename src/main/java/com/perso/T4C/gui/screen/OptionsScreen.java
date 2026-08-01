@@ -61,9 +61,6 @@ public class OptionsScreen extends GuiScreenBase {
         labels.add(new GuiBoxedText(text, x + 267f, y + 265f, 96f, 23f,
                 () -> I18n.key("options.brightness"), () -> gold)
                 .align(GuiBoxedText.Align.LEFT).shrinkToFit());
-        labels.add(new GuiBoxedText(text, x + 267f, y + 235f, 116f, 23f,
-                () -> I18n.key("options.interface_opacity"), () -> gold)
-                .align(GuiBoxedText.Align.LEFT).shrinkToFit());
     }
 
     private void addLabel(com.badlogic.gdx.graphics.g2d.BitmapFont font, String key,
@@ -83,9 +80,6 @@ public class OptionsScreen extends GuiScreenBase {
         controls.add(new GuiSlider(track, thumb, x + 389f, y + 266f, 82f,
                 () -> (preferences.getBrightness() - 0.5f) / 0.75f,
                 value -> update(p -> p.setBrightness(0.5f + (float) value * 0.75f))));
-        controls.add(new GuiSlider(track, thumb, x + 389f, y + 236f, 82f,
-                () -> preferences.getOverlayPercentage() / 100f,
-                value -> update(p -> p.setOverlayPercentage((float) value * 100f))));
     }
 
     private void addCheckboxes() {

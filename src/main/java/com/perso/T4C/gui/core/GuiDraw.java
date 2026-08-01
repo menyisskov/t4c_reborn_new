@@ -3,7 +3,7 @@ package com.perso.T4C.gui.core;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.perso.T4C.config.GamePreferencesStore;
+import com.perso.T4C.config.GameConstants;
 
 public final class GuiDraw {
     private GuiDraw() {
@@ -28,9 +28,9 @@ public final class GuiDraw {
         return Math.max(0f, Math.min(1f, percentage / 100f));
     }
 
-    /** Current configured opacity for decorative in-game interface backgrounds. */
+    /** Constant opacity used by decorative in-game interface backgrounds. */
     public static float overlayAlpha() {
-        return percentageToAlpha(GamePreferencesStore.get().getOverlayPercentage());
+        return percentageToAlpha(GameConstants.OVERLAY_PERCENTAGE_DEFAULT);
     }
 
     /** Draws a flipped region using the interface opacity, then restores the batch tint. */

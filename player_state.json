@@ -1,6 +1,6 @@
 {
-  "x": 2871.0,
-  "y": 1085.0,
+  "x": 2935.0,
+  "y": 1066.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 51412,
+  "gold": 51585,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 23,
+  "currentHp": 37,
   "maxMana": 600,
-  "mana": 564,
+  "mana": 584,
   "level": 16,
-  "currentXp": 4558,
+  "currentXp": 5324,
   "xpToNextLevel": 16889,
   "statPoints": 505,
   "skillPoints": 500,
@@ -56,12 +56,28 @@
       "totalDurationSeconds": 9223372036854775807,
       "unlimited": true,
       "effects": []
+    },
+    {
+      "spellName": "${spell.light}",
+      "description": "${spell.description.light}",
+      "iconId": "64kSpellIconLightMain",
+      "remainingSeconds": 170,
+      "totalDurationSeconds": 600,
+      "unlimited": false,
+      "effects": [
+        {
+          "type": "ATTRIBUTE",
+          "attribute": "radiance",
+          "amount": "100"
+        }
+      ]
     }
   ],
   "inventory": [
     "item.ring_of_the_seraph",
     "item.seraph_plate",
-    "item.nm_dechuwins"
+    "item.nm_dechuwins",
+    "Potion of mana"
   ],
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
@@ -78,7 +94,9 @@
     "attack": 38,
     "archery": 47
   },
-  "itemCharges": {},
+  "itemCharges": {
+    "Potion of mana": 1
+  },
   "questFlags": {
     "quest.lighthaven_samaritan_rats.status": 2,
     "quest.lighthaven_samaritan_rats.kills": 10,

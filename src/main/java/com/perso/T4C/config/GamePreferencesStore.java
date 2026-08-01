@@ -56,17 +56,11 @@ public final class GamePreferencesStore {
         value.setMusicVolume(clamp01(value.getMusicVolume()));
         value.setEffectsVolume(clamp01(value.getEffectsVolume()));
         value.setBrightness(clamp(value.getBrightness(), 0.5f, 1.25f));
-        value.setOverlayPercentage(sanitizeOverlayPercentage(value.getOverlayPercentage()));
         return value;
     }
 
     private static float clamp01(float value) {
         return clamp(value, 0f, 1f);
-    }
-
-    private static float sanitizeOverlayPercentage(float value) {
-        if (!Float.isFinite(value)) return GameConstants.OVERLAY_PERCENTAGE_DEFAULT;
-        return clamp(value, 0f, 100f);
     }
 
     private static float clamp(float value, float min, float max) {
