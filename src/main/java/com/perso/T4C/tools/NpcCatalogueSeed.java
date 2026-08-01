@@ -114,7 +114,7 @@ public final class NpcCatalogueSeed {
         defs.add(catalogueNpc("Balork", "Balork"));
         defs.add(catalogueNpc("BrotherKiran", "Brother Kiran"));
         defs.add(catalogueNpc("DelvarIrongrip", "Delvar Irongrip"));
-        defs.add(catalogueNpc("Dragon", "DarkFang"));
+        defs.add(catalogueNpc("Darkfang", "DarkFang"));
         defs.add(catalogueNpc("Edgar", "Edgar Gimplestratten"));
         defs.add(catalogueNpc("ElmertMerkiss", "Elmert Merkiss"));
         defs.add(fali());
@@ -210,14 +210,28 @@ public final class NpcCatalogueSeed {
                 "npc.topic_keyword." + identity + ".1.0", "travail",
                 "npc.topic_keyword." + identity + ".1.1", "work"));
         return new NpcDef(name, displayName, appearanceFor(name),
-                null, 0, List.of(), "Bonjour, je suis " + displayName + ".", topics);
+                spriteBaseFor(name), 0, List.of(), "Bonjour, je suis " + displayName + ".", topics);
+    }
+
+    /**
+     * Monster-style single-sprite-family appearance for NPCs that aren't humanoid.
+     * Values come from the NPC's original appearance override in its .cpp source
+     * (e.g. Murmuntag.cpp sets {@code npc.appearance = __NPC_ORC}).
+     */
+    private static String spriteBaseFor(String name) {
+        return switch (name) {
+            case "Murmuntag" -> "Orc";
+            case "Darkfang" -> "DragonSTMOV";
+            case "Pig" -> "Pig";
+            default -> null;
+        };
     }
 
     /** Appearance names translated from MonsterStatSetup.cpp. */
     private static List<NpcDef.Part> appearanceFor(String name) {
         return switch (name) {
             case "Araknor" -> parts("PupNecromanRobe", "PupLeatherPants", "PupBlackLeatherBoots", "PupHornedHelmet");
-            case "Dragon", "Murmuntag", "Balork", "Pig" -> List.of();
+            case "Darkfang", "Murmuntag", "Balork", "Pig" -> List.of();
             case "DelvarIrongrip" -> parts("PupChainMailBody", "PupChainMailLegs", "PupPlateBoots", "PupChainMailCoif", "PupNormalSword", "PupRomanShield", "PupRedCape");
             case "Guardman" -> parts("PupChainMailBody", "PupChainMailLegs", "PupPlateBoots", "PupChainMailCoif", "PupNormalSword", "PupRomanShield", "PupRedCape");
             case "Markam", "Isulgur" -> parts("PupChainMailBody", "PupLeatherPants", "PupPlateBoots", "PupChainMailCoif");

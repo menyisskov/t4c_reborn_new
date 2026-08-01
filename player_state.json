@@ -1,6 +1,6 @@
 {
-  "x": 2919.0,
-  "y": 1052.0,
+  "x": 2846.0,
+  "y": 1116.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -52,7 +52,7 @@
       "spellName": "${spell.light}",
       "description": "${spell.description.light}",
       "iconId": "64kSpellIconLightMain",
-      "remainingSeconds": 435,
+      "remainingSeconds": 215,
       "totalDurationSeconds": 600,
       "unlimited": false,
       "effects": [
