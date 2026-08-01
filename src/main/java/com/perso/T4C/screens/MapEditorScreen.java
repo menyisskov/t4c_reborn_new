@@ -101,6 +101,7 @@ import com.perso.T4C.editor.ui.EditorPanelChrome;
 import com.perso.T4C.editor.ui.EditorTheme;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.render.ObjectMapping;
 import com.perso.T4C.render.ObjectMappings;
 import com.perso.T4C.objects.ObjectPos;
@@ -508,6 +509,10 @@ public class MapEditorScreen implements Screen {
     private MonsterTypeEntry selectedNpcType = null;
     private final List<MonsterSpawnEntry> npcSpawns = new ArrayList<>();
     private MonsterSpawnEntry selectedNpcSpawn = null;
+    private final Map<String, BaseMonster> monsterSpawnPreviews = new HashMap<>();
+    private final Map<String, BaseNPC> npcSpawnPreviews = new HashMap<>();
+    private final Set<String> unavailableMonsterSpawnPreviews = new HashSet<>();
+    private final Set<String> unavailableNpcSpawnPreviews = new HashSet<>();
     private boolean npcStaticPlacement = false;
     private com.badlogic.gdx.math.Rectangle npcStaticBounds = null;
     private boolean spawnContextOpen = false;
@@ -4997,6 +5002,11 @@ public class MapEditorScreen implements Screen {
         }
         teleportPreviewTextures.clear();
         teleportPreviewDimensions.clear();
+        for (BaseNPC npc : npcSpawnPreviews.values()) {
+            npc.dispose();
+        }
+        npcSpawnPreviews.clear();
+        monsterSpawnPreviews.clear();
 
         if (ownsBatch) {
             batch.dispose();
@@ -19119,17 +19129,13 @@ public class MapEditorScreen implements Screen {
         float cx = x + GameConstants.GRID_W * 0.5f;
         float markerPadding = 3f;
 
+        renderSpawnPreview(spawn, isNpc, cx, y + GameConstants.GRID_H * 0.5f);
+
         shapeRenderer.setProjectionMatrix(camera.combined);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(color);
-        shapeRenderer.rect(x + markerPadding, y + markerPadding,
-                GameConstants.GRID_W - markerPadding * 2f, GameConstants.GRID_H - markerPadding * 2f);
-        shapeRenderer.end();
-
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(selected ? Color.YELLOW : Color.BLACK);
+        shapeRenderer.setColor(selected ? Color.YELLOW : color);
         shapeRenderer.rect(x + markerPadding, y + markerPadding,
                 GameConstants.GRID_W - markerPadding * 2f, GameConstants.GRID_H - markerPadding * 2f);
         shapeRenderer.end();
@@ -19153,6 +19159,56 @@ public class MapEditorScreen implements Screen {
         uiBatch.end();
     }
 
+    /** Draws the exact idle/first animation frame used by the game at the spawn position. */
+    private void renderSpawnPreview(MonsterSpawnEntry spawn, boolean isNpc, float worldX, float worldY) {
+        if (spawn.type == null || spawn.type.isBlank()) {
+            return;
+        }
+        try {
+            batch.setProjectionMatrix(camera.combined);
+            batch.begin();
+            if (isNpc) {
+                BaseNPC npc = npcSpawnPreviews.get(spawn.type);
+                if (npc == null && !unavailableNpcSpawnPreviews.contains(spawn.type)) {
+                    NpcDef def = NpcRegistry.findByName(spawn.type);
+                    if (def != null) {
+                        npc = new DataNpc(def);
+                        npcSpawnPreviews.put(spawn.type, npc);
+                    } else {
+                        unavailableNpcSpawnPreviews.add(spawn.type);
+                    }
+                }
+                if (npc != null) {
+                    npc.getPosition().set(worldX, worldY);
+                    npc.getAnimations().render(batch, npc.getPosition(), "000", false,
+                            false, false, null, null, false);
+                }
+            } else {
+                BaseMonster monster = monsterSpawnPreviews.get(spawn.type);
+                if (monster == null && !unavailableMonsterSpawnPreviews.contains(spawn.type)) {
+                    MonsterDef def = MonsterRegistry.findByName(spawn.type);
+                    if (def != null) {
+                        monster = new DataMonster(def, worldX, worldY);
+                        monsterSpawnPreviews.put(spawn.type, monster);
+                    } else {
+                        unavailableMonsterSpawnPreviews.add(spawn.type);
+                    }
+                }
+                if (monster != null) {
+                    monster.getPosition().set(worldX, worldY);
+                    monster.render(batch, null);
+                }
+            }
+            batch.end();
+        } catch (Throwable e) {
+            if (batch.isDrawing()) {
+                batch.end();
+            }
+            (isNpc ? unavailableNpcSpawnPreviews : unavailableMonsterSpawnPreviews).add(spawn.type);
+            log.debug("Unable to render spawn preview for {}", spawn.type, e);
+        }
+    }
+
     /** Resolves a spawn's raw type/codeId (e.g. "Olin Haad Guard 3") to its player-facing displayName. */
     private String spawnDisplayName(String type, boolean isNpc) {
         if (type == null) {
@@ -19161,7 +19217,7 @@ public class MapEditorScreen implements Screen {
         String displayName = isNpc
                 ? (NpcRegistry.findByName(type) != null ? NpcRegistry.findByName(type).getDisplayName() : null)
                 : (MonsterRegistry.findByName(type) != null ? MonsterRegistry.findByName(type).getDisplayName() : null);
-        return displayName != null && !displayName.isEmpty() ? displayName : type;
+        return displayName != null && !displayName.isEmpty() ? I18n.resolve(displayName) : type;
     }
 
     private MonsterSpawnEntry findSpawnAt(List<MonsterSpawnEntry> spawns, int tileX, int tileY) {

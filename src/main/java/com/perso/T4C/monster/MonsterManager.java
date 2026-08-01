@@ -47,6 +47,9 @@ public class MonsterManager {
     /** Notified when a player attack fails to land, so the UI can float a miss/dodge label. */
     private java.util.function.BiConsumer<com.perso.T4C.combat.CombatResult, Vector2> attackMissedCallback;
     private java.util.function.BiConsumer<BaseMonster, com.perso.T4C.combat.CombatResult> playerAttackHitCallback;
+    /** Notified on every player attack attempt so an ally companion can join the fight. */
+    private java.util.function.Consumer<BaseMonster> companionAttackNotifyCallback;
+    private java.util.function.IntConsumer companionDamageCallback;
 
     /**
      * Create Monster manager.
@@ -81,6 +84,11 @@ public class MonsterManager {
         this.playerKillCallback = callback;
     }
 
+    /** Set the callback letting the player's companion target what the player attacks. */
+    public void setCompanionAttackNotifyCallback(java.util.function.Consumer<BaseMonster> callback) {
+        this.companionAttackNotifyCallback = callback;
+    }
+
     /** Invoked before primary damage when the player's physical attack successfully hits. */
     public void setPlayerAttackHitCallback(
             java.util.function.BiConsumer<BaseMonster, com.perso.T4C.combat.CombatResult> callback) {
@@ -113,6 +121,14 @@ public class MonsterManager {
         }
     }
 
+    /** Wires the callback applying monster blows landed on the ally companion. */
+    public void setCompanionDamageCallback(java.util.function.IntConsumer callback) {
+        this.companionDamageCallback = callback;
+        for (BaseMonster monster : monsters) {
+            monster.setCompanionDamageCallback(callback);
+        }
+    }
+
     public void setDeathCallback(java.util.function.Consumer<BaseMonster> callback) {
         deathCallback = callback;
         for (BaseMonster monster : monsters) monster.setDeathCallback(callback);
@@ -126,6 +142,9 @@ public class MonsterManager {
         // Set damage callback if available
         if (playerDamageCallback != null) {
             monster.setDamageCallback(playerDamageCallback);
+        }
+        if (companionDamageCallback != null) {
+            monster.setCompanionDamageCallback(companionDamageCallback);
         }
         if (deathCallback != null) monster.setDeathCallback(deathCallback);
         log.debug("Added Monster: {} at position ({}, {})",
@@ -340,6 +359,10 @@ public class MonsterManager {
         // Any attack attempt provokes retaliation, hit or miss (matches the original
         // client, where an attacked creature always fights back).
         monster.aggroOn(player.getPositionVector());
+        // The companion joins whatever fight the player picks, hit or miss.
+        if (companionAttackNotifyCallback != null) {
+            companionAttackNotifyCallback.accept(monster);
+        }
         int damage = result.damage();
         boolean wasDead = monster.isDead();
         int appliedPrimaryDamage = 0;

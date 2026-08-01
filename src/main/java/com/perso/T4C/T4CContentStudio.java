@@ -2,6 +2,7 @@ package com.perso.T4C;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.AppearanceDefaultsBinaryIO;
@@ -50,6 +51,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -801,20 +803,27 @@ public class T4CContentStudio {
             sendMethodNotAllowed(exchange);
             return;
         }
-        NpcSaveRequest request;
+        Map<String, Object> request;
         try {
-            request = gson.fromJson(readBody(exchange), NpcSaveRequest.class);
+            Type mapType = new TypeToken<Map<String, Object>>() { }.getType();
+            request = gson.fromJson(readBody(exchange), mapType);
         } catch (JsonSyntaxException e) {
             sendBadRequest(exchange, "Invalid JSON");
             return;
         }
-        NpcDef def = npcFromRequest(request);
+        NpcDef def;
+        try {
+            def = request == null ? null : npcFromMap(request);
+        } catch (DialogValidationException e) {
+            sendBadRequest(exchange, e.getMessage());
+            return;
+        }
         if (def == null) {
             sendBadRequest(exchange, "Invalid NPC definition");
             return;
         }
         List<NpcDef> defs = new ArrayList<>(NpcRegistry.load());
-        String oldName = request.oldName == null ? "" : request.oldName.trim();
+        String oldName = str(request.get("oldName")).trim();
         boolean updated = false;
         for (int i = 0; i < defs.size(); i++) {
             NpcDef existing = defs.get(i);
@@ -2318,38 +2327,6 @@ public class T4CContentStudio {
         return item;
     }
 
-    private NpcDef npcFromRequest(NpcSaveRequest request) {
-        if (request == null || request.name == null || request.name.trim().isEmpty()) {
-            return null;
-        }
-        List<NpcDef.Part> parts = new ArrayList<>();
-        if (request.parts != null) {
-            for (NpcPartRequest part : request.parts) {
-                if (part == null || part.spriteBase == null || part.spriteBase.trim().isEmpty()) {
-                    continue;
-                }
-                BodyPart bodyPart = parseEnum(BodyPart.class, part.bodyPart, BodyPart.BODY);
-                parts.add(new NpcDef.Part(bodyPart, part.spriteBase.trim()));
-            }
-        }
-        // The web editor has no flee-shout field yet, so it is carried over
-        // instead of letting an unrelated edit clear it. The dialogue graph is
-        // not reachable through this request type (see npcFromMap instead).
-        NpcDef existing = NpcRegistry.findByName(request.name.trim());
-        return new NpcDef(
-                request.name.trim(),
-                // Saved as sent: the editor round-trips the ${...} placeholder, and
-                // resolving here would bake display text back into npcs.bin.
-                trimToEmpty(request.displayName),
-                parts,
-                emptyToNull(request.spriteBase),
-                Math.max(0, request.patrolRadiusTiles),
-                existing == null ? List.of() : existing.getFleeShouts(),
-                existing == null ? "" : existing.getWelcomeText(),
-                existing == null ? List.of() : existing.getTopics()
-        );
-    }
-
     private NpcDef npcFromMap(Map<String, Object> item) {
         String name = str(item.get("name")).trim();
         if (name.isEmpty()) {
@@ -3278,30 +3255,10 @@ public class T4CContentStudio {
     }
 
     /**
-     * Request payload for creating or updating an NPC definition.
-     */
-    private static class NpcSaveRequest {
-        private String oldName;
-        private String name;
-        private String displayName;
-        private String spriteBase;
-        private int patrolRadiusTiles;
-        private List<NpcPartRequest> parts;
-    }
-
-    /**
      * Request payload for deleting an NPC definition.
      */
     private static class NpcDeleteRequest {
         private String name;
-    }
-
-    /**
-     * Represents a body part row in an NPC save request.
-     */
-    private static class NpcPartRequest {
-        private String bodyPart;
-        private String spriteBase;
     }
 
     /**

@@ -48,4 +48,21 @@ public final class CombatProfiles {
         int level = Math.max(1, npc.getLevel());
         return new CombatProfile(level, 10, 10, 10, 10, 10, 10, 0, false, false, true, Map.of());
     }
+
+    /**
+     * Ally companions need a profile that scales with their level: the flat
+     * {@link #fromNpc} kit lands almost no hit past the lowest-level targets,
+     * because monster dodge grows far faster than a fixed skill of 10.
+     * Values follow the monster progression in MonsterStatSetup (agility and
+     * attack track the level, dodge is roughly four times the level).
+     */
+    public static CombatProfile fromCompanion(BaseNPC companion) {
+        if (companion == null) throw new IllegalArgumentException("Companion is required");
+        int level = Math.max(1, companion.getLevel());
+        int agility = 14 + level;
+        int attack = agility + level;
+        int dodge = Math.max(1, level * 4);
+        return new CombatProfile(level, 10 + level, 10 + level, agility, attack, attack,
+                dodge, 0, false, false, true, Map.of());
+    }
 }

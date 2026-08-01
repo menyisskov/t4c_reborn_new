@@ -8,5 +8,6 @@ public enum ActionType {
     GIVE_ITEM,
     GIVE_QUEST,
     END_CONVERSATION,
-    HEAL
+    HEAL,
+    SUMMON_COMPANION
 }

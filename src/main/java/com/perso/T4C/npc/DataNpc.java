@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import static com.perso.T4C.config.GameConstants.GRID_W;
 import static com.perso.T4C.config.GameConstants.NPC_PATROL_RADIUS;
@@ -34,31 +35,31 @@ public class DataNpc extends BaseNPC {
             "strength", "dexterity", "endurance", "intelligence", "wisdom");
     private final NpcDef def;
     private final QuestService questService;
+    /**
+     * Resolved when the action runs, not at construction: NPCs are built while
+     * the map loads, before the companion manager exists.
+     */
+    private final Supplier<CompanionManager> companionManagerSupplier;
 
     public DataNpc(NpcDef def) throws GameException {
-        this(def, null);
+        this(def, null, null);
     }
 
     public DataNpc(NpcDef def, QuestService questService) throws GameException {
-        super(def.getName(), def.getSpriteBase(), buildParts(def));
+        this(def, questService, null);
+    }
+
+    public DataNpc(NpcDef def, QuestService questService,
+                   Supplier<CompanionManager> companionManagerSupplier) throws GameException {
+        super(def.getName(), def.getSpriteBase(), NpcPartsBuilder.fromDef(def));
         this.def = def;
         this.questService = questService;
+        this.companionManagerSupplier = companionManagerSupplier;
         if (def.getDisplayName() != null && !def.getDisplayName().isEmpty()) {
             String translatedName = I18n.resolve(def.getName());
             setDisplayName(translatedName.equals(def.getName())
                     ? I18n.resolve(def.getDisplayName()) : translatedName);
         }
-    }
-
-    private static Object[] buildParts(NpcDef def) {
-        List<Object> parts = new ArrayList<>();
-        for (NpcDef.Part part : def.getParts()) {
-            if (part != null && part.getBodyPart() != null) {
-                parts.add(part.getBodyPart());
-                parts.add(part.getSpriteBase());
-            }
-        }
-        return parts.toArray();
     }
 
     @Override
@@ -176,7 +177,26 @@ public class DataNpc extends BaseNPC {
             }
             case END_CONVERSATION -> endInteraction();
             case HEAL -> healFully(player);
+            case SUMMON_COMPANION -> summonCompanion(action, player);
         }
+    }
+
+    /**
+     * Spawns the ally companion named by the action target next to this NPC.
+     * The companion then follows the player and fights alongside them.
+     */
+    private void summonCompanion(NpcDef.Action action, Player player) {
+        CompanionManager companionManager =
+                companionManagerSupplier == null ? null : companionManagerSupplier.get();
+        if (companionManager == null) {
+            log.warn("NPC '{}' cannot execute SUMMON_COMPANION without a companion manager", def.getName());
+            return;
+        }
+        if (action.getTargets().isEmpty()) {
+            log.warn("NPC '{}' declares SUMMON_COMPANION without a companion type", def.getName());
+            return;
+        }
+        companionManager.spawnCompanionFor(player, action.getTargets().get(0), position);
     }
 
     private void healFully(Player player) {

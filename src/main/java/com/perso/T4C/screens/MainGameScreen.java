@@ -39,6 +39,8 @@ import com.perso.T4C.input.*;
 import com.perso.T4C.monster.BaseMonster;
 import com.perso.T4C.monster.MonsterManager;
 import com.perso.T4C.npc.BaseNPC;
+import com.perso.T4C.npc.CompanionManager;
+import com.perso.T4C.npc.CompanionNPC;
 import com.perso.T4C.npc.NPCManager;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.player.BodyPart;
@@ -131,6 +133,7 @@ public class MainGameScreen implements Screen {
     private ShaderProgram outlineShader;
     private NPCManager npcManager;
     private MonsterManager monsterManager;
+    private CompanionManager companionManager;
     private QuestService questService;
     private final com.perso.T4C.objects.GroundItemManager groundItemManager = new com.perso.T4C.objects.GroundItemManager();
     private final java.util.Random lootRandom = new java.util.Random();
@@ -240,6 +243,9 @@ public class MainGameScreen implements Screen {
 
         npcManager = createNpcManager();
         monsterManager = createMonsterManager();
+        companionManager = new CompanionManager(npcManager);
+        companionManager.setXpCurve(xpCurve);
+        npcManager.setCompanionManager(companionManager);
 
         configureCallbacks();
         registerReloadListener();
@@ -826,6 +832,16 @@ public class MainGameScreen implements Screen {
                 floatingDamage.spawn(damage, pos.x, pos.y, FloatingDamage.Type.MONSTER_RECEIVED));
         monsterManager.setAttackMissedCallback(this::showMissFeedback);
         monsterManager.setPlayerAttackHitCallback((target, result) -> handleSeraphAuraAttackHit());
+        monsterManager.setCompanionAttackNotifyCallback(monster -> {
+            if (companionManager != null) {
+                companionManager.onPlayerAttacked(monster);
+            }
+        });
+        monsterManager.setCompanionDamageCallback(damage -> {
+            if (companionManager != null) {
+                companionManager.damageCompanion(damage);
+            }
+        });
         monsterManager.setPlayerDamageCallback(new com.perso.T4C.monster.DamageCallback() {
             @Override
             public void applyDamage(BaseMonster attacker, int rawDamage) {
@@ -978,11 +994,22 @@ public class MainGameScreen implements Screen {
             }
             mapRenderer = createMapRenderer();
             inputHandler = new GameInputHandler(log, mapRenderer, player);
+            // The companion survives the transition, so detach it before dispose()
+            // frees every other NPC's sprites and re-add it on the new map.
+            CompanionNPC survivingCompanion = companionManager != null ? companionManager.getCompanion() : null;
             if (npcManager != null) {
+                if (survivingCompanion != null) {
+                    npcManager.removeNPC(survivingCompanion);
+                }
                 npcManager.dispose();
             }
             npcManager = createNpcManager();
             monsterManager = createMonsterManager();
+            if (companionManager != null) {
+                companionManager.setNpcManager(npcManager);
+                npcManager.setCompanionManager(companionManager);
+                companionManager.onMapChanged(player.getPositionVector());
+            }
             groundItemManager.setActiveWorld(z);
             configureMonsterDamageCallback();
             configureNpcDamageCallback();
@@ -1720,6 +1747,10 @@ public class MainGameScreen implements Screen {
         if (currentAttackTarget.isDead() || !currentAttackTarget.canBeAttackedByPlayer()) {
             clearCurrentAttackTarget();
             return;
+        }
+        // Covers bow and spell auto-attacks too, which never reach the melee funnel.
+        if (companionManager != null) {
+            companionManager.onPlayerAttacked(currentAttackTarget);
         }
         if (currentAttackSpell != null) {
             performAutoSpellTick();
@@ -3152,6 +3183,8 @@ public class MainGameScreen implements Screen {
         SystemMessage.setShared(systemMessage);
         SystemMessage.setChatSink(gameChat::addSystemMessage);
         com.perso.T4C.spell.NpcCastVfxHook.setShared(this::playNpcCastVfx);
+        com.perso.T4C.spell.CompanionCastVfxHook.setShared(
+                this::playCompanionAttackVfx, this::playCompanionHealVfx);
         mapZoneDisplay = new GuiMapZoneDisplay(I18n.key("zone.lighthaven"));
     }
 
@@ -3201,6 +3234,72 @@ public class MainGameScreen implements Screen {
         }
         if (!launched) {
             onImpact.run();
+        }
+    }
+
+    /**
+     * Same launch/impact cascade as {@link #playNpcCastVfx}, but travelling from
+     * the companion to the monster it is fighting. {@code onImpact} carries the
+     * companion's damage so it lands when the projectile arrives.
+     */
+    private void playCompanionAttackVfx(SpellData spell, BaseMonster target,
+                                        Vector2 casterPosition, Runnable onImpact) {
+        if (spell == null || target == null || onImpact == null) {
+            return;
+        }
+        spellRenderer.playLaunchSound(spell.getSound());
+        String impact = spell.getImpactSpell();
+        if (impact == null || impact.isEmpty()) {
+            impact = spell.getProjectileSpell();
+        }
+        final String impactEffect = impact;
+        Runnable impactRunnable = () -> {
+            onImpact.run();
+            spellRenderer.playImpactSound(spell.getSoundImpact());
+            if (impactEffect != null && !impactEffect.isEmpty()) {
+                Vector2 hitPosition = target.getPosition();
+                spellRenderer.triggerImpactSpell(impactEffect, hitPosition.x, hitPosition.y);
+            }
+        };
+
+        String projectileSpell = spell.getProjectileSpell();
+        if (projectileSpell == null || projectileSpell.isEmpty() || casterPosition == null) {
+            impactRunnable.run();
+            return;
+        }
+        Vector2 targetPosition = target.getPosition();
+        boolean launched = false;
+        if (spell.isLineOfSight()) {
+            ProjectileDirection direction = computeProjectileDirection(casterPosition, targetPosition);
+            launched = spellRenderer.launchProjectile(projectileSpell + direction.angle, target,
+                    casterPosition.x, casterPosition.y, direction.flipX, impactRunnable);
+            if (!launched) {
+                ProjectileDirection fallback = computeFlipFallbackDirection(casterPosition, targetPosition);
+                launched = spellRenderer.launchProjectile(projectileSpell + fallback.angle, target,
+                        casterPosition.x, casterPosition.y, fallback.flipX, impactRunnable);
+            }
+        }
+        if (!launched) {
+            launched = spellRenderer.launchProjectile(projectileSpell, target,
+                    casterPosition.x, casterPosition.y, false, impactRunnable);
+        }
+        if (!launched) {
+            impactRunnable.run();
+        }
+    }
+
+    /** Plays a companion heal's impact visuals at the healed target's position. */
+    private void playCompanionHealVfx(SpellData spell, float worldX, float worldY) {
+        if (spell == null) {
+            return;
+        }
+        spellRenderer.playLaunchSound(spell.getSound());
+        String impact = spell.getImpactSpell();
+        if (impact == null || impact.isEmpty()) {
+            impact = spell.getProjectileSpell();
+        }
+        if (impact != null && !impact.isEmpty()) {
+            spellRenderer.triggerImpactSpell(impact, worldX, worldY, spell.getSoundImpact());
         }
     }
 
@@ -3422,6 +3521,7 @@ public class MainGameScreen implements Screen {
         if (systemMessage != null) {
             SystemMessage.setShared(null);
             com.perso.T4C.spell.NpcCastVfxHook.setShared(null);
+            com.perso.T4C.spell.CompanionCastVfxHook.setShared(null, null);
             systemMessage.dispose();
         }
         if (gameChat != null) {

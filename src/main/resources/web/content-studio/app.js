@@ -46,6 +46,10 @@ const state = {
   dialogueSelectedNodeId: null,
 };
 
+// Keeps the persisted identity outside the editable object so renaming an NPC
+// can still update the original definition through the single-record API.
+const npcOriginalNames = new WeakMap();
+
 const sectionGroups = [
   {
     title: "Assets",
@@ -423,7 +427,7 @@ async function selectSection(id) {
   await withLoader(`Loading ${sectionConfig().label}...`, loadCurrent);
 }
 
-async function loadCurrent() {
+async function loadCurrent(preferredNpcName = "") {
   const config = sectionConfig();
   el.title.textContent = config.label;
   el.eyebrow.textContent = config.kind === "sprites" ? "Assets" : "Content";
@@ -458,10 +462,19 @@ async function loadCurrent() {
   } else {
     state.items = data.items || [];
   }
+  if (state.section === "npcs") {
+    state.items.forEach((item) => npcOriginalNames.set(item, String(item?.name || "")));
+  }
   if (state.section === "clanRelations") {
     state.clanOptions = (data.clans || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
   }
-  state.selectedIndex = state.items.length ? 0 : -1;
+  if (state.section === "npcs" && preferredNpcName) {
+    state.selectedIndex = state.items.findIndex((item) =>
+      String(item?.name || "").localeCompare(preferredNpcName, undefined, { sensitivity: "accent" }) === 0);
+  } else {
+    state.selectedIndex = state.items.length ? 0 : -1;
+  }
+  if (state.selectedIndex < 0 && state.items.length) state.selectedIndex = 0;
   renderList();
   renderEditor();
   setStatus(`Loaded ${state.items.length} record(s)`);
@@ -2951,11 +2964,12 @@ async function ensureSpriteIndex() {
 }
 
 async function renderEntityPreview(item) {
-  if (!["npcs", "monsters", "items", "spells", "itemIcons", "appearanceDefaults", "concealmentRules"].includes(state.section)) {
+  if (!["npcs", "monsters", "items", "spells", "itemIcons", "appearanceDefaults", "concealmentRules", "groundMosaics"].includes(state.section)) {
     el.entityPreview.classList.add("hidden");
     return;
   }
   el.entityPreview.classList.remove("hidden");
+  el.entityPreview.classList.toggle("mosaic-preview", state.section === "groundMosaics");
   el.entityPreviewImage.parentElement.classList.remove("hidden");
   el.entityPreviewImage.style.display = "none";
   el.entityPreviewComposite.classList.add("hidden");
@@ -2965,6 +2979,10 @@ async function renderEntityPreview(item) {
   el.entityPreviewHint.textContent = "";
   try {
     await ensureSpriteIndex();
+    if (state.section === "groundMosaics") {
+      renderGroundMosaicPreview(item);
+      return;
+    }
     if (state.section === "npcs" && Array.isArray(item.parts) && item.parts.length && !String(item.spriteBase || "").trim()) {
       await ensureNakedParts();
       renderNpcCompositePreview(item);
@@ -3326,11 +3344,19 @@ async function saveCurrent() {
     await saveSprite();
     return;
   }
+  const selectedBeforeSave = state.items[state.selectedIndex];
+  const oldNpcName = state.section === "npcs"
+    ? (npcOriginalNames.get(selectedBeforeSave) || "")
+    : "";
   const payload = currentPayloadItems();
-  await apiJson(endpointFor(config), {
+  const requestEndpoint = state.section === "npcs" ? "/api/npc-save" : endpointFor(config);
+  const requestPayload = state.section === "npcs"
+    ? { ...state.items[state.selectedIndex], oldName: oldNpcName }
+    : payload;
+  await apiJson(requestEndpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(requestPayload),
   });
   if (state.section === "appearanceDefaults") {
     // The NPC composite preview caches this table; drop it so it picks the new sprites up.
@@ -3345,7 +3371,69 @@ async function saveCurrent() {
   state.dirty = false;
   el.dirtyBadge.classList.add("hidden");
   toast("Saved");
-  await loadCurrent();
+  await loadCurrent(state.section === "npcs" ? String(requestPayload.name || "") : "");
+}
+
+function renderGroundMosaicPreview(item) {
+  const width = Math.max(0, Math.trunc(Number(item.width) || 0));
+  const height = Math.max(0, Math.trunc(Number(item.height) || 0));
+  const sourceFrames = String(item.frames || "").split(/\r?\n/)
+    .map((frame) => frame.trim()).filter(Boolean);
+  const isTemplate = sourceFrames.length === 1 && /&[xy]/.test(sourceFrames[0]);
+  const expected = width * height;
+
+  el.entityPreviewImage.style.display = "none";
+  el.entityPreviewComposite.replaceChildren();
+  el.entityPreviewComposite.classList.remove("hidden");
+  el.entityPreviewPlaceholder.style.display = "none";
+
+  if (!width || !height || (!isTemplate && sourceFrames.length !== expected)) {
+    el.entityPreviewComposite.classList.add("hidden");
+    el.entityPreviewPlaceholder.style.display = "block";
+    el.entityPreviewTitle.textContent = "Mosaïque incomplète";
+    el.entityPreviewHint.textContent = width && height
+      ? `${sourceFrames.length} sprite(s) fourni(s), ${expected} attendu(s).`
+      : "La largeur et la hauteur doivent être supérieures à zéro.";
+    return;
+  }
+
+  const tileWidth = 32;
+  const tileHeight = 16;
+  const previewWidth = width * tileWidth;
+  const previewHeight = height * tileHeight;
+  el.entityPreviewComposite.style.width = `${previewWidth}px`;
+  el.entityPreviewComposite.style.height = `${previewHeight}px`;
+  el.entityPreviewComposite.style.transform = "none";
+
+  let missing = 0;
+  for (let x = 0; x < width; x += 1) {
+    for (let y = 0; y < height; y += 1) {
+      const rawName = isTemplate
+        ? sourceFrames[0].replaceAll("&x", String(x + 1)).replaceAll("&y", String(y + 1))
+        : sourceFrames[x * height + y];
+      const sprite = resolvePreviewSprite([rawName]);
+      const cell = document.createElement(sprite ? "img" : "span");
+      cell.className = sprite ? "mosaic-preview-tile" : "mosaic-preview-missing";
+      cell.style.left = `${x * tileWidth}px`;
+      cell.style.top = `${y * tileHeight}px`;
+      cell.style.width = `${tileWidth}px`;
+      cell.style.height = `${tileHeight}px`;
+      cell.title = `${x + 1},${y + 1} — ${rawName}`;
+      if (sprite) {
+        cell.src = spriteImageUrl(sprite.name);
+        cell.alt = rawName;
+      } else {
+        cell.textContent = "?";
+        missing += 1;
+      }
+      el.entityPreviewComposite.appendChild(cell);
+    }
+  }
+
+  el.entityPreviewTitle.textContent = `Aperçu ${width} × ${height}`;
+  el.entityPreviewHint.textContent = isTemplate
+    ? `Modèle ${displayContentValue(sourceFrames[0])}${missing ? ` — ${missing} sprite(s) introuvable(s)` : ""}`
+    : `${sourceFrames.length} sprite(s), ordre X-major${missing ? ` — ${missing} introuvable(s)` : ""}`;
 }
 
 function newRecord() {

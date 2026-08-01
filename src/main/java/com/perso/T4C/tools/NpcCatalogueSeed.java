@@ -45,6 +45,8 @@ public final class NpcCatalogueSeed {
                                 List.of("spell.flaming_arrow")))
                 ))
         );
+        // Companions now live in their own catalogue (CompanionCatalogueSeed),
+        // so they are no longer NPC definitions.
         String moonrockWelcome = "Je suis Moonrock, prêtresse de ce temple. Si vos blessures vous accablent, je peux invoquer la grâce des dieux pour vous soigner.";
         I18n.update(Map.of(
                 "npc.moonrock", "Moonrock",
@@ -129,7 +131,7 @@ public final class NpcCatalogueSeed {
         defs.add(catalogueNpc("Markam", "Markam"));
         defs.add(catalogueNpc("MarnecSunim", "Marnec Sunim"));
         defs.add(catalogueNpc("Mithrand", "Mithrand"));
-        defs.add(catalogueNpc("Murmuntag", "Murmuntag", List.of("attack")));
+        defs.add(murmuntag());
         defs.add(ortanalas());
         defs.add(catalogueNpc("Pig", "A pig"));
         defs.add(rolph());
@@ -171,6 +173,31 @@ public final class NpcCatalogueSeed {
                 I18n.placeholder("npc.welcome.lighthavensamaritan"),
                 topics
         );
+    }
+
+    /**
+     * Murmuntag keeps its catalogue dialogue and gains an "aide" topic summoning
+     * the mage companion that fights alongside the player.
+     */
+    static NpcDef murmuntag() {
+        NpcDef base = catalogueNpc("Murmuntag", "Murmuntag", List.of("attack"));
+        String identity = I18n.normalizedKey(base.getName());
+        String helpResponse = "Les monstres pullulent dans ces terres. Un mage de ma connaissance "
+                + "va t'accompagner et combattre à tes côtés.";
+        int topicIndex = base.getTopics().size();
+        I18n.update(Map.of(
+                "npc.topic." + identity + "." + topicIndex, helpResponse,
+                "npc.topic_keyword." + identity + "." + topicIndex + ".0", "aide",
+                "npc.topic_keyword." + identity + "." + topicIndex + ".1", "aider"));
+
+        List<NpcDef.DialogTopic> topics = new ArrayList<>(base.getTopics());
+        topics.add(new NpcDef.DialogTopic(
+                List.of("aide", "aider"),
+                helpResponse,
+                List.of(new NpcDef.Action(ActionType.SUMMON_COMPANION, "mage_apprentice"))));
+        return new NpcDef(base.getName(), base.getDisplayName(), base.getParts(),
+                base.getSpriteBase(), base.getPatrolRadiusTiles(), base.getFleeShouts(),
+                base.getWelcomeText(), topics);
     }
 
     static NpcDef ortanalas() {

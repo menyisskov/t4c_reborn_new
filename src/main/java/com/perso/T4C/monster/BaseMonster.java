@@ -98,6 +98,12 @@ public abstract class BaseMonster implements Nameable {
     /** True when the player explicitly provoked this monster by attacking it. */
     protected boolean retaliatingAgainstPlayer = false;
     protected BaseMonster monsterAggroTarget = null;
+    /**
+     * Ally companion this monster fights instead of the player. Chasing reuses
+     * the player combat path (both are tracked through a live position vector);
+     * only the damage recipient differs.
+     */
+    protected com.perso.T4C.npc.CompanionNPC companionAggroTarget = null;
     private final Vector2 fallbackDir = new Vector2();
     private float fallbackTimer = 0f;
     private float stuckCooldown = 0f;
@@ -114,6 +120,9 @@ public abstract class BaseMonster implements Nameable {
 
     @Setter
     private DamageCallback damageCallback = null;
+    /** Applies a blow landed on the player's ally companion. */
+    @Setter
+    private java.util.function.IntConsumer companionDamageCallback = null;
     private java.util.function.Consumer<BaseMonster> deathCallback = null;
 
     // Interaction state
@@ -286,6 +295,7 @@ public abstract class BaseMonster implements Nameable {
             aggroTarget = null;
             retaliatingAgainstPlayer = false;
             monsterAggroTarget = null;
+            companionAggroTarget = null;
             patrolTarget = null;
             clearPlannedPath();
             movement.stop();
@@ -301,11 +311,27 @@ public abstract class BaseMonster implements Nameable {
         float distanceToPlayer = playerPosition == null ? Float.MAX_VALUE : position.dst(playerPosition);
         BaseMonster enemyTarget = findNearestEnemyMonster(nearbyMonsters);
 
+        if (companionAggroTarget != null && companionAggroTarget.isDead()) {
+            // The ally fell: drop back to the player as the natural next target.
+            companionAggroTarget = null;
+            aggroTarget = playerPosition;
+        }
+
         if (isAggro) {
             if (isValidMonsterTarget(monsterAggroTarget)) {
                 float distanceToMonster = position.dst(monsterAggroTarget.position);
                 if (distanceToMonster <= MONSTER_AGGRO_LEASH_RANGE) {
                     updateMonsterCombat(delta, monsterAggroTarget);
+                } else {
+                    loseAggroAndReturnHome();
+                    updatePatrol(delta);
+                }
+            } else if (isFightingCompanion()) {
+                // Chase and leash against the companion itself, not the player,
+                // otherwise the monster drifts toward a distant player mid-fight.
+                Vector2 companionPosition = companionAggroTarget.getPosition();
+                if (position.dst(companionPosition) <= playerAggroLeashRange()) {
+                    updateCombat(delta, companionPosition);
                 } else {
                     loseAggroAndReturnHome();
                     updatePatrol(delta);
@@ -800,6 +826,10 @@ public abstract class BaseMonster implements Nameable {
         float targetDistance = playerPosition == null ? Float.MAX_VALUE : position.dst(playerPosition);
         int damage = rollDamage(targetDistance);
         if (damage < 0) return;
+        if (isFightingCompanion()) {
+            performCompanionAttack(damage);
+            return;
+        }
         startAttackAnimation();
         if (damageCallback != null) {
             if (lastAttackSpellId > 0) {
@@ -808,6 +838,25 @@ public abstract class BaseMonster implements Nameable {
                 log.info("{} attacks for {} damage!", name, damage);
                 damageCallback.applyDamage(this, damage);
             }
+        }
+    }
+
+    /**
+     * Resolves one blow against the player's ally companion through the shared
+     * combat engine, reporting the outcome so the owning manager can despawn a
+     * dead companion.
+     */
+    private void performCompanionAttack(int rawDamage) {
+        com.perso.T4C.npc.CompanionNPC target = companionAggroTarget;
+        startAttackAnimation();
+        com.perso.T4C.combat.CombatResult result = com.perso.T4C.combat.CombatResolver.resolve(
+                new com.perso.T4C.combat.PhysicalAttackRequest(
+                        com.perso.T4C.combat.CombatProfiles.fromMonster(this),
+                        com.perso.T4C.combat.CombatProfiles.fromCompanion(target), rawDamage, 0, false), random);
+        log.info("{} attacks companion {}: hit={}, damage={}",
+                name, target.getName(), result.hit(), result.damage());
+        if (result.hit() && companionDamageCallback != null) {
+            companionDamageCallback.accept(result.damage());
         }
     }
 
@@ -1053,6 +1102,37 @@ public abstract class BaseMonster implements Nameable {
         aggroTarget = playerPosition;
         retaliatingAgainstPlayer = true;
         monsterAggroTarget = null;
+        companionAggroTarget = null;
+    }
+
+    /**
+     * Retaliation against the player's ally companion, so the companion is a real
+     * combatant that can draw and take hits rather than an untouchable damage
+     * source. Chasing reuses the player combat path via the companion's live
+     * position vector.
+     */
+    public void aggroOnCompanion(com.perso.T4C.npc.CompanionNPC companion) {
+        if (isDead || stationary || companion == null || companion.isDead()) {
+            return;
+        }
+        if (!isAggro || companionAggroTarget != companion) {
+            log.info("{} aggroed companion {}", name, companion.getName());
+            resetChaseNavigation();
+        }
+        isAggro = true;
+        aggroTarget = companion.getPosition();
+        retaliatingAgainstPlayer = true;
+        monsterAggroTarget = null;
+        companionAggroTarget = companion;
+    }
+
+    /** True while this monster is fighting the companion rather than the player. */
+    public boolean isFightingCompanion() {
+        return companionAggroTarget != null && !companionAggroTarget.isDead();
+    }
+
+    public com.perso.T4C.npc.CompanionNPC getCompanionAggroTarget() {
+        return companionAggroTarget;
     }
 
     private float playerAggroLeashRange() {
@@ -1064,6 +1144,7 @@ public abstract class BaseMonster implements Nameable {
         aggroTarget = null;
         retaliatingAgainstPlayer = false;
         monsterAggroTarget = null;
+        companionAggroTarget = null;
         attackCooldownTimer = 0f;
         clearAttackAnimationPose();
         isPaused = false;
@@ -1122,6 +1203,7 @@ public abstract class BaseMonster implements Nameable {
             aggroTarget = null;
             retaliatingAgainstPlayer = false;
             monsterAggroTarget = null;
+            companionAggroTarget = null;
             patrolTarget = null;
             clearPlannedPath();
             movement.stop();

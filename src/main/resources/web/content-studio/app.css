@@ -1030,6 +1030,52 @@ body {
   min-width: 120px;
 }
 
+.entity-preview.mosaic-preview {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.mosaic-preview .entity-preview-stage {
+  width: 100%;
+  height: auto;
+  min-height: 128px;
+  max-height: 420px;
+  padding: 16px;
+  overflow: auto;
+  place-items: start center;
+}
+
+.mosaic-preview .entity-preview-composite {
+  flex: 0 0 auto;
+  transform-origin: top left;
+  background-color: #111827;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 32px 16px;
+}
+
+.entity-preview-composite .mosaic-preview-tile,
+.entity-preview-composite .mosaic-preview-missing {
+  position: absolute;
+  display: block;
+  max-width: none;
+  max-height: none;
+}
+
+.entity-preview-composite .mosaic-preview-tile {
+  image-rendering: pixelated;
+  object-fit: fill;
+}
+
+.entity-preview-composite .mosaic-preview-missing {
+  color: #fca5a5;
+  border: 1px dashed #ef4444;
+  background: rgba(127, 29, 29, 0.45);
+  font: 700 10px/16px "JetBrains Mono", monospace;
+  text-align: center;
+}
+
 .dialogue-target-picker {
   flex: 0 0 100%;
   width: 100%;

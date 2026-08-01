@@ -34,6 +34,7 @@ public final class Paths {
     public static final String MONSTER_SPAWNS_BIN = "assets/spawns/monster_spawns.bin";
     public static final String ITEMS_BIN = "assets/items/items.bin";
     public static final String NPCS_BIN = "assets/npcs/npcs.bin";
+    public static final String COMPANIONS_BIN = "assets/companions/companions.bin";
     public static final String QUESTS_BIN = "assets/quests/quests.bin";
     public static final String NPC_SPAWNS_BIN = "assets/spawns/npc_spawns.bin";
     public static final String TELEPORTS_BIN = "assets/teleports/teleports.bin";

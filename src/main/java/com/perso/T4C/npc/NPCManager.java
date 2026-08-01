@@ -13,6 +13,7 @@ import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.ui.SystemMessage;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -31,6 +32,9 @@ public class NPCManager {
     private final ShaderProgram outlineShader;
     private final QuestService questService;
     private BaseNPC activeConversationNpc;
+    /** Set after construction: DataNpc needs it to run SUMMON_COMPANION actions. */
+    @Setter
+    private CompanionManager companionManager;
 
     /**
      * Create NPC manager.
@@ -51,6 +55,18 @@ public class NPCManager {
         npcs.add(npc);
         npc.setDamageCallback(playerDamageCallback);
         log.info("Added NPC: {} at position ({}, {})", npc.getName(), npc.getTileX(), npc.getTileY());
+    }
+
+    /** Removes a single NPC from the world (companion dismissal, death). */
+    public void removeNPC(BaseNPC npc) {
+        if (npc == null) {
+            return;
+        }
+        if (activeConversationNpc == npc) {
+            npc.endInteraction();
+            activeConversationNpc = null;
+        }
+        npcs.remove(npc);
     }
 
     private NpcDamageCallback playerDamageCallback;
@@ -76,7 +92,7 @@ public class NPCManager {
             return false;
         }
         try {
-            BaseNPC npc = new DataNpc(def, questService);
+            BaseNPC npc = new DataNpc(def, questService, () -> companionManager);
             npc.setSpawnPosition(worldX, worldY);
             addNPC(npc);
             return true;
@@ -239,6 +255,10 @@ public class NPCManager {
         if (npc == null) {
             return false;
         }
+        if (npc instanceof CompanionNPC) {
+            // The player's own ally is never a valid attack target.
+            return false;
+        }
         if (systemMessage != null) {
             systemMessage.show(I18n.message("message.attack_npc",  I18n.resolve(npc.getName())));
         }
@@ -247,7 +267,7 @@ public class NPCManager {
     }
 
     public void onNpcAttacked(BaseNPC npc) {
-        if (npc == null || !npcs.contains(npc)) {
+        if (npc == null || !npcs.contains(npc) || npc instanceof CompanionNPC) {
             return;
         }
         if (activeConversationNpc == npc) {
@@ -364,7 +384,7 @@ public class NPCManager {
                     continue;
                 }
                 try {
-                    BaseNPC npc = new DataNpc(def, questService);
+                    BaseNPC npc = new DataNpc(def, questService, () -> companionManager);
                     npc.setSpawnPosition(entry.x * GRID_W, entry.y * GRID_H);
                     npc.setStationary(entry.stationary);
                     addNPC(npc);

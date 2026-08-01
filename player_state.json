@@ -1,6 +1,6 @@
 {
-  "x": 2846.0,
-  "y": 1116.0,
+  "x": 2850.0,
+  "y": 1122.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 51071,
+  "gold": 51085,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 68,
+  "currentHp": 66,
   "maxMana": 600,
-  "mana": 544,
+  "mana": 541,
   "level": 16,
-  "currentXp": 1337,
+  "currentXp": 1439,
   "xpToNextLevel": 16889,
   "statPoints": 505,
   "skillPoints": 500,
@@ -47,23 +47,7 @@
       "spell": "spell.spell_lesser_drain"
     }
   ],
-  "activeBuffs": [
-    {
-      "spellName": "${spell.light}",
-      "description": "${spell.description.light}",
-      "iconId": "64kSpellIconLightMain",
-      "remainingSeconds": 215,
-      "totalDurationSeconds": 600,
-      "unlimited": false,
-      "effects": [
-        {
-          "type": "ATTRIBUTE",
-          "attribute": "radiance",
-          "amount": "100"
-        }
-      ]
-    }
-  ],
+  "activeBuffs": [],
   "inventory": [
     "item.gem_of_destiny",
     "item.potion_of_mana",
