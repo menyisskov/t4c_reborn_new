@@ -13,6 +13,9 @@ public class GameConstants {
     // Launches the game in fullscreen mode when enabled.
     public static final boolean FULLSCREEN = false;
 
+    // Default opacity percentage used by in-game screen and HUD backgrounds.
+    public static final float OVERLAY_PERCENTAGE_DEFAULT = 85f;
+
     // Width of one map tile in world pixels.
     public static final int GRID_W = 32;
 

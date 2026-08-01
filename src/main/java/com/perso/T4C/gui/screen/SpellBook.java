@@ -122,8 +122,10 @@ public class SpellBook extends GuiScreenBase {
         float rightY = y + 50f;
         Runnable prevPage = () -> turnPage(-1);
         Runnable nextPage = () -> turnPage(1);
-        animatedSprites.add(new GuiAnimatedSprite(leftFrames, leftX, leftY, FRAME_TIME, nextPage));
-        animatedSprites.add(new GuiAnimatedSprite(rightFrames, rightX, rightY, FRAME_TIME, prevPage));
+        animatedSprites.add(new GuiAnimatedSprite(leftFrames, leftX, leftY, FRAME_TIME, nextPage)
+                .withOverlayOpacity());
+        animatedSprites.add(new GuiAnimatedSprite(rightFrames, rightX, rightY, FRAME_TIME, prevPage)
+                .withOverlayOpacity());
     }
 
     private void addHeader() {

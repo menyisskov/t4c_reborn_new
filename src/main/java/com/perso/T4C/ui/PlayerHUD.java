@@ -17,6 +17,7 @@ import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiBoxedText;
 import com.perso.T4C.gui.widget.GuiBar;
 import com.perso.T4C.gui.core.GuiBoxedInteraction;
+import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiElement;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.item.ItemDefinition;
@@ -190,9 +191,11 @@ public class PlayerHUD {
 
     private void renderTopBar(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
-        drawTiled(batch, topBarBackground, 0f, 0f, screenWidth, TOP_BAR_HEIGHT);
-        drawTiled(batch, topBarBorder, 0f, TOP_BAR_HEIGHT - TOP_BAR_BORDER_HEIGHT,
-                screenWidth, TOP_BAR_BORDER_HEIGHT);
+        GuiDraw.withOverlayAlpha(batch, () -> {
+            drawTiled(batch, topBarBackground, 0f, 0f, screenWidth, TOP_BAR_HEIGHT);
+            drawTiled(batch, topBarBorder, 0f, TOP_BAR_HEIGHT - TOP_BAR_BORDER_HEIGHT,
+                    screenWidth, TOP_BAR_BORDER_HEIGHT);
+        });
     }
 
     private static void drawTiled(SpriteBatch batch, TextureRegion region, float x, float y,
@@ -398,7 +401,8 @@ public class PlayerHUD {
             if (buff == null) {
                 continue;
             }
-            batch.draw(buffBackground, x, y);
+            float backgroundY = y;
+            GuiDraw.withOverlayAlpha(batch, () -> batch.draw(buffBackground, x, backgroundY));
             renderBuffDurationBar(batch, buff, x, y);
             TextureRegion icon = resolveBuffIcon(buff);
             if (icon != null) {
@@ -588,7 +592,7 @@ public class PlayerHUD {
         for (ChatBarButtonItem item : chatBarButtons) {
             item.button.setPosition(chatBarButtonX(layout, item), chatBarButtonY(layout, item));
             item.button.setSize(40f * layout.scale, 40f * layout.scale);
-            item.button.render(batch);
+            GuiDraw.withOverlayAlpha(batch, () -> item.button.render(batch));
         }
     }
 

@@ -174,7 +174,7 @@ public final class QuestScreen extends GuiScreenBase {
 
     @Override
     public void render(SpriteBatch batch) {
-        if (background != null) GuiDraw.drawRegionFlipped(batch, background, x, y);
+        if (background != null) GuiDraw.drawOverlayRegionFlipped(batch, background, x, y);
         for (GuiElement element : orderedElements()) element.render(batch);
         updateRewardTooltip();
         rewardTooltip.render(batch);

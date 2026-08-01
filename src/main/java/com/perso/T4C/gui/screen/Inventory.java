@@ -159,11 +159,11 @@ public class Inventory extends GuiScreenBase {
     @Override
     public void render(SpriteBatch batch) {
         if (backgroundTop != null) {
-            GuiDraw.drawRegionFlipped(batch, backgroundTop, x, y);
+            GuiDraw.drawOverlayRegionFlipped(batch, backgroundTop, x, y);
         }
         if (backgroundBottom != null) {
             float topHeight = backgroundTop == null ? 0f : backgroundTop.getRegionHeight();
-            GuiDraw.drawRegionFlipped(batch, backgroundBottom, x, y + topHeight);
+            GuiDraw.drawOverlayRegionFlipped(batch, backgroundBottom, x, y + topHeight);
         }
         for (GuiAnimatedSprite sprite : animatedSprites) {
             sprite.render(batch);

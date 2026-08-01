@@ -24,6 +24,7 @@ public class GuiAnimatedSprite extends AbstractGuiElement implements GuiResizabl
     private Runnable onClick;
     private float zoneWidth;
     private float zoneHeight;
+    private boolean overlayOpacity;
 
     public GuiAnimatedSprite(List<TextureRegion> frames, float x, float y, float frameTime) {
         super(x, y);
@@ -40,6 +41,12 @@ public class GuiAnimatedSprite extends AbstractGuiElement implements GuiResizabl
     public GuiAnimatedSprite boxed(float width, float height) {
         this.zoneWidth = Math.max(1f, width);
         this.zoneHeight = Math.max(1f, height);
+        return this;
+    }
+
+    /** Applies the configured interface opacity when drawing this decorative sprite. */
+    public GuiAnimatedSprite withOverlayOpacity() {
+        this.overlayOpacity = true;
         return this;
     }
 
@@ -60,7 +67,11 @@ public class GuiAnimatedSprite extends AbstractGuiElement implements GuiResizabl
             dx = x + (zoneWidth - region.getRegionWidth()) / 2f;
             dy = y + (zoneHeight - region.getRegionHeight()) / 2f;
         }
-        GuiDraw.drawRegionFlipped(batch, region, dx, dy);
+        if (overlayOpacity) {
+            GuiDraw.drawOverlayRegionFlipped(batch, region, dx, dy);
+        } else {
+            GuiDraw.drawRegionFlipped(batch, region, dx, dy);
+        }
     }
 
     public void onMouseMove(float screenX, float screenY) {

@@ -190,11 +190,11 @@ public final class GameChat extends InputAdapter {
             // Text remains usable when the optional GUI sprites cannot be decoded.
         }
         if (left != null) {
-            GuiDraw.drawRegionFlipped(batch, left, x, y,
+            GuiDraw.drawOverlayRegionFlipped(batch, left, x, y,
                     LEFT_CAP_WIDTH * scale, BAR_HEIGHT * scale);
         }
         if (background != null) {
-            GuiDraw.drawRegionFlipped(batch, background, x + LEFT_CAP_WIDTH * scale, y,
+            GuiDraw.drawOverlayRegionFlipped(batch, background, x + LEFT_CAP_WIDTH * scale, y,
                     (BAR_WIDTH - LEFT_CAP_WIDTH) * scale, BAR_HEIGHT * scale);
         }
     }

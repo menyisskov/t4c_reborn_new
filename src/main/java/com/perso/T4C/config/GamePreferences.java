@@ -13,6 +13,7 @@ public class GamePreferences {
     private float musicVolume = 0.7f;
     private float effectsVolume = 1f;
     private float brightness = 1f;
+    private float overlayPercentage = GameConstants.OVERLAY_PERCENTAGE_DEFAULT;
     private boolean fullscreen = false;
     private boolean vSync = true;
     private boolean showHudValues = true;

@@ -54,7 +54,7 @@ public abstract class GuiScreenBase {
 
     public void render(SpriteBatch batch) {
         if (background != null) {
-            GuiDraw.drawRegionFlipped(batch, background, x, y);
+            GuiDraw.drawOverlayRegionFlipped(batch, background, x, y);
         }
         for (GuiElement element : orderedElements()) {
             element.render(batch);
