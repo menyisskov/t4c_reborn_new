@@ -1,20 +1,20 @@
 {
-  "x": 344.0,
-  "y": 670.0,
+  "x": 319.0,
+  "y": 654.0,
   "z": 0,
   "strength": 500,
   "dexterity": 500,
   "endurance": 500,
   "intelligence": 500,
   "wisdom": 500,
-  "gold": 52441,
+  "gold": 52825,
   "karma": 0,
-  "maxHp": 5000,
-  "currentHp": 4459,
-  "maxMana": 5000,
-  "mana": 5000,
+  "maxHp": 50000,
+  "currentHp": 49313,
+  "maxMana": 50000,
+  "mana": 49931,
   "level": 176,
-  "currentXp": 16337,
+  "currentXp": 29073,
   "xpToNextLevel": 1426259,
   "statPoints": 0,
   "skillPoints": 0,
@@ -33,14 +33,13 @@
     {
       "slot": 2,
       "spell": "spell.light"
+    },
+    {
+      "slot": 3,
+      "spell": "spell.flaming_arrow"
     }
   ],
   "activeBuffs": [
-    {
-      "spellName": "spell.light",
-      "remainingSeconds": 287,
-      "totalDurationSeconds": 600
-    },
     {
       "spellName": "spell.remort_aura",
       "remainingSeconds": 9223372036854775807,
@@ -54,8 +53,8 @@
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
     "RIGHT_HAND": "item.studded_leather_gloves",
-    "RING1": "item.ring_of_the_seraph",
     "BELT": "item.leather_belt",
+    "RING1": "item.ring_of_the_seraph",
     "BACK": "item.remort_white_wings",
     "WEAPON": "item.ashwood_reflex_bow",
     "BODY": "item.seraph_plate",
@@ -82,5 +81,5 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.019514
 }

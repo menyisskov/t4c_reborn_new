@@ -38,14 +38,13 @@ class T4CContentStudioCompanionTest {
         item.put("damageMax", 5);
         item.put("damagePerLevel", .4f);
         item.put("attackCooldown", 1.5f);
-        item.put("speed", 51.75f);
+        item.put("speed", 51.75f); // Legacy clients may still send it; it must be ignored.
         item.put("parts", List.of(part));
         item.put("spells", List.of(spell));
 
         CompanionDef result = new T4CContentStudio().companionFromMap(item, new LinkedHashMap<>());
 
         assertEquals("test_companion", result.getId());
-        assertEquals(51.75f, result.getSpeed());
         assertEquals("PupNecromanRobe", result.getParts().get(0).getSpriteBase());
         assertEquals(CompanionSpellTrigger.ATTACK, result.getSpells().get(0).getTrigger());
         assertEquals("spell.fire_dart", result.getSpells().get(0).getSpellKey());

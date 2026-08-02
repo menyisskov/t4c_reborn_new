@@ -1,5 +1,7 @@
 package com.perso.T4C.npc;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.combat.CombatProfiles;
 import com.perso.T4C.combat.CombatResolver;
@@ -12,6 +14,9 @@ import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.BaseMonster;
+import com.perso.T4C.monster.MonsterAnimations;
+import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.MonsterRegistry;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.CompanionCastVfxHook;
 import com.perso.T4C.spell.SpellData;
@@ -57,6 +62,8 @@ public class CompanionNPC extends BaseNPC {
     private final CompanionDef def;
     private final Player owner;
     private final XpCurve xpCurve;
+    /** Tamed beasts retain the complete walk/attack/death animation set of their species. */
+    private final MonsterAnimations monsterAnimations;
 
     /** Monster the companion is currently helping to fight; null while following. */
     private BaseMonster combatTarget;
@@ -125,6 +132,7 @@ public class CompanionNPC extends BaseNPC {
         this.def = def;
         this.owner = owner;
         this.xpCurve = xpCurve;
+        this.monsterAnimations = createMonsterAnimations(def);
         this.spellCooldowns = new float[def.getSpells().size()];
         if (def.getDisplayName() != null && !def.getDisplayName().isEmpty()) {
             setDisplayName(I18n.resolve(def.getDisplayName()));
@@ -133,6 +141,36 @@ public class CompanionNPC extends BaseNPC {
         this.level = owner != null ? Math.max(1, owner.getLevel()) : 1;
         this.maxHp = def.resolveMaxHp(this.level);
         this.currentHp = this.maxHp;
+    }
+
+    private static MonsterAnimations createMonsterAnimations(CompanionDef companionDef) throws GameException {
+        if (companionDef == null || !companionDef.getId().startsWith(TamedCompanionFactory.ID_PREFIX)) return null;
+        String species = companionDef.getId().substring(TamedCompanionFactory.ID_PREFIX.length());
+        MonsterDef monster = MonsterRegistry.findByName(species);
+        if (monster == null) return null;
+        return new MonsterAnimations(monster.getWalkPattern(), monster.getAttackPattern(), monster.getDeathPattern(),
+                monster.getSoundAttack(), monster.getSoundDeath());
+    }
+
+    private void updateVisualAnimations(float delta, boolean moving) {
+        if (monsterAnimations != null) monsterAnimations.update(delta, moving);
+        else animations.update(delta, moving);
+    }
+
+    private void startAttackAnimation() {
+        if (monsterAnimations != null) monsterAnimations.startAttack();
+        else animations.startAttack(movement.getCurrentAngle());
+    }
+
+    @Override
+    public void render(SpriteBatch batch, ShaderProgram outlineShader) {
+        if (monsterAnimations == null) {
+            super.render(batch, outlineShader);
+            return;
+        }
+        float healthPercent = maxHp <= 0 ? 0f : Math.max(0f, Math.min(1f, currentHp / (float) maxHp));
+        monsterAnimations.render(batch, position, movement.getCurrentAngle(), movement.isFlipX(),
+                movement.isMoving(), isHovered, outlineShader, healthPercent, getName(), isNameVisible());
     }
 
     /** Flattens the definition's parts into the (BodyPart, spriteBase, ...) form BaseNPC expects. */
@@ -223,7 +261,8 @@ public class CompanionNPC extends BaseNPC {
             dead = true;
             combatTarget = null;
             movement.stop();
-            animations.clearAttackPose();
+            if (monsterAnimations != null) monsterAnimations.clearAttackPose();
+            else animations.clearAttackPose();
             log.info("Companion {} was killed", getName());
             return true;
         }
@@ -233,7 +272,7 @@ public class CompanionNPC extends BaseNPC {
     @Override
     public void update(float delta, Vector2 playerPosition) {
         if (dead || playerPosition == null) {
-            animations.update(delta, false);
+            updateVisualAnimations(delta, false);
             return;
         }
 
@@ -249,7 +288,7 @@ public class CompanionNPC extends BaseNPC {
             movement.stop();
             movement.faceToward(position, playerPosition);
             clearPlannedPath();
-            animations.update(delta, false);
+            updateVisualAnimations(delta, false);
             return;
         }
 
@@ -258,14 +297,14 @@ public class CompanionNPC extends BaseNPC {
         // Healing outranks fighting: a dead companion helps nobody. A passive
         // companion still heals -- "do nothing" means "do not fight".
         if (castFirstReadySupportSpell()) {
-            animations.update(delta, movement.isMoving());
+            updateVisualAnimations(delta, movement.isMoving());
             return;
         }
 
         if (mode == CompanionMode.PASSIVE) {
             combatTarget = null;
             updateFollow(delta, playerPosition);
-            animations.update(delta, movement.isMoving());
+            updateVisualAnimations(delta, movement.isMoving());
             return;
         }
         if (mode == CompanionMode.AGGRESSIVE && !isValidTarget(combatTarget, playerPosition)) {
@@ -278,7 +317,7 @@ public class CompanionNPC extends BaseNPC {
             combatTarget = null;
             updateFollow(delta, playerPosition);
         }
-        animations.update(delta, movement.isMoving());
+        updateVisualAnimations(delta, movement.isMoving());
     }
 
     /**
@@ -363,7 +402,7 @@ public class CompanionNPC extends BaseNPC {
      * credited to the owner so kills still grant them XP and loot.
      */
     private void performCompanionAttack(BaseMonster monster) {
-        animations.startAttack(movement.getCurrentAngle());
+        startAttackAnimation();
         int levelBonus = Math.round(def.getDamagePerLevel() * (level - 1));
         int low = Math.min(def.getDamageMin(), def.getDamageMax());
         int high = Math.max(def.getDamageMin(), def.getDamageMax());
@@ -592,7 +631,9 @@ public class CompanionNPC extends BaseNPC {
         }
         float ndx = dx / distance;
         float ndy = dy / distance;
-        float step = Math.min(def.getSpeed() * delta, distance);
+        float ownerSpeed = com.perso.T4C.config.GameConstants.PLAYER_SPEED
+                * (owner == null ? 1f : owner.getEffectiveSpeedMultiplier());
+        float step = Math.min(ownerSpeed * delta, distance);
         float newX = position.x + ndx * step;
         float newY = position.y + ndy * step;
 

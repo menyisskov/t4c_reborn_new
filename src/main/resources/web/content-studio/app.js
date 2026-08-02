@@ -97,8 +97,8 @@ const sectionGroups = [
 
 const fields = {
   npcs: ["name", "displayName", "spriteBase", "patrolRadiusTiles:number"],
-  monsters: ["name", "displayName", "health:number", "mana:number", "xpPerHit:number", "xpOnDeath:number", "hitDamageMin:number", "hitDamageMax:number", "respawnTime:number", "walkPattern", "attackPattern", "deathPattern", "soundAttack", "soundDeath", "soundHit", "goldMin:number", "goldMax:number", "defaultAggressive:boolean", "animateWhileStationary:boolean", "stationaryAnimationPauseSeconds:number"],
-  companions: ["id", "displayName", "spriteBase", "baseHp:number", "hpPerLevel:number", "damageMin:number", "damageMax:number", "damagePerLevel:number", "attackCooldown:number", "speed:number"],
+  monsters: ["name", "displayName", "health:number", "mana:number", "xpPerHit:number", "xpOnDeath:number", "hitDamageMin:number", "hitDamageMax:number", "respawnTime:number", "walkPattern", "attackPattern", "deathPattern", "soundAttack", "soundDeath", "soundHit", "goldMin:number", "goldMax:number", "defaultAggressive:boolean", "tameable:boolean", "tameMaxLevel:number", "animateWhileStationary:boolean", "stationaryAnimationPauseSeconds:number"],
+  companions: ["id", "displayName", "spriteBase", "baseHp:number", "hpPerLevel:number", "damageMin:number", "damageMax:number", "damagePerLevel:number", "attackCooldown:number"],
   quests: ["id", "title", "giverNpc", "targetMonster", "requiredKills:number", "targetWorldZ:number", "areaCenterX:number", "areaCenterY:number", "areaRadiusTiles:number", "rewardGold:number", "rewardXp:number", "offerText:textarea", "completionText:textarea", "completedText:textarea"],
   items: ["key", "name", "bodyPart", "appearanceEquippedPrimary", "appearanceInventory", "price:number", "weight:number", "armorClass:number", "dodgeLost:number", "minEnd:number", "reqAttack:number", "reqStr:number", "reqAgi:number", "minInt:number", "minWis:number", "dmgFormula", "atkDelay", "attackSpeed:number", "unique:boolean", "bow:boolean", "unlimitedUse:boolean", "canSummon:boolean", "radiance:number", "nbCharges:number", "lockName", "lockDiff:number", "signText", "containerGold:number", "globalRespawn:number", "localRespawn:number"],
   spells: ["key", "name", "description:textarea", "manaCost", "price:number", "radius:number", "minInt:number", "minWis:number", "minLevel:number", "attack:boolean", "lineOfSight:boolean", "iconId", "projectileSpell", "impactSpell", "minDamage:number", "maxDamage:number", "sound", "soundImpact", "cooldownSeconds:number", "duration"],
@@ -183,6 +183,8 @@ const FIELD_META = {
   goldMin: ["Minimum gold", "Lowest gold amount dropped."],
   goldMax: ["Maximum gold", "Highest gold amount dropped."],
   defaultAggressive: ["Aggressive by default", "Whether this monster starts hostile without being provoked."],
+  tameable: ["Tameable", "Allows this monster species to be targeted by the Tame spell."],
+  tameMaxLevel: ["Tame level cap", "Highest monster level allowed for this species. It must be at least the monster's level; the caster must also reach that level."],
   animateWhileStationary: ["Idle animation", "Keeps animation playing even when the monster is not moving."],
   stationaryAnimationPauseSeconds: ["Idle pause", "Pause between stationary animation loops, in seconds."],
   bodyPart: ["Equipment slot", "Body slot where this item is equipped."],
@@ -982,6 +984,9 @@ function renderEditor() {
         renderEntityPreview(item);
         markDirty();
         renderList();
+        if (shouldRerenderForContext(name)) {
+          renderEditor();
+        }
       });
       el.formFields.appendChild(label);
       return;
@@ -1060,9 +1065,15 @@ function renderEditor() {
       label.appendChild(toggleLabel);
       input.addEventListener("change", () => {
         item[name] = input.checked;
+        if (state.section === "monsters" && name === "tameable" && input.checked && Number(item.tameMaxLevel || 0) <= 0) {
+          item.tameMaxLevel = Math.max(1, Number(item.level || 1));
+        }
         renderEntityPreview(item);
         markDirty();
         renderList();
+        if (shouldRerenderForContext(name)) {
+          renderEditor();
+        }
       });
       el.formFields.appendChild(label);
       return;
@@ -1166,6 +1177,9 @@ function shouldShowField(name, item) {
   if (state.section === "monsters" && name === "stationaryAnimationPauseSeconds") {
     return Boolean(item.animateWhileStationary);
   }
+  if (state.section === "monsters" && name === "tameMaxLevel") {
+    return Boolean(item.tameable);
+  }
   if (state.section === "spells" && ["lineOfSight", "projectileSpell"].includes(name)) {
     return Boolean(item.attack);
   }
@@ -1191,7 +1205,7 @@ function shouldShowComplexKey(key, item) {
 
 function shouldRerenderForContext(name) {
   return (state.section === "objects" && name === "clickAnimate")
-    || (state.section === "monsters" && name === "animateWhileStationary")
+    || (state.section === "monsters" && ["animateWhileStationary", "tameable"].includes(name))
     || (state.section === "spells" && name === "attack")
     || (state.section === "items" && ["bodyPart", "bow"].includes(name));
 }

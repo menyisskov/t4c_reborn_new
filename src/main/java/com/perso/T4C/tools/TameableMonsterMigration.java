@@ -10,7 +10,8 @@ public final class TameableMonsterMigration {
     private static final Map<String, Integer> SPECIES = Map.ofEntries(
             Map.entry("Brown Rat", 10), Map.entry("Wild Horse", 30),
             Map.entry("Cow", 20), Map.entry("Pig", 20), Map.entry("Unicorn", 50),
-            Map.entry("Pegasus", 60), Map.entry("Dromadary", 30));
+            Map.entry("Pegasus", 60), Map.entry("Dromadary", 30),
+            Map.entry("Pack Wolf", 40));
     private TameableMonsterMigration() {}
 
     public static List<MonsterDef> migrate(List<MonsterDef> defs) {

@@ -78,6 +78,8 @@ import com.perso.T4C.gui.screen.OptionsScreen;
 import com.perso.T4C.gui.screen.QuestScreen;
 import com.perso.T4C.gui.screen.MapScreen;
 import com.perso.T4C.gui.widget.GuiMapZoneDisplay;
+import com.perso.T4C.gui.widget.GuiBar;
+import com.perso.T4C.gui.widget.GuiImage;
 import com.perso.T4C.ui.FloatingDamage;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.GameChat;
@@ -174,6 +176,8 @@ public class MainGameScreen implements Screen {
     private TameChannel tameChannel;
     private BaseMonster tameTarget;
     private SpellRenderer.ChannelHandle tameChannelVfx;
+    private GuiBar tameProgressBar;
+    private GuiImage tameProgressFrame;
     private int selectedTargetedSlot;
     private static final long BUFF_DOUBLE_CLICK_MILLIS = 350L;
     private String lastClickedBuffSpellName;
@@ -267,7 +271,16 @@ public class MainGameScreen implements Screen {
 
         configureCallbacks();
         restorePersistedCompanion();
+        initializeTameProgressGui();
         registerReloadListener();
+    }
+
+    private void initializeTameProgressGui() throws GameException {
+        tameProgressBar = new GuiBar(null, spriteLoader.getRegionFromSpriteName("GUI_BackChStat_XP"),
+                0f, 0f, 314f, 12f,
+                () -> tameChannel == null ? 0f : tameChannel.getProgress());
+        tameProgressFrame = new GuiImage(spriteLoader.getRegionFromSpriteName("64kTameProgressFrame"),
+                0f, 0f, 360f, 26f);
     }
 
     /**
@@ -2490,18 +2503,17 @@ public class MainGameScreen implements Screen {
     }
 
     private void renderTameProgress() {
-        if (tameChannel == null) return;
+        if (tameChannel == null || tameProgressBar == null || tameProgressFrame == null) return;
         updateHudCamera();
-        float width = 320f, height = 18f;
-        float x = (hudCamera.viewportWidth - width) * .5f;
+        float x = (hudCamera.viewportWidth - tameProgressFrame.getWidth()) * .5f;
         float y = hudCamera.viewportHeight * .72f;
-        debugShapeRenderer.setProjectionMatrix(hudCamera.combined);
-        debugShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        debugShapeRenderer.setColor(.08f, .08f, .08f, .9f);
-        debugShapeRenderer.rect(x, y, width, height);
-        debugShapeRenderer.setColor(.25f, .75f, .25f, 1f);
-        debugShapeRenderer.rect(x + 2f, y + 2f, (width - 4f) * tameChannel.getProgress(), height - 4f);
-        debugShapeRenderer.end();
+        tameProgressBar.setPosition(x + 23f, y + 7f);
+        tameProgressFrame.setPosition(x, y);
+        batch.setProjectionMatrix(hudCamera.combined);
+        batch.begin();
+        tameProgressFrame.render(batch);
+        tameProgressBar.render(batch);
+        batch.end();
     }
 
     /** Applies the user brightness to the world, before the HUD and options are drawn. */

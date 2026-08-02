@@ -27,13 +27,11 @@ public final class CompanionDef {
     private final int damageMax;
     private final float damagePerLevel;
     private final float attackCooldown;
-    /** Melee reach and follow speed, in world units. */
-    private final float speed;
     private final List<SpellEntry> spells;
 
     public CompanionDef(String id, String displayName, List<Part> parts, String spriteBase,
                         int baseHp, float hpPerLevel, int damageMin, int damageMax,
-                        float damagePerLevel, float attackCooldown, float speed,
+                        float damagePerLevel, float attackCooldown,
                         List<SpellEntry> spells) {
         this.id = id;
         this.displayName = displayName;
@@ -45,7 +43,6 @@ public final class CompanionDef {
         this.damageMax = damageMax;
         this.damagePerLevel = damagePerLevel;
         this.attackCooldown = attackCooldown;
-        this.speed = speed;
         this.spells = List.copyOf(spells == null ? List.of() : spells);
     }
 

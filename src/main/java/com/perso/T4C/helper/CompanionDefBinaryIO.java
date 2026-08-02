@@ -61,7 +61,7 @@ public final class CompanionDefBinaryIO {
         int damageMax = BinaryIOUtils.readIntLE(in);
         float damagePerLevel = readFloat(in);
         float attackCooldown = readFloat(in);
-        float speed = readFloat(in);
+        readFloat(in); // Legacy per-companion speed; all companions now use PLAYER_SPEED.
 
         int spellCount = checkedCount(BinaryIOUtils.readIntLE(in), "spell");
         List<CompanionDef.SpellEntry> spells = new ArrayList<>(spellCount);
@@ -69,7 +69,7 @@ public final class CompanionDefBinaryIO {
             spells.add(readSpell(in));
         }
         return new CompanionDef(id, displayName, parts, spriteBase, baseHp, hpPerLevel,
-                damageMin, damageMax, damagePerLevel, attackCooldown, speed, spells);
+                damageMin, damageMax, damagePerLevel, attackCooldown, spells);
     }
 
     private static CompanionDef.SpellEntry readSpell(DataInputStream in) throws IOException, GameException {
@@ -110,7 +110,8 @@ public final class CompanionDefBinaryIO {
         BinaryIOUtils.writeIntLE(out, def.getDamageMax());
         writeFloat(out, def.getDamagePerLevel());
         writeFloat(out, def.getAttackCooldown());
-        writeFloat(out, def.getSpeed());
+        // Preserve the v1 binary layout while making the legacy value non-configurable.
+        writeFloat(out, com.perso.T4C.config.GameConstants.PLAYER_SPEED);
 
         BinaryIOUtils.writeIntLE(out, def.getSpells().size());
         for (CompanionDef.SpellEntry spell : def.getSpells()) {

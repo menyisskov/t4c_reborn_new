@@ -7,7 +7,6 @@ import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.MonsterRegistry;
 import java.util.ArrayList;
 import java.util.List;
-import static com.perso.T4C.config.GameConstants.MONSTER_SPEED;
 
 /** Reproducibly converts authored monster species into runtime companions. */
 public final class TamedCompanionFactory {
@@ -21,7 +20,7 @@ public final class TamedCompanionFactory {
 
     public static CompanionDef fromMonster(MonsterDef def) {
         if (def == null) return null;
-        String sprite = def.getWalkPattern();
+        String sprite = companionSpriteBase(def.getWalkPattern());
         List<CompanionDef.Part> parts = sprite == null || sprite.isBlank() ? paperdoll(def) : List.of();
         int min = def.getHitDamageMin(), max = def.getHitDamageMax();
         if ((min <= 0 || max <= 0) && def.getAttacks() != null && !def.getAttacks().isEmpty()) {
@@ -30,7 +29,19 @@ public final class TamedCompanionFactory {
         }
         return new CompanionDef(ID_PREFIX + def.getName(), def.getDisplayName(), parts, sprite,
                 Math.max(1, def.getHealth()), Math.max(1f, def.getHealth() * .10f),
-                Math.max(0, min), Math.max(min, max), 0f, 1.5f, MONSTER_SPEED, List.of());
+                Math.max(0, min), Math.max(min, max), 0f, 1.5f, List.of());
+    }
+
+    /**
+     * Monster patterns carry a frame terminator (for example {@code Wolf#i}),
+     * while the NPC renderer used by companions expects only the directional
+     * sprite base ({@code Wolf}).
+     */
+    static String companionSpriteBase(String walkPattern) {
+        if (walkPattern == null || walkPattern.isBlank()) return walkPattern;
+        String value = walkPattern.trim();
+        int marker = value.indexOf('#');
+        return marker > 0 ? value.substring(0, marker) : value;
     }
 
     private static List<CompanionDef.Part> paperdoll(MonsterDef def) {

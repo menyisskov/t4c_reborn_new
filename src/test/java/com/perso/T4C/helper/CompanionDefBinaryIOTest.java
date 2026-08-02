@@ -30,7 +30,6 @@ class CompanionDefBinaryIOTest {
                 6,
                 0.5f,
                 1.2f,
-                3.5f,
                 List.of(new CompanionDef.SpellEntry("bite", CompanionSpellTrigger.ATTACK, 1,
                         2.0f, 0.0f, 3, 8, 0.2f, 1.0f))
         );

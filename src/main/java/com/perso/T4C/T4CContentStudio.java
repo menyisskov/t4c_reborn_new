@@ -1698,7 +1698,6 @@ public class T4CContentStudio {
         item.put("damageMax", def.getDamageMax());
         item.put("damagePerLevel", def.getDamagePerLevel());
         item.put("attackCooldown", def.getAttackCooldown());
-        item.put("speed", def.getSpeed());
         item.put("parts", def.getParts().stream().map(part -> {
             Map<String, Object> value = new LinkedHashMap<>();
             value.put("bodyPart", part.getBodyPart().name());
@@ -1759,7 +1758,7 @@ public class T4CContentStudio {
                 emptyToNull(str(item.get("spriteBase"))), integer(item.get("baseHp"), 1),
                 flt(item.get("hpPerLevel"), 0f), integer(item.get("damageMin"), 0),
                 integer(item.get("damageMax"), 0), flt(item.get("damagePerLevel"), 0f),
-                flt(item.get("attackCooldown"), 1f), flt(item.get("speed"), 0f), spells);
+                flt(item.get("attackCooldown"), 1f), spells);
     }
 
     private Map<String, Object> xpCurveEntryToMap(XpCurve.Entry entry) {

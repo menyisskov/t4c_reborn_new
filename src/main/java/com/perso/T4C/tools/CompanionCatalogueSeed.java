@@ -37,7 +37,6 @@ public final class CompanionCatalogueSeed {
                 35, 6f,          // hp: 35 at level 1, +6 per level
                 2, 5, 0.4f,      // weak melee, it is a caster
                 1.5f,            // attack cooldown
-                51.75f,          // speed (NPC_SPEED * 1.15)
                 List.of(
                         // Healing outranks damage so the pair survives long fights.
                         new CompanionDef.SpellEntry("spell.heal_light", CompanionSpellTrigger.HEAL_OWNER,
@@ -64,7 +63,6 @@ public final class CompanionCatalogueSeed {
                 70, 12f,
                 5, 11, 1.0f,
                 1.3f,
-                51.75f,
                 List.of(new CompanionDef.SpellEntry("spell.heal_light", CompanionSpellTrigger.HEAL_SELF,
                         20, 20f, 0.35f, 8, 14, 0.8f, 0f)));
 
