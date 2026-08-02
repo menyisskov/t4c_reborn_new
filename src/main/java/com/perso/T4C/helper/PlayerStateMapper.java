@@ -3,6 +3,7 @@ package com.perso.T4C.helper;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.spell.SpellEffectManager;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.combat.SeraphAuraService;
 
@@ -33,7 +34,6 @@ public final class PlayerStateMapper {
         state.endurance = player.getEndurance();
         state.intelligence = player.getIntelligence();
         state.wisdom = player.getWisdom();
-        state.armorClass = player.getArmorClass();
         state.gold = player.getGold();
         state.karma = player.getKarma();
         state.maxHp = player.getBaseMaxHp();
@@ -71,7 +71,6 @@ public final class PlayerStateMapper {
         player.setEndurance(state.endurance);
         player.setIntelligence(state.intelligence);
         player.setWisdom(state.wisdom);
-        player.setArmorClass(state.armorClass);
         player.setGold(state.gold);
         player.setKarma(state.karma);
         player.setMaxHp(state.maxHp);
@@ -146,25 +145,32 @@ public final class PlayerStateMapper {
             Integer durationSeconds = unlimited || restoredDuration > Integer.MAX_VALUE
                     ? null
                     : (int) restoredDuration;
-            SpellData spell = SpellRegistry.findByName(buff.spellName);
+            boolean seraphAura = SeraphAuraService.AURA_NAME.equals(buff.spellName)
+                    || "Remort aura".equals(buff.spellName);
+            SpellData spell = seraphAura ? null : SpellRegistry.findByName(buff.spellName);
             String description;
             String iconId;
+            String runtimeSpellName = buff.spellName;
             List<SpellData.SpellEffect> effects;
             if (spell != null) {
+                runtimeSpellName = spell.getName();
                 description = spell.getDescription();
                 iconId = spell.getIconId();
-                effects = spell.getBuff() == null || spell.getBuff().getEffects() == null
-                        ? List.of() : spell.getBuff().getEffects();
-            } else if (SeraphAuraService.AURA_NAME.equals(buff.spellName)) {
+                effects = new SpellEffectManager().resolvePlayerBuffEffects(spell, player);
+                if (effects.isEmpty() && spell.getBuff() != null && spell.getBuff().getEffects() != null) {
+                    effects = spell.getBuff().getEffects();
+                }
+            } else if (seraphAura) {
+                runtimeSpellName = SeraphAuraService.AURA_NAME;
                 description = SeraphAuraService.AURA_DESCRIPTION;
                 iconId = SeraphAuraService.AURA_ICON;
                 effects = List.of();
             } else {
                 continue;
             }
-            player.applyBuff(buff.spellName, description, iconId, durationSeconds, unlimited, effects);
+            player.applyBuff(runtimeSpellName, description, iconId, durationSeconds, unlimited, effects);
             if (!unlimited && buff.remainingSeconds < restoredDuration) {
-                player.adjustBuffRemaining(buff.spellName, buff.remainingSeconds);
+                player.adjustBuffRemaining(runtimeSpellName, buff.remainingSeconds);
             }
         }
     }

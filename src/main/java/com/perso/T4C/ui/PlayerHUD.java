@@ -940,10 +940,13 @@ public class PlayerHUD {
 
     private String buildBuffTooltipText(Player.ActiveBuff buff) {
         String description = I18n.resolve(buff.getDescription());
+        String spellDisplayName = I18n.has(buff.getSpellName())
+                ? I18n.key(buff.getSpellName())
+                : I18n.resolve(buff.getSpellName());
         if (description == null || description.isEmpty()) {
-            description = I18n.resolve(buff.getSpellName());
+            description = spellDisplayName;
         } else if (!description.contains(":")) {
-            description = I18n.resolve(buff.getSpellName()) + ": " + description;
+            description = spellDisplayName + ": " + description;
         }
         while (description.endsWith(".")) {
             description = description.substring(0, description.length() - 1);

@@ -643,7 +643,10 @@ public abstract class BaseNPC extends Stats implements Nameable {
         StringBuilder builder = new StringBuilder();
         for (int i = start; i < end; i++) {
             if (builder.length() > 0) {
-                builder.append('\n');
+                // dialogLines are soft-wrapped for pagination. Do not turn
+                // those pagination boundaries into forced visual line breaks:
+                // NameRenderer wraps the page using the actual font metrics.
+                builder.append(' ');
             }
             builder.append(dialogLines.get(i));
         }

@@ -21,7 +21,6 @@ public class PlayerStateDto {
     public int endurance;
     public int intelligence;
     public int wisdom;
-    public int armorClass;
     public int gold;
     public int karma;
     public int maxHp;

@@ -1,24 +1,23 @@
 {
-  "x": 2850.0,
-  "y": 1107.0,
+  "x": 344.0,
+  "y": 670.0,
   "z": 0,
-  "strength": 50,
-  "dexterity": 50,
-  "endurance": 50,
-  "intelligence": 50,
-  "wisdom": 50,
-  "armorClass": 0,
-  "gold": 51792,
+  "strength": 500,
+  "dexterity": 500,
+  "endurance": 500,
+  "intelligence": 500,
+  "wisdom": 500,
+  "gold": 52441,
   "karma": 0,
-  "maxHp": 71,
-  "currentHp": 71,
-  "maxMana": 600,
-  "mana": 560,
-  "level": 16,
-  "currentXp": 6096,
-  "xpToNextLevel": 16889,
-  "statPoints": 505,
-  "skillPoints": 500,
+  "maxHp": 5000,
+  "currentHp": 4459,
+  "maxMana": 5000,
+  "mana": 5000,
+  "level": 176,
+  "currentXp": 16337,
+  "xpToNextLevel": 1426259,
+  "statPoints": 0,
+  "skillPoints": 0,
   "rebirthCount": 1,
   "spells": [
     "spell.flaming_arrow",
@@ -38,23 +37,17 @@
   ],
   "activeBuffs": [
     {
+      "spellName": "spell.light",
+      "remainingSeconds": 287,
+      "totalDurationSeconds": 600
+    },
+    {
       "spellName": "spell.remort_aura",
       "remainingSeconds": 9223372036854775807,
       "totalDurationSeconds": 9223372036854775807
-    },
-    {
-      "spellName": "spell.light",
-      "remainingSeconds": 299,
-      "totalDurationSeconds": 600
-    },
-    {
-      "spellName": "spell.light",
-      "remainingSeconds": 600,
-      "totalDurationSeconds": 600
     }
   ],
   "inventory": [
-    "item.seraph_plate",
     "item.nm_dechuwins",
     "Potion of mana"
   ],
@@ -65,14 +58,15 @@
     "BELT": "item.leather_belt",
     "BACK": "item.remort_white_wings",
     "WEAPON": "item.ashwood_reflex_bow",
+    "BODY": "item.seraph_plate",
     "LEFT_HAND": "item.studded_leather_gloves"
   },
   "skills": {
-    "powerful_blow": 52,
-    "dodge": 15,
+    "powerful_blow": 500,
+    "dodge": 500,
     "stun_blow": 500,
-    "attack": 38,
-    "archery": 47
+    "attack": 500,
+    "archery": 500
   },
   "itemCharges": {
     "Potion of mana": 1
@@ -88,12 +82,5 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.009315,
-  "companion": {
-    "speciesName": "mage_apprentice",
-    "tamed": false,
-    "level": 16,
-    "currentHp": 125,
-    "mode": "AGGRESSIVE"
-  }
+  "dayNightHour": 7.0
 }

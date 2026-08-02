@@ -39,6 +39,7 @@ const state = {
   actionTypeOptions: [],
   questIdOptions: [],
   questFlagNameOptions: [],
+  companionOptions: [],
   dialogueEditorOptionsLoaded: false,
   dialogueEditorOptionsLoading: false,
   dialogueLayout: {},
@@ -66,6 +67,7 @@ const sectionGroups = [
     items: [
       { id: "npcs", label: "NPC Editor", endpoint: "/api/npcs", key: "displayName", subtitle: "name" },
       { id: "monsters", label: "Monster Editor", endpoint: "/api/monsters", key: "name", subtitle: "displayName" },
+      { id: "companions", label: "Companion Editor", endpoint: "/api/companions", key: "id", subtitle: "displayName" },
       { id: "quests", label: "Quest Editor", endpoint: "/api/quests", key: "id", subtitle: "title" },
       { id: "items", label: "Item Editor", endpoint: "/api/items", key: "key", subtitle: "name" },
       { id: "spells", label: "Spell Editor", endpoint: "/api/spells", key: "key", subtitle: "name" },
@@ -96,6 +98,7 @@ const sectionGroups = [
 const fields = {
   npcs: ["name", "displayName", "spriteBase", "patrolRadiusTiles:number"],
   monsters: ["name", "displayName", "health:number", "mana:number", "xpPerHit:number", "xpOnDeath:number", "hitDamageMin:number", "hitDamageMax:number", "respawnTime:number", "walkPattern", "attackPattern", "deathPattern", "soundAttack", "soundDeath", "soundHit", "goldMin:number", "goldMax:number", "defaultAggressive:boolean", "animateWhileStationary:boolean", "stationaryAnimationPauseSeconds:number"],
+  companions: ["id", "displayName", "spriteBase", "baseHp:number", "hpPerLevel:number", "damageMin:number", "damageMax:number", "damagePerLevel:number", "attackCooldown:number", "speed:number"],
   quests: ["id", "title", "giverNpc", "targetMonster", "requiredKills:number", "targetWorldZ:number", "areaCenterX:number", "areaCenterY:number", "areaRadiusTiles:number", "rewardGold:number", "rewardXp:number", "offerText:textarea", "completionText:textarea", "completedText:textarea"],
   items: ["key", "name", "bodyPart", "appearanceEquippedPrimary", "appearanceInventory", "price:number", "weight:number", "armorClass:number", "dodgeLost:number", "minEnd:number", "reqAttack:number", "reqStr:number", "reqAgi:number", "minInt:number", "minWis:number", "dmgFormula", "atkDelay", "attackSpeed:number", "unique:boolean", "bow:boolean", "unlimitedUse:boolean", "canSummon:boolean", "radiance:number", "nbCharges:number", "lockName", "lockDiff:number", "signText", "containerGold:number", "globalRespawn:number", "localRespawn:number"],
   spells: ["key", "name", "description:textarea", "manaCost", "price:number", "radius:number", "minInt:number", "minWis:number", "minLevel:number", "attack:boolean", "lineOfSight:boolean", "iconId", "projectileSpell", "impactSpell", "minDamage:number", "maxDamage:number", "sound", "soundImpact", "cooldownSeconds:number", "duration"],
@@ -158,6 +161,13 @@ const FIELD_META = {
   spriteBase: ["Sprite base", "Animation base used to resolve directional sprite frames."],
   patrolRadiusTiles: ["Patrol radius", "How far this NPC can wander from spawn, in tiles. 0 uses the engine default."],
   health: ["Health", "Maximum hit points."],
+  baseHp: ["Base health", "Maximum health at level 1."],
+  hpPerLevel: ["Health per level", "Health added for every level after level 1."],
+  damageMin: ["Minimum damage", "Lowest base melee damage."],
+  damageMax: ["Maximum damage", "Highest base melee damage."],
+  damagePerLevel: ["Damage per level", "Melee or spell damage added for every level after level 1."],
+  attackCooldown: ["Attack cooldown", "Delay between melee attacks, in seconds."],
+  speed: ["Movement speed", "Walking speed in world pixels per second."],
   mana: ["Mana", "Maximum mana points."],
   xpPerHit: ["XP per hit", "Experience granted when the monster is hit."],
   xpOnDeath: ["XP on death", "Experience granted when the monster dies."],
@@ -903,9 +913,9 @@ function renderEditor() {
       }
     });
   }
-  if (state.section === "npcs" && !state.animatedSpriteBaseOptions.length) {
+  if (["npcs", "companions"].includes(state.section) && !state.animatedSpriteBaseOptions.length) {
     ensureAnimatedSpriteBaseOptions().then(() => {
-      if (state.section === "npcs" && state.items[state.selectedIndex] === item) {
+      if (["npcs", "companions"].includes(state.section) && state.items[state.selectedIndex] === item) {
         renderEditor();
       }
     });
@@ -991,7 +1001,7 @@ function renderEditor() {
       el.formFields.appendChild(label);
       return;
     }
-    if (state.section === "npcs" && name === "spriteBase") {
+    if (["npcs", "companions"].includes(state.section) && name === "spriteBase") {
       label.appendChild(createSpriteDropdown(item, name));
       el.formFields.appendChild(label);
       return;
@@ -1165,7 +1175,7 @@ function shouldShowField(name, item) {
   if (state.section === "items" && name === "attackSpeed") {
     return item.bodyPart === "WEAPON" || Boolean(item.bow);
   }
-  if (state.section === "npcs" && name === "spriteBase") {
+  if (["npcs", "companions"].includes(state.section) && name === "spriteBase") {
     return !Array.isArray(item.parts) || item.parts.length === 0;
   }
   return true;
@@ -1538,6 +1548,7 @@ function renderSimpleDialogueAction(item, topic, action, index) {
       GIVE_QUEST: "Give quest",
       END_CONVERSATION: "End conversation",
       HEAL: "Heal player",
+      SUMMON_COMPANION: "Summon Companion",
     })[value] || value;
     option.selected = value === action.type;
     type.appendChild(option);
@@ -1550,14 +1561,19 @@ function renderSimpleDialogueAction(item, topic, action, index) {
   const choices = action.type === "OPEN_SPELL_LEARNING" ? state.spellNameOptions
     : action.type === "OPEN_SKILL_LEARNING" ? state.trainableStatIdOptions
       : ["OPEN_SHOP", "GIVE_ITEM"].includes(action.type) ? state.itemKeyOptions
-        : action.type === "GIVE_QUEST" ? state.questIdOptions : null;
-  if (choices && ["GIVE_ITEM", "GIVE_QUEST"].includes(action.type)) {
+        : action.type === "GIVE_QUEST" ? state.questIdOptions
+          : action.type === "SUMMON_COMPANION" ? state.companionOptions.map((entry) => entry.id) : null;
+  if (choices && ["GIVE_ITEM", "GIVE_QUEST", "SUMMON_COMPANION"].includes(action.type)) {
     const select = document.createElement("select");
     select.className = "form-control form-control-sm";
     ["", ...choices].forEach((value) => {
       const option = document.createElement("option");
       option.value = value;
-      option.textContent = value || (action.type === "GIVE_QUEST" ? "(quest)" : "(item)");
+      const companion = state.companionOptions.find((entry) => entry.id === value);
+      option.textContent = companion
+        ? `${companion.displayName} (${companion.id})`
+        : value || (action.type === "GIVE_QUEST" ? "(quest)"
+          : action.type === "SUMMON_COMPANION" ? "(companion)" : "(item)");
       option.selected = value === (action.targets || [])[0];
       select.appendChild(option);
     });
@@ -1818,6 +1834,9 @@ async function ensureDialogueEditorOptions() {
   }
   if (!state.spellNameOptions.length) {
     state.spellNameOptions = (data.spells || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
+  }
+  if (!state.companionOptions.length) {
+    state.companionOptions = (data.companions || []).filter((entry) => entry && entry.id);
   }
   if (state.editorTab === "dialogue") renderEditor();
 }
@@ -2944,7 +2963,7 @@ function spriteLookupValue(value, fieldName) {
 
 function spriteDropdownOptions(fieldName) {
   if (state.section === "monsters") return state.monsterPatternOptions;
-  if (state.section === "npcs") return state.animatedSpriteBaseOptions;
+  if (["npcs", "companions"].includes(state.section)) return state.animatedSpriteBaseOptions;
   if (["objects", "decorRules", "itemIcons", "appearanceDefaults"].includes(state.section)) return state.itemSpriteOptions;
   if (state.section === "items" && fieldName === "appearanceEquippedPrimary") return state.itemEquippedSpriteOptions;
   if (state.section === "items") return state.itemSpriteOptions;
@@ -2964,7 +2983,7 @@ async function ensureSpriteIndex() {
 }
 
 async function renderEntityPreview(item) {
-  if (!["npcs", "monsters", "items", "spells", "itemIcons", "appearanceDefaults", "concealmentRules", "groundMosaics"].includes(state.section)) {
+  if (!["npcs", "companions", "monsters", "items", "spells", "itemIcons", "appearanceDefaults", "concealmentRules", "groundMosaics"].includes(state.section)) {
     el.entityPreview.classList.add("hidden");
     return;
   }
@@ -2983,7 +3002,7 @@ async function renderEntityPreview(item) {
       renderGroundMosaicPreview(item);
       return;
     }
-    if (state.section === "npcs" && Array.isArray(item.parts) && item.parts.length && !String(item.spriteBase || "").trim()) {
+    if (["npcs", "companions"].includes(state.section) && Array.isArray(item.parts) && item.parts.length && !String(item.spriteBase || "").trim()) {
       await ensureNakedParts();
       renderNpcCompositePreview(item);
       return;
@@ -3201,7 +3220,7 @@ function preloadSpriteImage(spriteName) {
 }
 
 function previewCandidates(item) {
-  if (state.section === "npcs") {
+  if (["npcs", "companions"].includes(state.section)) {
     const partSprite = Array.isArray(item.parts) && item.parts.length ? item.parts[0]?.spriteBase : "";
     return [item.spriteBase, partSprite];
   }
@@ -3444,6 +3463,10 @@ function newRecord() {
     const [name, type = "text"] = descriptor.split(":");
     item[name] = type === "number" ? 0 : type === "boolean" ? false : "";
   });
+  if (state.section === "companions") {
+    item.parts = [];
+    item.spells = [];
+  }
   if (config.key && item[config.key] === "") item[config.key] = `New${state.items.length + 1}`;
   applySelectedMapZ(item);
   state.items.push(item);

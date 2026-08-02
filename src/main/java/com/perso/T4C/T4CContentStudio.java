@@ -30,6 +30,9 @@ import com.perso.T4C.monster.MonsterClan;
 import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.MonsterRegistry;
 import com.perso.T4C.npc.ActionType;
+import com.perso.T4C.npc.CompanionDef;
+import com.perso.T4C.npc.CompanionRegistry;
+import com.perso.T4C.npc.CompanionSpellTrigger;
 import com.perso.T4C.npc.NpcDef;
 import com.perso.T4C.npc.NpcRegistry;
 import com.perso.T4C.objects.ObjectPos;
@@ -120,6 +123,7 @@ public class T4CContentStudio {
         server.createContext("/api/npc-reload", this::handleNpcReload);
         server.createContext("/api/maps", this::handleMaps);
         server.createContext("/api/monsters", this::handleMonsters);
+        server.createContext("/api/companions", this::handleCompanions);
         server.createContext("/api/quests", this::handleQuests);
         server.createContext("/api/items", this::handleItems);
         server.createContext("/api/spells", this::handleSpells);
@@ -771,6 +775,14 @@ public class T4CContentStudio {
                 "strength", "dexterity", "endurance", "intelligence", "wisdom"
         ));
         response.put("actionTypes", Arrays.stream(ActionType.values()).map(Enum::name).toList());
+        response.put("companions", CompanionRegistry.load().stream()
+                .filter(Objects::nonNull)
+                .filter(def -> def.getId() != null && !def.getId().isBlank())
+                .sorted(Comparator.comparing(CompanionDef::getId, String.CASE_INSENSITIVE_ORDER))
+                .map(def -> Map.of(
+                        "id", def.getId(),
+                        "displayName", I18n.resolve(def.getDisplayName())))
+                .toList());
         response.put("questIds", QuestRegistry.load().stream()
                 .filter(Objects::nonNull)
                 .map(QuestDef::getId)
@@ -929,6 +941,41 @@ public class T4CContentStudio {
                     .toList();
             MonsterRegistry.save(defs);
             writeSaved(exchange, defs.size());
+            return;
+        }
+        sendMethodNotAllowed(exchange);
+    }
+
+    private void handleCompanions(HttpExchange exchange) throws IOException {
+        if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+            List<Map<String, Object>> items = CompanionRegistry.load().stream()
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(CompanionDef::getId, String.CASE_INSENSITIVE_ORDER))
+                    .map(this::companionToMap)
+                    .toList();
+            writeCollection(exchange, items);
+            return;
+        }
+        if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            try {
+                List<Map<String, Object>> items = readItemsPayload(exchange);
+                Set<String> ids = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+                Map<String, String> catalogueUpdates = new LinkedHashMap<>();
+                List<CompanionDef> definitions = new ArrayList<>();
+                for (Map<String, Object> item : items) {
+                    CompanionDef definition = companionFromMap(item, catalogueUpdates);
+                    if (!ids.add(definition.getId())) {
+                        throw new DialogValidationException("Duplicate companion id '" + definition.getId() + "'");
+                    }
+                    definitions.add(definition);
+                }
+                definitions.sort(Comparator.comparing(CompanionDef::getId, String.CASE_INSENSITIVE_ORDER));
+                if (!catalogueUpdates.isEmpty()) I18n.update(catalogueUpdates);
+                CompanionRegistry.save(definitions);
+                writeSaved(exchange, definitions.size());
+            } catch (DialogValidationException e) {
+                sendBadRequest(exchange, e.getMessage());
+            }
             return;
         }
         sendMethodNotAllowed(exchange);
@@ -1638,6 +1685,81 @@ public class T4CContentStudio {
                 integer(item.get("aggro"), bool(item.get("defaultAggressive"), true) ? 50 : 0),
                 integer(item.get("clan"), 0), integer(item.get("speed"), 0), bool(item.get("canAttack"), true),
                 new java.util.ArrayList<>(), bool(item.get("tameable"), false), integer(item.get("tameMaxLevel"), 0));
+    }
+
+    private Map<String, Object> companionToMap(CompanionDef def) {
+        Map<String, Object> item = new LinkedHashMap<>();
+        item.put("id", def.getId());
+        item.put("displayName", I18n.resolve(def.getDisplayName()));
+        item.put("spriteBase", def.getSpriteBase());
+        item.put("baseHp", def.getBaseHp());
+        item.put("hpPerLevel", def.getHpPerLevel());
+        item.put("damageMin", def.getDamageMin());
+        item.put("damageMax", def.getDamageMax());
+        item.put("damagePerLevel", def.getDamagePerLevel());
+        item.put("attackCooldown", def.getAttackCooldown());
+        item.put("speed", def.getSpeed());
+        item.put("parts", def.getParts().stream().map(part -> {
+            Map<String, Object> value = new LinkedHashMap<>();
+            value.put("bodyPart", part.getBodyPart().name());
+            value.put("spriteBase", part.getSpriteBase());
+            return value;
+        }).toList());
+        item.put("spells", def.getSpells().stream().map(spell -> {
+            Map<String, Object> value = new LinkedHashMap<>();
+            value.put("spellKey", spell.getSpellKey());
+            value.put("trigger", spell.getTrigger().name());
+            value.put("priority", spell.getPriority());
+            value.put("cooldownSeconds", spell.getCooldownSeconds());
+            value.put("healthThreshold", spell.getHealthThreshold());
+            value.put("minDamage", spell.getMinDamage());
+            value.put("maxDamage", spell.getMaxDamage());
+            value.put("damagePerLevel", spell.getDamagePerLevel());
+            value.put("rangeTiles", spell.getRangeTiles());
+            return value;
+        }).toList());
+        return item;
+    }
+
+    CompanionDef companionFromMap(Map<String, Object> item, Map<String, String> catalogueUpdates) {
+        String id = str(item.get("id")).trim();
+        if (id.isEmpty()) throw new DialogValidationException("Companion id is required");
+        String displayName = str(item.get("displayName")).trim();
+        String displayKey = "companion." + I18n.normalizedKey(id);
+        if (displayName.isEmpty()) throw new DialogValidationException("Companion '" + id + "': display name is required");
+        catalogueUpdates.put(displayKey, displayName);
+
+        List<CompanionDef.Part> parts = new ArrayList<>();
+        for (Map<String, Object> rawPart : listOfMaps(item.get("parts"))) {
+            try {
+                BodyPart bodyPart = BodyPart.valueOf(str(rawPart.get("bodyPart")).trim());
+                String sprite = str(rawPart.get("spriteBase")).trim();
+                if (sprite.isEmpty()) throw new IllegalArgumentException("empty sprite");
+                parts.add(new CompanionDef.Part(bodyPart, sprite));
+            } catch (IllegalArgumentException e) {
+                throw new DialogValidationException("Companion '" + id + "': invalid body part entry");
+            }
+        }
+
+        List<CompanionDef.SpellEntry> spells = new ArrayList<>();
+        for (Map<String, Object> rawSpell : listOfMaps(item.get("spells"))) {
+            try {
+                spells.add(new CompanionDef.SpellEntry(
+                        str(rawSpell.get("spellKey")).trim(),
+                        CompanionSpellTrigger.valueOf(str(rawSpell.get("trigger")).trim()),
+                        integer(rawSpell.get("priority"), 0), flt(rawSpell.get("cooldownSeconds"), 0f),
+                        flt(rawSpell.get("healthThreshold"), 0f), integer(rawSpell.get("minDamage"), 0),
+                        integer(rawSpell.get("maxDamage"), 0), flt(rawSpell.get("damagePerLevel"), 0f),
+                        flt(rawSpell.get("rangeTiles"), 0f)));
+            } catch (IllegalArgumentException e) {
+                throw new DialogValidationException("Companion '" + id + "': invalid spell trigger");
+            }
+        }
+        return new CompanionDef(id, I18n.placeholder(displayKey), parts,
+                emptyToNull(str(item.get("spriteBase"))), integer(item.get("baseHp"), 1),
+                flt(item.get("hpPerLevel"), 0f), integer(item.get("damageMin"), 0),
+                integer(item.get("damageMax"), 0), flt(item.get("damagePerLevel"), 0f),
+                flt(item.get("attackCooldown"), 1f), flt(item.get("speed"), 0f), spells);
     }
 
     private Map<String, Object> xpCurveEntryToMap(XpCurve.Entry entry) {
@@ -2413,6 +2535,9 @@ public class T4CContentStudio {
         if (type == ActionType.GIVE_QUEST && targets.size() != 1) {
             throw new DialogValidationException("NPC '" + npcName + "': GIVE_QUEST requires exactly one quest");
         }
+        if (type == ActionType.SUMMON_COMPANION && targets.size() != 1) {
+            throw new DialogValidationException("NPC '" + npcName + "': SUMMON_COMPANION requires exactly one companion");
+        }
         if ((type == ActionType.HEAL || type == ActionType.END_CONVERSATION) && !targets.isEmpty()) {
             throw new DialogValidationException("NPC '" + npcName + "': " + type + " accepts no target");
         }
@@ -2426,6 +2551,9 @@ public class T4CContentStudio {
         } else if (type == ActionType.GIVE_QUEST) {
             for (String target : targets) if (QuestRegistry.findById(target) == null)
                 throw new DialogValidationException("NPC '" + npcName + "': unknown quest '" + target + "'");
+        } else if (type == ActionType.SUMMON_COMPANION) {
+            for (String target : targets) if (CompanionRegistry.findById(target) == null)
+                throw new DialogValidationException("NPC '" + npcName + "': unknown companion '" + target + "'");
         } else if (type == ActionType.OPEN_SKILL_LEARNING) {
             Set<String> valid = Set.of("attack", "archery", "dodge", "peek", "stun_blow", "powerful_blow",
                     "rapid_healing", "first_aid", "parry", "critical_strike", "hide", "sneak", "search",

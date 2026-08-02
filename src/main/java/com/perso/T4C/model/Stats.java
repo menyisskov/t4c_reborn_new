@@ -23,7 +23,6 @@ public class Stats {
     protected int endurance;
     protected int intelligence;
     protected int wisdom;
-    protected int armorClass;
     protected int gold;
     /** Alignment value used by USER_KARMA in original NPC decision trees. */
     protected int karma;

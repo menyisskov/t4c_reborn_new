@@ -40,6 +40,23 @@ class T4CContentStudioQuestValidationTest {
     }
 
     @Test
+    void summonCompanionAcceptsOneKnownCompanionOnly() {
+        T4CContentStudio studio = new T4CContentStudio();
+
+        assertDoesNotThrow(() -> studio.validateActionTargets(
+                "CompanionGiver", ActionType.SUMMON_COMPANION, List.of("mage_apprentice")));
+
+        RuntimeException missingTarget = assertThrows(RuntimeException.class,
+                () -> studio.validateActionTargets("CompanionGiver", ActionType.SUMMON_COMPANION, List.of()));
+        assertTrue(missingTarget.getMessage().contains("exactly one companion"));
+
+        RuntimeException unknownCompanion = assertThrows(RuntimeException.class,
+                () -> studio.validateActionTargets(
+                        "CompanionGiver", ActionType.SUMMON_COMPANION, List.of("unknown_companion")));
+        assertTrue(unknownCompanion.getMessage().contains("unknown companion"));
+    }
+
+    @Test
     @SuppressWarnings("unchecked")
     void editorPayloadsExposeResolvedTextAndQuestChoices() throws Exception {
         T4CContentStudio studio = new T4CContentStudio();

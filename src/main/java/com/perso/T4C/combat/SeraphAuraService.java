@@ -2,6 +2,7 @@ package com.perso.T4C.combat;
 
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 
@@ -24,9 +25,7 @@ public final class SeraphAuraService {
     public static final String AURA_NAME = "spell.remort_aura";
     private static final String LEGACY_AURA_NAME = "Remort aura";
     /** English fallback; the displayed text comes from {@code spell.description.remort_aura}. */
-    public static final String AURA_DESCRIPTION =
-            "Permanent offensive and defensive aura only usable by seraphs "
-                    + "(effectiveness increases with each rebirth).";
+    public static final String AURA_DESCRIPTION = I18n.placeholder("spell.description.remort_aura");
     public static final String AURA_ICON = "64kSpellIconNoneDefense";
 
     public static final String SINGLE_PROJECTILE = "64kSpellEnergyBall-";

@@ -115,7 +115,7 @@ public final class PlayerStateStore {
                 || state.rebirthCount > 0
                 || state.karma != 0 || (state.questFlags != null && !state.questFlags.isEmpty())
                 || state.strength != 0 || state.dexterity != 0 || state.endurance != 0
-                || state.intelligence != 0 || state.wisdom != 0 || state.armorClass != 0 || state.gold != 0;
+                || state.intelligence != 0 || state.wisdom != 0 || state.gold != 0;
     }
 
 }
