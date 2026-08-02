@@ -21,7 +21,8 @@ public final class SeraphAuraService {
     public static final int AREA_BLAST_SPELL_ID = 10698;
     public static final int HEAL_SPELL_ID = 10699;
 
-    public static final String AURA_NAME = "Remort aura";
+    public static final String AURA_NAME = "spell.remort_aura";
+    private static final String LEGACY_AURA_NAME = "Remort aura";
     /** English fallback; the displayed text comes from {@code spell.description.remort_aura}. */
     public static final String AURA_DESCRIPTION =
             "Permanent offensive and defensive aura only usable by seraphs "
@@ -61,6 +62,10 @@ public final class SeraphAuraService {
         Objects.requireNonNull(player, "player");
 
         boolean changed = false;
+        // Collapse the pre-canonical English identity left by older saves.
+        while (player.dispelBuff(LEGACY_AURA_NAME)) {
+            changed = true;
+        }
         if (player.getRebirthCount() <= 0 && hasSeraphWings(player)) {
             player.setRebirthCount(1);
             changed = true;

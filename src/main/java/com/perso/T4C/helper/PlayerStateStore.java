@@ -5,6 +5,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.npc.CompanionNPC;
+import java.util.function.Supplier;
+import lombok.Setter;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -20,6 +23,7 @@ public final class PlayerStateStore {
     public static final String DEFAULT_FILENAME = com.perso.T4C.config.Paths.PLAYER_STATE_FILE;
 
     private static float lastDayNightHour = 7f;
+    @Setter private static Supplier<CompanionNPC> companionSupplier;
 
     public static void save(Player player) {
         save(player, lastDayNightHour);
@@ -28,6 +32,10 @@ public final class PlayerStateStore {
     public static void save(Player player, float dayNightHour) {
         lastDayNightHour = dayNightHour;
         PlayerStateDto state = PlayerStateMapper.fromPlayer(player, dayNightHour);
+        CompanionNPC companion = companionSupplier == null ? null : companionSupplier.get();
+        if (companion != null) {
+            state.companion = companion.toSaveState();
+        }
         if (!hasStats(state)) {
             try {
                 Gdx.app.log("PlayerStateStore", "Skip saving player_state: stats are empty");

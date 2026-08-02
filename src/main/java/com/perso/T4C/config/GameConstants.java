@@ -75,6 +75,9 @@ public class GameConstants {
     public static final float COMPANION_TRAIL_SAMPLE_INTERVAL = 0.3f;
     public static final int COMPANION_TRAIL_SAMPLES = 4;
     public static final float COMPANION_COMBAT_LEASH_RANGE = 15f * GRID_W;
+    public static final float TAME_CHANNEL_SECONDS = 5f;
+    public static final float TAME_MAX_RANGE_TILES = 8f;
+    public static final float TAME_MOVE_TOLERANCE = 4f;
     public static final long DEFAULT_CAST_MENTAL_EXHAUSTION_MS = 1000L;
     public static final long DEFAULT_CAST_PHYSICAL_EXHAUSTION_MS = 750L;
     public static final float COMPANION_AGGRESSIVE_DETECTION_RANGE = 8f * GRID_W;

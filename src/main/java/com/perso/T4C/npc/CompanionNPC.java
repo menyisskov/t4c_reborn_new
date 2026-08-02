@@ -104,6 +104,22 @@ public class CompanionNPC extends BaseNPC {
     @Setter
     private boolean dead;
 
+    /** Snapshot of this companion for player-state persistence, or {@code null} once dead. */
+    public com.perso.T4C.helper.PlayerStateDto.CompanionState toSaveState() {
+        if (isDead()) {
+            return null;
+        }
+        boolean tamed = def.getId().startsWith(TamedCompanionFactory.ID_PREFIX);
+        com.perso.T4C.helper.PlayerStateDto.CompanionState saved =
+                new com.perso.T4C.helper.PlayerStateDto.CompanionState();
+        saved.tamed = tamed;
+        saved.speciesName = tamed ? def.getId().substring(TamedCompanionFactory.ID_PREFIX.length()) : def.getId();
+        saved.level = getLevel();
+        saved.currentHp = getCurrentHp();
+        saved.mode = getMode().name();
+        return saved;
+    }
+
     public CompanionNPC(CompanionDef def, Player owner, XpCurve xpCurve) throws GameException {
         super(def.getId(), def.getSpriteBase(), buildParts(def));
         this.def = def;
@@ -155,6 +171,10 @@ public class CompanionNPC extends BaseNPC {
             clearPlannedPath();
         }
         log.info("Companion {} switched to {} mode", getName(), mode);
+    }
+
+    public void setCurrentHp(int hp) {
+        currentHp = Math.max(1, Math.min(maxHp, hp <= 0 ? maxHp : hp));
     }
 
     /**

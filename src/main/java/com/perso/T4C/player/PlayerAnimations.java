@@ -136,13 +136,12 @@ public class PlayerAnimations extends EntityAnimationsBase {
                 }
                 if (attackFrame >= max) {
                     attacking = false;
-                    if (bowAttack) {
-                        holdingMeleeAttackPose = false;
-                        attackFrame = 0;
-                    } else {
-                        holdingMeleeAttackPose = true;
-                        attackFrame = Math.max(0, max - 1);
-                    }
+                    // Keep the completed pose visible for both melee and bow
+                    // attacks.  Ranged attacks use the same hold-last-frame
+                    // behavior as sword attacks; only a new action or an
+                    // explicit clearAttackPose() returns to idle.
+                    holdingMeleeAttackPose = true;
+                    attackFrame = Math.max(0, max - 1);
                 }
             }
             return;

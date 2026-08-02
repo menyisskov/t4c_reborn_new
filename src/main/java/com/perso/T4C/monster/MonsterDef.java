@@ -74,6 +74,13 @@ public class MonsterDef {
     private final boolean canAttack;
     /** T4C attack list; empty = use hitDamageMin/hitDamageMax fallback. Never null. */
     private final List<Attack> attacks;
+    private final boolean tameable;
+    private final int tameMaxLevel;
+
+    /** True when this species may be tamed by a caster of the given level. */
+    public boolean canBeTamedBy(int casterLevel) {
+        return tameable && level <= tameMaxLevel && level <= casterLevel;
+    }
 
     /** True when aggro > 0 (mirrors the former defaultAggressive boolean). */
     public boolean isDefaultAggressive() {

@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ import java.util.List;
  */
 public final class MonsterDefBinaryIO {
     private static final byte[] MAGIC = "T4CMON".getBytes(StandardCharsets.US_ASCII);
-    private static final short VERSION = 2;
+    private static final short VERSION = 3;
     private static final int MAX_STRING_BYTES = 16384;
     private static final int RESISTS_COUNT = 12;
 
@@ -33,44 +32,17 @@ public final class MonsterDefBinaryIO {
     }
 
     public static List<MonsterDef> read(File file) throws IOException, GameException {
-        try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
-            byte[] magic = new byte[MAGIC.length];
-            in.readFully(magic);
-            if (!Arrays.equals(magic, MAGIC)) {
-                throw new GameException("Invalid monster definition file: wrong magic header");
-            }
-            short version = BinaryIOUtils.readShortLE(in);
-            if (version < 1 || version > VERSION) {
-                throw new GameException("Unsupported monster definition version: " + version);
-            }
-            int count = BinaryIOUtils.readIntLE(in);
-            if (count < 0) {
-                throw new GameException("Invalid monster definition count: " + count);
-            }
-            List<MonsterDef> defs = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                defs.add(readDef(in, version));
-            }
-            return defs;
-        }
+        return BinaryCatalogueIO.read(file, MAGIC, "monster definition",
+                version -> {
+                    if (version < 1 || version > VERSION) {
+                        throw new GameException("Unsupported monster definition version: " + version);
+                    }
+                },
+                MonsterDefBinaryIO::readDef);
     }
 
     public static void write(File file, List<MonsterDef> defs) throws IOException {
-        File parent = file.getParentFile();
-        if (parent != null) {
-            parent.mkdirs();
-        }
-        try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-            out.write(MAGIC);
-            BinaryIOUtils.writeShortLE(out, VERSION);
-            BinaryIOUtils.writeIntLE(out, defs == null ? 0 : defs.size());
-            if (defs == null) {
-                return;
-            }
-            for (MonsterDef def : defs) {
-                writeDef(out, def);
-            }
-        }
+        BinaryCatalogueIO.write(file, MAGIC, VERSION, defs, MonsterDefBinaryIO::writeDef);
     }
 
     private static MonsterDef readDef(DataInputStream in, short version) throws IOException, GameException {
@@ -162,6 +134,13 @@ public final class MonsterDefBinaryIO {
             }
         }
 
+        boolean tameable = false;
+        int tameMaxLevel = 0;
+        if (version >= 3) {
+            tameable = in.readBoolean();
+            tameMaxLevel = BinaryIOUtils.readIntLE(in);
+        }
+
         return new MonsterDef(name, displayName, health, mana, xpPerHit, xpOnDeath,
                 hitDamageMin, hitDamageMax, respawnTime,
                 walkPattern, emptyToNull(attackPattern), emptyToNull(deathPattern),
@@ -170,7 +149,7 @@ public final class MonsterDefBinaryIO {
                 str, end, agi, intel, will, wis, luck, resists,
                 level, dodge, acMin, acMax, appearance,
                 itemBody, itemFeet, itemHands, itemHead, itemLegs, itemWeapon, itemShield, itemBack,
-                aggro, clan, speed, canAttack, attacks);
+                aggro, clan, speed, canAttack, attacks, tameable, tameMaxLevel);
     }
 
     private static void writeDef(DataOutputStream out, MonsterDef def) throws IOException {
@@ -248,6 +227,8 @@ public final class MonsterDefBinaryIO {
                 BinaryIOUtils.writeIntLE(out, atk == null ? 0 : atk.getValue5());
             }
         }
+        out.writeBoolean(def != null && def.isTameable());
+        BinaryIOUtils.writeIntLE(out, def == null ? 0 : def.getTameMaxLevel());
     }
 
     private static String readString(DataInputStream in) throws IOException {

@@ -8,8 +8,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,44 +22,17 @@ public final class SkillDefBinaryIO {
     }
 
     public static List<SkillDefinition> read(File file) throws IOException, GameException {
-        try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
-            byte[] magic = new byte[MAGIC.length];
-            in.readFully(magic);
-            if (!Arrays.equals(magic, MAGIC)) {
-                throw new GameException("Invalid skill definition file: wrong magic header");
-            }
-            short version = BinaryIOUtils.readShortLE(in);
-            if (version < 1 || version > VERSION) {
-                throw new GameException("Unsupported skill definition version: " + version);
-            }
-            int count = BinaryIOUtils.readIntLE(in);
-            if (count < 0) {
-                throw new GameException("Invalid skill definition count: " + count);
-            }
-            List<SkillDefinition> defs = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                defs.add(readDef(in));
-            }
-            return defs;
-        }
+        return BinaryCatalogueIO.read(file, MAGIC, "skill definition",
+                version -> {
+                    if (version < 1 || version > VERSION) {
+                        throw new GameException("Unsupported skill definition version: " + version);
+                    }
+                },
+                (in, version) -> readDef(in));
     }
 
     public static void write(File file, List<SkillDefinition> defs) throws IOException {
-        File parent = file.getParentFile();
-        if (parent != null) {
-            parent.mkdirs();
-        }
-        try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-            out.write(MAGIC);
-            BinaryIOUtils.writeShortLE(out, VERSION);
-            BinaryIOUtils.writeIntLE(out, defs == null ? 0 : defs.size());
-            if (defs == null) {
-                return;
-            }
-            for (SkillDefinition def : defs) {
-                writeDef(out, def);
-            }
-        }
+        BinaryCatalogueIO.write(file, MAGIC, VERSION, defs, SkillDefBinaryIO::writeDef);
     }
 
     private static SkillDefinition readDef(DataInputStream in) throws IOException {

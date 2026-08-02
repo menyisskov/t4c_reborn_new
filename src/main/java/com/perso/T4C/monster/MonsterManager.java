@@ -58,6 +58,13 @@ public class MonsterManager {
         this.outlineShader = outlineShader;
     }
 
+    /** Permanently removes a monster without death rewards or respawn. */
+    public boolean despawnMonster(BaseMonster monster) {
+        if (monster == null) return false;
+        notifiedPlayerKills.remove(monster);
+        return monsters.remove(monster);
+    }
+
     /**
      * Set the callback for applying damage to the player.
      */

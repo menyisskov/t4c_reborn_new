@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,38 +36,17 @@ public final class ItemDefBinaryIO {
     }
 
     public static List<ItemDefinition> read(File file) throws IOException, GameException {
-        try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
-            byte[] magic = new byte[MAGIC.length];
-            in.readFully(magic);
-            if (!Arrays.equals(magic, MAGIC)) {
-                throw new GameException("Invalid item definition file: wrong magic header");
-            }
-            short version = BinaryIOUtils.readShortLE(in);
-            if (version < 1 || version > VERSION) {
-                throw new GameException("Unsupported item definition version: " + version);
-            }
-            int count = BinaryIOUtils.readIntLE(in);
-            if (count < 0) {
-                throw new GameException("Invalid item definition count: " + count);
-            }
-            List<ItemDefinition> defs = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                defs.add(readDef(in, version));
-            }
-            return defs;
-        }
+        return BinaryCatalogueIO.read(file, MAGIC, "item definition",
+                version -> {
+                    if (version < 1 || version > VERSION) {
+                        throw new GameException("Unsupported item definition version: " + version);
+                    }
+                },
+                ItemDefBinaryIO::readDef);
     }
 
     public static void write(File file, List<ItemDefinition> defs) throws IOException {
-        File parent = file.getParentFile();
-        if (parent != null) parent.mkdirs();
-        try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-            out.write(MAGIC);
-            BinaryIOUtils.writeShortLE(out, VERSION);
-            BinaryIOUtils.writeIntLE(out, defs == null ? 0 : defs.size());
-            if (defs == null) return;
-            for (ItemDefinition def : defs) writeDef(out, def);
-        }
+        BinaryCatalogueIO.write(file, MAGIC, VERSION, defs, ItemDefBinaryIO::writeDef);
     }
 
     private static ItemDefinition readDef(DataInputStream in, short version) throws IOException {

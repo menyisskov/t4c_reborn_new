@@ -65,8 +65,18 @@ public class CompanionManager {
             log.warn("No companion definition for id={}", companionType);
             return;
         }
+        spawnCompanionFromDef(owner, def, sourcePosition, 0);
+    }
+
+    public boolean spawnCompanionFromDef(Player owner, CompanionDef def, Vector2 sourcePosition, int startingHp) {
+        if (owner == null || def == null || sourcePosition == null) return false;
+        if (hasCompanion()) {
+            SystemMessage.showShared(I18n.message("message.companion_already_present"));
+            return false;
+        }
         try {
             CompanionNPC spawned = new CompanionNPC(def, owner, xpCurve);
+            spawned.setCurrentHp(startingHp);
             spawned.setMonsterSupplier(monsterSupplier);
             spawned.setDismissRequestHandler(this::dismissByPlayer);
             Vector2 spawnPosition = findFreeSpawnNear(sourcePosition);
@@ -76,8 +86,10 @@ public class CompanionManager {
             SystemMessage.showShared(I18n.message("message.companion_joined", I18n.resolve(spawned.getName())));
             log.info("Companion {} summoned for player at ({}, {})",
                     spawned.getName(), spawned.getTileX(), spawned.getTileY());
+            return true;
         } catch (Exception ex) {
-            log.warn("Failed to summon companion type={}", companionType, ex);
+            log.warn("Failed to summon companion type={}", def.getId(), ex);
+            return false;
         }
     }
 

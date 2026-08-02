@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /** Binary persistence for the reset, non-branching NPC dialogue format. */
@@ -25,36 +24,18 @@ public final class NpcDefBinaryIO {
     }
 
     public static List<NpcDef> read(File file) throws IOException, GameException {
-        try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
-            byte[] magic = new byte[MAGIC.length];
-            in.readFully(magic);
-            if (!Arrays.equals(magic, MAGIC)) {
-                throw new GameException("Invalid NPC definition file: wrong magic header");
-            }
-            short version = BinaryIOUtils.readShortLE(in);
-            if (version != VERSION) {
-                throw new GameException("Unsupported NPC definition version: " + version
-                        + " (expected " + VERSION + ")");
-            }
-            int count = checkedCount(BinaryIOUtils.readIntLE(in), "definition");
-            List<NpcDef> defs = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                defs.add(readDef(in));
-            }
-            return defs;
-        }
+        return BinaryCatalogueIO.read(file, MAGIC, "NPC definition",
+                version -> {
+                    if (version != VERSION) {
+                        throw new GameException("Unsupported NPC definition version: " + version
+                                + " (expected " + VERSION + ")");
+                    }
+                },
+                (in, version) -> readDef(in));
     }
 
     public static void write(File file, List<NpcDef> defs) throws IOException {
-        File parent = file.getParentFile();
-        if (parent != null) parent.mkdirs();
-        try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-            out.write(MAGIC);
-            BinaryIOUtils.writeShortLE(out, VERSION);
-            List<NpcDef> safeDefs = defs == null ? List.of() : defs;
-            BinaryIOUtils.writeIntLE(out, safeDefs.size());
-            for (NpcDef def : safeDefs) writeDef(out, def);
-        }
+        BinaryCatalogueIO.write(file, MAGIC, VERSION, defs, NpcDefBinaryIO::writeDef);
     }
 
     private static NpcDef readDef(DataInputStream in) throws IOException, GameException {

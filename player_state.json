@@ -1,6 +1,6 @@
 {
-  "x": 2935.0,
-  "y": 1066.0,
+  "x": 2850.0,
+  "y": 1107.0,
   "z": 0,
   "strength": 50,
   "dexterity": 50,
@@ -8,14 +8,14 @@
   "intelligence": 50,
   "wisdom": 50,
   "armorClass": 0,
-  "gold": 51585,
+  "gold": 51792,
   "karma": 0,
   "maxHp": 71,
-  "currentHp": 37,
+  "currentHp": 71,
   "maxMana": 600,
-  "mana": 584,
+  "mana": 560,
   "level": 16,
-  "currentXp": 5324,
+  "currentXp": 6096,
   "xpToNextLevel": 16889,
   "statPoints": 505,
   "skillPoints": 500,
@@ -23,58 +23,37 @@
   "spells": [
     "spell.flaming_arrow",
     "spell.light",
-    "spell.spell_lesser_drain"
+    "spell.spell_lesser_drain",
+    "spell.tame_beast"
   ],
   "quickSlots": [
     {
-      "slot": 3,
-      "spell": "spell.flaming_arrow"
-    },
-    {
       "slot": 1,
-      "spell": "spell.light"
-    },
-    {
-      "slot": 8,
-      "item": "item.light_healing_potion"
-    },
-    {
-      "slot": 9,
-      "item": "item.potion_of_mana"
+      "spell": "spell.tame_beast"
     },
     {
       "slot": 2,
-      "spell": "spell.spell_lesser_drain"
+      "spell": "spell.light"
     }
   ],
   "activeBuffs": [
     {
-      "spellName": "Remort aura",
-      "description": "Permanent offensive and defensive aura only usable by seraphs (effectiveness increases with each rebirth).",
-      "iconId": "64kSpellIconNoneDefense",
+      "spellName": "spell.remort_aura",
       "remainingSeconds": 9223372036854775807,
-      "totalDurationSeconds": 9223372036854775807,
-      "unlimited": true,
-      "effects": []
+      "totalDurationSeconds": 9223372036854775807
     },
     {
-      "spellName": "${spell.light}",
-      "description": "${spell.description.light}",
-      "iconId": "64kSpellIconLightMain",
-      "remainingSeconds": 170,
-      "totalDurationSeconds": 600,
-      "unlimited": false,
-      "effects": [
-        {
-          "type": "ATTRIBUTE",
-          "attribute": "radiance",
-          "amount": "100"
-        }
-      ]
+      "spellName": "spell.light",
+      "remainingSeconds": 299,
+      "totalDurationSeconds": 600
+    },
+    {
+      "spellName": "spell.light",
+      "remainingSeconds": 600,
+      "totalDurationSeconds": 600
     }
   ],
   "inventory": [
-    "item.ring_of_the_seraph",
     "item.seraph_plate",
     "item.nm_dechuwins",
     "Potion of mana"
@@ -82,6 +61,7 @@
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
     "RIGHT_HAND": "item.studded_leather_gloves",
+    "RING1": "item.ring_of_the_seraph",
     "BELT": "item.leather_belt",
     "BACK": "item.remort_white_wings",
     "WEAPON": "item.ashwood_reflex_bow",
@@ -108,5 +88,12 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.009315,
+  "companion": {
+    "speciesName": "mage_apprentice",
+    "tamed": false,
+    "level": 16,
+    "currentHp": 125,
+    "mode": "AGGRESSIVE"
+  }
 }

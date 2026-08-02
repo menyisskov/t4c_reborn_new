@@ -43,16 +43,7 @@ public class LearnScreen extends GuiListScreen {
     private static final float[] SKILL_LBL_BOX  = {457f, 233f, 94f, 17f};
     private static final float[] SKILL_VAL_BOX  = {457f, 253f, 94f, 15f};
     // APPRENDRE button under the skill-points plaques.
-    private static final float LEARN_BTN_X = 472f;
-    private static final float LEARN_BTN_Y = 284f;
-
-    private static final float CLOSE_X = 552f;
-    private static final float CLOSE_Y = 0f;
-
-    private static final Color GOLD    = Color.valueOf("F2B705");
-    private static final Color WHITE   = Color.WHITE;
     private static final Color BLOCKED = Color.valueOf("E33300");
-    private static final Color DIM     = Color.valueOf("888888");
 
     private final Player player;
     private final List<LearnEntry> entries   = new ArrayList<>();
@@ -142,7 +133,7 @@ public class LearnScreen extends GuiListScreen {
         BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(14, GOLD);
         buttons.add(new GuiButton(normal, hover != null ? hover : normal,
                 pressed != null ? pressed : normal,
-                x + LEARN_BTN_X, y + LEARN_BTN_Y, this::learnBasket)
+                x + ACTION_BTN_X, y + ACTION_BTN_Y, this::learnBasket)
                 .withLabel(chewy, () -> I18n.key("ui.learn")));
     }
 

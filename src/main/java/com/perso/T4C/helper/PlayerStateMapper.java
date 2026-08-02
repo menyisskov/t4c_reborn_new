@@ -3,9 +3,10 @@ package com.perso.T4C.helper;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.spell.SpellRegistry;
+import com.perso.T4C.combat.SeraphAuraService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,40 +109,25 @@ public final class PlayerStateMapper {
                 continue;
             }
             PlayerStateDto.ActiveBuffState state = new PlayerStateDto.ActiveBuffState();
-            state.spellName = buff.getSpellName();
-            state.description = buff.getDescription();
-            state.iconId = buff.getIconId();
-            state.unlimited = buff.getExpiresAtMillis() == Long.MAX_VALUE;
-            state.remainingSeconds = state.unlimited
+            SpellData spell = SpellRegistry.findByName(buff.getSpellName());
+            state.spellName = spell != null ? spell.getKey() : canonicalSpecialBuffKey(buff.getSpellName());
+            boolean unlimited = buff.getExpiresAtMillis() == Long.MAX_VALUE;
+            state.remainingSeconds = unlimited
                     ? Long.MAX_VALUE
                     : Math.max(0L, (buff.getExpiresAtMillis() - now + 999L) / 1000L);
-            state.totalDurationSeconds = state.unlimited || buff.getDurationMillis() == Long.MAX_VALUE
+            state.totalDurationSeconds = unlimited || buff.getDurationMillis() == Long.MAX_VALUE
                     ? Long.MAX_VALUE
                     : Math.max(1L, buff.getDurationMillis() / 1000L);
-            state.effects = toPersistedEffects(buff.getEffects());
-            if (state.unlimited || state.remainingSeconds > 0L) {
+            if (unlimited || state.remainingSeconds > 0L) {
                 states.add(state);
             }
         }
         return states;
     }
 
-    private static List<PlayerStateDto.ActiveBuffState.PersistedEffect> toPersistedEffects(List<SpellData.SpellEffect> effects) {
-        if (effects == null || effects.isEmpty()) return Collections.emptyList();
-        List<PlayerStateDto.ActiveBuffState.PersistedEffect> out = new ArrayList<>(effects.size());
-        for (SpellData.SpellEffect e : effects) {
-            if (e != null) out.add(new PlayerStateDto.ActiveBuffState.PersistedEffect(e.getType(), e.getAttribute(), e.getAmount()));
-        }
-        return out;
-    }
-
-    private static List<SpellData.SpellEffect> fromPersistedEffects(List<PlayerStateDto.ActiveBuffState.PersistedEffect> persisted) {
-        if (persisted == null || persisted.isEmpty()) return Collections.emptyList();
-        List<SpellData.SpellEffect> out = new ArrayList<>(persisted.size());
-        for (PlayerStateDto.ActiveBuffState.PersistedEffect e : persisted) {
-            if (e != null) out.add(new SpellData.SpellEffect(e.type, e.attribute, e.amount, ""));
-        }
-        return out;
+    private static String canonicalSpecialBuffKey(String name) {
+        return SeraphAuraService.AURA_NAME.equals(name) || "Remort aura".equals(name)
+                ? SeraphAuraService.AURA_NAME : name;
     }
 
     private static void applyActiveBuffs(PlayerStateDto state, Player player) {
@@ -152,16 +138,32 @@ public final class PlayerStateMapper {
             if (buff == null || buff.spellName == null || buff.spellName.isEmpty()) {
                 continue;
             }
-            if (!buff.unlimited && buff.remainingSeconds <= 0L) {
+            boolean unlimited = buff.remainingSeconds == Long.MAX_VALUE || buff.totalDurationSeconds == Long.MAX_VALUE;
+            if (!unlimited && buff.remainingSeconds <= 0L) {
                 continue;
             }
             long restoredDuration = buff.totalDurationSeconds > 0L ? buff.totalDurationSeconds : buff.remainingSeconds;
-            Integer durationSeconds = buff.unlimited || restoredDuration > Integer.MAX_VALUE
+            Integer durationSeconds = unlimited || restoredDuration > Integer.MAX_VALUE
                     ? null
                     : (int) restoredDuration;
-            List<SpellData.SpellEffect> effects = fromPersistedEffects(buff.effects);
-            player.applyBuff(buff.spellName, buff.description, buff.iconId, durationSeconds, buff.unlimited, effects);
-            if (!buff.unlimited && buff.remainingSeconds < restoredDuration) {
+            SpellData spell = SpellRegistry.findByName(buff.spellName);
+            String description;
+            String iconId;
+            List<SpellData.SpellEffect> effects;
+            if (spell != null) {
+                description = spell.getDescription();
+                iconId = spell.getIconId();
+                effects = spell.getBuff() == null || spell.getBuff().getEffects() == null
+                        ? List.of() : spell.getBuff().getEffects();
+            } else if (SeraphAuraService.AURA_NAME.equals(buff.spellName)) {
+                description = SeraphAuraService.AURA_DESCRIPTION;
+                iconId = SeraphAuraService.AURA_ICON;
+                effects = List.of();
+            } else {
+                continue;
+            }
+            player.applyBuff(buff.spellName, description, iconId, durationSeconds, unlimited, effects);
+            if (!unlimited && buff.remainingSeconds < restoredDuration) {
                 player.adjustBuffRemaining(buff.spellName, buff.remainingSeconds);
             }
         }

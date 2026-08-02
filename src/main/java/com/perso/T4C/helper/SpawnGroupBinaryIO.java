@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,36 +28,17 @@ public final class SpawnGroupBinaryIO {
     }
 
     public static List<SpawnGroup> read(File file) throws IOException, GameException {
-        try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
-            byte[] magic = new byte[MAGIC.length];
-            in.readFully(magic);
-            if (!Arrays.equals(magic, MAGIC)) {
-                throw new GameException("Invalid spawn group file: wrong magic header");
-            }
-            short version = BinaryIOUtils.readShortLE(in);
-            if (version < 1 || version > VERSION) {
-                throw new GameException("Unsupported spawn group version: " + version);
-            }
-            int count = BinaryIOUtils.readIntLE(in);
-            if (count < 0) throw new GameException("Invalid spawn group count: " + count);
-            List<SpawnGroup> groups = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                groups.add(readGroup(in));
-            }
-            return groups;
-        }
+        return BinaryCatalogueIO.read(file, MAGIC, "spawn group",
+                version -> {
+                    if (version < 1 || version > VERSION) {
+                        throw new GameException("Unsupported spawn group version: " + version);
+                    }
+                },
+                (in, version) -> readGroup(in));
     }
 
     public static void write(File file, List<SpawnGroup> groups) throws IOException {
-        File parent = file.getParentFile();
-        if (parent != null) parent.mkdirs();
-        try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-            out.write(MAGIC);
-            BinaryIOUtils.writeShortLE(out, VERSION);
-            BinaryIOUtils.writeIntLE(out, groups == null ? 0 : groups.size());
-            if (groups == null) return;
-            for (SpawnGroup g : groups) writeGroup(out, g);
-        }
+        BinaryCatalogueIO.write(file, MAGIC, VERSION, groups, SpawnGroupBinaryIO::writeGroup);
     }
 
     private static SpawnGroup readGroup(DataInputStream in) throws IOException {

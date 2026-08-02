@@ -17328,7 +17328,7 @@ public class MapEditorScreen implements Screen {
                     0, 0, 0, 0, 0, 0, 0, new int[12],
                     1, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0,
-                    50, 0, 0, true, new ArrayList<>());
+                    50, 0, 0, true, new ArrayList<>(), false, 0);
             defs.add(d);
             defs.sort(Comparator.comparing(MonsterDef::getName, String.CASE_INSENSITIVE_ORDER));
             list.setItems(defs);
@@ -17372,7 +17372,7 @@ public class MapEditorScreen implements Screen {
                     src.getItemBody(), src.getItemFeet(), src.getItemHands(), src.getItemHead(),
                     src.getItemLegs(), src.getItemWeapon(), src.getItemShield(), src.getItemBack(),
                     src.getAggro(), src.getClan(), src.getSpeed(), src.isCanAttack(),
-                    new ArrayList<>(src.getAttacks()));
+                    new ArrayList<>(src.getAttacks()), src.isTameable(), src.getTameMaxLevel());
             defs.add(d);
             defs.sort(Comparator.comparing(MonsterDef::getName, String.CASE_INSENSITIVE_ORDER));
             list.setItems(defs);
@@ -17488,7 +17488,8 @@ public class MapEditorScreen implements Screen {
                     str, end, agi, intel, will, wis, luck, resists,
                     level, dodge, acMin, acMax, appearance,
                     itemBody, itemFeet, itemHands, itemHead, itemLegs, itemWeapon, itemShield, itemBack,
-                    aggro, clan, speed, canAttack, attacks);
+                    aggro, clan, speed, canAttack, attacks,
+                    src != null && src.isTameable(), src == null ? 0 : src.getTameMaxLevel());
         }
 
         private void saveToDisk() {

@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,44 +22,17 @@ public final class SpellBinaryIO {
     }
 
     public static List<SpellData> read(File file) throws IOException, GameException {
-        try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
-            byte[] magic = new byte[MAGIC.length];
-            in.readFully(magic);
-            if (!Arrays.equals(magic, MAGIC)) {
-                throw new GameException("Invalid spell binary file: wrong magic header");
-            }
-            short version = readShortLE(in);
-            if (version < 1 || version > VERSION) {
-                throw new GameException("Unsupported spell binary version: " + version);
-            }
-            int count = readIntLE(in);
-            if (count < 0) {
-                throw new GameException("Invalid spell count: " + count);
-            }
-            List<SpellData> spells = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                spells.add(readSpell(in, version));
-            }
-            return spells;
-        }
+        return BinaryCatalogueIO.read(file, MAGIC, "spell binary",
+                version -> {
+                    if (version < 1 || version > VERSION) {
+                        throw new GameException("Unsupported spell binary version: " + version);
+                    }
+                },
+                SpellBinaryIO::readSpell);
     }
 
     public static void write(File file, List<SpellData> spells) throws IOException {
-        File parent = file.getParentFile();
-        if (parent != null) {
-            parent.mkdirs();
-        }
-        try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-            out.write(MAGIC);
-            writeShortLE(out, VERSION);
-            writeIntLE(out, spells == null ? 0 : spells.size());
-            if (spells == null) {
-                return;
-            }
-            for (SpellData spell : spells) {
-                writeSpell(out, spell);
-            }
-        }
+        BinaryCatalogueIO.write(file, MAGIC, VERSION, spells, SpellBinaryIO::writeSpell);
     }
 
     private static SpellData readSpell(DataInputStream in, short version) throws IOException, GameException {
@@ -259,16 +231,8 @@ public final class SpellBinaryIO {
         return value == null || value.isEmpty() ? null : value;
     }
 
-    private static short readShortLE(DataInputStream in) throws IOException {
-        return BinaryIOUtils.readShortLE(in);
-    }
-
     private static int readIntLE(DataInputStream in) throws IOException {
         return BinaryIOUtils.readIntLE(in);
-    }
-
-    private static void writeShortLE(DataOutputStream out, short value) throws IOException {
-        BinaryIOUtils.writeShortLE(out, value);
     }
 
     private static void writeIntLE(DataOutputStream out, int value) throws IOException {

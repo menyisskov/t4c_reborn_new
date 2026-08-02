@@ -47,22 +47,10 @@ public final class XpCurveBinaryIO {
     }
 
     public static void write(File file, List<XpCurve.Entry> entries) throws IOException {
-        File parent = file.getParentFile();
-        if (parent != null) {
-            parent.mkdirs();
-        }
-        try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-            out.write(MAGIC);
-            BinaryIOUtils.writeShortLE(out, VERSION);
-            BinaryIOUtils.writeIntLE(out, entries == null ? 0 : entries.size());
-            if (entries == null) {
-                return;
-            }
-            for (XpCurve.Entry entry : entries) {
-                BinaryIOUtils.writeIntLE(out, entry.getLevel());
-                BinaryIOUtils.writeIntLE(out, entry.getXpToNextLevel());
-                BinaryIOUtils.writeIntLE(out, entry.getTotalXp());
-            }
-        }
+        BinaryCatalogueIO.write(file, MAGIC, VERSION, entries, (out, entry) -> {
+            BinaryIOUtils.writeIntLE(out, entry.getLevel());
+            BinaryIOUtils.writeIntLE(out, entry.getXpToNextLevel());
+            BinaryIOUtils.writeIntLE(out, entry.getTotalXp());
+        });
     }
 }

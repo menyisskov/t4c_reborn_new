@@ -35,36 +35,10 @@ import java.util.List;
  */
 public class ShopScreen extends GuiListScreen {
 
-    // Item list rows (image coords, y-down): 6 slots, bar tops measured on GUIBackBuy.
-    private static final int   ROWS_VISIBLE = 6;
-    private static final float ROW_0_Y      = 60f;
-    private static final float ROW_H_PITCH  = 46f;
-
-    // Boxed label zones {left, top, width, height}, matching the background plaques.
-    private static final float[] TITLE_BOX     = {237f, 2f, 101f, 19f};
-    private static final float[] HDR_NAME_BOX  = {114f, 40f, 104f, 16f};
-    private static final float[] HDR_PRICE_BOX = {272f, 40f, 41f, 16f};
-    private static final float[] HDR_QTY_BOX   = {332f, 40f, 41f, 16f};
-    // Row cells: y is the row top, added per row.
-    private static final float[] CELL_NAME  = {77f, 0f, 177f, 16f};
-    private static final float[] CELL_PRICE = {259f, 0f, 67f, 16f};
-    private static final float[] CELL_QTY   = {331f, 0f, 43f, 16f};
-
-    // Item icon socket: the left circle column, as a boxed zone the icon is centered in
-    // (same idiom and 40×40 size as LearnScreen's LAMP_BOX). dy is from the row top.
-    private static final float[] ICON_BOX = {21f, -12f, 40f, 40f};
-
     // Wheel-scroll region: the six item rows plus the scrollbar column on their right,
     // from the first row top down past the last one (ROW_0_Y + 6 × ROW_H_PITCH).
     private static final float[] LIST_BOX = {10f, ROW_0_Y - 12f, 420f,
             ROWS_VISIBLE * ROW_H_PITCH + 12f};
-
-    // Scrollbar arrow click zones (big arrows at x≈400-430)
-    private static final float SCROLL_X     = 400f;
-    private static final float SCROLL_W     = 30f;
-    private static final float SCROLL_UP_Y  = 30f;
-    private static final float SCROLL_DN_Y  = 280f;
-    private static final float SCROLL_BTN_H = 32f;
 
     // GUI_ScrollTick thumb (24×22): page 0 puts it at THUMB_TOP_Y, the last page at
     // THUMB_BOTTOM_Y. Both ends tuned in-game against the track on GUIBackBuy; the thumb
@@ -73,32 +47,7 @@ public class ShopScreen extends GuiListScreen {
     private static final float THUMB_TOP_Y    = 60f;
     private static final float THUMB_BOTTOM_Y = 261f;
 
-    // Right GOLD panel plaques/boxes (x 457-550 on the background)
-    private static final float[] GOLD_HDR_BOX   = {457f, 44f, 94f, 17f};
-    private static final float[] ONHAND_LBL_BOX = {457f, 82f, 94f, 17f};
-    private static final float[] ONHAND_VAL_BOX = {457f, 102f, 94f, 15f};
-    private static final float[] COST_LBL_BOX   = {457f, 131f, 94f, 17f};
-    private static final float[] COST_VAL_BOX   = {457f, 151f, 94f, 15f};
-    private static final float[] TOTAL_LBL_BOX  = {457f, 180f, 94f, 17f};
-    private static final float[] TOTAL_VAL_BOX  = {457f, 200f, 94f, 15f};
-    // ACHETER button (60×32 GUI_Button* sprite), same socket as LearnScreen's APPRENDRE:
-    // both screens share the GUIBack* right-panel layout.
-    private static final float BUY_BTN_X = 472f;
-    private static final float BUY_BTN_Y = 284f;
-
-    // Per-row spin up/down buttons on the right column; dy from the row top.
-    // Same geometry as LearnScreen: both screens share the GUIBack* plaque layout.
-    private static final float SPIN_X     = 382f;
-    private static final float SPIN_UP_DY = -5f;
-    private static final float SPIN_DN_DY = 8f;
-
-    private static final float CLOSE_X = 552f;
-    private static final float CLOSE_Y = 0f;
-
-    private static final Color GOLD    = Color.valueOf("F2B705");
-    private static final Color WHITE   = Color.WHITE;
     private static final Color BLOCKED = Color.valueOf("B03030");
-    private static final Color DIM     = Color.valueOf("888888");
 
     private final Player player;
     private final List<ShopEntry> entries    = new ArrayList<>();
@@ -133,7 +82,7 @@ public class ShopScreen extends GuiListScreen {
         BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
         labels.add(boxed(sm, HDR_NAME_BOX,  0f, () -> I18n.key("ui.item_name"), GOLD));
         labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.key("ui.price"), GOLD));
-        labels.add(boxed(sm, HDR_QTY_BOX,   0f, () -> I18n.key("ui.quantity_short"), GOLD));
+        labels.add(boxed(sm, HDR_THIRD_BOX, 0f, () -> I18n.key("ui.quantity_short"), GOLD));
 
         labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.key("ui.on_hand"), GOLD));
         labels.add(boxed(sm, COST_LBL_BOX,   0f, () -> I18n.key("ui.cost"), GOLD));
@@ -196,7 +145,7 @@ public class ShopScreen extends GuiListScreen {
             final String qty   = String.valueOf(entry.count);
             addDyn(isSelected ? fontGo : fontWh, CELL_NAME, rowY, () -> name, isSelected ? GOLD : WHITE);
             addDyn(canAfford ? fontWh : fontBl, CELL_PRICE, rowY, () -> price, canAfford ? WHITE : BLOCKED);
-            addDyn(entry.count > 0 ? fontGo : fontWh, CELL_QTY, rowY, () -> qty,
+            addDyn(entry.count > 0 ? fontGo : fontWh, CELL_THIRD, rowY, () -> qty,
                     entry.count > 0 ? GOLD : WHITE);
 
             final ShopEntry e = entry;
@@ -251,7 +200,7 @@ public class ShopScreen extends GuiListScreen {
                 canBuy && pressed != null ? pressed : normal,
                 // A null callback, not a no-op: GuiButton only plays its click sound when
                 // it has one, so a disabled button stays silent too.
-                x + BUY_BTN_X, y + BUY_BTN_Y, canBuy ? this::buyBasket : null)
+                x + ACTION_BTN_X, y + ACTION_BTN_Y, canBuy ? this::buyBasket : null)
                 .withLabel(chewy, () -> I18n.key("ui.buy_action"));
         buttons.add(buy);
         dynButtons.add(buy);

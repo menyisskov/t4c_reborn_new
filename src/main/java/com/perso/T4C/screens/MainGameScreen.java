@@ -38,9 +38,15 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.input.*;
 import com.perso.T4C.monster.BaseMonster;
 import com.perso.T4C.monster.MonsterManager;
+import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.MonsterRegistry;
 import com.perso.T4C.npc.BaseNPC;
 import com.perso.T4C.npc.CompanionManager;
 import com.perso.T4C.npc.CompanionNPC;
+import com.perso.T4C.npc.CompanionDef;
+import com.perso.T4C.npc.CompanionMode;
+import com.perso.T4C.npc.CompanionRegistry;
+import com.perso.T4C.npc.TamedCompanionFactory;
 import com.perso.T4C.npc.NPCManager;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.player.BodyPart;
@@ -50,6 +56,9 @@ import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.spell.SpellCastingService;
 import com.perso.T4C.spell.SpellEffectManager;
+import com.perso.T4C.spell.TameChannel;
+import com.perso.T4C.spell.TameValidator;
+import com.perso.T4C.spell.CompanionCastVfxHook;
 import com.perso.T4C.combat.CombatProfile;
 import com.perso.T4C.combat.CombatProfiles;
 import com.perso.T4C.combat.CombatResolver;
@@ -162,6 +171,9 @@ public class MainGameScreen implements Screen {
     private final SpellEffectManager spellEffectManager = new SpellEffectManager();
     private final DeathPenaltyService deathPenaltyService = new DeathPenaltyService(DeathPenaltyService.Config.originalDefaults());
     private SpellData selectedTargetedSpell;
+    private TameChannel tameChannel;
+    private BaseMonster tameTarget;
+    private SpellRenderer.ChannelHandle tameChannelVfx;
     private int selectedTargetedSlot;
     private static final long BUFF_DOUBLE_CLICK_MILLIS = 350L;
     private String lastClickedBuffSpellName;
@@ -251,8 +263,10 @@ public class MainGameScreen implements Screen {
         companionManager.setMonsterSupplier(
                 () -> monsterManager == null ? null : monsterManager.getMonsters());
         npcManager.setCompanionManager(companionManager);
+        PlayerStateStore.setCompanionSupplier(companionManager::getCompanion);
 
         configureCallbacks();
+        restorePersistedCompanion();
         registerReloadListener();
     }
 
@@ -1111,6 +1125,7 @@ public class MainGameScreen implements Screen {
             renderEntityPathDebugOverlay();
             renderDayNightOverlay();
             renderBrightnessOverlay();
+            renderTameProgress();
         });
 
         section("hud", () -> {
@@ -1242,7 +1257,7 @@ public class MainGameScreen implements Screen {
             castDefensiveSpell(spell);
             return;
         }
-        if (spell.isAttack() || isPositionTargetSpell(spell)) {
+        if (spell.isAttack() || isPositionTargetSpell(spell) || isTameSpell(spell)) {
             if (selectedTargetedSpell != null && selectedTargetedSlot == slotNumber) {
                 clearSelectedTargetedSpell(false);
                 return;
@@ -1288,8 +1303,11 @@ public class MainGameScreen implements Screen {
      * @return True if a spell was cancelled, false otherwise.
      */
     private boolean cancelActiveTargetedSpell() {
+        if (tameChannel != null) {
+            tameChannel.cancel();
+        }
         if (selectedTargetedSpell == null) {
-            return false;
+            return tameChannel != null;
         }
         clearSelectedTargetedSpell(true);
         return true;
@@ -1458,6 +1476,91 @@ public class MainGameScreen implements Screen {
             clearCurrentAttackTarget();
         }
         return true;
+    }
+
+    private boolean tryCastTargetedSpell(BaseMonster monster) {
+        return isTameSpellSelected() ? tryStartTame(monster) : tryCastAttackSpell(monster);
+    }
+
+    private boolean isTameSpellSelected() {
+        return isTameSpell(selectedTargetedSpell);
+    }
+
+    private boolean isTameSpell(SpellData spell) {
+        if (spell == null) return false;
+        String key = spell.getKey();
+        return "tame_beast".equals(key) || "spell.tame_beast".equals(key);
+    }
+
+    private boolean tryStartTame(BaseMonster monster) {
+        if (monster == null || player == null) return true;
+        MonsterDef def = MonsterRegistry.findByName(monster.getCanonicalName());
+        float distance = player.getPositionVector().dst(monster.getPosition()) / Math.max(GRID_W, GRID_H);
+        TameValidator.Failure failure = TameValidator.check(def, monster.isDead(), player.getLevel(),
+                companionManager.hasCompanion(), distance, tameChannel != null);
+        if (failure != TameValidator.Failure.NONE) {
+            String key = failure == TameValidator.Failure.ALREADY_HAS_PET
+                    ? "message.companion_already_present" : "message.tame_" + failure.name().toLowerCase(Locale.ROOT);
+            showSystemMessage(I18n.message(key));
+            return true;
+        }
+        SpellData spell = selectedTargetedSpell;
+        boolean sightClear = !spell.isLineOfSight() || hasLineOfSight(player.getPositionVector(), monster.getPosition());
+        SpellCastingService.Result cast = SpellCastingService.begin(new SpellCastingService.Request(
+                spell, player, SpellCastingService.TargetKind.HOSTILE_UNIT, distance, sightClear, false, true));
+        if (!cast.success()) { showSystemMessage(SpellCastingService.message(cast.failure())); return true; }
+        float duration = parseTameDuration(spell.getDuration());
+        monster.aggroOn(player.getPositionVector());
+        clearCurrentAttackTarget();
+        tameTarget = monster;
+        tameChannel = new TameChannel(duration, TAME_MOVE_TOLERANCE, player::getPositionVector,
+                player::isStunned, () -> tameTarget == null || tameTarget.isDead());
+        tameChannelVfx = spellRenderer.startChannel(spell.getImpactSpell(), player::getPositionVector);
+        showSystemMessage(I18n.message("message.tame_channeling", I18n.resolve(monster.getName())));
+        return true;
+    }
+
+    private float parseTameDuration(String value) {
+        try { return Math.max(0f, Float.parseFloat(value)); }
+        catch (Exception ignored) { return TAME_CHANNEL_SECONDS; }
+    }
+
+    private void updateTameChannel(float delta) {
+        if (tameChannel == null) return;
+        TameChannel.Outcome outcome = tameChannel.update(delta);
+        if (outcome == TameChannel.Outcome.RUNNING) return;
+        if (outcome == TameChannel.Outcome.SUCCESS) completeTame();
+        else showSystemMessage(I18n.message("message.tame_" + outcome.name().toLowerCase(Locale.ROOT)));
+        spellRenderer.stopChannel(tameChannelVfx);
+        tameChannelVfx = null;
+        tameChannel = null; tameTarget = null;
+    }
+
+    private void completeTame() {
+        BaseMonster target = tameTarget;
+        if (target == null) return;
+        MonsterDef def = MonsterRegistry.findByName(target.getCanonicalName());
+        CompanionDef companionDef = TamedCompanionFactory.fromMonster(def);
+        if (companionDef == null) return;
+        Vector2 where = new Vector2(target.getPosition());
+        String name = I18n.resolve(target.getName());
+        monsterManager.despawnMonster(target);
+        CompanionCastVfxHook.playVanish(where.x, where.y);
+        if (companionManager.spawnCompanionFromDef(player, companionDef, where, 0)) {
+            savePlayerState();
+            showSystemMessage(I18n.message("message.tame_success", name));
+        }
+    }
+
+    private void restorePersistedCompanion() {
+        if (initialPlayerState == null || initialPlayerState.companion == null) return;
+        var saved = initialPlayerState.companion;
+        CompanionDef def = saved.tamed ? TamedCompanionFactory.fromSpeciesName(saved.speciesName)
+                : CompanionRegistry.findById(saved.speciesName);
+        if (def == null) { log.warn("Persisted companion {} no longer exists", saved.speciesName); return; }
+        if (!companionManager.spawnCompanionFromDef(player, def, player.getPositionVector(), saved.currentHp)) return;
+        if (saved.mode != null) try { companionManager.getCompanion().setMode(CompanionMode.valueOf(saved.mode)); }
+        catch (IllegalArgumentException ex) { log.warn("Unknown persisted companion mode {}", saved.mode); }
     }
 
     /** Handles an offensive spell click on a non-player NPC. */
@@ -2386,6 +2489,21 @@ public class MainGameScreen implements Screen {
         debugShapeRenderer.end();
     }
 
+    private void renderTameProgress() {
+        if (tameChannel == null) return;
+        updateHudCamera();
+        float width = 320f, height = 18f;
+        float x = (hudCamera.viewportWidth - width) * .5f;
+        float y = hudCamera.viewportHeight * .72f;
+        debugShapeRenderer.setProjectionMatrix(hudCamera.combined);
+        debugShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        debugShapeRenderer.setColor(.08f, .08f, .08f, .9f);
+        debugShapeRenderer.rect(x, y, width, height);
+        debugShapeRenderer.setColor(.25f, .75f, .25f, 1f);
+        debugShapeRenderer.rect(x + 2f, y + 2f, (width - 4f) * tameChannel.getProgress(), height - 4f);
+        debugShapeRenderer.end();
+    }
+
     /** Applies the user brightness to the world, before the HUD and options are drawn. */
     private void renderBrightnessOverlay() {
         float brightness = com.perso.T4C.config.GamePreferencesStore.get().getBrightness();
@@ -3014,6 +3132,7 @@ public class MainGameScreen implements Screen {
             pruneSelectedMonster();
             performAttackTick();
             spellEffectManager.update(this::applyPeriodicSpellImpact);
+            updateTameChannel(delta);
         }
     }
 
@@ -3375,7 +3494,7 @@ public class MainGameScreen implements Screen {
                 npcManager, camera, player, this::tryCastAttackSpell, systemMessage);
 
         // Set up Monster input handler for monster interactions (pass player for distance checking)
-        MonsterInputHandler monsterInputHandler = new MonsterInputHandler(camera, monsterManager, player, this::tryCastAttackSpell, this::tryBowAttack, systemMessage);
+        MonsterInputHandler monsterInputHandler = new MonsterInputHandler(camera, monsterManager, player, this::tryCastTargetedSpell, this::tryBowAttack, systemMessage);
         monsterInputHandler.setOnAttackTargetSelected(this::beginAttackTarget);
         monsterInputHandler.setOnClickedElsewhere(() -> {
             clearCurrentAttackTarget();

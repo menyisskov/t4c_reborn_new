@@ -131,7 +131,7 @@ public final class CppMonsterDefinitionMigration {
                 integer(block, "MOB_STR", 0), integer(block, "MOB_END", 0), integer(block, "MOB_DEX", 0),
                 integer(block, "MOB_INT", 0), integer(block, "MOB_WIL", 0), integer(block, "MOB_WIS", 0), integer(block, "MOB_LCK", 0), values,
                 integer(block, "MOB_LEVEL", 1), integer(block, "MOB_DODGE_SKILL", 0), 0, Float.floatToIntBits(ac), appearance,
-                0, 0, 0, 0, 0, 0, 0, 0, integer(block, "MOB_AGRESSIVNESS", 0), 0, 0, true, attacks);
+                0, 0, 0, 0, 0, 0, 0, 0, integer(block, "MOB_AGRESSIVNESS", 0), 0, 0, true, attacks, false, 0);
     }
 
     private static int appearance(String block, Map<String, Integer> appearances) {

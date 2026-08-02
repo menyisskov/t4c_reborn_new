@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /** Binary persistence for ally companion definitions. */
@@ -25,36 +24,18 @@ public final class CompanionDefBinaryIO {
     }
 
     public static List<CompanionDef> read(File file) throws IOException, GameException {
-        try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
-            byte[] magic = new byte[MAGIC.length];
-            in.readFully(magic);
-            if (!Arrays.equals(magic, MAGIC)) {
-                throw new GameException("Invalid companion definition file: wrong magic header");
-            }
-            short version = BinaryIOUtils.readShortLE(in);
-            if (version != VERSION) {
-                throw new GameException("Unsupported companion definition version: " + version
-                        + " (expected " + VERSION + ")");
-            }
-            int count = checkedCount(BinaryIOUtils.readIntLE(in), "definition");
-            List<CompanionDef> defs = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                defs.add(readDef(in));
-            }
-            return defs;
-        }
+        return BinaryCatalogueIO.read(file, MAGIC, "companion definition",
+                version -> {
+                    if (version != VERSION) {
+                        throw new GameException("Unsupported companion definition version: " + version
+                                + " (expected " + VERSION + ")");
+                    }
+                },
+                (in, version) -> readDef(in));
     }
 
     public static void write(File file, List<CompanionDef> defs) throws IOException {
-        File parent = file.getParentFile();
-        if (parent != null) parent.mkdirs();
-        try (DataOutputStream out = new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-            out.write(MAGIC);
-            BinaryIOUtils.writeShortLE(out, VERSION);
-            List<CompanionDef> safeDefs = defs == null ? List.of() : defs;
-            BinaryIOUtils.writeIntLE(out, safeDefs.size());
-            for (CompanionDef def : safeDefs) writeDef(out, def);
-        }
+        BinaryCatalogueIO.write(file, MAGIC, VERSION, defs, CompanionDefBinaryIO::writeDef);
     }
 
     private static CompanionDef readDef(DataInputStream in) throws IOException, GameException {

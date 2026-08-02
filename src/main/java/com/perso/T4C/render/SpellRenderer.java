@@ -31,6 +31,7 @@ public class SpellRenderer {
     private final Map<String, SpriteLoader.Sprite> spriteMetaCache = new HashMap<>();
     private final List<SpellImpact> activeImpacts = new ArrayList<>();
     private final List<SpellProjectile> activeProjectiles = new ArrayList<>();
+    private final List<ChannelEffect> activeChannels = new ArrayList<>();
     private final float impactXOffset = 0f;
     private final float impactYOffset = 0f;
     private final float projectileSpeed = 500f;
@@ -44,6 +45,21 @@ public class SpellRenderer {
     public void render(SpriteBatch batch) {
         renderProjectiles(batch);
         renderImpacts(batch);
+        renderChannels(batch);
+    }
+
+    /** Starts a looping spell effect that follows a moving caster. */
+    public ChannelHandle startChannel(String effect, Supplier<Vector2> positionSupplier) {
+        if (effect == null || effect.isBlank() || positionSupplier == null) return null;
+        List<ImpactFrame> frames = getImpactFrames(effect);
+        if (frames.isEmpty()) return null;
+        ChannelHandle handle = new ChannelHandle();
+        activeChannels.add(new ChannelEffect(handle, frames, positionSupplier));
+        return handle;
+    }
+
+    public void stopChannel(ChannelHandle handle) {
+        if (handle != null) activeChannels.removeIf(channel -> channel.handle == handle);
     }
 
     public void playLaunchSound(String sound) {
@@ -176,6 +192,17 @@ public class SpellRenderer {
         }
     }
 
+    private void renderChannels(SpriteBatch batch) {
+        if (activeChannels.isEmpty()) return;
+        float delta = Gdx.graphics.getDeltaTime();
+        for (ChannelEffect channel : activeChannels) {
+            channel.update(delta);
+            Vector2 position = channel.positionSupplier.get();
+            ImpactFrame frame = channel.currentFrame();
+            if (position != null && frame != null) renderImpactFrame(batch, frame, position.x, position.y);
+        }
+    }
+
     /**
      * Dessine la frame courante d'un impact. Quand la frame porte un masque de transparence, le
      * sprite couleur est rendu avec le shader qui module son alpha par le masque, comme le
@@ -186,10 +213,14 @@ public class SpellRenderer {
         if (frame == null) {
             return;
         }
+        renderImpactFrame(batch, frame, impact.worldX, impact.worldY);
+    }
+
+    private void renderImpactFrame(SpriteBatch batch, ImpactFrame frame, float worldX, float worldY) {
         float w = frame.region.getRegionWidth();
         float h = frame.region.getRegionHeight();
-        float x = impact.worldX + frame.offsetX;
-        float y = impact.worldY + frame.offsetY;
+        float x = worldX + frame.offsetX;
+        float y = worldY + frame.offsetY;
 
         ShaderProgram shader = frame.hasMask() ? maskShader() : null;
         if (shader == null) {
@@ -473,6 +504,34 @@ public class SpellRenderer {
             }
             return frames.get(frameIndex);
         }
+    }
+
+    public static final class ChannelHandle {
+        private ChannelHandle() {}
+    }
+
+    private static final class ChannelEffect {
+        private final ChannelHandle handle;
+        private final List<ImpactFrame> frames;
+        private final Supplier<Vector2> positionSupplier;
+        private int frameIndex;
+        private float timer;
+
+        private ChannelEffect(ChannelHandle handle, List<ImpactFrame> frames, Supplier<Vector2> positionSupplier) {
+            this.handle = handle;
+            this.frames = frames;
+            this.positionSupplier = positionSupplier;
+        }
+
+        private void update(float delta) {
+            timer += delta;
+            while (timer >= .08f) {
+                timer -= .08f;
+                frameIndex = (frameIndex + 1) % frames.size();
+            }
+        }
+
+        private ImpactFrame currentFrame() { return frames.get(frameIndex); }
     }
 /**
  * Class representing SpellProjectile.

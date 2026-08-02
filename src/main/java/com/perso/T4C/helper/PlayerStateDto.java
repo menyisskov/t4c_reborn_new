@@ -48,23 +48,21 @@ public class PlayerStateDto {
     public int respawnWorldZ;
     public long hiddenRemainingMillis;
     public float dayNightHour = 7f;
+    public CompanionState companion;
+
+    @NoArgsConstructor
+    public static class CompanionState {
+        public String speciesName;
+        public boolean tamed;
+        public int level;
+        public int currentHp;
+        public String mode;
+    }
 
     @NoArgsConstructor
     public static class ActiveBuffState {
         public String spellName;
-        public String description;
-        public String iconId;
         public long remainingSeconds;
         public long totalDurationSeconds;
-        public boolean unlimited;
-        public List<PersistedEffect> effects;
-
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class PersistedEffect {
-            public String type;
-            public String attribute;
-            public String amount;
-        }
     }
 }

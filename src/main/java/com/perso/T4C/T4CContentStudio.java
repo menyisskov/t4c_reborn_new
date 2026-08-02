@@ -1591,6 +1591,16 @@ public class T4CContentStudio {
         item.put("defaultAggressive", def.isDefaultAggressive());
         item.put("animateWhileStationary", def.isAnimateWhileStationary());
         item.put("stationaryAnimationPauseSeconds", def.getStationaryAnimationPauseSeconds());
+        item.put("str", def.getStr()); item.put("end", def.getEnd()); item.put("agi", def.getAgi());
+        item.put("intel", def.getIntel()); item.put("will", def.getWill()); item.put("wis", def.getWis());
+        item.put("luck", def.getLuck()); item.put("resists", def.getResists()); item.put("level", def.getLevel());
+        item.put("dodge", def.getDodge()); item.put("acMin", def.getAcMin()); item.put("acMax", def.getAcMax());
+        item.put("appearance", def.getAppearance()); item.put("itemBody", def.getItemBody());
+        item.put("itemFeet", def.getItemFeet()); item.put("itemHands", def.getItemHands()); item.put("itemHead", def.getItemHead());
+        item.put("itemLegs", def.getItemLegs()); item.put("itemWeapon", def.getItemWeapon());
+        item.put("itemShield", def.getItemShield()); item.put("itemBack", def.getItemBack());
+        item.put("aggro", def.getAggro()); item.put("clan", def.getClan()); item.put("speed", def.getSpeed());
+        item.put("canAttack", def.isCanAttack()); item.put("tameable", def.isTameable()); item.put("tameMaxLevel", def.getTameMaxLevel());
         item.put("loot", def.getLoot() == null ? List.of() : def.getLoot().stream().map(drop -> {
             Map<String, Object> loot = new LinkedHashMap<>();
             loot.put("item", drop.getItem());
@@ -1617,10 +1627,17 @@ public class T4CContentStudio {
                 integer(item.get("goldMin"), 0), integer(item.get("goldMax"), 0), loot,
                 bool(item.get("animateWhileStationary"), false),
                 flt(item.get("stationaryAnimationPauseSeconds"), 0f),
-                0, 0, 0, 0, 0, 0, 0, new int[12],
-                1, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                bool(item.get("defaultAggressive"), true) ? 50 : 0, 0, 0, true, new java.util.ArrayList<>());
+                integer(item.get("str"), 0), integer(item.get("end"), 0), integer(item.get("agi"), 0),
+                integer(item.get("intel"), 0), integer(item.get("will"), 0), integer(item.get("wis"), 0),
+                integer(item.get("luck"), 0), intArray(item.get("resists"), 12),
+                integer(item.get("level"), 1), integer(item.get("dodge"), 0), integer(item.get("acMin"), 0),
+                integer(item.get("acMax"), 0), integer(item.get("appearance"), 0),
+                integer(item.get("itemBody"), 0), integer(item.get("itemFeet"), 0), integer(item.get("itemHands"), 0),
+                integer(item.get("itemHead"), 0), integer(item.get("itemLegs"), 0), integer(item.get("itemWeapon"), 0),
+                integer(item.get("itemShield"), 0), integer(item.get("itemBack"), 0),
+                integer(item.get("aggro"), bool(item.get("defaultAggressive"), true) ? 50 : 0),
+                integer(item.get("clan"), 0), integer(item.get("speed"), 0), bool(item.get("canAttack"), true),
+                new java.util.ArrayList<>(), bool(item.get("tameable"), false), integer(item.get("tameMaxLevel"), 0));
     }
 
     private Map<String, Object> xpCurveEntryToMap(XpCurve.Entry entry) {
@@ -3050,6 +3067,13 @@ public class T4CContentStudio {
         } catch (Exception e) {
             return fallback;
         }
+    }
+
+    private int[] intArray(Object raw, int fallbackSize) {
+        if (!(raw instanceof List<?> list)) return new int[fallbackSize];
+        int[] values = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) values[i] = integer(list.get(i), 0);
+        return values;
     }
 
     private long longVal(Object value, long fallback) {
