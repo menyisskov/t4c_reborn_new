@@ -1,20 +1,20 @@
 {
-  "x": 319.0,
-  "y": 654.0,
+  "x": 302.0,
+  "y": 717.0,
   "z": 0,
   "strength": 500,
   "dexterity": 500,
   "endurance": 500,
   "intelligence": 500,
   "wisdom": 500,
-  "gold": 52825,
+  "gold": 54129,
   "karma": 0,
   "maxHp": 50000,
-  "currentHp": 49313,
+  "currentHp": 48306,
   "maxMana": 50000,
-  "mana": 49931,
+  "mana": 49668,
   "level": 176,
-  "currentXp": 29073,
+  "currentXp": 46855,
   "xpToNextLevel": 1426259,
   "statPoints": 0,
   "skillPoints": 0,
@@ -37,6 +37,10 @@
     {
       "slot": 3,
       "spell": "spell.flaming_arrow"
+    },
+    {
+      "slot": 4,
+      "spell": "spell.spell_lesser_drain"
     }
   ],
   "activeBuffs": [
@@ -44,17 +48,23 @@
       "spellName": "spell.remort_aura",
       "remainingSeconds": 9223372036854775807,
       "totalDurationSeconds": 9223372036854775807
+    },
+    {
+      "spellName": "spell.light",
+      "remainingSeconds": 134,
+      "totalDurationSeconds": 600
     }
   ],
   "inventory": [
     "item.nm_dechuwins",
-    "Potion of mana"
+    "Potion of mana",
+    "Finely crafted drum"
   ],
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
     "RIGHT_HAND": "item.studded_leather_gloves",
-    "BELT": "item.leather_belt",
     "RING1": "item.ring_of_the_seraph",
+    "BELT": "item.leather_belt",
     "BACK": "item.remort_white_wings",
     "WEAPON": "item.ashwood_reflex_bow",
     "BODY": "item.seraph_plate",
@@ -81,5 +91,12 @@
   "respawnWorldY": 0.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.019514
+  "dayNightHour": 7.0,
+  "companion": {
+    "speciesName": "Pack Wolf",
+    "tamed": true,
+    "level": 176,
+    "currentHp": 15599,
+    "mode": "SUPPORT"
+  }
 }

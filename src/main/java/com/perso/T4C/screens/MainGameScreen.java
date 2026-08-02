@@ -178,6 +178,9 @@ public class MainGameScreen implements Screen {
     private SpellRenderer.ChannelHandle tameChannelVfx;
     private GuiBar tameProgressBar;
     private GuiImage tameProgressFrame;
+    private float offensiveSpellProgressElapsed;
+    private float offensiveSpellProgressDuration;
+    private Runnable pendingOffensiveSpellLaunch;
     private int selectedTargetedSlot;
     private static final long BUFF_DOUBLE_CLICK_MILLIS = 350L;
     private String lastClickedBuffSpellName;
@@ -278,7 +281,7 @@ public class MainGameScreen implements Screen {
     private void initializeTameProgressGui() throws GameException {
         tameProgressBar = new GuiBar(null, spriteLoader.getRegionFromSpriteName("GUI_BackChStat_XP"),
                 0f, 0f, 314f, 12f,
-                () -> tameChannel == null ? 0f : tameChannel.getProgress());
+                this::getCastProgress);
         tameProgressFrame = new GuiImage(spriteLoader.getRegionFromSpriteName("64kTameProgressFrame"),
                 0f, 0f, 360f, 26f);
     }
@@ -1549,6 +1552,50 @@ public class MainGameScreen implements Screen {
         tameChannel = null; tameTarget = null;
     }
 
+    private void startOffensiveSpellProgress(SpellData spell, Runnable launch) {
+        long durationMillis = SpellCastingService.evaluateCastDurationMillis(spell, player);
+        if (durationMillis <= 0L) {
+            offensiveSpellProgressElapsed = 0f;
+            offensiveSpellProgressDuration = 0f;
+            pendingOffensiveSpellLaunch = null;
+            launch.run();
+            return;
+        }
+        offensiveSpellProgressElapsed = 0f;
+        offensiveSpellProgressDuration = durationMillis / 1000f;
+        pendingOffensiveSpellLaunch = launch;
+    }
+
+    private void updateOffensiveSpellProgress(float delta) {
+        if (offensiveSpellProgressDuration <= 0f) return;
+        offensiveSpellProgressElapsed += Math.max(0f, delta);
+        if (offensiveSpellProgressElapsed >= offensiveSpellProgressDuration) {
+            Runnable launch = pendingOffensiveSpellLaunch;
+            offensiveSpellProgressElapsed = 0f;
+            offensiveSpellProgressDuration = 0f;
+            pendingOffensiveSpellLaunch = null;
+            if (launch != null) launch.run();
+        }
+    }
+
+    private float getCastProgress() {
+        if (tameChannel != null) return tameChannel.getProgress();
+        if (offensiveSpellProgressDuration <= 0f) return hasQueuedOffensiveCast() ? 1f : 0f;
+        return Math.min(1f, offensiveSpellProgressElapsed / offensiveSpellProgressDuration);
+    }
+
+    /** Keeps the completed bar on screen between two automatic casts. */
+    private boolean hasQueuedOffensiveCast() {
+        if (currentAttackSpell == null || player == null
+                || SpellCastingService.evaluateCastDurationMillis(currentAttackSpell, player) <= 0L) {
+            return false;
+        }
+        if (currentAttackTarget != null) {
+            return !currentAttackTarget.isDead() && currentAttackTarget.canBeAttackedByPlayer();
+        }
+        return currentAttackNpcTarget != null;
+    }
+
     private void completeTame() {
         BaseMonster target = tameTarget;
         if (target == null) return;
@@ -1610,6 +1657,13 @@ public class MainGameScreen implements Screen {
         Vector2 playerPos = player.getPositionVector();
         Vector2 monsterPos = monster.getPosition();
         player.getMovement().faceToward(playerPos.x, playerPos.y, monsterPos.x, monsterPos.y);
+        startOffensiveSpellProgress(spell, () -> launchAttackSpell(spell, monster));
+        return cast;
+    }
+
+    private void launchAttackSpell(SpellData spell, BaseMonster monster) {
+        if (monster == null || monster.isDead()) return;
+        Vector2 playerPos = player.getPositionVector();
         spellRenderer.playLaunchSound(spell.getSound());
         float startX = playerPos.x;
         float startY = playerPos.y;
@@ -1635,7 +1689,6 @@ public class MainGameScreen implements Screen {
                 applySpellImpact(spell, monster);
             }
         }
-        return cast;
     }
 
     /** Performs one hostile spell attempt against an NPC. */
@@ -1650,17 +1703,24 @@ public class MainGameScreen implements Screen {
         if (!cast.success()) {
             return cast;
         }
-
         playerPos = player.getPositionVector();
         npcPos = npc.getPosition();
         player.getMovement().faceToward(playerPos.x, playerPos.y, npcPos.x, npcPos.y);
+        startOffensiveSpellProgress(spell, () -> launchAttackSpell(spell, npc));
+        return cast;
+    }
+
+    private void launchAttackSpell(SpellData spell, BaseNPC npc) {
+        if (npc == null) return;
+        Vector2 playerPos = player.getPositionVector();
+        Vector2 npcPos = npc.getPosition();
         spellRenderer.playLaunchSound(spell.getSound());
         float startX = playerPos.x;
         float startY = playerPos.y;
         String projectileSpell = spell.getProjectileSpell();
         if (projectileSpell == null || projectileSpell.isEmpty()) {
             applyNpcSpellImpact(spell, npc);
-            return cast;
+            return;
         }
 
         boolean launched = false;
@@ -1681,7 +1741,6 @@ public class MainGameScreen implements Screen {
         if (!launched) {
             applyNpcSpellImpact(spell, npc);
         }
-        return cast;
     }
 
     private void applyNpcSpellImpact(SpellData spell, BaseNPC npc) {
@@ -2335,8 +2394,18 @@ public class MainGameScreen implements Screen {
             showSystemMessage(SpellCastingService.message(cast.failure()));
             return true;
         }
+        if (spell.isAttack()) {
+            Vector2 castTarget = new Vector2(targetPosition);
+            startOffensiveSpellProgress(spell, () -> launchPositionSpell(spell, castTarget));
+            return true;
+        }
+        launchPositionSpell(spell, targetPosition);
+        return true;
+    }
+
+    private void launchPositionSpell(SpellData spell, Vector2 targetPosition) {
         spellRenderer.playLaunchSound(spell.getSound());
-        applySummons(spellEffectManager.resolvePositionSummons(spell), target.x, target.y);
+        applySummons(spellEffectManager.resolvePositionSummons(spell), targetPosition.x, targetPosition.y);
         if (spell.getRadius() > 0 && monsterManager != null) {
             for (BaseMonster candidate : monsterManager.getMonsters()) {
                 if (candidate.isDead()) continue;
@@ -2347,9 +2416,8 @@ public class MainGameScreen implements Screen {
             }
         }
         if (spell.getImpactSpell() != null && !spell.getImpactSpell().isEmpty()) {
-            spellRenderer.triggerImpactSpell(spell.getImpactSpell(), target.x, target.y, spell.getSoundImpact());
+            spellRenderer.triggerImpactSpell(spell.getImpactSpell(), targetPosition.x, targetPosition.y, spell.getSoundImpact());
         }
-        return true;
     }
 
     /**
@@ -2503,7 +2571,8 @@ public class MainGameScreen implements Screen {
     }
 
     private void renderTameProgress() {
-        if (tameChannel == null || tameProgressBar == null || tameProgressFrame == null) return;
+        if ((tameChannel == null && offensiveSpellProgressDuration <= 0f && !hasQueuedOffensiveCast())
+                || tameProgressBar == null || tameProgressFrame == null) return;
         updateHudCamera();
         float x = (hudCamera.viewportWidth - tameProgressFrame.getWidth()) * .5f;
         float y = hudCamera.viewportHeight * .72f;
@@ -3145,6 +3214,7 @@ public class MainGameScreen implements Screen {
             performAttackTick();
             spellEffectManager.update(this::applyPeriodicSpellImpact);
             updateTameChannel(delta);
+            updateOffensiveSpellProgress(delta);
         }
     }
 
