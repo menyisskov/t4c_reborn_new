@@ -2,6 +2,7 @@ package com.perso.T4C.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -40,7 +41,8 @@ public class PlayerHUD {
     private static final float BUFF_BAR_Y = 80f;
     private static final String COMBAT_ICON_SPRITE = "64kCursorAttack";
     private static final float COMBAT_ICON_MARGIN = 16f;
-    private static final float TOP_BAR_HEIGHT = 32f;
+    private static final float TOP_BAR_HEIGHT = 46f;
+    private static final String GENERATED_TOP_BAR_PATH = "assets/ui/topbar-frame-v2.png";
     private static final float TOP_BAR_BORDER_HEIGHT = 6f;
     private static final int TOP_BAR_BACKGROUND_X = 244;
     private static final int TOP_BAR_BACKGROUND_Y = 41;
@@ -50,20 +52,22 @@ public class PlayerHUD {
     private static final int TOP_BAR_BORDER_Y = 0;
     private static final int TOP_BAR_BORDER_WIDTH = 458;
     private static final int TOP_BAR_BORDER_SOURCE_HEIGHT = 8;
-    private static final float STAT_PANEL_WIDTH = 449f;
-    private static final float STAT_PANEL_HEIGHT = 26f;
+    private static final float STAT_PANEL_WIDTH = 458f;
+    private static final float STAT_PANEL_HEIGHT = 46f;
     private static final float STAT_PANEL_Y = 0f;
-    private static final float STAT_BAR_WIDTH = 106f;
-    private static final float STAT_BAR_HEIGHT = 11f;
-    private static final float STAT_LABEL_WIDTH = 25f;
+    private static final float STAT_BAR_WIDTH = 134f;
+    private static final float STAT_BAR_HEIGHT = 18f;
+    private static final float STAT_LABEL_WIDTH = 28f;
     private static final float STAT_LABEL_HEIGHT = 12f;
-    private static final float[] STAT_BAR_X = {27f, 178f, 329f};
-    private static final float[] STAT_BAR_Y = {7f, 7f, 7f};
-    private static final float[] STAT_LABEL_X = {0f, 151f, 302f};
-    private static final float[] STAT_LABEL_Y = {6f, 6f, 6f};
+    private static final float STAT_VALUE_Y = 27f;
+    private static final float[] STAT_BAR_X = {83f, 260f};
+    private static final float[] STAT_BAR_Y = {17f, 17f};
+    private static final float[] STAT_LABEL_X = {56f, 235f};
+    private static final float[] STAT_LABEL_Y = {19f, 19f};
 
     private TextureRegion topBarBackground;
     private TextureRegion topBarBorder;
+    private Texture generatedTopBar;
     private TextureRegion hpBar;
     private TextureRegion mpBar;
     private TextureRegion xpBar;
@@ -82,12 +86,16 @@ public class PlayerHUD {
     private static final int QUICK_SLOT_COUNT = 6;
     private static final float CHAT_BAR_WIDTH = 1024f;
     private static final float CHAT_BAR_HEIGHT = 150f;
-    private static final float QUICK_SLOT_X = 742f;
-    private static final float QUICK_SLOT_Y = 47f;
+    private static final float QUICK_SLOT_X = 668f;
+    private static final float QUICK_SLOT_Y = 13f;
     private static final float QUICK_SLOT_SIZE = 42f;
-    private static final float QUICK_SLOT_PITCH = 46f;
-    private static final float BACKPACK_BUTTON_X = 790f;
-    private static final float BACKPACK_BUTTON_Y = 102f;
+    private static final float[] QUICK_SLOT_OFFSET_X = {0f, 54f, 107f, 160f, 213f, 266f};
+    private static final float BACKPACK_BUTTON_X = 729f;
+    private static final float BACKPACK_BUTTON_Y = 65f;
+    private static final float XP_BAR_X = 20f;
+    private static final float XP_BAR_Y = 130f;
+    private static final float XP_BAR_WIDTH = 984f;
+    private static final float XP_BAR_HEIGHT = 7f;
     private final Map<String, TextureRegion> quickSlotIcons = new HashMap<>();
     private final Map<String, TextureRegion> buffIcons = new HashMap<>();
     private int selectedQuickSlot = 0;
@@ -111,10 +119,8 @@ public class PlayerHUD {
     private Player.ActiveBuff tooltipBuff;
     private GuiBoxedText hpLabel;
     private GuiBoxedText mpLabel;
-    private GuiBoxedText xpLabel;
     private GuiBar hpGuiBar;
     private GuiBar mpGuiBar;
-    private GuiBar xpGuiBar;
     private final GuiBoxedInteraction boxedInteraction = new GuiBoxedInteraction();
     private final List<GuiElement> hudBoxedElements = new ArrayList<>();
     private final HudStatsPanel statsPanel;
@@ -124,6 +130,7 @@ public class PlayerHUD {
 
         this.spriteLoader = spriteLoader;
         loadTopBarRegions();
+        loadGeneratedTopBar();
         this.hpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_HP");
         this.mpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_MP");
         this.xpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_XP");
@@ -143,8 +150,6 @@ public class PlayerHUD {
                 () -> "PV", () -> Color.WHITE).shrinkToFit();
         this.mpLabel = new GuiBoxedText(statLabelFont, 0f, 0f, STAT_LABEL_WIDTH, STAT_LABEL_HEIGHT,
                 () -> "PM", () -> Color.WHITE).shrinkToFit();
-        this.xpLabel = new GuiBoxedText(statLabelFont, 0f, 0f, STAT_LABEL_WIDTH, STAT_LABEL_HEIGHT,
-                () -> "XP", () -> Color.WHITE).shrinkToFit();
         createStatBars();
         this.statsPanel = new HudStatsPanel();
         statsPanel.initializeChildren();
@@ -157,7 +162,7 @@ public class PlayerHUD {
      */
     public void render(SpriteBatch batch, float offsetX, float offsetY) {
         if (spriteLoader.getTextureGeneration() != lastTextureGen) refreshRegions();
-        if (topBarBackground == null || hpBar == null || mpBar == null || xpBar == null) return;
+        if (topBarBackground == null || hpBar == null || mpBar == null) return;
 
         renderTopBar(batch);
         statsPanel.setSize(STAT_PANEL_WIDTH, STAT_PANEL_HEIGHT);
@@ -165,6 +170,7 @@ public class PlayerHUD {
         statsPanel.render(batch);
 
         renderActiveBuffs(batch);
+        renderExperienceBar(batch);
         renderQuickBar(batch);
         renderChatBarButtons(batch);
         renderBuffTooltip(batch);
@@ -189,12 +195,24 @@ public class PlayerHUD {
                 width, height);
     }
 
+    private void loadGeneratedTopBar() {
+        if (!Gdx.files.internal(GENERATED_TOP_BAR_PATH).exists()) return;
+        generatedTopBar = new Texture(Gdx.files.internal(GENERATED_TOP_BAR_PATH));
+        generatedTopBar.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    }
+
     private void renderTopBar(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
         GuiDraw.withOverlayAlpha(batch, () -> {
-            drawTiled(batch, topBarBackground, 0f, 0f, screenWidth, TOP_BAR_HEIGHT);
-            drawTiled(batch, topBarBorder, 0f, TOP_BAR_HEIGHT - TOP_BAR_BORDER_HEIGHT,
-                    screenWidth, TOP_BAR_BORDER_HEIGHT);
+            if (generatedTopBar != null) {
+                batch.draw(generatedTopBar, (screenWidth - STAT_PANEL_WIDTH) * 0.5f, 0f,
+                        STAT_PANEL_WIDTH, STAT_PANEL_HEIGHT, 0, 0,
+                        generatedTopBar.getWidth(), generatedTopBar.getHeight(), false, true);
+            } else {
+                drawTiled(batch, topBarBackground, 0f, 0f, screenWidth, TOP_BAR_HEIGHT);
+                drawTiled(batch, topBarBorder, 0f, TOP_BAR_HEIGHT - TOP_BAR_BORDER_HEIGHT,
+                        screenWidth, TOP_BAR_BORDER_HEIGHT);
+            }
         });
     }
 
@@ -240,18 +258,14 @@ public class PlayerHUD {
                 () -> safeRatio(player.getCurrentHp(), player.getMaxHp()));
         this.mpGuiBar = new GuiBar(emptyBar, mpBar, 0f, 0f, STAT_BAR_WIDTH, STAT_BAR_HEIGHT,
                 () -> safeRatio(player.getMana(), player.getMaxMana()));
-        this.xpGuiBar = new GuiBar(emptyBar, xpBar, 0f, 0f, STAT_BAR_WIDTH, STAT_BAR_HEIGHT,
-                () -> safeRatio(player.getCurrentXp(), player.getXpToNextLevel()));
     }
 
     private void refreshStatBars() {
         GuiBar oldHp = hpGuiBar;
         GuiBar oldMp = mpGuiBar;
-        GuiBar oldXp = xpGuiBar;
         createStatBars();
         copyBox(oldHp, hpGuiBar);
         copyBox(oldMp, mpGuiBar);
-        copyBox(oldXp, xpGuiBar);
         registerHudBoxedElements();
     }
 
@@ -273,10 +287,8 @@ public class PlayerHUD {
         hudBoxedElements.add(statsPanel);
         hudBoxedElements.add(hpGuiBar);
         hudBoxedElements.add(mpGuiBar);
-        hudBoxedElements.add(xpGuiBar);
         hudBoxedElements.add(hpLabel);
         hudBoxedElements.add(mpLabel);
-        hudBoxedElements.add(xpLabel);
     }
 
     /**
@@ -296,18 +308,14 @@ public class PlayerHUD {
         public void render(SpriteBatch batch) {
             hpGuiBar.render(batch);
             mpGuiBar.render(batch);
-            xpGuiBar.render(batch);
             hpLabel.render(batch);
             mpLabel.render(batch);
-            xpLabel.render(batch);
 
             if (com.perso.T4C.config.GamePreferencesStore.get().isShowHudValues()) {
-                drawBarValue(batch, player.getCurrentHp() + "/" + player.getMaxHp(),
-                        hpGuiBar.getX(), hpGuiBar.getY(), hpGuiBar.getWidth(), hpGuiBar.getHeight());
-                drawBarValue(batch, player.getMana() + "/" + player.getMaxMana(),
-                        mpGuiBar.getX(), mpGuiBar.getY(), mpGuiBar.getWidth(), mpGuiBar.getHeight());
-                drawBarValue(batch, player.getCurrentXp() + "/" + player.getXpToNextLevel(),
-                        xpGuiBar.getX(), xpGuiBar.getY(), xpGuiBar.getWidth(), xpGuiBar.getHeight());
+                drawBarValue(batch, player.getCurrentHp() + " / " + player.getMaxHp(),
+                        hpGuiBar.getX(), y + STAT_VALUE_Y, hpGuiBar.getWidth(), STAT_LABEL_HEIGHT);
+                drawBarValue(batch, player.getMana() + " / " + player.getMaxMana(),
+                        mpGuiBar.getX(), y + STAT_VALUE_Y, mpGuiBar.getWidth(), STAT_LABEL_HEIGHT);
             }
             GuiBoxedItem.drawDebugBorder(batch, x, y, width, height);
         }
@@ -315,7 +323,6 @@ public class PlayerHUD {
         private void initializeChildren() {
             layoutInitial(hpGuiBar, hpLabel, 0);
             layoutInitial(mpGuiBar, mpLabel, 1);
-            layoutInitial(xpGuiBar, xpLabel, 2);
         }
 
         private void layoutInitial(GuiBar bar, GuiBoxedText label, int row) {
@@ -332,10 +339,8 @@ public class PlayerHUD {
             super.setPosition(x, y);
             translate(hpGuiBar, dx, dy);
             translate(mpGuiBar, dx, dy);
-            translate(xpGuiBar, dx, dy);
             translate(hpLabel, dx, dy);
             translate(mpLabel, dx, dy);
-            translate(xpLabel, dx, dy);
         }
 
         @Override
@@ -346,10 +351,8 @@ public class PlayerHUD {
             float scaleY = newHeight / this.height;
             scaleChild(hpGuiBar, scaleX, scaleY);
             scaleChild(mpGuiBar, scaleX, scaleY);
-            scaleChild(xpGuiBar, scaleX, scaleY);
             scaleChild(hpLabel, scaleX, scaleY);
             scaleChild(mpLabel, scaleX, scaleY);
-            scaleChild(xpLabel, scaleX, scaleY);
             this.width = newWidth;
             this.height = newHeight;
             return this;
@@ -494,6 +497,24 @@ public class PlayerHUD {
         renderDraggedQuickSlotIcon(batch);
     }
 
+    private void renderExperienceBar(SpriteBatch batch) {
+        if (xpBar == null) return;
+        QuickBarLayout layout = quickBarLayout();
+        float ratio = Math.max(0f, Math.min(1f,
+                safeRatio(player.getCurrentXp(), player.getXpToNextLevel())));
+        float x = layout.x + (XP_BAR_X - QUICK_SLOT_X) * layout.scale;
+        float y = layout.y + (XP_BAR_Y - QUICK_SLOT_Y) * layout.scale;
+        float width = XP_BAR_WIDTH * layout.scale;
+        float height = XP_BAR_HEIGHT * layout.scale;
+        if (ratio > 0f) {
+            GuiDraw.drawRegionFlipped(batch, xpBar, x, y, width * ratio, height);
+        }
+        if (com.perso.T4C.config.GamePreferencesStore.get().isShowHudValues()) {
+            drawBarValue(batch, "XP  " + Math.round(ratio * 100f) + "%",
+                    x, y - 3f * layout.scale, width, 13f * layout.scale);
+        }
+    }
+
     private void renderDraggedQuickSlotIcon(SpriteBatch batch) {
         if (draggedQuickSlot <= 0) {
             return;
@@ -573,19 +594,18 @@ public class PlayerHUD {
                 barX + QUICK_SLOT_X * scale,
                 barY + QUICK_SLOT_Y * scale,
                 QUICK_SLOT_SIZE * scale,
-                QUICK_SLOT_PITCH * scale,
                 scale);
     }
 
     private float quickSlotX(QuickBarLayout layout, int index) {
-        return layout.x + (index * layout.pitch + quickSlotGuiOffsetX[index] * layout.scale);
+        return layout.x + (QUICK_SLOT_OFFSET_X[index] + quickSlotGuiOffsetX[index]) * layout.scale;
     }
 
     private float quickSlotY(QuickBarLayout layout, int index) {
         return layout.y + quickSlotGuiOffsetY[index] * layout.scale;
     }
 
-    private record QuickBarLayout(float x, float y, float size, float pitch, float scale) {}
+    private record QuickBarLayout(float x, float y, float size, float scale) {}
 
     private void renderChatBarButtons(SpriteBatch batch) {
         QuickBarLayout layout = quickBarLayout();
@@ -695,17 +715,17 @@ public class PlayerHUD {
 
     private void loadChatBarButtons() throws GameException {
         chatBarButtons.clear();
-        addChatBarButton("Character", 744f, "GUI_ChatBtnCharCheet",
+        addChatBarButton("Character", 671f, "GUI_ChatBtnCharCheet",
                 () -> characterAction.run());
         addChatBarButton("Backpack", BACKPACK_BUTTON_X, "GUI_ChatBtnBackPack",
                 () -> backpackAction.run());
-        addChatBarButton("Spell book", 836f, "GUI_ChatBtnSpell",
+        addChatBarButton("Spell book", 788f, "GUI_ChatBtnSpell",
                 () -> spellBookAction.run());
-        addChatBarButton("Quest journal", 882f, "GUI_ChatBtnQuest",
+        addChatBarButton("Quest journal", 846f, "GUI_ChatBtnQuest",
                 () -> questAction.run());
-        addChatBarButton("World map", 928f, "GUI_ChatBtnMap",
+        addChatBarButton("World map", 906f, "GUI_ChatBtnMap",
                 () -> mapAction.run());
-        addChatBarButton("Options", 974f, 101f, "GUI_ChatBtnOption",
+        addChatBarButton("Options", 965f, BACKPACK_BUTTON_Y, "GUI_ChatBtnOption",
                 () -> optionsAction.run());
     }
 
@@ -891,14 +911,14 @@ public class PlayerHUD {
         float targetX = screenX - quickSlotGuiGrabOffsetX;
         float targetY = screenY - quickSlotGuiGrabOffsetY;
         quickSlotGuiOffsetX[index] =
-                (targetX - layout.x) / layout.scale - index * QUICK_SLOT_PITCH;
+                (targetX - layout.x) / layout.scale - QUICK_SLOT_OFFSET_X[index];
         quickSlotGuiOffsetY[index] = (targetY - layout.y) / layout.scale;
     }
 
     public void stopQuickSlotGuiItemDragAndLog() {
         if (draggedQuickSlotGuiItem <= 0) return;
         int index = draggedQuickSlotGuiItem - 1;
-        float relativeX = QUICK_SLOT_X + index * QUICK_SLOT_PITCH + quickSlotGuiOffsetX[index];
+        float relativeX = QUICK_SLOT_X + QUICK_SLOT_OFFSET_X[index] + quickSlotGuiOffsetX[index];
         float relativeY = QUICK_SLOT_Y + quickSlotGuiOffsetY[index];
         Gdx.app.log("GuiScreen", String.format(Locale.ROOT,
                 "Quick slot %d moved to x + %.1ff, y + %.1ff",
@@ -990,5 +1010,6 @@ public class PlayerHUD {
 
     public void dispose() {
         tooltip.dispose();
+        if (generatedTopBar != null) generatedTopBar.dispose();
     }
 }

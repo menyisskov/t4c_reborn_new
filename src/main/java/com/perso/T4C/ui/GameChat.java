@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,6 +34,7 @@ public final class GameChat extends InputAdapter {
     private static final int MAX_TEXT_LENGTH = 256;
     private static final float BAR_WIDTH = 1024f;
     private static final float BAR_HEIGHT = 150f;
+    private static final String GENERATED_BACKGROUND_PATH = "assets/ui/bottom-hud-frame-v1.png";
     private static final float LEFT_CAP_WIDTH = 8f;
     private static final float LOG_X = 18f;
     private static final float LOG_Y = 22f;
@@ -70,11 +72,16 @@ public final class GameChat extends InputAdapter {
     private final ChatZone chatZone = new ChatZone();
     private final ChatZone inputZone = new ChatZone();
     private boolean chatLayoutInitialized;
+    private Texture generatedBackground;
 
     public GameChat(Predicate<String> submitHandler) {
         this.submitHandler = submitHandler == null ? text -> false : submitHandler;
         font = FontManager.getInstance().getNpcDialogFont(LOCAL);
         historyIndex = history.size();
+        if (Gdx.files.internal(GENERATED_BACKGROUND_PATH).exists()) {
+            generatedBackground = new Texture(Gdx.files.internal(GENERATED_BACKGROUND_PATH));
+            generatedBackground.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        }
     }
 
     public boolean isActive() {
@@ -180,6 +187,12 @@ public final class GameChat extends InputAdapter {
     }
 
     private void drawBackground(SpriteBatch batch, float x, float y, float scale) {
+        if (generatedBackground != null) {
+            GuiDraw.withOverlayAlpha(batch, () -> batch.draw(generatedBackground, x, y,
+                    BAR_WIDTH * scale, BAR_HEIGHT * scale, 0, 0,
+                    generatedBackground.getWidth(), generatedBackground.getHeight(), false, true));
+            return;
+        }
         SpriteLoader loader = SpriteLoader.getInstance();
         TextureRegion left = null;
         TextureRegion background = null;
@@ -386,6 +399,6 @@ public final class GameChat extends InputAdapter {
     }
 
     public void dispose() {
-        // Sprite textures and the shared font are owned by their respective managers.
+        if (generatedBackground != null) generatedBackground.dispose();
     }
 }

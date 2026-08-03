@@ -1,20 +1,20 @@
 {
   "x": 799.0,
-  "y": 1787.0,
+  "y": 1800.0,
   "z": 0,
   "strength": 500,
   "dexterity": 500,
   "endurance": 500,
   "intelligence": 500,
   "wisdom": 500,
-  "gold": 29975,
+  "gold": 30038,
   "karma": 0,
   "maxHp": 40000,
   "currentHp": 37492,
   "maxMana": 100,
-  "mana": 90,
+  "mana": 80,
   "level": 100,
-  "currentXp": 63665,
+  "currentXp": 65078,
   "xpToNextLevel": 501187,
   "statPoints": 0,
   "skillPoints": 0,
@@ -27,19 +27,15 @@
   ],
   "quickSlots": [
     {
-      "slot": 1,
-      "spell": "spell.tame_beast"
-    },
-    {
       "slot": 2,
-      "spell": "spell.light"
+      "spell": "spell.tame_beast"
     },
     {
       "slot": 3,
       "spell": "spell.flaming_arrow"
     },
     {
-      "slot": 4,
+      "slot": 6,
       "spell": "spell.spell_lesser_drain"
     }
   ],
@@ -51,7 +47,7 @@
     },
     {
       "spellName": "spell.light",
-      "remainingSeconds": 370,
+      "remainingSeconds": 567,
       "totalDurationSeconds": 600
     }
   ],
@@ -864,8 +860,8 @@
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
     "RIGHT_HAND": "item.studded_leather_gloves",
-    "BELT": "item.leather_belt",
     "RING1": "item.ring_of_the_seraph",
+    "BELT": "item.leather_belt",
     "BACK": "item.remort_white_wings",
     "WEAPON": "item.ashwood_reflex_bow",
     "BODY": "item.seraph_plate",
