@@ -110,6 +110,9 @@ public class GroundItem {
         if (inventorySprite.startsWith("64kInv")) {
             return inventorySprite.substring("64kInv".length());
         }
+        if (inventorySprite.startsWith("Inv_")) {
+            return "Ground_" + inventorySprite.substring("Inv_".length());
+        }
         return inventorySprite;
     }
 

@@ -24,6 +24,7 @@ public final class StarterLoadout {
         add(player, "Oak longbow", 1);
         add(player, "Fine steel long sword", 1);
         add(player, "High metal battle axe", 1);
+        add(player, "item.miner_pickaxe", 1);
         // Include every registered High Elf/seraph-style armour piece available in the data set.
         for (ItemDefinition d : ItemRegistry.load()) {
             if (d == null || d.getKey() == null || d.getBodyPart() == null) continue;

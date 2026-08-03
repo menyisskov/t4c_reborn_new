@@ -91,6 +91,34 @@ public final class SpellRegistry {
         return byName;
     }
 
+    /**
+     * Returns the visible, player-castable spell catalogue in data-file order.
+     * Item procs, monster abilities, test entries and secondary effect records
+     * share the same binary registry but must never appear in a player's book.
+     */
+    public static synchronized List<SpellData> playerCastableSpells() {
+        Map<String, SpellData> result = new LinkedHashMap<>();
+        for (SpellData spell : load()) {
+            if (!isPlayerCastable(spell)) continue;
+            result.putIfAbsent(canonicalKey(spell.getKey()), spell);
+        }
+        return List.copyOf(result.values());
+    }
+
+    private static boolean isPlayerCastable(SpellData spell) {
+        if (spell == null || spell.getName() == null || spell.getName().isBlank()) return false;
+        if (spell.getIconId() == null || spell.getIconId().isBlank()
+                || "0".equals(spell.getIconId())) return false;
+        String identity = spell.getName().toLowerCase();
+        if (!identity.startsWith("${spell.")) return false;
+        if (identity.startsWith("${spell.item_")
+                || identity.startsWith("${spell.mob_")
+                || identity.startsWith("${spell.test_")
+                || identity.startsWith("${spell.npc_")) return false;
+        if (identity.endsWith("_effect}")) return false;
+        return !spell.getT4cEffects().isEmpty() || identity.equals("${spell.tame_beast}");
+    }
+
     public static synchronized void invalidate() {
         cache = null;
         byName = null;

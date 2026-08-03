@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 /**
  * Class representing SpellBook.
  */
@@ -99,8 +101,27 @@ public class SpellBook extends GuiScreenBase {
         addCloseButton();
         addCornerAnimations();
         addHeader();
+        unlockAllPlayerSpells();
         loadSpells();
         rebuildPage();
+    }
+
+    private void unlockAllPlayerSpells() {
+        if (player == null) return;
+        if (player.getSpells() == null) player.setSpells(new ArrayList<>());
+        Set<String> knownKeys = new HashSet<>();
+        for (String known : player.getSpells()) {
+            SpellData data = SpellRegistry.findByName(known);
+            if (data != null && data.getKey() != null) knownKeys.add(data.getKey());
+        }
+        boolean changed = false;
+        for (SpellData spell : SpellRegistry.playerCastableSpells()) {
+            if (knownKeys.add(spell.getKey())) {
+                player.getSpells().add(spell.getName());
+                changed = true;
+            }
+        }
+        if (changed) PlayerStateStore.save(player);
     }
 
     private void addCloseButton() {
