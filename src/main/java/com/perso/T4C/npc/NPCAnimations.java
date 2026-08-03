@@ -368,6 +368,20 @@ public class NPCAnimations extends EntityAnimationsBase {
 
     private void loadBaseAnimations(SpriteLoader loader, String baseName) throws GameException {
         Map<String, List<TextureRegion>> angleMap = new HashMap<>();
+        if (baseName.equals("@invisible")) {
+            animations.put(baseName, angleMap);
+            return;
+        }
+        if (baseName.startsWith("@static:")) {
+            String spriteName = baseName.substring("@static:".length());
+            TextureRegion region = loader.getRegionFromSpriteName(spriteName);
+            if (region != null) {
+                cacheOffsets(spriteName, loader);
+                for (String angle : ANGLES) angleMap.put(angle, List.of(region));
+            }
+            animations.put(baseName, angleMap);
+            return;
+        }
         for (String angle : ANGLES) {
             List<TextureRegion> frames = new ArrayList<>();
             for (char c = FRAME_START; ; c++) {

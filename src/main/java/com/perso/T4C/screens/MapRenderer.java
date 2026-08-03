@@ -41,6 +41,7 @@ public class MapRenderer {
     private final SpriteLoader spriteLoader;
     private final SpriteBatch batchSol;
     private final SpriteBatch batchDecor;
+    private final Integer worldZ;
     @Getter
     private List<ObjectPos> objectPositions;
     private final ShaderProgram outlineShader;
@@ -71,18 +72,24 @@ public class MapRenderer {
      * Create a map renderer with required helpers and resources.
      */
     public MapRenderer(MapReader reader, SpriteLoader spriteLoader, SpriteBatch batchSol, SpriteBatch batchDecor, ShaderProgram outlineShader, ModifSprites modifSprites) throws GameException {
+        this(reader, spriteLoader, batchSol, batchDecor, outlineShader, modifSprites, null);
+    }
+
+    public MapRenderer(MapReader reader, SpriteLoader spriteLoader, SpriteBatch batchSol, SpriteBatch batchDecor,
+            ShaderProgram outlineShader, ModifSprites modifSprites, Integer worldZ) throws GameException {
         this.reader = reader;
         this.spriteLoader = spriteLoader;
         this.batchSol = batchSol;
         this.batchDecor = batchDecor;
         this.outlineShader = outlineShader;
+        this.worldZ = worldZ;
 
         for (SpriteLoader.Sprite s : spriteLoader.getSprites()) {
             metaByName.put(s.getName().toLowerCase(Locale.ROOT), s);
         }
 
         objectMappings.putAll(loadMappings());
-        this.objectPositions = loadObjectPositions(objectMappings);
+        this.objectPositions = loadObjectPositions(objectMappings, worldZ);
 
         // Precompute names of flagged decors from the loaded mappings
         flaggedDecorNames.clear();
@@ -112,7 +119,7 @@ public class MapRenderer {
         return ObjectMappings.load();
     }
 
-    private static List<ObjectPos> loadObjectPositions(Map<String, ObjectMapping> objectMappings) throws GameException {
+    private static List<ObjectPos> loadObjectPositions(Map<String, ObjectMapping> objectMappings, Integer worldZ) throws GameException {
         File file = new File(Paths.OBJECT_POSITIONS_BIN);
         if (!file.exists()) {
             return Collections.emptyList();
@@ -126,6 +133,7 @@ public class MapRenderer {
             List<ObjectPos> mappedPositions = new ArrayList<>();
             for (ObjectPos position : positions) {
                 if (position != null && position.name() != null
+                        && (worldZ == null || (int) position.z() == worldZ)
                         && objectMappings.containsKey(position.name().toUpperCase(Locale.ROOT))) {
                     mappedPositions.add(position);
                 }
@@ -256,7 +264,7 @@ public class MapRenderer {
     }
 
     public void reloadObjectPositions() throws GameException {
-        objectPositions = loadObjectPositions(objectMappings);
+        objectPositions = loadObjectPositions(objectMappings, worldZ);
         if (objectRenderer != null) {
             objectRenderer.reset();
         }
@@ -272,7 +280,7 @@ public class MapRenderer {
     public void reloadObjectMappings() throws GameException {
         objectMappings.clear();
         objectMappings.putAll(loadMappings());
-        objectPositions = loadObjectPositions(objectMappings);
+        objectPositions = loadObjectPositions(objectMappings, worldZ);
         recomputeFlaggedDecorNames();
         if (objectRenderer != null) {
             objectRenderer.reset();
@@ -300,7 +308,7 @@ public class MapRenderer {
 
         objectMappings.clear();
         objectMappings.putAll(loadMappings());
-        objectPositions = loadObjectPositions(objectMappings);
+        objectPositions = loadObjectPositions(objectMappings, worldZ);
 
         recomputeFlaggedDecorNames();
 

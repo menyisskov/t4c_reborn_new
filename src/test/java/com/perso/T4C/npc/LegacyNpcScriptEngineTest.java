@@ -1,0 +1,342 @@
+package com.perso.T4C.npc;
+
+import com.perso.T4C.player.Player;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class LegacyNpcScriptEngineTest {
+    @Test
+    void concatenatesAdjacentCppStringLiteralsInDialogue() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "ETHEREAL"))
+                    Conversation
+                        INTL(2, "You spoke the word of power "
+                                "and may enter the sanctuary.")
+                """;
+
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
+                script, "Gatekeeper", "ethereal", player);
+
+        assertEquals("You spoke the word of power and may enter the sanctuary.", result.text());
+    }
+
+    @Test
+    void selectsOriginalConditionalBranchAndMutatesFlagsGoldAndXp() throws Exception {
+        Player player = new Player();
+        player.setLevel(12);
+        player.setGold(500);
+        String script = """
+                Begin
+                    Conversation
+                        INTL(1, "Welcome.")
+                Command2(INTL(2, "WORK"), INTL(3, "OCCUPATION"))
+                    IF (CheckFlag(__QUEST_TEST) == 0 && USER_LEVEL >= 10)
+                        Conversation
+                            INTL(4, "You are ready.")
+                        GiveFlag(__QUEST_TEST, 2)
+                        GiveGold(75)
+                        GiveXP(250)
+                    ELSE
+                        Conversation
+                            INTL(5, "Not yet.")
+                    ENDIF
+                """;
+
+        LegacyNpcScriptEngine.Result greeting = LegacyNpcScriptEngine.begin(script, "Tester", player);
+        assertEquals("Welcome.", greeting.text());
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Tester", "work", player);
+        assertTrue(result.handled());
+        assertEquals("You are ready.", result.text());
+        assertEquals(2, player.getQuestFlag("__QUEST_TEST"));
+        assertEquals(575, player.getGold());
+        assertEquals(250, result.xp());
+
+        LegacyNpcScriptEngine.Result repeated = LegacyNpcScriptEngine.respond(script, "Tester", "occupation", player);
+        assertEquals("Not yet.", repeated.text());
+    }
+
+    @Test
+    void rejectsPartialKeywordMatches() throws Exception {
+        Player player = new Player();
+        String script = "Command(INTL(1, \"SPELL\"))\n INTL(2, \"Magic.\")";
+        assertFalse(LegacyNpcScriptEngine.respond(script, "Tester", "spelling", player).handled());
+        assertEquals("Magic.", LegacyNpcScriptEngine.respond(script, "Tester", "spell", player).text());
+    }
+
+    @Test
+    void resumesOriginalYesNoState() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "QUEST"))
+                    INTL(2, "Will you help?")
+                    SetYesNo(HELP)
+                YES(HELP)
+                    INTL(3, "Thank you.")
+                    GiveFlag(__HELPING, 1)
+                NO(HELP)
+                    INTL(4, "Too bad.")
+                YesNoELSE(HELP)
+                    INTL(5, "Answer yes or no.")
+                    SetYesNo(HELP)
+                """;
+        LegacyNpcScriptEngine.Result question = LegacyNpcScriptEngine.respond(script, "Tester", "quest", player);
+        assertEquals("Will you help?", question.text());
+        assertEquals("HELP", question.pendingYesNo());
+        assertEquals(0, player.getQuestFlag("__HELPING"));
+        LegacyNpcScriptEngine.Result answer = LegacyNpcScriptEngine.respondYesNo(
+                script, "Tester", question.pendingYesNo(), true, player);
+        assertEquals("Thank you.", answer.text());
+        assertEquals(1, player.getQuestFlag("__HELPING"));
+    }
+
+    @Test
+    void executesOriginalTeleportKarmaAndPrivateMessage() throws Exception {
+        Player player = new Player();
+        player.setKarma(10);
+        String script = """
+                Command(INTL(1, "PORTAL"))
+                    PRIVATE_SYSTEM_MESSAGE(INTL(2, "The portal activates."))
+                    GiveKarma(5)
+                    TELEPORT(1495, 2470, 2)
+                """;
+
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Portal", "portal", player);
+        assertTrue(result.handled());
+        assertEquals(List.of("The portal activates."), result.systemMessages());
+        assertEquals(15, player.getKarma());
+        assertEquals(1495 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
+        assertEquals(2470 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
+        assertEquals(2, player.getCoordinates().getZ());
+    }
+
+    @Test
+    void collectsOriginalSpellTeachingAndSkillTrainingLists() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "LEARN"))
+                    AddTeachSkill("spell.fire_bolt", 12, 20372)
+                    AddTeachSkill("stun_blow", 1, 150)
+                    SendTeachSkillList
+                Command(INTL(2, "TRAIN"))
+                    AddTrainSkill("attack", 5000, 10)
+                    SendTrainSkillList
+                """;
+
+        LegacyNpcScriptEngine.Result learn = LegacyNpcScriptEngine.respond(script, "Trainer", "learn", player);
+        assertEquals(List.of("spell.fire_bolt"), learn.taughtSpells());
+        assertEquals(List.of("stun_blow"), learn.taughtSkills());
+        assertEquals(new LegacyNpcScriptEngine.SkillOffer("stun_blow", 1, 150, true), learn.skillOffers().get(0));
+        LegacyNpcScriptEngine.Result train = LegacyNpcScriptEngine.respond(script, "Trainer", "train", player);
+        assertEquals(List.of("attack"), train.trainedSkills());
+        assertEquals(new LegacyNpcScriptEngine.SkillOffer("attack", 5000, 10, false), train.skillOffers().get(0));
+    }
+
+    @Test
+    void executesOriginalSwitchCasesConstantsAndForLoops() throws Exception {
+        Player player = new Player();
+        player.setGold(100);
+        player.setQuestFlag("__ROUTE", 2);
+        String script = """
+                Command(INTL(1, "ACT"))
+                    CONSTANT Cost = 7
+                    SWITCH(CheckFlag(__ROUTE))
+                        CASE(1)
+                            GiveFlag(__RESULT, 10)
+                        ENDCASE
+                        CASE(2)
+                            GiveFlag(__RESULT, 20)
+                            FOR(0, 3)
+                                TakeGold(Cost)
+                            ENDFOR
+                        ENDCASE
+                        OTHERWISE
+                            GiveFlag(__RESULT, 30)
+                    ENDSWITCH
+                """;
+
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Switch", "act", player);
+        assertTrue(result.handled());
+        assertEquals(20, player.getQuestFlag("__RESULT"));
+        assertEquals(79, player.getGold());
+    }
+
+    @Test
+    void preservesOriginalTargetAndSelfSpellCasts() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "CAST"))
+                    CastSpellTarget("spell.npc_cantrip_serious_heal")
+                    CastSpellSelf("spell.npc_cantrip_pentacle")
+                """;
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Mage", "cast", player);
+        assertEquals(List.of("spell.npc_cantrip_serious_heal"), result.targetSpells());
+        assertEquals(List.of("spell.npc_cantrip_pentacle"), result.selfSpells());
+    }
+
+    @Test
+    void preservesSummonsAndSellRules() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "TRADE"))
+                    AddSellItem(WEAPON | MAGIC, 10, 100000)
+                    SendSellItemList(INTL(2, "Sell"))
+                    SUMMON2("Brown Rat", FROM_USER(1, X), FROM_NPC(-2, Y), 3)
+                """;
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Trader", "trade", player);
+        assertEquals(1, result.sellRules().size());
+        assertEquals("WEAPON | MAGIC", result.sellRules().get(0).categories());
+        assertEquals(10, result.sellRules().get(0).minimumPrice());
+        assertEquals(1, result.summons().size());
+        assertEquals("Brown Rat", result.summons().get(0).monster());
+        assertEquals("FROM_USER(1, X)", result.summons().get(0).xExpression());
+        assertEquals("3", result.summons().get(0).zExpression());
+    }
+
+    @Test
+    void executesOriginalRespawnRemortAndAttributeMacros() throws Exception {
+        Player player = new Player();
+        player.setStrength(20);
+        String script = """
+                Command(INTL(1, "REBIRTH"))
+                    SetDeathLocation(100, 200, 1)
+                    SET_STR(USER_TRUE_STR + 1)
+                    REMORT_TO(300, 400, 2)
+                """;
+        LegacyNpcScriptEngine.respond(script, "Oracle", "rebirth", player);
+        assertTrue(player.isRespawnPointDefined());
+        assertEquals(21, player.getStrength());
+        assertEquals(1, player.getRebirthCount());
+        assertEquals(2, player.getCoordinates().getZ());
+    }
+
+    @Test
+    void matchesParameterizedCommandsAndExposesNumericParameters() throws Exception {
+        Player player = new Player();
+        player.setGold(500);
+        String script = """
+                ParamCmd(INTL(1, "DEPOSIT $ GOLD"))
+                    IF (NUM_PARAM(0) <= USER_GOLD)
+                        TakeGold(NUM_PARAM(0))
+                        GiveFlag(__BANK_GOLD, CheckFlag(__BANK_GOLD) + NUM_PARAM(0))
+                    ENDIF
+                """;
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Banker", "deposit 125 gold", player);
+        assertTrue(result.handled());
+        assertEquals(375, player.getGold());
+        assertEquals(125, player.getQuestFlag("__BANK_GOLD"));
+        assertFalse(LegacyNpcScriptEngine.respond(script, "Banker", "deposit apples gold", player).handled());
+    }
+
+    @Test
+    void executesDirectOriginalHpMutation() throws Exception {
+        Player player = new Player();
+        player.setMaxHp(100);
+        player.setCurrentHp(80);
+        String script = "Command(INTL(1, \"PENANCE\"))\n target->SetHP(USER_HP / 2, true)";
+        assertTrue(LegacyNpcScriptEngine.respond(script, "Priest", "penance", player).handled());
+        assertEquals(40, player.getCurrentHp());
+    }
+
+    @Test
+    void supportsOriginalRandomRollTimedFlagsAndShouts() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "ROLL"))
+                    GiveNPCFlag(__DELAY, rnd.roll(dice(1, 1)) SECONDS TDELAY)
+                    CHATTER_SHOUT(INTL(2, "The ritual begins!"))
+                """;
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Mage", "roll", player);
+        assertTrue(player.getQuestFlag("npc:Mage:__DELAY") >= System.currentTimeMillis() / 1000L);
+        assertEquals(List.of("The ritual begins!"), result.systemMessages());
+    }
+
+    @Test
+    void decodesOriginalPackedDeathLocationForReturnPortals() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "SET"))
+                    SetDeathLocation(1682, 1163, 2)
+                Command(INTL(2, "RETURN"))
+                    BYTE world = BYTE(target->ViewFlag(__FLAG_DEATH_LOCATION) & 0xFF)
+                    WORD y = WORD((target->ViewFlag(__FLAG_DEATH_LOCATION) & 0xFFF00) >> 8)
+                    WORD x = WORD((target->ViewFlag(__FLAG_DEATH_LOCATION) & 0xFFF00000) >> 20)
+                    TELEPORT(x, y, world)
+                """;
+        LegacyNpcScriptEngine.respond(script, "Portal", "set", player);
+        LegacyNpcScriptEngine.respond(script, "Portal", "return", player);
+        assertEquals(1682 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
+        assertEquals(1163 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
+        assertEquals(2, player.getCoordinates().getZ());
+    }
+
+    @Test
+    void rendersChainedIntlNumericConversionsAndOriginalRndFunction() throws Exception {
+        Player player = new Player();
+        player.setQuestFlag("__RATS_KILLED", 7);
+        String script = """
+                Command(INTL(1, "RATS"))
+                    int nRatsKilled = CheckFlag(__RATS_KILLED)
+                    int remaining = 15 - nRatsKilled
+                    INTL(2, "You have killed ") C(nRatsKilled) INTL(3, " rats; ") C(remaining) INTL(4, " remain.")
+                    int reward = rnd(3, 3)
+                    GiveFlag(__REWARD, reward)
+                """;
+
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Samaritan", "rats", player);
+        assertEquals("You have killed 7 rats; 8 remain.", result.text());
+        assertEquals(3, player.getQuestFlag("__REWARD"));
+    }
+
+    @Test
+    void collectsProfessionFormulaOffersAndFormatsNumericDialogue() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "LEARN"))
+                    int cost = 1000
+                    FORMAT(INTL(2, "The formula costs %u gold."), cost)
+                    CreateFormuleList
+                    AddTeachFormule(1000, cost)
+                    SendTeachFormuleList
+                """;
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(script, "Trainer", "learn", player);
+        assertEquals("The formula costs 1000 gold.", result.text());
+        assertEquals(List.of(new LegacyNpcScriptEngine.FormulaOffer(1000, 1000)), result.formulaOffers());
+    }
+
+    @Test
+    void executesLegacyInlineIfInLotteryCode() throws Exception {
+        Player player = new Player();
+        String script = """
+                Command(INTL(1, "PICK"))
+                    int picked = 4
+                    int first = 4
+                    int second = 2
+                    int matches = 0
+                    if (first == picked) ++matches;
+                    if (second == picked) ++matches;
+                    GiveFlag(__MATCHES, matches)
+                """;
+        LegacyNpcScriptEngine.respond(script, "Lottery", "pick", player);
+        assertEquals(1, player.getQuestFlag("__MATCHES"));
+    }
+
+    @Test
+    void executesCppLifecycleSwitchCases() throws Exception {
+        Player player = new Player();
+        String event = """
+                switch(rnd(0, 0))
+                {
+                    case 0: SHOUT(INTL(1, "Defend Stonecrest!")); break;
+                    default: break;
+                }
+                """;
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.event(event, "Guard", player, 100, 100);
+        assertEquals(List.of("Defend Stonecrest!"), result.systemMessages());
+    }
+}

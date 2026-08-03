@@ -127,6 +127,8 @@ public class Player extends Stats {
     private final PlayerProgression progression = new PlayerProgression();
     @Getter
     private Map<String, Integer> questFlags = new HashMap<>();
+    /** Non-persistent server-style TDELAY flags used by original NPC scripts. */
+    private final Map<String, Long> questFlagExpirations = new HashMap<>();
     /** MainObject talk text: the original client keeps it visible for 10 s. */
     private String talkText;
     private long talkTextExpiresAt;
@@ -239,16 +241,33 @@ public class Player extends Stats {
     }
 
     public int getQuestFlag(String flag) {
-        return flag == null ? 0 : questFlags.getOrDefault(flag.trim(), 0);
+        if (flag == null) return 0;
+        String key = flag.trim();
+        Long expires = questFlagExpirations.get(key);
+        if (expires != null && System.currentTimeMillis() >= expires) {
+            questFlagExpirations.remove(key);
+            questFlags.remove(key);
+            return 0;
+        }
+        return questFlags.getOrDefault(key, 0);
     }
 
     public void setQuestFlag(String flag, int value) {
         if (flag == null || flag.isBlank()) return;
         questFlags.put(flag.trim(), value);
+        questFlagExpirations.remove(flag.trim());
+    }
+
+    public void setTimedQuestFlag(String flag, int value, long durationMillis) {
+        if (flag == null || flag.isBlank()) return;
+        String key = flag.trim();
+        questFlags.put(key, value);
+        questFlagExpirations.put(key, System.currentTimeMillis() + Math.max(0L, durationMillis));
     }
 
     public void setQuestFlags(Map<String, Integer> flags) {
         questFlags = flags == null ? new HashMap<>() : new HashMap<>(flags);
+        questFlagExpirations.clear();
     }
 
     public void setItemCharges(Map<String, Integer> itemCharges) {
@@ -674,6 +693,7 @@ public class Player extends Stats {
         };
         String normalized = element == null ? "" : element.toLowerCase();
         return 100 + buffStatBonuses.getOrDefault("resist:" + normalized, 0)
+                + getQuestFlag("legacy:resist:" + normalized)
                 + EquipmentBonusRules.bonus(this, stat);
     }
     public int getElementPower(String element) {
@@ -685,7 +705,16 @@ public class Player extends Stats {
         int base = getSkillLevel(element);
         String normalized = element == null ? "" : element.toLowerCase();
         return (base <= 0 ? 100 : base) + buffStatBonuses.getOrDefault("power:" + normalized, 0)
+                + getQuestFlag("legacy:power:" + normalized)
                 + EquipmentBonusRules.bonus(this, stat);
+    }
+
+    public void setBaseElementResistance(String element, int value) {
+        if (element != null) setQuestFlag("legacy:resist:" + element.toLowerCase(), value - 100);
+    }
+
+    public void setBaseElementPower(String element, int value) {
+        if (element != null) setQuestFlag("legacy:power:" + element.toLowerCase(), value - 100);
     }
     public int getEffectiveSkillLevel(String skillId) {
         return getSkillLevel(skillId) + buffStatBonuses.getOrDefault("skill:" + skillId, 0)

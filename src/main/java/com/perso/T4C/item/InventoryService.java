@@ -71,17 +71,18 @@ public final class InventoryService {
     public static Result add(Player player, String itemKey, int remainingCharges) {
         ItemDefinition definition = ItemRegistry.findByKey(itemKey);
         if (player == null || definition == null) return Result.failure(Failure.UNKNOWN_ITEM, itemKey);
-        if (definition.isUnique() && count(player, itemKey) > 0) return Result.failure(Failure.UNIQUE_ITEM, itemKey);
+        String canonicalKey = definition.getKey();
+        if (definition.isUnique() && count(player, canonicalKey) > 0) return Result.failure(Failure.UNIQUE_ITEM, canonicalKey);
         if (currentWeight(player) + Math.max(0L, definition.getWeight()) > maximumWeight(player)) {
-            return Result.failure(Failure.TOO_HEAVY, itemKey);
+            return Result.failure(Failure.TOO_HEAVY, canonicalKey);
         }
-        player.getInventory().add(itemKey);
+        player.getInventory().add(canonicalKey);
         if (!definition.isUnlimitedUse() && definition.getNbCharges() > 0) {
             int charges = remainingCharges < 0 ? definition.getNbCharges()
                     : Math.max(0, Math.min(definition.getNbCharges(), remainingCharges));
-            player.getItemCharges().merge(itemKey, charges, Integer::sum);
+            player.getItemCharges().merge(canonicalKey, charges, Integer::sum);
         }
-        return Result.success(itemKey);
+        return Result.success(canonicalKey);
     }
 
     public static Result remove(Player player, int index, String expectedItemKey) {

@@ -1,20 +1,30 @@
 package com.perso.T4C.tools;
 
 import com.perso.T4C.helper.SpriteBinIO;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 
-/** Exports selected packed sprites as PNG files for visual inspection. */
+/** Small command-line exporter used to inspect packed UI sprites. */
 public final class SpritePngExport {
-    private SpritePngExport() {}
+    private SpritePngExport() { }
+
     public static void main(String[] args) throws Exception {
-        if (args.length == 0) throw new IllegalArgumentException("sprite name required");
-        Path out = Path.of("tmp/sprite-reference");
-        Files.createDirectories(out);
-        for (SpriteBinIO.Packed sprite : SpriteBinIO.readAllToList(Path.of("assets/sprites"), "sprites")) {
-            for (String requested : args) if (requested.equalsIgnoreCase(sprite.name())) {
-                Files.write(out.resolve(sprite.name() + ".png"), sprite.png());
+        if (args.length != 2) throw new IllegalArgumentException("Usage: <sprite-name> <output.png>");
+        String wanted = args[0].toLowerCase(Locale.ROOT);
+        Path output = Path.of(args[1]);
+        boolean[] found = {false};
+        SpriteBinIO.readAll(Path.of("assets/sprites"), "sprites", packed -> {
+            if (!packed.name().toLowerCase(Locale.ROOT).equals(wanted)) return;
+            try {
+                Files.createDirectories(output.getParent());
+                Files.write(output, packed.png());
+                found[0] = true;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
+        if (!found[0]) throw new IllegalArgumentException("Sprite not found: " + args[0]);
     }
 }

@@ -60,6 +60,7 @@ const sectionGroups = [
       { id: "objectPositions", label: "Object Positions", endpoint: "/api/object-positions", key: "name", subtitle: "x,y,z" },
       { id: "itemIcons", label: "Item Icons", endpoint: "/api/item-icons", key: "appearanceId", subtitle: "sprite" },
       { id: "groundMosaics", label: "Ground Mosaics", endpoint: "/api/ground-mosaics", key: "id", subtitle: "width,height,frameCount" },
+      { id: "herbs", label: "Harvestable Herbs", endpoint: "/api/herbs", key: "id", subtitle: "itemKey,spawnWeight" },
     ],
   },
   {
@@ -114,6 +115,7 @@ const fields = {
   appearanceDefaults: ["gender", "bodyPart", "sprite"],
   concealmentRules: ["triggerSlot", "appearance", "hiddenParts", "hidesExplicit:boolean"],
   groundMosaics: ["id", "width:number", "height:number", "frames:textarea"],
+  herbs: ["id", "itemKey", "worldSprite", "spawnWeight:number"],
   xpCurve: ["level:number", "xpToNextLevel:number", "totalXp:number"],
 };
 
@@ -249,6 +251,9 @@ const FIELD_META = {
   height: ["Block height", "Mosaic block height in tiles. Y selects the frame inside the block."],
   frameCount: ["Frames", "Number of frames stored for this mosaic."],
   frames: ["Frames", "One sprite name per line, in X-major order (width x height entries). A single line containing &x / &y is a coordinate template expanded at lookup time."],
+  itemKey: ["Inventory item", "Item definition granted after a successful harvest."],
+  worldSprite: ["World sprite", "Sprite rendered as the harvestable plant on the map."],
+  spawnWeight: ["Spawn weight", "Relative random selection weight. 0 disables this herb."],
   clickAnimate: ["Click animation", "Object can animate when clicked."],
   mirror: ["Mirror sprite", "Render this object mirrored."],
   animateSound: ["Open sound", "Sound played when click animation starts."],
@@ -937,9 +942,9 @@ function renderEditor() {
       }
     });
   }
-  if (["objects", "decorRules", "itemIcons", "appearanceDefaults"].includes(state.section) && !state.itemSpriteOptions.length) {
+  if (["objects", "decorRules", "itemIcons", "appearanceDefaults", "herbs"].includes(state.section) && !state.itemSpriteOptions.length) {
     ensureItemSpriteOptions().then(() => {
-      if (["objects", "decorRules", "itemIcons", "appearanceDefaults"].includes(state.section) && state.items[state.selectedIndex] === item) {
+      if (["objects", "decorRules", "itemIcons", "appearanceDefaults", "herbs"].includes(state.section) && state.items[state.selectedIndex] === item) {
         renderEditor();
       }
     });
@@ -1012,6 +1017,11 @@ function renderEditor() {
       return;
     }
     if (["objects", "decorRules", "itemIcons", "appearanceDefaults"].includes(state.section) && name === "sprite") {
+      label.appendChild(createSpriteDropdown(item, name));
+      el.formFields.appendChild(label);
+      return;
+    }
+    if (state.section === "herbs" && name === "worldSprite") {
       label.appendChild(createSpriteDropdown(item, name));
       el.formFields.appendChild(label);
       return;
@@ -2978,7 +2988,7 @@ function spriteLookupValue(value, fieldName) {
 function spriteDropdownOptions(fieldName) {
   if (state.section === "monsters") return state.monsterPatternOptions;
   if (["npcs", "companions"].includes(state.section)) return state.animatedSpriteBaseOptions;
-  if (["objects", "decorRules", "itemIcons", "appearanceDefaults"].includes(state.section)) return state.itemSpriteOptions;
+  if (["objects", "decorRules", "itemIcons", "appearanceDefaults", "herbs"].includes(state.section)) return state.itemSpriteOptions;
   if (state.section === "items" && fieldName === "appearanceEquippedPrimary") return state.itemEquippedSpriteOptions;
   if (state.section === "items") return state.itemSpriteOptions;
   return fieldName === "iconId" ? state.spellIconOptions : state.spellSpriteOptions;
@@ -2997,7 +3007,7 @@ async function ensureSpriteIndex() {
 }
 
 async function renderEntityPreview(item) {
-  if (!["npcs", "companions", "monsters", "items", "spells", "itemIcons", "appearanceDefaults", "concealmentRules", "groundMosaics"].includes(state.section)) {
+  if (!["npcs", "companions", "monsters", "items", "spells", "itemIcons", "appearanceDefaults", "concealmentRules", "groundMosaics", "herbs"].includes(state.section)) {
     el.entityPreview.classList.add("hidden");
     return;
   }
@@ -3249,6 +3259,9 @@ function previewCandidates(item) {
   }
   if (state.section === "itemIcons") {
     return [item.sprite];
+  }
+  if (state.section === "herbs") {
+    return [item.worldSprite];
   }
   if (state.section === "appearanceDefaults") {
     return [item.sprite];

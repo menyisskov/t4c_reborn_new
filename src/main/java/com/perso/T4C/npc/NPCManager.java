@@ -57,6 +57,14 @@ public class NPCManager {
         log.info("Added NPC: {} at position ({}, {})", npc.getName(), npc.getTileX(), npc.getTileY());
     }
 
+    /** Fires the original spawn/popup hooks once the player and map are both ready. */
+    public void triggerPopupEvents(Player player) {
+        for (BaseNPC npc : List.copyOf(npcs)) if (npc instanceof DataNpc dataNpc) {
+            dataNpc.triggerLegacyEvent("OnInitialise", player);
+            dataNpc.triggerLegacyEvent("OnPopup", player);
+        }
+    }
+
     /** Removes a single NPC from the world (companion dismissal, death). */
     public void removeNPC(BaseNPC npc) {
         if (npc == null) {
@@ -262,17 +270,50 @@ public class NPCManager {
         if (systemMessage != null) {
             systemMessage.show(I18n.message("message.attack_npc",  I18n.resolve(npc.getName())));
         }
-        onNpcAttacked(npc);
+        onNpcAttacked(npc, player);
+        int rawDamage = com.perso.T4C.helper.CombatMath.computeMeleeDamage(player);
+        var result = com.perso.T4C.combat.CombatResolver.resolve(
+                new com.perso.T4C.combat.PhysicalAttackRequest(
+                        com.perso.T4C.combat.CombatProfiles.fromPlayer(player),
+                        com.perso.T4C.combat.CombatProfiles.fromNpc(npc), rawDamage, 0, false),
+                java.util.concurrent.ThreadLocalRandom.current());
+        if (result.hit() && result.damage() > 0) damageNpc(npc, result.damage(), player);
+        return true;
+    }
+
+    public boolean damageNpc(BaseNPC npc, int damage, Player player) {
+        if (npc == null || damage <= 0 || !npcs.contains(npc)) return false;
+        npc.setCurrentHp(Math.max(0, npc.getCurrentHp() - damage));
+        if (npc.getCurrentHp() > 0) return false;
+        if (npc instanceof DataNpc dataNpc) {
+            dataNpc.triggerLegacyEvent("OnDeath", player);
+            dataNpc.triggerLegacyEvent("OnDestroy", player);
+        }
+        removeNPC(npc);
+        log.info("NPC {} was slain by the player", npc.getName());
         return true;
     }
 
     public void onNpcAttacked(BaseNPC npc) {
+        onNpcAttacked(npc, null);
+    }
+
+    public void onNpcAttacked(BaseNPC npc, Player player) {
         if (npc == null || !npcs.contains(npc) || npc instanceof CompanionNPC) {
             return;
         }
         if (activeConversationNpc == npc) {
             npc.endInteraction();
             activeConversationNpc = null;
+        }
+        if (player != null && npc instanceof DataNpc dataNpc) {
+            dataNpc.triggerLegacyEvent("OnAttacked", player);
+            if (npc.getCurrentHp() <= 0) {
+                dataNpc.triggerLegacyEvent("OnDeath", player);
+                dataNpc.triggerLegacyEvent("OnDestroy", player);
+                removeNPC(npc);
+                return;
+            }
         }
         List<String> fleeShouts = fleeShoutsOf(npc);
         if (!fleeShouts.isEmpty()) {

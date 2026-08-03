@@ -76,6 +76,8 @@ public class GameConstants {
     public static final int COMPANION_TRAIL_SAMPLES = 4;
     public static final float COMPANION_COMBAT_LEASH_RANGE = 15f * GRID_W;
     public static final float TAME_CHANNEL_SECONDS = 5f;
+    public static final float HERB_HARVEST_SECONDS = 5f;
+    public static final int HERB_INTERACTION_DISTANCE_TILES = 2;
     public static final float TAME_MAX_RANGE_TILES = 8f;
     public static final float TAME_MOVE_TOLERANCE = 4f;
     public static final long DEFAULT_CAST_MENTAL_EXHAUSTION_MS = 1000L;

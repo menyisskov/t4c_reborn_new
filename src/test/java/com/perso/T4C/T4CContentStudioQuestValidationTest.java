@@ -68,12 +68,11 @@ class T4CContentStudioQuestValidationTest {
         List<Map<String, Object>> topics = (List<Map<String, Object>>) npcPayload.get("topics");
         Map<String, Object> work = topics.get(1);
 
-        assertEquals(List.of("travail", "que faites-vous", "occupation"), work.get("keywords"));
+        assertEquals(List.of("WORK", "WHAT DO YOU", "OCCUPATION"), work.get("keywords"));
         assertTrue(((List<String>) work.get("keywords")).stream()
                 .noneMatch(value -> value.contains("${")));
         List<Map<String, Object>> actions = (List<Map<String, Object>>) work.get("actions");
-        assertEquals("GIVE_QUEST", actions.get(0).get("type"));
-        assertEquals(List.of("lighthaven_samaritan_rats"), actions.get(0).get("targets"));
+        assertTrue(actions.isEmpty(), "original quest effects are retained in sourceScript, not synthetic actions");
 
         QuestDef quest = QuestDefBinaryIO.read(new File(Paths.QUESTS_BIN)).get(0);
         Map<String, Object> questPayload = studio.questToMap(quest);

@@ -31,7 +31,7 @@ public final class CppEquipmentAppearanceMigration {
     private static final Pattern OBJECT_GROUP = Pattern.compile(
             "^\\s*const\\s+unsigned\\s+int\\s+(__OBJGROUP_[A-Za-z0-9_]+)\\s*=\\s*([0-9]+)\\s*;");
     private static final Pattern SWITCH = Pattern.compile("switch\\s*\\(Object->PuppetInfo\\[(\\d+)\\]\\)");
-    private static final Pattern CASE = Pattern.compile("^\\s*case\\s+(PUPEQ_[A-Za-z0-9_]+)\\s*:");
+    private static final Pattern CASE = Pattern.compile("^\\s*case\\s+(PUPEQ_[A-Za-z0-9_]+|[0-9]+)\\s*:");
     private static final Pattern SPRITE = Pattern.compile("LoadSprite3D\\([^;]*?\"([^\"]+)\"([^;]*)\\);");
     private static final Pattern GROUP_CASE = Pattern.compile("^\\s*case\\s+(__OBJGROUP_[A-Za-z0-9_]+)\\s*:");
     private static final Pattern PUPPET_ASSIGNMENT = Pattern.compile(
@@ -128,6 +128,10 @@ public final class CppEquipmentAppearanceMigration {
     }
 
     static ParsedPuppet parsePuppet(Path header, Path source) throws Exception {
+        return parsePuppet(header, source, false);
+    }
+
+    static ParsedPuppet parsePuppet(Path header, Path source, boolean female) throws Exception {
         Map<String, Integer> ids = new HashMap<>();
         for (String line : Files.readAllLines(header, StandardCharsets.ISO_8859_1)) {
             Matcher matcher = DEFINE.matcher(line);
@@ -138,11 +142,14 @@ public final class CppEquipmentAppearanceMigration {
         Map<Integer, Map<Integer, String>> result = new LinkedHashMap<>();
         int slot = -1;
         List<String> pendingCases = new ArrayList<>();
+        boolean genderConditional = false;
+        boolean femaleBranch = false;
         for (String line : Files.readAllLines(source, StandardCharsets.ISO_8859_1)) {
             Matcher switchMatcher = SWITCH.matcher(line);
             if (switchMatcher.find()) {
                 slot = Integer.parseInt(switchMatcher.group(1));
                 pendingCases.clear();
+                genderConditional = false;
                 continue;
             }
             if (slot < 0) {
@@ -153,19 +160,33 @@ public final class CppEquipmentAppearanceMigration {
                 pendingCases.add(caseMatcher.group(1));
                 continue;
             }
+            if (line.contains("Object->Type == 10011")) {
+                genderConditional = true;
+                femaleBranch = false;
+                continue;
+            }
+            if (genderConditional && line.trim().startsWith("else")) {
+                femaleBranch = true;
+                continue;
+            }
             Matcher spriteMatcher = SPRITE.matcher(line);
-            if (spriteMatcher.find() && !pendingCases.isEmpty()) {
+            if (spriteMatcher.find() && !pendingCases.isEmpty()
+                    && (!genderConditional || female == femaleBranch)) {
                 String sprite = paletteQualified(spriteMatcher.group(1), spriteMatcher.group(2));
                 Map<Integer, String> byId = result.computeIfAbsent(slot, ignored -> new LinkedHashMap<>());
                 for (String constant : pendingCases) {
                     Integer id = ids.get(constant);
+                    if (id == null && constant.chars().allMatch(Character::isDigit)) {
+                        id = Integer.parseInt(constant);
+                    }
                     if (id != null) {
                         byId.putIfAbsent(id, sprite); // first branch is the Pup (male) branch
                     }
                 }
-                pendingCases.clear();
             } else if (line.contains("break;")) {
                 pendingCases.clear();
+                genderConditional = false;
+                femaleBranch = false;
             }
         }
         return new ParsedPuppet(ids, result);
@@ -183,9 +204,22 @@ public final class CppEquipmentAppearanceMigration {
         Map<Integer, Map<Integer, String>> result = new LinkedHashMap<>();
         List<String> pendingGroups = new ArrayList<>();
         boolean inPuppetize = false;
+        boolean puppetizeSignature = false;
+        boolean bodyStarted = false;
+        int braceDepth = 0;
         for (String line : Files.readAllLines(visualObjectList, StandardCharsets.ISO_8859_1)) {
-            if (line.startsWith("void Puppetize(TFCObject* Object")) {
-                inPuppetize = true;
+            if (!inPuppetize && line.startsWith("void Puppetize(TFCObject* Object")) {
+                puppetizeSignature = true;
+            }
+            if (!inPuppetize && puppetizeSignature) {
+                if (line.contains(";")) {
+                    puppetizeSignature = false;
+                    continue;
+                }
+                if (line.contains("{")) {
+                    inPuppetize = true;
+                    bodyStarted = true;
+                }
             }
             if (!inPuppetize) continue;
             Matcher groupCase = GROUP_CASE.matcher(line);
@@ -209,6 +243,11 @@ public final class CppEquipmentAppearanceMigration {
             } else if (line.contains("break;")) {
                 pendingGroups.clear();
             }
+            int opens = (int) line.chars().filter(character -> character == '{').count();
+            int closes = (int) line.chars().filter(character -> character == '}').count();
+            if (opens > 0) bodyStarted = true;
+            braceDepth += opens - closes;
+            if (bodyStarted && braceDepth == 0) break;
         }
         return result;
     }
@@ -298,10 +337,12 @@ public final class CppEquipmentAppearanceMigration {
     private static Integer puppetSlot(String name) {
         return switch (name) {
             case "PUP_HAND_LEFT" -> 0;
+            case "PUP_ARM_LEFT" -> 1;
             case "PUP_FOOT" -> 2;
             case "PUP_LEGS" -> 3;
             case "PUP_BODY" -> 4;
             case "PUP_HAND_RIGHT" -> 6;
+            case "PUP_ARM_RIGHT" -> 7;
             case "PUP_WEAPON" -> 8;
             case "PUP_SHIELD" -> 9;
             case "PUP_BOOT" -> 10;

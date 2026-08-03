@@ -17,6 +17,7 @@ import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemIconRegistry;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.FontManager;
@@ -50,11 +51,17 @@ public class ShopScreen extends GuiListScreen {
     private static final Color BLOCKED = Color.valueOf("B03030");
 
     private final Player player;
+    private final boolean selling;
     private final List<ShopEntry> entries    = new ArrayList<>();
     private ShopEntry selected = null;
 
     public ShopScreen(Player player, List<String> itemKeys) {
+        this(player, itemKeys, false);
+    }
+
+    private ShopScreen(Player player, List<String> itemKeys, boolean selling) {
         this.player = player;
+        this.selling = selling;
         try {
             background = SpriteLoader.getInstance().getRegionFromSpriteName("GUIBackBuy");
         } catch (GameException ignored) {
@@ -67,6 +74,10 @@ public class ShopScreen extends GuiListScreen {
         rebuildList();
     }
 
+    public static ShopScreen forSelling(Player player, List<String> itemKeys) {
+        return new ShopScreen(player, itemKeys, true);
+    }
+
     // ── Static UI ─────────────────────────────────────────────────────────────
 
     private void addCloseButton() {
@@ -76,7 +87,7 @@ public class ShopScreen extends GuiListScreen {
     private void addStaticLabels() {
         if (background == null) return;
         BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
-        labels.add(boxed(chewy, TITLE_BOX, 0f, () -> I18n.key("ui.buy"), GOLD).shrinkToFit());
+        labels.add(boxed(chewy, TITLE_BOX, 0f, () -> selling ? "VENDRE" : I18n.key("ui.buy"), GOLD).shrinkToFit());
         labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.key("ui.gold"), GOLD).shrinkToFit());
 
         BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
@@ -98,7 +109,7 @@ public class ShopScreen extends GuiListScreen {
             if (itemKey == null || itemKey.isEmpty()) continue;
             ItemDefinition def = ItemRegistry.findByKey(itemKey);
             if (def != null) {
-                entries.add(new ShopEntry(def, def.getPrice()));
+                entries.add(new ShopEntry(def, selling ? Math.max(1L, def.getPrice() / 2L) : def.getPrice()));
             }
         }
     }
@@ -130,7 +141,8 @@ public class ShopScreen extends GuiListScreen {
             float rowY = ROW_0_Y + (i - start) * ROW_H_PITCH;
             boolean isSelected = (entry == selected);
             // Affordable = one more unit still fits in what the basket leaves.
-            boolean canAfford  = player.getGold() >= basketCost() + entry.effectivePrice;
+            boolean canAfford  = selling ? InventoryService.count(player, entry.def.getKey()) > entry.count
+                    : player.getGold() >= basketCost() + entry.effectivePrice;
 
             // Left socket: the item's category icon, centered in the socket zone.
             TextureRegion icon = loadIcon(entry.def);
@@ -176,7 +188,7 @@ public class ShopScreen extends GuiListScreen {
         addDyn(left >= 0 ? fontGo : fontBl, TOTAL_VAL_BOX, 0f,
                 () -> String.valueOf(left), left >= 0 ? GOLD : BLOCKED);
 
-        addBuyButton(basketCount() > 0 && onHand >= cost);
+        addBuyButton(basketCount() > 0 && (selling || onHand >= cost));
     }
 
     /**
@@ -201,7 +213,7 @@ public class ShopScreen extends GuiListScreen {
                 // A null callback, not a no-op: GuiButton only plays its click sound when
                 // it has one, so a disabled button stays silent too.
                 x + ACTION_BTN_X, y + ACTION_BTN_Y, canBuy ? this::buyBasket : null)
-                .withLabel(chewy, () -> I18n.key("ui.buy_action"));
+                .withLabel(chewy, () -> selling ? "VENDRE" : I18n.key("ui.buy_action"));
         buttons.add(buy);
         dynButtons.add(buy);
     }
@@ -240,6 +252,10 @@ public class ShopScreen extends GuiListScreen {
 
     /** Spin UP: queue one more unit, as long as the player can still pay for it. */
     private void basketAdd(ShopEntry entry) {
+        if (selling) {
+            if (entry.count < InventoryService.count(player, entry.def.getKey())) entry.count++;
+            selected = entry; rebuildList(); return;
+        }
         if (basketCost() + entry.effectivePrice > player.getGold()) {
             return;
         }
@@ -279,8 +295,18 @@ public class ShopScreen extends GuiListScreen {
         if (basketCount() == 0) {
             return;
         }
-        if (player.getGold() < cost) {
+        if (!selling && player.getGold() < cost) {
             SystemMessage.showShared(I18n.message("message.not_enough_gold"));
+            return;
+        }
+        if (selling) {
+            for (ShopEntry entry : entries) for (int n = 0; n < entry.count; n++)
+                InventoryService.destroyOne(player, entry.def.getKey());
+            player.setGold((int) Math.min(Integer.MAX_VALUE, player.getGold() + cost));
+            entries.forEach(entry -> entry.count = 0);
+            PlayerStateStore.save(player);
+            selected = null;
+            rebuildList();
             return;
         }
         player.setGold((int) (player.getGold() - cost));
@@ -347,6 +373,7 @@ public class ShopScreen extends GuiListScreen {
     @Override
     protected String blockedReason(ListRow row) {
         ShopEntry entry = (ShopEntry) row;
+        if (selling) return InventoryService.count(player, entry.def.getKey()) <= entry.count ? "Quantité insuffisante" : null;
         return player.getGold() < basketCost() + entry.effectivePrice
                 ? I18n.key("message.not_enough_gold") : null;
     }

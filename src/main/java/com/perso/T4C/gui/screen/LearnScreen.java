@@ -75,10 +75,26 @@ public class LearnScreen extends GuiListScreen {
 
     /** Same screen, fed with trainable skills instead of spells (e.g. Ortanalas). */
     public static LearnScreen forTraining(Player player, List<String> skillIds) {
-        return new LearnScreen(player, null, skillIds);
+        return new LearnScreen(player, null, skillIds, null);
+    }
+
+    public record TrainingOffer(String skillId, int limitOrInitialPoints, int goldCost, boolean teaching) {}
+    public record FormulaOffer(int formulaId, int goldCost) {}
+
+    public static LearnScreen forTrainingOffers(Player player, List<TrainingOffer> offers) {
+        return new LearnScreen(player, null, null, offers, null);
+    }
+
+    public static LearnScreen forFormulaOffers(Player player, List<FormulaOffer> offers) {
+        return new LearnScreen(player, null, null, null, offers);
     }
 
     private LearnScreen(Player player, List<String> spellIds, List<String> skillIds) {
+        this(player, spellIds, skillIds, null, null);
+    }
+
+    private LearnScreen(Player player, List<String> spellIds, List<String> skillIds,
+                        List<TrainingOffer> trainingOffers, List<FormulaOffer> formulaOffers) {
         this.player = player;
         try {
             background = SpriteLoader.getInstance().getRegionFromSpriteName("GUIBackSkill");
@@ -91,6 +107,8 @@ public class LearnScreen extends GuiListScreen {
         addLearnButton();
         loadEntries(spellIds);
         loadSkillEntries(skillIds);
+        loadTrainingOffers(trainingOffers);
+        loadFormulaOffers(formulaOffers);
         if (!entries.isEmpty()) {
             selected = entries.get(0);
         }
@@ -166,6 +184,19 @@ public class LearnScreen extends GuiListScreen {
             }
             entries.add(LearnEntry.forSkill(skillId));
         }
+    }
+
+    private void loadTrainingOffers(List<TrainingOffer> offers) {
+        if (offers == null) return;
+        for (TrainingOffer offer : offers) {
+            if (offer != null && offer.skillId() != null && !offer.skillId().isBlank())
+                entries.add(LearnEntry.forOffer(offer));
+        }
+    }
+
+    private void loadFormulaOffers(List<FormulaOffer> offers) {
+        if (offers == null) return;
+        for (FormulaOffer offer : offers) if (offer != null) entries.add(LearnEntry.forFormula(offer));
     }
 
     // ── Dynamic list (rebuilt on page change / selection / learn) ─────────────
@@ -260,12 +291,13 @@ public class LearnScreen extends GuiListScreen {
     }
 
     private int currentSkillLevel(LearnEntry entry) {
+        if (entry.formula) return player != null ? player.getQuestFlag("profession:formula:" + entry.id) : 0;
         return player != null ? player.getSkillLevel(entry.id) : 0;
     }
 
     /** Skill points consumed by the basket: 1 per skill point, 5 per spell (V3_TrainDlg). */
     private int basketSkillPoints() {
-        return entries.stream().mapToInt(e -> e.count * (e.isSkill() ? 1 : SKILL_POINTS_PER_SPELL)).sum();
+        return entries.stream().mapToInt(e -> e.count * (e.isSkill() ? e.skillPointCost : SKILL_POINTS_PER_SPELL)).sum();
     }
 
     private long basketGoldCost() {
@@ -316,10 +348,12 @@ public class LearnScreen extends GuiListScreen {
                 continue;
             }
             if (entry.isSkill()) {
-                int current = player.getSkillLevel(entry.id);
-                player.setSkillLevel(entry.id, current + entry.count);
-                SystemMessage.showShared(I18n.message("message.stat_increased", 
-                        skillName(entry), current + entry.count));
+                int current = currentSkillLevel(entry);
+                int newLevel = entry.formula ? 1
+                        : entry.teaching ? Math.max(current, entry.initialPoints) : current + entry.count;
+                if (entry.formula) player.setQuestFlag("profession:formula:" + entry.id, 1);
+                else player.setSkillLevel(entry.id, newLevel);
+                SystemMessage.showShared(I18n.message("message.stat_increased", skillName(entry), newLevel));
             } else {
                 spells.add(entry.id);
                 learnedNames.add(I18n.key(entry.spell.getKey(), I18n.resolve(entry.spell.getName())));
@@ -342,8 +376,9 @@ public class LearnScreen extends GuiListScreen {
     private void basketAdd(LearnEntry entry) {
         if (entry.isSkill()) {
             int current = currentSkillLevel(entry);
+            if (entry.teaching && entry.count > 0 || current + entry.count >= entry.maxLevel) return;
             // Each queued point consumes 1 skill point, as the original client does.
-            if (player != null && basketSkillPoints() + 1 > player.getSkillPoints()) {
+            if (!entry.formula && player != null && basketSkillPoints() + 1 > player.getSkillPoints()) {
                 return;
             }
             entry.count++;
@@ -379,7 +414,7 @@ public class LearnScreen extends GuiListScreen {
     /** Spell already known, or skill at its trainer cap. */
     private boolean isMaxed(LearnEntry entry) {
         if (entry.isSkill()) {
-            return false;
+            return currentSkillLevel(entry) >= entry.maxLevel;
         }
         return isKnown(entry.id);
     }
@@ -390,6 +425,7 @@ public class LearnScreen extends GuiListScreen {
             return I18n.message("message.learn_unavailable");
         }
         if (entry.isSkill()) {
+            if (currentSkillLevel(entry) >= entry.maxLevel) return I18n.message("message.learn_already_known");
             return player.getGold() < priceOf(entry) ? I18n.message("message.learn_not_enough_gold") : null;
         }
         SpellData spell = entry.spell;
@@ -422,13 +458,14 @@ public class LearnScreen extends GuiListScreen {
 
     /** Localized skill name, falling back to the English display name. */
     private static String skillName(LearnEntry entry) {
+        if (entry.formula) return entry.skillDisplayName;
         return I18n.key("skill." + entry.id);
     }
 
     /** A trainer can override a spell's default catalogue price, as GoN does. */
     private static int priceOf(LearnEntry entry) {
         if (entry.isSkill()) {
-            return 0;
+            return entry.goldPrice;
         }
         return entry.spell.getPrice();
     }
@@ -469,23 +506,49 @@ public class LearnScreen extends GuiListScreen {
         private final SpellData spell;             // null for skills
         private final boolean skill;
         private final String skillDisplayName;
+        private final int maxLevel;
+        private final int goldPrice;
+        private final int skillPointCost;
+        private final int initialPoints;
+        private final boolean teaching;
+        private final boolean formula;
         // Basketed quantity: 0/1 for a spell, any number of points for a skill.
         private int count;
 
-        private LearnEntry(String id, SpellData spell,
-                           boolean skill, String skillDisplayName) {
+        private LearnEntry(String id, SpellData spell, boolean skill, String skillDisplayName,
+                           int maxLevel, int goldPrice, int skillPointCost, int initialPoints, boolean teaching,
+                           boolean formula) {
             this.id = id;
             this.spell = spell;
             this.skill = skill;
             this.skillDisplayName = skillDisplayName;
+            this.maxLevel = maxLevel;
+            this.goldPrice = goldPrice;
+            this.skillPointCost = skillPointCost;
+            this.initialPoints = initialPoints;
+            this.teaching = teaching;
+            this.formula = formula;
         }
 
         static LearnEntry forSpell(String spellId, SpellData spell) {
-            return new LearnEntry(spellId, spell, false, null);
+            return new LearnEntry(spellId, spell, false, null, 1, 0, 0, 0, false, false);
         }
 
         static LearnEntry forSkill(String skillId) {
-            return new LearnEntry(skillId, null, true, skillDisplayName(skillId));
+            return new LearnEntry(skillId, null, true, skillDisplayName(skillId), Integer.MAX_VALUE, 0, 1, 0, false, false);
+        }
+
+        static LearnEntry forOffer(TrainingOffer offer) {
+            int initial = offer.teaching() ? Math.max(1, offer.limitOrInitialPoints()) : 0;
+            int maximum = offer.teaching() ? initial : Math.max(0, offer.limitOrInitialPoints());
+            return new LearnEntry(offer.skillId(), null, true, skillDisplayName(offer.skillId()), maximum,
+                    Math.max(0, offer.goldCost()), offer.teaching() ? initial : 1, initial, offer.teaching(), false);
+        }
+
+        static LearnEntry forFormula(FormulaOffer offer) {
+            return new LearnEntry(Integer.toString(offer.formulaId()), null, true,
+                    "Profession formula " + offer.formulaId(), 1, Math.max(0, offer.goldCost()),
+                    0, 1, true, true);
         }
 
         boolean isSkill() {

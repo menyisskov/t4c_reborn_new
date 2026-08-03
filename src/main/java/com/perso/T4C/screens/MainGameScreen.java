@@ -36,8 +36,12 @@ import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.helper.PlayerAppearanceDefaults;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.input.*;
+import com.perso.T4C.harvest.HarvestChannel;
+import com.perso.T4C.harvest.HerbManager;
+import com.perso.T4C.harvest.HerbNode;
 import com.perso.T4C.monster.BaseMonster;
 import com.perso.T4C.monster.MonsterManager;
+import com.perso.T4C.npc.LegacyNpcRuntimeHook;
 import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.MonsterRegistry;
 import com.perso.T4C.npc.BaseNPC;
@@ -46,6 +50,7 @@ import com.perso.T4C.npc.CompanionNPC;
 import com.perso.T4C.npc.CompanionDef;
 import com.perso.T4C.npc.CompanionMode;
 import com.perso.T4C.npc.CompanionRegistry;
+import com.perso.T4C.npc.DataNpc;
 import com.perso.T4C.npc.TamedCompanionFactory;
 import com.perso.T4C.npc.NPCManager;
 import com.perso.T4C.item.ItemDefinition;
@@ -147,6 +152,7 @@ public class MainGameScreen implements Screen {
     private CompanionManager companionManager;
     private QuestService questService;
     private final com.perso.T4C.objects.GroundItemManager groundItemManager = new com.perso.T4C.objects.GroundItemManager();
+    private final HerbManager herbManager = new HerbManager();
     private final java.util.Random lootRandom = new java.util.Random();
 
     private final Stage stage;
@@ -174,6 +180,8 @@ public class MainGameScreen implements Screen {
     private final DeathPenaltyService deathPenaltyService = new DeathPenaltyService(DeathPenaltyService.Config.originalDefaults());
     private SpellData selectedTargetedSpell;
     private TameChannel tameChannel;
+    private HarvestChannel harvestChannel;
+    private HerbNode harvestTarget;
     private BaseMonster tameTarget;
     private SpellRenderer.ChannelHandle tameChannelVfx;
     private GuiBar tameProgressBar;
@@ -247,6 +255,7 @@ public class MainGameScreen implements Screen {
         initialPlayerState = loadInitialPlayerState();
         currentMap = MapDefinition.fromZ(initialPlayerState != null ? initialPlayerState.z : 0);
         groundItemManager.setActiveWorld(currentMap.getZ());
+        herbManager.setActiveWorld(currentMap.getZ());
 
         loadShader();
         loadXpCurve();
@@ -766,7 +775,7 @@ public class MainGameScreen implements Screen {
     private MapRenderer createMapRenderer() throws GameException {
         ModifSprites modifSprites = ModifSprites.empty();
         MapRenderer renderer = new MapRenderer(reader, spriteLoader, batchSol, batchDecor, outlineShader,
-                modifSprites);
+                modifSprites, currentMap != null ? currentMap.getZ() : 0);
         CollisionManager.getInstance().setDynamicProvider((worldX, worldY) -> renderer.isDoorBlockedAt(worldX, worldY));
         return renderer;
     }
@@ -781,6 +790,7 @@ public class MainGameScreen implements Screen {
         try {
             String mapPath = currentMap != null ? currentMap.getMapPath() : Paths.MAP;
             manager.initializeNpcsFromMap(mapPath);
+            manager.triggerPopupEvents(player);
         } catch (GameException e) {
             log.error("Failed to initialize NPCs from map json", e);
         }
@@ -794,6 +804,8 @@ public class MainGameScreen implements Screen {
      */
     private MonsterManager createMonsterManager() {
         MonsterManager manager = new MonsterManager(outlineShader);
+        LegacyNpcRuntimeHook.setSummonCallback((name, x, y, z) ->
+                currentMap != null && currentMap.getZ() == z && manager.spawnMonster(name, x, y));
         manager.setXpCurve(xpCurve);
         try {
             String mapPath = currentMap != null ? currentMap.getMapPath() : Paths.MAP;
@@ -958,6 +970,13 @@ public class MainGameScreen implements Screen {
             return;
         }
         npcManager.setPlayerDamageCallback((attacker, rawDamage) -> {
+            if (attacker instanceof DataNpc dataNpc) {
+                dataNpc.triggerLegacyEvent("OnAttack", player);
+                if (attacker.getCurrentHp() <= 0) {
+                    npcManager.damageNpc(attacker, 1, player);
+                    return;
+                }
+            }
             CombatProfile attackerProfile = CombatProfiles.fromNpc(attacker);
             CombatProfile playerProfile = CombatProfiles.fromPlayer(player);
             CombatResult result = CombatResolver.resolve(new PhysicalAttackRequest(
@@ -1046,6 +1065,8 @@ public class MainGameScreen implements Screen {
                 companionManager.onMapChanged(player.getPositionVector());
             }
             groundItemManager.setActiveWorld(z);
+            cancelHarvest();
+            herbManager.setActiveWorld(z);
             configureMonsterDamageCallback();
             configureNpcDamageCallback();
             configureInputHandlerCallbacks();
@@ -1105,6 +1126,7 @@ public class MainGameScreen implements Screen {
         });
         section("bounds", () -> {
             calculateRenderBounds();
+            updateHerbViewport();
             warmVisibleCaches(FRAME_WARMUP_BUFFER, FRAME_WARMUP_CHUNK_BUDGET,
                     FRAME_WARMUP_TMPL_BUDGET, FRAME_WARMUP_DECOR_BUDGET);
         });
@@ -1552,6 +1574,78 @@ public class MainGameScreen implements Screen {
         tameChannel = null; tameTarget = null;
     }
 
+    private void updateHerbViewport() {
+        if (player == null || reader == null || currentMap == null) return;
+        Vector2 position = player.getPositionVector();
+        herbManager.updateViewport(renderStartX, renderEndX, renderStartY, renderEndY, reader,
+                (int) (position.x / GRID_W), (int) (position.y / GRID_H));
+    }
+
+    private boolean tryStartHarvest(HerbNode herb) {
+        if (herb == null || player == null) return false;
+        if (harvestChannel != null || tameChannel != null || offensiveSpellProgressDuration > 0f) {
+            showSystemMessage(I18n.message("message.harvest_busy"));
+            return true;
+        }
+        Vector2 playerPosition = player.getPositionVector();
+        int playerTileX = (int) (playerPosition.x / GRID_W);
+        int playerTileY = (int) (playerPosition.y / GRID_H);
+        int distance = Math.max(Math.abs(herb.getTileX() - playerTileX), Math.abs(herb.getTileY() - playerTileY));
+        if (distance > HERB_INTERACTION_DISTANCE_TILES) {
+            showSystemMessage(I18n.message("message.harvest_too_far"));
+            return true;
+        }
+        ItemDefinition definition = ItemDefinition.get(herb.getDefinition().getItemKey());
+        if (definition == null) {
+            showSystemMessage(I18n.message("message.harvest_unavailable"));
+            return true;
+        }
+        long nextWeight = com.perso.T4C.item.InventoryService.currentWeight(player) + Math.max(0L, definition.getWeight());
+        if (nextWeight > com.perso.T4C.item.InventoryService.maximumWeight(player)) {
+            showSystemMessage(I18n.message("message.item_too_heavy"));
+            return true;
+        }
+        herb.setState(HerbNode.State.HARVESTING);
+        harvestTarget = herb;
+        harvestChannel = new HarvestChannel(HERB_HARVEST_SECONDS, .5f, player::getPositionVector);
+        showSystemMessage(I18n.message("message.harvest_started", I18n.resolve(definition.getName())));
+        return true;
+    }
+
+    private void updateHarvest(float delta) {
+        if (harvestChannel == null) return;
+        boolean completed = harvestChannel.update(delta);
+        if (harvestChannel.isCancelled()) {
+            herbManager.cancel(harvestTarget);
+            harvestChannel = null;
+            harvestTarget = null;
+            showSystemMessage(I18n.message("message.harvest_cancelled_moved"));
+            return;
+        }
+        if (!completed) return;
+        HerbNode target = harvestTarget;
+        com.perso.T4C.item.InventoryService.Result result = target == null ? null
+                : com.perso.T4C.item.InventoryService.add(player, target.getDefinition().getItemKey());
+        if (result != null && result.success() && herbManager.complete(target)) {
+            ItemDefinition harvested = ItemDefinition.get(target.getDefinition().getItemKey());
+            showSystemMessage(I18n.message("message.harvest_success",
+                    I18n.resolve(harvested == null ? target.getDefinition().getItemKey() : harvested.getName())));
+            savePlayerState();
+        } else {
+            herbManager.cancel(target);
+            showSystemMessage(I18n.message("message.harvest_unavailable"));
+        }
+        harvestChannel = null;
+        harvestTarget = null;
+    }
+
+    private void cancelHarvest() {
+        if (harvestChannel != null) harvestChannel.cancel();
+        herbManager.cancel(harvestTarget);
+        harvestChannel = null;
+        harvestTarget = null;
+    }
+
     private void startOffensiveSpellProgress(SpellData spell, Runnable launch) {
         long durationMillis = SpellCastingService.evaluateCastDurationMillis(spell, player);
         if (durationMillis <= 0L) {
@@ -1579,6 +1673,7 @@ public class MainGameScreen implements Screen {
     }
 
     private float getCastProgress() {
+        if (harvestChannel != null) return harvestChannel.getProgress();
         if (tameChannel != null) return tameChannel.getProgress();
         if (offensiveSpellProgressDuration <= 0f) return hasQueuedOffensiveCast() ? 1f : 0f;
         return Math.min(1f, offensiveSpellProgressElapsed / offensiveSpellProgressDuration);
@@ -1748,7 +1843,16 @@ public class MainGameScreen implements Screen {
             return;
         }
         if (npcManager != null) {
-            npcManager.onNpcAttacked(npc);
+            npcManager.onNpcAttacked(npc, player);
+        }
+        int healthDelta = spellEffectManager.resolvePlayerHealthDelta(spell, player);
+        if (healthDelta < 0 && npcManager != null) {
+            int damage = -healthDelta;
+            npcManager.damageNpc(npc, damage, player);
+            Vector2 position = npc.getPosition();
+            floatingDamage.spawn(damage, position.x, position.y, FloatingDamage.Type.MONSTER_RECEIVED);
+        } else if (healthDelta > 0) {
+            npc.setCurrentHp(Math.min(npc.getMaxHp(), npc.getCurrentHp() + healthDelta));
         }
         String impact = spell.getImpactSpell();
         if (impact != null && !impact.isEmpty()) {
@@ -2571,7 +2675,7 @@ public class MainGameScreen implements Screen {
     }
 
     private void renderTameProgress() {
-        if ((tameChannel == null && offensiveSpellProgressDuration <= 0f && !hasQueuedOffensiveCast())
+        if ((harvestChannel == null && tameChannel == null && offensiveSpellProgressDuration <= 0f && !hasQueuedOffensiveCast())
                 || tameProgressBar == null || tameProgressFrame == null) return;
         updateHudCamera();
         float x = (hudCamera.viewportWidth - tameProgressFrame.getWidth()) * .5f;
@@ -2991,6 +3095,7 @@ public class MainGameScreen implements Screen {
      */
     private List<ObjectRenderer.RenderItem> buildEntityRenderItems() {
         entityItems.clear();
+        herbManager.addRenderItems(entityItems, this::obtainRenderItem, batchDecor, outlineShader);
         groundItemManager.addRenderItems(entityItems, this::obtainRenderItem, batchDecor, outlineShader);
         addNpcRenderItems(entityItems);
         addMonsterRenderItems(entityItems);
@@ -3214,6 +3319,7 @@ public class MainGameScreen implements Screen {
             performAttackTick();
             spellEffectManager.update(this::applyPeriodicSpellImpact);
             updateTameChannel(delta);
+            updateHarvest(delta);
             updateOffensiveSpellProgress(delta);
         }
     }
@@ -3376,7 +3482,11 @@ public class MainGameScreen implements Screen {
         });
         coordsHud = new PlayerCoordsHud(player);
         systemMessage = new SystemMessage();
+        GmCommandProcessor gmCommands = new GmCommandProcessor(xpCurve, npcManager, monsterManager);
         gameChat = new GameChat(text -> {
+            if (gmCommands.handleChatMessage(text, player)) {
+                return true;
+            }
             if (player != null) {
                 player.showTalkText(text);
                 if (npcManager != null && npcManager.hasActiveConversation()) {
@@ -3384,11 +3494,12 @@ public class MainGameScreen implements Screen {
                 }
             }
             // This callback is also the future network send point.
+            return false;
         });
         gameChat.addSystemMessage(I18n.key("chat.help"));
         SystemMessage.setShared(systemMessage);
         SystemMessage.setChatSink(gameChat::addSystemMessage);
-        com.perso.T4C.spell.NpcCastVfxHook.setShared(this::playNpcCastVfx);
+        com.perso.T4C.spell.NpcCastVfxHook.setShared(this::playNpcCastVfx, this::playNpcSelfVfx);
         com.perso.T4C.spell.CompanionCastVfxHook.setShared(
                 this::playCompanionAttackVfx, this::playCompanionHealVfx,
                 this::playCompanionVanishVfx);
@@ -3402,6 +3513,17 @@ public class MainGameScreen implements Screen {
      */
     private void playNpcCastVfx(SpellData spell, Player castOn, Vector2 casterPosition) {
         playNpcCastVfx(spell, castOn, casterPosition, null);
+    }
+
+    private void playNpcSelfVfx(SpellData spell, Vector2 casterPosition) {
+        if (spell == null || casterPosition == null) return;
+        spellRenderer.playLaunchSound(spell.getSound());
+        String impact = spell.getImpactSpell();
+        if (impact == null || impact.isEmpty()) impact = spell.getProjectileSpell();
+        if (impact != null && !impact.isEmpty()) {
+            spellRenderer.playImpactSound(spell.getSoundImpact());
+            spellRenderer.triggerImpactSpell(impact, casterPosition.x, casterPosition.y);
+        }
     }
 
     /**
@@ -3585,6 +3707,7 @@ public class MainGameScreen implements Screen {
 
         // Set up ground item pickup handler (loot dropped on the ground)
         GroundItemClickHandler groundItemClickHandler = new GroundItemClickHandler(camera, groundItemManager, player, systemMessage);
+        HerbInputHandler herbInputHandler = new HerbInputHandler(camera, herbManager, this::tryStartHarvest);
 
         // Set up click-to-move handler
         ClickToMoveHandler clickToMoveHandler = new ClickToMoveHandler(camera, reader, player, hud,
@@ -3615,6 +3738,13 @@ public class MainGameScreen implements Screen {
                 }
                 if (keycode == Input.Keys.F9) {
                     toggleProfilerEnabled();
+                    return true;
+                }
+                if (keycode == Input.Keys.F8) {
+                    herbManager.forceRefresh();
+                    updateHerbViewport();
+                    showSystemMessage(herbManager.debugSummary(renderStartX, renderEndX,
+                            renderStartY, renderEndY, reader));
                     return true;
                 }
                 if (keycode == Input.Keys.F11) {
@@ -3724,18 +3854,16 @@ public class MainGameScreen implements Screen {
                 return button == Input.Buttons.LEFT && tryCastPositionSpell(screenX, screenY);
             }
         };
-        GmInputHandler gmInputHandler = new GmInputHandler(player, new GmCommandProcessor(xpCurve, npcManager, monsterManager));
-        inputHandler.setGmInputHandler(gmInputHandler);
         inputHandler.setTextInputActiveSupplier(
                 () -> gameChat != null && gameChat.isActive());
         this.textInputActiveSupplier =
                 () -> gameChat != null && gameChat.isActive();
         multiplexer.addProcessor(gameChat);
-        multiplexer.addProcessor(gmInputHandler);
         multiplexer.addProcessor(guiAdapter);
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(monsterInputHandler);  // Process monster interactions first
         multiplexer.addProcessor(npcInputHandler);  // Process NPC interactions
+        multiplexer.addProcessor(herbInputHandler); // Harvest before loot/movement
         multiplexer.addProcessor(groundItemClickHandler);  // Pick up loot before moving/object clicks
         multiplexer.addProcessor(objectClickHandler);  // Process object clicks before tile clicks
         multiplexer.addProcessor(positionSpellHandler);
@@ -3770,6 +3898,7 @@ public class MainGameScreen implements Screen {
      */
     @Override
     public void dispose() {
+        LegacyNpcRuntimeHook.setSummonCallback(null);
         savePlayerState();
         gameProfiler.stop();
         SoundManager.stopAmbient();

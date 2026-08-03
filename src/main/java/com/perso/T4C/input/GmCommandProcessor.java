@@ -12,32 +12,59 @@ import com.perso.T4C.ui.SystemMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Consumer;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
 /**
  * Parses and executes GM (game-master) commands typed in-game.
- * Format: {@code <command> <value>}, e.g. {@code level 5} or {@code gold 9999}.
+ * Chat format: {@code .<command> <value>}, e.g. {@code .setLevel 5} or {@code .gold 9999}.
  */
 public final class GmCommandProcessor {
 
     private final XpCurve xpCurve;
     private final NPCManager npcManager;
     private final MonsterManager monsterManager;
+    private final Consumer<Player> saveHandler;
 
     public GmCommandProcessor(XpCurve xpCurve) {
         this(xpCurve, null, null);
     }
 
     public GmCommandProcessor(XpCurve xpCurve, NPCManager npcManager, MonsterManager monsterManager) {
+        this(xpCurve, npcManager, monsterManager, PlayerStateStore::save);
+    }
+
+    GmCommandProcessor(XpCurve xpCurve, NPCManager npcManager, MonsterManager monsterManager,
+                       Consumer<Player> saveHandler) {
         this.xpCurve = xpCurve;
         this.npcManager = npcManager;
         this.monsterManager = monsterManager;
+        this.saveHandler = saveHandler == null ? player -> { } : saveHandler;
     }
 
     /**
-     * Execute a raw command string (without the leading {@code #}).
+     * Handles a message submitted through the regular chat.
+     *
+     * @return true when the message used the GM prefix and must not be spoken or sent to an NPC
+     */
+    public boolean handleChatMessage(String text, Player player) {
+        if (text == null || !text.stripLeading().startsWith(".")) {
+            return false;
+        }
+        String command = text.stripLeading().substring(1).trim();
+        if (command.isEmpty()) {
+            SystemMessage.showShared("GM: type .help to list commands.");
+        } else {
+            execute(command, player);
+        }
+        return true;
+    }
+
+    /**
+     * Execute a raw command string (without the leading {@code .}).
      * Shows feedback via the shared SystemMessage.
      */
     public void execute(String raw, Player player) {
@@ -45,33 +72,34 @@ public final class GmCommandProcessor {
             return;
         }
         String[] parts = raw.trim().split("\\s+", 2);
-        String cmd = parts[0].toLowerCase();
+        String cmd = parts[0].toLowerCase(Locale.ROOT);
         String arg = parts.length > 1 ? parts[1].trim() : "";
 
         try {
             switch (cmd) {
-                case "level":    setLevel(player, parseInt(arg));    break;
-                case "xp":       setXp(player, parseInt(arg));       break;
-                case "gold":     setGold(player, parseInt(arg));     break;
-                case "hp":       setHp(player, parseInt(arg));       break;
-                case "mana":     setMana(player, parseInt(arg));     break;
-                case "str":      setStat(player, "str", parseInt(arg)); break;
-                case "dex":      setStat(player, "dex", parseInt(arg)); break;
-                case "end":      setStat(player, "end", parseInt(arg)); break;
-                case "int":      setStat(player, "int", parseInt(arg)); break;
-                case "wis":      setStat(player, "wis", parseInt(arg)); break;
-                case "statpts":  player.setStatPoints(parseInt(arg));
+                case "level", "setlevel": setLevel(player, parseInt(arg)); break;
+                case "xp", "setxp": setXp(player, parseInt(arg)); break;
+                case "gold", "setgold": setGold(player, parseInt(arg)); break;
+                case "hp", "sethp": setHp(player, parseInt(arg)); break;
+                case "mana", "setmana": setMana(player, parseInt(arg)); break;
+                case "str", "strength", "setstrength": setStat(player, "str", parseInt(arg)); break;
+                case "dex", "dexterity", "setdexterity": setStat(player, "dex", parseInt(arg)); break;
+                case "end", "endurance", "setendurance": setStat(player, "end", parseInt(arg)); break;
+                case "int", "intelect", "intellect", "intelligence", "setintelect", "setintellect", "setintelligence":
+                    setStat(player, "int", parseInt(arg)); break;
+                case "wis", "wisdom", "setwisdom": setStat(player, "wis", parseInt(arg)); break;
+                case "statpts", "setstatpoints": player.setStatPoints(Math.max(0, parseInt(arg)));
                                  ok("Stat points set to " + player.getStatPoints(), player); break;
-                case "skillpts": player.setSkillPoints(parseInt(arg));
+                case "skillpts", "setskillpoints": player.setSkillPoints(Math.max(0, parseInt(arg)));
                                  ok("Skill points set to " + player.getSkillPoints(), player); break;
                 case "summon":   summon(player, arg); break;
                 case "teleport": teleport(player, arg); break;
                 case "learn":    learn(player, arg); break;
-                case "collision": collision(player, arg); break;
+                case "collision", "noclip": collision(player, arg, "noclip".equals(cmd)); break;
                 case "speed":    speed(player, arg); break;
+                case "help", "commands": help(); break;
                 default:
-                    SystemMessage.showShared("Unknown GM command: " + cmd
-                            + "  (level/xp/gold/hp/mana/str/dex/end/int/wis/statpts/skillpts/summon/teleport/learn/collision/speed)");
+                    SystemMessage.showShared("GM: unknown command ." + cmd + " (type .help)");
             }
         } catch (NumberFormatException e) {
             SystemMessage.showShared("GM: invalid value \"" + arg + "\" - must be a number.");
@@ -126,7 +154,7 @@ public final class GmCommandProcessor {
     private void summon(Player player, String arg) {
         String[] parts = arg == null ? new String[0] : arg.trim().split("\\s+", 2);
         if (parts.length < 2 || parts[0].isBlank() || parts[1].isBlank()) {
-            SystemMessage.showShared("GM: usage #summon item <key>, #summon npc <name>, #summon monster <name>");
+            SystemMessage.showShared("GM: usage .summon item <key>, .summon npc <name>, .summon monster <name>");
             return;
         }
 
@@ -186,9 +214,14 @@ public final class GmCommandProcessor {
     }
 
     private void teleport(Player player, String arg) {
-        String[] coords = arg == null ? new String[0] : arg.trim().split("\\s*,\\s*");
+        String value = arg == null ? "" : arg.trim();
+        if (value.regionMatches(true, 0, "to", 0, 2)
+                && (value.length() == 2 || Character.isWhitespace(value.charAt(2)))) {
+            value = value.substring(2).trim();
+        }
+        String[] coords = value.split("\\s*,\\s*");
         if (coords.length != 3) {
-            SystemMessage.showShared("GM: usage #teleport X,Y,Z");
+            SystemMessage.showShared("GM: usage .teleport [to] X,Y,Z");
             return;
         }
         int tileX = parseInt(coords[0]);
@@ -201,7 +234,7 @@ public final class GmCommandProcessor {
     private void learn(Player player, String arg) {
         String requested = stripTextId(arg).trim();
         if (requested.isEmpty()) {
-            SystemMessage.showShared("GM: usage #learn <spell>");
+            SystemMessage.showShared("GM: usage .learn <spell>");
             return;
         }
 
@@ -227,20 +260,20 @@ public final class GmCommandProcessor {
         ok("Learned spell " + spell.getName(), player);
     }
 
-    private void collision(Player player, String arg) {
+    private void collision(Player player, String arg, boolean noclipSyntax) {
         String mode = arg == null ? "" : arg.trim().toLowerCase();
         if (mode.isEmpty() || "toggle".equals(mode)) {
             player.setPlayerCollisionsEnabled(!player.isPlayerCollisionsEnabled());
         } else if ("on".equals(mode) || "enable".equals(mode) || "enabled".equals(mode) || "1".equals(mode)) {
-            player.setPlayerCollisionsEnabled(true);
+            player.setPlayerCollisionsEnabled(!noclipSyntax);
         } else if ("off".equals(mode) || "disable".equals(mode) || "disabled".equals(mode) || "0".equals(mode)) {
-            player.setPlayerCollisionsEnabled(false);
+            player.setPlayerCollisionsEnabled(noclipSyntax);
         } else {
-            SystemMessage.showShared("GM: usage #collision on|off|toggle");
+            SystemMessage.showShared("GM: usage ." + (noclipSyntax ? "noclip" : "collision") + " on|off|toggle");
             return;
         }
-        SystemMessage.showShared("GM: player collisions "
-                + (player.isPlayerCollisionsEnabled() ? "enabled" : "disabled"));
+        SystemMessage.showShared("GM: noclip "
+                + (player.isPlayerCollisionsEnabled() ? "disabled" : "enabled"));
     }
 
     private void speed(Player player, String arg) {
@@ -283,8 +316,15 @@ public final class GmCommandProcessor {
     }
 
     private void ok(String msg, Player player) {
-        PlayerStateStore.save(player);
+        saveHandler.accept(player);
         SystemMessage.showShared("GM: " + msg);
+    }
+
+    private void help() {
+        SystemMessage.showShared("GM: .noclip [on|off|toggle] | .teleport [to] X,Y,Z | .speed N|up|down|reset");
+        SystemMessage.showShared("GM: .setLevel/.setXp/.setGold/.setHp/.setMana X");
+        SystemMessage.showShared("GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X");
+        SystemMessage.showShared("GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL");
     }
 
     private static int parseInt(String s) {

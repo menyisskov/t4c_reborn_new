@@ -19,6 +19,12 @@ public final class NpcDef {
     private final List<String> fleeShouts;
     private final String welcomeText;
     private final List<DialogTopic> topics;
+    /** Original C++ NPC template name, retained by the lossless legacy migration. */
+    private final String sourceTemplate;
+    /** Complete original OnTalk body. Null for native data-driven NPCs. */
+    private final String sourceScript;
+    /** Original non-dialogue handlers, keyed by OnPopup/OnAttack/OnAttacked/OnDeath/OnInitialise/OnDestroy. */
+    private final java.util.Map<String, String> sourceEvents;
 
     public NpcDef(String name, String displayName, List<Part> parts, String spriteBase,
                   int patrolRadiusTiles, List<String> fleeShouts,
@@ -31,6 +37,42 @@ public final class NpcDef {
         this.fleeShouts = List.copyOf(fleeShouts == null ? List.of() : fleeShouts);
         this.welcomeText = welcomeText;
         this.topics = List.copyOf(topics == null ? List.of() : topics);
+        this.sourceTemplate = null;
+        this.sourceScript = null;
+        this.sourceEvents = java.util.Map.of();
+    }
+
+    public NpcDef(String name, String displayName, List<Part> parts, String spriteBase,
+                  int patrolRadiusTiles, List<String> fleeShouts, String welcomeText,
+                  List<DialogTopic> topics, String sourceTemplate, String sourceScript) {
+        this.name = name;
+        this.displayName = displayName;
+        this.parts = List.copyOf(parts == null ? List.of() : parts);
+        this.spriteBase = spriteBase;
+        this.patrolRadiusTiles = patrolRadiusTiles;
+        this.fleeShouts = List.copyOf(fleeShouts == null ? List.of() : fleeShouts);
+        this.welcomeText = welcomeText;
+        this.topics = List.copyOf(topics == null ? List.of() : topics);
+        this.sourceTemplate = sourceTemplate;
+        this.sourceScript = sourceScript;
+        this.sourceEvents = java.util.Map.of();
+    }
+
+    public NpcDef(String name, String displayName, List<Part> parts, String spriteBase,
+                  int patrolRadiusTiles, List<String> fleeShouts, String welcomeText,
+                  List<DialogTopic> topics, String sourceTemplate, String sourceScript,
+                  java.util.Map<String, String> sourceEvents) {
+        this.name = name;
+        this.displayName = displayName;
+        this.parts = List.copyOf(parts == null ? List.of() : parts);
+        this.spriteBase = spriteBase;
+        this.patrolRadiusTiles = patrolRadiusTiles;
+        this.fleeShouts = List.copyOf(fleeShouts == null ? List.of() : fleeShouts);
+        this.welcomeText = welcomeText;
+        this.topics = List.copyOf(topics == null ? List.of() : topics);
+        this.sourceTemplate = sourceTemplate;
+        this.sourceScript = sourceScript;
+        this.sourceEvents = java.util.Map.copyOf(sourceEvents == null ? java.util.Map.of() : sourceEvents);
     }
 
     /*

@@ -46,6 +46,13 @@ public final class CombatProfiles {
     public static CombatProfile fromNpc(BaseNPC npc) {
         if (npc == null) throw new IllegalArgumentException("NPC is required");
         int level = Math.max(1, npc.getLevel());
+        if (npc instanceof com.perso.T4C.npc.DataNpc dataNpc) {
+            int attack = Math.max(1, npc.getSkillLevel("attack"));
+            int dodge = Math.max(1, npc.getSkillLevel("dodge"));
+            return new CombatProfile(level, Math.max(10, npc.getStrength()), Math.max(10, npc.getEndurance()),
+                    Math.max(10, npc.getDexterity()), attack, attack, dodge, dataNpc.getLegacyArmorClass(),
+                    false, false, true, Map.of());
+        }
         return new CombatProfile(level, 10, 10, 10, 10, 10, 10, 0, false, false, true, Map.of());
     }
 

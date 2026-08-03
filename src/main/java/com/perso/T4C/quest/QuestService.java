@@ -144,6 +144,13 @@ public final class QuestService {
         return "quest." + definition.getId() + ".kills";
     }
 
+    /** Applies XP awarded by an original NPC script and persists the transition. */
+    public void awardLegacyXp(Player player, int amount) {
+        if (player == null || amount == 0) return;
+        player.addXpExact(amount, xpCurve);
+        persist.run();
+    }
+
     private String complete(QuestDef definition, Player player) {
         if (status(player, definition) == STATUS_COMPLETED) {
             return I18n.resolve(definition.getCompletedText());

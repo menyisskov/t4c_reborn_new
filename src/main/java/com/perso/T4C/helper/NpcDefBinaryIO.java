@@ -17,8 +17,8 @@ import java.util.List;
 /** Binary persistence for the reset, non-branching NPC dialogue format. */
 public final class NpcDefBinaryIO {
     private static final byte[] MAGIC = "T4CNPC".getBytes(StandardCharsets.US_ASCII);
-    private static final short VERSION = 10;
-    private static final int MAX_STRING_BYTES = 16_384;
+    private static final short VERSION = 12;
+    private static final int MAX_STRING_BYTES = 1_048_576;
 
     private NpcDefBinaryIO() {
     }
@@ -26,19 +26,19 @@ public final class NpcDefBinaryIO {
     public static List<NpcDef> read(File file) throws IOException, GameException {
         return BinaryCatalogueIO.read(file, MAGIC, "NPC definition",
                 version -> {
-                    if (version != VERSION) {
+                    if (version != 10 && version != 11 && version != VERSION) {
                         throw new GameException("Unsupported NPC definition version: " + version
                                 + " (expected " + VERSION + ")");
                     }
                 },
-                (in, version) -> readDef(in));
+                (in, version) -> readDef(in, version));
     }
 
     public static void write(File file, List<NpcDef> defs) throws IOException {
         BinaryCatalogueIO.write(file, MAGIC, VERSION, defs, NpcDefBinaryIO::writeDef);
     }
 
-    private static NpcDef readDef(DataInputStream in) throws IOException, GameException {
+    private static NpcDef readDef(DataInputStream in, short version) throws IOException, GameException {
         String name = readString(in);
         String displayName = readString(in);
         int partCount = checkedCount(BinaryIOUtils.readIntLE(in), "part");
@@ -61,7 +61,15 @@ public final class NpcDefBinaryIO {
         int topicCount = checkedCount(BinaryIOUtils.readIntLE(in), "dialogue topic");
         List<NpcDef.DialogTopic> topics = new ArrayList<>(topicCount);
         for (int i = 0; i < topicCount; i++) topics.add(readTopic(in));
-        return new NpcDef(name, displayName, parts, spriteBase, patrolRadius, shouts, welcome, topics);
+        String sourceTemplate = version >= 11 ? emptyToNull(readString(in)) : null;
+        String sourceScript = version >= 11 ? emptyToNull(readString(in)) : null;
+        java.util.Map<String, String> sourceEvents = new java.util.LinkedHashMap<>();
+        if (version >= 12) {
+            int eventCount = checkedCount(BinaryIOUtils.readIntLE(in), "source event");
+            for (int i = 0; i < eventCount; i++) sourceEvents.put(readString(in), readString(in));
+        }
+        return new NpcDef(name, displayName, parts, spriteBase, patrolRadius, shouts, welcome, topics,
+                sourceTemplate, sourceScript, sourceEvents);
     }
 
     private static NpcDef.DialogTopic readTopic(DataInputStream in) throws IOException, GameException {
@@ -106,6 +114,13 @@ public final class NpcDefBinaryIO {
                 + I18n.normalizedKey(def.getName()), def.getWelcomeText()));
         BinaryIOUtils.writeIntLE(out, def.getTopics().size());
         for (int i = 0; i < def.getTopics().size(); i++) writeTopic(out, def, i, def.getTopics().get(i));
+        writeString(out, def.getSourceTemplate());
+        writeString(out, def.getSourceScript());
+        BinaryIOUtils.writeIntLE(out, def.getSourceEvents().size());
+        for (var event : def.getSourceEvents().entrySet()) {
+            writeString(out, event.getKey());
+            writeString(out, event.getValue());
+        }
     }
 
     private static void writeTopic(DataOutputStream out, NpcDef def, int topicIndex,

@@ -18,18 +18,34 @@ public final class NpcCastVfxHook {
         void play(SpellData spell, Player player, Vector2 casterPosition);
     }
 
+    @FunctionalInterface
+    public interface SelfEffect {
+        void play(SpellData spell, Vector2 casterPosition);
+    }
+
     private static CastEffect shared;
+    private static SelfEffect selfShared;
 
     private NpcCastVfxHook() {
     }
 
     public static void setShared(CastEffect instance) {
         shared = instance;
+        if (instance == null) selfShared = null;
+    }
+
+    public static void setShared(CastEffect instance, SelfEffect selfInstance) {
+        shared = instance;
+        selfShared = selfInstance;
     }
 
     public static void playOnPlayer(SpellData spell, Player player, Vector2 casterPosition) {
         if (shared != null) {
             shared.play(spell, player, casterPosition);
         }
+    }
+
+    public static void playOnSelf(SpellData spell, Vector2 casterPosition) {
+        if (selfShared != null) selfShared.play(spell, casterPosition);
     }
 }

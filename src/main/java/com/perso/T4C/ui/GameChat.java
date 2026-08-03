@@ -21,7 +21,7 @@ import com.perso.T4C.helper.SpriteLoader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * In-game chat adapted from the original client's main-bar chat.
@@ -58,7 +58,7 @@ public final class GameChat extends InputAdapter {
     private final List<Entry> entries = new ArrayList<>();
     private final List<String> history = new ArrayList<>();
     private final StringBuilder input = new StringBuilder();
-    private final Consumer<String> submitHandler;
+    private final Predicate<String> submitHandler;
     private boolean active;
     private boolean visible = true;
     private boolean suppressNextTypedEnter;
@@ -71,8 +71,8 @@ public final class GameChat extends InputAdapter {
     private final ChatZone inputZone = new ChatZone();
     private boolean chatLayoutInitialized;
 
-    public GameChat(Consumer<String> submitHandler) {
-        this.submitHandler = submitHandler == null ? text -> { } : submitHandler;
+    public GameChat(Predicate<String> submitHandler) {
+        this.submitHandler = submitHandler == null ? text -> false : submitHandler;
         font = FontManager.getInstance().getNpcDialogFont(LOCAL);
         historyIndex = history.size();
     }
@@ -362,8 +362,10 @@ public final class GameChat extends InputAdapter {
     private void submit() {
         String text = input.toString().trim();
         if (!text.isEmpty()) {
-            addLocalMessage("Vous", text);
-            submitHandler.accept(text);
+            boolean consumed = submitHandler.test(text);
+            if (!consumed) {
+                addLocalMessage("Vous", text);
+            }
             if (history.isEmpty() || !history.get(history.size() - 1).equals(text)) {
                 history.add(text);
                 if (history.size() > MAX_HISTORY) history.remove(0);

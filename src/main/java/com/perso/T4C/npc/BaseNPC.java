@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Locale;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILES;
 import static com.perso.T4C.config.GameConstants.GRID_H;
@@ -407,11 +408,14 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
     private void performHostileAttack() {
         animations.startAttack(movement.getCurrentAngle());
-        int damage = NPC_HOSTILE_DAMAGE_MIN
-                + random.nextInt(NPC_HOSTILE_DAMAGE_MAX - NPC_HOSTILE_DAMAGE_MIN + 1);
+        int damage = rollHostileDamage();
         if (damageCallback != null) {
             damageCallback.applyDamage(this, damage);
         }
+    }
+
+    protected int rollHostileDamage() {
+        return NPC_HOSTILE_DAMAGE_MIN + random.nextInt(NPC_HOSTILE_DAMAGE_MAX - NPC_HOSTILE_DAMAGE_MIN + 1);
     }
 
     public List<Vector2> getDebugPath() {
@@ -604,10 +608,11 @@ public abstract class BaseNPC extends Stats implements Nameable {
         if (text == null || text.isEmpty()) {
             return;
         }
-        dialogLines = wrapDialog(text, 52);
+        String displayedText = removeNpcDialogueQuotes(text);
+        dialogLines = wrapDialog(displayedText, 52);
         dialogPageIndex = 0;
         dialogActive = true;
-        SystemMessage.showShared(text);
+        SystemMessage.showShared(displayedText);
     }
 
     /**
@@ -619,7 +624,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
         if (text == null || text.isEmpty()) {
             return;
         }
-        dialogLines = wrapDialog(text, 52);
+        dialogLines = wrapDialog(removeNpcDialogueQuotes(text), 52);
         dialogPageIndex = 0;
         dialogActive = true;
         shoutUntil = System.currentTimeMillis() + durationMs;
@@ -652,7 +657,24 @@ public abstract class BaseNPC extends Stats implements Nameable {
         }
         // CDisplayTextBox adds the farewell link after an empty line.
         builder.append("\n\n> Adieu.");
-        return builder.toString();
+        return stripDialogKeywordQuotes(builder.toString(), getDialogKeywords());
+    }
+
+    static String stripDialogKeywordQuotes(String text, List<String> keywords) {
+        if (text == null || text.isEmpty() || keywords == null || keywords.isEmpty()) return text;
+        String cleaned = text;
+        for (String keyword : keywords) {
+            if (keyword == null || keyword.isBlank()) continue;
+            Pattern quotedKeyword = Pattern.compile(
+                    "[\\\"“«]\\s*(" + Pattern.quote(keyword.trim()) + ")\\s*[\\\"”»]",
+                    Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+            cleaned = quotedKeyword.matcher(cleaned).replaceAll("$1");
+        }
+        return cleaned;
+    }
+
+    static String removeNpcDialogueQuotes(String text) {
+        return text == null ? null : text.replaceAll("[\\\"“”«»]", "");
     }
 
     public boolean advanceDialog() {

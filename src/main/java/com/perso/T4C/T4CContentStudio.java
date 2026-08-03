@@ -13,6 +13,7 @@ import com.perso.T4C.helper.CollisionReader;
 import com.perso.T4C.helper.CollisionRuleBinaryIO;
 import com.perso.T4C.helper.DecorLayerRuleBinaryIO;
 import com.perso.T4C.helper.GroundMosaicBinaryIO;
+import com.perso.T4C.helper.HerbDefinitionBinaryIO;
 import com.perso.T4C.helper.ItemIconBinaryIO;
 import com.perso.T4C.helper.GroundMosaicCatalog;
 import com.perso.T4C.helper.MapReader;
@@ -25,6 +26,8 @@ import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemIconRegistry;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.harvest.HerbDefinition;
+import com.perso.T4C.harvest.HerbRegistry;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.MonsterClan;
 import com.perso.T4C.monster.MonsterDef;
@@ -162,6 +165,7 @@ public class T4CContentStudio {
         server.createContext("/api/decor-layer-rules", this::handleDecorLayerRules);
         server.createContext("/api/item-icons", this::handleItemIcons);
         server.createContext("/api/ground-mosaics", this::handleGroundMosaics);
+        server.createContext("/api/herbs", this::handleHerbs);
         server.createContext("/api/appearance-defaults", this::handleAppearanceDefaults);
         server.createContext("/api/concealment", this::handleConcealmentRules);
         server.createContext("/api/collision-rules", this::handleCollisionRules);
@@ -1685,6 +1689,45 @@ public class T4CContentStudio {
                 integer(item.get("aggro"), bool(item.get("defaultAggressive"), true) ? 50 : 0),
                 integer(item.get("clan"), 0), integer(item.get("speed"), 0), bool(item.get("canAttack"), true),
                 new java.util.ArrayList<>(), bool(item.get("tameable"), false), integer(item.get("tameMaxLevel"), 0));
+    }
+
+    private void handleHerbs(HttpExchange exchange) throws IOException {
+        File file = new File(Paths.HERBS_BIN);
+        if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+            List<HerbDefinition> definitions = readHerbs(file);
+            writeCollection(exchange, definitions.stream().map(definition -> {
+                Map<String, Object> item = new LinkedHashMap<>();
+                item.put("id", definition.getId());
+                item.put("itemKey", definition.getItemKey());
+                item.put("worldSprite", definition.getWorldSprite());
+                item.put("spawnWeight", definition.getSpawnWeight());
+                return item;
+            }).toList());
+            return;
+        }
+        if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            List<HerbDefinition> definitions = readItemsPayload(exchange).stream()
+                    .map(item -> new HerbDefinition(str(item.get("id")), str(item.get("itemKey")),
+                            str(item.get("worldSprite")), integer(item.get("spawnWeight"), 0)))
+                    .filter(definition -> !definition.getId().isBlank() && !definition.getItemKey().isBlank()
+                            && !definition.getWorldSprite().isBlank())
+                    .sorted(Comparator.comparing(HerbDefinition::getId, String.CASE_INSENSITIVE_ORDER))
+                    .toList();
+            HerbDefinitionBinaryIO.write(file, definitions);
+            HerbRegistry.invalidate();
+            writeSaved(exchange, definitions.size());
+            return;
+        }
+        sendMethodNotAllowed(exchange);
+    }
+
+    private List<HerbDefinition> readHerbs(File file) {
+        if (file == null || !file.exists()) return List.of();
+        try {
+            return HerbDefinitionBinaryIO.read(file);
+        } catch (Exception ignored) {
+            return List.of();
+        }
     }
 
     private Map<String, Object> companionToMap(CompanionDef def) {

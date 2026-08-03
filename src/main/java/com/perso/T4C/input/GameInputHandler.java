@@ -34,7 +34,6 @@ public class GameInputHandler {
     private Runnable debugOverlayToggle;
     private Runnable teleportOverlayToggle;
     private Runnable coordsHudToggle;
-    private GmInputHandler gmInputHandler;
     private BooleanSupplier textInputActiveSupplier;
     private final Vector2 movementInput = new Vector2();
 
@@ -47,17 +46,13 @@ public class GameInputHandler {
     /**
      * Poll and handle input each frame.
      */
-    public void setGmInputHandler(GmInputHandler gmInputHandler) {
-        this.gmInputHandler = gmInputHandler;
-    }
-
     public void setTextInputActiveSupplier(BooleanSupplier textInputActiveSupplier) {
         this.textInputActiveSupplier = textInputActiveSupplier;
     }
 
     public void handleInput(float delta, Player player) {
         int gridDx = 0, gridDy = 0;
-        if ((gmInputHandler == null || !gmInputHandler.isActive()) && !isTextInputActive()) {
+        if (!isTextInputActive()) {
             boolean left = Gdx.input.isKeyPressed(Input.Keys.A)
                     || Gdx.input.isKeyPressed(Input.Keys.Q)
                     || Gdx.input.isKeyPressed(Input.Keys.LEFT);
