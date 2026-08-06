@@ -45,4 +45,30 @@ class PlayerProgressionTest {
         assertEquals(40 + manaGain, player.getMana());
         assertEquals(2, player.getLevel());
     }
+
+    /**
+     * Character.cpp raises the current pools by the exact gain without clamping,
+     * so a character already at full health stays full after the level-up.
+     */
+    @Test
+    void levelUpKeepsAFullCharacterFull() {
+        Player player = new Player();
+        player.setLevel(1);
+        player.setXpToNextLevel(100);
+        player.setEndurance(100);
+        player.setIntelligence(90);
+        player.setWisdom(120);
+        player.setMaxHp(100);
+        player.setCurrentHp(100);
+        player.setMaxMana(100);
+        player.setMana(100);
+
+        new PlayerProgression(new Random(7)).addXp(
+                player, 100, XpCurve.load("assets/mappings/progression/xp_curve.bin"), false);
+
+        assertEquals(player.getMaxHp(), player.getCurrentHp());
+        assertEquals(player.getMaxMana(), player.getMana());
+        assertTrue(player.getMaxHp() > 100);
+        assertTrue(player.getMaxMana() > 100);
+    }
 }

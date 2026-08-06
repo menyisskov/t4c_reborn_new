@@ -12,6 +12,8 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.item.EquipmentBonusRules;
+import com.perso.T4C.combat.RegenerationRules;
+import com.perso.T4C.combat.StealthRules;
 import lombok.Getter;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -87,6 +89,8 @@ public class Player extends Stats {
     private final Map<String, Long> skillCooldowns = new HashMap<>();
     private long nextAttackReadyAtMs = 0L;
     private long stunnedUntilMs = 0L;
+    private long detectInvisibleUntilMs = 0L;
+    private long detectHiddenUntilMs = 0L;
     private long mentalExhaustionUntilMs = 0L;
     private long physicalExhaustionUntilMs = 0L;
     private long attackExhaustionUntilMs = 0L;
@@ -111,6 +115,10 @@ public class Player extends Stats {
     private ItemDropCallback itemDropCallback = null;
     private HealingCallback healingCallback = null;
     private ManaRestoredCallback manaRestoredCallback = null;
+    /** Seconds accumulated towards the next natural regeneration tick. */
+    private float regenAccumulatorSeconds = 0f;
+    /** Counts nearby units for the sneak upkeep roll; absent means no witnesses. */
+    private java.util.function.IntSupplier witnessCountSupplier = null;
     private final List<ActiveBuff> activeBuffs = new ArrayList<>();
     private final Map<String, Integer> buffStatBonuses = new HashMap<>();
     private float buffSpeedMultiplier = 1.0f;
@@ -324,8 +332,60 @@ public class Player extends Stats {
             movement.stop();
         }
         animations.update(delta, movement.isMoving());
+        tickNaturalRegeneration(delta);
+        tickSneakUpkeep();
         tickRegenBuffs(delta);
         removeExpiredBuffs();
+    }
+
+    /**
+     * Sneak.cpp hooks HOOK_MOVE: while hidden, every step rolls against the sneak
+     * skill and a failed roll blows the player's cover. Without the skill any
+     * movement unhides immediately, matching Unhide() on a zero-point roll.
+     */
+    private void tickSneakUpkeep() {
+        if (!movement.isMoving() || !isHidden()) return;
+        int witnesses = witnessCountSupplier == null ? 0 : witnessCountSupplier.getAsInt();
+        if (!StealthRules.staysHidden(getEffectiveSkillLevel("sneak"),
+                getEffectiveDexterity(), witnesses, random)) {
+            setHidden(false);
+        }
+    }
+
+    /** Supplies how many units stand within {@link StealthRules#WITNESS_RANGE}. */
+    public void setWitnessCountSupplier(java.util.function.IntSupplier supplier) {
+        this.witnessCountSupplier = supplier;
+    }
+
+    /**
+     * Drives GAME_RULES::HPregen and GAME_RULES::ManaRegen on the same 2-second
+     * cadence as PlayerManager.cpp. A dead player does not regenerate: the
+     * original only reaches Regenerate() through the in-game player loop.
+     */
+    private void tickNaturalRegeneration(float delta) {
+        if (delta <= 0f) return;
+        regenAccumulatorSeconds += delta;
+        if (regenAccumulatorSeconds < RegenerationRules.REGEN_INTERVAL_SECONDS) return;
+        regenAccumulatorSeconds %= RegenerationRules.REGEN_INTERVAL_SECONDS;
+        if (currentHp <= 0) return;
+
+        // FastHealing.cpp hooks HOOK_REGEN and scales the natural roll, so the skill
+        // is a passive multiplier here rather than an actively used heal.
+        int healedHp = RegenerationRules.regenerateHp(currentHp, maxHp, getEffectiveEndurance(),
+                getEffectiveSkillLevel("rapid_healing"), random);
+        if (healedHp != currentHp) {
+            int gained = healedHp - currentHp;
+            currentHp = healedHp;
+            if (gained > 0 && healingCallback != null) healingCallback.onHealing(gained);
+        }
+
+        int restoredMana = RegenerationRules.regenerateMana(mana, maxMana,
+                getEffectiveIntelligence(), getEffectiveWisdom(), random);
+        if (restoredMana != mana) {
+            int gained = restoredMana - mana;
+            mana = restoredMana;
+            if (gained > 0 && manaRestoredCallback != null) manaRestoredCallback.onManaRestored(gained);
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -541,9 +601,10 @@ public class Player extends Stats {
         setGold(Math.max(0, getGold() + amount));
     }
 
-    void showLevelUpMessage(int newLevel) {
+    void showLevelUpMessage(int newLevel, int hpGain, int manaGain) {
         if (messageCallback != null) {
             messageCallback.showMessage(I18n.message("message.level_up",  newLevel));
+            messageCallback.showMessage(I18n.message("message.level_up_gains", hpGain, manaGain));
         }
     }
 
@@ -707,6 +768,24 @@ public class Player extends Stats {
         return (base <= 0 ? 100 : base) + buffStatBonuses.getOrDefault("power:" + normalized, 0)
                 + getQuestFlag("legacy:power:" + normalized)
                 + EquipmentBonusRules.bonus(this, stat);
+    }
+
+    public boolean canDetectInvisible() {
+        return detectInvisibleUntilMs > System.currentTimeMillis();
+    }
+
+    public void setDetectInvisibleFor(long durationMillis) {
+        detectInvisibleUntilMs = Math.max(detectInvisibleUntilMs,
+                System.currentTimeMillis() + Math.max(0L, durationMillis));
+    }
+
+    public boolean canDetectHidden() {
+        return detectHiddenUntilMs > System.currentTimeMillis();
+    }
+
+    public void setDetectHiddenFor(long durationMillis) {
+        detectHiddenUntilMs = Math.max(detectHiddenUntilMs,
+                System.currentTimeMillis() + Math.max(0L, durationMillis));
     }
 
     public void setBaseElementResistance(String element, int value) {

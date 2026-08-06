@@ -30,8 +30,10 @@ class WdaItemDefinitionMigrationTest {
 
     @Test
     void allWdaEquipmentBoostsAreStoredInTheBinaryRegistry() {
+        // 884 imported from the WDA, plus 25 inherited by the five mithril plate
+        // pieces that MithrilPlateItemMigration clones from ancient_platemail.
         int count = ItemRegistry.load().stream().mapToInt(item -> item.getBoosts().size()).sum();
-        assertEquals(884, count);
+        assertEquals(909, count);
         ItemDefinition sword = require("Fine steel short sword 2");
         assertEquals(1, sword.getBoosts().size());
         assertEquals(296, sword.getBoosts().get(0).getBoostId());

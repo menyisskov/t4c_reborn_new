@@ -65,7 +65,8 @@ public final class AppearanceDefaultsToBinMigration {
 
     private static final String[] ARM_COVERINGS = {
             "PupArmoredRobe", "PupChainMailBody", "PupLeatherArmor", "PupMageRobe",
-            "PupNecromanRobe", "PupPlateBody", "PupStuddedBodyArmor", "PupWhiteRobe",
+            "PupNecromanRobe", "PupPlateBody", "PupMithrilPlateBody",
+            "PupStuddedBodyArmor", "PupWhiteRobe",
             "WoChainBody", "WoClothBody", "WoLeatherBody", "WoMageRobe", "WoNecromanRobe",
             "WoPlateBody", "WoWhiteRobe", "ManLichRobeBlanc", "ManLichRobeGold",
             "ManLichRobeGreen", "ManLichRobeKimono", "ManLichRobeNoir", "ManLichRobeOri",

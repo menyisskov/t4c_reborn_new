@@ -1,5 +1,7 @@
 package com.perso.T4C.death;
 
+import com.perso.T4C.helper.CollisionManager;
+import com.perso.T4C.helper.CollisionType;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
@@ -43,8 +45,21 @@ public final class DeathPenaltyService {
         this.config = config == null ? Config.originalDefaults() : config;
     }
 
+    /**
+     * GAME_RULES::DeathPenalties zeroes every penalty when the victim lies on a
+     * safe haven tile, so dying there costs nothing at all.
+     */
+    public static boolean isSafeHaven(int collisionValue) {
+        return collisionValue == CollisionType.SAFE_HAVEN.getValue()
+                || collisionValue == CollisionType.INDOOR_SAFE_HAVEN.getValue();
+    }
+
     public Result apply(Player player, boolean pvp, XpCurve curve, RandomGenerator random) {
         if (player == null || random == null) throw new IllegalArgumentException("Player and random generator are required");
+        if (isSafeHaven(CollisionManager.getInstance()
+                .getCollisionValue(player.getPositionVector().x, player.getPositionVector().y))) {
+            return new Result(pvp, 0, 0, 0, List.of(), List.of(), List.of());
+        }
         Rates rates = pvp ? config.pvp() : config.pve();
         List<String> dropped = new ArrayList<>();
         List<String> destroyed = new ArrayList<>();

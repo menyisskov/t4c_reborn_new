@@ -7,6 +7,12 @@ import java.util.random.RandomGenerator;
  * the original skill callbacks.
  */
 public final class CombatResolver {
+    /** Creatures.cpp:174 - AC at or above this marks an invulnerable unit. */
+    private static final double INVULNERABLE_ARMOR_CLASS = 100000d;
+
+    /** ArmorPenetration.cpp:49 - the skill is skipped above this AC. */
+    private static final double ARMOR_PENETRATION_MAX_AC = 4999d;
+
     private CombatResolver() {
     }
 
@@ -23,8 +29,19 @@ public final class CombatResolver {
         if (precision <= 0 && !target.stunned()) {
             return CombatResult.miss(precision, rawDamage);
         }
+        // Creatures::hit returns before applying any damage when AC >= 100000.
+        // Such values are invulnerability sentinels (scenery, scripted NPCs),
+        // not real armor, so the blow connects but never deals damage.
+        if (target.armorClass() >= INVULNERABLE_ARMOR_CLASS) {
+            return new CombatResult(true, precision, rawDamage, 0,
+                    false, false, false, false, 0L);
+        }
 
         double strike = rawDamage;
+        // TFC_MAIN.cpp:469 sets TrueStrike straight after attack(), before the
+        // hidden/stun multipliers and before any skill hook runs.
+        double trueStrike = strike;
+
         if (attacker.hidden()) {
             strike *= (149 + roll(random, 50)) / 100d;
         }
@@ -37,24 +54,28 @@ public final class CombatResolver {
             strike *= 1.33d;
         }
 
-        double trueStrike = strike;
         boolean dualWeapon = request.offHandDamage() > 0 && attacker.skill("two_weapons") > 0;
         if (dualWeapon) {
             strike += dualWeaponBonus(request.offHandDamage(), attacker.skill("two_weapons"), random);
         }
 
+        // ArmorPenetration.cpp (HOOK_ATTACK): the skill does not reduce the AC that
+        // gets subtracted later. It rebuilds Strike as TrueStrike + dNewAC + dBoost,
+        // so the AC portion it adds back cancels out the upcoming subtraction.
         boolean penetration = false;
-        double effectiveArmor = target.armorClass();
         int penetrationSkill = attacker.skill("armor_penetration");
-        if (target.armorClass() < 5000d && triggersHalfSkill(random, penetrationSkill)) {
+        if (target.armorClass() <= ARMOR_PENETRATION_MAX_AC && triggersHalfSkill(random, penetrationSkill)) {
             penetration = true;
-            double ignoredArmor = penetrationSkill > 125
+            double restoredArmor = Math.max(0d, penetrationSkill > 125
                     ? penetrationSkill / (penetrationSkill + 5d) * target.armorClass()
-                    : penetrationSkill / (penetrationSkill + 13.2d) * target.armorClass();
-            effectiveArmor = Math.max(0d, target.armorClass() - ignoredArmor);
-            strike += Math.min(penetrationSkill / 200d, 1d) * (trueStrike / 3.05d);
+                    : penetrationSkill / (penetrationSkill + 13.2d) * target.armorClass());
+            double boost = penetrationSkill < 200
+                    ? penetrationSkill / 200d * (trueStrike / 3.05d)
+                    : trueStrike / 3.05d;
+            strike = trueStrike + restoredArmor + boost;
         }
-        strike = Math.max(0d, strike - effectiveArmor);
+        // Character::attacked / NPCstructure::OnAttacked: flat AC subtraction, clamped.
+        strike = Math.max(0d, strike - target.armorClass());
 
         boolean parried = false;
         int parry = target.skill("parry");

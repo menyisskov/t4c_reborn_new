@@ -19,6 +19,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -99,14 +100,53 @@ public class DataNpc extends BaseNPC {
     protected List<String> getDialogKeywords() {
         List<String> keywords = new ArrayList<>(super.getDialogKeywords());
         for (NpcDef.DialogTopic topic : def.getTopics()) {
-            for (String keyword : topic.getKeywords()) {
-                String resolved = I18n.resolve(keyword);
-                if (resolved != null && !resolved.isBlank() && !keywords.contains(resolved)) {
-                    keywords.add(resolved);
-                }
-            }
+            for (String keyword : topic.getKeywords()) addKeyword(keywords, keyword);
+        }
+        // Topics stored in npcs.bin only cover Command sections; the script itself also answers to
+        // CmdAND words, which would otherwise stay invisible to the player.
+        for (String keyword : LegacyNpcScriptEngine.keywords(def.getSourceScript()).keySet()) {
+            addKeyword(keywords, keyword);
         }
         return keywords;
+    }
+
+    /**
+     * Naming a word of a {@code CmdAND} section must say the whole sentence, since the script only
+     * reacts when all of its keywords appear together. Applies to clicked links and typed speech
+     * alike: saying "reborn" on its own would otherwise reach an unrelated Command section.
+     */
+    private String sentenceForKeyword(String keyword) {
+        return sentenceForKeyword(def.getSourceScript(), keyword);
+    }
+
+    static String sentenceForKeyword(String script, String keyword) {
+        String spoken = normalizeCommand(keyword);
+        if (spoken.isEmpty()) return keyword;
+        for (Map.Entry<String, String> entry : LegacyNpcScriptEngine.keywords(script).entrySet()) {
+            String word = normalizeCommand(I18n.resolve(entry.getKey()));
+            if (word.isEmpty() || word.equals(normalizeCommand(entry.getValue()))) continue;
+            // Only rewrite when the sentence is not already complete, so typing the full
+            // "ready reborn" is left untouched.
+            if ((" " + spoken + " ").contains(" " + word + " ")
+                    && !containsAllWords(spoken, normalizeCommand(entry.getValue()))) {
+                return entry.getValue();
+            }
+        }
+        return keyword;
+    }
+
+    private static boolean containsAllWords(String spoken, String sentence) {
+        for (String word : sentence.split(" ")) {
+            if (!word.isEmpty() && !(" " + spoken + " ").contains(" " + word + " ")) return false;
+        }
+        return true;
+    }
+
+    private static void addKeyword(List<String> keywords, String keyword) {
+        String resolved = I18n.resolve(keyword);
+        if (resolved != null && !resolved.isBlank() && !keywords.contains(resolved)) {
+            keywords.add(resolved);
+        }
     }
 
     @Override
@@ -125,7 +165,7 @@ public class DataNpc extends BaseNPC {
         }
         if (isInteracting && def.getSourceScript() != null) {
             LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
-                    def.getSourceScript(), def.getName(), text, player);
+                    def.getSourceScript(), def.getName(), sentenceForKeyword(text), player);
             if (applyLegacyResult(result, player)) return true;
         }
         if (isInteracting && respondToTopic(text, player)) return true;

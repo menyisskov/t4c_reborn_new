@@ -14,11 +14,16 @@ public final class SpellEffectManager {
     public record SummonRequest(String type, String definitionKey) {
     }
 
-    public record Impact(int healthDelta, List<SummonRequest> summons, int drainedHealth) {
+    public record Impact(int healthDelta, List<SummonRequest> summons, int drainedHealth, boolean vaporize) {
+    }
+
+    /** Exhaustion induced by a linked spell on its target (GoN attack/mental/move order). */
+    public record TargetExhaustion(long attackMillis, long mentalMillis, long moveMillis) {
     }
 
     public record PlayerUtility(Integer teleportTileX, Integer teleportTileY, Integer teleportWorldZ,
-                                boolean invisibilityApplied, int dispelledEffects) {
+                                boolean invisibilityApplied, boolean detectInvisibleApplied,
+                                boolean detectHiddenApplied, int dispelledEffects) {
     }
 
     @FunctionalInterface
@@ -30,10 +35,11 @@ public final class SpellEffectManager {
     private final List<TimedHook> hooks = new ArrayList<>();
 
     public Impact resolve(SpellData spell, Player caster, BaseMonster target, double rangeFromCenter) {
-        if (spell == null || caster == null || target == null) return new Impact(0, List.of(), 0);
+        if (spell == null || caster == null || target == null) return new Impact(0, List.of(), 0, false);
         int delta = resolveHealthDelta(spell, caster, target, rangeFromCenter);
         int drainedHealth = hasDrainLifeEffect(spell) ? Math.max(0, -delta) : 0;
         List<SummonRequest> summons = new ArrayList<>();
+        boolean vaporize = false;
         for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
             if (effect == null) continue;
             if (effect.getEffectType() == 6) {
@@ -46,9 +52,16 @@ public final class SpellEffectManager {
                 if (spellId > 0 && chance > 0 && ThreadLocalRandom.current().nextInt(101) <= chance) {
                     dispel(target, spellId);
                 }
+            } else if (effect.getEffectType() == 12) {
+                vaporize = true;
             }
         }
-        return new Impact(delta, List.copyOf(summons), drainedHealth);
+        return new Impact(delta, List.copyOf(summons), drainedHealth, vaporize);
+    }
+
+    public boolean hasVaporizeEffect(SpellData spell) {
+        return spell != null && spell.getT4cEffects().stream()
+                .anyMatch(effect -> effect != null && effect.getEffectType() == 12);
     }
 
     public int resolvePlayerHealthDelta(SpellData spell, Player caster) {
@@ -155,9 +168,13 @@ public final class SpellEffectManager {
     }
 
     public PlayerUtility applyPlayerUtilityEffects(SpellData spell, Player caster) {
-        if (spell == null || caster == null) return new PlayerUtility(null, null, null, false, 0);
+        if (spell == null || caster == null) {
+            return new PlayerUtility(null, null, null, false, false, false, 0);
+        }
         Integer x = null, y = null, z = null;
         boolean invisible = false;
+        boolean detectInvisible = false;
+        boolean detectHidden = false;
         int dispelled = 0;
         for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
             if (effect == null) continue;
@@ -165,6 +182,14 @@ public final class SpellEffectManager {
                 x = evaluatePlayer(parameter(effect, 1), caster);
                 y = evaluatePlayer(parameter(effect, 2), caster);
                 z = evaluatePlayer(parameter(effect, 3), caster);
+            } else if (effect.getEffectType() == 11) {
+                x = Math.round(caster.resolveRespawnWorldX() / com.perso.T4C.config.GameConstants.GRID_W);
+                y = Math.round(caster.resolveRespawnWorldY() / com.perso.T4C.config.GameConstants.GRID_H);
+                z = caster.resolveRespawnWorldZ();
+            } else if (effect.getEffectType() == 3) {
+                int flagId = evaluatePlayer(parameter(effect, 1), caster);
+                int value = evaluatePlayer(parameter(effect, 2), caster);
+                if (flagId > 0) caster.setQuestFlag("legacy:viewflag:" + flagId, value);
             } else if (effect.getEffectType() == 13) {
                 int targetSpellId = evaluatePlayer(parameter(effect, 1), caster);
                 int chance = Math.max(0, Math.min(100, evaluatePlayer(parameter(effect, 2), caster)));
@@ -180,36 +205,101 @@ public final class SpellEffectManager {
                     caster.setHiddenFor(duration);
                     invisible = true;
                 }
+            } else if (effect.getEffectType() == 16 || effect.getEffectType() == 17) {
+                int chance = Math.max(0, Math.min(100, evaluatePlayer(parameter(effect, 1), caster)));
+                if (chance > 0 && ThreadLocalRandom.current().nextInt(101) <= chance) {
+                    long duration = Math.max(1_000L, evaluatePlayer(spell.getDuration(), caster));
+                    if (effect.getEffectType() == 16) {
+                        caster.setDetectInvisibleFor(duration);
+                        detectInvisible = true;
+                    } else {
+                        caster.setDetectHiddenFor(duration);
+                        detectHidden = true;
+                    }
+                }
+            } else if (effect.getEffectType() == 14) {
+                int chance = Math.max(0, Math.min(100, evaluatePlayer(parameter(effect, 4), caster)));
+                if (chance > 0 && ThreadLocalRandom.current().nextInt(101) <= chance) {
+                    long attack = Math.max(0L, evaluatePlayer(parameter(effect, 1), caster));
+                    long mental = Math.max(0L, evaluatePlayer(parameter(effect, 2), caster));
+                    long move = Math.max(0L, evaluatePlayer(parameter(effect, 3), caster));
+                    caster.applyExhaustion(mental, move, attack);
+                }
             }
         }
-        return new PlayerUtility(x, y, z, invisible, dispelled);
+        return new PlayerUtility(x, y, z, invisible, detectInvisible, detectHidden, dispelled);
     }
 
     /** Installs OnTimer spell hooks (poison, plague, regeneration, etc.). */
     public void installTimedHooks(SpellData source, Player caster, BaseMonster target) {
         if (source == null || caster == null || target == null) return;
-        long duration = Math.max(0, evaluate(source.getDuration(), caster, target, 0d));
-        if (duration <= 0L) return;
+        boolean targetIsSelf = source.getTargetType() == 5;
+        long duration = Math.max(0, evaluateHook(source.getDuration(), caster, target, targetIsSelf));
         for (SpellData.T4cEffect effect : source.getT4cEffects()) {
             if (effect == null || effect.getEffectType() != 9 || !"OnTimer".equalsIgnoreCase(parameter(effect, 2))) continue;
-            int linkedId = evaluate(parameter(effect, 1), caster, target, 0d);
-            int chance = Math.max(0, Math.min(100, evaluate(parameter(effect, 3), caster, target, 0d)));
+            int linkedId = evaluateHook(parameter(effect, 1), caster, target, targetIsSelf);
+            int chance = Math.max(0, Math.min(100,
+                    evaluateHook(parameter(effect, 3), caster, target, targetIsSelf)));
             SpellData linked = SpellRegistry.findById(linkedId);
             if (linked == null || chance <= 0) continue;
-            long initialDelay = Math.max(0L, evaluate(parameter(effect, 4), caster, target, 0d));
-            if (initialDelay == 0L) initialDelay = DEFAULT_TIMER_FREQUENCY_MS;
+            long initialDelay = Math.max(0L,
+                    evaluateHook(parameter(effect, 4), caster, target, targetIsSelf));
             long now = System.currentTimeMillis();
             hooks.removeIf(h -> h.target == target && h.sourceSpellId == source.getSpellId());
-            long frequency = evaluate(source.getFrequency(), caster, target, 0d);
+            // GoN uses a zero-duration OnTimer hook as an immediate one-shot. Entangle
+            // relies on this to activate spell 10151 from its cast spell 10150.
+            if (duration <= 0L) {
+                hooks.add(new TimedHook(source.getSpellId(), caster, target, linked, chance,
+                        now + initialDelay, Long.MAX_VALUE, 0L, true));
+                continue;
+            }
+            if (initialDelay == 0L) initialDelay = DEFAULT_TIMER_FREQUENCY_MS;
+            long frequency = evaluateHook(source.getFrequency(), caster, target, targetIsSelf);
             if (frequency <= 0L) frequency = DEFAULT_TIMER_FREQUENCY_MS;
             hooks.add(new TimedHook(source.getSpellId(), caster, target, linked, chance,
-                    now + initialDelay, now + duration, frequency));
+                    now + initialDelay, now + duration, frequency, false));
         }
+    }
+
+    public TargetExhaustion resolveTargetExhaustion(SpellData spell, Player caster, BaseMonster target) {
+        if (spell == null || caster == null || target == null) return new TargetExhaustion(0L, 0L, 0L);
+        boolean targetIsSelf = spell.getTargetType() == 5;
+        return new TargetExhaustion(
+                Math.max(0L, evaluateHook(spell.getAttackExhaustion(), caster, target, targetIsSelf)),
+                Math.max(0L, evaluateHook(spell.getMentalExhaustion(), caster, target, targetIsSelf)),
+                Math.max(0L, evaluateHook(spell.getPhysicalExhaustion(), caster, target, targetIsSelf)));
+    }
+
+    public TargetExhaustion resolveExplicitTargetExhaustion(SpellData spell, Player caster, BaseMonster target) {
+        if (spell == null || caster == null || target == null) return new TargetExhaustion(0L, 0L, 0L);
+        for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
+            if (effect == null || effect.getEffectType() != 14) continue;
+            int chance = Math.max(0, Math.min(100, evaluate(parameter(effect, 4), caster, target, 0d)));
+            if (chance <= 0 || ThreadLocalRandom.current().nextInt(101) > chance) continue;
+            return new TargetExhaustion(
+                    Math.max(0L, evaluate(parameter(effect, 1), caster, target, 0d)),
+                    Math.max(0L, evaluate(parameter(effect, 2), caster, target, 0d)),
+                    Math.max(0L, evaluate(parameter(effect, 3), caster, target, 0d)));
+        }
+        return new TargetExhaustion(0L, 0L, 0L);
+    }
+
+    public int resolveTargetDodgeModifier(SpellData spell, Player caster, BaseMonster target) {
+        if (spell == null || caster == null || target == null) return 0;
+        boolean targetIsSelf = spell.getTargetType() == 5;
+        for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
+            if (effect != null && effect.getEffectType() == 2
+                    && "dodge".equalsIgnoreCase(parameter(effect, 2))) {
+                return evaluateHook(parameter(effect, 3), caster, target, targetIsSelf);
+            }
+        }
+        return 0;
     }
 
     public void update(PeriodicImpactCallback callback) {
         if (callback == null || hooks.isEmpty()) return;
         long now = System.currentTimeMillis();
+        List<TimedHook> triggered = new ArrayList<>();
         Iterator<TimedHook> iterator = hooks.iterator();
         while (iterator.hasNext()) {
             TimedHook hook = iterator.next();
@@ -218,10 +308,22 @@ public final class SpellEffectManager {
                 continue;
             }
             if (now < hook.nextAt) continue;
+            if (hook.oneShot) {
+                iterator.remove();
+                if (ThreadLocalRandom.current().nextInt(101) <= hook.chance) {
+                    triggered.add(hook);
+                }
+                continue;
+            }
             hook.nextAt = now + hook.frequency;
             if (ThreadLocalRandom.current().nextInt(101) <= hook.chance) {
-                callback.apply(hook.linkedSpell, hook.caster, hook.target);
+                triggered.add(hook);
             }
+        }
+        // A triggered spell can install another hook (Entangle does this twice),
+        // so invoke callbacks only after the iterator has finished.
+        for (TimedHook hook : triggered) {
+            callback.apply(hook.linkedSpell, hook.caster, hook.target);
         }
     }
 
@@ -267,6 +369,19 @@ public final class SpellEffectManager {
                 elementalPower(caster, "light"), elementalPower(caster, "dark"));
         String withRange = formula.replaceAll("(?<![A-Za-z_.])r(?![A-Za-z_])", Double.toString(Math.max(0d, range)));
         return DiceFormula.of(withRange).evaluate(context);
+    }
+
+    /** Linked SELF spells run with the affected unit as GoN's {@code self}. */
+    private static int evaluateHook(String formula, Player caster, BaseMonster target, boolean targetIsSelf) {
+        if (!targetIsSelf) return evaluate(formula, caster, target, 0d);
+        if (formula == null || formula.isBlank()) return 0;
+        DiceFormula.Context context = new DiceFormula.Context(
+                target.getCombatStrength(), target.getCombatEndurance(), target.getCombatAgility(),
+                target.getCombatIntelligence(), 0, 0, 0, target.getCombatLevel(), 0,
+                resistance(target, 1), resistance(target, 2), resistance(target, 3),
+                resistance(target, 4), resistance(target, 5), resistance(target, 6),
+                100, 100, 100, 100, 100, 100);
+        return DiceFormula.of(formula).evaluate(context);
     }
 
     private static int resistance(BaseMonster target, int element) {
@@ -344,9 +459,10 @@ public final class SpellEffectManager {
         private long nextAt;
         private final long expiresAt;
         private final long frequency;
+        private final boolean oneShot;
 
         private TimedHook(int sourceSpellId, Player caster, BaseMonster target, SpellData linkedSpell,
-                          int chance, long nextAt, long expiresAt, long frequency) {
+                          int chance, long nextAt, long expiresAt, long frequency, boolean oneShot) {
             this.sourceSpellId = sourceSpellId;
             this.caster = caster;
             this.target = target;
@@ -355,6 +471,7 @@ public final class SpellEffectManager {
             this.nextAt = nextAt;
             this.expiresAt = expiresAt;
             this.frequency = frequency;
+            this.oneShot = oneShot;
         }
     }
 }

@@ -66,10 +66,15 @@ public abstract class BaseMonster implements Nameable {
     protected int combatIntelligence = 1;
     protected int combatAttack = 1;
     protected int combatDodge = 1;
+    private int temporaryDodgeModifier = 0;
+    private long temporaryDodgeModifierUntilMs = 0L;
     protected int combatArmorMin = 0;
     protected int combatArmorMax = 0;
     protected int[] combatResists = new int[12];
     protected long stunnedUntilMs = 0L;
+    protected long movementExhaustedUntilMs = 0L;
+    private long attackExhaustedUntilMs = 0L;
+    private long mentalExhaustedUntilMs = 0L;
     protected boolean lastAttackRanged = false;
     protected int lastAttackSpellId = 0;
     protected String soundHit;
@@ -428,11 +433,15 @@ public abstract class BaseMonster implements Nameable {
             movement.stop();
             movement.faceToward(position, playerPosition);
 
-            if (attackCooldownTimer <= 0 && !animations.isAttacking()) {
+            if (attackCooldownTimer <= 0 && !animations.isAttacking() && !isAttackExhausted()) {
                 performAttack(playerPosition);
                 attackCooldownTimer = MONSTER_ATTACK_COOLDOWN;
             }
         } else {
+            if (isMovementExhausted()) {
+                movement.stop();
+                return;
+            }
             // Chase player
             Vector2 moveTarget = nextPathWaypoint(playerPosition);
             if (moveTarget == null) {
@@ -481,11 +490,15 @@ public abstract class BaseMonster implements Nameable {
             movement.stop();
             movement.faceToward(position, targetPosition);
 
-            if (attackCooldownTimer <= 0 && !animations.isAttacking()) {
+            if (attackCooldownTimer <= 0 && !animations.isAttacking() && !isAttackExhausted()) {
                 performAttack(target);
                 attackCooldownTimer = MONSTER_ATTACK_COOLDOWN;
             }
         } else {
+            if (isMovementExhausted()) {
+                movement.stop();
+                return;
+            }
             Vector2 moveTarget = nextPathWaypoint(targetPosition);
             if (moveTarget == null) {
                 movement.stop();
@@ -513,6 +526,10 @@ public abstract class BaseMonster implements Nameable {
      * Update patrol logic with collision detection.
      */
     private void updatePatrol(float delta) {
+        if (isMovementExhausted()) {
+            movement.stop();
+            return;
+        }
         if (isPaused) {
             pauseTimer -= delta;
             if (pauseTimer <= 0) {
@@ -919,6 +936,7 @@ public abstract class BaseMonster implements Nameable {
     private MonsterDef.Attack pickAttack(float targetDistance) {
         List<MonsterDef.Attack> eligible = new ArrayList<>();
         for (MonsterDef.Attack attack : attacks) {
+            if (isMentallyExhausted() && attack.getValue3() > 0) continue;
             float range = attack.getValue5() > 1
                     ? attack.getValue5() * Math.max(GRID_W, GRID_H)
                     : MONSTER_ATTACK_RANGE;
@@ -1037,6 +1055,45 @@ public abstract class BaseMonster implements Nameable {
         stunnedUntilMs = 0L;
     }
 
+    public boolean isMovementExhausted() {
+        return movementExhaustedUntilMs > System.currentTimeMillis();
+    }
+
+    /** GoN's physical exhaust blocks movement without preventing attacks. */
+    public void exhaustMovementFor(long durationMillis) {
+        if (durationMillis <= 0L) return;
+        movementExhaustedUntilMs = Math.max(movementExhaustedUntilMs,
+                System.currentTimeMillis() + durationMillis);
+        movement.stop();
+    }
+
+    public boolean isAttackExhausted() {
+        return attackExhaustedUntilMs > System.currentTimeMillis();
+    }
+
+    public boolean isMentallyExhausted() {
+        return mentalExhaustedUntilMs > System.currentTimeMillis();
+    }
+
+    public void applyExhaustion(long attackMillis, long mentalMillis, long moveMillis) {
+        long now = System.currentTimeMillis();
+        attackExhaustedUntilMs = Math.max(attackExhaustedUntilMs, now + Math.max(0L, attackMillis));
+        mentalExhaustedUntilMs = Math.max(mentalExhaustedUntilMs, now + Math.max(0L, mentalMillis));
+        exhaustMovementFor(moveMillis);
+    }
+
+    public int getCombatDodge() {
+        int modifier = temporaryDodgeModifierUntilMs > System.currentTimeMillis()
+                ? temporaryDodgeModifier : 0;
+        return Math.max(0, combatDodge + modifier);
+    }
+
+    public void applyTemporaryDodgeModifier(int modifier, long durationMillis) {
+        if (durationMillis <= 0L) return;
+        temporaryDodgeModifier = modifier;
+        temporaryDodgeModifierUntilMs = System.currentTimeMillis() + durationMillis;
+    }
+
     private static int normalizeLegacyArmor(int armor) {
         if (armor >= 0 && armor < 100_000) return armor;
         float decoded = Float.intBitsToFloat(armor);
@@ -1051,9 +1108,13 @@ public abstract class BaseMonster implements Nameable {
             aggroOn(player.getPositionVector());
         }
         boolean wasDead = isDead;
+        // NPCstructure::OnHit awards XPperHit per point of damage actually dealt,
+        // capped by the remaining HP so an overkill blow never pays more than the
+        // monster had left.
+        int effectiveDamage = Math.min(Math.max(0, damage), Math.max(0, health));
         takeDamage(damage);
-        if (player != null && xpPerHit > 0) {
-            player.addXp(xpPerHit, xpCurve);
+        if (player != null && xpPerHit > 0 && effectiveDamage > 0) {
+            player.addXp(xpPerHit * effectiveDamage, xpCurve);
         }
         if (!wasDead && isDead && player != null && xpOnDeath > 0) {
             player.addXp(xpOnDeath, xpCurve);
@@ -1284,6 +1345,11 @@ public abstract class BaseMonster implements Nameable {
         monsterAggroTarget = null;
         attackCooldownTimer = 0f;
         stunnedUntilMs = 0L;
+        movementExhaustedUntilMs = 0L;
+        attackExhaustedUntilMs = 0L;
+        mentalExhaustedUntilMs = 0L;
+        temporaryDodgeModifier = 0;
+        temporaryDodgeModifierUntilMs = 0L;
 
         // Reset health and mana
         health = maxHealth;

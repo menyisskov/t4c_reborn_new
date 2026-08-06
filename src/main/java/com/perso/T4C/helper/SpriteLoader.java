@@ -35,6 +35,8 @@ public class SpriteLoader {
     private Texture[] textureCacheById = new Texture[0];
     private final Map<String, TextureRegion> maskedRegionCache = new HashMap<>();
     private final Map<String, Texture> maskedTextureCache = new HashMap<>();
+    private final Map<String, TextureRegion> energyBallPaletteRegionCache = new HashMap<>();
+    private final Map<String, Texture> energyBallPaletteTextureCache = new HashMap<>();
     private volatile int textureGeneration = 0;
     private static float MAX_SUPPORTED_ANISO = -1f;
     private final List<Sprite> sprites = new ArrayList<>();
@@ -131,6 +133,68 @@ public class SpriteLoader {
         Integer id = nameToId.get(name.toLowerCase(Locale.ROOT));
         if (id == null) return null;
         return getRegionFromSpriteId(id);
+    }
+
+    /** Recreates GoN's missing energy-ball palettes from the packed base frames. */
+    public TextureRegion getEnergyBallPaletteRegion(String name, String palette) throws GameException {
+        if (name == null || palette == null) return null;
+        String normalizedPalette = palette.toLowerCase(Locale.ROOT);
+        String key = normalizedPalette + '\0' + name.toLowerCase(Locale.ROOT);
+        TextureRegion cached = energyBallPaletteRegionCache.get(key);
+        if (cached != null) return cached;
+        Pixmap pixmap = createPixmapForSprite(name);
+        if (pixmap == null) return null;
+        try {
+            pixmap.setBlending(Pixmap.Blending.None);
+            for (int y = 0; y < pixmap.getHeight(); y++) {
+                for (int x = 0; x < pixmap.getWidth(); x++) {
+                    int pixel = pixmap.getPixel(x, y);
+                    int alpha = pixel & 0xFF;
+                    if (alpha == 0) continue;
+                    int intensity = Math.max((pixel >>> 24) & 0xFF,
+                            Math.max((pixel >>> 16) & 0xFF, (pixel >>> 8) & 0xFF));
+                    int core = Math.min(255, Math.max(0, intensity - 190) * 4);
+                    int red;
+                    int green;
+                    int blue;
+                    switch (normalizedPalette) {
+                        case "blue" -> {
+                            red = Math.min(255, intensity / 5 + core);
+                            green = Math.min(255, intensity * 3 / 4 + core);
+                            blue = intensity;
+                        }
+                        case "yellow" -> {
+                            red = intensity;
+                            green = Math.min(255, intensity * 4 / 5 + core);
+                            blue = Math.min(255, intensity / 6 + core);
+                        }
+                        case "black" -> {
+                            int shadow = intensity / 5;
+                            red = Math.min(255, shadow + core);
+                            green = Math.min(255, shadow + core);
+                            blue = Math.min(255, shadow + core);
+                        }
+                        case "purple" -> {
+                            red = Math.min(255, intensity * 4 / 5 + core);
+                            green = Math.min(255, intensity / 6 + core);
+                            blue = Math.min(255, intensity + core);
+                        }
+                        default -> throw new GameException("Unknown energy-ball palette: " + palette);
+                    }
+                    pixmap.drawPixel(x, y, (red << 24) | (green << 16) | (blue << 8) | alpha);
+                }
+            }
+            Texture texture = new Texture(pixmap);
+            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            texture.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
+            applyAnisotropy(texture);
+            TextureRegion region = new TextureRegion(texture);
+            energyBallPaletteTextureCache.put(key, texture);
+            energyBallPaletteRegionCache.put(key, region);
+            return region;
+        } finally {
+            pixmap.dispose();
+        }
     }
 
     /**
@@ -334,6 +398,11 @@ public class SpriteLoader {
         }
         maskedTextureCache.clear();
         maskedRegionCache.clear();
+        for (Texture texture : energyBallPaletteTextureCache.values()) {
+            if (texture != null) texture.dispose();
+        }
+        energyBallPaletteTextureCache.clear();
+        energyBallPaletteRegionCache.clear();
     }
 
     /**

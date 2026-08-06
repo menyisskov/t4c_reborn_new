@@ -88,7 +88,7 @@ class AppearanceDefaultsBinaryIOTest {
         AppearanceDefaultsBinaryIO.Defaults defaults = AppearanceDefaultsBinaryIO.read(file);
 
         assertEquals(18, defaults.nakedParts().size());
-        assertEquals(69, defaults.concealmentRules().size());
+        assertEquals(70, defaults.concealmentRules().size());
         assertEquals(4, defaults.concealmentRules().stream()
                 .filter(rule -> rule.hiddenParts().contains("HEAD")).count());
     }

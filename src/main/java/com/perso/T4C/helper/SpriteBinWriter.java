@@ -22,7 +22,13 @@ public final class SpriteBinWriter {
 
     /** Un sprite à écrire : nom, dimensions, offsets de dessin et image. */
     public record Entry(String name, int width, int height, int off1X, int off1Y,
-                        int off2X, int off2Y, BufferedImage image) {
+                        int off2X, int off2Y, int type, BufferedImage image) {
+
+        public Entry(String name, int width, int height, int off1X, int off1Y,
+                int off2X, int off2Y, BufferedImage image) {
+            this(name, width, height, off1X, off1Y, off2X, off2Y,
+                    SpriteBinIO.spriteType(width, height), image);
+        }
     }
 
     private SpriteBinWriter() {
@@ -50,7 +56,7 @@ public final class SpriteBinWriter {
             ImageIO.write(entry.image(), "png", png);
             SpriteBinIO.Packed packed = new SpriteBinIO.Packed(entry.name(), entry.width(),
                     entry.height(), entry.off1X(), entry.off1Y(), entry.off2X(), entry.off2Y(),
-                    SpriteBinIO.spriteType(entry.width(), entry.height()), png.toByteArray());
+                    entry.type(), png.toByteArray());
             Integer existing = indexByName.get(SpriteBinIO.key(entry.name()));
             if (existing != null) {
                 sprites.set(existing, packed);

@@ -1,0 +1,3241 @@
+_Intro 0
+_Intro 1
+_Intro 2
+_Intro 3
+_Intro 4
+_Intro 5
+_Intro 6
+_Intro 7
+_Intro 8
+_Intro Finger
+_Intro Mage
+_Intro Priest
+_Intro Thief
+_Intro Warrior
+_Logo
+_Splash
+_Tfctit01
+_Tfctit02
+_Tfctit03
+_Tfctit04
+_Tfctit05
+_Tfctit06
+_Tfctit07
+_Tfctit08
+_Tfctit09
+_Tfctit10
+_Tfctit11
+_Tfctit12
+_Tfctit13
+_Tfctit14
+_Tfctit15
+_Tfctit16
+_Tfctit17
+_Tfctit18
+_Tfctit19
+_Tfctit20
+_Tfctit21
+_Tfctit22
+_Tfctit23
+_Tfctit24
+_Tfctit25
+_Tfctit26
+_Tfctit27
+_Tfctit28
+_Tfctit29
+_Tfctit30
+_title01
+_title02
+_title03
+_title04
+_title05
+_title06
+_title07
+_title08
+_title09
+_title10
+_title11
+_title12
+_title13
+_title14
+_title15
+AutoSplitOff
+AutoSplitOffGrey
+BancTemple1
+BarossaShield
+BigSkel000-A
+BigSkel000-b
+BigSkel000-c
+BigSkel000-d
+BigSkel000-e
+BigSkel000-f
+BigSkel000-g
+BigSkel000-h
+BigSkel000-i
+BigSkel000-j
+BigSkel000-k
+BigSkel000-l
+BigSkel000-m
+BigSkel045-a
+BigSkel045-b
+BigSkel045-c
+BigSkel045-d
+BigSkel045-e
+BigSkel045-f
+BigSkel045-g
+BigSkel045-h
+BigSkel045-i
+BigSkel045-j
+BigSkel045-k
+BigSkel045-l
+BigSkel045-m
+BigSkel090-a
+BigSkel090-b
+BigSkel090-c
+BigSkel090-d
+BigSkel090-e
+BigSkel090-f
+BigSkel090-g
+BigSkel090-h
+BigSkel090-i
+BigSkel090-j
+BigSkel090-k
+BigSkel090-l
+BigSkel090-m
+BigSkel135-a
+BigSkel135-b
+BigSkel135-c
+BigSkel135-d
+BigSkel135-e
+BigSkel135-f
+BigSkel135-g
+BigSkel135-h
+BigSkel135-i
+BigSkel135-j
+BigSkel135-k
+BigSkel135-l
+BigSkel135-m
+BigSkel180-a
+BigSkel180-b
+BigSkel180-c
+BigSkel180-d
+BigSkel180-e
+BigSkel180-f
+BigSkel180-g
+BigSkel180-h
+BigSkel180-i
+BigSkel180-j
+BigSkel180-k
+BigSkel180-l
+BigSkel180-m
+BigSkelA000-a
+BigSkelA000-b
+BigSkelA000-c
+BigSkelA000-d
+BigSkelA000-e
+BigSkelA000-f
+BigSkelA000-g
+BigSkelA000-h
+BigSkelA000-i
+BigSkelA000-j
+BigSkelA000-k
+BigSkelA000-l
+BigSkelA000-m
+BigSkelA045-a
+BigSkelA045-b
+BigSkelA045-c
+BigSkelA045-d
+BigSkelA045-e
+BigSkelA045-f
+BigSkelA045-g
+BigSkelA045-h
+BigSkelA045-i
+BigSkelA045-j
+BigSkelA045-k
+BigSkelA045-l
+BigSkelA045-m
+BigSkelA090-a
+BigSkelA090-b
+BigSkelA090-c
+BigSkelA090-d
+BigSkelA090-e
+BigSkelA090-f
+BigSkelA090-g
+BigSkelA090-h
+BigSkelA090-i
+BigSkelA090-j
+BigSkelA090-k
+BigSkelA090-l
+BigSkelA090-m
+BigSkelA135-a
+BigSkelA135-b
+BigSkelA135-c
+BigSkelA135-d
+BigSkelA135-e
+BigSkelA135-f
+BigSkelA135-g
+BigSkelA135-h
+BigSkelA135-i
+BigSkelA135-j
+BigSkelA135-k
+BigSkelA135-l
+BigSkelA135-m
+BigSkelA180-a
+BigSkelA180-b
+BigSkelA180-c
+BigSkelA180-d
+BigSkelA180-e
+BigSkelA180-f
+BigSkelA180-g
+BigSkelA180-h
+BigSkelA180-i
+BigSkelA180-j
+BigSkelA180-k
+BigSkelA180-l
+BigSkelA180-m
+BigSkelC-A
+BigSkelC-B
+BigSkelC-C
+BigSkelC-D
+BigSkelC-E
+BigSkelC-F
+BigSkelC-G
+BigSkelC-H
+BigSkelC-I
+BossRat000-a
+BossRat000-b
+BossRat000-c
+BossRat000-d
+BossRat000-e
+BossRat000-f
+BossRat045-a
+BossRat045-b
+BossRat045-c
+BossRat045-d
+BossRat045-e
+BossRat045-f
+BossRat090-a
+BossRat090-b
+BossRat090-c
+BossRat090-d
+BossRat090-e
+BossRat090-f
+BossRat135-a
+BossRat135-b
+BossRat135-c
+BossRat135-d
+BossRat135-e
+BossRat135-f
+BossRat180-a
+BossRat180-b
+BossRat180-c
+BossRat180-d
+BossRat180-e
+BossRat180-f
+BossRatA000-a
+BossRatA000-b
+BossRatA000-c
+BossRatA000-d
+BossRatA000-e
+BossRatA000-f
+BossRatA000-g
+BossRatA000-h
+BossRatA000-i
+BossRatA045-a
+BossRatA045-b
+BossRatA045-c
+BossRatA045-d
+BossRatA045-e
+BossRatA045-f
+BossRatA045-g
+BossRatA045-h
+BossRatA045-i
+BossRatA090-a
+BossRatA090-b
+BossRatA090-c
+BossRatA090-d
+BossRatA090-e
+BossRatA090-f
+BossRatA090-g
+BossRatA090-h
+BossRatA090-i
+BossRatA135-a
+BossRatA135-b
+BossRatA135-c
+BossRatA135-d
+BossRatA135-e
+BossRatA135-f
+BossRatA135-g
+BossRatA135-h
+BossRatA135-i
+BossRatA180-a
+BossRatA180-b
+BossRatA180-c
+BossRatA180-d
+BossRatA180-e
+BossRatA180-f
+BossRatA180-g
+BossRatA180-h
+BossRatA180-i
+BossRatC-A
+BossRatC-B
+BossRatC-C
+BossRatC-D
+BossRatC-E
+BossRatC-F
+BossRatC-G
+BossRatC-H
+BossRatC-I
+Boulder
+BoulderFireA-2a
+BoulderFireA-2b
+BoulderFireA-2c
+BoulderFireA-2d
+BoulderFireA-2e
+BoulderFireA-a
+BoulderFireA-b
+BoulderFireA-c
+BoulderFireA-d
+BoulderFireA-e
+BoulderFireA-f
+BoulderFireA-g
+BoulderFireA-h
+BoulderFireA-i
+BoulderFireA-j
+BoulderFireA-k
+BoulderFireA-l
+BoulderFireA-m
+BoulderFireA-n
+BoulderFireA-o
+BoulderFireA-p
+BoulderFireA-q
+BoulderFireA-r
+BoulderFireA-s
+BoulderFireA-t
+BoulderFireA-u
+BoulderFireA-v
+BoulderFireA-w
+BoulderFireA-x
+BoulderFireA-y
+BoulderFireA-z
+BT000-A
+BT000-B
+BT000-C
+BT000-D
+BT000-E
+BT000-F
+BT000-G
+BT000-H
+BT000-I
+BT045-A
+BT045-B
+BT045-C
+BT045-D
+BT045-E
+BT045-F
+BT045-G
+BT045-H
+BT045-I
+BT090-A
+BT090-B
+BT090-C
+BT090-D
+BT090-E
+BT090-F
+BT090-G
+BT090-H
+BT090-I
+BT135-A
+BT135-B
+BT135-C
+BT135-D
+BT135-E
+BT135-F
+BT135-G
+BT135-H
+BT135-I
+BT180-A
+BT180-B
+BT180-C
+BT180-D
+BT180-E
+BT180-F
+BT180-G
+BT180-H
+BT180-I
+BTA000-A
+BTA000-B
+BTA000-C
+BTA000-D
+BTA000-E
+BTA000-F
+BTA000-G
+BTA000-H
+BTA000-I
+BTA045-A
+BTA045-B
+BTA045-C
+BTA045-D
+BTA045-E
+BTA045-F
+BTA045-G
+BTA045-H
+BTA045-I
+BTA090-A
+BTA090-B
+BTA090-C
+BTA090-D
+BTA090-E
+BTA090-F
+BTA090-G
+BTA090-H
+BTA090-I
+BTA135-A
+BTA135-B
+BTA135-C
+BTA135-D
+BTA135-E
+BTA135-F
+BTA135-G
+BTA135-H
+BTA135-I
+BTA180-A
+BTA180-B
+BTA180-C
+BTA180-D
+BTA180-E
+BTA180-F
+BTA180-G
+BTA180-H
+BTA180-I
+BTC-A
+BTC-B
+BTC-C
+BTC-D
+BTC-E
+BTC-F
+BTC-G
+BTC-H
+BTC-I
+BTC-J
+BTC-K
+BTC-L
+BTC-M
+BTC-N
+Bugg
+BuySellBox
+BuySellBoxHighLight
+Camp2
+Camp3
+Camp4
+Camp5
+Camp6
+Camp7
+Camp8
+Camp9
+Castle Border1
+Castle Border2
+Castle Rampart
+Castle TOWER
+CastleFloor (1, 1)
+CastleFloor (1, 2)
+CastleFloor (1, 3)
+CastleFloor (1, 4)
+CastleFloor (1, 5)
+CastleFloor (1, 6)
+CastleFloor (1, 7)
+CastleFloor (1, 8)
+CastleFloor (1, 9)
+CastleFloor (2, 1)
+CastleFloor (2, 2)
+CastleFloor (2, 3)
+CastleFloor (2, 4)
+CastleFloor (2, 5)
+CastleFloor (2, 6)
+CastleFloor (2, 7)
+CastleFloor (2, 8)
+CastleFloor (2, 9)
+CastleFloor (3, 1)
+CastleFloor (3, 2)
+CastleFloor (3, 3)
+CastleFloor (3, 4)
+CastleFloor (3, 5)
+CastleFloor (3, 6)
+CastleFloor (3, 7)
+CastleFloor (3, 8)
+CastleFloor (3, 9)
+CastleFloor (4, 1)
+CastleFloor (4, 2)
+CastleFloor (4, 3)
+CastleFloor (4, 4)
+CastleFloor (4, 5)
+CastleFloor (4, 6)
+CastleFloor (4, 7)
+CastleFloor (4, 8)
+CastleFloor (4, 9)
+CastleFloor (5, 1)
+CastleFloor (5, 2)
+CastleFloor (5, 3)
+CastleFloor (5, 4)
+CastleFloor (5, 5)
+CastleFloor (5, 6)
+CastleFloor (5, 7)
+CastleFloor (5, 8)
+CastleFloor (5, 9)
+CastleFloor (6, 1)
+CastleFloor (6, 2)
+CastleFloor (6, 3)
+CastleFloor (6, 4)
+CastleFloor (6, 5)
+CastleFloor (6, 6)
+CastleFloor (6, 7)
+CastleFloor (6, 8)
+CastleFloor (6, 9)
+CastleFloor (7, 1)
+CastleFloor (7, 2)
+CastleFloor (7, 3)
+CastleFloor (7, 4)
+CastleFloor (7, 5)
+CastleFloor (7, 6)
+CastleFloor (7, 7)
+CastleFloor (7, 8)
+CastleFloor (7, 9)
+CastleFloor (8, 1)
+CastleFloor (8, 2)
+CastleFloor (8, 3)
+CastleFloor (8, 4)
+CastleFloor (8, 5)
+CastleFloor (8, 6)
+CastleFloor (8, 7)
+CastleFloor (8, 8)
+CastleFloor (8, 9)
+CastleFloor (9, 1)
+CastleFloor (9, 2)
+CastleFloor (9, 3)
+CastleFloor (9, 4)
+CastleFloor (9, 5)
+CastleFloor (9, 6)
+CastleFloor (9, 7)
+CastleFloor (9, 8)
+CastleFloor (9, 9)
+ChainMailBody
+ChainMailHelm
+ChainMailLegs
+Chair 6
+ChannelJoinPopUp
+ChannelListingH
+Chatbox
+ChatPageOffToggle
+ChatPlayerListingH
+ChatToggleChannel
+ChatTogglePage
+ChatTogglePageName
+ChatToggleSpeak
+CheckOFFLightDown
+CheckONLightDown
+CleanPentacle
+Coins 1
+Coins 2
+Colonne Cercle Bas
+Corner
+Crates 2
+Crates 3
+Cross
+CUI_ChatSelectCC
+CUI_ChatSelectUser
+DecayingBatWings
+DestinyGem
+DG000-a
+DG000-b
+DG000-c
+DG000-d
+DG000-e
+DG000-f
+DG000-g
+DG000-h
+DG000-i
+DG000-j
+DG000-k
+DG000-l
+DG045-a
+DG045-b
+DG045-c
+DG045-d
+DG045-e
+DG045-f
+DG045-g
+DG045-h
+DG045-i
+DG045-j
+DG045-k
+DG045-l
+DG090-a
+DG090-b
+DG090-c
+DG090-d
+DG090-e
+DG090-f
+DG090-g
+DG090-h
+DG090-i
+DG090-j
+DG090-k
+DG090-l
+DG135-a
+DG135-b
+DG135-c
+DG135-d
+DG135-e
+DG135-f
+DG135-g
+DG135-h
+DG135-i
+DG135-j
+DG135-k
+DG135-l
+DG180-a
+DG180-b
+DG180-c
+DG180-d
+DG180-e
+DG180-f
+DG180-g
+DG180-h
+DG180-i
+DG180-j
+DG180-k
+DG180-l
+DGA000-a
+DGA000-b
+DGA000-c
+DGA000-d
+DGA000-e
+DGA000-f
+DGA000-g
+DGA000-h
+DGA000-i
+DGA045-a
+DGA045-b
+DGA045-c
+DGA045-d
+DGA045-e
+DGA045-f
+DGA045-g
+DGA045-h
+DGA045-i
+DGA090-a
+DGA090-b
+DGA090-c
+DGA090-d
+DGA090-e
+DGA090-f
+DGA090-g
+DGA090-h
+DGA090-i
+DGA135-a
+DGA135-b
+DGA135-c
+DGA135-d
+DGA135-e
+DGA135-f
+DGA135-g
+DGA135-h
+DGA135-i
+DGA180-a
+DGA180-b
+DGA180-c
+DGA180-d
+DGA180-e
+DGA180-f
+DGA180-g
+DGA180-h
+DGA180-i
+DGC-A
+DGC-B
+DGC-C
+DGC-D
+DGC-E
+DGC-F
+DGC-G
+DGC-H
+DGC-I
+DGC-J
+DGC-K
+DiskAccess
+DromedarC-a
+DromedarC-b
+DromedarC-c
+DromedarC-d
+DromedarC-e
+DromedarC-f
+DromedarC-g
+DromedarC-h
+DromedarC-i
+DromedarC-j
+DromedarC-k
+DromedarC-l
+DromedaryC-a
+DromedaryC-b
+DromedaryC-c
+DromedaryC-d
+DromedaryC-e
+DromedaryC-f
+DromedaryC-g
+DromedaryC-h
+DromedaryC-i
+DromedaryC-j
+DromedaryC-k
+DromedaryC-l
+DungeonBlue_DungeonFloor (1, 1)
+DungeonBlue_DungeonFloor (1, 2)
+DungeonBlue_DungeonFloor (1, 3)
+DungeonBlue_DungeonFloor (1, 4)
+DungeonBlue_DungeonFloor (1, 5)
+DungeonBlue_DungeonFloor (2, 1)
+DungeonBlue_DungeonFloor (2, 2)
+DungeonBlue_DungeonFloor (2, 3)
+DungeonBlue_DungeonFloor (2, 4)
+DungeonBlue_DungeonFloor (2, 5)
+DungeonBlue_DungeonFloor (3, 1)
+DungeonBlue_DungeonFloor (3, 2)
+DungeonBlue_DungeonFloor (3, 3)
+DungeonBlue_DungeonFloor (3, 4)
+DungeonBlue_DungeonFloor (3, 5)
+DungeonBlue_DungeonFloor (4, 1)
+DungeonBlue_DungeonFloor (4, 2)
+DungeonBlue_DungeonFloor (4, 3)
+DungeonBlue_DungeonFloor (4, 4)
+DungeonBlue_DungeonFloor (4, 5)
+DungeonBlue_DungeonFloor (5, 1)
+DungeonBlue_DungeonFloor (5, 2)
+DungeonBlue_DungeonFloor (5, 3)
+DungeonBlue_DungeonFloor (5, 4)
+DungeonBlue_DungeonFloor (5, 5)
+DungeonBlue_DungeonFloorOverHead2 (1, 1)
+DungeonBlue_DungeonFloorOverHead2 (1, 10)
+DungeonBlue_DungeonFloorOverHead2 (1, 11)
+DungeonBlue_DungeonFloorOverHead2 (1, 12)
+DungeonBlue_DungeonFloorOverHead2 (1, 13)
+DungeonBlue_DungeonFloorOverHead2 (1, 14)
+DungeonBlue_DungeonFloorOverHead2 (1, 15)
+DungeonBlue_DungeonFloorOverHead2 (1, 2)
+DungeonBlue_DungeonFloorOverHead2 (1, 3)
+DungeonBlue_DungeonFloorOverHead2 (1, 4)
+DungeonBlue_DungeonFloorOverHead2 (1, 5)
+DungeonBlue_DungeonFloorOverHead2 (1, 6)
+DungeonBlue_DungeonFloorOverHead2 (1, 7)
+DungeonBlue_DungeonFloorOverHead2 (1, 8)
+DungeonBlue_DungeonFloorOverHead2 (1, 9)
+DungeonBlue_DungeonFloorOverHead2 (10, 1)
+DungeonBlue_DungeonFloorOverHead2 (10, 10)
+DungeonBlue_DungeonFloorOverHead2 (10, 11)
+DungeonBlue_DungeonFloorOverHead2 (10, 12)
+DungeonBlue_DungeonFloorOverHead2 (10, 13)
+DungeonBlue_DungeonFloorOverHead2 (10, 14)
+DungeonBlue_DungeonFloorOverHead2 (10, 15)
+DungeonBlue_DungeonFloorOverHead2 (10, 2)
+DungeonBlue_DungeonFloorOverHead2 (10, 3)
+DungeonBlue_DungeonFloorOverHead2 (10, 4)
+DungeonBlue_DungeonFloorOverHead2 (10, 5)
+DungeonBlue_DungeonFloorOverHead2 (10, 6)
+DungeonBlue_DungeonFloorOverHead2 (10, 7)
+DungeonBlue_DungeonFloorOverHead2 (10, 8)
+DungeonBlue_DungeonFloorOverHead2 (10, 9)
+DungeonBlue_DungeonFloorOverHead2 (11, 1)
+DungeonBlue_DungeonFloorOverHead2 (11, 10)
+DungeonBlue_DungeonFloorOverHead2 (11, 11)
+DungeonBlue_DungeonFloorOverHead2 (11, 12)
+DungeonBlue_DungeonFloorOverHead2 (11, 13)
+DungeonBlue_DungeonFloorOverHead2 (11, 14)
+DungeonBlue_DungeonFloorOverHead2 (11, 15)
+DungeonBlue_DungeonFloorOverHead2 (11, 2)
+DungeonBlue_DungeonFloorOverHead2 (11, 3)
+DungeonBlue_DungeonFloorOverHead2 (11, 4)
+DungeonBlue_DungeonFloorOverHead2 (11, 5)
+DungeonBlue_DungeonFloorOverHead2 (11, 6)
+DungeonBlue_DungeonFloorOverHead2 (11, 7)
+DungeonBlue_DungeonFloorOverHead2 (11, 8)
+DungeonBlue_DungeonFloorOverHead2 (11, 9)
+DungeonBlue_DungeonFloorOverHead2 (12, 1)
+DungeonBlue_DungeonFloorOverHead2 (12, 10)
+DungeonBlue_DungeonFloorOverHead2 (12, 11)
+DungeonBlue_DungeonFloorOverHead2 (12, 12)
+DungeonBlue_DungeonFloorOverHead2 (12, 13)
+DungeonBlue_DungeonFloorOverHead2 (12, 14)
+DungeonBlue_DungeonFloorOverHead2 (12, 15)
+DungeonBlue_DungeonFloorOverHead2 (12, 2)
+DungeonBlue_DungeonFloorOverHead2 (12, 3)
+DungeonBlue_DungeonFloorOverHead2 (12, 4)
+DungeonBlue_DungeonFloorOverHead2 (12, 5)
+DungeonBlue_DungeonFloorOverHead2 (12, 6)
+DungeonBlue_DungeonFloorOverHead2 (12, 7)
+DungeonBlue_DungeonFloorOverHead2 (12, 8)
+DungeonBlue_DungeonFloorOverHead2 (12, 9)
+DungeonBlue_DungeonFloorOverHead2 (13, 1)
+DungeonBlue_DungeonFloorOverHead2 (13, 10)
+DungeonBlue_DungeonFloorOverHead2 (13, 11)
+DungeonBlue_DungeonFloorOverHead2 (13, 12)
+DungeonBlue_DungeonFloorOverHead2 (13, 13)
+DungeonBlue_DungeonFloorOverHead2 (13, 14)
+DungeonBlue_DungeonFloorOverHead2 (13, 15)
+DungeonBlue_DungeonFloorOverHead2 (13, 2)
+DungeonBlue_DungeonFloorOverHead2 (13, 3)
+DungeonBlue_DungeonFloorOverHead2 (13, 4)
+DungeonBlue_DungeonFloorOverHead2 (13, 5)
+DungeonBlue_DungeonFloorOverHead2 (13, 6)
+DungeonBlue_DungeonFloorOverHead2 (13, 7)
+DungeonBlue_DungeonFloorOverHead2 (13, 8)
+DungeonBlue_DungeonFloorOverHead2 (13, 9)
+DungeonBlue_DungeonFloorOverHead2 (14, 1)
+DungeonBlue_DungeonFloorOverHead2 (14, 10)
+DungeonBlue_DungeonFloorOverHead2 (14, 11)
+DungeonBlue_DungeonFloorOverHead2 (14, 12)
+DungeonBlue_DungeonFloorOverHead2 (14, 13)
+DungeonBlue_DungeonFloorOverHead2 (14, 14)
+DungeonBlue_DungeonFloorOverHead2 (14, 15)
+DungeonBlue_DungeonFloorOverHead2 (14, 2)
+DungeonBlue_DungeonFloorOverHead2 (14, 3)
+DungeonBlue_DungeonFloorOverHead2 (14, 4)
+DungeonBlue_DungeonFloorOverHead2 (14, 5)
+DungeonBlue_DungeonFloorOverHead2 (14, 6)
+DungeonBlue_DungeonFloorOverHead2 (14, 7)
+DungeonBlue_DungeonFloorOverHead2 (14, 8)
+DungeonBlue_DungeonFloorOverHead2 (14, 9)
+DungeonBlue_DungeonFloorOverHead2 (15, 1)
+DungeonBlue_DungeonFloorOverHead2 (15, 10)
+DungeonBlue_DungeonFloorOverHead2 (15, 11)
+DungeonBlue_DungeonFloorOverHead2 (15, 12)
+DungeonBlue_DungeonFloorOverHead2 (15, 13)
+DungeonBlue_DungeonFloorOverHead2 (15, 14)
+DungeonBlue_DungeonFloorOverHead2 (15, 15)
+DungeonBlue_DungeonFloorOverHead2 (15, 2)
+DungeonBlue_DungeonFloorOverHead2 (15, 3)
+DungeonBlue_DungeonFloorOverHead2 (15, 4)
+DungeonBlue_DungeonFloorOverHead2 (15, 5)
+DungeonBlue_DungeonFloorOverHead2 (15, 6)
+DungeonBlue_DungeonFloorOverHead2 (15, 7)
+DungeonBlue_DungeonFloorOverHead2 (15, 8)
+DungeonBlue_DungeonFloorOverHead2 (15, 9)
+DungeonBlue_DungeonFloorOverHead2 (2, 1)
+DungeonBlue_DungeonFloorOverHead2 (2, 10)
+DungeonBlue_DungeonFloorOverHead2 (2, 11)
+DungeonBlue_DungeonFloorOverHead2 (2, 12)
+DungeonBlue_DungeonFloorOverHead2 (2, 13)
+DungeonBlue_DungeonFloorOverHead2 (2, 14)
+DungeonBlue_DungeonFloorOverHead2 (2, 15)
+DungeonBlue_DungeonFloorOverHead2 (2, 2)
+DungeonBlue_DungeonFloorOverHead2 (2, 3)
+DungeonBlue_DungeonFloorOverHead2 (2, 4)
+DungeonBlue_DungeonFloorOverHead2 (2, 5)
+DungeonBlue_DungeonFloorOverHead2 (2, 6)
+DungeonBlue_DungeonFloorOverHead2 (2, 7)
+DungeonBlue_DungeonFloorOverHead2 (2, 8)
+DungeonBlue_DungeonFloorOverHead2 (2, 9)
+DungeonBlue_DungeonFloorOverHead2 (3, 1)
+DungeonBlue_DungeonFloorOverHead2 (3, 10)
+DungeonBlue_DungeonFloorOverHead2 (3, 11)
+DungeonBlue_DungeonFloorOverHead2 (3, 12)
+DungeonBlue_DungeonFloorOverHead2 (3, 13)
+DungeonBlue_DungeonFloorOverHead2 (3, 14)
+DungeonBlue_DungeonFloorOverHead2 (3, 15)
+DungeonBlue_DungeonFloorOverHead2 (3, 2)
+DungeonBlue_DungeonFloorOverHead2 (3, 3)
+DungeonBlue_DungeonFloorOverHead2 (3, 4)
+DungeonBlue_DungeonFloorOverHead2 (3, 5)
+DungeonBlue_DungeonFloorOverHead2 (3, 6)
+DungeonBlue_DungeonFloorOverHead2 (3, 7)
+DungeonBlue_DungeonFloorOverHead2 (3, 8)
+DungeonBlue_DungeonFloorOverHead2 (3, 9)
+DungeonBlue_DungeonFloorOverHead2 (4, 1)
+DungeonBlue_DungeonFloorOverHead2 (4, 10)
+DungeonBlue_DungeonFloorOverHead2 (4, 11)
+DungeonBlue_DungeonFloorOverHead2 (4, 12)
+DungeonBlue_DungeonFloorOverHead2 (4, 13)
+DungeonBlue_DungeonFloorOverHead2 (4, 14)
+DungeonBlue_DungeonFloorOverHead2 (4, 15)
+DungeonBlue_DungeonFloorOverHead2 (4, 2)
+DungeonBlue_DungeonFloorOverHead2 (4, 3)
+DungeonBlue_DungeonFloorOverHead2 (4, 4)
+DungeonBlue_DungeonFloorOverHead2 (4, 5)
+DungeonBlue_DungeonFloorOverHead2 (4, 6)
+DungeonBlue_DungeonFloorOverHead2 (4, 7)
+DungeonBlue_DungeonFloorOverHead2 (4, 8)
+DungeonBlue_DungeonFloorOverHead2 (4, 9)
+DungeonBlue_DungeonFloorOverHead2 (5, 1)
+DungeonBlue_DungeonFloorOverHead2 (5, 10)
+DungeonBlue_DungeonFloorOverHead2 (5, 11)
+DungeonBlue_DungeonFloorOverHead2 (5, 12)
+DungeonBlue_DungeonFloorOverHead2 (5, 13)
+DungeonBlue_DungeonFloorOverHead2 (5, 14)
+DungeonBlue_DungeonFloorOverHead2 (5, 15)
+DungeonBlue_DungeonFloorOverHead2 (5, 2)
+DungeonBlue_DungeonFloorOverHead2 (5, 3)
+DungeonBlue_DungeonFloorOverHead2 (5, 4)
+DungeonBlue_DungeonFloorOverHead2 (5, 5)
+DungeonBlue_DungeonFloorOverHead2 (5, 6)
+DungeonBlue_DungeonFloorOverHead2 (5, 7)
+DungeonBlue_DungeonFloorOverHead2 (5, 8)
+DungeonBlue_DungeonFloorOverHead2 (5, 9)
+DungeonBlue_DungeonFloorOverHead2 (6, 1)
+DungeonBlue_DungeonFloorOverHead2 (6, 10)
+DungeonBlue_DungeonFloorOverHead2 (6, 11)
+DungeonBlue_DungeonFloorOverHead2 (6, 12)
+DungeonBlue_DungeonFloorOverHead2 (6, 13)
+DungeonBlue_DungeonFloorOverHead2 (6, 14)
+DungeonBlue_DungeonFloorOverHead2 (6, 15)
+DungeonBlue_DungeonFloorOverHead2 (6, 2)
+DungeonBlue_DungeonFloorOverHead2 (6, 3)
+DungeonBlue_DungeonFloorOverHead2 (6, 4)
+DungeonBlue_DungeonFloorOverHead2 (6, 5)
+DungeonBlue_DungeonFloorOverHead2 (6, 6)
+DungeonBlue_DungeonFloorOverHead2 (6, 7)
+DungeonBlue_DungeonFloorOverHead2 (6, 8)
+DungeonBlue_DungeonFloorOverHead2 (6, 9)
+DungeonBlue_DungeonFloorOverHead2 (7, 1)
+DungeonBlue_DungeonFloorOverHead2 (7, 10)
+DungeonBlue_DungeonFloorOverHead2 (7, 11)
+DungeonBlue_DungeonFloorOverHead2 (7, 12)
+DungeonBlue_DungeonFloorOverHead2 (7, 13)
+DungeonBlue_DungeonFloorOverHead2 (7, 14)
+DungeonBlue_DungeonFloorOverHead2 (7, 15)
+DungeonBlue_DungeonFloorOverHead2 (7, 2)
+DungeonBlue_DungeonFloorOverHead2 (7, 3)
+DungeonBlue_DungeonFloorOverHead2 (7, 4)
+DungeonBlue_DungeonFloorOverHead2 (7, 5)
+DungeonBlue_DungeonFloorOverHead2 (7, 6)
+DungeonBlue_DungeonFloorOverHead2 (7, 7)
+DungeonBlue_DungeonFloorOverHead2 (7, 8)
+DungeonBlue_DungeonFloorOverHead2 (7, 9)
+DungeonBlue_DungeonFloorOverHead2 (8, 1)
+DungeonBlue_DungeonFloorOverHead2 (8, 10)
+DungeonBlue_DungeonFloorOverHead2 (8, 11)
+DungeonBlue_DungeonFloorOverHead2 (8, 12)
+DungeonBlue_DungeonFloorOverHead2 (8, 13)
+DungeonBlue_DungeonFloorOverHead2 (8, 14)
+DungeonBlue_DungeonFloorOverHead2 (8, 15)
+DungeonBlue_DungeonFloorOverHead2 (8, 2)
+DungeonBlue_DungeonFloorOverHead2 (8, 3)
+DungeonBlue_DungeonFloorOverHead2 (8, 4)
+DungeonBlue_DungeonFloorOverHead2 (8, 5)
+DungeonBlue_DungeonFloorOverHead2 (8, 6)
+DungeonBlue_DungeonFloorOverHead2 (8, 7)
+DungeonBlue_DungeonFloorOverHead2 (8, 8)
+DungeonBlue_DungeonFloorOverHead2 (8, 9)
+DungeonBlue_DungeonFloorOverHead2 (9, 1)
+DungeonBlue_DungeonFloorOverHead2 (9, 10)
+DungeonBlue_DungeonFloorOverHead2 (9, 11)
+DungeonBlue_DungeonFloorOverHead2 (9, 12)
+DungeonBlue_DungeonFloorOverHead2 (9, 13)
+DungeonBlue_DungeonFloorOverHead2 (9, 14)
+DungeonBlue_DungeonFloorOverHead2 (9, 15)
+DungeonBlue_DungeonFloorOverHead2 (9, 2)
+DungeonBlue_DungeonFloorOverHead2 (9, 3)
+DungeonBlue_DungeonFloorOverHead2 (9, 4)
+DungeonBlue_DungeonFloorOverHead2 (9, 5)
+DungeonBlue_DungeonFloorOverHead2 (9, 6)
+DungeonBlue_DungeonFloorOverHead2 (9, 7)
+DungeonBlue_DungeonFloorOverHead2 (9, 8)
+DungeonBlue_DungeonFloorOverHead2 (9, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (1, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (10, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (2, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (3, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (4, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (5, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (6, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (7, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (8, 9)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 1)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 10)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 2)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 3)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 4)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 5)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 6)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 7)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 8)
+DungeonBlue_DungeonFloorOverHeadLight1 (9, 9)
+DungeonBlue_DungeonFloorTorchLeft (1, 1)
+DungeonBlue_DungeonFloorTorchLeft (1, 2)
+DungeonBlue_DungeonFloorTorchLeft (1, 3)
+DungeonBlue_DungeonFloorTorchLeft (1, 4)
+DungeonBlue_DungeonFloorTorchLeft (1, 5)
+DungeonBlue_DungeonFloorTorchLeft (2, 1)
+DungeonBlue_DungeonFloorTorchLeft (2, 2)
+DungeonBlue_DungeonFloorTorchLeft (2, 3)
+DungeonBlue_DungeonFloorTorchLeft (2, 4)
+DungeonBlue_DungeonFloorTorchLeft (2, 5)
+DungeonBlue_DungeonFloorTorchLeft (3, 1)
+DungeonBlue_DungeonFloorTorchLeft (3, 2)
+DungeonBlue_DungeonFloorTorchLeft (3, 3)
+DungeonBlue_DungeonFloorTorchLeft (3, 4)
+DungeonBlue_DungeonFloorTorchLeft (3, 5)
+DungeonBlue_DungeonFloorTorchLeft (4, 1)
+DungeonBlue_DungeonFloorTorchLeft (4, 2)
+DungeonBlue_DungeonFloorTorchLeft (4, 3)
+DungeonBlue_DungeonFloorTorchLeft (4, 4)
+DungeonBlue_DungeonFloorTorchLeft (4, 5)
+DungeonBlue_DungeonFloorTorchLeft (5, 1)
+DungeonBlue_DungeonFloorTorchLeft (5, 2)
+DungeonBlue_DungeonFloorTorchLeft (5, 3)
+DungeonBlue_DungeonFloorTorchLeft (5, 4)
+DungeonBlue_DungeonFloorTorchLeft (5, 5)
+DungeonDarkArcEnd1
+DungeonDarkArcTorch 1
+DungeonDarkArcTorch 2
+DungeonDarkArcTorch 3
+DungeonDarkArcTorch 4
+DungeonDarkRockWall 1
+DungeonDarkRockWall 2
+DungeonDarkRockWall 3
+DungeonDarkRockWall 4
+DungeonDarkRockWall 5
+DungeonDoor
+DungeonGreen_DungeonFloor (1, 1)
+DungeonGreen_DungeonFloor (1, 2)
+DungeonGreen_DungeonFloor (1, 3)
+DungeonGreen_DungeonFloor (1, 4)
+DungeonGreen_DungeonFloor (1, 5)
+DungeonGreen_DungeonFloor (2, 1)
+DungeonGreen_DungeonFloor (2, 2)
+DungeonGreen_DungeonFloor (2, 3)
+DungeonGreen_DungeonFloor (2, 4)
+DungeonGreen_DungeonFloor (2, 5)
+DungeonGreen_DungeonFloor (3, 1)
+DungeonGreen_DungeonFloor (3, 2)
+DungeonGreen_DungeonFloor (3, 3)
+DungeonGreen_DungeonFloor (3, 4)
+DungeonGreen_DungeonFloor (3, 5)
+DungeonGreen_DungeonFloor (4, 1)
+DungeonGreen_DungeonFloor (4, 2)
+DungeonGreen_DungeonFloor (4, 3)
+DungeonGreen_DungeonFloor (4, 4)
+DungeonGreen_DungeonFloor (4, 5)
+DungeonGreen_DungeonFloor (5, 1)
+DungeonGreen_DungeonFloor (5, 2)
+DungeonGreen_DungeonFloor (5, 3)
+DungeonGreen_DungeonFloor (5, 4)
+DungeonGreen_DungeonFloor (5, 5)
+DungeonGreen_DungeonFloorOverHead2 (1, 1)
+DungeonGreen_DungeonFloorOverHead2 (1, 10)
+DungeonGreen_DungeonFloorOverHead2 (1, 11)
+DungeonGreen_DungeonFloorOverHead2 (1, 12)
+DungeonGreen_DungeonFloorOverHead2 (1, 13)
+DungeonGreen_DungeonFloorOverHead2 (1, 14)
+DungeonGreen_DungeonFloorOverHead2 (1, 15)
+DungeonGreen_DungeonFloorOverHead2 (1, 2)
+DungeonGreen_DungeonFloorOverHead2 (1, 3)
+DungeonGreen_DungeonFloorOverHead2 (1, 4)
+DungeonGreen_DungeonFloorOverHead2 (1, 5)
+DungeonGreen_DungeonFloorOverHead2 (1, 6)
+DungeonGreen_DungeonFloorOverHead2 (1, 7)
+DungeonGreen_DungeonFloorOverHead2 (1, 8)
+DungeonGreen_DungeonFloorOverHead2 (1, 9)
+DungeonGreen_DungeonFloorOverHead2 (10, 1)
+DungeonGreen_DungeonFloorOverHead2 (10, 10)
+DungeonGreen_DungeonFloorOverHead2 (10, 11)
+DungeonGreen_DungeonFloorOverHead2 (10, 12)
+DungeonGreen_DungeonFloorOverHead2 (10, 13)
+DungeonGreen_DungeonFloorOverHead2 (10, 14)
+DungeonGreen_DungeonFloorOverHead2 (10, 15)
+DungeonGreen_DungeonFloorOverHead2 (10, 2)
+DungeonGreen_DungeonFloorOverHead2 (10, 3)
+DungeonGreen_DungeonFloorOverHead2 (10, 4)
+DungeonGreen_DungeonFloorOverHead2 (10, 5)
+DungeonGreen_DungeonFloorOverHead2 (10, 6)
+DungeonGreen_DungeonFloorOverHead2 (10, 7)
+DungeonGreen_DungeonFloorOverHead2 (10, 8)
+DungeonGreen_DungeonFloorOverHead2 (10, 9)
+DungeonGreen_DungeonFloorOverHead2 (11, 1)
+DungeonGreen_DungeonFloorOverHead2 (11, 10)
+DungeonGreen_DungeonFloorOverHead2 (11, 11)
+DungeonGreen_DungeonFloorOverHead2 (11, 12)
+DungeonGreen_DungeonFloorOverHead2 (11, 13)
+DungeonGreen_DungeonFloorOverHead2 (11, 14)
+DungeonGreen_DungeonFloorOverHead2 (11, 15)
+DungeonGreen_DungeonFloorOverHead2 (11, 2)
+DungeonGreen_DungeonFloorOverHead2 (11, 3)
+DungeonGreen_DungeonFloorOverHead2 (11, 4)
+DungeonGreen_DungeonFloorOverHead2 (11, 5)
+DungeonGreen_DungeonFloorOverHead2 (11, 6)
+DungeonGreen_DungeonFloorOverHead2 (11, 7)
+DungeonGreen_DungeonFloorOverHead2 (11, 8)
+DungeonGreen_DungeonFloorOverHead2 (11, 9)
+DungeonGreen_DungeonFloorOverHead2 (12, 1)
+DungeonGreen_DungeonFloorOverHead2 (12, 10)
+DungeonGreen_DungeonFloorOverHead2 (12, 11)
+DungeonGreen_DungeonFloorOverHead2 (12, 12)
+DungeonGreen_DungeonFloorOverHead2 (12, 13)
+DungeonGreen_DungeonFloorOverHead2 (12, 14)
+DungeonGreen_DungeonFloorOverHead2 (12, 15)
+DungeonGreen_DungeonFloorOverHead2 (12, 2)
+DungeonGreen_DungeonFloorOverHead2 (12, 3)
+DungeonGreen_DungeonFloorOverHead2 (12, 4)
+DungeonGreen_DungeonFloorOverHead2 (12, 5)
+DungeonGreen_DungeonFloorOverHead2 (12, 6)
+DungeonGreen_DungeonFloorOverHead2 (12, 7)
+DungeonGreen_DungeonFloorOverHead2 (12, 8)
+DungeonGreen_DungeonFloorOverHead2 (12, 9)
+DungeonGreen_DungeonFloorOverHead2 (13, 1)
+DungeonGreen_DungeonFloorOverHead2 (13, 10)
+DungeonGreen_DungeonFloorOverHead2 (13, 11)
+DungeonGreen_DungeonFloorOverHead2 (13, 12)
+DungeonGreen_DungeonFloorOverHead2 (13, 13)
+DungeonGreen_DungeonFloorOverHead2 (13, 14)
+DungeonGreen_DungeonFloorOverHead2 (13, 15)
+DungeonGreen_DungeonFloorOverHead2 (13, 2)
+DungeonGreen_DungeonFloorOverHead2 (13, 3)
+DungeonGreen_DungeonFloorOverHead2 (13, 4)
+DungeonGreen_DungeonFloorOverHead2 (13, 5)
+DungeonGreen_DungeonFloorOverHead2 (13, 6)
+DungeonGreen_DungeonFloorOverHead2 (13, 7)
+DungeonGreen_DungeonFloorOverHead2 (13, 8)
+DungeonGreen_DungeonFloorOverHead2 (13, 9)
+DungeonGreen_DungeonFloorOverHead2 (14, 1)
+DungeonGreen_DungeonFloorOverHead2 (14, 10)
+DungeonGreen_DungeonFloorOverHead2 (14, 11)
+DungeonGreen_DungeonFloorOverHead2 (14, 12)
+DungeonGreen_DungeonFloorOverHead2 (14, 13)
+DungeonGreen_DungeonFloorOverHead2 (14, 14)
+DungeonGreen_DungeonFloorOverHead2 (14, 15)
+DungeonGreen_DungeonFloorOverHead2 (14, 2)
+DungeonGreen_DungeonFloorOverHead2 (14, 3)
+DungeonGreen_DungeonFloorOverHead2 (14, 4)
+DungeonGreen_DungeonFloorOverHead2 (14, 5)
+DungeonGreen_DungeonFloorOverHead2 (14, 6)
+DungeonGreen_DungeonFloorOverHead2 (14, 7)
+DungeonGreen_DungeonFloorOverHead2 (14, 8)
+DungeonGreen_DungeonFloorOverHead2 (14, 9)
+DungeonGreen_DungeonFloorOverHead2 (15, 1)
+DungeonGreen_DungeonFloorOverHead2 (15, 10)
+DungeonGreen_DungeonFloorOverHead2 (15, 11)
+DungeonGreen_DungeonFloorOverHead2 (15, 12)
+DungeonGreen_DungeonFloorOverHead2 (15, 13)
+DungeonGreen_DungeonFloorOverHead2 (15, 14)
+DungeonGreen_DungeonFloorOverHead2 (15, 15)
+DungeonGreen_DungeonFloorOverHead2 (15, 2)
+DungeonGreen_DungeonFloorOverHead2 (15, 3)
+DungeonGreen_DungeonFloorOverHead2 (15, 4)
+DungeonGreen_DungeonFloorOverHead2 (15, 5)
+DungeonGreen_DungeonFloorOverHead2 (15, 6)
+DungeonGreen_DungeonFloorOverHead2 (15, 7)
+DungeonGreen_DungeonFloorOverHead2 (15, 8)
+DungeonGreen_DungeonFloorOverHead2 (15, 9)
+DungeonGreen_DungeonFloorOverHead2 (2, 1)
+DungeonGreen_DungeonFloorOverHead2 (2, 10)
+DungeonGreen_DungeonFloorOverHead2 (2, 11)
+DungeonGreen_DungeonFloorOverHead2 (2, 12)
+DungeonGreen_DungeonFloorOverHead2 (2, 13)
+DungeonGreen_DungeonFloorOverHead2 (2, 14)
+DungeonGreen_DungeonFloorOverHead2 (2, 15)
+DungeonGreen_DungeonFloorOverHead2 (2, 2)
+DungeonGreen_DungeonFloorOverHead2 (2, 3)
+DungeonGreen_DungeonFloorOverHead2 (2, 4)
+DungeonGreen_DungeonFloorOverHead2 (2, 5)
+DungeonGreen_DungeonFloorOverHead2 (2, 6)
+DungeonGreen_DungeonFloorOverHead2 (2, 7)
+DungeonGreen_DungeonFloorOverHead2 (2, 8)
+DungeonGreen_DungeonFloorOverHead2 (2, 9)
+DungeonGreen_DungeonFloorOverHead2 (3, 1)
+DungeonGreen_DungeonFloorOverHead2 (3, 10)
+DungeonGreen_DungeonFloorOverHead2 (3, 11)
+DungeonGreen_DungeonFloorOverHead2 (3, 12)
+DungeonGreen_DungeonFloorOverHead2 (3, 13)
+DungeonGreen_DungeonFloorOverHead2 (3, 14)
+DungeonGreen_DungeonFloorOverHead2 (3, 15)
+DungeonGreen_DungeonFloorOverHead2 (3, 2)
+DungeonGreen_DungeonFloorOverHead2 (3, 3)
+DungeonGreen_DungeonFloorOverHead2 (3, 4)
+DungeonGreen_DungeonFloorOverHead2 (3, 5)
+DungeonGreen_DungeonFloorOverHead2 (3, 6)
+DungeonGreen_DungeonFloorOverHead2 (3, 7)
+DungeonGreen_DungeonFloorOverHead2 (3, 8)
+DungeonGreen_DungeonFloorOverHead2 (3, 9)
+DungeonGreen_DungeonFloorOverHead2 (4, 1)
+DungeonGreen_DungeonFloorOverHead2 (4, 10)
+DungeonGreen_DungeonFloorOverHead2 (4, 11)
+DungeonGreen_DungeonFloorOverHead2 (4, 12)
+DungeonGreen_DungeonFloorOverHead2 (4, 13)
+DungeonGreen_DungeonFloorOverHead2 (4, 14)
+DungeonGreen_DungeonFloorOverHead2 (4, 15)
+DungeonGreen_DungeonFloorOverHead2 (4, 2)
+DungeonGreen_DungeonFloorOverHead2 (4, 3)
+DungeonGreen_DungeonFloorOverHead2 (4, 4)
+DungeonGreen_DungeonFloorOverHead2 (4, 5)
+DungeonGreen_DungeonFloorOverHead2 (4, 6)
+DungeonGreen_DungeonFloorOverHead2 (4, 7)
+DungeonGreen_DungeonFloorOverHead2 (4, 8)
+DungeonGreen_DungeonFloorOverHead2 (4, 9)
+DungeonGreen_DungeonFloorOverHead2 (5, 1)
+DungeonGreen_DungeonFloorOverHead2 (5, 10)
+DungeonGreen_DungeonFloorOverHead2 (5, 11)
+DungeonGreen_DungeonFloorOverHead2 (5, 12)
+DungeonGreen_DungeonFloorOverHead2 (5, 13)
+DungeonGreen_DungeonFloorOverHead2 (5, 14)
+DungeonGreen_DungeonFloorOverHead2 (5, 15)
+DungeonGreen_DungeonFloorOverHead2 (5, 2)
+DungeonGreen_DungeonFloorOverHead2 (5, 3)
+DungeonGreen_DungeonFloorOverHead2 (5, 4)
+DungeonGreen_DungeonFloorOverHead2 (5, 5)
+DungeonGreen_DungeonFloorOverHead2 (5, 6)
+DungeonGreen_DungeonFloorOverHead2 (5, 7)
+DungeonGreen_DungeonFloorOverHead2 (5, 8)
+DungeonGreen_DungeonFloorOverHead2 (5, 9)
+DungeonGreen_DungeonFloorOverHead2 (6, 1)
+DungeonGreen_DungeonFloorOverHead2 (6, 10)
+DungeonGreen_DungeonFloorOverHead2 (6, 11)
+DungeonGreen_DungeonFloorOverHead2 (6, 12)
+DungeonGreen_DungeonFloorOverHead2 (6, 13)
+DungeonGreen_DungeonFloorOverHead2 (6, 14)
+DungeonGreen_DungeonFloorOverHead2 (6, 15)
+DungeonGreen_DungeonFloorOverHead2 (6, 2)
+DungeonGreen_DungeonFloorOverHead2 (6, 3)
+DungeonGreen_DungeonFloorOverHead2 (6, 4)
+DungeonGreen_DungeonFloorOverHead2 (6, 5)
+DungeonGreen_DungeonFloorOverHead2 (6, 6)
+DungeonGreen_DungeonFloorOverHead2 (6, 7)
+DungeonGreen_DungeonFloorOverHead2 (6, 8)
+DungeonGreen_DungeonFloorOverHead2 (6, 9)
+DungeonGreen_DungeonFloorOverHead2 (7, 1)
+DungeonGreen_DungeonFloorOverHead2 (7, 10)
+DungeonGreen_DungeonFloorOverHead2 (7, 11)
+DungeonGreen_DungeonFloorOverHead2 (7, 12)
+DungeonGreen_DungeonFloorOverHead2 (7, 13)
+DungeonGreen_DungeonFloorOverHead2 (7, 14)
+DungeonGreen_DungeonFloorOverHead2 (7, 15)
+DungeonGreen_DungeonFloorOverHead2 (7, 2)
+DungeonGreen_DungeonFloorOverHead2 (7, 3)
+DungeonGreen_DungeonFloorOverHead2 (7, 4)
+DungeonGreen_DungeonFloorOverHead2 (7, 5)
+DungeonGreen_DungeonFloorOverHead2 (7, 6)
+DungeonGreen_DungeonFloorOverHead2 (7, 7)
+DungeonGreen_DungeonFloorOverHead2 (7, 8)
+DungeonGreen_DungeonFloorOverHead2 (7, 9)
+DungeonGreen_DungeonFloorOverHead2 (8, 1)
+DungeonGreen_DungeonFloorOverHead2 (8, 10)
+DungeonGreen_DungeonFloorOverHead2 (8, 11)
+DungeonGreen_DungeonFloorOverHead2 (8, 12)
+DungeonGreen_DungeonFloorOverHead2 (8, 13)
+DungeonGreen_DungeonFloorOverHead2 (8, 14)
+DungeonGreen_DungeonFloorOverHead2 (8, 15)
+DungeonGreen_DungeonFloorOverHead2 (8, 2)
+DungeonGreen_DungeonFloorOverHead2 (8, 3)
+DungeonGreen_DungeonFloorOverHead2 (8, 4)
+DungeonGreen_DungeonFloorOverHead2 (8, 5)
+DungeonGreen_DungeonFloorOverHead2 (8, 6)
+DungeonGreen_DungeonFloorOverHead2 (8, 7)
+DungeonGreen_DungeonFloorOverHead2 (8, 8)
+DungeonGreen_DungeonFloorOverHead2 (8, 9)
+DungeonGreen_DungeonFloorOverHead2 (9, 1)
+DungeonGreen_DungeonFloorOverHead2 (9, 10)
+DungeonGreen_DungeonFloorOverHead2 (9, 11)
+DungeonGreen_DungeonFloorOverHead2 (9, 12)
+DungeonGreen_DungeonFloorOverHead2 (9, 13)
+DungeonGreen_DungeonFloorOverHead2 (9, 14)
+DungeonGreen_DungeonFloorOverHead2 (9, 15)
+DungeonGreen_DungeonFloorOverHead2 (9, 2)
+DungeonGreen_DungeonFloorOverHead2 (9, 3)
+DungeonGreen_DungeonFloorOverHead2 (9, 4)
+DungeonGreen_DungeonFloorOverHead2 (9, 5)
+DungeonGreen_DungeonFloorOverHead2 (9, 6)
+DungeonGreen_DungeonFloorOverHead2 (9, 7)
+DungeonGreen_DungeonFloorOverHead2 (9, 8)
+DungeonGreen_DungeonFloorOverHead2 (9, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (1, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (10, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (2, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (3, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (4, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (5, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (6, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (7, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (8, 9)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 1)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 10)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 2)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 3)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 4)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 5)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 6)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 7)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 8)
+DungeonGreen_DungeonFloorOverHeadLight1 (9, 9)
+DungeonGreen_DungeonFloorTorchLeft (1, 1)
+DungeonGreen_DungeonFloorTorchLeft (1, 2)
+DungeonGreen_DungeonFloorTorchLeft (1, 3)
+DungeonGreen_DungeonFloorTorchLeft (1, 4)
+DungeonGreen_DungeonFloorTorchLeft (1, 5)
+DungeonGreen_DungeonFloorTorchLeft (2, 1)
+DungeonGreen_DungeonFloorTorchLeft (2, 2)
+DungeonGreen_DungeonFloorTorchLeft (2, 3)
+DungeonGreen_DungeonFloorTorchLeft (2, 4)
+DungeonGreen_DungeonFloorTorchLeft (2, 5)
+DungeonGreen_DungeonFloorTorchLeft (3, 1)
+DungeonGreen_DungeonFloorTorchLeft (3, 2)
+DungeonGreen_DungeonFloorTorchLeft (3, 3)
+DungeonGreen_DungeonFloorTorchLeft (3, 4)
+DungeonGreen_DungeonFloorTorchLeft (3, 5)
+DungeonGreen_DungeonFloorTorchLeft (4, 1)
+DungeonGreen_DungeonFloorTorchLeft (4, 2)
+DungeonGreen_DungeonFloorTorchLeft (4, 3)
+DungeonGreen_DungeonFloorTorchLeft (4, 4)
+DungeonGreen_DungeonFloorTorchLeft (4, 5)
+DungeonGreen_DungeonFloorTorchLeft (5, 1)
+DungeonGreen_DungeonFloorTorchLeft (5, 2)
+DungeonGreen_DungeonFloorTorchLeft (5, 3)
+DungeonGreen_DungeonFloorTorchLeft (5, 4)
+DungeonGreen_DungeonFloorTorchLeft (5, 5)
+DungeonMainArcTorch 1
+DungeonMainArcTorch 2
+DungeonMainArcTorch 3
+DungeonMainArcTorch 4
+DungeonMainArcTorch 5
+DungeonRockArc 1
+DungeonRockArc 2
+DungeonRockArc 3
+DungeonRockArc 4
+DungeonRockArc 5
+DungeonRockArcDark 1
+DungeonRockArcDark 2
+DungeonRockArcDark 3
+DungeonRockArcDark 4
+DungeonRockArcDark 5
+DungeonRockArcDarkEnd1 1
+DungeonRockArcDarkEnd1 2
+DungeonRockArcDarkEnd1 3
+DungeonRockArcDarkEnd1 4
+DungeonRockArcDarkEnd1 5
+DungeonRockArcDarkEnd2 1
+DungeonRockArcDarkEnd2 2
+DungeonRockArcDarkEnd2 3
+DungeonRockArcDarkEnd2 4
+DungeonRockArcDarkEnd2 5
+DungeonRockArcEnd1 1
+DungeonRockArcEnd1 2
+DungeonRockArcEnd1 3
+DungeonRockArcEnd1 4
+DungeonRockArcEnd1 5
+DungeonRockArcEnd2 1
+DungeonRockArcEnd2 2
+DungeonRockArcEnd2 3
+DungeonRockArcEnd2 4
+DungeonRockArcEnd2 5
+DungeonRockCorner
+DungeonRockCorner2
+DungeonRockCornerN
+DungeonRockCornerNE
+DungeonRockCornerNW
+DungeonRockCornerSE
+DungeonRockCornerSW
+DungeonRockCornerV
+DungeonRockCornerX
+DungeonRockWall 1
+DungeonRockWall 2
+DungeonRockWall 3
+DungeonRockWall 4
+DungeonRockWall 5
+DungeonRockWallEnd1
+DungeonRockWallEnd2
+DungeonRockWallEnd3
+DungeonRockWallEnd4
+DungeonTorch-a
+DungeonTorch-b
+DungeonTorch-c
+DungeonTorch-d
+DungeonTorch-e
+DungeonTorch-f
+DungeonTorch-g
+DungeonTorch-h
+DungeonTorch-i
+DungeonTorch-j
+DungeonTorch-k
+DungeonTorch-l
+DungeonTorch-m
+DungeonTorch-n
+DungeonTorch-o
+DungeonTorch-p
+DungeonTorch-q
+DungeonTorch-r
+DungeonTorch-s
+DungeonTorch-t
+DungeonTorch-u
+DwarfHammer000-a
+DwarfHammer000-b
+DwarfHammer000-c
+DwarfHammer000-d
+DwarfHammer000-e
+DwarfHammer000-f
+DwarfHammer000-g
+DwarfHammer000-h
+DwarfHammer000-i
+DwarfHammer000-j
+DwarfHammer000-k
+DwarfHammer000-l
+DwarfHammer000-m
+DwarfHammer045-a
+DwarfHammer045-b
+DwarfHammer045-c
+DwarfHammer045-d
+DwarfHammer045-e
+DwarfHammer045-f
+DwarfHammer045-g
+DwarfHammer045-h
+DwarfHammer045-i
+DwarfHammer045-j
+DwarfHammer045-k
+DwarfHammer045-l
+DwarfHammer045-m
+DwarfHammer090-a
+DwarfHammer090-b
+DwarfHammer090-c
+DwarfHammer090-d
+DwarfHammer090-e
+DwarfHammer090-f
+DwarfHammer090-g
+DwarfHammer090-h
+DwarfHammer090-i
+DwarfHammer090-j
+DwarfHammer090-k
+DwarfHammer090-l
+DwarfHammer090-m
+DwarfHammer135-a
+DwarfHammer135-b
+DwarfHammer135-c
+DwarfHammer135-d
+DwarfHammer135-e
+DwarfHammer135-f
+DwarfHammer135-g
+DwarfHammer135-h
+DwarfHammer135-i
+DwarfHammer135-j
+DwarfHammer135-k
+DwarfHammer135-l
+DwarfHammer135-m
+DwarfHammer180-a
+DwarfHammer180-b
+DwarfHammer180-c
+DwarfHammer180-d
+DwarfHammer180-e
+DwarfHammer180-f
+DwarfHammer180-g
+DwarfHammer180-h
+DwarfHammer180-i
+DwarfHammer180-j
+DwarfHammer180-k
+DwarfHammer180-l
+DwarfHammer180-m
+DwarfHammerA000-a
+DwarfHammerA000-b
+DwarfHammerA000-c
+DwarfHammerA000-d
+DwarfHammerA000-e
+DwarfHammerA000-f
+DwarfHammerA000-g
+DwarfHammerA000-h
+DwarfHammerA000-i
+DwarfHammerA045-a
+DwarfHammerA045-b
+DwarfHammerA045-c
+DwarfHammerA045-d
+DwarfHammerA045-e
+DwarfHammerA045-f
+DwarfHammerA045-g
+DwarfHammerA045-h
+DwarfHammerA045-i
+DwarfHammerA090-a
+DwarfHammerA090-b
+DwarfHammerA090-c
+DwarfHammerA090-d
+DwarfHammerA090-e
+DwarfHammerA090-f
+DwarfHammerA090-g
+DwarfHammerA090-h
+DwarfHammerA090-i
+DwarfHammerA135-a
+DwarfHammerA135-b
+DwarfHammerA135-c
+DwarfHammerA135-d
+DwarfHammerA135-e
+DwarfHammerA135-f
+DwarfHammerA135-g
+DwarfHammerA135-h
+DwarfHammerA135-i
+DwarfHammerA180-a
+DwarfHammerA180-b
+DwarfHammerA180-c
+DwarfHammerA180-d
+DwarfHammerA180-e
+DwarfHammerA180-f
+DwarfHammerA180-g
+DwarfHammerA180-h
+DwarfHammerA180-i
+East Cursor
+ElvenHat
+EnterCombatMode3-a
+EnterCombatMode3-b
+EnterCombatMode3-c
+EnterCombatMode3-d
+EnterCombatMode3-e
+EnterCombatMode3-f
+EnterCombatMode3-g
+EnterCombatMode3-h
+EnterCombatMode3-i
+EnterCombatMode3-j
+EnterCombatMode3-k
+EnterCombatMode3-l
+EnterCombatMode3-m
+EnterCombatMode3-n
+EnterCombatMode3-o
+EnterCombatMode3-p
+EnterCombatMode3-q
+EnterCombatMode3-r
+EnterCombatMode3-s
+EnterCombatMode3-t
+EnterCombatMode3-u
+EnterProgressBar
+EnterProgressTick
+Entreemine
+Equipbox
+EquipMenu
+Escape
+Escapeo
+Etagere SW
+Feather
+FenceException1 1
+FenceException1 2
+FenceException1 3
+FenceException1Dark 1
+FenceException1Dark 2
+FenceException1Dark 3
+FenceException2 1
+FenceException2 2
+FenceException2 3
+FenceException2Dark 1
+FenceException2Dark 2
+FenceException2Dark 3
+fgamemaster000-a
+fgamemaster000-b
+fgamemaster000-c
+fgamemaster000-d
+fgamemaster000-e
+fgamemaster000-f
+fgamemaster000-g
+fgamemaster000-h
+fgamemaster000-i
+fgamemaster000-j
+fgamemaster000-k
+fgamemaster000-l
+fgamemaster000-m
+fgamemaster045-a
+fgamemaster045-b
+fgamemaster045-c
+fgamemaster045-d
+fgamemaster045-e
+fgamemaster045-f
+fgamemaster045-g
+fgamemaster045-h
+fgamemaster045-i
+fgamemaster045-j
+fgamemaster045-k
+fgamemaster045-l
+fgamemaster045-m
+fgamemaster090-a
+fgamemaster090-b
+fgamemaster090-c
+fgamemaster090-d
+fgamemaster090-e
+fgamemaster090-f
+fgamemaster090-g
+fgamemaster090-h
+fgamemaster090-i
+fgamemaster090-j
+fgamemaster090-k
+fgamemaster090-l
+fgamemaster090-m
+fgamemaster135-a
+fgamemaster135-b
+fgamemaster135-c
+fgamemaster135-d
+fgamemaster135-e
+fgamemaster135-f
+fgamemaster135-g
+fgamemaster135-h
+fgamemaster135-i
+fgamemaster135-j
+fgamemaster135-k
+fgamemaster135-l
+fgamemaster135-m
+fgamemaster180-a
+fgamemaster180-b
+fgamemaster180-c
+fgamemaster180-d
+fgamemaster180-e
+fgamemaster180-f
+fgamemaster180-g
+fgamemaster180-h
+fgamemaster180-i
+fgamemaster180-j
+fgamemaster180-k
+fgamemaster180-l
+fgamemaster180-m
+fgamemasterA000-a
+fgamemasterA000-b
+fgamemasterA000-c
+fgamemasterA000-d
+fgamemasterA000-e
+fgamemasterA000-f
+fgamemasterA000-g
+fgamemasterA000-h
+fgamemasterA000-i
+fgamemasterA045-a
+fgamemasterA045-b
+fgamemasterA045-c
+fgamemasterA045-d
+fgamemasterA045-e
+fgamemasterA045-f
+fgamemasterA045-g
+fgamemasterA045-h
+fgamemasterA045-i
+fgamemasterA090-a
+fgamemasterA090-b
+fgamemasterA090-c
+fgamemasterA090-d
+fgamemasterA090-e
+fgamemasterA090-f
+fgamemasterA090-g
+fgamemasterA090-h
+fgamemasterA090-i
+fgamemasterA135-a
+fgamemasterA135-b
+fgamemasterA135-c
+fgamemasterA135-d
+fgamemasterA135-e
+fgamemasterA135-f
+fgamemasterA135-g
+fgamemasterA135-h
+fgamemasterA135-i
+fgamemasterA180-a
+fgamemasterA180-b
+fgamemasterA180-c
+fgamemasterA180-d
+fgamemasterA180-e
+fgamemasterA180-f
+fgamemasterA180-g
+fgamemasterA180-h
+fgamemasterA180-i
+fgamemasterB000-a
+fgamemasterB000-b
+fgamemasterB000-c
+fgamemasterB000-d
+fgamemasterB000-e
+fgamemasterB000-f
+fgamemasterB000-g
+fgamemasterB000-h
+fgamemasterB000-i
+fgamemasterB045-a
+fgamemasterB045-b
+fgamemasterB045-c
+fgamemasterB045-d
+fgamemasterB045-e
+fgamemasterB045-f
+fgamemasterB045-g
+fgamemasterB045-h
+fgamemasterB045-i
+fgamemasterB090-a
+fgamemasterB090-b
+fgamemasterB090-c
+fgamemasterB090-d
+fgamemasterB090-e
+fgamemasterB090-f
+fgamemasterB090-g
+fgamemasterB090-h
+fgamemasterB090-i
+fgamemasterB135-a
+fgamemasterB135-b
+fgamemasterB135-c
+fgamemasterB135-d
+fgamemasterB135-e
+fgamemasterB135-f
+fgamemasterB135-g
+fgamemasterB135-h
+fgamemasterB135-i
+fgamemasterB180-a
+fgamemasterB180-b
+fgamemasterB180-c
+fgamemasterB180-d
+fgamemasterB180-e
+fgamemasterB180-f
+fgamemasterB180-g
+fgamemasterB180-h
+fgamemasterB180-i
+Flail
+flash
+FloorType1 (1, 1)
+FloorType1 (1, 2)
+FloorType1 (1, 3)
+FloorType1 (1, 4)
+FloorType1 (1, 5)
+FloorType1 (2, 1)
+FloorType1 (2, 2)
+FloorType1 (2, 3)
+FloorType1 (2, 4)
+FloorType1 (2, 5)
+FloorType1 (3, 1)
+FloorType1 (3, 2)
+FloorType1 (3, 3)
+FloorType1 (3, 4)
+FloorType1 (3, 5)
+FloorType1 (4, 1)
+FloorType1 (4, 2)
+FloorType1 (4, 3)
+FloorType1 (4, 4)
+FloorType1 (4, 5)
+FloorType1 (5, 1)
+FloorType1 (5, 2)
+FloorType1 (5, 3)
+FloorType1 (5, 4)
+FloorType1 (5, 5)
+FloorType1Exception1 (1, 1)
+FloorType1Exception1 (1, 2)
+FloorType1Exception1 (1, 3)
+FloorType1Exception1 (1, 4)
+FloorType1Exception1 (1, 5)
+FloorType1Exception1 (2, 1)
+FloorType1Exception1 (2, 2)
+FloorType1Exception1 (2, 3)
+FloorType1Exception1 (2, 4)
+FloorType1Exception1 (2, 5)
+FloorType1Exception1 (3, 1)
+FloorType1Exception1 (3, 2)
+FloorType1Exception1 (3, 3)
+FloorType1Exception1 (3, 4)
+FloorType1Exception1 (3, 5)
+FloorType1Exception1 (4, 1)
+FloorType1Exception1 (4, 2)
+FloorType1Exception1 (4, 3)
+FloorType1Exception1 (4, 4)
+FloorType1Exception1 (4, 5)
+FloorType1Exception1 (5, 1)
+FloorType1Exception1 (5, 2)
+FloorType1Exception1 (5, 3)
+FloorType1Exception1 (5, 4)
+FloorType1Exception1 (5, 5)
+Fontaine
+Fountaine20000
+Fountaine20001
+Fountaine20002
+Fountaine20003
+Fountaine20004
+Fountaine20005
+Fountaine20006
+Fountaine20007
+Fountaine20008
+Fountaine20009
+Fountaine20010
+Fountaine20011
+Fountaine20012
+Fountaine20013
+Fountaine20014
+Fountaine20015
+Fountaine20016
+Fountaine20017
+Fountaine20018
+Fountaine20019
+Fountaine20020
+Fruits 2
+Fruits 3
+Fruits 4
+Fruits 5
+Fruits 6
+Fruits 7
+Fruits 8
+Fruits 9
+Gems 1
+Gems 2
+Gems 3
+Gems 4
+Gems 5
+Gems 6
+Gems 7
+GemStaff
+Glinting Sword
+GodlyPotion 1
+GodlyPotion 2
+GodlyPotion 3
+GodlyPotion 4
+GodlyPotion Blue
+GodlyPotion Green
+GodlyPotion Red
+GodlyPotion Yellow
+GUI_back_TMI
+GUI_back_TMI_Mask
+GUI_back_TMI_PPos
+GUI_BackBuy
+GUI_BackBuySelect
+GUI_BackChest
+GUI_BackChStat
+GUI_BackGroupBk
+GUI_BackGroupChStat
+GUI_BackIgnore
+GUI_BackMacro
+GUI_BackMacroSelect
+GUI_BackRob
+GUI_BackSkill
+GUI_BackTrade
+GUI_ButtonIconOff
+GUI_ButtonOff
+GUI_ButtonSDown
+GUI_ButtonSHUp
+GUI_ButtonSUp
+GUI_ButtonTDown
+GUI_ButtonTHUp
+GUI_ButtonTUp
+GUI_ChatAddCCDown
+GUI_ChatAddCCHUp
+GUI_ChatAddCCUp
+GUI_ChatAddIgnoreDown
+GUI_ChatAddIgnoreHUp
+GUI_ChatAddIgnoreUp
+GUI_ChatBtnGroupPlayDown
+GUI_ChatBtnGroupPlayHUp
+GUI_ChatBtnGroupPlayUp
+GUI_ChatBtnMacroDown
+GUI_ChatBtnMacroHUp
+GUI_ChatBtnMacroUp
+GUI_ChatDelCCDown
+GUI_ChatDelCCHUp
+GUI_ChatDelCCUp
+GUI_ChatDelIgnoreDown
+GUI_ChatDelIgnoreHUp
+GUI_ChatDelIgnoreUp
+GUI_ChatIgnoreDown
+GUI_ChatIgnoreHUp
+GUI_ChatIgnoreUp
+GUI_ChatPageDown
+GUI_ChatPageHUp
+GUI_ChatPageUp
+GUI_ChatterBack
+GUI_Chest_HUp
+GUI_Group_Select
+GUI_IgnoreSelect
+GUI_InvPopupBack
+GUI_JoinCCPopupBack
+GUI_M_ButtonDown
+GUI_M_ButtonHUP
+GUI_M_ButtonUP
+GUI_MacroBtnAddDown
+GUI_MacroBtnAddHUp
+GUI_MacroBtnAddUp
+GUI_MacroBtnDelDown
+GUI_MacroBtnDelHUp
+GUI_MacroBtnDelUp
+GUI_MacroHUp
+GUI_MacroPopupBack
+GUI_MacroUp
+GUI_Map
+GUI_MinChatBtnInChatDown
+GUI_MinChatBtnInChatHDown
+GUI_MinChatBtnInChatHUp
+GUI_MinChatBtnInChatUp
+GUI_MinChatBtnInGameDown
+GUI_MinChatBtnInGameHDown
+GUI_MinChatBtnInGameHUp
+GUI_MinChatBtnInGameUp
+GUI_MinChatBtnInPageDown
+GUI_MinChatBtnInPageHDown
+GUI_MinChatBtnInPageHUp
+GUI_MinChatBtnInPageUp
+GUI_MinChatPage
+GUI_PopupBack
+GUI_RTMapBack
+GUI_RTMapMask
+GUI_TextPopupBack
+HornedHelmet
+HumanFoot
+HuteGob1
+HuteGob2
+IgnoreListPopUp
+Kitchen 3
+Kitchen 5
+Large Potion Green
+Large Potion Red
+LargeStatBox
+Leader
+Leave
+Letter
+Lever
+LoadScreen
+LoadScreenEnglish
+LoadScreenFrench
+NecroA01-2a
+NecroA01-2b
+NecroA01-2c
+NecroA01-2d
+NecroA01-2e
+NecroA01-2f
+NecroA01-2g
+NecroA01-2h
+NecroA01-2i
+NecroA01-2j
+NecroA01-a
+NecroA01-b
+NecroA01-c
+NecroA01-d
+NecroA01-e
+NecroA01-f
+NecroA01-g
+NecroA01-h
+NecroA01-i
+NecroA01-j
+NecroA01-k
+NecroA01-l
+NecroA01-m
+NecroA01-n
+NecroA01-o
+NecroA01-p
+NecroA01-q
+NecroA01-r
+NecroA01-s
+NecroA01-t
+NecroA01-u
+NecroA01-v
+NecroA01-w
+NecroA01-x
+NecroA01-y
+NecroA01-z
+NecroA01A-2a
+NecroA01A-2b
+NecroA01A-2c
+NecroA01A-2d
+NecroA01A-2e
+NecroA01A-2f
+NecroA01A-2g
+NecroA01A-2h
+NecroA01A-2i
+NecroA01A-2j
+NecroA01A-a
+NecroA01A-b
+NecroA01A-c
+NecroA01A-d
+NecroA01A-e
+NecroA01A-f
+NecroA01A-g
+NecroA01A-h
+NecroA01A-i
+NecroA01A-j
+NecroA01A-k
+NecroA01A-l
+NecroA01A-m
+NecroA01A-n
+NecroA01A-o
+NecroA01A-p
+NecroA01A-q
+NecroA01A-r
+NecroA01A-s
+NecroA01A-t
+NecroA01A-u
+NecroA01A-v
+NecroA01A-w
+NecroA01A-x
+NecroA01A-y
+NecroA01A-z
+NecromanRobe
+NetWorkAccess
+NM_Fire000-2a
+NM_Fire000-2b
+NM_Fire000-2c
+NM_Fire000-2d
+NM_Fire000-2e
+NM_Fire000-2f
+NM_Fire000-2g
+NM_Fire000-2h
+NM_Fire000-2i
+NM_Fire000-2j
+NM_Fire000-2k
+NM_Fire000-2l
+NM_Fire000-2m
+NM_Fire000-2n
+NM_Fire000-2o
+NM_Fire000-a
+NM_Fire000-b
+NM_Fire000-c
+NM_Fire000-d
+NM_Fire000-e
+NM_Fire000-f
+NM_Fire000-g
+NM_Fire000-h
+NM_Fire000-i
+NM_Fire000-j
+NM_Fire000-k
+NM_Fire000-l
+NM_Fire000-m
+NM_Fire000-n
+NM_Fire000-o
+NM_Fire000-p
+NM_Fire000-q
+NM_Fire000-r
+NM_Fire000-s
+NM_Fire000-t
+NM_Fire000-u
+NM_Fire000-v
+NM_Fire000-w
+NM_Fire000-x
+NM_Fire000-y
+NM_Fire000-z
+NM_Fireball000-a
+NM_Fireball000-b
+NM_Fireball000-c
+NM_Fireball000-d
+NM_Fireball000-e
+NM_Fireball000-f
+NM_Fireball000-g
+NM_Fireball000-h
+NM_Fireball000-i
+NM_Fireball000-j
+NM_Fireball000-k
+NM_Fireball000-l
+NM_Fireball000-m
+NM_Fireball000-n
+NM_Fireball000-o
+NM_Fireball000-p
+NM_Fireball000-q
+NM_Fireball000-r
+NM_Fireball000-s
+NM_Fireball000-t
+NM_Fireball000-u
+NM_Fireball000-v
+NM_Fireball000-w
+NM_Fireball000-x
+NM_Fireball000-y
+NM_Fireball000-z
+NM_Fireball045-a
+NM_Fireball045-b
+NM_Fireball045-c
+NM_Fireball045-d
+NM_Fireball045-e
+NM_Fireball045-f
+NM_Fireball045-g
+NM_Fireball045-h
+NM_Fireball045-i
+NM_Fireball045-j
+NM_Fireball045-k
+NM_Fireball045-l
+NM_Fireball045-m
+NM_Fireball045-n
+NM_Fireball045-o
+NM_Fireball045-p
+NM_Fireball045-q
+NM_Fireball045-r
+NM_Fireball045-s
+NM_Fireball045-t
+NM_Fireball045-u
+NM_Fireball045-v
+NM_Fireball045-w
+NM_Fireball045-x
+NM_Fireball045-y
+NM_Fireball045-z
+NM_Fireball090-a
+NM_Fireball090-b
+NM_Fireball090-c
+NM_Fireball090-d
+NM_Fireball090-e
+NM_Fireball090-f
+NM_Fireball090-g
+NM_Fireball090-h
+NM_Fireball090-i
+NM_Fireball090-j
+NM_Fireball090-k
+NM_Fireball090-l
+NM_Fireball090-m
+NM_Fireball090-n
+NM_Fireball090-o
+NM_Fireball090-p
+NM_Fireball090-q
+NM_Fireball090-r
+NM_Fireball090-s
+NM_Fireball090-t
+NM_Fireball090-u
+NM_Fireball090-v
+NM_Fireball090-w
+NM_Fireball090-x
+NM_Fireball090-y
+NM_Fireball090-z
+NM_Fireball135-a
+NM_Fireball135-b
+NM_Fireball135-c
+NM_Fireball135-d
+NM_Fireball135-e
+NM_Fireball135-f
+NM_Fireball135-g
+NM_Fireball135-h
+NM_Fireball135-i
+NM_Fireball135-j
+NM_Fireball135-k
+NM_Fireball135-l
+NM_Fireball135-m
+NM_Fireball135-n
+NM_Fireball135-o
+NM_Fireball135-p
+NM_Fireball135-q
+NM_Fireball135-r
+NM_Fireball135-s
+NM_Fireball135-t
+NM_Fireball135-u
+NM_Fireball135-v
+NM_Fireball135-w
+NM_Fireball135-x
+NM_Fireball135-y
+NM_Fireball135-z
+NM_Fireball180-a
+NM_Fireball180-b
+NM_Fireball180-c
+NM_Fireball180-d
+NM_Fireball180-e
+NM_Fireball180-f
+NM_Fireball180-g
+NM_Fireball180-h
+NM_Fireball180-i
+NM_Fireball180-j
+NM_Fireball180-k
+NM_Fireball180-l
+NM_Fireball180-m
+NM_Fireball180-n
+NM_Fireball180-o
+NM_Fireball180-p
+NM_Fireball180-q
+NM_Fireball180-r
+NM_Fireball180-s
+NM_Fireball180-t
+NM_Fireball180-u
+NM_Fireball180-v
+NM_Fireball180-w
+NM_Fireball180-x
+NM_Fireball180-y
+NM_Fireball180-z
+NM_Lightning000-2a
+NM_Lightning000-2b
+NM_Lightning000-2c
+NM_Lightning000-2d
+NM_Lightning000-2e
+NM_Lightning000-2f
+NM_Lightning000-2g
+NM_Lightning000-a
+NM_Lightning000-b
+NM_Lightning000-c
+NM_Lightning000-d
+NM_Lightning000-e
+NM_Lightning000-f
+NM_Lightning000-g
+NM_Lightning000-h
+NM_Lightning000-i
+NM_Lightning000-j
+NM_Lightning000-k
+NM_Lightning000-l
+NM_Lightning000-m
+NM_Lightning000-n
+NM_Lightning000-o
+NM_Lightning000-p
+NM_Lightning000-q
+NM_Lightning000-r
+NM_Lightning000-s
+NM_Lightning000-t
+NM_Lightning000-u
+NM_Lightning000-v
+NM_Lightning000-w
+NM_Lightning000-x
+NM_Lightning000-y
+NM_Lightning000-z
+NM_Poison000-2a
+NM_Poison000-2b
+NM_Poison000-2c
+NM_Poison000-2d
+NM_Poison000-2e
+NM_Poison000-2f
+NM_Poison000-2g
+NM_Poison000-2h
+NM_Poison000-2i
+NM_Poison000-2j
+NM_Poison000-2k
+NM_Poison000-2l
+NM_Poison000-2m
+NM_Poison000-2n
+NM_Poison000-2o
+NM_Poison000-a
+NM_Poison000-b
+NM_Poison000-c
+NM_Poison000-d
+NM_Poison000-e
+NM_Poison000-f
+NM_Poison000-g
+NM_Poison000-h
+NM_Poison000-i
+NM_Poison000-j
+NM_Poison000-k
+NM_Poison000-l
+NM_Poison000-m
+NM_Poison000-n
+NM_Poison000-o
+NM_Poison000-p
+NM_Poison000-q
+NM_Poison000-r
+NM_Poison000-s
+NM_Poison000-t
+NM_Poison000-u
+NM_Poison000-v
+NM_Poison000-w
+NM_Poison000-x
+NM_Poison000-y
+NM_Poison000-z
+NMLoveLove-a
+NMLoveLove-b
+NMLoveLove-c
+NMLoveLove-d
+NMLoveLove-e
+NMLoveLove-f
+NMLoveLove-g
+NMLoveLove-h
+NMLoveLove-i
+NMLoveLove-j
+NMLoveLove-k
+NMLoveLove-l
+NMLoveLove-m
+NMLoveLove-n
+NMLoveLove-o
+NMLoveLove-p
+NMLoveLove-q
+NMLoveLoveMask-a
+NMLoveLoveMask-b
+NMLoveLoveMask-c
+NMLoveLoveMask-d
+NMLoveLoveMask-e
+NMLoveLoveMask-f
+NMLoveLoveMask-g
+NMLoveLoveMask-h
+NMLoveLoveMask-i
+NMLoveLoveMask-j
+NMLoveLoveMask-k
+NMLoveLoveMask-l
+NMLoveLoveMask-m
+NMLoveLoveMask-n
+NMLoveLoveMask-o
+NMLoveLoveMask-p
+NMLoveLoveMask-q
+OakTreeLeaf
+Ogreclub
+OldPentacle
+OldSpellBook
+Optionbox
+RealDarkSword
+Reverse Sign 1
+RomanShield
+Rope
+RT_MAP_Mask
+Ruined_BrickWallCornerV
+Ruined_StuccoCornerV
+SdragonDarkGreen000-a
+SdragonDarkGreen000-b
+SdragonDarkGreen000-c
+SdragonDarkGreen000-d
+SdragonDarkGreen000-e
+SdragonDarkGreen000-f
+SdragonDarkGreen000-g
+SdragonDarkGreen000-h
+SdragonDarkGreen000-i
+SdragonDarkGreen000-j
+SdragonDarkGreen045-a
+SdragonDarkGreen045-b
+SdragonDarkGreen045-c
+SdragonDarkGreen045-d
+SdragonDarkGreen045-e
+SdragonDarkGreen045-f
+SdragonDarkGreen045-g
+SdragonDarkGreen045-h
+SdragonDarkGreen045-i
+SdragonDarkGreen045-j
+SdragonDarkGreen090-a
+SdragonDarkGreen090-b
+SdragonDarkGreen090-c
+SdragonDarkGreen090-d
+SdragonDarkGreen090-e
+SdragonDarkGreen090-f
+SdragonDarkGreen090-g
+SdragonDarkGreen090-h
+SdragonDarkGreen090-i
+SdragonDarkGreen090-j
+SdragonDarkGreen135-a
+SdragonDarkGreen135-b
+SdragonDarkGreen135-c
+SdragonDarkGreen135-d
+SdragonDarkGreen135-e
+SdragonDarkGreen135-f
+SdragonDarkGreen135-g
+SdragonDarkGreen135-h
+SdragonDarkGreen135-i
+SdragonDarkGreen135-j
+SdragonDarkGreen180-a
+SdragonDarkGreen180-b
+SdragonDarkGreen180-c
+SdragonDarkGreen180-d
+SdragonDarkGreen180-e
+SdragonDarkGreen180-f
+SdragonDarkGreen180-g
+SdragonDarkGreen180-h
+SdragonDarkGreen180-i
+SdragonDarkGreen180-j
+SdragonDarkGreenA000-a
+SdragonDarkGreenA000-b
+SdragonDarkGreenA000-c
+SdragonDarkGreenA000-d
+SdragonDarkGreenA000-e
+SdragonDarkGreenA000-f
+SdragonDarkGreenA000-g
+SdragonDarkGreenA000-h
+SdragonDarkGreenA045-a
+SdragonDarkGreenA045-b
+SdragonDarkGreenA045-c
+SdragonDarkGreenA045-d
+SdragonDarkGreenA045-e
+SdragonDarkGreenA045-f
+SdragonDarkGreenA045-g
+SdragonDarkGreenA045-h
+SdragonDarkGreenA090-a
+SdragonDarkGreenA090-b
+SdragonDarkGreenA090-c
+SdragonDarkGreenA090-d
+SdragonDarkGreenA090-e
+SdragonDarkGreenA090-f
+SdragonDarkGreenA090-g
+SdragonDarkGreenA090-h
+SdragonDarkGreenA135-a
+SdragonDarkGreenA135-b
+SdragonDarkGreenA135-c
+SdragonDarkGreenA135-d
+SdragonDarkGreenA135-e
+SdragonDarkGreenA135-f
+SdragonDarkGreenA135-g
+SdragonDarkGreenA135-h
+SdragonDarkGreenA180-a
+SdragonDarkGreenA180-b
+SdragonDarkGreenA180-c
+SdragonDarkGreenA180-d
+SdragonDarkGreenA180-e
+SdragonDarkGreenA180-f
+SdragonDarkGreenA180-g
+SdragonDarkGreenA180-h
+SdragonDarkGreenC-A
+SdragonDarkGreenC-B
+SdragonDarkGreenC-C
+SdragonDarkGreenC-D
+SdragonDarkGreenC-E
+SdragonDarkGreenC-F
+SdragonDarkGreenC-G
+SdragonDarkGreenC-H
+SdragonDarkGreenC-I
+SellUIPart
+Shawat 1
+Shawat 2
+Shawat 3
+Shawat 4
+Shawat 5
+Shawat 6
+ShockWave-a
+ShockWave-b
+ShockWave-c
+ShockWave-d
+ShockWave-e
+ShockWave-f
+ShockWave-g
+ShockWave-h
+ShockWave-i
+ShockWave-j
+ShockWave-k
+ShockWave-l
+ShockWave-m
+ShockWave-n
+ShockWave-o
+ShockWave-p
+ShockWave-q
+ShockWave-r
+ShockWave-s
+ShockWave-t
+ShockWave-u
+ShockWave-v
+ShockWave-w
+ShockWave-x
+ShockWave-y
+ShockWave-z
+Shop Sign
+ShopTable2
+Shore 1
+Shore 2
+Shore 3
+Shore 4
+Shore 5
+Shore 6
+Shore 7
+ShortSword
+SimplePortal-b
+SimplePortal-c
+SimplePortal-d
+SimplePortal-e
+SimplePortal-f
+SimplePortal-g
+SimplePortal-h
+SimplePortal-i
+SimplePortal-j
+SimplePortal-k
+SimplePortal-l
+SimplePortal-m
+SimplePortal-n
+SimplePortal-o
+SimplePortal-p
+SimplePortal-q
+SimplePortal-r
+SimplePortal-s
+SimplePortal-t
+SimplePortal-u
+SimplePortal-v
+SimplePortal-w
+SimplePortal-x
+SimplePortal-y
+SimplePortal-z
+SimpleStaff
+Single Axe
+Slair
+Sldark
+Slearth
+Sllight
+Slwater
+Small Flask Green
+Small Flask Red
+SmallTreeInBowl
+South Cursor
+South-East Cursor
+South-West Cursor
+Spear Axe
+Spiked Mace
+Srair
+Srdark
+Srearth
+Srf 2
+Srfire
+Srlight
+Srnone
+Srwater
+SSdragonDarkGreen000-a
+SSdragonDarkGreen000-b
+SSdragonDarkGreen000-c
+SSdragonDarkGreen000-d
+SSdragonDarkGreen000-e
+SSdragonDarkGreen000-f
+SSdragonDarkGreen000-g
+SSdragonDarkGreen000-h
+SSdragonDarkGreen000-i
+SSdragonDarkGreen000-j
+SSdragonDarkGreen045-a
+SSdragonDarkGreen045-b
+SSdragonDarkGreen045-c
+SSdragonDarkGreen045-d
+SSdragonDarkGreen045-e
+SSdragonDarkGreen045-f
+SSdragonDarkGreen045-g
+SSdragonDarkGreen045-h
+SSdragonDarkGreen045-i
+SSdragonDarkGreen045-j
+SSdragonDarkGreen090-a
+SSdragonDarkGreen090-b
+SSdragonDarkGreen090-c
+SSdragonDarkGreen090-d
+SSdragonDarkGreen090-e
+SSdragonDarkGreen090-f
+SSdragonDarkGreen090-g
+SSdragonDarkGreen090-h
+SSdragonDarkGreen090-i
+SSdragonDarkGreen090-j
+SSdragonDarkGreen135-a
+SSdragonDarkGreen135-b
+SSdragonDarkGreen135-c
+SSdragonDarkGreen135-d
+SSdragonDarkGreen135-e
+SSdragonDarkGreen135-f
+SSdragonDarkGreen135-g
+SSdragonDarkGreen135-h
+SSdragonDarkGreen135-i
+SSdragonDarkGreen135-j
+SSdragonDarkGreen180-a
+SSdragonDarkGreen180-b
+SSdragonDarkGreen180-c
+SSdragonDarkGreen180-d
+SSdragonDarkGreen180-e
+SSdragonDarkGreen180-f
+SSdragonDarkGreen180-g
+SSdragonDarkGreen180-h
+SSdragonDarkGreen180-i
+SSdragonDarkGreen180-j
+SSdragonDarkGreenA000-a
+SSdragonDarkGreenA000-b
+SSdragonDarkGreenA000-c
+SSdragonDarkGreenA000-d
+SSdragonDarkGreenA000-e
+SSdragonDarkGreenA000-f
+SSdragonDarkGreenA000-g
+SSdragonDarkGreenA000-h
+SSdragonDarkGreenA045-a
+SSdragonDarkGreenA045-b
+SSdragonDarkGreenA045-c
+SSdragonDarkGreenA045-d
+SSdragonDarkGreenA045-e
+SSdragonDarkGreenA045-f
+SSdragonDarkGreenA045-g
+SSdragonDarkGreenA045-h
+SSdragonDarkGreenA090-a
+SSdragonDarkGreenA090-b
+SSdragonDarkGreenA090-c
+SSdragonDarkGreenA090-d
+SSdragonDarkGreenA090-e
+SSdragonDarkGreenA090-f
+SSdragonDarkGreenA090-g
+SSdragonDarkGreenA090-h
+SSdragonDarkGreenA135-a
+SSdragonDarkGreenA135-b
+SSdragonDarkGreenA135-c
+SSdragonDarkGreenA135-d
+SSdragonDarkGreenA135-e
+SSdragonDarkGreenA135-f
+SSdragonDarkGreenA135-g
+SSdragonDarkGreenA135-h
+SSdragonDarkGreenA180-a
+SSdragonDarkGreenA180-b
+SSdragonDarkGreenA180-c
+SSdragonDarkGreenA180-d
+SSdragonDarkGreenA180-e
+SSdragonDarkGreenA180-f
+SSdragonDarkGreenA180-g
+SSdragonDarkGreenA180-h
+SSdragonDarkGreenC-A
+SSdragonDarkGreenC-B
+SSdragonDarkGreenC-C
+SSdragonDarkGreenC-D
+SSdragonDarkGreenC-E
+SSdragonDarkGreenC-F
+SSdragonDarkGreenC-G
+SSdragonDarkGreenC-H
+SSdragonDarkGreenC-I
+Status
+StuddedLeatherBody
+StuddedLeatherLegs
+StuffedBaskets 1
+StuffedBaskets 2
+StuffedBaskets 3
+SupraHeal-2a
+SupraHeal-2b
+SupraHeal-2c
+SupraHeal-2d
+SupraHeal-2e
+SupraHeal-2f
+SupraHeal-2g
+SupraHeal-2h
+SupraHeal-2i
+SupraHeal-2j
+SupraHeal-2k
+SupraHeal-2l
+SupraHeal-2m
+SupraHeal-2n
+SupraHeal-2o
+SupraHeal-2p
+SupraHeal-2q
+SupraHeal-2r
+SupraHeal-2s
+SupraHeal-2t
+SupraHeal-2u
+SupraHeal-2v
+SupraHeal-2w
+SupraHeal-2x
+SupraHeal-2y
+SupraHeal-2z
+SupraHeal-3a
+SupraHeal-3b
+SupraHeal-3c
+SupraHeal-3d
+SupraHeal-3e
+SupraHeal-3f
+SupraHeal-a
+SupraHeal-b
+SupraHeal-c
+SupraHeal-d
+SupraHeal-e
+SupraHeal-f
+SupraHeal-g
+SupraHeal-h
+SupraHeal-i
+SupraHeal-j
+SupraHeal-k
+SupraHeal-l
+SupraHeal-m
+SupraHeal-n
+SupraHeal-o
+SupraHeal-p
+SupraHeal-q
+SupraHeal-r
+SupraHeal-s
+SupraHeal-t
+SupraHeal-u
+SupraHeal-v
+SupraHeal-w
+SupraHeal-x
+SupraHeal-y
+SupraHeal-z
+Table3
+TableForge1
+TableTemple1
+Tente1
+Tente2
+Tente3
+Test000-a
+Test000-b
+Test000-c
+Test000-d
+Test000-e
+Test000-f
+Test000-g
+Test000-h
+Test000-i
+Test000-j
+Test000-k
+Test000-l
+Test000-m
+Test000-n
+Test000-o
+Test000-p
+Test000-q
+Test000-r
+Test000-s
+Test000-t
+Test000-u
+Test045-a
+Test045-b
+Test045-c
+Test045-d
+Test045-e
+Test045-f
+Test045-g
+Test045-h
+Test045-i
+Test045-j
+Test045-k
+Test045-l
+Test045-m
+Test045-n
+Test045-o
+Test045-p
+Test045-q
+Test045-r
+Test045-s
+Test045-t
+Test045-u
+Test090-a
+Test090-b
+Test090-c
+Test090-d
+Test090-e
+Test090-f
+Test090-g
+Test090-h
+Test090-i
+Test090-j
+Test090-k
+Test090-l
+Test090-m
+Test090-n
+Test090-o
+Test090-p
+Test090-q
+Test090-r
+Test090-s
+Test090-t
+Test090-u
+Test135-a
+Test135-b
+Test135-c
+Test135-d
+Test135-e
+Test135-f
+Test135-g
+Test135-h
+Test135-i
+Test135-j
+Test135-k
+Test135-l
+Test135-m
+Test135-n
+Test135-o
+Test135-p
+Test135-q
+Test135-r
+Test135-s
+Test135-t
+Test135-u
+Test180-a
+Test180-b
+Test180-c
+Test180-d
+Test180-e
+Test180-f
+Test180-g
+Test180-h
+Test180-i
+Test180-j
+Test180-k
+Test180-l
+Test180-m
+Test180-n
+Test180-o
+Test180-p
+Test180-q
+Test180-r
+Test180-s
+Test180-t
+Test180-u
+TH-A
+TH-B
+TH-C
+TH-D
+TH-E
+TH-F
+TH-G
+TH-H
+TH-I
+TH-J
+TH-K
+Throwing01Dagger000-a
+Throwing01Dagger045-a
+Throwing01Dagger090-a
+Throwing01Dagger135-a
+Throwing01Dagger180-a
+Throwing01Star000-a
+Throwing01Star000-b
+Throwing01Star000-c
+Throwing01Star000-d
+Throwing01Star000-e
+Throwing01Star000-f
+Throwing01Star045-a
+Throwing01Star045-b
+Throwing01Star045-c
+Throwing01Star045-d
+Throwing01Star045-e
+Throwing01Star045-f
+Throwing01Star090-a
+Throwing01Star090-b
+Throwing01Star090-c
+Throwing01Star090-d
+Throwing01Star090-e
+Throwing01Star090-f
+Throwing01Star135-a
+Throwing01Star135-b
+Throwing01Star135-c
+Throwing01Star135-d
+Throwing01Star135-e
+Throwing01Star135-f
+Throwing01Star180-a
+Throwing01Star180-b
+Throwing01Star180-c
+Throwing01Star180-d
+Throwing01Star180-e
+Throwing01Star180-f
+thunderstorm-2a
+thunderstorm-2b
+thunderstorm-2c
+thunderstorm-2d
+thunderstorm-2e
+thunderstorm-2f
+thunderstorm-2g
+thunderstorm-2h
+thunderstorm-2i
+thunderstorm-2j
+thunderstorm-2k
+thunderstorm-2l
+thunderstorm-2m
+thunderstorm-2n
+thunderstorm-2o
+thunderstorm-2p
+thunderstorm-2q
+thunderstorm-2r
+thunderstorm-2s
+thunderstorm-2t
+thunderstorm-2u
+thunderstorm-2v
+thunderstorm-2w
+thunderstorm-2x
+thunderstorm-2y
+thunderstorm-a
+thunderstorm-b
+thunderstorm-c
+thunderstorm-d
+thunderstorm-e
+thunderstorm-f
+thunderstorm-g
+thunderstorm-h
+thunderstorm-i
+thunderstorm-j
+thunderstorm-k
+thunderstorm-l
+thunderstorm-m
+thunderstorm-n
+thunderstorm-o
+thunderstorm-p
+thunderstorm-q
+thunderstorm-r
+thunderstorm-s
+thunderstorm-t
+thunderstorm-u
+thunderstorm-v
+thunderstorm-w
+thunderstorm-x
+thunderstorm-y
+thunderstorm-z
+Trade_Interface_OFF
+Trade_Interface_ON
+TrainTeachBox
+TroneKing1
+TroneKing2
+v2menu
+VolcanoRock
+Waiting Background
+WarHammer
+Warning Box
+Watemp 1
+Watemp 10
+Watemp 11
+Watemp 12
+Watemp 13
+Watemp 14
+Watemp 15
+Watemp 16
+Watemp 17
+Watemp 18
+Watemp 19
+Watemp 2
+Watemp 20
+Watemp 21
+Watemp 22
+Watemp 23
+Watemp 24
+Watemp 25
+Watemp 26
+Watemp 27
+Watemp 28
+Watemp 29
+Watemp 3
+Watemp 30
+Watemp 31
+Watemp 32
+Watemp 4
+Watemp 5
+Watemp 6
+Watemp 7
+Watemp 8
+Watemp 9
+Weather_Fog
+Weather_Rain
+Weather_Rain0
+Weather_Snow
+Weather_Snow2
+Web1
+Web10
+Web2
+Web3
+Web4
+Web5
+Web7
+Web8
+West Cursor
+Whitecat000-a
+Whitecat000-b
+Whitecat000-c
+Whitecat000-d
+Whitecat000-e
+Whitecat000-f
+Whitecat045-a
+Whitecat045-b
+Whitecat045-c
+Whitecat045-d
+Whitecat045-e
+Whitecat045-f
+Whitecat090-a
+Whitecat090-b
+Whitecat090-c
+Whitecat090-d
+Whitecat090-e
+Whitecat090-f
+Whitecat135-a
+Whitecat135-b
+Whitecat135-c
+Whitecat135-d
+Whitecat135-e
+Whitecat135-f
+Whitecat180-a
+Whitecat180-b
+Whitecat180-c
+Whitecat180-d
+Whitecat180-e
+Whitecat180-f
+WhitecatA000-a
+WhitecatA000-b
+WhitecatA000-c
+WhitecatA000-d
+WhitecatA000-e
+WhitecatA000-f
+WhitecatA000-g
+WhitecatA000-h
+WhitecatA000-i
+WhitecatA000-j
+WhitecatA000-k
+WhitecatA045-a
+WhitecatA045-b
+WhitecatA045-c
+WhitecatA045-d
+WhitecatA045-e
+WhitecatA045-f
+WhitecatA045-g
+WhitecatA045-h
+WhitecatA045-i
+WhitecatA045-j
+WhitecatA045-k
+WhitecatA090-a
+WhitecatA090-b
+WhitecatA090-c
+WhitecatA090-d
+WhitecatA090-e
+WhitecatA090-f
+WhitecatA090-g
+WhitecatA090-h
+WhitecatA090-i
+WhitecatA090-j
+WhitecatA090-k
+WhitecatA135-a
+WhitecatA135-b
+WhitecatA135-c
+WhitecatA135-d
+WhitecatA135-e
+WhitecatA135-f
+WhitecatA135-g
+WhitecatA135-h
+WhitecatA135-i
+WhitecatA135-j
+WhitecatA135-k
+WhitecatA180-a
+WhitecatA180-b
+WhitecatA180-c
+WhitecatA180-d
+WhitecatA180-e
+WhitecatA180-f
+WhitecatA180-g
+WhitecatA180-h
+WhitecatA180-i
+WhitecatA180-j
+WhitecatA180-k
+WhitecatC-A
+WhitecatC-B
+WhitecatC-C
+WhitecatC-D
+WhitecatC-E
+WhitecatC-F
+WhitecatC-G
+WhitecatC-H
+WhitecatC-I
+WhitecatC-J
+WhitecatC-K
+WhiteRobe
+WitchHat000-a
+WitchHat000-b
+WitchHat000-c
+WitchHat000-d
+WitchHat000-e
+WitchHat000-f
+WitchHat000-g
+WitchHat000-h
+WitchHat000-i
+WitchHat000-j
+WitchHat000-k
+WitchHat000-l
+WitchHat000-m
+WitchHat045-a
+WitchHat045-b
+WitchHat045-c
+WitchHat045-d
+WitchHat045-e
+WitchHat045-f
+WitchHat045-g
+WitchHat045-h
+WitchHat045-i
+WitchHat045-j
+WitchHat045-k
+WitchHat045-l
+WitchHat045-m
+WitchHat090-a
+WitchHat090-b
+WitchHat090-c
+WitchHat090-d
+WitchHat090-e
+WitchHat090-f
+WitchHat090-g
+WitchHat090-h
+WitchHat090-i
+WitchHat090-j
+WitchHat090-k
+WitchHat090-l
+WitchHat090-m
+WitchHatA000-a
+WitchHatA000-b
+WitchHatA000-c
+WitchHatA000-d
+WitchHatA000-e
+WitchHatA000-f
+WitchHatA000-g
+WitchHatA000-h
+WitchHatA000-i
+WitchHatA045-a
+WitchHatA045-b
+WitchHatA045-c
+WitchHatA045-d
+WitchHatA045-e
+WitchHatA045-f
+WitchHatA045-g
+WitchHatA045-h
+WitchHatA045-i
+WitchHatA090-a
+WitchHatA090-b
+WitchHatA090-c
+WitchHatA090-d
+WitchHatA090-e
+WitchHatA090-f
+WitchHatA090-g
+WitchHatA090-h
+WitchHatA090-i
+WitchHatA135-a
+WitchHatA135-b
+WitchHatA135-c
+WitchHatA135-d
+WitchHatA135-e
+WitchHatA135-f
+WitchHatA135-g
+WitchHatA135-h
+WitchHatA135-i
+WitchHatA180-a
+WitchHatA180-b
+WitchHatA180-c
+WitchHatA180-d
+WitchHatA180-e
+WitchHatA180-f
+WitchHatA180-g
+WitchHatA180-h
+WitchHatA180-i
+WitchHatB000-a
+WitchHatB000-b
+WitchHatB000-c
+WitchHatB000-d
+WitchHatB000-e
+WitchHatB000-f
+WitchHatB000-g
+WitchHatB000-h
+WitchHatB000-i
+WitchHatB045-a
+WitchHatB045-b
+WitchHatB045-c
+WitchHatB045-d
+WitchHatB045-e
+WitchHatB045-f
+WitchHatB045-g
+WitchHatB045-h
+WitchHatB045-i
+WitchHatB090-a
+WitchHatB090-b
+WitchHatB090-c
+WitchHatB090-d
+WitchHatB090-e
+WitchHatB090-f
+WitchHatB090-g
+WitchHatB090-h
+WitchHatB090-i
+WitchHatB135-a
+WitchHatB135-b
+WitchHatB135-c
+WitchHatB135-d
+WitchHatB135-e
+WitchHatB135-f
+WitchHatB135-g
+WitchHatB135-h
+WitchHatB135-i
+WitchHatB180-a
+WitchHatB180-b
+WitchHatB180-c
+WitchHatB180-d
+WitchHatB180-e
+WitchHatB180-f
+WitchHatB180-g
+WitchHatB180-h
+WitchHatB180-i
+GUI_BackPlayerStats
+GUI_BackChStat_Compact

@@ -23,24 +23,24 @@ public final class CombatMath {
 
     /**
      * Melee damage: weapon formula + natural STR bonus.
-     * Natural bonus = (STR - 20) / 5, only when STR > 20.
+     * Natural bonus = (STR - 20) / 5, only when STR >= 20.
      */
     public static int computeMeleeDamage(Player player) {
         int str = player == null ? 0 : player.getEffectiveStrength();
         int weaponDmg = rollWeaponDamage(player, false);
-        int natural = str > 20 ? (str - 20) / 5 : 0;
+        int natural = str >= 20 ? (str - 20) / 5 : 0;
         return Math.max(1, weaponDmg + natural + EquipmentBonusRules.bonus(player, 10));
     }
 
     /**
      * Bow damage: weapon formula + natural STR+AGI bonus.
-     * Natural bonus = (STR-20)/20 + (AGI-20)/10, only when stat > 20.
+     * Natural bonus = (STR-20)/20 + (AGI-20)/10, only when stat >= 20.
      */
     public static int computeBowDamage(Player player) {
         int str = player == null ? 0 : player.getEffectiveStrength();
         int agi = player == null ? 0 : player.getEffectiveDexterity();
         int weaponDmg = rollWeaponDamage(player, true);
-        int natural = (str > 20 ? (str - 20) / 20 : 0) + (agi > 20 ? (agi - 20) / 10 : 0);
+        int natural = (str >= 20 ? (str - 20) / 20 : 0) + (agi >= 20 ? (agi - 20) / 10 : 0);
         return Math.max(1, weaponDmg + natural + EquipmentBonusRules.bonus(player, 10));
     }
 
@@ -53,7 +53,7 @@ public final class CombatMath {
         if (definition == null || definition.isBow()) return 0;
         int weapon = rollDefinitionDamage(player, definition);
         int strength = player.getEffectiveStrength();
-        int natural = strength > 20 ? (strength - 20) / 5 : 0;
+        int natural = strength >= 20 ? (strength - 20) / 5 : 0;
         return Math.max(1, weapon + natural + EquipmentBonusRules.bonus(player, 10));
     }
 

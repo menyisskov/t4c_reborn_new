@@ -1,15 +1,33 @@
 package com.perso.T4C.npc;
 
+import com.perso.T4C.helper.NpcDefBinaryIO;
 import com.perso.T4C.player.Player;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LegacyNpcScriptEngineTest {
+    @Test
+    void wardenVortimerTeleportsPlayerIntoMadrigansAsylum() throws Exception {
+        NpcDef vortimer = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
+                .filter(def -> def.getName().equalsIgnoreCase("WardenVortimer"))
+                .findFirst().orElseThrow();
+        Player player = new Player();
+
+        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
+                vortimer.getSourceScript(), vortimer.getName(), "entrer", player);
+
+        assertTrue(result.handled());
+        assertEquals(2704 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
+        assertEquals(2226 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
+        assertEquals(0, player.getCoordinates().getZ());
+    }
+
     @Test
     void concatenatesAdjacentCppStringLiteralsInDialogue() throws Exception {
         Player player = new Player();
@@ -210,7 +228,9 @@ class LegacyNpcScriptEngineTest {
                 """;
         LegacyNpcScriptEngine.respond(script, "Oracle", "rebirth", player);
         assertTrue(player.isRespawnPointDefined());
-        assertEquals(21, player.getStrength());
+        // SET_STR raises strength to 21, then REMORT_TO rebuilds the character and drops every
+        // attribute back to the rebirth floor (20 + remorts * 5).
+        assertEquals(25, player.getStrength());
         assertEquals(1, player.getRebirthCount());
         assertEquals(2, player.getCoordinates().getZ());
     }

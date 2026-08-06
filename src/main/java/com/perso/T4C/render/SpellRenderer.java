@@ -314,10 +314,14 @@ public class SpellRenderer {
             return cached;
         }
         List<ProjectileFrame> frames = new ArrayList<>();
-        List<String> names = resolveFrameNames(spriteLoader, projectileSpell);
+        String energyBallPalette = energyBallPalette(projectileSpell);
+        String resolvedName = energyBallPalette != null ? "64kSpellEnergyBall-" : projectileSpell;
+        List<String> names = resolveFrameNames(spriteLoader, resolvedName);
         for (String name : names) {
             try {
-                TextureRegion region = spriteLoader.getRegionFromSpriteName(name);
+                TextureRegion region = energyBallPalette != null
+                        ? spriteLoader.getEnergyBallPaletteRegion(name, energyBallPalette)
+                        : spriteLoader.getRegionFromSpriteName(name);
                 if (region != null) {
                     SpriteLoader.Sprite meta = getSpriteMeta(name);
                     frames.add(new ProjectileFrame(region, meta));
@@ -327,6 +331,16 @@ public class SpellRenderer {
         }
         projectileFramesCache.put(projectileSpell, frames);
         return frames;
+    }
+
+    private static String energyBallPalette(String projectileSpell) {
+        if (projectileSpell == null) return null;
+        String lower = projectileSpell.toLowerCase(Locale.ROOT);
+        if (lower.equals("64kspellenergyballblue-")) return "blue";
+        if (lower.equals("64kspellenergyballyellow-")) return "yellow";
+        if (lower.equals("64kspellenergyballblack-")) return "black";
+        if (lower.equals("64kspellenergyballpurple-")) return "purple";
+        return null;
     }
 
     private SpriteLoader.Sprite getSpriteMeta(String spriteName) {

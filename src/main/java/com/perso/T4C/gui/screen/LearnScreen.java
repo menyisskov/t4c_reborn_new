@@ -75,7 +75,7 @@ public class LearnScreen extends GuiListScreen {
 
     /** Same screen, fed with trainable skills instead of spells (e.g. Ortanalas). */
     public static LearnScreen forTraining(Player player, List<String> skillIds) {
-        return new LearnScreen(player, null, skillIds, null);
+        return new LearnScreen(player, null, skillIds, null, null);
     }
 
     public record TrainingOffer(String skillId, int limitOrInitialPoints, int goldCost, boolean teaching) {}

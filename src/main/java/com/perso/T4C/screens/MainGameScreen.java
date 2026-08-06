@@ -915,7 +915,7 @@ public class MainGameScreen implements Screen {
                 log.info("Player took {} damage! HP: {}/{}", appliedDamage, player.getCurrentHp(), player.getMaxHp());
             } else {
                 log.info("{} hit player, but armor absorbed all {} raw damage (AC={})",
-                        attacker.getName(), rawDamage, CombatProfiles.fromPlayer(player).armorClass());
+                        attacker.getName(), rawDamage, playerProfile.armorClass());
             }
             }
 
@@ -1295,7 +1295,7 @@ public class MainGameScreen implements Screen {
             castDefensiveSpell(spell);
             return;
         }
-        if (spell.isAttack() || isPositionTargetSpell(spell) || isTameSpell(spell)) {
+        if (isHostileUnitSpell(spell) || isPositionTargetSpell(spell) || isTameSpell(spell)) {
             if (selectedTargetedSpell != null && selectedTargetedSlot == slotNumber) {
                 clearSelectedTargetedSpell(false);
                 return;
@@ -1333,6 +1333,16 @@ public class MainGameScreen implements Screen {
     private boolean isPositionTargetSpell(SpellData spell) {
         if (spell == null) return false;
         return spell.getTargetType() == 6 || spell.getTargetType() == 16 || spell.getTargetType() == 19;
+    }
+
+    /** GoN's attack flag means damaging; hostile non-damaging spells still need a target. */
+    private boolean isHostileUnitSpell(SpellData spell) {
+        if (spell == null) return false;
+        if (spell.isAttack() || spellEffectManager.hasVaporizeEffect(spell)) return true;
+        return switch (spell.getTargetType()) {
+            case 2, 8, 9, 11 -> true;
+            default -> false;
+        };
     }
 
     /**
@@ -1433,7 +1443,8 @@ public class MainGameScreen implements Screen {
             spellRenderer.triggerImpactSpell(impact, player);
         }
         if (spell.getBuff() != null || !originalEffects.isEmpty()
-                || utility.invisibilityApplied() || utility.dispelledEffects() > 0) {
+                || utility.invisibilityApplied() || utility.detectInvisibleApplied()
+                || utility.detectHiddenApplied() || utility.dispelledEffects() > 0) {
             savePlayerState();
         }
         if (!teleported && previousAutoCombatTarget != null && !previousAutoCombatTarget.isDead()) {
@@ -1491,7 +1502,8 @@ public class MainGameScreen implements Screen {
      * @return True if a spell cast attempt was handled, false otherwise.
      */
     private boolean tryCastAttackSpell(BaseMonster monster) {
-        if (monster == null || monster.isDead() || selectedTargetedSpell == null || !selectedTargetedSpell.isAttack() || player == null) {
+        if (monster == null || monster.isDead() || selectedTargetedSpell == null
+                || !isHostileUnitSpell(selectedTargetedSpell) || player == null) {
             return false;
         }
         if (!monster.canBeAttackedByPlayer()) {
@@ -1720,7 +1732,8 @@ public class MainGameScreen implements Screen {
 
     /** Handles an offensive spell click on a non-player NPC. */
     private boolean tryCastAttackSpell(BaseNPC npc) {
-        if (npc == null || selectedTargetedSpell == null || !selectedTargetedSpell.isAttack() || player == null) {
+        if (npc == null || selectedTargetedSpell == null
+                || !isHostileUnitSpell(selectedTargetedSpell) || player == null) {
             return false;
         }
         SpellData spell = selectedTargetedSpell;
@@ -1845,13 +1858,19 @@ public class MainGameScreen implements Screen {
         if (npcManager != null) {
             npcManager.onNpcAttacked(npc, player);
         }
+        boolean vaporize = spellEffectManager.hasVaporizeEffect(spell);
+        if (vaporize) {
+            if (npcManager != null) {
+                npcManager.damageNpc(npc, Math.max(1, npc.getCurrentHp()), player);
+            }
+        }
         int healthDelta = spellEffectManager.resolvePlayerHealthDelta(spell, player);
-        if (healthDelta < 0 && npcManager != null) {
+        if (!vaporize && healthDelta < 0 && npcManager != null) {
             int damage = -healthDelta;
             npcManager.damageNpc(npc, damage, player);
             Vector2 position = npc.getPosition();
             floatingDamage.spawn(damage, position.x, position.y, FloatingDamage.Type.MONSTER_RECEIVED);
-        } else if (healthDelta > 0) {
+        } else if (!vaporize && healthDelta > 0) {
             npc.setCurrentHp(Math.min(npc.getMaxHp(), npc.getCurrentHp() + healthDelta));
         }
         String impact = spell.getImpactSpell();
@@ -2448,8 +2467,15 @@ public class MainGameScreen implements Screen {
 
     private void applyResolvedSpellImpact(SpellData spell, BaseMonster monster, double range, boolean installHooks) {
         SpellEffectManager.Impact impactResult = spellEffectManager.resolve(spell, player, monster, range);
+        SpellEffectManager.TargetExhaustion explicitExhaustion =
+                spellEffectManager.resolveExplicitTargetExhaustion(spell, player, monster);
+        monster.applyExhaustion(explicitExhaustion.attackMillis(), explicitExhaustion.mentalMillis(),
+                explicitExhaustion.moveMillis());
+        if (impactResult.vaporize()) {
+            monster.takeDamage(Math.max(1, monster.getHealth()));
+        }
         int healthDelta = impactResult.healthDelta();
-        if (healthDelta < 0) {
+        if (!impactResult.vaporize() && healthDelta < 0) {
             int dmg = -healthDelta;
             boolean wasDead = monster.isDead();
             monster.applyPlayerDamage(dmg, player, xpCurve);
@@ -2458,7 +2484,7 @@ public class MainGameScreen implements Screen {
             }
             Vector2 pos = monster.getPosition();
             floatingDamage.spawn(dmg, pos.x, pos.y, FloatingDamage.Type.MONSTER_RECEIVED);
-        } else if (healthDelta > 0) {
+        } else if (!impactResult.vaporize() && healthDelta > 0) {
             monster.heal(healthDelta);
         }
         if (impactResult.drainedHealth() > 0) {
@@ -2819,7 +2845,7 @@ public class MainGameScreen implements Screen {
         if (hovered != null) {
             if (hovered.canBeAttackedByPlayer()) {
                 // An active offensive spell takes priority over the attack/bow cursor.
-                if (selectedTargetedSpell != null && selectedTargetedSpell.isAttack()) {
+                if (isHostileUnitSpell(selectedTargetedSpell)) {
                     applySpellCursor();
                 } else if (PlayerAppearanceDefaults.hasBowEquipped(player)) {
                     applyBowCursor();
@@ -2835,7 +2861,7 @@ public class MainGameScreen implements Screen {
             if (player != null && player.isCombatMode()) {
                 // Combat mode lets the player target any NPC, mirroring the original
                 // client's crossed-sword cursor override (Objects.AttackMode()).
-                if (selectedTargetedSpell != null && selectedTargetedSpell.isAttack()) {
+                if (isHostileUnitSpell(selectedTargetedSpell)) {
                     applySpellCursor();
                 } else if (PlayerAppearanceDefaults.hasBowEquipped(player)) {
                     applyBowCursor();
@@ -3194,10 +3220,41 @@ public class MainGameScreen implements Screen {
     }
 
     private void applyPeriodicSpellImpact(SpellData spell, Player caster, BaseMonster target) {
-        if (caster == player) applyResolvedSpellImpact(spell, target, 0d, false);
+        if (caster != player) return;
+        SpellEffectManager.TargetExhaustion exhaustion =
+                spellEffectManager.resolveTargetExhaustion(spell, caster, target);
+        target.exhaustMovementFor(exhaustion.moveMillis());
+        int durationSeconds = spellEffectManager.resolveDurationSeconds(spell,
+                new com.perso.T4C.helper.DiceFormula.Context(
+                        target.getCombatStrength(), target.getCombatEndurance(), target.getCombatAgility(),
+                        target.getCombatIntelligence(), 0, 0, 0, target.getCombatLevel()));
+        target.applyTemporaryDodgeModifier(
+                spellEffectManager.resolveTargetDodgeModifier(spell, caster, target),
+                durationSeconds * 1_000L);
+        // Linked spells may themselves install a hook (10151 -> 10349 for Entangle).
+        applyResolvedSpellImpact(spell, target, 0d, true);
+    }
+
+    /**
+     * Feeds Sneak.cpp's witness heuristic: units standing within
+     * {@link com.perso.T4C.combat.StealthRules#WITNESS_RANGE} of the player make
+     * keeping cover harder with every extra onlooker.
+     */
+    private int countSneakWitnesses() {
+        if (monsterManager == null) return 0;
+        Vector2 playerPosition = player.getPositionVector();
+        float range = com.perso.T4C.combat.StealthRules.WITNESS_RANGE
+                * Math.max(GRID_W, GRID_H);
+        int witnesses = 0;
+        for (BaseMonster monster : monsterManager.getMonsters()) {
+            if (monster == null || monster.isDead()) continue;
+            if (monster.getPosition().dst(playerPosition) <= range) witnesses++;
+        }
+        return witnesses;
     }
 
     private void configurePlayerDeathCallback() {
+        player.setWitnessCountSupplier(this::countSneakWitnesses);
         player.setDeathCallback(pvpDeath -> {
             Vector2 deathPosition = player.getPositionVector().cpy();
             DeathPenaltyService.Result penalties = deathPenaltyService.apply(player, pvpDeath, xpCurve,
@@ -3861,13 +3918,15 @@ public class MainGameScreen implements Screen {
         multiplexer.addProcessor(gameChat);
         multiplexer.addProcessor(guiAdapter);
         multiplexer.addProcessor(stage);
+        // The quickbar must consume presses before world handlers unproject the
+        // same coordinates and accidentally target a monster/NPC behind the HUD.
+        multiplexer.addProcessor(clickToMoveHandler);
         multiplexer.addProcessor(monsterInputHandler);  // Process monster interactions first
         multiplexer.addProcessor(npcInputHandler);  // Process NPC interactions
         multiplexer.addProcessor(herbInputHandler); // Harvest before loot/movement
         multiplexer.addProcessor(groundItemClickHandler);  // Pick up loot before moving/object clicks
         multiplexer.addProcessor(objectClickHandler);  // Process object clicks before tile clicks
         multiplexer.addProcessor(positionSpellHandler);
-        multiplexer.addProcessor(clickToMoveHandler);
         multiplexer.addProcessor(new TileClickHandler(reader, camera));
         Gdx.input.setInputProcessor(multiplexer);
     }

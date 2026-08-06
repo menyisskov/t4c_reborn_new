@@ -83,18 +83,18 @@ public class PlayerHUD {
     private final HudTooltip tooltip;
     private final SpriteLoader spriteLoader;
     private int lastTextureGen;
-    private static final int QUICK_SLOT_COUNT = 7;
-    private static final float CHAT_BAR_WIDTH = 1024f;
-    private static final float CHAT_BAR_HEIGHT = 150f;
+    private static final int QUICK_SLOT_COUNT = 5;
+    private static final float CHAT_BAR_WIDTH = 934f;
+    private static final float CHAT_BAR_HEIGHT = 166f;
     private static final float QUICK_SLOT_X = 668f;
-    private static final float QUICK_SLOT_Y = 15f;
+    private static final float QUICK_SLOT_Y = 31f;
     private static final float QUICK_SLOT_SIZE = 42f;
-    private static final float[] QUICK_SLOT_OFFSET_X = {0f, 52f, 103f, 156f, 206f, 255f, 302f};
-    private static final float BACKPACK_BUTTON_X = 729f;
-    private static final float BACKPACK_BUTTON_Y = 65f;
+    private static final float[] QUICK_SLOT_OFFSET_X = {0f, 52f, 103f, 156f, 206f};
+    private static final float BACKPACK_BUTTON_X = 707f;
+    private static final float BACKPACK_BUTTON_Y = 81f;
     private static final float XP_BAR_X = 20f;
-    private static final float XP_BAR_Y = 123f;
-    private static final float XP_BAR_WIDTH = 984f;
+    private static final float XP_BAR_Y = 139f;
+    private static final float XP_BAR_WIDTH = 894f;
     private static final float XP_BAR_HEIGHT = 14f;
     private final Map<String, TextureRegion> quickSlotIcons = new HashMap<>();
     private final Map<String, TextureRegion> buffIcons = new HashMap<>();
@@ -831,17 +831,17 @@ public class PlayerHUD {
 
     private void loadChatBarButtons() throws GameException {
         chatBarButtons.clear();
-        addChatBarButton("Character", 670f, 66f, "GUI_ChatBtnCharCheet",
+        addChatBarButton("Character", 664f, BACKPACK_BUTTON_Y, "GUI_ChatBtnCharCheet",
                 () -> characterAction.run());
-        addChatBarButton("Backpack", BACKPACK_BUTTON_X, 66f, "GUI_ChatBtnBackPack",
+        addChatBarButton("Backpack", BACKPACK_BUTTON_X, BACKPACK_BUTTON_Y, "GUI_ChatBtnBackPack",
                 () -> backpackAction.run());
-        addChatBarButton("Spell book", 788f, "GUI_ChatBtnSpell",
+        addChatBarButton("Spell book", 750f, "GUI_ChatBtnSpell",
                 () -> spellBookAction.run());
-        addChatBarButton("Quest journal", 846f, "GUI_ChatBtnQuest",
+        addChatBarButton("Quest journal", 793f, "GUI_ChatBtnQuest",
                 () -> questAction.run());
-        addChatBarButton("World map", 906f, "GUI_ChatBtnMap",
+        addChatBarButton("World map", 836f, "GUI_ChatBtnMap",
                 () -> mapAction.run());
-        addChatBarButton("Options", 965f, BACKPACK_BUTTON_Y, "GUI_ChatBtnOption",
+        addChatBarButton("Options", 879f, BACKPACK_BUTTON_Y, "GUI_ChatBtnOption",
                 () -> optionsAction.run());
     }
 

@@ -61,7 +61,8 @@ public final class SkillService {
         if (level <= 0) return Result.failure(Failure.NOT_LEARNED, level);
         if (!player.isSkillReady(skillId)) return Result.failure(Failure.COOLDOWN, level);
         switch (skillId) {
-            case "rapid_healing" -> player.applyHeal(Math.max(1, level / 10), Math.max(1, level / 10));
+            // rapid_healing is passive in the original: FastHealing.cpp only reacts to
+            // HOOK_REGEN, multiplying the natural roll in Player#tickNaturalRegeneration.
             case "sneak" -> player.setHidden(true);
             default -> { /* Combat and interaction skills are resolved by their owning service. */ }
         }

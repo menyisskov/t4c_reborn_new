@@ -257,6 +257,14 @@ public final class InventoryService {
                 || player.getEquippedItems().containsKey(BodyPart.WEAPON2));
     }
 
+    /**
+     * Parry.cpp only deflects when {@code equipment[weapon_right]} is set, so the
+     * off-hand alone never enables a parry.
+     */
+    public static boolean hasMainHandWeapon(Player player) {
+        return player != null && player.getEquippedItems().containsKey(BodyPart.WEAPON);
+    }
+
     public static int chargesForNextInstance(Player player, String itemKey) {
         ItemDefinition definition = ItemRegistry.findByKey(itemKey);
         if (player == null || definition == null || definition.isUnlimitedUse() || definition.getNbCharges() <= 0) {

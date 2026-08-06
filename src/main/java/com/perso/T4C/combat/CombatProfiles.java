@@ -27,7 +27,7 @@ public final class CombatProfiles {
                 player.getEffectiveDexterity(), Math.max(1, attack),
                 Math.max(1, archery), dodge,
                 ArmorClassRules.effectiveArmorClass(player),
-                player.isStunned(), player.isHidden(), InventoryService.hasWeapon(player), skills);
+                player.isStunned(), player.isHidden(), InventoryService.hasMainHandWeapon(player), skills);
     }
 
     public static CombatProfile fromMonster(BaseMonster monster) {

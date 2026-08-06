@@ -63,7 +63,7 @@ public final class SpellVisualsMigration {
 
             String newSound = withExtension(entry.sound);
             String newSoundImpact = withExtension(entry.impactSound);
-            String newProjectile = entry.sprite;
+            String newProjectile = projectileWithOriginalPalette(entry);
             String newImpact = entry.impactSprite;
 
             checkSoundCoverage(newSound, soundFiles, missingSounds);
@@ -125,6 +125,25 @@ public final class SpellVisualsMigration {
     private static String withExtension(String soundName) {
         if (soundName == null || soundName.isBlank()) return null;
         return soundName.endsWith(".wav") ? soundName : soundName + ".wav";
+    }
+
+    /** The source table stores the bitmap name but not the palette argument passed by GoN. */
+    private static String projectileWithOriginalPalette(CppSpellEntry entry) {
+        if (entry.sprite == null || entry.cppName == null) return entry.sprite;
+        String name = entry.cppName.toUpperCase(Locale.ROOT);
+        if (name.contains("WITH_BLUE_BALL") || name.equals("__SPELL_BLUE_ENERGY_BALL")) {
+            return "64kSpellEnergyBallBlue-";
+        }
+        if (name.contains("WITH_YELLOW_BALL") || name.equals("__SPELL_YELLOW_ENERGY_BALL")) {
+            return "64kSpellEnergyBallYellow-";
+        }
+        if (name.contains("WITH_BLACK_BALL") || name.equals("__SPELL_BLACK_ENERGY_BALL")) {
+            return "64kSpellEnergyBallBlack-";
+        }
+        if (name.contains("WITH_PURPLE_BALL") || name.equals("__SPELL_PURPLE_ENERGY_BALL")) {
+            return "64kSpellEnergyBallPurple-";
+        }
+        return entry.sprite;
     }
 
     private static Map<String, CppSpellEntry> loadTable(String path) throws Exception {

@@ -1,9 +1,13 @@
 package com.perso.T4C.npc;
 
+import com.perso.T4C.helper.PlayerAppearanceDefaults;
+import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.player.PlayerProgression;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -24,6 +28,39 @@ final class LegacyNpcScriptEngine {
     private static final Pattern INT = Pattern.compile("-?\\d+");
     private static final Map<String, Integer> GLOBAL_FLAGS = new ConcurrentHashMap<>();
     private static final Map<String, Long> GLOBAL_FLAG_EXPIRATIONS = new ConcurrentHashMap<>();
+    /** Maximum number of rebirths, exposed to scripts as {@code ACK_MAXREMORTS}. */
+    private static final long MAX_REMORTS = 10L;
+    /** Rebirth counter the legacy scripts read through {@code CheckFlag}. */
+    private static final String FLAG_NUMBER_OF_REMORTS = "__FLAG_NUMBER_OF_REMORTS";
+    /** Stage of the rebirth ritual: 0 not started, 1 spending energy, 2 ready to leave. */
+    private static final String FLAG_REMORT_PROCESS = "__FLAG_REMORT_PROCESS";
+    /** Energy the player spends with Alphan's associates after a rebirth. */
+    private static final String FLAG_REMORT_POINTS = "__FLAG_REMORT_POINTS";
+    /** Energy granted by each rebirth, matching the original server's allowance. */
+    private static final int REMORT_POINTS_PER_REBIRTH = 10;
+    /**
+     * Attribute floor a reborn character starts from. Betran (RemortNPC2) prices his upgrades
+     * against {@code USER_TRUE_STR - (20 + remorts * 5)}, which pins the base to these two numbers.
+     */
+    private static final int REBIRTH_BASE_ATTRIBUTE = 20;
+    private static final int REBIRTH_ATTRIBUTE_PER_REMORT = 5;
+    /** Elemental resistances and powers both sit at 100 for a fresh character. */
+    private static final int ELEMENT_BASE = 100;
+    /** Legacy quest-flag prefixes holding the deltas above {@link #ELEMENT_BASE}. */
+    private static final String FLAG_RESIST_PREFIX = "legacy:resist:";
+    private static final String FLAG_POWER_PREFIX = "legacy:power:";
+    private static final List<String> ELEMENTS = List.of("fire", "water", "air", "earth", "light", "dark");
+    /** Marks of the Seraph the Oracle promises to every reborn character. */
+    private static final List<String> SERAPH_REGALIA =
+            List.of("item.remort_white_wings", "item.ring_of_the_seraph");
+    /**
+     * Where the rebirth ritual sends the player back into the world, at the end of Alphan's final
+     * stage. Not to be confused with {@code REMORT_TO(1315, 920, 1)}, which is the ritual room
+     * hosting Alphan and his associates.
+     */
+    private static final int LIGHTHAVEN_TILE_X = 2939;
+    private static final int LIGHTHAVEN_TILE_Y = 1066;
+    private static final int LIGHTHAVEN_Z = 0;
 
     record Result(String text, List<String> systemMessages, List<String> shopItems, List<SellRule> sellRules, List<String> taughtSpells,
                   List<String> taughtSkills, List<String> trainedSkills, List<String> targetSpells,
@@ -51,6 +88,106 @@ final class LegacyNpcScriptEngine {
     record FormulaOffer(int formulaId, int goldCost) {}
 
     private LegacyNpcScriptEngine() {}
+
+    /**
+     * Rebuilds the character the way the original {@code REMORT_TO} primitive did. The Oracle warns
+     * the player they will be "demoted to an inexperienced adventurer and will have to begin life
+     * anew": level, experience, spells and skills are wiped, and attributes drop back to a floor
+     * that grows with every rebirth, which is what Alphan's associates then spend energy raising.
+     *
+     * <p>Attributes and elemental values are not reset to a fresh character's numbers but to the
+     * floor the legacy scripts price against, so the promised "greatly increased capabilities"
+     * accumulate across rebirths.
+     */
+    private static void rebirth(Player player) {
+        int remorts = player.getQuestFlag(FLAG_NUMBER_OF_REMORTS) + 1;
+        player.setQuestFlag(FLAG_NUMBER_OF_REMORTS, remorts);
+        player.setRebirthCount(remorts);
+
+        // Alphan and his associates read these; nothing else in the scripts sets them up.
+        player.setQuestFlag(FLAG_REMORT_POINTS, REMORT_POINTS_PER_REBIRTH);
+        player.setQuestFlag(FLAG_REMORT_PROCESS, 0);
+
+        int attribute = REBIRTH_BASE_ATTRIBUTE + remorts * REBIRTH_ATTRIBUTE_PER_REMORT;
+        player.setStrength(attribute);
+        player.setDexterity(attribute);
+        player.setEndurance(attribute);
+        player.setIntelligence(attribute);
+        player.setWisdom(attribute);
+
+        // Elemental values live as deltas above ELEMENT_BASE; clearing them restores the base.
+        for (String element : ELEMENTS) {
+            player.setQuestFlag(FLAG_RESIST_PREFIX + element, 0);
+            player.setQuestFlag(FLAG_POWER_PREFIX + element, 0);
+        }
+
+        player.setLevel(1);
+        player.setCurrentXp(0);
+        // Without realigning the threshold the character keeps its level-100 requirement and can
+        // never level up again.
+        XpCurve.loadDefault().applyToPlayer(player);
+        player.setStatPoints(0);
+        player.setSkillPoints(0);
+        if (player.getSkills() != null) player.getSkills().clear();
+        if (player.getSpells() != null) player.getSpells().clear();
+        if (player.getQuickSlots() != null) player.getQuickSlots().clear();
+
+        // A level-1 character keeps neither the pools nor the reserves of its former self. Derive
+        // them from the same rolls a level-up uses, so they stay consistent with the new attributes.
+        int maxHp = PlayerProgression.hitPointGainBase(attribute);
+        int maxMana = PlayerProgression.manaGainBase(attribute, attribute);
+        player.setMaxHp(maxHp);
+        player.setCurrentHp(maxHp);
+        player.setMaxMana(maxMana);
+        player.setMana(maxMana);
+
+        // Buffs of the former life must not survive it. Dispel by name so each one's stat
+        // contributions are undone; clearing the list would leave the bonuses applied.
+        for (Player.ActiveBuff buff : new ArrayList<>(player.getActiveBuffs())) {
+            player.dispelBuff(buff.getSpellName());
+        }
+        player.setHiddenFor(0L);
+
+        stripEquipment(player);
+        grantSeraphRegalia(player);
+    }
+
+    /**
+     * Returns every worn item to the inventory, keeping only the marks of the Seraph. A character
+     * demoted to level 1 no longer meets the requirements of its former gear, and the attribute
+     * floor it starts from would otherwise be inflated by bonuses it can no longer sustain.
+     *
+     * <p>The wings and the Ring of the Seraph survive the ritual: they are the heritage the Oracle
+     * grants across rebirths, not equipment earned in the life being left behind.
+     */
+    private static void stripEquipment(Player player) {
+        // unequip mutates the equipment map, so iterate over a snapshot of the slots.
+        for (BodyPart slot : new ArrayList<>(player.getEquippedItems().keySet())) {
+            if (SERAPH_REGALIA.contains(player.getEquippedItems().get(slot))) continue;
+            InventoryService.unequip(player, slot);
+        }
+    }
+
+    /**
+     * Grants and wears the marks of the Seraph. The Oracle promises them ("you will be gifted with
+     * wings, a part of your heritage as a Seraph"), but the legacy script never hands them over:
+     * that was part of the {@code REMORT_TO} primitive, like the rest of the ritual.
+     */
+    private static void grantSeraphRegalia(Player player) {
+        for (String key : SERAPH_REGALIA) {
+            ItemDefinition definition = ItemRegistry.findByKey(key);
+            if (definition == null || definition.getBodyPart() == null) continue;
+            if (!player.getInventory().contains(key)) InventoryService.add(player, key);
+            // Equipping needs the item in the inventory, and only succeeds on a free-enough slot;
+            // a failure just leaves the item carried rather than worn.
+            InventoryService.equip(player, definition.getBodyPart(), key);
+        }
+        // Equipping only updates the inventory model. The puppet keeps its former parts until the
+        // appearance is rebuilt and the animations reloaded, which is what the inventory screen
+        // does on every drag and what a save reload does implicitly.
+        PlayerAppearanceDefaults.applyDefaults(player);
+        if (player.getAnimations() != null) player.getAnimations().refresh();
+    }
 
     static Result begin(String script, String npcName, Player player) {
         if (script == null || script.isBlank()) return Result.empty();
@@ -103,6 +240,35 @@ final class LegacyNpcScriptEngine {
             return execute(body, npcName, player);
         }
         return Result.empty();
+    }
+
+    /**
+     * Lists the words the script reacts to, so the dialogue UI can highlight them.
+     * {@code CmdAND} keywords are listed individually because the dialogue text quotes them that
+     * way ({@code "ready" "to" "be" "reborn"}), even though answering needs them in one sentence.
+     * {@code ParamCmd} is skipped: its last keyword is a numeric pattern, not something to type.
+     */
+    static Map<String, String> keywords(String script) {
+        if (script == null || script.isBlank()) return Map.of();
+        Map<String, String> result = new LinkedHashMap<>();
+        Matcher commands = COMMAND.matcher(script);
+        while (commands.find()) {
+            int start = commands.start();
+            int open = script.indexOf('(', start);
+            int close = matching(script, open, '(', ')');
+            if (close < 0) continue;
+            String commandKind = script.substring(start, open).trim();
+            if (commandKind.equals("ParamCmd")) continue;
+            List<String> keywords = strings(script.substring(open + 1, close)).stream()
+                    .filter(keyword -> !keyword.isBlank()).toList();
+            // A CmdAND section only fires when every keyword is in the same sentence, so clicking
+            // any one of its words must send them all; Command sections answer to a single word.
+            String sentence = commandKind.contains("CmdAND") ? String.join(" ", keywords) : null;
+            for (String keyword : keywords) {
+                result.putIfAbsent(keyword, sentence == null ? keyword : sentence);
+            }
+        }
+        return result;
     }
 
     static Result respondYesNo(String script, String npcName, String state, boolean yes, Player player) {
@@ -305,7 +471,7 @@ final class LegacyNpcScriptEngine {
             else if ((args = macroArgs(s, "REMORT_TO")) != null) {
                 List<String> values = splitArgs(args);
                 if (values.size() >= 3) {
-                    player.setRebirthCount(player.getRebirthCount() + 1);
+                    rebirth(player);
                     player.setWorldPosition(number(values.get(0), npcName, player, locals)
                                     * com.perso.T4C.config.GameConstants.GRID_W,
                             number(values.get(1), npcName, player, locals)
@@ -379,7 +545,21 @@ final class LegacyNpcScriptEngine {
                         safeInt(number(values.get(1), npcName, player, locals)));
                 effect = true;
             }
-            else if ((args = macroArgs(s, "CastSpellTarget")) != null) targetSpells.add(unquote(firstArg(args)));
+            else if ((args = macroArgs(s, "CastSpellTarget")) != null) {
+                String spell = unquote(firstArg(args));
+                targetSpells.add(spell);
+                // The rebirth teleport never made it into the spell registry, so casting it moves
+                // nobody. Alphan's own words send the player to Lighthaven; do it here, otherwise
+                // the ritual ends with a farewell speech and the player stays put.
+                if (spell != null && spell.contains("remort") && spell.contains("teleport")) {
+                    player.setWorldPosition(LIGHTHAVEN_TILE_X * com.perso.T4C.config.GameConstants.GRID_W,
+                            LIGHTHAVEN_TILE_Y * com.perso.T4C.config.GameConstants.GRID_H, LIGHTHAVEN_Z);
+                    // No script clears this stage, so close the ritual here: otherwise Alphan stays
+                    // stuck on his farewell and the next rebirth would start half-finished.
+                    player.setQuestFlag(FLAG_REMORT_PROCESS, 0);
+                    effect = true;
+                }
+            }
             else if ((args = macroArgs(s, "CastSpellSelf")) != null) selfSpells.add(unquote(firstArg(args)));
             else if ((args = macroArgs(s, "SUMMON2")) != null) collectSummon(args, summons, true);
             else if ((args = macroArgs(s, "SUMMON")) != null) collectSummon(args, summons, false);
@@ -565,7 +745,26 @@ final class LegacyNpcScriptEngine {
             case "USER_TRUE_STR" -> player.getStrength(); case "USER_TRUE_AGI", "USER_TRUE_DEX" -> player.getDexterity();
             case "USER_TRUE_END" -> player.getEndurance(); case "USER_TRUE_INT" -> player.getIntelligence();
             case "USER_TRUE_WIS" -> player.getWisdom();
+            // Delaan and Caplan price their upgrades from these; unresolved they read 0 and every
+            // cost check goes wrong.
+            case "USER_TRUE_FIRE_RESIST" -> player.getElementResistance("fire");
+            case "USER_TRUE_WATER_RESIST" -> player.getElementResistance("water");
+            case "USER_TRUE_AIR_RESIST" -> player.getElementResistance("air");
+            case "USER_TRUE_EARTH_RESIST" -> player.getElementResistance("earth");
+            case "USER_TRUE_DARK_RESIST" -> player.getElementResistance("dark");
+            case "USER_TRUE_LIGHT_RESIST" -> player.getElementResistance("light");
+            case "USER_TRUE_FIRE_POWER" -> player.getElementPower("fire");
+            case "USER_TRUE_WATER_POWER" -> player.getElementPower("water");
+            case "USER_TRUE_AIR_POWER" -> player.getElementPower("air");
+            case "USER_TRUE_EARTH_POWER" -> player.getElementPower("earth");
+            case "USER_TRUE_DARK_POWER" -> player.getElementPower("dark");
+            case "USER_TRUE_LIGHT_POWER" -> player.getElementPower("light");
+            case "USER_TRUE_MAXHP" -> player.getMaxHp();
             case "TRUE" -> 1; case "FALSE", "NULL" -> 0;
+            // Engine-wide cap on rebirths. Without it the identifier falls through to parseLong,
+            // which yields 0 and makes the Oracle's "remorts >= ACK_MAXREMORTS" guard always true,
+            // blocking every rebirth.
+            case "ACK_MAXREMORTS" -> MAX_REMORTS;
             case "CurrentRound" -> System.currentTimeMillis() / 1000L;
             default -> locals.getOrDefault(e, parseLong(e));
         };

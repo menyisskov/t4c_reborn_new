@@ -3029,17 +3029,18 @@ public class MapEditorScreen implements Screen {
 
         commitPendingOffsets();
         String[] spriteNames = computeObjectSpriteNames(mapping.sprite);
+        boolean mirror = mapping.mirror ^ selected.mirror();
         int updatedCount = 0;
         int lastX = 0;
         int lastY = 0;
         for (String spriteName : spriteNames) {
-            int[] updated = applySpriteOffsetDeltaInternal(spriteName, mapping.mirror, dx, dy);
+            int[] updated = applySpriteOffsetDeltaInternal(spriteName, mirror, dx, dy);
             if (updated == null) {
                 continue;
             }
             queueOffsetWrite(spriteName, updated);
-            lastX = mapping.mirror ? updated[2] : updated[0];
-            lastY = mapping.mirror ? updated[3] : updated[1];
+            lastX = mirror ? updated[2] : updated[0];
+            lastY = mirror ? updated[3] : updated[1];
             updatedCount++;
         }
         if (updatedCount == 0) {
@@ -3054,14 +3055,16 @@ public class MapEditorScreen implements Screen {
         if (pattern == null || pattern.isBlank()) {
             return new String[0];
         }
-        if (pattern.contains("%d") && pattern.contains("$")) {
+        if ((pattern.contains("%d") || pattern.contains("%s")) && pattern.contains("$")) {
             int dollar = pattern.lastIndexOf('$');
             try {
                 int frameCount = Integer.parseInt(pattern.substring(dollar + 1));
                 String base = pattern.substring(0, dollar);
                 String[] names = new String[frameCount];
                 for (int i = 1; i <= frameCount; i++) {
-                    names[i - 1] = base.replace("%d", String.valueOf(i));
+                    names[i - 1] = pattern.contains("%s")
+                            ? base.replace("%s", String.valueOf((char) ('a' + i - 1)))
+                            : base.replace("%d", String.valueOf(i));
                 }
                 return names;
             } catch (NumberFormatException e) {
@@ -4079,14 +4082,16 @@ public class MapEditorScreen implements Screen {
     }
 
     private boolean hasOffsetNudgeTarget() {
-        if (editorMode == EditorMode.OBJECT_POSITION_EDITOR) {
-            return selectedObjectPositionIndex >= 0 && selectedObjectPositionIndex < objectPositions.size();
+        if (selectedObjectPositionIndex >= 0 && selectedObjectPositionIndex < objectPositions.size()) {
+            return true;
         }
         return selectedDecorInfo != null;
     }
 
     private void applyOffsetNudgeDelta(int dx, int dy) {
-        if (editorMode == EditorMode.OBJECT_POSITION_EDITOR) {
+        // Object selection is also available from the regular map view. It
+        // must take precedence over decor/camera arrow handling there too.
+        if (selectedObjectPositionIndex >= 0 && selectedObjectPositionIndex < objectPositions.size()) {
             applySelectedObjectOffsetDelta(dx, dy);
             return;
         }
@@ -4117,7 +4122,9 @@ public class MapEditorScreen implements Screen {
             return;
         }
 
-        boolean allowArrowMove = selectedDecorInfo == null;
+        boolean objectOffsetTargetSelected = selectedObjectPositionIndex >= 0
+                && selectedObjectPositionIndex < objectPositions.size();
+        boolean allowArrowMove = selectedDecorInfo == null && !objectOffsetTargetSelected;
         boolean moveUp = Gdx.input.isKeyPressed(Input.Keys.W)
                 || Gdx.input.isKeyPressed(Input.Keys.Z)
                 || (allowArrowMove && Gdx.input.isKeyPressed(Input.Keys.UP));
@@ -10778,6 +10785,19 @@ public class MapEditorScreen implements Screen {
         }
         int z = getCurrentMapZ();
         int clickedObjectIndex = findObjectAtWorld(worldCoords.x, worldCoords.y);
+        // An object's sprite can be far from its anchor tile because of its
+        // draw offset.  In the object editor, also allow selecting it by
+        // clicking the tile stored in the WDA position itself.
+        if (clickedObjectIndex < 0) {
+            for (int i = objectPositions.size() - 1; i >= 0; i--) {
+                ObjectPos candidate = objectPositions.get(i);
+                if ((int) candidate.x() == tileX && (int) candidate.y() == tileY
+                        && (int) candidate.z() == z) {
+                    clickedObjectIndex = i;
+                    break;
+                }
+            }
+        }
         if (clickedObjectIndex >= 0 && clickedObjectIndex != selectedObjectPositionIndex) {
             selectObjectPosition(clickedObjectIndex, false);
             ObjectPos selected = objectPositions.get(clickedObjectIndex);
