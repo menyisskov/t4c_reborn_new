@@ -13,7 +13,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.ui.HudTooltip;
 
 import java.util.ArrayList;

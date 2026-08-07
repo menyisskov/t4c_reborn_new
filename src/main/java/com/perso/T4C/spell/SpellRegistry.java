@@ -86,11 +86,6 @@ public final class SpellRegistry {
         return null;
     }
 
-    public static synchronized Map<String, SpellData> allByName() {
-        load();
-        return byName;
-    }
-
     /**
      * Returns the visible, player-castable spell catalogue in data-file order.
      * Item procs, monster abilities, test entries and secondary effect records

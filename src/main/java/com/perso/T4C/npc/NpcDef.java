@@ -141,12 +141,6 @@ public final class NpcDef {
             this(type, stringParam1);
         }
 
-        @Deprecated public String getStringParam1() {
-            return targets.isEmpty() ? null : targets.get(0);
-        }
-        @Deprecated public String getStringParam2() { return null; }
-        @Deprecated public int getIntParam1() { return 0; }
-        @Deprecated public int getIntParam2() { return 0; }
     }
 
     @Getter

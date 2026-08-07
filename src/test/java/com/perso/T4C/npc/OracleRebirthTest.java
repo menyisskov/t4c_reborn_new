@@ -31,7 +31,7 @@ class OracleRebirthTest {
 
     @Test
     void offersRebirthConfirmationToAnEligiblePlayer() throws Exception {
-        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
+        NpcScriptEngine.Result result = NpcScriptEngine.respond(
                 oracle().getSourceScript(), "Oracle", "ready to be reborn", eligiblePlayer());
 
         assertEquals("REBIRTH", result.pendingYesNo(),
@@ -42,9 +42,9 @@ class OracleRebirthTest {
     void confirmingRebirthTeleportsAndIncrementsTheCounter() throws Exception {
         NpcDef oracle = oracle();
         Player player = eligiblePlayer();
-        LegacyNpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
+        NpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
 
-        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respondYesNo(
+        NpcScriptEngine.Result result = NpcScriptEngine.respondYesNo(
                 oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
 
         assertTrue(result.handled());
@@ -57,7 +57,7 @@ class OracleRebirthTest {
     @Test
     void highlightsCmdAndWordsIndividuallyButClicksSayTheWholeSentence() throws Exception {
         java.util.Map<String, String> keywords =
-                LegacyNpcScriptEngine.keywords(oracle().getSourceScript());
+                NpcScriptEngine.keywords(oracle().getSourceScript());
 
         // The dialogue quotes "ready" ... "reborn" as separate words, so each must be highlightable.
         assertTrue(keywords.containsKey("READY"), "READY must be highlighted on its own");
@@ -68,10 +68,10 @@ class OracleRebirthTest {
 
     @Test
     void clickingACmdAndWordReachesTheRebirthOffer() throws Exception {
-        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
+        NpcScriptEngine.Result result = NpcScriptEngine.respond(
                 oracle().getSourceScript(),
                 "Oracle",
-                LegacyNpcScriptEngine.keywords(oracle().getSourceScript()).get("READY"),
+                NpcScriptEngine.keywords(oracle().getSourceScript()).get("READY"),
                 eligiblePlayer());
 
         assertEquals("REBIRTH", result.pendingYesNo());
@@ -81,8 +81,8 @@ class OracleRebirthTest {
     void rebirthOpensTheRitualSoAlphanCanGrantEnergy() throws Exception {
         NpcDef oracle = oracle();
         Player player = eligiblePlayer();
-        LegacyNpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
-        LegacyNpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
+        NpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
+        NpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
 
         assertEquals(1, player.getQuestFlag("__FLAG_NUMBER_OF_REMORTS"),
                 "the script-visible counter must follow the rebirth count");
@@ -97,10 +97,10 @@ class OracleRebirthTest {
                 .filter(def -> "RemortNPC1".equals(def.getName())).findFirst().orElseThrow();
         Player player = eligiblePlayer();
         NpcDef oracle = oracle();
-        LegacyNpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
-        LegacyNpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
+        NpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
+        NpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
 
-        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
+        NpcScriptEngine.Result result = NpcScriptEngine.respond(
                 alphan.getSourceScript(), "RemortNPC1", "assist", player);
 
         assertEquals(1, player.getQuestFlag("__FLAG_REMORT_PROCESS"),
@@ -120,8 +120,8 @@ class OracleRebirthTest {
         player.setBaseElementResistance("fire", 180);
         player.setBaseElementPower("fire", 160);
 
-        LegacyNpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
-        LegacyNpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
+        NpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
+        NpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
 
         assertEquals(1, player.getLevel(), "the Oracle demotes the player to level 1");
         assertEquals(0, player.getCurrentXp());
@@ -144,8 +144,8 @@ class OracleRebirthTest {
         player.setHiddenFor(60_000L);
         player.setGold(1234);
 
-        LegacyNpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
-        LegacyNpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
+        NpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
+        NpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
 
         assertTrue(player.getActiveBuffs().isEmpty(), "buffs do not survive the former life");
         assertEquals(0L, player.getHiddenRemainingMillis());
@@ -158,8 +158,8 @@ class OracleRebirthTest {
         NpcDef oracle = oracle();
         Player player = eligiblePlayer();
 
-        LegacyNpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
-        LegacyNpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
+        NpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
+        NpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
 
         assertEquals("item.remort_white_wings",
                 player.getEquippedItems().get(com.perso.T4C.player.BodyPart.BACK),
@@ -193,8 +193,8 @@ class OracleRebirthTest {
         assertEquals(helm, player.getEquippedItems().get(com.perso.T4C.player.BodyPart.HEAD),
                 "precondition: the helm must be worn before the ritual");
 
-        LegacyNpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
-        LegacyNpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
+        NpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
+        NpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
 
         assertEquals(null, player.getEquippedItems().get(com.perso.T4C.player.BodyPart.HEAD),
                 "gear of the former life must come off");
@@ -212,8 +212,8 @@ class OracleRebirthTest {
         Player player = eligiblePlayer();
         player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", 3);
 
-        LegacyNpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
-        LegacyNpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
+        NpcScriptEngine.respond(oracle.getSourceScript(), "Oracle", "ready to be reborn", player);
+        NpcScriptEngine.respondYesNo(oracle.getSourceScript(), "Oracle", "REBIRTH", true, player);
 
         assertEquals(4, player.getQuestFlag("__FLAG_NUMBER_OF_REMORTS"));
         assertEquals(40, player.getStrength(), "20 + 4 * 5 after the fourth rebirth");
@@ -229,10 +229,10 @@ class OracleRebirthTest {
         player.setWorldPosition(0, 0, 0);
 
         // Greeting Alphan with no energy left moves the ritual to its final stage.
-        LegacyNpcScriptEngine.begin(alphan.getSourceScript(), "RemortNPC1", player);
+        NpcScriptEngine.begin(alphan.getSourceScript(), "RemortNPC1", player);
         assertEquals(2, player.getQuestFlag("__FLAG_REMORT_PROCESS"));
 
-        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
+        NpcScriptEngine.Result result = NpcScriptEngine.respond(
                 alphan.getSourceScript(), "RemortNPC1", "begin", player);
 
         assertTrue(result.handled());
@@ -251,7 +251,7 @@ class OracleRebirthTest {
         player.setLevel(74);
         player.setQuestFlag("__FLAG_USER_HAS_DEFEATED_ASSISTANT", 1);
 
-        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
+        NpcScriptEngine.Result result = NpcScriptEngine.respond(
                 oracle().getSourceScript(), "Oracle", "ready to be reborn", player);
 
         assertEquals(null, result.pendingYesNo());

@@ -34,9 +34,9 @@ import java.util.Random;
 public final class LevelUpSpriteSeed {
 
     /** Must match {@code SpellRenderer.LEVEL_UP_EFFECT} without its trailing dash. */
-    private static final String EFFECT_NAME = "LevelUpClaude";
+    private static final String EFFECT_NAME = "LevelUp";
     private static final List<String> REPLACED_EFFECT_PREFIXES = List.of(
-            "levelupcodex-", "levelupclaude-", "spelllevelup-");
+            "levelupcodex-", "levelupclaude-", "levelup-", "spelllevelup-");
     private static final int FRAME_COUNT = 18;
     private static final int WIDTH = 96;
     private static final int HEIGHT = 128;
@@ -96,7 +96,7 @@ public final class LevelUpSpriteSeed {
         return REPLACED_EFFECT_PREFIXES.stream().anyMatch(lower::startsWith);
     }
 
-    /** {@code LevelUpClaude-a}, {@code LevelUpClaude-b}, … as parsed by {@code SpellRenderer}. */
+    /** {@code LevelUp-a}, {@code LevelUp-b}, … as parsed by {@code SpellRenderer}. */
     private static String frameName(int index) {
         return EFFECT_NAME + "-" + (char) ('a' + index);
     }

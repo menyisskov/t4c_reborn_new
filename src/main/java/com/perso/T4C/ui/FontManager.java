@@ -94,30 +94,6 @@ public class FontManager {
     }
 
     /**
-     * Gets or creates a Press Start 2P font with the specified size and color.
-     *
-     * @param size  Font size in pixels
-     * @param color Font color
-     * @return BitmapFont instance
-     */
-    public BitmapFont getPressStart2PFont(int size, Color color) {
-        String key = "pressstart2p_" + size + "_" + color.toString();
-        return fontCache.computeIfAbsent(key, k -> createPressStart2PFont(size, color));
-    }
-
-    /**
-     * Gets or creates a Chewy font with the specified size and color.
-     *
-     * @param size  Font size in pixels
-     * @param color Font color
-     * @return BitmapFont instance
-     */
-    public BitmapFont getChewyFont(int size, Color color) {
-        String key = "chewy_" + size + "_" + color.toString();
-        return fontCache.computeIfAbsent(key, k -> createChewyFont(size, color));
-    }
-
-    /**
      * Gets or creates a Haettenschweiler font with the specified size and color.
      *
      * @param size  Font size in pixels
@@ -228,23 +204,6 @@ public class FontManager {
     }
 
     /**
-     * Creates a Press Start 2P font.
-     */
-    private BitmapFont createPressStart2PFont(int size, Color color) {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(com.perso.T4C.config.Paths.FONT_PRESS_START_2P));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = size;
-        parameter.color = color;
-        parameter.flip = true;
-
-        BitmapFont font = generator.generateFont(parameter);
-        generator.dispose();
-
-        font.getData().setLineHeight(27f);
-        return font;
-    }
-
-    /**
      * Creates a Chewy font.
      */
     private BitmapFont createChewyFont(int size, Color color) {
@@ -296,14 +255,6 @@ public class FontManager {
                 font.dispose();
             }
         }
-        fontCache.clear();
-    }
-
-    /**
-     * Clears the font cache without disposing.
-     * Use this when you want to reload fonts.
-     */
-    public void clearCache() {
         fontCache.clear();
     }
 }

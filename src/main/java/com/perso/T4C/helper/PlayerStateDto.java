@@ -1,7 +1,6 @@
 package com.perso.T4C.helper;
 
 import com.perso.T4C.model.QuickSlotEntry;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.List;

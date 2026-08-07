@@ -5,7 +5,6 @@ import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.gui.widget.GuiAnimatedSprite;
 import com.perso.T4C.gui.widget.GuiBoxedText;
 import com.perso.T4C.gui.widget.GuiButton;
-import com.perso.T4C.gui.widget.GuiText;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;

@@ -50,7 +50,7 @@ public final class CombatProfiles {
             int attack = Math.max(1, npc.getSkillLevel("attack"));
             int dodge = Math.max(1, npc.getSkillLevel("dodge"));
             return new CombatProfile(level, Math.max(10, npc.getStrength()), Math.max(10, npc.getEndurance()),
-                    Math.max(10, npc.getDexterity()), attack, attack, dodge, dataNpc.getLegacyArmorClass(),
+                    Math.max(10, npc.getDexterity()), attack, attack, dodge, dataNpc.getArmorClass(),
                     false, false, true, Map.of());
         }
         return new CombatProfile(level, 10, 10, 10, 10, 10, 10, 0, false, false, true, Map.of());

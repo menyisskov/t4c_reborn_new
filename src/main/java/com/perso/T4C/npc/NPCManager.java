@@ -60,8 +60,8 @@ public class NPCManager {
     /** Fires the original spawn/popup hooks once the player and map are both ready. */
     public void triggerPopupEvents(Player player) {
         for (BaseNPC npc : List.copyOf(npcs)) if (npc instanceof DataNpc dataNpc) {
-            dataNpc.triggerLegacyEvent("OnInitialise", player);
-            dataNpc.triggerLegacyEvent("OnPopup", player);
+            dataNpc.triggerScriptEvent("OnInitialise", player);
+            dataNpc.triggerScriptEvent("OnPopup", player);
         }
     }
 
@@ -285,8 +285,8 @@ public class NPCManager {
         npc.setCurrentHp(Math.max(0, npc.getCurrentHp() - damage));
         if (npc.getCurrentHp() > 0) return false;
         if (npc instanceof DataNpc dataNpc) {
-            dataNpc.triggerLegacyEvent("OnDeath", player);
-            dataNpc.triggerLegacyEvent("OnDestroy", player);
+            dataNpc.triggerScriptEvent("OnDeath", player);
+            dataNpc.triggerScriptEvent("OnDestroy", player);
         }
         removeNPC(npc);
         log.info("NPC {} was slain by the player", npc.getName());
@@ -306,10 +306,10 @@ public class NPCManager {
             activeConversationNpc = null;
         }
         if (player != null && npc instanceof DataNpc dataNpc) {
-            dataNpc.triggerLegacyEvent("OnAttacked", player);
+            dataNpc.triggerScriptEvent("OnAttacked", player);
             if (npc.getCurrentHp() <= 0) {
-                dataNpc.triggerLegacyEvent("OnDeath", player);
-                dataNpc.triggerLegacyEvent("OnDestroy", player);
+                dataNpc.triggerScriptEvent("OnDeath", player);
+                dataNpc.triggerScriptEvent("OnDestroy", player);
                 removeNPC(npc);
                 return;
             }
@@ -340,11 +340,9 @@ public class NPCManager {
         return translated;
     }
 
-    /** Technical NPC identity from npcs.bin, never shown to the player. */
-    private static final String PASSIVE_ON_ATTACK_NPC = "Darkfang";
-
     private boolean isPassiveOnAttack(BaseNPC npc) {
-        return PASSIVE_ON_ATTACK_NPC.equalsIgnoreCase(npc.getName());
+        NpcDef def = NpcRegistry.findByName(npc.getName());
+        return def != null && "true".equalsIgnoreCase(def.getSourceEvents().get("@combat.passiveOnAttack"));
     }
 
     /**

@@ -32,7 +32,7 @@ public final class LegacyNpcSourceMigration {
     private static final Pattern POSITION = Pattern.compile("npc\\.InitialPos\\.(X|Y|world)\\s*=\\s*(-?\\d+)");
     private static final Pattern TEMPLATE = Pattern.compile("npc\\s*=\\s*\\(?\\s*(\\w+)\\s*\\)?\\s*;");
     private static final Pattern INTL = Pattern.compile("INTL\\s*\\(\\s*\\d+\\s*,");
-    // Mirrors LegacyNpcScriptEngine.COMMAND: CmdAND sections are real dialogue topics too, and
+    // Mirrors NpcScriptEngine.COMMAND: CmdAND sections are real dialogue topics too, and
     // omitting them here hid their keywords from the dialogue list even though the engine matched them.
     private static final Pattern COMMAND = Pattern.compile("(?m)^\\s*(?:Command\\d*|CmdAND\\d*|ParamCmd)\\s*\\(");
     private static final Pattern C_STRING = Pattern.compile("\"((?:\\\\.|[^\"\\\\])*)\"");

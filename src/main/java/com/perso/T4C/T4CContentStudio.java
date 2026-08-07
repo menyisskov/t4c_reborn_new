@@ -1652,6 +1652,7 @@ public class T4CContentStudio {
         item.put("itemShield", def.getItemShield()); item.put("itemBack", def.getItemBack());
         item.put("aggro", def.getAggro()); item.put("clan", def.getClan()); item.put("speed", def.getSpeed());
         item.put("canAttack", def.isCanAttack()); item.put("tameable", def.isTameable()); item.put("tameMaxLevel", def.getTameMaxLevel());
+        item.put("spawnAliases", def.getSpawnAliases());
         item.put("loot", def.getLoot() == null ? List.of() : def.getLoot().stream().map(drop -> {
             Map<String, Object> loot = new LinkedHashMap<>();
             loot.put("item", drop.getItem());
@@ -1688,7 +1689,8 @@ public class T4CContentStudio {
                 integer(item.get("itemShield"), 0), integer(item.get("itemBack"), 0),
                 integer(item.get("aggro"), bool(item.get("defaultAggressive"), true) ? 50 : 0),
                 integer(item.get("clan"), 0), integer(item.get("speed"), 0), bool(item.get("canAttack"), true),
-                new java.util.ArrayList<>(), bool(item.get("tameable"), false), integer(item.get("tameMaxLevel"), 0));
+                new java.util.ArrayList<>(), bool(item.get("tameable"), false), integer(item.get("tameMaxLevel"), 0),
+                stringList(item.get("spawnAliases")));
     }
 
     private void handleHerbs(HttpExchange exchange) throws IOException {
@@ -2616,88 +2618,6 @@ public class T4CContentStudio {
     }
 
     /**
-     * Builds the dialogue graph from the editor payload, validating structural
-     * integrity and writing edited reply/keyword text into the translation
-     * catalogue under each node's id-based key.
-     *
-     * <p>Unlike the other NPC fields, the graph editor can create, delete, and
-     * reconnect nodes, so the full node list is rebuilt from the payload rather
-     * than carried over from {@code existingNodes} — that list is consulted only
-     * to detect which response/keyword text actually changed.
-     *
-     * @throws DialogValidationException if a node id is missing/duplicated, a
-     *         GOTO_NODE/fallbackNode target does not resolve within the same
-     *         payload, or more than one node is marked as the greeting.
-     */
-    private List<NpcDef.DialogNode> dialogNodesFromMap(String npcName, List<NpcDef.DialogNode> existingNodes,
-                                                         List<Map<String, Object>> payloadNodes) {
-        if (payloadNodes.isEmpty()) {
-            return List.of();
-        }
-        Map<String, NpcDef.DialogNode> existingById = new LinkedHashMap<>();
-        for (NpcDef.DialogNode node : existingNodes) {
-            existingById.put(node.getId(), node);
-        }
-        Set<String> ids = new LinkedHashSet<>();
-        Set<String> greetings = new LinkedHashSet<>();
-        List<NpcDef.DialogNode> nodes = new ArrayList<>();
-        Map<String, String> catalogueUpdates = new LinkedHashMap<>();
-        for (Map<String, Object> row : payloadNodes) {
-            String id = str(row.get("id")).trim();
-            if (id.isEmpty()) {
-                throw new DialogValidationException("NPC '" + npcName + "': every dialogue node needs an id");
-            }
-            if (!ids.add(id)) {
-                throw new DialogValidationException("NPC '" + npcName + "': duplicate dialogue node id '" + id + "'");
-            }
-            boolean greeting = bool(row.get("greeting"), false);
-            if (greeting) {
-                greetings.add(id);
-            }
-            NpcDef.DialogNode existingNode = existingById.get(id);
-            String responseKey = "npc.topic." + I18n.normalizedKey(npcName) + "." + id;
-            String editedResponse = str(row.get("response"));
-            String response = resolveEditedText(existingNode == null ? null : existingNode.getResponse(),
-                    editedResponse, responseKey, catalogueUpdates);
-            List<String> keywords = new ArrayList<>();
-            List<String> rawKeywords = stringList(row.get("keywords"));
-            List<String> existingKeywords = existingNode == null ? List.of() : existingNode.getKeywords();
-            for (int k = 0; k < rawKeywords.size(); k++) {
-                String keywordKey = "npc.topic_keyword." + I18n.normalizedKey(npcName) + "." + id + "." + k;
-                String existingKeyword = k < existingKeywords.size() ? existingKeywords.get(k) : null;
-                keywords.add(resolveEditedText(existingKeyword, rawKeywords.get(k), keywordKey, catalogueUpdates));
-            }
-            List<NpcDef.Action> actions = new ArrayList<>();
-            for (Map<String, Object> actionRow : listOfMaps(row.get("actions"))) {
-                ActionType type = parseEnum(ActionType.class, str(actionRow.get("type")), null);
-                if (type == null) continue;
-                actions.add(new NpcDef.Action(type,
-                        emptyToNull(str(actionRow.get("stringParam1"))),
-                        emptyToNull(str(actionRow.get("stringParam2"))),
-                        integer(actionRow.get("intParam1"), 0),
-                        integer(actionRow.get("intParam2"), 0)));
-            }
-            nodes.add(new NpcDef.DialogNode(id, keywords, response,
-                    emptyToNull(str(row.get("requiredFlag"))), integer(row.get("requiredFlagValue"), 0),
-                    emptyToNull(str(row.get("requiredItem"))), greeting,
-                    emptyToNull(str(row.get("fallbackNode"))), actions));
-        }
-        if (greetings.size() > 1) {
-            throw new DialogValidationException("NPC '" + npcName + "': only one dialogue node may be the greeting");
-        }
-        for (NpcDef.DialogNode node : nodes) {
-            if (node.getFallbackNode() != null && !ids.contains(node.getFallbackNode())) {
-                throw new DialogValidationException("NPC '" + npcName + "': node '" + node.getId()
-                        + "' has a fallbackNode that does not exist: '" + node.getFallbackNode() + "'");
-            }
-        }
-        if (!catalogueUpdates.isEmpty()) {
-            I18n.update(catalogueUpdates);
-        }
-        return nodes;
-    }
-
-    /**
      * Resolves what a node's response/keyword text should be saved as: if the
      * edited text differs from what the existing placeholder currently resolves
      * to, the existing key is queued for a catalogue update (or a fresh key is
@@ -2770,10 +2690,6 @@ public class T4CContentStudio {
         } catch (IllegalArgumentException e) {
             return fallback;
         }
-    }
-
-    private static String trimToEmpty(String value) {
-        return value == null ? "" : value.trim();
     }
 
     private static String emptyToNull(String value) {

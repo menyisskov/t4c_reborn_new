@@ -41,7 +41,7 @@ import com.perso.T4C.harvest.HerbManager;
 import com.perso.T4C.harvest.HerbNode;
 import com.perso.T4C.monster.BaseMonster;
 import com.perso.T4C.monster.MonsterManager;
-import com.perso.T4C.npc.LegacyNpcRuntimeHook;
+import com.perso.T4C.npc.NpcSummonBridge;
 import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.MonsterRegistry;
 import com.perso.T4C.npc.BaseNPC;
@@ -56,6 +56,7 @@ import com.perso.T4C.npc.NPCManager;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.player.StarterLoadout;
 import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
@@ -810,7 +811,7 @@ public class MainGameScreen implements Screen {
      */
     private MonsterManager createMonsterManager() {
         MonsterManager manager = new MonsterManager(outlineShader);
-        LegacyNpcRuntimeHook.setSummonCallback((name, x, y, z) ->
+        NpcSummonBridge.setSummonCallback((name, x, y, z) ->
                 currentMap != null && currentMap.getZ() == z && manager.spawnMonster(name, x, y));
         manager.setXpCurve(xpCurve);
         try {
@@ -842,7 +843,8 @@ public class MainGameScreen implements Screen {
             floatingDamage.spawn(amount, position.x, position.y, FloatingDamage.Type.MANA);
         });
         player.setItemDropCallback((index, itemKey) -> {
-            if ("Gem of Destiny".equals(itemKey)) {
+            com.perso.T4C.item.ItemDefinition dropped = com.perso.T4C.item.ItemRegistry.findByKey(itemKey);
+            if (dropped != null && dropped.isUndroppable()) {
                 showSystemMessage(I18n.key("message.gem_of_destiny_undroppable"));
                 return false;
             }
@@ -978,7 +980,7 @@ public class MainGameScreen implements Screen {
         }
         npcManager.setPlayerDamageCallback((attacker, rawDamage) -> {
             if (attacker instanceof DataNpc dataNpc) {
-                dataNpc.triggerLegacyEvent("OnAttack", player);
+                dataNpc.triggerScriptEvent("OnAttack", player);
                 if (attacker.getCurrentHp() <= 0) {
                     npcManager.damageNpc(attacker, 1, player);
                     return;
@@ -1023,12 +1025,22 @@ public class MainGameScreen implements Screen {
     }
 
     /**
-     * Plays the level-up effect on the character, like a spell cast upon it.
+     * Plays the level-up effect on the character and grants the LevelUp buff, like a spell cast
+     * upon it. Applied directly rather than through {@link #castDefensiveSpell}: a level up must
+     * never fail for lack of mana or be blocked by cast requirements.
      */
     private void configurePlayerLevelUpCallback() {
         player.setLevelUpCallback(newLevel -> {
             spellRenderer.playImpactSound(LEVEL_UP_SOUND);
             spellRenderer.playLevelUpAnimation(player);
+            SpellData levelUpSpell = SpellRegistry.findByName(StarterLoadout.LEVEL_UP_TEST_SPELL);
+            if (levelUpSpell != null) {
+                List<SpellData.SpellEffect> effects = spellEffectManager.resolvePlayerBuffEffects(levelUpSpell, player);
+                if (!effects.isEmpty()) {
+                    player.applyBuff(levelUpSpell.getName(), levelUpSpell.getDescription(), levelUpSpell.getIconId(),
+                            spellEffectManager.resolveDurationSeconds(levelUpSpell, player), false, effects);
+                }
+            }
         });
     }
 
@@ -3997,7 +4009,7 @@ public class MainGameScreen implements Screen {
      */
     @Override
     public void dispose() {
-        LegacyNpcRuntimeHook.setSummonCallback(null);
+        NpcSummonBridge.setSummonCallback(null);
         savePlayerState();
         gameProfiler.stop();
         SoundManager.stopAmbient();

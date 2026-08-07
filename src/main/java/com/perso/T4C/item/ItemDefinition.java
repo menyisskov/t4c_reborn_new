@@ -38,7 +38,7 @@ public class ItemDefinition {
     private final boolean isBow;
     private final boolean unlimitedUse;
 
-    // --- v4 fields (T4C original data) ---
+    // --- v4-v6 fields (T4C original data) ---
     private final int numId;
     private final int structure;
     private final int appearanceId;
@@ -59,6 +59,10 @@ public class ItemDefinition {
     private final List<ItemBoost> boosts;
     /** GoN container tables; one item is drawn from one randomly selected group. */
     private final List<ContainerLootGroup> containerLootGroups;
+
+    // --- v7 fields ---
+    /** True for items that must never leave the player's inventory (e.g. quest tokens). */
+    private final boolean undroppable;
 
     /** Full constructor (v4). */
     public ItemDefinition(
@@ -84,7 +88,8 @@ public class ItemDefinition {
                 dodgeLost, minEnd, reqAttack, reqStr, reqAgi, minInt, minWis, attackSpeed,
                 unique, isBow, unlimitedUse, numId, structure, appearanceId, dmgFormula,
                 atkDelay, radiance, nbCharges, canSummon, lockName, lockDiff, signText,
-                containerGold, globalRespawn, localRespawn, spells, Collections.emptyList());
+                containerGold, globalRespawn, localRespawn, spells, Collections.<ItemBoost>emptyList(),
+                Collections.<ContainerLootGroup>emptyList(), false);
     }
 
     public ItemDefinition(
@@ -107,10 +112,10 @@ public class ItemDefinition {
                 dodgeLost, minEnd, reqAttack, reqStr, reqAgi, minInt, minWis, attackSpeed,
                 unique, isBow, unlimitedUse, numId, structure, appearanceId, dmgFormula, atkDelay,
                 radiance, nbCharges, canSummon, lockName, lockDiff, signText, containerGold,
-                globalRespawn, localRespawn, spells, boosts, Collections.emptyList());
+                globalRespawn, localRespawn, spells, boosts, Collections.emptyList(), false);
     }
 
-    /** Full constructor including the GoN container loot tables. */
+    /** Full constructor including the GoN container loot tables (v6). */
     public ItemDefinition(
             String key, String name,
             BodyPart bodyPart, String appearanceEquippedPrimary,
@@ -126,6 +131,31 @@ public class ItemDefinition {
             boolean canSummon, String lockName, int lockDiff, String signText,
             int containerGold, int globalRespawn, int localRespawn,
             List<ItemSpell> spells, List<ItemBoost> boosts, List<ContainerLootGroup> containerLootGroups) {
+        this(key, name, bodyPart, appearanceEquippedPrimary, secondaryBodyPart,
+                appearanceEquippedSecondary, appearanceInventory, price, weight, armorClass,
+                dodgeLost, minEnd, reqAttack, reqStr, reqAgi, minInt, minWis, attackSpeed,
+                unique, isBow, unlimitedUse, numId, structure, appearanceId, dmgFormula, atkDelay,
+                radiance, nbCharges, canSummon, lockName, lockDiff, signText, containerGold,
+                globalRespawn, localRespawn, spells, boosts, containerLootGroups, false);
+    }
+
+    /** Full constructor (v7): adds {@code undroppable}. */
+    public ItemDefinition(
+            String key, String name,
+            BodyPart bodyPart, String appearanceEquippedPrimary,
+            BodyPart secondaryBodyPart, String appearanceEquippedSecondary,
+            String appearanceInventory,
+            long price, long weight, double armorClass,
+            long dodgeLost, long minEnd,
+            long reqAttack, long reqStr, long reqAgi,
+            long minInt, long minWis, double attackSpeed,
+            boolean unique, boolean isBow, boolean unlimitedUse,
+            int numId, int structure, int appearanceId,
+            String dmgFormula, String atkDelay, int radiance, int nbCharges,
+            boolean canSummon, String lockName, int lockDiff, String signText,
+            int containerGold, int globalRespawn, int localRespawn,
+            List<ItemSpell> spells, List<ItemBoost> boosts, List<ContainerLootGroup> containerLootGroups,
+            boolean undroppable) {
         this.key = normalizeKey(key);
         this.name = name;
         this.bodyPart = bodyPart;
@@ -164,6 +194,7 @@ public class ItemDefinition {
         this.spells = spells != null ? spells : Collections.emptyList();
         this.boosts = boosts != null ? List.copyOf(boosts) : Collections.emptyList();
         this.containerLootGroups = containerLootGroups != null ? List.copyOf(containerLootGroups) : Collections.emptyList();
+        this.undroppable = undroppable;
     }
 
     /** Canonical item identity: namespace + lowercase alphanumeric name. */

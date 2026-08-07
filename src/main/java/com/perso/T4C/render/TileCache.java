@@ -1,6 +1,5 @@
 package com.perso.T4C.render;
 
-import com.perso.T4C.helper.ResolvedSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Map;
@@ -10,14 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Global caches reused across chunk builds. Cleared on resource reload only.
  */
 public class TileCache {
-    public static final Map<Long, ResolvedSprite> resolvedSpriteCache = new ConcurrentHashMap<>();
     public static final Map<String, TextureRegion> regionCache = new ConcurrentHashMap<>();
-
-    public static long keyFor(int id, int x, int y) {
-        long k = ((long) id & 0xffffffffL) << 32;
-        k |= ((long) (x & 0xffff) << 16) | (long) (y & 0xffff);
-        return k;
-    }
 
     /**
      * Invalidate only cached TMPL composite regions (generated textures), keeping base regions intact.
@@ -51,7 +43,6 @@ public class TileCache {
     }
 
     public static void clearAll() {
-        resolvedSpriteCache.clear();
         try {
             for (TextureRegion tr : regionCache.values()) {
                 if (tr != null && tr.getTexture() != null) {

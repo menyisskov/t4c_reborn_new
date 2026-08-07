@@ -46,11 +46,6 @@ public final class SkillRegistry {
         return id == null ? null : cache.get(id);
     }
 
-    /** Drop the in-memory cache so the next {@link #load()} re-reads from disk. */
-    public static synchronized void invalidate() {
-        cache = null;
-    }
-
     private static void rebuild(List<SkillDefinition> defs) {
         Map<String, SkillDefinition> map = new LinkedHashMap<>();
         for (SkillDefinition def : defs) {

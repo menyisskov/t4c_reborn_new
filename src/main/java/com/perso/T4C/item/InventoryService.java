@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.random.RandomGenerator;
 
 /**
  * Authoritative inventory and equipment rules. The existing string inventory
@@ -194,40 +193,6 @@ public final class InventoryService {
         return Result.failure(Failure.ITEM_NOT_OWNED, itemKey);
     }
 
-    /** Server-style steal contest; the transfer still obeys unique and weight rules. */
-    public static Result steal(Player thief, Player victim, String itemKey, RandomGenerator random) {
-        if (thief == null || victim == null || random == null || !victim.getInventory().contains(itemKey)) {
-            return Result.failure(Failure.ITEM_NOT_OWNED, itemKey);
-        }
-        int skill = thief.getSkillLevel("rob");
-        int attackRoll = random.nextInt(Math.max(1, skill + thief.getDexterity())) + 1;
-        int defenseRoll = random.nextInt(Math.max(1, victim.getDexterity() * 2)) + 1;
-        if (attackRoll <= defenseRoll) return Result.failure(Failure.REQUIREMENTS_NOT_MET, itemKey);
-        Result capacity = canReceive(thief, itemKey);
-        if (!capacity.success()) return capacity;
-        ItemDefinition definition = ItemRegistry.findByKey(itemKey);
-        int transferredCharges = 0;
-        int victimChargesBefore = 0;
-        int thiefChargesBefore = 0;
-        if (definition != null && definition.getNbCharges() > 0 && !definition.isUnlimitedUse()) {
-            victimChargesBefore = victim.getItemCharges().getOrDefault(itemKey,
-                    definition.getNbCharges() * count(victim, itemKey));
-            thiefChargesBefore = thief.getItemCharges().getOrDefault(itemKey,
-                    definition.getNbCharges() * count(thief, itemKey));
-            transferredCharges = victimChargesBefore % definition.getNbCharges();
-            if (transferredCharges == 0) transferredCharges = definition.getNbCharges();
-        }
-        remove(victim, victim.getInventory().indexOf(itemKey), itemKey);
-        Result added = add(thief, itemKey);
-        if (transferredCharges > 0) {
-            int remainingVictimCharges = Math.max(0, victimChargesBefore - transferredCharges);
-            if (remainingVictimCharges > 0) victim.getItemCharges().put(itemKey, remainingVictimCharges);
-            else victim.getItemCharges().remove(itemKey);
-            thief.getItemCharges().put(itemKey, thiefChargesBefore + transferredCharges);
-        }
-        return added;
-    }
-
     public static double equippedArmor(Player player) {
         if (player == null) return 0d;
         double armor = 0d;
@@ -250,11 +215,6 @@ public final class InventoryService {
             penalty += Math.max(0L, definition.getDodgeLost());
         }
         return (int) Math.min(Integer.MAX_VALUE, penalty);
-    }
-
-    public static boolean hasWeapon(Player player) {
-        return player != null && (player.getEquippedItems().containsKey(BodyPart.WEAPON)
-                || player.getEquippedItems().containsKey(BodyPart.WEAPON2));
     }
 
     /**
@@ -280,16 +240,6 @@ public final class InventoryService {
         int remaining = Math.max(0, player.getItemCharges().getOrDefault(itemKey, 0) - extractedCharges);
         if (remaining > 0) player.getItemCharges().put(itemKey, remaining);
         else player.getItemCharges().remove(itemKey);
-    }
-
-    private static Result canReceive(Player player, String itemKey) {
-        ItemDefinition definition = ItemRegistry.findByKey(itemKey);
-        if (definition == null) return Result.failure(Failure.UNKNOWN_ITEM, itemKey);
-        if (definition.isUnique() && count(player, itemKey) > 0) return Result.failure(Failure.UNIQUE_ITEM, itemKey);
-        if (currentWeight(player) + Math.max(0L, definition.getWeight()) > maximumWeight(player)) {
-            return Result.failure(Failure.TOO_HEAVY, itemKey);
-        }
-        return Result.success(itemKey);
     }
 
     private static boolean meetsRequirements(Player player, ItemDefinition definition) {

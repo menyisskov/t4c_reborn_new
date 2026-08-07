@@ -3,7 +3,6 @@ package com.perso.T4C.render;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Collection;
-import java.util.function.IntSupplier;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;

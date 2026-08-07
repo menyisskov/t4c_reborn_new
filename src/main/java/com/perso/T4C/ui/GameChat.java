@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiDraw;
-import com.perso.T4C.gui.core.GuiElement;
 import com.perso.T4C.gui.core.GuiResizable;
 import com.perso.T4C.gui.core.GuiBoxedInteraction;
 import com.perso.T4C.gui.core.GuiBoxedItem;

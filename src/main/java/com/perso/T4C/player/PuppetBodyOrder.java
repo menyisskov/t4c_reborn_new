@@ -14,10 +14,6 @@ public final class PuppetBodyOrder {
     private static final BodyPart[] INDEX_TO_BODY_PART = {
             BodyPart.LEFT_HAND, BodyPart.LEFT_ARM, BodyPart.FEET, BodyPart.LEGS, BodyPart.BODY,
             BodyPart.HEAD, BodyPart.RIGHT_HAND, BodyPart.RIGHT_ARM, BodyPart.WEAPON, BodyPart.SHIELD,
-            // PUP_CAPE_2 is a distinct GoN layer used by mage robes.  It is not
-            // a second rendering pass of PUP_CAPE: mapping both slots to CAPE
-            // draws an ordinary cape twice and makes it appear in front of the
-            // body for directions where the secondary layer is foreground.
             BodyPart.BOOT, BodyPart.HAT, BodyPart.CAPE, BodyPart.BACK, null, BodyPart.HAIR,
             BodyPart.ROBELEGS, BodyPart.MASK, BodyPart.WEAPON2
     };
@@ -96,8 +92,6 @@ public final class PuppetBodyOrder {
         }
         return result;
     }
-
-    public static int angleToDirection(String angle) { return angleToDirection(angle, false); }
 
     public static int angleToDirection(String angle, boolean flipX) {
         String effective = mirroredAngle(angle, flipX);

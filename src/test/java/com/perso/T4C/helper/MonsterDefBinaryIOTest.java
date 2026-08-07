@@ -27,7 +27,7 @@ class MonsterDefBinaryIOTest {
                 3, 5, 1, 4, 100,
                 0, 0, 0, 0, 0, 0, 0, 0,
                 40, 1, 3, true, List.of(new MonsterDef.Attack("1d4+1", 1, 50, 0, 0, 0)),
-                true, 5
+                true, 5, List.of("Rat")
         );
         File file = dir.resolve("monsters.bin").toFile();
 
@@ -50,6 +50,7 @@ class MonsterDefBinaryIOTest {
         assertEquals(source.getAttacks().get(0).getName(), read.getAttacks().get(0).getName());
         assertEquals(source.isTameable(), read.isTameable());
         assertEquals(source.getTameMaxLevel(), read.getTameMaxLevel());
+        assertEquals(source.getSpawnAliases(), read.getSpawnAliases());
     }
 
     @Test

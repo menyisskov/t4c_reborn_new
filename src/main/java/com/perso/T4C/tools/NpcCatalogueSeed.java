@@ -5,7 +5,6 @@ import com.perso.T4C.helper.NpcDefBinaryIO;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.NpcDef;
-import com.perso.T4C.player.BodyPart;
 
 import java.io.File;
 import java.util.List;

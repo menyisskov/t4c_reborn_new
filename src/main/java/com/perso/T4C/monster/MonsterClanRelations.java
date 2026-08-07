@@ -26,6 +26,11 @@ public final class MonsterClanRelations {
     private MonsterClanRelations() {
     }
 
+    /**
+     * Sole source of truth for a monster's {@link MonsterClan}. {@link MonsterDef#getClan()} carries
+     * the original T4C numeric clan ID from monsters.bin, but no mapping from that ID to
+     * {@link MonsterClan} is known, so it is not read here to avoid guessing.
+     */
     public static MonsterClan resolveClan(String className, String monsterName) {
         String key = ((className == null ? "" : className) + " " + (monsterName == null ? "" : monsterName))
                 .toLowerCase(Locale.ROOT);

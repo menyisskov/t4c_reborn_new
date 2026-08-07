@@ -25,8 +25,8 @@ import java.util.function.Supplier;
  */
 
 public class SpellRenderer {
-    /** Generated visual shared by the Elevation test spell and level-up feedback. */
-    public static final String LEVEL_UP_EFFECT = "LevelUpClaude-";
+    /** Generated visual shared by the LevelUp spell and level-up feedback. */
+    public static final String LEVEL_UP_EFFECT = "LevelUp-";
 
     private final SpriteLoader spriteLoader;
     private final Map<String, List<ImpactFrame>> impactFramesCache = new HashMap<>();

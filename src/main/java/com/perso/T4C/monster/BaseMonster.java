@@ -7,7 +7,6 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.entity.Nameable;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.CollisionManager;
-import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.player.Player;
@@ -1012,8 +1011,8 @@ public abstract class BaseMonster implements Nameable {
         combatIntelligence = Math.max(1, definition.getIntel());
         combatAttack = Math.max(1, definition.getAgi() + definition.getLevel());
         combatDodge = Math.max(1, definition.getDodge());
-        combatArmorMin = normalizeLegacyArmor(definition.getAcMin());
-        combatArmorMax = Math.max(combatArmorMin, normalizeLegacyArmor(definition.getAcMax()));
+        combatArmorMin = decodeArmorValue(definition.getAcMin());
+        combatArmorMax = Math.max(combatArmorMin, decodeArmorValue(definition.getAcMax()));
         combatResists = definition.getResists() == null ? new int[12] : definition.getResists().clone();
     }
 
@@ -1094,7 +1093,7 @@ public abstract class BaseMonster implements Nameable {
         temporaryDodgeModifierUntilMs = System.currentTimeMillis() + durationMillis;
     }
 
-    private static int normalizeLegacyArmor(int armor) {
+    private static int decodeArmorValue(int armor) {
         if (armor >= 0 && armor < 100_000) return armor;
         float decoded = Float.intBitsToFloat(armor);
         return Float.isFinite(decoded) ? Math.max(0, Math.round(decoded)) : 0;

@@ -11,8 +11,6 @@ public final class Paths {
     public static final String SHADERS_SPELL_MASK_VERT = "assets/shaders/spellmask.vert";
     public static final String SHADERS_SPELL_MASK_FRAG = "assets/shaders/spellmask.frag";
     public static final String WDA = "assets/wda/Worlds.WDA";
-    public static final String WDA_DECRYPTED = "assets/wda/Worlds_decrypted.WDA";
-    public static final String WDA_KEY = "assets/wda/decrypt.key";
     public static final String MAP = "assets/maps/worldmap/worldmap.mapbin";
     public static final String COLLISION_MAP = "assets/maps/worldmap/worldmap.colbin";
     public static final String MAPS_DIR = "assets/maps";
@@ -49,7 +47,6 @@ public final class Paths {
     public static final String DDA_DIR = "assets/dda";
     public static final String SPRITE_PNG_DIR = "assets/sprites/png";
     public static final String SOUNDS_DIR = "assets/sounds";
-    public static final String GAME_FILES_DIR = "assets/gamefiles";
     public static final String FONT = "assets/font/t4cbeaulieux.ttf";
     public static final String FONT_JETBRAINS_MONO = "assets/font/JetBrainsMono-Regular.ttf";
     public static final String FONT_PRESS_START_2P = "assets/font/PressStart2P-Regular.ttf";
@@ -57,6 +54,5 @@ public final class Paths {
     public static final String EDITOR_CAMERA_POSITION_FILE = "editor_camera_position.json";
     public static final String PLAYER_STATE_FILE = "player_state.json";
     public static final String GAME_PREFERENCES_FILE = "game_preferences.json";
-    public static final String COLLISION_JSON_INPUT = "colision.json";
     public static final String SPAWN_GROUPS_BIN = "assets/spawns/spawn_groups.bin";
 }

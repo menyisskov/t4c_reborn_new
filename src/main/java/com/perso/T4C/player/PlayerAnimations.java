@@ -102,16 +102,6 @@ public class PlayerAnimations extends EntityAnimationsBase {
         this.bowEquipped = bowEquipped;
     }
 
-    /** Prefix used when building attack frame names: "B" for bow, "A" for melee. */
-    private String attackPrefix() {
-        return bowAttack ? "B" : "A";
-    }
-
-    /** Returns the active attack frames for a base/angle, accounting for bow vs melee. */
-    private List<TextureRegion> getActiveAttackFrames(String base, String angle) {
-        return bowAttack ? getBowAttackFrames(base, angle) : getAttackFrames(base, angle);
-    }
-
     /**
      * Update timers for regular and attack animations.
      *

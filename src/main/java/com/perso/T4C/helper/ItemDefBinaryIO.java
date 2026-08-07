@@ -25,11 +25,14 @@ import java.util.List;
  *   <li>v4 — added T4C fields: numId, structure, appearanceId, dmgFormula, atkDelay,
  *             radiance, nbCharges, canSummon, lockName, lockDiff, signText,
  *             containerGold, globalRespawn, localRespawn, spells[]</li>
+ *   <li>v5 — added boosts[]</li>
+ *   <li>v6 — added containerLootGroups[]</li>
+ *   <li>v7 — added undroppable</li>
  * </ul>
  */
 public final class ItemDefBinaryIO {
     private static final byte[] MAGIC = "T4CITEM".getBytes(StandardCharsets.US_ASCII);
-    private static final short VERSION = 6;
+    private static final short VERSION = 7;
     private static final int MAX_STRING_BYTES = 16384;
 
     private ItemDefBinaryIO() {
@@ -132,6 +135,11 @@ public final class ItemDefBinaryIO {
             }
         }
 
+        boolean undroppable = false;
+        if (version >= 7) {
+            undroppable = in.readBoolean();
+        }
+
         return new ItemDefinition(
                 key, name,
                 bodyPart, emptyToNull(appearanceEquippedPrimary),
@@ -145,7 +153,7 @@ public final class ItemDefBinaryIO {
                 radiance, nbCharges, canSummon,
                 lockName, lockDiff, signText,
                 containerGold, globalRespawn, localRespawn,
-                spells, boosts, containerLootGroups);
+                spells, boosts, containerLootGroups, undroppable);
     }
 
     private static void writeDef(DataOutputStream out, ItemDefinition def) throws IOException {
@@ -213,6 +221,7 @@ public final class ItemDefBinaryIO {
             BinaryIOUtils.writeIntLE(out, items == null ? 0 : items.size());
             if (items != null) for (String item : items) writeString(out, item);
         }
+        out.writeBoolean(def != null && def.isUndroppable());
     }
 
 

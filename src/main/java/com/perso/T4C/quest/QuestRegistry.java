@@ -45,11 +45,6 @@ public final class QuestRegistry {
         return id == null ? null : byId.get(normalize(id));
     }
 
-    public static synchronized void invalidate() {
-        cache = null;
-        byId = null;
-    }
-
     private static void rebuild(List<QuestDef> definitions) {
         cache = List.copyOf(definitions == null ? List.of() : definitions);
         Map<String, QuestDef> indexed = new LinkedHashMap<>();

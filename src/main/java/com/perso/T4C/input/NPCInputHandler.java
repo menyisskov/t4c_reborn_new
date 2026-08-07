@@ -26,10 +26,6 @@ public class NPCInputHandler extends InputAdapter {
     private final SystemMessage systemMessage;
     private final Vector3 worldCoordsTemp = new Vector3();
 
-    public NPCInputHandler(NPCManager npcManager, OrthographicCamera camera, Player player) {
-        this(npcManager, camera, player, null, null);
-    }
-
     public NPCInputHandler(NPCManager npcManager, OrthographicCamera camera, Player player,
                            Function<BaseNPC, Boolean> offensiveSpellCastHandler, SystemMessage systemMessage) {
         this.npcManager = npcManager;

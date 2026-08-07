@@ -29,10 +29,6 @@ public final class GmCommandProcessor {
     private final MonsterManager monsterManager;
     private final Consumer<Player> saveHandler;
 
-    public GmCommandProcessor(XpCurve xpCurve) {
-        this(xpCurve, null, null);
-    }
-
     public GmCommandProcessor(XpCurve xpCurve, NPCManager npcManager, MonsterManager monsterManager) {
         this(xpCurve, npcManager, monsterManager, PlayerStateStore::save);
     }

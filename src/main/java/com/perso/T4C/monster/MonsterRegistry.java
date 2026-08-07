@@ -17,21 +17,10 @@ import java.util.Locale;
  * name are O(1).
  */
 public final class MonsterRegistry {
-    private static final Map<String, String> SPAWN_ALIASES = Map.ofEntries(
-            Map.entry("Crawling Mummy", "Mummy"),
-            Map.entry("Dark Synk", "Wraith Bat"),
-            Map.entry("Dark Tarantula", "Tarantula"),
-            Map.entry("GoblinBoss", "Goblin Chieftain"),
-            Map.entry("Horse", "Wild Horse"),
-            Map.entry("Kraanian", "Kraanian Worker"),
-            Map.entry("KraanianFlying", "Kraanian Flyer"),
-            Map.entry("Olin Haad", "OLINHAAD3"),
-            Map.entry("Rat", "Brown Rat"),
-            Map.entry("Xarrax", "Goblin Warlord")
-    );
     private static List<MonsterDef> cache;
     private static Map<String, MonsterDef> byName;
     private static Map<String, MonsterDef> byNormalizedName;
+    private static Map<String, MonsterDef> byAlias;
 
     private MonsterRegistry() {
     }
@@ -68,8 +57,7 @@ public final class MonsterRegistry {
         if (exact != null) return exact;
         MonsterDef normalized = byNormalizedName.get(normalize(name));
         if (normalized != null) return normalized;
-        String canonical = SPAWN_ALIASES.get(name);
-        return canonical == null ? null : byName.get(canonical);
+        return byAlias.get(name);
     }
 
     /** Drop the in-memory cache so the next {@link #load()} re-reads from disk. */
@@ -83,6 +71,7 @@ public final class MonsterRegistry {
         cache = List.copyOf(defs);
         Map<String, MonsterDef> map = new LinkedHashMap<>();
         Map<String, MonsterDef> normalized = new LinkedHashMap<>();
+        Map<String, MonsterDef> aliases = new LinkedHashMap<>();
         for (MonsterDef def : cache) {
             if (def != null && def.getName() != null) {
                 map.put(def.getName(), def);
@@ -95,10 +84,16 @@ public final class MonsterRegistry {
                 } else if (def.getDisplayName() != null) {
                     normalized.putIfAbsent(normalize(def.getDisplayName()), def);
                 }
+                if (def.getSpawnAliases() != null) {
+                    for (String alias : def.getSpawnAliases()) {
+                        if (alias != null && !alias.isBlank()) aliases.putIfAbsent(alias, def);
+                    }
+                }
             }
         }
         byName = map;
         byNormalizedName = normalized;
+        byAlias = aliases;
     }
 
     private static String normalize(String value) {

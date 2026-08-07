@@ -1,7 +1,7 @@
 package com.perso.T4C.npc;
 
 /** Bridges migrated server-side NPC effects to the active game screen. */
-public final class LegacyNpcRuntimeHook {
+public final class NpcSummonBridge {
     @FunctionalInterface
     public interface SummonCallback {
         boolean summon(String monster, float worldX, float worldY, int worldZ);
@@ -9,7 +9,7 @@ public final class LegacyNpcRuntimeHook {
 
     private static SummonCallback summonCallback;
 
-    private LegacyNpcRuntimeHook() {}
+    private NpcSummonBridge() {}
 
     public static void setSummonCallback(SummonCallback callback) {
         summonCallback = callback;

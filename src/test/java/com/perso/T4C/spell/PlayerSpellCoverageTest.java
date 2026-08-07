@@ -56,31 +56,63 @@ class PlayerSpellCoverageTest {
     }
 
     /**
-     * The Elevation spell carries the generated level-up animation. It must stay self-targeted and
+     * The LevelUp spell carries the generated level-up animation. It must stay self-targeted and
      * reach the learnable catalogue, otherwise it can never appear in a player's spell book.
      */
     @Test
-    void levelUpClaudeSpellCarriesTheAnimationAndIsLearnable() {
-        SpellData spell = SpellRegistry.findByName("spell.level_up_claude");
+    void levelUpSpellCarriesTheAnimationAndIsLearnable() {
+        SpellData spell = SpellRegistry.findByName("spell.level_up");
 
         assertNotNull(spell);
         assertEquals(SpellRenderer.LEVEL_UP_EFFECT, spell.getImpactSpell());
-        assertEquals(0, Integer.parseInt(spell.getManaCost()), "Elevation is free to cast");
-        assertEquals(5, spell.getTargetType(), "Elevation is cast on the caster itself");
+        assertEquals(0, Integer.parseInt(spell.getManaCost()), "LevelUp is free to cast");
+        assertEquals(5, spell.getTargetType(), "LevelUp is cast on the caster itself");
         assertFalse(spell.isAttack());
         assertTrue(SpellRegistry.playerCastableSpells().stream()
-                        .anyMatch(candidate -> "spell.level_up_claude".equals(candidate.getKey())),
-                "Elevation must be part of the learnable catalogue");
+                        .anyMatch(candidate -> "spell.level_up".equals(candidate.getKey())),
+                "LevelUp must be part of the learnable catalogue");
     }
 
     @Test
-    void levelUpClaudeSpellIsRestoredForManualTestingWithoutDuplicates() {
+    void levelUpSpellBoostsEveryCoreAttributeByTenPercent() {
+        SpellData spell = SpellRegistry.findByName("spell.level_up");
+        assertNotNull(spell);
+
+        Set<String> boostedAttributes = new TreeSet<>();
+        for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
+            if (effect == null || effect.getEffectType() != 2) continue;
+            String attribute = null;
+            String amount = null;
+            for (SpellData.T4cEffect.EffectParam param : effect.getParameters()) {
+                if (param == null) continue;
+                if (param.getParamId() == 2) attribute = param.getExpression();
+                if (param.getParamId() == 3) amount = param.getExpression();
+            }
+            assertNotNull(attribute);
+            assertNotNull(amount);
+            assertTrue(amount.endsWith("/10"), "Expected a 10% formula for " + attribute + ", got " + amount);
+            boostedAttributes.add(attribute);
+        }
+        assertEquals(Set.of("strength", "agility", "endurance", "intelligence", "wisdom"), boostedAttributes);
+    }
+
+    @Test
+    void levelUpSpellDescriptionAnnouncesTheLevelGain() {
+        SpellData spell = SpellRegistry.findByName("spell.level_up");
+        assertNotNull(spell);
+        String description = com.perso.T4C.i18n.I18n.resolve(spell.getDescription());
+        assertTrue(description.startsWith("Gain de Niveau:"),
+                "LevelUp's description must start with \"Gain de Niveau:\", was: " + description);
+    }
+
+    @Test
+    void levelUpSpellIsRestoredForManualTestingWithoutDuplicates() {
         Player player = new Player();
         player.setSpells(new java.util.ArrayList<>());
 
         StarterLoadout.ensureLevelUpTestSpell(player);
         StarterLoadout.ensureLevelUpTestSpell(player);
 
-        assertEquals(List.of("spell.level_up_claude"), player.getSpells());
+        assertEquals(List.of("spell.level_up"), player.getSpells());
     }
 }

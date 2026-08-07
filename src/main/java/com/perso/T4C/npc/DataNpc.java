@@ -42,9 +42,9 @@ public class DataNpc extends BaseNPC {
      * the map loads, before the companion manager exists.
      */
     private final Supplier<CompanionManager> companionManagerSupplier;
-    private String legacyYesNoState;
-    private int legacyArmorClass;
-    private String legacyDamageFormula = "1d3";
+    private String pendingYesNoState;
+    private int armorClass;
+    private String damageFormula = "1d3";
 
     public DataNpc(NpcDef def) throws GameException {
         this(def, null, null);
@@ -66,10 +66,10 @@ public class DataNpc extends BaseNPC {
         this.strength = Math.max(1, combatInt("@combat.str", 10));
         this.endurance = Math.max(1, combatInt("@combat.end", 10));
         this.dexterity = Math.max(1, combatInt("@combat.dex", 10));
-        this.legacyArmorClass = Math.max(0, combatInt("@combat.ac", 0));
+        this.armorClass = Math.max(0, combatInt("@combat.ac", 0));
         setSkillLevel("attack", Math.max(1, combatInt("@combat.attackSkill", level)));
         setSkillLevel("dodge", Math.max(1, combatInt("@combat.dodge", level)));
-        this.legacyDamageFormula = def.getSourceEvents().getOrDefault("@combat.damage", "1d3");
+        this.damageFormula = def.getSourceEvents().getOrDefault("@combat.damage", "1d3");
         if (def.getDisplayName() != null && !def.getDisplayName().isEmpty()) {
             String translatedName = I18n.resolve(def.getName());
             setDisplayName(translatedName.equals(def.getName())
@@ -87,9 +87,9 @@ public class DataNpc extends BaseNPC {
             }
         }
         if (def.getSourceScript() != null) {
-            LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.begin(
+            NpcScriptEngine.Result result = NpcScriptEngine.begin(
                     def.getSourceScript(), def.getName(), player);
-            if (applyLegacyResult(result, player)) return;
+            if (applyScriptResult(result, player)) return;
         }
         if (def.getWelcomeText() != null && !def.getWelcomeText().isBlank()) {
             showDialog(I18n.resolve(def.getWelcomeText()), 0L);
@@ -104,7 +104,7 @@ public class DataNpc extends BaseNPC {
         }
         // Topics stored in npcs.bin only cover Command sections; the script itself also answers to
         // CmdAND words, which would otherwise stay invisible to the player.
-        for (String keyword : LegacyNpcScriptEngine.keywords(def.getSourceScript()).keySet()) {
+        for (String keyword : NpcScriptEngine.keywords(def.getSourceScript()).keySet()) {
             addKeyword(keywords, keyword);
         }
         return keywords;
@@ -122,7 +122,7 @@ public class DataNpc extends BaseNPC {
     static String sentenceForKeyword(String script, String keyword) {
         String spoken = normalizeCommand(keyword);
         if (spoken.isEmpty()) return keyword;
-        for (Map.Entry<String, String> entry : LegacyNpcScriptEngine.keywords(script).entrySet()) {
+        for (Map.Entry<String, String> entry : NpcScriptEngine.keywords(script).entrySet()) {
             String word = normalizeCommand(I18n.resolve(entry.getKey()));
             if (word.isEmpty() || word.equals(normalizeCommand(entry.getValue()))) continue;
             // Only rewrite when the sentence is not already complete, so typing the full
@@ -151,22 +151,22 @@ public class DataNpc extends BaseNPC {
 
     @Override
     public boolean talk(String text, Player player) {
-        if (isInteracting && legacyYesNoState != null) {
+        if (isInteracting && pendingYesNoState != null) {
             String normalized = normalizeCommand(text);
             boolean yes = normalized.equals("yes") || normalized.equals("oui");
             boolean no = normalized.equals("no") || normalized.equals("non");
             if (yes || no) {
-                String state = legacyYesNoState;
-                legacyYesNoState = null;
-                LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respondYesNo(
+                String state = pendingYesNoState;
+                pendingYesNoState = null;
+                NpcScriptEngine.Result result = NpcScriptEngine.respondYesNo(
                         def.getSourceScript(), def.getName(), state, yes, player);
-                if (applyLegacyResult(result, player)) return true;
+                if (applyScriptResult(result, player)) return true;
             }
         }
         if (isInteracting && def.getSourceScript() != null) {
-            LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.respond(
+            NpcScriptEngine.Result result = NpcScriptEngine.respond(
                     def.getSourceScript(), def.getName(), sentenceForKeyword(text), player);
-            if (applyLegacyResult(result, player)) return true;
+            if (applyScriptResult(result, player)) return true;
         }
         if (isInteracting && respondToTopic(text, player)) return true;
         return super.talk(text, player);
@@ -177,14 +177,14 @@ public class DataNpc extends BaseNPC {
         catch (NumberFormatException ignored) { return fallback; }
     }
 
-    public int getLegacyArmorClass() { return legacyArmorClass; }
+    public int getArmorClass() { return armorClass; }
 
     @Override
     protected int rollHostileDamage() {
-        return Math.max(0, com.perso.T4C.helper.DiceFormula.of(legacyDamageFormula).roll());
+        return Math.max(0, com.perso.T4C.helper.DiceFormula.of(damageFormula).roll());
     }
 
-    private boolean applyLegacyResult(LegacyNpcScriptEngine.Result result, Player player) {
+    private boolean applyScriptResult(NpcScriptEngine.Result result, Player player) {
         if (result == null || !result.handled()) return false;
         if (result.text() != null && !result.text().isBlank()) showDialog(result.text(), 0L);
         for (String message : result.systemMessages()) {
@@ -214,44 +214,44 @@ public class DataNpc extends BaseNPC {
                 result.formulaOffers().stream().map(offer -> new LearnScreen.FormulaOffer(
                         offer.formulaId(), offer.goldCost())).toList()));
         for (String spellId : result.targetSpells()) {
-            SpellData spell = legacySpell(spellId);
+            SpellData spell = resolveSpell(spellId);
             if (spell != null) NpcCastVfxHook.playOnPlayer(spell, player, position);
             if (spellId.contains("serious_heal") || spellId.contains("healing")) healFully(player);
         }
         for (String spellId : result.selfSpells()) {
-            SpellData spell = legacySpell(spellId);
+            SpellData spell = resolveSpell(spellId);
             if (spell != null) NpcCastVfxHook.playOnSelf(spell, position);
         }
-        for (LegacyNpcScriptEngine.SummonRequest summon : result.summons()) {
+        for (NpcScriptEngine.SummonRequest summon : result.summons()) {
             int z = summon.zExpression() == null ? player.getCoordinates().getZ()
-                    : legacyCoordinate(summon.zExpression(), player, false, true);
-            float x = legacyCoordinate(summon.xExpression(), player, true, false) * GRID_W;
-            float y = legacyCoordinate(summon.yExpression(), player, false, false) * GRID_H;
-            if (!LegacyNpcRuntimeHook.summon(summon.monster(), x, y, z)) {
+                    : scriptCoordinate(summon.zExpression(), player, false, true);
+            float x = scriptCoordinate(summon.xExpression(), player, true, false) * GRID_W;
+            float y = scriptCoordinate(summon.yExpression(), player, false, false) * GRID_H;
+            if (!NpcSummonBridge.summon(summon.monster(), x, y, z)) {
                 log.warn("NPC '{}' could not summon '{}' at ({}, {}, {})", def.getName(), summon.monster(), x, y, z);
             }
         }
-        if (result.xp() != 0 && questService != null) questService.awardLegacyXp(player, result.xp());
+        if (result.xp() != 0 && questService != null) questService.awardScriptXp(player, result.xp());
         if (result.heal()) healFully(player);
         if (result.endConversation()) endInteraction();
-        if (result.pendingYesNo() != null) legacyYesNoState = result.pendingYesNo();
+        if (result.pendingYesNo() != null) pendingYesNoState = result.pendingYesNo();
         return true;
     }
 
     /** Executes one migrated C++ lifecycle handler against the local player. */
-    public boolean triggerLegacyEvent(String event, Player player) {
+    public boolean triggerScriptEvent(String event, Player player) {
         String script = def.getSourceEvents().get(event);
         if (script == null) return false;
-        LegacyNpcScriptEngine.Result result = LegacyNpcScriptEngine.event(
+        NpcScriptEngine.Result result = NpcScriptEngine.event(
                 script, def.getName(), player, getCurrentHp(), getMaxHp());
-        boolean handled = applyLegacyResult(result, player);
+        boolean handled = applyScriptResult(result, player);
         if (result.npcHpOverride() != Integer.MIN_VALUE)
             setCurrentHp(Math.max(0, Math.min(getMaxHp(), result.npcHpOverride())));
         if (result.selfDestruct()) setCurrentHp(0);
         return handled;
     }
 
-    private static boolean sellRuleMatches(LegacyNpcScriptEngine.SellRule rule,
+    private static boolean sellRuleMatches(NpcScriptEngine.SellRule rule,
             com.perso.T4C.item.ItemDefinition item) {
         if (item.getPrice() < rule.minimumPrice() || item.getPrice() > rule.maximumPrice()) return false;
         String categories = rule.categories();
@@ -266,7 +266,7 @@ public class DataNpc extends BaseNPC {
         return structural;
     }
 
-    private int legacyCoordinate(String expression, Player player, boolean xAxis, boolean world) {
+    private int scriptCoordinate(String expression, Player player, boolean xAxis, boolean world) {
         String value = expression == null ? "0" : expression.trim();
         if (value.equals("target->GetWL().X")) return Math.round(player.getCoordinates().getX() / GRID_W);
         if (value.equals("target->GetWL().Y")) return Math.round(player.getCoordinates().getY() / GRID_H);
@@ -274,17 +274,17 @@ public class DataNpc extends BaseNPC {
         java.util.regex.Matcher relative = java.util.regex.Pattern
                 .compile("FROM_(NPC|USER)\\s*\\((.+),\\s*[XY]\\s*\\)").matcher(value);
         if (relative.matches()) {
-            int offset = legacySmallExpression(relative.group(2));
+            int offset = scriptExpression(relative.group(2));
             boolean npc = relative.group(1).equals("NPC");
             float base = npc ? (xAxis ? position.x / GRID_W : position.y / GRID_H)
                     : (xAxis ? player.getCoordinates().getX() / GRID_W : player.getCoordinates().getY() / GRID_H);
             return Math.round(base) + offset;
         }
-        if (world) return legacySmallExpression(value);
-        return legacySmallExpression(value);
+        if (world) return scriptExpression(value);
+        return scriptExpression(value);
     }
 
-    private static int legacySmallExpression(String expression) {
+    private static int scriptExpression(String expression) {
         String value = expression == null ? "0" : expression.replaceAll("\\s+", "");
         java.util.regex.Matcher dice = java.util.regex.Pattern
                 .compile("rnd\\.roll\\(dice\\(1,(\\d+)\\)\\)([+-]\\d+)?").matcher(value);
@@ -296,7 +296,7 @@ public class DataNpc extends BaseNPC {
         try { return Integer.parseInt(value); } catch (NumberFormatException ignored) { return 0; }
     }
 
-    private static SpellData legacySpell(String id) {
+    private static SpellData resolveSpell(String id) {
         SpellData exact = SpellRegistry.findByName(id);
         if (exact != null || id == null) return exact;
         String alias;

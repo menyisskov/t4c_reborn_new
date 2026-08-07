@@ -10,7 +10,6 @@ import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.core.GuiScreenBase;
 import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.gui.widget.GuiBoxedText;
-import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiCheckbox;
 import com.perso.T4C.gui.widget.GuiSlider;
 import com.perso.T4C.gui.widget.GuiAnimatedSprite;

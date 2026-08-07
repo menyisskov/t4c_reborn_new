@@ -6,12 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.DataInputStream;
 import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.text.Normalizer;
 import java.util.concurrent.Executors;
@@ -17348,7 +17344,7 @@ public class MapEditorScreen implements Screen {
                     0, 0, 0, 0, 0, 0, 0, new int[12],
                     1, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0,
-                    50, 0, 0, true, new ArrayList<>(), false, 0);
+                    50, 0, 0, true, new ArrayList<>(), false, 0, new ArrayList<>());
             defs.add(d);
             defs.sort(Comparator.comparing(MonsterDef::getName, String.CASE_INSENSITIVE_ORDER));
             list.setItems(defs);
@@ -17392,7 +17388,8 @@ public class MapEditorScreen implements Screen {
                     src.getItemBody(), src.getItemFeet(), src.getItemHands(), src.getItemHead(),
                     src.getItemLegs(), src.getItemWeapon(), src.getItemShield(), src.getItemBack(),
                     src.getAggro(), src.getClan(), src.getSpeed(), src.isCanAttack(),
-                    new ArrayList<>(src.getAttacks()), src.isTameable(), src.getTameMaxLevel());
+                    new ArrayList<>(src.getAttacks()), src.isTameable(), src.getTameMaxLevel(),
+                    new ArrayList<>(src.getSpawnAliases()));
             defs.add(d);
             defs.sort(Comparator.comparing(MonsterDef::getName, String.CASE_INSENSITIVE_ORDER));
             list.setItems(defs);
@@ -17509,7 +17506,8 @@ public class MapEditorScreen implements Screen {
                     level, dodge, acMin, acMax, appearance,
                     itemBody, itemFeet, itemHands, itemHead, itemLegs, itemWeapon, itemShield, itemBack,
                     aggro, clan, speed, canAttack, attacks,
-                    src != null && src.isTameable(), src == null ? 0 : src.getTameMaxLevel());
+                    src != null && src.isTameable(), src == null ? 0 : src.getTameMaxLevel(),
+                    src != null ? src.getSpawnAliases() : List.of());
         }
 
         private void saveToDisk() {

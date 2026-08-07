@@ -20,11 +20,13 @@ import java.util.List;
  *   <li>v1 — original fields (health, mana, xp, damage, respawn, sounds, gold, loot, flags)</li>
  *   <li>v2 — adds T4C stats (str/end/agi/intel/will/wis/luck, resists, level, dodge, ac,
  *             appearance, equipment, aggro, clan, speed, canAttack, attacks[])</li>
+ *   <li>v3 — adds tameable, tameMaxLevel</li>
+ *   <li>v4 — adds spawnAliases[]</li>
  * </ul>
  */
 public final class MonsterDefBinaryIO {
     private static final byte[] MAGIC = "T4CMON".getBytes(StandardCharsets.US_ASCII);
-    private static final short VERSION = 3;
+    private static final short VERSION = 4;
     private static final int MAX_STRING_BYTES = 16384;
     private static final int RESISTS_COUNT = 12;
 
@@ -141,6 +143,17 @@ public final class MonsterDefBinaryIO {
             tameMaxLevel = BinaryIOUtils.readIntLE(in);
         }
 
+        List<String> spawnAliases = new ArrayList<>();
+        if (version >= 4) {
+            int aliasCount = BinaryIOUtils.readIntLE(in);
+            if (aliasCount < 0) {
+                throw new GameException("Invalid spawn alias count: " + aliasCount);
+            }
+            for (int i = 0; i < aliasCount; i++) {
+                spawnAliases.add(readString(in));
+            }
+        }
+
         return new MonsterDef(name, displayName, health, mana, xpPerHit, xpOnDeath,
                 hitDamageMin, hitDamageMax, respawnTime,
                 walkPattern, emptyToNull(attackPattern), emptyToNull(deathPattern),
@@ -149,7 +162,7 @@ public final class MonsterDefBinaryIO {
                 str, end, agi, intel, will, wis, luck, resists,
                 level, dodge, acMin, acMax, appearance,
                 itemBody, itemFeet, itemHands, itemHead, itemLegs, itemWeapon, itemShield, itemBack,
-                aggro, clan, speed, canAttack, attacks, tameable, tameMaxLevel);
+                aggro, clan, speed, canAttack, attacks, tameable, tameMaxLevel, spawnAliases);
     }
 
     private static void writeDef(DataOutputStream out, MonsterDef def) throws IOException {
@@ -229,6 +242,14 @@ public final class MonsterDefBinaryIO {
         }
         out.writeBoolean(def != null && def.isTameable());
         BinaryIOUtils.writeIntLE(out, def == null ? 0 : def.getTameMaxLevel());
+
+        List<String> spawnAliases = def == null ? null : def.getSpawnAliases();
+        BinaryIOUtils.writeIntLE(out, spawnAliases == null ? 0 : spawnAliases.size());
+        if (spawnAliases != null) {
+            for (String alias : spawnAliases) {
+                writeString(out, alias == null ? "" : alias);
+            }
+        }
     }
 
     private static String readString(DataInputStream in) throws IOException {

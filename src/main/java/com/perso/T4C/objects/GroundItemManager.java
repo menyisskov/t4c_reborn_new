@@ -119,10 +119,6 @@ public class GroundItemManager {
         return corpse;
     }
 
-    public void dropItem(String itemKey, float x, float y) {
-        if (itemKey != null) items.add(GroundItem.ofItem(itemKey, x, y));
-    }
-
     public void dropItem(String itemKey, int remainingCharges, float x, float y) {
         if (itemKey != null) items.add(GroundItem.ofItem(itemKey, x, y, remainingCharges));
     }
@@ -252,14 +248,6 @@ public class GroundItemManager {
         dropsByWorld.clear();
         corpseOwners.clear();
         claimedCorpseGold.clear();
-    }
-
-    public int size() {
-        return items.size();
-    }
-
-    public List<CorpseDrop> getCorpses() {
-        return List.copyOf(corpses);
     }
 
     private boolean hasRemainingContents(CorpseDrop corpse) {

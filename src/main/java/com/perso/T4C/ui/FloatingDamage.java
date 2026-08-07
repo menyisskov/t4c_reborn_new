@@ -118,7 +118,4 @@ public class FloatingDamage {
         };
     }
 
-    public void dispose() {
-        // fonts managed by FontManager
-    }
 }

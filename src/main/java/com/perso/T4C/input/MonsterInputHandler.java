@@ -39,14 +39,6 @@ public class MonsterInputHandler extends InputAdapter {
         this.onClickedElsewhere = onClickedElsewhere;
     }
 
-    public MonsterInputHandler(OrthographicCamera camera, MonsterManager monsterManager, Player player, Function<BaseMonster, Boolean> spellCastHandler) {
-        this(camera, monsterManager, player, spellCastHandler, null, null);
-    }
-
-    public MonsterInputHandler(OrthographicCamera camera, MonsterManager monsterManager, Player player, Function<BaseMonster, Boolean> spellCastHandler, SystemMessage systemMessage) {
-        this(camera, monsterManager, player, spellCastHandler, null, systemMessage);
-    }
-
     public MonsterInputHandler(OrthographicCamera camera, MonsterManager monsterManager, Player player, Function<BaseMonster, Boolean> spellCastHandler, Function<BaseMonster, Boolean> bowAttackHandler, SystemMessage systemMessage) {
         this.camera = camera;
         this.monsterManager = monsterManager;

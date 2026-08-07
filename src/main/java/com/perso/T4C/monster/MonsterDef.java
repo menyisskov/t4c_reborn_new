@@ -76,6 +76,8 @@ public class MonsterDef {
     private final List<Attack> attacks;
     private final boolean tameable;
     private final int tameMaxLevel;
+    /** Alternate names spawn files may use to refer to this monster. Never null. */
+    private final List<String> spawnAliases;
 
     /** True when this species may be tamed by a caster of the given level. */
     public boolean canBeTamedBy(int casterLevel) {

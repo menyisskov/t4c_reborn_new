@@ -1,5 +1,6 @@
 package com.perso.T4C.npc;
 
+import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.PlayerAppearanceDefaults;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.InventoryService;
@@ -20,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Executes the data-oriented subset of Vircom's original NPC macro DSL. */
-final class LegacyNpcScriptEngine {
+final class NpcScriptEngine {
     private static final Pattern COMMAND = Pattern.compile("(?m)^\\s*(Command\\d*|CmdAND\\d*|ParamCmd)\\s*\\(");
     private static final Pattern SECTION = Pattern.compile(
             "(?m)^\\s*(?:Command\\d*|CmdAND\\d*|ParamCmd|YES|NO|YesNoELSE|Default)\\s*(?:\\(|$)");
@@ -28,39 +29,18 @@ final class LegacyNpcScriptEngine {
     private static final Pattern INT = Pattern.compile("-?\\d+");
     private static final Map<String, Integer> GLOBAL_FLAGS = new ConcurrentHashMap<>();
     private static final Map<String, Long> GLOBAL_FLAG_EXPIRATIONS = new ConcurrentHashMap<>();
-    /** Maximum number of rebirths, exposed to scripts as {@code ACK_MAXREMORTS}. */
-    private static final long MAX_REMORTS = 10L;
     /** Rebirth counter the legacy scripts read through {@code CheckFlag}. */
     private static final String FLAG_NUMBER_OF_REMORTS = "__FLAG_NUMBER_OF_REMORTS";
     /** Stage of the rebirth ritual: 0 not started, 1 spending energy, 2 ready to leave. */
     private static final String FLAG_REMORT_PROCESS = "__FLAG_REMORT_PROCESS";
     /** Energy the player spends with Alphan's associates after a rebirth. */
     private static final String FLAG_REMORT_POINTS = "__FLAG_REMORT_POINTS";
-    /** Energy granted by each rebirth, matching the original server's allowance. */
-    private static final int REMORT_POINTS_PER_REBIRTH = 10;
-    /**
-     * Attribute floor a reborn character starts from. Betran (RemortNPC2) prices his upgrades
-     * against {@code USER_TRUE_STR - (20 + remorts * 5)}, which pins the base to these two numbers.
-     */
-    private static final int REBIRTH_BASE_ATTRIBUTE = 20;
-    private static final int REBIRTH_ATTRIBUTE_PER_REMORT = 5;
-    /** Elemental resistances and powers both sit at 100 for a fresh character. */
-    private static final int ELEMENT_BASE = 100;
-    /** Legacy quest-flag prefixes holding the deltas above {@link #ELEMENT_BASE}. */
+    /** Quest-flag prefixes holding the deltas above {@link com.perso.T4C.config.GameConstants#REBIRTH_ELEMENT_BASE}. */
     private static final String FLAG_RESIST_PREFIX = "legacy:resist:";
     private static final String FLAG_POWER_PREFIX = "legacy:power:";
     private static final List<String> ELEMENTS = List.of("fire", "water", "air", "earth", "light", "dark");
-    /** Marks of the Seraph the Oracle promises to every reborn character. */
-    private static final List<String> SERAPH_REGALIA =
-            List.of("item.remort_white_wings", "item.ring_of_the_seraph");
-    /**
-     * Where the rebirth ritual sends the player back into the world, at the end of Alphan's final
-     * stage. Not to be confused with {@code REMORT_TO(1315, 920, 1)}, which is the ritual room
-     * hosting Alphan and his associates.
-     */
-    private static final int LIGHTHAVEN_TILE_X = 2939;
-    private static final int LIGHTHAVEN_TILE_Y = 1066;
-    private static final int LIGHTHAVEN_Z = 0;
+    /** {@code NpcDef.sourceEvents} key for the comma-separated item keys granted by {@link #rebirth}. */
+    private static final String EVENT_REBIRTH_REGALIA = "@rebirth.regalia";
 
     record Result(String text, List<String> systemMessages, List<String> shopItems, List<SellRule> sellRules, List<String> taughtSpells,
                   List<String> taughtSkills, List<String> trainedSkills, List<String> targetSpells,
@@ -87,7 +67,7 @@ final class LegacyNpcScriptEngine {
     record SkillOffer(String skill, int limitOrInitialPoints, int goldCost, boolean teaching) {}
     record FormulaOffer(int formulaId, int goldCost) {}
 
-    private LegacyNpcScriptEngine() {}
+    private NpcScriptEngine() {}
 
     /**
      * Rebuilds the character the way the original {@code REMORT_TO} primitive did. The Oracle warns
@@ -99,23 +79,23 @@ final class LegacyNpcScriptEngine {
      * floor the legacy scripts price against, so the promised "greatly increased capabilities"
      * accumulate across rebirths.
      */
-    private static void rebirth(Player player) {
+    private static void rebirth(Player player, String npcName) {
         int remorts = player.getQuestFlag(FLAG_NUMBER_OF_REMORTS) + 1;
         player.setQuestFlag(FLAG_NUMBER_OF_REMORTS, remorts);
         player.setRebirthCount(remorts);
 
         // Alphan and his associates read these; nothing else in the scripts sets them up.
-        player.setQuestFlag(FLAG_REMORT_POINTS, REMORT_POINTS_PER_REBIRTH);
+        player.setQuestFlag(FLAG_REMORT_POINTS, GameConstants.REBIRTH_REMORT_POINTS_PER_REBIRTH);
         player.setQuestFlag(FLAG_REMORT_PROCESS, 0);
 
-        int attribute = REBIRTH_BASE_ATTRIBUTE + remorts * REBIRTH_ATTRIBUTE_PER_REMORT;
+        int attribute = GameConstants.REBIRTH_BASE_ATTRIBUTE + remorts * GameConstants.REBIRTH_ATTRIBUTE_PER_REMORT;
         player.setStrength(attribute);
         player.setDexterity(attribute);
         player.setEndurance(attribute);
         player.setIntelligence(attribute);
         player.setWisdom(attribute);
 
-        // Elemental values live as deltas above ELEMENT_BASE; clearing them restores the base.
+        // Elemental values live as deltas above GameConstants.REBIRTH_ELEMENT_BASE; clearing them restores the base.
         for (String element : ELEMENTS) {
             player.setQuestFlag(FLAG_RESIST_PREFIX + element, 0);
             player.setQuestFlag(FLAG_POWER_PREFIX + element, 0);
@@ -148,8 +128,22 @@ final class LegacyNpcScriptEngine {
         }
         player.setHiddenFor(0L);
 
-        stripEquipment(player);
-        grantSeraphRegalia(player);
+        List<String> regalia = rebirthRegalia(npcName);
+        stripEquipment(player, regalia);
+        grantSeraphRegalia(player, regalia);
+    }
+
+    /** Reads {@link #EVENT_REBIRTH_REGALIA} off the NPC running the ritual (the Oracle). */
+    private static List<String> rebirthRegalia(String npcName) {
+        NpcDef def = NpcRegistry.findByName(npcName);
+        String raw = def == null ? null : def.getSourceEvents().get(EVENT_REBIRTH_REGALIA);
+        if (raw == null || raw.isBlank()) return List.of();
+        List<String> keys = new ArrayList<>();
+        for (String key : raw.split(",")) {
+            String trimmed = key.trim();
+            if (!trimmed.isEmpty()) keys.add(trimmed);
+        }
+        return keys;
     }
 
     /**
@@ -160,10 +154,10 @@ final class LegacyNpcScriptEngine {
      * <p>The wings and the Ring of the Seraph survive the ritual: they are the heritage the Oracle
      * grants across rebirths, not equipment earned in the life being left behind.
      */
-    private static void stripEquipment(Player player) {
+    private static void stripEquipment(Player player, List<String> regalia) {
         // unequip mutates the equipment map, so iterate over a snapshot of the slots.
         for (BodyPart slot : new ArrayList<>(player.getEquippedItems().keySet())) {
-            if (SERAPH_REGALIA.contains(player.getEquippedItems().get(slot))) continue;
+            if (regalia.contains(player.getEquippedItems().get(slot))) continue;
             InventoryService.unequip(player, slot);
         }
     }
@@ -173,8 +167,8 @@ final class LegacyNpcScriptEngine {
      * wings, a part of your heritage as a Seraph"), but the legacy script never hands them over:
      * that was part of the {@code REMORT_TO} primitive, like the rest of the ritual.
      */
-    private static void grantSeraphRegalia(Player player) {
-        for (String key : SERAPH_REGALIA) {
+    private static void grantSeraphRegalia(Player player, List<String> regalia) {
+        for (String key : regalia) {
             ItemDefinition definition = ItemRegistry.findByKey(key);
             if (definition == null || definition.getBodyPart() == null) continue;
             if (!player.getInventory().contains(key)) InventoryService.add(player, key);
@@ -471,7 +465,7 @@ final class LegacyNpcScriptEngine {
             else if ((args = macroArgs(s, "REMORT_TO")) != null) {
                 List<String> values = splitArgs(args);
                 if (values.size() >= 3) {
-                    rebirth(player);
+                    rebirth(player, npcName);
                     player.setWorldPosition(number(values.get(0), npcName, player, locals)
                                     * com.perso.T4C.config.GameConstants.GRID_W,
                             number(values.get(1), npcName, player, locals)
@@ -552,8 +546,8 @@ final class LegacyNpcScriptEngine {
                 // nobody. Alphan's own words send the player to Lighthaven; do it here, otherwise
                 // the ritual ends with a farewell speech and the player stays put.
                 if (spell != null && spell.contains("remort") && spell.contains("teleport")) {
-                    player.setWorldPosition(LIGHTHAVEN_TILE_X * com.perso.T4C.config.GameConstants.GRID_W,
-                            LIGHTHAVEN_TILE_Y * com.perso.T4C.config.GameConstants.GRID_H, LIGHTHAVEN_Z);
+                    player.setWorldPosition(GameConstants.REBIRTH_RETURN_TILE_X * GameConstants.GRID_W,
+                            GameConstants.REBIRTH_RETURN_TILE_Y * GameConstants.GRID_H, GameConstants.REBIRTH_RETURN_Z);
                     // No script clears this stage, so close the ritual here: otherwise Alphan stays
                     // stuck on his farewell and the next rebirth would start half-finished.
                     player.setQuestFlag(FLAG_REMORT_PROCESS, 0);
@@ -764,7 +758,7 @@ final class LegacyNpcScriptEngine {
             // Engine-wide cap on rebirths. Without it the identifier falls through to parseLong,
             // which yields 0 and makes the Oracle's "remorts >= ACK_MAXREMORTS" guard always true,
             // blocking every rebirth.
-            case "ACK_MAXREMORTS" -> MAX_REMORTS;
+            case "ACK_MAXREMORTS" -> GameConstants.REBIRTH_MAX_REMORTS;
             case "CurrentRound" -> System.currentTimeMillis() / 1000L;
             default -> locals.getOrDefault(e, parseLong(e));
         };

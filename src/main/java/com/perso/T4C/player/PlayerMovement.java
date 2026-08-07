@@ -158,9 +158,6 @@ public class PlayerMovement {
         while (true) {
             Coordinates pos = player.getCoordinates();
             if (activeGridStep && !isAtExpectedActiveStepPosition(pos)) {
-                // A teleport, respawn or authoritative correction invalidates
-                // the previously reserved destination, even when the corrected
-                // point happens to remain somewhere on the old segment.
                 clearActiveGridStep();
             }
 

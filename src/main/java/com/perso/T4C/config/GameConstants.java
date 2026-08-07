@@ -34,9 +34,6 @@ public class GameConstants {
     public static final int PLAYER_COLLISION_FOOTPRINT_ABOVE_TILES = 1;
     public static final int PLAYER_COLLISION_FOOTPRINT_BELOW_TILES = 0;
 
-    // Enables or disables game sounds globally.
-    public static final boolean ENABLE_SOUNDS = false;
-
     // Draws the border of GuiBoxedText zones so their position/size can be tuned.
     public static final boolean DEBUG_GUI_TEXT_BOUNDS = false;
 
@@ -116,4 +113,27 @@ public class GameConstants {
     // Item structure id identifying a quiver in items.bin. Firing a bow requires
     // one equipped in the off-hand, as in GoN's Character::RangedAttack().
     public static final int QUIVER_STRUCTURE_ID = 8;
+
+    // Rebirth ("remort") ritual tuning, read by NpcScriptEngine.
+    /** Maximum number of rebirths, exposed to scripts as {@code ACK_MAXREMORTS}. */
+    public static final long REBIRTH_MAX_REMORTS = 10L;
+    /** Energy granted by each rebirth, matching the original server's allowance. */
+    public static final int REBIRTH_REMORT_POINTS_PER_REBIRTH = 10;
+    /**
+     * Attribute floor a reborn character starts from. Betran (RemortNPC2) prices his upgrades
+     * against {@code USER_TRUE_STR - (20 + remorts * 5)}, which pins the base to these two numbers.
+     */
+    public static final int REBIRTH_BASE_ATTRIBUTE = 20;
+    public static final int REBIRTH_ATTRIBUTE_PER_REMORT = 5;
+    // Elemental resistances and powers both sit at 100 for a fresh character.
+    public static final int REBIRTH_ELEMENT_BASE = 100;
+
+    /**
+     * Where the rebirth ritual sends the player back into the world, at the end of Alphan's final
+     * stage. Not to be confused with {@code REMORT_TO(1315, 920, 1)}, which is the ritual room
+     * hosting Alphan and his associates.
+     */
+    public static final int REBIRTH_RETURN_TILE_X = 2939;
+    public static final int REBIRTH_RETURN_TILE_Y = 1066;
+    public static final int REBIRTH_RETURN_Z = 0;
 }

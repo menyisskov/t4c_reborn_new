@@ -3,13 +3,10 @@ package com.perso.T4C.gui.screen;
 import com.perso.T4C.gui.core.GuiClickZone;
 import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.gui.widget.GuiAnimatedSprite;
-import com.perso.T4C.gui.widget.GuiBoxedText;
 import com.perso.T4C.gui.widget.GuiButton;
-import com.perso.T4C.gui.widget.GuiText;
 
 import com.perso.T4C.i18n.I18n;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

@@ -26,7 +26,7 @@ public final class TameableMonsterMigration {
                 d.getAgi(), d.getIntel(), d.getWill(), d.getWis(), d.getLuck(), d.getResists(), d.getLevel(), d.getDodge(),
                 d.getAcMin(), d.getAcMax(), d.getAppearance(), d.getItemBody(), d.getItemFeet(), d.getItemHands(), d.getItemHead(),
                 d.getItemLegs(), d.getItemWeapon(), d.getItemShield(), d.getItemBack(), d.getAggro(), d.getClan(), d.getSpeed(),
-                d.isCanAttack(), d.getAttacks(), cap != null, cap == null ? 0 : cap);
+                d.isCanAttack(), d.getAttacks(), cap != null, cap == null ? 0 : cap, d.getSpawnAliases());
     }
 
     public static void main(String[] args) throws Exception {

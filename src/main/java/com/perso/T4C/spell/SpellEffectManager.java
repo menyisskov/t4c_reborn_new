@@ -162,11 +162,6 @@ public final class SpellEffectManager {
         return millis <= 0 ? 0 : (int) Math.min(Integer.MAX_VALUE, Math.max(1L, (millis + 999L) / 1_000L));
     }
 
-    /** Builds a caster context for an entity that isn't a {@link Player} (e.g. an NPC). */
-    public static DiceFormula.Context npcCasterContext(int level, int wisdom) {
-        return new DiceFormula.Context(0, 0, 0, 0, 0, wisdom, 0, level);
-    }
-
     public PlayerUtility applyPlayerUtilityEffects(SpellData spell, Player caster) {
         if (spell == null || caster == null) {
             return new PlayerUtility(null, null, null, false, false, false, 0);
@@ -331,10 +326,6 @@ public final class SpellEffectManager {
         int before = hooks.size();
         hooks.removeIf(h -> h.target == target && (sourceSpellId <= 0 || h.sourceSpellId == sourceSpellId));
         return before - hooks.size();
-    }
-
-    public void clear(BaseMonster target) {
-        if (target != null) hooks.removeIf(h -> h.target == target);
     }
 
     private static int resolveHealthDelta(SpellData spell, Player caster, BaseMonster target, double range) {
