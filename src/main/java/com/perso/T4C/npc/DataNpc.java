@@ -302,6 +302,9 @@ public class DataNpc extends BaseNPC {
         String alias;
         if (id.contains("serious_heal")) alias = "spell.heal_serious";
         else if (id.contains("fireball")) alias = "spell.fireball";
+        // Teleport scripts carry names such as "..._return_teleport_dispel"; they must not fall back
+        // to the dispel visual, which would fire a projectile at the player taking the portal.
+        else if (id.contains("teleport")) alias = null;
         else if (id.contains("dispel") || id.contains("blue_wipe")) alias = "spell.dispel";
         else if (id.contains("lighthaven") && id.contains("portal")) alias = "spell.lighthaven_portal";
         else if (id.contains("windhowl") && id.contains("portal")) alias = "spell.windhowl_portal";

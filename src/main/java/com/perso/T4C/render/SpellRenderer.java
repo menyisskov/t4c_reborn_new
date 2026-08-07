@@ -25,6 +25,9 @@ import java.util.function.Supplier;
  */
 
 public class SpellRenderer {
+    /** Generated visual shared by the Elevation test spell and level-up feedback. */
+    public static final String LEVEL_UP_EFFECT = "LevelUpClaude-";
+
     private final SpriteLoader spriteLoader;
     private final Map<String, List<ImpactFrame>> impactFramesCache = new HashMap<>();
     private final Map<String, List<ProjectileFrame>> projectileFramesCache = new HashMap<>();
@@ -87,6 +90,11 @@ public class SpellRenderer {
         float x = player.getCoordinates().getX();
         float y = player.getCoordinates().getY();
         activeImpacts.add(new SpellImpact(impactSpell, frames, x + impactXOffset, y + impactYOffset));
+    }
+
+    /** Plays the level-up visual as a spell impact centered on the player. */
+    public void playLevelUpAnimation(Player player) {
+        triggerImpactSpell(LEVEL_UP_EFFECT, player);
     }
 
     public void triggerImpactSpell(String impactSpell, float worldX, float worldY) {

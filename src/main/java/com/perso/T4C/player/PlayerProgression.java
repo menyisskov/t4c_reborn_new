@@ -39,6 +39,7 @@ public final class PlayerProgression {
             player.setStatPoints(player.getStatPoints() + 5);
             player.setSkillPoints(player.getSkillPoints() + 15);
             player.showLevelUpMessage(player.getLevel(), gains[0], gains[1]);
+            player.notifyLevelUp(player.getLevel());
             int next = xpCurve.getXpToNextLevel(player.getLevel());
             if (next > 0) {
                 player.setXpToNextLevel(next);

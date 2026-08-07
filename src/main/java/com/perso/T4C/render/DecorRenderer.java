@@ -329,6 +329,9 @@ public class DecorRenderer {
                 item.decorW = w;
                 item.decorH = h;
                 item.decorMirror = res.mirror;
+                // Decors reaching this collector are foreground ones: those walked upon are
+                // flagged and drawn earlier, so they never fade the entity standing on them.
+                item.occludesEntities = true;
                 items.add(item);
             }
         }

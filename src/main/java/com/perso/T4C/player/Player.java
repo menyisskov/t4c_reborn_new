@@ -69,6 +69,12 @@ public class Player extends Stats {
         void onManaRestored(int amount);
     }
 
+    /** Notified when the character gains a level, so the screen can play the level-up effect. */
+    @FunctionalInterface
+    public interface LevelUpCallback {
+        void onLevelUp(int newLevel);
+    }
+
     // Respawn coordinates
     
     private final Coordinates position = new Coordinates(0f, 0f, 0);
@@ -115,6 +121,7 @@ public class Player extends Stats {
     private ItemDropCallback itemDropCallback = null;
     private HealingCallback healingCallback = null;
     private ManaRestoredCallback manaRestoredCallback = null;
+    private LevelUpCallback levelUpCallback = null;
     /** Seconds accumulated towards the next natural regeneration tick. */
     private float regenAccumulatorSeconds = 0f;
     /** Counts nearby units for the sneak upkeep roll; absent means no witnesses. */
@@ -454,6 +461,10 @@ public class Player extends Stats {
         this.manaRestoredCallback = callback;
     }
 
+    public void setLevelUpCallback(LevelUpCallback callback) {
+        this.levelUpCallback = callback;
+    }
+
     public void notifyManaRestored(int amount) {
         if (amount > 0 && manaRestoredCallback != null) {
             manaRestoredCallback.onManaRestored(amount);
@@ -605,6 +616,16 @@ public class Player extends Stats {
         if (messageCallback != null) {
             messageCallback.showMessage(I18n.message("message.level_up",  newLevel));
             messageCallback.showMessage(I18n.message("message.level_up_gains", hpGain, manaGain));
+        }
+    }
+
+    /**
+     * Requests the level-up visual effect. Kept apart from {@link #showLevelUpMessage} because the
+     * chat lines belong to the headless model while the effect only exists once a screen is bound.
+     */
+    void notifyLevelUp(int newLevel) {
+        if (levelUpCallback != null) {
+            levelUpCallback.onLevelUp(newLevel);
         }
     }
 

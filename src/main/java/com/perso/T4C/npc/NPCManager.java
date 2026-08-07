@@ -239,11 +239,10 @@ public class NPCManager {
                 if (interactionStarted) {
                     activeConversationNpc = npc;
                     log.info("Player interacting with NPC: {}", npc.getName());
-                } else if (!com.perso.T4C.combat.CombatGeometry.hasLineOfSight(
+                } else if (!com.perso.T4C.combat.CombatGeometry.hasTalkLineOfSight(
                         player.getPositionVector(), npc.getPosition())) {
                     log.info("NPC {} is not in line of sight for interaction", npc.getName());
-                    SystemMessage.showShared(
-                            I18n.message("message.target_no_line_of_sight"));
+                    SystemMessage.showShared(I18n.message("message.target_no_line_of_sight"));
                 } else {
                     log.info("NPC {} is too far away for interaction", npc.getName());
                 }

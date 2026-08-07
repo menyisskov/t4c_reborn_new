@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Fusionne des sprites dans un fichier {@code sprites.bin} existant, au format T4C1 lu par
@@ -41,12 +42,27 @@ public final class SpriteBinWriter {
      * @return le nombre de sprites écrits
      */
     public static int merge(Path spriteBin, List<Entry> entries) throws IOException {
+        return merge(spriteBin, entries, ignored -> false);
+    }
+
+    /**
+     * Removes every existing sprite selected by {@code replacedFamily}, then appends the freshly
+     * generated entries. Useful when an animation family is renamed.
+     */
+    public static int replaceMatching(Path spriteBin, List<Entry> entries,
+                                      Predicate<String> replacedFamily) throws IOException {
+        return merge(spriteBin, entries, replacedFamily);
+    }
+
+    private static int merge(Path spriteBin, List<Entry> entries,
+                             Predicate<String> replacedFamily) throws IOException {
         Path dir = spriteBin.getParent() != null ? spriteBin.getParent() : Path.of(".");
         String baseName = baseName(spriteBin);
 
         List<SpriteBinIO.Packed> sprites = new ArrayList<>();
         Map<String, Integer> indexByName = new HashMap<>();
         SpriteBinIO.readAll(dir, baseName, packed -> {
+            if (replacedFamily.test(packed.name())) return;
             indexByName.putIfAbsent(SpriteBinIO.key(packed.name()), sprites.size());
             sprites.add(packed);
         });

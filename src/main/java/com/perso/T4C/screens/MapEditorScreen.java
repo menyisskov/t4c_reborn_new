@@ -19330,13 +19330,6 @@ public class MapEditorScreen implements Screen {
 
     private void toggleSpawnContextStatic() {
         if (spawnContextTarget != null) {
-            if (spawnContextNpc && !"Darkfang".equals(spawnContextTarget.type)) {
-                spawnContextTarget.stationary = false;
-                npcStaticPlacement = false;
-                npcsDirty = true;
-                showEditorMessage("Only Darkfang can be static");
-                return;
-            }
             spawnContextTarget.stationary = !spawnContextTarget.stationary;
             if (spawnContextNpc) {
                 npcStaticPlacement = spawnContextTarget.stationary;
@@ -19592,24 +19585,12 @@ public class MapEditorScreen implements Screen {
 
     private void saveNpcSpawns() {
         try {
-            enforceNpcStationaryRule(npcSpawns);
             writeGlobalSpawns(new File(Paths.NPC_SPAWNS_BIN), npcSpawns);
             npcsDirty = false;
             showEditorMessage("NPC spawns saved");
         } catch (Exception e) {
             log.error("Failed to save NPC spawns", e);
             showEditorMessage("Error: Failed to save NPC spawns");
-        }
-    }
-
-    private void enforceNpcStationaryRule(List<MonsterSpawnEntry> spawns) {
-        if (spawns == null) {
-            return;
-        }
-        for (MonsterSpawnEntry spawn : spawns) {
-            if (spawn != null) {
-                spawn.stationary = "Darkfang".equals(spawn.type);
-            }
         }
     }
 

@@ -18,6 +18,7 @@ public class CollisionManager {
     private CollisionReader collisionReader;
     private DynamicCollisionProvider dynamicProvider;
     private BiPredicate<Integer, Integer> playerPassabilityProvider;
+    private BiPredicate<Integer, Integer> talkVisibilityProvider;
     private long lastDynamicLogAt = 0L;
 
     /**
@@ -97,6 +98,7 @@ public class CollisionManager {
         this.collisionReader = null;
         this.dynamicProvider = null;
         this.playerPassabilityProvider = null;
+        this.talkVisibilityProvider = null;
         log.info("CollisionManager cleared");
     }
 
@@ -107,6 +109,25 @@ public class CollisionManager {
     /** Supplies player-only exceptions to static collision (e.g. teleport source tiles). */
     public void setPlayerPassabilityProvider(BiPredicate<Integer, Integer> provider) {
         this.playerPassabilityProvider = provider;
+    }
+
+    /** Supplies tiles carrying a railing one can see and talk through, but not walk or shoot through. */
+    public void setTalkVisibilityProvider(BiPredicate<Integer, Integer> provider) {
+        this.talkVisibilityProvider = provider;
+    }
+
+    /**
+     * Line of sight for starting a conversation, which railings such as cemetery gates do not
+     * block. Movement and attacks keep using {@link #blocksLineOfSight}, so those tiles stay solid.
+     */
+    public boolean blocksTalkLineOfSight(float worldX, float worldY) {
+        if (!blocksLineOfSight(worldX, worldY)) {
+            return false;
+        }
+        if (talkVisibilityProvider == null) {
+            return true;
+        }
+        return !talkVisibilityProvider.test((int) (worldX / GRID_W), (int) (worldY / GRID_H));
     }
 
     /**

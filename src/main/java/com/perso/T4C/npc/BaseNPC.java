@@ -31,7 +31,7 @@ import static com.perso.T4C.config.GameConstants.MONSTER_ATTACK_RANGE;
 import static com.perso.T4C.config.GameConstants.NPC_HOSTILE_DAMAGE_MAX;
 import static com.perso.T4C.config.GameConstants.NPC_HOSTILE_DAMAGE_MIN;
 import static com.perso.T4C.config.GameConstants.NPC_HOSTILE_LEASH_RANGE;
-import static com.perso.T4C.config.GameConstants.NPC_INTERACTION_RANGE;
+import static com.perso.T4C.config.GameConstants.NPC_INTERACTION_RANGE_TILES_SQUARED;
 import static com.perso.T4C.config.GameConstants.NPC_PATROL_PAUSE_MAX;
 import static com.perso.T4C.config.GameConstants.NPC_PATROL_PAUSE_MIN;
 import static com.perso.T4C.config.GameConstants.NPC_PATROL_RADIUS;
@@ -67,6 +67,8 @@ public abstract class BaseNPC extends Stats implements Nameable {
     // Interaction state
     @Setter
     protected boolean isHovered = false;
+    /** Scratch rectangle for hit-testing object appearances, to avoid allocating per mouse move. */
+    private final Rectangle mouseOverBounds = new Rectangle();
     protected boolean isInteracting = false;
     protected Vector2 savedPatrolTarget = null;
     protected float savedPauseTimer = 0f;
@@ -434,12 +436,11 @@ public abstract class BaseNPC extends Stats implements Nameable {
      */
     public boolean onClick(Player player) {
         Vector2 playerPosition = player.getPositionVector();
-        float distance = position.dst(playerPosition);
-
-        // A wall between the two blocks conversation: you cannot talk through
-        // stone even when standing right on the other side of it.
-        if (distance <= NPC_INTERACTION_RANGE
-                && com.perso.T4C.combat.CombatGeometry.hasLineOfSight(playerPosition, position)) {
+        // Clicking a distant NPC has no equivalent in GoN, where reaching one means walking up to
+        // it and typing. Requiring a clear line keeps that constraint: without it a click picks
+        // targets straight through walls.
+        if (isWithinTalkingRange(playerPosition)
+                && com.perso.T4C.combat.CombatGeometry.hasTalkLineOfSight(playerPosition, position)) {
             if (!isInteracting) {
                 // Save patrol state
                 savedPatrolTarget = patrolTarget;
@@ -465,14 +466,26 @@ public abstract class BaseNPC extends Stats implements Nameable {
     }
 
     /**
+     * Whether the player stands close enough to hold a conversation.
+     *
+     * <p>Mirrors the {@code Dist < 120} guard of {@code Character::StartAsyncDirectTalk}: a squared
+     * tile distance, isotropic and measured in tiles rather than world units, since tiles are twice
+     * as wide as they are tall. Walls are handled by the caller, not by this reach test.
+     */
+    private boolean isWithinTalkingRange(Vector2 playerPosition) {
+        if (playerPosition == null) return false;
+        float tilesX = (position.x - playerPosition.x) / GRID_W;
+        float tilesY = (position.y - playerPosition.y) / GRID_H;
+        return tilesX * tilesX + tilesY * tilesY < NPC_INTERACTION_RANGE_TILES_SQUARED;
+    }
+
+    /**
      * Check if player is still in range, resume patrol if not.
      */
     public void checkPlayerRange(Vector2 playerPosition) {
         if (isInteracting) {
-            float distance = position.dst(playerPosition);
-            // Walking out of range or behind a wall both end the conversation.
-            if (distance > NPC_INTERACTION_RANGE
-                    || !com.perso.T4C.combat.CombatGeometry.hasLineOfSight(playerPosition, position)) {
+            // Only walking out of range ends the conversation, matching the rule used to start it.
+            if (!isWithinTalkingRange(playerPosition)) {
                 // Player moved away, resume patrol
                 endInteraction();
             }
@@ -527,9 +540,20 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
     /**
      * Check if mouse is hovering over NPC.
-     * Uses a larger hitbox to cover all body parts including head and shoulders.
+     *
+     * <p>Humanoids use a fixed box rather than their sprite bounds: it is deliberately wider and
+     * taller than the frame so extended arms, shoulders and helmets stay clickable whatever the
+     * pose. Object appearances have no such silhouette and vary wildly in size, so a portal
+     * measuring 64x119 was mostly outside that human-sized box and could only be clicked on the
+     * one strip where the two happened to overlap. Those follow their drawn bounds instead.
      */
     public boolean isMouseOver(float mouseX, float mouseY) {
+        if (animations.hasObjectAppearance()) {
+            Rectangle bounds = getRenderBounds(mouseOverBounds);
+            if (bounds.width > 0f && bounds.height > 0f) {
+                return bounds.contains(mouseX, mouseY);
+            }
+        }
         float halfWidth = 40f;   // 80 pixels wide total (covers extended arms)
         float heightAbove = 60f; // 60 pixels above position (covers head, shoulders, helmet)
         float heightBelow = 10f; // 10 pixels below position (covers feet)

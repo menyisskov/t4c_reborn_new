@@ -142,6 +142,10 @@ public class MainGameScreen implements Screen {
     private GameChat gameChat;
     private GuiMapZoneDisplay mapZoneDisplay;
 
+    /** Railings an entity can be talked to through, while movement and attacks stay blocked. */
+    private static final java.util.Set<String> SEE_THROUGH_FOR_TALK =
+            com.perso.T4C.render.DecorFlags.loadSeeThroughForTalkRules();
+
     @Getter
     private Player player;
     private MapReader reader;
@@ -221,6 +225,7 @@ public class MainGameScreen implements Screen {
 
     /** Spell whose visuals play when a companion is dismissed. */
     private static final String COMPANION_VANISH_SPELL = "spell.light";
+    private static final String LEVEL_UP_SOUND = "Seraph.wav";
     private static final String MUSIC_ZONES_SUFFIX = ".musiczones.json";
     private static final String MUSIC_ZONES_BIN_SUFFIX = ".musiczones.bin";
     private final List<MusicZoneEntry> musicZones = new ArrayList<>();
@@ -264,6 +269,7 @@ public class MainGameScreen implements Screen {
         loadTeleports();
         loadCollisionMap(currentMap);
         CollisionManager.getInstance().setPlayerPassabilityProvider(this::isTeleportSourceTile);
+        CollisionManager.getInstance().setTalkVisibilityProvider(this::isTalkVisibleTile);
         initializePlayer();
         questService = new QuestService(xpCurve, this::savePlayerState, this::showSystemMessage);
         updateAmbientMusicForPlayer();
@@ -825,6 +831,7 @@ public class MainGameScreen implements Screen {
         configurePlayerMessageCallback();
         configurePlayerTeleportCallback();
         configurePlayerDeathCallback();
+        configurePlayerLevelUpCallback();
         player.setActionInterruptedCallback(this::clearCurrentAttackTarget);
         player.setHealingCallback(amount -> {
             Vector2 position = player.getPositionVector();
@@ -1016,6 +1023,16 @@ public class MainGameScreen implements Screen {
     }
 
     /**
+     * Plays the level-up effect on the character, like a spell cast upon it.
+     */
+    private void configurePlayerLevelUpCallback() {
+        player.setLevelUpCallback(newLevel -> {
+            spellRenderer.playImpactSound(LEVEL_UP_SOUND);
+            spellRenderer.playLevelUpAnimation(player);
+        });
+    }
+
+    /**
      * Configures the player's teleport callback used when crossing Z levels.
      */
     private void configurePlayerTeleportCallback() {
@@ -1043,6 +1060,7 @@ public class MainGameScreen implements Screen {
             loadMusicZones(currentMap);
             loadCollisionMap(currentMap);
             CollisionManager.getInstance().setPlayerPassabilityProvider(this::isTeleportSourceTile);
+            CollisionManager.getInstance().setTalkVisibilityProvider(this::isTalkVisibleTile);
             if (mapRenderer != null) {
                 mapRenderer.dispose();
             }
@@ -2641,6 +2659,28 @@ public class MainGameScreen implements Screen {
     private void toggleCollisionDebugOverlay() {
         collisionDebugVisible = !collisionDebugVisible;
         showSystemMessage("Collision debug: " + (collisionDebugVisible ? "ON" : "OFF"));
+    }
+
+    /**
+     * Whether a blocking tile carries a railing one can hold a conversation across.
+     *
+     * <p>Cemetery gates keep their {@code ABSOLUTE} collision, so they still stop movement, arrows
+     * and spells; only the conversation check consults this exception.
+     */
+    private boolean isTalkVisibleTile(int tileX, int tileY) {
+        if (reader == null) return false;
+        // Isometric decors are anchored up and left of the collision band they stand on, so the
+        // blocking tile itself carries no sprite: look for the railing that owns it.
+        for (int offsetY = 0; offsetY <= 1; offsetY++) {
+            for (int offsetX = 0; offsetX <= 1; offsetX++) {
+                int x = tileX + offsetX;
+                int y = tileY + offsetY;
+                if (x >= reader.getWidth() || y >= reader.getHeight()) continue;
+                String decor = reader.getDecorSpriteName(x, y);
+                if (decor != null && SEE_THROUGH_FOR_TALK.contains(decor)) return true;
+            }
+        }
+        return false;
     }
 
     private boolean isTeleportSourceTile(int tileX, int tileY) {

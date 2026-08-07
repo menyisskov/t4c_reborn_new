@@ -616,9 +616,12 @@ public class ObjectRenderer {
                 && entity.revealY + entity.revealH > occluderY;
     }
 
-    /** Doors are world objects, but occlude entities like foreground walls do. */
+    /**
+     * Doors are world objects, but occlude entities like foreground walls do. Decors carry the
+     * flag too, so ground-level ones such as bridges never fade the entity standing on them.
+     */
     private static boolean isEntityOccluder(RenderItem item) {
-        return item.decorRegion != null || item.occludesEntities;
+        return item.occludesEntities;
     }
 
     private static void renderOcclusionReveal(SpriteBatch batch, RenderItem entity) {

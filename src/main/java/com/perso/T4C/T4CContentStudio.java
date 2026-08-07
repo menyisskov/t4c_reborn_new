@@ -1135,7 +1135,7 @@ public class T4CContentStudio {
         }
         if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
             List<Map<String, Object>> items = readItemsPayload(exchange);
-            List<SpawnBinaryIO.Entry> edited = items.stream().map(item -> spawnFromMap(item, kind)).filter(Objects::nonNull).toList();
+            List<SpawnBinaryIO.Entry> edited = items.stream().map(this::spawnFromMap).filter(Objects::nonNull).toList();
             // Pin every edited spawn to the map being edited, so a new row left at the
             // default z=0 is not filed under worldmap and then dropped by the merge below.
             edited.forEach(entry -> entry.z = mapZ);
@@ -2124,7 +2124,7 @@ public class T4CContentStudio {
         return item;
     }
 
-    private SpawnBinaryIO.Entry spawnFromMap(Map<String, Object> item, String kind) {
+    private SpawnBinaryIO.Entry spawnFromMap(Map<String, Object> item) {
         String type = str(item.get("type")).trim();
         if (type.isEmpty()) return null;
         SpawnBinaryIO.Entry entry = new SpawnBinaryIO.Entry();
@@ -2133,9 +2133,6 @@ public class T4CContentStudio {
         entry.y = integer(item.get("y"), 0);
         entry.z = integer(item.get("z"), 0);
         entry.stationary = bool(item.get("stationary"), false);
-        if ("npc".equalsIgnoreCase(kind)) {
-            entry.stationary = "Darkfang".equals(entry.type);
-        }
         entry.aggressive = bool(item.get("aggressive"), false);
         return entry;
     }

@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Align;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiElement;
@@ -252,15 +251,14 @@ public final class GameChat extends InputAdapter {
     private List<Entry> visualLines(float width) {
         List<Entry> result = new ArrayList<>();
         for (Entry entry : entries) {
-            layout.setText(font, entry.text(), entry.color(), width, Align.left, true);
-            String[] wrapped = layout.runs.isEmpty()
-                    ? new String[]{entry.text()}
-                    : entry.text().split("\\R");
-            if (wrapped.length == 1 && layout.height <= 17f) {
-                result.add(entry);
-                continue;
+            for (String paragraph : entry.text().split("\\R")) {
+                Entry line = new Entry(paragraph, entry.color());
+                // Only a text that already fits can be drawn as-is: anything wider must be split
+                // here, otherwise font.draw would render several rows while textY advances once.
+                layout.setText(font, paragraph);
+                if (layout.width <= width) result.add(line);
+                else wrap(line, width, result);
             }
-            wrap(entry, width, result);
         }
         return result;
     }

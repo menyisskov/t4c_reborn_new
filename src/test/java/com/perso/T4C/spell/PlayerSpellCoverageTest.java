@@ -1,12 +1,17 @@
 package com.perso.T4C.spell;
 
 import com.perso.T4C.player.Player;
+import com.perso.T4C.player.StarterLoadout;
+import com.perso.T4C.render.SpellRenderer;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerSpellCoverageTest {
@@ -48,5 +53,34 @@ class PlayerSpellCoverageTest {
         manager.applyPlayerUtilityEffects(SpellRegistry.findById(10259), player);
         assertTrue(player.canDetectInvisible());
         assertTrue(player.canDetectHidden());
+    }
+
+    /**
+     * The Elevation spell carries the generated level-up animation. It must stay self-targeted and
+     * reach the learnable catalogue, otherwise it can never appear in a player's spell book.
+     */
+    @Test
+    void levelUpClaudeSpellCarriesTheAnimationAndIsLearnable() {
+        SpellData spell = SpellRegistry.findByName("spell.level_up_claude");
+
+        assertNotNull(spell);
+        assertEquals(SpellRenderer.LEVEL_UP_EFFECT, spell.getImpactSpell());
+        assertEquals(0, Integer.parseInt(spell.getManaCost()), "Elevation is free to cast");
+        assertEquals(5, spell.getTargetType(), "Elevation is cast on the caster itself");
+        assertFalse(spell.isAttack());
+        assertTrue(SpellRegistry.playerCastableSpells().stream()
+                        .anyMatch(candidate -> "spell.level_up_claude".equals(candidate.getKey())),
+                "Elevation must be part of the learnable catalogue");
+    }
+
+    @Test
+    void levelUpClaudeSpellIsRestoredForManualTestingWithoutDuplicates() {
+        Player player = new Player();
+        player.setSpells(new java.util.ArrayList<>());
+
+        StarterLoadout.ensureLevelUpTestSpell(player);
+        StarterLoadout.ensureLevelUpTestSpell(player);
+
+        assertEquals(List.of("spell.level_up_claude"), player.getSpells());
     }
 }

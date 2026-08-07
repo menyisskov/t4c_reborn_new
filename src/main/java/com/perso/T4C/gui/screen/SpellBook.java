@@ -18,6 +18,7 @@ import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.model.QuickSlotEntry;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.player.StarterLoadout;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.ui.FontManager;
@@ -100,6 +101,7 @@ public class SpellBook extends GuiScreenBase {
         addCloseButton();
         addCornerAnimations();
         addHeader();
+        StarterLoadout.ensureLevelUpTestSpell(player);
         loadSpells();
         rebuildPage();
     }

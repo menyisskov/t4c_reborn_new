@@ -109,6 +109,15 @@ public class NPCAnimations extends EntityAnimationsBase {
         return spriteBase != null;
     }
 
+    /**
+     * True for scenery drawn from an object appearance (portal, chest, door) rather than from a
+     * character sprite. Such NPCs have no humanoid silhouette, so callers size hitboxes and
+     * animation from the sprite itself.
+     */
+    public boolean hasObjectAppearance() {
+        return isStaticBase(spriteBase);
+    }
+
     public NPCAnimations(String spriteBase, Object... parts) throws GameException {
         this.spriteBase = spriteBase == null || spriteBase.isBlank() ? null : spriteBase.trim();
         for (int i = 0; i < parts.length; i += 2) {
@@ -195,7 +204,9 @@ public class NPCAnimations extends EntityAnimationsBase {
             playerAnimations.update(delta, moving);
             return;
         }
-        animTimer = moving ? animTimer + delta : 0f;
+        // Object appearances keep their timer running: a portal loops while standing perfectly
+        // still, so resetting on !moving would pin it to its first frame forever.
+        animTimer = moving || isStaticBase(spriteBase) ? animTimer + delta : 0f;
     }
 
     public void renderComposite(SpriteBatch batch, Vector2 pos, String angle, boolean flipX, boolean moving) {
@@ -218,6 +229,44 @@ public class NPCAnimations extends EntityAnimationsBase {
             return out.set(0f, 0f, 0f, 0f);
         }
         return out.set(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+    }
+
+    /** Prefix marking a sprite base that is a plain sprite family rather than a directional one. */
+    private static final String STATIC_PREFIX = "@static:";
+
+    /** True for object appearances (portals, chests, doors) which have no per-angle sprites. */
+    private static boolean isStaticBase(String base) {
+        return base != null && base.startsWith(STATIC_PREFIX);
+    }
+
+    /**
+     * Sprite name of one frame of a single-sprite base.
+     *
+     * <p>Directional NPCs name their frames {@code <base><angle>-<letter>}, but an object
+     * appearance is stored under its bare sprite name: {@code SimplePortal-a}, with no angle in
+     * between. Composing the directional form for those produced a name that matches nothing, so
+     * the draw offset silently fell back to zero and both the sprite and its clickable bounds were
+     * displaced by the whole offset.
+     */
+    private String frameSpriteName(String base, String angle, int frameIndex) {
+        if (isStaticBase(base)) {
+            return staticFrameName(base, frameIndex);
+        }
+        return base + angle + "-" + (char) (FRAME_START + frameIndex);
+    }
+
+    /**
+     * Frame to draw for a single-sprite base, given whether the NPC is walking.
+     *
+     * <p>Object appearances are the exception to the "animate only while moving" rule: a portal
+     * never walks, yet its twenty-six frames loop continuously in the original client. Freezing
+     * them on frame 0 whenever {@code moving} was false is what left the portal static.
+     */
+    private int animatedFrameIndex(int frameCount, boolean moving) {
+        if (isStaticBase(spriteBase)) {
+            return frameCount <= 1 ? 0 : (int) (animTimer / FRAME_DURATION) % frameCount;
+        }
+        return moving ? spriteFrameIndex(frameCount) : 0;
     }
 
     /**
@@ -280,7 +329,9 @@ public class NPCAnimations extends EntityAnimationsBase {
             boundsWidth = bounds.width;
             boundsHeight = bounds.height;
         } else {
-            Bounds bounds = calculateBounds(pos, angle, flipX, false);
+            // Stable across the animation: a dialogue box must not follow the sprite's per-frame
+            // wobble.
+            Bounds bounds = calculateStableBounds(pos, angle, flipX);
             if (bounds == null) return;
             boundsY = bounds.minY();
             boundsWidth = bounds.width();
@@ -295,9 +346,9 @@ public class NPCAnimations extends EntityAnimationsBase {
         List<TextureRegion> frames = getFrames(spriteBase, angle);
         if (frames.isEmpty()) return;
 
-        int frameIndex = moving ? spriteFrameIndex(frames.size()) : 0;
+        int frameIndex = animatedFrameIndex(frames.size(), moving);
         TextureRegion reg = frames.get(frameIndex);
-        String name = spriteBase + angle + "-" + (char) ('a' + frameIndex);
+        String name = frameSpriteName(spriteBase, angle, frameIndex);
         Vector2 off = flipX ? offset2.getOrDefault(name, ZERO_OFFSET) : offset1.getOrDefault(name, ZERO_OFFSET);
         float topLeftX = pos.x + off.x;
         float topLeftY = pos.y + off.y;
@@ -327,13 +378,42 @@ public class NPCAnimations extends EntityAnimationsBase {
         }
     }
 
+    /**
+     * Bounds that stay put for the whole animation, for anchoring text above the sprite.
+     *
+     * <p>{@link #calculateBounds} measures the frame currently on screen, which is right for
+     * drawing and hit-testing but wrong for a label: the portal's frames differ by a pixel in
+     * height and offset, so a dialogue box hung off the live frame twitched up and down ten times
+     * a second. The extent of every frame is used instead, so the box holds still while the sprite
+     * underneath keeps animating.
+     */
+    private Bounds calculateStableBounds(Vector2 pos, String angle, boolean flipX) {
+        List<TextureRegion> frames = getFrames(spriteBase, angle);
+        if (frames.isEmpty()) return null;
+        float minX = Float.POSITIVE_INFINITY;
+        float maxX = Float.NEGATIVE_INFINITY;
+        float minY = Float.POSITIVE_INFINITY;
+        float maxY = Float.NEGATIVE_INFINITY;
+        for (int index = 0; index < frames.size(); index++) {
+            TextureRegion region = frames.get(index);
+            String name = frameSpriteName(spriteBase, angle, index);
+            Vector2 off = flipX ? offset2.getOrDefault(name, ZERO_OFFSET)
+                    : offset1.getOrDefault(name, ZERO_OFFSET);
+            minX = Math.min(minX, pos.x + off.x);
+            maxX = Math.max(maxX, pos.x + off.x + region.getRegionWidth());
+            minY = Math.min(minY, pos.y + off.y);
+            maxY = Math.max(maxY, pos.y + off.y + region.getRegionHeight());
+        }
+        return new Bounds(minX, maxX, minY, maxY);
+    }
+
     /** Only used by single-sprite NPCs; composite NPCs use playerAnimations.getRenderBounds directly. */
     private Bounds calculateBounds(Vector2 pos, String angle, boolean flipX, boolean moving) {
         List<TextureRegion> frames = getFrames(spriteBase, angle);
         if (frames.isEmpty()) return null;
-        int frameIndex = moving ? spriteFrameIndex(frames.size()) : 0;
+        int frameIndex = animatedFrameIndex(frames.size(), moving);
         TextureRegion reg = frames.get(frameIndex);
-        String name = spriteBase + angle + "-" + (char) ('a' + frameIndex);
+        String name = frameSpriteName(spriteBase, angle, frameIndex);
         Vector2 off = flipX ? offset2.getOrDefault(name, ZERO_OFFSET) : offset1.getOrDefault(name, ZERO_OFFSET);
         return new Bounds(pos.x + off.x, pos.x + off.x + reg.getRegionWidth(),
                 pos.y + off.y, pos.y + off.y + reg.getRegionHeight());
@@ -349,7 +429,9 @@ public class NPCAnimations extends EntityAnimationsBase {
             bounds = playerAnimations.getRenderBounds(pos, angle, flipX, false, renderBounds);
             if (bounds.width <= 0f && bounds.height <= 0f) return List.of();
         } else {
-            Bounds b = calculateBounds(pos, angle, flipX, false);
+            // Must match renderDialogText exactly, or the clickable keywords drift away from the
+            // words drawn on screen.
+            Bounds b = calculateStableBounds(pos, angle, flipX);
             if (b == null) return List.of();
             bounds = new Rectangle(b.minX(), b.minY(), b.width(), b.height());
         }
@@ -366,18 +448,66 @@ public class NPCAnimations extends EntityAnimationsBase {
         }
     }
 
+    /**
+     * Loads every frame of an object appearance.
+     *
+     * <p>The migration records the first frame of the family ({@code SimplePortal-a}), because that
+     * is what the original server stores: {@code __OBJGROUP_PORTAL} is the id of the first of the
+     * twenty-six sprites the client registers for a portal. So a trailing {@code -<letter>} is
+     * walked forward to collect the rest and the object animates, exactly as it does in GoN. Object
+     * appearances with a single sprite, such as {@code Chest} or {@code Vault}, simply yield one
+     * frame and stay still.
+     */
+    private List<TextureRegion> loadStaticFrames(SpriteLoader loader, String baseName) {
+        String spriteName = baseName.substring(STATIC_PREFIX.length());
+        List<TextureRegion> frames = new ArrayList<>();
+        if (!hasFrameSuffix(spriteName)) {
+            TextureRegion single = loader.getRegionFromSpriteName(spriteName);
+            if (single != null) {
+                cacheOffsets(spriteName, loader);
+                frames.add(single);
+            }
+            return frames;
+        }
+        String family = spriteName.substring(0, spriteName.length() - 1);
+        for (char c = FRAME_START; ; c++) {
+            String key = family + c;
+            TextureRegion region = loader.getRegionFromSpriteName(key);
+            if (region == null) break;
+            cacheOffsets(key, loader);
+            frames.add(region);
+        }
+        return frames;
+    }
+
+    /** True when a sprite name ends in the {@code -<letter>} suffix of an animation family. */
+    private static boolean hasFrameSuffix(String spriteName) {
+        int length = spriteName.length();
+        return length >= 2
+                && spriteName.charAt(length - 2) == '-'
+                && Character.isLetter(spriteName.charAt(length - 1));
+    }
+
+    /** Sprite name of one frame of an object appearance, e.g. {@code SimplePortal-c}. */
+    private static String staticFrameName(String baseName, int frameIndex) {
+        String spriteName = baseName.substring(STATIC_PREFIX.length());
+        if (!hasFrameSuffix(spriteName)) {
+            return spriteName;
+        }
+        return spriteName.substring(0, spriteName.length() - 1) + (char) (FRAME_START + frameIndex);
+    }
+
     private void loadBaseAnimations(SpriteLoader loader, String baseName) throws GameException {
         Map<String, List<TextureRegion>> angleMap = new HashMap<>();
         if (baseName.equals("@invisible")) {
             animations.put(baseName, angleMap);
             return;
         }
-        if (baseName.startsWith("@static:")) {
-            String spriteName = baseName.substring("@static:".length());
-            TextureRegion region = loader.getRegionFromSpriteName(spriteName);
-            if (region != null) {
-                cacheOffsets(spriteName, loader);
-                for (String angle : ANGLES) angleMap.put(angle, List.of(region));
+        if (isStaticBase(baseName)) {
+            List<TextureRegion> frames = loadStaticFrames(loader, baseName);
+            if (!frames.isEmpty()) {
+                // Object appearances have no facing: the same frames serve every angle.
+                for (String angle : ANGLES) angleMap.put(angle, frames);
             }
             animations.put(baseName, angleMap);
             return;

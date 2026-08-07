@@ -63,7 +63,16 @@ public class GameConstants {
     public static final float NPC_SPEED = 45f;
     public static final float NPC_PATROL_PAUSE_MIN = 1f;
     public static final float NPC_PATROL_PAUSE_MAX = 3f;
-    public static final float NPC_INTERACTION_RANGE = 5f * GRID_W;
+    /**
+     * Squared conversation reach, in tiles.
+     *
+     * <p>{@code Character::StartAsyncDirectTalk} guards the whole talk path with
+     * {@code if (Dist < 120)}, where {@code Dist} is the squared tile distance to the target. The
+     * comparison is isotropic and made in tiles, so it is reproduced as-is rather than turned into
+     * a world-unit radius: tiles are twice as wide as they are tall, and a world-unit radius would
+     * reach twice as far vertically as horizontally.
+     */
+    public static final float NPC_INTERACTION_RANGE_TILES_SQUARED = 120f;
 
     // NPC hostile retaliation tuning (when a non-fleeing NPC is attacked in combat mode).
     public static final float NPC_HOSTILE_LEASH_RANGE = 20f * GRID_W;

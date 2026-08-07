@@ -25,7 +25,35 @@ public final class DecorFlags {
                 "TapisRouge 2M",
                 "TapisRouge 3",
                 "TapisRouge 3M",
-                "Ble"
+                "Ble",
+                // Bridges are walked upon, so they must stay behind entities instead of fading them.
+                "Bridge1",
+                "Bridge1M",
+                "Bridge2",
+                "Bridge2M",
+                "Bridge3",
+                "Bridge3M"
+        );
+    }
+
+    /**
+     * Decors an entity can be talked to through, while still blocking movement and attacks.
+     *
+     * <p>Cemetery gates are railings: their tiles are {@code ABSOLUTE} so nobody walks or shoots
+     * through them, but they are open enough to hold a conversation across.
+     */
+    public static Set<String> loadSeeThroughForTalkRules() {
+        return Set.of(
+                "Cemetery Gates -",
+                "Cemetery Gates -M",
+                "Cemetery Gates >",
+                "Cemetery Gates >M",
+                "Cemetery Gates X",
+                "Cemetery Gates XM",
+                "Cemetery Gates \\v",
+                "Cemetery Gates \\vM",
+                "Cemetery Gates ^",
+                "Cemetery Gates v"
         );
     }
 
