@@ -426,12 +426,7 @@ public class Player extends Stats {
     public void render(SpriteBatch batch, ShaderProgram outlineShader, boolean hovered) {
         positionVector.set(position.getX(), position.getY());
         float healthPercent = maxHp <= 0 ? 0f : (float) currentHp / (float) maxHp;
-        if (com.perso.T4C.config.GamePreferencesStore.get().isNewHealthBar()) {
-            animations.render(batch, positionVector, movement, outlineShader, hovered, healthPercent);
-        } else {
-            animations.render(batch, positionVector, movement.getCurrentAngle(), movement.isFlipX(),
-                    movement.isMoving(), outlineShader, hovered, 1f, 1f, 0f);
-        }
+        animations.render(batch, positionVector, movement, outlineShader, hovered, healthPercent);
     }
 
     public void renderOcclusionReveal(SpriteBatch batch) {

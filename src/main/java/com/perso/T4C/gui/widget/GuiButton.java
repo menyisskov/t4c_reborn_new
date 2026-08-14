@@ -25,6 +25,7 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
     private boolean enabled = true;
     private float renderedWidth;
     private float renderedHeight;
+    private float labelVerticalOffset;
     private com.badlogic.gdx.graphics.g2d.BitmapFont labelFont;
     private java.util.function.Supplier<String> labelText;
     private final com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout();
@@ -34,6 +35,12 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
     public GuiButton withLabel(com.badlogic.gdx.graphics.g2d.BitmapFont font, java.util.function.Supplier<String> text) {
         this.labelFont = font;
         this.labelText = text;
+        return this;
+    }
+
+    /** Applies a small optical correction to the label baseline when a font has unusual metrics. */
+    public GuiButton withLabelVerticalOffset(float offset) {
+        this.labelVerticalOffset = offset;
         return this;
     }
 
@@ -102,7 +109,7 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
                 }
                 labelFont.draw(batch, layout,
                         x + (w - layout.width) / 2f,
-                        y + (h - layout.height) / 2f);
+                        y + (h - layout.height) / 2f + labelVerticalOffset);
                 labelFont.getData().setScale(prevScaleX, prevScaleY);
             }
         }

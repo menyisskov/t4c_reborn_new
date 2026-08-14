@@ -3,12 +3,16 @@ package com.perso.T4C.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.Texture;
 import com.perso.T4C.config.Paths;
+import com.perso.T4C.config.GamePreferencesStore;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Manages fonts used throughout the application.
@@ -19,6 +23,7 @@ public class FontManager {
     private static FontManager instance;
 
     private final Map<String, BitmapFont> fontCache = new HashMap<>();
+    private final Set<BitmapFont> externalFonts = new HashSet<>();
 
     private FontManager() {
         // Private constructor for singleton
@@ -110,8 +115,34 @@ public class FontManager {
     public void applyHighQuality(boolean enabled) {
         Texture.TextureFilter filter = enabled ? Texture.TextureFilter.Linear : Texture.TextureFilter.Nearest;
         for (BitmapFont font : fontCache.values()) {
-            if (font != null && font.getRegion() != null && font.getRegion().getTexture() != null) {
-                font.getRegion().getTexture().setFilter(filter, filter);
+            applyFilter(font, filter);
+        }
+        for (BitmapFont font : externalFonts) {
+            applyFilter(font, filter);
+        }
+    }
+
+    /** Registers a font not owned by the cache so the quality switch updates it too. */
+    public void registerExternalFont(BitmapFont font) {
+        if (font == null) return;
+        externalFonts.add(font);
+        applyFilter(font, currentFilter());
+    }
+
+    public void unregisterExternalFont(BitmapFont font) {
+        if (font != null) externalFonts.remove(font);
+    }
+
+    private Texture.TextureFilter currentFilter() {
+        return GamePreferencesStore.get().isHighQualityFont()
+                ? Texture.TextureFilter.Linear : Texture.TextureFilter.Nearest;
+    }
+
+    private static void applyFilter(BitmapFont font, Texture.TextureFilter filter) {
+        if (font == null || font.getRegions() == null) return;
+        for (TextureRegion region : font.getRegions()) {
+            if (region != null && region.getTexture() != null) {
+                region.getTexture().setFilter(filter, filter);
             }
         }
     }
@@ -129,7 +160,7 @@ public class FontManager {
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
 
-        return font;
+        return prepare(font);
     }
 
     /**
@@ -150,7 +181,7 @@ public class FontManager {
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
 
-        return font;
+        return prepare(font);
     }
 
     /**
@@ -166,7 +197,7 @@ public class FontManager {
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
 
-        return font;
+        return prepare(font);
     }
 
     private BitmapFont createNpcDialogFont(Color color) {
@@ -186,7 +217,7 @@ public class FontManager {
         parameter.flip = true;
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
-        return font;
+        return prepare(font);
     }
 
     /**
@@ -211,7 +242,7 @@ public class FontManager {
         parameter.flip = true;
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
-        return font;
+        return prepare(font);
     }
 
     /**
@@ -228,7 +259,7 @@ public class FontManager {
         generator.dispose();
 
         font.getData().setLineHeight(27f);
-        return font;
+        return prepare(font);
     }
 
     /**
@@ -253,6 +284,11 @@ public class FontManager {
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
         font.getData().setLineHeight(27f);
+        return prepare(font);
+    }
+
+    private BitmapFont prepare(BitmapFont font) {
+        applyFilter(font, currentFilter());
         return font;
     }
 
@@ -267,6 +303,7 @@ public class FontManager {
             }
         }
         fontCache.clear();
+        externalFonts.clear();
     }
 }
 

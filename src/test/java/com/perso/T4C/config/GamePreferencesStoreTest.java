@@ -30,7 +30,6 @@ class GamePreferencesStoreTest {
         preferences.setEffectsVolume(-2f);
         preferences.setBrightness(9f);
         preferences.setFullscreen(true);
-        preferences.setAnimatedWater(false);
         preferences.setChatLogging(true);
         preferences.setChatLogFilename("session.log");
 
@@ -41,7 +40,6 @@ class GamePreferencesStoreTest {
         assertEquals(0f, loaded.getEffectsVolume(), 0.001f);
         assertEquals(1.25f, loaded.getBrightness(), 0.001f);
         assertTrue(loaded.isFullscreen());
-        assertFalse(loaded.isAnimatedWater());
         assertTrue(loaded.isChatLogging());
         assertEquals("session.log", loaded.getChatLogFilename());
     }

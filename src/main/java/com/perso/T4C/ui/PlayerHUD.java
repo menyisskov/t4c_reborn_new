@@ -62,8 +62,8 @@ public class PlayerHUD {
     private static final float STAT_VALUE_Y = 27f;
     private static final float[] STAT_BAR_X = {83f, 260f};
     private static final float[] STAT_BAR_Y = {17f, 17f};
-    private static final float[] STAT_LABEL_X = {56f, 235f};
-    private static final float[] STAT_LABEL_Y = {19f, 19f};
+    private static final float[] STAT_LABEL_X = {58f, 235f};
+    private static final float[] STAT_LABEL_Y = {20f, 19f};
 
     private TextureRegion topBarBackground;
     private TextureRegion topBarBorder;
@@ -92,8 +92,8 @@ public class PlayerHUD {
     private static final float[] QUICK_SLOT_OFFSET_X = {0f, 52f, 103f, 156f, 206f};
     private static final float BACKPACK_BUTTON_X = 707f;
     private static final float BACKPACK_BUTTON_Y = 81f;
-    private static final float XP_BAR_X = 20f;
-    private static final float XP_BAR_Y = 139f;
+    private static final float XP_BAR_X = 15f;
+    private static final float XP_BAR_Y = 142f;
     private static final float XP_BAR_WIDTH = 894f;
     private static final float XP_BAR_HEIGHT = 14f;
     private final Map<String, TextureRegion> quickSlotIcons = new HashMap<>();
@@ -186,9 +186,7 @@ public class PlayerHUD {
         }
         statsPanel.render(batch);
 
-        if (com.perso.T4C.config.GamePreferencesStore.get().isStatusEffects()) {
-            renderActiveBuffs(batch);
-        }
+        renderActiveBuffs(batch);
         renderExperienceBar(batch);
         renderGold(batch);
         if (isQuickBarVisible()) renderQuickBar(batch);
@@ -198,7 +196,6 @@ public class PlayerHUD {
     }
 
     private void renderGold(SpriteBatch batch) {
-        if (!com.perso.T4C.config.GamePreferencesStore.get().isDisplayGold()) return;
         String value = "Or : " + player.getGold();
         GlyphLayout layout = new GlyphLayout(statLabelFont, value);
         statLabelFont.draw(batch, value, Gdx.graphics.getWidth() - layout.width - 12f, 12f);
@@ -231,8 +228,7 @@ public class PlayerHUD {
     private void renderTopBar(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
         GuiDraw.withOverlayAlpha(batch, () -> {
-            if (generatedTopBar != null
-                    && !com.perso.T4C.config.GamePreferencesStore.get().isOldStatusBar()) {
+            if (generatedTopBar != null) {
                 batch.draw(generatedTopBar, (screenWidth - STAT_PANEL_WIDTH) * 0.5f, 0f,
                         STAT_PANEL_WIDTH, STAT_PANEL_HEIGHT, 0, 0,
                         generatedTopBar.getWidth(), generatedTopBar.getHeight(), false, true);
@@ -649,8 +645,7 @@ public class PlayerHUD {
     }
 
     private boolean isQuickBarVisible() {
-        return !Gdx.graphics.isFullscreen()
-                || com.perso.T4C.config.GamePreferencesStore.get().isFullscreenMacros();
+        return true;
     }
 
     private QuickBarLayout quickBarLayout() {

@@ -574,7 +574,6 @@ public class Inventory extends GuiScreenBase {
     }
 
     private boolean showItemTooltipAt(float screenX, float screenY) {
-        if (!com.perso.T4C.config.GamePreferencesStore.get().isItemDetails()) return false;
         String equippedItem = findEquippedItemAt(screenX, screenY);
         if (equippedItem != null) {
             tooltip.show(buildItemTooltipText(equippedItem), screenX, screenY);

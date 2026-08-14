@@ -2,6 +2,7 @@ package com.perso.T4C.gui.widget;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.perso.T4C.gui.core.AbstractGuiElement;
@@ -12,12 +13,17 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-/** Original-client style two-column option list with 16-pixel rows. */
+/** Original-client style option list with 16-pixel slots separated by 5-pixel gaps. */
 public final class GuiOptionList extends AbstractGuiElement {
     public record Entry(Supplier<String> label, BooleanSupplier value, Consumer<Boolean> setter) {}
 
-    private static final float ROW_HEIGHT = 16f;
-    private static final float TOGGLE_X = 177f;
+    private static final float SLOT_HEIGHT = 16f;
+    private static final float ROW_PITCH = 21f;
+    private static final float TOGGLE_X = 174f;
+    private static final float TOGGLE_DRAW_X = 175f;
+    private static final float TOGGLE_SLOT_SIZE = 16f;
+    private static final float LABEL_X = 0f;
+    private static final float LABEL_MAX_WIDTH = 167f;
     private final float width;
     private final float height;
     private final BitmapFont font;
@@ -27,6 +33,7 @@ public final class GuiOptionList extends AbstractGuiElement {
     private final TextureRegion off;
     private final TextureRegion offHover;
     private final List<Entry> entries;
+    private final GlyphLayout labelLayout = new GlyphLayout();
     private int firstVisible;
     private int hovered = -1;
     private int pressed = -1;
@@ -51,19 +58,34 @@ public final class GuiOptionList extends AbstractGuiElement {
         int visible = visibleRows();
         for (int row = 0; row < visible && firstVisible + row < entries.size(); row++) {
             int index = firstVisible + row;
-            float rowY = y + row * ROW_HEIGHT;
+            float rowY = y + row * ROW_PITCH;
             if (index == hovered && selection != null) {
-                GuiDraw.drawRegionFlipped(batch, selection, x - 2f, rowY, 171f, ROW_HEIGHT);
+                GuiDraw.drawRegionFlipped(batch, selection, x - 2f, rowY);
             }
             Entry entry = entries.get(index);
             Color previous = new Color(font.getColor());
             font.setColor(Color.valueOf("DCDCDC"));
-            font.draw(batch, entry.label().get(), x + 2f, rowY + 1f);
+            String label = entry.label().get();
+            float previousScaleX = font.getData().scaleX;
+            float previousScaleY = font.getData().scaleY;
+            labelLayout.setText(font, label);
+            boolean scaledToFit = false;
+            if (labelLayout.width > LABEL_MAX_WIDTH) {
+                float scale = LABEL_MAX_WIDTH / labelLayout.width;
+                font.getData().setScale(previousScaleX * scale, previousScaleY * scale);
+                labelLayout.setText(font, label);
+                scaledToFit = true;
+            }
+            font.draw(batch, labelLayout, x + LABEL_X, rowY + (scaledToFit ? 1f : 0f));
+            font.getData().setScale(previousScaleX, previousScaleY);
             font.setColor(previous);
             TextureRegion toggle = entry.value().getAsBoolean()
                     ? (index == hovered ? onHover : on)
                     : (index == hovered ? offHover : off);
-            if (toggle != null) GuiDraw.drawRegionFlipped(batch, toggle, x + TOGGLE_X, rowY);
+            if (toggle != null) {
+                float toggleX = x + TOGGLE_DRAW_X;
+                GuiDraw.drawRegionFlipped(batch, toggle, toggleX, rowY);
+            }
         }
     }
 
@@ -94,17 +116,20 @@ public final class GuiOptionList extends AbstractGuiElement {
 
     private int rowAt(float screenX, float screenY) {
         if (!contains(screenX, screenY)) return -1;
-        int index = firstVisible + (int) ((screenY - y) / ROW_HEIGHT);
+        float relativeY = screenY - y;
+        int row = (int) (relativeY / ROW_PITCH);
+        if (relativeY - row * ROW_PITCH >= SLOT_HEIGHT) return -1;
+        int index = firstVisible + row;
         return index < entries.size() ? index : -1;
     }
 
     private int toggleRowAt(float screenX, float screenY) {
-        if (screenX < x + TOGGLE_X || screenX > x + TOGGLE_X + 16f) return -1;
+        if (screenX < x + TOGGLE_X || screenX > x + TOGGLE_X + TOGGLE_SLOT_SIZE) return -1;
         return rowAt(screenX, screenY);
     }
 
     private int visibleRows() {
-        return Math.max(1, (int) (height / ROW_HEIGHT));
+        return Math.max(1, 1 + (int) ((height - 1f) / ROW_PITCH));
     }
 
     @Override public float getWidth() { return width; }

@@ -2781,9 +2781,6 @@ public class MainGameScreen implements Screen {
      * Renders the day/night ambient darkness overlay (full-screen alpha quad).
      */
     private void renderDayNightOverlay() {
-        if (com.perso.T4C.config.GamePreferencesStore.get().isLightGraphics()) {
-            return;
-        }
         com.badlogic.gdx.graphics.Color overlay = dayNightCycle.getOverlayColor();
         if (overlay.a <= 0f) {
             return;
@@ -3855,9 +3852,7 @@ public class MainGameScreen implements Screen {
         MonsterInputHandler monsterInputHandler = new MonsterInputHandler(camera, monsterManager, player, this::tryCastTargetedSpell, this::tryBowAttack, systemMessage);
         monsterInputHandler.setOnAttackTargetSelected(this::beginAttackTarget);
         monsterInputHandler.setOnClickedElsewhere(() -> {
-            if (!com.perso.T4C.config.GamePreferencesStore.get().isLockTarget()) {
-                clearCurrentAttackTarget();
-            }
+            clearCurrentAttackTarget();
             cancelActiveTargetedSpell();
         });
 
@@ -4001,12 +3996,9 @@ public class MainGameScreen implements Screen {
                     GuiManager.onScroll(amountY, Gdx.input.getX(), Gdx.input.getY());
                     return true;
                 }
-                if (com.perso.T4C.config.GamePreferencesStore.get().isZoomEnabled()) {
-                    camera.zoom = Math.max(0.6f, Math.min(1.8f, camera.zoom + amountY * 0.1f));
-                    camera.update();
-                    return true;
-                }
-                return false;
+                camera.zoom = Math.max(0.6f, Math.min(1.8f, camera.zoom + amountY * 0.1f));
+                camera.update();
+                return true;
             }
         };
         InputAdapter positionSpellHandler = new InputAdapter() {

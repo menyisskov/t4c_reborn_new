@@ -34,6 +34,7 @@ public class HudTooltip {
         this.font.getData().setScale(1f, -1f);
         this.font.setUseIntegerPositions(false);
         this.font.setColor(Color.WHITE);
+        FontManager.getInstance().registerExternalFont(this.font);
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -99,6 +100,7 @@ public class HudTooltip {
     }
 
     public void dispose() {
+        FontManager.getInstance().unregisterExternalFont(font);
         font.dispose();
         background.dispose();
     }

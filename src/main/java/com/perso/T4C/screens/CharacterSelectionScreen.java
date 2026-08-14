@@ -272,14 +272,24 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
                 : contains(x, y, largeNormal.getRegionWidth(), largeNormal.getRegionHeight())
                 ? largeHover : largeNormal;
         GuiDraw.drawRegionFlipped(batch, region, x, y);
-        if (enabled) drawCentered(buttonFont, text, x, y + 3f, largeNormal.getRegionWidth());
+        if (enabled) drawButtonTextCentered(buttonFont, text, x, y,
+                largeNormal.getRegionWidth(), largeNormal.getRegionHeight());
     }
 
     private void drawSmallButton(float x, float y, String text, boolean enabled) {
         TextureRegion region = enabled && contains(x, y, smallNormal.getRegionWidth(), smallNormal.getRegionHeight())
                 ? smallHover : smallNormal;
         GuiDraw.drawRegionFlipped(batch, region, x, y);
-        if (enabled) drawCentered(buttonFont, text, x, y + 3f, smallNormal.getRegionWidth());
+        if (enabled) drawButtonTextCentered(buttonFont, text, x, y,
+                smallNormal.getRegionWidth(), smallNormal.getRegionHeight());
+    }
+
+    private void drawButtonTextCentered(BitmapFont font, String text, float x, float y,
+                                        float width, float height) {
+        layout.setText(font, text);
+        font.draw(batch, layout,
+                x + (width - layout.width) / 2f,
+                y + (height - layout.height) / 2f);
     }
 
     private void drawCentered(BitmapFont font, String text, float x, float y, float width) {
