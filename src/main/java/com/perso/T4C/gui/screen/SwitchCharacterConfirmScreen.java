@@ -23,7 +23,9 @@ public final class SwitchCharacterConfirmScreen extends GuiScreenBase {
         var gold = Color.valueOf("DF9D00");
         var textFont = FontManager.getInstance().getJetBrainsMonoFont(12, gold);
         labels.add(new GuiBoxedText(textFont, x + 22f, y + 23f, 196f, 55f,
-                () -> I18n.key("options.switch_character.confirm"), () -> gold));
+                () -> I18n.key("options.switch_character.confirm"), () -> gold)
+                .wrap()
+                .shrinkToFit());
 
         var normal = GuiSprites.load("GUI_ButtonUp");
         var hover = GuiSprites.load("GUI_ButtonHUp");

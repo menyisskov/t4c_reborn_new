@@ -19,7 +19,7 @@ public class PlayerCoordsHud {
     public PlayerCoordsHud(Player player) {
         this.player = player;
         this.font = ((MyGame) Gdx.app.getApplicationListener()).customFont;
-        this.font.getData().setScale(0.8f);
+        this.font.getData().setScale(FontManager.logicalScale(0.8f));
         this.font.setColor(Color.WHITE);
     }
 

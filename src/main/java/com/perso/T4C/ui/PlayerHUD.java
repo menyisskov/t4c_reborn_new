@@ -155,7 +155,7 @@ public class PlayerHUD {
         this.lastTextureGen = spriteLoader.getTextureGeneration();
 
         this.font = ((MyGame) Gdx.app.getApplicationListener()).customFont;
-        this.font.getData().setScale(0.7f);
+        this.font.getData().setScale(FontManager.logicalScale(0.7f));
         this.font.setColor(Color.WHITE);
         this.statLabelFont = FontManager.getInstance().getTahomaFont(12, Color.WHITE, true);
         this.hpLabel = new GuiBoxedText(statLabelFont, 0f, 0f, STAT_LABEL_WIDTH, STAT_LABEL_HEIGHT,
@@ -1072,7 +1072,7 @@ public class PlayerHUD {
         int seconds = (int) Math.ceil(remaining);
         String text = String.valueOf(seconds);
         float previousScale = font.getData().scaleX;
-        font.getData().setScale(0.6f);
+        font.getData().setScale(FontManager.logicalScale(0.6f));
         cooldownLayout.setText(font, text);
         float textX = slotX + (size - cooldownLayout.width) * 0.5f;
         float textY = slotY + (size + cooldownLayout.height) * 0.5f;

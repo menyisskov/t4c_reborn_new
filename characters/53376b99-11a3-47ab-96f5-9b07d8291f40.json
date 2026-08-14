@@ -9,7 +9,7 @@
   "endurance": 16,
   "intelligence": 21,
   "wisdom": 17,
-  "gold": 0,
+  "gold": 250,
   "karma": 0,
   "maxHp": 27,
   "currentHp": 27,
@@ -25,6 +25,10 @@
   "quickSlots": [],
   "activeBuffs": [],
   "inventory": [
+    "item.dagger",
+    "item.cloth_vest",
+    "item.cloth_pants",
+    "item.bow",
     "item.letter_from_crimsonscale",
     "item.light_healing_potion",
     "item.light_healing_potion",
@@ -48,7 +52,8 @@
     "item.book_of_psalms": 17
   },
   "questFlags": {
-    "__FLAG_ADDON_CRIMSONSCALE_LETTER": 1
+    "__FLAG_ADDON_CRIMSONSCALE_LETTER": 1,
+    "__MIGRATION_STARTING_EQUIPMENT_V1": 1
   },
   "respawnPointDefined": true,
   "respawnWorldX": 94432.0,

@@ -8,6 +8,7 @@ import com.perso.T4C.gui.core.GuiResizable;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.perso.T4C.audio.SoundManager;
+import com.perso.T4C.ui.FontManager;
 
 import java.util.Objects;
 /**
@@ -93,6 +94,7 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
         }
         GuiDraw.drawRegionFlipped(batch, region, x, y, renderedWidth, renderedHeight);
         if (labelFont != null && labelText != null) {
+            FontManager.getInstance().applyCurrentQuality(labelFont);
             String text = labelText.get();
             if (text != null && !text.isEmpty()) {
                 float w = renderedWidth;

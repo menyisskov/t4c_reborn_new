@@ -1,18 +1,18 @@
 {
   "name": "Lynania",
   "gender": "FEMALE",
-  "x": 2927.0,
-  "y": 1068.0,
+  "x": 2932.0,
+  "y": 1059.0,
   "z": 0,
   "strength": 15,
   "dexterity": 15,
   "endurance": 12,
   "intelligence": 17,
   "wisdom": 15,
-  "gold": 0,
+  "gold": 250,
   "karma": 0,
   "maxHp": 27,
-  "currentHp": 27,
+  "currentHp": 24,
   "maxMana": 12,
   "mana": 12,
   "level": 1,
@@ -36,20 +36,27 @@
     "item.light_healing_potion",
     "item.book_of_psalms",
     "item.gem_of_destiny",
-    "item.wooden_arrow",
     "item.light_healing_potion",
     "item.wooden_arrow",
     "item.wooden_arrow",
     "item.wooden_arrow",
-    "item.wooden_arrow"
+    "item.wooden_arrow",
+    "item.dagger",
+    "item.cloth_pants",
+    "item.cloth_vest"
   ],
-  "equipment": {},
+  "equipment": {
+    "WEAPON2": "item.wooden_arrow",
+    "WEAPON": "item.bow"
+  },
   "skills": {},
   "itemCharges": {
     "item.book_of_psalms": 12,
     "item.light_healing_potion": 5
   },
-  "questFlags": {},
+  "questFlags": {
+    "__MIGRATION_STARTING_EQUIPMENT_V1": 1
+  },
   "respawnPointDefined": true,
   "respawnWorldX": 94432.0,
   "respawnWorldY": 16608.0,

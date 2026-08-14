@@ -76,9 +76,41 @@ class LocalCharacterStoreTest {
         assertEquals(1059f, state.y);
         assertEquals(0, state.z);
         assertTrue(state.spells.isEmpty(), "A new character must not start with LevelUp");
+        assertTrue(state.gold >= LocalCharacterStore.MIN_STARTING_GOLD);
+        assertTrue(state.gold <= LocalCharacterStore.MAX_STARTING_GOLD);
+        assertEquals(List.of(
+                "item.dagger",
+                "item.cloth_vest",
+                "item.cloth_pants",
+                "item.bow",
+                "item.wooden_arrow"), state.inventory);
 
         LocalCharacterStore.delete(second);
         assertEquals(2, LocalCharacterStore.list().size());
         assertFalse(Files.exists(tempDir.resolve(second.stateFile())));
+    }
+
+    @Test
+    void addsTheStartingEquipmentOnceToAnExistingCharacter() throws Exception {
+        CharacterCreationRules.Stats stats = new CharacterCreationRules.Stats(
+                15, 14, 13, 12, 11, 28, 10);
+        LocalCharacterStore.CharacterSlot slot = LocalCharacterStore.create(
+                "Ancien", LocalCharacterStore.MALE, stats);
+        PlayerStateDto legacy = LocalCharacterStore.loadState(slot);
+        legacy.gold = 0;
+        legacy.inventory.clear();
+        legacy.questFlags.clear();
+        PlayerStateStore.save(slot.stateFile(), legacy);
+
+        PlayerStateDto migrated = LocalCharacterStore.loadState(slot);
+
+        assertEquals(250, migrated.gold);
+        assertEquals(List.of(
+                "item.dagger",
+                "item.cloth_vest",
+                "item.cloth_pants",
+                "item.bow",
+                "item.wooden_arrow"), migrated.inventory);
+        assertEquals(migrated.inventory, LocalCharacterStore.loadState(slot).inventory);
     }
 }

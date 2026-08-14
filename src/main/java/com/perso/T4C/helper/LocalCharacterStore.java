@@ -15,12 +15,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /** Three-slot local character roster used when no T4C server is available. */
 public final class LocalCharacterStore {
     public static final int MAX_CHARACTERS = 3;
     public static final String MALE = AppearanceDefaultsCatalog.MALE;
     public static final String FEMALE = AppearanceDefaultsCatalog.FEMALE;
+    public static final int MIN_STARTING_GOLD = 201;
+    public static final int MAX_STARTING_GOLD = 250;
+    private static final String STARTING_EQUIPMENT_MIGRATION =
+            "__MIGRATION_STARTING_EQUIPMENT_V1";
+
+    private static final List<String> STARTING_INVENTORY = List.of(
+            "item.dagger",
+            "item.cloth_vest",
+            "item.cloth_pants",
+            "item.bow",
+            "item.wooden_arrow");
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static volatile CharacterSlot activeCharacter;
@@ -88,7 +100,12 @@ public final class LocalCharacterStore {
     }
 
     public static PlayerStateDto loadState(CharacterSlot slot) {
-        return slot == null ? null : PlayerStateStore.load(slot.stateFile);
+        if (slot == null) return null;
+        PlayerStateDto state = PlayerStateStore.load(slot.stateFile);
+        if (applyStartingEquipmentMigration(state)) {
+            PlayerStateStore.save(slot.stateFile, state);
+        }
+        return state;
     }
 
     private static PlayerStateDto newInitialState(String name, String gender,
@@ -109,20 +126,38 @@ public final class LocalCharacterStore {
         state.maxMana = stats.maxMana();
         state.mana = stats.maxMana();
         state.level = 1;
+        // The original server rolls StartupGold from the default formula 200+1d50.
+        state.gold = ThreadLocalRandom.current().nextInt(
+                MIN_STARTING_GOLD, MAX_STARTING_GOLD + 1);
         state.dayNightHour = 7f;
         state.spells = new ArrayList<>();
         state.quickSlots = new ArrayList<>();
         state.activeBuffs = new ArrayList<>();
-        state.inventory = new ArrayList<>();
+        state.inventory = new ArrayList<>(STARTING_INVENTORY);
         state.equipment = new HashMap<>();
         state.skills = new HashMap<>();
         state.itemCharges = new HashMap<>();
         state.questFlags = new HashMap<>();
+        state.questFlags.put(STARTING_EQUIPMENT_MIGRATION, 1);
         state.respawnPointDefined = true;
         state.respawnWorldX = GameConstants.PLAYER_RESPAWN_TILE_X * GameConstants.GRID_W;
         state.respawnWorldY = GameConstants.PLAYER_RESPAWN_TILE_Y * GameConstants.GRID_H;
         state.respawnWorldZ = GameConstants.PLAYER_RESPAWN_TILE_Z;
         return state;
+    }
+
+    private static boolean applyStartingEquipmentMigration(PlayerStateDto state) {
+        if (state == null) return false;
+        if (state.questFlags == null) state.questFlags = new HashMap<>();
+        if (state.questFlags.getOrDefault(STARTING_EQUIPMENT_MIGRATION, 0) != 0) return false;
+
+        if (state.inventory == null) state.inventory = new ArrayList<>();
+        for (String item : STARTING_INVENTORY) {
+            if (!state.inventory.contains(item)) state.inventory.add(item);
+        }
+        state.gold = Math.max(state.gold, MAX_STARTING_GOLD);
+        state.questFlags.put(STARTING_EQUIPMENT_MIGRATION, 1);
+        return true;
     }
 
     private static Roster loadRoster() throws IOException {

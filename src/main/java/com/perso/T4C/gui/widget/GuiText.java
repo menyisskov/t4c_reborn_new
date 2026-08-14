@@ -72,6 +72,7 @@ public class GuiText extends AbstractGuiElement {
         if (text == null || text.isEmpty()) {
             return;
         }
+        FontManager.getInstance().applyCurrentQuality(font);
         if (colorSupplier != null) {
             Color previous = new Color(font.getColor());
             font.setColor(colorSupplier.get());
@@ -87,6 +88,7 @@ public class GuiText extends AbstractGuiElement {
         if (text == null || text.isEmpty()) {
             return;
         }
+        FontManager.getInstance().applyCurrentQuality(font);
         Color previous = new Color(font.getColor());
         font.setColor(color);
         font.draw(batch, text, x, y);
@@ -98,6 +100,7 @@ public class GuiText extends AbstractGuiElement {
         if (text == null || text.isEmpty()) {
             return;
         }
+        FontManager.getInstance().applyCurrentQuality(font);
         Color previous = new Color(font.getColor());
         font.setColor(outlineColor);
         font.draw(batch, text, x - outlineOffset, y);

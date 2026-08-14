@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.perso.T4C.config.GameConstants;
+import com.perso.T4C.ui.FontManager;
 
 import java.util.function.Supplier;
 
@@ -75,6 +76,7 @@ public class GuiBoxedText extends GuiText implements GuiResizable {
         if (text == null || text.isEmpty()) {
             return;
         }
+        FontManager.getInstance().applyCurrentQuality(font);
         float prevScaleX = font.getData().scaleX;
         float prevScaleY = font.getData().scaleY;
         float maxW = width - 2f * PAD_X;
@@ -87,7 +89,10 @@ public class GuiBoxedText extends GuiText implements GuiResizable {
             font.getData().setScale(prevScaleX * scale, prevScaleY * scale);
             layout = createLayout(text, maxW, renderColor);
         }
-        float tx = switch (align) {
+        // Wrapped layouts already position every line inside maxW according to
+        // their alignment. Applying the single-line offset again would center
+        // the text twice and shift centered/right-aligned paragraphs.
+        float tx = wrap ? getX() + PAD_X : switch (align) {
             case LEFT -> getX() + PAD_X;
             case RIGHT -> getX() + width - PAD_X - layout.width;
             case CENTER -> getX() + (width - layout.width) / 2f;

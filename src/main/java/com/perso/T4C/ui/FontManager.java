@@ -19,6 +19,8 @@ import java.util.Set;
  * Provides T4C Beaulieu and JetBrains Mono fonts with various sizes and configurations.
  */
 public class FontManager {
+    private static final int FONT_SUPERSAMPLING = 2;
+    private static final float FONT_RENDER_SCALE = 1f / FONT_SUPERSAMPLING;
 
     private static FontManager instance;
 
@@ -37,6 +39,11 @@ public class FontManager {
             instance = new FontManager();
         }
         return instance;
+    }
+
+    /** Converts an existing logical font scale to the supersampled atlas scale. */
+    public static float logicalScale(float scale) {
+        return scale * FONT_RENDER_SCALE;
     }
 
     /**
@@ -133,6 +140,11 @@ public class FontManager {
         if (font != null) externalFonts.remove(font);
     }
 
+    /** Synchronizes one font with the currently selected quality at draw time. */
+    public void applyCurrentQuality(BitmapFont font) {
+        applyFilter(font, currentFilter());
+    }
+
     private Texture.TextureFilter currentFilter() {
         return GamePreferencesStore.get().isHighQualityFont()
                 ? Texture.TextureFilter.Linear : Texture.TextureFilter.Nearest;
@@ -153,7 +165,7 @@ public class FontManager {
     private BitmapFont createT4CBeaulieuFont(int size, Color color) {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Paths.FONT));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = size;
+        parameter.size = size * FONT_SUPERSAMPLING;
         parameter.color = color;
         parameter.flip = true;
 
@@ -169,12 +181,12 @@ public class FontManager {
     private BitmapFont createT4CBeaulieuFontStyled(int size, Color color, float borderWidth, Color borderColor, int shadowOffsetX, int shadowOffsetY, Color shadowColor) {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Paths.FONT));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = size;
+        parameter.size = size * FONT_SUPERSAMPLING;
         parameter.color = color;
-        parameter.borderWidth = borderWidth;
+        parameter.borderWidth = borderWidth * FONT_SUPERSAMPLING;
         parameter.borderColor = borderColor;
-        parameter.shadowOffsetX = shadowOffsetX;
-        parameter.shadowOffsetY = shadowOffsetY;
+        parameter.shadowOffsetX = shadowOffsetX * FONT_SUPERSAMPLING;
+        parameter.shadowOffsetY = shadowOffsetY * FONT_SUPERSAMPLING;
         parameter.shadowColor = shadowColor;
         parameter.flip = true;
 
@@ -190,7 +202,7 @@ public class FontManager {
     private BitmapFont createJetBrainsMonoFont(int size, Color color) {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(com.perso.T4C.config.Paths.FONT_JETBRAINS_MONO));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = size;
+        parameter.size = size * FONT_SUPERSAMPLING;
         parameter.color = color;
         parameter.flip = true;
 
@@ -212,7 +224,7 @@ public class FontManager {
         }
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(verdana);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 14;
+        parameter.size = 14 * FONT_SUPERSAMPLING;
         parameter.color = color;
         parameter.flip = true;
         BitmapFont font = generator.generateFont(parameter);
@@ -237,7 +249,7 @@ public class FontManager {
         }
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(tahoma);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = size;
+        parameter.size = size * FONT_SUPERSAMPLING;
         parameter.color = color;
         parameter.flip = true;
         BitmapFont font = generator.generateFont(parameter);
@@ -251,14 +263,14 @@ public class FontManager {
     private BitmapFont createChewyFont(int size, Color color) {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(com.perso.T4C.config.Paths.FONT_CHEWY));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = size;
+        parameter.size = size * FONT_SUPERSAMPLING;
         parameter.color = color;
         parameter.flip = true;
 
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
 
-        font.getData().setLineHeight(27f);
+        font.getData().setLineHeight(27f * FONT_SUPERSAMPLING);
         return prepare(font);
     }
 
@@ -278,16 +290,17 @@ public class FontManager {
         }
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(hatten);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = size;
+        parameter.size = size * FONT_SUPERSAMPLING;
         parameter.color = color;
         parameter.flip = true;
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
-        font.getData().setLineHeight(27f);
+        font.getData().setLineHeight(27f * FONT_SUPERSAMPLING);
         return prepare(font);
     }
 
     private BitmapFont prepare(BitmapFont font) {
+        font.getData().setScale(FONT_RENDER_SCALE);
         applyFilter(font, currentFilter());
         return font;
     }
