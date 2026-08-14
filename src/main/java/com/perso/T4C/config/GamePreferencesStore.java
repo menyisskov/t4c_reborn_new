@@ -56,6 +56,9 @@ public final class GamePreferencesStore {
         value.setMusicVolume(clamp01(value.getMusicVolume()));
         value.setEffectsVolume(clamp01(value.getEffectsVolume()));
         value.setBrightness(clamp(value.getBrightness(), 0.5f, 1.25f));
+        if (value.getChatLogFilename() == null || value.getChatLogFilename().isBlank()) {
+            value.setChatLogFilename("t4c-chat.log");
+        }
         return value;
     }
 

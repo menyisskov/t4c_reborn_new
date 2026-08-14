@@ -415,6 +415,14 @@ public class SpriteLoader {
         }
     }
 
+    /** Stops notifying a previously registered runtime reload listener. */
+    public void unregisterReloadListener(Runnable listener) {
+        if (listener == null) return;
+        synchronized (reloadListeners) {
+            reloadListeners.remove(listener);
+        }
+    }
+
     private void notifyReloadListeners() {
         List<Runnable> copy;
         synchronized (reloadListeners) {

@@ -214,7 +214,9 @@ public class MonsterAnimations extends EntityAnimationsBase {
 
         // Draw an optional standalone Shd sprite before the outlined entity.
         batch.setShader(null);
-        renderShadow(batch, name, pos, flipX);
+        if (com.perso.T4C.config.GamePreferencesStore.get().isNewShadows()) {
+            renderShadow(batch, name, pos, flipX);
+        }
 
         // Apply outline shader if hovered
         if (isHovered && outlineShader != null && outlineShader.isCompiled()) {

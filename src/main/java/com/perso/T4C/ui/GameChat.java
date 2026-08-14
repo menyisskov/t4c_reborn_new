@@ -21,6 +21,12 @@ import com.perso.T4C.helper.SpriteLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * In-game chat adapted from the original client's main-bar chat.
@@ -88,11 +94,40 @@ public final class GameChat extends InputAdapter {
 
     public void addSystemMessage(String message) {
         add(message, SYSTEM);
+        appendLog(message);
     }
 
     public void addLocalMessage(String speaker, String message) {
         String prefix = speaker == null || speaker.isBlank() ? "" : speaker + " : ";
         add(prefix + message, LOCAL);
+        if (com.perso.T4C.config.GamePreferencesStore.get().isLogPlayerMessages()) {
+            appendLog(prefix + message);
+        }
+    }
+
+    /** Adds NPC speech to the backscroll according to the original NPC logging toggle. */
+    public void addNpcMessage(String speaker, String message) {
+        String prefix = speaker == null || speaker.isBlank() ? "" : speaker + " : ";
+        add(prefix + message, SYSTEM);
+        if (com.perso.T4C.config.GamePreferencesStore.get().isLogNpcMessages()) {
+            appendLog(prefix + message);
+        }
+    }
+
+    private static void appendLog(String message) {
+        var preferences = com.perso.T4C.config.GamePreferencesStore.get();
+        if (!preferences.isChatLogging() || message == null || message.isBlank()) return;
+        try {
+            Path path = Path.of(System.getProperty("user.dir"), preferences.getChatLogFilename()).normalize();
+            Path root = Path.of(System.getProperty("user.dir")).toAbsolutePath().normalize();
+            if (!path.toAbsolutePath().startsWith(root)) return;
+            String line = "[" + LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    + "] " + message + System.lineSeparator();
+            Files.writeString(path, line, StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        } catch (Exception ignored) {
+            // Logging must never interrupt gameplay.
+        }
     }
 
     private void add(String message, Color color) {

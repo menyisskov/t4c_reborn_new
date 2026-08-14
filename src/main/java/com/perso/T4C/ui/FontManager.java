@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.Texture;
 import com.perso.T4C.config.Paths;
 
 import java.util.HashMap;
@@ -103,6 +104,16 @@ public class FontManager {
     public BitmapFont getHaettenschweilerFont(int size, Color color) {
         String key = "haettenschweiler_" + size + "_" + color.toString();
         return fontCache.computeIfAbsent(key, k -> createHaettenschweilerFont(size, color));
+    }
+
+    /** Applies the original high-font switch immediately to every cached font. */
+    public void applyHighQuality(boolean enabled) {
+        Texture.TextureFilter filter = enabled ? Texture.TextureFilter.Linear : Texture.TextureFilter.Nearest;
+        for (BitmapFont font : fontCache.values()) {
+            if (font != null && font.getRegion() != null && font.getRegion().getTexture() != null) {
+                font.getRegion().getTexture().setFilter(filter, filter);
+            }
+        }
     }
 
     /**

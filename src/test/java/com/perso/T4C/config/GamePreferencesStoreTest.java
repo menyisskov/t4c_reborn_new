@@ -30,6 +30,9 @@ class GamePreferencesStoreTest {
         preferences.setEffectsVolume(-2f);
         preferences.setBrightness(9f);
         preferences.setFullscreen(true);
+        preferences.setAnimatedWater(false);
+        preferences.setChatLogging(true);
+        preferences.setChatLogFilename("session.log");
 
         GamePreferencesStore.save(file, preferences);
         GamePreferences loaded = GamePreferencesStore.load(file);
@@ -38,5 +41,16 @@ class GamePreferencesStoreTest {
         assertEquals(0f, loaded.getEffectsVolume(), 0.001f);
         assertEquals(1.25f, loaded.getBrightness(), 0.001f);
         assertTrue(loaded.isFullscreen());
+        assertFalse(loaded.isAnimatedWater());
+        assertTrue(loaded.isChatLogging());
+        assertEquals("session.log", loaded.getChatLogFilename());
+    }
+
+    @Test
+    void missingLogFilenameUsesOriginalCompatibleDefault() throws Exception {
+        Path file = tempDir.resolve("settings.json");
+        Files.writeString(file, "{\"chatLogFilename\":\"  \"}");
+
+        assertEquals("t4c-chat.log", GamePreferencesStore.load(file).getChatLogFilename());
     }
 }

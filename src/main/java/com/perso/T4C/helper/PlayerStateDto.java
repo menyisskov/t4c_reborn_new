@@ -11,6 +11,8 @@ import java.util.Map;
 
 @NoArgsConstructor
 public class PlayerStateDto {
+    public String name;
+    public String gender;
     /** Persisted tile coordinates. */
     public float x;
     public float y;

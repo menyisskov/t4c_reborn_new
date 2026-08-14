@@ -32,6 +32,8 @@ import java.util.Map;
  * player.
  */
 public class Player extends Stats {
+    private String name = "Personnage";
+    private String gender = com.perso.T4C.helper.AppearanceDefaultsCatalog.MALE;
     /**
      * Callback interface for showing system messages.
      */
@@ -163,6 +165,26 @@ public class Player extends Stats {
         this.animations = new PlayerAnimations(parts);
         this.movement = new PlayerMovement();
         this.position.set(0f, 0f, 0);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (name != null && !name.isBlank()) {
+            this.name = name;
+        }
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = com.perso.T4C.helper.AppearanceDefaultsCatalog.FEMALE.equalsIgnoreCase(gender)
+                ? com.perso.T4C.helper.AppearanceDefaultsCatalog.FEMALE
+                : com.perso.T4C.helper.AppearanceDefaultsCatalog.MALE;
     }
 
     /**
@@ -404,7 +426,12 @@ public class Player extends Stats {
     public void render(SpriteBatch batch, ShaderProgram outlineShader, boolean hovered) {
         positionVector.set(position.getX(), position.getY());
         float healthPercent = maxHp <= 0 ? 0f : (float) currentHp / (float) maxHp;
-        animations.render(batch, positionVector, movement, outlineShader, hovered, healthPercent);
+        if (com.perso.T4C.config.GamePreferencesStore.get().isNewHealthBar()) {
+            animations.render(batch, positionVector, movement, outlineShader, hovered, healthPercent);
+        } else {
+            animations.render(batch, positionVector, movement.getCurrentAngle(), movement.isFlipX(),
+                    movement.isMoving(), outlineShader, hovered, 1f, 1f, 0f);
+        }
     }
 
     public void renderOcclusionReveal(SpriteBatch batch) {

@@ -628,6 +628,10 @@ public class ObjectRenderer {
         if (entity.occlusionRevealAction == null) {
             return;
         }
+        // With dithering disabled the original client keeps foreground scenery opaque.
+        if (!com.perso.T4C.config.GamePreferencesStore.get().isDithering()) {
+            return;
+        }
         Color color = batch.getColor();
         float r = color.r;
         float g = color.g;

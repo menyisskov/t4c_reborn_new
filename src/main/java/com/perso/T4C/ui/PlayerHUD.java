@@ -186,12 +186,22 @@ public class PlayerHUD {
         }
         statsPanel.render(batch);
 
-        renderActiveBuffs(batch);
+        if (com.perso.T4C.config.GamePreferencesStore.get().isStatusEffects()) {
+            renderActiveBuffs(batch);
+        }
         renderExperienceBar(batch);
-        renderQuickBar(batch);
+        renderGold(batch);
+        if (isQuickBarVisible()) renderQuickBar(batch);
         renderChatBarButtons(batch);
         renderBuffTooltip(batch);
         renderCombatModeIndicator(batch);
+    }
+
+    private void renderGold(SpriteBatch batch) {
+        if (!com.perso.T4C.config.GamePreferencesStore.get().isDisplayGold()) return;
+        String value = "Or : " + player.getGold();
+        GlyphLayout layout = new GlyphLayout(statLabelFont, value);
+        statLabelFont.draw(batch, value, Gdx.graphics.getWidth() - layout.width - 12f, 12f);
     }
 
     private void loadTopBarRegions() throws GameException {
@@ -221,7 +231,8 @@ public class PlayerHUD {
     private void renderTopBar(SpriteBatch batch) {
         float screenWidth = Gdx.graphics.getWidth();
         GuiDraw.withOverlayAlpha(batch, () -> {
-            if (generatedTopBar != null) {
+            if (generatedTopBar != null
+                    && !com.perso.T4C.config.GamePreferencesStore.get().isOldStatusBar()) {
                 batch.draw(generatedTopBar, (screenWidth - STAT_PANEL_WIDTH) * 0.5f, 0f,
                         STAT_PANEL_WIDTH, STAT_PANEL_HEIGHT, 0, 0,
                         generatedTopBar.getWidth(), generatedTopBar.getHeight(), false, true);
@@ -562,7 +573,7 @@ public class PlayerHUD {
         xpGuiBar.setPosition(lastXpGuiX, lastXpGuiY);
         xpGuiBar.setSize(lastXpGuiWidth, lastXpGuiHeight);
         xpGuiBar.render(batch);
-        if (com.perso.T4C.config.GamePreferencesStore.get().isShowHudValues()) {
+        if (com.perso.T4C.config.GamePreferencesStore.get().isXpBarText()) {
             drawBarValue(batch, "XP  " + Math.round(ratio * 100f) + "%",
                     lastXpGuiX, lastXpGuiY - 3f * layout.scale, lastXpGuiWidth,
                     Math.max(13f * layout.scale, lastXpGuiHeight));
@@ -585,6 +596,7 @@ public class PlayerHUD {
     }
 
     public int getQuickSlotAt(int screenX, int screenY) {
+        if (!isQuickBarVisible()) return 0;
         QuickBarLayout layout = quickBarLayout();
         for (int i = QUICK_SLOT_COUNT - 1; i >= 0; i--) {
             QuickSlotBox box = syncQuickSlotBox(layout, i);
@@ -634,6 +646,11 @@ public class PlayerHUD {
 
     public boolean isQuickBarHit(int screenX, int screenY) {
         return getQuickSlotAt(screenX, screenY) > 0;
+    }
+
+    private boolean isQuickBarVisible() {
+        return !Gdx.graphics.isFullscreen()
+                || com.perso.T4C.config.GamePreferencesStore.get().isFullscreenMacros();
     }
 
     private QuickBarLayout quickBarLayout() {

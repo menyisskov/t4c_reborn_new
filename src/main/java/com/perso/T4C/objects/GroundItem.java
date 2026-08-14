@@ -17,7 +17,7 @@ import static com.perso.T4C.config.GameConstants.GRID_H;
 
 /**
  * An item lying on the ground, dropped by a monster on death.
- * Rendered as its ground sprite (the inventory sprite without the "64kInv" prefix) at its
+ * Rendered as its original ground sprite (normally {@code 64kItemGr*}) at its
  * world position, and picked up by clicking on it. {@link #getItemName()} stays the item
  * class name, so the inventory receives the correct entry on pickup.
  *
@@ -87,13 +87,17 @@ public class GroundItem {
             SpriteLoader loader = SpriteLoader.getInstance();
             ItemDefinition def = ItemDefinition.get(itemName);
             String inventorySprite = def != null ? def.getAppearanceInventory() : itemName;
-            // The ground sprite is the inventory sprite without the "64kInv" prefix
-            // (e.g. 64kInvLeatherArmorBody -> LeatherArmorBody).
+            // The original client uses a distinct 64kItemGr* namespace for
+            // ground objects (for example 64kInvQuiver -> 64kItemGrQuiver).
             String groundSprite = groundSpriteName(inventorySprite);
             if (groundSprite != null && !groundSprite.isEmpty()) {
                 region = loader.getRegionFromSpriteName(groundSprite);
             }
-            // Fall back to the inventory sprite if the ground variant doesn't exist.
+            // Older imported packs sometimes kept only the suffix form.
+            if (region == null && inventorySprite != null && inventorySprite.startsWith("64kInv")) {
+                region = loader.getRegionFromSpriteName(inventorySprite.substring("64kInv".length()));
+            }
+            // Fall back to the inventory sprite if no ground variant exists.
             if (region == null && inventorySprite != null && !inventorySprite.isEmpty()) {
                 region = loader.getRegionFromSpriteName(inventorySprite);
             }
@@ -103,12 +107,12 @@ public class GroundItem {
         return region;
     }
 
-    private static String groundSpriteName(String inventorySprite) {
+    static String groundSpriteName(String inventorySprite) {
         if (inventorySprite == null) {
             return null;
         }
         if (inventorySprite.startsWith("64kInv")) {
-            return inventorySprite.substring("64kInv".length());
+            return "64kItemGr" + inventorySprite.substring("64kInv".length());
         }
         if (inventorySprite.startsWith("Inv_")) {
             return "Ground_" + inventorySprite.substring("Inv_".length());

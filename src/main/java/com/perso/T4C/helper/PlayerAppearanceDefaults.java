@@ -12,7 +12,7 @@ import java.util.Map;
  * slot, then the appearances of whatever is equipped on top.
  *
  * <p>The sprite names themselves live in {@link Paths#APPEARANCE_DEFAULTS_BIN} and are read
- * through {@link AppearanceDefaultsCatalog}; only the male puppet is used for players.
+ * through {@link AppearanceDefaultsCatalog}; the player's saved gender selects the puppet.
  */
 public final class PlayerAppearanceDefaults {
 
@@ -28,7 +28,7 @@ public final class PlayerAppearanceDefaults {
             return;
         }
         Map<BodyPart, String> nakedParts =
-                AppearanceDefaultsCatalog.nakedParts(AppearanceDefaultsCatalog.MALE);
+                AppearanceDefaultsCatalog.nakedParts(player.getGender());
         resetEquipmentVisuals(partMap);
         for (Map.Entry<BodyPart, String> entry : nakedParts.entrySet()) {
             ensureDefaultPart(partMap, entry.getKey(), entry.getValue());

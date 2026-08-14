@@ -1,0 +1,59 @@
+{
+  "name": "Lynania",
+  "gender": "FEMALE",
+  "x": 2911.0,
+  "y": 1065.0,
+  "z": 0,
+  "strength": 15,
+  "dexterity": 15,
+  "endurance": 12,
+  "intelligence": 17,
+  "wisdom": 15,
+  "gold": 0,
+  "karma": 0,
+  "maxHp": 27,
+  "currentHp": 27,
+  "maxMana": 12,
+  "mana": 12,
+  "level": 1,
+  "currentXp": 0,
+  "xpToNextLevel": 100,
+  "statPoints": 0,
+  "skillPoints": 0,
+  "rebirthCount": 0,
+  "spells": [],
+  "quickSlots": [
+    {
+      "slot": 1,
+      "item": "item.light_healing_potion"
+    }
+  ],
+  "activeBuffs": [],
+  "inventory": [
+    "item.light_healing_potion",
+    "item.light_healing_potion",
+    "item.light_healing_potion",
+    "item.light_healing_potion",
+    "item.book_of_psalms",
+    "item.gem_of_destiny",
+    "item.wooden_arrow",
+    "item.light_healing_potion",
+    "item.wooden_arrow",
+    "item.wooden_arrow",
+    "item.wooden_arrow",
+    "item.wooden_arrow"
+  ],
+  "equipment": {},
+  "skills": {},
+  "itemCharges": {
+    "item.book_of_psalms": 12,
+    "item.light_healing_potion": 5
+  },
+  "questFlags": {},
+  "respawnPointDefined": true,
+  "respawnWorldX": 94432.0,
+  "respawnWorldY": 16608.0,
+  "respawnWorldZ": 0,
+  "hiddenRemainingMillis": 0,
+  "dayNightHour": 7.0
+}

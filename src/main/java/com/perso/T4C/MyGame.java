@@ -13,6 +13,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.perso.T4C.helper.GameCursorManager;
 import com.perso.T4C.helper.MapReader;
 import com.perso.T4C.helper.PlayerStateStore;
+import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.screens.LoadingScreen;
 import com.perso.T4C.screens.MainGameScreen;
 import com.perso.T4C.config.MapDefinition;
@@ -123,6 +124,7 @@ public class MyGame extends Game {
         }
 
         if (batch != null) batch.dispose();
+        FontManager.getInstance().dispose();
         if (assetManager != null) assetManager.dispose();
         if (customFont != null) customFont.dispose();
         if (cursorManager != null) cursorManager.dispose(this);

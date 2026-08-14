@@ -87,7 +87,6 @@ import com.perso.T4C.gui.widget.GuiMapZoneDisplay;
 import com.perso.T4C.gui.widget.GuiBar;
 import com.perso.T4C.gui.widget.GuiImage;
 import com.perso.T4C.ui.FloatingDamage;
-import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.GameChat;
 import com.perso.T4C.ui.PlayerCoordsHud;
 import com.perso.T4C.ui.PlayerHUD;
@@ -136,6 +135,10 @@ public class MainGameScreen implements Screen {
     private final SpriteBatch batchDecor;
     private final SpriteBatch batch;
     private final SpriteLoader spriteLoader = SpriteLoader.getInstance();
+    private Runnable spriteReloadListener;
+    private boolean switchingCharacter;
+    private boolean disposed;
+    private boolean playerStateSaved;
     private GameInputHandler inputHandler;
     private PlayerHUD hud;
     private PlayerCoordsHud coordsHud;
@@ -335,7 +338,14 @@ public class MainGameScreen implements Screen {
      */
     private com.perso.T4C.helper.PlayerStateDto loadInitialPlayerState() {
         try {
-            return PlayerStateStore.load();
+            com.perso.T4C.helper.PlayerStateDto state = PlayerStateStore.load();
+            com.perso.T4C.helper.LocalCharacterStore.CharacterSlot active =
+                    com.perso.T4C.helper.LocalCharacterStore.getActiveCharacter();
+            if (state != null && active != null) {
+                if (state.name == null || state.name.isBlank()) state.name = active.name();
+                if (state.gender == null || state.gender.isBlank()) state.gender = active.gender();
+            }
+            return state;
         } catch (Throwable ignored) {
             return null;
         }
@@ -658,9 +668,9 @@ public class MainGameScreen implements Screen {
         player = new Player(resolvePlayerParts());
         applyEquippedItemsToPlayer();
 
-        float startX = 2846 * GRID_W;
-        float startY = 1126 * GRID_H;
-        int startZ = currentMap.getZ();
+          float startX = NEW_CHARACTER_START_TILE_X * GRID_W;
+          float startY = NEW_CHARACTER_START_TILE_Y * GRID_H;
+          int startZ = NEW_CHARACTER_START_TILE_Z;
 
         // Restore saved position if available
         try {
@@ -714,7 +724,8 @@ public class MainGameScreen implements Screen {
         }
 
         for (Map.Entry<BodyPart, String> entry
-                : AppearanceDefaultsCatalog.nakedParts(AppearanceDefaultsCatalog.MALE).entrySet()) {
+                : AppearanceDefaultsCatalog.nakedParts(initialPlayerState != null
+                        ? initialPlayerState.gender : AppearanceDefaultsCatalog.MALE).entrySet()) {
             parts.add(entry.getKey());
             parts.add(entry.getValue());
         }
@@ -744,7 +755,13 @@ public class MainGameScreen implements Screen {
      * Applies the loaded equipped items to the player instance.
      */
     private void applyEquippedItemsToPlayer() {
-        if (player == null || initialPlayerState == null || initialPlayerState.equipment == null) {
+        if (player == null || initialPlayerState == null) {
+            return;
+        }
+        // Player starts with the male default. Restore the saved gender before rebuilding every
+        // naked layer; otherwise a female character receives the complete Pup* fallback set.
+        player.setGender(initialPlayerState.gender);
+        if (initialPlayerState.equipment == null) {
             return;
         }
         Map<BodyPart, String> equipped = new java.util.EnumMap<>(BodyPart.class);
@@ -1119,7 +1136,7 @@ public class MainGameScreen implements Screen {
      * Registers a listener to handle sprite loader reloads.
      */
     private void registerReloadListener() {
-        SpriteLoader.getInstance().registerReloadListener(() -> {
+        spriteReloadListener = () -> {
             try {
                 player.onResourcesReloaded();
                 npcManager.onResourcesReloaded();
@@ -1130,7 +1147,33 @@ public class MainGameScreen implements Screen {
                 clearCursorState();
             } catch (Throwable ignored) {
             }
-        });
+        };
+        SpriteLoader.getInstance().registerReloadListener(spriteReloadListener);
+    }
+
+    /** Saves and tears down the current session before returning to the local roster. */
+    private void switchCharacter() {
+        if (switchingCharacter || disposed) return;
+        switchingCharacter = true;
+        clearCurrentAttackTarget();
+        clearSelectedMonster();
+        cancelActiveTargetedSpell();
+        GuiManager.close();
+        savePlayerState();
+        playerStateSaved = true;
+
+        CharacterSelectionScreen next;
+        try {
+            next = new CharacterSelectionScreen(game);
+        } catch (RuntimeException e) {
+            switchingCharacter = false;
+            log.error("Failed to return to character selection", e);
+            showSystemMessage(I18n.key("character.roster.failed"));
+            GuiManager.open(new OptionsScreen(this::switchCharacter));
+            return;
+        }
+        dispose();
+        game.setScreen(next);
     }
 
     /**
@@ -2343,15 +2386,16 @@ public class MainGameScreen implements Screen {
         SeraphAuraService.OnHitResult proc = SeraphAuraService.onHit(
                 player, attacker.getElementResistance(1), attackerArmorClass, ThreadLocalRandom.current());
         Vector2 playerPosition = player.getPositionVector().cpy();
+        boolean animate = com.perso.T4C.config.GamePreferencesStore.get().isSeraphAnimation();
 
         if (proc.healingTriggered()) {
             applySeraphAuraHealing(proc.centralHealing(), playerPosition);
             applySeraphAuraHealing(proc.radialHealing(), playerPosition);
-            spellRenderer.triggerImpactSpell(SeraphAuraService.HEAL_IMPACT,
+            if (animate) spellRenderer.triggerImpactSpell(SeraphAuraService.HEAL_IMPACT,
                     playerPosition.x, playerPosition.y, SeraphAuraService.HEAL_SOUND);
             // The radius-10 group spell processes its center a second time and
             // broadcasts visual 30096 even when the only group member is self.
-            spellRenderer.triggerImpactSpell(SeraphAuraService.HEAL_RADIAL_EFFECT,
+            if (animate) spellRenderer.triggerImpactSpell(SeraphAuraService.HEAL_RADIAL_EFFECT,
                     playerPosition.x, playerPosition.y);
         }
 
@@ -2361,12 +2405,11 @@ public class MainGameScreen implements Screen {
                 spellRenderer.triggerImpactSpell(SeraphAuraService.SINGLE_IMPACT,
                         currentPosition.x, currentPosition.y, SeraphAuraService.EXPLOSION_SOUND);
             };
-            boolean launched = spellRenderer.launchProjectile(SeraphAuraService.SINGLE_PROJECTILE,
-                    attacker, playerPosition.x, playerPosition.y, false, impact);
-            if (launched) {
-                spellRenderer.playLaunchSound(SeraphAuraService.HEAL_SOUND);
-            } else {
-                impact.run();
+            if (animate) {
+                boolean launched = spellRenderer.launchProjectile(SeraphAuraService.SINGLE_PROJECTILE,
+                        attacker, playerPosition.x, playerPosition.y, false, impact);
+                if (launched) spellRenderer.playLaunchSound(SeraphAuraService.HEAL_SOUND);
+                else impact.run();
             }
             applySeraphAuraDamage(attacker, proc.retaliationDamage());
         }
@@ -2397,7 +2440,8 @@ public class MainGameScreen implements Screen {
         }
 
         Vector2 center = player.getPositionVector().cpy();
-        spellRenderer.triggerImpactSpell(SeraphAuraService.AREA_CENTER_IMPACT,
+        boolean animate = com.perso.T4C.config.GamePreferencesStore.get().isSeraphAnimation();
+        if (animate) spellRenderer.triggerImpactSpell(SeraphAuraService.AREA_CENTER_IMPACT,
                 center.x, center.y, SeraphAuraService.EXPLOSION_SOUND);
         for (BaseMonster candidate : monsterManager.getMonsters()) {
             if (candidate == null || candidate.isDead()) {
@@ -2421,16 +2465,14 @@ public class MainGameScreen implements Screen {
                 spellRenderer.triggerImpactSpell(SeraphAuraService.AREA_CENTER_IMPACT,
                         currentPosition.x, currentPosition.y, SeraphAuraService.EXPLOSION_SOUND);
             };
-            boolean launched = spellRenderer.launchProjectile(projectile, candidate,
-                    center.x, center.y, direction.flipX, impact);
-            if (!launched) {
-                launched = spellRenderer.launchProjectile(SeraphAuraService.AREA_PROJECTILE + "000",
-                        candidate, center.x, center.y, false, impact);
-            }
-            if (launched) {
-                spellRenderer.playLaunchSound(SeraphAuraService.FIREBALL_SOUND);
-            } else {
-                impact.run();
+            if (animate) {
+                boolean launched = spellRenderer.launchProjectile(projectile, candidate,
+                        center.x, center.y, direction.flipX, impact);
+                if (!launched) launched = spellRenderer.launchProjectile(
+                        SeraphAuraService.AREA_PROJECTILE + "000", candidate,
+                        center.x, center.y, false, impact);
+                if (launched) spellRenderer.playLaunchSound(SeraphAuraService.FIREBALL_SOUND);
+                else impact.run();
             }
             applySeraphAuraDamage(candidate, damage);
         }
@@ -2739,6 +2781,9 @@ public class MainGameScreen implements Screen {
      * Renders the day/night ambient darkness overlay (full-screen alpha quad).
      */
     private void renderDayNightOverlay() {
+        if (com.perso.T4C.config.GamePreferencesStore.get().isLightGraphics()) {
+            return;
+        }
         com.badlogic.gdx.graphics.Color overlay = dayNightCycle.getOverlayColor();
         if (overlay.a <= 0f) {
             return;
@@ -3586,7 +3631,7 @@ public class MainGameScreen implements Screen {
             if (GuiManager.isCurrent(OptionsScreen.class)) {
                 GuiManager.close();
             } else {
-                GuiManager.open(new OptionsScreen());
+                GuiManager.open(new OptionsScreen(this::switchCharacter));
             }
         });
         coordsHud = new PlayerCoordsHud(player);
@@ -3810,7 +3855,9 @@ public class MainGameScreen implements Screen {
         MonsterInputHandler monsterInputHandler = new MonsterInputHandler(camera, monsterManager, player, this::tryCastTargetedSpell, this::tryBowAttack, systemMessage);
         monsterInputHandler.setOnAttackTargetSelected(this::beginAttackTarget);
         monsterInputHandler.setOnClickedElsewhere(() -> {
-            clearCurrentAttackTarget();
+            if (!com.perso.T4C.config.GamePreferencesStore.get().isLockTarget()) {
+                clearCurrentAttackTarget();
+            }
             cancelActiveTargetedSpell();
         });
 
@@ -3842,7 +3889,7 @@ public class MainGameScreen implements Screen {
                     return true;
                 }
                 if (keycode == Input.Keys.ESCAPE && !isTextInputActive()) {
-                    GuiManager.open(new OptionsScreen());
+                    GuiManager.open(new OptionsScreen(MainGameScreen.this::switchCharacter));
                     return true;
                 }
                 if (keycode == Input.Keys.F9) {
@@ -3954,6 +4001,11 @@ public class MainGameScreen implements Screen {
                     GuiManager.onScroll(amountY, Gdx.input.getX(), Gdx.input.getY());
                     return true;
                 }
+                if (com.perso.T4C.config.GamePreferencesStore.get().isZoomEnabled()) {
+                    camera.zoom = Math.max(0.6f, Math.min(1.8f, camera.zoom + amountY * 0.1f));
+                    camera.update();
+                    return true;
+                }
                 return false;
             }
         };
@@ -4009,14 +4061,25 @@ public class MainGameScreen implements Screen {
      */
     @Override
     public void dispose() {
+        if (disposed) return;
+        disposed = true;
         NpcSummonBridge.setSummonCallback(null);
-        savePlayerState();
+        if (!playerStateSaved && player != null) {
+            savePlayerState();
+            playerStateSaved = true;
+        }
+        GuiManager.close();
+        if (Gdx.input.getInputProcessor() != null) {
+            Gdx.input.setInputProcessor(null);
+        }
+        spriteLoader.unregisterReloadListener(spriteReloadListener);
+        spriteReloadListener = null;
+        PlayerStateStore.clearCompanionSupplier();
         gameProfiler.stop();
         SoundManager.stopAmbient();
-        mapRenderer.dispose();
+        if (mapRenderer != null) mapRenderer.dispose();
         batchSol.dispose();
         batchDecor.dispose();
-        batch.dispose();
         debugShapeRenderer.dispose();
 
         if (systemMessage != null) {
@@ -4041,8 +4104,6 @@ public class MainGameScreen implements Screen {
         if (npcManager != null) {
             npcManager.dispose();
         }
-
-        // Dispose all cached fonts
-        FontManager.getInstance().dispose();
+        stage.dispose();
     }
 }

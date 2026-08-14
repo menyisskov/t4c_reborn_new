@@ -122,7 +122,7 @@ public class LoadingScreen implements Screen {
                 failedSounds.clear();
             } else {
                 // All assets loaded successfully
-                game.setScreen(new MainGameScreen(game));
+                game.setScreen(new CharacterSelectionScreen(game));
             }
         }
     }

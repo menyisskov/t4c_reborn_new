@@ -25,6 +25,8 @@ public final class PlayerStateMapper {
 
     public static PlayerStateDto fromPlayer(Player player, float dayNightHour) {
         PlayerStateDto state = new PlayerStateDto();
+        state.name = player.getName();
+        state.gender = player.getGender();
         state.dayNightHour = dayNightHour;
         state.x = player.getCoordinates().getX() / com.perso.T4C.config.GameConstants.GRID_W;
         state.y = player.getCoordinates().getY() / com.perso.T4C.config.GameConstants.GRID_H;
@@ -66,6 +68,8 @@ public final class PlayerStateMapper {
         if (state == null || player == null) {
             return;
         }
+        player.setName(state.name);
+        player.setGender(state.gender);
         player.setStrength(state.strength);
         player.setDexterity(state.dexterity);
         player.setEndurance(state.endurance);

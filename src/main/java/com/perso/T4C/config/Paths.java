@@ -53,6 +53,8 @@ public final class Paths {
     public static final String FONT_CHEWY = "assets/font/Chewy-Regular.ttf";
     public static final String EDITOR_CAMERA_POSITION_FILE = "editor_camera_position.json";
     public static final String PLAYER_STATE_FILE = "player_state.json";
+    public static final String CHARACTER_ROSTER_FILE = "characters.json";
+    public static final String CHARACTER_STATES_DIR = "characters";
     public static final String GAME_PREFERENCES_FILE = "game_preferences.json";
     public static final String SPAWN_GROUPS_BIN = "assets/spawns/spawn_groups.bin";
 }

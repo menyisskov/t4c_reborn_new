@@ -21,9 +21,15 @@ import java.nio.file.Paths;
 public final class PlayerStateStore {
     private PlayerStateStore() {}
     public static final String DEFAULT_FILENAME = com.perso.T4C.config.Paths.PLAYER_STATE_FILE;
+    private static volatile String activeFilename = DEFAULT_FILENAME;
 
     private static float lastDayNightHour = 7f;
     @Setter private static Supplier<CompanionNPC> companionSupplier;
+
+    /** Detaches session-owned state before the active gameplay screen is discarded. */
+    public static void clearCompanionSupplier() {
+        companionSupplier = null;
+    }
 
     public static void save(Player player) {
         save(player, lastDayNightHour);
@@ -42,13 +48,17 @@ public final class PlayerStateStore {
             } catch (Throwable ignored) {}
             return;
         }
-        save(DEFAULT_FILENAME, state);
+        save(activeFilename, state);
     }
 
     public static void save(String filename, PlayerStateDto state) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Path outPath = Paths.get(System.getProperty("user.dir"), filename);
+            Path parent = outPath.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             Files.writeString(outPath, gson.toJson(state), StandardCharsets.UTF_8);
         } catch (Exception e) {
 
@@ -71,7 +81,19 @@ public final class PlayerStateStore {
     }
 
     public static PlayerStateDto load() {
-        return load(DEFAULT_FILENAME);
+        return load(activeFilename);
+    }
+
+    public static String getActiveFilename() {
+        return activeFilename;
+    }
+
+    public static void setActiveFilename(String filename) {
+        activeFilename = filename == null || filename.isBlank() ? DEFAULT_FILENAME : filename;
+    }
+
+    public static void resetActiveFilename() {
+        activeFilename = DEFAULT_FILENAME;
     }
 
     public static PlayerStateDto load(String filename) {

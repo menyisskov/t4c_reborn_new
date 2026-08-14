@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "characters": [
+    {
+      "id": "aa6d00a9-e892-439f-b6fe-6b79cafa182d",
+      "name": "Lynania",
+      "gender": "FEMALE",
+      "stateFile": "characters/aa6d00a9-e892-439f-b6fe-6b79cafa182d.json",
+      "createdAt": 1786696042904
+    },
+    {
+      "id": "53376b99-11a3-47ab-96f5-9b07d8291f40",
+      "name": "Neidrae",
+      "gender": "MALE",
+      "stateFile": "characters/53376b99-11a3-47ab-96f5-9b07d8291f40.json",
+      "createdAt": 1786697634181
+    }
+  ]
+}

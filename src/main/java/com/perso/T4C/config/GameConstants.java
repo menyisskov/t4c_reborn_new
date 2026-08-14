@@ -91,6 +91,11 @@ public class GameConstants {
     public static final float COMPANION_AGGRESSIVE_DETECTION_RANGE = 8f * GRID_W;
     public static final float COMPANION_AGGRESSIVE_SCAN_INTERVAL = 0.5f;
 
+    // Default level-one position from Server 1.68 Character.cpp: wlStartPos.
+    public static final int NEW_CHARACTER_START_TILE_X = 2944;
+    public static final int NEW_CHARACTER_START_TILE_Y = 1059;
+    public static final int NEW_CHARACTER_START_TILE_Z = 0;
+
     // Player respawn tile coordinates.
     public static final int PLAYER_RESPAWN_TILE_X = 2951;
     public static final int PLAYER_RESPAWN_TILE_Y = 1038;

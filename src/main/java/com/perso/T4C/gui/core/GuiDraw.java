@@ -30,7 +30,8 @@ public final class GuiDraw {
 
     /** Constant opacity used by decorative in-game interface backgrounds. */
     public static float overlayAlpha() {
-        return percentageToAlpha(GameConstants.OVERLAY_PERCENTAGE_DEFAULT);
+        return com.perso.T4C.config.GamePreferencesStore.get().isTransparentGui()
+                ? percentageToAlpha(GameConstants.OVERLAY_PERCENTAGE_DEFAULT) : 1f;
     }
 
     /** Draws a flipped region using the interface opacity, then restores the batch tint. */
