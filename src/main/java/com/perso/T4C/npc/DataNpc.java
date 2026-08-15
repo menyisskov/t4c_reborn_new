@@ -216,7 +216,6 @@ public class DataNpc extends BaseNPC {
         for (String spellId : result.targetSpells()) {
             SpellData spell = resolveSpell(spellId);
             if (spell != null) NpcCastVfxHook.playOnPlayer(spell, player, position);
-            if (spellId.contains("serious_heal") || spellId.contains("healing")) healFully(player);
         }
         for (String spellId : result.selfSpells()) {
             SpellData spell = resolveSpell(spellId);

@@ -2944,9 +2944,9 @@ public class MainGameScreen implements Screen {
             Vector3 pointer = getWorldCoords();
             npcManager.onMouseMove(pointer.x, pointer.y);
         }
-        // The quick bar is a HUD control. An entity rendered underneath it must
-        // not affect the world-targeting cursor while the mouse is over the bar.
-        if (hud != null && hud.isQuickBarHit(screenX, screenY)) {
+        // HUD bars are controls drawn over the world. Entities underneath their
+        // backgrounds, buttons or gaps must not affect the targeting cursor.
+        if (hud != null && hud.isHudHit(screenX, screenY)) {
             applyDefaultCursor();
             return;
         }

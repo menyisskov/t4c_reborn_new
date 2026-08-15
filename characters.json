@@ -7,6 +7,13 @@
       "gender": "FEMALE",
       "stateFile": "characters/627442f4-4f9d-4606-aa43-7c85edb47ad8.json",
       "createdAt": 1786782252524
+    },
+    {
+      "id": "c2fb61ad-db24-4d75-82b3-28d73b31d7b1",
+      "name": "Jean Las",
+      "gender": "MALE",
+      "stateFile": "characters/c2fb61ad-db24-4d75-82b3-28d73b31d7b1.json",
+      "createdAt": 1786825197849
     }
   ]
 }

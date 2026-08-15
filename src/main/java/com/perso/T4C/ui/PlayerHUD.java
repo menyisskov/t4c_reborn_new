@@ -43,6 +43,11 @@ public class PlayerHUD {
     private static final float COMBAT_ICON_MARGIN = 16f;
     private static final float TOP_BAR_HEIGHT = 46f;
     private static final String GENERATED_TOP_BAR_PATH = "assets/ui/topbar-frame-v2.png";
+    private static final String GOLD_PANEL_PATH = "assets/ui/gold-hud-panel.png";
+    private static final float GOLD_PANEL_WIDTH = 128f;
+    private static final float GOLD_PANEL_HEIGHT = 28f;
+    private static final float GOLD_PANEL_LATTICE_WIDTH = 24f;
+    private static final float GOLD_PANEL_MARGIN = 8f;
     private static final float TOP_BAR_BORDER_HEIGHT = 6f;
     private static final int TOP_BAR_BACKGROUND_X = 244;
     private static final int TOP_BAR_BACKGROUND_Y = 41;
@@ -68,6 +73,7 @@ public class PlayerHUD {
     private TextureRegion topBarBackground;
     private TextureRegion topBarBorder;
     private Texture generatedTopBar;
+    private Texture goldPanelTexture;
     private TextureRegion hpBar;
     private TextureRegion mpBar;
     private TextureRegion xpBar;
@@ -135,7 +141,9 @@ public class PlayerHUD {
     private final GuiBoxedInteraction boxedInteraction = new GuiBoxedInteraction();
     private final List<GuiElement> hudBoxedElements = new ArrayList<>();
     private final HudStatsPanel statsPanel;
+    private final HudGoldPanel goldPanel;
     private boolean statsPanelLayoutInitialized;
+    private boolean goldPanelLayoutInitialized;
 
     public PlayerHUD(Player player, SpriteLoader spriteLoader) throws GameException {
         this.player = player;
@@ -143,6 +151,7 @@ public class PlayerHUD {
         this.spriteLoader = spriteLoader;
         loadTopBarRegions();
         loadGeneratedTopBar();
+        loadGoldPanel();
         this.hpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_HP");
         this.mpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_MP");
         this.xpBar = spriteLoader.getRegionFromSpriteName("GUI_BackChStat_XP");
@@ -166,6 +175,7 @@ public class PlayerHUD {
         createExperienceBar();
         for (int i = 0; i < QUICK_SLOT_COUNT; i++) quickSlotBoxes[i] = new QuickSlotBox();
         this.statsPanel = new HudStatsPanel();
+        this.goldPanel = new HudGoldPanel();
         statsPanel.initializeChildren();
         registerHudBoxedElements();
         this.tooltip = new HudTooltip();
@@ -196,9 +206,12 @@ public class PlayerHUD {
     }
 
     private void renderGold(SpriteBatch batch) {
-        String value = "Or : " + player.getGold();
-        GlyphLayout layout = new GlyphLayout(statLabelFont, value);
-        statLabelFont.draw(batch, value, Gdx.graphics.getWidth() - layout.width - 12f, 12f);
+        if (!goldPanelLayoutInitialized) {
+            goldPanel.setPosition(Gdx.graphics.getWidth() - GOLD_PANEL_WIDTH - GOLD_PANEL_MARGIN,
+                    (TOP_BAR_HEIGHT - GOLD_PANEL_HEIGHT) * 0.5f);
+            goldPanelLayoutInitialized = true;
+        }
+        goldPanel.render(batch);
     }
 
     private void loadTopBarRegions() throws GameException {
@@ -316,6 +329,7 @@ public class PlayerHUD {
         hudBoxedElements.clear();
         // The panel is deliberately first: reverse hit-testing gives its children priority.
         hudBoxedElements.add(statsPanel);
+        hudBoxedElements.add(goldPanel);
         hudBoxedElements.add(hpGuiBar);
         hudBoxedElements.add(mpGuiBar);
         hudBoxedElements.add(hpLabel);
@@ -638,6 +652,65 @@ public class PlayerHUD {
         entry.setSlot(slotNumber);
         entry.setItem(itemName);
         slots.add(entry);
+    }
+
+    public boolean isHudHit(int screenX, int screenY) {
+        if (screenY >= 0 && screenY <= TOP_BAR_HEIGHT) return true;
+
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        float scale = Math.min(1f, screenWidth / CHAT_BAR_WIDTH);
+        float barX = (screenWidth - CHAT_BAR_WIDTH * scale) * 0.5f;
+        float barY = screenHeight - CHAT_BAR_HEIGHT * scale;
+        if (screenX >= barX && screenX <= barX + CHAT_BAR_WIDTH * scale
+                && screenY >= barY && screenY <= screenHeight) {
+            return true;
+        }
+
+        if (getQuickSlotAt(screenX, screenY) > 0) return true;
+        return findChatBarButton(screenX, screenY) != null;
+    }
+
+    private void loadGoldPanel() {
+        if (!Gdx.files.internal(GOLD_PANEL_PATH).exists()) return;
+        goldPanelTexture = new Texture(Gdx.files.internal(GOLD_PANEL_PATH));
+        goldPanelTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    }
+
+    /** Movable boxed unit containing both the gold plaque and its dynamic value. */
+    private final class HudGoldPanel extends AbstractGuiElement implements GuiResizable {
+        private float width = GOLD_PANEL_WIDTH;
+        private float height = GOLD_PANEL_HEIGHT;
+
+        private HudGoldPanel() {
+            super(0f, 0f);
+        }
+
+        @Override
+        public void render(SpriteBatch batch) {
+            if (goldPanelTexture != null) {
+                batch.draw(goldPanelTexture, x, y, width, height,
+                        0, 0, goldPanelTexture.getWidth(), goldPanelTexture.getHeight(), false, true);
+            }
+            String value = "Or : " + player.getGold();
+            GlyphLayout layout = new GlyphLayout(statLabelFont, value);
+            float latticeWidth = GOLD_PANEL_LATTICE_WIDTH * width / GOLD_PANEL_WIDTH;
+            float textWidth = width - latticeWidth;
+            statLabelFont.draw(batch, value,
+                    x + (textWidth - layout.width) * 0.5f,
+                    y + (height - layout.height) * 0.5f);
+            GuiBoxedItem.drawDebugBorder(batch, x, y, width, height);
+        }
+
+        @Override
+        public HudGoldPanel setSize(float width, float height) {
+            this.width = Math.max(8f, width);
+            this.height = Math.max(8f, height);
+            return this;
+        }
+
+        @Override public float getWidth() { return width; }
+        @Override public float getHeight() { return height; }
     }
 
     public boolean isQuickBarHit(int screenX, int screenY) {
@@ -1147,5 +1220,6 @@ public class PlayerHUD {
     public void dispose() {
         tooltip.dispose();
         if (generatedTopBar != null) generatedTopBar.dispose();
+        if (goldPanelTexture != null) goldPanelTexture.dispose();
     }
 }

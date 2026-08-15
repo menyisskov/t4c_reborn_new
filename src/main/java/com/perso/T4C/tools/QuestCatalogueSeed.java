@@ -44,7 +44,7 @@ public final class QuestCatalogueSeed {
                 I18n.placeholder(keyPrefix + ".title"),
                 "LighthavenSamaritan",
                 "Brown Rat",
-                10,
+                15,
                 1,
                 304,
                 383,
@@ -53,7 +53,8 @@ public final class QuestCatalogueSeed {
                 300,
                 I18n.placeholder(keyPrefix + ".offer"),
                 I18n.placeholder(keyPrefix + ".completion"),
-                I18n.placeholder(keyPrefix + ".completed")
+                I18n.placeholder(keyPrefix + ".completed"),
+                "__NEWBIE_QUEST"
         );
     }
 

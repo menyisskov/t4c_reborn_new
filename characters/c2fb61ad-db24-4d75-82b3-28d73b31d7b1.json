@@ -1,0 +1,82 @@
+{
+  "name": "Jean Las",
+  "gender": "MALE",
+  "x": 2918.5408,
+  "y": 1063.0,
+  "z": 0,
+  "strength": 15,
+  "dexterity": 14,
+  "endurance": 300,
+  "intelligence": 20,
+  "wisdom": 14,
+  "gold": 243,
+  "karma": 0,
+  "maxHp": 33,
+  "currentHp": 33,
+  "maxMana": 16,
+  "mana": 16,
+  "level": 2,
+  "currentXp": 198,
+  "xpToNextLevel": 360,
+  "statPoints": 5,
+  "skillPoints": 15,
+  "rebirthCount": 0,
+  "spells": [],
+  "quickSlots": [],
+  "activeBuffs": [
+    {
+      "spellName": "spell.item_torch_radiance",
+      "remainingSeconds": 440,
+      "totalDurationSeconds": 600
+    },
+    {
+      "spellName": "spell.level_up",
+      "remainingSeconds": 159,
+      "totalDurationSeconds": 300
+    }
+  ],
+  "inventory": [
+    "item.dagger",
+    "item.torch",
+    "item.torch",
+    "item.light_healing_potion",
+    "item.light_healing_potion",
+    "item.light_healing_potion",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.ancient_platemail_armor",
+    "item.ancient_platemail_boots",
+    "item.ancient_platemail_gauntlets",
+    "item.ancient_plate_protector",
+    "item.ancient_platemail_helmet",
+    "item.ancient_platemail_leggings"
+  ],
+  "equipment": {
+    "WEAPON2": "item.wooden_arrow",
+    "LEGS": "item.cloth_pants",
+    "WEAPON": "item.bow",
+    "BODY": "item.cloth_vest"
+  },
+  "skills": {
+    "dodge": 15,
+    "attack": 15,
+    "archery": 15
+  },
+  "itemCharges": {
+    "item.potion_of_mana": 3,
+    "item.torch": 2,
+    "item.light_healing_potion": 3
+  },
+  "questFlags": {
+    "__NEWBIE_QUEST": 1,
+    "__KNOW_ABOUT_QUEST": 1,
+    "quest.__NEWBIE_QUEST.kills": 4
+  },
+  "respawnPointDefined": true,
+  "respawnWorldX": 94432.0,
+  "respawnWorldY": 16608.0,
+  "respawnWorldZ": 0,
+  "hiddenRemainingMillis": 0,
+  "dayNightHour": 7.093158
+}

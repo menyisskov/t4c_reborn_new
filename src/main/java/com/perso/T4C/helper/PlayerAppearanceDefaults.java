@@ -16,6 +16,9 @@ import java.util.Map;
  */
 public final class PlayerAppearanceDefaults {
 
+    private static final String MITHRIL_PREFIX = "PupMithrilPlate";
+    private static final String PLATE_PREFIX = "PupPlate";
+
     private PlayerAppearanceDefaults() {
     }
 
@@ -68,12 +71,20 @@ public final class PlayerAppearanceDefaults {
         }
         String appearance = def.getAppearanceEquippedFor(part);
         if (appearance != null && !appearance.isEmpty()) {
-            return appearance;
+            return availableAppearance(appearance);
         }
         // A registered item without an equipped appearance is intentionally
         // invisible in the original client (quivers, focuses, arrows, etc.).
         // Never interpret its display/key name as a sprite base.
         return null;
+    }
+
+    /** The experimental mithril frames were removed from the sprite pack; use visible plate. */
+    private static String availableAppearance(String appearance) {
+        if (appearance == null) return null;
+        return appearance.startsWith(MITHRIL_PREFIX)
+                ? PLATE_PREFIX + appearance.substring(MITHRIL_PREFIX.length())
+                : appearance;
     }
 
     private static void applyEquippedAppearances(Player player, Map<BodyPart, String> partMap) {
@@ -101,9 +112,12 @@ public final class PlayerAppearanceDefaults {
                 partMap.put(visualPart, primary);
             }
             if (def != null && def.getSecondaryBodyPart() != null) {
-                String secondary = def.getAppearanceEquippedSecondary();
+                String secondary = availableAppearance(def.getAppearanceEquippedSecondary());
                 if (secondary != null && !secondary.isEmpty()) {
-                    partMap.put(def.getSecondaryBodyPart(), secondary);
+                    AppearanceDefaultsCatalog.EquippedAppearance resolvedSecondary =
+                            AppearanceDefaultsCatalog.equippedAppearance(player.getGender(),
+                                    def.getSecondaryBodyPart(), secondary);
+                    partMap.put(resolvedSecondary.bodyPart(), resolvedSecondary.sprite());
                 }
             }
         }

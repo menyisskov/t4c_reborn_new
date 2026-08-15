@@ -22,7 +22,7 @@ class QuestCatalogueSeedTest {
                 .filter(quest -> QuestCatalogueSeed.QUEST_ID.equals(quest.getId()))
                 .findFirst()
                 .orElseThrow();
-        assertEquals(10, rats.getRequiredKills());
+        assertEquals(15, rats.getRequiredKills());
         assertEquals(500, rats.getRewardGold());
         assertEquals(300, rats.getRewardXp());
 

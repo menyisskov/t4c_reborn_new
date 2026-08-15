@@ -356,9 +356,9 @@ public class Inventory extends GuiScreenBase {
                 () -> ArmorClassRules.effectiveArmorClass(player) > ArmorClassRules.trueArmorClass(player)
                         ? Color.GREEN
                         : Color.WHITE));
-        // Plaque above the character preview shows the carried gold.
+        // Plaque above the character preview shows the character name.
         labels.add(new GuiBoxedText(font, x + 424f, y + 51f, 101f, 16f,
-                () -> String.valueOf(player.getGold()), () -> Color.WHITE));
+                player::getName, () -> Color.WHITE).shrinkToFit());
         // Bottom bar: GOLD plaque, gold value box, hover-item information box.
         labels.add(new GuiBoxedText(FontManager.getInstance().getHaettenschweilerFont(18, gold),
                 x + 28f, y + 397f, 55f, 18f, () -> I18n.key("ui.gold"), () -> gold).shrinkToFit());

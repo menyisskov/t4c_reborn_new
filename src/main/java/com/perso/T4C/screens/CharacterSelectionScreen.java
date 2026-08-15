@@ -62,6 +62,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     private final TextureRegion rerollPanel;
 
     private final BitmapFont buttonFont;
+    private final BitmapFont smallButtonFont;
     private final BitmapFont listFont;
     private final BitmapFont goldFont;
     private final BitmapFont whiteFont;
@@ -109,6 +110,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
 
         FontManager fonts = FontManager.getInstance();
         buttonFont = fonts.getT4CBeaulieuFont(17, Color.BLACK);
+        smallButtonFont = fonts.getT4CBeaulieuFont(15, Color.BLACK);
         listFont = fonts.getT4CBeaulieuFont(17, Color.WHITE);
         goldFont = fonts.getT4CBeaulieuFont(17, new Color(222 / 255f, 158 / 255f, 0f, 1f));
         whiteFont = fonts.getT4CBeaulieuFont(17, Color.WHITE);
@@ -235,8 +237,11 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
                 500f, Align.left, true);
         for (int row = 0; row < CharacterCreationRules.AFFINITY_COUNT; row++) {
             int answer = run.answerOrder.get(row);
-            whiteFont.draw(batch, I18n.key(prefix + ".answer." + (answer + 1)),
-                    x + 18f, y + 106f + row * 48f, 500f, Align.left, true);
+            layout.setText(whiteFont, I18n.key(prefix + ".answer." + (answer + 1)),
+                    Color.WHITE, 500f, Align.left, true);
+            float answerY = y + 106f + row * 48f;
+            whiteFont.draw(batch, layout, x + 18f,
+                    answerY + (40f - layout.height) / 2f);
         }
         drawSmallButton(x + 537f, y + 265f, I18n.key("character.continue"), true);
         drawSmallButton(x + 537f, y + 313f, I18n.key("character.back"), true);
@@ -280,7 +285,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
         TextureRegion region = enabled && contains(x, y, smallNormal.getRegionWidth(), smallNormal.getRegionHeight())
                 ? smallHover : smallNormal;
         GuiDraw.drawRegionFlipped(batch, region, x, y);
-        if (enabled) drawButtonTextCentered(buttonFont, text, x, y,
+        if (enabled) drawButtonTextCentered(smallButtonFont, text, x, y,
                 smallNormal.getRegionWidth(), smallNormal.getRegionHeight());
     }
 

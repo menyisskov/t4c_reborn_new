@@ -112,7 +112,102 @@ public final class AppearanceDefaultsToBinMigration {
                         "BODY", "WoClothBody"),
                 new AppearanceDefaultsBinaryIO.EquippedOverride(
                         AppearanceDefaultsCatalog.FEMALE, "LEGS", "PupLegsClothSet1",
-                        "ROBELEGS", "WoClothRobe"));
+                        "ROBELEGS", "WoClothRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupPlateBody",
+                        "BODY", "WoPlateBody"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "FEET", "PupPlateFoot",
+                        "FEET", "WoPlateBoots"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "LEFT_HAND", "PupPlateGloveL",
+                        "LEFT_HAND", "WoPlateGloveL"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "RIGHT_HAND", "PupPlateGloveR",
+                        "RIGHT_HAND", "WoPlateGloveR"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "HAT", "PupPlateHelm",
+                        "HAT", "WoPlateHelm"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "LEGS", "PupPlateLegs",
+                        "LEGS", "WoPlateLegs"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupLeatherBody",
+                        "BODY", "WoLeatherArms"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupSpikeLeatherBody",
+                        "BODY", "WoLeatherArms"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "FEET", "PupLeatherBoots",
+                        "FEET", "WoLeatherBoots"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "FEET", "PupBlackLeatherBoots",
+                        "FEET", "WoBlackLeatherBoots"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "LEFT_HAND", "PupLeatherGloveL",
+                        "LEFT_HAND", "WoLeatherGloveL"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "RIGHT_HAND", "PupLeatherGloveR",
+                        "RIGHT_HAND", "WoLeatherGloveR"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "HAT", "PupLeatherHelm",
+                        "HAT", "WoLeatherHelm"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "LEGS", "PupLeatherPants",
+                        "LEGS", "WoLeatherLegs"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupStuddedBodyArmor",
+                        "BODY", "WoStuddedBody"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "LEGS", "PupStuddedLegs",
+                        "LEGS", "WoStuddedLegs"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupChainMailBody",
+                        "BODY", "WoChainBody"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "HAT", "PupChainMailCoif",
+                        "HAT", "WoChainMailCoif"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "LEGS", "PupChainMailLegs",
+                        "LEGS", "WoChainLegs"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupArmoredRobe",
+                        "BODY", "WoArmoredRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupMageRobe",
+                        "BODY", "WoMageRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupNecromanRobe",
+                        "BODY", "WoNecromanRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupRedRobe",
+                        "BODY", "WoRedRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupWhiteRobe",
+                        "BODY", "WoWhiteRobe"),
+                // WoLichRobe* is absent from the imported sprite pack. The closest original
+                // female silhouette keeps these robes visible without rendering a male body.
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "ManLichRobeOri",
+                        "BODY", "WoArmoredRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "ManLichRobeBlanc",
+                        "BODY", "WoArmoredRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "ManLichRobeGold",
+                        "BODY", "WoArmoredRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "ManLichRobeGreen",
+                        "BODY", "WoArmoredRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "ManLichRobeKimono",
+                        "BODY", "WoArmoredRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "ManLichRobeNoir",
+                        "BODY", "WoArmoredRobe"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "ManLichRobeRouge",
+                        "BODY", "WoArmoredRobe"));
 
         System.out.printf("nakedParts=%d concealmentRules=%d%n", parts.size(), rules.size());
         if (dryRun) {

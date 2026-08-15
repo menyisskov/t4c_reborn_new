@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 /** Local replacement for the original server-side name checks and initial-stat roll. */
 public final class CharacterCreationRules {
     public static final int MIN_NAME_LENGTH = 2;
-    public static final int MAX_NAME_LENGTH = 20;
+    public static final int MAX_NAME_LENGTH = 8;
     public static final int AFFINITY_COUNT = 5;
 
     private static final Pattern VALID_NAME = Pattern.compile(

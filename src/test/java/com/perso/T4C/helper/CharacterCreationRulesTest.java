@@ -17,6 +17,8 @@ class CharacterCreationRulesTest {
         assertFalse(CharacterCreationRules.isValidName("A"));
         assertFalse(CharacterCreationRules.isValidName("Jean  Luc"));
         assertFalse(CharacterCreationRules.isValidName("Jean42"));
+        assertTrue(CharacterCreationRules.isValidName("Abcdefgh"));
+        assertFalse(CharacterCreationRules.isValidName("Abcdefghi"));
     }
 
     @Test

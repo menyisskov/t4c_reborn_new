@@ -75,9 +75,11 @@ public final class AppearanceDefaultsCatalog {
         if (slot == null || defaultAppearance == null || defaultAppearance.isBlank()) {
             return new EquippedAppearance(slot, defaultAppearance);
         }
-        return cachedEquippedOverrides.getOrDefault(
-                overrideKey(gender, slot.name(), defaultAppearance),
-                new EquippedAppearance(slot, defaultAppearance));
+        EquippedAppearance override = cachedEquippedOverrides.get(
+                overrideKey(gender, slot.name(), defaultAppearance));
+        if (override == null) return new EquippedAppearance(slot, defaultAppearance);
+        return new EquippedAppearance(override.bodyPart(),
+                preservePalette(defaultAppearance, override.sprite()));
     }
 
     /** Reloads the tables from disk on the next lookup. */
@@ -163,6 +165,12 @@ public final class AppearanceDefaultsCatalog {
 
     private static String ruleKey(String triggerSlot, String appearance) {
         return key(triggerSlot) + "|" + key(appearance);
+    }
+
+    private static String preservePalette(String source, String target) {
+        if (source == null || target == null || target.contains("__")) return target;
+        int palette = source.indexOf("__");
+        return palette >= 0 ? target + source.substring(palette) : target;
     }
 
     private static String overrideKey(String gender, String slot, String appearance) {

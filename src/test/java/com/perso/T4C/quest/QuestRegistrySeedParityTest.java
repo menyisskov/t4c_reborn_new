@@ -24,14 +24,15 @@ class QuestRegistrySeedParityTest {
         assertEquals("Les rats du sous-sol du temple", I18n.resolve(quest.getTitle()));
         assertEquals("LighthavenSamaritan", quest.getGiverNpc());
         assertEquals("Brown Rat", quest.getTargetMonster());
-        assertEquals(10, quest.getRequiredKills());
+        assertEquals(15, quest.getRequiredKills());
         assertEquals(1, quest.getTargetWorldZ());
         assertEquals(304, quest.getAreaCenterX());
         assertEquals(383, quest.getAreaCenterY());
         assertEquals(120, quest.getAreaRadiusTiles());
         assertEquals(500, quest.getRewardGold());
         assertEquals(300, quest.getRewardXp());
-        assertEquals("J'ai un travail pour vous. Allez dans le sous-sol du temple et tuez 10 rats, "
+        assertEquals("__NEWBIE_QUEST", quest.getActivationFlag());
+        assertEquals("J'ai un travail pour vous. Allez dans le sous-sol du temple et tuez 15 rats, "
                         + "puis revenez me voir lorsque ce sera fait. Je vous donnerai une récompense.",
                 I18n.resolve(quest.getOfferText()));
         assertNotNull(I18n.keyOf(quest.getTitle()));

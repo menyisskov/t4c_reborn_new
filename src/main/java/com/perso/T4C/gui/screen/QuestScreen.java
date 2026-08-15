@@ -169,7 +169,7 @@ public final class QuestScreen extends GuiScreenBase {
 
     private String selectedGiver() {
         QuestDef quest = selectedQuest();
-        return quest == null ? "" : I18n.message("quest.giver", I18n.resolve(quest.getGiverNpc()));
+        return quest == null ? "" : I18n.message("quest.giver", QuestService.giverDisplayName(quest));
     }
 
     @Override
@@ -235,7 +235,7 @@ public final class QuestScreen extends GuiScreenBase {
     }
 
     private int status(QuestDef quest) {
-        return player.getQuestFlag(QuestService.statusFlag(quest));
+        return QuestService.statusFor(player, quest);
     }
 
     private int kills(QuestDef quest) {

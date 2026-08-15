@@ -27,4 +27,15 @@ public final class QuestDef {
     private final String offerText;
     private final String completionText;
     private final String completedText;
+    /** Optional persistent player flag whose non-zero value activates this quest. */
+    private final String activationFlag;
+
+    public QuestDef(String id, String title, String giverNpc, String targetMonster,
+                    int requiredKills, int targetWorldZ, int areaCenterX, int areaCenterY,
+                    int areaRadiusTiles, int rewardGold, int rewardXp, String offerText,
+                    String completionText, String completedText) {
+        this(id, title, giverNpc, targetMonster, requiredKills, targetWorldZ, areaCenterX,
+                areaCenterY, areaRadiusTiles, rewardGold, rewardXp, offerText, completionText,
+                completedText, null);
+    }
 }

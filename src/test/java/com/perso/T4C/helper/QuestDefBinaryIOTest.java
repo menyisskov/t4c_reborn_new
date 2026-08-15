@@ -31,7 +31,8 @@ class QuestDefBinaryIOTest {
                 300,
                 "${quest.test_rats.offer}",
                 "${quest.test_rats.completion}",
-                "${quest.test_rats.completed}"
+                "${quest.test_rats.completed}",
+                "__TEST_RATS_ACTIVE"
         );
         File file = dir.resolve("quests.bin").toFile();
 
@@ -52,6 +53,7 @@ class QuestDefBinaryIOTest {
         assertEquals(source.getOfferText(), read.getOfferText());
         assertEquals(source.getCompletionText(), read.getCompletionText());
         assertEquals(source.getCompletedText(), read.getCompletedText());
+        assertEquals(source.getActivationFlag(), read.getActivationFlag());
     }
 
     @Test

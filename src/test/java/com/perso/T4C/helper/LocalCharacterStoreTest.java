@@ -98,6 +98,7 @@ class LocalCharacterStoreTest {
         assertEquals(15, state.skills.get("attack"));
         assertEquals(15, state.skills.get("dodge"));
         assertEquals(15, state.skills.get("archery"));
+        assertTrue(state.questFlags.isEmpty());
 
         LocalCharacterStore.delete(second);
         assertEquals(2, LocalCharacterStore.list().size());
@@ -105,7 +106,7 @@ class LocalCharacterStoreTest {
     }
 
     @Test
-    void addsTheStartingEquipmentOnceToAnExistingCharacter() throws Exception {
+    void doesNotReapplyStartingResourcesWhenLoadingAnExistingCharacter() throws Exception {
         CharacterCreationRules.Stats stats = new CharacterCreationRules.Stats(
                 15, 14, 13, 12, 11, 28, 10);
         LocalCharacterStore.CharacterSlot slot = LocalCharacterStore.create(
@@ -114,87 +115,12 @@ class LocalCharacterStoreTest {
         legacy.gold = 0;
         legacy.inventory.clear();
         legacy.itemCharges.clear();
-        legacy.questFlags.clear();
         PlayerStateStore.save(slot.stateFile(), legacy);
 
-        PlayerStateDto migrated = LocalCharacterStore.loadState(slot);
+        PlayerStateDto loaded = LocalCharacterStore.loadState(slot);
 
-        assertEquals(250, migrated.gold);
-        assertEquals(List.of(
-                "item.dagger",
-                "item.cloth_vest",
-                "item.cloth_pants",
-                "item.bow",
-                "item.wooden_arrow",
-                "item.torch",
-                "item.torch",
-                "item.torch",
-                "item.light_healing_potion",
-                "item.light_healing_potion",
-                "item.light_healing_potion",
-                "item.potion_of_mana",
-                "item.potion_of_mana",
-                "item.potion_of_mana"), migrated.inventory);
-        assertEquals(migrated.inventory, LocalCharacterStore.loadState(slot).inventory);
-    }
-
-    @Test
-    void addsOnlyMissingStartingSkillsToAnExistingCharacter() throws Exception {
-        CharacterCreationRules.Stats stats = new CharacterCreationRules.Stats(
-                15, 14, 13, 12, 11, 28, 10);
-        LocalCharacterStore.CharacterSlot slot = LocalCharacterStore.create(
-                "Ancien", LocalCharacterStore.FEMALE, stats);
-        PlayerStateDto legacy = LocalCharacterStore.loadState(slot);
-        legacy.skills.clear();
-        legacy.skills.put("attack", 42);
-        legacy.questFlags.remove("__MIGRATION_STARTING_SKILLS_V1");
-        PlayerStateStore.save(slot.stateFile(), legacy);
-
-        PlayerStateDto migrated = LocalCharacterStore.loadState(slot);
-
-        assertEquals(42, migrated.skills.get("attack"));
-        assertEquals(15, migrated.skills.get("dodge"));
-        assertEquals(15, migrated.skills.get("archery"));
-    }
-
-    @Test
-    void addsThreeStartingTorchesOnceToAnExistingCharacter() throws Exception {
-        CharacterCreationRules.Stats stats = new CharacterCreationRules.Stats(
-                15, 14, 13, 12, 11, 28, 10);
-        LocalCharacterStore.CharacterSlot slot = LocalCharacterStore.create(
-                "Ancien", LocalCharacterStore.MALE, stats);
-        PlayerStateDto legacy = LocalCharacterStore.loadState(slot);
-        legacy.inventory.removeIf("item.torch"::equals);
-        legacy.questFlags.remove("__MIGRATION_STARTING_TORCHES_V1");
-        PlayerStateStore.save(slot.stateFile(), legacy);
-
-        PlayerStateDto migrated = LocalCharacterStore.loadState(slot);
-
-        assertEquals(3, migrated.inventory.stream().filter("item.torch"::equals).count());
-        assertEquals(migrated.inventory, LocalCharacterStore.loadState(slot).inventory);
-    }
-
-    @Test
-    void addsThreeOfEachStartingPotionOnceToAnExistingCharacter() throws Exception {
-        CharacterCreationRules.Stats stats = new CharacterCreationRules.Stats(
-                15, 14, 13, 12, 11, 28, 10);
-        LocalCharacterStore.CharacterSlot slot = LocalCharacterStore.create(
-                "Ancien", LocalCharacterStore.FEMALE, stats);
-        PlayerStateDto legacy = LocalCharacterStore.loadState(slot);
-        legacy.inventory.removeIf(item -> item.equals("item.light_healing_potion")
-                || item.equals("item.potion_of_mana"));
-        legacy.itemCharges.remove("item.light_healing_potion");
-        legacy.itemCharges.remove("item.potion_of_mana");
-        legacy.questFlags.remove("__MIGRATION_STARTING_POTIONS_V1");
-        PlayerStateStore.save(slot.stateFile(), legacy);
-
-        PlayerStateDto migrated = LocalCharacterStore.loadState(slot);
-
-        assertEquals(3, migrated.inventory.stream()
-                .filter("item.light_healing_potion"::equals).count());
-        assertEquals(3, migrated.inventory.stream().filter("item.potion_of_mana"::equals).count());
-        assertEquals(3, migrated.itemCharges.get("item.light_healing_potion"));
-        assertEquals(3, migrated.itemCharges.get("item.potion_of_mana"));
-        assertEquals(migrated.inventory, LocalCharacterStore.loadState(slot).inventory);
+        assertEquals(0, loaded.gold);
+        assertTrue(loaded.inventory.isEmpty());
+        assertTrue(loaded.itemCharges.isEmpty());
     }
 }

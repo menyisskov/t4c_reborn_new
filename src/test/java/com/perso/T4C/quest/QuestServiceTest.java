@@ -22,7 +22,7 @@ class QuestServiceTest {
             "Les rats du sous-sol du temple",
             "LighthavenSamaritan",
             "Brown Rat",
-            10,
+            15,
             1,
             304,
             383,
@@ -33,6 +33,27 @@ class QuestServiceTest {
             "Réussite",
             "Déjà terminée"
     );
+
+    @Test
+    void legacyNewbieMarkerActivatesTheRatQuestAndTracksProgress() {
+        Player player = new Player();
+        player.setQuestFlag("__NEWBIE_QUEST", 1);
+        QuestDef flaggedQuest = new QuestDef(
+                QUEST.getId(), QUEST.getTitle(), QUEST.getGiverNpc(), QUEST.getTargetMonster(),
+                QUEST.getRequiredKills(), QUEST.getTargetWorldZ(), QUEST.getAreaCenterX(),
+                QUEST.getAreaCenterY(), QUEST.getAreaRadiusTiles(), QUEST.getRewardGold(),
+                QUEST.getRewardXp(), QUEST.getOfferText(), QUEST.getCompletionText(),
+                QUEST.getCompletedText(), "__NEWBIE_QUEST");
+        QuestService service = new QuestService(
+                XpCurve.loadDefault(), null, null, () -> List.of(flaggedQuest));
+
+        assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, flaggedQuest));
+        assertEquals(QuestService.STATUS_NOT_STARTED,
+                player.getQuestFlag(QuestService.statusFlag(flaggedQuest)));
+        assertTrue(service.recordKill(player, "Brown Rat", 1, 304, 383));
+        assertEquals(1, player.getQuestFlag(QuestService.killsFlag(flaggedQuest)));
+        assertEquals(1, player.getQuestFlag("__NEWBIE_QUEST"));
+    }
 
     @Test
     void oneTimeQuestPersistsProgressAndPaysExactRewardOnlyAtTurnIn() throws Exception {
@@ -51,7 +72,7 @@ class QuestServiceTest {
         assertEquals(1, saves.get());
 
         assertTrue(service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), player)
-                .contains("0/10"));
+                .contains("0/15"));
         assertEquals(1, saves.get(), "asking for work again must not restart or save the quest");
         assertNull(service.turnInReadyQuests(QUEST.getGiverNpc(), player));
         assertEquals(0, player.getGold());
@@ -77,15 +98,15 @@ class QuestServiceTest {
         for (int i = 1; i < QUEST.getRequiredKills(); i++) {
             assertTrue(service.recordKill(restored, "Brown Rat", 1, 304, 383));
         }
-        assertEquals(10, restored.getQuestFlag(QuestService.killsFlag(QUEST)));
+        assertEquals(15, restored.getQuestFlag(QuestService.killsFlag(QUEST)));
         assertEquals(QuestService.STATUS_ACTIVE,
                 restored.getQuestFlag(QuestService.statusFlag(QUEST)));
-        assertEquals(0, restored.getGold(), "the tenth kill must not pay the reward");
-        assertEquals(0, restored.getCurrentXp(), "the tenth kill must not pay XP");
+        assertEquals(0, restored.getGold(), "the fifteenth kill must not pay the reward");
+        assertEquals(0, restored.getCurrentXp(), "the fifteenth kill must not pay XP");
         assertTrue(messages.get(messages.size() - 1).contains("Retournez voir"));
 
         assertTrue(service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), restored)
-                .contains("10/10"));
+                .contains("15/15"));
         assertEquals(QuestService.STATUS_ACTIVE,
                 restored.getQuestFlag(QuestService.statusFlag(QUEST)));
         assertEquals(0, restored.getGold(), "GIVE_QUEST itself must not turn in a ready quest");
@@ -98,14 +119,14 @@ class QuestServiceTest {
         assertEquals("Réussite", service.turnInReadyQuests(QUEST.getGiverNpc(), restored));
         assertEquals(QuestService.STATUS_COMPLETED,
                 restored.getQuestFlag(QuestService.statusFlag(QUEST)));
-        assertEquals(10, restored.getQuestFlag(QuestService.killsFlag(QUEST)));
+        assertEquals(15, restored.getQuestFlag(QuestService.killsFlag(QUEST)));
         assertEquals(500, restored.getGold());
         assertEquals(2, restored.getLevel());
         assertEquals(200, restored.getCurrentXp(),
                 "300 exact XP at level 1 spends 100 on level-up and leaves 200");
         assertEquals(5, restored.getStatPoints());
         assertEquals(15, restored.getSkillPoints());
-        assertEquals(12, saves.get(), "acceptance, ten kills and turn-in must each persist");
+        assertEquals(17, saves.get(), "acceptance, fifteen kills and turn-in must each persist");
 
         assertNull(service.turnInReadyQuests(QUEST.getGiverNpc(), restored));
         assertEquals("Déjà terminée",
@@ -114,6 +135,6 @@ class QuestServiceTest {
         assertEquals(500, restored.getGold());
         assertEquals(2, restored.getLevel());
         assertEquals(200, restored.getCurrentXp());
-        assertEquals(12, saves.get(), "a completed one-time quest must never save or pay again");
+        assertEquals(17, saves.get(), "a completed one-time quest must never save or pay again");
     }
 }

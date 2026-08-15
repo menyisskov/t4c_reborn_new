@@ -57,7 +57,7 @@ public final class QuestService {
             return null;
         }
 
-        int status = status(player, definition);
+        int status = statusFor(player, definition);
         if (status == STATUS_NOT_STARTED) {
             player.setQuestFlag(statusFlag(definition), STATUS_ACTIVE);
             player.setQuestFlag(killsFlag(definition), 0);
@@ -86,7 +86,7 @@ public final class QuestService {
         List<String> completionLines = new ArrayList<>();
         for (QuestDef definition : loadDefinitions()) {
             if (same(definition.getGiverNpc(), npcName)
-                    && status(player, definition) == STATUS_ACTIVE
+                    && statusFor(player, definition) == STATUS_ACTIVE
                     && kills(player, definition) >= definition.getRequiredKills()) {
                 completionLines.add(complete(definition, player));
             }
@@ -108,7 +108,7 @@ public final class QuestService {
         boolean changed = false;
         List<String> notifications = new ArrayList<>();
         for (QuestDef definition : loadDefinitions()) {
-            if (status(player, definition) != STATUS_ACTIVE
+            if (statusFor(player, definition) != STATUS_ACTIVE
                     || !matchesTargetMonster(definition, monsterName)
                     || !insideObjectiveArea(definition, worldZ, tileX, tileY)) {
                 continue;
@@ -136,14 +136,6 @@ public final class QuestService {
         return changed;
     }
 
-    public static String statusFlag(QuestDef definition) {
-        return "quest." + definition.getId() + ".status";
-    }
-
-    public static String killsFlag(QuestDef definition) {
-        return "quest." + definition.getId() + ".kills";
-    }
-
     /** Applies XP awarded by an original NPC script and persists the transition. */
     public void awardScriptXp(Player player, int amount) {
         if (player == null || amount == 0) return;
@@ -152,7 +144,7 @@ public final class QuestService {
     }
 
     private String complete(QuestDef definition, Player player) {
-        if (status(player, definition) == STATUS_COMPLETED) {
+        if (statusFor(player, definition) == STATUS_COMPLETED) {
             return I18n.resolve(definition.getCompletedText());
         }
         player.setQuestFlag(statusFlag(definition), STATUS_COMPLETED);
@@ -165,8 +157,17 @@ public final class QuestService {
         return I18n.resolve(definition.getCompletionText());
     }
 
-    private static int status(Player player, QuestDef definition) {
-        return player.getQuestFlag(statusFlag(definition));
+    /** Resolves native quest state while retaining the original Samaritan marker. */
+    public static int statusFor(Player player, QuestDef definition) {
+        if (player == null || definition == null) return STATUS_NOT_STARTED;
+        int status = player.getQuestFlag(statusFlag(definition));
+        if (status != STATUS_NOT_STARTED) return status;
+        String activationFlag = definition.getActivationFlag();
+        if (activationFlag != null && !activationFlag.isBlank()
+                && player.getQuestFlag(activationFlag) != 0) {
+            return STATUS_ACTIVE;
+        }
+        return STATUS_NOT_STARTED;
     }
 
     private static int kills(Player player, QuestDef definition) {
@@ -213,7 +214,9 @@ public final class QuestService {
         return loaded == null ? List.of() : loaded;
     }
 
-    private static String giverDisplayName(QuestDef definition) {
+    /** Returns the translated display name of the quest giver, with its id as fallback. */
+    public static String giverDisplayName(QuestDef definition) {
+        if (definition == null) return "";
         NpcDef giver = NpcRegistry.findByName(definition.getGiverNpc());
         if (giver == null) {
             return definition.getGiverNpc();
@@ -221,5 +224,17 @@ public final class QuestService {
         String translatedName = I18n.resolve(giver.getName());
         return translatedName.equals(giver.getName())
                 ? I18n.resolve(giver.getDisplayName()) : translatedName;
+    }
+
+    public static String statusFlag(QuestDef definition) {
+        return "quest." + definition.getId() + ".status";
+    }
+
+    public static String killsFlag(QuestDef definition) {
+        String progressKey = definition.getActivationFlag();
+        if (progressKey == null || progressKey.isBlank()) {
+            progressKey = definition.getId();
+        }
+        return "quest." + progressKey + ".kills";
     }
 }

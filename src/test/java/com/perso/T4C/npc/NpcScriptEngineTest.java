@@ -189,10 +189,12 @@ class NpcScriptEngineTest {
         Player player = new Player();
         String script = """
                 Command(INTL(1, "CAST"))
+                    HealPlayer(USER_MAXHP)
                     CastSpellTarget("spell.npc_cantrip_serious_heal")
                     CastSpellSelf("spell.npc_cantrip_pentacle")
                 """;
         NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Mage", "cast", player);
+        assertTrue(result.heal());
         assertEquals(List.of("spell.npc_cantrip_serious_heal"), result.targetSpells());
         assertEquals(List.of("spell.npc_cantrip_pentacle"), result.selfSpells());
     }
