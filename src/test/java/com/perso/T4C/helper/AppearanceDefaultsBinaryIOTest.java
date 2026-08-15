@@ -19,14 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AppearanceDefaultsBinaryIOTest {
 
     @Test
-    void writeThenReadKeepsBothTables(@TempDir Path dir) throws Exception {
+    void writeThenReadKeepsEveryTable(@TempDir Path dir) throws Exception {
         AppearanceDefaultsBinaryIO.Defaults defaults = new AppearanceDefaultsBinaryIO.Defaults(
                 List.of(new AppearanceDefaultsBinaryIO.NakedPart("MALE", "BODY", "PupNakedBody"),
                         new AppearanceDefaultsBinaryIO.NakedPart("FEMALE", "BODY", "WoNakedBody")),
                 List.of(new AppearanceDefaultsBinaryIO.ConcealmentRule(
                         "HEAD", "PupPlateHelm", List.of("HEAD", "HAIR"), false),
                         new AppearanceDefaultsBinaryIO.ConcealmentRule(
-                                "BODY", "PupWhiteRobe", List.of("BOOT"), true)));
+                                "BODY", "PupWhiteRobe", List.of("BOOT"), true)),
+                List.of(new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        "FEMALE", "BODY", "PupBodyClothSet1", "BODY", "WoClothBody")));
         File file = dir.resolve("appearance_defaults.bin").toFile();
 
         AppearanceDefaultsBinaryIO.write(file, defaults);
@@ -69,6 +71,7 @@ class AppearanceDefaultsBinaryIOTest {
         AppearanceDefaultsBinaryIO.Defaults defaults = AppearanceDefaultsBinaryIO.read(file);
         assertEquals(List.of(), defaults.nakedParts());
         assertEquals(List.of(), defaults.concealmentRules());
+        assertEquals(List.of(), defaults.equippedOverrides());
     }
 
     @Test
@@ -89,6 +92,7 @@ class AppearanceDefaultsBinaryIOTest {
 
         assertEquals(18, defaults.nakedParts().size());
         assertEquals(70, defaults.concealmentRules().size());
+        assertEquals(2, defaults.equippedOverrides().size());
         assertEquals(4, defaults.concealmentRules().stream()
                 .filter(rule -> rule.hiddenParts().contains("HEAD")).count());
     }

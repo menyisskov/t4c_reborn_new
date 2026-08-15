@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.perso.T4C.ui.FontManager;
-import com.perso.T4C.ui.SystemMessage;
 import com.perso.T4C.helper.SpriteLoader;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,8 +23,8 @@ import java.util.Locale;
 @Slf4j
 public class NameRenderer {
 
-    private static final int FONT_SIZE = 16;
-    private static final Color TEXT_COLOR = SystemMessage.MESSAGE_COLOR;
+    private static final int FONT_SIZE = 14;
+    private static final Color NAME_TEXT_COLOR = new Color(0.92f, 0.72f, 0.30f, 1f);
     private static final Color DIALOG_TEXT_COLOR = new Color(230f / 255f, 230f / 255f, 230f / 255f, 1f);
     private static final Color KEYWORD_COLOR = new Color(180f / 255f, 1f, 0f, 1f);
     private static final Color SHADOW_COLOR = Color.BLACK;
@@ -62,7 +61,7 @@ public class NameRenderer {
         try {
             BitmapFont font = FontManager.getInstance().getT4CBeaulieuFont(
                     FONT_SIZE,
-                    TEXT_COLOR,
+                    NAME_TEXT_COLOR,
                     0f,
                     Color.CLEAR,
                     0,
@@ -86,7 +85,7 @@ public class NameRenderer {
             font.draw(batch, name, x, y - OUTLINE_OFFSET);
             font.draw(batch, name, x, y + OUTLINE_OFFSET);
 
-            font.setColor(TEXT_COLOR);
+            font.setColor(NAME_TEXT_COLOR);
             font.draw(batch, name, x, y);
 
         } catch (Throwable t) {
@@ -144,7 +143,7 @@ public class NameRenderer {
                     }
 
                     if (!segment.isEmpty()) {
-                        font.setColor(TEXT_COLOR);
+                        font.setColor(DIALOG_TEXT_COLOR);
                         font.draw(batch, segment, cursorX, lineY);
                         GlyphLayout segLayout = new GlyphLayout(font, segment);
                         cursorX += segLayout.width;

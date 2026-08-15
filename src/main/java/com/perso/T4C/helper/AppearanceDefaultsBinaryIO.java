@@ -34,11 +34,14 @@ import java.util.List;
  * ruleCount   int32 LE
  * ruleCount x { triggerSlot string, appearance string, hiddenParts CSV string,
  *               hidesExplicit int32 LE }
+ * overrideCount int32 LE
+ * overrideCount x { gender string, sourceSlot string, sourceAppearance string,
+ *                   targetSlot string, targetAppearance string }
  * </pre>
  */
 public final class AppearanceDefaultsBinaryIO {
     private static final byte[] MAGIC = "T4CAPD".getBytes(StandardCharsets.US_ASCII);
-    private static final short VERSION = 2;
+    private static final short VERSION = 3;
     private static final int MAX_STRING_BYTES = 4096;
 
     private AppearanceDefaultsBinaryIO() {
@@ -56,11 +59,22 @@ public final class AppearanceDefaultsBinaryIO {
         }
     }
 
+    /** Gender-specific replacement for an equipped sprite and, optionally, its render layer. */
+    public record EquippedOverride(String gender, String sourceSlot, String sourceAppearance,
+                                   String targetSlot, String targetAppearance) {
+    }
+
     /** The full contents of the asset. */
-    public record Defaults(List<NakedPart> nakedParts, List<ConcealmentRule> concealmentRules) {
+    public record Defaults(List<NakedPart> nakedParts, List<ConcealmentRule> concealmentRules,
+                           List<EquippedOverride> equippedOverrides) {
+        public Defaults(List<NakedPart> nakedParts, List<ConcealmentRule> concealmentRules) {
+            this(nakedParts, concealmentRules, List.of());
+        }
+
         public Defaults {
             nakedParts = nakedParts == null ? List.of() : List.copyOf(nakedParts);
             concealmentRules = concealmentRules == null ? List.of() : List.copyOf(concealmentRules);
+            equippedOverrides = equippedOverrides == null ? List.of() : List.copyOf(equippedOverrides);
         }
     }
 
@@ -72,7 +86,7 @@ public final class AppearanceDefaultsBinaryIO {
                 throw new GameException("Invalid appearance defaults binary file: wrong magic header");
             }
             short version = BinaryIOUtils.readShortLE(in);
-            if (version != 1 && version != VERSION) {
+            if (version < 1 || version > VERSION) {
                 throw new GameException("Unsupported appearance defaults binary version: " + version);
             }
 
@@ -117,7 +131,22 @@ public final class AppearanceDefaultsBinaryIO {
                     rules.add(new ConcealmentRule(triggerSlot, appearance, hiddenParts, hidesExplicit));
                 }
             }
-            return new Defaults(parts, rules);
+            List<EquippedOverride> overrides = new ArrayList<>();
+            if (version >= 3) {
+                int overrideCount = BinaryIOUtils.readIntLE(in);
+                if (overrideCount < 0) {
+                    throw new GameException("Invalid equipped override count: " + overrideCount);
+                }
+                for (int i = 0; i < overrideCount; i++) {
+                    overrides.add(new EquippedOverride(
+                            BinaryIOUtils.readString(in, MAX_STRING_BYTES).trim(),
+                            BinaryIOUtils.readString(in, MAX_STRING_BYTES).trim(),
+                            BinaryIOUtils.readString(in, MAX_STRING_BYTES).trim(),
+                            BinaryIOUtils.readString(in, MAX_STRING_BYTES).trim(),
+                            BinaryIOUtils.readString(in, MAX_STRING_BYTES).trim()));
+                }
+            }
+            return new Defaults(parts, rules, overrides);
         }
     }
 
@@ -146,6 +175,15 @@ public final class AppearanceDefaultsBinaryIO {
                         .map(AppearanceDefaultsBinaryIO::trimmed)
                         .filter(value -> !value.isEmpty()).collect(java.util.stream.Collectors.joining(",")));
                 BinaryIOUtils.writeIntLE(out, rule.hidesExplicit() ? 1 : 0);
+            }
+
+            BinaryIOUtils.writeIntLE(out, safe.equippedOverrides().size());
+            for (EquippedOverride override : safe.equippedOverrides()) {
+                BinaryIOUtils.writeString(out, trimmed(override.gender()));
+                BinaryIOUtils.writeString(out, trimmed(override.sourceSlot()));
+                BinaryIOUtils.writeString(out, trimmed(override.sourceAppearance()));
+                BinaryIOUtils.writeString(out, trimmed(override.targetSlot()));
+                BinaryIOUtils.writeString(out, trimmed(override.targetAppearance()));
             }
         }
     }

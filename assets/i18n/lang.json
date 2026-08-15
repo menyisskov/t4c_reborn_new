@@ -15926,5 +15926,6 @@
   "ui.wisdom": "Sagesse",
   "ui.world_map": "CARTE",
   "ui.xp_to_next_level": "XP au niveau suivant",
+  "entity.name_level": "%s - Niveau %d",
   "zone.lighthaven": "LIGHTHAVEN"
 }

@@ -30,6 +30,10 @@ public final class AppearanceDefaultsCatalog {
 
     private static Map<String, Map<BodyPart, String>> cachedNakedParts;
     private static Map<String, List<AppearanceDefaultsBinaryIO.ConcealmentRule>> cachedRules;
+    private static Map<String, EquippedAppearance> cachedEquippedOverrides;
+
+    public record EquippedAppearance(BodyPart bodyPart, String sprite) {
+    }
 
     private AppearanceDefaultsCatalog() {
     }
@@ -65,10 +69,22 @@ public final class AppearanceDefaultsCatalog {
         return cachedRules.getOrDefault(ruleKey(triggerSlot.name(), normalizeAppearance(appearance)), List.of());
     }
 
+    public static EquippedAppearance equippedAppearance(
+            String gender, BodyPart slot, String defaultAppearance) {
+        load();
+        if (slot == null || defaultAppearance == null || defaultAppearance.isBlank()) {
+            return new EquippedAppearance(slot, defaultAppearance);
+        }
+        return cachedEquippedOverrides.getOrDefault(
+                overrideKey(gender, slot.name(), defaultAppearance),
+                new EquippedAppearance(slot, defaultAppearance));
+    }
+
     /** Reloads the tables from disk on the next lookup. */
     public static synchronized void invalidate() {
         cachedNakedParts = null;
         cachedRules = null;
+        cachedEquippedOverrides = null;
     }
 
     private static synchronized void load() {
@@ -110,8 +126,18 @@ public final class AppearanceDefaultsCatalog {
                     ignored -> new ArrayList<>()).add(rule);
         }
         rules.replaceAll((ignored, value) -> List.copyOf(value));
+        Map<String, EquippedAppearance> overrides = new LinkedHashMap<>();
+        for (AppearanceDefaultsBinaryIO.EquippedOverride override : defaults.equippedOverrides()) {
+            BodyPart sourceSlot = bodyPart(override.sourceSlot());
+            BodyPart targetSlot = bodyPart(override.targetSlot());
+            if (sourceSlot == null || targetSlot == null || override.sourceAppearance().isBlank()
+                    || override.targetAppearance().isBlank()) continue;
+            overrides.put(overrideKey(override.gender(), sourceSlot.name(), override.sourceAppearance()),
+                    new EquippedAppearance(targetSlot, override.targetAppearance()));
+        }
         cachedRules = Collections.unmodifiableMap(rules);
         cachedNakedParts = Collections.unmodifiableMap(byGender);
+        cachedEquippedOverrides = Collections.unmodifiableMap(overrides);
     }
 
     private static BodyPart bodyPart(String name) {
@@ -137,5 +163,9 @@ public final class AppearanceDefaultsCatalog {
 
     private static String ruleKey(String triggerSlot, String appearance) {
         return key(triggerSlot) + "|" + key(appearance);
+    }
+
+    private static String overrideKey(String gender, String slot, String appearance) {
+        return key(gender) + "|" + key(slot) + "|" + key(normalizeAppearance(appearance));
     }
 }

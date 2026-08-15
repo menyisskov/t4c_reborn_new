@@ -338,9 +338,11 @@ public class MainGameScreen implements Screen {
      */
     private com.perso.T4C.helper.PlayerStateDto loadInitialPlayerState() {
         try {
-            com.perso.T4C.helper.PlayerStateDto state = PlayerStateStore.load();
             com.perso.T4C.helper.LocalCharacterStore.CharacterSlot active =
                     com.perso.T4C.helper.LocalCharacterStore.getActiveCharacter();
+            com.perso.T4C.helper.PlayerStateDto state = active == null
+                    ? PlayerStateStore.load()
+                    : com.perso.T4C.helper.LocalCharacterStore.loadState(active);
             if (state != null && active != null) {
                 if (state.name == null || state.name.isBlank()) state.name = active.name();
                 if (state.gender == null || state.gender.isBlank()) state.gender = active.gender();
@@ -3442,6 +3444,12 @@ public class MainGameScreen implements Screen {
     }
 
     private void renderNameOverlay(SpriteBatch batch) {
+        if (monsterManager != null) {
+            monsterManager.renderNameOverlay(batch);
+        }
+        if (npcManager != null) {
+            npcManager.renderNameOverlay(batch);
+        }
         if (mapRenderer != null && mapRenderer.getObjectRenderer() != null) {
             mapRenderer.getObjectRenderer().renderNameOverlay(batch, mapRenderer.getObjectPositions(), mapRenderer.getObjectMappings());
         }
@@ -4097,7 +4105,6 @@ public class MainGameScreen implements Screen {
         if (hud != null) {
             hud.dispose();
         }
-
         if (outlineShader != null) {
             outlineShader.dispose();
         }

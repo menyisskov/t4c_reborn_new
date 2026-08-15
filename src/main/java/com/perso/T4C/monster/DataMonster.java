@@ -93,7 +93,7 @@ public class DataMonster extends BaseMonster {
         }
         if (isDead) return;
         humanoidAnimations.render(batch, position, movement.getCurrentAngle(), movement.isFlipX(),
-                movement.isMoving(), isHovered || selected, outlineShader, getName(), isNameVisible() || selected);
+                movement.isMoving(), isHovered || selected, outlineShader, null, false);
     }
 
     public boolean usesHumanoidAnimations() {

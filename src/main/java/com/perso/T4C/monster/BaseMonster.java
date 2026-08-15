@@ -9,6 +9,7 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
+import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import lombok.Getter;
 import lombok.Setter;
@@ -1275,7 +1276,19 @@ public abstract class BaseMonster implements Nameable {
      */
     public void render(SpriteBatch batch, ShaderProgram outlineShader) {
         float healthPercent = (float) health / (float) maxHealth;
-        animations.render(batch, position, movement.getCurrentAngle(), movement.isFlipX(), movement.isMoving() || (stationary && shouldAnimateWhileStationary()), isHovered || selected, outlineShader, healthPercent, getName(), isNameVisible() || selected);
+        animations.render(batch, position, movement.getCurrentAngle(), movement.isFlipX(), movement.isMoving() || (stationary && shouldAnimateWhileStationary()), isHovered || selected, outlineShader, healthPercent, null, false);
+    }
+
+    /** Drawn after world decors so an inspected monster's complete label stays readable. */
+    public void renderNameOverlay(SpriteBatch batch) {
+        if (!isDead && (isNameVisible() || selected)) {
+            com.perso.T4C.entity.NameRenderer.renderName(
+                    batch, getNameWithLevel(), position.x, position.y, 0f, 0f);
+        }
+    }
+
+    protected String getNameWithLevel() {
+        return I18n.message("entity.name_level", getName(), Math.max(1, combatLevel));
     }
 
     /**

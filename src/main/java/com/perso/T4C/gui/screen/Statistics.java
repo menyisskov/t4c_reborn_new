@@ -254,12 +254,28 @@ public class Statistics extends GuiScreenBase {
     private static final float[] SKILL_ICON_BOX  = {417f, 61f, 32f, 32f};
     private static final float[] SKILL_VALUE_BOX = {462f, 64f, 40f, 24f};
     private static final float SKILL_ROW_PITCH = 43f;
-    private static final java.util.Map<String, String> SKILL_ICONS = java.util.Map.of(
-            "attack", "64kIconSword", "archery", "64kIconBow");
+    private static final java.util.Map<String, String> SKILL_ICONS = java.util.Map.ofEntries(
+            java.util.Map.entry("stun_blow",         "64kIconStunBlow"),
+            java.util.Map.entry("powerful_blow",     "64kIconPowerBlow"),
+            java.util.Map.entry("first_aid",         "64kIconFirstAid"),
+            java.util.Map.entry("parry",             "64kIconParry"),
+            java.util.Map.entry("meditate",          "64kIconMeditate"),
+            java.util.Map.entry("dodge",             "64kIconShield"),
+            java.util.Map.entry("attack",            "64kIconSword"),
+            java.util.Map.entry("hide",              "64kIconHide"),
+            java.util.Map.entry("rob",               "64kIconRob"),
+            java.util.Map.entry("sneak",             "64kIconSneak"),
+            java.util.Map.entry("search",            "64kIconSearch"),
+            java.util.Map.entry("pick_lock",         "64kIconPicklock"),
+            java.util.Map.entry("armor_penetration", "64kIconArmorPierce"),
+            java.util.Map.entry("peek",               "64kIconPeek"),
+            java.util.Map.entry("rapid_healing",     "64kIconRapidHealing"),
+            java.util.Map.entry("archery",           "64kIconBow"),
+            java.util.Map.entry("two_weapons",       "64kIconDualSword"));
 
-    /** Bless-style spell boosts to attack/archery, shown as icon+value rows with no attribute bar above. */
+    /** Core combat skills, shown as icon+value rows with no attribute bar above. */
     private void addCombatSkillRows(com.badlogic.gdx.graphics.g2d.BitmapFont font) {
-        String[] skillIds = {"attack", "archery"};
+        String[] skillIds = {"attack", "dodge", "archery"};
         for (int i = 0; i < skillIds.length; i++) {
             String skillId = skillIds[i];
             float iconX = x + SKILL_ICON_BOX[0];

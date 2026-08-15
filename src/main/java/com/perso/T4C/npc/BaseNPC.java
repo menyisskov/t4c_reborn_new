@@ -8,6 +8,7 @@ import com.perso.T4C.entity.Nameable;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.Pathfinding;
+import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.model.Stats;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.SystemMessage;
@@ -517,7 +518,16 @@ public abstract class BaseNPC extends Stats implements Nameable {
         // must match the "moving" flag update() used to drive animTimer, or the frame
         // index recomputed here from that timer always resolves to 0 (frozen frame).
         boolean animate = movement.isMoving() || (stationary && animations.hasSingleSpriteBase());
-        animations.render(batch, position, movement.getCurrentAngle(), movement.isFlipX(), animate, isHovered, outlineShader, getName(), isNameVisible());
+        animations.render(batch, position, movement.getCurrentAngle(), movement.isFlipX(), animate, isHovered, outlineShader, null, false);
+    }
+
+    /** Drawn after world decors so an inspected NPC's complete label stays readable. */
+    public void renderNameOverlay(SpriteBatch batch) {
+        if (isNameVisible()) {
+            String label = I18n.message("entity.name_level", getName(), Math.max(1, getLevel()));
+            com.perso.T4C.entity.NameRenderer.renderName(
+                    batch, label, position.x, position.y, 0f, 0f);
+        }
     }
 
     public void renderOcclusionReveal(SpriteBatch batch) {

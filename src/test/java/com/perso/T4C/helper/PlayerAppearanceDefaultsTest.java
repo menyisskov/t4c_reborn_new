@@ -33,4 +33,18 @@ class PlayerAppearanceDefaultsTest {
         assertEquals("PupNormalHair", actual.get(BodyPart.HAIR),
                 "Existing hair customization must remain untouched");
     }
+
+    @Test
+    void femaleClothUsesTheSameAppearancesAsAmelia() throws Exception {
+        Player player = new Player();
+        player.setGender(AppearanceDefaultsCatalog.FEMALE);
+        player.getEquippedItems().put(BodyPart.BODY, "item.cloth_vest");
+        player.getEquippedItems().put(BodyPart.LEGS, "item.cloth_pants");
+
+        PlayerAppearanceDefaults.applyDefaults(player);
+
+        Map<BodyPart, String> actual = player.getAnimations().getPartMap();
+        assertEquals("WoClothBody", actual.get(BodyPart.BODY));
+        assertEquals("WoClothRobe", actual.get(BodyPart.ROBELEGS));
+    }
 }

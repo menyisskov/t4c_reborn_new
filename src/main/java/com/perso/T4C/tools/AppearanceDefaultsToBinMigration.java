@@ -106,6 +106,14 @@ public final class AppearanceDefaultsToBinMigration {
             rules.add(rule("BODY", appearance, "BOOT", true));
         }
 
+        List<AppearanceDefaultsBinaryIO.EquippedOverride> overrides = List.of(
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "BODY", "PupBodyClothSet1",
+                        "BODY", "WoClothBody"),
+                new AppearanceDefaultsBinaryIO.EquippedOverride(
+                        AppearanceDefaultsCatalog.FEMALE, "LEGS", "PupLegsClothSet1",
+                        "ROBELEGS", "WoClothRobe"));
+
         System.out.printf("nakedParts=%d concealmentRules=%d%n", parts.size(), rules.size());
         if (dryRun) {
             System.out.println("dry run - rien ecrit");
@@ -113,7 +121,7 @@ public final class AppearanceDefaultsToBinMigration {
         }
 
         AppearanceDefaultsBinaryIO.write(new File(Paths.APPEARANCE_DEFAULTS_BIN),
-                new AppearanceDefaultsBinaryIO.Defaults(parts, rules));
+                new AppearanceDefaultsBinaryIO.Defaults(parts, rules, overrides));
         System.out.println("written: " + Paths.APPEARANCE_DEFAULTS_BIN);
     }
 

@@ -152,6 +152,12 @@ public class NPCManager {
         }
     }
 
+    public void renderNameOverlay(SpriteBatch batch) {
+        for (BaseNPC npc : npcs) {
+            npc.renderNameOverlay(batch);
+        }
+    }
+
     public boolean advanceDialog() {
         return activeConversationNpc != null
                 && activeConversationNpc.isInteracting()

@@ -282,6 +282,12 @@ public class MonsterManager {
         }
     }
 
+    public void renderNameOverlay(SpriteBatch batch) {
+        for (BaseMonster monster : monsters) {
+            monster.renderNameOverlay(batch);
+        }
+    }
+
     /**
      * Handle mouse movement for hover detection.
      */

@@ -88,11 +88,16 @@ public final class PlayerAppearanceDefaults {
             }
             ItemDefinition def = ItemDefinition.get(itemName);
             String primary = getAppearanceFor(itemName, part);
+            BodyPart visualPart = part == BodyPart.HEAD ? BodyPart.HAT : part;
+            AppearanceDefaultsCatalog.EquippedAppearance resolved =
+                    AppearanceDefaultsCatalog.equippedAppearance(
+                            player.getGender(), visualPart, primary);
+            primary = resolved.sprite();
+            visualPart = resolved.bodyPart();
             if (primary != null && !primary.isEmpty()) {
                 // Inventory/equipment uses HEAD as its slot. The original puppet
                 // renders its sprite independently in PUP_HAT (index 11), while
                 // PUP_HEAD (index 5) remains the naked head for crowns and hats.
-                BodyPart visualPart = part == BodyPart.HEAD ? BodyPart.HAT : part;
                 partMap.put(visualPart, primary);
             }
             if (def != null && def.getSecondaryBodyPart() != null) {

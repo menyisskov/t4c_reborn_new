@@ -14,6 +14,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -26,6 +27,18 @@ public final class LocalCharacterStore {
     public static final int MAX_STARTING_GOLD = 250;
     private static final String STARTING_EQUIPMENT_MIGRATION =
             "__MIGRATION_STARTING_EQUIPMENT_V1";
+    private static final String STARTING_SKILLS_MIGRATION =
+            "__MIGRATION_STARTING_SKILLS_V1";
+    private static final String STARTING_TORCHES_MIGRATION =
+            "__MIGRATION_STARTING_TORCHES_V1";
+    private static final String STARTING_POTIONS_MIGRATION =
+            "__MIGRATION_STARTING_POTIONS_V1";
+    private static final String STARTING_TORCH = "item.torch";
+    private static final int STARTING_TORCH_COUNT = 3;
+    private static final int STARTING_POTION_COUNT = 3;
+    private static final List<String> STARTING_POTIONS = List.of(
+            "item.light_healing_potion",
+            "item.potion_of_mana");
 
     private static final List<String> STARTING_INVENTORY = List.of(
             "item.dagger",
@@ -33,6 +46,11 @@ public final class LocalCharacterStore {
             "item.cloth_pants",
             "item.bow",
             "item.wooden_arrow");
+
+    private static final Map<String, Integer> STARTING_SKILLS = Map.of(
+            "attack", 15,
+            "dodge", 15,
+            "archery", 15);
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static volatile CharacterSlot activeCharacter;
@@ -102,7 +120,10 @@ public final class LocalCharacterStore {
     public static PlayerStateDto loadState(CharacterSlot slot) {
         if (slot == null) return null;
         PlayerStateDto state = PlayerStateStore.load(slot.stateFile);
-        if (applyStartingEquipmentMigration(state)) {
+        if (applyStartingEquipmentMigration(state)
+                | applyStartingSkillsMigration(state)
+                | applyStartingTorchesMigration(state)
+                | applyStartingPotionsMigration(state)) {
             PlayerStateStore.save(slot.stateFile, state);
         }
         return state;
@@ -134,11 +155,19 @@ public final class LocalCharacterStore {
         state.quickSlots = new ArrayList<>();
         state.activeBuffs = new ArrayList<>();
         state.inventory = new ArrayList<>(STARTING_INVENTORY);
+        state.inventory.addAll(java.util.Collections.nCopies(STARTING_TORCH_COUNT, STARTING_TORCH));
+        for (String potion : STARTING_POTIONS) {
+            state.inventory.addAll(java.util.Collections.nCopies(STARTING_POTION_COUNT, potion));
+        }
         state.equipment = new HashMap<>();
-        state.skills = new HashMap<>();
+        state.skills = new HashMap<>(STARTING_SKILLS);
         state.itemCharges = new HashMap<>();
+        STARTING_POTIONS.forEach(potion -> state.itemCharges.put(potion, STARTING_POTION_COUNT));
         state.questFlags = new HashMap<>();
         state.questFlags.put(STARTING_EQUIPMENT_MIGRATION, 1);
+        state.questFlags.put(STARTING_SKILLS_MIGRATION, 1);
+        state.questFlags.put(STARTING_TORCHES_MIGRATION, 1);
+        state.questFlags.put(STARTING_POTIONS_MIGRATION, 1);
         state.respawnPointDefined = true;
         state.respawnWorldX = GameConstants.PLAYER_RESPAWN_TILE_X * GameConstants.GRID_W;
         state.respawnWorldY = GameConstants.PLAYER_RESPAWN_TILE_Y * GameConstants.GRID_H;
@@ -157,6 +186,45 @@ public final class LocalCharacterStore {
         }
         state.gold = Math.max(state.gold, MAX_STARTING_GOLD);
         state.questFlags.put(STARTING_EQUIPMENT_MIGRATION, 1);
+        return true;
+    }
+
+    private static boolean applyStartingSkillsMigration(PlayerStateDto state) {
+        if (state == null) return false;
+        if (state.questFlags == null) state.questFlags = new HashMap<>();
+        if (state.questFlags.getOrDefault(STARTING_SKILLS_MIGRATION, 0) != 0) return false;
+
+        if (state.skills == null) state.skills = new HashMap<>();
+        STARTING_SKILLS.forEach(state.skills::putIfAbsent);
+        state.questFlags.put(STARTING_SKILLS_MIGRATION, 1);
+        return true;
+    }
+
+    private static boolean applyStartingTorchesMigration(PlayerStateDto state) {
+        if (state == null) return false;
+        if (state.questFlags == null) state.questFlags = new HashMap<>();
+        if (state.questFlags.getOrDefault(STARTING_TORCHES_MIGRATION, 0) != 0) return false;
+
+        if (state.inventory == null) state.inventory = new ArrayList<>();
+        state.inventory.addAll(java.util.Collections.nCopies(STARTING_TORCH_COUNT, STARTING_TORCH));
+        state.questFlags.put(STARTING_TORCHES_MIGRATION, 1);
+        return true;
+    }
+
+    private static boolean applyStartingPotionsMigration(PlayerStateDto state) {
+        if (state == null) return false;
+        if (state.questFlags == null) state.questFlags = new HashMap<>();
+        if (state.questFlags.getOrDefault(STARTING_POTIONS_MIGRATION, 0) != 0) return false;
+
+        if (state.inventory == null) state.inventory = new ArrayList<>();
+        if (state.itemCharges == null) state.itemCharges = new HashMap<>();
+        for (String potion : STARTING_POTIONS) {
+            int existingItems = java.util.Collections.frequency(state.inventory, potion);
+            int existingCharges = state.itemCharges.getOrDefault(potion, existingItems);
+            state.inventory.addAll(java.util.Collections.nCopies(STARTING_POTION_COUNT, potion));
+            state.itemCharges.put(potion, existingCharges + STARTING_POTION_COUNT);
+        }
+        state.questFlags.put(STARTING_POTIONS_MIGRATION, 1);
         return true;
     }
 

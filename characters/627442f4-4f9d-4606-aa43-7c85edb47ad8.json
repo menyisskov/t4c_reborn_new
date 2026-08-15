@@ -1,0 +1,82 @@
+{
+  "name": "Lynania",
+  "gender": "FEMALE",
+  "x": 2931.0,
+  "y": 1070.0,
+  "z": 0,
+  "strength": 16,
+  "dexterity": 22,
+  "endurance": 15,
+  "intelligence": 16,
+  "wisdom": 14,
+  "gold": 59,
+  "karma": 0,
+  "maxHp": 42,
+  "currentHp": 42,
+  "maxMana": 22,
+  "mana": 22,
+  "level": 3,
+  "currentXp": 588,
+  "xpToNextLevel": 763,
+  "statPoints": 0,
+  "skillPoints": 14,
+  "rebirthCount": 0,
+  "spells": [],
+  "quickSlots": [
+    {
+      "slot": 1,
+      "item": "item.light_healing_potion"
+    },
+    {
+      "slot": 2,
+      "item": "item.potion_of_mana"
+    }
+  ],
+  "activeBuffs": [
+    {
+      "spellName": "spell.item_torch_radiance",
+      "remainingSeconds": 4,
+      "totalDurationSeconds": 600
+    }
+  ],
+  "inventory": [
+    "item.torch",
+    "item.torch",
+    "item.dagger",
+    "item.light_healing_potion",
+    "item.light_healing_potion",
+    "item.potion_of_mana",
+    "item.potion_of_mana",
+    "item.potion_of_mana"
+  ],
+  "equipment": {
+    "WEAPON2": "item.wooden_arrow",
+    "LEGS": "item.cloth_pants",
+    "WEAPON": "item.bow",
+    "BODY": "item.cloth_vest"
+  },
+  "skills": {
+    "dodge": 15,
+    "archery": 31,
+    "attack": 15
+  },
+  "itemCharges": {
+    "item.potion_of_mana": 3,
+    "item.torch": 2,
+    "item.light_healing_potion": 2
+  },
+  "questFlags": {
+    "__MIGRATION_STARTING_EQUIPMENT_V1": 1,
+    "__MIGRATION_STARTING_POTIONS_V1": 1,
+    "__KNOW_ABOUT_QUEST": 1,
+    "__MIGRATION_STARTING_SKILLS_V1": 1,
+    "__MIGRATION_STARTING_TORCHES_V1": 1,
+    "__NEWBIE_QUEST": 1
+  },
+  "respawnPointDefined": true,
+  "respawnWorldX": 94432.0,
+  "respawnWorldY": 16608.0,
+  "respawnWorldZ": 0,
+  "hiddenRemainingMillis": 0,
+  "dayNightHour": 7.0
+}
