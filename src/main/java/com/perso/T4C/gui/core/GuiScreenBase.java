@@ -147,6 +147,26 @@ public abstract class GuiScreenBase {
         return List.of();
     }
 
+    /** Returns whether this GUI visually covers the supplied screen position. */
+    public boolean isPointerOver(float screenX, float screenY) {
+        if (isBackgroundHit(screenX, screenY)) {
+            return true;
+        }
+        for (GuiElement element : orderedElements()) {
+            if (element.contains(screenX, screenY)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Screens made from several background regions can override their full bounds. */
+    protected boolean isBackgroundHit(float screenX, float screenY) {
+        return background != null
+                && screenX >= x && screenX <= x + background.getRegionWidth()
+                && screenY >= y && screenY <= y + background.getRegionHeight();
+    }
+
     private GuiElement findTopmostElement(float screenX, float screenY) {
         List<GuiElement> elements = orderedElements();
         for (int i = elements.size() - 1; i >= 0; i--) {

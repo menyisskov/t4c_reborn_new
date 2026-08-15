@@ -887,6 +887,7 @@ public class MainGameScreen implements Screen {
         inputHandler.setDebugOverlayToggle(this::toggleCollisionDebugOverlay);
         inputHandler.setTeleportOverlayToggle(this::toggleTeleportOverlay);
         inputHandler.setCoordsHudToggle(this::toggleCoordsHud);
+        inputHandler.setMapToggle(this::toggleMapScreen);
         inputHandler.setHudSupplier(() -> hud);
     }
 
@@ -2925,9 +2926,25 @@ public class MainGameScreen implements Screen {
      * Updates the cursor state depending on the context of what is hovered.
      */
     private void updateAttackCursor() {
+        int screenX = Gdx.input.getX();
+        int screenY = Gdx.input.getY();
+
+        // GUI windows are drawn over the world. Entities hidden behind their
+        // background or controls must not affect the mouse cursor.
+        if (GuiManager.isPointerOver(screenX, screenY)) {
+            applyDefaultCursor();
+            return;
+        }
+
+        // Hover cannot depend solely on mouseMoved: NPCs patrol and the camera follows
+        // the player, so the entity below a stationary pointer can change every frame.
+        if (npcManager != null) {
+            Vector3 pointer = getWorldCoords();
+            npcManager.onMouseMove(pointer.x, pointer.y);
+        }
         // The quick bar is a HUD control. An entity rendered underneath it must
         // not affect the world-targeting cursor while the mouse is over the bar.
-        if (hud != null && hud.isQuickBarHit(Gdx.input.getX(), Gdx.input.getY())) {
+        if (hud != null && hud.isQuickBarHit(screenX, screenY)) {
             applyDefaultCursor();
             return;
         }
@@ -3617,13 +3634,7 @@ public class MainGameScreen implements Screen {
                 GuiManager.open(new QuestScreen(player));
             }
         });
-        hud.setMapAction(() -> {
-            if (GuiManager.isCurrent(MapScreen.class)) {
-                GuiManager.close();
-            } else {
-                GuiManager.open(new MapScreen());
-            }
-        });
+        hud.setMapAction(this::toggleMapScreen);
         hud.setOptionsAction(() -> {
             if (GuiManager.isCurrent(OptionsScreen.class)) {
                 GuiManager.close();
@@ -4097,5 +4108,13 @@ public class MainGameScreen implements Screen {
             npcManager.dispose();
         }
         stage.dispose();
+    }
+
+    private void toggleMapScreen() {
+        if (GuiManager.isCurrent(MapScreen.class)) {
+            GuiManager.close();
+        } else {
+            GuiManager.open(new MapScreen(player));
+        }
     }
 }

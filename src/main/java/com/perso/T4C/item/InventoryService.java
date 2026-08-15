@@ -15,7 +15,7 @@ import java.util.Set;
 public final class InventoryService {
     public enum Failure {
         NONE, UNKNOWN_ITEM, TOO_HEAVY, UNIQUE_ITEM, WRONG_SLOT,
-        REQUIREMENTS_NOT_MET, ITEM_NOT_OWNED, INVENTORY_EMPTY
+        REQUIREMENTS_NOT_MET, INCOMPATIBLE_EQUIPMENT, ITEM_NOT_OWNED, INVENTORY_EMPTY
     }
 
     public record Result(boolean success, Failure failure, String itemKey) {
@@ -138,9 +138,27 @@ public final class InventoryService {
         if (player == null || definition == null) return Result.failure(Failure.UNKNOWN_ITEM, itemKey);
         if (!player.getInventory().contains(itemKey)) return Result.failure(Failure.ITEM_NOT_OWNED, itemKey);
         if (!slotMatches(requestedSlot, definition.getBodyPart())) return Result.failure(Failure.WRONG_SLOT, itemKey);
+        if (conflictsWithEquippedWeapon(player, definition)) {
+            return Result.failure(Failure.INCOMPATIBLE_EQUIPMENT, itemKey);
+        }
         if (!meetsRequirements(player, definition)) return Result.failure(Failure.REQUIREMENTS_NOT_MET, itemKey);
 
         return Result.success(itemKey);
+    }
+
+    /** A quiver is an off-hand accessory reserved for bows, never for melee weapons. */
+    private static boolean conflictsWithEquippedWeapon(Player player, ItemDefinition candidate) {
+        ItemDefinition mainHand = ItemRegistry.findByKey(player.getEquippedItems().get(BodyPart.WEAPON));
+        boolean candidateIsQuiver = candidate.getBodyPart() == BodyPart.WEAPON2;
+        if (candidateIsQuiver && mainHand != null && !mainHand.isBow()) {
+            return true;
+        }
+
+        if (candidate.getBodyPart() != BodyPart.WEAPON || candidate.isBow()) {
+            return false;
+        }
+        ItemDefinition offHand = ItemRegistry.findByKey(player.getEquippedItems().get(BodyPart.WEAPON2));
+        return offHand != null && offHand.getBodyPart() == BodyPart.WEAPON2;
     }
 
     public static Result unequip(Player player, BodyPart slot) {

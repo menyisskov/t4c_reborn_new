@@ -1,8 +1,8 @@
 {
   "name": "Lynania",
   "gender": "FEMALE",
-  "x": 2932.0,
-  "y": 1059.0,
+  "x": 2851.0,
+  "y": 1110.0,
   "z": 0,
   "strength": 15,
   "dexterity": 15,
@@ -12,7 +12,7 @@
   "gold": 250,
   "karma": 0,
   "maxHp": 27,
-  "currentHp": 24,
+  "currentHp": 27,
   "maxMana": 12,
   "mana": 12,
   "level": 1,
@@ -38,16 +38,17 @@
     "item.gem_of_destiny",
     "item.light_healing_potion",
     "item.wooden_arrow",
-    "item.wooden_arrow",
-    "item.wooden_arrow",
-    "item.wooden_arrow",
-    "item.dagger",
     "item.cloth_pants",
-    "item.cloth_vest"
+    "item.cloth_vest",
+    "item.wooden_arrow",
+    "item.wooden_arrow",
+    "item.wooden_arrow",
+    "item.wooden_arrow",
+    "item.bow",
+    "item.herb_silverleaf"
   ],
   "equipment": {
-    "WEAPON2": "item.wooden_arrow",
-    "WEAPON": "item.bow"
+    "WEAPON": "item.dagger"
   },
   "skills": {},
   "itemCharges": {

@@ -158,6 +158,13 @@ public class Inventory extends GuiScreenBase {
     }
 
     @Override
+    protected boolean isBackgroundHit(float screenX, float screenY) {
+        return totalWidth > 0f && totalHeight > 0f
+                && screenX >= x && screenX <= x + totalWidth
+                && screenY >= y && screenY <= y + totalHeight;
+    }
+
+    @Override
     public void render(SpriteBatch batch) {
         if (backgroundTop != null) {
             GuiDraw.drawOverlayRegionFlipped(batch, backgroundTop, x, y);
@@ -733,6 +740,7 @@ public class Inventory extends GuiScreenBase {
         String message;
         switch (result.failure()) {
             case REQUIREMENTS_NOT_MET -> message = requirementFailureMessage(def);
+            case INCOMPATIBLE_EQUIPMENT -> message = I18n.message("message.equip_quiver_requires_bow");
             case WRONG_SLOT -> message = I18n.message("message.equip_wrong_slot");
             case ITEM_NOT_OWNED -> message = I18n.message("message.item_not_owned");
             case UNKNOWN_ITEM -> message = I18n.message("message.item_not_equippable");

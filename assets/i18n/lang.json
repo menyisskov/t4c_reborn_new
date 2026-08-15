@@ -4080,6 +4080,7 @@
   "message.equip_need_intelligence": "Il vous faut %d en intelligence pour équiper %s.",
   "message.equip_need_strength": "Il vous faut %d en force pour équiper %s.",
   "message.equip_need_wisdom": "Il vous faut %d en sagesse pour équiper %s.",
+  "message.equip_quiver_requires_bow": "Vous devez équiper un arc pour pouvoir utiliser un carquois.",
   "message.equip_requirements": "Vous ne remplissez pas les conditions requises pour équiper %s.",
   "message.equip_wrong_slot": "Vous ne pouvez pas équiper cet objet dans cet emplacement.",
   "message.gem_of_destiny_undroppable": "La pierre de destinée ne peut pas être jetée au sol.",

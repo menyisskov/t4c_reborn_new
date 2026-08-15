@@ -29,6 +29,10 @@ public final class GuiManager {
         return type != null && type.isInstance(current);
     }
 
+    public static boolean isPointerOver(float screenX, float screenY) {
+        return current != null && current.isPointerOver(screenX, screenY);
+    }
+
     public static void render(SpriteBatch batch) {
         if (current != null) {
             current.render(batch);

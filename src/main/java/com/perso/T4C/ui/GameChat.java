@@ -40,10 +40,10 @@ public final class GameChat extends InputAdapter {
     private static final float BAR_HEIGHT = 166f;
     private static final String GENERATED_BACKGROUND_PATH = "assets/ui/bottom-hud-frame-v9.png";
     private static final float LEFT_CAP_WIDTH = 8f;
-    private static final float LOG_X = 14f;
-    private static final float LOG_Y = 26f;
+    private static final float LOG_X = 16f;
+    private static final float LOG_Y = 9f;
     private static final float LOG_WIDTH = 569f;
-    private static final float LOG_HEIGHT = 60f;
+    private static final float LOG_HEIGHT = 77f;
     private static final float LOG_TEXT_INSET_Y = 4f;
     private static final float INPUT_X = 21f;
     private static final float INPUT_Y = 97f;

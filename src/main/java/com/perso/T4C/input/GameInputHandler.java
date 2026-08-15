@@ -34,6 +34,7 @@ public class GameInputHandler {
     private Runnable debugOverlayToggle;
     private Runnable teleportOverlayToggle;
     private Runnable coordsHudToggle;
+    private Runnable mapToggle;
     private BooleanSupplier textInputActiveSupplier;
     private final Vector2 movementInput = new Vector2();
 
@@ -131,6 +132,10 @@ public class GameInputHandler {
                 GuiManager.open(new QuestScreen(player));
             }
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W) &&
+            (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))) {
+            if (mapToggle != null) mapToggle.run();
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             if (debugOverlayToggle != null) {
                 debugOverlayToggle.run();
@@ -175,6 +180,10 @@ public class GameInputHandler {
 
     public void setCoordsHudToggle(Runnable coordsHudToggle) {
         this.coordsHudToggle = coordsHudToggle;
+    }
+
+    public void setMapToggle(Runnable mapToggle) {
+        this.mapToggle = mapToggle;
     }
 
     public void setHudSupplier(Supplier<PlayerHUD> hudSupplier) {

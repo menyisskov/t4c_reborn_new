@@ -15,10 +15,19 @@ public class GameCursorManager {
 
     private static final String DEFAULT_CURSOR_SPRITE = "64kInterfaceCursor";
     private static final String ATTACK_CURSOR_SPRITE = "64kCursorAttack";
-    private static final String TALK_CURSOR_PREFIX = "TalkCursor";
     private static final String SPELL_CURSOR_PREFIX = "64kCursorSpell-";
     private static final String BOW_CURSOR_PREFIX = "64kCursorBow-";
-    private static final float TALK_FRAME_TIME = 0.35f;
+    /**
+     * Exact frame order used by MouseCursor17 in the 1.68 RC14h client.
+     * Repeated entries deliberately hold each of the four drawings for four ticks.
+     */
+    private static final String[] TALK_CURSOR_FRAMES = {
+            "TalkCursor00", "TalkCursor00", "TalkCursor00", "TalkCursor00",
+            "TalkCursor01", "TalkCursor01", "TalkCursor01", "TalkCursor01",
+            "TalkCursor02", "TalkCursor02", "TalkCursor02", "TalkCursor02",
+            "TalkCursor03", "TalkCursor03", "TalkCursor03", "TalkCursor03"
+    };
+    private static final float TALK_FRAME_TIME = 0.0875f;
     private static final float SPELL_FRAME_TIME = 0.08f;
     private static final float BOW_FRAME_TIME = 0.08f;
 
@@ -190,6 +199,13 @@ public class GameCursorManager {
         try {
             Pixmap pixmap = SpriteLoader.getInstance().createPixmapForSprite(spriteName);
             if (pixmap == null) {
+                var cursorFile = Gdx.files.internal("assets/cursors/" + spriteName + ".png");
+                if (cursorFile.exists()) {
+                    pixmap = new Pixmap(cursorFile);
+                }
+            }
+            if (pixmap == null) {
+                log.warn("Cursor sprite not found: {}", spriteName);
                 return null;
             }
             Pixmap cursorPixmap = ensurePowerOfTwoPixmap(pixmap);
@@ -230,11 +246,11 @@ public class GameCursorManager {
         if (!talkCursors.isEmpty()) {
             return;
         }
-        for (int i = 0; i < 100; i++) {
-            String name = String.format("%s%02d", TALK_CURSOR_PREFIX, i);
+        for (String name : TALK_CURSOR_FRAMES) {
             Cursor cursor = buildCursorFromSprite(name);
             if (cursor == null) {
-                break;
+                clearTalkCursors();
+                return;
             }
             talkCursors.add(cursor);
         }

@@ -92,10 +92,10 @@ public class PlayerHUD {
     private static final float[] QUICK_SLOT_OFFSET_X = {0f, 52f, 103f, 156f, 206f};
     private static final float BACKPACK_BUTTON_X = 707f;
     private static final float BACKPACK_BUTTON_Y = 81f;
-    private static final float XP_BAR_X = 15f;
-    private static final float XP_BAR_Y = 142f;
-    private static final float XP_BAR_WIDTH = 894f;
-    private static final float XP_BAR_HEIGHT = 14f;
+    private static final float XP_BAR_X = 19f;
+    private static final float XP_BAR_Y = 140f;
+    private static final float XP_BAR_WIDTH = 906f;
+    private static final float XP_BAR_HEIGHT = 13f;
     private final Map<String, TextureRegion> quickSlotIcons = new HashMap<>();
     private final Map<String, TextureRegion> buffIcons = new HashMap<>();
     private int selectedQuickSlot = 0;
