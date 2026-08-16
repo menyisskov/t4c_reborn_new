@@ -55,6 +55,9 @@ public final class PlayerStateMapper {
         state.equipment = toEquipmentMap(player);
         state.skills = player.getSkills() != null ? new HashMap<>(player.getSkills()) : new HashMap<>();
         state.itemCharges = new HashMap<>(player.getItemCharges());
+        com.perso.T4C.item.ItemDurabilityService.synchronize(player);
+        state.inventoryDurability = new ArrayList<>(player.getInventoryDurability());
+        state.equipmentDurability = toEquipmentDurabilityMap(player);
         state.questFlags = new HashMap<>(player.getQuestFlags());
         state.respawnPointDefined = player.isRespawnPointDefined();
         state.respawnWorldX = player.getRespawnWorldX();
@@ -96,6 +99,8 @@ public final class PlayerStateMapper {
             player.setSkills(new HashMap<>(state.skills));
         }
         player.setItemCharges(state.itemCharges);
+        player.setInventoryDurability(state.inventoryDurability);
+        player.setEquippedDurability(toEquippedDurability(state));
         player.setQuestFlags(state.questFlags);
         if (state.respawnPointDefined) {
             player.setRespawnPoint(state.respawnWorldX, state.respawnWorldY, state.respawnWorldZ);
@@ -202,5 +207,19 @@ public final class PlayerStateMapper {
             }
         }
         return equippedItems;
+    }
+
+    private static Map<String, Double> toEquipmentDurabilityMap(Player player) {
+        Map<String, Double> result = new HashMap<>();
+        player.getEquippedDurability().forEach((slot, value) -> result.put(slot.name(), value));
+        return result;
+    }
+
+    private static Map<BodyPart, Double> toEquippedDurability(PlayerStateDto state) {
+        Map<BodyPart, Double> result = new HashMap<>();
+        if (state.equipmentDurability != null) state.equipmentDurability.forEach((key, value) -> {
+            try { result.put(BodyPart.valueOf(key), value); } catch (IllegalArgumentException ignored) {}
+        });
+        return result;
     }
 }

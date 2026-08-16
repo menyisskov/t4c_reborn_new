@@ -939,6 +939,7 @@ public class MainGameScreen implements Screen {
             player.takeDamage(damage);
             int appliedDamage = player.getLastDamageTaken();
             if (appliedDamage > 0) {
+                com.perso.T4C.item.ItemDurabilityService.wearArmorOnPhysicalHit(player);
                 playRandomPlayerHitSound();
                 floatingDamage.spawn(appliedDamage, impactPosition.x, impactPosition.y, FloatingDamage.Type.PLAYER_RECEIVED);
                 log.info("Player took {} damage! HP: {}/{}", appliedDamage, player.getCurrentHp(), player.getMaxHp());
@@ -1019,6 +1020,7 @@ public class MainGameScreen implements Screen {
             player.takeDamage(result.damage());
             int appliedDamage = player.getLastDamageTaken();
             if (appliedDamage > 0) {
+                com.perso.T4C.item.ItemDurabilityService.wearArmorOnPhysicalHit(player);
                 playRandomPlayerHitSound();
                 floatingDamage.spawn(appliedDamage, impactPosition.x, impactPosition.y, FloatingDamage.Type.PLAYER_RECEIVED);
                 log.info("Player took {} damage from {}! HP: {}/{}", appliedDamage, attacker.getName(),
@@ -2343,6 +2345,8 @@ public class MainGameScreen implements Screen {
         boolean wasDead = monster.isDead();
         int appliedPrimaryDamage = 0;
         if (result.hit()) {
+            com.perso.T4C.item.ItemDurabilityService.damageEquipped(player,
+                    com.perso.T4C.player.BodyPart.WEAPON, com.perso.T4C.item.ItemDurabilityService.COMBAT_WEAR);
             handleSeraphAuraAttackHit();
             if (!monster.isDead()) {
                 if (monster.isStunned()) monster.clearStun();

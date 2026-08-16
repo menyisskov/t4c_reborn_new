@@ -4,6 +4,7 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.screen.LearnScreen;
 import com.perso.T4C.gui.screen.ShopScreen;
+import com.perso.T4C.gui.screen.RepairScreen;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemRegistry;
@@ -86,14 +87,20 @@ public class DataNpc extends BaseNPC {
                 return;
             }
         }
+        boolean scriptHandled = false;
         if (def.getSourceScript() != null) {
             NpcScriptEngine.Result result = NpcScriptEngine.begin(
                     def.getSourceScript(), def.getName(), player);
-            if (applyScriptResult(result, player)) return;
+            // Legacy Begin blocks still carry their original literal greeting.
+            // Execute their flags/items/actions, but the displayed welcome always
+            // comes from NpcDef.welcomeText -> assets/i18n/lang.json.
+            scriptHandled = applyScriptResult(result, player, false);
         }
         if (def.getWelcomeText() != null && !def.getWelcomeText().isBlank()) {
             showDialog(I18n.resolve(def.getWelcomeText()), 0L);
+            return;
         }
+        if (scriptHandled) return;
     }
 
     @Override
@@ -185,8 +192,12 @@ public class DataNpc extends BaseNPC {
     }
 
     private boolean applyScriptResult(NpcScriptEngine.Result result, Player player) {
+        return applyScriptResult(result, player, true);
+    }
+
+    private boolean applyScriptResult(NpcScriptEngine.Result result, Player player, boolean displayText) {
         if (result == null || !result.handled()) return false;
-        if (result.text() != null && !result.text().isBlank()) showDialog(result.text(), 0L);
+        if (displayText && result.text() != null && !result.text().isBlank()) showDialog(result.text(), 0L);
         for (String message : result.systemMessages()) {
             if (message != null && !message.isBlank()) SystemMessage.showShared(message);
         }
@@ -370,6 +381,7 @@ public class DataNpc extends BaseNPC {
                         }).toList();
                 GuiManager.open(new ShopScreen(player, valid));
             }
+            case OPEN_REPAIR -> GuiManager.open(new RepairScreen(player));
             case GIVE_ITEM -> {
                 if (action.getTargets().isEmpty()) return;
                 String itemKey = action.getTargets().get(0);

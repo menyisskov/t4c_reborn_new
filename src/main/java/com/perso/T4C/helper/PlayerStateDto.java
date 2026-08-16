@@ -41,6 +41,8 @@ public class PlayerStateDto {
     public Map<String, String> equipment;
     public Map<String, Integer> skills;
     public Map<String, Integer> itemCharges;
+    public List<Double> inventoryDurability;
+    public Map<String, Double> equipmentDurability;
     public Map<String, Integer> questFlags;
     public boolean respawnPointDefined;
     public float respawnWorldX;

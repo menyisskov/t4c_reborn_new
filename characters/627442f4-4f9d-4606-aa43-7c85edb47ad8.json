@@ -1,22 +1,22 @@
 {
   "name": "Lynania",
   "gender": "FEMALE",
-  "x": 2932.0,
-  "y": 1059.0,
+  "x": 2918.0,
+  "y": 1063.0,
   "z": 0,
   "strength": 16,
   "dexterity": 22,
   "endurance": 300,
   "intelligence": 16,
   "wisdom": 14,
-  "gold": 86,
+  "gold": 141,
   "karma": 0,
   "maxHp": 49,
-  "currentHp": 49,
+  "currentHp": 31,
   "maxMana": 27,
   "mana": 27,
   "level": 4,
-  "currentXp": 305,
+  "currentXp": 442,
   "xpToNextLevel": 1299,
   "statPoints": 5,
   "skillPoints": 29,
@@ -35,25 +35,18 @@
   "activeBuffs": [],
   "inventory": [
     "item.torch",
-    "item.dagger",
-    "item.light_healing_potion",
-    "item.light_healing_potion",
-    "item.potion_of_mana",
-    "item.potion_of_mana",
-    "item.potion_of_mana",
-    "item.cloth_vest",
-    "item.cloth_pants"
+    "item.ancient_platemail_armor",
+    "item.ancient_platemail_leggings",
+    "item.ancient_platemail_helmet",
+    "item.ancient_platemail_gauntlets",
+    "item.ancient_plate_protector",
+    "item.ancient_platemail_boots"
   ],
   "equipment": {
     "WEAPON2": "item.wooden_arrow",
-    "HEAD": "item.ancient_platemail_helmet",
-    "RIGHT_HAND": "item.ancient_platemail_gauntlets",
-    "BELT": "item.ancient_plate_protector",
-    "LEGS": "item.ancient_platemail_leggings",
+    "LEGS": "item.cloth_pants",
     "WEAPON": "item.bow",
-    "BODY": "item.ancient_platemail_armor",
-    "LEFT_HAND": "item.ancient_platemail_gauntlets",
-    "FEET": "item.ancient_platemail_boots"
+    "BODY": "item.cloth_vest"
   },
   "skills": {
     "dodge": 15,
@@ -61,12 +54,25 @@
     "attack": 15
   },
   "itemCharges": {
-    "item.potion_of_mana": 3,
-    "item.torch": 1,
-    "item.light_healing_potion": 2
+    "item.torch": 1
+  },
+  "inventoryDurability": [
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100
+  ],
+  "equipmentDurability": {
+    "LEGS": 89,
+    "WEAPON": 96,
+    "BODY": 100
   },
   "questFlags": {
     "__NEWBIE_QUEST": 1,
+    "__QUEST_SIGFRIED_REPORT": 0,
     "quest.__NEWBIE_QUEST.kills": 10
   },
   "respawnPointDefined": true,
@@ -74,5 +80,5 @@
   "respawnWorldY": 16608.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.036158
 }

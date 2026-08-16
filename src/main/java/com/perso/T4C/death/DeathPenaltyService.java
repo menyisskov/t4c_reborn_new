@@ -6,6 +6,7 @@ import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 
@@ -56,6 +57,7 @@ public final class DeathPenaltyService {
 
     public Result apply(Player player, boolean pvp, XpCurve curve, RandomGenerator random) {
         if (player == null || random == null) throw new IllegalArgumentException("Player and random generator are required");
+        ItemDurabilityService.wearAllEquippedOnDeath(player);
         if (isSafeHaven(CollisionManager.getInstance()
                 .getCollisionValue(player.getPositionVector().x, player.getPositionVector().y))) {
             return new Result(pvp, 0, 0, 0, List.of(), List.of(), List.of());

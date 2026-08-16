@@ -7,10 +7,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Color;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.ui.FontManager;
 
 import java.util.List;
 import java.util.LinkedHashMap;
@@ -30,6 +34,7 @@ public class GuiInventory extends AbstractGuiElement {
     private float width;
     private float height;
     private float scrollOffset;
+    private final BitmapFont durabilityFont;
 /**
  * Class representing ItemHit.
  */
@@ -51,6 +56,7 @@ public class GuiInventory extends AbstractGuiElement {
         this.player = player;
         this.width = width;
         this.height = height;
+        this.durabilityFont = FontManager.getInstance().getJetBrainsMonoFont(10, Color.WHITE);
     }
 
     @Override
@@ -184,6 +190,12 @@ public class GuiInventory extends AbstractGuiElement {
                 // Skip drawing if outside viewport but still advance layout
             } else {
                 GuiDraw.drawRegionFlipped(batch, region, cursorX, cursorY, w, h);
+                ItemDefinition definition = ItemDefinition.get(itemName);
+                if (ItemDurabilityService.isRepairable(definition)) {
+                    double durability = ItemDurabilityService.inventory(player, stack.firstIndex);
+                    durabilityFont.setColor(durability >= 50 ? Color.GREEN : durability >= 25 ? Color.ORANGE : Color.RED);
+                    durabilityFont.draw(batch, ItemDurabilityService.format(durability) + "%", cursorX + 1f, cursorY + h - 1f);
+                }
             }
             cursorX += w + CELL_PADDING;
             rowHeight = Math.max(rowHeight, h);
@@ -245,17 +257,21 @@ public class GuiInventory extends AbstractGuiElement {
         }
     }
 
-    private static List<StackEntry> stacks(List<String> items) {
+    private List<StackEntry> stacks(List<String> items) {
         Map<String, int[]> grouped = new LinkedHashMap<>();
+        ItemDurabilityService.synchronize(player);
         if (items != null) for (int i = 0; i < items.size(); i++) {
             String key = items.get(i);
             if (key == null) continue;
-            int[] v = grouped.get(key);
-            if (v == null) { v = new int[]{i, 0}; grouped.put(key, v); }
+            ItemDefinition definition = ItemDefinition.get(key);
+            String groupKey = ItemDurabilityService.isRepairable(definition)
+                    ? key + "\u0000" + ItemDurabilityService.inventory(player, i) : key;
+            int[] v = grouped.get(groupKey);
+            if (v == null) { v = new int[]{i, 0}; grouped.put(groupKey, v); }
             v[1]++;
         }
         List<StackEntry> result = new java.util.ArrayList<>();
-        grouped.forEach((key, v) -> result.add(new StackEntry(key, v[0], v[1])));
+        grouped.forEach((groupKey, v) -> result.add(new StackEntry(items.get(v[0]), v[0], v[1])));
         return result;
     }
 

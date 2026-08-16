@@ -3,6 +3,7 @@ package com.perso.T4C.helper;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.EquipmentBonusRules;
+import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 
@@ -50,7 +51,7 @@ public final class CombatMath {
         String itemKey = player.getEquippedItems().get(BodyPart.WEAPON2);
         if (itemKey == null || itemKey.equals(player.getEquippedItems().get(BodyPart.WEAPON))) return 0;
         ItemDefinition definition = ItemRegistry.findByKey(itemKey);
-        if (definition == null || definition.isBow()) return 0;
+        if (definition == null || definition.isBow() || ItemDurabilityService.isBroken(player, BodyPart.WEAPON2)) return 0;
         int weapon = rollDefinitionDamage(player, definition);
         int strength = player.getEffectiveStrength();
         int natural = strength >= 20 ? (strength - 20) / 5 : 0;
@@ -67,7 +68,9 @@ public final class CombatMath {
             ItemDefinition primary = ItemRegistry.findByKey(itemKey);
             if (primary == null || !primary.isBow()) itemKey = player.getEquippedItems().get(BodyPart.WEAPON2);
         }
-        if (itemKey == null) return fallback(player.getEffectiveStrength(), player.getEffectiveDexterity());
+        if (itemKey == null || ItemDurabilityService.isBroken(player,
+                itemKey.equals(player.getEquippedItems().get(BodyPart.WEAPON)) ? BodyPart.WEAPON : BodyPart.WEAPON2))
+            return fallback(player.getEffectiveStrength(), player.getEffectiveDexterity());
 
         ItemDefinition def = ItemRegistry.findByKey(itemKey);
         if (def == null) return fallback(player.getEffectiveStrength(), player.getEffectiveDexterity());

@@ -24,6 +24,7 @@ import com.perso.T4C.helper.PlayerAppearanceDefaults;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.InventoryService;
+import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.item.ItemUseService;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.helper.PlayerStateStore;
@@ -583,7 +584,9 @@ public class Inventory extends GuiScreenBase {
     private boolean showItemTooltipAt(float screenX, float screenY) {
         String equippedItem = findEquippedItemAt(screenX, screenY);
         if (equippedItem != null) {
-            tooltip.show(buildItemTooltipText(equippedItem), screenX, screenY);
+            BodyPart equippedSlot = findEquippedSlotAt(screenX, screenY);
+            tooltip.show(buildItemTooltipText(equippedItem,
+                    equippedSlot == null ? 100d : ItemDurabilityService.equipped(player, equippedSlot)), screenX, screenY);
             return true;
         }
 
@@ -595,7 +598,8 @@ public class Inventory extends GuiScreenBase {
         if (hit == null || hit.getItemName() == null || hit.getItemName().isEmpty()) {
             return false;
         }
-        tooltip.show(buildItemTooltipText(hit.getItemName()), screenX, screenY);
+        tooltip.show(buildItemTooltipText(hit.getItemName(),
+                ItemDurabilityService.inventory(player, hit.getIndex())), screenX, screenY);
         return true;
     }
 
@@ -616,7 +620,15 @@ public class Inventory extends GuiScreenBase {
         return null;
     }
 
-    private String buildItemTooltipText(String itemName) {
+    private BodyPart findEquippedSlotAt(float screenX, float screenY) {
+        for (int i = playerParts.size() - 1; i >= 0; i--) {
+            GuiPlayerPart part = playerParts.get(i);
+            if (part.contains(screenX, screenY) && part.equippedItem() != null) return part.occupiedPart();
+        }
+        return null;
+    }
+
+    private String buildItemTooltipText(String itemName, double durability) {
         ItemDefinition def = ItemDefinition.get(itemName);
         if (def == null) {
             return itemName;
@@ -627,6 +639,11 @@ public class Inventory extends GuiScreenBase {
         appendLine(text, "type", formatBodyPart(def.getBodyPart()));
         appendLine(text, "price", def.getPrice() > 0 ? def.getPrice() + " gold" : null);
         appendLine(text, "weight", def.getWeight() > 0 ? String.valueOf(def.getWeight()) : null);
+        if (ItemDurabilityService.isRepairable(def)) {
+            String formatted = ItemDurabilityService.format(durability);
+            text.append('\n').append(I18n.message("tooltip.durability", formatted, formatted));
+            if (durability <= 0d) text.append(" - ").append(I18n.key("tooltip.broken"));
+        }
         appendLine(text, "armor_class", def.getArmorClass() != 0d ? formatDouble(def.getArmorClass()) : null);
         appendLine(text, "dodge_penalty", def.getDodgeLost() != 0 ? String.valueOf(def.getDodgeLost()) : null);
         appendLine(text, "damage", nonBlank(def.getDmgFormula()));

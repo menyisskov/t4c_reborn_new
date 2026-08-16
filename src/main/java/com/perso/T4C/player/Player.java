@@ -156,6 +156,12 @@ public class Player extends Stats {
     /** Total remaining uses for each charged item stack. */
     @Getter
     private Map<String, Integer> itemCharges = new HashMap<>();
+    /** Durability values aligned with inventory entries; legacy/missing entries default to 100. */
+    @Getter
+    private List<Double> inventoryDurability = new ArrayList<>();
+    /** Durability of equipped item instances, keyed by their primary equipment slot. */
+    @Getter
+    private Map<BodyPart, Double> equippedDurability = new HashMap<>();
 
     /**
      * Construct player with ordered pairs of BodyPart and base sprite name.
@@ -250,10 +256,21 @@ public class Player extends Stats {
 
     public void setInventory(List<String> inventory) {
         this.inventory = inventory == null ? new ArrayList<>() : new ArrayList<>(inventory);
+        this.inventoryDurability = new ArrayList<>();
+    }
+
+    public void setInventoryDurability(List<Double> durability) {
+        this.inventoryDurability = durability == null ? new ArrayList<>() : new ArrayList<>(durability);
+        com.perso.T4C.item.ItemDurabilityService.synchronize(this);
+    }
+
+    public void setEquippedDurability(Map<BodyPart, Double> durability) {
+        this.equippedDurability = durability == null ? new HashMap<>() : new HashMap<>(durability);
     }
 
     public void setEquippedItems(Map<BodyPart, String> equippedItems) {
         this.equippedItems = equippedItems == null ? new HashMap<>() : new HashMap<>(equippedItems);
+        this.equippedDurability = new HashMap<>();
     }
 
     public void showTalkText(String text) {
