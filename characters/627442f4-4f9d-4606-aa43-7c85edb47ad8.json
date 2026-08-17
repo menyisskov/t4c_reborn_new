@@ -1,27 +1,29 @@
 {
   "name": "Lynania",
   "gender": "FEMALE",
-  "x": 2918.0,
-  "y": 1063.0,
+  "x": 337.0,
+  "y": 484.63202,
   "z": 0,
-  "strength": 16,
-  "dexterity": 22,
+  "strength": 300,
+  "dexterity": 700,
   "endurance": 300,
-  "intelligence": 16,
-  "wisdom": 14,
-  "gold": 141,
+  "intelligence": 300,
+  "wisdom": 300,
+  "gold": 26218,
   "karma": 0,
-  "maxHp": 49,
-  "currentHp": 31,
-  "maxMana": 27,
-  "mana": 27,
-  "level": 4,
-  "currentXp": 442,
-  "xpToNextLevel": 1299,
-  "statPoints": 5,
-  "skillPoints": 29,
-  "rebirthCount": 0,
-  "spells": [],
+  "maxHp": 6000,
+  "currentHp": 6000,
+  "maxMana": 6000,
+  "mana": 6000,
+  "level": 150,
+  "currentXp": 32919,
+  "xpToNextLevel": 1061130,
+  "statPoints": 0,
+  "skillPoints": 44,
+  "rebirthCount": 1,
+  "spells": [
+    "spell.meteor"
+  ],
   "quickSlots": [
     {
       "slot": 1,
@@ -30,55 +32,90 @@
     {
       "slot": 2,
       "item": "item.potion_of_mana"
+    },
+    {
+      "slot": 3,
+      "spell": "spell.meteor"
     }
   ],
-  "activeBuffs": [],
+  "activeBuffs": [
+    {
+      "spellName": "spell.remort_aura",
+      "remainingSeconds": 9223372036854775807,
+      "totalDurationSeconds": 9223372036854775807
+    }
+  ],
   "inventory": [
     "item.torch",
-    "item.ancient_platemail_armor",
-    "item.ancient_platemail_leggings",
-    "item.ancient_platemail_helmet",
-    "item.ancient_platemail_gauntlets",
-    "item.ancient_plate_protector",
-    "item.ancient_platemail_boots"
+    "item.cloth_pants",
+    "item.cloth_vest",
+    "item.bow",
+    "item.wooden_arrow",
+    "item.colosseum_token",
+    "item.colosseum_token",
+    "item.colosseum_token",
+    "item.colosseum_token",
+    "item.colosseum_token",
+    "item.colosseum_token"
   ],
   "equipment": {
-    "WEAPON2": "item.wooden_arrow",
-    "LEGS": "item.cloth_pants",
-    "WEAPON": "item.bow",
-    "BODY": "item.cloth_vest"
+    "WEAPON2": "item.carquois_des_vagues_silencieuses",
+    "HEAD": "item.ancient_platemail_helmet",
+    "RIGHT_HAND": "item.ancient_platemail_gauntlets",
+    "BELT": "item.ancient_plate_protector",
+    "LEGS": "item.ancient_platemail_leggings",
+    "WEAPON": "item.tension_primordiale_ultimate",
+    "BODY": "item.ancient_platemail_armor",
+    "LEFT_HAND": "item.ancient_platemail_gauntlets",
+    "FEET": "item.ancient_platemail_boots"
   },
   "skills": {
-    "dodge": 15,
-    "archery": 31,
-    "attack": 15
+    "dodge": 5000,
+    "archery": 5000,
+    "attack": 5000
   },
   "itemCharges": {
     "item.torch": 1
   },
   "inventoryDurability": [
-    100,
-    100,
-    100,
-    100,
-    100,
-    100,
-    100
+    100.0,
+    89.0,
+    85.19999999999979,
+    81.39999999999979,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0
   ],
   "equipmentDurability": {
-    "LEGS": 89,
-    "WEAPON": 96,
-    "BODY": 100
+    "WEAPON2": 100.0,
+    "HEAD": 100.0,
+    "BELT": 100.0,
+    "LEGS": 100.0,
+    "WEAPON": 88.39999999999984,
+    "BODY": 100.0,
+    "LEFT_HAND": 100.0,
+    "FEET": 100.0
   },
   "questFlags": {
+    "__ARENA_RETURN_LOC": 0,
+    "__FLAG_NUMBER_OF_REMORTS": 1,
+    "__FLAG_USER_HAS_READ_COLOSSEUM_INSTRUCTIONS": 1,
+    "quest.__NEWBIE_QUEST.kills": 10,
+    "__FLAG_ARENA_LEVEL": 450,
+    "__FLAG_USER_LEVEL_SLICE": 450,
     "__NEWBIE_QUEST": 1,
     "__QUEST_SIGFRIED_REPORT": 0,
-    "quest.__NEWBIE_QUEST.kills": 10
+    "__FLAG_USER_HAS_CHANGED_DIFFICULTY_LEVEL": 0,
+    "__FLAG_USER_HAS_SPOKEN_TO_COLOSSEUM_CLERK": 1
   },
   "respawnPointDefined": true,
   "respawnWorldX": 94432.0,
   "respawnWorldY": 16608.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.036158
+  "dayNightHour": 7.0
 }

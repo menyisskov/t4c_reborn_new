@@ -139,6 +139,8 @@ public class MainGameScreen implements Screen {
     private boolean switchingCharacter;
     private boolean disposed;
     private boolean playerStateSaved;
+    private boolean displayInitialized;
+    private int loadingStep;
     private GameInputHandler inputHandler;
     private PlayerHUD hud;
     private PlayerCoordsHud coordsHud;
@@ -247,6 +249,14 @@ public class MainGameScreen implements Screen {
      * @throws GameException If an error occurs during initialization.
      */
     public MainGameScreen(MyGame game) throws GameException {
+        this(game, false);
+        while (advanceLoading()) {
+            // Preserve the historical synchronous constructor for callers that do not use
+            // CharacterLoadingScreen.
+        }
+    }
+
+    private MainGameScreen(MyGame game, boolean progressive) {
         this.game = game;
         this.batch = game.batch;
         this.batchSol = new SpriteBatch();
@@ -260,12 +270,52 @@ public class MainGameScreen implements Screen {
         updateHudCamera();
 
         stage = new Stage(new ScreenViewport());
+    }
+
+    /** Creates an empty gameplay screen whose initialization is advanced one step per frame. */
+    static MainGameScreen createProgressive(MyGame game) {
+        return new MainGameScreen(game, true);
+    }
+
+    /**
+     * Executes exactly one initialization step.
+     *
+     * @return true while another step remains, false when the screen is ready
+     */
+    boolean advanceLoading() throws GameException {
+        if (loadingStep >= loadingStepCount()) return false;
+
+        switch (loadingStep) {
+            case 0 -> initializeCharacterAndWorld();
+            case 1 -> initializeWorldData();
+            case 2 -> initializePlayerAndServices();
+            case 3 -> initializeMapRendering();
+            case 4 -> initializeWorldEntities();
+            case 5 -> initializeCompanionAndCallbacks();
+            case 6 -> initializeDisplay();
+            default -> throw new IllegalStateException("Unknown loading step: " + loadingStep);
+        }
+        loadingStep++;
+        return loadingStep < loadingStepCount();
+    }
+
+    int getCompletedLoadingSteps() {
+        return loadingStep;
+    }
+
+    static int loadingStepCount() {
+        return 7;
+    }
+
+    private void initializeCharacterAndWorld() {
 
         initialPlayerState = loadInitialPlayerState();
         currentMap = MapDefinition.fromZ(initialPlayerState != null ? initialPlayerState.z : 0);
         groundItemManager.setActiveWorld(currentMap.getZ());
         herbManager.setActiveWorld(currentMap.getZ());
+    }
 
+    private void initializeWorldData() throws GameException {
         loadShader();
         loadXpCurve();
         loadMap(currentMap);
@@ -274,15 +324,25 @@ public class MainGameScreen implements Screen {
         loadCollisionMap(currentMap);
         CollisionManager.getInstance().setPlayerPassabilityProvider(this::isTeleportSourceTile);
         CollisionManager.getInstance().setTalkVisibilityProvider(this::isTalkVisibleTile);
+    }
+
+    private void initializePlayerAndServices() throws GameException {
         initializePlayer();
         questService = new QuestService(xpCurve, this::savePlayerState, this::showSystemMessage);
         updateAmbientMusicForPlayer();
+    }
 
+    private void initializeMapRendering() throws GameException {
         mapRenderer = createMapRenderer();
         inputHandler = new GameInputHandler(log, mapRenderer, player);
+    }
 
+    private void initializeWorldEntities() {
         npcManager = createNpcManager();
         monsterManager = createMonsterManager();
+    }
+
+    private void initializeCompanionAndCallbacks() throws GameException {
         companionManager = new CompanionManager(npcManager);
         companionManager.setXpCurve(xpCurve);
         // Read through the field so the supplier survives the map-change rebuild.
@@ -295,6 +355,16 @@ public class MainGameScreen implements Screen {
         restorePersistedCompanion();
         initializeTameProgressGui();
         registerReloadListener();
+    }
+
+    private void initializeDisplay() {
+        initializeHud();
+        initializeInputHandlers();
+        updateCamera();
+        calculateRenderBounds();
+        warmVisibleCaches(INITIAL_WARMUP_BUFFER, INITIAL_WARMUP_CHUNK_BUDGET, INITIAL_WARMUP_TMPL_BUDGET,
+                INITIAL_WARMUP_DECOR_BUDGET);
+        displayInitialized = true;
     }
 
     private void initializeTameProgressGui() throws GameException {
@@ -831,7 +901,7 @@ public class MainGameScreen implements Screen {
     private MonsterManager createMonsterManager() {
         MonsterManager manager = new MonsterManager(outlineShader);
         NpcSummonBridge.setSummonCallback((name, x, y, z) ->
-                currentMap != null && currentMap.getZ() == z && manager.spawnMonster(name, x, y));
+                currentMap != null && currentMap.getZ() == z && manager.spawnMonster(name, x, y, false));
         manager.setXpCurve(xpCurve);
         try {
             String mapPath = currentMap != null ? currentMap.getMapPath() : Paths.MAP;
@@ -898,6 +968,23 @@ public class MainGameScreen implements Screen {
      */
     private void configureMonsterDamageCallback() {
         monsterManager.setDeathCallback(monster -> {
+            if (monster instanceof com.perso.T4C.monster.DataMonster dataMonster) {
+                com.perso.T4C.npc.MonsterScriptBridge.Effects effects =
+                        com.perso.T4C.npc.MonsterScriptBridge.death(dataMonster, player);
+                effects.messages().forEach(this::showSystemMessage);
+                for (String spell : effects.selfSpells()) {
+                    com.perso.T4C.spell.SpellData data = com.perso.T4C.spell.SpellRegistry.findByName(spell);
+                    if (data != null) spellRenderer.triggerImpactSpell(data.getName(), monster.getPosition().x, monster.getPosition().y);
+                }
+            }
+            NpcSummonBridge.DeathEffect summonEffect =
+                    NpcSummonBridge.summonedMonsterDefeated(monster.getName());
+            if (summonEffect != null) {
+                if (summonEffect.itemKey() != null && !summonEffect.itemKey().isBlank())
+                    com.perso.T4C.item.InventoryService.add(player, summonEffect.itemKey());
+                if (summonEffect.message() != null && !summonEffect.message().isBlank())
+                    showSystemMessage(summonEffect.message());
+            }
             if (monster instanceof com.perso.T4C.monster.DataMonster dataMonster
                     && dataMonster.usesHumanoidAnimations()) {
                 Vector2 position = monster.getPosition();
@@ -3264,7 +3351,9 @@ public class MainGameScreen implements Screen {
                     // anchor, just like the player.  Sorting on getTileY() alone
                     // leaves them behind tall foreground decors (e.g. the rock at
                     // the reported position).
-                    playerRenderDepth(npc.getTileY() * GRID_H),
+                    npc.hasObjectAppearance()
+                            ? npc.getTileY()
+                            : playerRenderDepth(npc.getTileY() * GRID_H),
                     () -> npc.render(batchDecor, outlineShader));
             item.revealThroughDecor = true;
             item.occlusionRevealAction = () -> npc.renderOcclusionReveal(batchDecor);
@@ -3605,12 +3694,7 @@ public class MainGameScreen implements Screen {
      */
     @Override
     public void show() {
-        initializeHud();
-        initializeInputHandlers();
-        updateCamera();
-        calculateRenderBounds();
-        warmVisibleCaches(INITIAL_WARMUP_BUFFER, INITIAL_WARMUP_CHUNK_BUDGET, INITIAL_WARMUP_TMPL_BUDGET,
-                INITIAL_WARMUP_DECOR_BUDGET);
+        if (!displayInitialized) initializeDisplay();
     }
 
     /**
@@ -4079,7 +4163,7 @@ public class MainGameScreen implements Screen {
         if (disposed) return;
         disposed = true;
         NpcSummonBridge.setSummonCallback(null);
-        if (!playerStateSaved && player != null) {
+        if (!playerStateSaved && player != null && displayInitialized) {
             savePlayerState();
             playerStateSaved = true;
         }

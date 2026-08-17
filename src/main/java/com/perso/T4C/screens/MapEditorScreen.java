@@ -17344,7 +17344,7 @@ public class MapEditorScreen implements Screen {
                     0, 0, 0, 0, 0, 0, 0, new int[12],
                     1, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0,
-                    50, 0, 0, true, new ArrayList<>(), false, 0, new ArrayList<>());
+                    50, 0, 0, true, new ArrayList<>(), false, 0, new ArrayList<>(), java.util.Map.of());
             defs.add(d);
             defs.sort(Comparator.comparing(MonsterDef::getName, String.CASE_INSENSITIVE_ORDER));
             list.setItems(defs);
@@ -17389,7 +17389,7 @@ public class MapEditorScreen implements Screen {
                     src.getItemLegs(), src.getItemWeapon(), src.getItemShield(), src.getItemBack(),
                     src.getAggro(), src.getClan(), src.getSpeed(), src.isCanAttack(),
                     new ArrayList<>(src.getAttacks()), src.isTameable(), src.getTameMaxLevel(),
-                    new ArrayList<>(src.getSpawnAliases()));
+                    new ArrayList<>(src.getSpawnAliases()), src.getSourceEvents());
             defs.add(d);
             defs.sort(Comparator.comparing(MonsterDef::getName, String.CASE_INSENSITIVE_ORDER));
             list.setItems(defs);
@@ -17507,7 +17507,7 @@ public class MapEditorScreen implements Screen {
                     itemBody, itemFeet, itemHands, itemHead, itemLegs, itemWeapon, itemShield, itemBack,
                     aggro, clan, speed, canAttack, attacks,
                     src != null && src.isTameable(), src == null ? 0 : src.getTameMaxLevel(),
-                    src != null ? src.getSpawnAliases() : List.of());
+                    src != null ? src.getSpawnAliases() : List.of(), src != null ? src.getSourceEvents() : java.util.Map.of());
         }
 
         private void saveToDisk() {

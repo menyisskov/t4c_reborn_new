@@ -4,6 +4,7 @@ import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.MonsterDefBinaryIO;
 import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.i18n.I18n;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -39,6 +40,10 @@ public final class CppMonsterDefinitionMigration {
         definitions.forEach(definition -> known.add(definition.getName()));
         Set<String> missing = new LinkedHashSet<>();
         for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(spawns)) if (!known.contains(entry.type)) missing.add(entry.type);
+        Pattern includedClasses = args.length > 3 && !args[3].isBlank()
+                ? Pattern.compile(args[3], Pattern.CASE_INSENSITIVE) : null;
+        Map<String, Integer> objectConstants = LegacyNpcSourceMigration.loadObjectConstants(
+                cppRoot.resolve("Include").resolve("DynObjListing.h"));
 
         Map<String, Path> classes = new HashMap<>();
         Map<String, Integer> appearances = new HashMap<>();
@@ -60,6 +65,11 @@ public final class CppMonsterDefinitionMigration {
             }
         }
         Map<String, String> blocks = blocks(setup.toString());
+        if (includedClasses != null) {
+            classes.values().stream().map(path -> path.getFileName().toString().replaceFirst("(?i)\\.cpp$", ""))
+                    .filter(name -> includedClasses.matcher(name).matches())
+                    .sorted(String.CASE_INSENSITIVE_ORDER).forEach(missing::add);
+        }
         Map<Integer, AnimationPatterns> patterns = new HashMap<>();
         for (MonsterDef definition : definitions) {
             if (definition.getAppearance() > 0 && definition.getWalkPattern() != null) {
@@ -68,14 +78,18 @@ public final class CppMonsterDefinitionMigration {
             }
         }
         int imported = 0;
+        Set<String> updatedNames = new LinkedHashSet<>();
         for (String type : missing) {
             Path source = classes.get(type.toLowerCase(Locale.ROOT));
             if (source == null) continue;
-            Matcher assignment = NPC_ASSIGNMENT.matcher(Files.readString(source, StandardCharsets.ISO_8859_1));
+            String sourceText = Files.readString(source, StandardCharsets.ISO_8859_1);
+            Matcher assignment = NPC_ASSIGNMENT.matcher(sourceText);
             if (!assignment.find()) continue;
             String block = blocks.get(assignment.group(1).toLowerCase(Locale.ROOT));
             if (block == null || integer(block, "MOB_HP", 0) <= 0) continue;
-            definitions.add(definition(type, block, appearances, patterns));
+            definitions.removeIf(existing -> existing.getName().equalsIgnoreCase(type));
+            definitions.add(definition(type, block, appearances, patterns, lifecycleEvents(sourceText, objectConstants)));
+            updatedNames.add(type.toLowerCase(Locale.ROOT));
             imported++;
         }
         int repaired = 0;
@@ -90,10 +104,18 @@ public final class CppMonsterDefinitionMigration {
             if (block == null) continue;
             int authoritativeAppearance = appearance(block, appearances);
             if (authoritativeAppearance <= 0 || authoritativeAppearance == current.getAppearance()) continue;
-            definitions.set(i, definition(current.getName(), block, appearances, patterns));
+            definitions.set(i, definition(current.getName(), block, appearances, patterns, current.getSourceEvents()));
             repaired++;
         }
         MonsterDefBinaryIO.write(target, definitions);
+        Map<String, String> translations = new java.util.LinkedHashMap<>();
+        for (MonsterDef definition : definitions) {
+            if (!updatedNames.contains(definition.getName().toLowerCase(Locale.ROOT))) continue;
+            String display = definition.getDisplayName();
+            String key = I18n.keyOf(display);
+            if (key != null) translations.putIfAbsent(key, displayName(definition.getName()));
+        }
+        I18n.update(translations);
         System.out.println("Imported " + imported + " C++ monster definitions, repaired " + repaired
                 + " fallback appearances; " + (missing.size() - imported) + " aliases remain for audit.");
     }
@@ -106,12 +128,19 @@ public final class CppMonsterDefinitionMigration {
     }
 
     private static MonsterDef definition(String type, String block, Map<String, Integer> appearances,
-                                         Map<Integer, AnimationPatterns> patternsByAppearance) {
+                                         Map<Integer, AnimationPatterns> patternsByAppearance,
+                                         Map<String, String> sourceEvents) {
         String roll = text(block, "MOB_ATTACK_DMG_ROLL", "1d4");
         int appearance = appearance(block, appearances);
         AnimationPatterns animation = patternsByAppearance.getOrDefault(appearance,
-                appearance == 20013 ? new AnimationPatterns("Demon#i", "DemonA#i", "DemonC#k")
-                        : new AnimationPatterns("Warrio#l", "WarrioA#l", "WarrioC"));
+                switch (appearance) {
+                    case 20013 -> new AnimationPatterns("Demon#i", "DemonA#i", "DemonC#k");
+                    case 20034 -> new AnimationPatterns(
+                            "KraanianFlying#h", "KraanianFlyingA#h", "KraanianFlyingC#l");
+                    case 20035 -> new AnimationPatterns(
+                            "KraanianMilipede#i", "KraanianMilipedeA#h", "KraanianMilipedeC#l");
+                    default -> new AnimationPatterns("Warrio#l", "WarrioA#l", "WarrioC");
+                });
         int[] damage = diceBounds(roll);
         int[] values = {
                 integer(block, "MOB_AIR_RESIST", 0), integer(block, "MOB_EARTH_RESIST", 0),
@@ -131,7 +160,27 @@ public final class CppMonsterDefinitionMigration {
                 integer(block, "MOB_STR", 0), integer(block, "MOB_END", 0), integer(block, "MOB_DEX", 0),
                 integer(block, "MOB_INT", 0), integer(block, "MOB_WIL", 0), integer(block, "MOB_WIS", 0), integer(block, "MOB_LCK", 0), values,
                 integer(block, "MOB_LEVEL", 1), integer(block, "MOB_DODGE_SKILL", 0), 0, Float.floatToIntBits(ac), appearance,
-                0, 0, 0, 0, 0, 0, 0, 0, integer(block, "MOB_AGRESSIVNESS", 0), 0, 0, true, attacks, false, 0, List.of());
+                0, 0, 0, 0, 0, 0, 0, 0, integer(block, "MOB_AGRESSIVNESS", 0), 0, 0, true, attacks, false, 0, List.of(), sourceEvents);
+    }
+
+    private static Map<String, String> lifecycleEvents(String source, Map<String, Integer> objectConstants) {
+        Map<String, String> events = new java.util.LinkedHashMap<>();
+        for (String event : List.of("OnPopup", "OnDeath", "OnDestroy")) {
+            Matcher method = Pattern.compile("void\\s+\\w+::" + event + "\\s*\\([^)]*\\).*?\\{", Pattern.DOTALL).matcher(source);
+            if (!method.find()) continue;
+            int open = source.indexOf('{', method.start());
+            int depth = 0, close = -1;
+            for (int i = open; i < source.length(); i++) {
+                if (source.charAt(i) == '{') depth++;
+                else if (source.charAt(i) == '}' && --depth == 0) { close = i; break; }
+            }
+            if (close > open) {
+                String body = source.substring(open + 1, close);
+                events.put(event, LegacyNpcSourceMigration.translateSymbolicConstants(
+                        LegacyNpcSourceMigration.translateObjectConstants(body, objectConstants)));
+            }
+        }
+        return events;
     }
 
     private static int appearance(String block, Map<String, Integer> appearances) {

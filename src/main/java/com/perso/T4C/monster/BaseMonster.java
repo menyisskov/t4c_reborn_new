@@ -142,6 +142,7 @@ public abstract class BaseMonster implements Nameable {
     protected boolean isDead = false;
     protected long deathTime = 0L;
     protected long respawnTime;
+    private boolean respawnEnabled = true;
     protected boolean stationary = false;
     private float stationaryAnimationPauseTimer = 0f;
 
@@ -1331,12 +1332,22 @@ public abstract class BaseMonster implements Nameable {
      * Check if monster should respawn.
      */
     public boolean shouldRespawn() {
-        if (!isDead) return false;
+        if (!respawnEnabled || !isDead) return false;
         if (!animations.isDeadComplete()) return false;
 
         // Check if respawn time has passed since death
         long currentTime = System.currentTimeMillis();
         return (currentTime - deathTime) >= respawnTime;
+    }
+
+    /** Marks a runtime-created monster as temporary. */
+    public void disableRespawn() {
+        respawnEnabled = false;
+    }
+
+    /** Temporary monsters are discarded once their death animation has finished. */
+    public boolean shouldRemoveAfterDeath() {
+        return !respawnEnabled && isDead && animations.isDeadComplete();
     }
 
     /** Schedules the next respawn delay; used by density-aware spawn rules. */

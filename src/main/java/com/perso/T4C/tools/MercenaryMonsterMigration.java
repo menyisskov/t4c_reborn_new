@@ -43,6 +43,6 @@ public final class MercenaryMonsterMigration {
                 21, 21, 21, 23, 21, 21, 21, resistsAndPowers,
                 7, 43, 0, Float.floatToIntBits(2f), 10_004,
                 0, 0, 0, 0, 0, 0, 0, 0,
-                50, 20, 0, true, attacks, false, 0, List.of());
+                50, 20, 0, true, attacks, false, 0, List.of(), java.util.Map.of());
     }
 }

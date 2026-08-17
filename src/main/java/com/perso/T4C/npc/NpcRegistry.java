@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -47,7 +48,7 @@ public final class NpcRegistry {
     /** Lookup a definition by name, or null if absent. */
     public static synchronized NpcDef findByName(String name) {
         load();
-        return name == null ? null : byName.get(name);
+        return name == null ? null : byName.get(normalize(name));
     }
 
     /** Drop the in-memory cache so the next {@link #load()} re-reads from disk. */
@@ -61,9 +62,13 @@ public final class NpcRegistry {
         Map<String, NpcDef> map = new LinkedHashMap<>();
         for (NpcDef def : cache) {
             if (def != null && def.getName() != null) {
-                map.put(def.getName(), def);
+                map.put(normalize(def.getName()), def);
             }
         }
         byName = map;
+    }
+
+    private static String normalize(String name) {
+        return name.trim().toLowerCase(Locale.ROOT);
     }
 }

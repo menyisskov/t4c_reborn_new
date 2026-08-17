@@ -22,11 +22,12 @@ import java.util.List;
  *             appearance, equipment, aggro, clan, speed, canAttack, attacks[])</li>
  *   <li>v3 — adds tameable, tameMaxLevel</li>
  *   <li>v4 — adds spawnAliases[]</li>
+ *   <li>v5 — adds sourceEvents map</li>
  * </ul>
  */
 public final class MonsterDefBinaryIO {
     private static final byte[] MAGIC = "T4CMON".getBytes(StandardCharsets.US_ASCII);
-    private static final short VERSION = 4;
+    private static final short VERSION = 5;
     private static final int MAX_STRING_BYTES = 16384;
     private static final int RESISTS_COUNT = 12;
 
@@ -153,6 +154,12 @@ public final class MonsterDefBinaryIO {
                 spawnAliases.add(readString(in));
             }
         }
+        java.util.Map<String, String> sourceEvents = new java.util.LinkedHashMap<>();
+        if (version >= 5) {
+            int eventCount = BinaryIOUtils.readIntLE(in);
+            if (eventCount < 0) throw new GameException("Invalid monster event count: " + eventCount);
+            for (int i = 0; i < eventCount; i++) sourceEvents.put(readString(in), readString(in));
+        }
 
         return new MonsterDef(name, displayName, health, mana, xpPerHit, xpOnDeath,
                 hitDamageMin, hitDamageMax, respawnTime,
@@ -162,7 +169,7 @@ public final class MonsterDefBinaryIO {
                 str, end, agi, intel, will, wis, luck, resists,
                 level, dodge, acMin, acMax, appearance,
                 itemBody, itemFeet, itemHands, itemHead, itemLegs, itemWeapon, itemShield, itemBack,
-                aggro, clan, speed, canAttack, attacks, tameable, tameMaxLevel, spawnAliases);
+                aggro, clan, speed, canAttack, attacks, tameable, tameMaxLevel, spawnAliases, sourceEvents);
     }
 
     private static void writeDef(DataOutputStream out, MonsterDef def) throws IOException {
@@ -249,6 +256,12 @@ public final class MonsterDefBinaryIO {
             for (String alias : spawnAliases) {
                 writeString(out, alias == null ? "" : alias);
             }
+        }
+        java.util.Map<String, String> sourceEvents = def == null ? null : def.getSourceEvents();
+        BinaryIOUtils.writeIntLE(out, sourceEvents == null ? 0 : sourceEvents.size());
+        if (sourceEvents != null) for (var event : sourceEvents.entrySet()) {
+            writeString(out, event.getKey());
+            writeString(out, event.getValue());
         }
     }
 

@@ -18,6 +18,7 @@ import java.util.List;
  * hardcoded {@code com.perso.T4C.monster.types.*} subclasses.
  */
 public class DataMonster extends BaseMonster {
+    private final java.util.Map<String, String> sourceEvents;
 
     private final boolean animateWhileStationary;
     private final float stationaryAnimationPauseSeconds;
@@ -57,7 +58,10 @@ public class DataMonster extends BaseMonster {
         }
         this.animateWhileStationary = def.isAnimateWhileStationary();
         this.stationaryAnimationPauseSeconds = def.getStationaryAnimationPauseSeconds();
+        this.sourceEvents = def.getSourceEvents() == null ? java.util.Map.of() : def.getSourceEvents();
     }
+
+    public java.util.Map<String, String> getSourceEvents() { return sourceEvents; }
 
     /** Resolved at display time: the definition stores a ${monster.x} placeholder. */
     @Override

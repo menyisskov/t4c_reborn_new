@@ -21,10 +21,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Executes the data-oriented subset of Vircom's original NPC macro DSL. */
-final class NpcScriptEngine {
+public final class NpcScriptEngine {
     private static final Pattern COMMAND = Pattern.compile("(?m)^\\s*(Command\\d*|CmdAND\\d*|ParamCmd)\\s*\\(");
     private static final Pattern SECTION = Pattern.compile(
             "(?m)^\\s*(?:Command\\d*|CmdAND\\d*|ParamCmd|YES|NO|YesNoELSE|Default)\\s*(?:\\(|$)");
+    private static final Pattern LEGACY_STATE_MARKER = Pattern.compile("(?s);?\\}\\s*else\\s+if\\s*\\((.*?)\\)\\s*\\{;?");
     private static final Pattern C_STRING = Pattern.compile("\"((?:\\\\.|[^\"\\\\])*)\"");
     private static final Pattern INT = Pattern.compile("-?\\d+");
     private static final Map<String, Integer> GLOBAL_FLAGS = new ConcurrentHashMap<>();
@@ -35,6 +36,16 @@ final class NpcScriptEngine {
     private static final String FLAG_REMORT_PROCESS = "__FLAG_REMORT_PROCESS";
     /** Energy the player spends with Alphan's associates after a rebirth. */
     private static final String FLAG_REMORT_POINTS = "__FLAG_REMORT_POINTS";
+
+    static int globalFlag(String flag) {
+        return GLOBAL_FLAGS.getOrDefault(flag, 0);
+    }
+
+    static void setGlobalFlag(String flag, int value) {
+        if (value <= 0) GLOBAL_FLAGS.remove(flag);
+        else GLOBAL_FLAGS.put(flag, value);
+        GLOBAL_FLAG_EXPIRATIONS.remove(flag);
+    }
     /** Quest-flag prefixes holding the deltas above {@link com.perso.T4C.config.GameConstants#REBIRTH_ELEMENT_BASE}. */
     private static final String FLAG_RESIST_PREFIX = "legacy:resist:";
     private static final String FLAG_POWER_PREFIX = "legacy:power:";
@@ -42,7 +53,7 @@ final class NpcScriptEngine {
     /** {@code NpcDef.sourceEvents} key for the comma-separated item keys granted by {@link #rebirth}. */
     private static final String EVENT_REBIRTH_REGALIA = "@rebirth.regalia";
 
-    record Result(String text, List<String> systemMessages, List<String> shopItems, List<SellRule> sellRules, List<String> taughtSpells,
+    public record Result(String text, List<String> systemMessages, List<String> shopItems, List<SellRule> sellRules, List<String> taughtSpells,
                   List<String> taughtSkills, List<String> trainedSkills, List<String> targetSpells,
                   List<String> selfSpells, List<SkillOffer> skillOffers, List<FormulaOffer> formulaOffers,
                   List<SummonRequest> summons, int xp, boolean heal,
@@ -189,17 +200,26 @@ final class NpcScriptEngine {
         if (begin < 0) return Result.empty();
         Matcher firstCommand = COMMAND.matcher(script);
         int end = firstCommand.find(begin) ? firstCommand.start() : script.length();
-        return execute(script.substring(begin + 5, end), npcName, player);
+        Matcher firstState = LEGACY_STATE_MARKER.matcher(script);
+        if (firstState.find(begin)) end = Math.min(end, firstState.start());
+        return execute(script.substring(begin + 5, end), npcName, player,
+                scriptLocals(script, npcName, player));
     }
 
-    static Result event(String script, String npcName, Player player, int npcHp, int npcMaxHp) {
+    public static Result event(String script, String npcName, Player player, int npcHp, int npcMaxHp) {
         if (script == null || script.isBlank() || player == null) return Result.empty();
         return execute("long NPC_HP = " + npcHp + ";\nlong NPC_MAXHP = " + npcMaxHp + ";\n" + script,
                 npcName, player);
     }
 
     static Result respond(String script, String npcName, String input, Player player) {
+        return respond(script, npcName, input, player, null);
+    }
+
+    static Result respond(String script, String npcName, String input, Player player, String conversationState) {
         if (script == null || input == null || player == null) return Result.empty();
+        Result legacyState = respondLegacyState(script, npcName, input, player, conversationState);
+        if (legacyState.handled()) return legacyState;
         Matcher commands = COMMAND.matcher(script);
         List<Integer> starts = new ArrayList<>();
         while (commands.find()) starts.add(commands.start());
@@ -217,13 +237,15 @@ final class NpcScriptEngine {
             boolean requireAll = script.substring(start, open).contains("CmdAND");
             java.util.function.Predicate<String> contained = keyword -> {
                 String normalized = normalize(keyword);
-                return !normalized.isBlank() && (" " + normalizedInput + " ").contains(" " + normalized + " ");
+                return keywordMatches(normalizedInput, normalized);
             };
             boolean match = commandKind.equals("ParamCmd")
                     || (requireAll ? keywords.stream().allMatch(contained) : keywords.stream().anyMatch(contained));
             if (!match) continue;
             Matcher boundary = SECTION.matcher(script);
             int end = boundary.find(close + 1) ? boundary.start() : script.length();
+            Matcher stateBoundary = LEGACY_STATE_MARKER.matcher(script);
+            if (stateBoundary.find(close + 1)) end = Math.min(end, stateBoundary.start());
             String body = script.substring(close + 1, end);
             if (parameters != null) {
                 StringBuilder declarations = new StringBuilder();
@@ -231,10 +253,61 @@ final class NpcScriptEngine {
                     declarations.append("long PARAM_").append(p).append(" = ").append(parameters.get(p)).append(";\n");
                 body = declarations + body;
             }
-            return execute(body, npcName, player);
+            return execute(body, npcName, player, scriptLocals(script, npcName, player));
+        }
+        Matcher defaultSection = Pattern.compile("(?m)^\\s*Default\\s*$").matcher(script);
+        if (defaultSection.find()) {
+            int end = script.indexOf("EndTalk", defaultSection.end());
+            return execute(script.substring(defaultSection.end(), end < 0 ? script.length() : end), npcName, player,
+                    scriptLocals(script, npcName, player));
         }
         return Result.empty();
     }
+
+    /** Executes Vircom's inline {@code msg.Find(...) && YesNo == State} dialogue sections. */
+    private static Result respondLegacyState(String script, String npcName, String input, Player player,
+                                             String conversationState) {
+        if (conversationState == null || conversationState.isBlank()) return Result.empty();
+        Matcher markers = LEGACY_STATE_MARKER.matcher(script);
+        List<LegacyStateSection> sections = new ArrayList<>();
+        while (markers.find()) sections.add(new LegacyStateSection(markers.group(1), markers.start(), markers.end()));
+        String spoken = " " + normalize(input) + " ";
+        for (int i = 0; i < sections.size(); i++) {
+            LegacyStateSection section = sections.get(i);
+            if (!Pattern.compile("\\bYesNo\\s*==\\s*" + Pattern.quote(conversationState) + "\\b")
+                    .matcher(section.condition()).find()) continue;
+            List<String> words = strings(section.condition()).stream().map(NpcScriptEngine::normalize)
+                    .filter(word -> !word.isBlank()).toList();
+            boolean fallback = words.isEmpty();
+            boolean matches = fallback || legacyKeywordCondition(section.condition(), words, spoken);
+            if (!matches) continue;
+            int end = i + 1 < sections.size() ? sections.get(i + 1).start() : script.length();
+            Matcher standard = SECTION.matcher(script);
+            if (standard.find(section.end()) && standard.start() < end) end = standard.start();
+            return execute(script.substring(section.end(), end), npcName, player,
+                    scriptLocals(script, npcName, player));
+        }
+        return Result.empty();
+    }
+
+    private static boolean legacyKeywordCondition(String condition, List<String> words, String spoken) {
+        String input = spoken.trim();
+        List<Boolean> present = words.stream().map(word -> keywordMatches(input, word)).toList();
+        // Original compound topics (physical+offense, complete+restoration) use AND; numeric/name
+        // synonyms use OR. Mixed expressions are not emitted by the legacy NPC generator.
+        boolean keywordOr = condition.contains("||");
+        return keywordOr ? present.stream().anyMatch(Boolean::booleanValue)
+                : present.stream().allMatch(Boolean::booleanValue);
+    }
+
+    private static boolean keywordMatches(String input, String keyword) {
+        if (keyword == null || keyword.isBlank()) return false;
+        if (keyword.chars().allMatch(Character::isDigit))
+            return (" " + input + " ").contains(" " + keyword + " ");
+        return input.contains(keyword);
+    }
+
+    private record LegacyStateSection(String condition, int start, int end) {}
 
     /**
      * Lists the words the script reacts to, so the dialogue UI can highlight them.
@@ -280,14 +353,37 @@ final class NpcScriptEngine {
         Matcher next = anyMarker.matcher(script);
         int end = script.length();
         if (next.find(selected.end)) end = next.start();
-        return execute(script.substring(selected.end, end), npcName, player);
+        return execute(script.substring(selected.end, end), npcName, player,
+                scriptLocals(script, npcName, player));
     }
 
     private static Result execute(String block, String npcName, Player player) {
+        return execute(block, npcName, player, Map.of());
+    }
+
+    /**
+     * C++ NPC constants live at function scope, before {@code Begin}.  Dialogue sections are
+     * executed independently here, so copy those declarations into every section's local scope.
+     */
+    private static Map<String, Long> scriptLocals(String script, String npcName, Player player) {
+        int begin = script.indexOf("Begin");
+        String preamble = begin < 0 ? script : script.substring(0, begin);
+        Map<String, Long> locals = new LinkedHashMap<>();
+        Pattern declaration = Pattern.compile(
+                "(?:CONSTANT|BOOL|int|long|double|DWORD|BYTE|WORD|Fix|unsigned\\s+int)\\s+(\\w+)\\s*=\\s*(.+?);?$");
+        for (String statement : statements(preamble)) {
+            Matcher matcher = declaration.matcher(statement.trim());
+            if (matcher.find())
+                locals.put(matcher.group(1), number(matcher.group(2), npcName, player, locals));
+        }
+        return locals;
+    }
+
+    private static Result execute(String block, String npcName, Player player, Map<String, Long> initialLocals) {
         ArrayDeque<Branch> branches = new ArrayDeque<>();
         ArrayDeque<SwitchState> switches = new ArrayDeque<>();
         ArrayDeque<Integer> repeats = new ArrayDeque<>();
-        Map<String, Long> locals = new LinkedHashMap<>();
+        Map<String, Long> locals = new LinkedHashMap<>(initialLocals);
         Map<String, String> itemHandles = new LinkedHashMap<>();
         StringBuilder response = new StringBuilder();
         List<String> systemMessages = new ArrayList<>();
@@ -307,6 +403,7 @@ final class NpcScriptEngine {
 
         for (String statement : statements(block)) {
             String s = statement.trim();
+            if (s.startsWith(";")) s = s.substring(1).trim();
             String args;
             if ((args = macroArgs(s, "SWITCH")) != null || (args = macroArgs(s, "switch")) != null) {
                 switches.push(new SwitchState(number(args, npcName, player, locals), false, false));
@@ -385,7 +482,8 @@ final class NpcScriptEngine {
             }
             assignment = Pattern.compile("(\\w+)\\s*=\\s*(.+?);?$").matcher(s);
             if (assignment.matches()) {
-                locals.put(assignment.group(1), number(assignment.group(2), npcName, player, locals));
+                if (assignment.group(1).equals("YesNo")) pendingYesNo = assignment.group(2).trim();
+                else locals.put(assignment.group(1), number(assignment.group(2), npcName, player, locals));
                 continue;
             }
             if (s.startsWith("Conversation") || s.equals("\"\"") || s.startsWith("//")) continue;
@@ -541,18 +639,16 @@ final class NpcScriptEngine {
             }
             else if ((args = macroArgs(s, "CastSpellTarget")) != null) {
                 String spell = unquote(firstArg(args));
-                targetSpells.add(spell);
-                // The rebirth teleport never made it into the spell registry, so casting it moves
-                // nobody. Alphan's own words send the player to Lighthaven; do it here, otherwise
-                // the ritual ends with a farewell speech and the player stays put.
-                if (spell != null && spell.contains("remort") && spell.contains("teleport")) {
-                    player.setWorldPosition(GameConstants.REBIRTH_RETURN_TILE_X * GameConstants.GRID_W,
-                            GameConstants.REBIRTH_RETURN_TILE_Y * GameConstants.GRID_H, GameConstants.REBIRTH_RETURN_Z);
-                    // No script clears this stage, so close the ritual here: otherwise Alphan stays
-                    // stuck on his farewell and the next rebirth would start half-finished.
-                    player.setQuestFlag(FLAG_REMORT_PROCESS, 0);
-                    effect = true;
-                }
+                NpcDef caster = NpcRegistry.findByName(npcName);
+                String scriptedSpell = caster == null ? null : caster.getSourceEvents().get("@spell." + spell);
+                if (scriptedSpell != null) {
+                    Result nested = execute(scriptedSpell, npcName, player, locals);
+                    systemMessages.addAll(nested.systemMessages());
+                    targetSpells.addAll(nested.targetSpells());
+                    selfSpells.addAll(nested.selfSpells());
+                    heal |= nested.heal();
+                    effect |= nested.effect();
+                } else targetSpells.add(spell);
             }
             else if ((args = macroArgs(s, "CastSpellSelf")) != null) selfSpells.add(unquote(firstArg(args)));
             else if ((args = macroArgs(s, "SUMMON2")) != null) collectSummon(args, summons, true);

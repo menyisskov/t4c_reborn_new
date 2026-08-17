@@ -593,13 +593,17 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     private void enterCharacter(LocalCharacterStore.CharacterSlot slot) {
         try {
             LocalCharacterStore.activate(slot);
-            MainGameScreen next = new MainGameScreen(game);
-            game.setScreen(next);
-            dispose();
+            game.setScreen(new CharacterLoadingScreen(game, this));
         } catch (Exception e) {
-            errorMessage = I18n.key("character.load.failed") + ": " + e.getMessage();
-            mode = Mode.SELECT;
+            showLoadError(e);
         }
+    }
+
+    void showLoadError(Exception error) {
+        String detail = error.getMessage();
+        errorMessage = I18n.key("character.load.failed")
+                + (detail == null || detail.isBlank() ? "" : ": " + detail);
+        mode = Mode.SELECT;
     }
 
     private void moveSelection(int direction) {

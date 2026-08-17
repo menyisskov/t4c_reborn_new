@@ -31,12 +31,15 @@ import static com.perso.T4C.config.GameConstants.NPC_PATROL_RADIUS;
 /** Runtime NPC backed by the simple welcome/topics dialogue definition. */
 @Slf4j
 public class DataNpc extends BaseNPC {
+    static final String TALK_THROUGH_WALLS_EVENT = "@interaction.talkThroughWalls";
+    static final String SCRIPT_WELCOME_EVENT = "@interaction.scriptWelcome";
     private static final Set<String> KNOWN_SKILLS = Set.of(
             "attack", "archery", "dodge", "peek", "stun_blow", "powerful_blow",
             "rapid_healing", "first_aid", "parry", "critical_strike", "hide", "sneak",
             "search", "picklock", "armor_penetration", "two_weapons", "rob",
             "meditate", "strength", "dexterity", "endurance", "intelligence", "wisdom");
     private final NpcDef def;
+    private final String sourceScript;
     private final QuestService questService;
     /**
      * Resolved when the action runs, not at construction: NPCs are built while
@@ -59,6 +62,7 @@ public class DataNpc extends BaseNPC {
                    Supplier<CompanionManager> companionManagerSupplier) throws GameException {
         super(def.getName(), def.getSpriteBase(), NpcPartsBuilder.fromDef(def));
         this.def = def;
+        this.sourceScript = def.getSourceScript();
         this.questService = questService;
         this.companionManagerSupplier = companionManagerSupplier;
         this.maxHp = Math.max(1, combatInt("@combat.hp", 1));
@@ -79,6 +83,11 @@ public class DataNpc extends BaseNPC {
     }
 
     @Override
+    protected boolean canTalkThroughWalls() {
+        return Boolean.parseBoolean(def.getSourceEvents().get(TALK_THROUGH_WALLS_EVENT));
+    }
+
+    @Override
     protected void onInteractStart(Player player) {
         if (questService != null) {
             String completion = questService.turnInReadyQuests(def.getName(), player);
@@ -88,13 +97,19 @@ public class DataNpc extends BaseNPC {
             }
         }
         boolean scriptHandled = false;
-        if (def.getSourceScript() != null) {
-            NpcScriptEngine.Result result = NpcScriptEngine.begin(
-                    def.getSourceScript(), def.getName(), player);
+        NpcScriptEngine.Result scriptResult = null;
+        if (sourceScript != null) {
+            scriptResult = NpcScriptEngine.begin(
+                    sourceScript, def.getName(), player);
             // Legacy Begin blocks still carry their original literal greeting.
             // Execute their flags/items/actions, but the displayed welcome always
             // comes from NpcDef.welcomeText -> assets/i18n/lang.json.
-            scriptHandled = applyScriptResult(result, player, false);
+            scriptHandled = applyScriptResult(scriptResult, player, false);
+        }
+        if (Boolean.parseBoolean(def.getSourceEvents().get(SCRIPT_WELCOME_EVENT))
+                && scriptResult != null && scriptResult.text() != null && !scriptResult.text().isBlank()) {
+            showDialog(scriptResult.text(), 0L);
+            return;
         }
         if (def.getWelcomeText() != null && !def.getWelcomeText().isBlank()) {
             showDialog(I18n.resolve(def.getWelcomeText()), 0L);
@@ -111,7 +126,7 @@ public class DataNpc extends BaseNPC {
         }
         // Topics stored in npcs.bin only cover Command sections; the script itself also answers to
         // CmdAND words, which would otherwise stay invisible to the player.
-        for (String keyword : NpcScriptEngine.keywords(def.getSourceScript()).keySet()) {
+        for (String keyword : NpcScriptEngine.keywords(sourceScript).keySet()) {
             addKeyword(keywords, keyword);
         }
         return keywords;
@@ -123,7 +138,7 @@ public class DataNpc extends BaseNPC {
      * alike: saying "reborn" on its own would otherwise reach an unrelated Command section.
      */
     private String sentenceForKeyword(String keyword) {
-        return sentenceForKeyword(def.getSourceScript(), keyword);
+        return sentenceForKeyword(sourceScript, keyword);
     }
 
     static String sentenceForKeyword(String script, String keyword) {
@@ -166,13 +181,13 @@ public class DataNpc extends BaseNPC {
                 String state = pendingYesNoState;
                 pendingYesNoState = null;
                 NpcScriptEngine.Result result = NpcScriptEngine.respondYesNo(
-                        def.getSourceScript(), def.getName(), state, yes, player);
+                        sourceScript, def.getName(), state, yes, player);
                 if (applyScriptResult(result, player)) return true;
             }
         }
-        if (isInteracting && def.getSourceScript() != null) {
+        if (isInteracting && sourceScript != null) {
             NpcScriptEngine.Result result = NpcScriptEngine.respond(
-                    def.getSourceScript(), def.getName(), sentenceForKeyword(text), player);
+                    sourceScript, def.getName(), sentenceForKeyword(text), player, pendingYesNoState);
             if (applyScriptResult(result, player)) return true;
         }
         if (isInteracting && respondToTopic(text, player)) return true;
@@ -237,7 +252,7 @@ public class DataNpc extends BaseNPC {
                     : scriptCoordinate(summon.zExpression(), player, false, true);
             float x = scriptCoordinate(summon.xExpression(), player, true, false) * GRID_W;
             float y = scriptCoordinate(summon.yExpression(), player, false, false) * GRID_H;
-            if (!NpcSummonBridge.summon(summon.monster(), x, y, z)) {
+            if (!NpcSummonBridge.summon(summon.monster(), x, y, z, def.getSourceEvents())) {
                 log.warn("NPC '{}' could not summon '{}' at ({}, {}, {})", def.getName(), summon.monster(), x, y, z);
             }
         }

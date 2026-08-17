@@ -60,7 +60,7 @@ public final class MonsterSpawnAliasMigration {
                     def.getAppearance(), def.getItemBody(), def.getItemFeet(), def.getItemHands(), def.getItemHead(),
                     def.getItemLegs(), def.getItemWeapon(), def.getItemShield(), def.getItemBack(), def.getAggro(),
                     def.getClan(), def.getSpeed(), def.isCanAttack(), def.getAttacks(), def.isTameable(),
-                    def.getTameMaxLevel(), aliasesForThis));
+                    def.getTameMaxLevel(), aliasesForThis, def.getSourceEvents()));
         }
 
         Map<String, MonsterDef> byName = new java.util.HashMap<>();

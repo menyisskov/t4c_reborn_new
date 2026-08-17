@@ -1,6 +1,7 @@
 package com.perso.T4C.npc;
 
 import com.perso.T4C.helper.NpcDefBinaryIO;
+import com.perso.T4C.helper.MonsterDefBinaryIO;
 import com.perso.T4C.player.Player;
 import org.junit.jupiter.api.Test;
 
@@ -9,23 +10,200 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NpcScriptEngineTest {
+    @Test
+    void makesTopLevelCppConstantsAvailableToEveryDialogueSection() {
+        String script = """
+                CONSTANT Base = 20;
+                CONSTANT HintCount = Base + 5;
+                InitTalk
+                Begin
+                INTL(\"hello\")
+                Command(\"HINT\")
+                FORMAT(INTL(\"There are %u hints.\"), HintCount)
+                Default
+                FORMAT(INTL(\"Still %u.\"), HintCount)
+                EndTalk
+                """;
+        Player player = new Player();
+
+        assertEquals("There are 25 hints.",
+                NpcScriptEngine.respond(script, "ConstantNpc", "hint", player).text());
+        assertEquals("Still 25.",
+                NpcScriptEngine.respond(script, "ConstantNpc", "unknown", player).text());
+    }
+
+    @Test
+    void executesArenaMonsterLifecycleStoredInMonsterBin() throws Exception {
+        var monster = MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+                .filter(def -> def.getName().equalsIgnoreCase("ArenaMob500"))
+                .findFirst().orElseThrow();
+        Player player = new Player();
+        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 1);
+
+        NpcScriptEngine.Result death = NpcScriptEngine.event(
+                monster.getSourceEvents().get("OnDeath"), monster.getName(), player, 0, 0);
+        NpcScriptEngine.event(monster.getSourceEvents().get("OnDestroy"), monster.getName(), player, 0, 0);
+
+        assertEquals(List.of("You receive a battle token for your efforts."), death.systemMessages());
+        assertEquals(List.of("spell.mob_arena_level_spell"), death.selfSpells());
+        assertEquals(0, NpcScriptEngine.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA"));
+    }
+
+    @Test
+    void arenaMonsterBinsPersistTheirParticipationLevelEffect() throws Exception {
+        var arenaMonsters = MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+                .filter(def -> def.getName().matches("ArenaMob(?:XP)?\\d+"))
+                .toList();
+        assertEquals(58, arenaMonsters.size());
+        for (var monster : arenaMonsters) {
+            String level = monster.getName().replaceFirst("^ArenaMob(?:XP)?", "");
+            assertEquals("GiveFlag(__FLAG_ARENA_LEVEL," + level + ")",
+                    monster.getSourceEvents().get("@spell.spell.mob_arena_level_spell"));
+        }
+        Player player = new Player();
+        player.setQuestFlag("__FLAG_ARENA_LEVEL", 60);
+        var level70 = arenaMonsters.stream().filter(monster -> "ArenaMob70".equals(monster.getName()))
+                .findFirst().orElseThrow();
+        NpcScriptEngine.event(level70.getSourceEvents().get("@spell.spell.mob_arena_level_spell"),
+                level70.getName(), player, 0, 0);
+        assertEquals(70, player.getQuestFlag("__FLAG_ARENA_LEVEL"));
+    }
+
+    @Test
+    void everyArenaMonsterHasAVisibleAnimationDefinition() throws Exception {
+        var arenaMonsters = MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+                .filter(def -> def.getName().matches("ArenaMob(?:XP)?\\d+"))
+                .toList();
+        assertEquals(58, arenaMonsters.size());
+        assertTrue(arenaMonsters.stream().allMatch(def -> def.getWalkPattern() != null
+                && !def.getWalkPattern().isBlank()
+                && def.getAttackPattern() != null && !def.getAttackPattern().isBlank()
+                && def.getDeathPattern() != null && !def.getDeathPattern().isBlank()));
+
+        for (var def : arenaMonsters.stream().filter(d -> d.getName().matches("ArenaMob(?:XP)?250")).toList()) {
+            assertEquals("KraanianFlying#h", def.getWalkPattern());
+            assertEquals("KraanianFlyingA#h", def.getAttackPattern());
+            assertEquals("KraanianFlyingC#l", def.getDeathPattern());
+        }
+        for (var def : arenaMonsters.stream().filter(d -> d.getName().matches("ArenaMob(?:XP)?275")).toList()) {
+            assertEquals("KraanianMilipede#i", def.getWalkPattern());
+            assertEquals("KraanianMilipedeA#h", def.getAttackPattern());
+            assertEquals("KraanianMilipedeC#l", def.getDeathPattern());
+        }
+    }
+
+    @Test
+    void clerkStopsReportingLivingMonstersAfterTheLastArenaDeath() throws Exception {
+        NpcDef clerk = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
+                .filter(def -> def.getName().equalsIgnoreCase("ColosseumClerk"))
+                .findFirst().orElseThrow();
+        var monster = MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+                .filter(def -> def.getName().equalsIgnoreCase("ArenaMob500"))
+                .findFirst().orElseThrow();
+        Player player = new Player();
+        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 1);
+
+        assertEquals("I cannot help you until all the monsters have been defeated.",
+                NpcScriptEngine.begin(clerk.getSourceScript(), clerk.getName(), player).text());
+        NpcScriptEngine.event(monster.getSourceEvents().get("OnDestroy"), monster.getName(), player, 0, 0);
+
+        String afterLastDeath = NpcScriptEngine.begin(clerk.getSourceScript(), clerk.getName(), player).text();
+        assertFalse(afterLastDeath.contains("until all the monsters have been defeated"));
+        assertEquals("Ah! A new contestant! Welcome to the \"colosseum\", my friend.", afterLastDeath);
+    }
+
+    @Test
+    void executesOriginalColosseumStateMachineAndExactSpawnPositions() throws Exception {
+        NpcDef clerk = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
+                .filter(def -> def.getName().equalsIgnoreCase("ColosseumClerk"))
+                .findFirst().orElseThrow();
+        Player player = new Player();
+        player.setLevel(40);
+        NpcScriptEngine.begin(clerk.getSourceScript(), clerk.getName(), player);
+        player.setQuestFlag("__FLAG_USER_HAS_READ_COLOSSEUM_INSTRUCTIONS", 1);
+
+        NpcScriptEngine.Result fight = NpcScriptEngine.respond(
+                clerk.getSourceScript(), clerk.getName(), "fight", player);
+        assertEquals("LevelSelection", fight.pendingYesNo());
+        NpcScriptEngine.Result level = NpcScriptEngine.respond(
+                clerk.getSourceScript(), clerk.getName(), "leave", player, fight.pendingYesNo());
+        assertEquals("NumberOfOpponents", level.pendingYesNo());
+        NpcScriptEngine.Result summon = NpcScriptEngine.respond(
+                clerk.getSourceScript(), clerk.getName(), "three", player, level.pendingYesNo());
+        assertEquals(3, summon.summons().size());
+        assertEquals("1707", summon.summons().get(0).xExpression());
+        assertEquals("1853", summon.summons().get(0).yExpression());
+        assertEquals("1710", summon.summons().get(1).xExpression());
+        assertEquals("1825", summon.summons().get(1).yExpression());
+        assertEquals("1735", summon.summons().get(2).xExpression());
+        assertEquals("1850", summon.summons().get(2).yExpression());
+        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 0);
+    }
+
+    @Test
+    void purchasesAndActivatesColosseumUpgradeFromPersistedScripts() throws Exception {
+        NpcDef clerk = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
+                .filter(def -> def.getName().equalsIgnoreCase("ColosseumClerk"))
+                .findFirst().orElseThrow();
+        Player player = new Player();
+        player.setLevel(40);
+        NpcScriptEngine.begin(clerk.getSourceScript(), clerk.getName(), player);
+        for (int i = 0; i < 15; i++) com.perso.T4C.item.InventoryService.add(player, "item.colosseum_token");
+
+        NpcScriptEngine.Result purchase = NpcScriptEngine.respond(
+                clerk.getSourceScript(), clerk.getName(), "physical offense", player, "PurchaseGoods");
+        assertEquals("BuySomethingElse", purchase.pendingYesNo());
+        assertEquals(1, player.getQuestFlag("__FLAG_USER_BOUGHT_PHYSICAL_OFFENSE_UPGRADE"));
+        NpcScriptEngine.Result summon = NpcScriptEngine.respond(
+                clerk.getSourceScript(), clerk.getName(), "one", player, "NumberOfOpponents");
+        assertEquals(List.of("spell.mob_colosseum_upgrade_spell_1"), summon.targetSpells());
+        assertEquals(0, player.getQuestFlag("__FLAG_USER_BOUGHT_PHYSICAL_OFFENSE_UPGRADE"));
+        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 0);
+    }
+
+    @Test
+    void executesMaterializedColosseumOwnerScript() throws Exception {
+        NpcDef owner = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
+                .filter(def -> def.getName().equalsIgnoreCase("ColosseumOwner"))
+                .findFirst().orElseThrow();
+        String script = owner.getSourceScript();
+        Player player = new Player();
+        player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", 1);
+
+        NpcScriptEngine.Result question = NpcScriptEngine.respond(script, owner.getName(), "test", player);
+        assertTrue(question.handled());
+        assertEquals("WantToFight", question.pendingYesNo());
+
+        NpcScriptEngine.Result answer = NpcScriptEngine.respondYesNo(
+                script, owner.getName(), question.pendingYesNo(), true, player);
+        assertTrue(answer.handled());
+        assertEquals("Gladiator", answer.pendingYesNo());
+        NpcScriptEngine.respond(script, owner.getName(), "colosseum", player, answer.pendingYesNo());
+        assertEquals(1725 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
+        assertEquals(1835 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
+        assertEquals(0, player.getCoordinates().getZ());
+    }
+
     @Test
     void wardenVortimerTeleportsPlayerIntoMadrigansAsylum() throws Exception {
         NpcDef vortimer = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
                 .filter(def -> def.getName().equalsIgnoreCase("WardenVortimer"))
                 .findFirst().orElseThrow();
         Player player = new Player();
+        player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", 1);
 
         NpcScriptEngine.Result result = NpcScriptEngine.respond(
-                vortimer.getSourceScript(), vortimer.getName(), "entrer", player);
+                vortimer.getSourceScript(), vortimer.getName(), "enter", player);
 
         assertTrue(result.handled());
-        assertEquals(2704 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
-        assertEquals(2226 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
-        assertEquals(0, player.getCoordinates().getZ());
+        assertEquals("GiveKey", result.pendingYesNo());
+        NpcScriptEngine.Result accepted = NpcScriptEngine.respondYesNo(
+                vortimer.getSourceScript(), vortimer.getName(), result.pendingYesNo(), true, player);
+        assertTrue(accepted.systemMessages().stream().anyMatch(message -> message.contains("mad house key")));
     }
 
     @Test
@@ -80,10 +258,10 @@ class NpcScriptEngineTest {
     }
 
     @Test
-    void rejectsPartialKeywordMatches() throws Exception {
+    void matchesPrefixesLikeOriginalMsgFindMacro() throws Exception {
         Player player = new Player();
         String script = "Command(INTL(1, \"SPELL\"))\n INTL(2, \"Magic.\")";
-        assertFalse(NpcScriptEngine.respond(script, "Tester", "spelling", player).handled());
+        assertTrue(NpcScriptEngine.respond(script, "Tester", "spelling", player).handled());
         assertEquals("Magic.", NpcScriptEngine.respond(script, "Tester", "spell", player).text());
     }
 
@@ -216,6 +394,31 @@ class NpcScriptEngineTest {
         assertEquals("Brown Rat", result.summons().get(0).monster());
         assertEquals("FROM_USER(1, X)", result.summons().get(0).xExpression());
         assertEquals("3", result.summons().get(0).zExpression());
+    }
+
+    @Test
+    void executesMaterializedColosseumClerkEncounter() throws Exception {
+        Player player = new Player();
+        player.setLevel(40);
+        player.setQuestFlag("__FLAG_ARENA_LEVEL", 40);
+        NpcDef clerk = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
+                .filter(def -> def.getName().equalsIgnoreCase("ColosseumClerk"))
+                .findFirst().orElseThrow();
+        String repaired = clerk.getSourceScript();
+        NpcScriptEngine.begin(repaired, "ColosseumClerk", player);
+
+        NpcScriptEngine.respond(repaired, "ColosseumClerk", "procedure", player);
+        NpcScriptEngine.Result fight = NpcScriptEngine.respond(repaired, "ColosseumClerk", "fight", player);
+        NpcScriptEngine.Result level = NpcScriptEngine.respond(
+                repaired, "ColosseumClerk", "leave", player, fight.pendingYesNo());
+        NpcScriptEngine.Result opponents = NpcScriptEngine.respond(
+                repaired, "ColosseumClerk", "three", player, level.pendingYesNo());
+
+        assertTrue(fight.handled());
+        assertEquals("LevelSelection", fight.pendingYesNo());
+        assertEquals(3, opponents.summons().size());
+        assertEquals(3, NpcScriptEngine.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA"));
+        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 0);
     }
 
     @Test

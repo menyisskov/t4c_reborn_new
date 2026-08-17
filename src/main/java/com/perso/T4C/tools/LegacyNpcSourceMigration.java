@@ -57,15 +57,25 @@ public final class LegacyNpcSourceMigration {
             "IsInRange", "GetWL", "GetHP", "GetMaxMana", "AND", "OR", "LOG_GOLD_DEPOSIT", "LOG_GOLD_WITHDRAW",
             "SET_AIR_POWER", "SET_AIR_RESIST", "SET_WATER_POWER", "SET_WATER_RESIST", "SET_EARTH_POWER",
             "SET_EARTH_RESIST", "SET_FIRE_POWER", "SET_FIRE_RESIST", "SET_LIGHT_POWER", "SET_LIGHT_RESIST",
-            "SET_DARK_POWER", "SET_DARK_RESIST", "SetFlag", "SetGold", "SetMaxHP", "SetMaxMana", "abs", "pow");
+            "SET_DARK_POWER", "SET_DARK_RESIST", "SetFlag", "SetGold", "SetMaxHP", "SetMaxMana", "abs", "pow", "Find");
 
     private LegacyNpcSourceMigration() {}
 
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
-            throw new IllegalArgumentException("Usage: LegacyNpcSourceMigration <ServeurLib_NPC_DLL_SRC root>");
+            throw new IllegalArgumentException("Usage: LegacyNpcSourceMigration [--include=regex] [--merge] <source root>");
         }
-        Path root = Path.of(String.join(" ", args));
+        Pattern include = null;
+        boolean merge = false;
+        boolean auditOnly = false;
+        List<String> rootParts = new ArrayList<>();
+        for (String arg : args) {
+            if (arg.startsWith("--include=")) include = Pattern.compile(arg.substring("--include=".length()), Pattern.CASE_INSENSITIVE);
+            else if (arg.equals("--merge")) merge = true;
+            else if (arg.equals("--audit")) auditOnly = true;
+            else rootParts.add(arg);
+        }
+        Path root = Path.of(String.join(" ", rootParts));
         if (!Files.isDirectory(root)) throw new IllegalArgumentException("NPC source root not found: " + root);
 
         Map<String, TemplateAppearance> appearances = loadAppearances(root);
@@ -77,7 +87,7 @@ public final class LegacyNpcSourceMigration {
                 try (var files = Files.list(project)) {
                     for (Path file : files.filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".cpp")).toList()) {
                         ImportedNpc npc = parse(file, appearances, objectConstants);
-                        if (npc != null) imported.add(npc);
+                        if (npc != null && (include == null || include.matcher(npc.def.getName()).matches())) imported.add(npc);
                     }
                 }
             }
@@ -89,8 +99,35 @@ public final class LegacyNpcSourceMigration {
             if (previous != null) throw new IllegalStateException("Duplicate NPC id " + npc.def.getName());
         }
 
-        List<NpcDef> defs = unique.values().stream().map(n -> n.def).toList();
-        List<SpawnBinaryIO.Entry> spawns = unique.values().stream().map(ImportedNpc::spawn).toList();
+        List<NpcDef> defs = new ArrayList<>();
+        List<SpawnBinaryIO.Entry> spawns = new ArrayList<>();
+        Map<String, NpcDef> persisted = new HashMap<>();
+        if (merge) {
+            Set<String> replaced = unique.keySet();
+            List<NpcDef> existingDefs = NpcDefBinaryIO.read(new File(Paths.NPCS_BIN));
+            existingDefs.forEach(def -> persisted.put(def.getName().toLowerCase(Locale.ROOT), def));
+            defs.addAll(existingDefs.stream()
+                    .filter(def -> !replaced.contains(def.getName().toLowerCase(Locale.ROOT))).toList());
+            spawns.addAll(SpawnBinaryIO.read(new File(Paths.NPC_SPAWNS_BIN)).stream()
+                    .filter(spawn -> !replaced.contains(spawn.type.toLowerCase(Locale.ROOT))).toList());
+        }
+        for (ImportedNpc importedNpc : unique.values()) {
+            NpcDef importedDef = importedNpc.def;
+            NpcDef previous = persisted.get(importedDef.getName().toLowerCase(Locale.ROOT));
+            if (previous != null) {
+                Map<String, String> events = new LinkedHashMap<>(importedDef.getSourceEvents());
+                previous.getSourceEvents().forEach((key, value) -> {
+                    if (key.startsWith("@")) events.putIfAbsent(key, value);
+                });
+                importedDef = new NpcDef(importedDef.getName(), importedDef.getDisplayName(), importedDef.getParts(),
+                        importedDef.getSpriteBase(), importedDef.getPatrolRadiusTiles(), importedDef.getFleeShouts(),
+                        importedDef.getWelcomeText(), importedDef.getTopics(), importedDef.getSourceTemplate(),
+                        importedDef.getSourceScript(), events);
+            }
+            defs.add(importedDef);
+        }
+        spawns.addAll(unique.values().stream().map(ImportedNpc::spawn).toList());
+        defs.sort(Comparator.comparing(NpcDef::getName, String.CASE_INSENSITIVE_ORDER));
         Map<String, String> translations = new LinkedHashMap<>();
         for (NpcDef def : defs) {
             String identity = I18n.normalizedKey(def.getName());
@@ -105,9 +142,11 @@ public final class LegacyNpcSourceMigration {
                 }
             }
         }
-        I18n.update(translations);
-        NpcDefBinaryIO.write(new File(Paths.NPCS_BIN), defs);
-        SpawnBinaryIO.write(new File(Paths.NPC_SPAWNS_BIN), spawns);
+        if (!auditOnly) {
+            I18n.update(translations);
+            NpcDefBinaryIO.write(new File(Paths.NPCS_BIN), defs);
+            SpawnBinaryIO.write(new File(Paths.NPC_SPAWNS_BIN), spawns);
+        }
         long scriptBytes = defs.stream().map(NpcDef::getSourceScript).filter(java.util.Objects::nonNull)
                 .mapToLong(s -> s.getBytes(java.nio.charset.StandardCharsets.UTF_8).length).sum();
         long missingAppearance = defs.stream().filter(d -> d.getSpriteBase() == null && d.getParts().isEmpty()).count();
@@ -124,6 +163,17 @@ public final class LegacyNpcSourceMigration {
                 missingAppearance);
         System.out.printf("Unsupported OnTalk call kinds: %d (%d calls)%n", unsupportedTalkCalls.size(),
                 unsupportedTalkCalls.values().stream().mapToLong(Long::longValue).sum());
+        if (auditOnly) {
+            Map<String, Long> allTalkCalls = defs.stream().map(NpcDef::getSourceScript)
+                    .filter(java.util.Objects::nonNull).flatMap(script -> {
+                        List<String> calls = new ArrayList<>();
+                        Matcher matcher = TALK_CALL.matcher(codeOnly(script));
+                        while (matcher.find()) calls.add(matcher.group(1));
+                        return calls.stream();
+                    }).collect(java.util.stream.Collectors.groupingBy(name -> name, java.util.TreeMap::new,
+                            java.util.stream.Collectors.counting()));
+            allTalkCalls.forEach((name, count) -> System.out.printf("  call %-36s %d%n", name, count));
+        }
         unsupportedTalkCalls.entrySet().stream().sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                 .limit(30).forEach(entry -> System.out.printf("  unsupported %-32s %d%n", entry.getKey(), entry.getValue()));
         if (!unsupportedTalkCalls.isEmpty()) {
@@ -276,7 +326,7 @@ public final class LegacyNpcSourceMigration {
         return result;
     }
 
-    private static Map<String, Integer> loadObjectConstants(Path header) throws Exception {
+    static Map<String, Integer> loadObjectConstants(Path header) throws Exception {
         Map<String, Integer> result = new HashMap<>();
         Pattern define = Pattern.compile("(?m)^\\s*#define\\s+(__OBJ_[A-Za-z0-9_]+)\\s+([0-9]+)\\b");
         Matcher matcher = define.matcher(Files.readString(header, SOURCE_CHARSET));
@@ -284,7 +334,7 @@ public final class LegacyNpcSourceMigration {
         return result;
     }
 
-    private static String translateObjectConstants(String script, Map<String, Integer> constants) {
+    static String translateObjectConstants(String script, Map<String, Integer> constants) {
         Matcher matcher = Pattern.compile("\\b__OBJ_[A-Za-z0-9_]+\\b").matcher(script);
         StringBuffer translated = new StringBuffer(script.length());
         while (matcher.find()) {
@@ -296,7 +346,7 @@ public final class LegacyNpcSourceMigration {
     }
 
     /** Turns server-only spell/skill constants into stable runtime catalogue keys. */
-    private static String translateSymbolicConstants(String script) {
+    static String translateSymbolicConstants(String script) {
         Matcher matcher = Pattern.compile("\\b__(SPELL|SKILL)_([A-Za-z0-9_]+)\\b").matcher(script);
         StringBuffer translated = new StringBuffer(script.length());
         while (matcher.find()) {
@@ -450,6 +500,12 @@ public final class LegacyNpcSourceMigration {
         while (matcher.find()) {
             if (!matcher.group(2).equals(method)) continue;
             int open = source.indexOf('{', matcher.end());
+            // InitTalk injects C++ branch delimiters (`;} else if ... {;`) inside the macro DSL.
+            // They deliberately confuse ordinary brace matching, while EndTalk is its authoritative end.
+            if (method.equals("OnTalk") && open >= 0) {
+                int endTalk = source.indexOf("EndTalk", open);
+                if (endTalk > open) return source.substring(open + 1, endTalk + "EndTalk".length());
+            }
             int close = matching(source, open, '{', '}');
             return open >= 0 && close > open ? source.substring(open + 1, close) : null;
         }

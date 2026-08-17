@@ -173,6 +173,7 @@ public class MonsterManager {
                 scheduleNextRespawn(monster);
             }
         }
+        monsters.removeIf(BaseMonster::shouldRemoveAfterDeath);
     }
 
     public void setXpCurve(com.perso.T4C.helper.XpCurve xpCurve) {
@@ -194,6 +195,7 @@ public class MonsterManager {
                 scheduleNextRespawn(monster);
             }
         }
+        monsters.removeIf(BaseMonster::shouldRemoveAfterDeath);
     }
 
     private boolean canRespawn(BaseMonster monster) {
@@ -260,12 +262,19 @@ public class MonsterManager {
     }
 
     public boolean spawnMonster(String name, float worldX, float worldY) {
+        return spawnMonster(name, worldX, worldY, true);
+    }
+
+    /** Creates a runtime monster, optionally excluding it from the normal respawn cycle. */
+    public boolean spawnMonster(String name, float worldX, float worldY, boolean respawn) {
         MonsterDef def = MonsterRegistry.findByName(name);
         if (def == null) {
             return false;
         }
         try {
-            addMonster(new DataMonster(def, worldX, worldY));
+            DataMonster monster = new DataMonster(def, worldX, worldY);
+            if (!respawn) monster.disableRespawn();
+            addMonster(monster);
             return true;
         } catch (Exception ex) {
             log.warn("Failed to summon monster type={} at ({}, {})", name, worldX, worldY, ex);

@@ -441,7 +441,8 @@ public abstract class BaseNPC extends Stats implements Nameable {
         // it and typing. Requiring a clear line keeps that constraint: without it a click picks
         // targets straight through walls.
         if (isWithinTalkingRange(playerPosition)
-                && com.perso.T4C.combat.CombatGeometry.hasTalkLineOfSight(playerPosition, position)) {
+                && (canTalkThroughWalls()
+                || com.perso.T4C.combat.CombatGeometry.hasTalkLineOfSight(playerPosition, position))) {
             if (!isInteracting) {
                 // Save patrol state
                 savedPatrolTarget = patrolTarget;
@@ -463,6 +464,11 @@ public abstract class BaseNPC extends Stats implements Nameable {
             }
             return true;
         }
+        return false;
+    }
+
+    /** Data-defined exception to the talk visibility check; distance still applies. */
+    protected boolean canTalkThroughWalls() {
         return false;
     }
 
@@ -542,6 +548,11 @@ public abstract class BaseNPC extends Stats implements Nameable {
                 movement.isFlipX(),
                 movement.isMoving(),
                 out);
+    }
+
+    /** True for portal/chest/door NPCs rendered from one non-directional sprite family. */
+    public boolean hasObjectAppearance() {
+        return animations.hasObjectAppearance();
     }
 
     public void dispose() {

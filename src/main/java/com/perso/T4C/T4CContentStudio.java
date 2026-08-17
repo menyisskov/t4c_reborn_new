@@ -1690,7 +1690,7 @@ public class T4CContentStudio {
                 integer(item.get("aggro"), bool(item.get("defaultAggressive"), true) ? 50 : 0),
                 integer(item.get("clan"), 0), integer(item.get("speed"), 0), bool(item.get("canAttack"), true),
                 new java.util.ArrayList<>(), bool(item.get("tameable"), false), integer(item.get("tameMaxLevel"), 0),
-                stringList(item.get("spawnAliases")));
+                stringList(item.get("spawnAliases")), java.util.Map.of());
     }
 
     private void handleHerbs(HttpExchange exchange) throws IOException {

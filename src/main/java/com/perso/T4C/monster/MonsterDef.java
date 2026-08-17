@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data-driven definition of a monster type. Replaces the former hardcoded
@@ -78,6 +79,8 @@ public class MonsterDef {
     private final int tameMaxLevel;
     /** Alternate names spawn files may use to refer to this monster. Never null. */
     private final List<String> spawnAliases;
+    /** Original lifecycle handlers and data annotations imported from the server sources. */
+    private final Map<String, String> sourceEvents;
 
     /** True when this species may be tamed by a caster of the given level. */
     public boolean canBeTamedBy(int casterLevel) {
