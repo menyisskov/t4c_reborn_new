@@ -11,7 +11,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "MOBREDEYEDCENTAUR", x = 973, y = 962, z = 0, stationary = false, aggressive = true)
 public final class RedEyedCentaur extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
-  public static final String SOUND_DEATH = "Centaur Dying.wav";
+  public static final String SOUND_DEATH = "Taunting Hit.wav";
   public static final String SOUND_HIT = "Centaur Hit.wav";
 
   public RedEyedCentaur(MonsterDef d, float x, float y) throws GameException {

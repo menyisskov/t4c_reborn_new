@@ -240,9 +240,9 @@ public final class r182PackWolf extends DataMonster {
         "Wolf#i",
         "WolfA#i",
         "WolfC#n",
-        "Wolf Attack.wav",
-        "Wolf Dying.wav",
-        "Wolf Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         71,
         220,
         java.util.List.of(

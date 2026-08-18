@@ -17,9 +17,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "MOBPURIFIER", x = 1989, y = 2811, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "MOBPURIFIER", x = 2031, y = 2732, z = 0, stationary = false, aggressive = false)
 public final class Purifier extends NamedEventMonster {
-  public static final String SOUND_ATTACK = "Wasp Attack.wav";
-  public static final String SOUND_DEATH = "Wasp Dying.wav";
-  public static final String SOUND_HIT = "Wasp Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshm 7.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public Purifier(MonsterDef d, float x, float y) throws GameException {
 

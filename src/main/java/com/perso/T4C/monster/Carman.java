@@ -3,15 +3,16 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterLifecycle;
 import com.perso.T4C.npc.script.MonsterScriptBridge;
 import com.perso.T4C.player.Player;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class Carman extends DataMonster implements MonsterLifecycle {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Female Dying 1.wav";
+  public static final String SOUND_HIT = "Female Hit 1.wav";
 
   public Carman(MonsterDef definition, float worldX, float worldY) throws GameException {
     super(definition, worldX, worldY);

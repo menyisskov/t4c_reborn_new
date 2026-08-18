@@ -29,9 +29,9 @@ public final class r211ShadowDemon extends DataMonster {
         "",
         null,
         null,
-        "Demon Attack.wav",
-        "Demon Dying.wav",
-        "Demon Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         179,
         550,
         java.util.List.of(

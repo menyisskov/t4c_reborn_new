@@ -77,9 +77,9 @@ public final class DeepOne extends DataMonster {
         "Atrocity#h",
         "AtrocityA#h",
         "AtrocityC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         57,
         176,
         java.util.List.of(

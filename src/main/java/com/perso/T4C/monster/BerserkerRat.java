@@ -53,9 +53,9 @@ public final class BerserkerRat extends DataMonster {
         "Rat#f",
         "RatA#i",
         "RatC#j",
-        "Rat Attack.wav",
-        "Rat Dying.wav",
-        "Rat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         111,
         341,
         java.util.List.of(

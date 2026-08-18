@@ -63,9 +63,9 @@ public final class DecayingZombie extends DataMonster {
         "Zombie#h",
         "ZombieA#g",
         "ZombieC#j",
-        "Demon Attack.wav",
-        "Demon Dying.wav",
-        "Demon Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         5,
         16,
         java.util.List.of(

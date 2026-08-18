@@ -152,9 +152,9 @@ public final class r265UnseenBat extends DataMonster {
         "",
         null,
         null,
-        "Bat Attack.wav",
-        "Bat Dying.wav",
-        "Bat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         89,
         275,
         java.util.List.of(

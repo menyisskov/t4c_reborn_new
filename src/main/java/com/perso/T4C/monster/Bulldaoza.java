@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Bulldaoza", x = 375, y = 987, z = 1, stationary = false, aggressive = true)
 public final class Bulldaoza extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Minotaur Attack.wav";
+  public static final String SOUND_DEATH = "Minotaur Dying.wav";
+  public static final String SOUND_HIT = "Minotaur Hit.wav";
 
   public static final String CANONICAL_NAME = "Bulldaoza";
 
@@ -37,9 +37,9 @@ public final class Bulldaoza extends DataMonster {
         "Minotaur#f",
         "MinotaurA#i",
         "MinotaurC#m",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         150,
         461,
         java.util.List.of(

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.npc.core.NPCManager;
@@ -114,6 +115,9 @@ public final class GmCommandProcessor {
           break;
         case "learn":
           learn(player, arg);
+          break;
+        case "repair":
+          repair(player, arg);
           break;
         case "collision", "noclip":
           collision(player, arg, "noclip".equals(cmd));
@@ -299,6 +303,15 @@ public final class GmCommandProcessor {
     ok("Learned spell " + spell.getName(), player);
   }
 
+  private void repair(Player player, String arg) {
+    if (!arg.isBlank()) {
+      SystemMessage.showShared("GM: usage .repair");
+      return;
+    }
+    ItemDurabilityService.repairAllFree(player);
+    ok("All equipment repaired", player);
+  }
+
   private void collision(Player player, String arg, boolean noclipSyntax) {
     String mode = arg == null ? "" : arg.trim().toLowerCase();
     if (mode.isEmpty() || "toggle".equals(mode)) {
@@ -373,7 +386,7 @@ public final class GmCommandProcessor {
     SystemMessage.showShared(
         "GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X");
     SystemMessage.showShared(
-        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL");
+        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .repair");
   }
 
   private static int parseInt(String s) {

@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class Lich extends DataMonster {
-  public static final String SOUND_ATTACK = "Whooshh 1.wav";
-  public static final String SOUND_DEATH = "Skeleton Dying.wav";
-  public static final String SOUND_HIT = "Skeleton Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 3.wav";
+  public static final String SOUND_DEATH = "Vampire Dying.wav";
+  public static final String SOUND_HIT = "Vampire Hit.wav";
 
   public static final String CANONICAL_NAME = "Lich";
 
@@ -35,9 +35,9 @@ public final class Lich extends DataMonster {
         "64kLich#l",
         "64kLichA#j",
         "64kLichC#w",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(),

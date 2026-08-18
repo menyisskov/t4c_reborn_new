@@ -27,7 +27,7 @@ import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterAnimations;

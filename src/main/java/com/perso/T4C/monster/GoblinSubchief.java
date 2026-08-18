@@ -114,9 +114,9 @@ public final class GoblinSubchief extends DataMonster {
         "Goblin#l",
         "GoblinA#i",
         "GoblinC#o",
-        "Taunting Attack.wav",
-        "Taunting Dying.wav",
-        "Taunting Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         26,
         82,
         java.util.List.of(

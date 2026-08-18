@@ -55,9 +55,9 @@ public final class r277WraithBat extends DataMonster {
         "Bat#h",
         "BatA#i",
         "BatC#l",
-        "Bat Attack.wav",
-        "Bat Dying.wav",
-        "Bat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         116,
         357,
         java.util.List.of(

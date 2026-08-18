@@ -28,9 +28,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Forest Guardian", x = 2800, y = 115, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Forest Guardian", x = 2839, y = 223, z = 0, stationary = false, aggressive = false)
 public final class ForestGuardian extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Electrik.wav";
+  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
+  public static final String SOUND_HIT = "AxeWood.wav";
 
   public static final String CANONICAL_NAME = "Forest Guardian";
 
@@ -59,9 +59,9 @@ public final class ForestGuardian extends DataMonster {
         "TreeEnt#i",
         "TreeEntA#i",
         "TreeEntC#j",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(new MonsterDef.LootDrop("Light healing potion", 0.15f)),

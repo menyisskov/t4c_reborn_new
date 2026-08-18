@@ -29,9 +29,9 @@ public final class r198Ratsputin extends DataMonster {
         "Rat#f",
         "RatA#i",
         "RatC#j",
-        "Rat Attack.wav",
-        "Rat Dying.wav",
-        "Rat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         142,
         440,
         java.util.List.of(

@@ -77,9 +77,9 @@ public final class r274Wolfhound extends DataMonster {
         "Wolf#i",
         "WolfA#i",
         "WolfC#n",
-        "Wolf Attack.wav",
-        "Wolf Dying.wav",
-        "Wolf Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         86,
         264,
         java.util.List.of(

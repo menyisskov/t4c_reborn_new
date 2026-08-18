@@ -40,9 +40,9 @@ public final class GiantSpider extends DataMonster {
         "Spider#f",
         "SpiderA#f",
         "SpiderC#m",
-        "Spider Attack.wav",
-        "Spider Dying.wav",
-        "Spider Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         7,
         22,
         java.util.List.of(

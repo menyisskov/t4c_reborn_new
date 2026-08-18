@@ -34,9 +34,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Shadowfiend", x = 1723, y = 675, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "Shadowfiend", x = 1732, y = 663, z = 2, stationary = false, aggressive = true)
 public final class r212Shadowfiend extends DataMonster {
-  public static final String SOUND_ATTACK = "Demon Attack.wav";
-  public static final String SOUND_DEATH = "Demon Dying.wav";
-  public static final String SOUND_HIT = "Demon Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public r212Shadowfiend(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -57,9 +57,9 @@ public final class r212Shadowfiend extends DataMonster {
         "",
         null,
         null,
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         107,
         330,
         java.util.List.of(

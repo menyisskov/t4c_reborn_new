@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class r148MOONTUGGUARD11 extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Skraug Attack.wav";
+  public static final String SOUND_DEATH = "Skraug Die.wav";
+  public static final String SOUND_HIT = "Taunting Hit.wav";
 
   public r148MOONTUGGUARD11(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -28,9 +28,9 @@ public final class r148MOONTUGGUARD11 extends DataMonster {
         "64kSkavenWarrior#i",
         "64kSkavenWarriorA#k",
         "64kSkavenWarriorC#s",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         189,
         550,
         java.util.List.of(),

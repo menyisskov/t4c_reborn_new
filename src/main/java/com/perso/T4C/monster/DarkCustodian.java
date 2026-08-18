@@ -39,9 +39,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Dark Custodian", x = 2895, y = 2067, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Dark Custodian", x = 2900, y = 1998, z = 0, stationary = false, aggressive = true)
 public final class DarkCustodian extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Electrik.wav";
+  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
+  public static final String SOUND_HIT = "AxeWood.wav";
 
   public static final String CANONICAL_NAME = "Dark Custodian";
 
@@ -70,9 +70,9 @@ public final class DarkCustodian extends DataMonster {
         "TreeEnt#i",
         "TreeEntA#i",
         "TreeEntC#j",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         89,
         275,
         java.util.List.of(

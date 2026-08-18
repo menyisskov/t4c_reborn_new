@@ -37,9 +37,9 @@ public final class Bonedead extends DataMonster {
         "Skeleton#g",
         "SkeletonA#i",
         "SkeletonC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         64,
         198,
         java.util.List.of(

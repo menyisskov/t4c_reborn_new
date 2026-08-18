@@ -96,9 +96,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Colony Sentinel", x = 508, y = 1205, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Colony Sentinel", x = 525, y = 1239, z = 0, stationary = false, aggressive = true)
 public final class ColonySentinel extends DataMonster {
-  public static final String SOUND_ATTACK = "Electrik.wav";
-  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
-  public static final String SOUND_HIT = "AxeWood.wav";
+  public static final String SOUND_ATTACK = "Wasp Attack.wav";
+  public static final String SOUND_DEATH = "Wasp Dying.wav";
+  public static final String SOUND_HIT = "Wasp Hit.wav";
 
   public static final String CANONICAL_NAME = "Colony Sentinel";
 
@@ -127,9 +127,9 @@ public final class ColonySentinel extends DataMonster {
         "GiantWasp#h",
         "GiantWaspA#h",
         "GiantWaspC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         84,
         258,
         java.util.List.of(

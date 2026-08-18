@@ -348,9 +348,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Demon Tree", x = 998, y = 1781, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Demon Tree", x = 999, y = 2509, z = 0, stationary = false, aggressive = true)
 public final class DemonTree extends DataMonster {
-  public static final String SOUND_ATTACK = "Demon Attack.wav";
-  public static final String SOUND_DEATH = "Demon Dying.wav";
-  public static final String SOUND_HIT = "Demon Hit.wav";
+  public static final String SOUND_ATTACK = "Electrik.wav";
+  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
+  public static final String SOUND_HIT = "AxeWood.wav";
 
   public static final String CANONICAL_NAME = "Demon Tree";
 
@@ -379,9 +379,9 @@ public final class DemonTree extends DataMonster {
         "TreeEnt#i",
         "TreeEntA#i",
         "TreeEntC#j",
-        "Demon Attack.wav",
-        "Demon Dying.wav",
-        "Demon Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         39,
         121,
         java.util.List.of(

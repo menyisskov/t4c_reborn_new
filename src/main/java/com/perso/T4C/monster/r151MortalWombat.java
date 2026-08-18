@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Mortal Wombat", x = 1542, y = 372, z = 2, stationary = false, aggressive = true)
 public final class r151MortalWombat extends DataMonster {
-  public static final String SOUND_ATTACK = "Bat Attack.wav";
-  public static final String SOUND_DEATH = "Bat Dying.wav";
-  public static final String SOUND_HIT = "Bat Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 2.wav";
+  public static final String SOUND_DEATH = "Goblin Dying.wav";
+  public static final String SOUND_HIT = "Goblin Hit.wav";
 
   public r151MortalWombat(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -29,9 +29,9 @@ public final class r151MortalWombat extends DataMonster {
         "Goblin#l",
         "GoblinA#i",
         "GoblinC#o",
-        "Bat Attack.wav",
-        "Bat Dying.wav",
-        "Bat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         143,
         440,
         java.util.List.of(

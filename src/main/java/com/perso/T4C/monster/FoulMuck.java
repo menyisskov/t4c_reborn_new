@@ -73,9 +73,9 @@ public final class FoulMuck extends DataMonster {
         "Slime@023",
         "Slimea@35",
         "SlimeC!z",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         98,
         302,
         java.util.List.of(

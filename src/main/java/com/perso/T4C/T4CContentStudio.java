@@ -19,7 +19,7 @@ import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterClan;
 import com.perso.T4C.monster.core.MonsterClanRelations;
 import com.perso.T4C.monster.core.MonsterRegistry;

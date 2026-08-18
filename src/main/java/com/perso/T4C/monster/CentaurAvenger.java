@@ -21,7 +21,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "CENTAURAVENGER", x = 956, y = 855, z = 0, stationary = false, aggressive = true)
 public final class CentaurAvenger extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
-  public static final String SOUND_DEATH = "Centaur Dying.wav";
+  public static final String SOUND_DEATH = "Taunting Hit.wav";
   public static final String SOUND_HIT = "Centaur Hit.wav";
 
   public CentaurAvenger(MonsterDef d, float x, float y) throws GameException {
@@ -43,9 +43,9 @@ public final class CentaurAvenger extends NamedEventMonster {
         "64kCentaurKing#i",
         "64kCentaurKingA#i",
         "64kCentaurKingC#n",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         107,
         330,
         java.util.List.of(),

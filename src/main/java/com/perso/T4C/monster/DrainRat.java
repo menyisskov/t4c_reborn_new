@@ -58,9 +58,9 @@ public final class DrainRat extends DataMonster {
         "Rat#f",
         "RatA#i",
         "RatC#j",
-        "Rat Attack.wav",
-        "Rat Dying.wav",
-        "Rat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         53,
         165,
         java.util.List.of(

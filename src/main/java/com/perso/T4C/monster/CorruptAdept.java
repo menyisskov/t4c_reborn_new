@@ -31,9 +31,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Corrupt Adept", x = 949, y = 1669, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Corrupt Adept", x = 967, y = 1647, z = 1, stationary = false, aggressive = true)
 public final class CorruptAdept extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Atrocity Attack.wav";
+  public static final String SOUND_DEATH = "Atrocity Dying.wav";
+  public static final String SOUND_HIT = "Atrocity Hit.wav";
 
   public static final String CANONICAL_NAME = "Corrupt Adept";
 
@@ -62,9 +62,9 @@ public final class CorruptAdept extends DataMonster {
         "Kraanian#h",
         "KraanianA#h",
         "KraanianC#l",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         41,
         126,
         java.util.List.of(),

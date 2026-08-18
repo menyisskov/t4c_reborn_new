@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class ARENAMOBXP170 extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Elemear Attack.wav";
+  public static final String SOUND_DEATH = "Scorpion Dying.wav";
+  public static final String SOUND_HIT = "Scorpion Hit.wav";
 
   public ARENAMOBXP170(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -27,9 +27,9 @@ public final class ARENAMOBXP170 extends DataMonster {
         "Scorpion#h",
         "ScorpionA#g",
         "ScorpionC#l",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(),

@@ -36,9 +36,9 @@ public final class r268Warg extends DataMonster {
         "Wolf#i",
         "WolfA#i",
         "WolfC#n",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         100,
         308,
         java.util.List.of(

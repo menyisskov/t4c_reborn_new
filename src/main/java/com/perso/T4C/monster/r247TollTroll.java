@@ -43,9 +43,9 @@ public final class r247TollTroll extends DataMonster {
         "GreenTroll#f",
         "GreenTrollA#g",
         "GreenTrollC#k",
-        "Troll Attack.wav",
-        "Troll Dying.wav",
-        "Troll Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         152,
         467,
         java.util.List.of(

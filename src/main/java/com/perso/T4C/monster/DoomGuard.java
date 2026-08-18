@@ -60,9 +60,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Doom Guard", x = 415, y = 709, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Doom Guard", x = 433, y = 708, z = 1, stationary = false, aggressive = true)
 public final class DoomGuard extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Skeleton Dying.wav";
+  public static final String SOUND_HIT = "Skeleton Hit.wav";
 
   public static final String CANONICAL_NAME = "Doom Guard";
 
@@ -91,9 +91,9 @@ public final class DoomGuard extends DataMonster {
         "Skeleton#g",
         "SkeletonA#i",
         "SkeletonC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         53,
         165,
         java.util.List.of(

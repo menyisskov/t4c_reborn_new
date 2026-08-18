@@ -62,9 +62,9 @@ public final class CarrionCrawler extends DataMonster {
         "SmallWorm#m",
         "SmallWormA#k",
         "SmallWormC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         122,
         374,
         java.util.List.of(

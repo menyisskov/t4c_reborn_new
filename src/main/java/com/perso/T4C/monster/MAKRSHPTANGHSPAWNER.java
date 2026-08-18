@@ -33,9 +33,9 @@ import com.perso.T4C.spawn.Spawn;
     stationary = false,
     aggressive = true)
 public final class MAKRSHPTANGHSPAWNER extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Skeleton Dying.wav";
+  public static final String SOUND_HIT = "Skeleton Hit.wav";
 
   public MAKRSHPTANGHSPAWNER(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -57,9 +57,9 @@ public final class MAKRSHPTANGHSPAWNER extends DataMonster {
         "64kCentaurSkeleton#i",
         "64kCentaurSkeletonA#i",
         "64kCentaurSkeletonC#n",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         269,
         825,
         java.util.List.of(),

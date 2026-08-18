@@ -27,9 +27,9 @@ public final class r155Necrospider extends DataMonster {
         "Spider#f",
         "SpiderA#f",
         "SpiderC#m",
-        "Spider Attack.wav",
-        "Spider Dying.wav",
-        "Spider Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         116,
         357,
         java.util.List.of(

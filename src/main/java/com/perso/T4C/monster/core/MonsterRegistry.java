@@ -3,7 +3,7 @@ package com.perso.T4C.monster.core;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.*;
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.npc.*;
 import java.io.File;
 import java.io.IOException;

@@ -197,9 +197,9 @@ public final class r269WaspDrone extends DataMonster {
         "GiantWasp#h",
         "GiantWaspA#h",
         "GiantWaspC#k",
-        "Wasp Attack.wav",
-        "Wasp Dying.wav",
-        "Wasp Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         71,
         220,
         java.util.List.of(

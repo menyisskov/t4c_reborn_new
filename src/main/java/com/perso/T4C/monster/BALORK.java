@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "BALORK", x = 235, y = 452, z = 1, stationary = false, aggressive = false)
 public final class BALORK extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Demon Attack.wav";
+  public static final String SOUND_DEATH = "Demon Dying.wav";
+  public static final String SOUND_HIT = "Demon Hit.wav";
 
   public BALORK(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -29,9 +29,9 @@ public final class BALORK extends DataMonster {
         "Demon#i",
         "DemonA#i",
         "DemonC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         52,
         164,
         java.util.List.of(),

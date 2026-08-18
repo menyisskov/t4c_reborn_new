@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class GreaterDrake extends DataMonster {
-  public static final String SOUND_ATTACK = "Wasp Attack.wav";
-  public static final String SOUND_DEATH = "Wasp Dying.wav";
-  public static final String SOUND_HIT = "Wasp Hit.wav";
+  public static final String SOUND_ATTACK = "Kraanian Attack.wav";
+  public static final String SOUND_DEATH = "Kraanian Dying.wav";
+  public static final String SOUND_HIT = "Kraanian Hit.wav";
 
   public static final String CANONICAL_NAME = "Greater Drake";
 
@@ -35,9 +35,9 @@ public final class GreaterDrake extends DataMonster {
         "Agmorkian#h",
         "AgmorkianA#h",
         "AgmorkianC#p",
-        "Demon Attack.wav",
-        "Demon Dying.wav",
-        "Demon Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         899,
         2750,
         java.util.List.of(),

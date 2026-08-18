@@ -9,9 +9,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "MOBFLESHGOLEM", x = 74, y = 1569, z = 0, stationary = false, aggressive = false)
 public final class FleshGolem extends NamedEventMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Mummy Attack.wav";
+  public static final String SOUND_DEATH = "Zombie Dying.wav";
+  public static final String SOUND_HIT = "Zombie Hit.wav";
 
   public FleshGolem(MonsterDef d, float x, float y) throws GameException {
 

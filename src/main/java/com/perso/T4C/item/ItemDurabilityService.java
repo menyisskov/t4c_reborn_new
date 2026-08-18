@@ -121,6 +121,17 @@ public final class ItemDurabilityService {
     return true;
   }
 
+  /** Repairs every repairable item without charging gold (GM/admin use). */
+  public static void repairAllFree(Player player) {
+    if (player == null) return;
+    synchronize(player);
+    for (int i = 0; i < player.getInventory().size(); i++)
+      if (isRepairable(ItemRegistry.findByKey(player.getInventory().get(i))))
+        player.getInventoryDurability().set(i, MAX);
+    for (BodyPart slot : new ArrayList<>(player.getEquippedDurability().keySet()))
+      player.getEquippedDurability().put(slot, MAX);
+  }
+
   public static boolean repairInventory(Player player, int index) {
     if (player == null) return false;
     synchronize(player);

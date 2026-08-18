@@ -61,7 +61,7 @@ import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.input.*;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.monster.core.MonsterRegistry;
@@ -970,7 +970,7 @@ public class MainGameScreen implements Screen {
               return;
             }
             SpellData spell = SpellRegistry.findById(spellId);
-            String element = spellId == 10120 ? "air" : "water";
+            String element = spell == null ? (spellId == 10120 ? "air" : "water") : elementName(spell.getElement());
             String legacyProjectile = spellId == 10086 ? "64kSpellEnergyBallBlue-" : null;
             String legacyImpact = spellId == 10086 ? "SmallExplosion-" : null;
             String legacySound = spellId == 10086 ? "Small Projectile.wav" : null;
@@ -1058,6 +1058,18 @@ public class MainGameScreen implements Screen {
                 currentMap.getZ(),
                 monster.getTileX(),
                 monster.getTileY()));
+  }
+
+  private static String elementName(int element) {
+    return switch (element) {
+      case 1 -> "fire";
+      case 2 -> "water";
+      case 3 -> "air";
+      case 4 -> "water";
+      case 5 -> "light";
+      case 6 -> "dark";
+      default -> "water";
+    };
   }
 
   private void configureNpcDamageCallback() {

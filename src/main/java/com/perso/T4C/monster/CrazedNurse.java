@@ -31,9 +31,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "MOBCRAZEDNURSE", x = 2831, y = 2234, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "MOBCRAZEDNURSE", x = 2832, y = 2319, z = 0, stationary = false, aggressive = true)
 public final class CrazedNurse extends NamedEventMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Female Dying 1.wav";
+  public static final String SOUND_HIT = "Female Hit 1.wav";
 
   public CrazedNurse(MonsterDef d, float x, float y) throws GameException {
 
@@ -68,9 +68,9 @@ public final class CrazedNurse extends NamedEventMonster {
         "",
         null,
         null,
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(

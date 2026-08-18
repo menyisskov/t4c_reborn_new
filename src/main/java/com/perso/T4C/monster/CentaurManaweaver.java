@@ -6,7 +6,7 @@ import com.perso.T4C.monster.core.NamedEventMonster;
 
 public final class CentaurManaweaver extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
-  public static final String SOUND_DEATH = "Centaur Dying.wav";
+  public static final String SOUND_DEATH = "Taunting Hit.wav";
   public static final String SOUND_HIT = "Centaur Hit.wav";
 
   public CentaurManaweaver(MonsterDef d, float x, float y) throws GameException {

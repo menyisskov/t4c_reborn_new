@@ -28,9 +28,9 @@ public final class r189PsykowaspDevastator extends DataMonster {
         "GiantWasp#h",
         "GiantWaspA#h",
         "GiantWaspC#k",
-        "Wasp Attack.wav",
-        "Wasp Dying.wav",
-        "Wasp Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         39,
         121,
         java.util.List.of(

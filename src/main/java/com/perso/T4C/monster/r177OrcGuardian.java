@@ -27,9 +27,9 @@ public final class r177OrcGuardian extends DataMonster {
         "Orc#g",
         "OrcA#i",
         "OrcC#k",
-        "Taunting Attack.wav",
-        "Taunting Dying.wav",
-        "Taunting Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         71,
         220,
         java.util.List.of(

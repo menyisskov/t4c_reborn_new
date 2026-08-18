@@ -55,9 +55,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Bone Demon", x = 412, y = 215, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Bone Demon", x = 415, y = 233, z = 0, stationary = false, aggressive = true)
 public final class BoneDemon extends DataMonster {
-  public static final String SOUND_ATTACK = "Demon Attack.wav";
-  public static final String SOUND_DEATH = "Demon Dying.wav";
-  public static final String SOUND_HIT = "Demon Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Skeleton Dying.wav";
+  public static final String SOUND_HIT = "Skeleton Hit.wav";
 
   public static final String CANONICAL_NAME = "Bone Demon";
 
@@ -86,9 +86,9 @@ public final class BoneDemon extends DataMonster {
         "Skeleton#g",
         "SkeletonA#i",
         "SkeletonC#k",
-        "Demon Attack.wav",
-        "Demon Dying.wav",
-        "Demon Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         111,
         341,
         java.util.List.of(

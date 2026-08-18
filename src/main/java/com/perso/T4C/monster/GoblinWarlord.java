@@ -59,9 +59,9 @@ public final class GoblinWarlord extends DataMonster {
         "Goblin#l",
         "GoblinA#i",
         "GoblinC#o",
-        "Taunting Attack.wav",
-        "Taunting Dying.wav",
-        "Taunting Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         35,
         110,
         java.util.List.of(

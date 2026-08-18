@@ -1,6 +1,5 @@
-package com.perso.T4C.monster;
+package com.perso.T4C.monster.core;
 
-import com.perso.T4C.monster.core.*;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;

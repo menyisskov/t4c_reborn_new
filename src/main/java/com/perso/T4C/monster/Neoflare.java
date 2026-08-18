@@ -19,9 +19,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "MOBNEOFLARE", x = 1878, y = 2777, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "MOBNEOFLARE", x = 1887, y = 2728, z = 0, stationary = false, aggressive = true)
 public final class Neoflare extends NamedEventMonster {
-  public static final String SOUND_ATTACK = "Wasp Attack.wav";
-  public static final String SOUND_DEATH = "Wasp Dying.wav";
-  public static final String SOUND_HIT = "Wasp Hit.wav";
+  public static final String SOUND_ATTACK = "Kraanian Attack.wav";
+  public static final String SOUND_DEATH = "Kraanian Dying.wav";
+  public static final String SOUND_HIT = "Kraanian Hit.wav";
 
   public Neoflare(MonsterDef d, float x, float y) throws GameException {
 

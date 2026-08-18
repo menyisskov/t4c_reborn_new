@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class Gremlin extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 2.wav";
+  public static final String SOUND_DEATH = "Goblin Dying.wav";
+  public static final String SOUND_HIT = "Goblin Hit.wav";
 
   public static final String CANONICAL_NAME = "Gremlin";
 
@@ -35,9 +35,9 @@ public final class Gremlin extends DataMonster {
         "Goblin#l",
         "GoblinA#i",
         "GoblinC#o",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         102,
         313,
         java.util.List.of(

@@ -28,9 +28,9 @@ public final class r216SkeletonGuardian extends DataMonster {
         "Skeleton#g",
         "SkeletonA#i",
         "SkeletonC#k",
-        "Demon Attack.wav",
-        "Demon Dying.wav",
-        "Demon Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         23,
         71,
         java.util.List.of(

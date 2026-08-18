@@ -9,9 +9,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "MOBHUNTER1", x = 495, y = 553, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "MOBHUNTER1", x = 607, y = 925, z = 0, stationary = false, aggressive = false)
 public final class Hunter1 extends NamedEventMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public Hunter1(MonsterDef d, float x, float y) throws GameException {
 

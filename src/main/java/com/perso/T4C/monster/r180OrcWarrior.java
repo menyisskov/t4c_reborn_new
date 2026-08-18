@@ -77,9 +77,9 @@ public final class r180OrcWarrior extends DataMonster {
         "Orc#g",
         "OrcA#i",
         "OrcC#k",
-        "Taunting Attack.wav",
-        "Taunting Dying.wav",
-        "Taunting Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         21,
         66,
         java.util.List.of(

@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class Hoofcrusher extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Minotaur Attack.wav";
+  public static final String SOUND_DEATH = "Minotaur Dying.wav";
+  public static final String SOUND_HIT = "Minotaur Hit.wav";
 
   public static final String CANONICAL_NAME = "Hoofcrusher";
 
@@ -35,9 +35,9 @@ public final class Hoofcrusher extends DataMonster {
         "Minotaur#f",
         "MinotaurA#i",
         "MinotaurC#m",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         146,
         450,
         java.util.List.of(

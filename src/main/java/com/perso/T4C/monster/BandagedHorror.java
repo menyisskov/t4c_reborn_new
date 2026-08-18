@@ -52,9 +52,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Bandaged Horror", x = 715, y = 2416, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Bandaged Horror", x = 725, y = 2421, z = 1, stationary = false, aggressive = true)
 public final class BandagedHorror extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Mummy Attack.wav";
+  public static final String SOUND_DEATH = "Mummy Dying.wav";
+  public static final String SOUND_HIT = "Mummy Hit.wav";
 
   public static final String CANONICAL_NAME = "Bandaged Horror";
 
@@ -83,9 +83,9 @@ public final class BandagedHorror extends DataMonster {
         "Mummy#i",
         "MummyA#j",
         "MummyC",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         79,
         242,
         java.util.List.of(

@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class CENTAURTRACKER1 extends DataMonster {
-  public static final String SOUND_ATTACK = "Electrik.wav";
-  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
-  public static final String SOUND_HIT = "AxeWood.wav";
+  public static final String SOUND_ATTACK = "Whooshm 7.wav";
+  public static final String SOUND_DEATH = "Taunting Hit.wav";
+  public static final String SOUND_HIT = "Centaur Hit.wav";
 
   public static final String CANONICAL_NAME = "CENTAURTRACKER1";
 
@@ -35,9 +35,9 @@ public final class CENTAURTRACKER1 extends DataMonster {
         "64kCentaurWarrior#i",
         "64kCentaurWarriorA#i",
         "64kCentaurWarriorC#n",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         71,
         220,
         java.util.List.of(),

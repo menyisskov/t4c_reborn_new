@@ -28,9 +28,9 @@ public final class r190PsykowaspFeeder extends DataMonster {
         "GiantWasp#h",
         "GiantWaspA#h",
         "GiantWaspC#k",
-        "Wasp Attack.wav",
-        "Wasp Dying.wav",
-        "Wasp Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         25,
         77,
         java.util.List.of(

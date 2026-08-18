@@ -18,9 +18,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Dark Warlord", x = 537, y = 528, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Dark Warlord", x = 559, y = 525, z = 1, stationary = false, aggressive = true)
 public final class DarkWarlord extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Demon Attack.wav";
+  public static final String SOUND_DEATH = "Demon Dying.wav";
+  public static final String SOUND_HIT = "Demon Hit.wav";
 
   public static final String CANONICAL_NAME = "Dark Warlord";
 
@@ -49,9 +49,9 @@ public final class DarkWarlord extends DataMonster {
         "Demon#i",
         "DemonA#i",
         "DemonC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         134,
         412,
         java.util.List.of(

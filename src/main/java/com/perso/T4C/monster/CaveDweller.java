@@ -35,9 +35,9 @@ public final class CaveDweller extends DataMonster {
         "Atrocity#h",
         "AtrocityA#h",
         "AtrocityC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         93,
         286,
         java.util.List.of(

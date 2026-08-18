@@ -39,9 +39,9 @@ public final class r176OrcDeserter extends DataMonster {
         "Orc#g",
         "OrcA#i",
         "OrcC#k",
-        "Taunting Attack.wav",
-        "Taunting Dying.wav",
-        "Taunting Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         37,
         115,
         java.util.List.of(

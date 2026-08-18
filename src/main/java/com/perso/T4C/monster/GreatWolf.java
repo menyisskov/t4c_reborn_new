@@ -59,9 +59,9 @@ public final class GreatWolf extends DataMonster {
         "Wolf#i",
         "WolfA#i",
         "WolfC#n",
-        "Wolf Attack.wav",
-        "Wolf Dying.wav",
-        "Wolf Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         116,
         357,
         java.util.List.of(

@@ -27,9 +27,9 @@ public final class r153Mummy extends DataMonster {
         "Mummy#i",
         "MummyA#j",
         "MummyC",
-        "Mummy Attack.wav",
-        "Mummy Dying.wav",
-        "Mummy Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         7,
         22,
         java.util.List.of(

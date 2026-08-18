@@ -158,9 +158,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Arachnofiend", x = 991, y = 750, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Arachnofiend", x = 995, y = 730, z = 0, stationary = false, aggressive = true)
 public final class Arachnofiend extends DataMonster {
-  public static final String SOUND_ATTACK = "Demon Attack.wav";
-  public static final String SOUND_DEATH = "Demon Dying.wav";
-  public static final String SOUND_HIT = "Demon Hit.wav";
+  public static final String SOUND_ATTACK = "Spider Attack.wav";
+  public static final String SOUND_DEATH = "Spider Dying.wav";
+  public static final String SOUND_HIT = "Spider Hit.wav";
 
   public static final String CANONICAL_NAME = "Arachnofiend";
 
@@ -189,9 +189,9 @@ public final class Arachnofiend extends DataMonster {
         "Tarantula#m",
         "Tarantula#m",
         "TarantulaC#n",
-        "Spider Attack.wav",
-        "Spider Dying.wav",
-        "Spider Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         107,
         330,
         java.util.List.of(

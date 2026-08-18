@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class Battlebard extends DataMonster {
-  public static final String SOUND_ATTACK = "Bat Attack.wav";
-  public static final String SOUND_DEATH = "Bat Dying.wav";
-  public static final String SOUND_HIT = "Bat Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public static final String CANONICAL_NAME = "Battle bard";
 
@@ -35,9 +35,9 @@ public final class Battlebard extends DataMonster {
         "",
         null,
         null,
-        "Bat Attack.wav",
-        "Bat Dying.wav",
-        "Bat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         39,
         121,
         java.util.List.of(

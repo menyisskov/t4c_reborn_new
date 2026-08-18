@@ -82,9 +82,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Roaming Cadaver", x = 994, y = 2728, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Roaming Cadaver", x = 998, y = 2335, z = 1, stationary = false, aggressive = true)
 public final class r201RoamingCadaver extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Mummy Attack.wav";
+  public static final String SOUND_DEATH = "Mummy Dying.wav";
+  public static final String SOUND_HIT = "Mummy Hit.wav";
 
   public r201RoamingCadaver(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -106,9 +106,9 @@ public final class r201RoamingCadaver extends DataMonster {
         "Mummy#i",
         "MummyA#j",
         "MummyC",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         84,
         258,
         java.util.List.of(),

@@ -56,9 +56,9 @@ public final class Bat extends DataMonster {
         "Bat#h",
         "BatA#i",
         "BatC#l",
-        "Bat Attack.wav",
-        "Bat Dying.wav",
-        "Bat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         1,
         5,
         java.util.List.of(

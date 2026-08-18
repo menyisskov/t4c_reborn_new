@@ -29,9 +29,9 @@ public final class r239TBone extends DataMonster {
         "Skeleton#g",
         "SkeletonA#i",
         "SkeletonC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         106,
         330,
         java.util.List.of(

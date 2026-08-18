@@ -44,9 +44,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Flesh Eater", x = 967, y = 1808, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Flesh Eater", x = 971, y = 1758, z = 0, stationary = false, aggressive = true)
 public final class FleshEater extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Mummy Attack.wav";
+  public static final String SOUND_DEATH = "Mummy Dying.wav";
+  public static final String SOUND_HIT = "Mummy Hit.wav";
 
   public static final String CANONICAL_NAME = "Flesh Eater";
 
@@ -75,9 +75,9 @@ public final class FleshEater extends DataMonster {
         "Mummy#i",
         "MummyA#j",
         "MummyC",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         52,
         159,
         java.util.List.of(

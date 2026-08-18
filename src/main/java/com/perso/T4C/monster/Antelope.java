@@ -74,9 +74,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Antelope", x = 2891, y = 186, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Antelope", x = 2926, y = 691, z = 0, stationary = false, aggressive = false)
 public final class Antelope extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Mummy Attack.wav";
+  public static final String SOUND_DEATH = "Mummy Dying.wav";
+  public static final String SOUND_HIT = "Mummy Hit.wav";
 
   public static final String CANONICAL_NAME = "Antelope";
 
@@ -105,9 +105,9 @@ public final class Antelope extends DataMonster {
         "Ori#h",
         "OriA",
         "OriC#l",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(new MonsterDef.LootDrop("Antelope skin", 0.2f)),

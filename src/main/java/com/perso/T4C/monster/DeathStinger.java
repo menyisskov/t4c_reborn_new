@@ -84,9 +84,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Death Stinger", x = 927, y = 2816, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Death Stinger", x = 929, y = 2853, z = 0, stationary = false, aggressive = true)
 public final class DeathStinger extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Wasp Attack.wav";
+  public static final String SOUND_DEATH = "Wasp Dying.wav";
+  public static final String SOUND_HIT = "Wasp Hit.wav";
 
   public static final String CANONICAL_NAME = "Death Stinger";
 
@@ -115,9 +115,9 @@ public final class DeathStinger extends DataMonster {
         "GiantWasp#h",
         "GiantWaspA#h",
         "GiantWaspC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         59,
         181,
         java.util.List.of(new MonsterDef.LootDrop("Wasp wax", 0.2f)),

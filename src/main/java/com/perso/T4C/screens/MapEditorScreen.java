@@ -56,7 +56,7 @@ import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.mapping.definition.DecorLayerRuleDefinitions;
 import com.perso.T4C.mapping.definition.ObjectPositionDefinitions;
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterClan;
 import com.perso.T4C.monster.core.MonsterClanRelations;

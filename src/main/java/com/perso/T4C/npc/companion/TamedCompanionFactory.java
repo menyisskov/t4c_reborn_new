@@ -3,7 +3,7 @@ package com.perso.T4C.npc.companion;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import java.util.ArrayList;

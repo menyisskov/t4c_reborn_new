@@ -51,9 +51,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Draconis Knight", x = 2045, y = 2157, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Draconis Knight", x = 2074, y = 2302, z = 1, stationary = false, aggressive = true)
 public final class DraconisKnight extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 3.wav";
+  public static final String SOUND_DEATH = "Demon Dying.wav";
+  public static final String SOUND_HIT = "Demon Hit.wav";
 
   public static final String CANONICAL_NAME = "Draconis Knight";
 
@@ -82,9 +82,9 @@ public final class DraconisKnight extends DataMonster {
         "MonsDraconianPlate#k",
         "MonsDraconianPlateA#k",
         "MonsDraconianPlateC#l",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         129,
         396,
         java.util.List.of(),

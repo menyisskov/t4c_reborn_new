@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Gorben", x = 2010, y = 429, z = 0, stationary = false, aggressive = true)
 public final class Gorben extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 2.wav";
+  public static final String SOUND_DEATH = "Goblin Dying.wav";
+  public static final String SOUND_HIT = "Goblin Hit.wav";
 
   public static final String CANONICAL_NAME = "Gorben";
 
@@ -37,9 +37,9 @@ public final class Gorben extends DataMonster {
         "GoblinBoss#l",
         "GoblinBossA#i",
         "GoblinBossC#l",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         106,
         330,
         java.util.List.of(

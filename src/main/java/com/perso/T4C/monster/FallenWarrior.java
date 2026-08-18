@@ -17,9 +17,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Fallen Warrior", x = 862, y = 1523, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Fallen Warrior", x = 871, y = 1525, z = 1, stationary = false, aggressive = true)
 public final class FallenWarrior extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Mummy Attack.wav";
+  public static final String SOUND_DEATH = "Zombie Dying.wav";
+  public static final String SOUND_HIT = "Zombie Hit.wav";
 
   public static final String CANONICAL_NAME = "Fallen Warrior";
 
@@ -48,9 +48,9 @@ public final class FallenWarrior extends DataMonster {
         "Zombie#h",
         "ZombieA#g",
         "ZombieC#j",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         37,
         115,
         java.util.List.of(new MonsterDef.LootDrop("Corrupt heart", 0.1f)),

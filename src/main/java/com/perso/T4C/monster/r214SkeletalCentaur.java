@@ -22,9 +22,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Skeletal Centaur", x = 569, y = 537, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Skeletal Centaur", x = 577, y = 549, z = 1, stationary = false, aggressive = true)
 public final class r214SkeletalCentaur extends DataMonster {
-  public static final String SOUND_ATTACK = "Electrik.wav";
-  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
-  public static final String SOUND_HIT = "AxeWood.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Skeleton Dying.wav";
+  public static final String SOUND_HIT = "Skeleton Hit.wav";
 
   public r214SkeletalCentaur(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -46,9 +46,9 @@ public final class r214SkeletalCentaur extends DataMonster {
         "64kCentaurSkeleton#i",
         "64kCentaurSkeletonA#i",
         "64kCentaurSkeletonC#n",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         125,
         385,
         java.util.List.of(

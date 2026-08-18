@@ -2,7 +2,7 @@ package com.perso.T4C.quest;
 
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.registry.NpcFactoryRegistry;
 import com.perso.T4C.player.Player;

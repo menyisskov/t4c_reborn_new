@@ -11,9 +11,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "MOONTUGGUARD2", x = 2590, y = 283, z = 2, stationary = false, aggressive = false)
 @Spawn(type = "MOONTUGGUARD2", x = 2612, y = 290, z = 2, stationary = false, aggressive = false)
 public final class MOONTUGGUARD2 extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Skraug Attack.wav";
+  public static final String SOUND_DEATH = "Skraug Die.wav";
+  public static final String SOUND_HIT = "Taunting Hit.wav";
 
   public MOONTUGGUARD2(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -34,9 +34,9 @@ public final class MOONTUGGUARD2 extends DataMonster {
         "64kSkavenWarrior#i",
         "64kSkavenWarriorA#k",
         "64kSkavenWarriorC#s",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         189,
         550,
         java.util.List.of(),

@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class FailedSummon extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Ooze Attack.wav";
+  public static final String SOUND_DEATH = "Ooze Dying.wav";
+  public static final String SOUND_HIT = "Ooze Hit.wav";
 
   public static final String CANONICAL_NAME = "Failed Summon";
 
@@ -35,9 +35,9 @@ public final class FailedSummon extends DataMonster {
         "Slime@023",
         "Slimea@35",
         "SlimeC!z",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         62,
         192,
         java.util.List.of(),

@@ -85,9 +85,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Desperate Prisoner", x = 985, y = 702, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Desperate Prisoner", x = 990, y = 709, z = 1, stationary = false, aggressive = true)
 public final class DesperatePrisoner extends DataMonster {
-  public static final String SOUND_ATTACK = "Rat Attack.wav";
-  public static final String SOUND_DEATH = "Rat Dying.wav";
-  public static final String SOUND_HIT = "Rat Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public static final String CANONICAL_NAME = "Desperate Prisoner";
 
@@ -116,9 +116,9 @@ public final class DesperatePrisoner extends DataMonster {
         "Warrio#l",
         "WarrioA#l",
         "WarrioC",
-        "Rat Attack.wav",
-        "Rat Dying.wav",
-        "Rat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         43,
         132,
         java.util.List.of(

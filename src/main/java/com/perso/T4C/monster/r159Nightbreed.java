@@ -283,9 +283,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Nightbreed", x = 996, y = 229, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "Nightbreed", x = 998, y = 1763, z = 0, stationary = false, aggressive = true)
 public final class r159Nightbreed extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Bat Attack.wav";
+  public static final String SOUND_DEATH = "Bat Dying.wav";
+  public static final String SOUND_HIT = "Bat Hit.wav";
 
   public r159Nightbreed(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -306,9 +306,9 @@ public final class r159Nightbreed extends DataMonster {
         "Bat#h",
         "BatA#i",
         "BatC#l",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         43,
         132,
         java.util.List.of(),

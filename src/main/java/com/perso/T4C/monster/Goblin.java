@@ -136,9 +136,9 @@ public final class Goblin extends DataMonster {
         "Goblin#l",
         "GoblinA#i",
         "GoblinC#o",
-        "Taunting Attack.wav",
-        "Taunting Dying.wav",
-        "Taunting Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         8,
         27,
         java.util.List.of(

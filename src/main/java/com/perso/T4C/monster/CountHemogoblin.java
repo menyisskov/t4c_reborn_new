@@ -37,9 +37,9 @@ public final class CountHemogoblin extends DataMonster {
         "GoblinBoss#l",
         "GoblinBossA#i",
         "GoblinBossC#l",
-        "Taunting Attack.wav",
-        "Taunting Dying.wav",
-        "Taunting Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         106,
         330,
         java.util.List.of(

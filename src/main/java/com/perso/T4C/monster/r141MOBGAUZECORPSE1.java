@@ -5,8 +5,8 @@ import com.perso.T4C.monster.core.*;
 
 public final class r141MOBGAUZECORPSE1 extends DataMonster {
   public static final String SOUND_ATTACK = "Mummy Attack.wav";
-  public static final String SOUND_DEATH = "Zombie Dying.wav";
-  public static final String SOUND_HIT = "Zombie Hit.wav";
+  public static final String SOUND_DEATH = "Mummy Dying.wav";
+  public static final String SOUND_HIT = "Mummy Hit.wav";
 
   public r141MOBGAUZECORPSE1(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -28,9 +28,9 @@ public final class r141MOBGAUZECORPSE1 extends DataMonster {
         "Mummy#i",
         "MummyA#j",
         "MummyC",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         170,
         522,
         java.util.List.of(),

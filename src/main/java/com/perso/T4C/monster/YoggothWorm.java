@@ -212,9 +212,9 @@ public final class YoggothWorm extends NamedEventMonster {
         "SmallWorm#m",
         "SmallWormA#k",
         "SmallWormC#k",
-        "Worm Attack.wav",
-        "Worm Dying.wav",
-        "Worm Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         107,
         330,
         java.util.List.of(

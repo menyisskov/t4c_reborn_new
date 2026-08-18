@@ -162,9 +162,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Taunting Horror", x = 797, y = 2256, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Taunting Horror", x = 804, y = 2274, z = 0, stationary = false, aggressive = true)
 public final class r238TauntingHorror extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Taunting Attack.wav";
+  public static final String SOUND_DEATH = "Taunting Dying.wav";
+  public static final String SOUND_HIT = "Taunting Hit.wav";
 
   public r238TauntingHorror(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -186,9 +186,9 @@ public final class r238TauntingHorror extends DataMonster {
         "Taunting#h",
         "TauntingA#h",
         "TauntingC#m",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         53,
         165,
         java.util.List.of(

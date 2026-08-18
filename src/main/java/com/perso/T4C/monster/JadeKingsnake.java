@@ -56,9 +56,9 @@ public final class JadeKingsnake extends DataMonster {
         "Snake#h",
         "SnakeA#g",
         "SnakeC#m",
-        "Snake Attack.wav",
-        "Snake Dying.wav",
-        "Snake Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         53,
         165,
         java.util.List.of(

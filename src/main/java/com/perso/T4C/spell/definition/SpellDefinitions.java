@@ -1,291 +1,80 @@
 package com.perso.T4C.spell.definition;
 
 import com.perso.T4C.spell.SpellData;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.JarURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public final class SpellDefinitions {
+  private static final String PACKAGE_NAME = "com.perso.T4C.spell.definition";
+  private static final String PACKAGE_PATH = PACKAGE_NAME.replace('.', '/');
+
   private SpellDefinitions() {}
 
   public static List<SpellData> all() {
-    return List.of(
-        TameBeast.definition(),
-        FireDart.definition(),
-        ItemTorchRadiance.definition(),
-        FlamingArrow.definition(),
-        FireBolt.definition(),
-        Fireball.definition(),
-        LighthavenGateway.definition(),
-        Poison.definition(),
-        IceShard.definition(),
-        PoisonArrow.definition(),
-        Freeze.definition(),
-        IceBolt.definition(),
-        DustDevil.definition(),
-        LightningBolt.definition(),
-        WordOfRecall.definition(),
-        CallLightning.definition(),
-        HealLight.definition(),
-        HealSerious.definition(),
-        HealCritical.definition(),
-        StoneShard.definition(),
-        Shatter.definition(),
-        Curse.definition(),
-        ItemPotionOfFury.definition(),
-        ChaosShield.definition(),
-        ItemPotionOfMana.definition(),
-        EssenceOfDrake.definition(),
-        Tetrashock.definition(),
-        FlameWave.definition(),
-        IceBall.definition(),
-        ChainLightning.definition(),
-        VortexOfAir.definition(),
-        ElectricShield.definition(),
-        Earthquake.definition(),
-        WrathOfDrake.definition(),
-        Light.definition(),
-        WindhowlGateway.definition(),
-        LesserDrain.definition(),
-        ItemGoblinBlood.definition(),
-        Plague.definition(),
-        ItemPotionOfRegeneration.definition(),
-        Protection.definition(),
-        SilverskyGateway.definition(),
-        Barrier.definition(),
-        EarthenStrength.definition(),
-        MinorCombatSense.definition(),
-        Meteor.definition(),
-        RainOfFire.definition(),
-        Flare.definition(),
-        Firestorm.definition(),
-        Inferno.definition(),
-        ManaBurst.definition(),
-        Glacier.definition(),
-        IceStorm.definition(),
-        Blizzard.definition(),
-        Avalanche.definition(),
-        Tsunami.definition(),
-        Healing.definition(),
-        MassHealing.definition(),
-        ManaSurge.definition(),
-        HealingMist.definition(),
-        Tornado.definition(),
-        Hurricane.definition(),
-        MajorCombatSense.definition(),
-        TurnUndead.definition(),
-        ManaShield.definition(),
-        StoneSkin.definition(),
-        Sanctuary.definition(),
-        ClearThought.definition(),
-        Entangle.definition(),
-        EntangleEffect.definition(),
-        DrainLife.definition(),
-        ItemPotionOfClearThought.definition(),
-        ResistFire.definition(),
-        ItemPotionOfFortitude.definition(),
-        ItemPotionOfTranquility.definition(),
-        ItemPotionOfNimbleness.definition(),
-        Tranquility.definition(),
-        GreaterDrain.definition(),
-        ResistIce.definition(),
-        FireShield.definition(),
-        Nimbleness.definition(),
-        ItemPotionOfLightHealing.definition(),
-        ItemHyperPotionOfTranquility.definition(),
-        ItemHyperPotionOfFury.definition(),
-        ItemHyperPotionOfNimbleness.definition(),
-        ItemHyperPotionOfFortitude.definition(),
-        ItemHyperPotionOfClearThought.definition(),
-        ItemHyperPotionOfViolentRage.definition(),
-        ItemPotionOfHealing.definition(),
-        Vaporize.definition(),
-        ItemManaPrism.definition(),
-        DrakeSBladesOfVengeance.definition(),
-        CurePoison.definition(),
-        Dispel.definition(),
-        SunkenWoodsGateway.definition(),
-        LighthavenGateway2.definition(),
-        WindhowlGateway2.definition(),
-        DruidSPointGateway.definition(),
-        SilverskyGateway2.definition(),
-        WizardSValeGateway.definition(),
-        StonecrestGateway.definition(),
-        Invisibility.definition(),
-        DetectInvisible.definition(),
-        DetectHidden.definition(),
-        TrueSight.definition(),
-        Boulders.definition(),
-        SoulSteal.definition(),
-        Bless.definition(),
-        MobInvisibilitySpell.definition(),
-        LighthavenImprovedGateway.definition(),
-        ItemPotionOfGreaterProtectionFromEvil.definition(),
-        ItemPotionOfGreaterEarthResistance.definition(),
-        ItemPotionOfLesserFireResistance.definition(),
-        ItemPotionOfLesserWaterResistance.definition(),
-        ItemPotionOfLesserAirResistance.definition(),
-        ItemPotionOfLesserEarthResistance.definition(),
-        ItemPotionOfLesserProtectionFromEvil.definition(),
-        ItemPotionOfPartialFireResistance.definition(),
-        ItemPotionOfPartialWaterResistance.definition(),
-        ItemPotionOfPartialAirResistance.definition(),
-        ItemPotionOfPartialEarthResistance.definition(),
-        ItemPotionOfPartialProtectionFromEvil.definition(),
-        ItemPotionOfGreaterFireResistance.definition(),
-        ItemPotionOfGreaterWaterResistance.definition(),
-        ItemPotionOfGreaterAirResistance.definition(),
-        TestSanctuaryIsland.definition(),
-        TestTemporarySanctuaryIsland.definition(),
-        ItemMantleOfInfiniteBlessingsEffect.definition(),
-        ItemCloakOfRenewalEffect.definition(),
-        ItemMantleOfDeathEffect.definition(),
-        MobBlinkSpell.definition(),
-        MobBlinkEffect.definition(),
-        MobPetrificationSpellEffect.definition(),
-        MobTerrorSpellEffect.definition(),
-        MobFoulSicknessSpell.definition(),
-        MobQuicksandsSpellEffect.definition(),
-        MobPoisonSpell.definition(),
-        MobMudballSpell.definition(),
-        MobStenchSpell.definition(),
-        MobRatLiceSpell.definition(),
-        MobRabiesSpell.definition(),
-        MobFirefangSpell.definition(),
-        MobGangreneSpell.definition(),
-        MobMindRotSpell.definition(),
-        MobCustodiansWordSpell.definition(),
-        MobPeacefulNightSpell.definition(),
-        MobSilenceOfTheLambsSpell.definition(),
-        MobMightOfTheCustodianSpell.definition(),
-        MobThrowingStonesSpell.definition(),
-        MobFairysNightMagicSpell.definition(),
-        MobHideInShadowsSpell.definition(),
-        MobEvilPentagramSpell.definition(),
-        MobWillOfOgrimarSpell.definition(),
-        MobDarkRegenerationSpell.definition(),
-        MobDesolidificationSpell.definition(),
-        MobDemonicPossessionSpell.definition(),
-        MobAggravationSpell.definition(),
-        MobDiseaseSpell.definition(),
-        MobRottingFingersSpell.definition(),
-        MobPiercingWormsSpell.definition(),
-        MobArmorWeaknessSpell.definition(),
-        MobManaLeakSpell.definition(),
-        MobChillingTouchSpell.definition(),
-        MobAntimagicShellSpell.definition(),
-        MobManabaneSpell.definition(),
-        MobStoneSpell.definition(),
-        MobHellChainsSpell.definition(),
-        MobArmorMeltSpell.definition(),
-        ItemScrollOfTrueSight.definition(),
-        WrathOfMarc.definition(),
-        ItemJaggedGypsyDaggerEffect.definition(),
-        ItemSapphireHiltedSpellEffect.definition(),
-        ItemGloomStaffEffect.definition(),
-        ItemCrystalSwordOfMightEffect.definition(),
-        ItemGreatAxeOfTheCrowEffect.definition(),
-        TestMarkedForDeath.definition(),
-        MobVaporizeSpell.definition(),
-        MobBrainBlastSpell.definition(),
-        MobBallOfConfusionSpell.definition(),
-        ItemFineWine.definition(),
-        ItemArcaneLiquor.definition(),
-        ItemAmbrosia.definition(),
-        TestMassPlague.definition(),
-        MobCharmSpellEffect.definition(),
-        ItemPsykowaspNectar.definition(),
-        ItemBookOfPsalms.definition(),
-        ItemRingOfTheBerserkerEffect.definition(),
-        ItemBluestoneTalisman.definition(),
-        ItemLostBladeOfTheDragonEffect.definition(),
-        ItemVoyeurCloakEffect.definition(),
-        MobKingsnakePoisonSpell.definition(),
-        MobFatigueSpell.definition(),
-        ItemScrollOfProtection.definition(),
-        ItemScrollOfBarrier.definition(),
-        ItemScrollOfEarthenStrength.definition(),
-        ItemScrollOfResistFire.definition(),
-        ItemScrollOfResistIce.definition(),
-        ItemScrollOfStoneSkin.definition(),
-        ItemScrollOfMajorCombatSense.definition(),
-        ItemScrollOfMinorCombatSense.definition(),
-        ItemScrollOfManaShield.definition(),
-        ItemScrollOfManaSurge.definition(),
-        ItemScrollOfDetectInvisible.definition(),
-        ItemScrollOfDetectHidden.definition(),
-        ItemScrollOfInvisibility.definition(),
-        ItemScrollOfOrientationCenter.definition(),
-        ItemScrollOfOrientationMiddle.definition(),
-        ItemEscapeScroll.definition(),
-        ItemWizardBane.definition(),
-        ItemWizardBaneEffect.definition(),
-        ItemHammerOfTrueSight.definition(),
-        ItemGemOfTheMoon.definition(),
-        ItemGemOfTheSun.definition(),
-        ItemGemOfTheStars.definition(),
-        ItemBowOfTheSpidersEffect.definition(),
-        ItemRaindrop.definition(),
-        ItemAncientRing.definition(),
-        ItemAncientRing2.definition(),
-        ItemBoneswordOfTheBerserkerEffect.definition(),
-        NpcTheoranBoost.definition(),
-        RemortAura.definition(),
-        StonecrestGateway2.definition(),
-        MobColosseumUpgradeSpell1.definition(),
-        MobColosseumUpgradeSpell2.definition(),
-        MobColosseumUpgradeSpell3.definition(),
-        MobColosseumUpgradeSpell4.definition(),
-        MobRadianceSpell.definition(),
-        MobRadianceSpell2.definition(),
-        MobThirdMaxHpPoison.definition(),
-        ItemRunedStoneTablet.definition(),
-        ItemRunedStoneTablet2.definition(),
-        ItemRunedStoneTablet3.definition(),
-        ItemRunedStoneTablet4.definition(),
-        ItemBeltOfUnstableProtection.definition(),
-        ItemArmletOfFlames.definition(),
-        ItemGuardianRingOfVitality.definition(),
-        ItemBracerOfTheImmortal.definition(),
-        ItemAmuletOfRegeneration.definition(),
-        ItemAmuletOfRejuvenation.definition(),
-        ItemAmuletOfRenewal.definition(),
-        ItemAmuletOfReplenishment.definition(),
-        LighthavenPortal.definition(),
-        EssenceOfSeraphEffect.definition(),
-        DruidSPointPortal.definition(),
-        SilverskyPortal.definition(),
-        StonecrestPortal.definition(),
-        SunkenWoodsPortal.definition(),
-        WindhowlPortal.definition(),
-        WizardSValePortal.definition(),
-        IceShield.definition(),
-        WrathOfTheAncients.definition(),
-        Fervor.definition(),
-        EntangleEffect2.definition(),
-        LevelUp.definition(),
-        NpcCantripFlak.definition(),
-        NpcSelfDestruct2Minutes.definition(),
-        DoppelgangerSelfDamage1.definition(),
-        DoppelgangerSelfDamage2.definition(),
-        DoppelgangerSelfDamage3.definition(),
-        MobLordOfTheShopsTeleportSpell.definition(),
-        MobAiRegenerationSpell.definition(),
-        MobOracleAssistantSelfDamageSpell.definition(),
-        MobOracleAssistantTeleportSpell.definition(),
-        MobOracleAssistantSelfHealSpell.definition(),
-        NpcCantripFlak2.definition(),
-        NpcSelfDestruct2Minutes2.definition(),
-        DoppelgangerSelfDamage12.definition(),
-        DoppelgangerSelfDamage22.definition(),
-        DoppelgangerSelfDamage32.definition(),
-        MobLordOfTheShopsTeleportSpell2.definition(),
-        MobAiRegenerationSpell2.definition(),
-        MobOracleAssistantSelfDamageSpell2.definition(),
-        MobOracleAssistantTeleportSpell2.definition(),
-        MobOracleAssistantSelfHealSpell2.definition(),
-        MobMakrshPtanghBouldersSpell.definition(),
-        MobMakrshPtanghGlacierSpell.definition(),
-        MobMakrshPtanghMeteorSpell.definition(),
-        MobMakrshPtanghTeleportSpell.definition(),
-        MobArenaMinorRegenerationSpell.definition());
+    List<SpellData> definitions = new ArrayList<>();
+    for (String className : findClassNames()) {
+      try {
+        Class<?> type = Class.forName(className);
+        if (type == SpellDefinitions.class || type.isInterface() || type.isEnum()) continue;
+        Method definition = type.getDeclaredMethod("definition");
+        if (!Modifier.isStatic(definition.getModifiers()) || definition.getParameterCount() != 0
+            || !SpellData.class.isAssignableFrom(definition.getReturnType())) continue;
+        SpellData spell = (SpellData) definition.invoke(null);
+        if (spell != null) definitions.add(spell);
+      } catch (ReflectiveOperationException | RuntimeException ignored) {
+      }
+    }
+    definitions.sort(Comparator.comparingInt(SpellData::getSpellId));
+    return List.copyOf(definitions);
+  }
+
+  private static Set<String> findClassNames() {
+    Set<String> classNames = new LinkedHashSet<>();
+    try {
+      Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(PACKAGE_PATH);
+      while (resources.hasMoreElements()) {
+        URL resource = resources.nextElement();
+        if ("file".equals(resource.getProtocol())) {
+          scanDirectory(Path.of(URI.create(resource.toString())), classNames);
+        } else if ("jar".equals(resource.getProtocol())) {
+          scanJar(((JarURLConnection) resource.openConnection()).getJarFile(), classNames);
+        }
+      }
+    } catch (IOException | RuntimeException ignored) {
+    }
+    return classNames;
+  }
+
+  private static void scanDirectory(Path directory, Set<String> classNames) throws IOException {
+    try (var files = Files.list(directory)) {
+      files.filter(path -> path.getFileName().toString().endsWith(".class"))
+          .map(path -> path.getFileName().toString().replaceFirst("\\.class$", ""))
+          .filter(name -> !name.contains("$"))
+          .sorted()
+          .forEach(name -> classNames.add(PACKAGE_NAME + "." + name));
+    }
+  }
+
+  private static void scanJar(JarFile jar, Set<String> classNames) {
+    Enumeration<JarEntry> entries = jar.entries();
+    while (entries.hasMoreElements()) {
+      String name = entries.nextElement().getName();
+      if (name.startsWith(PACKAGE_PATH + "/") && name.endsWith(".class") && !name.contains("$"))
+        classNames.add(name.substring(0, name.length() - 6).replace('/', '.'));
+    }
   }
 }

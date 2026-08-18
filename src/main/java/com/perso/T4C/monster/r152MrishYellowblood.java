@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Mrish Yellowblood", x = 864, y = 2421, z = 2, stationary = false, aggressive = true)
 public final class r152MrishYellowblood extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 2.wav";
+  public static final String SOUND_DEATH = "Goblin Dying.wav";
+  public static final String SOUND_HIT = "Goblin Hit.wav";
 
   public r152MrishYellowblood(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -30,9 +30,9 @@ public final class r152MrishYellowblood extends DataMonster {
         "GoblinBoss#l",
         "GoblinBossA#i",
         "GoblinBossC#l",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         64,
         198,
         java.util.List.of(

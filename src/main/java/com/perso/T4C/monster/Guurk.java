@@ -37,9 +37,9 @@ public final class Guurk extends DataMonster {
         "AtrocityBoss#h",
         "AtrocityBossA#h",
         "AtrocityBossC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         42,
         132,
         java.util.List.of(

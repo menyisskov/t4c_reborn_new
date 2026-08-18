@@ -1,12 +1,13 @@
 package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
 
 public final class MakrshPtangh2 extends NamedEventMonster {
-  public static final String SOUND_ATTACK = "Whooshm 7.wav";
-  public static final String SOUND_DEATH = "Male Dying 1.wav";
-  public static final String SOUND_HIT = "Male Hit 1.wav";
+  public static final String SOUND_ATTACK = "Whooshh 3.wav";
+  public static final String SOUND_DEATH = "Vampire Dying.wav";
+  public static final String SOUND_HIT = "Vampire Hit.wav";
 
   public MakrshPtangh2(MonsterDef definition, float worldX, float worldY) throws GameException {
     super(definition, worldX, worldY);
@@ -26,9 +27,9 @@ public final class MakrshPtangh2 extends NamedEventMonster {
         "64kLich#l",
         "64kLichA#j",
         "64kLichC#w",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         400,
         1500,
         java.util.List.of(

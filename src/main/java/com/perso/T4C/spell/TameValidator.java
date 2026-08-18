@@ -2,7 +2,7 @@ package com.perso.T4C.spell;
 
 import static com.perso.T4C.config.GameConstants.TAME_MAX_RANGE_TILES;
 
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.*;
 
 public final class TameValidator {

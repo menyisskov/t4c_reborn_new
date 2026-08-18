@@ -18,9 +18,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Obsidian Assassin", x = 1449, y = 2700, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "Obsidian Assassin", x = 1460, y = 2734, z = 2, stationary = false, aggressive = true)
 public final class r161ObsidianAssassin extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public r161ObsidianAssassin(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -42,9 +42,9 @@ public final class r161ObsidianAssassin extends DataMonster {
         "Thief#m",
         "ThiefA#i",
         "ThiefC#l",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         161,
         495,
         java.util.List.of(

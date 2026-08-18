@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class r150Morlokk extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshm 3.wav";
+  public static final String SOUND_DEATH = "Kobold Dying.wav";
+  public static final String SOUND_HIT = "Kobold Hit.wav";
 
   public r150Morlokk(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -27,9 +27,9 @@ public final class r150Morlokk extends DataMonster {
         "Kobold#l",
         "KoboldA#g",
         "KoboldC",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         106,
         324,
         java.util.List.of(

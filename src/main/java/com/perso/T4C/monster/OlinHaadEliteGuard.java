@@ -34,9 +34,9 @@ import com.perso.T4C.spawn.Spawn;
     stationary = false,
     aggressive = true)
 public final class OlinHaadEliteGuard extends NamedEventMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public OlinHaadEliteGuard(MonsterDef d, float x, float y) throws GameException {
 
@@ -57,9 +57,9 @@ public final class OlinHaadEliteGuard extends NamedEventMonster {
         "",
         null,
         null,
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(),

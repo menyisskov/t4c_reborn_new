@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "VENADAR", x = 2345, y = 545, z = 2, stationary = false, aggressive = false)
 public final class VENADAR extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Taunting Attack.wav";
+  public static final String SOUND_DEATH = "Taunting Dying.wav";
+  public static final String SOUND_HIT = "Taunting Hit.wav";
 
   public VENADAR(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -29,9 +29,9 @@ public final class VENADAR extends DataMonster {
         "Taunting#h",
         "TauntingA#h",
         "TauntingC#m",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(),

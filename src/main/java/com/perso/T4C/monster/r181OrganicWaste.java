@@ -11,9 +11,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Organic Waste", x = 419, y = 451, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "Organic Waste", x = 419, y = 462, z = 2, stationary = false, aggressive = true)
 public final class r181OrganicWaste extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Ooze Attack.wav";
+  public static final String SOUND_DEATH = "Ooze Dying.wav";
+  public static final String SOUND_HIT = "Ooze Hit.wav";
 
   public r181OrganicWaste(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -34,9 +34,9 @@ public final class r181OrganicWaste extends DataMonster {
         "Slime@023",
         "Slimea@35",
         "SlimeC!z",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         14,
         44,
         java.util.List.of(),

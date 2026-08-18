@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.SpawnRegistry;

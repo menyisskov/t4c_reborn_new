@@ -211,9 +211,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Animated Corpse", x = 926, y = 2572, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "Animated Corpse", x = 93, y = 2213, z = 2, stationary = false, aggressive = true)
 public final class AnimatedCorpse extends DataMonster {
-  public static final String SOUND_ATTACK = "Mummy Attack.wav";
-  public static final String SOUND_DEATH = "Zombie Dying.wav";
-  public static final String SOUND_HIT = "Zombie Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Skeleton Dying.wav";
+  public static final String SOUND_HIT = "Skeleton Hit.wav";
 
   public static final String CANONICAL_NAME = "Animated Corpse";
 
@@ -242,9 +242,9 @@ public final class AnimatedCorpse extends DataMonster {
         "Skeleton#g",
         "SkeletonA#i",
         "SkeletonC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         25,
         77,
         java.util.List.of(

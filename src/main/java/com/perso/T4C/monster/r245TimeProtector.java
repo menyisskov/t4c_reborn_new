@@ -33,9 +33,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Time Protector", x = 2967, y = 2257, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "Time Protector", x = 2968, y = 2257, z = 2, stationary = false, aggressive = true)
 public final class r245TimeProtector extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Electrik.wav";
+  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
+  public static final String SOUND_HIT = "AxeWood.wav";
 
   public r245TimeProtector(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -56,9 +56,9 @@ public final class r245TimeProtector extends DataMonster {
         "TreeEnt#i",
         "TreeEntA#i",
         "TreeEntC#j",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         269,
         825,
         java.util.List.of(new MonsterDef.LootDrop("Bracer of leaves", 0.05f)),

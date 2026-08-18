@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Araf Kul", x = 2654, y = 565, z = 0, stationary = false, aggressive = true)
 public final class ArafKul extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshm 8.wav";
+  public static final String SOUND_DEATH = "Orc Dying.wav";
+  public static final String SOUND_HIT = "Orc Hit.wav";
 
   public static final String CANONICAL_NAME = "Araf Kul";
 
@@ -37,9 +37,9 @@ public final class ArafKul extends DataMonster {
         "Orc#g",
         "OrcA#i",
         "OrcC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         88,
         274,
         java.util.List.of(

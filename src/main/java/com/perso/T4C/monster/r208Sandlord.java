@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Sandlord", x = 266, y = 2400, z = 0, stationary = false, aggressive = true)
 public final class r208Sandlord extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Worm Attack.wav";
+  public static final String SOUND_DEATH = "Worm Dying.wav";
+  public static final String SOUND_HIT = "Worm Hit.wav";
 
   public r208Sandlord(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -29,9 +29,9 @@ public final class r208Sandlord extends DataMonster {
         "BigWorm#h",
         "BigWormA#k",
         "BigWormC#m",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         142,
         440,
         java.util.List.of(),

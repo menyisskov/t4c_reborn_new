@@ -51,9 +51,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Crypt Stalker", x = 971, y = 2504, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Crypt Stalker", x = 994, y = 2483, z = 1, stationary = false, aggressive = true)
 public final class CryptStalker extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Spider Attack.wav";
+  public static final String SOUND_DEATH = "Spider Dying.wav";
+  public static final String SOUND_HIT = "Spider Hit.wav";
 
   public static final String CANONICAL_NAME = "Crypt Stalker";
 
@@ -82,9 +82,9 @@ public final class CryptStalker extends DataMonster {
         "Spider#f",
         "SpiderA#f",
         "SpiderC#m",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         77,
         236,
         java.util.List.of(),

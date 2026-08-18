@@ -32,7 +32,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "PIG", x = 2850, y = 1205, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "PIG", x = 2850, y = 1207, z = 0, stationary = false, aggressive = false)
 public final class PIG extends DataMonster {
-  public static final String SOUND_ATTACK = "Whooshm 7.wav";
+  public static final String SOUND_ATTACK = null;
   public static final String SOUND_DEATH = "Pig Dying.wav";
   public static final String SOUND_HIT = "Pig Hit.wav";
 
@@ -55,9 +55,9 @@ public final class PIG extends DataMonster {
         "Warrio#l",
         "WarrioA#l",
         "WarrioC",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(),

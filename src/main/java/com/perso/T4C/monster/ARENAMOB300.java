@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class ARENAMOB300 extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Atrocity Attack.wav";
+  public static final String SOUND_DEATH = "Atrocity Dying.wav";
+  public static final String SOUND_HIT = "Atrocity Hit.wav";
 
   public ARENAMOB300(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -27,9 +27,9 @@ public final class ARENAMOB300 extends DataMonster {
         "Tank#h",
         "TankA#h",
         "TankC#n",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(),

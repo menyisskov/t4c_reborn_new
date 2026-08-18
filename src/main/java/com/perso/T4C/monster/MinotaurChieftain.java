@@ -35,9 +35,9 @@ public final class MinotaurChieftain extends DataMonster {
         "Minotaur#f",
         "MinotaurA#i",
         "MinotaurC#m",
-        "Minotaur Attack.wav",
-        "Minotaur Dying.wav",
-        "Minotaur Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         62,
         192,
         java.util.List.of(

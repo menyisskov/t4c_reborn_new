@@ -6,9 +6,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Grott", x = 1058, y = 2431, z = 0, stationary = false, aggressive = false)
 public final class Grott extends DataMonster {
-  public static final String SOUND_ATTACK = "Beast Attack.wav";
-  public static final String SOUND_DEATH = "Beast Dying.wav";
-  public static final String SOUND_HIT = "Beast Hit.wav";
+  public static final String SOUND_ATTACK = "Troll Attack.wav";
+  public static final String SOUND_DEATH = "Troll Dying.wav";
+  public static final String SOUND_HIT = "Troll Hit.wav";
 
   public static final String CANONICAL_NAME = "Grott";
 
@@ -37,9 +37,9 @@ public final class Grott extends DataMonster {
         "GreenTroll#f",
         "GreenTrollA#g",
         "GreenTrollC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         142,
         440,
         java.util.List.of(

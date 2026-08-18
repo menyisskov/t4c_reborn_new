@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class r260TROLLSTANDANBONKAH1 extends DataMonster {
-  public static final String SOUND_ATTACK = "Troll Attack.wav";
-  public static final String SOUND_DEATH = "Troll Dying.wav";
-  public static final String SOUND_HIT = "Troll Hit.wav";
+  public static final String SOUND_ATTACK = "Ooze Attack.wav";
+  public static final String SOUND_DEATH = "Ooze Dying.wav";
+  public static final String SOUND_HIT = "Ooze Hit.wav";
 
   public r260TROLLSTANDANBONKAH1(MonsterDef definition, float worldX, float worldY)
       throws GameException {
@@ -28,9 +28,9 @@ public final class r260TROLLSTANDANBONKAH1 extends DataMonster {
         "Ooze#h",
         "OozeA#h",
         "OozeC#j",
-        "Troll Attack.wav",
-        "Troll Dying.wav",
-        "Troll Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(),

@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class r174OrcBattlemage extends DataMonster {
-  public static final String SOUND_ATTACK = "Bat Attack.wav";
-  public static final String SOUND_DEATH = "Bat Dying.wav";
-  public static final String SOUND_HIT = "Bat Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshm 8.wav";
+  public static final String SOUND_DEATH = "Orc Dying.wav";
+  public static final String SOUND_HIT = "Orc Hit.wav";
 
   public r174OrcBattlemage(MonsterDef definition, float worldX, float worldY) throws GameException {
 
@@ -27,9 +27,9 @@ public final class r174OrcBattlemage extends DataMonster {
         "Orc#g",
         "OrcA#i",
         "OrcC#k",
-        "Bat Attack.wav",
-        "Bat Dying.wav",
-        "Bat Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         61,
         187,
         java.util.List.of(

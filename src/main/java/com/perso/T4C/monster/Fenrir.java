@@ -10,9 +10,9 @@ import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "FENRIR", x = 157, y = 211, z = 0, stationary = false, aggressive = true)
 public final class Fenrir extends NamedEventMonster {
-  public static final String SOUND_ATTACK = "Wolf Attack.wav";
-  public static final String SOUND_DEATH = "Wolf Dying.wav";
-  public static final String SOUND_HIT = "Wolf Hit.wav";
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public Fenrir(MonsterDef d, float x, float y) throws GameException {
 
@@ -42,9 +42,9 @@ public final class Fenrir extends NamedEventMonster {
         "",
         null,
         null,
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         0,
         0,
         java.util.List.of(),

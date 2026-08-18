@@ -8,9 +8,9 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Kraanian Reaper", x = 2117, y = 2212, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Kraanian Reaper", x = 2119, y = 2202, z = 1, stationary = false, aggressive = true)
 public final class KraanianReaper extends DataMonster {
-  public static final String SOUND_ATTACK = "Kraanian Attack.wav";
-  public static final String SOUND_DEATH = "Kraanian Dying.wav";
-  public static final String SOUND_HIT = "Kraanian Hit.wav";
+  public static final String SOUND_ATTACK = "Atrocity Attack.wav";
+  public static final String SOUND_DEATH = "Atrocity Dying.wav";
+  public static final String SOUND_HIT = "Atrocity Hit.wav";
 
   public static final String CANONICAL_NAME = "Kraanian Reaper";
 
@@ -39,9 +39,9 @@ public final class KraanianReaper extends DataMonster {
         "Kraanian#h",
         "KraanianA#h",
         "KraanianC#l",
-        "Kraanian Attack.wav",
-        "Kraanian Dying.wav",
-        "Kraanian Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         122,
         374,
         java.util.List.of(),

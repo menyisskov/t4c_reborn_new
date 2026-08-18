@@ -35,9 +35,9 @@ public final class FiendOfThePale extends DataMonster {
         "Demon#i",
         "DemonA#i",
         "DemonC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         152,
         467,
         java.util.List.of(

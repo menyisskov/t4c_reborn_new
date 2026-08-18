@@ -4,9 +4,9 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
 public final class FoulFiend extends DataMonster {
-  public static final String SOUND_ATTACK = "Demon Attack.wav";
-  public static final String SOUND_DEATH = "Demon Dying.wav";
-  public static final String SOUND_HIT = "Demon Hit.wav";
+  public static final String SOUND_ATTACK = "Beast Attack.wav";
+  public static final String SOUND_DEATH = "Beast Dying.wav";
+  public static final String SOUND_HIT = "Beast Hit.wav";
 
   public static final String CANONICAL_NAME = "Foul Fiend";
 
@@ -35,9 +35,9 @@ public final class FoulFiend extends DataMonster {
         "AtrocityBoss#h",
         "AtrocityBossA#h",
         "AtrocityBossC#k",
-        "Beast Attack.wav",
-        "Beast Dying.wav",
-        "Beast Hit.wav",
+        SOUND_ATTACK,
+        SOUND_DEATH,
+        SOUND_HIT,
         147,
         451,
         java.util.List.of(
