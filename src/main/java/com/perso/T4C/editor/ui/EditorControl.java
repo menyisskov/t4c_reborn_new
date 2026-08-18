@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class EditorControl extends EditorComponent {
-    protected boolean enabled = true;
-    protected boolean hovered;
+  protected boolean enabled = true;
+  protected boolean hovered;
 }

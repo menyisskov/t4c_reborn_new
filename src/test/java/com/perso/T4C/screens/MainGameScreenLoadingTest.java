@@ -1,20 +1,19 @@
 package com.perso.T4C.screens;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class MainGameScreenLoadingTest {
-    @Test
-    void loadingProgressHasStableNonZeroStepCount() {
-        int count = MainGameScreen.loadingStepCount();
+import org.junit.jupiter.api.Test;
 
-        assertTrue(count > 0);
-        for (int completed = 0; completed <= count; completed++) {
-            float progress = completed / (float) count;
-            assertTrue(progress >= 0f && progress <= 1f);
-            assertEquals(completed, Math.round(progress * count));
-        }
+class MainGameScreenLoadingTest {
+  @Test
+  void loadingProgressHasStableNonZeroStepCount() {
+    int count = MainGameScreen.loadingStepCount();
+    assertTrue(count > 0);
+    for (int completed = 0; completed <= count; completed++) {
+      float progress = completed / (float) count;
+      assertTrue(progress >= 0f && progress <= 1f);
+      assertEquals(completed, Math.round(progress * count));
     }
+  }
 }

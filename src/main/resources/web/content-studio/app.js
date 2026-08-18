@@ -66,7 +66,6 @@ const sectionGroups = [
   {
     title: "Entities",
     items: [
-      { id: "npcs", label: "NPC Editor", endpoint: "/api/npcs", key: "displayName", subtitle: "name" },
       { id: "monsters", label: "Monster Editor", endpoint: "/api/monsters", key: "name", subtitle: "displayName" },
       { id: "companions", label: "Companion Editor", endpoint: "/api/companions", key: "id", subtitle: "displayName" },
       { id: "quests", label: "Quest Editor", endpoint: "/api/quests", key: "id", subtitle: "title" },

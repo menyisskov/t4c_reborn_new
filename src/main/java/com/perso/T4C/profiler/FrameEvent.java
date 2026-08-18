@@ -13,22 +13,21 @@ import jdk.jfr.StackTrace;
 @Category("T4C")
 @StackTrace(false)
 public class FrameEvent extends Event {
+  @Label("Frame Index")
+  public long frameIndex;
 
-    @Label("Frame Index")
-    public long frameIndex;
+  @Label("FPS (libGDX)")
+  public int fps;
 
-    @Label("FPS (libGDX)")
-    public int fps;
+  @Label("Tile X")
+  public int tileX;
 
-    @Label("Tile X")
-    public int tileX;
+  @Label("Tile Y")
+  public int tileY;
 
-    @Label("Tile Y")
-    public int tileY;
+  @Label("Z Level")
+  public int z;
 
-    @Label("Z Level")
-    public int z;
-
-    @Label("composedCache size")
-    public int composedCacheSize;
+  @Label("composedCache size")
+  public int composedCacheSize;
 }

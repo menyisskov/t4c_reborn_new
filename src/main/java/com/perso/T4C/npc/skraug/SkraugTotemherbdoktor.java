@@ -1,0 +1,14 @@
+package com.perso.T4C.npc.skraug;
+
+import com.perso.T4C.exception.GameException;
+import com.perso.T4C.npc.registry.NpcContext;
+
+public final class SkraugTotemherbdoktor extends SkraugOwnerBase {
+
+  public static final String ID = "SkraugTotemherbdoktor";
+
+  public SkraugTotemherbdoktor(NpcContext c) throws GameException {
+
+    super(ID, c);
+  }
+}

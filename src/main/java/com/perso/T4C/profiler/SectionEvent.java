@@ -13,10 +13,9 @@ import jdk.jfr.StackTrace;
 @Category("T4C")
 @StackTrace(false)
 public class SectionEvent extends Event {
+  @Label("Section Name")
+  public String section;
 
-    @Label("Section Name")
-    public String section;
-
-    @Label("Frame Index")
-    public long frameIndex;
+  @Label("Frame Index")
+  public long frameIndex;
 }

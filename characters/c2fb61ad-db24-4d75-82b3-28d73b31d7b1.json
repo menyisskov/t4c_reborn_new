@@ -1,8 +1,8 @@
 {
   "name": "Jean Las",
   "gender": "MALE",
-  "x": 2918.5408,
-  "y": 1063.0,
+  "x": 2811.0,
+  "y": 1060.0,
   "z": 0,
   "strength": 15,
   "dexterity": 14,
@@ -16,7 +16,7 @@
   "maxMana": 16,
   "mana": 16,
   "level": 2,
-  "currentXp": 198,
+  "currentXp": 224,
   "xpToNextLevel": 360,
   "statPoints": 5,
   "skillPoints": 15,
@@ -26,12 +26,12 @@
   "activeBuffs": [
     {
       "spellName": "spell.item_torch_radiance",
-      "remainingSeconds": 440,
+      "remainingSeconds": 342,
       "totalDurationSeconds": 600
     },
     {
       "spellName": "spell.level_up",
-      "remainingSeconds": 159,
+      "remainingSeconds": 61,
       "totalDurationSeconds": 300
     }
   ],
@@ -64,19 +64,39 @@
     "archery": 15
   },
   "itemCharges": {
-    "item.potion_of_mana": 3,
     "item.torch": 2,
+    "item.potion_of_mana": 3,
     "item.light_healing_potion": 3
+  },
+  "inventoryDurability": [
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0
+  ],
+  "equipmentDurability": {
+    "WEAPON": 99.39999999999999
   },
   "questFlags": {
     "__NEWBIE_QUEST": 1,
-    "__KNOW_ABOUT_QUEST": 1,
-    "quest.__NEWBIE_QUEST.kills": 4
+    "quest.__NEWBIE_QUEST.kills": 4,
+    "__KNOW_ABOUT_QUEST": 1
   },
   "respawnPointDefined": true,
   "respawnWorldX": 94432.0,
   "respawnWorldY": 16608.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.093158
+  "dayNightHour": 7.0
 }

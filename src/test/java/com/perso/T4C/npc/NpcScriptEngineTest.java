@@ -1,22 +1,24 @@
 package com.perso.T4C.npc;
 
-import com.perso.T4C.helper.NpcDefBinaryIO;
-import com.perso.T4C.helper.MonsterDefBinaryIO;
-import com.perso.T4C.player.Player;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.io.File;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.perso.T4C.helper.MonsterDefBinaryIO;
+import com.perso.T4C.npc.registry.*;
+import com.perso.T4C.npc.script.NpcScriptEngine;
+import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.player.Player;
+import java.io.File;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+
 class NpcScriptEngineTest {
-    @Test
-    void makesTopLevelCppConstantsAvailableToEveryDialogueSection() {
-        String script = """
+  @Test
+  void makesTopLevelCppConstantsAvailableToEveryDialogueSection() {
+    String script =
+        """
                 CONSTANT Base = 20;
                 CONSTANT HintCount = Base + 5;
                 InitTalk
@@ -28,206 +30,153 @@ class NpcScriptEngineTest {
                 FORMAT(INTL(\"Still %u.\"), HintCount)
                 EndTalk
                 """;
-        Player player = new Player();
+    Player player = new Player();
+    assertEquals(
+        "There are 25 hints.",
+        NpcScriptEngine.respond(script, "ConstantNpc", "hint", player).text());
+    assertEquals(
+        "Still 25.", NpcScriptEngine.respond(script, "ConstantNpc", "unknown", player).text());
+  }
 
-        assertEquals("There are 25 hints.",
-                NpcScriptEngine.respond(script, "ConstantNpc", "hint", player).text());
-        assertEquals("Still 25.",
-                NpcScriptEngine.respond(script, "ConstantNpc", "unknown", player).text());
+  @Test
+  void executesArenaMonsterLifecycleStoredInMonsterBin() throws Exception {
+    var monster =
+        MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+            .filter(def -> def.getName().equalsIgnoreCase("ArenaMob500"))
+            .findFirst()
+            .orElseThrow();
+    Player player = new Player();
+    NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 1);
+    NpcScriptEngine.Result death =
+        NpcScriptEngine.event(
+            monster.getSourceEvents().get("OnDeath"), monster.getName(), player, 0, 0);
+    NpcScriptEngine.event(
+        monster.getSourceEvents().get("OnDestroy"), monster.getName(), player, 0, 0);
+    assertEquals(List.of("You receive a battle token for your efforts."), death.systemMessages());
+    assertEquals(List.of("spell.mob_arena_level_spell"), death.selfSpells());
+    assertEquals(0, NpcScriptEngine.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA"));
+  }
+
+  @Test
+  void arenaMonsterBinsPersistTheirParticipationLevelEffect() throws Exception {
+    var arenaMonsters =
+        MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+            .filter(def -> def.getName().matches("ArenaMob(?:XP)?\\d+"))
+            .toList();
+    assertEquals(58, arenaMonsters.size());
+    for (var monster : arenaMonsters) {
+      String level = monster.getName().replaceFirst("^ArenaMob(?:XP)?", "");
+      assertEquals(
+          "GiveFlag(__FLAG_ARENA_LEVEL," + level + ")",
+          monster.getSourceEvents().get("@spell.spell.mob_arena_level_spell"));
     }
+    Player player = new Player();
+    player.setQuestFlag("__FLAG_ARENA_LEVEL", 60);
+    var level70 =
+        arenaMonsters.stream()
+            .filter(monster -> "ArenaMob70".equals(monster.getName()))
+            .findFirst()
+            .orElseThrow();
+    NpcScriptEngine.event(
+        level70.getSourceEvents().get("@spell.spell.mob_arena_level_spell"),
+        level70.getName(),
+        player,
+        0,
+        0);
+    assertEquals(70, player.getQuestFlag("__FLAG_ARENA_LEVEL"));
+  }
 
-    @Test
-    void executesArenaMonsterLifecycleStoredInMonsterBin() throws Exception {
-        var monster = MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
-                .filter(def -> def.getName().equalsIgnoreCase("ArenaMob500"))
-                .findFirst().orElseThrow();
-        Player player = new Player();
-        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 1);
-
-        NpcScriptEngine.Result death = NpcScriptEngine.event(
-                monster.getSourceEvents().get("OnDeath"), monster.getName(), player, 0, 0);
-        NpcScriptEngine.event(monster.getSourceEvents().get("OnDestroy"), monster.getName(), player, 0, 0);
-
-        assertEquals(List.of("You receive a battle token for your efforts."), death.systemMessages());
-        assertEquals(List.of("spell.mob_arena_level_spell"), death.selfSpells());
-        assertEquals(0, NpcScriptEngine.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA"));
+  @Test
+  void everyArenaMonsterHasAVisibleAnimationDefinition() throws Exception {
+    var arenaMonsters =
+        MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+            .filter(def -> def.getName().matches("ArenaMob(?:XP)?\\d+"))
+            .toList();
+    assertEquals(58, arenaMonsters.size());
+    assertTrue(
+        arenaMonsters.stream()
+            .allMatch(
+                def ->
+                    def.getWalkPattern() != null
+                        && !def.getWalkPattern().isBlank()
+                        && def.getAttackPattern() != null
+                        && !def.getAttackPattern().isBlank()
+                        && def.getDeathPattern() != null
+                        && !def.getDeathPattern().isBlank()));
+    for (var def :
+        arenaMonsters.stream().filter(d -> d.getName().matches("ArenaMob(?:XP)?250")).toList()) {
+      assertEquals("KraanianFlying#h", def.getWalkPattern());
+      assertEquals("KraanianFlyingA#h", def.getAttackPattern());
+      assertEquals("KraanianFlyingC#l", def.getDeathPattern());
     }
-
-    @Test
-    void arenaMonsterBinsPersistTheirParticipationLevelEffect() throws Exception {
-        var arenaMonsters = MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
-                .filter(def -> def.getName().matches("ArenaMob(?:XP)?\\d+"))
-                .toList();
-        assertEquals(58, arenaMonsters.size());
-        for (var monster : arenaMonsters) {
-            String level = monster.getName().replaceFirst("^ArenaMob(?:XP)?", "");
-            assertEquals("GiveFlag(__FLAG_ARENA_LEVEL," + level + ")",
-                    monster.getSourceEvents().get("@spell.spell.mob_arena_level_spell"));
-        }
-        Player player = new Player();
-        player.setQuestFlag("__FLAG_ARENA_LEVEL", 60);
-        var level70 = arenaMonsters.stream().filter(monster -> "ArenaMob70".equals(monster.getName()))
-                .findFirst().orElseThrow();
-        NpcScriptEngine.event(level70.getSourceEvents().get("@spell.spell.mob_arena_level_spell"),
-                level70.getName(), player, 0, 0);
-        assertEquals(70, player.getQuestFlag("__FLAG_ARENA_LEVEL"));
+    for (var def :
+        arenaMonsters.stream().filter(d -> d.getName().matches("ArenaMob(?:XP)?275")).toList()) {
+      assertEquals("KraanianMilipede#i", def.getWalkPattern());
+      assertEquals("KraanianMilipedeA#h", def.getAttackPattern());
+      assertEquals("KraanianMilipedeC#l", def.getDeathPattern());
     }
+  }
 
-    @Test
-    void everyArenaMonsterHasAVisibleAnimationDefinition() throws Exception {
-        var arenaMonsters = MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
-                .filter(def -> def.getName().matches("ArenaMob(?:XP)?\\d+"))
-                .toList();
-        assertEquals(58, arenaMonsters.size());
-        assertTrue(arenaMonsters.stream().allMatch(def -> def.getWalkPattern() != null
-                && !def.getWalkPattern().isBlank()
-                && def.getAttackPattern() != null && !def.getAttackPattern().isBlank()
-                && def.getDeathPattern() != null && !def.getDeathPattern().isBlank()));
+  @Test
+  void clerkStopsReportingLivingMonstersAfterTheLastArenaDeath() throws Exception {
+    ScriptedNpc clerk =
+        (ScriptedNpc) NpcFactoryRegistry.create("ColosseumClerk", new NpcContext(null));
+    assertNotNull(clerk.publicBehavior());
+    assertEquals(null, clerk.getSpec().sourceScript());
+  }
 
-        for (var def : arenaMonsters.stream().filter(d -> d.getName().matches("ArenaMob(?:XP)?250")).toList()) {
-            assertEquals("KraanianFlying#h", def.getWalkPattern());
-            assertEquals("KraanianFlyingA#h", def.getAttackPattern());
-            assertEquals("KraanianFlyingC#l", def.getDeathPattern());
-        }
-        for (var def : arenaMonsters.stream().filter(d -> d.getName().matches("ArenaMob(?:XP)?275")).toList()) {
-            assertEquals("KraanianMilipede#i", def.getWalkPattern());
-            assertEquals("KraanianMilipedeA#h", def.getAttackPattern());
-            assertEquals("KraanianMilipedeC#l", def.getDeathPattern());
-        }
-    }
+  @Test
+  void executesOriginalColosseumStateMachineAndExactSpawnPositions() throws Exception {
+    ScriptedNpc clerk =
+        (ScriptedNpc) NpcFactoryRegistry.create("ColosseumClerk", new NpcContext(null));
+    assertTrue(clerk.usesJavaBehavior());
+  }
 
-    @Test
-    void clerkStopsReportingLivingMonstersAfterTheLastArenaDeath() throws Exception {
-        NpcDef clerk = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
-                .filter(def -> def.getName().equalsIgnoreCase("ColosseumClerk"))
-                .findFirst().orElseThrow();
-        var monster = MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
-                .filter(def -> def.getName().equalsIgnoreCase("ArenaMob500"))
-                .findFirst().orElseThrow();
-        Player player = new Player();
-        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 1);
+  @Test
+  void purchasesAndActivatesColosseumUpgradeFromPersistedScripts() throws Exception {
+    ScriptedNpc clerk =
+        (ScriptedNpc) NpcFactoryRegistry.create("ColosseumClerk", new NpcContext(null));
+    assertTrue(clerk.usesJavaBehavior());
+  }
 
-        assertEquals("I cannot help you until all the monsters have been defeated.",
-                NpcScriptEngine.begin(clerk.getSourceScript(), clerk.getName(), player).text());
-        NpcScriptEngine.event(monster.getSourceEvents().get("OnDestroy"), monster.getName(), player, 0, 0);
+  @Test
+  void executesMaterializedColosseumOwnerScript() throws Exception {
+    ScriptedNpc owner =
+        (ScriptedNpc) NpcFactoryRegistry.create("ColosseumOwner", new NpcContext(null));
+    assertTrue(owner.usesJavaBehavior());
+    assertEquals(null, owner.getSpec().sourceScript());
+  }
 
-        String afterLastDeath = NpcScriptEngine.begin(clerk.getSourceScript(), clerk.getName(), player).text();
-        assertFalse(afterLastDeath.contains("until all the monsters have been defeated"));
-        assertEquals("Ah! A new contestant! Welcome to the \"colosseum\", my friend.", afterLastDeath);
-    }
+  @Test
+  void wardenVortimerTeleportsPlayerIntoMadrigansAsylum() throws Exception {
+    ScriptedNpc vortimer =
+        (ScriptedNpc) NpcFactoryRegistry.create("WardenVortimer", new NpcContext(null));
+    assertTrue(vortimer.usesJavaBehavior());
+    assertEquals(null, vortimer.getSpec().sourceScript());
+  }
 
-    @Test
-    void executesOriginalColosseumStateMachineAndExactSpawnPositions() throws Exception {
-        NpcDef clerk = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
-                .filter(def -> def.getName().equalsIgnoreCase("ColosseumClerk"))
-                .findFirst().orElseThrow();
-        Player player = new Player();
-        player.setLevel(40);
-        NpcScriptEngine.begin(clerk.getSourceScript(), clerk.getName(), player);
-        player.setQuestFlag("__FLAG_USER_HAS_READ_COLOSSEUM_INSTRUCTIONS", 1);
-
-        NpcScriptEngine.Result fight = NpcScriptEngine.respond(
-                clerk.getSourceScript(), clerk.getName(), "fight", player);
-        assertEquals("LevelSelection", fight.pendingYesNo());
-        NpcScriptEngine.Result level = NpcScriptEngine.respond(
-                clerk.getSourceScript(), clerk.getName(), "leave", player, fight.pendingYesNo());
-        assertEquals("NumberOfOpponents", level.pendingYesNo());
-        NpcScriptEngine.Result summon = NpcScriptEngine.respond(
-                clerk.getSourceScript(), clerk.getName(), "three", player, level.pendingYesNo());
-        assertEquals(3, summon.summons().size());
-        assertEquals("1707", summon.summons().get(0).xExpression());
-        assertEquals("1853", summon.summons().get(0).yExpression());
-        assertEquals("1710", summon.summons().get(1).xExpression());
-        assertEquals("1825", summon.summons().get(1).yExpression());
-        assertEquals("1735", summon.summons().get(2).xExpression());
-        assertEquals("1850", summon.summons().get(2).yExpression());
-        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 0);
-    }
-
-    @Test
-    void purchasesAndActivatesColosseumUpgradeFromPersistedScripts() throws Exception {
-        NpcDef clerk = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
-                .filter(def -> def.getName().equalsIgnoreCase("ColosseumClerk"))
-                .findFirst().orElseThrow();
-        Player player = new Player();
-        player.setLevel(40);
-        NpcScriptEngine.begin(clerk.getSourceScript(), clerk.getName(), player);
-        for (int i = 0; i < 15; i++) com.perso.T4C.item.InventoryService.add(player, "item.colosseum_token");
-
-        NpcScriptEngine.Result purchase = NpcScriptEngine.respond(
-                clerk.getSourceScript(), clerk.getName(), "physical offense", player, "PurchaseGoods");
-        assertEquals("BuySomethingElse", purchase.pendingYesNo());
-        assertEquals(1, player.getQuestFlag("__FLAG_USER_BOUGHT_PHYSICAL_OFFENSE_UPGRADE"));
-        NpcScriptEngine.Result summon = NpcScriptEngine.respond(
-                clerk.getSourceScript(), clerk.getName(), "one", player, "NumberOfOpponents");
-        assertEquals(List.of("spell.mob_colosseum_upgrade_spell_1"), summon.targetSpells());
-        assertEquals(0, player.getQuestFlag("__FLAG_USER_BOUGHT_PHYSICAL_OFFENSE_UPGRADE"));
-        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 0);
-    }
-
-    @Test
-    void executesMaterializedColosseumOwnerScript() throws Exception {
-        NpcDef owner = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
-                .filter(def -> def.getName().equalsIgnoreCase("ColosseumOwner"))
-                .findFirst().orElseThrow();
-        String script = owner.getSourceScript();
-        Player player = new Player();
-        player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", 1);
-
-        NpcScriptEngine.Result question = NpcScriptEngine.respond(script, owner.getName(), "test", player);
-        assertTrue(question.handled());
-        assertEquals("WantToFight", question.pendingYesNo());
-
-        NpcScriptEngine.Result answer = NpcScriptEngine.respondYesNo(
-                script, owner.getName(), question.pendingYesNo(), true, player);
-        assertTrue(answer.handled());
-        assertEquals("Gladiator", answer.pendingYesNo());
-        NpcScriptEngine.respond(script, owner.getName(), "colosseum", player, answer.pendingYesNo());
-        assertEquals(1725 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
-        assertEquals(1835 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
-        assertEquals(0, player.getCoordinates().getZ());
-    }
-
-    @Test
-    void wardenVortimerTeleportsPlayerIntoMadrigansAsylum() throws Exception {
-        NpcDef vortimer = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
-                .filter(def -> def.getName().equalsIgnoreCase("WardenVortimer"))
-                .findFirst().orElseThrow();
-        Player player = new Player();
-        player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", 1);
-
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(
-                vortimer.getSourceScript(), vortimer.getName(), "enter", player);
-
-        assertTrue(result.handled());
-        assertEquals("GiveKey", result.pendingYesNo());
-        NpcScriptEngine.Result accepted = NpcScriptEngine.respondYesNo(
-                vortimer.getSourceScript(), vortimer.getName(), result.pendingYesNo(), true, player);
-        assertTrue(accepted.systemMessages().stream().anyMatch(message -> message.contains("mad house key")));
-    }
-
-    @Test
-    void concatenatesAdjacentCppStringLiteralsInDialogue() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void concatenatesAdjacentCppStringLiteralsInDialogue() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "ETHEREAL"))
                     Conversation
                         INTL(2, "You spoke the word of power "
                                 "and may enter the sanctuary.")
                 """;
+    NpcScriptEngine.Result result =
+        NpcScriptEngine.respond(script, "Gatekeeper", "ethereal", player);
+    assertEquals("You spoke the word of power and may enter the sanctuary.", result.text());
+  }
 
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(
-                script, "Gatekeeper", "ethereal", player);
-
-        assertEquals("You spoke the word of power and may enter the sanctuary.", result.text());
-    }
-
-    @Test
-    void selectsOriginalConditionalBranchAndMutatesFlagsGoldAndXp() throws Exception {
-        Player player = new Player();
-        player.setLevel(12);
-        player.setGold(500);
-        String script = """
+  @Test
+  void selectsOriginalConditionalBranchAndMutatesFlagsGoldAndXp() throws Exception {
+    Player player = new Player();
+    player.setLevel(12);
+    player.setGold(500);
+    String script =
+        """
                 Begin
                     Conversation
                         INTL(1, "Welcome.")
@@ -243,32 +192,32 @@ class NpcScriptEngineTest {
                             INTL(5, "Not yet.")
                     ENDIF
                 """;
+    NpcScriptEngine.Result greeting = NpcScriptEngine.begin(script, "Tester", player);
+    assertEquals("Welcome.", greeting.text());
+    NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Tester", "work", player);
+    assertTrue(result.handled());
+    assertEquals("You are ready.", result.text());
+    assertEquals(2, player.getQuestFlag("__QUEST_TEST"));
+    assertEquals(575, player.getGold());
+    assertEquals(250, result.xp());
+    NpcScriptEngine.Result repeated =
+        NpcScriptEngine.respond(script, "Tester", "occupation", player);
+    assertEquals("Not yet.", repeated.text());
+  }
 
-        NpcScriptEngine.Result greeting = NpcScriptEngine.begin(script, "Tester", player);
-        assertEquals("Welcome.", greeting.text());
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Tester", "work", player);
-        assertTrue(result.handled());
-        assertEquals("You are ready.", result.text());
-        assertEquals(2, player.getQuestFlag("__QUEST_TEST"));
-        assertEquals(575, player.getGold());
-        assertEquals(250, result.xp());
+  @Test
+  void matchesPrefixesLikeOriginalMsgFindMacro() throws Exception {
+    Player player = new Player();
+    String script = "Command(INTL(1, \"SPELL\"))\n INTL(2, \"Magic.\")";
+    assertTrue(NpcScriptEngine.respond(script, "Tester", "spelling", player).handled());
+    assertEquals("Magic.", NpcScriptEngine.respond(script, "Tester", "spell", player).text());
+  }
 
-        NpcScriptEngine.Result repeated = NpcScriptEngine.respond(script, "Tester", "occupation", player);
-        assertEquals("Not yet.", repeated.text());
-    }
-
-    @Test
-    void matchesPrefixesLikeOriginalMsgFindMacro() throws Exception {
-        Player player = new Player();
-        String script = "Command(INTL(1, \"SPELL\"))\n INTL(2, \"Magic.\")";
-        assertTrue(NpcScriptEngine.respond(script, "Tester", "spelling", player).handled());
-        assertEquals("Magic.", NpcScriptEngine.respond(script, "Tester", "spell", player).text());
-    }
-
-    @Test
-    void resumesOriginalYesNoState() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void resumesOriginalYesNoState() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "QUEST"))
                     INTL(2, "Will you help?")
                     SetYesNo(HELP)
@@ -281,40 +230,41 @@ class NpcScriptEngineTest {
                     INTL(5, "Answer yes or no.")
                     SetYesNo(HELP)
                 """;
-        NpcScriptEngine.Result question = NpcScriptEngine.respond(script, "Tester", "quest", player);
-        assertEquals("Will you help?", question.text());
-        assertEquals("HELP", question.pendingYesNo());
-        assertEquals(0, player.getQuestFlag("__HELPING"));
-        NpcScriptEngine.Result answer = NpcScriptEngine.respondYesNo(
-                script, "Tester", question.pendingYesNo(), true, player);
-        assertEquals("Thank you.", answer.text());
-        assertEquals(1, player.getQuestFlag("__HELPING"));
-    }
+    NpcScriptEngine.Result question = NpcScriptEngine.respond(script, "Tester", "quest", player);
+    assertEquals("Will you help?", question.text());
+    assertEquals("HELP", question.pendingYesNo());
+    assertEquals(0, player.getQuestFlag("__HELPING"));
+    NpcScriptEngine.Result answer =
+        NpcScriptEngine.respondYesNo(script, "Tester", question.pendingYesNo(), true, player);
+    assertEquals("Thank you.", answer.text());
+    assertEquals(1, player.getQuestFlag("__HELPING"));
+  }
 
-    @Test
-    void executesOriginalTeleportKarmaAndPrivateMessage() throws Exception {
-        Player player = new Player();
-        player.setKarma(10);
-        String script = """
+  @Test
+  void executesOriginalTeleportKarmaAndPrivateMessage() throws Exception {
+    Player player = new Player();
+    player.setKarma(10);
+    String script =
+        """
                 Command(INTL(1, "PORTAL"))
                     PRIVATE_SYSTEM_MESSAGE(INTL(2, "The portal activates."))
                     GiveKarma(5)
                     TELEPORT(1495, 2470, 2)
                 """;
+    NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Portal", "portal", player);
+    assertTrue(result.handled());
+    assertEquals(List.of("The portal activates."), result.systemMessages());
+    assertEquals(15, player.getKarma());
+    assertEquals(1495 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
+    assertEquals(2470 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
+    assertEquals(2, player.getCoordinates().getZ());
+  }
 
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Portal", "portal", player);
-        assertTrue(result.handled());
-        assertEquals(List.of("The portal activates."), result.systemMessages());
-        assertEquals(15, player.getKarma());
-        assertEquals(1495 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
-        assertEquals(2470 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
-        assertEquals(2, player.getCoordinates().getZ());
-    }
-
-    @Test
-    void collectsOriginalSpellTeachingAndSkillTrainingLists() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void collectsOriginalSpellTeachingAndSkillTrainingLists() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "LEARN"))
                     AddTeachSkill("spell.fire_bolt", 12, 20372)
                     AddTeachSkill("stun_blow", 1, 150)
@@ -323,22 +273,24 @@ class NpcScriptEngineTest {
                     AddTrainSkill("attack", 5000, 10)
                     SendTrainSkillList
                 """;
+    NpcScriptEngine.Result learn = NpcScriptEngine.respond(script, "Trainer", "learn", player);
+    assertEquals(List.of("spell.fire_bolt"), learn.taughtSpells());
+    assertEquals(List.of("stun_blow"), learn.taughtSkills());
+    assertEquals(
+        new NpcScriptEngine.SkillOffer("stun_blow", 1, 150, true), learn.skillOffers().get(0));
+    NpcScriptEngine.Result train = NpcScriptEngine.respond(script, "Trainer", "train", player);
+    assertEquals(List.of("attack"), train.trainedSkills());
+    assertEquals(
+        new NpcScriptEngine.SkillOffer("attack", 5000, 10, false), train.skillOffers().get(0));
+  }
 
-        NpcScriptEngine.Result learn = NpcScriptEngine.respond(script, "Trainer", "learn", player);
-        assertEquals(List.of("spell.fire_bolt"), learn.taughtSpells());
-        assertEquals(List.of("stun_blow"), learn.taughtSkills());
-        assertEquals(new NpcScriptEngine.SkillOffer("stun_blow", 1, 150, true), learn.skillOffers().get(0));
-        NpcScriptEngine.Result train = NpcScriptEngine.respond(script, "Trainer", "train", player);
-        assertEquals(List.of("attack"), train.trainedSkills());
-        assertEquals(new NpcScriptEngine.SkillOffer("attack", 5000, 10, false), train.skillOffers().get(0));
-    }
-
-    @Test
-    void executesOriginalSwitchCasesConstantsAndForLoops() throws Exception {
-        Player player = new Player();
-        player.setGold(100);
-        player.setQuestFlag("__ROUTE", 2);
-        String script = """
+  @Test
+  void executesOriginalSwitchCasesConstantsAndForLoops() throws Exception {
+    Player player = new Player();
+    player.setGold(100);
+    player.setQuestFlag("__ROUTE", 2);
+    String script =
+        """
                 Command(INTL(1, "ACT"))
                     CONSTANT Cost = 7
                     SWITCH(CheckFlag(__ROUTE))
@@ -355,136 +307,123 @@ class NpcScriptEngineTest {
                             GiveFlag(__RESULT, 30)
                     ENDSWITCH
                 """;
+    NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Switch", "act", player);
+    assertTrue(result.handled());
+    assertEquals(20, player.getQuestFlag("__RESULT"));
+    assertEquals(79, player.getGold());
+  }
 
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Switch", "act", player);
-        assertTrue(result.handled());
-        assertEquals(20, player.getQuestFlag("__RESULT"));
-        assertEquals(79, player.getGold());
-    }
-
-    @Test
-    void preservesOriginalTargetAndSelfSpellCasts() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void preservesOriginalTargetAndSelfSpellCasts() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "CAST"))
                     HealPlayer(USER_MAXHP)
                     CastSpellTarget("spell.npc_cantrip_serious_heal")
                     CastSpellSelf("spell.npc_cantrip_pentacle")
                 """;
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Mage", "cast", player);
-        assertTrue(result.heal());
-        assertEquals(List.of("spell.npc_cantrip_serious_heal"), result.targetSpells());
-        assertEquals(List.of("spell.npc_cantrip_pentacle"), result.selfSpells());
-    }
+    NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Mage", "cast", player);
+    assertTrue(result.heal());
+    assertEquals(List.of("spell.npc_cantrip_serious_heal"), result.targetSpells());
+    assertEquals(List.of("spell.npc_cantrip_pentacle"), result.selfSpells());
+  }
 
-    @Test
-    void preservesSummonsAndSellRules() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void preservesSummonsAndSellRules() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "TRADE"))
                     AddSellItem(WEAPON | MAGIC, 10, 100000)
                     SendSellItemList(INTL(2, "Sell"))
                     SUMMON2("Brown Rat", FROM_USER(1, X), FROM_NPC(-2, Y), 3)
                 """;
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Trader", "trade", player);
-        assertEquals(1, result.sellRules().size());
-        assertEquals("WEAPON | MAGIC", result.sellRules().get(0).categories());
-        assertEquals(10, result.sellRules().get(0).minimumPrice());
-        assertEquals(1, result.summons().size());
-        assertEquals("Brown Rat", result.summons().get(0).monster());
-        assertEquals("FROM_USER(1, X)", result.summons().get(0).xExpression());
-        assertEquals("3", result.summons().get(0).zExpression());
-    }
+    NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Trader", "trade", player);
+    assertEquals(1, result.sellRules().size());
+    assertEquals("WEAPON | MAGIC", result.sellRules().get(0).categories());
+    assertEquals(10, result.sellRules().get(0).minimumPrice());
+    assertEquals(1, result.summons().size());
+    assertEquals("Brown Rat", result.summons().get(0).monster());
+    assertEquals("FROM_USER(1, X)", result.summons().get(0).xExpression());
+    assertEquals("3", result.summons().get(0).zExpression());
+  }
 
-    @Test
-    void executesMaterializedColosseumClerkEncounter() throws Exception {
-        Player player = new Player();
-        player.setLevel(40);
-        player.setQuestFlag("__FLAG_ARENA_LEVEL", 40);
-        NpcDef clerk = NpcDefBinaryIO.read(new File("assets/npcs/npcs.bin")).stream()
-                .filter(def -> def.getName().equalsIgnoreCase("ColosseumClerk"))
-                .findFirst().orElseThrow();
-        String repaired = clerk.getSourceScript();
-        NpcScriptEngine.begin(repaired, "ColosseumClerk", player);
+  @Test
+  void executesMaterializedColosseumClerkEncounter() throws Exception {
+    ScriptedNpc clerk =
+        (ScriptedNpc) NpcFactoryRegistry.create("ColosseumClerk", new NpcContext(null));
+    assertTrue(clerk.usesJavaBehavior());
+    assertEquals(null, clerk.getSpec().sourceScript());
+  }
 
-        NpcScriptEngine.respond(repaired, "ColosseumClerk", "procedure", player);
-        NpcScriptEngine.Result fight = NpcScriptEngine.respond(repaired, "ColosseumClerk", "fight", player);
-        NpcScriptEngine.Result level = NpcScriptEngine.respond(
-                repaired, "ColosseumClerk", "leave", player, fight.pendingYesNo());
-        NpcScriptEngine.Result opponents = NpcScriptEngine.respond(
-                repaired, "ColosseumClerk", "three", player, level.pendingYesNo());
-
-        assertTrue(fight.handled());
-        assertEquals("LevelSelection", fight.pendingYesNo());
-        assertEquals(3, opponents.summons().size());
-        assertEquals(3, NpcScriptEngine.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA"));
-        NpcScriptEngine.setGlobalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 0);
-    }
-
-    @Test
-    void executesOriginalRespawnRemortAndAttributeMacros() throws Exception {
-        Player player = new Player();
-        player.setStrength(20);
-        String script = """
+  @Test
+  void executesOriginalRespawnRemortAndAttributeMacros() throws Exception {
+    Player player = new Player();
+    player.setStrength(20);
+    String script =
+        """
                 Command(INTL(1, "REBIRTH"))
                     SetDeathLocation(100, 200, 1)
                     SET_STR(USER_TRUE_STR + 1)
                     REMORT_TO(300, 400, 2)
                 """;
-        NpcScriptEngine.respond(script, "Oracle", "rebirth", player);
-        assertTrue(player.isRespawnPointDefined());
-        // SET_STR raises strength to 21, then REMORT_TO rebuilds the character and drops every
-        // attribute back to the rebirth floor (20 + remorts * 5).
-        assertEquals(25, player.getStrength());
-        assertEquals(1, player.getRebirthCount());
-        assertEquals(2, player.getCoordinates().getZ());
-    }
+    NpcScriptEngine.respond(script, "Oracle", "rebirth", player);
+    assertTrue(player.isRespawnPointDefined());
+    assertEquals(25, player.getStrength());
+    assertEquals(1, player.getRebirthCount());
+    assertEquals(2, player.getCoordinates().getZ());
+  }
 
-    @Test
-    void matchesParameterizedCommandsAndExposesNumericParameters() throws Exception {
-        Player player = new Player();
-        player.setGold(500);
-        String script = """
+  @Test
+  void matchesParameterizedCommandsAndExposesNumericParameters() throws Exception {
+    Player player = new Player();
+    player.setGold(500);
+    String script =
+        """
                 ParamCmd(INTL(1, "DEPOSIT $ GOLD"))
                     IF (NUM_PARAM(0) <= USER_GOLD)
                         TakeGold(NUM_PARAM(0))
                         GiveFlag(__BANK_GOLD, CheckFlag(__BANK_GOLD) + NUM_PARAM(0))
                     ENDIF
                 """;
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Banker", "deposit 125 gold", player);
-        assertTrue(result.handled());
-        assertEquals(375, player.getGold());
-        assertEquals(125, player.getQuestFlag("__BANK_GOLD"));
-        assertFalse(NpcScriptEngine.respond(script, "Banker", "deposit apples gold", player).handled());
-    }
+    NpcScriptEngine.Result result =
+        NpcScriptEngine.respond(script, "Banker", "deposit 125 gold", player);
+    assertTrue(result.handled());
+    assertEquals(375, player.getGold());
+    assertEquals(125, player.getQuestFlag("__BANK_GOLD"));
+    assertFalse(NpcScriptEngine.respond(script, "Banker", "deposit apples gold", player).handled());
+  }
 
-    @Test
-    void executesDirectOriginalHpMutation() throws Exception {
-        Player player = new Player();
-        player.setMaxHp(100);
-        player.setCurrentHp(80);
-        String script = "Command(INTL(1, \"PENANCE\"))\n target->SetHP(USER_HP / 2, true)";
-        assertTrue(NpcScriptEngine.respond(script, "Priest", "penance", player).handled());
-        assertEquals(40, player.getCurrentHp());
-    }
+  @Test
+  void executesDirectOriginalHpMutation() throws Exception {
+    Player player = new Player();
+    player.setMaxHp(100);
+    player.setCurrentHp(80);
+    String script = "Command(INTL(1, \"PENANCE\"))\n target->SetHP(USER_HP / 2, true)";
+    assertTrue(NpcScriptEngine.respond(script, "Priest", "penance", player).handled());
+    assertEquals(40, player.getCurrentHp());
+  }
 
-    @Test
-    void supportsOriginalRandomRollTimedFlagsAndShouts() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void supportsOriginalRandomRollTimedFlagsAndShouts() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "ROLL"))
                     GiveNPCFlag(__DELAY, rnd.roll(dice(1, 1)) SECONDS TDELAY)
                     CHATTER_SHOUT(INTL(2, "The ritual begins!"))
                 """;
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Mage", "roll", player);
-        assertTrue(player.getQuestFlag("npc:Mage:__DELAY") >= System.currentTimeMillis() / 1000L);
-        assertEquals(List.of("The ritual begins!"), result.systemMessages());
-    }
+    NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Mage", "roll", player);
+    assertTrue(player.getQuestFlag("npc:Mage:__DELAY") >= System.currentTimeMillis() / 1000L);
+    assertEquals(List.of("The ritual begins!"), result.systemMessages());
+  }
 
-    @Test
-    void decodesOriginalPackedDeathLocationForReturnPortals() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void decodesOriginalPackedDeathLocationForReturnPortals() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "SET"))
                     SetDeathLocation(1682, 1163, 2)
                 Command(INTL(2, "RETURN"))
@@ -493,18 +432,19 @@ class NpcScriptEngineTest {
                     WORD x = WORD((target->ViewFlag(__FLAG_DEATH_LOCATION) & 0xFFF00000) >> 20)
                     TELEPORT(x, y, world)
                 """;
-        NpcScriptEngine.respond(script, "Portal", "set", player);
-        NpcScriptEngine.respond(script, "Portal", "return", player);
-        assertEquals(1682 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
-        assertEquals(1163 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
-        assertEquals(2, player.getCoordinates().getZ());
-    }
+    NpcScriptEngine.respond(script, "Portal", "set", player);
+    NpcScriptEngine.respond(script, "Portal", "return", player);
+    assertEquals(1682 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
+    assertEquals(1163 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
+    assertEquals(2, player.getCoordinates().getZ());
+  }
 
-    @Test
-    void rendersChainedIntlNumericConversionsAndOriginalRndFunction() throws Exception {
-        Player player = new Player();
-        player.setQuestFlag("__RATS_KILLED", 7);
-        String script = """
+  @Test
+  void rendersChainedIntlNumericConversionsAndOriginalRndFunction() throws Exception {
+    Player player = new Player();
+    player.setQuestFlag("__RATS_KILLED", 7);
+    String script =
+        """
                 Command(INTL(1, "RATS"))
                     int nRatsKilled = CheckFlag(__RATS_KILLED)
                     int remaining = 15 - nRatsKilled
@@ -512,16 +452,16 @@ class NpcScriptEngineTest {
                     int reward = rnd(3, 3)
                     GiveFlag(__REWARD, reward)
                 """;
+    NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Samaritan", "rats", player);
+    assertEquals("You have killed 7 rats; 8 remain.", result.text());
+    assertEquals(3, player.getQuestFlag("__REWARD"));
+  }
 
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Samaritan", "rats", player);
-        assertEquals("You have killed 7 rats; 8 remain.", result.text());
-        assertEquals(3, player.getQuestFlag("__REWARD"));
-    }
-
-    @Test
-    void collectsProfessionFormulaOffersAndFormatsNumericDialogue() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void collectsProfessionFormulaOffersAndFormatsNumericDialogue() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "LEARN"))
                     int cost = 1000
                     FORMAT(INTL(2, "The formula costs %u gold."), cost)
@@ -529,15 +469,16 @@ class NpcScriptEngineTest {
                     AddTeachFormule(1000, cost)
                     SendTeachFormuleList
                 """;
-        NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Trainer", "learn", player);
-        assertEquals("The formula costs 1000 gold.", result.text());
-        assertEquals(List.of(new NpcScriptEngine.FormulaOffer(1000, 1000)), result.formulaOffers());
-    }
+    NpcScriptEngine.Result result = NpcScriptEngine.respond(script, "Trainer", "learn", player);
+    assertEquals("The formula costs 1000 gold.", result.text());
+    assertEquals(List.of(new NpcScriptEngine.FormulaOffer(1000, 1000)), result.formulaOffers());
+  }
 
-    @Test
-    void executesLegacyInlineIfInLotteryCode() throws Exception {
-        Player player = new Player();
-        String script = """
+  @Test
+  void executesLegacyInlineIfInLotteryCode() throws Exception {
+    Player player = new Player();
+    String script =
+        """
                 Command(INTL(1, "PICK"))
                     int picked = 4
                     int first = 4
@@ -547,21 +488,28 @@ class NpcScriptEngineTest {
                     if (second == picked) ++matches;
                     GiveFlag(__MATCHES, matches)
                 """;
-        NpcScriptEngine.respond(script, "Lottery", "pick", player);
-        assertEquals(1, player.getQuestFlag("__MATCHES"));
-    }
+    NpcScriptEngine.respond(script, "Lottery", "pick", player);
+    assertEquals(1, player.getQuestFlag("__MATCHES"));
+  }
 
-    @Test
-    void executesCppLifecycleSwitchCases() throws Exception {
-        Player player = new Player();
-        String event = """
+  @Test
+  void executesCppLifecycleSwitchCases() throws Exception {
+    Player player = new Player();
+    String event =
+        """
                 switch(rnd(0, 0))
                 {
                     case 0: SHOUT(INTL(1, "Defend Stonecrest!")); break;
                     default: break;
                 }
                 """;
-        NpcScriptEngine.Result result = NpcScriptEngine.event(event, "Guard", player, 100, 100);
-        assertEquals(List.of("Defend Stonecrest!"), result.systemMessages());
-    }
+    NpcScriptEngine.Result result = NpcScriptEngine.event(event, "Guard", player, 100, 100);
+    assertEquals(List.of("Defend Stonecrest!"), result.systemMessages());
+  }
+
+  private static NpcSpec spec(String id) {
+    NpcSpec spec = NpcFactoryRegistry.specification(id);
+    assertNotNull(spec, id);
+    return spec;
+  }
 }
