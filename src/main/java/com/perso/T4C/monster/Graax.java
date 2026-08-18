@@ -2,7 +2,9 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Graax", x = 315, y = 464, z = 2, stationary = false, aggressive = true)
 public final class Graax extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

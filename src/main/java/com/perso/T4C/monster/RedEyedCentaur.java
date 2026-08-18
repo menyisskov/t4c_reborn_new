@@ -3,7 +3,12 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "MOBREDEYEDCENTAUR", x = 1089, y = 1014, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBREDEYEDCENTAUR", x = 926, y = 1082, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBREDEYEDCENTAUR", x = 971, y = 968, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBREDEYEDCENTAUR", x = 973, y = 962, z = 0, stationary = false, aggressive = true)
 public final class RedEyedCentaur extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
   public static final String SOUND_DEATH = "Centaur Dying.wav";

@@ -32,7 +32,7 @@ public final class DarkCleric extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBDARKCLERIC",
+        "MOBDARKCLERIC",
         "${monster.mobdarkcleric}",
         100,
         0,

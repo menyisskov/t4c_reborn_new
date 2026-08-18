@@ -24,7 +24,7 @@ public final class NightRetriever extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBNIGHTRETRIEVER",
+        "MOBNIGHTRETRIEVER",
         "${monster.mobnightretriever}",
         100,
         0,

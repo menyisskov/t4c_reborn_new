@@ -11,8 +11,10 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+@Spawn(type = "DaranAtrocity", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
 public final class DaranAtrocity extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

@@ -2,7 +2,14 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Kraanian Stomper", x = 2047, y = 2235, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Stomper", x = 2056, y = 2254, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Stomper", x = 2099, y = 2221, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Stomper", x = 2111, y = 2211, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Stomper", x = 2122, y = 2191, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Stomper", x = 2132, y = 2201, z = 1, stationary = false, aggressive = true)
 public final class KraanianStomper extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";

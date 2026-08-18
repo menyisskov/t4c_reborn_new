@@ -2,11 +2,8 @@ package com.perso.T4C.helper;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import com.perso.T4C.config.Paths;
 import com.perso.T4C.player.BodyPart;
-import java.io.File;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +12,6 @@ import org.junit.jupiter.api.Test;
 class ConcealmentResolverTest {
   @BeforeEach
   void reloadCatalog() {
-    assumeTrue(new File(Paths.APPEARANCE_DEFAULTS_BIN).exists());
     AppearanceDefaultsCatalog.invalidate();
   }
 

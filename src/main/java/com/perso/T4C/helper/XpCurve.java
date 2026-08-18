@@ -1,8 +1,7 @@
 package com.perso.T4C.helper;
 
-import com.perso.T4C.config.Paths;
+import com.perso.T4C.mapping.definition.XpCurveDefinitions;
 import com.perso.T4C.player.Player;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,11 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class XpCurve {
-  private static final Logger log = LoggerFactory.getLogger(XpCurve.class);
   private final Map<Integer, Entry> byLevel;
 
   private XpCurve(Map<Integer, Entry> byLevel) {
@@ -23,39 +19,15 @@ public final class XpCurve {
   }
 
   public static XpCurve loadDefault() {
-    return load(Paths.XP_CURVE_BIN);
+    return fromEntries(XpCurveDefinitions.all());
   }
 
   public static XpCurve load(String path) {
-    File file = resolve(path);
-    try {
-      if (!file.exists()) {
-        log.warn("XP curve file not found: {}", path);
-        return new XpCurve(Collections.emptyMap());
-      }
-      Map<Integer, Entry> map = new HashMap<>();
-      for (Entry entry : XpCurveBinaryIO.read(file)) {
-        if (entry == null || entry.level <= 0) {
-          continue;
-        }
-        map.put(entry.level, entry);
-      }
-      return new XpCurve(map);
-    } catch (Exception e) {
-      log.warn("Failed to load XP curve: {}", path, e);
-    }
-    return new XpCurve(Collections.emptyMap());
+    return fromEntries(XpCurveDefinitions.all());
   }
 
   public static void save(List<Entry> entries) throws IOException {
-    List<Entry> sorted =
-        entries == null
-            ? List.of()
-            : entries.stream()
-                .filter(entry -> entry != null && entry.level > 0)
-                .sorted(Comparator.comparingInt(Entry::getLevel))
-                .toList();
-    XpCurveBinaryIO.write(resolve(Paths.XP_CURVE_BIN), sorted);
+    throw new UnsupportedOperationException("XP curve definitions are Java source");
   }
 
   public List<Entry> entries() {
@@ -89,12 +61,10 @@ public final class XpCurve {
     }
   }
 
-  private static File resolve(String path) {
-    File file = new File(path);
-    if (!file.isAbsolute()) {
-      file = new File(System.getProperty("user.dir"), path);
-    }
-    return file;
+  private static XpCurve fromEntries(List<Entry> entries) {
+    Map<Integer, Entry> map = new HashMap<>();
+    for (Entry entry : entries) if (entry != null && entry.level > 0) map.put(entry.level, entry);
+    return new XpCurve(map);
   }
 
   @Getter

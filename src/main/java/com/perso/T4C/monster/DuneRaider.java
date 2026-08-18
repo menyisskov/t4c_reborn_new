@@ -2,7 +2,26 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Dune Raider", x = 146, y = 2532, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 165, y = 2570, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 177, y = 2448, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 199, y = 2410, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 199, y = 2411, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 199, y = 2428, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 233, y = 2406, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 249, y = 2605, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 274, y = 2516, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 275, y = 2462, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 282, y = 2517, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 354, y = 2667, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 363, y = 2537, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 402, y = 2542, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 434, y = 2461, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 480, y = 2427, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 511, y = 2413, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dune Raider", x = 529, y = 2426, z = 0, stationary = false, aggressive = true)
 public final class DuneRaider extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

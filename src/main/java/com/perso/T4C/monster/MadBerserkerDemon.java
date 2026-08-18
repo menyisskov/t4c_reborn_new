@@ -32,7 +32,7 @@ public final class MadBerserkerDemon extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBMADBERSERKERDEMON",
+        "MOBMADBERSERKERDEMON",
         "${monster.mobmadberserkerdemon}",
         100,
         0,

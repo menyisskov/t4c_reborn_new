@@ -2,7 +2,42 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Dark Custodian", x = 2663, y = 1957, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2664, y = 1989, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2668, y = 2020, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2680, y = 1929, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2682, y = 2065, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2699, y = 1963, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2699, y = 2020, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2712, y = 1952, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2720, y = 2051, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2722, y = 1907, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2737, y = 2097, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2752, y = 2076, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2758, y = 1919, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2771, y = 2099, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2798, y = 2069, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2811, y = 1946, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2822, y = 1909, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2822, y = 2099, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2830, y = 1938, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2848, y = 2029, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2849, y = 2014, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2849, y = 2060, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2851, y = 2022, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2857, y = 2029, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2859, y = 1954, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2859, y = 1997, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2859, y = 2003, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2870, y = 2028, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2871, y = 2011, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2874, y = 2081, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2876, y = 2017, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2889, y = 1948, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2895, y = 2067, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Dark Custodian", x = 2900, y = 1998, z = 0, stationary = false, aggressive = true)
 public final class DarkCustodian extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

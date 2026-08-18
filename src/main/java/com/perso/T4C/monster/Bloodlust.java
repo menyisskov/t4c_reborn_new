@@ -38,7 +38,7 @@ public final class Bloodlust extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "BLOODLUST",
+        "BLOODLUST",
         "${monster.bloodlust}",
         100,
         0,

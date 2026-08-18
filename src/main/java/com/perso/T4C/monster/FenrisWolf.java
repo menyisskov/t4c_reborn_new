@@ -2,7 +2,11 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Fenris Wolf", x = 570, y = 1079, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Fenris Wolf", x = 811, y = 536, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Fenris Wolf", x = 826, y = 864, z = 0, stationary = false, aggressive = true)
 public final class FenrisWolf extends DataMonster {
   public static final String SOUND_ATTACK = "Wolf Attack.wav";
   public static final String SOUND_DEATH = "Wolf Dying.wav";

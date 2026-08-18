@@ -8,8 +8,10 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+@Spawn(type = "Brother2", x = 465, y = 2460, z = 1, stationary = false, aggressive = false)
 public final class Brother2 extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Mummy Attack.wav";
   public static final String SOUND_DEATH = "Zombie Dying.wav";

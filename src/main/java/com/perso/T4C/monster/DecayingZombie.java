@@ -2,7 +2,35 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Decaying Zombie", x = 102, y = 603, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 131, y = 672, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 35, y = 447, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 38, y = 468, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 416, y = 235, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 428, y = 248, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 486, y = 290, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 49, y = 631, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 509, y = 264, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 527, y = 294, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 528, y = 267, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 534, y = 258, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 535, y = 238, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 548, y = 230, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 61, y = 644, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 64, y = 645, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 65, y = 645, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 67, y = 611, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 68, y = 611, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 69, y = 606, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 72, y = 600, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 78, y = 640, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 81, y = 650, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 82, y = 650, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 85, y = 606, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 88, y = 627, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Decaying Zombie", x = 97, y = 645, z = 1, stationary = false, aggressive = true)
 public final class DecayingZombie extends DataMonster {
   public static final String SOUND_ATTACK = "Mummy Attack.wav";
   public static final String SOUND_DEATH = "Zombie Dying.wav";

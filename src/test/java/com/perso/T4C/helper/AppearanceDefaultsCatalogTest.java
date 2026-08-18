@@ -5,18 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import com.perso.T4C.config.Paths;
 import com.perso.T4C.npc.core.*;
 import com.perso.T4C.player.BodyPart;
-import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class AppearanceDefaultsCatalogTest {
   private static void assumeAssetPresent() {
-    assumeTrue(
-        new File(Paths.APPEARANCE_DEFAULTS_BIN).exists(), "appearance defaults asset missing");
+    assumeTrue(true, "java appearance defaults catalog");
   }
 
   @Test

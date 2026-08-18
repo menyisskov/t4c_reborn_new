@@ -2,7 +2,14 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "MOONTUGGUARD2", x = 2554, y = 286, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "MOONTUGGUARD2", x = 2578, y = 293, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "MOONTUGGUARD2", x = 2580, y = 261, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "MOONTUGGUARD2", x = 2589, y = 314, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "MOONTUGGUARD2", x = 2590, y = 283, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "MOONTUGGUARD2", x = 2612, y = 290, z = 2, stationary = false, aggressive = false)
 public final class MOONTUGGUARD2 extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

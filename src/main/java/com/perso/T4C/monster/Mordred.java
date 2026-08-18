@@ -16,7 +16,7 @@ public final class Mordred extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBMORDRED",
+        "MOBMORDRED",
         "${monster.mobmordred}",
         100,
         0,

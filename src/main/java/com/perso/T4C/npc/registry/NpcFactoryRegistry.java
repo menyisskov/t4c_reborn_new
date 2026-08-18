@@ -1,10 +1,12 @@
 package com.perso.T4C.npc.registry;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.npc.arakas.LighthavenSamaritan;
 import com.perso.T4C.npc.core.*;
 import com.perso.T4C.npc.generated.GeneratedNpcIndex;
 import com.perso.T4C.npc.script.*;
+import java.io.File;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -17,13 +19,6 @@ public final class NpcFactoryRegistry {
 
   static {
     GeneratedNpcIndex.registrations().forEach(NpcFactoryRegistry::register);
-
-    register(
-        new Registration(
-            LighthavenSamaritan.ID,
-            LighthavenSamaritan.DISPLAY_NAME,
-            LighthavenSamaritan.SPRITE_BASE,
-            LighthavenSamaritan::new));
   }
 
   private NpcFactoryRegistry() {}
@@ -61,7 +56,7 @@ public final class NpcFactoryRegistry {
 
   private static void register(Registration registration) {
 
-    if (registration.specification() == null && !LighthavenSamaritan.ID.equals(registration.id())) {
+    if (registration.specification() == null) {
 
       try {
 
@@ -88,6 +83,51 @@ public final class NpcFactoryRegistry {
     if (BY_ID.putIfAbsent(key, registration) != null) {
 
       throw new IllegalStateException("Duplicate NPC id: " + registration.id());
+    }
+  }
+
+  private static void registerReflectiveNpcs() {
+    try {
+      Enumeration<URL> resources =
+          NpcFactoryRegistry.class.getClassLoader().getResources("com/perso/T4C/npc/arakas");
+      while (resources.hasMoreElements()) {
+        URL resource = resources.nextElement();
+        if (!"file".equals(resource.getProtocol())) continue;
+        File directory = new File(resource.toURI());
+        File[] files =
+            directory.listFiles((dir, name) -> name.endsWith(".class") && !name.contains("$"));
+        if (files == null) continue;
+        for (File file : files)
+          registerReflectiveNpc("com.perso.T4C.npc.arakas." + file.getName().replace(".class", ""));
+      }
+    } catch (Exception e) {
+      throw new ExceptionInInitializerError(e);
+    }
+  }
+
+  private static void registerReflectiveNpc(String className) {
+    try {
+      Class<?> type = Class.forName(className, true, NpcFactoryRegistry.class.getClassLoader());
+      var id = type.getField("ID").get(null);
+      var displayName = type.getField("DISPLAY_NAME").get(null);
+      var spriteBase = type.getField("SPRITE_BASE").get(null);
+      var constructor = type.getConstructor(NpcContext.class);
+      if (BY_ID.containsKey(normalize((String) id))) return;
+      register(
+          new Registration(
+              (String) id,
+              (String) displayName,
+              (String) spriteBase,
+              context -> {
+                try {
+                  return (BaseNPC) constructor.newInstance(context);
+                } catch (ReflectiveOperationException e) {
+                  throw new GameException("Unable to create NPC: " + className, e);
+                }
+              }));
+    } catch (NoSuchFieldException | NoSuchMethodException ignored) {
+    } catch (ReflectiveOperationException e) {
+      throw new IllegalStateException("Invalid NPC class: " + className, e);
     }
   }
 

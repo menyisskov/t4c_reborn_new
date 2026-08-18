@@ -25,8 +25,7 @@ class PlayerProgressionTest {
     player.setXpToNextLevel(100);
     java.util.List<Integer> levels = new java.util.ArrayList<>();
     player.setLevelUpCallback(levels::add);
-    new PlayerProgression(new Random(7))
-        .addXp(player, 100_000, XpCurve.load("assets/mappings/progression/xp_curve.bin"), false);
+    new PlayerProgression(new Random(7)).addXp(player, 100_000, XpCurve.load("java"), false);
     assertTrue(levels.size() >= 2, "each level gained must fire the callback");
     assertEquals(player.getLevel(), levels.get(levels.size() - 1));
     assertEquals(java.util.List.of(2, 3), levels.subList(0, 2));
@@ -44,8 +43,7 @@ class PlayerProgressionTest {
     player.setCurrentHp(60);
     player.setMaxMana(100);
     player.setMana(40);
-    new PlayerProgression(new Random(7))
-        .addXp(player, 100, XpCurve.load("assets/mappings/progression/xp_curve.bin"), false);
+    new PlayerProgression(new Random(7)).addXp(player, 100, XpCurve.load("java"), false);
     int hpGain = player.getMaxHp() - 100;
     int manaGain = player.getMaxMana() - 100;
     assertTrue(hpGain >= 11 && hpGain <= 13);
@@ -67,8 +65,7 @@ class PlayerProgressionTest {
     player.setCurrentHp(100);
     player.setMaxMana(100);
     player.setMana(100);
-    new PlayerProgression(new Random(7))
-        .addXp(player, 100, XpCurve.load("assets/mappings/progression/xp_curve.bin"), false);
+    new PlayerProgression(new Random(7)).addXp(player, 100, XpCurve.load("java"), false);
     assertEquals(player.getMaxHp(), player.getCurrentHp());
     assertEquals(player.getMaxMana(), player.getMana());
     assertTrue(player.getMaxHp() > 100);

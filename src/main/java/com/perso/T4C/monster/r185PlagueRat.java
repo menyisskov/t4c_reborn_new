@@ -2,7 +2,15 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Plague Rat", x = 1551, y = 179, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Plague Rat", x = 1560, y = 199, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Plague Rat", x = 1569, y = 201, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Plague Rat", x = 1581, y = 187, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Plague Rat", x = 441, y = 219, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Plague Rat", x = 442, y = 194, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Plague Rat", x = 443, y = 210, z = 1, stationary = false, aggressive = true)
 public final class r185PlagueRat extends DataMonster {
   public static final String SOUND_ATTACK = "Rat Attack.wav";
   public static final String SOUND_DEATH = "Rat Dying.wav";

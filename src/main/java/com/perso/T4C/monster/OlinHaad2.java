@@ -16,7 +16,7 @@ public final class OlinHaad2 extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "OLINHAAD2",
+        "OLINHAAD2",
         "${monster.olinhaad2}",
         100,
         0,

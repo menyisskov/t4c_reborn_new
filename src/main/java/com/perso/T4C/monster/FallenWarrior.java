@@ -2,7 +2,20 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Fallen Warrior", x = 810, y = 1495, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 810, y = 1500, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 824, y = 1541, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 834, y = 1550, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 837, y = 1558, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 841, y = 1544, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 851, y = 1517, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 853, y = 1546, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 857, y = 1529, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 860, y = 1545, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 862, y = 1523, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Fallen Warrior", x = 871, y = 1525, z = 1, stationary = false, aggressive = true)
 public final class FallenWarrior extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

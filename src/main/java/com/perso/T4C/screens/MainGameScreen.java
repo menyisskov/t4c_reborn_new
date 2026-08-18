@@ -57,7 +57,6 @@ import com.perso.T4C.helper.MusicZoneBinaryIO;
 import com.perso.T4C.helper.PlayerAppearanceDefaults;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
-import com.perso.T4C.helper.TeleportBinaryIO;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.input.*;
@@ -497,26 +496,22 @@ public class MainGameScreen implements Screen {
 
   private void loadTeleports() {
     teleports.clear();
-    File file = new File(Paths.TELEPORTS_BIN);
-    if (!file.exists()) {
-      log.warn("Teleport binary file not found: {}", file.getPath());
-      return;
-    }
     try {
-      for (TeleportBinaryIO.Entry entry : TeleportBinaryIO.read(file)) {
+      for (com.perso.T4C.teleport.TeleportDefinition entry :
+          com.perso.T4C.teleport.TeleportRegistry.load()) {
         TeleportEntry teleport = new TeleportEntry();
-        teleport.id = entry.id;
-        teleport.sourceZ = entry.sourceZ;
-        teleport.sourceX = entry.sourceX;
-        teleport.sourceY = entry.sourceY;
-        teleport.targetZ = entry.targetZ;
-        teleport.targetX = entry.targetX;
-        teleport.targetY = entry.targetY;
+        teleport.id = entry.id();
+        teleport.sourceZ = entry.sourceZ();
+        teleport.sourceX = entry.sourceX();
+        teleport.sourceY = entry.sourceY();
+        teleport.targetZ = entry.targetZ();
+        teleport.targetX = entry.targetX();
+        teleport.targetY = entry.targetY();
         teleports.add(teleport);
       }
-      log.info("Loaded {} teleport(s) from {}", teleports.size(), file.getPath());
+      log.info("Loaded {} teleport(s) from Java definitions", teleports.size());
     } catch (Exception e) {
-      log.warn("Failed to load teleports from {}", file.getPath(), e);
+      log.warn("Failed to load teleports from Java definitions", e);
     }
   }
 
@@ -981,8 +976,6 @@ public class MainGameScreen implements Screen {
             String legacySound = spellId == 10086 ? "Small Projectile.wav" : null;
             String launchSound = spell == null ? null : spell.getSound();
             if (launchSound == null || launchSound.isBlank()) {
-              // Legacy monster-only spells are not always present in the
-              // player spell catalogue, but still have a cast sound.
               launchSound = legacySound != null ? legacySound : "Small Projectile.wav";
             }
             spellRenderer.playLaunchSound(launchSound);

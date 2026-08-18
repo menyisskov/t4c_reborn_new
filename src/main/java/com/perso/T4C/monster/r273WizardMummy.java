@@ -2,7 +2,34 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Wizard Mummy", x = 1211, y = 2371, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 1232, y = 2337, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 1245, y = 2273, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 1274, y = 2211, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 1275, y = 2172, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 1301, y = 2236, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 1312, y = 2292, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 394, y = 208, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 400, y = 197, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 428, y = 183, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 446, y = 250, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 447, y = 166, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 448, y = 226, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 456, y = 180, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 464, y = 266, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 475, y = 283, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 485, y = 191, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 493, y = 314, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 518, y = 299, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 704, y = 2584, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 704, y = 2615, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 712, y = 2596, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 797, y = 2617, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 867, y = 2570, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 874, y = 2543, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Wizard Mummy", x = 892, y = 2566, z = 2, stationary = false, aggressive = true)
 public final class r273WizardMummy extends DataMonster {
   public static final String SOUND_ATTACK = "Mummy Attack.wav";
   public static final String SOUND_DEATH = "Mummy Dying.wav";

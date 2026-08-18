@@ -2,7 +2,16 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "MOBMERCENARYB", x = 2728, y = 977, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYB", x = 2733, y = 972, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYB", x = 2736, y = 957, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYB", x = 2738, y = 963, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYB", x = 2740, y = 970, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYB", x = 2742, y = 974, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYB", x = 2748, y = 971, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYB", x = 2748, y = 979, z = 0, stationary = false, aggressive = true)
 public final class MercenaryB extends DataMonster {
 
   public static final String SOUND_ATTACK = "Whooshh 1.wav";

@@ -9,8 +9,27 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.spawn.SpawnKind;
 import java.util.List;
 
+@Spawn(type = "KahpLethGuard1", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "KAHPLETHGUARD1",
+    x = 1970,
+    y = 1278,
+    z = 2,
+    stationary = false,
+    aggressive = false,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "KAHPLETHGUARD1",
+    x = 1980,
+    y = 1269,
+    z = 2,
+    stationary = false,
+    aggressive = false,
+    kind = SpawnKind.MONSTER)
 public final class KahpLethGuard1 extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

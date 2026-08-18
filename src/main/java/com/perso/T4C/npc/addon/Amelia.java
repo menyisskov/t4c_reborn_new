@@ -10,8 +10,10 @@ import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+@Spawn(type = "Amelia", x = 2953, y = 1093, z = 0, stationary = false, aggressive = false)
 public final class Amelia extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

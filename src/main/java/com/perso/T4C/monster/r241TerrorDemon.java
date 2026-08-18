@@ -2,7 +2,9 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Terror Demon", x = 1477, y = 1793, z = 1, stationary = false, aggressive = true)
 public final class r241TerrorDemon extends DataMonster {
   public static final String SOUND_ATTACK = "Demon Attack.wav";
   public static final String SOUND_DEATH = "Demon Dying.wav";

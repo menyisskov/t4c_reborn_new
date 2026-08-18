@@ -1,0 +1,51 @@
+package com.perso.T4C.item.definition;
+
+import com.perso.T4C.item.ItemDefinition;
+import java.util.List;
+
+public final class ItemItemObjMirror {
+  private ItemItemObjMirror() {}
+
+  public static ItemDefinition definition() {
+    return new ItemDefinition(
+        "item.obj_mirror",
+        "${item.obj_mirror}",
+        null,
+        null,
+        null,
+        null,
+        "64kInvMirrors 1",
+        0L,
+        0L,
+        0.0d,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0.0d,
+        false,
+        false,
+        false,
+        41807,
+        6,
+        117,
+        null,
+        "0",
+        0,
+        0,
+        true,
+        null,
+        0,
+        null,
+        0,
+        0,
+        0,
+        List.of(),
+        List.of(),
+        List.of(),
+        false);
+  }
+}

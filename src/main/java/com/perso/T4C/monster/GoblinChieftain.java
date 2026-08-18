@@ -2,7 +2,9 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "GoblinBoss", x = 2739, y = 966, z = 0, stationary = false, aggressive = true)
 public final class GoblinChieftain extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 2.wav";
   public static final String SOUND_DEATH = "Goblin Dying.wav";

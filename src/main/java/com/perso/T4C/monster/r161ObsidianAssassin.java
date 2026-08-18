@@ -2,7 +2,21 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Obsidian Assassin", x = 1074, y = 2615, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1083, y = 2617, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1095, y = 2603, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1115, y = 2574, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1309, y = 2617, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1323, y = 2634, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1338, y = 2615, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1373, y = 2670, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1394, y = 2673, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1406, y = 2644, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1411, y = 2706, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1449, y = 2700, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Obsidian Assassin", x = 1460, y = 2734, z = 2, stationary = false, aggressive = true)
 public final class r161ObsidianAssassin extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

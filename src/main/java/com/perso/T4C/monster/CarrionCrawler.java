@@ -2,7 +2,34 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Carrion Crawler", x = 386, y = 524, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 398, y = 545, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 408, y = 498, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 409, y = 519, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 434, y = 472, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 437, y = 581, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 441, y = 567, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 448, y = 477, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 466, y = 434, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 470, y = 454, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 488, y = 615, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 500, y = 642, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 502, y = 405, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 504, y = 415, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 516, y = 440, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 518, y = 605, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 532, y = 613, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 533, y = 438, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 546, y = 468, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 555, y = 595, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 558, y = 567, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 582, y = 560, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 583, y = 511, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 585, y = 487, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 621, y = 526, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Carrion Crawler", x = 648, y = 376, z = 1, stationary = false, aggressive = true)
 public final class CarrionCrawler extends DataMonster {
   public static final String SOUND_ATTACK = "Worm Attack.wav";
   public static final String SOUND_DEATH = "Worm Dying.wav";

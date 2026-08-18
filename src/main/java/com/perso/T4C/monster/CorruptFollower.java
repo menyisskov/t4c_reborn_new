@@ -2,7 +2,28 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Corrupt Follower", x = 819, y = 1506, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 819, y = 1546, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 821, y = 1515, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 840, y = 1785, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 847, y = 1748, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 847, y = 1793, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 858, y = 1522, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 859, y = 1629, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 864, y = 1643, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 865, y = 1607, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 869, y = 1729, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 872, y = 1785, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 880, y = 1654, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 881, y = 1571, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 902, y = 1793, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 905, y = 1755, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 909, y = 1795, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 910, y = 1790, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 911, y = 1550, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Corrupt Follower", x = 936, y = 1558, z = 1, stationary = false, aggressive = true)
 public final class CorruptFollower extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

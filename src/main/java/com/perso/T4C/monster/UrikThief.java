@@ -16,7 +16,7 @@ public final class UrikThief extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "URIKTHIEF",
+        "URIKTHIEF",
         "${monster.urikthief}",
         100,
         0,

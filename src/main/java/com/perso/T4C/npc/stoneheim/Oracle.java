@@ -11,9 +11,11 @@ import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 import java.util.Locale;
 
+@Spawn(type = "Oracle", x = 2724, y = 2192, z = 2, stationary = false, aggressive = false)
 public final class Oracle extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -281,7 +283,7 @@ public final class Oracle extends ScriptedNpc {
 
           c.sayKey("npc.oracle.native.letItBe");
 
-          com.perso.T4C.npc.RebirthService.perform(c.player());
+          com.perso.T4C.npc.behavior.RebirthBehavior.perform(c.player());
 
           c.teleport(1315, 920, 1);
 

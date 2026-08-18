@@ -33,7 +33,7 @@ public final class MercenaryLeader extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBMERCENARYLEADER",
+        "MOBMERCENARYLEADER",
         "${monster.mobmercenaryleader}",
         100,
         0,

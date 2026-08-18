@@ -3,7 +3,22 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "CENTAURAVENGER", x = 1064, y = 1265, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 1067, y = 1257, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 1087, y = 1111, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 1100, y = 1114, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 1189, y = 1077, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 1196, y = 1087, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 833, y = 985, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 882, y = 928, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 894, y = 1117, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 915, y = 822, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 929, y = 841, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 934, y = 1071, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 947, y = 828, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "CENTAURAVENGER", x = 956, y = 855, z = 0, stationary = false, aggressive = true)
 public final class CentaurAvenger extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
   public static final String SOUND_DEATH = "Centaur Dying.wav";

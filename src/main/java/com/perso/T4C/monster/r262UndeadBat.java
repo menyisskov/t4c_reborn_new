@@ -2,7 +2,17 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Undead Bat", x = 14, y = 306, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Bat", x = 199, y = 101, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Bat", x = 240, y = 71, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Bat", x = 273, y = 55, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Bat", x = 292, y = 31, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Bat", x = 300, y = 21, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Bat", x = 331, y = 52, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Bat", x = 35, y = 281, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Bat", x = 9, y = 335, z = 1, stationary = false, aggressive = true)
 public final class r262UndeadBat extends DataMonster {
   public static final String SOUND_ATTACK = "Bat Attack.wav";
   public static final String SOUND_DEATH = "Bat Dying.wav";

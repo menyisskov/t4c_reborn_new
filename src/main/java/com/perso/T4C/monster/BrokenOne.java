@@ -2,7 +2,31 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Broken One", x = 648, y = 1716, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 651, y = 1573, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 663, y = 1561, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 664, y = 1687, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 674, y = 1629, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 683, y = 1539, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 691, y = 1614, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 705, y = 1751, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 706, y = 1579, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 706, y = 1657, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 710, y = 1737, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 722, y = 1614, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 723, y = 1704, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 730, y = 1636, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 743, y = 1584, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 744, y = 1713, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 895, y = 1436, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 917, y = 1411, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 923, y = 1482, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 938, y = 1481, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 948, y = 1447, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 954, y = 1467, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Broken One", x = 957, y = 1490, z = 2, stationary = false, aggressive = true)
 public final class BrokenOne extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

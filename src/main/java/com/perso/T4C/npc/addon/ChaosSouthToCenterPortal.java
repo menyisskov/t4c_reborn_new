@@ -9,8 +9,16 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+@Spawn(
+    type = "ChaosSouthToCenterPortal",
+    x = 1570,
+    y = 1697,
+    z = 1,
+    stationary = true,
+    aggressive = false)
 public final class ChaosSouthToCenterPortal extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -52,6 +60,35 @@ public final class ChaosSouthToCenterPortal extends ScriptedNpc {
   }
 
   private static final NpcBehavior BEHAVIOR =
-      new com.perso.T4C.npc.ChaosDemonGateBehavior(
-          1604, 1664, 1, "npc.welcome.chaossouthtocenterportal");
+      new GateBehavior(1604, 1664, 1, "npc.welcome.chaossouthtocenterportal");
+
+  private static final class GateBehavior implements NpcBehavior {
+    private final int tileX;
+    private final int tileY;
+    private final int world;
+    private final String blockedMessage;
+
+    private GateBehavior(int tileX, int tileY, int world, String blockedMessage) {
+      this.tileX = tileX;
+      this.tileY = tileY;
+      this.world = world;
+      this.blockedMessage = blockedMessage;
+    }
+
+    @Override
+    public void onInitialise(NpcBehaviorContext context) {
+      context.npc().setStationary(true);
+    }
+
+    @Override
+    public void onConversationStart(NpcBehaviorContext context) {
+      if (!context.isInRange(4)) context.sayKey("npc.portal.too_far");
+      else if (context.flag("ADDON_TERROR_DEMON_KILLED") == 1
+          && context.flag("ADDON_CHAOS_DEMON_KILLED") == 1
+          && context.flag("ADDON_DARKNESS_DEMON_KILLED") == 1) {
+        context.teleport(tileX, tileY, world);
+      } else context.sayKey(blockedMessage);
+      context.endConversation();
+    }
+  }
 }

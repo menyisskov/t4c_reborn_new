@@ -1,0 +1,51 @@
+package com.perso.T4C.item.definition;
+
+import com.perso.T4C.item.ItemDefinition;
+import java.util.List;
+
+public final class ItemItemBookOfFeylor {
+  private ItemItemBookOfFeylor() {}
+
+  public static ItemDefinition definition() {
+    return new ItemDefinition(
+        "item.book_of_feylor",
+        "${item.book_of_feylor}",
+        null,
+        null,
+        null,
+        null,
+        "64kInvMisc1 4",
+        0L,
+        3L,
+        0.0d,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0.0d,
+        false,
+        false,
+        false,
+        40107,
+        6,
+        12,
+        null,
+        "0",
+        0,
+        0,
+        true,
+        null,
+        0,
+        null,
+        0,
+        0,
+        0,
+        List.of(),
+        List.of(),
+        List.of(),
+        false);
+  }
+}

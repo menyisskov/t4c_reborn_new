@@ -1,0 +1,80 @@
+package com.perso.T4C.spawn.definition;
+
+import com.perso.T4C.monster.SpawnGroup;
+import com.perso.T4C.spawn.SpawnGroupDefinition;
+import java.util.List;
+
+public final class SpawnGroup0137 {
+  private SpawnGroup0137() {}
+
+  public static SpawnGroupDefinition definition() {
+    return new SpawnGroupDefinition(
+        "Antelope",
+        70,
+        200,
+        1,
+        5,
+        List.of("Antelope"),
+        List.of(
+            new SpawnGroup.SpawnPoint(2818, 128, 0),
+            new SpawnGroup.SpawnPoint(2743, 156, 0),
+            new SpawnGroup.SpawnPoint(2817, 170, 0),
+            new SpawnGroup.SpawnPoint(2891, 186, 0),
+            new SpawnGroup.SpawnPoint(2797, 234, 0),
+            new SpawnGroup.SpawnPoint(2749, 372, 0),
+            new SpawnGroup.SpawnPoint(2635, 381, 0),
+            new SpawnGroup.SpawnPoint(2642, 413, 0),
+            new SpawnGroup.SpawnPoint(2798, 480, 0),
+            new SpawnGroup.SpawnPoint(1911, 643, 0),
+            new SpawnGroup.SpawnPoint(1907, 650, 0),
+            new SpawnGroup.SpawnPoint(2851, 659, 0),
+            new SpawnGroup.SpawnPoint(2501, 667, 0),
+            new SpawnGroup.SpawnPoint(2509, 677, 0),
+            new SpawnGroup.SpawnPoint(2926, 691, 0),
+            new SpawnGroup.SpawnPoint(2462, 700, 0),
+            new SpawnGroup.SpawnPoint(2847, 719, 0),
+            new SpawnGroup.SpawnPoint(2820, 726, 0),
+            new SpawnGroup.SpawnPoint(2552, 877, 0),
+            new SpawnGroup.SpawnPoint(2248, 943, 0),
+            new SpawnGroup.SpawnPoint(2246, 953, 0),
+            new SpawnGroup.SpawnPoint(2177, 1002, 0),
+            new SpawnGroup.SpawnPoint(1613, 1038, 0),
+            new SpawnGroup.SpawnPoint(2601, 1042, 0),
+            new SpawnGroup.SpawnPoint(1652, 1066, 0),
+            new SpawnGroup.SpawnPoint(2410, 1076, 0),
+            new SpawnGroup.SpawnPoint(2426, 1076, 0),
+            new SpawnGroup.SpawnPoint(2569, 1078, 0),
+            new SpawnGroup.SpawnPoint(2002, 1087, 0),
+            new SpawnGroup.SpawnPoint(2018, 1087, 0),
+            new SpawnGroup.SpawnPoint(1560, 1091, 0),
+            new SpawnGroup.SpawnPoint(1710, 1096, 0),
+            new SpawnGroup.SpawnPoint(2616, 1098, 0),
+            new SpawnGroup.SpawnPoint(1874, 1135, 0),
+            new SpawnGroup.SpawnPoint(2101, 1151, 0),
+            new SpawnGroup.SpawnPoint(2114, 1151, 0),
+            new SpawnGroup.SpawnPoint(1889, 1168, 0),
+            new SpawnGroup.SpawnPoint(2065, 1283, 0),
+            new SpawnGroup.SpawnPoint(2430, 1289, 0),
+            new SpawnGroup.SpawnPoint(2419, 1293, 0),
+            new SpawnGroup.SpawnPoint(1818, 1340, 0),
+            new SpawnGroup.SpawnPoint(1857, 1368, 0),
+            new SpawnGroup.SpawnPoint(1809, 1372, 0),
+            new SpawnGroup.SpawnPoint(1803, 1389, 0),
+            new SpawnGroup.SpawnPoint(1743, 1397, 0),
+            new SpawnGroup.SpawnPoint(2167, 1410, 0),
+            new SpawnGroup.SpawnPoint(2380, 1468, 0),
+            new SpawnGroup.SpawnPoint(2386, 1475, 0),
+            new SpawnGroup.SpawnPoint(1298, 2222, 0),
+            new SpawnGroup.SpawnPoint(1382, 2273, 0),
+            new SpawnGroup.SpawnPoint(1481, 2286, 0),
+            new SpawnGroup.SpawnPoint(1584, 2310, 0),
+            new SpawnGroup.SpawnPoint(1585, 2320, 0),
+            new SpawnGroup.SpawnPoint(1306, 2323, 0),
+            new SpawnGroup.SpawnPoint(1589, 2326, 0),
+            new SpawnGroup.SpawnPoint(1226, 2395, 0),
+            new SpawnGroup.SpawnPoint(1291, 2473, 0),
+            new SpawnGroup.SpawnPoint(1372, 2511, 0),
+            new SpawnGroup.SpawnPoint(1273, 2542, 0),
+            new SpawnGroup.SpawnPoint(1423, 2592, 0)));
+  }
+}

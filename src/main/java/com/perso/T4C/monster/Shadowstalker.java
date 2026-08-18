@@ -16,7 +16,7 @@ public final class Shadowstalker extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBSHADOWSTALKER",
+        "MOBSHADOWSTALKER",
         "${monster.mobshadowstalker}",
         100,
         0,

@@ -3,7 +3,15 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(
+    type = "MOBQUENTINTARANTULA",
+    x = 1731,
+    y = 247,
+    z = 2,
+    stationary = false,
+    aggressive = true)
 public final class QuentinTarantula extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Spider Attack.wav";
   public static final String SOUND_DEATH = "Spider Dying.wav";
@@ -16,7 +24,7 @@ public final class QuentinTarantula extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBQUENTINTARANTULA",
+        "MOBQUENTINTARANTULA",
         "${monster.mobquentintarantula}",
         100,
         0,

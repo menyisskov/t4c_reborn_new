@@ -1,7 +1,6 @@
 package com.perso.T4C.helper;
 
-import com.perso.T4C.config.Paths;
-import java.io.File;
+import com.perso.T4C.mapping.definition.GroundMosaicDefinitions;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 public final class GroundMosaicCatalog {
   private static final Logger log = LoggerFactory.getLogger(GroundMosaicCatalog.class);
-  private static List<GroundMosaicBinaryIO.Definition> cachedDefinitions;
+  private static List<GroundMosaicDefinitions.Definition> cachedDefinitions;
   private static final Pattern COMPACT_COORDINATES =
       Pattern.compile("^(Dtm|DungeonFloorTorch)(\\d+)\\s+(\\d+)\\s*$", Pattern.CASE_INSENSITIVE);
   private static final Pattern GRID_COORDINATES =
@@ -86,21 +85,11 @@ public final class GroundMosaicCatalog {
     cachedDefinitions = null;
   }
 
-  private static synchronized List<GroundMosaicBinaryIO.Definition> definitions() {
+  private static synchronized List<GroundMosaicDefinitions.Definition> definitions() {
     if (cachedDefinitions != null) {
       return cachedDefinitions;
     }
-    List<GroundMosaicBinaryIO.Definition> definitions = List.of();
-    File file = new File(Paths.GROUND_MOSAICS_BIN);
-    if (file.exists()) {
-      try {
-        definitions = GroundMosaicBinaryIO.read(file);
-      } catch (Exception e) {
-        log.warn("Could not load ground mosaics from {}: {}", file.getPath(), e.getMessage());
-      }
-    } else {
-      log.warn("Missing ground mosaic catalog: {}", file.getPath());
-    }
+    List<GroundMosaicDefinitions.Definition> definitions = GroundMosaicDefinitions.all();
     cachedDefinitions = definitions;
     return cachedDefinitions;
   }
@@ -179,7 +168,7 @@ public final class GroundMosaicCatalog {
   }
 
   private static MosaicPattern pattern(
-      GroundMosaicBinaryIO.Definition definition, Map<String, String> actualNames) {
+      GroundMosaicDefinitions.Definition definition, Map<String, String> actualNames) {
     if (definition.width() <= 0 || definition.height() <= 0 || definition.frames().isEmpty()) {
       log.warn(
           "Skipping ground mosaic {}: invalid {}x{} block with {} frame(s)",

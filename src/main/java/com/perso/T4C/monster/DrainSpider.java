@@ -2,7 +2,43 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Drain Spider", x = 2669, y = 1948, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2673, y = 2005, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2679, y = 1979, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2688, y = 2053, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2698, y = 1982, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2700, y = 2031, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2709, y = 2005, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2710, y = 1945, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2711, y = 2043, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2718, y = 1938, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2719, y = 2090, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2727, y = 2054, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2729, y = 1913, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2740, y = 1935, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2746, y = 1923, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2752, y = 2064, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2772, y = 2086, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2778, y = 1935, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2781, y = 2096, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2789, y = 1917, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2792, y = 2076, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2805, y = 2088, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2809, y = 1927, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2829, y = 2093, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2837, y = 2068, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2842, y = 2073, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2845, y = 2049, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2848, y = 1946, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2853, y = 2084, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2855, y = 2045, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2862, y = 1974, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2862, y = 2013, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2872, y = 1951, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2878, y = 2036, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Spider", x = 2882, y = 1983, z = 0, stationary = false, aggressive = true)
 public final class DrainSpider extends DataMonster {
   public static final String SOUND_ATTACK = "Spider Attack.wav";
   public static final String SOUND_DEATH = "Spider Dying.wav";

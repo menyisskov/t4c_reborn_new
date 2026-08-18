@@ -9,8 +9,19 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.spawn.SpawnKind;
 import java.util.List;
 
+@Spawn(type = "RenegadeOrcLeader", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "RENEGADEORCLEADER",
+    x = 1076,
+    y = 276,
+    z = 1,
+    stationary = false,
+    aggressive = false,
+    kind = SpawnKind.MONSTER)
 public final class RenegadeOrcLeader extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshm 8.wav";
   public static final String SOUND_DEATH = "Orc Dying.wav";

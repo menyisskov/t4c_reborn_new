@@ -2,7 +2,14 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Olin Haad Sentry", x = 2776, y = 1204, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Olin Haad Sentry", x = 2778, y = 1207, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Olin Haad Sentry", x = 2779, y = 1204, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Olin Haad Sentry", x = 2780, y = 1201, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Olin Haad Sentry", x = 2782, y = 1208, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Olin Haad Sentry", x = 2784, y = 1205, z = 0, stationary = false, aggressive = true)
 public final class r167OlinHaadSentry extends DataMonster {
   public static final String SOUND_ATTACK = "Electrik.wav";
   public static final String SOUND_DEATH = "Tree Ent Dying.wav";

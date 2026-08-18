@@ -2,7 +2,50 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(
+    type = "Olin Haad Soldier 10",
+    x = 2965,
+    y = 241,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Olin Haad Soldier 10",
+    x = 2967,
+    y = 250,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Olin Haad Soldier 10",
+    x = 2973,
+    y = 239,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Olin Haad Soldier 10",
+    x = 2976,
+    y = 253,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Olin Haad Soldier 10",
+    x = 2980,
+    y = 241,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Olin Haad Soldier 10",
+    x = 2982,
+    y = 248,
+    z = 0,
+    stationary = false,
+    aggressive = true)
 public final class r168OlinHaadSoldier10 extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

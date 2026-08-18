@@ -2,7 +2,15 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(
+    type = "GHUNDARGRUMBLEFOOT",
+    x = 1135,
+    y = 1798,
+    z = 0,
+    stationary = false,
+    aggressive = false)
 public final class GHUNDARGRUMBLEFOOT extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

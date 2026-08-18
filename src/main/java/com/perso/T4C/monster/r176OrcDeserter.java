@@ -2,7 +2,19 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Orc Deserter", x = 1002, y = 2088, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1010, y = 2131, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1037, y = 1934, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1051, y = 2038, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1069, y = 1917, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1104, y = 2010, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1109, y = 1981, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1118, y = 1951, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1157, y = 2044, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1158, y = 2044, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Orc Deserter", x = 1159, y = 2053, z = 0, stationary = false, aggressive = true)
 public final class r176OrcDeserter extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshm 8.wav";
   public static final String SOUND_DEATH = "Orc Dying.wav";

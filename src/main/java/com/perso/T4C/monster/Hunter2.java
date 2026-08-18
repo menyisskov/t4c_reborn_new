@@ -3,7 +3,10 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "MOBHUNTER2", x = 780, y = 439, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "MOBHUNTER2", x = 792, y = 801, z = 0, stationary = false, aggressive = false)
 public final class Hunter2 extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

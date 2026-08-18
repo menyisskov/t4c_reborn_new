@@ -2,7 +2,9 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Count Hemogoblin", x = 371, y = 2523, z = 2, stationary = false, aggressive = true)
 public final class CountHemogoblin extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 2.wav";
   public static final String SOUND_DEATH = "Goblin Dying.wav";

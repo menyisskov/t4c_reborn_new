@@ -16,7 +16,7 @@ public final class CentaurManaweaver extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "CENTAURMANAWEAVER",
+        "CENTAURMANAWEAVER",
         "${monster.centaurmanaweaver}",
         100,
         0,

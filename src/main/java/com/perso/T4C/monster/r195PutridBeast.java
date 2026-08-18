@@ -2,7 +2,46 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Putrid Beast", x = 1016, y = 2633, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1039, y = 2605, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1049, y = 2648, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1053, y = 2624, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1063, y = 2652, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1096, y = 2761, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1102, y = 2646, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1102, y = 2724, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1112, y = 2767, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1114, y = 2751, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1121, y = 2620, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1121, y = 2655, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1122, y = 2646, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1134, y = 2611, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1149, y = 2771, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1152, y = 2785, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1164, y = 2720, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1175, y = 2601, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1185, y = 2819, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1191, y = 2671, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1201, y = 2733, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1204, y = 2750, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1209, y = 2807, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1214, y = 2585, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1215, y = 2793, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1235, y = 2663, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1242, y = 2569, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1246, y = 2767, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1251, y = 2777, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1257, y = 2746, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1265, y = 2596, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1267, y = 2656, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1274, y = 2752, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1279, y = 2731, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1300, y = 2579, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1301, y = 2683, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1325, y = 2594, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Putrid Beast", x = 1391, y = 2661, z = 2, stationary = false, aggressive = true)
 public final class r195PutridBeast extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

@@ -2,7 +2,25 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Skeletal Centaur", x = 423, y = 503, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 427, y = 552, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 438, y = 508, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 449, y = 556, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 459, y = 483, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 476, y = 580, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 481, y = 604, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 496, y = 447, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 503, y = 599, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 504, y = 426, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 512, y = 453, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 526, y = 578, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 550, y = 558, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 552, y = 497, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 563, y = 490, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 569, y = 537, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Skeletal Centaur", x = 577, y = 549, z = 1, stationary = false, aggressive = true)
 public final class r214SkeletalCentaur extends DataMonster {
   public static final String SOUND_ATTACK = "Electrik.wav";
   public static final String SOUND_DEATH = "Tree Ent Dying.wav";

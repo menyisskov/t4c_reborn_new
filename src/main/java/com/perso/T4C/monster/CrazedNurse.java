@@ -5,7 +5,31 @@ import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.NamedEventMonster;
 import com.perso.T4C.npc.script.MonsterScriptBridge;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "MOBCRAZEDNURSE", x = 2707, y = 2307, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2714, y = 2492, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2720, y = 2472, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2726, y = 2576, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2727, y = 2568, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2729, y = 2555, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2732, y = 2296, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2736, y = 2590, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2743, y = 2569, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2744, y = 2483, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2746, y = 2407, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2746, y = 2494, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2749, y = 2581, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2808, y = 2220, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2811, y = 2206, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2811, y = 2240, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2815, y = 2251, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2824, y = 2222, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2827, y = 2309, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2827, y = 2391, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2830, y = 2408, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2831, y = 2234, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBCRAZEDNURSE", x = 2832, y = 2319, z = 0, stationary = false, aggressive = true)
 public final class CrazedNurse extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

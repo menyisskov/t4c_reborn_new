@@ -1,9 +1,6 @@
 package com.perso.T4C.quest;
 
-import com.perso.T4C.config.Paths;
-import com.perso.T4C.helper.QuestDefBinaryIO;
-import java.io.File;
-import java.io.IOException;
+import com.perso.T4C.quest.definition.QuestDefinitions;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -19,21 +16,11 @@ public final class QuestRegistry {
     if (cache != null) {
       return cache;
     }
-    File file = new File(Paths.QUESTS_BIN);
-    List<QuestDef> definitions = List.of();
-    if (file.exists()) {
-      try {
-        definitions = QuestDefBinaryIO.read(file);
-      } catch (Exception ignored) {
-        definitions = List.of();
-      }
-    }
-    rebuild(definitions);
+    rebuild(QuestDefinitions.all());
     return cache;
   }
 
-  public static synchronized void save(List<QuestDef> definitions) throws IOException {
-    QuestDefBinaryIO.write(new File(Paths.QUESTS_BIN), definitions);
+  public static synchronized void save(List<QuestDef> definitions) {
     rebuild(definitions);
   }
 

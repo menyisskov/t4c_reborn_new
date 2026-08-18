@@ -2,7 +2,16 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "MOBMERCENARYA", x = 2664, y = 1072, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYA", x = 2669, y = 1082, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYA", x = 2672, y = 1068, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYA", x = 2677, y = 1072, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYA", x = 2678, y = 1059, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYA", x = 2682, y = 1066, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYA", x = 2688, y = 1066, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "MOBMERCENARYA", x = 2694, y = 1062, z = 0, stationary = false, aggressive = true)
 public class MercenaryA extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -66,5 +75,4 @@ public class MercenaryA extends DataMonster {
         java.util.List.of(),
         java.util.Map.of());
   }
-
 }

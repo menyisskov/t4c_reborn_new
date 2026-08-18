@@ -2,7 +2,23 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Undead Guardian", x = 2165, y = 295, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2265, y = 195, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2265, y = 395, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2365, y = 295, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2585, y = 613, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2586, y = 686, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2668, y = 766, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2678, y = 519, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2732, y = 832, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2800, y = 503, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2807, y = 791, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2862, y = 561, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2869, y = 729, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2920, y = 681, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Undead Guardian", x = 2922, y = 621, z = 1, stationary = false, aggressive = true)
 public final class r263UndeadGuardian extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Skeleton Dying.wav";

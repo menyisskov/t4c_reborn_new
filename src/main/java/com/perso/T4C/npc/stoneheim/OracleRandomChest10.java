@@ -8,8 +8,16 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+@Spawn(
+    type = "OracleRandomChest10",
+    x = 2820,
+    y = 2490,
+    z = 2,
+    stationary = true,
+    aggressive = false)
 public final class OracleRandomChest10 extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

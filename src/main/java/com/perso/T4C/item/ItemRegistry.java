@@ -1,8 +1,7 @@
 package com.perso.T4C.item;
 
-import com.perso.T4C.config.Paths;
-import com.perso.T4C.helper.ItemDefBinaryIO;
-import java.io.File;
+import com.perso.T4C.content.ItemJavaExporter;
+import com.perso.T4C.item.definition.ItemDefinitions;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,13 +18,12 @@ public final class ItemRegistry {
     if (cache != null) {
       return cache;
     }
-    File file = new File(Paths.ITEMS_BIN);
-    rebuild(loadFromFile(file));
+    rebuild(ItemDefinitions.all());
     return cache;
   }
 
   public static synchronized void save(List<ItemDefinition> defs) throws IOException {
-    ItemDefBinaryIO.write(new File(Paths.ITEMS_BIN), defs);
+    ItemJavaExporter.export(defs);
     rebuild(defs);
   }
 
@@ -62,16 +60,5 @@ public final class ItemRegistry {
     }
     byKey = Map.copyOf(map);
     byNumId = Map.copyOf(numeric);
-  }
-
-  static List<ItemDefinition> loadFromFile(File file) {
-    if (file == null || !file.exists()) {
-      return List.of();
-    }
-    try {
-      return ItemDefBinaryIO.read(file);
-    } catch (Exception ignored) {
-      return List.of();
-    }
   }
 }

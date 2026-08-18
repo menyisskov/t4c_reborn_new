@@ -1,8 +1,7 @@
 package com.perso.T4C.helper;
 
-import com.perso.T4C.config.Paths;
+import com.perso.T4C.mapping.definition.AppearanceDefaultsDefinitions;
 import com.perso.T4C.player.BodyPart;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -18,7 +17,7 @@ public final class AppearanceDefaultsCatalog {
   public static final String MALE = "MALE";
   public static final String FEMALE = "FEMALE";
   private static Map<String, Map<BodyPart, String>> cachedNakedParts;
-  private static Map<String, List<AppearanceDefaultsBinaryIO.ConcealmentRule>> cachedRules;
+  private static Map<String, List<AppearanceDefaultsDefinitions.ConcealmentRule>> cachedRules;
   private static Map<String, EquippedAppearance> cachedEquippedOverrides;
 
   public record EquippedAppearance(BodyPart bodyPart, String sprite) {}
@@ -40,12 +39,12 @@ public final class AppearanceDefaultsCatalog {
         .anyMatch(rule -> rule.hiddenParts().stream().anyMatch("HAIR"::equalsIgnoreCase));
   }
 
-  public static List<AppearanceDefaultsBinaryIO.ConcealmentRule> rulesFor(
+  public static List<AppearanceDefaultsDefinitions.ConcealmentRule> rulesFor(
       BodyPart triggerSlot, String appearance) {
     load();
     if (triggerSlot == null || appearance == null || appearance.isBlank()) return List.of();
     String rawKey = ruleKey(triggerSlot.name(), appearance);
-    List<AppearanceDefaultsBinaryIO.ConcealmentRule> exact = cachedRules.get(rawKey);
+    List<AppearanceDefaultsDefinitions.ConcealmentRule> exact = cachedRules.get(rawKey);
     if (exact != null) return exact;
     return cachedRules.getOrDefault(
         ruleKey(triggerSlot.name(), normalizeAppearance(appearance)), List.of());
@@ -74,20 +73,9 @@ public final class AppearanceDefaultsCatalog {
     if (cachedNakedParts != null) {
       return;
     }
-    AppearanceDefaultsBinaryIO.Defaults defaults =
-        new AppearanceDefaultsBinaryIO.Defaults(java.util.List.of(), java.util.List.of());
-    File file = new File(Paths.APPEARANCE_DEFAULTS_BIN);
-    if (file.exists()) {
-      try {
-        defaults = AppearanceDefaultsBinaryIO.read(file);
-      } catch (Exception e) {
-        log.warn("Could not load appearance defaults from {}: {}", file.getPath(), e.getMessage());
-      }
-    } else {
-      log.warn("Missing appearance defaults catalog: {}", file.getPath());
-    }
+    AppearanceDefaultsDefinitions.Defaults defaults = AppearanceDefaultsDefinitions.defaults();
     Map<String, Map<BodyPart, String>> byGender = new LinkedHashMap<>();
-    for (AppearanceDefaultsBinaryIO.NakedPart part : defaults.nakedParts()) {
+    for (AppearanceDefaultsDefinitions.NakedPart part : defaults.nakedParts()) {
       BodyPart bodyPart = bodyPart(part.bodyPart());
       if (bodyPart == null) {
         log.warn("Skipping naked part {}: unknown body part '{}'", part.sprite(), part.bodyPart());
@@ -98,8 +86,8 @@ public final class AppearanceDefaultsCatalog {
           .put(bodyPart, part.sprite());
     }
     byGender.replaceAll((ignored, value) -> Collections.unmodifiableMap(value));
-    Map<String, List<AppearanceDefaultsBinaryIO.ConcealmentRule>> rules = new LinkedHashMap<>();
-    for (AppearanceDefaultsBinaryIO.ConcealmentRule rule : defaults.concealmentRules()) {
+    Map<String, List<AppearanceDefaultsDefinitions.ConcealmentRule>> rules = new LinkedHashMap<>();
+    for (AppearanceDefaultsDefinitions.ConcealmentRule rule : defaults.concealmentRules()) {
       if (bodyPart(rule.triggerSlot()) == null
           || rule.appearance() == null
           || rule.appearance().isBlank()) continue;
@@ -110,7 +98,7 @@ public final class AppearanceDefaultsCatalog {
     }
     rules.replaceAll((ignored, value) -> List.copyOf(value));
     Map<String, EquippedAppearance> overrides = new LinkedHashMap<>();
-    for (AppearanceDefaultsBinaryIO.EquippedOverride override : defaults.equippedOverrides()) {
+    for (AppearanceDefaultsDefinitions.EquippedOverride override : defaults.equippedOverrides()) {
       BodyPart sourceSlot = bodyPart(override.sourceSlot());
       BodyPart targetSlot = bodyPart(override.targetSlot());
       if (sourceSlot == null

@@ -16,7 +16,7 @@ public final class GehennaReaver extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBGEHENNAREAVER",
+        "MOBGEHENNAREAVER",
         "${monster.mobgehennareaver}",
         100,
         0,

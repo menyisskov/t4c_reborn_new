@@ -2,7 +2,47 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Nemesis", x = 1665, y = 200, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1667, y = 181, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1684, y = 164, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1684, y = 179, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1685, y = 216, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1690, y = 200, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1696, y = 181, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1702, y = 172, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1702, y = 202, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1702, y = 213, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1714, y = 179, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1719, y = 198, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1866, y = 311, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1878, y = 291, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1879, y = 321, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1900, y = 231, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1903, y = 292, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1907, y = 246, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1913, y = 209, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1913, y = 351, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1916, y = 234, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1920, y = 215, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1928, y = 289, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1929, y = 323, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1933, y = 249, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1939, y = 205, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1946, y = 264, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 1953, y = 270, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2004, y = 268, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2007, y = 313, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2012, y = 331, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2021, y = 228, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2021, y = 327, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2022, y = 302, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2022, y = 309, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2023, y = 235, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2023, y = 274, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2032, y = 241, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Nemesis", x = 2045, y = 265, z = 2, stationary = false, aggressive = true)
 public final class r156Nemesis extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

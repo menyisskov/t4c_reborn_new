@@ -5,7 +5,9 @@ import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.NamedEventMonster;
 import com.perso.T4C.npc.script.MonsterScriptBridge;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "MADMADRIGAN", x = 2810, y = 2572, z = 0, stationary = false, aggressive = true)
 public final class MadMadrigan extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

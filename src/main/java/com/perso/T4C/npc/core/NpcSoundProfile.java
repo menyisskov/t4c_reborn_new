@@ -1,6 +1,5 @@
 package com.perso.T4C.npc.core;
 
-/** Sound triplet owned by one concrete NPC class. */
 public record NpcSoundProfile(String attack, String death, String hit) {
   public static NpcSoundProfile forClass(Class<?> type) {
     return new NpcSoundProfile(

@@ -16,7 +16,7 @@ public final class HereticWarrior extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBHERETICWARRIOR",
+        "MOBHERETICWARRIOR",
         "${monster.mobhereticwarrior}",
         100,
         0,

@@ -2,7 +2,64 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(
+    type = "Oracle Gate Guardian 1",
+    x = 2808,
+    y = 2256,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Gate Guardian 1",
+    x = 2816,
+    y = 2240,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Gate Guardian 1",
+    x = 2820,
+    y = 2260,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Gate Guardian 1",
+    x = 2828,
+    y = 2252,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Gate Guardian 1",
+    x = 2836,
+    y = 2236,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Gate Guardian 1",
+    x = 2836,
+    y = 2244,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Gate Guardian 1",
+    x = 2848,
+    y = 2224,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Gate Guardian 1",
+    x = 2848,
+    y = 2240,
+    z = 2,
+    stationary = false,
+    aggressive = true)
 public final class r170OracleGateGuardian1 extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

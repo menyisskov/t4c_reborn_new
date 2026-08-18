@@ -2,7 +2,25 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Crypt Custodian", x = 1549, y = 682, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1564, y = 675, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1566, y = 702, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1569, y = 699, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1574, y = 655, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1575, y = 696, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1581, y = 715, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1583, y = 663, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1584, y = 648, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1594, y = 675, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1595, y = 637, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1600, y = 702, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1604, y = 634, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1607, y = 623, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1615, y = 619, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1625, y = 602, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Crypt Custodian", x = 1626, y = 610, z = 2, stationary = false, aggressive = true)
 public final class CryptCustodian extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

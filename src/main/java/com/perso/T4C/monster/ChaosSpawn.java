@@ -2,7 +2,24 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Chaos Spawn", x = 620, y = 512, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 638, y = 448, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 645, y = 526, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 647, y = 494, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 648, y = 426, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 664, y = 458, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 675, y = 506, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 689, y = 414, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 693, y = 509, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 694, y = 427, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 704, y = 483, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 706, y = 454, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 710, y = 529, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 722, y = 418, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 730, y = 493, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Chaos Spawn", x = 737, y = 422, z = 0, stationary = false, aggressive = true)
 public final class ChaosSpawn extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

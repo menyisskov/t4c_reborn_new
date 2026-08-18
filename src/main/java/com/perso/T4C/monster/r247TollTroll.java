@@ -2,7 +2,23 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Toll Troll", x = 1905, y = 2711, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 1907, y = 2723, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 1912, y = 2718, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 1914, y = 2729, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 1914, y = 2730, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 1919, y = 2725, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 1979, y = 2741, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 1985, y = 2747, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 2017, y = 2718, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 2018, y = 2719, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 2019, y = 2781, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 2024, y = 2786, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 2029, y = 2791, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 2043, y = 2744, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Toll Troll", x = 2052, y = 2753, z = 0, stationary = false, aggressive = true)
 public final class r247TollTroll extends DataMonster {
   public static final String SOUND_ATTACK = "Troll Attack.wav";
   public static final String SOUND_DEATH = "Troll Dying.wav";

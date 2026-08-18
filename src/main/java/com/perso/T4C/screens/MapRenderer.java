@@ -3,12 +3,11 @@ package com.perso.T4C.screens;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.perso.T4C.config.Paths;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.MapReader;
 import com.perso.T4C.helper.ModifSprites;
-import com.perso.T4C.helper.ObjectPositionBinaryIO;
 import com.perso.T4C.helper.SpriteLoader;
+import com.perso.T4C.mapping.definition.ObjectPositionDefinitions;
 import com.perso.T4C.objects.ObjectPos;
 import com.perso.T4C.render.DecorFlags;
 import com.perso.T4C.render.DecorRenderer;
@@ -16,8 +15,6 @@ import com.perso.T4C.render.GroundRenderer;
 import com.perso.T4C.render.ObjectMapping;
 import com.perso.T4C.render.ObjectMappings;
 import com.perso.T4C.render.ObjectRenderer;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -106,29 +103,20 @@ public class MapRenderer {
 
   private static List<ObjectPos> loadObjectPositions(
       Map<String, ObjectMapping> objectMappings, Integer worldZ) throws GameException {
-    File file = new File(Paths.OBJECT_POSITIONS_BIN);
-    if (!file.exists()) {
+    List<ObjectPos> positions = ObjectPositionDefinitions.all();
+    if (positions == null || positions.isEmpty()) {
       return Collections.emptyList();
     }
-    try {
-      List<ObjectPos> positions = ObjectPositionBinaryIO.read(file);
-      if (positions == null || positions.isEmpty()) {
-        return Collections.emptyList();
+    List<ObjectPos> mappedPositions = new ArrayList<>();
+    for (ObjectPos position : positions) {
+      if (position != null
+          && position.name() != null
+          && (worldZ == null || (int) position.z() == worldZ)
+          && objectMappings.containsKey(position.name().toUpperCase(Locale.ROOT))) {
+        mappedPositions.add(position);
       }
-      List<ObjectPos> mappedPositions = new ArrayList<>();
-      for (ObjectPos position : positions) {
-        if (position != null
-            && position.name() != null
-            && (worldZ == null || (int) position.z() == worldZ)
-            && objectMappings.containsKey(position.name().toUpperCase(Locale.ROOT))) {
-          mappedPositions.add(position);
-        }
-      }
-      return mappedPositions;
-    } catch (IOException e) {
-      throw new GameException(
-          "Failed to load object positions from: " + Paths.OBJECT_POSITIONS_BIN, e);
     }
+    return mappedPositions;
   }
 
   public void renderGroundOnly(

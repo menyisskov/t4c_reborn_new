@@ -2,7 +2,491 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 1822,
+    y = 1115,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 1912,
+    y = 1005,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2488,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2488,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2488,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2574,
+    y = 496,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 509,
+    y = 417,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 596,
+    y = 146,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 738,
+    y = 147,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 789,
+    y = 113,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 843,
+    y = 149,
+    z = 0,
+    stationary = false,
+    aggressive = true)
 public final class SKRAUGMOONFIREDANSAH extends DataMonster {
   public static final String SOUND_ATTACK = "Skraug Attack.wav";
   public static final String SOUND_DEATH = "Skraug Die.wav";

@@ -2,7 +2,9 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Mortal Wombat", x = 1542, y = 372, z = 2, stationary = false, aggressive = true)
 public final class r151MortalWombat extends DataMonster {
   public static final String SOUND_ATTACK = "Bat Attack.wav";
   public static final String SOUND_DEATH = "Bat Dying.wav";

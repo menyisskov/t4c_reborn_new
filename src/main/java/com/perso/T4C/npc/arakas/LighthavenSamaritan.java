@@ -7,11 +7,19 @@ import com.perso.T4C.npc.registry.*;
 import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
+import com.perso.T4C.spawn.Spawn;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+@Spawn(
+    type = "LighthavenSamaritan",
+    x = 2931,
+    y = 1072,
+    z = 0,
+    stationary = false,
+    aggressive = false)
 public final class LighthavenSamaritan extends BaseNPC {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

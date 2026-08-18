@@ -9,8 +9,19 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.spawn.SpawnKind;
 import java.util.List;
 
+@Spawn(type = "GreyLeaf", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "GREYLEAF",
+    x = 849,
+    y = 2086,
+    z = 0,
+    stationary = false,
+    aggressive = false,
+    kind = SpawnKind.MONSTER)
 public final class GreyLeaf extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Electrik.wav";
   public static final String SOUND_DEATH = "Tree Ent Dying.wav";

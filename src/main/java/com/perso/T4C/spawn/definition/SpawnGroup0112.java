@@ -1,0 +1,80 @@
+package com.perso.T4C.spawn.definition;
+
+import com.perso.T4C.monster.SpawnGroup;
+import com.perso.T4C.spawn.SpawnGroupDefinition;
+import java.util.List;
+
+public final class SpawnGroup0112 {
+  private SpawnGroup0112() {}
+
+  public static SpawnGroupDefinition definition() {
+    return new SpawnGroupDefinition(
+        "Atrocity",
+        18,
+        30,
+        2,
+        6,
+        List.of("Atrocity"),
+        List.of(
+            new SpawnGroup.SpawnPoint(506, 197, 1),
+            new SpawnGroup.SpawnPoint(517, 218, 1),
+            new SpawnGroup.SpawnPoint(535, 222, 1),
+            new SpawnGroup.SpawnPoint(391, 246, 2),
+            new SpawnGroup.SpawnPoint(438, 260, 2),
+            new SpawnGroup.SpawnPoint(392, 284, 2),
+            new SpawnGroup.SpawnPoint(484, 287, 2),
+            new SpawnGroup.SpawnPoint(301, 290, 2),
+            new SpawnGroup.SpawnPoint(318, 294, 2),
+            new SpawnGroup.SpawnPoint(500, 307, 2),
+            new SpawnGroup.SpawnPoint(423, 314, 2),
+            new SpawnGroup.SpawnPoint(356, 315, 2),
+            new SpawnGroup.SpawnPoint(338, 328, 2),
+            new SpawnGroup.SpawnPoint(425, 335, 2),
+            new SpawnGroup.SpawnPoint(303, 353, 2),
+            new SpawnGroup.SpawnPoint(324, 407, 2),
+            new SpawnGroup.SpawnPoint(432, 408, 2),
+            new SpawnGroup.SpawnPoint(215, 413, 2),
+            new SpawnGroup.SpawnPoint(201, 423, 2),
+            new SpawnGroup.SpawnPoint(486, 433, 2),
+            new SpawnGroup.SpawnPoint(294, 443, 2),
+            new SpawnGroup.SpawnPoint(239, 450, 2),
+            new SpawnGroup.SpawnPoint(359, 451, 2),
+            new SpawnGroup.SpawnPoint(396, 453, 2),
+            new SpawnGroup.SpawnPoint(596, 468, 2),
+            new SpawnGroup.SpawnPoint(523, 469, 2),
+            new SpawnGroup.SpawnPoint(564, 471, 2),
+            new SpawnGroup.SpawnPoint(195, 484, 2),
+            new SpawnGroup.SpawnPoint(285, 485, 2),
+            new SpawnGroup.SpawnPoint(132, 497, 2),
+            new SpawnGroup.SpawnPoint(381, 505, 2),
+            new SpawnGroup.SpawnPoint(508, 512, 2),
+            new SpawnGroup.SpawnPoint(625, 530, 2),
+            new SpawnGroup.SpawnPoint(186, 536, 2),
+            new SpawnGroup.SpawnPoint(284, 557, 2),
+            new SpawnGroup.SpawnPoint(290, 557, 2),
+            new SpawnGroup.SpawnPoint(571, 558, 2),
+            new SpawnGroup.SpawnPoint(409, 559, 2),
+            new SpawnGroup.SpawnPoint(587, 570, 2),
+            new SpawnGroup.SpawnPoint(351, 574, 2),
+            new SpawnGroup.SpawnPoint(138, 576, 2),
+            new SpawnGroup.SpawnPoint(370, 582, 2),
+            new SpawnGroup.SpawnPoint(261, 583, 2),
+            new SpawnGroup.SpawnPoint(453, 585, 2),
+            new SpawnGroup.SpawnPoint(408, 593, 2),
+            new SpawnGroup.SpawnPoint(134, 597, 2),
+            new SpawnGroup.SpawnPoint(457, 603, 2),
+            new SpawnGroup.SpawnPoint(280, 604, 2),
+            new SpawnGroup.SpawnPoint(324, 615, 2),
+            new SpawnGroup.SpawnPoint(293, 631, 2),
+            new SpawnGroup.SpawnPoint(362, 635, 2),
+            new SpawnGroup.SpawnPoint(485, 635, 2),
+            new SpawnGroup.SpawnPoint(310, 650, 2),
+            new SpawnGroup.SpawnPoint(207, 659, 2),
+            new SpawnGroup.SpawnPoint(186, 694, 2),
+            new SpawnGroup.SpawnPoint(193, 701, 2),
+            new SpawnGroup.SpawnPoint(298, 706, 2),
+            new SpawnGroup.SpawnPoint(248, 717, 2),
+            new SpawnGroup.SpawnPoint(283, 731, 2),
+            new SpawnGroup.SpawnPoint(299, 749, 2)));
+  }
+}

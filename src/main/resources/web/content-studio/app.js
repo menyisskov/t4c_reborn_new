@@ -3164,7 +3164,7 @@ function concealmentRulesFor(triggerSlot, appearance) {
   return CONCEALMENT_RULES.get(normalized) || [];
 }
 
-// Naked fallbacks come from assets/mappings/appearance/appearance_defaults.bin, the same table the game
+// Naked fallbacks come from the Java appearance registry, the same table the game
 // reads, so the preview cannot drift from it. Cached because the composite preview is synchronous;
 // ensureNakedParts() primes it and is awaited before a preview renders.
 const NAKED_PARTS = { MALE: {}, FEMALE: {} };

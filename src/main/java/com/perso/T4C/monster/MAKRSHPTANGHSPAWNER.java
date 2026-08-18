@@ -2,7 +2,36 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(
+    type = "MAKRSHPTANGHSPAWNER",
+    x = 2215,
+    y = 245,
+    z = 1,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "MAKRSHPTANGHSPAWNER",
+    x = 2215,
+    y = 345,
+    z = 1,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "MAKRSHPTANGHSPAWNER",
+    x = 2315,
+    y = 245,
+    z = 1,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "MAKRSHPTANGHSPAWNER",
+    x = 2315,
+    y = 345,
+    z = 1,
+    stationary = false,
+    aggressive = true)
 public final class MAKRSHPTANGHSPAWNER extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

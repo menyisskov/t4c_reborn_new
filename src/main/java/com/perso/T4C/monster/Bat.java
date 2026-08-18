@@ -2,7 +2,28 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Bat", x = 166, y = 208, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 187, y = 131, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 194, y = 223, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 212, y = 72, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 219, y = 191, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 230, y = 108, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 241, y = 93, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 244, y = 145, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 284, y = 127, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 286, y = 113, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 294, y = 304, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 313, y = 282, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 323, y = 415, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 326, y = 408, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 332, y = 350, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 334, y = 405, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 339, y = 371, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 353, y = 366, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 358, y = 363, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Bat", x = 371, y = 340, z = 1, stationary = false, aggressive = true)
 public final class Bat extends DataMonster {
   public static final String SOUND_ATTACK = "Bat Attack.wav";
   public static final String SOUND_DEATH = "Bat Dying.wav";

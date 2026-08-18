@@ -12,7 +12,7 @@ public final class MercenaryLieutenantC extends MercenaryA {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBMERCENARYLIEUTENANTC",
+        "MOBMERCENARYLIEUTENANTC",
         "${monster.mobmercenarylieutenantc}",
         100,
         0,

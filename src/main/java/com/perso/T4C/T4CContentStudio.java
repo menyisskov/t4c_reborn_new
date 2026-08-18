@@ -4,33 +4,24 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
+import com.perso.T4C.content.SpawnJavaExporter;
 import com.perso.T4C.content.SpellJavaExporter;
 import com.perso.T4C.harvest.HerbDefinition;
 import com.perso.T4C.harvest.HerbRegistry;
-import com.perso.T4C.helper.AppearanceDefaultsBinaryIO;
-import com.perso.T4C.helper.AppearanceDefaultsCatalog;
-import com.perso.T4C.helper.ClanRelationsBinaryIO;
-import com.perso.T4C.helper.CollisionGenerationService;
+import com.perso.T4C.helper.AppearanceDefaultsData;
 import com.perso.T4C.helper.CollisionReader;
-import com.perso.T4C.helper.CollisionRuleBinaryIO;
-import com.perso.T4C.helper.DecorLayerRuleBinaryIO;
-import com.perso.T4C.helper.GroundMosaicBinaryIO;
-import com.perso.T4C.helper.GroundMosaicCatalog;
-import com.perso.T4C.helper.HerbDefinitionBinaryIO;
-import com.perso.T4C.helper.ItemIconBinaryIO;
+import com.perso.T4C.helper.GroundMosaicData;
+import com.perso.T4C.helper.JavaDataCatalog;
 import com.perso.T4C.helper.MapReader;
-import com.perso.T4C.helper.ObjectMappingsBinaryIO;
-import com.perso.T4C.helper.ObjectPositionBinaryIO;
-import com.perso.T4C.helper.SpawnBinaryIO;
+import com.perso.T4C.helper.ObjectMappingsData;
 import com.perso.T4C.helper.SpriteBinIO;
-import com.perso.T4C.helper.TeleportBinaryIO;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.item.ItemIconRegistry;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.core.MonsterClan;
+import com.perso.T4C.monster.core.MonsterClanRelations;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.companion.CompanionDef;
 import com.perso.T4C.npc.companion.CompanionRegistry;
@@ -43,8 +34,12 @@ import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.render.ObjectMapping;
 import com.perso.T4C.skill.SkillDefinition;
 import com.perso.T4C.skill.SkillRegistry;
+import com.perso.T4C.spawn.SpawnDefinition;
+import com.perso.T4C.spawn.SpawnRegistry;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
+import com.perso.T4C.teleport.TeleportDefinition;
+import com.perso.T4C.teleport.TeleportRegistry;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import java.awt.BasicStroke;
@@ -159,8 +154,6 @@ public class T4CContentStudio {
     server.createContext("/api/herbs", this::handleHerbs);
     server.createContext("/api/appearance-defaults", this::handleAppearanceDefaults);
     server.createContext("/api/concealment", this::handleConcealmentRules);
-    server.createContext("/api/collision-rules", this::handleCollisionRules);
-    server.createContext("/api/regenerate-collisions", this::handleRegenerateCollisions);
     server.start();
     System.out.println("T4C Content Studio running on http://localhost:" + port);
   }
@@ -906,27 +899,26 @@ public class T4CContentStudio {
     Map<String, String> query = parseQueryMap(exchange.getRequestURI().getRawQuery());
     String mapPath = query.getOrDefault("map", Paths.MAP);
     String kind = query.getOrDefault("kind", "monster");
-    File file = getSpawnFile(kind);
     int mapZ = resolveMapZ(mapPath);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<SpawnBinaryIO.Entry> entries =
-          readSpawns(file).stream().filter(entry -> entry.z == mapZ).toList();
+      List<SpawnDefinition> entries =
+          spawnDefinitions(kind).stream().filter(entry -> entry.z() == mapZ).toList();
       writeCollection(exchange, entries.stream().map(this::spawnToMap).toList());
       return;
     }
     if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
       List<Map<String, Object>> items = readItemsPayload(exchange);
-      List<SpawnBinaryIO.Entry> edited =
+      List<SpawnDefinition> edited =
           items.stream().map(this::spawnFromMap).filter(Objects::nonNull).toList();
-      edited.forEach(entry -> entry.z = mapZ);
-      List<SpawnBinaryIO.Entry> entries = new ArrayList<>();
-      for (SpawnBinaryIO.Entry entry : readSpawns(file)) {
-        if (entry.z != mapZ) {
+      edited = edited.stream().map(entry -> withZ(entry, mapZ)).toList();
+      List<SpawnDefinition> entries = new ArrayList<>();
+      for (SpawnDefinition entry : spawnDefinitions(kind)) {
+        if (entry.z() != mapZ) {
           entries.add(entry);
         }
       }
       entries.addAll(edited);
-      SpawnBinaryIO.write(file, entries);
+      SpawnJavaExporter.export(entries, isNpcKind(kind));
       writeSaved(exchange, edited.size());
       return;
     }
@@ -950,7 +942,7 @@ public class T4CContentStudio {
     }
     try (MapReader reader = MapReader.spriteNamesOnly(mapFile)) {
       CollisionReader collisionReader = null;
-      File collisionFile = CollisionGenerationService.collisionFileFor(mapFile);
+      File collisionFile = collisionFileFor(mapFile);
       if (collisionFile.exists()) {
         collisionReader = new CollisionReader(collisionFile);
       }
@@ -1006,14 +998,16 @@ public class T4CContentStudio {
   }
 
   private void handleObjectMappings(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.OBJECT_MAPPINGS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<ObjectMappingsBinaryIO.Entry> entries = readObjectMappings(file);
-      writeCollection(exchange, entries.stream().map(this::objectMappingToMap).toList());
+      writeCollection(
+          exchange,
+          JavaDataCatalog.objectMappings().entrySet().stream()
+              .map(e -> objectMappingToMap(new ObjectMappingsData.Entry(e.getKey(), e.getValue())))
+              .toList());
       return;
     }
     if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<ObjectMappingsBinaryIO.Entry> entries =
+      List<ObjectMappingsData.Entry> entries =
           readItemsPayload(exchange).stream()
               .map(this::objectMappingFromMap)
               .filter(Objects::nonNull)
@@ -1022,17 +1016,15 @@ public class T4CContentStudio {
                       e -> e.logicalName == null ? "" : e.logicalName,
                       String.CASE_INSENSITIVE_ORDER))
               .toList();
-      ObjectMappingsBinaryIO.write(file, entries);
-      writeSaved(exchange, entries.size());
+      sendBadRequest(exchange, "Object mappings are generated Java definitions");
       return;
     }
     sendMethodNotAllowed(exchange);
   }
 
   private void handleObjectPositions(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.OBJECT_POSITIONS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<ObjectPos> entries = readObjectPositions(file);
+      List<ObjectPos> entries = JavaDataCatalog.objectPositions();
       writeCollection(exchange, entries.stream().map(this::objectPosToMap).toList());
       return;
     }
@@ -1042,28 +1034,26 @@ public class T4CContentStudio {
               .map(this::objectPosFromMap)
               .filter(Objects::nonNull)
               .toList();
-      ObjectPositionBinaryIO.write(file, entries);
-      writeSaved(exchange, entries.size());
+      sendBadRequest(exchange, "Object positions are generated Java definitions");
       return;
     }
     sendMethodNotAllowed(exchange);
   }
 
   private void handleTeleports(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.TELEPORTS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<TeleportBinaryIO.Entry> entries = readTeleports(file);
+      List<TeleportDefinition> entries = TeleportRegistry.load();
       writeCollection(exchange, entries.stream().map(this::teleportToMap).toList());
       return;
     }
     if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<TeleportBinaryIO.Entry> entries =
+      List<TeleportDefinition> entries =
           readItemsPayload(exchange).stream()
               .map(this::teleportFromMap)
               .filter(Objects::nonNull)
-              .sorted(Comparator.comparingInt(e -> e.id))
+              .sorted(Comparator.comparingInt(TeleportDefinition::id))
               .toList();
-      TeleportBinaryIO.write(file, entries);
+      TeleportRegistry.save(entries);
       writeSaved(exchange, entries.size());
       return;
     }
@@ -1071,9 +1061,8 @@ public class T4CContentStudio {
   }
 
   private void handleClanRelations(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.CLAN_RELATIONS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<ClanRelationsBinaryIO.Entry> entries = readClanRelations(file);
+      List<MonsterClanRelations.Relation> entries = MonsterClanRelations.getRelations();
       Map<String, Object> response = new LinkedHashMap<>();
       response.put("items", entries.stream().map(this::clanRelationToMap).toList());
       response.put("count", entries.size());
@@ -1082,12 +1071,12 @@ public class T4CContentStudio {
       return;
     }
     if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<ClanRelationsBinaryIO.Entry> entries =
+      List<MonsterClanRelations.Relation> entries =
           readItemsPayload(exchange).stream()
               .map(this::clanRelationFromMap)
               .filter(Objects::nonNull)
               .toList();
-      ClanRelationsBinaryIO.write(file, entries);
+      MonsterClanRelations.saveRelations(entries);
       writeSaved(exchange, entries.size());
       return;
     }
@@ -1095,9 +1084,8 @@ public class T4CContentStudio {
   }
 
   private void handleDecorLayerRules(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.DECOR_LAYER_RULES_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-      Set<String> names = readDecorLayerRules(file);
+      Set<String> names = JavaDataCatalog.decorRules();
       writeCollection(
           exchange,
           names.stream()
@@ -1118,19 +1106,17 @@ public class T4CContentStudio {
           names.add(sprite);
         }
       }
-      DecorLayerRuleBinaryIO.write(file, names);
-      writeSaved(exchange, names.size());
+      sendBadRequest(exchange, "Decor layer rules are generated Java definitions");
       return;
     }
     sendMethodNotAllowed(exchange);
   }
 
   private void handleItemIcons(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.ITEM_ICONS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
       writeCollection(
           exchange,
-          readItemIcons(file).entrySet().stream()
+          JavaDataCatalog.itemIcons().entrySet().stream()
               .map(
                   entry -> {
                     Map<String, Object> item = new LinkedHashMap<>();
@@ -1150,31 +1136,25 @@ public class T4CContentStudio {
           icons.put(appearanceId, sprite);
         }
       }
-      ItemIconBinaryIO.write(file, icons);
-      ItemIconRegistry.invalidate();
-      writeSaved(exchange, icons.size());
+      sendBadRequest(exchange, "Item icons are generated Java definitions");
       return;
     }
     sendMethodNotAllowed(exchange);
   }
 
   private Map<Integer, String> readItemIcons(File file) {
-    if (file == null || !file.exists()) {
-      return new TreeMap<>();
-    }
     try {
-      return new TreeMap<>(ItemIconBinaryIO.read(file));
+      return new TreeMap<>(JavaDataCatalog.itemIcons());
     } catch (Exception e) {
       return new TreeMap<>();
     }
   }
 
   private void handleGroundMosaics(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.GROUND_MOSAICS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
       writeCollection(
           exchange,
-          readGroundMosaics(file).stream()
+          JavaDataCatalog.mosaics().stream()
               .map(
                   definition -> {
                     Map<String, Object> item = new LinkedHashMap<>();
@@ -1189,7 +1169,7 @@ public class T4CContentStudio {
       return;
     }
     if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<GroundMosaicBinaryIO.Definition> definitions = new ArrayList<>();
+      List<GroundMosaicData.Definition> definitions = new ArrayList<>();
       for (Map<String, Object> item : readItemsPayload(exchange)) {
         String id = str(item.get("id")).trim();
         if (id.isBlank()) {
@@ -1201,34 +1181,24 @@ public class T4CContentStudio {
                 .filter(frame -> !frame.isEmpty())
                 .toList();
         definitions.add(
-            new GroundMosaicBinaryIO.Definition(
+            new GroundMosaicData.Definition(
                 id, integer(item.get("width"), 0), integer(item.get("height"), 0), frames));
       }
-      GroundMosaicBinaryIO.write(file, definitions);
-      GroundMosaicCatalog.invalidate();
-      writeSaved(exchange, definitions.size());
+      sendBadRequest(exchange, "Ground mosaics are generated Java definitions");
       return;
     }
     sendMethodNotAllowed(exchange);
   }
 
-  private List<GroundMosaicBinaryIO.Definition> readGroundMosaics(File file) {
-    if (file == null || !file.exists()) {
-      return List.of();
-    }
-    try {
-      return GroundMosaicBinaryIO.read(file);
-    } catch (Exception e) {
-      return List.of();
-    }
+  private List<GroundMosaicData.Definition> readGroundMosaics(File file) {
+    return JavaDataCatalog.mosaics();
   }
 
   private void handleAppearanceDefaults(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.APPEARANCE_DEFAULTS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
       writeCollection(
           exchange,
-          readAppearanceDefaults(file).nakedParts().stream()
+          JavaDataCatalog.appearanceDefaults().nakedParts().stream()
               .map(
                   part -> {
                     Map<String, Object> item = new LinkedHashMap<>();
@@ -1241,32 +1211,26 @@ public class T4CContentStudio {
       return;
     }
     if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<AppearanceDefaultsBinaryIO.NakedPart> parts = new ArrayList<>();
+      List<AppearanceDefaultsData.NakedPart> parts = new ArrayList<>();
       for (Map<String, Object> item : readItemsPayload(exchange)) {
         String gender = str(item.get("gender")).trim();
         String bodyPart = str(item.get("bodyPart")).trim();
         String sprite = str(item.get("sprite")).trim();
         if (!gender.isBlank() && !bodyPart.isBlank() && !sprite.isBlank()) {
-          parts.add(new AppearanceDefaultsBinaryIO.NakedPart(gender, bodyPart, sprite));
+          parts.add(new AppearanceDefaultsData.NakedPart(gender, bodyPart, sprite));
         }
       }
-      AppearanceDefaultsBinaryIO.write(
-          file,
-          new AppearanceDefaultsBinaryIO.Defaults(
-              parts, readAppearanceDefaults(file).concealmentRules()));
-      AppearanceDefaultsCatalog.invalidate();
-      writeSaved(exchange, parts.size());
+      sendBadRequest(exchange, "Appearance defaults are generated Java definitions");
       return;
     }
     sendMethodNotAllowed(exchange);
   }
 
   private void handleConcealmentRules(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.APPEARANCE_DEFAULTS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
       writeCollection(
           exchange,
-          readAppearanceDefaults(file).concealmentRules().stream()
+          JavaDataCatalog.appearanceDefaults().concealmentRules().stream()
               .map(
                   rule -> {
                     Map<String, Object> item = new LinkedHashMap<>();
@@ -1280,7 +1244,7 @@ public class T4CContentStudio {
       return;
     }
     if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<AppearanceDefaultsBinaryIO.ConcealmentRule> rules = new ArrayList<>();
+      List<AppearanceDefaultsData.ConcealmentRule> rules = new ArrayList<>();
       for (Map<String, Object> item : readItemsPayload(exchange)) {
         String triggerSlot = validBodyPart(str(item.get("triggerSlot")));
         String appearance = str(item.get("appearance")).trim();
@@ -1292,16 +1256,11 @@ public class T4CContentStudio {
                 .toList();
         if (!triggerSlot.isEmpty() && !appearance.isBlank()) {
           rules.add(
-              new AppearanceDefaultsBinaryIO.ConcealmentRule(
+              new AppearanceDefaultsData.ConcealmentRule(
                   triggerSlot, appearance, hiddenParts, bool(item.get("hidesExplicit"), false)));
         }
       }
-      AppearanceDefaultsBinaryIO.write(
-          file,
-          new AppearanceDefaultsBinaryIO.Defaults(
-              readAppearanceDefaults(file).nakedParts(), rules));
-      AppearanceDefaultsCatalog.invalidate();
-      writeSaved(exchange, rules.size());
+      sendBadRequest(exchange, "Appearance defaults are generated Java definitions");
       return;
     }
     sendMethodNotAllowed(exchange);
@@ -1318,72 +1277,8 @@ public class T4CContentStudio {
     }
   }
 
-  private AppearanceDefaultsBinaryIO.Defaults readAppearanceDefaults(File file) {
-    if (file == null || !file.exists()) {
-      return new AppearanceDefaultsBinaryIO.Defaults(List.of(), List.of());
-    }
-    try {
-      return AppearanceDefaultsBinaryIO.read(file);
-    } catch (Exception e) {
-      return new AppearanceDefaultsBinaryIO.Defaults(List.of(), List.of());
-    }
-  }
-
-  private void handleCollisionRules(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.COLLISION_RULES_BIN);
-    if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-      CollisionRuleBinaryIO.CollisionRules rules =
-          file.exists()
-              ? CollisionRuleBinaryIO.read(file)
-              : new CollisionRuleBinaryIO.CollisionRules();
-      writeJson(exchange, collisionRulesToMap(rules));
-      return;
-    }
-    if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-      CollisionRuleBinaryIO.CollisionRules rules = collisionRulesFromMap(readMapPayload(exchange));
-      CollisionRuleBinaryIO.write(file, rules);
-      writeSaved(exchange, rules.exactSprites.size() + rules.nameContainsRules.size());
-      return;
-    }
-    sendMethodNotAllowed(exchange);
-  }
-
-  private void handleRegenerateCollisions(HttpExchange exchange) throws IOException {
-    if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-      sendMethodNotAllowed(exchange);
-      return;
-    }
-    Map<String, Object> payload = readMapPayload(exchange);
-    boolean all = bool(payload.get("all"), false);
-    Map<String, CollisionGenerationService.SpriteMeta> metaByName = buildCollisionSpriteMeta();
-    List<Map<String, Object>> results = new ArrayList<>();
-    try {
-      if (all) {
-        List<Map<String, Object>> maps = new ArrayList<>();
-        collectMapBins(new File(Paths.MAPS_DIR), maps);
-        for (Map<String, Object> map : maps) {
-          CollisionGenerationService.Result result =
-              CollisionGenerationService.regenerate(new File(str(map.get("path"))), metaByName);
-          results.add(collisionResultToMap(result));
-        }
-      } else {
-        String mapPath = str(payload.get("map")).trim();
-        if (mapPath.isEmpty()) {
-          mapPath = Paths.MAP;
-        }
-        CollisionGenerationService.Result result =
-            CollisionGenerationService.regenerate(new File(mapPath), metaByName);
-        results.add(collisionResultToMap(result));
-      }
-    } catch (Exception e) {
-      sendBadRequest(exchange, "Collision regeneration failed: " + e.getMessage());
-      return;
-    }
-    Map<String, Object> response = new LinkedHashMap<>();
-    response.put("regenerated", true);
-    response.put("count", results.size());
-    response.put("items", results);
-    writeJson(exchange, response);
+  private AppearanceDefaultsData.Defaults readAppearanceDefaults(File file) {
+    return JavaDataCatalog.appearanceDefaults();
   }
 
   private void collectMapBins(File file, List<Map<String, Object>> maps) {
@@ -1576,9 +1471,8 @@ public class T4CContentStudio {
   }
 
   private void handleHerbs(HttpExchange exchange) throws IOException {
-    File file = new File(Paths.HERBS_BIN);
     if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-      List<HerbDefinition> definitions = readHerbs(file);
+      List<HerbDefinition> definitions = HerbRegistry.load();
       writeCollection(
           exchange,
           definitions.stream()
@@ -1611,21 +1505,11 @@ public class T4CContentStudio {
                           && !definition.getWorldSprite().isBlank())
               .sorted(Comparator.comparing(HerbDefinition::getId, String.CASE_INSENSITIVE_ORDER))
               .toList();
-      HerbDefinitionBinaryIO.write(file, definitions);
-      HerbRegistry.invalidate();
+      HerbRegistry.save(definitions);
       writeSaved(exchange, definitions.size());
       return;
     }
     sendMethodNotAllowed(exchange);
-  }
-
-  private List<HerbDefinition> readHerbs(File file) {
-    if (file == null || !file.exists()) return List.of();
-    try {
-      return HerbDefinitionBinaryIO.read(file);
-    } catch (Exception ignored) {
-      return List.of();
-    }
   }
 
   private Map<String, Object> companionToMap(CompanionDef def) {
@@ -2098,28 +1982,27 @@ public class T4CContentStudio {
         longVal(item.get("useCooldownMillis"), 0L));
   }
 
-  private Map<String, Object> spawnToMap(SpawnBinaryIO.Entry entry) {
+  private Map<String, Object> spawnToMap(SpawnDefinition entry) {
     Map<String, Object> item = new LinkedHashMap<>();
-    item.put("type", entry.type);
-    item.put("x", entry.x);
-    item.put("y", entry.y);
-    item.put("z", entry.z);
-    item.put("stationary", entry.stationary);
-    item.put("aggressive", entry.aggressive);
+    item.put("type", entry.type());
+    item.put("x", entry.x());
+    item.put("y", entry.y());
+    item.put("z", entry.z());
+    item.put("stationary", entry.stationary());
+    item.put("aggressive", entry.aggressive());
     return item;
   }
 
-  private SpawnBinaryIO.Entry spawnFromMap(Map<String, Object> item) {
+  private SpawnDefinition spawnFromMap(Map<String, Object> item) {
     String type = str(item.get("type")).trim();
     if (type.isEmpty()) return null;
-    SpawnBinaryIO.Entry entry = new SpawnBinaryIO.Entry();
-    entry.type = type;
-    entry.x = integer(item.get("x"), 0);
-    entry.y = integer(item.get("y"), 0);
-    entry.z = integer(item.get("z"), 0);
-    entry.stationary = bool(item.get("stationary"), false);
-    entry.aggressive = bool(item.get("aggressive"), false);
-    return entry;
+    return new SpawnDefinition(
+        type,
+        integer(item.get("x"), 0),
+        integer(item.get("y"), 0),
+        integer(item.get("z"), 0),
+        bool(item.get("stationary"), false),
+        bool(item.get("aggressive"), false));
   }
 
   private BufferedImage createMapPreview(File mapFile, String kind, int selectedX, int selectedY)
@@ -2147,7 +2030,7 @@ public class T4CContentStudio {
         g.drawLine(0, line, size, line);
       }
       if ("object".equalsIgnoreCase(kind) || "objects".equalsIgnoreCase(kind)) {
-        for (ObjectPos pos : readObjectPositions(new File(Paths.OBJECT_POSITIONS_BIN))) {
+        for (ObjectPos pos : JavaDataCatalog.objectPositions()) {
           drawMapMarker(
               g,
               pos.x(),
@@ -2162,15 +2045,15 @@ public class T4CContentStudio {
         }
       } else {
         int mapZ = resolveMapZ(mapFile.getPath());
-        List<SpawnBinaryIO.Entry> spawns =
-            readSpawns(getSpawnFile(kind)).stream().filter(spawn -> spawn.z == mapZ).toList();
+        List<SpawnDefinition> spawns =
+            spawnDefinitions(kind).stream().filter(spawn -> spawn.z() == mapZ).toList();
         Color marker =
             "npc".equalsIgnoreCase(kind) || "npcs".equalsIgnoreCase(kind)
                 ? new Color(34, 197, 94)
                 : new Color(239, 68, 68);
-        for (SpawnBinaryIO.Entry spawn : spawns) {
+        for (SpawnDefinition spawn : spawns) {
           drawMapMarker(
-              g, spawn.x, spawn.y, selectedX, selectedY, width, height, size, marker, false);
+              g, spawn.x(), spawn.y(), selectedX, selectedY, width, height, size, marker, false);
         }
       }
     } finally {
@@ -2290,7 +2173,7 @@ public class T4CContentStudio {
     return new Color(r, gr, b);
   }
 
-  private Map<String, Object> objectMappingToMap(ObjectMappingsBinaryIO.Entry entry) {
+  private Map<String, Object> objectMappingToMap(ObjectMappingsData.Entry entry) {
     ObjectMapping mapping = entry.mapping;
     Map<String, Object> item = new LinkedHashMap<>();
     item.put("logicalName", entry.logicalName);
@@ -2310,7 +2193,7 @@ public class T4CContentStudio {
     return item;
   }
 
-  private ObjectMappingsBinaryIO.Entry objectMappingFromMap(Map<String, Object> item) {
+  private ObjectMappingsData.Entry objectMappingFromMap(Map<String, Object> item) {
     String logicalName = str(item.get("logicalName")).trim();
     if (logicalName.isEmpty()) return null;
     ObjectMapping mapping =
@@ -2324,7 +2207,7 @@ public class T4CContentStudio {
             bool(item.get("alwaysBehindEntities"), false),
             str(item.get("displayName")),
             integer(item.get("depthTileOffsetY"), 0));
-    return new ObjectMappingsBinaryIO.Entry(logicalName, mapping);
+    return new ObjectMappingsData.Entry(logicalName, mapping);
   }
 
   private Map<String, Object> objectPosToMap(ObjectPos pos) {
@@ -2348,156 +2231,40 @@ public class T4CContentStudio {
         bool(item.get("mirror"), false));
   }
 
-  private Map<String, Object> teleportToMap(TeleportBinaryIO.Entry entry) {
+  private Map<String, Object> teleportToMap(TeleportDefinition entry) {
     Map<String, Object> item = new LinkedHashMap<>();
-    item.put("id", entry.id);
-    item.put("sourceZ", entry.sourceZ);
-    item.put("sourceX", entry.sourceX);
-    item.put("sourceY", entry.sourceY);
-    item.put("targetZ", entry.targetZ);
-    item.put("targetX", entry.targetX);
-    item.put("targetY", entry.targetY);
+    item.put("id", entry.id());
+    item.put("sourceZ", entry.sourceZ());
+    item.put("sourceX", entry.sourceX());
+    item.put("sourceY", entry.sourceY());
+    item.put("targetZ", entry.targetZ());
+    item.put("targetX", entry.targetX());
+    item.put("targetY", entry.targetY());
     return item;
   }
 
-  private TeleportBinaryIO.Entry teleportFromMap(Map<String, Object> item) {
-    TeleportBinaryIO.Entry entry = new TeleportBinaryIO.Entry();
-    entry.id = integer(item.get("id"), 0);
-    entry.sourceZ = integer(item.get("sourceZ"), 0);
-    entry.sourceX = integer(item.get("sourceX"), 0);
-    entry.sourceY = integer(item.get("sourceY"), 0);
-    entry.targetZ = integer(item.get("targetZ"), 0);
-    entry.targetX = integer(item.get("targetX"), 0);
-    entry.targetY = integer(item.get("targetY"), 0);
-    return entry;
+  private TeleportDefinition teleportFromMap(Map<String, Object> item) {
+    return new TeleportDefinition(
+        integer(item.get("id"), 0),
+        integer(item.get("sourceZ"), 0),
+        integer(item.get("sourceX"), 0),
+        integer(item.get("sourceY"), 0),
+        integer(item.get("targetZ"), 0),
+        integer(item.get("targetX"), 0),
+        integer(item.get("targetY"), 0));
   }
 
-  private Map<String, Object> clanRelationToMap(ClanRelationsBinaryIO.Entry entry) {
+  private Map<String, Object> clanRelationToMap(MonsterClanRelations.Relation entry) {
     Map<String, Object> item = new LinkedHashMap<>();
     item.put("source", entry.source == null ? MonsterClan.NEUTRAL.name() : entry.source.name());
     item.put("target", entry.target == null ? MonsterClan.NEUTRAL.name() : entry.target.name());
     return item;
   }
 
-  private ClanRelationsBinaryIO.Entry clanRelationFromMap(Map<String, Object> item) {
-    return new ClanRelationsBinaryIO.Entry(
+  private MonsterClanRelations.Relation clanRelationFromMap(Map<String, Object> item) {
+    return new MonsterClanRelations.Relation(
         parseEnum(MonsterClan.class, str(item.get("source")), MonsterClan.NEUTRAL),
         parseEnum(MonsterClan.class, str(item.get("target")), MonsterClan.NEUTRAL));
-  }
-
-  private Map<String, Object> collisionRulesToMap(CollisionRuleBinaryIO.CollisionRules rules) {
-    Map<String, Object> response = new LinkedHashMap<>();
-    response.put("defaultDecorCollision", rules.defaultDecorCollision);
-    response.put("defaultCollisionValue", rules.defaultCollisionValue);
-    response.put("ignoredSprites", rules.ignoredSprites);
-    response.put(
-        "exactSprites",
-        rules.exactSprites.entrySet().stream()
-            .map(
-                entry -> {
-                  Map<String, Object> item = ruleToMap(entry.getValue());
-                  item.put("sprite", entry.getKey());
-                  return item;
-                })
-            .toList());
-    response.put(
-        "nameContainsRules",
-        rules.nameContainsRules.stream()
-            .map(
-                nameRule -> {
-                  Map<String, Object> item = ruleToMap(nameRule.rule);
-                  item.put("contains", nameRule.contains);
-                  return item;
-                })
-            .toList());
-    return response;
-  }
-
-  private CollisionRuleBinaryIO.CollisionRules collisionRulesFromMap(Map<String, Object> map) {
-    CollisionRuleBinaryIO.CollisionRules rules = new CollisionRuleBinaryIO.CollisionRules();
-    rules.defaultDecorCollision = bool(map.get("defaultDecorCollision"), false);
-    rules.defaultCollisionValue = integer(map.get("defaultCollisionValue"), 1);
-    rules.ignoredSprites = stringList(map.get("ignoredSprites"));
-    rules.exactSprites = new LinkedHashMap<>();
-    for (Map<String, Object> item : listOfMaps(map.get("exactSprites"))) {
-      String sprite = str(item.get("sprite")).trim();
-      if (!sprite.isEmpty()) rules.exactSprites.put(sprite, ruleFromMap(item));
-    }
-    rules.nameContainsRules = new ArrayList<>();
-    for (Map<String, Object> item : listOfMaps(map.get("nameContainsRules"))) {
-      CollisionRuleBinaryIO.CollisionNameRule nameRule =
-          new CollisionRuleBinaryIO.CollisionNameRule();
-      nameRule.contains = stringList(item.get("contains"));
-      nameRule.rule = ruleFromMap(item);
-      rules.nameContainsRules.add(nameRule);
-    }
-    return rules;
-  }
-
-  private Map<String, Object> ruleToMap(CollisionRuleBinaryIO.CollisionRule rule) {
-    Map<String, Object> item = new LinkedHashMap<>();
-    item.put("value", rule == null ? 1 : rule.value);
-    item.put("tiles", tilesToList(rule == null ? null : rule.tiles));
-    item.put("clearTiles", tilesToList(rule == null ? null : rule.clearTiles));
-    return item;
-  }
-
-  private CollisionRuleBinaryIO.CollisionRule ruleFromMap(Map<String, Object> item) {
-    CollisionRuleBinaryIO.CollisionRule rule = new CollisionRuleBinaryIO.CollisionRule();
-    rule.value = integer(item.get("value"), 1);
-    rule.tiles = tilesFromList(item.get("tiles"));
-    rule.clearTiles = tilesFromList(item.get("clearTiles"));
-    return rule;
-  }
-
-  private List<Map<String, Object>> tilesToList(List<int[]> tiles) {
-    if (tiles == null) return List.of();
-    List<Map<String, Object>> items = new ArrayList<>();
-    for (int[] tile : tiles) {
-      Map<String, Object> item = new LinkedHashMap<>();
-      item.put("x", tile != null && tile.length > 0 ? tile[0] : 0);
-      item.put("y", tile != null && tile.length > 1 ? tile[1] : 0);
-      items.add(item);
-    }
-    return items;
-  }
-
-  private List<int[]> tilesFromList(Object raw) {
-    List<int[]> tiles = new ArrayList<>();
-    for (Map<String, Object> item : listOfMaps(raw)) {
-      tiles.add(new int[] {integer(item.get("x"), 0), integer(item.get("y"), 0)});
-    }
-    return tiles;
-  }
-
-  private Map<String, CollisionGenerationService.SpriteMeta> buildCollisionSpriteMeta() {
-    Map<String, CollisionGenerationService.SpriteMeta> meta = new HashMap<>();
-    synchronized (sprites) {
-      for (SpriteEntry sprite : sprites) {
-        if (sprite != null && sprite.name != null) {
-          meta.put(
-              sprite.name.toLowerCase(Locale.ROOT),
-              new CollisionGenerationService.SpriteMeta(
-                  sprite.name,
-                  sprite.width,
-                  sprite.height,
-                  sprite.off1X,
-                  sprite.off1Y,
-                  sprite.off2X,
-                  sprite.off2Y));
-        }
-      }
-    }
-    return meta;
-  }
-
-  private Map<String, Object> collisionResultToMap(CollisionGenerationService.Result result) {
-    Map<String, Object> item = new LinkedHashMap<>();
-    item.put("file", normalizePath(result.file()));
-    item.put("width", result.width());
-    item.put("height", result.height());
-    item.put("collisionCount", result.collisionCount());
-    return item;
   }
 
   private String resolveEditedText(
@@ -2757,6 +2524,12 @@ public class T4CContentStudio {
     return idx >= 0 ? name.substring(0, idx) : name;
   }
 
+  private File collisionFileFor(File mapFile) {
+    File parent = mapFile.getParentFile();
+    return new File(
+        parent != null ? parent : new File("."), stripExtension(mapFile.getName()) + ".colbin");
+  }
+
   private void serveResource(HttpExchange exchange, String resource, String contentType)
       throws IOException {
     try (InputStream in = getClass().getClassLoader().getResourceAsStream(resource)) {
@@ -2833,8 +2606,13 @@ public class T4CContentStudio {
     return "npc".equalsIgnoreCase(kind) || "npcs".equalsIgnoreCase(kind);
   }
 
-  private File getSpawnFile(String kind) {
-    return new File(isNpcKind(kind) ? Paths.NPC_SPAWNS_BIN : Paths.MONSTER_SPAWNS_BIN);
+  private List<SpawnDefinition> spawnDefinitions(String kind) {
+    return isNpcKind(kind) ? SpawnRegistry.npcs() : SpawnRegistry.monsters();
+  }
+
+  private static SpawnDefinition withZ(SpawnDefinition entry, int z) {
+    return new SpawnDefinition(
+        entry.type(), entry.x(), entry.y(), z, entry.stationary(), entry.aggressive());
   }
 
   private int resolveMapZ(String mapPath) {
@@ -2850,70 +2628,18 @@ public class T4CContentStudio {
     return 0;
   }
 
-  private List<SpawnBinaryIO.Entry> readSpawns(File file) {
-    if (file == null || !file.exists()) {
-      return List.of();
-    }
-    try {
-      return SpawnBinaryIO.read(file);
-    } catch (Exception e) {
-      return List.of();
-    }
-  }
-
-  private List<ObjectMappingsBinaryIO.Entry> readObjectMappings(File file) {
-    if (file == null || !file.exists()) {
-      return List.of();
-    }
-    try {
-      return ObjectMappingsBinaryIO.read(file);
-    } catch (Exception e) {
-      return List.of();
-    }
+  private List<ObjectMappingsData.Entry> readObjectMappings(File file) {
+    return JavaDataCatalog.objectMappings().entrySet().stream()
+        .map(entry -> new ObjectMappingsData.Entry(entry.getKey(), entry.getValue()))
+        .toList();
   }
 
   private List<ObjectPos> readObjectPositions(File file) {
-    if (file == null || !file.exists()) {
-      return List.of();
-    }
-    try {
-      return ObjectPositionBinaryIO.read(file);
-    } catch (Exception e) {
-      return List.of();
-    }
-  }
-
-  private List<TeleportBinaryIO.Entry> readTeleports(File file) {
-    if (file == null || !file.exists()) {
-      return List.of();
-    }
-    try {
-      return TeleportBinaryIO.read(file);
-    } catch (Exception e) {
-      return List.of();
-    }
-  }
-
-  private List<ClanRelationsBinaryIO.Entry> readClanRelations(File file) {
-    if (file == null || !file.exists()) {
-      return List.of();
-    }
-    try {
-      return ClanRelationsBinaryIO.read(file);
-    } catch (Exception e) {
-      return List.of();
-    }
+    return JavaDataCatalog.objectPositions();
   }
 
   private Set<String> readDecorLayerRules(File file) {
-    if (file == null || !file.exists()) {
-      return new LinkedHashSet<>();
-    }
-    try {
-      return DecorLayerRuleBinaryIO.read(file);
-    } catch (Exception e) {
-      return new LinkedHashSet<>();
-    }
+    return JavaDataCatalog.decorRules();
   }
 
   @SuppressWarnings("unchecked")

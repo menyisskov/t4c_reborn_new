@@ -7,13 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.config.MapDefinition;
-import com.perso.T4C.config.Paths;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spawn.SpawnRegistry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -516,18 +515,15 @@ public class MonsterManager {
   }
 
   private SpawnSource readSpawnsForMap(String mapPath) throws Exception {
-    File globalSpawnFile = new File(Paths.MONSTER_SPAWNS_BIN);
-    if (!globalSpawnFile.exists()) {
-      return null;
-    }
+    String source = "java:SpawnRegistry";
     int z = resolveMapZ(mapPath);
     List<MonsterSpawnEntry> filtered = new ArrayList<>();
-    for (MonsterSpawnEntry entry : readBinarySpawns(globalSpawnFile)) {
+    for (MonsterSpawnEntry entry : readJavaSpawns()) {
       if (entry.z == z) {
         filtered.add(entry);
       }
     }
-    return new SpawnSource(globalSpawnFile.getPath(), filtered);
+    return new SpawnSource(source, filtered);
   }
 
   private int resolveMapZ(String mapPath) {
@@ -543,17 +539,17 @@ public class MonsterManager {
     return 0;
   }
 
-  private List<MonsterSpawnEntry> readBinarySpawns(File spawnFile) throws Exception {
-    List<SpawnBinaryIO.Entry> binaryEntries = SpawnBinaryIO.read(spawnFile);
-    List<MonsterSpawnEntry> entries = new ArrayList<>(binaryEntries.size());
-    for (SpawnBinaryIO.Entry binaryEntry : binaryEntries) {
+  private List<MonsterSpawnEntry> readJavaSpawns() {
+    List<com.perso.T4C.spawn.SpawnDefinition> definitions = SpawnRegistry.monsters();
+    List<MonsterSpawnEntry> entries = new ArrayList<>(definitions.size());
+    for (com.perso.T4C.spawn.SpawnDefinition definition : definitions) {
       MonsterSpawnEntry entry = new MonsterSpawnEntry();
-      entry.type = binaryEntry.type;
-      entry.x = binaryEntry.x;
-      entry.y = binaryEntry.y;
-      entry.z = binaryEntry.z;
-      entry.stationary = binaryEntry.stationary;
-      entry.aggressive = binaryEntry.aggressive;
+      entry.type = definition.type();
+      entry.x = definition.x();
+      entry.y = definition.y();
+      entry.z = definition.z();
+      entry.stationary = definition.stationary();
+      entry.aggressive = definition.aggressive();
       entries.add(entry);
     }
     return entries;

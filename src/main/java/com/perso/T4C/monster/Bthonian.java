@@ -2,7 +2,17 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Bthonian", x = 2792, y = 2452, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bthonian", x = 2796, y = 2456, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bthonian", x = 2800, y = 2444, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bthonian", x = 2800, y = 2460, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bthonian", x = 2804, y = 2440, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bthonian", x = 2808, y = 2436, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bthonian", x = 2808, y = 2452, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bthonian", x = 2812, y = 2448, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bthonian", x = 2816, y = 2444, z = 2, stationary = false, aggressive = true)
 public final class Bthonian extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

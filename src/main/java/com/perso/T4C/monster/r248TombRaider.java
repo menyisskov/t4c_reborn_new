@@ -2,7 +2,12 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Tomb Raider", x = 1121, y = 129, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Tomb Raider", x = 21, y = 461, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Tomb Raider", x = 428, y = 204, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Tomb Raider", x = 71, y = 620, z = 1, stationary = false, aggressive = true)
 public final class r248TombRaider extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

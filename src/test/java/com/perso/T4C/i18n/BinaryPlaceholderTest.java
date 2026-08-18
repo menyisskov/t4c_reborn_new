@@ -2,17 +2,16 @@ package com.perso.T4C.i18n;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.perso.T4C.helper.ItemDefBinaryIO;
-import com.perso.T4C.helper.ObjectMappingsBinaryIO;
-import com.perso.T4C.helper.QuestDefBinaryIO;
 import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.mapping.definition.ObjectMappingDefinitions;
 import com.perso.T4C.npc.arakas.LighthavenSamaritan;
 import com.perso.T4C.npc.registry.*;
 import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcFactoryRegistry;
 import com.perso.T4C.quest.QuestDef;
+import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.spell.SpellData;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ class BinaryPlaceholderTest {
 
   @Test
   void everyPlayerFacingStringIsAKnownPlaceholder() throws Exception {
-    for (ItemDefinition def : ItemDefBinaryIO.read(new File("assets/items/items.bin"))) {
+    for (ItemDefinition def : ItemRegistry.load()) {
       check("item[" + def.getKey() + "].name", def.getName());
       check("item[" + def.getKey() + "].signText", def.getSignText());
     }
@@ -54,16 +53,15 @@ class BinaryPlaceholderTest {
         }
       }
     }
-    for (QuestDef quest : QuestDefBinaryIO.read(new File("assets/quests/quests.bin"))) {
+    for (QuestDef quest : QuestRegistry.load()) {
       check("quest[" + quest.getId() + "].title", quest.getTitle());
       check("quest[" + quest.getId() + "].offerText", quest.getOfferText());
       check("quest[" + quest.getId() + "].completionText", quest.getCompletionText());
       check("quest[" + quest.getId() + "].completedText", quest.getCompletedText());
     }
-    for (ObjectMappingsBinaryIO.Entry entry :
-        ObjectMappingsBinaryIO.read(new File("assets/objects/object_mappings.bin"))) {
-      if (entry != null && entry.mapping != null) {
-        check("object[" + entry.logicalName + "].displayName", entry.mapping.displayName);
+    for (var entry : ObjectMappingDefinitions.all().entrySet()) {
+      if (entry != null && entry.getValue() != null) {
+        check("object[" + entry.getKey() + "].displayName", entry.getValue().displayName);
       }
     }
     assertTrue(

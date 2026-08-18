@@ -19,28 +19,6 @@ public final class Paths {
   public static final String DUNGEON_COLLISION_MAP = "assets/maps/dungeon/DungeonMap.colbin";
   public static final String CAVERN_COLLISION_MAP = "assets/maps/cavern/CavernMap.colbin";
   public static final String UNDERWORLD_COLLISION_MAP = "assets/maps/underworld/underworld.colbin";
-  public static final String XP_CURVE_BIN = "assets/mappings/progression/xp_curve.bin";
-  public static final String ITEM_ICONS_BIN = "assets/mappings/items/item_icons.bin";
-  public static final String GROUND_MOSAICS_BIN = "assets/mappings/ground/ground_mosaics.bin";
-  public static final String APPEARANCE_DEFAULTS_BIN =
-      "assets/mappings/appearance/appearance_defaults.bin";
-  public static final String OBJECT_POSITIONS_BIN = "assets/objects/object_positions.bin";
-  public static final String OBJECT_MAPPINGS_BIN = "assets/objects/object_mappings.bin";
-  public static final String COLLISION_RULES = "assets/mappings/collision_rules.json";
-  public static final String COLLISION_RULES_BIN = "assets/collision/collision_rules.bin";
-  public static final String DECOR_LAYER_RULES_BIN = "assets/decor/decor_layer_rules.bin";
-  public static final String CLAN_RELATIONS_BIN = "assets/monsters/clan_relations.bin";
-  public static final String MONSTER_SPAWNS_BIN = "assets/spawns/monster_spawns.bin";
-  public static final String ITEMS_BIN = "assets/items/items.bin";
-  public static final String HERBS_BIN = "assets/harvest/herbs.bin";
-
-  public static final String NPCS_BIN = "assets/npcs/npcs.bin";
-
-  public static final String COMPANIONS_BIN = "assets/companions/companions.bin";
-  public static final String QUESTS_BIN = "assets/quests/quests.bin";
-  public static final String NPC_SPAWNS_BIN = "assets/spawns/npc_spawns.bin";
-  public static final String TELEPORTS_BIN = "assets/teleports/teleports.bin";
-  public static final String SKILLS_BIN = "assets/skills/skills.bin";
   public static final String SPRITE_PALETTES = "assets/mappings/sprite_palettes.json";
   public static final String SPRITE_DIR = "assets/sprites";
   public static final String SPRITE_BIN_BASE = "sprites";
@@ -58,5 +36,4 @@ public final class Paths {
   public static final String CHARACTER_ROSTER_FILE = "characters.json";
   public static final String CHARACTER_STATES_DIR = "characters";
   public static final String GAME_PREFERENCES_FILE = "game_preferences.json";
-  public static final String SPAWN_GROUPS_BIN = "assets/spawns/spawn_groups.bin";
 }

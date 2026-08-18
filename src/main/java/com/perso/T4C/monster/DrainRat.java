@@ -2,7 +2,30 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Drain Rat", x = 2727, y = 1951, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2732, y = 2003, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2735, y = 2047, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2746, y = 2023, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2749, y = 1988, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2755, y = 1965, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2756, y = 1981, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2756, y = 2018, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2758, y = 2044, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2764, y = 1960, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2778, y = 1974, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2779, y = 2035, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2784, y = 2062, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2794, y = 1960, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2797, y = 1939, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2802, y = 2041, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2803, y = 2019, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2804, y = 1965, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2805, y = 1990, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2810, y = 2024, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2822, y = 2002, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drain Rat", x = 2836, y = 1983, z = 0, stationary = false, aggressive = true)
 public final class DrainRat extends DataMonster {
   public static final String SOUND_ATTACK = "Rat Attack.wav";
   public static final String SOUND_DEATH = "Rat Dying.wav";

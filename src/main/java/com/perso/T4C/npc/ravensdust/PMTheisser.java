@@ -9,11 +9,13 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Spawn(type = "PMTheisser", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
 public final class PMTheisser extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 2.wav";
   public static final String SOUND_DEATH = "Goblin Dying.wav";

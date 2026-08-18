@@ -2,7 +2,31 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Great Wolf", x = 354, y = 379, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 439, y = 935, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 554, y = 1076, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 555, y = 860, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 557, y = 1091, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 570, y = 1092, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 574, y = 1068, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 577, y = 1076, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 581, y = 1084, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 697, y = 1089, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 724, y = 1029, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 772, y = 1074, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 792, y = 541, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 797, y = 546, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 809, y = 519, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 809, y = 873, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 811, y = 548, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 818, y = 862, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 824, y = 538, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 826, y = 532, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 833, y = 855, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 87, y = 606, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Great Wolf", x = 95, y = 559, z = 0, stationary = false, aggressive = true)
 public final class GreatWolf extends DataMonster {
   public static final String SOUND_ATTACK = "Wolf Attack.wav";
   public static final String SOUND_DEATH = "Wolf Dying.wav";

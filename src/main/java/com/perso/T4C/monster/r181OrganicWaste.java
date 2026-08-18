@@ -2,7 +2,14 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Organic Waste", x = 173, y = 509, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Organic Waste", x = 195, y = 527, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Organic Waste", x = 202, y = 696, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Organic Waste", x = 215, y = 482, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Organic Waste", x = 419, y = 451, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Organic Waste", x = 419, y = 462, z = 2, stationary = false, aggressive = true)
 public final class r181OrganicWaste extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

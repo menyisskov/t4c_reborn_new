@@ -1,5 +1,6 @@
 package com.perso.T4C.helper;
 
+import com.perso.T4C.mapping.definition.AppearanceDefaultsDefinitions;
 import com.perso.T4C.player.BodyPart;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -22,7 +23,7 @@ public final class ConcealmentResolver {
     for (Map.Entry<BodyPart, String> entry : snapshot.entrySet()) {
       BodyPart trigger = entry.getKey();
       for (BodyPart lookup : aliases(trigger)) {
-        for (AppearanceDefaultsBinaryIO.ConcealmentRule rule :
+        for (AppearanceDefaultsDefinitions.ConcealmentRule rule :
             AppearanceDefaultsCatalog.rulesFor(lookup, entry.getValue())) {
           for (String hiddenName : rule.hiddenParts()) {
             BodyPart hidden = bodyPart(hiddenName);

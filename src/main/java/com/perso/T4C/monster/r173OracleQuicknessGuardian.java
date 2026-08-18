@@ -2,7 +2,120 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2732,
+    y = 2284,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2736,
+    y = 2296,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2744,
+    y = 2280,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2748,
+    y = 2268,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2748,
+    y = 2292,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2764,
+    y = 2252,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2768,
+    y = 2272,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2780,
+    y = 2260,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2784,
+    y = 2232,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2792,
+    y = 2247,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2800,
+    y = 2216,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2804,
+    y = 2236,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2812,
+    y = 2212,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2816,
+    y = 2200,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2824,
+    y = 2216,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Oracle Quickness Guardian",
+    x = 2828,
+    y = 2204,
+    z = 2,
+    stationary = false,
+    aggressive = true)
 public final class r173OracleQuicknessGuardian extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

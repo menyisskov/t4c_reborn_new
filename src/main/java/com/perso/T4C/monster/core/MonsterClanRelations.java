@@ -1,9 +1,5 @@
 package com.perso.T4C.monster.core;
 
-import com.perso.T4C.config.Paths;
-import com.perso.T4C.helper.ClanRelationsBinaryIO;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -110,55 +106,53 @@ public final class MonsterClanRelations {
   }
 
   public static void reloadFromDisk() {
-    File file = new File(Paths.CLAN_RELATIONS_BIN);
     synchronized (ENEMIES) {
       ENEMIES.clear();
-      if (!file.exists()) {
-        addDefaultRelations();
-        return;
-      }
-      try {
-        applyRelations(ClanRelationsBinaryIO.read(file));
-      } catch (Exception e) {
-        addDefaultRelations();
-      }
+      addDefaultRelations();
     }
   }
 
-  public static java.util.List<ClanRelationsBinaryIO.Entry> getRelations() {
+  public static final class Relation {
+    public final MonsterClan source;
+    public final MonsterClan target;
+
+    public Relation(MonsterClan source, MonsterClan target) {
+      this.source = source;
+      this.target = target;
+    }
+  }
+
+  public static java.util.List<Relation> getRelations() {
     synchronized (ENEMIES) {
-      java.util.List<ClanRelationsBinaryIO.Entry> entries = new ArrayList<>();
+      java.util.List<Relation> entries = new ArrayList<>();
       for (Map.Entry<MonsterClan, Set<MonsterClan>> sourceEntry : ENEMIES.entrySet()) {
         for (MonsterClan target : sourceEntry.getValue()) {
-          entries.add(new ClanRelationsBinaryIO.Entry(sourceEntry.getKey(), target));
+          entries.add(new Relation(sourceEntry.getKey(), target));
         }
       }
       entries.sort(
-          Comparator.comparing((ClanRelationsBinaryIO.Entry entry) -> entry.source.name())
+          Comparator.comparing((Relation entry) -> entry.source.name())
               .thenComparing(entry -> entry.target.name()));
       return entries;
     }
   }
 
-  public static void saveRelations(java.util.List<ClanRelationsBinaryIO.Entry> relations)
-      throws IOException {
+  public static void saveRelations(java.util.List<Relation> relations) {
     synchronized (ENEMIES) {
       applyRelations(relations);
-      ClanRelationsBinaryIO.write(new File(Paths.CLAN_RELATIONS_BIN), getRelations());
     }
   }
 
-  public static java.util.List<ClanRelationsBinaryIO.Entry> defaultRelations() {
-    return java.util.List.of(
-        new ClanRelationsBinaryIO.Entry(MonsterClan.GOBLIN, MonsterClan.HORSE));
+  public static java.util.List<Relation> defaultRelations() {
+    return java.util.List.of(new Relation(MonsterClan.GOBLIN, MonsterClan.HORSE));
   }
 
-  private static void applyRelations(java.util.List<ClanRelationsBinaryIO.Entry> relations) {
+  private static void applyRelations(java.util.List<Relation> relations) {
     ENEMIES.clear();
     if (relations == null) {
       return;
     }
-    for (ClanRelationsBinaryIO.Entry relation : relations) {
+    for (Relation relation : relations) {
       if (relation == null
           || relation.source == null
           || relation.target == null

@@ -34,7 +34,7 @@ public final class BlackProphet extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBBLACKPROPHET",
+        "MOBBLACKPROPHET",
         "${monster.mobblackprophet}",
         100,
         0,

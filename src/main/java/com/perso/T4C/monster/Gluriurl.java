@@ -16,7 +16,7 @@ public final class Gluriurl extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "GLURIURL",
+        "GLURIURL",
         "${monster.gluriurl}",
         100,
         0,

@@ -8,8 +8,10 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+@Spawn(type = "GuntertagDestroy", x = 1813, y = 1273, z = 0, stationary = false, aggressive = false)
 public final class GuntertagDestroy extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshm 8.wav";
   public static final String SOUND_DEATH = "Orc Dying.wav";

@@ -10,12 +10,41 @@ public final class SunkenWoodsPortal {
     return new SpellData(
         "${spell.sunken_woods_portal}",
         "${spell.description.sunken_woods_portal}",
-        "self.maxmana", 0, 109, 106, 92,
-        false, true, "64kSpellIconNoneMain",
-        "64kSpellEnergyBallPurple-", null, 0, 0,
-        "Healing.wav", null, 0, "0", "0", 268038,
-        null, 10809, 0, 6, 1,
-        "100", "20000", "1000", "1000",
-        30049, 0, false, List.of(new SpellData.T4cEffect(6, List.of(new SpellData.T4cEffect.EffectParam(1, "NPC"), new SpellData.T4cEffect.EffectParam(2, "PORTALSPELLSUNKENWOODS")))));
+        "self.maxmana",
+        0,
+        109,
+        106,
+        92,
+        false,
+        true,
+        "64kSpellIconNoneMain",
+        "64kSpellEnergyBallPurple-",
+        null,
+        0,
+        0,
+        "Healing.wav",
+        null,
+        0,
+        "0",
+        "0",
+        268038,
+        null,
+        10809,
+        0,
+        6,
+        1,
+        "100",
+        "20000",
+        "1000",
+        "1000",
+        30049,
+        0,
+        false,
+        List.of(
+            new SpellData.T4cEffect(
+                6,
+                List.of(
+                    new SpellData.T4cEffect.EffectParam(1, "NPC"),
+                    new SpellData.T4cEffect.EffectParam(2, "PORTALSPELLSUNKENWOODS")))));
   }
 }

@@ -2,7 +2,21 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Dark Warlord", x = 448, y = 536, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 465, y = 502, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 467, y = 529, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 470, y = 554, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 477, y = 542, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 491, y = 494, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 498, y = 580, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 502, y = 470, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 507, y = 560, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 519, y = 507, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 528, y = 557, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 537, y = 528, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Dark Warlord", x = 559, y = 525, z = 1, stationary = false, aggressive = true)
 public final class DarkWarlord extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

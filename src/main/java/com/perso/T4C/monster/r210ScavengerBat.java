@@ -2,7 +2,17 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Scavenger Bat", x = 463, y = 241, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Scavenger Bat", x = 472, y = 303, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Scavenger Bat", x = 495, y = 261, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Scavenger Bat", x = 496, y = 208, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Scavenger Bat", x = 497, y = 301, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Scavenger Bat", x = 511, y = 308, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Scavenger Bat", x = 519, y = 237, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Scavenger Bat", x = 548, y = 216, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Scavenger Bat", x = 558, y = 238, z = 1, stationary = false, aggressive = true)
 public final class r210ScavengerBat extends DataMonster {
   public static final String SOUND_ATTACK = "Bat Attack.wav";
   public static final String SOUND_DEATH = "Bat Dying.wav";

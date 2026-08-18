@@ -1,0 +1,51 @@
+package com.perso.T4C.item.definition;
+
+import com.perso.T4C.item.ItemDefinition;
+import java.util.List;
+
+public final class ItemItemRoad12 {
+  private ItemItemRoad12() {}
+
+  public static ItemDefinition definition() {
+    return new ItemDefinition(
+        "item.road_12",
+        "${item.road_12}",
+        null,
+        null,
+        null,
+        null,
+        "Sign3",
+        0L,
+        0L,
+        0.0d,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0.0d,
+        false,
+        false,
+        false,
+        40966,
+        7,
+        293,
+        null,
+        "0",
+        0,
+        0,
+        true,
+        null,
+        0,
+        "${item.sign.road_12}",
+        0,
+        0,
+        0,
+        List.of(),
+        List.of(),
+        List.of(),
+        false);
+  }
+}

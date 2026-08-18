@@ -2,7 +2,47 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Flesh Eater", x = 100, y = 1694, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 1018, y = 1744, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 1028, y = 1806, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 1044, y = 1751, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 337, y = 1805, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 338, y = 1936, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 342, y = 1898, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 352, y = 1912, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 357, y = 1832, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 364, y = 1803, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 366, y = 1933, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 370, y = 1816, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 393, y = 1920, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 395, y = 1966, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 402, y = 1891, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 421, y = 1861, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 430, y = 1913, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 448, y = 1914, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 454, y = 1767, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 478, y = 1757, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 57, y = 1696, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 59, y = 1684, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 63, y = 1704, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 74, y = 1699, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 77, y = 1678, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 82, y = 1711, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 866, y = 1752, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 88, y = 1674, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 898, y = 1627, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 898, y = 1718, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 905, y = 1819, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 907, y = 1814, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 91, y = 1694, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 917, y = 1849, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 926, y = 1803, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 930, y = 1661, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 939, y = 1847, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 967, y = 1808, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Flesh Eater", x = 971, y = 1758, z = 0, stationary = false, aggressive = true)
 public final class FleshEater extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

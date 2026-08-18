@@ -3,7 +3,16 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "CENTAURCHAMPION", x = 1020, y = 989, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "CENTAURCHAMPION", x = 1064, y = 1090, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "CENTAURCHAMPION", x = 1120, y = 1172, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "CENTAURCHAMPION", x = 1136, y = 1269, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "CENTAURCHAMPION", x = 851, y = 986, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "CENTAURCHAMPION", x = 925, y = 1133, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "CENTAURCHAMPION", x = 975, y = 1192, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "CENTAURCHAMPION", x = 992, y = 1140, z = 0, stationary = false, aggressive = false)
 public final class CentaurChampion extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
   public static final String SOUND_DEATH = "Centaur Dying.wav";

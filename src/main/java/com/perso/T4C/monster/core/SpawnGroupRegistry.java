@@ -1,9 +1,7 @@
 package com.perso.T4C.monster.core;
 
-import com.perso.T4C.config.Paths;
-import com.perso.T4C.helper.SpawnGroupBinaryIO;
 import com.perso.T4C.monster.SpawnGroup;
-import java.io.File;
+import com.perso.T4C.spawn.definition.SpawnGroups;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -18,16 +16,10 @@ public final class SpawnGroupRegistry {
 
   public static synchronized List<SpawnGroup> load() {
     if (cache != null) return cache;
-    File file = new File(Paths.SPAWN_GROUPS_BIN);
-    if (!file.exists()) {
-      rebuild(List.of());
-      return cache;
-    }
-    try {
-      rebuild(SpawnGroupBinaryIO.read(file));
-    } catch (Exception ignored) {
-      rebuild(List.of());
-    }
+    rebuild(
+        SpawnGroups.all().stream()
+            .map(com.perso.T4C.spawn.SpawnGroupDefinition::toSpawnGroup)
+            .toList());
     return cache;
   }
 
@@ -37,7 +29,6 @@ public final class SpawnGroupRegistry {
   }
 
   public static synchronized void save(List<SpawnGroup> groups) throws IOException {
-    SpawnGroupBinaryIO.write(new File(Paths.SPAWN_GROUPS_BIN), groups);
     rebuild(groups);
   }
 

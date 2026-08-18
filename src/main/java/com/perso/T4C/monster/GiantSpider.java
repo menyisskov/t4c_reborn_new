@@ -2,7 +2,12 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Giant Spider", x = 281, y = 72, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Giant Spider", x = 309, y = 66, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Giant Spider", x = 325, y = 79, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "Giant Spider", x = 330, y = 60, z = 1, stationary = false, aggressive = true)
 public final class GiantSpider extends DataMonster {
   public static final String SOUND_ATTACK = "Spider Attack.wav";
   public static final String SOUND_DEATH = "Spider Dying.wav";

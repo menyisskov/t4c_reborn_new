@@ -756,9 +756,6 @@ public abstract class BaseMonster implements Nameable {
     }
     if (damageCallback != null) {
       if (lastAttackSpellId > 0) {
-        // Spell attacks use the spell VFX, not the physical attack pose.
-        // Starting the attack animation here made every monster spell look
-        // like a physical hit while the projectile was being rendered.
         clearAttackAnimationPose();
         damageCallback.applySpell(this, lastAttackSpellId, damage);
       } else {

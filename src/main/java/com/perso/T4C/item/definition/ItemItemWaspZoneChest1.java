@@ -1,0 +1,61 @@
+package com.perso.T4C.item.definition;
+
+import com.perso.T4C.item.ItemDefinition;
+import java.util.List;
+
+public final class ItemItemWaspZoneChest1 {
+  private ItemItemWaspZoneChest1() {}
+
+  public static ItemDefinition definition() {
+    return new ItemDefinition(
+        "item.wasp_zone_chest_1",
+        "${item.wasp_zone_chest_1}",
+        null,
+        null,
+        null,
+        null,
+        "64kInvChest",
+        0L,
+        10000L,
+        0.0d,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0L,
+        0.0d,
+        false,
+        false,
+        false,
+        41156,
+        3,
+        20,
+        null,
+        "0",
+        0,
+        0,
+        true,
+        null,
+        0,
+        null,
+        623,
+        700,
+        1800,
+        List.of(),
+        List.of(),
+        List.of(
+            new ItemDefinition.ContainerLootGroup(
+                List.of(
+                    "Jander ring of nimbleness",
+                    "Potion of cure rabies",
+                    "Potion of cure disease",
+                    "Potion of cure poison",
+                    "Serious healing potion",
+                    "Critical healing potion",
+                    "Manastone",
+                    "Mana elixir"))),
+        false);
+  }
+}

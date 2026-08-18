@@ -7,10 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.config.MapDefinition;
-import com.perso.T4C.config.Paths;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.npc.companion.*;
@@ -22,6 +20,7 @@ import com.perso.T4C.npc.registry.NpcFactoryRegistry;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
+import com.perso.T4C.spawn.SpawnRegistry;
 import com.perso.T4C.ui.SystemMessage;
 import java.io.File;
 import java.util.ArrayList;
@@ -610,52 +609,31 @@ public class NPCManager {
 
   private SpawnSource readSpawnsForMap(String mapPath) throws Exception {
 
-    File npcSpawnFile = new File(Paths.NPC_SPAWNS_BIN);
-
-    File monsterSpawnFile = new File(Paths.MONSTER_SPAWNS_BIN);
-
-    if (!npcSpawnFile.exists() && !monsterSpawnFile.exists()) {
-
-      return null;
-    }
-
     int z = resolveMapZ(mapPath);
 
     List<NpcSpawnEntry> filtered = new ArrayList<>();
 
-    if (npcSpawnFile.exists()) {
+    for (NpcSpawnEntry entry : readJavaSpawns(SpawnRegistry.npcs())) {
 
-      for (NpcSpawnEntry entry : readBinarySpawns(npcSpawnFile)) {
+      if ("SUNDIAL".equalsIgnoreCase(entry.type) && entry.x == 0 && entry.y == 0 && entry.z == 0) {
 
-        if ("SUNDIAL".equalsIgnoreCase(entry.type)
-            && entry.x == 0
-            && entry.y == 0
-            && entry.z == 0) {
+        continue;
+      }
 
-          continue;
-        }
+      if (entry.z == z) {
 
-        if (entry.z == z) {
+        filtered.add(entry);
+      }
+    }
+    for (NpcSpawnEntry entry : readJavaSpawns(SpawnRegistry.monsters())) {
 
-          filtered.add(entry);
-        }
+      if (entry.z == z && "SUNDIAL".equalsIgnoreCase(entry.type)) {
+
+        filtered.add(entry);
       }
     }
 
-    if (monsterSpawnFile.exists()) {
-
-      for (NpcSpawnEntry entry : readBinarySpawns(monsterSpawnFile)) {
-
-        if (entry.z == z && "SUNDIAL".equalsIgnoreCase(entry.type)) {
-
-          filtered.add(entry);
-        }
-      }
-    }
-
-    String sourcePath = npcSpawnFile.exists() ? npcSpawnFile.getPath() : monsterSpawnFile.getPath();
-
-    return new SpawnSource(sourcePath, filtered);
+    return new SpawnSource("java:SpawnRegistry", filtered);
   }
 
   private int resolveMapZ(String mapPath) {
@@ -673,25 +651,22 @@ public class NPCManager {
     return 0;
   }
 
-  private List<NpcSpawnEntry> readBinarySpawns(File spawnFile) throws Exception {
-
-    List<SpawnBinaryIO.Entry> binaryEntries = SpawnBinaryIO.read(spawnFile);
-
-    List<NpcSpawnEntry> entries = new ArrayList<>(binaryEntries.size());
-
-    for (SpawnBinaryIO.Entry binaryEntry : binaryEntries) {
+  private List<NpcSpawnEntry> readJavaSpawns(
+      List<com.perso.T4C.spawn.SpawnDefinition> definitions) {
+    List<NpcSpawnEntry> entries = new ArrayList<>(definitions.size());
+    for (com.perso.T4C.spawn.SpawnDefinition definition : definitions) {
 
       NpcSpawnEntry entry = new NpcSpawnEntry();
 
-      entry.type = binaryEntry.type;
+      entry.type = definition.type();
 
-      entry.x = binaryEntry.x;
+      entry.x = definition.x();
 
-      entry.y = binaryEntry.y;
+      entry.y = definition.y();
 
-      entry.z = binaryEntry.z;
+      entry.z = definition.z();
 
-      entry.stationary = binaryEntry.stationary;
+      entry.stationary = definition.stationary();
 
       entries.add(entry);
     }

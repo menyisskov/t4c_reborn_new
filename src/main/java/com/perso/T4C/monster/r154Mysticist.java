@@ -2,7 +2,41 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Mysticist", x = 2578, y = 2013, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2588, y = 1934, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2611, y = 1933, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2612, y = 1985, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2631, y = 2031, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2636, y = 1902, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2636, y = 2016, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2640, y = 1948, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2651, y = 1901, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2655, y = 2094, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2656, y = 2050, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2660, y = 2078, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2680, y = 1971, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2692, y = 1916, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2692, y = 2109, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2706, y = 2072, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2713, y = 2109, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2739, y = 1892, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2768, y = 2122, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2779, y = 1889, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2823, y = 1886, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2828, y = 2124, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2860, y = 1925, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2867, y = 2125, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2869, y = 1906, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2888, y = 2011, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2890, y = 2111, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2907, y = 2108, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2912, y = 2059, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2933, y = 2011, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2943, y = 1921, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2954, y = 1945, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mysticist", x = 2954, y = 1971, z = 0, stationary = false, aggressive = true)
 public final class r154Mysticist extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

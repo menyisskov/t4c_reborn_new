@@ -9,8 +9,547 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.spawn.SpawnKind;
 import java.util.List;
 
+@Spawn(type = "Sundial", x = 0, y = 0, z = 0, stationary = true, aggressive = false)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1014,
+    y = 668,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1022,
+    y = 662,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1024,
+    y = 672,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1455,
+    y = 2500,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1470,
+    y = 2426,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1521,
+    y = 2412,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1564,
+    y = 2554,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1667,
+    y = 1242,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 1723,
+    y = 1245,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 273,
+    y = 744,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 277,
+    y = 827,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 2881,
+    y = 1070,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 295,
+    y = 808,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 677,
+    y = 547,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 684,
+    y = 543,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 703,
+    y = 576,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 708,
+    y = 580,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 735,
+    y = 628,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 737,
+    y = 549,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 738,
+    y = 551,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 739,
+    y = 547,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 739,
+    y = 616,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 748,
+    y = 516,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 751,
+    y = 693,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 752,
+    y = 691,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 764,
+    y = 510,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 764,
+    y = 730,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 764,
+    y = 732,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 765,
+    y = 611,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 766,
+    y = 505,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 766,
+    y = 729,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 782,
+    y = 564,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 804,
+    y = 532,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 804,
+    y = 758,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 806,
+    y = 760,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 808,
+    y = 617,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 815,
+    y = 673,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 816,
+    y = 778,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 818,
+    y = 781,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 819,
+    y = 608,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 821,
+    y = 615,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 824,
+    y = 699,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 836,
+    y = 698,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 841,
+    y = 588,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 843,
+    y = 691,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 845,
+    y = 592,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 845,
+    y = 661,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 877,
+    y = 548,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 879,
+    y = 735,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 883,
+    y = 587,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 886,
+    y = 560,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 887,
+    y = 723,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 887,
+    y = 745,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 890,
+    y = 566,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 896,
+    y = 652,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 896,
+    y = 670,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 898,
+    y = 559,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 900,
+    y = 533,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 902,
+    y = 543,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 918,
+    y = 771,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 920,
+    y = 644,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 955,
+    y = 736,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 959,
+    y = 700,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 963,
+    y = 724,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 966,
+    y = 1031,
+    z = 0,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 970,
+    y = 626,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
+@Spawn(
+    type = "SUNDIAL",
+    x = 972,
+    y = 691,
+    z = 1,
+    stationary = false,
+    aggressive = true,
+    kind = SpawnKind.MONSTER)
 public final class Sundial extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

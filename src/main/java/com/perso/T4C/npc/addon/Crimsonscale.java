@@ -9,8 +9,10 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+@Spawn(type = "Crimsonscale", x = 842, y = 2220, z = 1, stationary = true, aggressive = false)
 public final class Crimsonscale extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Wasp Attack.wav";
   public static final String SOUND_DEATH = "Wasp Dying.wav";

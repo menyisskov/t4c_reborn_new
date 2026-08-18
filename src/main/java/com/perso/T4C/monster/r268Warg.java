@@ -2,7 +2,16 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Warg", x = 562, y = 1081, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warg", x = 572, y = 1087, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warg", x = 685, y = 1114, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warg", x = 806, y = 533, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warg", x = 814, y = 868, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warg", x = 818, y = 1097, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warg", x = 819, y = 541, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warg", x = 844, y = 857, z = 0, stationary = false, aggressive = true)
 public final class r268Warg extends DataMonster {
   public static final String SOUND_ATTACK = "Wolf Attack.wav";
   public static final String SOUND_DEATH = "Wolf Dying.wav";

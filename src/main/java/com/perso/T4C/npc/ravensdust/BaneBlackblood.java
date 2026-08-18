@@ -10,8 +10,19 @@ import com.perso.T4C.npc.registry.NpcContext;
 import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.spawn.SpawnKind;
 import java.util.List;
 
+@Spawn(type = "BaneBlackblood", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "BANEBLACKBLOOD",
+    x = 342,
+    y = 1679,
+    z = 0,
+    stationary = false,
+    aggressive = false,
+    kind = SpawnKind.MONSTER)
 public final class BaneBlackblood extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

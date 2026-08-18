@@ -26,7 +26,7 @@ public final class DarkNoble extends NamedEventMonster {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "MOBDARKNOBLE",
+        "MOBDARKNOBLE",
         "${monster.mobdarknoble}",
         100,
         0,

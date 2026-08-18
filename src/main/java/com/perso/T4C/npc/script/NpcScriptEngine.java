@@ -7,6 +7,7 @@ import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.npc.*;
+import com.perso.T4C.npc.behavior.RebirthBehavior;
 import com.perso.T4C.npc.registry.*;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
@@ -175,7 +176,7 @@ public final class NpcScriptEngine {
 
   public static void performRebirth(Player player) {
 
-    RebirthService.perform(player);
+    RebirthBehavior.perform(player);
   }
 
   private static void rebirth(Player player, String npcName) {

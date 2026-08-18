@@ -1,9 +1,6 @@
 package com.perso.T4C.harvest;
 
-import com.perso.T4C.config.Paths;
-import com.perso.T4C.helper.HerbDefinitionBinaryIO;
-import java.io.File;
-import java.io.IOException;
+import com.perso.T4C.harvest.definition.HerbDefinitions;
 import java.util.List;
 
 public final class HerbRegistry {
@@ -13,17 +10,10 @@ public final class HerbRegistry {
 
   public static synchronized List<HerbDefinition> load() {
     if (cache != null) return cache;
-    File file = new File(Paths.HERBS_BIN);
-    if (!file.exists()) return cache = List.of();
-    try {
-      return cache = List.copyOf(HerbDefinitionBinaryIO.read(file));
-    } catch (Exception ignored) {
-      return cache = List.of();
-    }
+    return cache = List.copyOf(HerbDefinitions.all());
   }
 
-  public static synchronized void save(List<HerbDefinition> definitions) throws IOException {
-    HerbDefinitionBinaryIO.write(new File(Paths.HERBS_BIN), definitions);
+  public static synchronized void save(List<HerbDefinition> definitions) {
     cache = List.copyOf(definitions == null ? List.of() : definitions);
   }
 

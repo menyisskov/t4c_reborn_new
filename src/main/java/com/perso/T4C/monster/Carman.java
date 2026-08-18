@@ -38,7 +38,7 @@ public final class Carman extends DataMonster implements MonsterLifecycle {
 
   public static MonsterDef definition() {
     return new MonsterDef(
-         "CARMAN",
+        "CARMAN",
         "${monster.carman}",
         100,
         0,

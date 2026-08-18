@@ -9,8 +9,10 @@ import com.perso.T4C.npc.registry.NpcSpec;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.npc.script.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+@Spawn(type = "KingTheodore", x = 2848, y = 648, z = 4, stationary = true, aggressive = false)
 public final class KingTheodore extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

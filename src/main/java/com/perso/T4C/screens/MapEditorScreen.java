@@ -30,6 +30,7 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
+import com.perso.T4C.content.SpawnJavaExporter;
 import com.perso.T4C.content.SpellJavaExporter;
 import com.perso.T4C.editor.ui.EditorButton;
 import com.perso.T4C.editor.ui.EditorContextMenu;
@@ -39,26 +40,22 @@ import com.perso.T4C.editor.ui.EditorListBox;
 import com.perso.T4C.editor.ui.EditorPanelChrome;
 import com.perso.T4C.editor.ui.EditorTheme;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.helper.BinaryIOUtils;
-import com.perso.T4C.helper.ClanRelationsBinaryIO;
 import com.perso.T4C.helper.CollisionMapIO;
 import com.perso.T4C.helper.CollisionType;
-import com.perso.T4C.helper.DecorLayerRuleBinaryIO;
 import com.perso.T4C.helper.DisplayModeToggle;
 import com.perso.T4C.helper.GroundMosaicCatalog;
 import com.perso.T4C.helper.MapReader;
 import com.perso.T4C.helper.ModifSprites;
 import com.perso.T4C.helper.MusicZoneBinaryIO;
-import com.perso.T4C.helper.ObjectPositionBinaryIO;
 import com.perso.T4C.helper.ResolvedSprite;
-import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.helper.SpriteBinIO;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.helper.SpriteNameParser;
-import com.perso.T4C.helper.TeleportBinaryIO;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.mapping.definition.DecorLayerRuleDefinitions;
+import com.perso.T4C.mapping.definition.ObjectPositionDefinitions;
 import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterClan;
@@ -73,6 +70,8 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.PuppetBodyOrder;
 import com.perso.T4C.render.ObjectMapping;
 import com.perso.T4C.render.ObjectMappings;
+import com.perso.T4C.spawn.SpawnDefinition;
+import com.perso.T4C.spawn.SpawnRegistry;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.tmpl3.Direction;
@@ -173,13 +172,6 @@ public class MapEditorScreen implements Screen {
             t.setDaemon(true);
             return t;
           });
-  private final ExecutorService collisionGenerationExecutor =
-      Executors.newSingleThreadExecutor(
-          r -> {
-            Thread t = new Thread(r, "collision-generator");
-            t.setDaemon(true);
-            return t;
-          });
   private final ExecutorService tmpl3RegenerationExecutor =
       Executors.newSingleThreadExecutor(
           r -> {
@@ -205,8 +197,6 @@ public class MapEditorScreen implements Screen {
   private ScheduledFuture<?> offsetWriteFuture = null;
   private volatile boolean spriteHotReloading = false;
   private volatile boolean collisionRegenerating = false;
-  private volatile float collisionRegenerationProgress = 0f;
-  private volatile String collisionRegenerationStage = "";
   private volatile boolean tmpl3Regenerating = false;
   private volatile float tmpl3RegenerationProgress = 0f;
   private volatile String tmpl3RegenerationStage = "";
@@ -283,7 +273,6 @@ public class MapEditorScreen implements Screen {
   private int lastHoverScreenY = Integer.MIN_VALUE;
   private EditorMode editorMode = EditorMode.SELECT_TILE;
   private SpritePickerUI spritePicker;
-  private CollisionRuleEditorUI collisionRuleEditor;
   private DecorLayerRuleEditorUI decorLayerRuleEditor;
   private ClanRelationsEditorUI clanRelationsEditor;
   private ObjectMappingsEditorUI objectMappingsEditor;
@@ -311,15 +300,9 @@ public class MapEditorScreen implements Screen {
   private byte[] collisionData = null;
   private int collisionMapWidth = 0;
   private int collisionMapHeight = 0;
-  private static final int COLLISION_VALUE_RED = 1;
   private int selectedCollisionValue = CollisionType.ABSOLUTE.getValue();
   private boolean collisionOverlayVisible = false;
   private boolean teleportOverlayVisible = false;
-  private long lastCollisionRulesModified = -1L;
-  private long nextCollisionRulesWatchAt = 0L;
-  private static final long COLLISION_RULES_WATCH_INTERVAL_MS = 500L;
-  private static final byte[] COLLISION_RULES_MAGIC = new byte[] {'T', '4', 'C', 'C', 'R', 'L'};
-  private static final short COLLISION_RULES_BIN_VERSION = 2;
   private CopiedTile copiedTile = null;
   private List<CopiedAreaTile> copiedAreaTiles = null;
   private RectangleSelection rectangleSelection = null;
@@ -332,7 +315,6 @@ public class MapEditorScreen implements Screen {
   private boolean autofillRectSelecting = false;
   private static final int MINIMAP_SIZE = 200;
   private static final int MINIMAP_MARGIN = 10;
-  private static final Color COLLISION_COLOR_RED = new Color(1f, 0f, 0f, 0.6f);
   private boolean decorVisible = true;
   private boolean objectsVisible = true;
   private boolean groundOutlineEnabled = false;
@@ -983,122 +965,6 @@ public class MapEditorScreen implements Screen {
     }
   }
 
-  private static class CollisionRules {
-    boolean defaultDecorCollision = false;
-    int defaultCollisionValue = COLLISION_VALUE_RED;
-    List<String> ignoredSprites = new ArrayList<>();
-    Map<String, CollisionRule> exactSprites = new LinkedHashMap<>();
-    List<CollisionNameRule> nameContainsRules = new ArrayList<>();
-
-    Map<String, CollisionRule> normalizedExactSprites() {
-      Map<String, CollisionRule> normalized = new HashMap<>();
-      if (exactSprites == null) {
-        return normalized;
-      }
-      for (Map.Entry<String, CollisionRule> entry : exactSprites.entrySet()) {
-        if (entry.getKey() != null && entry.getValue() != null) {
-          normalized.put(normalizeSpriteKey(entry.getKey()), entry.getValue());
-        }
-      }
-      return normalized;
-    }
-
-    Set<String> normalizedIgnoredSprites() {
-      Set<String> ignored = new HashSet<>();
-      if (ignoredSprites == null) {
-        return ignored;
-      }
-      for (String sprite : ignoredSprites) {
-        if (sprite != null && !sprite.isBlank() && !sprite.contains("*")) {
-          ignored.add(normalizeSpriteKey(sprite));
-        }
-      }
-      return ignored;
-    }
-
-    boolean isIgnoredSprite(String spriteName, Set<String> normalizedExactIgnoredSprites) {
-      if (spriteName == null) {
-        return false;
-      }
-      if (normalizedExactIgnoredSprites.contains(spriteName)) {
-        return true;
-      }
-      if (ignoredSprites == null) {
-        return false;
-      }
-      for (String ignoredSprite : ignoredSprites) {
-        if (matchesWildcard(ignoredSprite, spriteName)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    private boolean matchesWildcard(String pattern, String value) {
-      if (pattern == null || pattern.isBlank() || !pattern.contains("*")) {
-        return false;
-      }
-      String normalizedPattern = normalizeSpriteKey(pattern);
-      StringBuilder regex = new StringBuilder();
-      for (int i = 0; i < normalizedPattern.length(); i++) {
-        char c = normalizedPattern.charAt(i);
-        if (c == '*') {
-          regex.append(".*");
-        } else {
-          regex.append(java.util.regex.Pattern.quote(String.valueOf(c)));
-        }
-      }
-      return value.matches(regex.toString());
-    }
-  }
-
-  private static class CollisionNameRule {
-    List<String> contains = new ArrayList<>();
-    CollisionRule rule;
-
-    boolean matches(String spriteName) {
-      if (spriteName == null || contains == null || rule == null) {
-        return false;
-      }
-      String normalizedSprite = normalizeSpriteKey(spriteName);
-      String compactSprite = compactSpriteKey(normalizedSprite);
-      for (String token : contains) {
-        if (token == null || token.isBlank()) {
-          continue;
-        }
-        String normalizedToken = normalizeSpriteKey(token);
-        if (normalizedToken.isBlank()) {
-          continue;
-        }
-        if (normalizedSprite.contains(normalizedToken)
-            || compactSprite.contains(compactSpriteKey(normalizedToken))) {
-          return true;
-        }
-      }
-      return false;
-    }
-  }
-
-  private static class CollisionRule {
-    int value = COLLISION_VALUE_RED;
-    List<int[]> tiles = new ArrayList<>();
-    List<int[]> clearTiles = new ArrayList<>();
-
-    List<int[]> normalizedTiles() {
-      if (tiles == null || tiles.isEmpty()) {
-        return List.of();
-      }
-      return tiles;
-    }
-
-    List<int[]> normalizedClearTiles() {
-      if (clearTiles == null || clearTiles.isEmpty()) {
-        return List.of();
-      }
-      return clearTiles;
-    }
-  }
-
   private static class MusicZoneEntry {
     String name;
     int x1;
@@ -1280,9 +1146,6 @@ public class MapEditorScreen implements Screen {
             if (entityPicker != null) {
               return entityPicker.handleKeyTyped(character);
             }
-            if (collisionRuleEditor != null) {
-              return collisionRuleEditor.handleKeyTyped(character);
-            }
             if (decorLayerRuleEditor != null) {
               return decorLayerRuleEditor.handleKeyTyped(character);
             }
@@ -1335,14 +1198,11 @@ public class MapEditorScreen implements Screen {
 
           @Override
           public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-            if (collisionRegenerating || tmpl3Regenerating || groundRecalculating) {
+            if (tmpl3Regenerating || groundRecalculating) {
               return true;
             }
             if (entityPicker != null) {
               return entityPicker.handleClick(screenX, screenY, button);
-            }
-            if (collisionRuleEditor != null) {
-              return collisionRuleEditor.handleClick(screenX, screenY, button);
             }
             if (decorLayerRuleEditor != null) {
               return decorLayerRuleEditor.handleClick(screenX, screenY, button);
@@ -1668,11 +1528,8 @@ public class MapEditorScreen implements Screen {
 
           @Override
           public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-            if (collisionRegenerating || tmpl3Regenerating || groundRecalculating) {
+            if (tmpl3Regenerating || groundRecalculating) {
               return true;
-            }
-            if (collisionRuleEditor != null) {
-              return collisionRuleEditor.handleTouchUp(screenX, screenY, button);
             }
             if (draggedTeleport != null && button == Input.Buttons.LEFT) {
               finishDraggingTeleport();
@@ -1725,11 +1582,8 @@ public class MapEditorScreen implements Screen {
 
           @Override
           public boolean touchDragged(int screenX, int screenY, int pointer) {
-            if (collisionRegenerating || tmpl3Regenerating || groundRecalculating) {
+            if (tmpl3Regenerating || groundRecalculating) {
               return true;
-            }
-            if (collisionRuleEditor != null) {
-              return collisionRuleEditor.handleDrag(screenX, screenY);
             }
             if (draggedTeleport != null && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
               Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
@@ -1837,7 +1691,7 @@ public class MapEditorScreen implements Screen {
 
           @Override
           public boolean scrolled(float amountX, float amountY) {
-            if (collisionRegenerating || tmpl3Regenerating || groundRecalculating) {
+            if (tmpl3Regenerating || groundRecalculating) {
               return true;
             }
             if (editorMode == EditorMode.SPRITE_PICKER && spritePicker != null) {
@@ -1845,9 +1699,6 @@ public class MapEditorScreen implements Screen {
             }
             if (entityPicker != null) {
               return entityPicker.handleScroll(amountY);
-            }
-            if (collisionRuleEditor != null) {
-              return collisionRuleEditor.handleScroll(amountY);
             }
             if (decorLayerRuleEditor != null) {
               return decorLayerRuleEditor.handleScroll(amountY);
@@ -2029,9 +1880,6 @@ public class MapEditorScreen implements Screen {
             if (keycode == Input.Keys.ESCAPE) {
               if (entityPicker != null) {
                 entityPicker = null;
-                openMenu = null;
-              } else if (collisionRuleEditor != null) {
-                collisionRuleEditor.close();
                 openMenu = null;
               } else if (decorLayerRuleEditor != null) {
                 decorLayerRuleEditor.close();
@@ -3409,9 +3257,6 @@ public class MapEditorScreen implements Screen {
     } else if (groundRecalculating) {
       progress = groundRecalculationProgress;
       stage = groundRecalculationStage;
-    } else if (collisionRegenerating) {
-      progress = collisionRegenerationProgress;
-      stage = collisionRegenerationStage;
     } else {
       return;
     }
@@ -4237,9 +4082,6 @@ public class MapEditorScreen implements Screen {
     if (entityPicker != null) {
       entityPicker.render(uiBatch, shapeRenderer);
     }
-    if (collisionRuleEditor != null) {
-      collisionRuleEditor.render(uiBatch, shapeRenderer);
-    }
     if (decorLayerRuleEditor != null) {
       decorLayerRuleEditor.render(uiBatch, shapeRenderer);
     }
@@ -4265,8 +4107,7 @@ public class MapEditorScreen implements Screen {
   }
 
   private boolean isModalEditorOpen() {
-    return collisionRuleEditor != null
-        || decorLayerRuleEditor != null
+    return decorLayerRuleEditor != null
         || clanRelationsEditor != null
         || objectMappingsEditor != null
         || spellEditor != null
@@ -4849,7 +4690,6 @@ public class MapEditorScreen implements Screen {
   public void dispose() {
     saveCameraPosition();
     offsetWriteExecutor.shutdownNow();
-    collisionGenerationExecutor.shutdownNow();
     tmpl3RegenerationExecutor.shutdownNow();
     groundRecalculationExecutor.shutdownNow();
     teleportPreviewExecutor.shutdownNow();
@@ -6476,7 +6316,7 @@ public class MapEditorScreen implements Screen {
     private static final int ROW_HEIGHT = 28;
     private static final int BUTTON_HEIGHT = 32;
     private final MonsterClan[] clans;
-    private List<ClanRelationsBinaryIO.Entry> relations;
+    private List<MonsterClanRelations.Relation> relations;
     private int sourceIndex = 0;
     private int targetIndex = 0;
     private int selectedRelationIndex = -1;
@@ -6495,8 +6335,8 @@ public class MapEditorScreen implements Screen {
             .rowHeight(ROW_HEIGHT)
             .labelProvider(c -> c.name())
             .colorProvider(i -> i == targetIndex ? EditorTheme.BLUE : null);
-    private final EditorListBox<ClanRelationsBinaryIO.Entry> relationList =
-        new EditorListBox<ClanRelationsBinaryIO.Entry>()
+    private final EditorListBox<MonsterClanRelations.Relation> relationList =
+        new EditorListBox<MonsterClanRelations.Relation>()
             .rowHeight(ROW_HEIGHT)
             .labelProvider(this::formatRelation)
             .colorProvider(i -> i == selectedRelationIndex ? EditorTheme.BLUE : null);
@@ -6603,7 +6443,7 @@ public class MapEditorScreen implements Screen {
         int idx = relationList.selectedIndex();
         if (idx >= 0 && idx < relations.size()) {
           selectedRelationIndex = idx;
-          ClanRelationsBinaryIO.Entry relation = relations.get(idx);
+          MonsterClanRelations.Relation relation = relations.get(idx);
           sourceIndex = Math.max(0, indexOfClan(relation.source));
           targetIndex = Math.max(0, indexOfClan(relation.target));
         }
@@ -6652,13 +6492,13 @@ public class MapEditorScreen implements Screen {
         showEditorMessage("Invalid clan relation");
         return;
       }
-      for (ClanRelationsBinaryIO.Entry relation : relations) {
+      for (MonsterClanRelations.Relation relation : relations) {
         if (relation.source == source && relation.target == target) {
           showEditorMessage("Relation already exists: " + formatRelation(relation));
           return;
         }
       }
-      relations.add(new ClanRelationsBinaryIO.Entry(source, target));
+      relations.add(new MonsterClanRelations.Relation(source, target));
       selectedRelationIndex = relations.size() - 1;
       saveRelations();
     }
@@ -6677,13 +6517,13 @@ public class MapEditorScreen implements Screen {
         if (i == selectedRelationIndex) {
           continue;
         }
-        ClanRelationsBinaryIO.Entry relation = relations.get(i);
+        MonsterClanRelations.Relation relation = relations.get(i);
         if (relation.source == source && relation.target == target) {
           showEditorMessage("Relation already exists: " + formatRelation(relation));
           return;
         }
       }
-      relations.set(selectedRelationIndex, new ClanRelationsBinaryIO.Entry(source, target));
+      relations.set(selectedRelationIndex, new MonsterClanRelations.Relation(source, target));
       saveRelations();
     }
 
@@ -6702,14 +6542,9 @@ public class MapEditorScreen implements Screen {
 
     private void saveRelations() {
       refreshRelationList();
-      try {
-        MonsterClanRelations.saveRelations(relations);
-        relations = new ArrayList<>(MonsterClanRelations.getRelations());
-        showEditorMessage("Clan relations saved");
-      } catch (IOException e) {
-        log.error("Failed to save clan relations", e);
-        showEditorMessage("Error: clan relations not saved");
-      }
+      MonsterClanRelations.saveRelations(relations);
+      relations = new ArrayList<>(MonsterClanRelations.getRelations());
+      showEditorMessage("Clan relations saved");
     }
 
     public void close() {
@@ -6737,7 +6572,7 @@ public class MapEditorScreen implements Screen {
       return (int) ((bounds.y + bounds.height - y) / ROW_HEIGHT);
     }
 
-    private String formatRelation(ClanRelationsBinaryIO.Entry relation) {
+    private String formatRelation(MonsterClanRelations.Relation relation) {
       if (relation == null || relation.source == null || relation.target == null) {
         return "-";
       }
@@ -10707,12 +10542,8 @@ public class MapEditorScreen implements Screen {
   private void loadObjectPositions() {
     objectPositions.clear();
     selectedObjectPositionIndex = -1;
-    File bin = new File(Paths.OBJECT_POSITIONS_BIN);
-    if (!bin.exists()) {
-      return;
-    }
     try {
-      objectPositions.addAll(ObjectPositionBinaryIO.read(bin));
+      objectPositions.addAll(ObjectPositionDefinitions.all());
     } catch (Exception e) {
       log.warn("Failed to load object positions", e);
       showEditorMessage("Error: object positions not loaded");
@@ -10727,7 +10558,6 @@ public class MapEditorScreen implements Screen {
 
   private void saveObjectPositions() {
     try {
-      ObjectPositionBinaryIO.write(new File(Paths.OBJECT_POSITIONS_BIN), objectPositions);
       objectPositionsDirty = false;
       if (mapRenderer != null) {
         mapRenderer.reloadObjectPositions();
@@ -11118,16 +10948,9 @@ public class MapEditorScreen implements Screen {
   private void loadTeleports() {
     teleports.clear();
     selectedTeleport = null;
-    File bin = new File(Paths.TELEPORTS_BIN);
-    if (bin.exists()) {
-      try {
-        for (TeleportBinaryIO.Entry entry : TeleportBinaryIO.read(bin)) {
-          teleports.add(fromTeleportBinaryEntry(entry));
-        }
-        return;
-      } catch (Exception e) {
-        log.warn("Failed to load binary teleports", e);
-      }
+    for (com.perso.T4C.teleport.TeleportDefinition entry :
+        com.perso.T4C.teleport.TeleportRegistry.load()) {
+      teleports.add(fromTeleportDefinition(entry));
     }
     File json = new File("assets/teleports/teleports.json");
     if (!json.exists()) {
@@ -11156,41 +10979,19 @@ public class MapEditorScreen implements Screen {
   }
 
   private void saveTeleports() {
-    try {
-      TeleportBinaryIO.write(new File(Paths.TELEPORTS_BIN), toTeleportBinaryEntries());
-      teleportsDirty = false;
-      showEditorMessage("Teleports saved");
-    } catch (Exception e) {
-      log.error("Failed to save teleports", e);
-      showEditorMessage("Error: Failed to save teleports");
-    }
+    teleportsDirty = false;
+    showEditorMessage("Teleports are defined in Java sources");
   }
 
-  private List<TeleportBinaryIO.Entry> toTeleportBinaryEntries() {
-    List<TeleportBinaryIO.Entry> entries = new ArrayList<>(teleports.size());
-    for (TeleportEntry teleport : teleports) {
-      TeleportBinaryIO.Entry entry = new TeleportBinaryIO.Entry();
-      entry.id = teleport.id;
-      entry.sourceZ = teleport.sourceZ;
-      entry.sourceX = teleport.sourceX;
-      entry.sourceY = teleport.sourceY;
-      entry.targetZ = teleport.targetZ;
-      entry.targetX = teleport.targetX;
-      entry.targetY = teleport.targetY;
-      entries.add(entry);
-    }
-    return entries;
-  }
-
-  private TeleportEntry fromTeleportBinaryEntry(TeleportBinaryIO.Entry entry) {
+  private TeleportEntry fromTeleportDefinition(com.perso.T4C.teleport.TeleportDefinition entry) {
     return new TeleportEntry(
-        entry.id,
-        entry.sourceZ,
-        entry.sourceX,
-        entry.sourceY,
-        entry.targetZ,
-        entry.targetX,
-        entry.targetY);
+        entry.id(),
+        entry.sourceZ(),
+        entry.sourceX(),
+        entry.sourceY(),
+        entry.targetZ(),
+        entry.targetX(),
+        entry.targetY());
   }
 
   private boolean handleTeleportEditorClick(int screenX, int screenY, int button) {
@@ -12940,665 +12741,6 @@ public class MapEditorScreen implements Screen {
     log.info("Created new collision map: {}x{}", collisionMapWidth, collisionMapHeight);
   }
 
-  private void generateCollisionFromDecors() {
-    if (mapReader == null) {
-      return;
-    }
-    collisionMapWidth = mapReader.getWidth();
-    collisionMapHeight = mapReader.getHeight();
-    CollisionRules rules = loadCollisionRules();
-    Map<String, SpriteLoader.Sprite> metaByName = buildCollisionMetaByName();
-    CollisionGenerationResult result =
-        buildCollisionDataFromRules(collisionMapWidth, collisionMapHeight, rules, metaByName);
-    collisionData = result.data;
-    showEditorMessage("Generated collisions from rules: " + result.count);
-    log.info("Generated collision map from {}: {}", Paths.COLLISION_RULES_BIN, result.count);
-    collisionDirty = true;
-  }
-
-  private CollisionGenerationResult buildCollisionDataFromRules(
-      int width, int height, CollisionRules rules, Map<String, SpriteLoader.Sprite> metaByName) {
-    return buildCollisionDataFromRules(width, height, rules, metaByName, false);
-  }
-
-  private CollisionGenerationResult buildCollisionDataFromRules(
-      int width,
-      int height,
-      CollisionRules rules,
-      Map<String, SpriteLoader.Sprite> metaByName,
-      boolean reportProgress) {
-    byte[] generated = new byte[width * height];
-    Set<String> ignoredSprites = rules.normalizedIgnoredSprites();
-    Map<String, CollisionRule> exactRules = rules.normalizedExactSprites();
-    int count = 0;
-    if (reportProgress) {
-      collisionRegenerationProgress = 0f;
-      collisionRegenerationStage = "Protecting TMPL edges next to water...";
-    }
-    count += applyWaterAdjacentTmplCollisions(generated, width, height, metaByName);
-    if (reportProgress) {
-      collisionRegenerationStage = "Scanning map...";
-    }
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        ResolvedSprite resolved = resolveSpriteAt(x, y, metaByName);
-        if (resolved == null || resolved.name == null) {
-          continue;
-        }
-        String resolvedName = normalizeSpriteKey(resolved.name);
-        int originX = x;
-        int originY = y;
-        SpriteLoader.Sprite meta = metaByName.get(resolved.name.toLowerCase(Locale.ROOT));
-        if (meta != null) {
-          originX += Math.round(mapReader.getOffsetXFast(x, y) / GameConstants.GRID_W);
-          originY +=
-              Math.round(
-                  (mapReader.getOffsetYFast(x, y) + meta.getHeight() - GameConstants.GRID_H)
-                      / GameConstants.GRID_H);
-        }
-        if (resolved.mirror) {
-          int[] shift = getMirrorCollisionOriginShift(resolved.name, metaByName);
-          originX += shift[0];
-          originY += shift[1];
-        }
-        if (rules.isIgnoredSprite(resolvedName, ignoredSprites)) {
-          continue;
-        }
-        CollisionRule exactRule = exactRules.get(resolvedName);
-        if (exactRule != null) {
-          count +=
-              applyCollisionRule(
-                  generated, width, height, originX, originY, exactRule, resolved.mirror);
-          continue;
-        }
-        boolean matchedNamedRule = false;
-        if (rules.nameContainsRules != null) {
-          for (CollisionNameRule nameRule : rules.nameContainsRules) {
-            if (nameRule != null && nameRule.matches(resolvedName)) {
-              count +=
-                  applyCollisionRule(
-                      generated, width, height, originX, originY, nameRule.rule, resolved.mirror);
-              matchedNamedRule = true;
-            }
-          }
-        }
-        if (matchedNamedRule) {
-          continue;
-        }
-      }
-      if (reportProgress) {
-        collisionRegenerationProgress = height == 0 ? 0.95f : ((y + 1) / (float) height) * 0.95f;
-        collisionRegenerationStage = "Scanning map (" + (y + 1) + "/" + height + " rows)...";
-      }
-    }
-    if (mapRenderer != null && mapRenderer.getObjectPositions() != null) {
-      Map<String, ObjectMapping> objectMappings = mapRenderer.getObjectMappings();
-      List<ObjectPos> positions = mapRenderer.getObjectPositions();
-      int processedObjects = 0;
-      for (ObjectPos pos : positions) {
-        processedObjects++;
-        if (pos == null) {
-          updateCollisionObjectProgress(reportProgress, processedObjects, positions.size());
-          continue;
-        }
-        int x = (int) pos.x();
-        int y = (int) pos.y();
-        if (x < 0 || x >= width || y < 0 || y >= height) {
-          updateCollisionObjectProgress(reportProgress, processedObjects, positions.size());
-          continue;
-        }
-        String objectName = pos.name();
-        String mappedSpriteName = null;
-        if (objectMappings != null && objectName != null) {
-          ObjectMapping mapping = objectMappings.get(objectName.toUpperCase(Locale.ROOT));
-          if (mapping != null) {
-            mappedSpriteName = mapping.sprite;
-          }
-        }
-        count +=
-            applyRulesForSpriteNameAt(
-                generated,
-                width,
-                height,
-                x,
-                y,
-                objectName,
-                false,
-                rules,
-                ignoredSprites,
-                exactRules,
-                metaByName);
-        count +=
-            applyRulesForSpriteNameAt(
-                generated,
-                width,
-                height,
-                x,
-                y,
-                mappedSpriteName,
-                false,
-                rules,
-                ignoredSprites,
-                exactRules,
-                metaByName);
-        updateCollisionObjectProgress(reportProgress, processedObjects, positions.size());
-      }
-    }
-    if (reportProgress) {
-      collisionRegenerationProgress = 0.99f;
-      collisionRegenerationStage = "Finalizing collisions...";
-    }
-    return new CollisionGenerationResult(generated, count);
-  }
-
-  private int applyWaterAdjacentTmplCollisions(
-      byte[] generated, int width, int height, Map<String, SpriteLoader.Sprite> metaByName) {
-    int added = 0;
-    int[][] cardinalNeighbors = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        String groundName = resolvedGroundNameAt(x, y, metaByName);
-        if (groundName == null || !groundName.trim().toLowerCase(Locale.ROOT).startsWith("tmpl"))
-          continue;
-        for (int[] offset : cardinalNeighbors) {
-          int nx = x + offset[0];
-          int ny = y + offset[1];
-          if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
-          String neighborGround = resolvedGroundNameAt(nx, ny, metaByName);
-          if (neighborGround != null && normalizeSpriteKey(neighborGround).contains("water")) {
-            added += setCollisionIfEmpty(generated, width, height, x, y, COLLISION_VALUE_RED);
-            break;
-          }
-        }
-      }
-    }
-    return added;
-  }
-
-  private String resolvedGroundNameAt(int x, int y, Map<String, SpriteLoader.Sprite> metaByName) {
-    String rawName = mapReader.getGroundSpriteName(x, y);
-    ResolvedSprite resolved = SpriteNameParser.parse(rawName, metaByName);
-    return resolved == null ? rawName : resolved.name;
-  }
-
-  private void updateCollisionObjectProgress(boolean reportProgress, int processed, int total) {
-    if (!reportProgress) {
-      return;
-    }
-    float fraction = total == 0 ? 1f : processed / (float) total;
-    collisionRegenerationProgress = 0.95f + fraction * 0.04f;
-    collisionRegenerationStage = "Scanning objects (" + processed + "/" + total + ")...";
-  }
-
-  private int applyRulesForSpriteNameAt(
-      byte[] generated,
-      int width,
-      int height,
-      int x,
-      int y,
-      String sourceName,
-      boolean mirrored,
-      CollisionRules rules,
-      Set<String> ignoredSprites,
-      Map<String, CollisionRule> exactRules,
-      Map<String, SpriteLoader.Sprite> metaByName) {
-    if (sourceName == null || sourceName.isBlank()) {
-      return 0;
-    }
-    String resolvedName = normalizeSpriteKey(sourceName);
-    if (rules.isIgnoredSprite(resolvedName, ignoredSprites)) {
-      return 0;
-    }
-    CollisionRule exactRule = exactRules.get(resolvedName);
-    if (exactRule != null) {
-      return applyCollisionRule(generated, width, height, x, y, exactRule, mirrored);
-    }
-    int count = 0;
-    boolean matchedNamedRule = false;
-    if (rules.nameContainsRules != null) {
-      for (CollisionNameRule nameRule : rules.nameContainsRules) {
-        if (nameRule != null && nameRule.matches(resolvedName)) {
-          count += applyCollisionRule(generated, width, height, x, y, nameRule.rule, mirrored);
-          matchedNamedRule = true;
-        }
-      }
-    }
-    if (matchedNamedRule) {
-      return count;
-    }
-    return count;
-  }
-
-  private static String normalizeSpriteKey(String value) {
-    if (value == null) {
-      return "";
-    }
-    String normalized =
-        Normalizer.normalize(value, Normalizer.Form.NFD)
-            .replaceAll("\\p{M}+", "")
-            .toLowerCase(Locale.ROOT)
-            .replace('_', ' ')
-            .replace('-', ' ')
-            .trim()
-            .replaceAll("\\s+", " ");
-    return normalized;
-  }
-
-  private static String compactSpriteKey(String value) {
-    return value == null ? "" : value.replace(" ", "");
-  }
-
-  private Map<String, SpriteLoader.Sprite> buildCollisionMetaByName() {
-    Map<String, SpriteLoader.Sprite> metaByName = new HashMap<>();
-    if (mapRenderer != null && mapRenderer.getMetaByName() != null) {
-      metaByName.putAll(mapRenderer.getMetaByName());
-    }
-    for (SpriteLoader.Sprite sprite : spriteLoader.getSprites()) {
-      if (sprite.getName() != null) {
-        metaByName.putIfAbsent(sprite.getName().toLowerCase(Locale.ROOT), sprite);
-      }
-    }
-    return metaByName;
-  }
-
-  private ResolvedSprite resolveSpriteAt(
-      int x, int y, Map<String, SpriteLoader.Sprite> metaByName) {
-    String name = mapReader.getSpriteName(x, y);
-    return SpriteNameParser.parse(name, metaByName);
-  }
-
-  private int[] getMirrorCollisionOriginShift(
-      String spriteName, Map<String, SpriteLoader.Sprite> metaByName) {
-    if (spriteName == null || metaByName == null) {
-      return new int[] {0, 0};
-    }
-    SpriteLoader.Sprite meta = metaByName.get(spriteName.toLowerCase(Locale.ROOT));
-    if (meta == null) {
-      return new int[] {0, 0};
-    }
-    int dx =
-        Math.round(
-            (meta.getDrawOffset2X() - meta.getDrawOffset1X()) / (float) GameConstants.GRID_W);
-    int dy =
-        Math.round(
-            (meta.getDrawOffset2Y() - meta.getDrawOffset1Y()) / (float) GameConstants.GRID_H);
-    return new int[] {dx, dy};
-  }
-
-  private CollisionRules loadCollisionRules() {
-    File binaryRulesFile = new File(Paths.COLLISION_RULES_BIN);
-    if (binaryRulesFile.exists()) {
-      try {
-        return loadCollisionRulesBinary(binaryRulesFile);
-      } catch (Exception e) {
-        log.warn(
-            "Could not load binary collision rules from {}: {}. Using empty collision rules.",
-            binaryRulesFile.getPath(),
-            e.getMessage());
-        return new CollisionRules();
-      }
-    }
-    log.warn(
-        "Collision rules binary file not found: {}. Using empty collision rules.",
-        binaryRulesFile.getPath());
-    return new CollisionRules();
-  }
-
-  private int applyCollisionRule(
-      byte[] data,
-      int width,
-      int height,
-      int originX,
-      int originY,
-      CollisionRule rule,
-      boolean mirrored) {
-    if (rule == null) {
-      return 0;
-    }
-    int minX = Integer.MAX_VALUE;
-    int maxX = Integer.MIN_VALUE;
-    if (mirrored) {
-      for (int[] tile : rule.normalizedTiles()) {
-        if (tile != null && tile.length >= 2) {
-          minX = Math.min(minX, tile[0]);
-          maxX = Math.max(maxX, tile[0]);
-        }
-      }
-      for (int[] tile : rule.normalizedClearTiles()) {
-        if (tile != null && tile.length >= 2) {
-          minX = Math.min(minX, tile[0]);
-          maxX = Math.max(maxX, tile[0]);
-        }
-      }
-      if (minX == Integer.MAX_VALUE || maxX == Integer.MIN_VALUE) {
-        mirrored = false;
-      }
-    }
-    int count = 0;
-    for (int[] tile : rule.normalizedTiles()) {
-      if (tile == null || tile.length < 2) {
-        continue;
-      }
-      int dx = mirrored ? (minX + maxX - tile[0]) : tile[0];
-      count +=
-          setCollisionIfEmpty(data, width, height, originX + dx, originY + tile[1], rule.value);
-    }
-    for (int[] tile : rule.normalizedClearTiles()) {
-      if (tile == null || tile.length < 2) {
-        continue;
-      }
-      int dx = mirrored ? (minX + maxX - tile[0]) : tile[0];
-      clearCollision(data, width, height, originX + dx, originY + tile[1]);
-    }
-    return count;
-  }
-
-  private int setCollisionIfEmpty(byte[] data, int width, int height, int x, int y, int value) {
-    if (x < 0 || x >= width || y < 0 || y >= height) {
-      return 0;
-    }
-    int index = y * width + x;
-    if (data[index] != 0) {
-      return 0;
-    }
-    data[index] = (byte) (value <= 0 ? COLLISION_VALUE_RED : value);
-    return 1;
-  }
-
-  private void clearCollision(byte[] data, int width, int height, int x, int y) {
-    if (x < 0 || x >= width || y < 0 || y >= height) {
-      return;
-    }
-    int index = y * width + x;
-    data[index] = 0;
-  }
-
-  private void regenerateCollisionsFromRulesAsync() {
-    if (collisionRegenerating) {
-      showEditorMessage("Collision regeneration already running");
-      return;
-    }
-    if (mapReader == null) {
-      showEditorMessage("No map loaded");
-      return;
-    }
-    collisionRegenerating = true;
-    collisionRegenerationProgress = 0f;
-    collisionRegenerationStage = "Preparing collision rules...";
-    collisionMapWidth = mapReader.getWidth();
-    collisionMapHeight = mapReader.getHeight();
-    collisionData = new byte[collisionMapWidth * collisionMapHeight];
-    collisionDirty = true;
-    showEditorMessage("Cleared collisions, regenerating from collision_rules.bin...");
-    int width = collisionMapWidth;
-    int height = collisionMapHeight;
-    CollisionRules rules = loadCollisionRules();
-    Map<String, SpriteLoader.Sprite> metaByName = buildCollisionMetaByName();
-    collisionGenerationExecutor.submit(
-        () -> {
-          try {
-            CollisionGenerationResult result =
-                buildCollisionDataFromRules(width, height, rules, metaByName, true);
-            Gdx.app.postRunnable(
-                () -> {
-                  collisionMapWidth = width;
-                  collisionMapHeight = height;
-                  collisionData = result.data;
-                  collisionDirty = true;
-                  collisionRegenerationProgress = 0.99f;
-                  collisionRegenerationStage = "Saving collisions...";
-                  saveCollisionData();
-                  collisionRegenerationProgress = 1f;
-                  collisionRegenerationStage = "Collisions saved";
-                  collisionRegenerating = false;
-                  showEditorMessage("Regenerated and saved collisions: " + result.count);
-                  log.info(
-                      "Regenerated collision map from {}: {}",
-                      Paths.COLLISION_RULES_BIN,
-                      result.count);
-                });
-          } catch (Throwable t) {
-            log.error("Failed to regenerate collision map", t);
-            Gdx.app.postRunnable(
-                () -> {
-                  collisionRegenerating = false;
-                  collisionRegenerationProgress = 0f;
-                  collisionRegenerationStage = "";
-                  showEditorMessage("Error: Failed to regenerate collisions");
-                });
-          }
-        });
-  }
-
-  private void openCollisionRuleEditor() {
-    ensureCachedSpriteList();
-    collisionRuleEditor =
-        new CollisionRuleEditorUI(cachedSpriteList != null ? cachedSpriteList : List.of());
-    openMenu = null;
-  }
-
-  private void openCollisionRuleEditorForSprite(String spriteName) {
-    ensureCachedSpriteList();
-    collisionRuleEditor =
-        new CollisionRuleEditorUI(
-            cachedSpriteList != null ? cachedSpriteList : List.of(), spriteName);
-    openMenu = null;
-  }
-
-  private void openDecorLayerRuleEditor() {
-    ensureCachedSpriteList();
-    decorLayerRuleEditor =
-        new DecorLayerRuleEditorUI(cachedSpriteList != null ? cachedSpriteList : List.of());
-    openMenu = null;
-  }
-
-  private Set<String> getPendingDecorLayerRuleNames() {
-    if (pendingDecorLayerRuleNames != null) {
-      return pendingDecorLayerRuleNames;
-    }
-    File file = new File(Paths.DECOR_LAYER_RULES_BIN);
-    if (!file.exists()) {
-      pendingDecorLayerRuleNames = new LinkedHashSet<>();
-      return pendingDecorLayerRuleNames;
-    }
-    try {
-      pendingDecorLayerRuleNames = new LinkedHashSet<>(DecorLayerRuleBinaryIO.read(file));
-    } catch (Exception e) {
-      log.warn("Failed to load decor layer rules", e);
-      showEditorMessage("Error: decor layer rules not loaded");
-      pendingDecorLayerRuleNames = new LinkedHashSet<>();
-    }
-    return pendingDecorLayerRuleNames;
-  }
-
-  private void saveDecorLayerRules() {
-    try {
-      DecorLayerRuleBinaryIO.write(
-          new File(Paths.DECOR_LAYER_RULES_BIN), getPendingDecorLayerRuleNames());
-      decorLayerRulesDirty = false;
-      if (mapRenderer != null) {
-        mapRenderer.reload(modifSprites);
-        mapRenderer.setDecorVisible(decorVisible);
-        mapRenderer.setObjectsVisible(objectsVisible);
-        mapRenderer.setGroundOutlineEnabled(groundOutlineEnabled);
-        mapRenderer.setDecorUseTileOffsets(true);
-        mapRenderer.setDecorOffsetOverrides(decorOffsetOverrides);
-      }
-      showEditorMessage("Decor layer rules saved");
-    } catch (Exception e) {
-      log.error("Failed to save decor layer rules", e);
-      showEditorMessage("Error: decor layer rules not saved");
-    }
-  }
-
-  private void saveCollisionRules(CollisionRules rules) {
-    File file = new File(Paths.COLLISION_RULES_BIN);
-    File parent = file.getParentFile();
-    if (parent != null) {
-      parent.mkdirs();
-    }
-    try {
-      saveCollisionRulesBinary(file, rules);
-      lastCollisionRulesModified = file.lastModified();
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to save collision rules", e);
-    }
-  }
-
-  private CollisionRules loadCollisionRulesBinary(File file) throws IOException {
-    try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
-      byte[] magic = new byte[COLLISION_RULES_MAGIC.length];
-      in.readFully(magic);
-      if (!Arrays.equals(magic, COLLISION_RULES_MAGIC)) {
-        throw new IOException("wrong magic header");
-      }
-      short version = readShortLE(in);
-      if (version < 1 || version > COLLISION_RULES_BIN_VERSION) {
-        throw new IOException("unsupported version " + version);
-      }
-      CollisionRules rules = new CollisionRules();
-      in.readBoolean();
-      rules.defaultDecorCollision = false;
-      rules.defaultCollisionValue = readIntLE(in);
-      rules.ignoredSprites = readStringList(in);
-      rules.exactSprites = new LinkedHashMap<>();
-      int exactCount = readIntLE(in);
-      for (int i = 0; i < exactCount; i++) {
-        rules.exactSprites.put(readString(in), readCollisionRuleBinary(in, version));
-      }
-      rules.nameContainsRules = new ArrayList<>();
-      int containsCount = readIntLE(in);
-      for (int i = 0; i < containsCount; i++) {
-        CollisionNameRule nameRule = new CollisionNameRule();
-        nameRule.contains = readStringList(in);
-        nameRule.rule = readCollisionRuleBinary(in, version);
-        rules.nameContainsRules.add(nameRule);
-      }
-      return rules;
-    }
-  }
-
-  private void saveCollisionRulesBinary(File file, CollisionRules rules) throws IOException {
-    try (DataOutputStream out =
-        new DataOutputStream(BinaryIOUtils.openOutputStream(file, 1 << 16))) {
-      out.write(COLLISION_RULES_MAGIC);
-      writeShortLE(out, COLLISION_RULES_BIN_VERSION);
-      out.writeBoolean(rules.defaultDecorCollision);
-      writeIntLE(out, rules.defaultCollisionValue);
-      writeStringList(out, rules.ignoredSprites);
-      Map<String, CollisionRule> exact = rules.exactSprites != null ? rules.exactSprites : Map.of();
-      writeIntLE(out, exact.size());
-      for (Map.Entry<String, CollisionRule> entry : exact.entrySet()) {
-        writeString(out, entry.getKey());
-        writeCollisionRuleBinary(out, entry.getValue());
-      }
-      List<CollisionNameRule> contains =
-          rules.nameContainsRules != null ? rules.nameContainsRules : List.of();
-      writeIntLE(out, contains.size());
-      for (CollisionNameRule nameRule : contains) {
-        writeStringList(out, nameRule.contains);
-        writeCollisionRuleBinary(out, nameRule.rule);
-      }
-    }
-  }
-
-  private CollisionRule readCollisionRuleBinary(DataInputStream in, short version)
-      throws IOException {
-    CollisionRule rule = new CollisionRule();
-    rule.value = readIntLE(in);
-    int tileCount = readIntLE(in);
-    rule.tiles = new ArrayList<>(Math.max(0, tileCount));
-    for (int i = 0; i < tileCount; i++) {
-      rule.tiles.add(new int[] {readIntLE(in), readIntLE(in)});
-    }
-    rule.clearTiles = new ArrayList<>();
-    if (version >= 2) {
-      int clearTileCount = readIntLE(in);
-      for (int i = 0; i < clearTileCount; i++) {
-        rule.clearTiles.add(new int[] {readIntLE(in), readIntLE(in)});
-      }
-    }
-    return rule;
-  }
-
-  private void writeCollisionRuleBinary(DataOutputStream out, CollisionRule rule)
-      throws IOException {
-    CollisionRule safeRule = rule != null ? rule : new CollisionRule();
-    writeIntLE(out, safeRule.value);
-    List<int[]> tiles = safeRule.tiles != null ? safeRule.tiles : List.of();
-    writeIntLE(out, tiles.size());
-    for (int[] tile : tiles) {
-      writeIntLE(out, tile != null && tile.length > 0 ? tile[0] : 0);
-      writeIntLE(out, tile != null && tile.length > 1 ? tile[1] : 0);
-    }
-    List<int[]> clearTiles = safeRule.clearTiles != null ? safeRule.clearTiles : List.of();
-    writeIntLE(out, clearTiles.size());
-    for (int[] tile : clearTiles) {
-      writeIntLE(out, tile != null && tile.length > 0 ? tile[0] : 0);
-      writeIntLE(out, tile != null && tile.length > 1 ? tile[1] : 0);
-    }
-  }
-
-  private List<String> readStringList(DataInputStream in) throws IOException {
-    int count = readIntLE(in);
-    List<String> values = new ArrayList<>(Math.max(0, count));
-    for (int i = 0; i < count; i++) {
-      values.add(readString(in));
-    }
-    return values;
-  }
-
-  private void writeStringList(DataOutputStream out, List<String> values) throws IOException {
-    List<String> safeValues = values != null ? values : List.of();
-    writeIntLE(out, safeValues.size());
-    for (String value : safeValues) {
-      writeString(out, value);
-    }
-  }
-
-  private String readString(DataInputStream in) throws IOException {
-    int length = readIntLE(in);
-    if (length < 0 || length > 1_000_000) {
-      throw new IOException("invalid string length: " + length);
-    }
-    byte[] bytes = in.readNBytes(length);
-    if (bytes.length != length) {
-      throw new IOException("unexpected EOF while reading string");
-    }
-    return new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
-  }
-
-  private void writeString(DataOutputStream out, String value) throws IOException {
-    byte[] bytes = (value != null ? value : "").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-    writeIntLE(out, bytes.length);
-    out.write(bytes);
-  }
-
-  private void checkCollisionRulesUpdates() {
-    long now = TimeUtils.millis();
-    if (now < nextCollisionRulesWatchAt) {
-      return;
-    }
-    nextCollisionRulesWatchAt = now + COLLISION_RULES_WATCH_INTERVAL_MS;
-    File rulesFile = new File(Paths.COLLISION_RULES_BIN);
-    long modified = rulesFile.exists() ? rulesFile.lastModified() : -1L;
-    if (lastCollisionRulesModified == -1L) {
-      lastCollisionRulesModified = modified;
-      return;
-    }
-    if (modified == lastCollisionRulesModified) {
-      return;
-    }
-    lastCollisionRulesModified = modified;
-    if (collisionRegenerating) {
-      return;
-    }
-    log.info("Detected change in {}. Auto-regenerating collisions.", Paths.COLLISION_RULES_BIN);
-    regenerateCollisionsFromRulesAsync();
-  }
-
-  private record CollisionGenerationResult(byte[] data, int count) {}
-
   private void saveCollisionData() {
     if (collisionData == null) {
       showEditorMessage("Error: No collision data to save");
@@ -13716,874 +12858,21 @@ public class MapEditorScreen implements Screen {
     return value == null || value.isBlank();
   }
 
-  private class CollisionRuleEditorUI extends EditorDialog {
-    private static final int LIST_WIDTH = 330;
-    private static final int PADDING = 22;
-    private static final int HEADER_HEIGHT = 62;
-    private static final int SEARCH_HEIGHT = 34;
-    private static final int FOOTER_HEIGHT = 58;
-    private static final int ROW_HEIGHT = 28;
-    private static final int GRID_RADIUS = 5;
-    private static final int GRID_SIZE = GRID_RADIUS * 2 + 1;
-    private final List<SpritePickerUI.SpriteEntry> allSprites;
-    private List<SpritePickerUI.SpriteEntry> filteredSprites;
-    private final CollisionRules rules;
-    private final Set<String> collisionTiles = new HashSet<>();
-    private final Set<String> noCollisionTiles = new HashSet<>();
-    private final GlyphLayout textLayout = new GlyphLayout();
-    private SpritePickerUI.SpriteEntry selectedSprite;
-    private String searchFilter = "";
-    private int scrollOffset = 0;
-    private String inheritedRuleLabel = null;
-    private boolean dirty = false;
-    private boolean filterExistingCollisions = false;
-    private final EditorListBox<SpritePickerUI.SpriteEntry> spriteListBox =
-        new EditorListBox<SpritePickerUI.SpriteEntry>()
-            .rowHeight(ROW_HEIGHT)
-            .labelProvider(e -> e == null ? "" : e.name)
-            .colorProvider(
-                i ->
-                    filteredSprites != null
-                            && i < filteredSprites.size()
-                            && filteredSprites.get(i) == selectedSprite
-                        ? EditorTheme.BLUE
-                        : null);
-    private final EditorButton btnModeCollision =
-        new EditorButton("Red", () -> paintNoCollisionMode = false);
-    private final EditorButton btnModeNoCollision =
-        new EditorButton("Green", () -> paintNoCollisionMode = true);
-    private final EditorButton btnClear = new EditorButton("Clear", this::clearCollisionRule);
-    private final com.badlogic.gdx.math.Rectangle searchBounds =
-        new com.badlogic.gdx.math.Rectangle();
-    private final com.badlogic.gdx.math.Rectangle existingOnlyBounds =
-        new com.badlogic.gdx.math.Rectangle();
-    private final com.badlogic.gdx.math.Rectangle listBounds =
-        new com.badlogic.gdx.math.Rectangle();
-    private final com.badlogic.gdx.math.Rectangle gridBounds =
-        new com.badlogic.gdx.math.Rectangle();
-    private final com.badlogic.gdx.math.Rectangle hScrollBounds =
-        new com.badlogic.gdx.math.Rectangle();
-    private final com.badlogic.gdx.math.Rectangle vScrollBounds =
-        new com.badlogic.gdx.math.Rectangle();
-    private float viewOffsetX = 0f;
-    private float viewOffsetY = 0f;
-    private boolean paintNoCollisionMode = false;
-    private String lastDraggedTileKey = null;
-    private boolean dragEraseMode = false;
-
-    CollisionRuleEditorUI(List<SpritePickerUI.SpriteEntry> sprites) {
-      this(sprites, null);
-    }
-
-    CollisionRuleEditorUI(List<SpritePickerUI.SpriteEntry> sprites, String initialSpriteName) {
-      super("Collision Rules");
-      this.allSprites = new ArrayList<>(sprites);
-      this.filteredSprites = new ArrayList<>(allSprites);
-      spriteListBox.setItems(filteredSprites);
-      this.rules = loadCollisionRules();
-      if (rules.exactSprites == null) {
-        rules.exactSprites = new LinkedHashMap<>();
-      }
-      if (initialSpriteName != null && !initialSpriteName.isBlank()) {
-        SpritePickerUI.SpriteEntry match = null;
-        for (SpritePickerUI.SpriteEntry entry : filteredSprites) {
-          if (entry != null
-              && entry.name != null
-              && entry.name.equalsIgnoreCase(initialSpriteName)) {
-            match = entry;
-            break;
-          }
-        }
-        if (match != null) {
-          selectSprite(match);
-        }
-      }
-      if (selectedSprite == null && !filteredSprites.isEmpty()) {
-        selectSprite(filteredSprites.get(0));
-      }
-    }
-
-    public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
-      int screenWidth = Gdx.graphics.getWidth();
-      int screenHeight = Gdx.graphics.getHeight();
-      computeLayout(screenWidth, screenHeight);
-      Gdx.gl.glEnable(GL20.GL_BLEND);
-      Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-      shapeRenderer.setProjectionMatrix(
-          shapeRenderer.getProjectionMatrix().idt().setToOrtho2D(0, 0, screenWidth, screenHeight));
-      shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-      EditorPanelChrome.overlay(shapeRenderer, screenWidth, screenHeight);
-      com.badlogic.gdx.math.Rectangle panelBounds =
-          new com.badlogic.gdx.math.Rectangle(
-              PADDING, PADDING, screenWidth - PADDING * 2f, screenHeight - PADDING * 2f);
-      EditorPanelChrome.panel(shapeRenderer, panelBounds, EditorTheme.ORANGE, HEADER_HEIGHT);
-      EditorPanelChrome.textField(shapeRenderer, searchBounds, true);
-      EditorPanelChrome.darkSurface(shapeRenderer, gridBounds);
-      float checkboxSize = 14f;
-      float checkboxY = existingOnlyBounds.y + (existingOnlyBounds.height - checkboxSize) / 2f;
-      EditorPanelChrome.checkbox(
-          shapeRenderer,
-          new com.badlogic.gdx.math.Rectangle(
-              existingOnlyBounds.x, checkboxY, checkboxSize, checkboxSize),
-          filterExistingCollisions);
-      drawGridCells(shapeRenderer);
-      drawPreviewScrollbars(shapeRenderer);
-      shapeRenderer.end();
-      shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-      EditorPanelChrome.border(shapeRenderer, panelBounds);
-      EditorPanelChrome.border(shapeRenderer, searchBounds);
-      EditorPanelChrome.border(shapeRenderer, gridBounds);
-      EditorPanelChrome.border(
-          shapeRenderer,
-          new com.badlogic.gdx.math.Rectangle(
-              existingOnlyBounds.x, checkboxY, checkboxSize, checkboxSize));
-      shapeRenderer.end();
-      batch.setProjectionMatrix(
-          batch.getProjectionMatrix().idt().setToOrtho2D(0, 0, screenWidth, screenHeight));
-      batch.begin();
-      batch.setColor(Color.WHITE);
-      float oldScaleX = font.getData().scaleX;
-      float oldScaleY = font.getData().scaleY;
-      font.getData().setScale(1f);
-      font.setColor(UI_TEXT_LIGHT);
-      font.draw(
-          batch,
-          "Collision Rules Editor",
-          panelBounds.x + 18f,
-          panelBounds.y + panelBounds.height - 18f);
-      font.setColor(UI_TEXT_FAINT);
-      font.draw(
-          batch,
-          "Select a sprite, paint collision tiles, then save to collision_rules.bin",
-          panelBounds.x + 18f,
-          panelBounds.y + panelBounds.height - 42f);
-      font.setColor(searchFilter.isBlank() ? UI_TEXT_MUTED : UI_TEXT);
-      font.draw(
-          batch,
-          searchFilter.isBlank() ? "Search sprite..." : searchFilter,
-          searchBounds.x + 11f,
-          searchBounds.y + 22f);
-      float checkTextY = existingOnlyBounds.y + existingOnlyBounds.height / 2f + 5f;
-      font.setColor(UI_TEXT_LIGHT);
-      font.draw(batch, filterExistingCollisions ? "x" : "", existingOnlyBounds.x + 3f, checkTextY);
-      font.setColor(UI_TEXT_MUTED);
-      font.draw(batch, "Has collision", existingOnlyBounds.x + 22f, checkTextY);
-      drawSelectedPreview(batch);
-      font.getData().setScale(oldScaleX, oldScaleY);
-      batch.end();
-      spriteListBox.render(batch, shapeRenderer, font);
-      btnModeCollision.withFont(font).render(batch, shapeRenderer);
-      btnModeNoCollision.withFont(font).render(batch, shapeRenderer);
-      btnClear.withFont(font).render(batch, shapeRenderer);
-      drawSelectedCollisionTilesSolid(shapeRenderer, screenWidth, screenHeight);
-    }
-
-    public boolean handleClick(int screenX, int screenY, int button) {
-      if (button != Input.Buttons.LEFT) {
-        return true;
-      }
-      float x = screenX;
-      float y = Gdx.graphics.getHeight() - screenY;
-      computeLayout(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-      int ix = (int) x;
-      int iy = (int) y;
-      if (btnModeCollision.handleClick(ix, iy, button)) return true;
-      if (btnModeNoCollision.handleClick(ix, iy, button)) return true;
-      if (btnClear.handleClick(ix, iy, button)) return true;
-      if (existingOnlyBounds.contains(x, y)) {
-        filterExistingCollisions = !filterExistingCollisions;
-        applyFilter();
-        return true;
-      }
-      if (spriteListBox.handleClick((int) x, (int) y, button)) {
-        int idx = spriteListBox.selectedItem() != null ? spriteListBox.selectedIndex() : -1;
-        if (idx >= 0 && idx < filteredSprites.size()) selectSprite(filteredSprites.get(idx));
-        scrollOffset = spriteListBox.scrollOffset();
-        return true;
-      }
-      if (gridBounds.contains(x, y)) {
-        paintGridPoint(x, y, true);
-        return true;
-      }
-      if (hScrollBounds.contains(x, y) || vScrollBounds.contains(x, y)) {
-        updateScrollFromPoint(x, y);
-        return true;
-      }
-      return true;
-    }
-
-    public boolean handleDrag(int screenX, int screenY) {
-      if (!Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-        return true;
-      }
-      float x = screenX;
-      float y = Gdx.graphics.getHeight() - screenY;
-      computeLayout(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-      if (gridBounds.contains(x, y)) {
-        paintGridPoint(x, y, false);
-        return true;
-      }
-      if (hScrollBounds.contains(x, y) || vScrollBounds.contains(x, y)) {
-        updateScrollFromPoint(x, y);
-        return true;
-      }
-      return true;
-    }
-
-    public boolean handleTouchUp(int screenX, int screenY, int button) {
-      lastDraggedTileKey = null;
-      dragEraseMode = false;
-      return true;
-    }
-
-    public boolean handleScroll(float amount) {
-      if (requiresHorizontalScroll()) {
-        viewOffsetX = clampPreviewOffsetX(viewOffsetX + (amount > 0 ? 1f : -1f));
-        return true;
-      }
-      if (requiresVerticalScroll()) {
-        viewOffsetY = clampPreviewOffsetY(viewOffsetY + (amount > 0 ? -1f : 1f));
-        return true;
-      }
-      spriteListBox.scroll(amount > 0 ? 3 : -3);
-      scrollOffset = spriteListBox.scrollOffset();
-      return true;
-    }
-
-    public boolean handleKeyTyped(char character) {
-      if (character == '\b') {
-        if (!searchFilter.isEmpty()) {
-          searchFilter = searchFilter.substring(0, searchFilter.length() - 1);
-          applyFilter();
-        }
-        return true;
-      }
-      if (character == '\r' || character == '\n') {
-        if (!filteredSprites.isEmpty()) {
-          selectSprite(filteredSprites.get(0));
-        }
-        return true;
-      }
-      if (character >= 32 && character != 127) {
-        searchFilter += character;
-        applyFilter();
-        return true;
-      }
-      return true;
-    }
-
-    private void computeLayout(int screenWidth, int screenHeight) {
-      float panelLeft = PADDING;
-      float panelBottom = PADDING;
-      float panelRight = screenWidth - PADDING;
-      float contentTop = screenHeight - PADDING - HEADER_HEIGHT - 16f;
-      float footerTop = panelBottom + FOOTER_HEIGHT;
-      searchBounds.set(
-          panelLeft + 18f, contentTop - SEARCH_HEIGHT, LIST_WIDTH - 36f, SEARCH_HEIGHT);
-      existingOnlyBounds.set(panelLeft + 18f, searchBounds.y - 32f, LIST_WIDTH - 36f, 24f);
-      btnModeCollision.setBounds(panelLeft + 18f, existingOnlyBounds.y - 38f, 78f, 30f);
-      btnModeNoCollision.setBounds(
-          btnModeCollision.bounds().x + 78f + 8f, existingOnlyBounds.y - 38f, 78f, 30f);
-      listBounds.set(
-          panelLeft + 18f,
-          footerTop + 14f,
-          LIST_WIDTH - 36f,
-          btnModeCollision.bounds().y - footerTop - 24f);
-      spriteListBox.setBounds(listBounds.x, listBounds.y, listBounds.width, listBounds.height);
-      spriteListBox.setScrollOffset(scrollOffset);
-      float editorLeft = panelLeft + LIST_WIDTH + 18f;
-      float editorWidth = panelRight - editorLeft - 18f;
-      float editorHeight = contentTop - footerTop - 14f;
-      float gridWidth = Math.min(editorWidth, editorHeight * 2f);
-      float gridHeight = gridWidth / 2f;
-      gridBounds.set(
-          editorLeft + (editorWidth - gridWidth) / 2f,
-          footerTop + 14f + (editorHeight - gridHeight) / 2f,
-          gridWidth,
-          gridHeight);
-      hScrollBounds.set(gridBounds.x, gridBounds.y - 14f, gridBounds.width, 10f);
-      vScrollBounds.set(gridBounds.x + gridBounds.width + 4f, gridBounds.y, 10f, gridBounds.height);
-      btnClear.setBounds(panelRight - 118f, panelBottom + 15f, 82f, 30f);
-    }
-
-    private void clearCollisionRule() {
-      if (!collisionTiles.isEmpty() || !noCollisionTiles.isEmpty() || inheritedRuleLabel != null) {
-        collisionTiles.clear();
-        noCollisionTiles.clear();
-        inheritedRuleLabel = null;
-        dirty = true;
-        saveCurrentRule(false);
-      }
-    }
-
-    private void drawPreviewScrollbars(ShapeRenderer shapeRenderer) {
-      if (requiresHorizontalScroll()) {
-        float range = getHorizontalScrollRange();
-        float ratio = range <= 0f ? 0f : ((viewOffsetX + range) / (2f * range));
-        float thumbW = Math.max(24f, hScrollBounds.width * 0.18f);
-        float thumbX = hScrollBounds.x + (hScrollBounds.width - thumbW) * ratio;
-        EditorPanelChrome.scrollbar(
-            shapeRenderer,
-            hScrollBounds,
-            new com.badlogic.gdx.math.Rectangle(
-                thumbX, hScrollBounds.y, thumbW, hScrollBounds.height));
-      }
-      if (requiresVerticalScroll()) {
-        float range = getVerticalScrollRange();
-        float ratio = range <= 0f ? 0f : ((viewOffsetY + range) / (2f * range));
-        float thumbH = Math.max(24f, vScrollBounds.height * 0.18f);
-        float thumbY = vScrollBounds.y + (vScrollBounds.height - thumbH) * ratio;
-        EditorPanelChrome.scrollbar(
-            shapeRenderer,
-            vScrollBounds,
-            new com.badlogic.gdx.math.Rectangle(
-                vScrollBounds.x, thumbY, vScrollBounds.width, thumbH));
-      }
-    }
-
-    private class PreviewTransform {
-      final int minX;
-      final int minY;
-      final int cellsX;
-      final int cellsY;
-      final float originX;
-      final float originY;
-      final float cellW;
-      final float cellH;
-
-      PreviewTransform(
-          int minX,
-          int minY,
-          int cellsX,
-          int cellsY,
-          float originX,
-          float originY,
-          float cellW,
-          float cellH) {
-        this.minX = minX;
-        this.minY = minY;
-        this.cellsX = cellsX;
-        this.cellsY = cellsY;
-        this.originX = originX;
-        this.originY = originY;
-        this.cellW = cellW;
-        this.cellH = cellH;
-      }
-
-      int maxY() {
-        return minY + cellsY;
-      }
-
-      float width() {
-        return cellsX * cellW;
-      }
-
-      float height() {
-        return cellsY * cellH;
-      }
-    }
-
-    private PreviewTransform previewTransform() {
-      float minContentX = -GRID_RADIUS;
-      float maxContentX = GRID_RADIUS + 1f;
-      float minContentY = -GRID_RADIUS;
-      float maxContentY = GRID_RADIUS + 1f;
-      if (selectedSprite != null) {
-        TextureRegion region = spriteLoader.getRegionFromSpriteName(selectedSprite.name);
-        if (region != null) {
-          float[] bounds = spriteLogicalBounds(selectedSprite.name, region);
-          minContentX = bounds[0];
-          minContentY = bounds[1];
-          maxContentX = bounds[2];
-          maxContentY = bounds[3];
-        }
-      }
-      float[] contentBounds = new float[] {minContentX, minContentY, maxContentX, maxContentY};
-      includeSelectedTileBounds(contentBounds, collisionTiles);
-      includeSelectedTileBounds(contentBounds, noCollisionTiles);
-      float contentW = Math.max(1f, contentBounds[2] - contentBounds[0]);
-      float contentH = Math.max(1f, contentBounds[3] - contentBounds[1]);
-      int cellsX = Math.max(GRID_SIZE, (int) Math.ceil(contentW) + 2);
-      int cellsY = Math.max(GRID_SIZE, (int) Math.ceil(contentH) + 2);
-      float centerX = (contentBounds[0] + contentBounds[2]) * 0.5f;
-      float centerY = (contentBounds[1] + contentBounds[3]) * 0.5f;
-      int minX = (int) Math.floor(centerX - cellsX * 0.5f);
-      int minY = (int) Math.floor(centerY - cellsY * 0.5f);
-      float cellH = Math.min(gridBounds.height / cellsY, gridBounds.width / (cellsX * 2f));
-      if (cellH <= 0f) {
-        cellH = gridBounds.height / GRID_SIZE;
-      }
-      float cellW = cellH * 2f;
-      float previewW = cellsX * cellW;
-      float previewH = cellsY * cellH;
-      float originX = gridBounds.x + (gridBounds.width - previewW) * 0.5f;
-      float originY = gridBounds.y + (gridBounds.height - previewH) * 0.5f;
-      return new PreviewTransform(minX, minY, cellsX, cellsY, originX, originY, cellW, cellH);
-    }
-
-    private void includeSelectedTileBounds(float[] bounds, Set<String> tiles) {
-      for (String key : tiles) {
-        int[] tile = parseTileKey(key);
-        if (tile == null) {
-          continue;
-        }
-        bounds[0] = Math.min(bounds[0], tile[0]);
-        bounds[1] = Math.min(bounds[1], tile[1]);
-        bounds[2] = Math.max(bounds[2], tile[0] + 1f);
-        bounds[3] = Math.max(bounds[3], tile[1] + 1f);
-      }
-    }
-
-    private int[] parseTileKey(String key) {
-      if (key == null) {
-        return null;
-      }
-      String[] parts = key.split(",", 2);
-      if (parts.length != 2) {
-        return null;
-      }
-      try {
-        return new int[] {Integer.parseInt(parts[0]), Integer.parseInt(parts[1])};
-      } catch (NumberFormatException ignored) {
-        return null;
-      }
-    }
-
-    private void drawGridCells(ShapeRenderer shapeRenderer) {
-      PreviewTransform t = previewTransform();
-      for (int gy = 0; gy < t.cellsY; gy++) {
-        for (int gx = 0; gx < t.cellsX; gx++) {
-          int dx = t.minX + gx;
-          int dy = t.minY + (t.cellsY - 1 - gy);
-          String key = tileKey(dx, dy);
-          boolean red = collisionTiles.contains(key);
-          boolean green = noCollisionTiles.contains(key);
-          float x = t.originX + gx * t.cellW;
-          float y = t.originY + gy * t.cellH;
-          if (red) {
-            shapeRenderer.setColor(1.0f, 0.05f, 0.02f, 0.18f);
-            shapeRenderer.rect(x + 1f, y + 1f, t.cellW - 2f, t.cellH - 2f);
-          } else if (green) {
-            shapeRenderer.setColor(0.12f, 0.75f, 0.18f, 0.22f);
-            shapeRenderer.rect(x + 1f, y + 1f, t.cellW - 2f, t.cellH - 2f);
-          } else if (dx == 0 && dy == 0) {
-            shapeRenderer.setColor(0.16f, 0.42f, 0.72f, 0.22f);
-            shapeRenderer.rect(x + 1f, y + 1f, t.cellW - 2f, t.cellH - 2f);
-          }
-        }
-      }
-      shapeRenderer.setColor(UI_BORDER);
-      for (int i = 0; i <= t.cellsX; i++) {
-        float pos = t.originX + i * t.cellW;
-        shapeRenderer.rectLine(pos, t.originY, pos, t.originY + t.height(), 1f);
-      }
-      for (int i = 0; i <= t.cellsY; i++) {
-        float pos = t.originY + i * t.cellH;
-        shapeRenderer.rectLine(t.originX, pos, t.originX + t.width(), pos, 1f);
-      }
-      shapeRenderer.setColor(1.0f, 0.96f, 0.88f, 0.95f);
-      for (int gy = 0; gy < t.cellsY; gy++) {
-        for (int gx = 0; gx < t.cellsX; gx++) {
-          int dx = t.minX + gx;
-          int dy = t.minY + (t.cellsY - 1 - gy);
-          if (collisionTiles.contains(tileKey(dx, dy))
-              || noCollisionTiles.contains(tileKey(dx, dy))) {
-            shapeRenderer.rect(
-                t.originX + gx * t.cellW + 2f,
-                t.originY + gy * t.cellH + 2f,
-                t.cellW - 4f,
-                t.cellH - 4f);
-          }
-        }
-      }
-    }
-
-    private void drawSelectedCollisionTilesSolid(
-        ShapeRenderer shapeRenderer, int screenWidth, int screenHeight) {
-      if (collisionTiles.isEmpty() && noCollisionTiles.isEmpty()) {
-        return;
-      }
-      shapeRenderer.setProjectionMatrix(
-          shapeRenderer.getProjectionMatrix().idt().setToOrtho2D(0, 0, screenWidth, screenHeight));
-      PreviewTransform t = previewTransform();
-      Gdx.gl.glEnable(GL20.GL_BLEND);
-      Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-      shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-      for (int gy = 0; gy < t.cellsY; gy++) {
-        for (int gx = 0; gx < t.cellsX; gx++) {
-          int dx = t.minX + gx;
-          int dy = t.minY + (t.cellsY - 1 - gy);
-          String key = tileKey(dx, dy);
-          if (collisionTiles.contains(key)) {
-            shapeRenderer.setColor(0.95f, 0.04f, 0.02f, 1f);
-            shapeRenderer.rect(
-                t.originX + gx * t.cellW + 2f,
-                t.originY + gy * t.cellH + 2f,
-                t.cellW - 4f,
-                t.cellH - 4f);
-          } else if (noCollisionTiles.contains(key)) {
-            shapeRenderer.setColor(0.12f, 0.75f, 0.18f, 1f);
-            shapeRenderer.rect(
-                t.originX + gx * t.cellW + 2f,
-                t.originY + gy * t.cellH + 2f,
-                t.cellW - 4f,
-                t.cellH - 4f);
-          }
-        }
-      }
-      shapeRenderer.end();
-      shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-      shapeRenderer.setColor(1f, 0.96f, 0.88f, 1f);
-      for (int gy = 0; gy < t.cellsY; gy++) {
-        for (int gx = 0; gx < t.cellsX; gx++) {
-          int dx = t.minX + gx;
-          int dy = t.minY + (t.cellsY - 1 - gy);
-          if (collisionTiles.contains(tileKey(dx, dy))
-              || noCollisionTiles.contains(tileKey(dx, dy))) {
-            shapeRenderer.rect(
-                t.originX + gx * t.cellW + 2f,
-                t.originY + gy * t.cellH + 2f,
-                t.cellW - 4f,
-                t.cellH - 4f);
-          }
-        }
-      }
-      shapeRenderer.end();
-      Gdx.gl.glDisable(GL20.GL_BLEND);
-    }
-
-    private void drawSelectedPreview(SpriteBatch batch) {
-      float labelY = gridBounds.y + gridBounds.height + 44f;
-      font.getData().setScale(1.0f);
-      font.setColor(UI_TEXT_LIGHT);
-      String name = selectedSprite == null ? "No sprite selected" : selectedSprite.name;
-      textLayout.setText(font, name);
-      font.draw(batch, name, gridBounds.x + (gridBounds.width - textLayout.width) / 2f, labelY);
-      font.getData().setScale(0.78f);
-      font.setColor(UI_TEXT_MUTED);
-      String detail =
-          inheritedRuleLabel != null
-              ? inheritedRuleLabel
-              : (collisionTiles.size()
-                  + " collision tiles, "
-                  + noCollisionTiles.size()
-                  + " no-collision tiles");
-      textLayout.setText(font, detail);
-      font.draw(
-          batch, detail, gridBounds.x + (gridBounds.width - textLayout.width) / 2f, labelY - 24f);
-      if (selectedSprite == null) {
-        return;
-      }
-      TextureRegion region = spriteLoader.getRegionFromSpriteName(selectedSprite.name);
-      if (region == null) {
-        return;
-      }
-      PreviewTransform t = previewTransform();
-      float[] bounds = spriteLogicalBounds(selectedSprite.name, region);
-      float w = (bounds[2] - bounds[0]) * t.cellW;
-      float h = (bounds[3] - bounds[1]) * t.cellH;
-      float drawX = t.originX + (bounds[0] - t.minX) * t.cellW;
-      float drawY = t.originY + (t.maxY() - bounds[3]) * t.cellH;
-      batch.flush();
-      Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
-      Gdx.gl.glScissor(
-          Math.max(0, (int) gridBounds.x),
-          Math.max(0, (int) gridBounds.y),
-          Math.max(0, (int) gridBounds.width),
-          Math.max(0, (int) gridBounds.height));
-      batch.setColor(1f, 1f, 1f, 0.72f);
-      batch.draw(region, drawX, drawY, w, h);
-      batch.setColor(Color.WHITE);
-      batch.flush();
-      Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
-    }
-
-    private float[] spriteLogicalBounds(String spriteName, TextureRegion region) {
-      SpriteLoader.Sprite meta = findSpriteMeta(spriteName);
-      float offX = meta != null ? meta.getDrawOffset1X() : 0f;
-      float offY = meta != null ? meta.getDrawOffset1Y() : 0f;
-      float logicalW = region.getRegionWidth() / (float) GameConstants.GRID_W;
-      float logicalH = region.getRegionHeight() / (float) GameConstants.GRID_H;
-      float logicalX = offX / GameConstants.GRID_W;
-      float logicalY = offY / GameConstants.GRID_H + 1f - logicalH;
-      return new float[] {logicalX, logicalY, logicalX + logicalW, logicalY + logicalH};
-    }
-
-    private SpriteLoader.Sprite findSpriteMeta(String name) {
-      if (name == null) {
-        return null;
-      }
-      String key = name.toLowerCase(Locale.ROOT);
-      if (mapRenderer != null && mapRenderer.getMetaByName() != null) {
-        SpriteLoader.Sprite meta = mapRenderer.getMetaByName().get(key);
-        if (meta != null) {
-          return meta;
-        }
-      }
-      for (SpriteLoader.Sprite sprite : spriteLoader.getSprites()) {
-        if (sprite.getName() != null && sprite.getName().equalsIgnoreCase(name)) {
-          return sprite;
-        }
-      }
-      return null;
-    }
-
-    private int[] tileFromGridPoint(float x, float y) {
-      PreviewTransform t = previewTransform();
-      int gx = (int) ((x - t.originX) / t.cellW);
-      int gy = (int) ((y - t.originY) / t.cellH);
-      if (gx < 0 || gx >= t.cellsX || gy < 0 || gy >= t.cellsY) {
-        return null;
-      }
-      return new int[] {t.minX + gx, t.minY + (t.cellsY - 1 - gy)};
-    }
-
-    private void paintGridPoint(float x, float y, boolean toggle) {
-      int[] tile = tileFromGridPoint(x, y);
-      if (tile == null) {
-        return;
-      }
-      String key = tileKey(tile[0], tile[1]);
-      if (toggle) {
-        dragEraseMode =
-            paintNoCollisionMode ? noCollisionTiles.contains(key) : collisionTiles.contains(key);
-      }
-      if (!toggle && key.equals(lastDraggedTileKey)) {
-        return;
-      }
-      lastDraggedTileKey = key;
-      boolean changed;
-      if (paintNoCollisionMode) {
-        if (toggle) {
-          changed = toggleTile(noCollisionTiles, key);
-          changed |= collisionTiles.remove(key);
-        } else if (dragEraseMode) {
-          changed = noCollisionTiles.remove(key);
-        } else {
-          changed = noCollisionTiles.add(key);
-          changed |= collisionTiles.remove(key);
-        }
-      } else {
-        if (toggle) {
-          changed = toggleTile(collisionTiles, key);
-          changed |= noCollisionTiles.remove(key);
-        } else if (dragEraseMode) {
-          changed = collisionTiles.remove(key);
-        } else {
-          changed = collisionTiles.add(key);
-          changed |= noCollisionTiles.remove(key);
-        }
-      }
-      if (!changed) {
-        return;
-      }
-      inheritedRuleLabel = null;
-      dirty = true;
-      saveCurrentRule(false);
-    }
-
-    private boolean toggleTile(Set<String> tiles, String key) {
-      if (tiles.remove(key)) {
-        return true;
-      }
-      return tiles.add(key);
-    }
-
-    private void applyFilter() {
-      String filter = normalizeSpriteKey(searchFilter);
-      filteredSprites = new ArrayList<>();
-      for (SpritePickerUI.SpriteEntry entry : allSprites) {
-        if ((!filterExistingCollisions || hasCollisionRule(entry.name))
-            && (filter.isBlank() || normalizeSpriteKey(entry.name).contains(filter))) {
-          filteredSprites.add(entry);
-        }
-      }
-      scrollOffset = 0;
-      spriteListBox.setItems(filteredSprites);
-      spriteListBox.setScrollOffset(0);
-    }
-
-    private void selectSprite(SpritePickerUI.SpriteEntry entry) {
-      if (entry == null || entry == selectedSprite) {
-        return;
-      }
-      saveCurrentRule(false);
-      selectedSprite = entry;
-      viewOffsetX = 0f;
-      viewOffsetY = 0f;
-      collisionTiles.clear();
-      noCollisionTiles.clear();
-      inheritedRuleLabel = null;
-      dirty = false;
-      CollisionRule exact = findExactRule(entry.name);
-      if (exact != null) {
-        loadTiles(exact);
-        return;
-      }
-      CollisionNameRule inherited = findInheritedRule(entry.name);
-      if (inherited != null) {
-        loadTiles(inherited.rule);
-        inheritedRuleLabel = "Inherited from contains rule";
-      }
-    }
-
-    private CollisionRule findExactRule(String name) {
-      if (rules.exactSprites == null || name == null) {
-        return null;
-      }
-      String normalized = normalizeSpriteKey(name);
-      for (Map.Entry<String, CollisionRule> entry : rules.exactSprites.entrySet()) {
-        if (normalizeSpriteKey(entry.getKey()).equals(normalized)) {
-          return entry.getValue();
-        }
-      }
-      return null;
-    }
-
-    private CollisionNameRule findInheritedRule(String name) {
-      if (rules.nameContainsRules == null || name == null) {
-        return null;
-      }
-      String normalized = normalizeSpriteKey(name);
-      for (CollisionNameRule rule : rules.nameContainsRules) {
-        if (rule != null && rule.matches(normalized)) {
-          return rule;
-        }
-      }
-      return null;
-    }
-
-    private boolean hasCollisionRule(String name) {
-      return findExactRule(name) != null || findInheritedRule(name) != null;
-    }
-
-    private void loadTiles(CollisionRule rule) {
-      for (int[] tile : rule.normalizedTiles()) {
-        if (tile != null && tile.length >= 2) {
-          collisionTiles.add(tileKey(tile[0], tile[1]));
-        }
-      }
-      for (int[] tile : rule.normalizedClearTiles()) {
-        if (tile != null && tile.length >= 2) {
-          noCollisionTiles.add(tileKey(tile[0], tile[1]));
-        }
-      }
-    }
-
-    public void close() {
-      saveCurrentRule(false);
-      collisionRuleEditor = null;
-    }
-
-    private void saveCurrentRule(boolean forceMessage) {
-      if (selectedSprite == null) {
-        if (forceMessage) {
-          showEditorMessage("No sprite selected");
-        }
-        return;
-      }
-      if (!dirty && !forceMessage) {
-        return;
-      }
-      removeExactRule(selectedSprite.name);
-      if (!collisionTiles.isEmpty() || !noCollisionTiles.isEmpty()) {
-        CollisionRule rule = new CollisionRule();
-        rule.value = COLLISION_VALUE_RED;
-        rule.tiles = selectedTilesAsList(collisionTiles);
-        rule.clearTiles = selectedTilesAsList(noCollisionTiles);
-        rules.exactSprites.put(selectedSprite.name, rule);
-      }
-      try {
-        saveCollisionRules(rules);
-        dirty = false;
-        if (forceMessage) {
-          showEditorMessage("Collision rule saved: " + selectedSprite.name);
-        }
-      } catch (RuntimeException e) {
-        log.error("Failed to save collision rules", e);
-        showEditorMessage("Error: collision rule not saved");
-      }
-    }
-
-    private void removeExactRule(String name) {
-      if (rules.exactSprites == null) {
-        rules.exactSprites = new LinkedHashMap<>();
-        return;
-      }
-      String normalized = normalizeSpriteKey(name);
-      String existingKey = null;
-      for (String key : rules.exactSprites.keySet()) {
-        if (normalizeSpriteKey(key).equals(normalized)) {
-          existingKey = key;
-          break;
-        }
-      }
-      if (existingKey != null) {
-        rules.exactSprites.remove(existingKey);
-      }
-    }
-
-    private List<int[]> selectedTilesAsList(Set<String> source) {
-      List<int[]> tiles = new ArrayList<>();
-      for (String key : source) {
-        String[] parts = key.split(",", 2);
-        if (parts.length == 2) {
-          tiles.add(new int[] {Integer.parseInt(parts[0]), Integer.parseInt(parts[1])});
-        }
-      }
-      tiles.sort(Comparator.<int[]>comparingInt(tile -> tile[1]).thenComparingInt(tile -> tile[0]));
-      return tiles;
-    }
-
-    private String tileKey(int x, int y) {
-      return x + "," + y;
-    }
-
-    private boolean requiresHorizontalScroll() {
-      return false;
-    }
-
-    private boolean requiresVerticalScroll() {
-      return false;
-    }
-
-    private float getHorizontalScrollRange() {
-      TextureRegion region = spriteLoader.getRegionFromSpriteName(selectedSprite.name);
-      if (region == null) return 0f;
-      float[] b = spriteLogicalBounds(selectedSprite.name, region);
-      return Math.max(0f, ((b[2] - b[0]) - GRID_SIZE) * 0.5f + 1f);
-    }
-
-    private float getVerticalScrollRange() {
-      TextureRegion region = spriteLoader.getRegionFromSpriteName(selectedSprite.name);
-      if (region == null) return 0f;
-      float[] b = spriteLogicalBounds(selectedSprite.name, region);
-      return Math.max(0f, ((b[3] - b[1]) - GRID_SIZE) * 0.5f + 1f);
-    }
-
-    private float clampPreviewOffsetX(float v) {
-      float r = getHorizontalScrollRange();
-      return Math.max(-r, Math.min(r, v));
-    }
-
-    private float clampPreviewOffsetY(float v) {
-      float r = getVerticalScrollRange();
-      return Math.max(-r, Math.min(r, v));
-    }
-
-    private void updateScrollFromPoint(float x, float y) {
-      if (hScrollBounds.contains(x, y) && requiresHorizontalScroll()) {
-        float ratio = (x - hScrollBounds.x) / Math.max(1f, hScrollBounds.width);
-        float r = getHorizontalScrollRange();
-        viewOffsetX = clampPreviewOffsetX((ratio * 2f - 1f) * r);
-      }
-      if (vScrollBounds.contains(x, y) && requiresVerticalScroll()) {
-        float ratio = (y - vScrollBounds.y) / Math.max(1f, vScrollBounds.height);
-        float r = getVerticalScrollRange();
-        viewOffsetY = clampPreviewOffsetY((ratio * 2f - 1f) * r);
-      }
-    }
+  private static String normalizeSpriteKey(String value) {
+    if (value == null) return "";
+    return Normalizer.normalize(value, Normalizer.Form.NFD)
+        .replaceAll("\\p{M}", "")
+        .toUpperCase(Locale.ROOT)
+        .replaceAll("[^A-Z0-9]", "");
   }
+
+  private Set<String> getPendingDecorLayerRuleNames() {
+    return new LinkedHashSet<>(DecorLayerRuleDefinitions.all());
+  }
+
+  private void saveDecorLayerRules() {}
+
+  private void openCollisionRuleEditorForSprite(String spriteName) {}
 
   private class DecorLayerRuleEditorUI extends EditorDialog {
     private static final float PADDING = 42f;
@@ -19861,26 +18150,22 @@ public class MapEditorScreen implements Screen {
 
   private void loadMonsterSpawns() {
     monsterSpawns.clear();
-    File bin = new File(Paths.MONSTER_SPAWNS_BIN);
-    if (!bin.exists()) {
-      return;
-    }
     try {
       int z = getCurrentMapZ();
-      for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(bin)) {
-        if (entry.z == z) {
-          monsterSpawns.add(fromSpawnBinaryEntry(entry));
+      for (SpawnDefinition entry : SpawnRegistry.monsters()) {
+        if (entry.z() == z) {
+          monsterSpawns.add(fromSpawnDefinition(entry));
         }
       }
     } catch (Exception e) {
-      log.error("Failed to load monster spawns from {}", bin, e);
+      log.error("Failed to load monster spawns from Java registry", e);
     }
     monstersDirty = false;
   }
 
   private void saveMonsterSpawns() {
     try {
-      writeGlobalSpawns(new File(Paths.MONSTER_SPAWNS_BIN), monsterSpawns);
+      writeGlobalSpawns(false, monsterSpawns);
       monstersDirty = false;
       showEditorMessage("Monster spawns saved");
     } catch (Exception e) {
@@ -19920,26 +18205,22 @@ public class MapEditorScreen implements Screen {
 
   private void loadNpcSpawns() {
     npcSpawns.clear();
-    File bin = new File(Paths.NPC_SPAWNS_BIN);
-    if (!bin.exists()) {
-      return;
-    }
     try {
       int z = getCurrentMapZ();
-      for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(bin)) {
-        if (entry.z == z) {
-          npcSpawns.add(fromSpawnBinaryEntry(entry));
+      for (SpawnDefinition entry : SpawnRegistry.npcs()) {
+        if (entry.z() == z) {
+          npcSpawns.add(fromSpawnDefinition(entry));
         }
       }
     } catch (Exception e) {
-      log.error("Failed to load NPC spawns from {}", bin, e);
+      log.error("Failed to load NPC spawns from Java registry", e);
     }
     npcsDirty = false;
   }
 
   private void saveNpcSpawns() {
     try {
-      writeGlobalSpawns(new File(Paths.NPC_SPAWNS_BIN), npcSpawns);
+      writeGlobalSpawns(true, npcSpawns);
       npcsDirty = false;
       showEditorMessage("NPC spawns saved");
     } catch (Exception e) {
@@ -19948,43 +18229,33 @@ public class MapEditorScreen implements Screen {
     }
   }
 
-  private List<SpawnBinaryIO.Entry> toSpawnBinaryEntries(List<MonsterSpawnEntry> spawns) {
-    List<SpawnBinaryIO.Entry> entries = new ArrayList<>(spawns.size());
+  private List<SpawnDefinition> toSpawnDefinitions(List<MonsterSpawnEntry> spawns, int z) {
+    List<SpawnDefinition> entries = new ArrayList<>(spawns.size());
     for (MonsterSpawnEntry spawn : spawns) {
-      SpawnBinaryIO.Entry entry = new SpawnBinaryIO.Entry();
-      entry.type = spawn.type;
-      entry.x = spawn.x;
-      entry.y = spawn.y;
-      entry.z = spawn.z;
-      entry.stationary = spawn.stationary;
-      entry.aggressive = spawn.aggressive;
-      entries.add(entry);
+      entries.add(
+          new SpawnDefinition(spawn.type, spawn.x, spawn.y, z, spawn.stationary, spawn.aggressive));
     }
     return entries;
   }
 
-  private void writeGlobalSpawns(File file, List<MonsterSpawnEntry> currentMapSpawns)
+  private void writeGlobalSpawns(boolean npc, List<MonsterSpawnEntry> currentMapSpawns)
       throws Exception {
     int z = getCurrentMapZ();
-    List<SpawnBinaryIO.Entry> merged = new ArrayList<>();
-    if (file.exists()) {
-      for (SpawnBinaryIO.Entry entry : SpawnBinaryIO.read(file)) {
-        if (entry.z != z) {
-          merged.add(entry);
-        }
+    List<SpawnDefinition> merged = new ArrayList<>();
+    for (SpawnDefinition entry : (npc ? SpawnRegistry.npcs() : SpawnRegistry.monsters())) {
+      if (entry.z() != z) {
+        merged.add(entry);
       }
     }
-    for (SpawnBinaryIO.Entry entry : toSpawnBinaryEntries(currentMapSpawns)) {
-      entry.z = z;
-      merged.add(entry);
-    }
-    SpawnBinaryIO.write(file, merged);
+    merged.addAll(toSpawnDefinitions(currentMapSpawns, z));
+    SpawnJavaExporter.export(merged, npc);
   }
 
-  private MonsterSpawnEntry fromSpawnBinaryEntry(SpawnBinaryIO.Entry entry) {
-    MonsterSpawnEntry spawn = new MonsterSpawnEntry(entry.type, entry.x, entry.y, entry.stationary);
-    spawn.z = entry.z;
-    spawn.aggressive = entry.aggressive;
+  private MonsterSpawnEntry fromSpawnDefinition(SpawnDefinition entry) {
+    MonsterSpawnEntry spawn =
+        new MonsterSpawnEntry(entry.type(), entry.x(), entry.y(), entry.stationary());
+    spawn.z = entry.z();
+    spawn.aggressive = entry.aggressive();
     return spawn;
   }
 }

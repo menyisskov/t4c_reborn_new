@@ -3,7 +3,33 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "DOPPELGANGER", x = 2790, y = 1030, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2790, y = 1090, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2790, y = 1150, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2790, y = 1210, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2790, y = 1270, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2850, y = 1030, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2850, y = 1090, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2850, y = 1150, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2850, y = 1210, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2850, y = 1270, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2910, y = 1030, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2910, y = 1090, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2910, y = 1150, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2910, y = 1210, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2910, y = 1270, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2970, y = 1030, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2970, y = 1090, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2970, y = 1150, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2970, y = 1210, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 2970, y = 1270, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 3030, y = 1030, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 3030, y = 1090, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 3030, y = 1150, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 3030, y = 1210, z = 1, stationary = false, aggressive = true)
+@Spawn(type = "DOPPELGANGER", x = 3030, y = 1270, z = 1, stationary = false, aggressive = true)
 public final class Doppelganger extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

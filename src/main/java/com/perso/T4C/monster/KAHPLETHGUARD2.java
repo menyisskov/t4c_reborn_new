@@ -2,7 +2,14 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "KAHPLETHGUARD2", x = 2771, y = 557, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "KAHPLETHGUARD2", x = 2789, y = 539, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "KAHPLETHGUARD2", x = 2790, y = 567, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "KAHPLETHGUARD2", x = 2799, y = 558, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "KAHPLETHGUARD2", x = 2801, y = 587, z = 2, stationary = false, aggressive = false)
+@Spawn(type = "KAHPLETHGUARD2", x = 2819, y = 569, z = 2, stationary = false, aggressive = false)
 public final class KAHPLETHGUARD2 extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

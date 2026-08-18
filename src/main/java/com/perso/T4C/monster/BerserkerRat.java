@@ -2,7 +2,25 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Berserker Rat", x = 1456, y = 501, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1457, y = 489, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1469, y = 498, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1474, y = 489, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1478, y = 510, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1487, y = 461, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1490, y = 501, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1492, y = 488, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1507, y = 484, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1508, y = 412, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1510, y = 436, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1512, y = 395, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1519, y = 415, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1524, y = 385, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1535, y = 428, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1551, y = 445, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Berserker Rat", x = 1556, y = 387, z = 2, stationary = false, aggressive = true)
 public final class BerserkerRat extends DataMonster {
   public static final String SOUND_ATTACK = "Rat Attack.wav";
   public static final String SOUND_DEATH = "Rat Dying.wav";

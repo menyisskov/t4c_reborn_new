@@ -2,7 +2,31 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Forest Guardian", x = 1263, y = 2811, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1289, y = 2903, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1313, y = 2882, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1335, y = 2856, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1356, y = 2886, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1357, y = 2718, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1357, y = 2859, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1378, y = 2860, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1399, y = 2663, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1400, y = 2693, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1428, y = 2900, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1432, y = 2693, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1446, y = 2695, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1462, y = 2818, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1470, y = 2734, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1484, y = 2753, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 1502, y = 2883, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 2722, y = 189, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 2727, y = 181, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 2736, y = 209, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 2745, y = 220, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 2800, y = 115, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Forest Guardian", x = 2839, y = 223, z = 0, stationary = false, aggressive = false)
 public final class ForestGuardian extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";

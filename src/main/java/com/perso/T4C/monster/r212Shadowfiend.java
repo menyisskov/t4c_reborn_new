@@ -2,7 +2,37 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Shadowfiend", x = 1481, y = 599, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1485, y = 585, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1522, y = 529, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1526, y = 539, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1546, y = 525, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1546, y = 556, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1549, y = 490, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1552, y = 566, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1555, y = 517, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1555, y = 579, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1561, y = 486, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1566, y = 466, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1567, y = 576, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1570, y = 516, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1572, y = 473, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1588, y = 456, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1590, y = 512, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1596, y = 509, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1598, y = 451, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1607, y = 459, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1612, y = 495, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1625, y = 481, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1628, y = 513, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1631, y = 505, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1641, y = 488, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1649, y = 512, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1723, y = 646, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1723, y = 675, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Shadowfiend", x = 1732, y = 663, z = 2, stationary = false, aggressive = true)
 public final class r212Shadowfiend extends DataMonster {
   public static final String SOUND_ATTACK = "Demon Attack.wav";
   public static final String SOUND_DEATH = "Demon Dying.wav";
