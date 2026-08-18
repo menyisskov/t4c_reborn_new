@@ -33,6 +33,8 @@ public class NPCAnimations extends EntityAnimationsBase {
 
   private final String spriteBase;
 
+  private String soundAttack;
+
   private final Map<BodyPart, String> partMap = new EnumMap<>(BodyPart.class);
 
   private final com.perso.T4C.player.PlayerAnimations playerAnimations;
@@ -68,6 +70,10 @@ public class NPCAnimations extends EntityAnimationsBase {
 
       playerAnimations.startAttack(angle);
     }
+
+    if (soundAttack != null && !soundAttack.isBlank()) {
+      com.perso.T4C.audio.SoundManager.animateSound(soundAttack);
+    }
   }
 
   public boolean isAttacking() {
@@ -93,6 +99,12 @@ public class NPCAnimations extends EntityAnimationsBase {
     this(null, parts);
   }
 
+  public NPCAnimations(String spriteBase, NpcSoundProfile sounds, Object... parts)
+      throws GameException {
+    this(spriteBase, parts);
+    this.soundAttack = sounds == null ? null : sounds.attack();
+  }
+
   public boolean hasSingleSpriteBase() {
 
     return spriteBase != null;
@@ -106,6 +118,7 @@ public class NPCAnimations extends EntityAnimationsBase {
   public NPCAnimations(String spriteBase, Object... parts) throws GameException {
 
     this.spriteBase = spriteBase == null || spriteBase.isBlank() ? null : spriteBase.trim();
+    this.soundAttack = null;
 
     for (int i = 0; i < parts.length; i += 2) {
 

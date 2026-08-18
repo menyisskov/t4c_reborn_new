@@ -1,7 +1,6 @@
 package com.perso.T4C.monster;
 
 import com.perso.T4C.monster.core.*;
-
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -88,7 +87,61 @@ public class MonsterDef {
         soundHit,
         goldMin,
         goldMax,
-        newLoot == null ? List.of() : newLoot,
+        newLoot == null ? java.util.List.of() : newLoot,
+        animateWhileStationary,
+        stationaryAnimationPauseSeconds,
+        str,
+        end,
+        agi,
+        intel,
+        will,
+        wis,
+        luck,
+        resists,
+        level,
+        dodge,
+        acMin,
+        acMax,
+        appearance,
+        itemBody,
+        itemFeet,
+        itemHands,
+        itemHead,
+        itemLegs,
+        itemWeapon,
+        itemShield,
+        itemBack,
+        aggro,
+        clan,
+        speed,
+        canAttack,
+        attacks,
+        tameable,
+        tameMaxLevel,
+        spawnAliases,
+        sourceEvents);
+  }
+
+  public MonsterDef withSounds(String newSoundAttack, String newSoundDeath, String newSoundHit) {
+    return new MonsterDef(
+        name,
+        displayName,
+        health,
+        mana,
+        xpPerHit,
+        xpOnDeath,
+        hitDamageMin,
+        hitDamageMax,
+        respawnTime,
+        walkPattern,
+        attackPattern,
+        deathPattern,
+        newSoundAttack,
+        newSoundDeath,
+        newSoundHit,
+        goldMin,
+        goldMax,
+        loot,
         animateWhileStationary,
         stationaryAnimationPauseSeconds,
         str,

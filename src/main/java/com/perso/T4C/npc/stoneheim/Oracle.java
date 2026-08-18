@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Locale;
 
 public final class Oracle extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public static final String ID = "Oracle";
 

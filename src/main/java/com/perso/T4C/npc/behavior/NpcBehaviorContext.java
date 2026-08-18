@@ -20,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class NpcBehaviorContext {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   private final ScriptedNpc npc;
 

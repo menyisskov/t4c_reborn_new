@@ -12,6 +12,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class AaronBrownbark extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Electrik.wav";
+  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
+  public static final String SOUND_HIT = "AxeWood.wav";
 
   public static final String ID = "AaronBrownbark";
 

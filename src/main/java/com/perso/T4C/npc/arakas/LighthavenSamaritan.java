@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Locale;
 
 public final class LighthavenSamaritan extends BaseNPC {
+  public static final String SOUND_ATTACK = "Whooshm 7.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public static final String ID = "LighthavenSamaritan";
 

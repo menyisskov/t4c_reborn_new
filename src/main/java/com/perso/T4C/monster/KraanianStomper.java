@@ -1,10 +1,12 @@
 package com.perso.T4C.monster;
 
+import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
-import com.perso.T4C.exception.GameException;
-
 public final class KraanianStomper extends DataMonster {
+  public static final String SOUND_ATTACK = "Kraanian Attack.wav";
+  public static final String SOUND_DEATH = "Kraanian Dying.wav";
+  public static final String SOUND_HIT = "Kraanian Hit.wav";
 
   public static final String CANONICAL_NAME = "Kraanian Stomper";
 
@@ -17,5 +19,59 @@ public final class KraanianStomper extends DataMonster {
   public String getCanonicalName() {
 
     return CANONICAL_NAME;
+  }
+
+  public static MonsterDef definition() {
+    return new MonsterDef(
+        "Kraanian Stomper",
+        "${monster.kraanian_stomper}",
+        1762,
+        0,
+        7,
+        6168,
+        81,
+        183,
+        30000L,
+        "Tank#h",
+        "TankA#h",
+        "TankC#n",
+        "Kraanian Attack.wav",
+        "Kraanian Dying.wav",
+        "Kraanian Hit.wav",
+        120,
+        368,
+        java.util.List.of(new MonsterDef.LootDrop("Yellow crystal shard", 0.1f)),
+        false,
+        0.0f,
+        82,
+        75,
+        75,
+        95,
+        0,
+        75,
+        0,
+        new int[] {62, 62, 62, 62, 62, 5000, 100, 100, 100, 100, 100, 100},
+        67,
+        278,
+        0,
+        1077968896,
+        20037,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        100,
+        20,
+        0,
+        true,
+        java.util.List.of(new MonsterDef.Attack("1d103+80", 814, 100, 0, 0, 0)),
+        false,
+        0,
+        java.util.List.of(),
+        java.util.Map.of());
   }
 }

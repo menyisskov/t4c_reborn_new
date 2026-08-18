@@ -1,6 +1,5 @@
 package com.perso.T4C.monster.core;
 
-
 import com.perso.T4C.npc.script.MonsterScriptBridge;
 import com.perso.T4C.player.Player;
 

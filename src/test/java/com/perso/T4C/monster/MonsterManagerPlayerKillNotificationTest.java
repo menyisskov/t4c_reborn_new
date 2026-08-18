@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.monster.core.BaseMonster;
+import com.perso.T4C.monster.core.MonsterManager;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 

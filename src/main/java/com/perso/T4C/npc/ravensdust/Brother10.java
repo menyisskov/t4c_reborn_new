@@ -11,6 +11,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class Brother10 extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Mummy Attack.wav";
+  public static final String SOUND_DEATH = "Zombie Dying.wav";
+  public static final String SOUND_HIT = "Zombie Hit.wav";
 
   public static final String ID = "Brother10";
 

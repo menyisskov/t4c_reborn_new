@@ -1,10 +1,12 @@
 package com.perso.T4C.monster;
 
+import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
-import com.perso.T4C.exception.GameException;
-
 public final class Jailkeeper extends DataMonster {
+  public static final String SOUND_ATTACK = "Beast Attack.wav";
+  public static final String SOUND_DEATH = "Beast Dying.wav";
+  public static final String SOUND_HIT = "Beast Hit.wav";
 
   public static final String CANONICAL_NAME = "Jailkeeper";
 
@@ -17,5 +19,61 @@ public final class Jailkeeper extends DataMonster {
   public String getCanonicalName() {
 
     return CANONICAL_NAME;
+  }
+
+  public static MonsterDef definition() {
+    return new MonsterDef(
+        "Jailkeeper",
+        "${monster.jailkeeper}",
+        581,
+        0,
+        3,
+        1154,
+        28,
+        63,
+        30000L,
+        "BlackWarrior#m",
+        "BlackWarriorA#l",
+        "BlackWarriorC#k",
+        "Beast Attack.wav",
+        "Beast Dying.wav",
+        "Beast Hit.wav",
+        53,
+        165,
+        java.util.List.of(
+            new MonsterDef.LootDrop("Light healing potion", 0.02f),
+            new MonsterDef.LootDrop("Rusted long sword", 0.05f)),
+        false,
+        0.0f,
+        45,
+        41,
+        41,
+        51,
+        0,
+        41,
+        0,
+        new int[] {79, 79, 79, 79, 53, 5000, 100, 100, 100, 100, 100, 100},
+        30,
+        130,
+        0,
+        1076756480,
+        20043,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        50,
+        24,
+        0,
+        true,
+        java.util.List.of(new MonsterDef.Attack("1d36+27", 370, 100, 0, 0, 0)),
+        false,
+        0,
+        java.util.List.of(),
+        java.util.Map.of());
   }
 }

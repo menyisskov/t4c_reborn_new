@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +36,18 @@ public final class BinaryCatalogueIO {
       DefinitionReader<T> reader)
       throws IOException, GameException {
     try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(file, 1 << 16))) {
+      return read(in, magic, typeLabel, versionCheck, reader);
+    }
+  }
+
+  public static <T> List<T> read(
+      InputStream input,
+      byte[] magic,
+      String typeLabel,
+      VersionCheck versionCheck,
+      DefinitionReader<T> reader)
+      throws IOException, GameException {
+    try (DataInputStream in = new DataInputStream(BinaryIOUtils.openInputStream(input))) {
       byte[] actualMagic = new byte[magic.length];
       in.readFully(actualMagic);
       if (!Arrays.equals(actualMagic, magic)) {

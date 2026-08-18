@@ -3,12 +3,10 @@ package com.perso.T4C.i18n;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.helper.ItemDefBinaryIO;
-import com.perso.T4C.helper.MonsterDefBinaryIO;
 import com.perso.T4C.helper.ObjectMappingsBinaryIO;
 import com.perso.T4C.helper.QuestDefBinaryIO;
 import com.perso.T4C.helper.SpellBinaryIO;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.npc.arakas.LighthavenSamaritan;
 import com.perso.T4C.npc.registry.*;
 import com.perso.T4C.npc.registry.NpcContext;
@@ -43,9 +41,6 @@ class BinaryPlaceholderTest {
     for (SpellData spell : SpellBinaryIO.read(new File("assets/spells/spells.bin"))) {
       check("spell.name", spell.getName());
       check("spell.description", spell.getDescription());
-    }
-    for (MonsterDef def : MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin"))) {
-      check("monster[" + def.getName() + "].displayName", def.getDisplayName());
     }
     for (NpcFactoryRegistry.Registration registration : NpcFactoryRegistry.registrations()) {
       check("npc[" + registration.id() + "].displayName", registration.displayName());

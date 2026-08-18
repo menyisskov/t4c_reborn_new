@@ -62,11 +62,10 @@ import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.input.*;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.monster.core.MonsterRegistry;
-import com.perso.T4C.npc.companion.*;
 import com.perso.T4C.npc.companion.CompanionDef;
 import com.perso.T4C.npc.companion.CompanionManager;
 import com.perso.T4C.npc.companion.CompanionMode;
@@ -75,7 +74,7 @@ import com.perso.T4C.npc.companion.CompanionRegistry;
 import com.perso.T4C.npc.companion.TamedCompanionFactory;
 import com.perso.T4C.npc.core.BaseNPC;
 import com.perso.T4C.npc.core.NPCManager;
-import com.perso.T4C.npc.script.*;
+import com.perso.T4C.npc.registry.NpcFactoryRegistry;
 import com.perso.T4C.npc.script.NpcSummonBridge;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
@@ -977,9 +976,21 @@ public class MainGameScreen implements Screen {
             }
             SpellData spell = SpellRegistry.findById(spellId);
             String element = spellId == 10120 ? "air" : "water";
+            String legacyProjectile = spellId == 10086 ? "64kSpellEnergyBallBlue-" : null;
+            String legacyImpact = spellId == 10086 ? "SmallExplosion-" : null;
+            String legacySound = spellId == 10086 ? "Small Projectile.wav" : null;
+            String launchSound = spell == null ? null : spell.getSound();
+            if (launchSound == null || launchSound.isBlank()) {
+              // Legacy monster-only spells are not always present in the
+              // player spell catalogue, but still have a cast sound.
+              launchSound = legacySound != null ? legacySound : "Small Projectile.wav";
+            }
+            spellRenderer.playLaunchSound(launchSound);
             String projectile =
                 spell == null
-                    ? (spellId == 10120 ? "Lightning" : "PoisonArrow")
+                    ? (legacyProjectile != null
+                        ? legacyProjectile
+                        : (spellId == 10120 ? "Lightning" : "PoisonArrow"))
                     : spell.getProjectileSpell();
             String impactSpell = spell == null ? null : spell.getImpactSpell();
             final String projectileName =
@@ -992,7 +1003,15 @@ public class MainGameScreen implements Screen {
                       impactSpell == null || impactSpell.isBlank()
                           ? projectileName + "000"
                           : impactSpell;
-                  spellRenderer.triggerImpactSpell(impactEffect, player);
+                  String impactSound = spell == null ? null : spell.getSoundImpact();
+                  if (impactSound == null || impactSound.isBlank()) {
+                    impactSound = legacySound != null ? legacySound : "Explosion.wav";
+                  }
+                  spellRenderer.triggerImpactSpell(
+                      legacyImpact != null ? legacyImpact : impactEffect,
+                      player.getPositionVector().x,
+                      player.getPositionVector().y,
+                      impactSound);
                   Vector2 impactPosition = player.getPositionVector().cpy();
                   player.takeDamage(damage);
                   int appliedDamage = player.getLastDamageTaken();
@@ -3616,6 +3635,13 @@ public class MainGameScreen implements Screen {
               }
               return false;
             });
+    gameChat.setAutocompleteProvider(
+        type ->
+            "npc".equalsIgnoreCase(type)
+                ? NpcFactoryRegistry.registrations().stream()
+                    .map(NpcFactoryRegistry.Registration::id)
+                    .toList()
+                : MonsterRegistry.names());
     gameChat.addSystemMessage(I18n.key("chat.help"));
     SystemMessage.setShared(systemMessage);
     SystemMessage.setChatSink(gameChat::addSystemMessage);

@@ -12,6 +12,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class GhundargRumblefoot extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Whooshm 8.wav";
+  public static final String SOUND_DEATH = "Orc Dying.wav";
+  public static final String SOUND_HIT = "Orc Hit.wav";
 
   public static final String ID = "GhundargRumblefoot";
 

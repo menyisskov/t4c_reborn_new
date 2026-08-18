@@ -1,13 +1,12 @@
 package com.perso.T4C.monster.core;
 
-import com.perso.T4C.monster.MonsterDef;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.loot.LootTable;
 import com.perso.T4C.npc.core.NPCAnimations;
 import com.perso.T4C.player.BodyPart;

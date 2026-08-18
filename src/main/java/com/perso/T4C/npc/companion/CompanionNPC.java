@@ -1,7 +1,5 @@
 package com.perso.T4C.npc.companion;
 
-import com.perso.T4C.monster.core.*;
-
 import static com.perso.T4C.config.GameConstants.COMPANION_AGGRESSIVE_DETECTION_RANGE;
 import static com.perso.T4C.config.GameConstants.COMPANION_AGGRESSIVE_SCAN_INTERVAL;
 import static com.perso.T4C.config.GameConstants.COMPANION_COMBAT_LEASH_RANGE;
@@ -29,9 +27,10 @@ import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterAnimations;
-import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.*;
 import com.perso.T4C.player.Player;
@@ -52,6 +51,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 public class CompanionNPC extends BaseNPC {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   private final CompanionDef def;
 

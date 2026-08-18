@@ -1,8 +1,8 @@
 package com.perso.T4C.monster.core;
 
-import com.perso.T4C.monster.SpawnGroup;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.SpawnGroupBinaryIO;
+import com.perso.T4C.monster.SpawnGroup;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;

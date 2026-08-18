@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.monster.core.BaseMonster;
 import org.junit.jupiter.api.Test;
 
 class BaseMonsterAttackabilityTest {

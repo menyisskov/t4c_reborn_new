@@ -15,6 +15,9 @@ import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class PMTheisser extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Whooshh 2.wav";
+  public static final String SOUND_DEATH = "Goblin Dying.wav";
+  public static final String SOUND_HIT = "Goblin Hit.wav";
 
   public static final String ID = "PMTheisser";
 

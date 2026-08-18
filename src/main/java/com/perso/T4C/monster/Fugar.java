@@ -1,10 +1,12 @@
 package com.perso.T4C.monster;
 
+import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
-import com.perso.T4C.exception.GameException;
-
 public final class Fugar extends DataMonster {
+  public static final String SOUND_ATTACK = "Beast Attack.wav";
+  public static final String SOUND_DEATH = "Beast Dying.wav";
+  public static final String SOUND_HIT = "Beast Hit.wav";
 
   public static final String CANONICAL_NAME = "Fugar";
 
@@ -17,5 +19,68 @@ public final class Fugar extends DataMonster {
   public String getCanonicalName() {
 
     return CANONICAL_NAME;
+  }
+
+  public static MonsterDef definition() {
+    return new MonsterDef(
+        "Fugar",
+        "${monster.fugar}",
+        706,
+        0,
+        3,
+        1086,
+        17,
+        39,
+        30000L,
+        "GoblinBoss#l",
+        "GoblinBossA#i",
+        "GoblinBossC#l",
+        "Beast Attack.wav",
+        "Beast Dying.wav",
+        "Beast Hit.wav",
+        70,
+        220,
+        java.util.List.of(
+            new MonsterDef.LootDrop("Studded leather armor", 0.02f),
+            new MonsterDef.LootDrop("Studded leather gloves", 0.03f),
+            new MonsterDef.LootDrop("Studded leather pants", 0.03f),
+            new MonsterDef.LootDrop("Studded leather helmet", 0.03f),
+            new MonsterDef.LootDrop("Studded leather boots", 0.03f),
+            new MonsterDef.LootDrop("Goblin Blade", 0.02f),
+            new MonsterDef.LootDrop("Light healing potion", 0.02f),
+            new MonsterDef.LootDrop("Light healing potion", 0.02f),
+            new MonsterDef.LootDrop("Torch", 0.05f)),
+        false,
+        0.0f,
+        35,
+        32,
+        32,
+        39,
+        0,
+        32,
+        0,
+        new int[] {112, 56, 84, 84, 84, 5025, 100, 100, 100, 100, 100, 100},
+        20,
+        90,
+        0,
+        1076101120,
+        20041,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        50,
+        20,
+        0,
+        true,
+        java.util.List.of(new MonsterDef.Attack("1d23+16", 250, 100, 0, 0, 0)),
+        false,
+        0,
+        java.util.List.of(),
+        java.util.Map.of());
   }
 }

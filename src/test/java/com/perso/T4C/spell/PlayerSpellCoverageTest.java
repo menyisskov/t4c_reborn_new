@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.player.Player;
 import com.perso.T4C.render.SpellRenderer;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.junit.jupiter.api.Test;
@@ -100,5 +99,4 @@ class PlayerSpellCoverageTest {
         description.startsWith("Gain de Niveau:"),
         "LevelUp's description must start with \"Gain de Niveau:\", was: " + description);
   }
-
 }

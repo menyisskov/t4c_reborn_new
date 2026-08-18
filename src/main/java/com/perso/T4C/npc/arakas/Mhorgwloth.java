@@ -12,6 +12,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class Mhorgwloth extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Troll Attack.wav";
+  public static final String SOUND_DEATH = "Troll Dying.wav";
+  public static final String SOUND_HIT = "Troll Hit.wav";
 
   public static final String ID = "Mhorgwloth";
 

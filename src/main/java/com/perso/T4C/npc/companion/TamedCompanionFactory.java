@@ -1,16 +1,18 @@
 package com.perso.T4C.npc.companion;
 
-import com.perso.T4C.monster.core.*;
-
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.MonsterDef;
+import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class TamedCompanionFactory {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public static final String ID_PREFIX = "tamed:";
 

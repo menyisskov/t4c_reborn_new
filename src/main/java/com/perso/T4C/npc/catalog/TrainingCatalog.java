@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 public final class TrainingCatalog {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   private record E(boolean teach, List<LearnScreen.TrainingOffer> offers) {}
 

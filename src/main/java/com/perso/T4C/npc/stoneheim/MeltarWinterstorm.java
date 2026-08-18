@@ -12,6 +12,9 @@ import com.perso.T4C.player.BodyPart;
 import java.util.List;
 
 public final class MeltarWinterstorm extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public static final String ID = "MeltarWinterstorm";
 

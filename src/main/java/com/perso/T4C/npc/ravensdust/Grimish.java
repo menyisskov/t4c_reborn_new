@@ -11,6 +11,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class Grimish extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Whooshh 2.wav";
+  public static final String SOUND_DEATH = "Goblin Dying.wav";
+  public static final String SOUND_HIT = "Goblin Hit.wav";
 
   public static final String ID = "Grimish";
 

@@ -1,7 +1,5 @@
 package com.perso.T4C.npc.core;
 
-import com.perso.T4C.monster.core.*;
-
 import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILES;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
@@ -26,6 +24,7 @@ import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.model.Stats;
+import com.perso.T4C.monster.core.*;
 import com.perso.T4C.npc.registry.*;
 import com.perso.T4C.npc.registry.NpcDamageCallback;
 import com.perso.T4C.player.Player;
@@ -136,7 +135,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
     this.position.set(0f, 0f);
 
-    this.animations = new NPCAnimations(spriteBase, parts);
+    this.animations = new NPCAnimations(spriteBase, NpcSoundProfile.forClass(getClass()), parts);
 
     this.movement = new NPCMovement();
 
@@ -666,13 +665,29 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   public void onAttack(Player player) {}
 
-  public void onAttacked(Player player) {}
+  public void onAttacked(Player player) {
+    playNpcSound(soundProfile().hit());
+  }
 
-  public void onDeath(Player player) {}
+  public void onDeath(Player player) {
+    playNpcSound(soundProfile().death());
+  }
 
   public void onDestroy(Player player) {}
 
-  public void onHit(Player player) {}
+  public void onHit(Player player) {
+    playNpcSound(soundProfile().hit());
+  }
+
+  private void playNpcSound(String sound) {
+    if (sound != null && !sound.isBlank()) {
+      com.perso.T4C.audio.SoundManager.animateSound(sound);
+    }
+  }
+
+  private NpcSoundProfile soundProfile() {
+    return NpcSoundProfile.forClass(getClass());
+  }
 
   public void onAttackHit(Player player) {}
 

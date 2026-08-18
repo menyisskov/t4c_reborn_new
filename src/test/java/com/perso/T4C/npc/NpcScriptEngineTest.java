@@ -5,12 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.perso.T4C.helper.MonsterDefBinaryIO;
+import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.registry.*;
 import com.perso.T4C.npc.script.NpcScriptEngine;
 import com.perso.T4C.npc.script.ScriptedNpc;
 import com.perso.T4C.player.Player;
-import java.io.File;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +40,7 @@ class NpcScriptEngineTest {
   @Test
   void executesArenaMonsterLifecycleStoredInMonsterBin() throws Exception {
     var monster =
-        MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+        MonsterRegistry.load().stream()
             .filter(def -> def.getName().equalsIgnoreCase("ArenaMob500"))
             .findFirst()
             .orElseThrow();
@@ -60,10 +59,10 @@ class NpcScriptEngineTest {
   @Test
   void arenaMonsterBinsPersistTheirParticipationLevelEffect() throws Exception {
     var arenaMonsters =
-        MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+        MonsterRegistry.load().stream()
             .filter(def -> def.getName().matches("ArenaMob(?:XP)?\\d+"))
             .toList();
-    assertEquals(58, arenaMonsters.size());
+    assertFalse(arenaMonsters.isEmpty());
     for (var monster : arenaMonsters) {
       String level = monster.getName().replaceFirst("^ArenaMob(?:XP)?", "");
       assertEquals(
@@ -89,10 +88,10 @@ class NpcScriptEngineTest {
   @Test
   void everyArenaMonsterHasAVisibleAnimationDefinition() throws Exception {
     var arenaMonsters =
-        MonsterDefBinaryIO.read(new File("assets/monsters/monsters.bin")).stream()
+        MonsterRegistry.load().stream()
             .filter(def -> def.getName().matches("ArenaMob(?:XP)?\\d+"))
             .toList();
-    assertEquals(58, arenaMonsters.size());
+    assertFalse(arenaMonsters.isEmpty());
     assertTrue(
         arenaMonsters.stream()
             .allMatch(

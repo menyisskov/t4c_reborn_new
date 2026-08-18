@@ -4,6 +4,9 @@ import com.perso.T4C.npc.registry.*;
 import java.util.Locale;
 
 public final class StaticDialogueBehavior implements NpcBehavior {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public static final StaticDialogueBehavior INSTANCE = new StaticDialogueBehavior();
 

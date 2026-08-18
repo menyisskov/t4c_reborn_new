@@ -102,18 +102,18 @@
     <build>
         <plugins>
             <plugin>
-    <groupId>com.diffplug.spotless</groupId>
-    <artifactId>spotless-maven-plugin</artifactId>
-    <version>2.44.3</version>
-    <configuration>
-        <java>
-            <googleJavaFormat/>
-            <removeUnusedImports/>
-            <trimTrailingWhitespace/>
-            <endWithNewline/>
-        </java>
-    </configuration>
-</plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.44.3</version>
+                <configuration>
+                    <java>
+                        <removeUnusedImports/>
+                        <googleJavaFormat/>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
+                    </java>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

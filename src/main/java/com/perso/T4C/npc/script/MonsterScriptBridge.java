@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class MonsterScriptBridge {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public record Effects(List<String> messages, List<String> selfSpells, List<String> targetSpells) {
 

@@ -12,6 +12,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class WorldWildHorse extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Pegase Attack.wav";
+  public static final String SOUND_DEATH = "Pegase Dying.wav";
+  public static final String SOUND_HIT = "Pegase Hit.wav";
 
   public static final String ID = "WorldWildHorse";
 

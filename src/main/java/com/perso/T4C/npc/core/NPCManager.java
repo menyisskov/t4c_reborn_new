@@ -1,7 +1,5 @@
 package com.perso.T4C.npc.core;
 
-import com.perso.T4C.monster.core.*;
-
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
@@ -14,6 +12,7 @@ import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpawnBinaryIO;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.monster.core.*;
 import com.perso.T4C.npc.companion.*;
 import com.perso.T4C.npc.companion.CompanionManager;
 import com.perso.T4C.npc.registry.*;

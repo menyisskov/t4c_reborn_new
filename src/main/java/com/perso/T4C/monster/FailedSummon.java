@@ -1,10 +1,12 @@
 package com.perso.T4C.monster;
 
+import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
-import com.perso.T4C.exception.GameException;
-
 public final class FailedSummon extends DataMonster {
+  public static final String SOUND_ATTACK = "Beast Attack.wav";
+  public static final String SOUND_DEATH = "Beast Dying.wav";
+  public static final String SOUND_HIT = "Beast Hit.wav";
 
   public static final String CANONICAL_NAME = "Failed Summon";
 
@@ -17,5 +19,59 @@ public final class FailedSummon extends DataMonster {
   public String getCanonicalName() {
 
     return CANONICAL_NAME;
+  }
+
+  public static MonsterDef definition() {
+    return new MonsterDef(
+        "Failed Summon",
+        "${monster.failed_summon}",
+        710,
+        0,
+        4,
+        1566,
+        34,
+        78,
+        30000L,
+        "Slime@023",
+        "Slimea@35",
+        "SlimeC!z",
+        "Beast Attack.wav",
+        "Beast Dying.wav",
+        "Beast Hit.wav",
+        62,
+        192,
+        java.util.List.of(),
+        false,
+        0.0f,
+        50,
+        46,
+        46,
+        57,
+        0,
+        46,
+        0,
+        new int[] {51, 103, 103, 51, 77, 5000, 100, 100, 100, 100, 100, 100},
+        35,
+        60,
+        0,
+        1078034432,
+        20005,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        50,
+        23,
+        0,
+        true,
+        java.util.List.of(new MonsterDef.Attack("1d45+33", 430, 100, 0, 0, 0)),
+        false,
+        0,
+        java.util.List.of(),
+        java.util.Map.of());
   }
 }

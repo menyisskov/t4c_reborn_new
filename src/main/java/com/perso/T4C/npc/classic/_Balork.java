@@ -12,6 +12,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class _Balork extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Demon Attack.wav";
+  public static final String SOUND_DEATH = "Demon Dying.wav";
+  public static final String SOUND_HIT = "Demon Hit.wav";
 
   public static final String ID = "_Balork";
 

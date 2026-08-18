@@ -113,10 +113,7 @@ class ObjectAppearanceAnimationTest {
     String source =
         java.nio.file.Files.readString(
             Path.of("src/main/java/com/perso/T4C/npc/core/NPCAnimations.java"));
-    String dialogText =
-        methodBody(
-            source,
-            "List<String> keywords)");
+    String dialogText = methodBody(source, "List<String> keywords)");
     String wordBounds = methodBody(source, "getDialogWordBounds(");
     assertTrue(
         dialogText.contains("calculateStableBounds"),

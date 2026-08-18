@@ -1,10 +1,12 @@
 package com.perso.T4C.monster;
 
+import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
-import com.perso.T4C.exception.GameException;
-
 public final class Battlebard extends DataMonster {
+  public static final String SOUND_ATTACK = "Bat Attack.wav";
+  public static final String SOUND_DEATH = "Bat Dying.wav";
+  public static final String SOUND_HIT = "Bat Hit.wav";
 
   public static final String CANONICAL_NAME = "Battle bard";
 
@@ -17,5 +19,63 @@ public final class Battlebard extends DataMonster {
   public String getCanonicalName() {
 
     return CANONICAL_NAME;
+  }
+
+  public static MonsterDef definition() {
+    return new MonsterDef(
+        "Battle bard",
+        "${monster.battle_bard}",
+        396,
+        0,
+        3,
+        641,
+        19,
+        43,
+        30000L,
+        "",
+        null,
+        null,
+        "Bat Attack.wav",
+        "Bat Dying.wav",
+        "Bat Hit.wav",
+        39,
+        121,
+        java.util.List.of(
+            new MonsterDef.LootDrop("Rusted long sword", 0.01f),
+            new MonsterDef.LootDrop("Leather armor", 0.01f),
+            new MonsterDef.LootDrop("Leather boots", 0.01f),
+            new MonsterDef.LootDrop("Leather pants", 0.01f)),
+        false,
+        0.0f,
+        37,
+        34,
+        34,
+        41,
+        0,
+        34,
+        0,
+        new int[] {83, 83, 83, 83, 111, 5000, 100, 100, 100, 100, 100, 100},
+        22,
+        98,
+        0,
+        1076232192,
+        10011,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        46,
+        0,
+        true,
+        java.util.List.of(new MonsterDef.Attack("1d25+18", 274, 100, 0, 0, 0)),
+        false,
+        0,
+        java.util.List.of(),
+        java.util.Map.of());
   }
 }

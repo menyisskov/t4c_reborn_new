@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.MonsterClan;
+import com.perso.T4C.monster.core.MonsterClan;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;

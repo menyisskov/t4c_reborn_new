@@ -1,7 +1,5 @@
 package com.perso.T4C.input;
 
-import com.perso.T4C.monster.core.*;
-
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
@@ -9,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.npc.core.NPCManager;
 import com.perso.T4C.player.Player;

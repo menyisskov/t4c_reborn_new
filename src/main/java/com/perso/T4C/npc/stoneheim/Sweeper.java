@@ -11,6 +11,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class Sweeper extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Rat Attack.wav";
+  public static final String SOUND_DEATH = "Rat Dying.wav";
+  public static final String SOUND_HIT = "Rat Hit.wav";
 
   public static final String ID = "Sweeper";
 

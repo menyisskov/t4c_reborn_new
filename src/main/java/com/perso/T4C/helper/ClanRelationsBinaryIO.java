@@ -1,8 +1,7 @@
 package com.perso.T4C.helper;
 
-import com.perso.T4C.monster.core.*;
-
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.MonsterClan;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

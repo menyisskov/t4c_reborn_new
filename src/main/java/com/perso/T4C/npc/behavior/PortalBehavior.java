@@ -4,6 +4,9 @@ import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 
 public final class PortalBehavior implements NpcBehavior {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   private final int tileX;
 

@@ -1,7 +1,5 @@
 package com.perso.T4C.monster.core;
 
-import com.perso.T4C.monster.MonsterDef;
-
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
@@ -13,6 +11,7 @@ import com.perso.T4C.config.Paths;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpawnBinaryIO;
+import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.npc.script.*;
 import com.perso.T4C.player.Player;
 import java.io.File;

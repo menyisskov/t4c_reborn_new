@@ -1,7 +1,5 @@
 package com.perso.T4C.monster.core;
 
-import com.perso.T4C.monster.MonsterDef;
-
 import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILES;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
@@ -25,6 +23,7 @@ import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
 import java.util.List;
@@ -182,15 +181,10 @@ public abstract class BaseMonster implements Nameable {
     this.hitDamageMin = hitDamageMin;
     this.hitDamageMax = hitDamageMax;
     this.respawnTime = respawnTime;
-    this.soundHit = resolveSoundName(name, "Hit", soundHit);
+    this.soundHit = soundHit;
     this.clan = MonsterClanRelations.resolveClan(getClass().getSimpleName(), name);
     this.animations =
-        new MonsterAnimations(
-            walkPattern,
-            attackPattern,
-            deathPattern,
-            resolveSoundName(name, "Attack", soundAttack),
-            resolveSoundName(name, "Dying", soundDeath));
+        new MonsterAnimations(walkPattern, attackPattern, deathPattern, soundAttack, soundDeath);
     this.movement = new MonsterMovement();
     isPaused = false;
     pauseTimer = 0f;
@@ -200,50 +194,6 @@ public abstract class BaseMonster implements Nameable {
     position.set(worldX, worldY);
     initialPosition.set(worldX, worldY);
     movement.stop();
-  }
-
-  private static String resolveSoundName(String monsterName, String action, String explicitSound) {
-    if (explicitSound != null && !explicitSound.isBlank()) {
-      return explicitSound;
-    }
-    String family = resolveSoundFamily(monsterName);
-    if (family == null || family.isBlank()) {
-      return null;
-    }
-    return family + " " + action + ".wav";
-  }
-
-  private static String resolveSoundFamily(String monsterName) {
-    if (monsterName == null) {
-      return null;
-    }
-    String normalized = monsterName.replace("64k", "").trim();
-    String lower = normalized.toLowerCase();
-    if (lower.contains("atrocity")) return "Atrocity";
-    if (lower.contains("beholder")) return "Beholder";
-    if (lower.contains("bat")) return "Bat";
-    if (lower.contains("centaur")) return "Centaur";
-    if (lower.contains("demon")) return "Demon";
-    if (lower.contains("goblin")) return "Goblin";
-    if (lower.contains("kobold")) return "Kobold";
-    if (lower.contains("kraanian")) return "Kraanian";
-    if (lower.contains("minotaur")) return "Minotaur";
-    if (lower.contains("mummy")) return "Mummy";
-    if (lower.contains("orc")) return "Orc";
-    if (lower.contains("pig")) return "Pig";
-    if (lower.contains("rat")) return "Rat";
-    if (lower.contains("scorpion")) return "Scorpion";
-    if (lower.contains("skeleton")) return "Skeleton";
-    if (lower.contains("slime")) return "Ooze";
-    if (lower.contains("snake")) return "Snake";
-    if (lower.contains("spider") || lower.contains("tarantula")) return "Spider";
-    if (lower.contains("taunting")) return "Taunting";
-    if (lower.contains("tree ent")) return "Tree Ent";
-    if (lower.contains("troll")) return "Troll";
-    if (lower.contains("wasp")) return "Wasp";
-    if (lower.contains("worm")) return "Worm";
-    if (lower.contains("zombie")) return "Zombie";
-    return normalized;
   }
 
   public void update(float delta, Vector2 playerPosition) {
@@ -804,11 +754,15 @@ public abstract class BaseMonster implements Nameable {
       performCompanionAttack(damage);
       return;
     }
-    startAttackAnimation();
     if (damageCallback != null) {
       if (lastAttackSpellId > 0) {
+        // Spell attacks use the spell VFX, not the physical attack pose.
+        // Starting the attack animation here made every monster spell look
+        // like a physical hit while the projectile was being rendered.
+        clearAttackAnimationPose();
         damageCallback.applySpell(this, lastAttackSpellId, damage);
       } else {
+        startAttackAnimation();
         log.info("{} attacks for {} damage!", name, damage);
         damageCallback.applyDamage(this, damage);
       }

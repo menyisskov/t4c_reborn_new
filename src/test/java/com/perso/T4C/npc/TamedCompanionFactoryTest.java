@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.perso.T4C.monster.MonsterDef;
-import com.perso.T4C.monster.MonsterRegistry;
+import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.companion.*;
 import org.junit.jupiter.api.Test;
 

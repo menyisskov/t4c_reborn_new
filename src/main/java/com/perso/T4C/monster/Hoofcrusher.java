@@ -1,10 +1,12 @@
 package com.perso.T4C.monster;
 
+import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
-import com.perso.T4C.exception.GameException;
-
 public final class Hoofcrusher extends DataMonster {
+  public static final String SOUND_ATTACK = "Beast Attack.wav";
+  public static final String SOUND_DEATH = "Beast Dying.wav";
+  public static final String SOUND_HIT = "Beast Hit.wav";
 
   public static final String CANONICAL_NAME = "Hoofcrusher";
 
@@ -17,5 +19,64 @@ public final class Hoofcrusher extends DataMonster {
   public String getCanonicalName() {
 
     return CANONICAL_NAME;
+  }
+
+  public static MonsterDef definition() {
+    return new MonsterDef(
+        "Hoofcrusher",
+        "${monster.hoofcrusher}",
+        1752,
+        0,
+        5,
+        4406,
+        43,
+        98,
+        30000L,
+        "Minotaur#f",
+        "MinotaurA#i",
+        "MinotaurC#m",
+        "Beast Attack.wav",
+        "Beast Dying.wav",
+        "Beast Hit.wav",
+        146,
+        450,
+        java.util.List.of(
+            new MonsterDef.LootDrop("Manastone", 0.02f),
+            new MonsterDef.LootDrop("Light healing potion", 0.02f),
+            new MonsterDef.LootDrop("Healing potion", 0.05f),
+            new MonsterDef.LootDrop("Sapphire bracelet", 0.01f),
+            new MonsterDef.LootDrop("Minotaur clan ring", 0.005f)),
+        false,
+        0.0f,
+        56,
+        51,
+        51,
+        64,
+        0,
+        51,
+        0,
+        new int[] {99, 49, 74, 74, 74, 5000, 100, 100, 100, 100, 100, 100},
+        41,
+        174,
+        0,
+        1077149696,
+        20014,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        50,
+        24,
+        0,
+        true,
+        java.util.List.of(new MonsterDef.Attack("1d56+42", 502, 100, 0, 0, 0)),
+        false,
+        0,
+        java.util.List.of(),
+        java.util.Map.of());
   }
 }

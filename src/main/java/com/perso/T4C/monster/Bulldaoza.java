@@ -1,10 +1,12 @@
 package com.perso.T4C.monster;
 
+import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.*;
 
-import com.perso.T4C.exception.GameException;
-
 public final class Bulldaoza extends DataMonster {
+  public static final String SOUND_ATTACK = "Beast Attack.wav";
+  public static final String SOUND_DEATH = "Beast Dying.wav";
+  public static final String SOUND_HIT = "Beast Hit.wav";
 
   public static final String CANONICAL_NAME = "Bulldaoza";
 
@@ -17,5 +19,62 @@ public final class Bulldaoza extends DataMonster {
   public String getCanonicalName() {
 
     return CANONICAL_NAME;
+  }
+
+  public static MonsterDef definition() {
+    return new MonsterDef(
+        "Bulldaoza",
+        "${monster.bulldaoza}",
+        1812,
+        0,
+        5,
+        4661,
+        45,
+        102,
+        30000L,
+        "Minotaur#f",
+        "MinotaurA#i",
+        "MinotaurC#m",
+        "Beast Attack.wav",
+        "Beast Dying.wav",
+        "Beast Hit.wav",
+        150,
+        461,
+        java.util.List.of(
+            new MonsterDef.LootDrop("Potion of fury", 0.01f),
+            new MonsterDef.LootDrop("Light healing potion", 0.02f),
+            new MonsterDef.LootDrop("Skeleton bone", 0.01f)),
+        false,
+        0.0f,
+        57,
+        52,
+        52,
+        65,
+        0,
+        52,
+        0,
+        new int[] {98, 49, 74, 74, 74, 5000, 100, 100, 100, 100, 100, 100},
+        42,
+        178,
+        0,
+        1077215232,
+        20014,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        50,
+        24,
+        0,
+        true,
+        java.util.List.of(new MonsterDef.Attack("1d58+44", 514, 100, 0, 0, 0)),
+        false,
+        0,
+        java.util.List.of(),
+        java.util.Map.of());
   }
 }

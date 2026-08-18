@@ -12,6 +12,9 @@ import com.perso.T4C.npc.script.ScriptedNpc;
 import java.util.List;
 
 public final class Dragon extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Wasp Attack.wav";
+  public static final String SOUND_DEATH = "Wasp Dying.wav";
+  public static final String SOUND_HIT = "Wasp Hit.wav";
 
   public static final String ID = "Dragon";
 

@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class GameChat extends InputAdapter {
@@ -65,6 +66,10 @@ public final class GameChat extends InputAdapter {
   private final List<String> history = new ArrayList<>();
   private final StringBuilder input = new StringBuilder();
   private final Predicate<String> submitHandler;
+  private Function<String, List<String>> autocompleteProvider = ignored -> List.of();
+  private String autocompleteCompletedText;
+  private List<String> autocompleteMatches = List.of();
+  private int autocompleteIndex;
   private boolean active;
   private boolean visible = true;
   private boolean suppressNextTypedEnter;
@@ -99,6 +104,10 @@ public final class GameChat extends InputAdapter {
       generatedBackground = new Texture(Gdx.files.internal(GENERATED_BACKGROUND_PATH));
       generatedBackground.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
+  }
+
+  public void setAutocompleteProvider(Function<String, List<String>> provider) {
+    autocompleteProvider = provider == null ? ignored -> List.of() : provider;
   }
 
   public boolean isActive() {
@@ -548,7 +557,11 @@ public final class GameChat extends InputAdapter {
     if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
       beginHorizontalKeyRepeat(keycode);
     }
+    if (keycode == Input.Keys.BACKSPACE) {
+      beginHorizontalKeyRepeat(keycode);
+    }
     switch (keycode) {
+      case Input.Keys.TAB -> autocomplete();
       case Input.Keys.ESCAPE -> {
         active = false;
         repeatedHorizontalKey = -1;
@@ -595,10 +608,47 @@ public final class GameChat extends InputAdapter {
     return true;
   }
 
+  private void autocomplete() {
+    if (cursor != input.length() || hasSelection()) return;
+    String text = input.toString();
+    java.util.regex.Matcher matcher =
+        java.util.regex.Pattern.compile(
+                "^\\.summon\\s+(npc|monster)\\s+(.+)$", java.util.regex.Pattern.CASE_INSENSITIVE)
+            .matcher(text);
+    if (!matcher.matches()) return;
+    String prefix = matcher.group(2);
+    if (!text.equals(autocompleteCompletedText)) {
+      List<String> candidates = autocompleteProvider.apply(matcher.group(1));
+      if (candidates == null) return;
+      String lower = prefix.toLowerCase(java.util.Locale.ROOT);
+      autocompleteMatches =
+          candidates.stream()
+              .filter(
+                  match ->
+                      match != null && match.toLowerCase(java.util.Locale.ROOT).startsWith(lower))
+              .distinct()
+              .toList();
+      autocompleteIndex = 0;
+    } else if (autocompleteMatches.isEmpty()) {
+      return;
+    } else {
+      autocompleteIndex = (autocompleteIndex + 1) % autocompleteMatches.size();
+    }
+    if (autocompleteMatches.isEmpty()) return;
+    String match = autocompleteMatches.get(autocompleteIndex);
+    saveUndo();
+    input.replace(text.length() - prefix.length(), text.length(), match);
+    cursor = input.length();
+    autocompleteCompletedText = input.toString();
+  }
+
   @Override
   public boolean keyUp(int keycode) {
     if (keycode == repeatedHorizontalKey) repeatedHorizontalKey = -1;
-    return active && (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT);
+    return active
+        && (keycode == Input.Keys.LEFT
+            || keycode == Input.Keys.RIGHT
+            || keycode == Input.Keys.BACKSPACE);
   }
 
   private void beginHorizontalKeyRepeat(int keycode) {
@@ -615,6 +665,14 @@ public final class GameChat extends InputAdapter {
     }
     keyRepeatCountdown -= Math.min(Gdx.graphics.getDeltaTime(), 0.1f);
     while (keyRepeatCountdown <= 0f) {
+      if (repeatedHorizontalKey == Input.Keys.BACKSPACE) {
+        if (cursor > 0 && !hasSelection()) {
+          saveUndo();
+          input.deleteCharAt(--cursor);
+        }
+        keyRepeatCountdown += KEY_REPEAT_INTERVAL;
+        continue;
+      }
       boolean shift =
           Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
               || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);

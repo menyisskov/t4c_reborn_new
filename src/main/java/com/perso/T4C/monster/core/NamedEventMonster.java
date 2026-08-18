@@ -1,16 +1,14 @@
 package com.perso.T4C.monster.core;
 
-import com.perso.T4C.monster.MonsterDef;
-
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.monster.MonsterDef;
 import com.perso.T4C.npc.script.MonsterScriptBridge;
 import com.perso.T4C.player.Player;
 import java.util.List;
 
 public class NamedEventMonster extends DataMonster implements MonsterLifecycle {
 
-  public NamedEventMonster(MonsterDef definition, float worldX, float worldY)
-      throws GameException {
+  public NamedEventMonster(MonsterDef definition, float worldX, float worldY) throws GameException {
 
     super(definition, worldX, worldY);
   }

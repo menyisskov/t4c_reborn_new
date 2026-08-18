@@ -3,6 +3,9 @@ package com.perso.T4C.npc.script;
 import com.perso.T4C.monster.core.*;
 
 public final class NpcSummonBridge {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   public static final String SUMMON_DEATH_COUNTER = "@summon.deathCounter";
 

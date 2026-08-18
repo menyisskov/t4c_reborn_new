@@ -22,6 +22,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class NpcScriptEngine {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
 
   private static final Pattern COMMAND =
       Pattern.compile("(?m)^\\s*(Command\\d*|CmdAND\\d*|ParamCmd)\\s*\\(");
