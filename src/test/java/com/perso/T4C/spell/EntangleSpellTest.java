@@ -3,15 +3,13 @@ package com.perso.T4C.spell;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.perso.T4C.helper.SpellBinaryIO;
-import java.io.File;
 import org.junit.jupiter.api.Test;
 
 class EntangleSpellTest {
   @Test
-  void catalogueContainsGonMovementExhaustEffect() throws Exception {
+  void catalogueContainsGonMovementExhaustEffect() {
     SpellData effect =
-        SpellBinaryIO.read(new File("assets/spells/spells.bin")).stream()
+        SpellRegistry.load().stream()
             .filter(spell -> spell.getSpellId() == 10349)
             .findFirst()
             .orElse(null);

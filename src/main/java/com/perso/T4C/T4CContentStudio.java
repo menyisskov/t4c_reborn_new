@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
+import com.perso.T4C.content.SpellJavaExporter;
 import com.perso.T4C.harvest.HerbDefinition;
 import com.perso.T4C.harvest.HerbRegistry;
 import com.perso.T4C.helper.AppearanceDefaultsBinaryIO;
@@ -834,7 +835,7 @@ public class T4CContentStudio {
               .filter(Objects::nonNull)
               .sorted(Comparator.comparing(SpellData::getName, String.CASE_INSENSITIVE_ORDER))
               .toList();
-      SpellRegistry.save(defs);
+      SpellJavaExporter.export(defs);
       writeSaved(exchange, defs.size());
       return;
     }

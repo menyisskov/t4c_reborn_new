@@ -5,17 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.perso.T4C.helper.SpellBinaryIO;
 import com.perso.T4C.player.Player;
-import java.io.File;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class SpellEffectManagerBuffTest {
   @Test
-  void manaShieldCreatesVisibleBuffAndRaisesElementalResistances() throws Exception {
+  void manaShieldCreatesVisibleBuffAndRaisesElementalResistances() {
     SpellData manaShield =
-        SpellBinaryIO.read(new File("assets/spells/spells.bin")).stream()
+        SpellRegistry.load().stream()
             .filter(spell -> "${spell.mana_shield}".equals(spell.getName()))
             .findFirst()
             .orElseThrow();
@@ -38,8 +36,8 @@ class SpellEffectManagerBuffTest {
   }
 
   @Test
-  void elementalPowerAndRadianceSpellsAlsoProduceVisibleBuffEffects() throws Exception {
-    List<SpellData> spells = SpellBinaryIO.read(new File("assets/spells/spells.bin"));
+  void elementalPowerAndRadianceSpellsAlsoProduceVisibleBuffEffects() {
+    List<SpellData> spells = SpellRegistry.load();
     Player player = new Player();
     SpellEffectManager manager = new SpellEffectManager();
     for (String spellName : List.of("${spell.mana_surge}", "${spell.light}")) {
@@ -56,7 +54,7 @@ class SpellEffectManagerBuffTest {
   void everyKnownT4cAttributeBoostProducesAVisibleEffect() throws Exception {
     Player player = new Player();
     SpellEffectManager manager = new SpellEffectManager();
-    for (SpellData spell : SpellBinaryIO.read(new File("assets/spells/spells.bin"))) {
+    for (SpellData spell : SpellRegistry.load()) {
       boolean containsAttributeBoost =
           spell.getT4cEffects().stream()
               .anyMatch(effect -> effect != null && effect.getEffectType() == 2);
@@ -67,9 +65,9 @@ class SpellEffectManagerBuffTest {
   }
 
   @Test
-  void instantaneousManaRestoreProducesNoBuff() throws Exception {
+  void instantaneousManaRestoreProducesNoBuff() {
     SpellData potion =
-        SpellBinaryIO.read(new File("assets/spells/spells.bin")).stream()
+        SpellRegistry.load().stream()
             .filter(spell -> "${spell.item_potion_of_mana}".equals(spell.getName()))
             .findFirst()
             .orElseThrow();
@@ -81,9 +79,9 @@ class SpellEffectManagerBuffTest {
   }
 
   @Test
-  void timedManaEffectRemainsAVisibleBuff() throws Exception {
+  void timedManaEffectRemainsAVisibleBuff() {
     SpellData manabane =
-        SpellBinaryIO.read(new File("assets/spells/spells.bin")).stream()
+        SpellRegistry.load().stream()
             .filter(spell -> "${spell.mob_manabane_spell}".equals(spell.getName()))
             .findFirst()
             .orElseThrow();

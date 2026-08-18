@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.perso.T4C.helper.ItemDefBinaryIO;
 import com.perso.T4C.helper.ObjectMappingsBinaryIO;
 import com.perso.T4C.helper.QuestDefBinaryIO;
-import com.perso.T4C.helper.SpellBinaryIO;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.npc.arakas.LighthavenSamaritan;
 import com.perso.T4C.npc.registry.*;
@@ -33,12 +32,12 @@ class BinaryPlaceholderTest {
   }
 
   @Test
-  void everyPlayerFacingBinaryStringIsAKnownPlaceholder() throws Exception {
+  void everyPlayerFacingStringIsAKnownPlaceholder() throws Exception {
     for (ItemDefinition def : ItemDefBinaryIO.read(new File("assets/items/items.bin"))) {
       check("item[" + def.getKey() + "].name", def.getName());
       check("item[" + def.getKey() + "].signText", def.getSignText());
     }
-    for (SpellData spell : SpellBinaryIO.read(new File("assets/spells/spells.bin"))) {
+    for (SpellData spell : com.perso.T4C.spell.SpellRegistry.load()) {
       check("spell.name", spell.getName());
       check("spell.description", spell.getDescription());
     }

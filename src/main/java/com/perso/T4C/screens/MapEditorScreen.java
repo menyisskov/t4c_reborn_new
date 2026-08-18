@@ -30,6 +30,7 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
+import com.perso.T4C.content.SpellJavaExporter;
 import com.perso.T4C.editor.ui.EditorButton;
 import com.perso.T4C.editor.ui.EditorContextMenu;
 import com.perso.T4C.editor.ui.EditorDialog;
@@ -15950,7 +15951,7 @@ public class MapEditorScreen implements Screen {
 
     private void save() {
       try {
-        SpellRegistry.save(spells);
+        SpellJavaExporter.export(spells);
         dirty = false;
       } catch (Exception e) {
         log.error("Failed to save spells", e);

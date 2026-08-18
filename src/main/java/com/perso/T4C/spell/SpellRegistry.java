@@ -1,10 +1,6 @@
 package com.perso.T4C.spell;
 
-import com.perso.T4C.config.Paths;
-import com.perso.T4C.helper.SpellBinaryIO;
 import com.perso.T4C.i18n.I18n;
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,22 +15,8 @@ public final class SpellRegistry {
     if (cache != null) {
       return cache;
     }
-    File file = new File(Paths.SPELLS_BIN);
-    if (!file.exists()) {
-      rebuild(List.of());
-      return cache;
-    }
-    try {
-      rebuild(SpellBinaryIO.read(file));
-    } catch (Exception ignored) {
-      rebuild(List.of());
-    }
+    rebuild(com.perso.T4C.spell.definition.SpellDefinitions.all());
     return cache;
-  }
-
-  public static synchronized void save(List<SpellData> spells) throws IOException {
-    SpellBinaryIO.write(new File(Paths.SPELLS_BIN), spells);
-    rebuild(spells);
   }
 
   public static synchronized SpellData findByName(String name) {

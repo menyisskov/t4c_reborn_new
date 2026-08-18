@@ -2,14 +2,12 @@ package com.perso.T4C.spell;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.perso.T4C.helper.SpellBinaryIO;
-import java.io.File;
 import org.junit.jupiter.api.Test;
 
 class SpellProjectilePaletteTest {
   @Test
-  void spellBinaryKeepsOriginalGonEnergyBallPalettes() throws Exception {
-    for (SpellData spell : SpellBinaryIO.read(new File("assets/spells/spells.bin"))) {
+  void spellDefinitionsKeepOriginalGonEnergyBallPalettes() {
+    for (SpellData spell : SpellRegistry.load()) {
       assertEquals(
           SpellProjectilePalette.projectileFor(spell.getVisualEffect(), spell.getProjectileSpell()),
           spell.getProjectileSpell(),

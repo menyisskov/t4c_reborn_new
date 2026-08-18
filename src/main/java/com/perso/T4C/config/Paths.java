@@ -40,7 +40,6 @@ public final class Paths {
   public static final String QUESTS_BIN = "assets/quests/quests.bin";
   public static final String NPC_SPAWNS_BIN = "assets/spawns/npc_spawns.bin";
   public static final String TELEPORTS_BIN = "assets/teleports/teleports.bin";
-  public static final String SPELLS_BIN = "assets/spells/spells.bin";
   public static final String SKILLS_BIN = "assets/skills/skills.bin";
   public static final String SPRITE_PALETTES = "assets/mappings/sprite_palettes.json";
   public static final String SPRITE_DIR = "assets/sprites";
