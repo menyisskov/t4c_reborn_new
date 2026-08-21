@@ -218,6 +218,10 @@ public class ObjectRenderer {
       info.uniqueKey = uniqueKey;
       info.mapping = mapping;
       info.state = state;
+      if (Boolean.TRUE.equals(alwaysBehindFilter)) {
+        renderInfos.add(info);
+        continue;
+      }
       boolean objectInFront = info.tileY > playerTileY;
       if (objectInFront == renderInFront) {
         renderInfos.add(info);

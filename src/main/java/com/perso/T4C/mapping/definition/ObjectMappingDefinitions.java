@@ -186,9 +186,9 @@ public final class ObjectMappingDefinitions {
                 false,
                 "Open Wooden Door.wav",
                 "Close Wooden Door.wav",
-                true,
+                false,
                 "${object.closed_wooden_door}",
-                1)),
+                0)),
         Map.entry(
             "CLOSED_WOODEN_DOOR_FLIP",
             new ObjectMapping(
@@ -198,9 +198,9 @@ public final class ObjectMappingDefinitions {
                 true,
                 "Open Wooden Door.wav",
                 "Close Wooden Door.wav",
-                true,
+                false,
                 "${object.closed_wooden_door_flip}",
-                1)),
+                0)),
         Map.entry(
             "CUP_FULL",
             new ObjectMapping(
