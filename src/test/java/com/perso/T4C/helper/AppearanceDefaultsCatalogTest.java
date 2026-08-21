@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-
-import com.perso.T4C.npc.core.*;
 import com.perso.T4C.player.BodyPart;
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -2,10 +2,10 @@ package com.perso.T4C.npc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
-import com.perso.T4C.npc.companion.*;
+import com.perso.T4C.npc.companion.CompanionDef;
+import com.perso.T4C.npc.companion.TamedCompanionFactory;
 import org.junit.jupiter.api.Test;
 
 class TamedCompanionFactoryTest {

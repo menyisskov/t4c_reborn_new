@@ -1,6 +1,5 @@
 package com.perso.T4C.npc.behavior;
 
-import com.perso.T4C.npc.registry.*;
 import java.util.Locale;
 
 public final class StaticDialogueBehavior implements NpcBehavior {

@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Bthastan", x = 2588, y = 2972, z = 2, stationary = false, aggressive = true)
@@ -87,7 +89,7 @@ public final class Bthastan extends DataMonster {
         30000L,
         "Agmorkian#h",
         "AgmorkianA#h",
-        "AgmorkianC#p",
+        "AgmorkianC!p",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

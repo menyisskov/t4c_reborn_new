@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 
 public final class r189PsykowaspDevastator extends DataMonster {
   public static final String SOUND_ATTACK = "Wasp Attack.wav";
@@ -27,7 +29,7 @@ public final class r189PsykowaspDevastator extends DataMonster {
         30000L,
         "GiantWasp#h",
         "GiantWaspA#h",
-        "GiantWaspC#k",
+        "GiantWaspC!k",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

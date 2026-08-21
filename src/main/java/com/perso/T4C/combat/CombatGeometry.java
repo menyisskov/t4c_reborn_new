@@ -21,11 +21,18 @@ public final class CombatGeometry {
     if (from == null || to == null || !CollisionManager.getInstance().isInitialized()) return true;
     float distance = from.dst(to);
     if (distance <= 0.001f) return true;
+    int destTileX = (int) (to.x / GRID_W);
+    int destTileY = (int) (to.y / GRID_H);
     int steps = Math.max(1, (int) Math.ceil(distance / (Math.min(GRID_W, GRID_H) * 0.5f)));
     for (int i = 1; i < steps; i++) {
       float alpha = i / (float) steps;
       float x = from.x + (to.x - from.x) * alpha;
       float y = from.y + (to.y - from.y) * alpha;
+      if (forTalking
+          && (int) (x / GRID_W) == destTileX
+          && (int) (y / GRID_H) == destTileY) {
+        continue;
+      }
       boolean blocked =
           forTalking
               ? CollisionManager.getInstance().blocksTalkLineOfSight(x, y)

@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Kraanian Reaper", x = 2107, y = 2204, z = 1, stationary = false, aggressive = true)
@@ -38,7 +40,7 @@ public final class KraanianReaper extends DataMonster {
         30000L,
         "Kraanian#h",
         "KraanianA#h",
-        "KraanianC#l",
+        "KraanianC!l",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

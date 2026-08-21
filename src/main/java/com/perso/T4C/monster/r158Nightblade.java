@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Nightblade", x = 1006, y = 642, z = 2, stationary = false, aggressive = true)
@@ -215,7 +217,7 @@ public final class r158Nightblade extends DataMonster {
         30000L,
         "Thief#m",
         "ThiefA#i",
-        "ThiefC#l",
+        "ThiefC!l",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Pack Wolf", x = 105, y = 471, z = 0, stationary = false, aggressive = true)
@@ -239,7 +241,7 @@ public final class r182PackWolf extends DataMonster {
         30000L,
         "Wolf#i",
         "WolfA#i",
-        "WolfC#n",
+        "WolfC!n",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

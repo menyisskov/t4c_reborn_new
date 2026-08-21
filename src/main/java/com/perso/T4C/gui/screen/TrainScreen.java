@@ -11,8 +11,6 @@ import com.perso.T4C.gui.widget.GuiText;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.npc.registry.*;
-import com.perso.T4C.npc.registry.NpcDef;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.SystemMessage;
@@ -52,7 +50,9 @@ public class TrainScreen extends GuiScreenBase {
   private final List<GuiText> rowLabels = new ArrayList<>();
   private final List<GuiClickZone> plusZones = new ArrayList<>();
 
-  public TrainScreen(Player player, List<NpcDef.TrainableStat> trainableStats) {
+  public record TrainableStat(String statId, int costPerPoint, int maxPoints) {}
+
+  public TrainScreen(Player player, List<TrainableStat> trainableStats) {
     this.player = player;
     try {
       background = SpriteLoader.getInstance().getRegionFromSpriteName("GUI_BackSpell");
@@ -75,12 +75,12 @@ public class TrainScreen extends GuiScreenBase {
     labels.add(GuiText.translatedHeader("ui.training", "TRAINING", x + 250f, y + 5f));
   }
 
-  private void loadEntries(List<NpcDef.TrainableStat> trainableStats) {
+  private void loadEntries(List<TrainableStat> trainableStats) {
     entries.clear();
     if (trainableStats == null) return;
-    for (NpcDef.TrainableStat ts : trainableStats) {
-      if (ts == null || ts.getStatId() == null || ts.getStatId().isEmpty()) continue;
-      entries.add(new TrainEntry(ts, resolveDisplayName(ts.getStatId())));
+    for (TrainableStat ts : trainableStats) {
+      if (ts == null || ts.statId() == null || ts.statId().isEmpty()) continue;
+      entries.add(new TrainEntry(ts, resolveDisplayName(ts.statId())));
     }
   }
 
@@ -111,13 +111,13 @@ public class TrainScreen extends GuiScreenBase {
       TrainEntry entry = entries.get(i);
       float ry = y + ROW_START_Y + i * ROW_HEIGHT;
       int current = getCurrent(entry);
-      boolean capped = entry.stat.getMaxPoints() > 0 && current >= entry.stat.getMaxPoints();
-      boolean canAfford = player.getGold() >= entry.stat.getCostPerPoint();
+      boolean capped = entry.stat.maxPoints() > 0 && current >= entry.stat.maxPoints();
+      boolean canAfford = player.getGold() >= entry.stat.costPerPoint();
       final String label = entry.displayName;
       addRow(font, x + STAT_X, ry, () -> label, null);
       final String valueStr = String.valueOf(current);
       addRow(font, x + VALUE_X, ry, () -> valueStr, null);
-      final String costStr = entry.stat.getCostPerPoint() + I18n.key("ui.gold_per_point");
+      final String costStr = entry.stat.costPerPoint() + I18n.key("ui.gold_per_point");
       addRow(font, x + COST_X, ry, () -> costStr, canAfford ? ELIGIBLE_COLOR : BLOCKED_COLOR);
       Color plusColor = capped ? Color.WHITE : (canAfford ? ELIGIBLE_COLOR : BLOCKED_COLOR);
       final String plusLabel = capped ? "[MAX]" : "[+1]";
@@ -138,7 +138,7 @@ public class TrainScreen extends GuiScreenBase {
   }
 
   private int getCurrent(TrainEntry entry) {
-    String id = entry.stat.getStatId();
+    String id = entry.stat.statId();
     if (STAT_ACCESSORS.containsKey(id)) {
       return STAT_ACCESSORS.get(id).getter.applyAsInt(player);
     }
@@ -146,7 +146,7 @@ public class TrainScreen extends GuiScreenBase {
   }
 
   private void increment(TrainEntry entry, int current) {
-    String id = entry.stat.getStatId();
+    String id = entry.stat.statId();
     if (STAT_ACCESSORS.containsKey(id)) {
       STAT_ACCESSORS.get(id).setter.accept(player, current + 1);
     } else {
@@ -166,15 +166,15 @@ public class TrainScreen extends GuiScreenBase {
 
   private void tryTrain(TrainEntry entry) {
     int current = getCurrent(entry);
-    if (entry.stat.getMaxPoints() > 0 && current >= entry.stat.getMaxPoints()) {
+    if (entry.stat.maxPoints() > 0 && current >= entry.stat.maxPoints()) {
       SystemMessage.showShared(I18n.message("message.stat_at_maximum", entry.displayName));
       return;
     }
-    if (player.getGold() < entry.stat.getCostPerPoint()) {
+    if (player.getGold() < entry.stat.costPerPoint()) {
       SystemMessage.showShared(I18n.message("message.not_enough_gold"));
       return;
     }
-    player.setGold(player.getGold() - entry.stat.getCostPerPoint());
+    player.setGold(player.getGold() - entry.stat.costPerPoint());
     increment(entry, current);
     PlayerStateStore.save(player);
     SystemMessage.showShared(
@@ -213,10 +213,10 @@ public class TrainScreen extends GuiScreenBase {
   }
 
   private static final class TrainEntry {
-    private final NpcDef.TrainableStat stat;
+    private final TrainableStat stat;
     private final String displayName;
 
-    private TrainEntry(NpcDef.TrainableStat stat, String displayName) {
+    private TrainEntry(TrainableStat stat, String displayName) {
       this.stat = stat;
       this.displayName = displayName;
     }

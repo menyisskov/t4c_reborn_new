@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 
 public final class ARENAMOBXP50 extends DataMonster {
   public static final String SOUND_ATTACK = "Rat Attack.wav";
@@ -26,7 +28,7 @@ public final class ARENAMOBXP50 extends DataMonster {
         30000L,
         "Rat#f",
         "RatA#i",
-        "RatC#j",
+        "RatC!j",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

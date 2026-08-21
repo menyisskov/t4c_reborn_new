@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Wasp Drone", x = 162, y = 1088, z = 0, stationary = false, aggressive = false)
@@ -196,7 +198,7 @@ public final class r269WaspDrone extends DataMonster {
         30000L,
         "GiantWasp#h",
         "GiantWaspA#h",
-        "GiantWaspC#k",
+        "GiantWaspC!k",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

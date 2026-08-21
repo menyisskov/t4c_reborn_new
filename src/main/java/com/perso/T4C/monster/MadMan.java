@@ -1,9 +1,10 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
@@ -41,11 +42,11 @@ public final class MadMan extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttack(Player p) {
+  public NpcScriptRuntime.Effects onAttack(Player p) {
 
     return Math.random() < .02
         ? message("npc.madman.shout." + (int) (Math.random() * 3))
-        : MonsterScriptBridge.Effects.empty();
+        : NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {
@@ -84,13 +85,13 @@ public final class MadMan extends NamedEventMonster {
         0,
         0,
         0,
+        10011,
+        285,
+        260,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        284,
+        447,
         0,
         0,
         0,

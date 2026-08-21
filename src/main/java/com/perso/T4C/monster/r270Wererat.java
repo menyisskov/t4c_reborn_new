@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Wererat", x = 1005, y = 1512, z = 2, stationary = false, aggressive = true)
@@ -208,7 +210,7 @@ public final class r270Wererat extends DataMonster {
         30000L,
         "Rat#f",
         "RatA#i",
-        "RatC#j",
+        "RatC!j",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

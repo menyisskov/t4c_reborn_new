@@ -1,8 +1,7 @@
 package com.perso.T4C.npc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.perso.T4C.npc.core.*;
+import com.perso.T4C.npc.core.BaseNPC;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

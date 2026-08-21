@@ -1,9 +1,10 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
@@ -41,15 +42,15 @@ public final class CrazedNurse extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onHit(Player p) {
+  public NpcScriptRuntime.Effects onHit(Player p) {
 
     return Math.random() < .02
         ? message("npc.crazednurse.shout." + (int) (Math.random() * 4))
-        : MonsterScriptBridge.Effects.empty();
+        : NpcScriptRuntime.Effects.empty();
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttackHit(Player p) {
+  public NpcScriptRuntime.Effects onAttackHit(Player p) {
 
     return onHit(p);
   }
@@ -90,13 +91,13 @@ public final class CrazedNurse extends NamedEventMonster {
         82,
         0,
         1075970048,
-        10008,
-        41139,
+        10012,
+        425,
         0,
         0,
         0,
         0,
-        0,
+        274,
         0,
         0,
         50,

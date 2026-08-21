@@ -2,14 +2,14 @@ package com.perso.T4C.npc.behavior;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
-
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.gui.screen.LearnScreen;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
-import com.perso.T4C.npc.script.*;
-import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.npc.core.NpcScriptEngine;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.NpcCastVfxHook;
 import com.perso.T4C.spell.SpellData;
@@ -193,7 +193,7 @@ public final class NpcBehaviorContext {
 
   public boolean summon(String monster, int tileX, int tileY, int world) {
 
-    return NpcSummonBridge.summon(monster, tileX * GRID_W, tileY * GRID_H, world);
+    return NpcScriptRuntime.summon(monster, tileX * GRID_W, tileY * GRID_H, world);
   }
 
   public int npcTileX() {
@@ -262,6 +262,7 @@ public final class NpcBehaviorContext {
     }
 
     NpcCastVfxHook.playOnSelf(spell, new Vector2(npc.getPosition().x, npc.getPosition().y));
+    npc.scheduleSelfDestructFrom(spell);
 
     return true;
   }
@@ -278,6 +279,7 @@ public final class NpcBehaviorContext {
     }
 
     NpcCastVfxHook.playOnSelf(spell, new Vector2(npc.getPosition().x, npc.getPosition().y));
+    npc.scheduleSelfDestructFrom(spell);
 
     int min = Math.max(0, spell.getMinDamage());
 

@@ -1,10 +1,11 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.item.InventoryService;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 
 public final class Bloodlust extends NamedEventMonster {
@@ -18,7 +19,7 @@ public final class Bloodlust extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onDeath(Player p) {
+  public NpcScriptRuntime.Effects onDeath(Player p) {
 
     if (p != null) {
 
@@ -33,7 +34,7 @@ public final class Bloodlust extends NamedEventMonster {
       } else if (Math.random() < .25) InventoryService.add(p, "essence_of_bloodlust");
     }
 
-    return MonsterScriptBridge.Effects.empty();
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

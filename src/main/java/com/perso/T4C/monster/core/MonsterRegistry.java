@@ -2,9 +2,8 @@ package com.perso.T4C.monster.core;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.monster.*;
 import com.perso.T4C.monster.core.MonsterDef;
-import com.perso.T4C.npc.*;
+import com.perso.T4C.spawn.Spawn;
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -24,6 +23,7 @@ public final class MonsterRegistry {
   }
 
   private static final Map<String, MonsterFactory> SPECIALIZED_FACTORIES = new LinkedHashMap<>();
+  private static final Map<String, MonsterDef> SPAWN_TYPE_ALIASES = new LinkedHashMap<>();
   private static List<MonsterDef> cache;
   private static Map<String, MonsterDef> byName;
   private static Map<String, MonsterDef> byNormalizedName;
@@ -95,6 +95,8 @@ public final class MonsterRegistry {
       Class<?> type = Class.forName(className, true, MonsterRegistry.class.getClassLoader());
       MonsterDef definition = (MonsterDef) type.getMethod("definition").invoke(null);
       definitions.add(definition);
+      indexIdentity(type.getSimpleName(), definition);
+      indexSpawnTypes(type, definition);
       var constructor = type.getConstructor(MonsterDef.class, float.class, float.class);
       registerSpecialized(
           definition.getName(),
@@ -150,12 +152,49 @@ public final class MonsterRegistry {
   public static synchronized MonsterDef findByName(String name) {
     load();
     if (name == null) return null;
+    return lookup(name);
+  }
+
+  private static MonsterDef lookup(String name) {
     MonsterDef exact = byName.get(name);
-    if (exact != null) return exact;
-    MonsterDef normalized = byNormalizedName.get(normalize(name));
-    if (normalized != null) return normalized;
+    if (exact != null) {
+      return exact;
+    }
+    String key = normalize(name);
+    MonsterDef normalized = byNormalizedName.get(key);
+    if (normalized != null) {
+      return normalized;
+    }
     MonsterDef alias = byAlias.get(name);
-    return alias != null ? alias : byAlias.get(normalize(name));
+    return alias != null ? alias : byAlias.get(key);
+  }
+
+  private static void indexIdentity(String identity, MonsterDef definition) {
+    if (identity == null || identity.isBlank()) {
+      return;
+    }
+    SPAWN_TYPE_ALIASES.putIfAbsent(identity, definition);
+    SPAWN_TYPE_ALIASES.putIfAbsent(normalize(identity), definition);
+  }
+
+  private static void indexSpawnTypes(Class<?> type, MonsterDef definition) {
+    for (Spawn spawn : type.getAnnotationsByType(Spawn.class)) {
+      String spawnType = spawn.type();
+      if (spawnType == null || spawnType.isBlank()) {
+        continue;
+      }
+      indexIdentity(spawnType, definition);
+      registerSpecialized(
+          spawnType,
+          (def, x, y) -> {
+            try {
+              var constructor = type.getConstructor(MonsterDef.class, float.class, float.class);
+              return (BaseMonster) constructor.newInstance(def, x, y);
+            } catch (ReflectiveOperationException e) {
+              throw new GameException("Unable to instantiate " + type.getName(), e);
+            }
+          });
+    }
   }
 
   public static synchronized List<String> names() {
@@ -196,6 +235,9 @@ public final class MonsterRegistry {
           }
         }
       }
+    }
+    for (Map.Entry<String, MonsterDef> extra : SPAWN_TYPE_ALIASES.entrySet()) {
+      aliases.putIfAbsent(extra.getKey(), extra.getValue());
     }
     byName = map;
     byNormalizedName = normalized;

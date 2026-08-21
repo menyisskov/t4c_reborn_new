@@ -5,13 +5,13 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.loot.LootTable;
 import com.perso.T4C.npc.core.NPCAnimations;
 import com.perso.T4C.player.BodyPart;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DataMonster extends BaseMonster {
   private final java.util.Map<String, String> sourceEvents;
@@ -149,8 +149,16 @@ public class DataMonster extends BaseMonster {
     }
   }
 
+  private static final int APPEAR_PUPPET = 10011;
+  private static final int APPEAR_FEMALE_PUPPET = 10012;
+
   private static boolean hasMonsterAnimation(MonsterDef def) {
     return def.getWalkPattern() != null && !def.getWalkPattern().isBlank();
+  }
+
+  private static boolean isPuppetAppearance(MonsterDef def) {
+    int appearance = def.getAppearance();
+    return appearance >= 10001 && appearance <= 10012;
   }
 
   private static NPCAnimations buildHumanoidAnimations(MonsterDef def) throws GameException {
@@ -166,24 +174,19 @@ public class DataMonster extends BaseMonster {
     };
     List<Object> parts = new ArrayList<>();
     for (int id : ids) {
-      if (id <= 0) continue;
-      ItemDefinition item = findItem(id);
+      ItemDefinition item = MonsterPuppetDress.find(id);
       if (item == null) continue;
-      addPart(parts, item.getBodyPart(), item.getAppearanceEquippedPrimary());
-      addPart(parts, item.getSecondaryBodyPart(), item.getAppearanceEquippedSecondary());
+      MonsterPuppetDress.addPart(parts, item.getBodyPart(), item.getAppearanceEquippedPrimary());
+      MonsterPuppetDress.addPart(
+          parts, item.getSecondaryBodyPart(), item.getAppearanceEquippedSecondary());
     }
-    return parts.isEmpty() ? null : new NPCAnimations(null, parts.toArray());
-  }
-
-  private static ItemDefinition findItem(int numId) {
-    for (ItemDefinition item : ItemRegistry.load()) if (item.getNumId() == numId) return item;
-    return null;
-  }
-
-  private static void addPart(List<Object> parts, BodyPart bodyPart, String sprite) {
-    if (bodyPart == null || sprite == null || sprite.isBlank()) return;
-    parts.add(bodyPart);
-    parts.add(sprite);
+    if (def.getAppearance() == APPEAR_FEMALE_PUPPET) {
+      MonsterPuppetDress.addPart(parts, BodyPart.HAIR, "WoHairPonyTail");
+    }
+    if (parts.isEmpty() && !isPuppetAppearance(def)) {
+      return null;
+    }
+    return new NPCAnimations(null, parts.toArray());
   }
 
   @Override

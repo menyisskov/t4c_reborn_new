@@ -1,5 +1,6 @@
 package com.perso.T4C;
 
+import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.perso.T4C.config.MapDefinition;
@@ -26,7 +27,7 @@ import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.companion.CompanionDef;
 import com.perso.T4C.npc.companion.CompanionRegistry;
 import com.perso.T4C.npc.companion.CompanionSpellTrigger;
-import com.perso.T4C.npc.registry.NpcFactoryRegistry;
+import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.objects.ObjectPos;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.quest.QuestDef;

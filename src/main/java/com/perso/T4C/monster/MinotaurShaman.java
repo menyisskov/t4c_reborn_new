@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Minotaur Shaman", x = 216, y = 788, z = 1, stationary = false, aggressive = true)
@@ -91,7 +93,7 @@ public final class MinotaurShaman extends DataMonster {
         30000L,
         "Minotaur#f",
         "MinotaurA#i",
-        "MinotaurC#m",
+        "MinotaurC!m",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

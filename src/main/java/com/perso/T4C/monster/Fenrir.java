@@ -1,10 +1,11 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.item.InventoryService;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
@@ -20,11 +21,11 @@ public final class Fenrir extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onDeath(Player p) {
+  public NpcScriptRuntime.Effects onDeath(Player p) {
 
     if (p != null) InventoryService.add(p, "fenrir_soulstone");
 
-    return new MonsterScriptBridge.Effects(
+    return new NpcScriptRuntime.Effects(
         java.util.List.of("${message.fenrir.soulstone}"), java.util.List.of(), java.util.List.of());
   }
 

@@ -1,8 +1,6 @@
 package com.perso.T4C.npc;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
-import com.perso.T4C.npc.behavior.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;

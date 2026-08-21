@@ -1,0 +1,52 @@
+package com.perso.T4C.npc;
+
+import com.perso.T4C.exception.GameException;
+import com.perso.T4C.npc.behavior.NpcBehavior;
+import com.perso.T4C.npc.behavior.StationaryBehavior;
+import com.perso.T4C.npc.core.NpcContext;
+import com.perso.T4C.npc.core.NpcSpec;
+import com.perso.T4C.npc.core.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
+import java.util.List;
+
+@Spawn(type = "PaintingNomad1", x = 0, y = 0, z = 0, stationary = true, aggressive = false)
+public final class PaintingNomad1 extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
+
+  public static final String ID = "PaintingNomad1";
+
+  public static final String DISPLAY_NAME = "${npc.paintingnomad1}";
+
+  public static final String SPRITE_BASE = "@static:RockDoor1";
+
+  private static final NpcSpec SPEC =
+      new NpcSpec(
+          ID,
+          DISPLAY_NAME,
+          SPRITE_BASE,
+          List.of(),
+          0,
+          List.of(),
+          "${npc.welcome.paintingnomad1}",
+          List.of(),
+          "PaintingNPC",
+          new NpcSpec.CombatProfile(200, 1000000, 500, 500, 500, 1000000, 0, 65535, "1d3"));
+
+  @Override
+  protected NpcBehavior javaBehavior() {
+
+    return StationaryBehavior.INSTANCE;
+  }
+
+  public PaintingNomad1(NpcContext context) throws GameException {
+
+    super(SPEC, context);
+  }
+
+  public static NpcSpec spec() {
+
+    return SPEC;
+  }
+}

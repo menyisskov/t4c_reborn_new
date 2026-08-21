@@ -1,38 +1,33 @@
 {
   "name": "Jean Las",
   "gender": "MALE",
-  "x": 2822.0,
-  "y": 1095.0,
+  "x": 2858.0,
+  "y": 1094.0,
   "z": 0,
   "strength": 15,
   "dexterity": 14,
   "endurance": 300,
   "intelligence": 20,
   "wisdom": 14,
-  "gold": 251,
+  "gold": 263,
   "karma": 0,
-  "maxHp": 33,
-  "currentHp": 33,
-  "maxMana": 16,
-  "mana": 16,
-  "level": 2,
-  "currentXp": 325,
-  "xpToNextLevel": 360,
-  "statPoints": 5,
-  "skillPoints": 15,
+  "maxHp": 54,
+  "currentHp": 54,
+  "maxMana": 20,
+  "mana": 20,
+  "level": 3,
+  "currentXp": 66,
+  "xpToNextLevel": 763,
+  "statPoints": 10,
+  "skillPoints": 30,
   "rebirthCount": 0,
   "spells": [],
   "quickSlots": [],
   "activeBuffs": [
     {
       "spellName": "spell.item_torch_radiance",
-      "remainingSeconds": 296,
+      "remainingSeconds": 225,
       "totalDurationSeconds": 600
-    },
-    {
-      "spellName": "spell.level_up",
-      "remainingSeconds": 15,
-      "totalDurationSeconds": 300
     }
   ],
   "inventory": [
@@ -89,7 +84,7 @@
   ],
   "equipmentDurability": {
     "LEGS": 100.0,
-    "WEAPON": 97.99999999999997,
+    "WEAPON": 96.59999999999995,
     "BODY": 100.0
   },
   "questFlags": {
@@ -102,5 +97,5 @@
   "respawnWorldY": 16608.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0088744
+  "dayNightHour": 7.0
 }

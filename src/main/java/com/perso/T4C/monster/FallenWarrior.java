@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Fallen Warrior", x = 810, y = 1495, z = 1, stationary = false, aggressive = true)
@@ -47,7 +49,7 @@ public final class FallenWarrior extends DataMonster {
         30000L,
         "Zombie#h",
         "ZombieA#g",
-        "ZombieC#j",
+        "ZombieC!j",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

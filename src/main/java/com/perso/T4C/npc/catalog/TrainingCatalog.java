@@ -1,7 +1,8 @@
 package com.perso.T4C.npc.catalog;
 
 import com.perso.T4C.gui.screen.LearnScreen;
-import com.perso.T4C.npc.behavior.*;
+import com.perso.T4C.npc.behavior.NpcBehavior;
+import com.perso.T4C.npc.behavior.TrainingBehavior;
 import java.util.List;
 import java.util.Map;
 

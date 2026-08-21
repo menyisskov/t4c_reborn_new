@@ -1,9 +1,10 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 
 public final class MadBerserkerDemon extends NamedEventMonster {
@@ -17,17 +18,17 @@ public final class MadBerserkerDemon extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onSpawn(Player p) {
+  public NpcScriptRuntime.Effects onSpawn(Player p) {
 
     return selfSpell("spell.npc_cantrip_pentacle");
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttack(Player p) {
+  public NpcScriptRuntime.Effects onAttack(Player p) {
 
     int r = (int) (Math.random() * 21);
 
-    return r < 2 ? message("npc.madberserker.shout." + r) : MonsterScriptBridge.Effects.empty();
+    return r < 2 ? message("npc.madberserker.shout." + r) : NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

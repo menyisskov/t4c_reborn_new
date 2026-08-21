@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Taintscale", x = 1010, y = 1866, z = 1, stationary = false, aggressive = true)
@@ -77,7 +79,7 @@ public final class r236Taintscale extends DataMonster {
         30000L,
         "Snake#h",
         "SnakeA#g",
-        "SnakeC#m",
+        "SnakeC!m",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

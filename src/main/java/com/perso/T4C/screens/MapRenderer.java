@@ -197,6 +197,10 @@ public class MapRenderer {
       decorRenderer.renderFlaggedDecorsInternal(startX, endX, startY, endY);
     }
     boolean includeObjects = objectsVisible && !objectPositions.isEmpty();
+    if (includeObjects) {
+      objectRenderer.renderObjectsBehindPlayerByBehindFlag(
+          batchDecor, objectPositions, objectMappings, mouseX, mouseY, 0f, true);
+    }
     objectRenderer.renderObjectsDecorsAndEntitiesInternal(
         batchDecor,
         objectPositions,

@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 
 public final class MercenaryC extends DataMonster {
 
@@ -27,7 +29,7 @@ public final class MercenaryC extends DataMonster {
         30000L,
         "Thief#m",
         "ThiefA#i",
-        "ThiefC#l",
+        "ThiefC!l",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

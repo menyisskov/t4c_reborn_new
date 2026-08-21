@@ -22,8 +22,8 @@ public final class MobMakrshPtanghMeteorSpell {
         "64kSpellMeteor-",
         0,
         25,
-        null,
-        null,
+        "Healing.wav",
+        "Meteor.wav",
         0,
         null,
         null,
@@ -37,8 +37,8 @@ public final class MobMakrshPtanghMeteorSpell {
         null,
         null,
         null,
-        0,
-        0,
+        30070,
+        30102,
         false,
         List.of());
   }

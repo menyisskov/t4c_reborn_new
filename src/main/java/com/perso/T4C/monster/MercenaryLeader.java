@@ -1,9 +1,10 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 
 public final class MercenaryLeader extends NamedEventMonster {
@@ -17,15 +18,15 @@ public final class MercenaryLeader extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttacked(Player p) {
+  public NpcScriptRuntime.Effects onAttacked(Player p) {
 
     return Math.random() < 1.0 / 30
         ? message(Math.random() < .5 ? "npc.mercenary.shout.match" : "npc.mercenary.shout.blood")
-        : MonsterScriptBridge.Effects.empty();
+        : NpcScriptRuntime.Effects.empty();
   }
 
   @Override
-  public MonsterScriptBridge.Effects onDeath(Player p) {
+  public NpcScriptRuntime.Effects onDeath(Player p) {
 
     return messageAndSpell(
         "npc.mercenary.leader.death", "spell.mercenary_leader_defeat_flag_spell");
@@ -65,15 +66,15 @@ public final class MercenaryLeader extends NamedEventMonster {
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        10011,
+        269,
+        265,
+        259,
+        469,
+        268,
+        468,
+        470,
+        287,
         0,
         0,
         0,

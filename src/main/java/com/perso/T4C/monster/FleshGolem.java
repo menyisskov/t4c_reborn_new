@@ -1,9 +1,10 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
@@ -19,21 +20,21 @@ public final class FleshGolem extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onSpawn(Player p) {
+  public NpcScriptRuntime.Effects onSpawn(Player p) {
 
     return selfSpell("spell.npc_cantrip_red_wipe");
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttacked(Player p) {
+  public NpcScriptRuntime.Effects onAttacked(Player p) {
 
     if (getHealth() < 181 && Math.random() < .25)
-      return new MonsterScriptBridge.Effects(
+      return new NpcScriptRuntime.Effects(
           java.util.List.of("${npc.fleshgolem.shout.last_breath}"),
           java.util.List.of("spell.mob_ai_spell_blaze_of_glory"),
           java.util.List.of());
 
-    return MonsterScriptBridge.Effects.empty();
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {
@@ -49,7 +50,7 @@ public final class FleshGolem extends NamedEventMonster {
         30000L,
         "Zombie#h",
         "ZombieA#g",
-        "ZombieC#j",
+        "ZombieC!j",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

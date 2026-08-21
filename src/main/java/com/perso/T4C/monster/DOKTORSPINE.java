@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "DOKTORSPINE", x = 2831, y = 2331, z = 0, stationary = false, aggressive = true)
@@ -50,11 +52,11 @@ public final class DOKTORSPINE extends DataMonster {
         0,
         1097859072,
         10011,
+        278,
+        288,
         0,
-        0,
-        0,
-        0,
-        0,
+        276,
+        261,
         0,
         0,
         0,

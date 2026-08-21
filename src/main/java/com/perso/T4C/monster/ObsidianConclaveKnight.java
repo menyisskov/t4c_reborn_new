@@ -1,7 +1,8 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
 import com.perso.T4C.spawn.Spawn;
 
@@ -56,7 +57,7 @@ public final class ObsidianConclaveKnight extends NamedEventMonster {
         30000L,
         "Warrio#l",
         "WarrioA#l",
-        "WarrioC",
+        "WarrioC!a",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
@@ -77,7 +78,7 @@ public final class ObsidianConclaveKnight extends NamedEventMonster {
         282,
         0,
         1107820544,
-        0,
+        10001,
         0,
         0,
         0,

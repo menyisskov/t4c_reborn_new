@@ -1,5 +1,6 @@
 package com.perso.T4C.render;
 
+import java.util.Map;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
@@ -200,7 +201,8 @@ public class ObjectRenderer {
       String logicalId = logicalIdFor(pos);
       ObjectMapping mapping = objectMappings.get(logicalId);
       if (mapping == null) continue;
-      if (alwaysBehindFilter != null && mapping.alwaysBehindEntities != alwaysBehindFilter)
+      if (alwaysBehindFilter != null
+          && isAlwaysBehindObject(logicalId, mapping) != alwaysBehindFilter)
         continue;
       ObjectPos uniqueKey = pos;
       List<TextureRegion> frames =
@@ -366,7 +368,7 @@ public class ObjectRenderer {
     for (ObjectPos pos : objectPositions) {
       String logicalId = logicalIdFor(pos);
       ObjectMapping mapping = objectMappings.get(logicalId);
-      if (mapping == null) continue;
+      if (mapping == null || isAlwaysBehindObject(logicalId, mapping)) continue;
       ObjectPos uniqueKey = pos;
       List<TextureRegion> frames =
           framesByType.computeIfAbsent(logicalId, id -> loadFrames(mapping));
@@ -464,6 +466,9 @@ public class ObjectRenderer {
         if (frames.isEmpty()) continue;
         AnimState state = animations.computeIfAbsent(uniqueKey, k -> new AnimState());
         updateAnim(state, delta, frames.size());
+        if (isAlwaysBehindObject(logicalId, mapping)) {
+          continue;
+        }
         RenderInfo info = computeRenderInfo(mapping, pos, state, frames);
         info.uniqueKey = uniqueKey;
         info.mapping = mapping;
@@ -521,13 +526,11 @@ public class ObjectRenderer {
           draw(batch, info.region, info.px, info.py, info.w, info.h, info.mirror);
         }
         renderObjectNameIfVisible(batch, info, info.mapping, info.state);
-        for (RenderItem entity : occlusionRevealItems) {
-          if (entity.revealAfterDecor == item) {
-            renderOcclusionReveal(batch, entity);
-          }
-        }
+        revealEntitiesAfter(batch, item);
       } else if (item.renderAction != null) {
-        item.renderAction.run();
+        if (!(item.opaqueOcclusionReveal && item.revealAfterDecor != null)) {
+          item.renderAction.run();
+        }
       } else if (item.decorRegion != null) {
         draw(
             batch,
@@ -537,11 +540,7 @@ public class ObjectRenderer {
             item.decorW,
             item.decorH,
             item.decorMirror);
-        for (RenderItem entity : occlusionRevealItems) {
-          if (entity.revealAfterDecor == item) {
-            renderOcclusionReveal(batch, entity);
-          }
-        }
+        revealEntitiesAfter(batch, item);
       }
     }
     occlusionRevealItems.clear();
@@ -570,6 +569,7 @@ public class ObjectRenderer {
     public float revealW;
     public float revealH;
     public RenderItem revealAfterDecor;
+    public boolean opaqueOcclusionReveal;
   }
 
   private static int renderPriority(RenderItem item) {
@@ -634,7 +634,20 @@ public class ObjectRenderer {
   }
 
   private static boolean isEntityOccluder(RenderItem item) {
-    return item.occludesEntities;
+    return item.renderAction == null && (item.occludesEntities || item.decorRegion != null || item.isObject);
+  }
+
+  private void revealEntitiesAfter(SpriteBatch batch, RenderItem occluder) {
+    for (RenderItem entity : occlusionRevealItems) {
+      if (entity.revealAfterDecor != occluder) {
+        continue;
+      }
+      if (entity.opaqueOcclusionReveal && entity.renderAction != null) {
+        entity.renderAction.run();
+      } else {
+        renderOcclusionReveal(batch, entity);
+      }
+    }
   }
 
   private static void renderOcclusionReveal(SpriteBatch batch, RenderItem entity) {
@@ -646,7 +659,7 @@ public class ObjectRenderer {
     float g = color.g;
     float b = color.b;
     float a = color.a;
-    batch.setColor(r, g, b, a * OCCLUDED_ENTITY_ALPHA);
+    batch.setColor(r, g, b, entity.opaqueOcclusionReveal ? a : a * OCCLUDED_ENTITY_ALPHA);
     try {
       entity.occlusionRevealAction.run();
     } finally {
@@ -662,6 +675,7 @@ public class ObjectRenderer {
     item.revealW = 0f;
     item.revealH = 0f;
     item.revealAfterDecor = null;
+    item.opaqueOcclusionReveal = false;
   }
 
   private List<TextureRegion> loadFrames(ObjectMapping mapping) {
@@ -1088,6 +1102,14 @@ public class ObjectRenderer {
 
   private static long tileKey(int x, int y) {
     return (((long) x) << 32) ^ (y & 0xffffffffL);
+  }
+
+  private boolean isAlwaysBehindObject(String logicalId, ObjectMapping mapping) {
+    if (mapping != null && mapping.alwaysBehindEntities) {
+      return true;
+    }
+    return DecorFlags.isWalkableBridge(logicalId)
+        || (mapping != null && DecorFlags.isWalkableBridge(mapping.sprite));
   }
 
   private boolean isDoorMapping(String logicalId, ObjectMapping mapping) {

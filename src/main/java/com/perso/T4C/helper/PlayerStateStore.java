@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.perso.T4C.npc.companion.*;
 import com.perso.T4C.npc.companion.CompanionNPC;
 import com.perso.T4C.player.Player;
 import java.nio.charset.StandardCharsets;

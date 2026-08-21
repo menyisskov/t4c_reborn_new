@@ -325,6 +325,7 @@ public class DecorRenderer {
     item.revealW = 0f;
     item.revealH = 0f;
     item.revealAfterDecor = null;
+    item.opaqueOcclusionReveal = false;
     return item;
   }
 
@@ -383,7 +384,9 @@ public class DecorRenderer {
           if (cache.lowerName == null) {
             return cache;
           }
-          cache.flagged = flaggedDecorNames.contains(cache.lowerName);
+          cache.flagged =
+              flaggedDecorNames.contains(cache.lowerName)
+                  || DecorFlags.isWalkableBridge(cache.lowerName);
           cache.meta = metaByName.get(cache.lowerName);
           if (cache.meta != null) {
             cache.region = getRegion(cache.meta.getName());

@@ -1,11 +1,12 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterLifecycle;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,19 +20,19 @@ public final class Carman extends DataMonster implements MonsterLifecycle {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttack(Player player) {
-    if (ThreadLocalRandom.current().nextInt(11) != 0) return MonsterScriptBridge.Effects.empty();
-    return new MonsterScriptBridge.Effects(
+  public NpcScriptRuntime.Effects onAttack(Player player) {
+    if (ThreadLocalRandom.current().nextInt(11) != 0) return NpcScriptRuntime.Effects.empty();
+    return new NpcScriptRuntime.Effects(
         java.util.List.of(), java.util.List.of("spell.mob_fast_regen"), java.util.List.of());
   }
 
   @Override
-  public MonsterScriptBridge.Effects onDeath(Player player) {
+  public NpcScriptRuntime.Effects onDeath(Player player) {
     if (player != null) {
       InventoryService.add(player, "hel_soulstone");
-      com.perso.T4C.npc.script.NpcScriptEngine.setGlobalFlag("GLOBAL_FLAG_ADDON_CARMAN_PRESENT", 0);
+      com.perso.T4C.npc.core.NpcScriptEngine.setGlobalFlag("GLOBAL_FLAG_ADDON_CARMAN_PRESENT", 0);
     }
-    return new MonsterScriptBridge.Effects(
+    return new NpcScriptRuntime.Effects(
         java.util.List.of("${npc.carman.soulstone}"),
         java.util.List.of(),
         java.util.List.of("spell.carman_flag_spell"));
@@ -71,15 +72,15 @@ public final class Carman extends DataMonster implements MonsterLifecycle {
         0,
         0,
         0,
+        10012,
+        278,
+        288,
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        277,
+        273,
+        472,
         0,
         0,
         0,

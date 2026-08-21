@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Crypt Custodian", x = 1549, y = 682, z = 2, stationary = false, aggressive = true)
@@ -52,7 +54,7 @@ public final class CryptCustodian extends DataMonster {
         30000L,
         "64kCentaurSkeleton#i",
         "64kCentaurSkeletonA#i",
-        "64kCentaurSkeletonC#n",
+        "64kCentaurSkeletonC!n",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

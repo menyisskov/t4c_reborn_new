@@ -1,0 +1,66 @@
+package com.perso.T4C.npc;
+
+import com.perso.T4C.exception.GameException;
+import com.perso.T4C.npc.behavior.NpcBehavior;
+import com.perso.T4C.npc.core.NpcContext;
+import com.perso.T4C.npc.core.NpcSpec;
+import com.perso.T4C.npc.core.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
+import java.util.List;
+
+@Spawn(type = "TreeOfWisdom", x = 1791, y = 2617, z = 1, stationary = true, aggressive = false)
+public final class TreeOfWisdom extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Electrik.wav";
+  public static final String SOUND_DEATH = "Tree Ent Dying.wav";
+  public static final String SOUND_HIT = "AxeWood.wav";
+
+  public static final String ID = "TreeOfWisdom";
+
+  public static final String DISPLAY_NAME = "${npc.treeofwisdom}";
+
+  public static final String SPRITE_BASE = "TreeEnt";
+
+  private static final NpcSpec SPEC =
+      new NpcSpec(
+          ID,
+          DISPLAY_NAME,
+          SPRITE_BASE,
+          List.of(),
+          0,
+          List.of(),
+          "${npc.welcome.treeofwisdom}",
+          List.of(),
+          "TreeOfWisdomNPC",
+          new NpcSpec.CombatProfile(200, 1000000, 500, 500, 500, 1000000, 0, 65535, "1d3"));
+
+  @Override
+  protected NpcBehavior javaBehavior() {
+
+    return new NpcBehavior() {
+
+      @Override
+      public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
+
+        if (c.flag("ADDON_STORYLINE_PROGRESS") == 30) {
+
+          c.giveItem("branch_of_wisdom");
+
+          c.flag("ADDON_STORYLINE_PROGRESS", 31);
+
+          c.sayKey("npc.treewisdom.branch");
+
+        } else c.sayKey("npc.treewisdom.towers");
+      }
+    };
+  }
+
+  public TreeOfWisdom(NpcContext context) throws GameException {
+
+    super(SPEC, context);
+  }
+
+  public static NpcSpec spec() {
+
+    return SPEC;
+  }
+}

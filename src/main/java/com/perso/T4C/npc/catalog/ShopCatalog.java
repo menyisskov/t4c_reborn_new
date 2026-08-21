@@ -1,6 +1,7 @@
 package com.perso.T4C.npc.catalog;
 
-import com.perso.T4C.npc.behavior.*;
+import com.perso.T4C.npc.behavior.NpcBehavior;
+import com.perso.T4C.npc.behavior.ShopBehavior;
 import java.util.List;
 import java.util.Map;
 

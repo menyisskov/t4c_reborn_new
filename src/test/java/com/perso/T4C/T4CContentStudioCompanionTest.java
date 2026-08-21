@@ -1,8 +1,6 @@
 package com.perso.T4C;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.perso.T4C.npc.companion.*;
 import com.perso.T4C.npc.companion.CompanionDef;
 import com.perso.T4C.npc.companion.CompanionSpellTrigger;
 import java.util.LinkedHashMap;

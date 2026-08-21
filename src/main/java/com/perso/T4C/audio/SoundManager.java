@@ -18,10 +18,52 @@ public final class SoundManager {
     assets = mgr;
   }
 
+  private static volatile java.util.Map<String, String> soundFilesByLowerName;
+
   private static String normalize(String fileName) {
     if (fileName == null) return null;
     String f = fileName.trim();
-    return f.isEmpty() ? null : f;
+    if (f.isEmpty()) return null;
+    String mapped = canonicalSoundFile(f);
+    return mapped == null ? f : mapped;
+  }
+
+  private static String canonicalSoundFile(String fileName) {
+    java.util.Map<String, String> files = soundFilesByLowerName;
+    if (files == null) {
+      java.util.Map<String, String> loaded = new java.util.HashMap<>();
+      try {
+        com.badlogic.gdx.files.FileHandle dir = Gdx.files.internal(Paths.SOUNDS_DIR);
+        if (dir != null && dir.exists() && dir.isDirectory()) {
+          for (com.badlogic.gdx.files.FileHandle child : dir.list()) {
+            if (child != null && child.name() != null && !child.isDirectory()) {
+              loaded.put(child.name().toLowerCase(java.util.Locale.ROOT), child.name());
+            }
+          }
+        }
+      } catch (Throwable ignored) {
+      }
+      if (loaded.isEmpty()) {
+        try {
+          java.nio.file.Path dir = java.nio.file.Path.of(Paths.SOUNDS_DIR);
+          if (java.nio.file.Files.isDirectory(dir)) {
+            try (var stream = java.nio.file.Files.list(dir)) {
+              stream
+                  .filter(java.nio.file.Files::isRegularFile)
+                  .forEach(
+                      path ->
+                          loaded.put(
+                              path.getFileName().toString().toLowerCase(java.util.Locale.ROOT),
+                              path.getFileName().toString()));
+            }
+          }
+        } catch (Throwable ignored) {
+        }
+      }
+      soundFilesByLowerName = loaded;
+      files = loaded;
+    }
+    return files.get(fileName.toLowerCase(java.util.Locale.ROOT));
   }
 
   private static void ensureLoadedAs(String path, Class<?> type) {

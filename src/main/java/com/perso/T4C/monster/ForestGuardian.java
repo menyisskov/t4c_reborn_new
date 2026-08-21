@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Forest Guardian", x = 1263, y = 2811, z = 0, stationary = false, aggressive = false)
@@ -58,7 +60,7 @@ public final class ForestGuardian extends DataMonster {
         30000L,
         "TreeEnt#i",
         "TreeEntA#i",
-        "TreeEntC#j",
+        "TreeEntC!j",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

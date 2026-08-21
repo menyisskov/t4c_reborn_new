@@ -1,14 +1,12 @@
 package com.perso.T4C.i18n;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.mapping.definition.ObjectMappingDefinitions;
-import com.perso.T4C.npc.arakas.LighthavenSamaritan;
-import com.perso.T4C.npc.registry.*;
-import com.perso.T4C.npc.registry.NpcContext;
-import com.perso.T4C.npc.registry.NpcFactoryRegistry;
+import com.perso.T4C.npc.LighthavenSamaritan;
+import com.perso.T4C.npc.core.NpcContext;
+import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.spell.SpellData;

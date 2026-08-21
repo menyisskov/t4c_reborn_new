@@ -62,9 +62,8 @@ import com.perso.T4C.monster.core.MonsterClan;
 import com.perso.T4C.monster.core.MonsterClanRelations;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.BaseNPC;
-import com.perso.T4C.npc.registry.*;
-import com.perso.T4C.npc.registry.NpcContext;
-import com.perso.T4C.npc.registry.NpcFactoryRegistry;
+import com.perso.T4C.npc.core.NpcContext;
+import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.objects.ObjectPos;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.PuppetBodyOrder;
@@ -114,6 +113,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 public class MapEditorScreen implements Screen {

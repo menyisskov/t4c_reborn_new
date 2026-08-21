@@ -1,13 +1,14 @@
 package com.perso.T4C.monster;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Spawn(type = "MOBGIANTBLACKWIDOW", x = 1725, y = 253, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "MOBGIANTBLACKWIDOW", x = 1726, y = 221, z = 2, stationary = false, aggressive = true)
@@ -48,19 +49,19 @@ public final class GiantBlackWidow extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttack(Player p) {
+  public NpcScriptRuntime.Effects onAttack(Player p) {
 
     return hatch();
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttacked(Player p) {
+  public NpcScriptRuntime.Effects onAttacked(Player p) {
 
     return hatch();
   }
 
   @Override
-  public MonsterScriptBridge.Effects onDeath(Player p) {
+  public NpcScriptRuntime.Effects onDeath(Player p) {
 
     List<String> summons = new ArrayList<>();
 
@@ -70,12 +71,12 @@ public final class GiantBlackWidow extends NamedEventMonster {
       summons.add(
           "WIDOWHATCHLING@" + (int) getPosition().x + o[0] + "," + (int) getPosition().y + o[1]);
 
-    return MonsterScriptBridge.Effects.empty();
+    return NpcScriptRuntime.Effects.empty();
   }
 
-  private MonsterScriptBridge.Effects hatch() {
+  private NpcScriptRuntime.Effects hatch() {
 
-    return MonsterScriptBridge.Effects.empty();
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

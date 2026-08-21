@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Horse", x = 2686, y = 971, z = 0, stationary = false, aggressive = false)
@@ -321,7 +323,7 @@ public final class r272WildHorse extends DataMonster {
         30000L,
         "Horse#h",
         "HorseA",
-        "HorseC#l",
+        "HorseC!l",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

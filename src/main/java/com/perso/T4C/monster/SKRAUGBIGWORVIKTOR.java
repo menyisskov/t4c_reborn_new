@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "SKRAUGBIGWORVIKTOR", x = 1011, y = 580, z = 0, stationary = false, aggressive = true)
@@ -129,7 +131,7 @@ public final class SKRAUGBIGWORVIKTOR extends DataMonster {
         30000L,
         "64kSkavenWarrior#i",
         "64kSkavenWarriorA#k",
-        "64kSkavenWarriorC#s",
+        "64kSkavenWarriorC!s",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

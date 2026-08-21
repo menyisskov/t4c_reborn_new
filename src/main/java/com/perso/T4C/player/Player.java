@@ -176,8 +176,13 @@ public class Player extends Stats {
     movement.stop();
     String angle = movement.getCurrentAngle();
     animations.startAttack(angle, bow);
-    String[] whooshSounds = {"Whooshh 1.wav", "Whooshh 2.wav", "Whooshh 3.wav"};
-    String sound = whooshSounds[random.nextInt(whooshSounds.length)];
+    // Original client VisualObjectList::PlAttack: melee Whooshh 1/2/3 (SoundFX 4/11/12);
+    // ranged bow SoundFX[20] "Bow Attack". Arrow projectile Play() is commented out.
+    String sound =
+        bow
+            ? "Bow Attack.wav"
+            : new String[] {"Whooshh 1.wav", "Whooshh 2.wav", "Whooshh 3.wav"}
+                [random.nextInt(3)];
     SoundManager.animateSound(sound);
   }
 

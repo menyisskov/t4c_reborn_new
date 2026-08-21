@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.audio.SoundManager;
+import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.entity.EntityAnimationsBase;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpriteLoader;
@@ -20,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 public class MonsterAnimations extends EntityAnimationsBase {
-  private static final float FRAME_DURATION = 0.08f;
   private static final float MIN_ATTACK_DURATION = 0.5f;
   private static final float DEATH_DURATION = 1.0f;
   private final String walkPattern;
@@ -161,7 +161,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
     PatternParts activeParts;
     if (isDying && deathPattern != null) {
       frames = getDeathFrames("000");
-      frameIndex = (int) (deathTimer / FRAME_DURATION);
+      frameIndex = (int) (deathTimer / NativeTimingProfile.current().frameDurationSeconds());
       if (frameIndex >= frames.size()) {
         frameIndex = frames.size() - 1;
       }
@@ -173,13 +173,13 @@ public class MonsterAnimations extends EntityAnimationsBase {
       frameIndex =
           holdingAttackPose
               ? Math.max(0, frames.size() - 1)
-              : Math.min((int) (attackTimer / FRAME_DURATION), Math.max(0, frames.size() - 1));
+              : Math.min((int) (attackTimer / NativeTimingProfile.current().frameDurationSeconds()), Math.max(0, frames.size() - 1));
       patternBase = attackParts.baseName;
       appendAngle = !attackParts.angleless;
       activeParts = attackParts;
     } else {
       frames = getWalkFrames(angle);
-      frameIndex = moving ? (int) (animTimer / FRAME_DURATION) % Math.max(1, frames.size()) : 0;
+      frameIndex = moving ? (int) (animTimer / NativeTimingProfile.current().frameDurationSeconds()) % Math.max(1, frames.size()) : 0;
       patternBase = walkParts.baseName;
       appendAngle = !walkParts.angleless;
       activeParts = walkParts;
@@ -241,7 +241,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
       }
     }
     return maxFrames > 0
-        ? Math.max(MIN_ATTACK_DURATION, maxFrames * FRAME_DURATION)
+        ? Math.max(MIN_ATTACK_DURATION, maxFrames * NativeTimingProfile.current().frameDurationSeconds())
         : MIN_ATTACK_DURATION;
   }
 
@@ -322,7 +322,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
     if (frameCount <= 1) {
       return 0;
     }
-    return (int) (animTimer / FRAME_DURATION) % frameCount;
+    return (int) (animTimer / NativeTimingProfile.current().frameDurationSeconds()) % frameCount;
   }
 
   private List<TextureRegion> getAttackFrames(String angle) {

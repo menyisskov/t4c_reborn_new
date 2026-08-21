@@ -3,9 +3,8 @@ package com.perso.T4C.npc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.perso.T4C.npc.registry.*;
-import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.npc.core.NpcSpec;
+import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.Player;
 import java.util.List;
 import org.junit.jupiter.api.Test;

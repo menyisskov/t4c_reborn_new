@@ -191,5 +191,32 @@ public class MonsterDef {
     private final int value3;
     private final int value4;
     private final int value5;
+
+    public boolean isSpell() {
+      return value3 > 0;
+    }
+
+    public int getSpellId() {
+      return value3;
+    }
+
+    public int getPercentage() {
+      return value2;
+    }
+
+    public int getMinRangeTiles() {
+      return Math.max(0, value4);
+    }
+
+    public int getMaxRangeTiles() {
+      return isSpell() ? Math.max(value5, 0) : 1;
+    }
+
+    public boolean isInRange(int tiles) {
+      if (isSpell()) {
+        return value5 > 0 && tiles >= getMinRangeTiles() && tiles <= value5;
+      }
+      return tiles < 2;
+    }
   }
 }

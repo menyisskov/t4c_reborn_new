@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 
 public final class MinotaurChieftain extends DataMonster {
   public static final String SOUND_ATTACK = "Minotaur Attack.wav";
@@ -34,7 +36,7 @@ public final class MinotaurChieftain extends DataMonster {
         30000L,
         "Minotaur#f",
         "MinotaurA#i",
-        "MinotaurC#m",
+        "MinotaurC!m",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.perso.T4C.monster.core.MonsterRegistry;
-import com.perso.T4C.npc.registry.*;
-import com.perso.T4C.npc.script.NpcScriptEngine;
-import com.perso.T4C.npc.script.ScriptedNpc;
+import com.perso.T4C.npc.core.NpcContext;
+import com.perso.T4C.npc.core.NpcFactoryRegistry;
+import com.perso.T4C.npc.core.NpcSpec;
+import com.perso.T4C.npc.core.NpcScriptEngine;
+import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.Player;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -106,13 +107,13 @@ class NpcScriptEngineTest {
         arenaMonsters.stream().filter(d -> d.getName().matches("ArenaMob(?:XP)?250")).toList()) {
       assertEquals("KraanianFlying#h", def.getWalkPattern());
       assertEquals("KraanianFlyingA#h", def.getAttackPattern());
-      assertEquals("KraanianFlyingC#l", def.getDeathPattern());
+      assertEquals("KraanianFlyingC!l", def.getDeathPattern());
     }
     for (var def :
         arenaMonsters.stream().filter(d -> d.getName().matches("ArenaMob(?:XP)?275")).toList()) {
       assertEquals("KraanianMilipede#i", def.getWalkPattern());
       assertEquals("KraanianMilipedeA#h", def.getAttackPattern());
-      assertEquals("KraanianMilipedeC#l", def.getDeathPattern());
+      assertEquals("KraanianMilipedeC!l", def.getDeathPattern());
     }
   }
 

@@ -9,7 +9,7 @@ class SpellRegistryParityTest {
   @Test
   void registryContainsEveryMigratedSpellOnce() {
     var registry = SpellRegistry.load();
-    assertEquals(279, registry.size());
+    assertEquals(282, registry.size());
     registry.forEach(
         spell -> {
           assertNotNull(spell.getName());

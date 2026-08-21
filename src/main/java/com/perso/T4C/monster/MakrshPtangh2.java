@@ -1,5 +1,6 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
@@ -26,7 +27,7 @@ public final class MakrshPtangh2 extends NamedEventMonster {
         30000L,
         "64kLich#l",
         "64kLichA#j",
-        "64kLichC#w",
+        "64kLichC!w",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
@@ -73,11 +74,11 @@ public final class MakrshPtangh2 extends NamedEventMonster {
         true,
         java.util.List.of(
             new MonsterDef.Attack("1d390+360", 2410, 40, 0, 0, 0),
-            new MonsterDef.Attack("boulders", 0, 15, 10708, 0, 0),
-            new MonsterDef.Attack("glacier", 0, 15, 10709, 0, 0),
-            new MonsterDef.Attack("meteor", 0, 15, 10710, 0, 0),
-            new MonsterDef.Attack("teleport", 0, 8, 10596, 0, 0),
-            new MonsterDef.Attack("regeneration", 0, 5, 10618, 0, 0)),
+            new MonsterDef.Attack("boulders", 0, 15, 10708, 0, 25),
+            new MonsterDef.Attack("glacier", 0, 15, 10709, 0, 25),
+            new MonsterDef.Attack("meteor", 0, 15, 10710, 0, 25),
+            new MonsterDef.Attack("teleport", 0, 8, 10596, 0, 25),
+            new MonsterDef.Attack("regeneration", 0, 5, 10618, 0, 25)),
         false,
         0,
         java.util.List.of(),

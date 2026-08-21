@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "SHADEEN", x = 1593, y = 102, z = 1, stationary = false, aggressive = false)
@@ -28,7 +30,7 @@ public final class SHADEEN extends DataMonster {
         30000L,
         "Warrio#l",
         "WarrioA#l",
-        "WarrioC",
+        "WarrioC!a",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
@@ -49,7 +51,7 @@ public final class SHADEEN extends DataMonster {
         65535,
         0,
         1199433472,
-        0,
+        10004,
         0,
         0,
         0,

@@ -1,9 +1,10 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
-import com.perso.T4C.npc.script.MonsterScriptBridge;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
@@ -39,11 +40,11 @@ public final class MadPatient extends NamedEventMonster {
   }
 
   @Override
-  public MonsterScriptBridge.Effects onAttack(Player p) {
+  public NpcScriptRuntime.Effects onAttack(Player p) {
 
     return Math.random() < .02
         ? message("npc.madpatient.shout." + (int) (Math.random() * 3))
-        : MonsterScriptBridge.Effects.empty();
+        : NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {
@@ -57,9 +58,9 @@ public final class MadPatient extends NamedEventMonster {
         13,
         29,
         30000L,
-        "",
-        null,
-        null,
+        "Zombie#h",
+        "ZombieA#g",
+        "ZombieC!j",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
@@ -81,12 +82,12 @@ public final class MadPatient extends NamedEventMonster {
         70,
         0,
         1075576832,
-        10011,
-        40220,
+        20009,
         0,
         0,
         0,
-        40213,
+        0,
+        0,
         0,
         0,
         0,

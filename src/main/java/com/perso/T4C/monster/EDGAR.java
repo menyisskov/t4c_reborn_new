@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "EDGAR", x = 2855, y = 1162, z = 0, stationary = false, aggressive = false)
@@ -50,11 +52,11 @@ public final class EDGAR extends DataMonster {
         0,
         1073741824,
         10011,
+        285,
+        260,
         0,
         0,
-        0,
-        0,
-        0,
+        284,
         0,
         0,
         0,

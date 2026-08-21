@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Trish Yellowblood", x = 863, y = 2615, z = 2, stationary = false, aggressive = true)
@@ -29,7 +31,7 @@ public final class r249TrishYellowblood extends DataMonster {
         30000L,
         "GoblinBoss#l",
         "GoblinBossA#i",
-        "GoblinBossC#l",
+        "GoblinBossC!l",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

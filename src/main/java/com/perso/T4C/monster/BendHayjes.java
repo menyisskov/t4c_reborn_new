@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Bend Hayjes", x = 456, y = 1909, z = 1, stationary = false, aggressive = true)
@@ -36,7 +38,7 @@ public final class BendHayjes extends DataMonster {
         30000L,
         "Mummy#i",
         "MummyA#j",
-        "MummyC",
+        "MummyC!a",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

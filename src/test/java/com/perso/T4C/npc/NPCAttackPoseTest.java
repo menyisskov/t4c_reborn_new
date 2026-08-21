@@ -2,9 +2,8 @@ package com.perso.T4C.npc;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.npc.core.*;
+import com.perso.T4C.npc.core.NPCAnimations;
 import com.perso.T4C.player.BodyPart;
 import org.junit.jupiter.api.Test;
 

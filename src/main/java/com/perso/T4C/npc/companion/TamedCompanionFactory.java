@@ -2,9 +2,8 @@ package com.perso.T4C.npc.companion;
 
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterDef;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterPuppetDress;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,16 +83,14 @@ public final class TamedCompanionFactory {
 
     List<CompanionDef.Part> result = new ArrayList<>();
 
-    for (int id : ids)
-      for (ItemDefinition item : ItemRegistry.load())
-        if (item.getNumId() == id) {
-
-          add(result, item.getBodyPart(), item.getAppearanceEquippedPrimary());
-
-          add(result, item.getSecondaryBodyPart(), item.getAppearanceEquippedSecondary());
-
-          break;
-        }
+    for (int id : ids) {
+      ItemDefinition item = MonsterPuppetDress.find(id);
+      if (item == null) {
+        continue;
+      }
+      add(result, item.getBodyPart(), item.getAppearanceEquippedPrimary());
+      add(result, item.getSecondaryBodyPart(), item.getAppearanceEquippedSecondary());
+    }
 
     return result;
   }

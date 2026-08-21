@@ -8,6 +8,7 @@ import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_HORI
 import static com.perso.T4C.config.GameConstants.PLAYER_MOVEMENT_RESERVATION_STEP_TILES;
 
 import com.perso.T4C.config.GameConstants;
+import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.model.Coordinates;
 import java.util.ArrayDeque;
@@ -122,8 +123,15 @@ public class PlayerMovement {
     if (directInput) {
       path.clear();
     }
+    NativeTimingProfile timing = NativeTimingProfile.current();
+    // continueActiveGridStep multiplies this unit budget by MOVX/MOVY.
+    // Convert the existing world speed to native movement units so changing
+    // the profile does not unexpectedly slow the player down.
     float travelBudget =
-        GameConstants.PLAYER_SPEED * player.getEffectiveSpeedMultiplier() * Math.max(0f, delta);
+        GameConstants.PLAYER_SPEED
+            * Math.max(0f, delta)
+            / timing.movX()
+            * player.getEffectiveSpeedMultiplier();
     boolean advancedThisUpdate = false;
     while (true) {
       Coordinates pos = player.getCoordinates();

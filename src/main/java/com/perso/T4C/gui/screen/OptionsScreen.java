@@ -5,8 +5,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.config.GamePreferences;
 import com.perso.T4C.config.GamePreferencesStore;
-import com.perso.T4C.gui.core.*;
-import com.perso.T4C.gui.widget.*;
+import com.perso.T4C.gui.core.GuiElement;
+import com.perso.T4C.gui.core.GuiManager;
+import com.perso.T4C.gui.core.GuiScreenBase;
+import com.perso.T4C.gui.core.GuiSprites;
+import com.perso.T4C.gui.widget.GuiBoxedText;
+import com.perso.T4C.gui.widget.GuiButton;
+import com.perso.T4C.gui.widget.GuiOptionList;
+import com.perso.T4C.gui.widget.GuiSlider;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.ui.FontManager;
 import java.util.*;
@@ -172,6 +178,7 @@ public class OptionsScreen extends GuiScreenBase {
             value -> FontManager.getInstance().applyHighQuality(value)),
         displayEntry("options.fullscreen", preferences::isFullscreen, preferences::setFullscreen),
         displayEntry("options.vsync", preferences::isVSync, preferences::setVSync),
+        entry("options.enable_32fps", preferences::isEnable32FPS, preferences::setEnable32FPS),
         entry("options.hud_values", preferences::isShowHudValues, preferences::setShowHudValues));
   }
 

@@ -3,10 +3,9 @@ package com.perso.T4C.npc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.perso.T4C.npc.behavior.*;
-import com.perso.T4C.npc.registry.*;
-import com.perso.T4C.npc.stoneheim.Oracle;
+import com.perso.T4C.npc.behavior.NpcBehaviorContext;
+import com.perso.T4C.npc.core.NpcContext;
+import com.perso.T4C.npc.Oracle;
 import com.perso.T4C.player.Player;
 import org.junit.jupiter.api.Test;
 

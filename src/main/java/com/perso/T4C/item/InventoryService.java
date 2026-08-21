@@ -58,9 +58,10 @@ public final class InventoryService {
 
   public static int count(Player player, String itemKey) {
     if (player == null || itemKey == null) return 0;
+    String canonical = canonicalKey(itemKey);
     int count = 0;
-    for (String key : player.getInventory()) if (itemKey.equals(key)) count++;
-    for (String key : player.getEquippedItems().values()) if (itemKey.equals(key)) count++;
+    for (String key : player.getInventory()) if (sameItem(canonical, key)) count++;
+    for (String key : player.getEquippedItems().values()) if (sameItem(canonical, key)) count++;
     return count;
   }
 
@@ -221,21 +222,37 @@ public final class InventoryService {
 
   public static Result destroyOne(Player player, String itemKey) {
     if (player == null || itemKey == null) return Result.failure(Failure.ITEM_NOT_OWNED, itemKey);
-    int index = player.getInventory().indexOf(itemKey);
-    if (index >= 0) return remove(player, index, itemKey);
+    String canonical = canonicalKey(itemKey);
+    int index = -1;
+    for (int i = 0; i < player.getInventory().size(); i++) {
+      if (sameItem(canonical, player.getInventory().get(i))) {
+        index = i;
+        break;
+      }
+    }
+    if (index >= 0) return remove(player, index, canonical);
     BodyPart equippedSlot = null;
     for (Map.Entry<BodyPart, String> entry : player.getEquippedItems().entrySet()) {
-      if (itemKey.equals(entry.getValue())) {
+      if (sameItem(canonical, entry.getValue())) {
         equippedSlot = entry.getKey();
         break;
       }
     }
     if (equippedSlot != null) {
-      unequipWithoutTransfer(player, equippedSlot, itemKey);
-      normalizeChargesAfterRemoval(player, itemKey);
-      return Result.success(itemKey);
+      unequipWithoutTransfer(player, equippedSlot, canonical);
+      normalizeChargesAfterRemoval(player, canonical);
+      return Result.success(canonical);
     }
-    return Result.failure(Failure.ITEM_NOT_OWNED, itemKey);
+    return Result.failure(Failure.ITEM_NOT_OWNED, canonical);
+  }
+
+  private static String canonicalKey(String itemKey) {
+    ItemDefinition definition = ItemRegistry.findByKey(itemKey);
+    return definition != null ? definition.getKey() : ItemDefinition.normalizeKey(itemKey);
+  }
+
+  private static boolean sameItem(String canonical, String other) {
+    return canonical != null && other != null && canonical.equals(canonicalKey(other));
   }
 
   public static double equippedArmor(Player player) {

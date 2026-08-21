@@ -11,4 +11,15 @@ public final class DecorFlags {
   public static Set<String> loadPlayerAlwaysAboveRules() {
     return new HashSet<>(DecorLayerRuleDefinitions.all());
   }
+
+  public static boolean isWalkableBridge(String name) {
+    if (name == null || name.isBlank()) {
+      return false;
+    }
+    int start = 0;
+    while (start < name.length() && name.charAt(start) <= ' ') {
+      start++;
+    }
+    return name.regionMatches(true, start, "bridge", 0, 6);
+  }
 }

@@ -44,7 +44,6 @@ public class PlayerHUD {
   private static final float GOLD_PANEL_WIDTH = 128f;
   private static final float GOLD_PANEL_HEIGHT = 28f;
   private static final float GOLD_PANEL_LATTICE_WIDTH = 24f;
-  private static final float GOLD_PANEL_MARGIN = 8f;
   private static final float TOP_BAR_BORDER_HEIGHT = 6f;
   private static final int TOP_BAR_BACKGROUND_X = 244;
   private static final int TOP_BAR_BACKGROUND_Y = 41;
@@ -138,8 +137,8 @@ public class PlayerHUD {
   private final List<GuiElement> hudBoxedElements = new ArrayList<>();
   private final HudStatsPanel statsPanel;
   private final HudGoldPanel goldPanel;
-  private boolean statsPanelLayoutInitialized;
-  private boolean goldPanelLayoutInitialized;
+  private int lastHudLayoutWidth = -1;
+  private int lastHudLayoutHeight = -1;
 
   public PlayerHUD(Player player, SpriteLoader spriteLoader) throws GameException {
     this.player = player;
@@ -194,31 +193,43 @@ public class PlayerHUD {
   public void render(SpriteBatch batch, float offsetX, float offsetY) {
     if (spriteLoader.getTextureGeneration() != lastTextureGen) refreshRegions();
     if (topBarBackground == null || hpBar == null || mpBar == null) return;
+    layoutHudForScreen();
     renderTopBar(batch);
-    if (!statsPanelLayoutInitialized) {
-      statsPanel.setSize(STAT_PANEL_WIDTH, STAT_PANEL_HEIGHT);
-      statsPanel.setPosition(
-          Math.max(0f, (Gdx.graphics.getWidth() - STAT_PANEL_WIDTH) * 0.5f), STAT_PANEL_Y);
-      statsPanelLayoutInitialized = true;
-    }
     statsPanel.render(batch);
     renderActiveBuffs(batch);
     renderExperienceBar(batch);
     renderGold(batch);
-    if (isQuickBarVisible()) renderQuickBar(batch);
-    renderChatBarButtons(batch);
+    if (isHudLayoutReady()) {
+      if (isQuickBarVisible()) renderQuickBar(batch);
+      renderChatBarButtons(batch);
+    }
     renderBuffTooltip(batch);
     renderCombatModeIndicator(batch);
   }
 
   private void renderGold(SpriteBatch batch) {
-    if (!goldPanelLayoutInitialized) {
-      goldPanel.setPosition(
-          Gdx.graphics.getWidth() - GOLD_PANEL_WIDTH - GOLD_PANEL_MARGIN,
-          (TOP_BAR_HEIGHT - GOLD_PANEL_HEIGHT) * 0.5f);
-      goldPanelLayoutInitialized = true;
-    }
     goldPanel.render(batch);
+  }
+
+  private void layoutHudForScreen() {
+    int width = Gdx.graphics.getWidth();
+    int height = Gdx.graphics.getHeight();
+    if (width <= 0 || height <= 0) {
+      return;
+    }
+    boolean firstLayout = lastHudLayoutWidth < 0;
+    if (firstLayout) {
+      statsPanel.setSize(STAT_PANEL_WIDTH, STAT_PANEL_HEIGHT);
+      goldPanel.setSize(GOLD_PANEL_WIDTH, GOLD_PANEL_HEIGHT);
+    }
+    goldPanel.setPosition(Math.max(0f, width - goldPanel.getWidth()), 0f);
+    if (!firstLayout && width == lastHudLayoutWidth && height == lastHudLayoutHeight) {
+      return;
+    }
+    lastHudLayoutWidth = width;
+    lastHudLayoutHeight = height;
+    statsPanel.setPosition(
+        Math.max(0f, (width - statsPanel.getWidth()) * 0.5f), STAT_PANEL_Y);
   }
 
   private void loadTopBarRegions() throws GameException {
@@ -264,10 +275,10 @@ public class PlayerHUD {
           if (generatedTopBar != null) {
             batch.draw(
                 generatedTopBar,
-                (screenWidth - STAT_PANEL_WIDTH) * 0.5f,
-                0f,
-                STAT_PANEL_WIDTH,
-                STAT_PANEL_HEIGHT,
+                statsPanel.getX(),
+                statsPanel.getY(),
+                statsPanel.getWidth(),
+                statsPanel.getHeight(),
                 0,
                 0,
                 generatedTopBar.getWidth(),
@@ -667,7 +678,7 @@ public class PlayerHUD {
   }
 
   private void renderExperienceBar(SpriteBatch batch) {
-    if (xpGuiBar == null) return;
+    if (xpGuiBar == null || !isHudLayoutReady()) return;
     QuickBarLayout layout = quickBarLayout();
     float ratio =
         Math.max(0f, Math.min(1f, safeRatio(player.getCurrentXp(), player.getXpToNextLevel())));
@@ -678,12 +689,16 @@ public class PlayerHUD {
     if (xpGuiLayoutInitialized) {
       xpGuiOffsetX += xpGuiBar.getX() - lastXpGuiX;
       xpGuiOffsetY += xpGuiBar.getY() - lastXpGuiY;
-      if (lastXpGuiWidth > 0f) {
+      if (lastXpGuiWidth > 1f) {
         xpGuiWidthScale *= xpGuiBar.getWidth() / lastXpGuiWidth;
       }
-      if (lastXpGuiHeight > 0f) {
+      if (lastXpGuiHeight > 1f) {
         xpGuiHeightScale *= xpGuiBar.getHeight() / lastXpGuiHeight;
       }
+      xpGuiOffsetX = finiteOrZero(xpGuiOffsetX);
+      xpGuiOffsetY = finiteOrZero(xpGuiOffsetY);
+      xpGuiWidthScale = saneScale(xpGuiWidthScale);
+      xpGuiHeightScale = saneScale(xpGuiHeightScale);
     } else {
       xpGuiLayoutInitialized = true;
     }
@@ -861,9 +876,46 @@ public class PlayerHUD {
     return true;
   }
 
+  private static boolean isHudLayoutReady() {
+    return Gdx.graphics.getWidth() > 1 && Gdx.graphics.getHeight() > 1;
+  }
+
+  private static float finiteOrZero(float value) {
+    return Float.isFinite(value) ? value : 0f;
+  }
+
+  private static float saneScale(float scale) {
+    return Float.isFinite(scale) && scale >= 0.05f && scale <= 20f ? scale : 1f;
+  }
+
+  public void recoverAfterDisplayChange() {
+    for (int i = 0; i < QUICK_SLOT_COUNT; i++) {
+      if (quickSlotBoxes[i] == null) continue;
+      quickSlotBoxes[i].layoutInitialized = false;
+      quickSlotBoxes[i].widthScale = saneScale(quickSlotBoxes[i].widthScale);
+      quickSlotBoxes[i].heightScale = saneScale(quickSlotBoxes[i].heightScale);
+      quickSlotGuiOffsetX[i] = finiteOrZero(quickSlotGuiOffsetX[i]);
+      quickSlotGuiOffsetY[i] = finiteOrZero(quickSlotGuiOffsetY[i]);
+    }
+    for (ChatBarButtonItem item : chatBarButtons) {
+      item.layoutInitialized = false;
+      item.offsetX = finiteOrZero(item.offsetX);
+      item.offsetY = finiteOrZero(item.offsetY);
+      item.widthScale = saneScale(item.widthScale);
+      item.heightScale = saneScale(item.heightScale);
+    }
+    xpGuiLayoutInitialized = false;
+    xpGuiOffsetX = finiteOrZero(xpGuiOffsetX);
+    xpGuiOffsetY = finiteOrZero(xpGuiOffsetY);
+    xpGuiWidthScale = saneScale(xpGuiWidthScale);
+    xpGuiHeightScale = saneScale(xpGuiHeightScale);
+    lastHudLayoutWidth = -1;
+    lastHudLayoutHeight = -1;
+  }
+
   private QuickBarLayout quickBarLayout() {
-    float screenWidth = Gdx.graphics.getWidth();
-    float screenHeight = Gdx.graphics.getHeight();
+    float screenWidth = Math.max(1, Gdx.graphics.getWidth());
+    float screenHeight = Math.max(1, Gdx.graphics.getHeight());
     float scale = Math.min(1f, screenWidth / CHAT_BAR_WIDTH);
     float barX = (screenWidth - CHAT_BAR_WIDTH * scale) * 0.5f;
     float barY = screenHeight - CHAT_BAR_HEIGHT * scale;
@@ -881,11 +933,15 @@ public class PlayerHUD {
 
   private QuickSlotBox syncQuickSlotBox(QuickBarLayout layout, int index) {
     QuickSlotBox box = quickSlotBoxes[index];
-    if (box.layoutInitialized) {
+    if (box.layoutInitialized && layout.scale > 0.05f) {
       quickSlotGuiOffsetX[index] += (box.getX() - box.lastX) / layout.scale;
       quickSlotGuiOffsetY[index] += (box.getY() - box.lastY) / layout.scale;
-      if (box.lastWidth > 0f) box.widthScale *= box.getWidth() / box.lastWidth;
-      if (box.lastHeight > 0f) box.heightScale *= box.getHeight() / box.lastHeight;
+      if (box.lastWidth > 1f) box.widthScale *= box.getWidth() / box.lastWidth;
+      if (box.lastHeight > 1f) box.heightScale *= box.getHeight() / box.lastHeight;
+      quickSlotGuiOffsetX[index] = finiteOrZero(quickSlotGuiOffsetX[index]);
+      quickSlotGuiOffsetY[index] = finiteOrZero(quickSlotGuiOffsetY[index]);
+      box.widthScale = saneScale(box.widthScale);
+      box.heightScale = saneScale(box.heightScale);
     } else {
       box.layoutInitialized = true;
     }
@@ -943,11 +999,15 @@ public class PlayerHUD {
     for (ChatBarButtonItem item : chatBarButtons) {
       float baseWidth = 40f * layout.scale;
       float baseHeight = 40f * layout.scale;
-      if (item.layoutInitialized) {
+      if (item.layoutInitialized && layout.scale > 0.05f) {
         item.offsetX += (item.button.getX() - item.lastX) / layout.scale;
         item.offsetY += (item.button.getY() - item.lastY) / layout.scale;
-        if (item.lastWidth > 0f) item.widthScale *= item.button.getWidth() / item.lastWidth;
-        if (item.lastHeight > 0f) item.heightScale *= item.button.getHeight() / item.lastHeight;
+        if (item.lastWidth > 1f) item.widthScale *= item.button.getWidth() / item.lastWidth;
+        if (item.lastHeight > 1f) item.heightScale *= item.button.getHeight() / item.lastHeight;
+        item.offsetX = finiteOrZero(item.offsetX);
+        item.offsetY = finiteOrZero(item.offsetY);
+        item.widthScale = saneScale(item.widthScale);
+        item.heightScale = saneScale(item.heightScale);
       } else {
         item.layoutInitialized = true;
       }

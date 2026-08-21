@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Corrupted Goblin", x = 1029, y = 1665, z = 1, stationary = false, aggressive = true)
@@ -107,7 +109,7 @@ public final class CorruptedGoblin extends DataMonster {
         30000L,
         "Goblin#l",
         "GoblinA#i",
-        "GoblinC#o",
+        "GoblinC!o",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

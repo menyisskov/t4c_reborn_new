@@ -13,7 +13,6 @@ import static com.perso.T4C.config.GameConstants.NPC_PATROL_PAUSE_MAX;
 import static com.perso.T4C.config.GameConstants.NPC_PATROL_PAUSE_MIN;
 import static com.perso.T4C.config.GameConstants.NPC_PATROL_RADIUS;
 import static com.perso.T4C.config.GameConstants.NPC_SPEED;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Rectangle;
@@ -24,9 +23,7 @@ import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.model.Stats;
-import com.perso.T4C.monster.core.*;
-import com.perso.T4C.npc.registry.*;
-import com.perso.T4C.npc.registry.NpcDamageCallback;
+import com.perso.T4C.movement.BaseMovement;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.SystemMessage;
 import java.util.ArrayList;
@@ -62,7 +59,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   protected final NPCAnimations animations;
 
-  protected final NPCMovement movement;
+  protected final BaseMovement movement;
 
   protected Vector2 patrolTarget = null;
 
@@ -118,7 +115,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   protected float attackCooldownTimer = 0f;
 
-  @Setter private NpcDamageCallback damageCallback = null;
+  @Setter private DamageCallback damageCallback = null;
 
   protected BaseNPC(String name, Object... parts) throws GameException {
 
@@ -135,9 +132,9 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
     this.position.set(0f, 0f);
 
-    this.animations = new NPCAnimations(spriteBase, NpcSoundProfile.forClass(getClass()), parts);
+    this.animations = new NPCAnimations(spriteBase, NPCAnimations.Sounds.forClass(getClass()), parts);
 
-    this.movement = new NPCMovement();
+    this.movement = new QuietMovement();
 
     this.level = 1;
 
@@ -685,8 +682,8 @@ public abstract class BaseNPC extends Stats implements Nameable {
     }
   }
 
-  private NpcSoundProfile soundProfile() {
-    return NpcSoundProfile.forClass(getClass());
+  private NPCAnimations.Sounds soundProfile() {
+    return NPCAnimations.Sounds.forClass(getClass());
   }
 
   public void onAttackHit(Player player) {}
@@ -1233,5 +1230,15 @@ public abstract class BaseNPC extends Stats implements Nameable {
     }
 
     return lines;
+  }
+
+  @FunctionalInterface
+  public interface DamageCallback {
+    void applyDamage(BaseNPC attacker, int damage);
+  }
+
+  private static final class QuietMovement extends BaseMovement {
+    @Override
+    protected void logDirectionChange(float dx, float worldDy) {}
   }
 }

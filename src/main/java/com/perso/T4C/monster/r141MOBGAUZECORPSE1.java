@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 
 public final class r141MOBGAUZECORPSE1 extends DataMonster {
   public static final String SOUND_ATTACK = "Mummy Attack.wav";
@@ -27,7 +29,7 @@ public final class r141MOBGAUZECORPSE1 extends DataMonster {
         30000L,
         "Mummy#i",
         "MummyA#j",
-        "MummyC",
+        "MummyC!a",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

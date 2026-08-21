@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Kraanian Flyer", x = 107, y = 1543, z = 2, stationary = false, aggressive = true)
@@ -117,9 +119,9 @@ public final class KraanianFlyer extends DataMonster {
         14,
         33,
         30000L,
-        "",
-        null,
-        null,
+        "KraanianFlying#h",
+        "KraanianFlyingA#h",
+        "KraanianFlyingC!l",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

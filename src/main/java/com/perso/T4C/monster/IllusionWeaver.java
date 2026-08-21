@@ -1,7 +1,8 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
 import com.perso.T4C.spawn.Spawn;
 
@@ -80,7 +81,7 @@ public final class IllusionWeaver extends NamedEventMonster {
         0,
         0,
         0,
-        0,
+        10002,
         0,
         0,
         0,

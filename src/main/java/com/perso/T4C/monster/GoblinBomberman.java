@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 
 public final class GoblinBomberman extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 2.wav";
@@ -34,7 +36,7 @@ public final class GoblinBomberman extends DataMonster {
         30000L,
         "Goblin#l",
         "GoblinA#i",
-        "GoblinC#o",
+        "GoblinC!o",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 
 public final class r184Pilferer extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
@@ -26,7 +28,7 @@ public final class r184Pilferer extends DataMonster {
         30000L,
         "Thief#m",
         "ThiefA#i",
-        "ThiefC#l",
+        "ThiefC!l",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

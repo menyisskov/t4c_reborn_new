@@ -1,9 +1,9 @@
 package com.perso.T4C.input;
 
-import static com.perso.T4C.config.GameConstants.GRID_H;
-import static com.perso.T4C.config.GameConstants.GRID_W;
 import static org.junit.jupiter.api.Assertions.*;
 
+import static com.perso.T4C.config.GameConstants.GRID_H;
+import static com.perso.T4C.config.GameConstants.GRID_W;
 import com.perso.T4C.player.Player;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;

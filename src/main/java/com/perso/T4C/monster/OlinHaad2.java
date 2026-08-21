@@ -1,7 +1,8 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
 
 public final class OlinHaad2 extends NamedEventMonster {
@@ -48,13 +49,13 @@ public final class OlinHaad2 extends NamedEventMonster {
         0,
         0,
         0,
+        10011,
+        278,
+        288,
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
+        296,
         0,
         0,
         0,

@@ -2,7 +2,6 @@ package com.perso.T4C.npc.core;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -10,14 +9,8 @@ import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.monster.core.*;
-import com.perso.T4C.npc.companion.*;
+import com.perso.T4C.npc.companion.CompanionNPC;
 import com.perso.T4C.npc.companion.CompanionManager;
-import com.perso.T4C.npc.registry.*;
-import com.perso.T4C.npc.registry.NpcContext;
-import com.perso.T4C.npc.registry.NpcDamageCallback;
-import com.perso.T4C.npc.registry.NpcFactoryRegistry;
-import com.perso.T4C.npc.script.*;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.spawn.SpawnRegistry;
@@ -91,11 +84,11 @@ public class NPCManager {
     npcs.remove(npc);
   }
 
-  private NpcDamageCallback playerDamageCallback;
+  private BaseNPC.DamageCallback playerDamageCallback;
 
   private Player lifecyclePlayer;
 
-  public void setPlayerDamageCallback(NpcDamageCallback callback) {
+  public void setPlayerDamageCallback(BaseNPC.DamageCallback callback) {
 
     this.playerDamageCallback = callback;
 
@@ -627,7 +620,7 @@ public class NPCManager {
     }
     for (NpcSpawnEntry entry : readJavaSpawns(SpawnRegistry.monsters())) {
 
-      if (entry.z == z && "SUNDIAL".equalsIgnoreCase(entry.type)) {
+      if (entry.z == z && isNpcOwnedMonsterSpawn(entry.type)) {
 
         filtered.add(entry);
       }
@@ -649,6 +642,16 @@ public class NPCManager {
     }
 
     return 0;
+  }
+
+  private static boolean isNpcOwnedMonsterSpawn(String type) {
+
+    if (type == null || type.isBlank()) {
+
+      return false;
+    }
+
+    return "SUNDIAL".equalsIgnoreCase(type) || NpcFactoryRegistry.find(type) != null;
   }
 
   private List<NpcSpawnEntry> readJavaSpawns(

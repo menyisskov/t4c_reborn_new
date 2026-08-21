@@ -2,7 +2,6 @@ package com.perso.T4C.monster.core;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +9,8 @@ import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.MonsterDef;
-import com.perso.T4C.npc.script.*;
+import com.perso.T4C.npc.core.NpcFactoryRegistry;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.SpawnRegistry;
 import java.io.File;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +39,7 @@ public class MonsterManager {
   private java.util.function.BiConsumer<Integer, Vector2> damageDealtCallback;
   private java.util.function.Consumer<BaseMonster> lootCallback;
   private java.util.function.Consumer<BaseMonster> playerKillCallback;
-  private java.util.function.Consumer<com.perso.T4C.npc.script.MonsterScriptBridge.Effects>
-      scriptEffectsCallback;
+  private java.util.function.Consumer<NpcScriptRuntime.Effects> scriptEffectsCallback;
   private Player scriptPlayer;
   private final Set<BaseMonster> notifiedPlayerKills =
       Collections.newSetFromMap(new IdentityHashMap<>());
@@ -120,7 +120,7 @@ public class MonsterManager {
   }
 
   public void setScriptEffectsCallback(
-      java.util.function.Consumer<com.perso.T4C.npc.script.MonsterScriptBridge.Effects> callback) {
+      java.util.function.Consumer<NpcScriptRuntime.Effects> callback) {
     scriptEffectsCallback = callback;
     for (BaseMonster monster : monsters) monster.setScriptEffectsCallback(callback);
   }
@@ -262,32 +262,32 @@ public class MonsterManager {
   private void emitSpawn(BaseMonster monster) {
     if (scriptPlayer == null || !notifiedSpawns.add(monster)) return;
     if (monster instanceof MonsterLifecycle lifecycle) emit(lifecycle.onSpawn(scriptPlayer));
-    if (monster instanceof DataMonster data) emit(MonsterScriptBridge.spawn(data, scriptPlayer));
+    else if (monster instanceof DataMonster data) emit(NpcScriptRuntime.spawn(data, scriptPlayer));
   }
 
   private void emit(BaseMonster monster, String event, Player player) {
     if (player == null) return;
     if (monster instanceof MonsterLifecycle lifecycle) {
-      MonsterScriptBridge.Effects effects =
+      NpcScriptRuntime.Effects effects =
           switch (event) {
             case "OnAttacked" -> lifecycle.onAttacked(player);
             case "OnHit" -> lifecycle.onHit(player);
             case "OnAttackHit" -> lifecycle.onAttackHit(player);
-            default -> MonsterScriptBridge.Effects.empty();
+            default -> NpcScriptRuntime.Effects.empty();
           };
       emit(effects);
     } else if (monster instanceof DataMonster data) {
       emit(
           switch (event) {
-            case "OnAttacked" -> MonsterScriptBridge.attacked(data, player);
-            case "OnHit" -> MonsterScriptBridge.hit(data, player);
-            case "OnAttackHit" -> MonsterScriptBridge.attackHit(data, player);
-            default -> MonsterScriptBridge.Effects.empty();
+            case "OnAttacked" -> NpcScriptRuntime.attacked(data, player);
+            case "OnHit" -> NpcScriptRuntime.hit(data, player);
+            case "OnAttackHit" -> NpcScriptRuntime.attackHit(data, player);
+            default -> NpcScriptRuntime.Effects.empty();
           });
     }
   }
 
-  private void emit(MonsterScriptBridge.Effects effects) {
+  private void emit(NpcScriptRuntime.Effects effects) {
     if (scriptEffectsCallback != null && effects != null) scriptEffectsCallback.accept(effects);
   }
 
@@ -493,7 +493,9 @@ public class MonsterManager {
         }
         MonsterDef def = MonsterRegistry.findByName(entry.type);
         if (def == null) {
-          if ("SUNDIAL".equalsIgnoreCase(entry.type)) {
+          // Hostile scripted NPCs (Skraug, Jarko, …) are registered as SpawnKind.MONSTER
+          // but spawned by NPCManager. Skip them here without a missing-def warning.
+          if (isNpcOwnedSpawn(entry.type)) {
             continue;
           }
           log.warn(
@@ -537,6 +539,11 @@ public class MonsterManager {
     if (lower.contains("/moontug/")) return 2;
     if (lower.contains("/ravensdust/")) return 4;
     return 0;
+  }
+
+  private static boolean isNpcOwnedSpawn(String type) {
+    return type != null
+        && ("SUNDIAL".equalsIgnoreCase(type) || NpcFactoryRegistry.find(type) != null);
   }
 
   private List<MonsterSpawnEntry> readJavaSpawns() {

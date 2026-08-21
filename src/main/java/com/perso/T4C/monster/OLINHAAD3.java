@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Olin Haad", x = 2211, y = 2811, z = 1, stationary = false, aggressive = false)
@@ -51,12 +53,12 @@ public final class OLINHAAD3 extends DataMonster {
         0,
         1176256512,
         10011,
+        278,
+        288,
         0,
         0,
         0,
-        0,
-        0,
-        0,
+        296,
         0,
         0,
         -100,

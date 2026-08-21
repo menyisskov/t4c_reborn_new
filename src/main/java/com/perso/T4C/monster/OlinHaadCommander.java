@@ -1,7 +1,8 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
 import com.perso.T4C.spawn.Spawn;
 
@@ -51,14 +52,14 @@ public final class OlinHaadCommander extends NamedEventMonster {
         0,
         1088421888,
         10011,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        269,
+        265,
+        259,
+        270,
+        268,
+        277,
+        273,
+        287,
         100,
         0,
         0,

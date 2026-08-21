@@ -13,7 +13,6 @@ import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILE
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 import static com.perso.T4C.config.GameConstants.MONSTER_ATTACK_RANGE;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -28,11 +27,10 @@ import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.core.MonsterDef;
-import com.perso.T4C.monster.core.*;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterAnimations;
 import com.perso.T4C.monster.core.MonsterRegistry;
-import com.perso.T4C.npc.core.*;
+import com.perso.T4C.npc.core.BaseNPC;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.CompanionCastVfxHook;
 import com.perso.T4C.spell.SpellData;

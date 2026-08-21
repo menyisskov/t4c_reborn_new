@@ -1,7 +1,9 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.DataMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Toll Troll", x = 1905, y = 2711, z = 0, stationary = false, aggressive = true)
@@ -42,7 +44,7 @@ public final class r247TollTroll extends DataMonster {
         30000L,
         "GreenTroll#f",
         "GreenTrollA#g",
-        "GreenTrollC#k",
+        "GreenTrollC!k",
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,

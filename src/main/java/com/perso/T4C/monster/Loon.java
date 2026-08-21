@@ -1,7 +1,8 @@
 package com.perso.T4C.monster;
 
+import java.util.Map;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.*;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
 
 public final class Loon extends NamedEventMonster {
@@ -51,12 +52,12 @@ public final class Loon extends NamedEventMonster {
         0,
         1075838976,
         10011,
+        8,
+        288,
         0,
         0,
-        40020,
         0,
-        0,
-        0,
+        5,
         0,
         0,
         50,

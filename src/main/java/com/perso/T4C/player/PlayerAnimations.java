@@ -1,5 +1,6 @@
 package com.perso.T4C.player;
 
+import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -13,9 +14,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.perso.T4C.entity.EntityAnimationsBase;
+import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpriteLoader;
-import com.perso.T4C.npc.core.*;
 import com.perso.T4C.render.SpriteOffsetUtil;
 import java.nio.IntBuffer;
 import java.util.*;
@@ -25,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Slf4j
 public class PlayerAnimations extends EntityAnimationsBase {
-  private static final float FRAME_DURATION = 0.05f;
   private final Map<BodyPart, String> partMap = new EnumMap<>(BodyPart.class);
   private final Map<String, Map<String, List<TextureRegion>>> animations = new HashMap<>();
   private final Map<String, Map<String, List<TextureRegion>>> attackAnimations = new HashMap<>();
@@ -82,8 +82,9 @@ public class PlayerAnimations extends EntityAnimationsBase {
   public void update(float delta, boolean moving) {
     if (attacking) {
       attackTimer += delta;
-      if (attackTimer > FRAME_DURATION) {
-        attackTimer = 0f;
+      float frameDuration = NativeTimingProfile.current().frameDurationSeconds();
+      if (attackTimer >= frameDuration) {
+        attackTimer -= frameDuration;
         attackFrame++;
         int max = 1;
         Map<String, Map<String, List<TextureRegion>>> activeAttack =
@@ -253,7 +254,7 @@ public class PlayerAnimations extends EntityAnimationsBase {
     int frameIndex =
         attackPoseVisible
             ? (bodyResolved.attackSequence ? Math.min(attackFrame, bodyFrames.size() - 1) : 0)
-            : (moving ? (int) (animTimer / FRAME_DURATION) % bodyFrames.size() : 0);
+            : (moving ? (int) (animTimer / NativeTimingProfile.current().frameDurationSeconds()) % bodyFrames.size() : 0);
     BodyPart[] order =
         PuppetBodyOrder.getBodyPartsOrder(
             effAngle,
@@ -305,7 +306,7 @@ public class PlayerAnimations extends EntityAnimationsBase {
     int frameIndex =
         attackPoseVisible
             ? (bodyResolved.attackSequence ? Math.min(attackFrame, bodyFrames.size() - 1) : 0)
-            : (moving ? (int) (animTimer / FRAME_DURATION) % bodyFrames.size() : 0);
+            : (moving ? (int) (animTimer / NativeTimingProfile.current().frameDurationSeconds()) % bodyFrames.size() : 0);
     BodyPart[] order =
         PuppetBodyOrder.getBodyPartsOrder(
             angle,

@@ -1,7 +1,6 @@
 package com.perso.T4C.screens;
 
 import static com.perso.T4C.config.GameConstants.*;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -27,7 +26,9 @@ import com.perso.T4C.combat.CombatProfiles;
 import com.perso.T4C.combat.CombatResolver;
 import com.perso.T4C.combat.CombatResult;
 import com.perso.T4C.combat.PhysicalAttackRequest;
+import com.perso.T4C.combat.SeraphArrivalAnimation;
 import com.perso.T4C.combat.SeraphAuraService;
+import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.death.DeathPenaltyService;
@@ -59,7 +60,15 @@ import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.input.*;
+import com.perso.T4C.input.ClickToMoveHandler;
+import com.perso.T4C.input.GameInputHandler;
+import com.perso.T4C.input.GmCommandProcessor;
+import com.perso.T4C.input.GroundItemClickHandler;
+import com.perso.T4C.input.HerbInputHandler;
+import com.perso.T4C.input.MonsterInputHandler;
+import com.perso.T4C.input.NPCInputHandler;
+import com.perso.T4C.input.ObjectClickHandler;
+import com.perso.T4C.input.TileClickHandler;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.BaseMonster;
@@ -73,8 +82,8 @@ import com.perso.T4C.npc.companion.CompanionRegistry;
 import com.perso.T4C.npc.companion.TamedCompanionFactory;
 import com.perso.T4C.npc.core.BaseNPC;
 import com.perso.T4C.npc.core.NPCManager;
-import com.perso.T4C.npc.registry.NpcFactoryRegistry;
-import com.perso.T4C.npc.script.NpcSummonBridge;
+import com.perso.T4C.npc.core.NpcFactoryRegistry;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
@@ -87,6 +96,7 @@ import com.perso.T4C.spell.SpellCastingService;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellEffectManager;
 import com.perso.T4C.spell.SpellRegistry;
+import com.perso.T4C.spell.SpellVisualResolver;
 import com.perso.T4C.spell.TameChannel;
 import com.perso.T4C.spell.TameValidator;
 import com.perso.T4C.ui.FloatingDamage;
@@ -218,6 +228,8 @@ public class MainGameScreen implements Screen {
   private int lastAmbientMusicTileY = Integer.MIN_VALUE;
   private long teleportCooldownUntilMs = 0L;
   private long lastTeleportSourceKey = Long.MIN_VALUE;
+  private SeraphArrivalAnimation.Kind seraphArrivalKind;
+  private boolean seraphArrivalPlaying;
 
   public MainGameScreen(MyGame game) throws GameException {
     this(game, false);
@@ -286,7 +298,6 @@ public class MainGameScreen implements Screen {
   private void initializePlayerAndServices() throws GameException {
     initializePlayer();
     questService = new QuestService(xpCurve, this::savePlayerState, this::showSystemMessage);
-    updateAmbientMusicForPlayer();
   }
 
   private void initializeMapRendering() throws GameException {
@@ -295,8 +306,9 @@ public class MainGameScreen implements Screen {
   }
 
   private void initializeWorldEntities() {
-    npcManager = createNpcManager();
     monsterManager = createMonsterManager();
+    npcManager = createNpcManager();
+    npcManager.triggerPopupEvents(player);
   }
 
   private void initializeCompanionAndCallbacks() throws GameException {
@@ -763,7 +775,6 @@ public class MainGameScreen implements Screen {
     try {
       String mapPath = currentMap != null ? currentMap.getMapPath() : Paths.MAP;
       manager.initializeNpcsFromMap(mapPath);
-      manager.triggerPopupEvents(player);
     } catch (GameException e) {
       log.error("Failed to initialize NPCs from map json", e);
     }
@@ -772,7 +783,7 @@ public class MainGameScreen implements Screen {
 
   private MonsterManager createMonsterManager() {
     MonsterManager manager = new MonsterManager(outlineShader);
-    NpcSummonBridge.setSummonCallback(
+    NpcScriptRuntime.setSummonCallback(
         (name, x, y, z) -> {
           if (currentMap == null || currentMap.getZ() != z) return false;
           if (manager.spawnMonster(name, x, y, false)) return true;
@@ -842,12 +853,11 @@ public class MainGameScreen implements Screen {
     monsterManager.setDeathCallback(
         monster -> {
           if (monster instanceof com.perso.T4C.monster.core.DataMonster dataMonster) {
-            com.perso.T4C.npc.script.MonsterScriptBridge.Effects effects =
-                com.perso.T4C.npc.script.MonsterScriptBridge.Effects.empty();
+            NpcScriptRuntime.Effects effects = NpcScriptRuntime.Effects.empty();
             if (monster instanceof com.perso.T4C.monster.core.MonsterLifecycle lifecycle) {
               effects = lifecycle.onDeath(player);
             } else {
-              effects = com.perso.T4C.npc.script.MonsterScriptBridge.death(dataMonster, player);
+              effects = NpcScriptRuntime.death(dataMonster, player);
             }
             effects.messages().forEach(this::showSystemMessage);
             for (String spell : effects.targetSpells()) {
@@ -865,8 +875,8 @@ public class MainGameScreen implements Screen {
                     data.getName(), monster.getPosition().x, monster.getPosition().y);
             }
           }
-          NpcSummonBridge.DeathEffect summonEffect =
-              NpcSummonBridge.summonedMonsterDefeated(monster.getName());
+          NpcScriptRuntime.DeathEffect summonEffect =
+              NpcScriptRuntime.summonedMonsterDefeated(monster.getName());
           if (summonEffect != null) {
             if (summonEffect.itemKey() != null && !summonEffect.itemKey().isBlank())
               com.perso.T4C.item.InventoryService.add(player, summonEffect.itemKey());
@@ -928,7 +938,10 @@ public class MainGameScreen implements Screen {
                     ThreadLocalRandom.current());
             int damage = result.damage();
             if (!result.hit()) {
-              log.info("{} misses player (precision={})", attacker.getName(), result.precision());
+              log.info(
+                  "{} misses player (precision={})",
+                  attacker.getCanonicalName(),
+                  result.precision());
               return;
             }
             monsterManager.notifyMonsterAttackHit(attacker, player);
@@ -952,7 +965,7 @@ public class MainGameScreen implements Screen {
             } else {
               log.info(
                   "{} hit player, but armor absorbed all {} raw damage (AC={})",
-                  attacker.getName(),
+                  attacker.getCanonicalName(),
                   rawDamage,
                   playerProfile.armorClass());
             }
@@ -960,51 +973,28 @@ public class MainGameScreen implements Screen {
 
           @Override
           public void applySpell(BaseMonster attacker, int spellId, int rawDamage) {
-            if (spellId == 10596 && attacker.getName().contains("Makrsh")) {
+            if (spellId == 10596) {
+              SpellData teleport = SpellRegistry.findById(spellId);
+              Vector2 origin = attacker.getPosition().cpy();
               Vector2 target = player.getPositionVector();
               float angle = (float) (Math.random() * Math.PI * 2.0);
               float distance = 6f * GRID_W;
+              playNpcSelfVfx(teleport, origin);
               attacker.teleportTo(
                   target.x + (float) Math.cos(angle) * distance,
                   target.y + (float) Math.sin(angle) * distance);
+              playNpcSelfVfx(teleport, attacker.getPosition().cpy());
               return;
             }
             SpellData spell = SpellRegistry.findById(spellId);
-            String element = spell == null ? (spellId == 10120 ? "air" : "water") : elementName(spell.getElement());
-            String legacyProjectile = spellId == 10086 ? "64kSpellEnergyBallBlue-" : null;
-            String legacyImpact = spellId == 10086 ? "SmallExplosion-" : null;
-            String legacySound = spellId == 10086 ? "Small Projectile.wav" : null;
-            String launchSound = spell == null ? null : spell.getSound();
-            if (launchSound == null || launchSound.isBlank()) {
-              launchSound = legacySound != null ? legacySound : "Small Projectile.wav";
-            }
-            spellRenderer.playLaunchSound(launchSound);
-            String projectile =
+            String element =
                 spell == null
-                    ? (legacyProjectile != null
-                        ? legacyProjectile
-                        : (spellId == 10120 ? "Lightning" : "PoisonArrow"))
-                    : spell.getProjectileSpell();
-            String impactSpell = spell == null ? null : spell.getImpactSpell();
-            final String projectileName =
-                projectile == null || projectile.isBlank() ? "PoisonArrow" : projectile;
+                    ? (spellId == 10120 ? "air" : "water")
+                    : elementName(spell.getElement());
             int resistance = Math.max(1, player.getElementResistance(element));
             int damage = Math.max(0, rawDamage * 100 / resistance);
             Runnable impact =
                 () -> {
-                  String impactEffect =
-                      impactSpell == null || impactSpell.isBlank()
-                          ? projectileName + "000"
-                          : impactSpell;
-                  String impactSound = spell == null ? null : spell.getSoundImpact();
-                  if (impactSound == null || impactSound.isBlank()) {
-                    impactSound = legacySound != null ? legacySound : "Explosion.wav";
-                  }
-                  spellRenderer.triggerImpactSpell(
-                      legacyImpact != null ? legacyImpact : impactEffect,
-                      player.getPositionVector().x,
-                      player.getPositionVector().y,
-                      impactSound);
                   Vector2 impactPosition = player.getPositionVector().cpy();
                   player.takeDamage(damage);
                   int appliedDamage = player.getLastDamageTaken();
@@ -1018,24 +1008,45 @@ public class MainGameScreen implements Screen {
                   }
                   log.info(
                       "{} spell {} hits player for {} damage ({} resistance={})",
-                      attacker.getName(),
+                      attacker.getCanonicalName(),
                       spellId,
                       appliedDamage,
                       element,
                       resistance);
                 };
-            Vector2 origin = attacker.getPosition();
-            ProjectileDirection direction =
-                computeProjectileDirection(origin, player.getPositionVector());
+            if (spell != null) {
+              playNpcCastVfx(spell, player, attacker.getPosition().cpy(), impact);
+              return;
+            }
+            String legacyProjectile =
+                spellId == 10086
+                    ? "64kSpellEnergyBallBlue-"
+                    : spellId == 10120 ? "Lightning" : "PoisonArrow";
+            String legacyImpact = spellId == 10086 ? "SmallExplosion-" : legacyProjectile;
+            spellRenderer.playLaunchSound("Small Projectile.wav");
             boolean launched =
                 spellRenderer.launchProjectile(
-                    projectileName + direction.angle,
+                    legacyProjectile,
                     player,
-                    origin.x,
-                    origin.y,
-                    direction.flipX,
-                    impact);
-            if (!launched) impact.run();
+                    attacker.getPosition().x,
+                    attacker.getPosition().y,
+                    false,
+                    () -> {
+                      spellRenderer.triggerImpactSpell(
+                          legacyImpact,
+                          player.getPositionVector().x,
+                          player.getPositionVector().y,
+                          "Explosion.wav");
+                      impact.run();
+                    });
+            if (!launched) {
+              spellRenderer.triggerImpactSpell(
+                  legacyImpact,
+                  player.getPositionVector().x,
+                  player.getPositionVector().y,
+                  "Explosion.wav");
+              impact.run();
+            }
           }
         });
     monsterManager.setLootCallback(
@@ -1063,7 +1074,7 @@ public class MainGameScreen implements Screen {
   private static String elementName(int element) {
     return switch (element) {
       case 1 -> "fire";
-      case 2 -> "water";
+      case 2 -> "earth";
       case 3 -> "air";
       case 4 -> "water";
       case 5 -> "light";
@@ -1129,17 +1140,15 @@ public class MainGameScreen implements Screen {
         });
   }
 
-  private static com.perso.T4C.npc.script.MonsterScriptBridge.Effects mergeMonsterEffects(
-      com.perso.T4C.npc.script.MonsterScriptBridge.Effects first,
-      com.perso.T4C.npc.script.MonsterScriptBridge.Effects second) {
+  private static NpcScriptRuntime.Effects mergeMonsterEffects(
+      NpcScriptRuntime.Effects first, NpcScriptRuntime.Effects second) {
     java.util.List<String> messages = new java.util.ArrayList<>(first.messages());
     messages.addAll(second.messages());
     java.util.List<String> selfSpells = new java.util.ArrayList<>(first.selfSpells());
     selfSpells.addAll(second.selfSpells());
     java.util.List<String> targetSpells = new java.util.ArrayList<>(first.targetSpells());
     targetSpells.addAll(second.targetSpells());
-    return new com.perso.T4C.npc.script.MonsterScriptBridge.Effects(
-        messages, selfSpells, targetSpells);
+    return new NpcScriptRuntime.Effects(messages, selfSpells, targetSpells);
   }
 
   private void configurePlayerLevelUpCallback() {
@@ -1185,8 +1194,9 @@ public class MainGameScreen implements Screen {
         }
         npcManager.dispose();
       }
-      npcManager = createNpcManager();
       monsterManager = createMonsterManager();
+      npcManager = createNpcManager();
+      npcManager.triggerPopupEvents(player);
       if (companionManager != null) {
         companionManager.setNpcManager(npcManager);
         npcManager.setCompanionManager(companionManager);
@@ -1261,7 +1271,14 @@ public class MainGameScreen implements Screen {
     com.perso.T4C.profiler.FrameEvent frameEvent =
         gameProfiler.isActive() ? new com.perso.T4C.profiler.FrameEvent() : null;
     if (frameEvent != null) frameEvent.begin();
-    section("input", () -> inputHandler.handleInput(delta, player));
+    section(
+        "input",
+        () -> {
+          if (seraphArrivalBlocksMovement()) {
+            return;
+          }
+          inputHandler.handleInput(delta, player);
+        });
     section("teleport", this::updateTeleportForPlayer);
     section("entities", () -> updateEntities(delta));
     section(
@@ -1582,12 +1599,10 @@ public class MainGameScreen implements Screen {
       teleported = true;
       savePlayerState();
     }
-    spellRenderer.playLaunchSound(spell.getSound());
-    spellRenderer.playImpactSound(spell.getSoundImpact());
-    String impact = spell.getImpactSpell();
-    if (impact == null || impact.isEmpty()) {
-      impact = spell.getProjectileSpell();
-    }
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
+    spellRenderer.playImpactSound(visuals.impactSound());
+    String impact = visuals.impact();
     if (impact != null && !impact.isEmpty()) {
       spellRenderer.triggerImpactSpell(impact, player);
     }
@@ -1982,10 +1997,11 @@ public class MainGameScreen implements Screen {
   private void launchAttackSpell(SpellData spell, BaseMonster monster) {
     if (monster == null || monster.isDead()) return;
     Vector2 playerPos = player.getPositionVector();
-    spellRenderer.playLaunchSound(spell.getSound());
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
     float startX = playerPos.x;
     float startY = playerPos.y;
-    String projectileSpell = spell.getProjectileSpell();
+    String projectileSpell = visuals.projectile();
     if (projectileSpell == null || projectileSpell.isEmpty()) {
       applySpellImpact(spell, monster);
     } else {
@@ -2061,10 +2077,11 @@ public class MainGameScreen implements Screen {
     if (npc == null) return;
     Vector2 playerPos = player.getPositionVector();
     Vector2 npcPos = npc.getPosition();
-    spellRenderer.playLaunchSound(spell.getSound());
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
     float startX = playerPos.x;
     float startY = playerPos.y;
-    String projectileSpell = spell.getProjectileSpell();
+    String projectileSpell = visuals.projectile();
     if (projectileSpell == null || projectileSpell.isEmpty()) {
       applyNpcSpellImpact(spell, npc);
       return;
@@ -2124,10 +2141,11 @@ public class MainGameScreen implements Screen {
     } else if (!vaporize && healthDelta > 0) {
       npc.setCurrentHp(Math.min(npc.getMaxHp(), npc.getCurrentHp() + healthDelta));
     }
-    String impact = spell.getImpactSpell();
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    String impact = visuals.impact();
     if (impact != null && !impact.isEmpty()) {
       Vector2 position = npc.getPosition();
-      spellRenderer.triggerImpactSpell(impact, position.x, position.y, spell.getSoundImpact());
+      spellRenderer.triggerImpactSpell(impact, position.x, position.y, visuals.impactSound());
     }
   }
 
@@ -2700,10 +2718,11 @@ public class MainGameScreen implements Screen {
     }
     if (installHooks) spellEffectManager.installTimedHooks(spell, player, monster);
     applySummons(impactResult.summons(), monster.getPosition().x, monster.getPosition().y);
-    String impact = spell.getImpactSpell();
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    String impact = visuals.impact();
     if (impact != null && !impact.isEmpty()) {
       Vector2 pos = monster.getPosition();
-      spellRenderer.triggerImpactSpell(impact, pos.x, pos.y, spell.getSoundImpact());
+      spellRenderer.triggerImpactSpell(impact, pos.x, pos.y, visuals.impactSound());
     }
   }
 
@@ -2752,7 +2771,8 @@ public class MainGameScreen implements Screen {
   }
 
   private void launchPositionSpell(SpellData spell, Vector2 targetPosition) {
-    spellRenderer.playLaunchSound(spell.getSound());
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
     applySummons(
         spellEffectManager.resolvePositionSummons(spell), targetPosition.x, targetPosition.y);
     if (spell.getRadius() > 0 && monsterManager != null) {
@@ -2765,9 +2785,9 @@ public class MainGameScreen implements Screen {
         applyResolvedSpellImpact(spell, candidate, range, true);
       }
     }
-    if (spell.getImpactSpell() != null && !spell.getImpactSpell().isEmpty()) {
+    if (visuals.impact() != null && !visuals.impact().isEmpty()) {
       spellRenderer.triggerImpactSpell(
-          spell.getImpactSpell(), targetPosition.x, targetPosition.y, spell.getSoundImpact());
+          visuals.impact(), targetPosition.x, targetPosition.y, visuals.impactSound());
     }
   }
 
@@ -3288,10 +3308,11 @@ public class MainGameScreen implements Screen {
           addEntityRenderItem(
               entityItems,
               npc.hasObjectAppearance()
-                  ? npc.getTileY()
+                  ? npc.getTileY() + 0.5f
                   : playerRenderDepth(npc.getTileY() * GRID_H),
               () -> npc.render(batchDecor, outlineShader));
       item.revealThroughDecor = true;
+      item.opaqueOcclusionReveal = npc.hasObjectAppearance();
       item.occlusionRevealAction = () -> npc.renderOcclusionReveal(batchDecor);
       item.revealX = npcRenderBoundsTemp.x;
       item.revealY = npcRenderBoundsTemp.y;
@@ -3311,7 +3332,7 @@ public class MainGameScreen implements Screen {
   }
 
   private void addPlayerRenderItem(List<ObjectRenderer.RenderItem> entityItems) {
-    if (player == null) {
+    if (player == null || !seraphArrivalShowsPlayer()) {
       return;
     }
     Vector2 pos = player.getPositionVector();
@@ -3527,6 +3548,7 @@ public class MainGameScreen implements Screen {
     item.revealW = 0f;
     item.revealH = 0f;
     item.revealAfterDecor = null;
+    item.opaqueOcclusionReveal = false;
     item.y = 0f;
     return item;
   }
@@ -3549,6 +3571,7 @@ public class MainGameScreen implements Screen {
       item.revealW = 0f;
       item.revealH = 0f;
       item.revealAfterDecor = null;
+      item.opaqueOcclusionReveal = false;
       renderItemPool.addLast(item);
     }
   }
@@ -3578,6 +3601,53 @@ public class MainGameScreen implements Screen {
   @Override
   public void show() {
     if (!displayInitialized) initializeDisplay();
+    lastAmbientMusicTileX = Integer.MIN_VALUE;
+    lastAmbientMusicTileY = Integer.MIN_VALUE;
+    updateAmbientMusicForPlayer();
+    startSeraphArrivalIfNeeded();
+  }
+
+  private void startSeraphArrivalIfNeeded() {
+    if (seraphArrivalPlaying || player == null) {
+      return;
+    }
+    if (!GamePreferencesStore.get().isSeraphAnimation()) {
+      return;
+    }
+    seraphArrivalKind = SeraphArrivalAnimation.kindOf(player);
+    if (seraphArrivalKind == null) {
+      return;
+    }
+    Vector2 position = player.getPositionVector();
+    spellRenderer.triggerImpactSpell(
+        seraphArrivalKind.spritePrefix(),
+        position.x,
+        position.y,
+        seraphArrivalKind.sound());
+    seraphArrivalPlaying = spellRenderer.hasActiveImpact(seraphArrivalKind.spritePrefix());
+  }
+
+  private boolean seraphArrivalActive() {
+    return seraphArrivalPlaying
+        && seraphArrivalKind != null
+        && spellRenderer.hasActiveImpact(seraphArrivalKind.spritePrefix());
+  }
+
+  private int seraphArrivalFrame() {
+    if (!seraphArrivalActive()) {
+      return Integer.MAX_VALUE;
+    }
+    return Math.max(0, spellRenderer.currentImpactFrameIndex(seraphArrivalKind.spritePrefix()));
+  }
+
+  private boolean seraphArrivalShowsPlayer() {
+    return SeraphArrivalAnimation.playerVisible(
+        seraphArrivalKind, seraphArrivalFrame(), seraphArrivalActive());
+  }
+
+  private boolean seraphArrivalBlocksMovement() {
+    return !SeraphArrivalAnimation.movementAllowed(
+        seraphArrivalKind, seraphArrivalFrame(), seraphArrivalActive());
   }
 
   private void initializeHud() {
@@ -3662,11 +3732,11 @@ public class MainGameScreen implements Screen {
 
   private void playNpcSelfVfx(SpellData spell, Vector2 casterPosition) {
     if (spell == null || casterPosition == null) return;
-    spellRenderer.playLaunchSound(spell.getSound());
-    String impact = spell.getImpactSpell();
-    if (impact == null || impact.isEmpty()) impact = spell.getProjectileSpell();
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
+    String impact = visuals.impact();
     if (impact != null && !impact.isEmpty()) {
-      spellRenderer.playImpactSound(spell.getSoundImpact());
+      spellRenderer.playImpactSound(visuals.impactSound());
       spellRenderer.triggerImpactSpell(impact, casterPosition.x, casterPosition.y);
     }
   }
@@ -3679,20 +3749,18 @@ public class MainGameScreen implements Screen {
       }
       return;
     }
-    spellRenderer.playLaunchSound(spell.getSound());
-    String impact = spell.getImpactSpell();
-    if (impact == null || impact.isEmpty()) {
-      impact = spell.getProjectileSpell();
-    }
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
+    String impact = visuals.impact();
     if (impact == null || impact.isEmpty()) {
       if (onLanded != null) {
         onLanded.run();
       }
       return;
     }
-    String projectileSpell = spell.getProjectileSpell();
+    String projectileSpell = visuals.projectile();
     if (projectileSpell == null || projectileSpell.isEmpty() || casterPosition == null) {
-      spellRenderer.playImpactSound(spell.getSoundImpact());
+      spellRenderer.playImpactSound(visuals.impactSound());
       spellRenderer.triggerImpactSpell(impact, castOn);
       if (onLanded != null) {
         onLanded.run();
@@ -3703,7 +3771,7 @@ public class MainGameScreen implements Screen {
     final String impactEffect = impact;
     Runnable onImpact =
         () -> {
-          spellRenderer.playImpactSound(spell.getSoundImpact());
+          spellRenderer.playImpactSound(visuals.impactSound());
           spellRenderer.triggerImpactSpell(impactEffect, castOn);
           if (onLanded != null) {
             onLanded.run();
@@ -3747,22 +3815,20 @@ public class MainGameScreen implements Screen {
     if (spell == null || target == null || onImpact == null) {
       return;
     }
-    spellRenderer.playLaunchSound(spell.getSound());
-    String impact = spell.getImpactSpell();
-    if (impact == null || impact.isEmpty()) {
-      impact = spell.getProjectileSpell();
-    }
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
+    String impact = visuals.impact();
     final String impactEffect = impact;
     Runnable impactRunnable =
         () -> {
           onImpact.run();
-          spellRenderer.playImpactSound(spell.getSoundImpact());
+          spellRenderer.playImpactSound(visuals.impactSound());
           if (impactEffect != null && !impactEffect.isEmpty()) {
             Vector2 hitPosition = target.getPosition();
             spellRenderer.triggerImpactSpell(impactEffect, hitPosition.x, hitPosition.y);
           }
         };
-    String projectileSpell = spell.getProjectileSpell();
+    String projectileSpell = visuals.projectile();
     if (projectileSpell == null || projectileSpell.isEmpty() || casterPosition == null) {
       impactRunnable.run();
       return;
@@ -3832,13 +3898,11 @@ public class MainGameScreen implements Screen {
       playNpcCastVfx(spell, castOn, casterPosition, onImpact);
       return;
     }
-    spellRenderer.playLaunchSound(spell.getSound());
-    String impact = spell.getImpactSpell();
-    if (impact == null || impact.isEmpty()) {
-      impact = spell.getProjectileSpell();
-    }
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
+    String impact = visuals.impact();
     if (impact != null && !impact.isEmpty()) {
-      spellRenderer.triggerImpactSpell(impact, worldX, worldY, spell.getSoundImpact());
+      spellRenderer.triggerImpactSpell(impact, worldX, worldY, visuals.impactSound());
     }
   }
 
@@ -4061,13 +4125,22 @@ public class MainGameScreen implements Screen {
   public void pause() {}
 
   @Override
-  public void resume() {}
+  public void resume() {
+    int width = Gdx.graphics.getWidth();
+    int height = Gdx.graphics.getHeight();
+    if (width > 1 && height > 1) {
+      updateHudCamera(width, height);
+      if (hud != null) {
+        hud.recoverAfterDisplayChange();
+      }
+    }
+  }
 
   @Override
   public void dispose() {
     if (disposed) return;
     disposed = true;
-    NpcSummonBridge.setSummonCallback(null);
+    NpcScriptRuntime.setSummonCallback(null);
     if (!playerStateSaved && player != null && displayInitialized) {
       savePlayerState();
       playerStateSaved = true;

@@ -6,13 +6,11 @@ import static com.perso.T4C.config.GameConstants.GRID_W;
 import static com.perso.T4C.config.GameConstants.MONSTER_AGGRO_LEASH_RANGE;
 import static com.perso.T4C.config.GameConstants.MONSTER_AGGRO_RANGE;
 import static com.perso.T4C.config.GameConstants.MONSTER_ATTACK_COOLDOWN;
-import static com.perso.T4C.config.GameConstants.MONSTER_ATTACK_RANGE;
 import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_PAUSE_MAX;
 import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_PAUSE_MIN;
 import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_RADIUS;
 import static com.perso.T4C.config.GameConstants.MONSTER_RETALIATION_LEASH_RANGE;
 import static com.perso.T4C.config.GameConstants.MONSTER_SPEED;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -24,6 +22,7 @@ import com.perso.T4C.helper.Pathfinding;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +109,7 @@ public abstract class BaseMonster implements Nameable {
   private boolean respawnEnabled = true;
   protected boolean stationary = false;
   private Player scriptPlayer;
-  private Consumer<com.perso.T4C.npc.script.MonsterScriptBridge.Effects> scriptEffectsCallback;
+  private Consumer<NpcScriptRuntime.Effects> scriptEffectsCallback;
   private float stationaryAnimationPauseTimer = 0f;
   protected volatile long nameDisplayUntil = 0L;
 
@@ -390,7 +389,7 @@ public abstract class BaseMonster implements Nameable {
     }
     Vector2 targetPosition = target.position;
     float distanceToTarget = position.dst(targetPosition);
-    if (distanceToTarget <= MONSTER_ATTACK_RANGE) {
+    if (distanceToTarget <= resolveAttackRange() && hasLineOfSight(targetPosition)) {
       movement.stop();
       movement.faceToward(position, targetPosition);
       if (attackCooldownTimer <= 0 && !animations.isAttacking() && !isAttackExhausted()) {
@@ -738,14 +737,12 @@ public abstract class BaseMonster implements Nameable {
   }
 
   protected void performAttack(Vector2 playerPosition) {
-    if (this instanceof MonsterLifecycle lifecycle
-        && scriptPlayer != null
-        && scriptEffectsCallback != null) {
-      scriptEffectsCallback.accept(lifecycle.onAttack(scriptPlayer));
-    }
-    if (this instanceof DataMonster data && scriptPlayer != null) {
-      var effects = com.perso.T4C.npc.script.MonsterScriptBridge.attack(data, scriptPlayer);
-      if (scriptEffectsCallback != null) scriptEffectsCallback.accept(effects);
+    if (scriptPlayer != null && scriptEffectsCallback != null) {
+      if (this instanceof MonsterLifecycle lifecycle) {
+        scriptEffectsCallback.accept(lifecycle.onAttack(scriptPlayer));
+      } else if (this instanceof DataMonster data) {
+        scriptEffectsCallback.accept(NpcScriptRuntime.attack(data, scriptPlayer));
+      }
     }
     float targetDistance = playerPosition == null ? Float.MAX_VALUE : position.dst(playerPosition);
     int damage = rollDamage(targetDistance);
@@ -829,28 +826,30 @@ public abstract class BaseMonster implements Nameable {
       MonsterDef.Attack chosen = pickAttack(targetDistance);
       if (chosen != null) {
         combatAttack = Math.max(1, chosen.getValue1());
-        lastAttackRanged = chosen.getValue5() > 1;
-        lastAttackSpellId = chosen.getValue3();
+        lastAttackRanged = chosen.isSpell() || chosen.getMaxRangeTiles() > 1;
+        lastAttackSpellId = chosen.getSpellId();
         if (lastAttackSpellId > 0) return rollMonsterSpellDamage(lastAttackSpellId);
         return parseDiceRoll(chosen.getName());
       }
     }
-    if (targetDistance > MONSTER_ATTACK_RANGE) return -1;
+    if (tileRange(targetDistance) >= 2) return -1;
     lastAttackRanged = false;
     lastAttackSpellId = 0;
     int range = hitDamageMax - hitDamageMin;
     return hitDamageMin + (range > 0 ? random.nextInt(range + 1) : 0);
   }
 
+  private int tileRange(float worldDistance) {
+    return (int) Math.round(worldDistance / Math.max(GRID_W, GRID_H));
+  }
+
   private MonsterDef.Attack pickAttack(float targetDistance) {
+    int tiles = tileRange(targetDistance);
     List<MonsterDef.Attack> eligible = new ArrayList<>();
     for (MonsterDef.Attack attack : attacks) {
-      if (isMentallyExhausted() && attack.getValue3() > 0) continue;
-      float range =
-          attack.getValue5() > 1
-              ? attack.getValue5() * Math.max(GRID_W, GRID_H)
-              : MONSTER_ATTACK_RANGE;
-      if (targetDistance <= range) eligible.add(attack);
+      if (attack == null || !attack.isInRange(tiles)) continue;
+      if (isMentallyExhausted() && attack.isSpell()) continue;
+      eligible.add(attack);
     }
     if (eligible.isEmpty()) return null;
     int totalWeight = 0;
@@ -943,11 +942,11 @@ public abstract class BaseMonster implements Nameable {
   }
 
   private float resolveAttackRange() {
-    int maximumTiles = 0;
+    int maximumTiles = 1;
     for (MonsterDef.Attack attack : attacks) {
-      if (attack != null) maximumTiles = Math.max(maximumTiles, attack.getValue5());
+      if (attack != null) maximumTiles = Math.max(maximumTiles, attack.getMaxRangeTiles());
     }
-    return maximumTiles > 0 ? maximumTiles * Math.max(GRID_W, GRID_H) : MONSTER_ATTACK_RANGE;
+    return maximumTiles * Math.max(GRID_W, GRID_H);
   }
 
   public boolean isStunned() {
@@ -1031,11 +1030,9 @@ public abstract class BaseMonster implements Nameable {
     if (this instanceof MonsterLifecycle lifecycle) {
       scriptEffectsCallback.accept(lifecycle.onAttacked(player));
       scriptEffectsCallback.accept(lifecycle.onHit(player));
-    }
-    if (this instanceof DataMonster data) {
-      scriptEffectsCallback.accept(
-          com.perso.T4C.npc.script.MonsterScriptBridge.attacked(data, player));
-      scriptEffectsCallback.accept(com.perso.T4C.npc.script.MonsterScriptBridge.hit(data, player));
+    } else if (this instanceof DataMonster data) {
+      scriptEffectsCallback.accept(NpcScriptRuntime.attacked(data, player));
+      scriptEffectsCallback.accept(NpcScriptRuntime.hit(data, player));
     }
   }
 
@@ -1235,7 +1232,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void setScriptEffectsCallback(
-      Consumer<com.perso.T4C.npc.script.MonsterScriptBridge.Effects> callback) {
+      Consumer<NpcScriptRuntime.Effects> callback) {
     this.scriptEffectsCallback = callback;
   }
 

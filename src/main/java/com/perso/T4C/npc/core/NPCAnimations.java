@@ -1,5 +1,6 @@
 package com.perso.T4C.npc.core;
 
+import java.util.Map;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -99,10 +100,24 @@ public class NPCAnimations extends EntityAnimationsBase {
     this(null, parts);
   }
 
-  public NPCAnimations(String spriteBase, NpcSoundProfile sounds, Object... parts)
-      throws GameException {
+  public NPCAnimations(String spriteBase, Sounds sounds, Object... parts) throws GameException {
     this(spriteBase, parts);
     this.soundAttack = sounds == null ? null : sounds.attack();
+  }
+
+  public record Sounds(String attack, String death, String hit) {
+    public static Sounds forClass(Class<?> type) {
+      return new Sounds(value(type, "SOUND_ATTACK"), value(type, "SOUND_DEATH"), value(type, "SOUND_HIT"));
+    }
+
+    private static String value(Class<?> type, String name) {
+      try {
+        Object value = type.getField(name).get(null);
+        return value == null || value.toString().isBlank() ? null : value.toString();
+      } catch (ReflectiveOperationException ignored) {
+        return null;
+      }
+    }
   }
 
   public boolean hasSingleSpriteBase() {
@@ -255,6 +270,10 @@ public class NPCAnimations extends EntityAnimationsBase {
       playerAnimations.renderComposite(batch, pos, angle, flipX, moving);
 
       return;
+    }
+
+    if (spriteBase != null) {
+      renderSingleSprite(batch, pos, angle, flipX, moving, false, null, null, false);
     }
   }
 

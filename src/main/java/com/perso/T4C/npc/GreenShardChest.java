@@ -1,0 +1,85 @@
+package com.perso.T4C.npc;
+
+import com.perso.T4C.exception.GameException;
+import com.perso.T4C.npc.behavior.NpcBehavior;
+import com.perso.T4C.npc.core.NpcContext;
+import com.perso.T4C.npc.core.NpcSpec;
+import com.perso.T4C.npc.core.ScriptedNpc;
+import com.perso.T4C.spawn.Spawn;
+import java.util.List;
+
+@Spawn(type = "GreenShardChest", x = 2076, y = 2435, z = 1, stationary = true, aggressive = false)
+public final class GreenShardChest extends ScriptedNpc {
+  public static final String SOUND_ATTACK = "Whooshh 1.wav";
+  public static final String SOUND_DEATH = "Male Dying 1.wav";
+  public static final String SOUND_HIT = "Male Hit 1.wav";
+
+  public static final String ID = "GreenShardChest";
+
+  public static final String DISPLAY_NAME = "${npc.greenshardchest}";
+
+  public static final String SPRITE_BASE = "@static:Chest";
+
+  private static final NpcSpec SPEC =
+      new NpcSpec(
+          ID,
+          DISPLAY_NAME,
+          SPRITE_BASE,
+          List.of(),
+          0,
+          List.of(),
+          "${npc.welcome.greenshardchest}",
+          List.of(),
+          "WoodenChestNPC",
+          new NpcSpec.CombatProfile(200, 1000000, 500, 500, 500, 1000000, 0, 65535, "1d3"));
+
+  private static final NpcBehavior BEHAVIOR =
+      new NpcBehavior() {
+
+        @Override
+        public void onInitialise(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
+
+          c.npc().setStationary(true);
+        }
+
+        @Override
+        public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
+
+          if (c.hasItem("green_crystal_shard")) {
+
+            c.sayKey("npc.shardchest.empty");
+
+            return;
+          }
+
+          if (c.flag("ADDON_CHEST_INSPECT_COUNT") == 0) {
+
+            c.flag("ADDON_CHEST_INSPECT_COUNT", 1);
+
+            c.sayKey("npc.shardchest.first");
+
+            return;
+          }
+
+          c.giveItem("green_crystal_shard");
+
+          c.sayKey("npc.shardchest.found.green");
+        }
+      };
+
+  @Override
+  protected NpcBehavior javaBehavior() {
+
+    return BEHAVIOR;
+  }
+
+  public GreenShardChest(NpcContext context) throws GameException {
+
+    super(SPEC, context);
+  }
+
+  public static NpcSpec spec() {
+
+    return SPEC;
+  }
+}

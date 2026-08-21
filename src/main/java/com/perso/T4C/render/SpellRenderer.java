@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.audio.SoundManager;
+import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.monster.core.BaseMonster;
@@ -187,6 +188,30 @@ public class SpellRenderer {
       return false;
     }
     return launchProjectile(projectileSpell, target, startX, startY, flipX, onImpact);
+  }
+
+  public boolean hasActiveImpact(String impactSpell) {
+    if (impactSpell == null || impactSpell.isEmpty()) {
+      return false;
+    }
+    for (SpellImpact impact : activeImpacts) {
+      if (impactSpell.equals(impact.impactSpell)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public int currentImpactFrameIndex(String impactSpell) {
+    if (impactSpell == null || impactSpell.isEmpty()) {
+      return -1;
+    }
+    for (SpellImpact impact : activeImpacts) {
+      if (impactSpell.equals(impact.impactSpell)) {
+        return impact.frameIndex;
+      }
+    }
+    return -1;
   }
 
   public boolean hasActiveProjectile(String projectileSpell, BaseMonster target) {
@@ -503,7 +528,6 @@ public class SpellRenderer {
     private final float worldY;
     private int frameIndex = 0;
     private float timer = 0f;
-    private final float frameDuration = 0.08f;
 
     private SpellImpact(String impactSpell, List<ImpactFrame> frames, float worldX, float worldY) {
       this.impactSpell = impactSpell;
@@ -517,8 +541,9 @@ public class SpellRenderer {
         return false;
       }
       timer += delta;
+      float frameDuration = NativeTimingProfile.current().frameDurationSeconds();
       if (timer >= frameDuration) {
-        timer = 0f;
+        timer -= frameDuration;
         frameIndex++;
         if (frameIndex >= frames.size()) {
           return false;
@@ -555,8 +580,9 @@ public class SpellRenderer {
 
     private void update(float delta) {
       timer += delta;
-      while (timer >= .08f) {
-        timer -= .08f;
+      float frameDuration = NativeTimingProfile.current().frameDurationSeconds();
+      while (timer >= frameDuration) {
+        timer -= frameDuration;
         frameIndex = (frameIndex + 1) % frames.size();
       }
     }
@@ -577,7 +603,6 @@ public class SpellRenderer {
     private float y;
     private int frameIndex = 0;
     private float timer = 0f;
-    private final float frameDuration = 0.08f;
 
     private SpellProjectile(
         String projectileSpell,
@@ -614,8 +639,9 @@ public class SpellRenderer {
         return false;
       }
       timer += delta;
+      float frameDuration = NativeTimingProfile.current().frameDurationSeconds();
       if (timer >= frameDuration) {
-        timer = 0f;
+        timer -= frameDuration;
         frameIndex = (frameIndex + 1) % frames.size();
       }
       Vector2 target = targetPosition.get();

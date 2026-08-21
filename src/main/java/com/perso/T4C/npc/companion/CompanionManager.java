@@ -2,13 +2,12 @@ package com.perso.T4C.npc.companion;
 
 import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILES;
 import static com.perso.T4C.config.GameConstants.GRID_W;
-
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.core.BaseMonster;
-import com.perso.T4C.npc.core.*;
+import com.perso.T4C.npc.core.NPCManager;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.CompanionCastVfxHook;
 import com.perso.T4C.ui.SystemMessage;
