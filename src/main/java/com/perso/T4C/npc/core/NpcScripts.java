@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-/** Authoritative, i18n-tokenized NPC scripts migrated from the original C++ server. */
+/** NPC catalogue from Java factory registrations, plus spell/skill macro tables. */
 public final class NpcScripts {
   public static final int FORMAT_VERSION = 1;
 
@@ -67,10 +67,7 @@ public final class NpcScripts {
   private static Catalogue load() {
     Map<String, Entry> entries = new LinkedHashMap<>();
     Map<String, Entry> lower = new LinkedHashMap<>();
-    OriginalNpcScriptSources.entries()
-        .forEach((id, entry) -> index(entries, lower, id, entry));
     for (NpcFactoryRegistry.Registration registration : NpcFactoryRegistry.registrations()) {
-      if (entries.containsKey(registration.id())) continue;
       NpcSpec spec =
           registration.specification() == null ? null : registration.specification().get();
       if (spec == null) continue;
@@ -87,8 +84,8 @@ public final class NpcScripts {
     }
     return new Catalogue(
         FORMAT_VERSION,
-        OriginalNpcScriptSources.SOURCE_REPOSITORY,
-        OriginalNpcScriptSources.SOURCE_COMMIT,
+        "",
+        "",
         OriginalNpcScriptSources.macros(),
         OriginalNpcScriptSources.skillNames(),
         Collections.unmodifiableMap(entries),

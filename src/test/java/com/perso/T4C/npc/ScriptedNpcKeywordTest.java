@@ -28,22 +28,6 @@ class ScriptedNpcKeywordTest {
   }
 
   @Test
-  void namingOneCmdAndWordSaysTheWholeSentence() {
-    String script =
-        """
-                CmdAND(INTL(1, "READY"), INTL(2, "REBORN"))
-                    SetYesNo(REBIRTH)
-                Command2(INTL(2, "REBORN"), INTL(3, "REBIRTH"))
-                    INTL(4, "Once you are reborn...")
-                """;
-
-    assertEquals("READY REBORN", ScriptedNpc.sentenceForKeyword(script, "ready"));
-    assertEquals("READY REBORN", ScriptedNpc.sentenceForKeyword(script, "reborn"));
-    assertEquals("ready reborn", ScriptedNpc.sentenceForKeyword(script, "ready reborn"));
-    assertEquals("bonjour", ScriptedNpc.sentenceForKeyword(script, "bonjour"));
-  }
-
-  @Test
   void translatedDialogueReplacesPlayerNamePlaceholders() throws Exception {
     Player player = new Player();
     player.setName("Alyssa");

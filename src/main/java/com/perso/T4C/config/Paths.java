@@ -12,6 +12,7 @@ public final class Paths {
   public static final String COLLISION_MAP = "assets/maps/worldmap/worldmap.colbin";
   public static final String MAPS_DIR = "assets/maps";
   public static final String RT_MAP = "assets/maps/rt/rt_map_125.dat";
+  public static final String ZONE_MAP = "assets/maps/rt/zone_map.dat";
   public static final String WORLDMAP_MAPBIN = "assets/maps/worldmap/worldmap.mapbin";
   public static final String DUNGEON_MAPBIN = "assets/maps/dungeon/DungeonMap.mapbin";
   public static final String CAVERN_MAPBIN = "assets/maps/cavern/CavernMap.mapbin";

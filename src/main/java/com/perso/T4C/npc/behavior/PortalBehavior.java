@@ -94,12 +94,6 @@ public final class PortalBehavior implements NpcBehavior {
   }
 
   @Override
-  public void onPopup(NpcBehaviorContext context) {
-
-    context.castSelfSpell("spell.self_destruct_20_seconds");
-  }
-
-  @Override
   public void onAttacked(NpcBehaviorContext context) {
 
     if (context.npcCurrentHp() < 10_000) {

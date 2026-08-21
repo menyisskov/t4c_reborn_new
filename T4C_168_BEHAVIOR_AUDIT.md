@@ -1021,12 +1021,6 @@ Le client natif possède une mémoire d’exploration par monde dans `CSaveGame`
 
 Le Java charge bien l’image originale via `OriginalRtMap` et applique seulement le masque graphique `GUI_RTMapMask` dans `GuiWorldMap`. `MapScreen` reconstruit la vue autour de la position courante ; je ne trouve aucun tableau de cellules visitées par monde, ni lecture/écriture de cet état dans `PlayerStateStore`. Conséquence : la carte Java ne reproduit pas le brouillard/progression d’exploration persistante du client 1.68 et son état ne survit pas à un changement de session.
 
-## 141. Cadence et pas de déplacement : profils natifs 17/34 FPS absents
-
-Le client natif centralise son profil de cadence dans `TileSet`. Sans `bEnable32FPS`, `GetFPS()` vaut 17, `GetFPSFRAMING()` vaut 1, et les pas de déplacement sont `MOVX=8`, `MOVY=4`, `DONE=4`. Avec cette option, la cadence passe à 34, le framing à 2 et les pas sont divisés (`MOVX=4`, `MOVY=2`, `DONE=8`). `VisualObjectList` utilise directement `GetFPSFRAMING()` pour le nombre de sprites de déplacement et d’attaque ; l’option modifie donc à la fois le temps et la progression visuelle.
-
-Le Java met à jour mouvement, entités et animations avec le `delta` LibGDX et n’expose pas de profil 17/34 FPS équivalent. `PlayerAnimations`, `SpellRenderer` et `MainGameScreen` avancent indépendamment du réglage natif `bEnable32FPS`. Une cadence variable ou une activation de 32 FPS ne produit donc pas les mêmes pas, nombre de frames d’attaque et synchronisation déplacement/animation que le client 1.68.
-
 ## 142. Modèles 3D et sons attachés aux unités : rendu 2D Java
 
 `VisualObjectList` natif réserve un tableau `VObject3D` et instancie des `Sprite3D` pour de nombreuses unités (par exemple Beholder, Wizard, Goblin, Mummy, Demon, Minotaur, Rat, Bat, Spider et Skeleton). Chaque modèle possède ses dimensions, directions, frames et parfois plusieurs sons d’attaque, de douleur ou de mort dans `Object3DSound`. Le type d’objet reçu détermine donc non seulement une apparence, mais aussi un chemin de rendu et une table sonore dédiée.

@@ -18,7 +18,7 @@ public class GuiMapZoneDisplay {
   private float timer = 0f;
 
   public GuiMapZoneDisplay(String zoneName) {
-    BitmapFont font = FontManager.getInstance().getHaettenschweilerFont(32, textBaseColor);
+    BitmapFont font = FontManager.getInstance().getT4CBeaulieuFont(32, textBaseColor);
     GlyphLayout layout = new GlyphLayout(font, zoneName);
     x = (Gdx.graphics.getWidth() - layout.width) * 0.5f;
     y = Gdx.graphics.getHeight() * 0.15f;

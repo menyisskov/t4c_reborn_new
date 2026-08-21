@@ -164,20 +164,7 @@ public final class ColosseumOwner extends ScriptedNpc {
 
             if ("arena".equals(state)) {
 
-              c.flag("__FLAG_USER_HAS_ENTERED_COLOSSEUM", 1);
-
-              c.flag("__FLAG_ARENA_LEVEL", 0);
-
-              c.flag("__FLAG_USER_LEVEL_SLICE", 0);
-
-              c.sayKey("npc.colosseumowner.enjoy");
-
-              c.teleport(
-                  k.equals("BATTLEGROUND") ? 1990 : 1725,
-                  k.equals("BATTLEGROUND") ? 1870 : 1835,
-                  0);
-
-              c.endConversation();
+              enterAsFighter(c, k.equals("BATTLEGROUND"));
 
               return true;
             }
@@ -216,18 +203,14 @@ public final class ColosseumOwner extends ScriptedNpc {
 
           if ("battleground".equals(state)) {
 
-            if (!answer) {
+            enterAsFighter(c, true);
 
-              c.sayKey("npc.colosseumowner.no");
+            return true;
+          }
 
-              return true;
-            }
+          if ("arena".equals(state)) {
 
-            c.sayKey("npc.colosseumowner.enjoy");
-
-            c.teleport(1990, 1870, 0);
-
-            c.endConversation();
+            enterAsFighter(c, false);
 
             return true;
           }
@@ -236,10 +219,27 @@ public final class ColosseumOwner extends ScriptedNpc {
 
             c.sayKey("npc.colosseumowner.spectator.choice");
 
+            c.askYesNo("spectator");
+
             return true;
           }
 
           return false;
+        }
+
+        private static void enterAsFighter(NpcBehaviorContext c, boolean battleground) {
+
+          c.flag("__FLAG_USER_HAS_ENTERED_COLOSSEUM", 1);
+
+          c.flag("__FLAG_ARENA_LEVEL", 0);
+
+          c.flag("__FLAG_USER_LEVEL_SLICE", 0);
+
+          c.sayKey("npc.colosseumowner.enjoy");
+
+          c.teleport(battleground ? 1990 : 1725, battleground ? 1870 : 1835, 0);
+
+          c.endConversation();
         }
       };
 }

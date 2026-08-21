@@ -24895,5 +24895,7 @@
   "ui.wisdom": "Sagesse",
   "ui.world_map": "CARTE",
   "ui.xp_to_next_level": "XP au niveau suivant",
-  "zone.lighthaven": "LIGHTHAVEN"
+  "zone.lighthaven": "LIGHTHAVEN",
+  "zone.0.0": "LIGHTHAVEN",
+  "zone.0.3": "WINDHOWL"
 }

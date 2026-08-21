@@ -25,6 +25,7 @@ public final class NpcFactoryRegistry {
 
   static {
     scanClasspath();
+    NpcScripts.reload();
   }
 
   private NpcFactoryRegistry() {}

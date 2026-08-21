@@ -56,6 +56,7 @@ import com.perso.T4C.helper.DisplayModeToggle;
 import com.perso.T4C.helper.MapReader;
 import com.perso.T4C.helper.ModifSprites;
 import com.perso.T4C.helper.MusicZoneBinaryIO;
+import com.perso.T4C.helper.OriginalZoneMap;
 import com.perso.T4C.helper.PlayerAppearanceDefaults;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
@@ -148,6 +149,8 @@ public class MainGameScreen implements Screen {
   private SystemMessage systemMessage;
   private GameChat gameChat;
   private GuiMapZoneDisplay mapZoneDisplay;
+  private int lastMapZoneWorld = Integer.MIN_VALUE;
+  private int lastMapZoneId = Integer.MIN_VALUE;
   @Getter private Player player;
   private MapReader reader;
   private MapRenderer mapRenderer;
@@ -513,6 +516,19 @@ public class MainGameScreen implements Screen {
     } else {
       SoundManager.playAmbient(music + ".wav");
     }
+  }
+
+  private void updateMapZoneDisplay() {
+    if (player == null) return;
+    int world = player.getCoordinates().getZ();
+    int tileX = (int) (player.getPositionVector().x / GRID_W);
+    int tileY = (int) (player.getPositionVector().y / GRID_H);
+    int zoneId = OriginalZoneMap.zoneId(world, tileX, tileY);
+    if (world == lastMapZoneWorld && zoneId == lastMapZoneId) return;
+    lastMapZoneWorld = world;
+    lastMapZoneId = zoneId;
+    String name = OriginalZoneMap.displayName(world, tileX, tileY);
+    mapZoneDisplay = name == null || name.isBlank() ? null : new GuiMapZoneDisplay(name);
   }
 
   private void loadTeleports() {
@@ -885,7 +901,7 @@ public class MainGameScreen implements Screen {
             }
           }
           NpcScriptRuntime.DeathEffect summonEffect =
-              NpcScriptRuntime.summonedMonsterDefeated(monster.getName());
+              NpcScriptRuntime.summonedMonsterDefeated(monster.getCanonicalName());
           if (summonEffect != null) {
             if (summonEffect.itemKey() != null && !summonEffect.itemKey().isBlank())
               com.perso.T4C.item.InventoryService.add(player, summonEffect.itemKey());
@@ -1228,7 +1244,12 @@ public class MainGameScreen implements Screen {
         initializeInputHandlers();
       }
       log.info("Switched to map {} at Z={}", currentMap.name(), currentMap.getZ());
+      lastAmbientMusicTileX = Integer.MIN_VALUE;
+      lastAmbientMusicTileY = Integer.MIN_VALUE;
+      lastMapZoneWorld = Integer.MIN_VALUE;
+      lastMapZoneId = Integer.MIN_VALUE;
       updateAmbientMusicForPlayer();
+      updateMapZoneDisplay();
     } catch (Exception e) {
       log.error("Failed to switch map for Z={}", z, e);
       showSystemMessage(I18n.message("message.map_load_failed", z));
@@ -1295,6 +1316,7 @@ public class MainGameScreen implements Screen {
         () -> {
           updateCamera();
           updateAmbientMusicForPlayer();
+          updateMapZoneDisplay();
         });
     section(
         "dayNight",
@@ -3620,7 +3642,10 @@ public class MainGameScreen implements Screen {
     if (!displayInitialized) initializeDisplay();
     lastAmbientMusicTileX = Integer.MIN_VALUE;
     lastAmbientMusicTileY = Integer.MIN_VALUE;
+    lastMapZoneWorld = Integer.MIN_VALUE;
+    lastMapZoneId = Integer.MIN_VALUE;
     updateAmbientMusicForPlayer();
+    updateMapZoneDisplay();
     startSeraphArrivalIfNeeded();
   }
 
@@ -3740,7 +3765,9 @@ public class MainGameScreen implements Screen {
     com.perso.T4C.spell.NpcCastVfxHook.setShared(this::playNpcCastVfx, this::playNpcSelfVfx);
     com.perso.T4C.spell.CompanionCastVfxHook.setShared(
         this::playCompanionAttackVfx, this::playCompanionHealVfx, this::playCompanionVanishVfx);
-    mapZoneDisplay = new GuiMapZoneDisplay(I18n.key("zone.lighthaven"));
+    lastMapZoneWorld = Integer.MIN_VALUE;
+    lastMapZoneId = Integer.MIN_VALUE;
+    updateMapZoneDisplay();
   }
 
   private void playNpcCastVfx(SpellData spell, Player castOn, Vector2 casterPosition) {

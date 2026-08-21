@@ -1,8 +1,8 @@
 {
   "name": "Jean Las",
   "gender": "MALE",
-  "x": 2921.0,
-  "y": 1060.0,
+  "x": 2896.0,
+  "y": 1062.0,
   "z": 0,
   "strength": 15,
   "dexterity": 14,
@@ -26,7 +26,7 @@
   "activeBuffs": [
     {
       "spellName": "spell.item_torch_radiance",
-      "remainingSeconds": 121,
+      "remainingSeconds": 19,
       "totalDurationSeconds": 600
     }
   ],
@@ -97,5 +97,5 @@
   "respawnWorldY": 16608.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.004635
 }

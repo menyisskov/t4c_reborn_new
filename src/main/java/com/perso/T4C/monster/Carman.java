@@ -30,7 +30,7 @@ public final class Carman extends DataMonster implements MonsterLifecycle {
   public NpcScriptRuntime.Effects onDeath(Player player) {
     if (player != null) {
       InventoryService.add(player, "hel_soulstone");
-      com.perso.T4C.npc.core.NpcScriptEngine.setGlobalFlag("GLOBAL_FLAG_ADDON_CARMAN_PRESENT", 0);
+      com.perso.T4C.npc.core.NpcWorldFlags.set("GLOBAL_FLAG_ADDON_CARMAN_PRESENT", 0);
     }
     return new NpcScriptRuntime.Effects(
         java.util.List.of("${npc.carman.soulstone}"),

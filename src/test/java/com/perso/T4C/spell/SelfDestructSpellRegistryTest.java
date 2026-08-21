@@ -20,9 +20,11 @@ class SelfDestructSpellRegistryTest {
   }
 
   @Test
-  void remortPortalJ4HasNoOriginalPopupSelfDestruct() {
+  void remortPortalJ4HasNoEmbeddedCppPopupEvent() {
+    NpcScripts.reload();
     NpcScripts.Entry portal = NpcScripts.find("PortalJ4");
     assertNotNull(portal);
+    assertFalse(portal.hasConversation());
     assertFalse(portal.hasEvent("OnPopup"));
   }
 }

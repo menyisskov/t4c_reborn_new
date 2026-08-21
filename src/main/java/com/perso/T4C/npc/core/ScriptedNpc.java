@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,8 +69,6 @@ public abstract class ScriptedNpc extends BaseNPC {
   private final QuestService questService;
 
   private final Supplier<CompanionManager> companionManagerSupplier;
-
-  private final NpcScripts.Entry originalScript;
 
   private String pendingYesNoState;
 
@@ -315,8 +312,6 @@ public abstract class ScriptedNpc extends BaseNPC {
 
     this.spec = spec;
 
-    this.originalScript = NpcScripts.find(spec.id());
-
     if ((spec.spriteBase() != null
             && (spec.spriteBase().startsWith("@static:") || spec.spriteBase().equals("@invisible")))
         || spec.parts().isEmpty()) {
@@ -380,25 +375,6 @@ public abstract class ScriptedNpc extends BaseNPC {
       }
     }
 
-    if (originalScript != null && originalScript.hasConversation()) {
-
-      conversationResponseShown = false;
-
-      NpcScriptEngine.Result result =
-          NpcScriptEngine.begin(originalScript.sourceScript(), spec.id(), player);
-
-      applyScriptResult(result, player);
-
-      if (!conversationResponseShown
-          && spec.welcomeText() != null
-          && !spec.welcomeText().isBlank()) {
-
-        showDialog(resolvePlayerName(spec.welcomeText(), player), 0L);
-      }
-
-      return;
-    }
-
     NpcBehavior behavior = resolvedBehavior();
 
     if (behavior != null && behavior.handles(player)) {
@@ -435,14 +411,6 @@ public abstract class ScriptedNpc extends BaseNPC {
       for (String keyword : topic.keywords()) addKeyword(keywords, keyword);
     }
 
-    if (originalScript != null) {
-
-      for (String keyword : NpcScriptEngine.keywords(originalScript.sourceScript()).keySet()) {
-
-        addKeyword(keywords, keyword);
-      }
-    }
-
     return keywords;
   }
 
@@ -459,48 +427,13 @@ public abstract class ScriptedNpc extends BaseNPC {
   @Override
   public boolean talk(String text, Player player) {
 
-    if (isInteracting && originalScript != null && originalScript.hasConversation()) {
-
-      if (pendingYesNoState != null) {
-
-        String normalized = normalizeCommand(text);
-
-        boolean yes = normalized.equals("yes") || normalized.equals("oui");
-
-        boolean no = normalized.equals("no") || normalized.equals("non");
-
-        if (yes || no) {
-
-          String state = pendingYesNoState;
-
-          pendingYesNoState = null;
-
-          NpcScriptEngine.Result answer =
-              NpcScriptEngine.respondYesNo(
-                  originalScript.sourceScript(), spec.id(), state, yes, player);
-
-          if (applyScriptResult(answer, player)) return true;
-        }
-      }
-
-      NpcScriptEngine.Result result =
-          NpcScriptEngine.respond(
-              originalScript.sourceScript(),
-              spec.id(),
-              sentenceForOriginalKeyword(text),
-              player,
-              pendingYesNoState);
-
-      if (applyScriptResult(result, player)) return true;
-
-      return super.talk(text, player);
-    }
-
     NpcBehavior behavior = resolvedBehavior();
 
-    if (isInteracting && behavior != null && behavior.handles(player)) {
+    boolean javaOk = isInteracting && behavior != null && behavior.handles(player);
 
-      NpcBehaviorContext context = new NpcBehaviorContext(this, player);
+    NpcBehaviorContext context = javaOk ? new NpcBehaviorContext(this, player) : null;
+
+    if (javaOk) {
 
       if (pendingYesNoState != null) {
 
@@ -537,67 +470,6 @@ public abstract class ScriptedNpc extends BaseNPC {
     return Boolean.parseBoolean(sourceEvents().get("@combat.passiveOnAttack"));
   }
 
-  @Deprecated
-  public static String sentenceForKeyword(String script, String keyword) {
-
-    if (script == null || keyword == null) return keyword;
-
-    String spoken = normalizeCommand(keyword);
-
-    if (spoken.isEmpty()) return keyword;
-
-    java.util.regex.Matcher matcher =
-        java.util.regex.Pattern.compile(
-                "CmdAND\\([^\\n]*INTL\\(\\d+,\\s*\\\"([^\\\"]+)\\\"\\)[^\\n]*INTL\\(\\d+,\\s*\\\"([^\\\"]+)\\\"\\)[^\\n]*\\)",
-                java.util.regex.Pattern.MULTILINE)
-            .matcher(script);
-
-    while (matcher.find()) {
-
-      String sentence = matcher.group(1) + " " + matcher.group(2);
-
-      if (normalizeCommand(sentence).contains(spoken)
-          && !containsAllWords(spoken, normalizeCommand(sentence))) return sentence;
-    }
-
-    return keyword;
-  }
-
-  private static boolean containsAllWords(String spoken, String sentence) {
-
-    for (String word : sentence.split(" ")) {
-
-      if (!word.isEmpty() && !(" " + spoken + " ").contains(" " + word + " ")) return false;
-    }
-
-    return true;
-  }
-
-  private String sentenceForOriginalKeyword(String keyword) {
-
-    String spoken = normalizeCommand(keyword);
-
-    if (spoken.isEmpty()) return keyword;
-
-    for (Map.Entry<String, String> entry :
-        NpcScriptEngine.keywords(originalScript.sourceScript()).entrySet()) {
-
-      String word = normalizeCommand(entry.getKey());
-
-      String sentence = normalizeCommand(entry.getValue());
-
-      if (word.isEmpty() || word.equals(sentence)) continue;
-
-      if ((" " + spoken + " ").contains(" " + word + " ")
-          && !containsAllWords(spoken, sentence)) {
-
-        return entry.getValue();
-      }
-    }
-
-    return keyword;
-  }
-
   @Override
   public List<String> getFleeShouts() {
 
@@ -612,314 +484,12 @@ public abstract class ScriptedNpc extends BaseNPC {
 
   private Map<String, String> sourceEvents() {
 
-    if (originalScript == null) return spec.sourceEvents();
-
-    if (spec.sourceEvents().isEmpty()) return originalScript.sourceEvents();
-
-    Map<String, String> merged = new java.util.LinkedHashMap<>(spec.sourceEvents());
-
-    merged.putAll(originalScript.sourceEvents());
-
-    return Map.copyOf(merged);
+    return spec.sourceEvents();
   }
 
-  private boolean triggerOriginalEvent(String event, Player player) {
-
-    String script = originalScript.event(event);
-
-    if (script == null || script.isBlank()) return false;
-
-    NpcScriptEngine.Result result =
-        NpcScriptEngine.event(script, spec.id(), player, getCurrentHp(), getMaxHp());
-
-    boolean handled = applyScriptResult(result, player);
-
-    if (result.npcHpOverride() != Integer.MIN_VALUE) {
-
-      setCurrentHp(Math.max(0, Math.min(getMaxHp(), result.npcHpOverride())));
-    }
-
-    if (result.selfDestruct()) {
-
-      nativeSelfDestructRequested = true;
-
-      setCurrentHp(0);
-    }
-
-    return handled;
-  }
-
-  private boolean applyScriptResult(NpcScriptEngine.Result result, Player player) {
-
-    if (result == null || !result.handled()) return false;
-
-    if (result.text() != null && !result.text().isBlank()) say(result.text(), player);
-
-    for (String message : result.systemMessages()) {
-
-      if (message != null && !message.isBlank()) SystemMessage.showShared(I18n.resolve(message));
-    }
-
-    if (!result.shopItems().isEmpty()) {
-
-      List<String> valid =
-          result.shopItems().stream().filter(id -> ItemRegistry.findByKey(id) != null).toList();
-
-      GuiManager.open(new ShopScreen(player, valid));
-    }
-
-    if (!result.sellRules().isEmpty()) {
-
-      List<String> sellable =
-          player.getInventory().stream()
-              .distinct()
-              .filter(
-                  key -> {
-                    var item = ItemRegistry.findByKey(key);
-                    return item != null
-                        && result.sellRules().stream().anyMatch(rule -> sellRuleMatches(rule, item));
-                  })
-              .toList();
-
-      GuiManager.open(ShopScreen.forSelling(player, sellable));
-    }
-
-    if (!result.taughtSpells().isEmpty()) {
-
-      GuiManager.open(
-          new LearnScreen(
-              player,
-              result.taughtSpells().stream()
-                  .filter(id -> SpellRegistry.findByName(id) != null)
-                  .toList()));
-    }
-
-    if (!result.skillOffers().isEmpty()) {
-
-      GuiManager.open(
-          LearnScreen.forTrainingOffers(
-              player,
-              result.skillOffers().stream()
-                  .filter(offer -> KNOWN_SKILLS.contains(offer.skill()))
-                  .map(
-                      offer ->
-                          new LearnScreen.TrainingOffer(
-                              offer.skill(),
-                              offer.limitOrInitialPoints(),
-                              offer.goldCost(),
-                              offer.teaching()))
-                  .toList()));
-
-    } else {
-
-      List<String> skills = new ArrayList<>(result.taughtSkills());
-
-      skills.addAll(result.trainedSkills());
-
-      if (!skills.isEmpty()) {
-
-        GuiManager.open(
-            LearnScreen.forTraining(
-                player, skills.stream().filter(KNOWN_SKILLS::contains).distinct().toList()));
-      }
-    }
-
-    if (!result.formulaOffers().isEmpty()) {
-
-      GuiManager.open(
-          LearnScreen.forFormulaOffers(
-              player,
-              result.formulaOffers().stream()
-                  .map(
-                      offer ->
-                          new LearnScreen.FormulaOffer(offer.formulaId(), offer.goldCost()))
-                  .toList()));
-    }
-
-    for (String spellId : result.targetSpells()) {
-
-      SpellData spell = resolveScriptSpell(spellId);
-
-      if (spell != null) NpcCastVfxHook.playOnPlayer(spell, player, position);
-    }
-
-    for (String spellId : result.selfSpells()) {
-
-      SpellData spell = resolveScriptSpell(spellId);
-
-      if (spell != null) {
-        NpcCastVfxHook.playOnSelf(spell, position);
-        scheduleSelfDestructFrom(spell);
-      }
-    }
-
-    for (NpcScriptEngine.SummonRequest summon : result.summons()) {
-
-      int z =
-          summon.zExpression() == null
-              ? player.getCoordinates().getZ()
-              : scriptCoordinate(summon.zExpression(), player, false, true);
-
-      float x = scriptCoordinate(summon.xExpression(), player, true, false) * GRID_W;
-
-      float y = scriptCoordinate(summon.yExpression(), player, false, false) * GRID_H;
-
-      if (!NpcScriptRuntime.summon(summon.monster(), x, y, z, sourceEvents())) {
-
-        log.warn(
-            "NPC '{}' could not summon '{}' at ({}, {}, {})",
-            spec.id(),
-            summon.monster(),
-            x,
-            y,
-            z);
-      }
-    }
-
-    if (result.xp() != 0 && questService != null) questService.awardScriptXp(player, result.xp());
-
-    if (result.heal()) healFully(player);
-
-    if (result.endConversation()) endInteraction();
-
-    if (result.pendingYesNo() != null) pendingYesNoState = result.pendingYesNo();
-
-    if (result.selfDestruct()) nativeSelfDestructRequested = true;
-
-    return true;
-  }
-
-  private static boolean sellRuleMatches(
-      NpcScriptEngine.SellRule rule, com.perso.T4C.item.ItemDefinition item) {
-
-    if (item.getPrice() < rule.minimumPrice() || item.getPrice() > rule.maximumPrice()) return false;
-
-    String categories = rule.categories();
-
-    return (categories.contains("WEAPON")
-            && (item.getStructure() == 1 || item.getStructure() == 8 || item.getStructure() == 9))
-        || (categories.contains("ARMOR") && item.getStructure() == 2)
-        || (categories.contains("POTION") && item.getStructure() == 5)
-        || (categories.contains("JEWEL")
-            && (item.getBodyPart() == com.perso.T4C.player.BodyPart.RING1
-                || item.getBodyPart() == com.perso.T4C.player.BodyPart.RING2
-                || item.getBodyPart() == com.perso.T4C.player.BodyPart.NECK))
-        || (categories.contains("MAGIC")
-            && (!item.getSpells().isEmpty() || !item.getBoosts().isEmpty()))
-        || categories.contains("PAWNSHOP")
-        || categories.contains("JUNK");
-  }
-
-  private int scriptCoordinate(String expression, Player player, boolean xAxis, boolean world) {
-
-    String value = expression == null ? "0" : expression.trim();
-
-    if (value.equals("target->GetWL().X"))
-      return Math.round(player.getCoordinates().getX() / GRID_W);
-
-    if (value.equals("target->GetWL().Y"))
-      return Math.round(player.getCoordinates().getY() / GRID_H);
-
-    if (value.equals("target->GetWL().world")) return player.getCoordinates().getZ();
-
-    java.util.regex.Matcher relative =
-        java.util.regex.Pattern.compile("FROM_(NPC|USER)\\s*\\((.+),\\s*[XY]\\s*\\)")
-            .matcher(value);
-
-    if (relative.matches()) {
-
-      int offset = scriptExpression(relative.group(2));
-
-      boolean npc = relative.group(1).equals("NPC");
-
-      float base =
-          npc
-              ? (xAxis ? position.x / GRID_W : position.y / GRID_H)
-              : (xAxis
-                  ? player.getCoordinates().getX() / GRID_W
-                  : player.getCoordinates().getY() / GRID_H);
-
-      return Math.round(base) + offset;
-    }
-
-    return scriptExpression(value);
-  }
-
-  private static int scriptExpression(String expression) {
-
-    String value = expression == null ? "0" : expression.replaceAll("\\s+", "");
-
-    java.util.regex.Matcher dice =
-        java.util.regex.Pattern.compile("rnd\\.roll\\(dice\\(1,(\\d+)\\)\\)([+-]\\d+)?")
-            .matcher(value);
-
-    if (dice.matches()) {
-
-      int sides = Math.max(1, Integer.parseInt(dice.group(1)));
-
-      int offset = dice.group(2) == null ? 0 : Integer.parseInt(dice.group(2));
-
-      return ThreadLocalRandom.current().nextInt(1, sides + 1) + offset;
-    }
-
-    try {
-
-      return Integer.parseInt(value);
-
-    } catch (NumberFormatException ignored) {
-
-      return 0;
-    }
-  }
-
-  private static SpellData resolveScriptSpell(String id) {
-
-    if (id == null) return null;
-
-    SpellData exact = SpellRegistry.findByName(id);
-
-    if (exact != null) return exact;
-
-    if (NpcScripts.hasMacro(id)) {
-
-      SpellData byMacro = SpellRegistry.findById(NpcScripts.macro(id));
-
-      if (byMacro != null) return byMacro;
-    }
-
-    try {
-
-      SpellData byNumeric = SpellRegistry.findById(Integer.parseInt(id.trim()));
-
-      if (byNumeric != null) return byNumeric;
-
-    } catch (NumberFormatException ignored) {
-
-    }
-
-    String alias;
-
-    if (id.contains("serious_heal")) alias = "spell.heal_serious";
-    else if (id.contains("fireball")) alias = "spell.fireball";
-    else if (id.contains("teleport")) alias = null;
-    else if (id.contains("dispel") || id.contains("blue_wipe")) alias = "spell.dispel";
-    else if (id.contains("lighthaven") && id.contains("portal"))
-      alias = "spell.lighthaven_portal";
-    else if (id.contains("windhowl") && id.contains("portal")) alias = "spell.windhowl_portal";
-    else if (id.contains("silversky") && id.contains("portal")) alias = "spell.silversky_portal";
-    else if (id.contains("stonecrest") && id.contains("portal"))
-      alias = "spell.stonecrest_portal";
-    else alias = null;
-
-    return alias == null ? null : SpellRegistry.findByName(alias);
-  }
 
   @Override
   public final void onInitialise(Player player) {
-
-    if (runOriginalEvent("OnInitialise", player)) {
-      return;
-    }
 
     NpcBehavior behavior = resolvedBehavior();
 
@@ -966,22 +536,8 @@ public abstract class ScriptedNpc extends BaseNPC {
             && System.currentTimeMillis() >= nativeSelfDestructAtMillis);
   }
 
-  private boolean runOriginalEvent(String event, Player player) {
-    if (originalScript == null) {
-      return false;
-    }
-    if (originalScript.hasEvent(event)) {
-      triggerOriginalEvent(event, player);
-    }
-    return true;
-  }
-
   @Override
   public final void onPopup(Player player) {
-
-    if (runOriginalEvent("OnPopup", player)) {
-      return;
-    }
 
     NpcBehavior behavior = resolvedBehavior();
 
@@ -996,10 +552,6 @@ public abstract class ScriptedNpc extends BaseNPC {
   @Override
   public final void onAttack(Player player) {
 
-    if (runOriginalEvent("OnAttack", player)) {
-      return;
-    }
-
     NpcBehavior behavior = resolvedBehavior();
 
     if (behavior != null && behavior.handles(player)) {
@@ -1012,10 +564,6 @@ public abstract class ScriptedNpc extends BaseNPC {
 
   @Override
   public final void onAttacked(Player player) {
-
-    if (runOriginalEvent("OnAttacked", player)) {
-      return;
-    }
 
     NpcBehavior behavior = resolvedBehavior();
 
@@ -1030,10 +578,6 @@ public abstract class ScriptedNpc extends BaseNPC {
   @Override
   public final void onDeath(Player player) {
 
-    if (runOriginalEvent("OnDeath", player)) {
-      return;
-    }
-
     NpcBehavior behavior = resolvedBehavior();
 
     if (behavior != null && behavior.handles(player)) {
@@ -1046,10 +590,6 @@ public abstract class ScriptedNpc extends BaseNPC {
 
   @Override
   public final void onDestroy(Player player) {
-
-    if (runOriginalEvent("OnDestroy", player)) {
-      return;
-    }
 
     NpcBehavior behavior = resolvedBehavior();
 
@@ -1064,10 +604,6 @@ public abstract class ScriptedNpc extends BaseNPC {
   @Override
   public final void onHit(Player player) {
 
-    if (runOriginalEvent("OnHit", player)) {
-      return;
-    }
-
     NpcBehavior behavior = resolvedBehavior();
 
     if (behavior != null && behavior.handles(player)) {
@@ -1080,10 +616,6 @@ public abstract class ScriptedNpc extends BaseNPC {
 
   @Override
   public final void onAttackHit(Player player) {
-
-    if (runOriginalEvent("OnAttackHit", player)) {
-      return;
-    }
 
     NpcBehavior behavior = resolvedBehavior();
 

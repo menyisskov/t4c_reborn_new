@@ -2,6 +2,7 @@ package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
@@ -114,6 +115,11 @@ public final class ColosseumClerk extends ScriptedNpc {
     return BEHAVIOR;
   }
 
+  private static final int[] ARENA_SLICES = {
+    50, 60, 70, 80, 90, 100, 120, 130, 140, 150, 160, 170, 180, 190, 200, 225, 300, 325, 350, 375,
+    400, 425, 450, 475, 500
+  };
+
   private static final NpcBehavior BEHAVIOR =
       new NpcBehavior() {
 
@@ -125,6 +131,8 @@ public final class ColosseumClerk extends ScriptedNpc {
 
         @Override
         public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
+
+          clearStuckArenaOccupancy(c);
 
           initialiseArenaSlice(c);
 
@@ -223,6 +231,8 @@ public final class ColosseumClerk extends ScriptedNpc {
 
           if (!"fight".equals(state)) return false;
 
+          clearStuckArenaOccupancy(c);
+
           if (c.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA") > 0) {
 
             c.sayKey("npc.colosseumclerk.busy");
@@ -237,13 +247,13 @@ public final class ColosseumClerk extends ScriptedNpc {
             return true;
           }
 
-          int level = c.flag("__ARENA_LEVEL");
-
           initialiseArenaSlice(c);
 
-          level = c.flag("__FLAG_USER_LEVEL_SLICE");
+          int level = snapArenaSlice(c.flag("__FLAG_USER_LEVEL_SLICE"));
 
-          c.flag("__ARENA_LEVEL", level);
+          c.flag("__FLAG_USER_LEVEL_SLICE", level);
+
+          c.flag("__FLAG_ARENA_LEVEL", level);
 
           c.viewFlag("ARENA_RETURN_X", (int) (c.player().getPositionVector().x / 32f));
 
@@ -262,9 +272,16 @@ public final class ColosseumClerk extends ScriptedNpc {
             return true;
           }
 
-          c.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", opponents);
+          String mob = resolveArenaMob(level);
 
-          boolean summoned = true;
+          if (mob == null) {
+
+            c.sayKey("npc.colosseumclerk.fight.unavailable");
+
+            return true;
+          }
+
+          int spawned = 0;
 
           for (int i = 0; i < opponents; i++) {
 
@@ -272,13 +289,15 @@ public final class ColosseumClerk extends ScriptedNpc {
 
             int y = opponents == 1 ? 1853 : (i == 0 ? 1825 : 1850);
 
-            summoned &= c.summon("ArenaMob" + level, x, y, 0);
+            if (c.summon(mob, x, y, 0)) spawned++;
           }
+
+          c.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", spawned);
 
           c.flag("__FLAG_USER_HAS_CHANGED_DIFFICULTY_LEVEL", 0);
 
           c.sayKey(
-              summoned
+              spawned > 0
                   ? "npc.colosseumclerk.fight.started"
                   : "npc.colosseumclerk.fight.unavailable");
 
@@ -287,30 +306,84 @@ public final class ColosseumClerk extends ScriptedNpc {
 
         private void initialiseArenaSlice(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
-          if (c.flag("__FLAG_USER_LEVEL_SLICE") != 0) return;
+          int current = c.flag("__FLAG_USER_LEVEL_SLICE");
+
+          if (current != 0) {
+
+            int snapped = snapArenaSlice(current);
+
+            if (snapped != current) {
+
+              c.flag("__FLAG_USER_LEVEL_SLICE", snapped);
+
+              c.flag("__FLAG_ARENA_LEVEL", snapped);
+            }
+
+            return;
+          }
 
           int l = c.player().getLevel();
 
           int slice =
               l <= 40 ? 40 : l <= 200 ? ((l + 9) / 10) * 10 : l <= 450 ? ((l + 24) / 25) * 25 : 500;
 
-          c.flag("__FLAG_USER_LEVEL_SLICE", Math.min(500, Math.max(40, slice)));
+          slice = snapArenaSlice(Math.min(500, Math.max(40, slice)));
 
-          c.flag("__FLAG_ARENA_LEVEL", c.flag("__FLAG_USER_LEVEL_SLICE"));
+          c.flag("__FLAG_USER_LEVEL_SLICE", slice);
+
+          c.flag("__FLAG_ARENA_LEVEL", slice);
+        }
+
+        private void clearStuckArenaOccupancy(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
+
+          if (c.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA") <= 0) return;
+
+          int slice = c.flag("__FLAG_USER_LEVEL_SLICE");
+
+          if (slice == 0 || MonsterRegistry.findByName("ArenaMobXP" + slice) == null) {
+
+            c.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", 0);
+          }
+        }
+
+        private static String resolveArenaMob(int level) {
+
+          String xp = "ArenaMobXP" + level;
+
+          return MonsterRegistry.findByName(xp) != null ? xp : null;
         }
 
         private int increase(int level) {
 
-          return level < 200
-              ? Math.min(200, level + 10)
-              : level < 475 ? Math.min(475, level + 25) : 500;
+          for (int slice : ARENA_SLICES) if (slice > level) return slice;
+
+          return ARENA_SLICES[ARENA_SLICES.length - 1];
         }
 
         private int decrease(int level) {
 
-          return level > 225
-              ? Math.max(225, level - 25)
-              : level > 50 ? Math.max(40, level - 10) : 40;
+          for (int i = ARENA_SLICES.length - 1; i >= 0; i--) {
+
+            if (ARENA_SLICES[i] < level) return ARENA_SLICES[i];
+          }
+
+          return ARENA_SLICES[0];
+        }
+
+        private static int snapArenaSlice(int level) {
+
+          int best = ARENA_SLICES[0];
+
+          for (int slice : ARENA_SLICES) {
+
+            int delta = Math.abs(slice - level);
+
+            int bestDelta = Math.abs(best - level);
+
+            if (delta < bestDelta || (delta == bestDelta && slice < best)) best = slice;
+          }
+
+          return best;
         }
       };
 }

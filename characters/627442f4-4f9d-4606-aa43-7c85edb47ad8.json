@@ -1,22 +1,22 @@
 {
   "name": "Lynania",
   "gender": "FEMALE",
-  "x": 340.0,
-  "y": 493.0,
+  "x": 1726.0,
+  "y": 1839.0,
   "z": 0,
   "strength": 300,
   "dexterity": 700,
   "endurance": 300,
   "intelligence": 300,
   "wisdom": 300,
-  "gold": 57940,
+  "gold": 58249,
   "karma": 0,
   "maxHp": 50413,
-  "currentHp": 37531,
+  "currentHp": 38915,
   "maxMana": 6487,
-  "mana": 6487,
+  "mana": 6173,
   "level": 176,
-  "currentXp": 592925,
+  "currentXp": 603881,
   "xpToNextLevel": 1426259,
   "statPoints": 130,
   "skillPoints": 434,
@@ -84,7 +84,10 @@
     "item.broom",
     "item.will_of_artherk",
     "item.will_of_artherk",
-    "item.will_of_artherk"
+    "item.will_of_artherk",
+    "item.colosseum_token",
+    "item.colosseum_token",
+    "item.colosseum_token"
   ],
   "equipment": {
     "WEAPON2": "item.carquois_des_vagues_silencieuses",
@@ -96,8 +99,8 @@
     "BACK": "item.remort_white_wings",
     "WEAPON": "item.tension_primordiale_ultimate",
     "BODY": "item.ancient_platemail_armor",
-    "FEET": "item.ancient_platemail_boots",
-    "LEFT_HAND": "item.ancient_platemail_gauntlets"
+    "LEFT_HAND": "item.ancient_platemail_gauntlets",
+    "FEET": "item.ancient_platemail_boots"
   },
   "skills": {
     "dodge": 5000,
@@ -143,6 +146,9 @@
     100.0,
     100.0,
     100.0,
+    100.0,
+    100.0,
+    100.0,
     100.0
   ],
   "equipmentDurability": {
@@ -152,23 +158,23 @@
     "RING1": 100.0,
     "LEGS": 100.0,
     "BACK": 100.0,
-    "WEAPON": 74.39999999999964,
+    "WEAPON": 70.39999999999958,
     "BODY": 100.0,
-    "FEET": 100.0,
-    "LEFT_HAND": 99.8
+    "LEFT_HAND": 99.8,
+    "FEET": 100.0
   },
   "questFlags": {
     "__GLOBAL_FLAG_MAKRSH_PTANGH_IS_FIGHTING": 0,
     "__QUEST_FLAG_WILL_OF_ARTHERK_QUEST": 17,
     "__FLAG_NUMBER_OF_REMORTS": 1,
     "quest.__NEWBIE_QUEST.kills": 10,
-    "__FLAG_USER_LEVEL_SLICE": 0,
+    "__FLAG_USER_LEVEL_SLICE": 250,
     "__NEWBIE_QUEST": 1,
     "__VIEW_ARENA_RETURN_WORLD": 0,
     "__VIEW_ARENA_RETURN_Y": 918,
     "__ARENA_RETURN_LOC": 0,
     "__FLAG_USER_HAS_READ_COLOSSEUM_INSTRUCTIONS": 1,
-    "__FLAG_ARENA_LEVEL": 100,
+    "__FLAG_ARENA_LEVEL": 250,
     "__FLAG_USER_HAS_ENTERED_COLOSSEUM": 1,
     "__VIEW_ARENA_RETURN_X": 1728,
     "__QUEST_SIGFRIED_REPORT": 0,
@@ -176,12 +182,12 @@
     "__FLAG_USER_HAS_CHANGED_DIFFICULTY_LEVEL": 0,
     "__QUEST_FLAG_ARTHERK_WILL": 1,
     "__FLAG_USER_HAS_SPOKEN_TO_COLOSSEUM_CLERK": 1,
-    "__ARENA_LEVEL": 150
+    "__ARENA_LEVEL": 180
   },
   "respawnPointDefined": true,
   "respawnWorldX": 94432.0,
   "respawnWorldY": 16608.0,
   "respawnWorldZ": 0,
   "hiddenRemainingMillis": 0,
-  "dayNightHour": 7.0
+  "dayNightHour": 7.004635
 }

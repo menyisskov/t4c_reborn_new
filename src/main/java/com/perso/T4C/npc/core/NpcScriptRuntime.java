@@ -1,8 +1,9 @@
 package com.perso.T4C.npc.core;
 
-import static com.perso.T4C.config.GameConstants.GRID_H;
-import static com.perso.T4C.config.GameConstants.GRID_W;
-
+import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.item.InventoryService;
+import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.player.Player;
 import java.util.ArrayDeque;
@@ -12,17 +13,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** World-side effects for {@link NpcScriptEngine} results: summons and monster event scripts. */
+/** Summons and monster lifecycle effects implemented in Java. */
 public final class NpcScriptRuntime {
 
   public static final String SUMMON_DEATH_COUNTER = "@summon.deathCounter";
   public static final String SUMMON_DEATH_ITEM = "@summon.deathItem";
   public static final String SUMMON_DEATH_MESSAGE = "@summon.deathMessage";
 
-  private static final Pattern DICE_OFFSET =
-      Pattern.compile("dice\\(1,\\s*(\\d+)\\).*?([+-]\\s*\\d+)");
+  private static final int ARENA_TOKEN_ITEM_ID = 41702;
+  private static final Pattern ARENA_NAME = Pattern.compile("ArenaMob(?:XP)?(\\d+)", Pattern.CASE_INSENSITIVE);
 
   private static final Map<String, ArrayDeque<DeathEffect>> TRACKED_SUMMONS = new HashMap<>();
 
@@ -80,92 +82,73 @@ public final class NpcScriptRuntime {
   }
 
   public static Effects death(DataMonster monster, Player player) {
-    List<String> messages = new ArrayList<>();
-    List<String> selfSpells = new ArrayList<>();
-    List<String> targetSpells = new ArrayList<>();
-    execute(monster, player, "OnDeath", messages, selfSpells, targetSpells);
-    execute(monster, player, "OnDestroy", messages, selfSpells, targetSpells);
-    return new Effects(List.copyOf(messages), List.copyOf(selfSpells), List.copyOf(targetSpells));
+    String identity = monsterIdentity(monster);
+    if (arenaSlice(identity) != null) {
+      Effects onDeath = arenaDeath(identity, player);
+      arenaDestroyed();
+      return onDeath;
+    }
+    return Effects.empty();
   }
 
   public static Effects attack(DataMonster monster, Player player) {
-    return event(monster, player, "OnAttack");
+    return Effects.empty();
   }
 
   public static Effects spawn(DataMonster monster, Player player) {
-    return event(monster, player, "OnSpawn");
+    return Effects.empty();
   }
 
   public static Effects attacked(DataMonster monster, Player player) {
-    return event(monster, player, "OnAttacked");
+    return Effects.empty();
   }
 
   public static Effects hit(DataMonster monster, Player player) {
-    return event(monster, player, "OnHit");
+    return Effects.empty();
   }
 
   public static Effects attackHit(DataMonster monster, Player player) {
-    return event(monster, player, "OnAttackHit");
+    return Effects.empty();
   }
 
-  public static void applySummons(
-      NpcScriptEngine.Result result, float originX, float originY, int originZ, Map<String, String> metadata) {
-    if (result == null) return;
-    for (NpcScriptEngine.SummonRequest summon : result.summons()) {
-      summon(
-          summon.monster(),
-          originX + offset(summon.xExpression(), GRID_W),
-          originY + offset(summon.yExpression(), GRID_H),
-          originZ,
-          metadata == null ? Map.of() : metadata);
-    }
-  }
-
-  private static Effects event(DataMonster monster, Player player, String event) {
+  public static Effects arenaDeath(String monsterName, Player player) {
+    Integer slice = arenaSlice(monsterName);
+    if (slice == null) return Effects.empty();
     List<String> messages = new ArrayList<>();
-    List<String> selfSpells = new ArrayList<>();
-    List<String> targetSpells = new ArrayList<>();
-    execute(monster, player, event, messages, selfSpells, targetSpells);
-    return new Effects(List.copyOf(messages), List.copyOf(selfSpells), List.copyOf(targetSpells));
-  }
-
-  private static void execute(
-      DataMonster monster,
-      Player player,
-      String event,
-      List<String> messages,
-      List<String> selfSpells,
-      List<String> targetSpells) {
-    String script = monster.getSourceEvents().get(event);
-    if (script == null || script.isBlank()) return;
-    NpcScriptEngine.Result result =
-        NpcScriptEngine.event(script, monster.getCanonicalName(), player, 0, 0);
-    applySummons(result, monster.getPosition().x, monster.getPosition().y, 0, Map.of());
-    messages.addAll(result.systemMessages());
-    for (String spell : result.selfSpells()) {
-      String spellScript = monster.getSourceEvents().get("@spell." + spell);
-      if (spellScript != null && !spellScript.isBlank()) {
-        NpcScriptEngine.Result spellResult =
-            NpcScriptEngine.event(spellScript, monster.getCanonicalName(), player, 0, 0);
-        messages.addAll(spellResult.systemMessages());
-        targetSpells.addAll(spellResult.targetSpells());
+    if (player != null) {
+      boolean guaranteed = slice >= 475;
+      int chance = slice + 30 - player.getLevel();
+      if (guaranteed || ThreadLocalRandom.current().nextInt(1, 101) <= chance) {
+        ItemDefinition token = ItemRegistry.findByNumId(ARENA_TOKEN_ITEM_ID);
+        if (token != null) InventoryService.add(player, token.getKey());
+        messages.add(I18n.resolve("${npc.cpp.intl.10682}"));
       }
-      selfSpells.add(spell);
+      player.setQuestFlag("__FLAG_ARENA_LEVEL", slice);
     }
-    targetSpells.addAll(result.targetSpells());
+    return new Effects(List.copyOf(messages), List.of("spell.mob_arena_level_spell"), List.of());
   }
 
-  private static float offset(String expression, int grid) {
-    if (expression == null || expression.isBlank()) return 0;
-    var m = DICE_OFFSET.matcher(expression);
-    if (!m.find()) return 0;
-    int sides = Integer.parseInt(m.group(1));
-    int base = Integer.parseInt(m.group(2).replace(" ", ""));
-    return (ThreadLocalRandom.current().nextInt(1, sides + 1) + base) * grid;
+  static void arenaDestroyed() {
+    int current = NpcWorldFlags.get("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA");
+    if (current > 0) NpcWorldFlags.set("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA", current - 1);
+  }
+
+  public static Integer arenaSlice(String name) {
+    if (name == null) return null;
+    Matcher matcher = ARENA_NAME.matcher(name.trim());
+    if (!matcher.matches()) return null;
+    return Integer.parseInt(matcher.group(1));
+  }
+
+  private static String monsterIdentity(DataMonster monster) {
+    if (monster.getDefinition() != null && monster.getDefinition().getName() != null) {
+      return monster.getDefinition().getName();
+    }
+    return monster.getCanonicalName();
   }
 
   private static void adjustFlag(String flag, int delta) {
-    NpcScriptEngine.setGlobalFlag(flag, NpcScriptEngine.globalFlag(flag) + delta);
+    NpcWorldFlags.set(flag, NpcWorldFlags.get(flag) + delta);
   }
 
   private static String normalize(String monster) {

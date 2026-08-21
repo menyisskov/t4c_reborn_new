@@ -7,8 +7,8 @@ import com.perso.T4C.gui.screen.LearnScreen;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
-import com.perso.T4C.npc.core.NpcScriptEngine;
 import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.npc.core.NpcWorldFlags;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.NpcCastVfxHook;
@@ -62,17 +62,17 @@ public final class NpcBehaviorContext {
 
   public int globalFlag(String name) {
 
-    return NpcScriptEngine.globalFlagValue(name);
+    return NpcWorldFlags.get(name);
   }
 
   public int globalFlag(int id) {
 
-    return NpcScriptEngine.globalFlagValue(id);
+    return NpcWorldFlags.get(id);
   }
 
   public void globalFlag(String name, int value) {
 
-    NpcScriptEngine.setGlobalFlag(name, value);
+    NpcWorldFlags.set(name, value);
   }
 
   public void flag(String name, int value) {
