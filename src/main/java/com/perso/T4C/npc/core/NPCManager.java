@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NPCManager {
 
   private final List<BaseNPC> npcs = new ArrayList<>();
+  private final List<NpcSpawnEntry> pendingSpawns = new ArrayList<>();
 
   private final ShaderProgram outlineShader;
 
@@ -52,7 +53,9 @@ public class NPCManager {
 
     npc.setDamageCallback(playerDamageCallback);
 
-    log.info("Added NPC: {} at position ({}, {})", npc.getName(), npc.getTileX(), npc.getTileY());
+    // Hundreds of NPCs can be created during map loading; keep per-entity
+    // diagnostics available without flooding the startup log.
+    log.debug("Added NPC: {} at position ({}, {})", npc.getName(), npc.getTileX(), npc.getTileY());
   }
 
   public void triggerPopupEvents(Player player) {
@@ -152,6 +155,7 @@ public class NPCManager {
   public void updateVisible(
       float delta, Vector2 playerPosition, int startX, int endX, int startY, int endY, int margin) {
 
+    spawnPendingInView(startX, endX, startY, endY, margin);
     for (BaseNPC npc : List.copyOf(npcs)) {
 
       int tileX = npc.getTileX();
@@ -499,6 +503,7 @@ public class NPCManager {
     }
 
     npcs.clear();
+    pendingSpawns.clear();
   }
 
   public List<BaseNPC> getNPCs() {
@@ -563,22 +568,9 @@ public class NPCManager {
 
         try {
 
-          BaseNPC npc = NpcFactoryRegistry.create(entry.type, npcContext());
-
-          if (npc == null) {
-
-            log.warn("Unknown Java NPC spawn type: {}", entry.type);
-
-            continue;
-          }
-
-          npc.setSpawnPosition(entry.x * GRID_W, entry.y * GRID_H);
-
-          npc.setStationary(entry.stationary || "SUNDIAL".equalsIgnoreCase(entry.type));
-
-          addNPC(npc);
-
+          pendingSpawns.add(entry);
           loaded++;
+          continue;
 
         } catch (Exception ex) {
 
@@ -597,6 +589,27 @@ public class NPCManager {
     } catch (Exception e) {
 
       throw new GameException("Failed to load NPC spawns for " + mapPath, e);
+    }
+  }
+
+  private void spawnPendingInView(int startX, int endX, int startY, int endY, int margin) {
+    var it = pendingSpawns.iterator();
+    while (it.hasNext()) {
+      NpcSpawnEntry entry = it.next();
+      if (entry.x < startX - margin || entry.x > endX + margin
+          || entry.y < startY - margin || entry.y > endY + margin) continue;
+      it.remove();
+      try {
+        BaseNPC npc = NpcFactoryRegistry.create(entry.type, npcContext());
+        if (npc == null) continue;
+        npc.setSpawnPosition(entry.x * GRID_W, entry.y * GRID_H);
+        npc.setStationary(entry.stationary || "SUNDIAL".equalsIgnoreCase(entry.type));
+        addNPC(npc);
+        npc.onInitialise(lifecyclePlayer);
+        npc.onPopup(lifecyclePlayer);
+      } catch (Exception ex) {
+        log.warn("Failed to load visible NPC spawn type={} at ({}, {})", entry.type, entry.x, entry.y, ex);
+      }
     }
   }
 

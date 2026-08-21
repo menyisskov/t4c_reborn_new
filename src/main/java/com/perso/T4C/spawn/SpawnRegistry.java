@@ -15,15 +15,40 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public final class SpawnRegistry {
+  private static volatile List<SpawnDefinition> cachedNpcs;
+  private static volatile List<SpawnDefinition> cachedMonsters;
+
   private SpawnRegistry() {}
 
   public static List<SpawnDefinition> npcs() {
+    List<SpawnDefinition> cached = cachedNpcs;
+    if (cached != null) return cached;
+    synchronized (SpawnRegistry.class) {
+      if (cachedNpcs == null) {
+        cachedNpcs = buildNpcs();
+      }
+      return cachedNpcs;
+    }
+  }
+
+  private static List<SpawnDefinition> buildNpcs() {
     List<SpawnDefinition> result = new ArrayList<>();
     result.addAll(scan("com.perso.T4C.npc", Set.of(SpawnKind.AUTO, SpawnKind.NPC)));
     return unique(result);
   }
 
   public static List<SpawnDefinition> monsters() {
+    List<SpawnDefinition> cached = cachedMonsters;
+    if (cached != null) return cached;
+    synchronized (SpawnRegistry.class) {
+      if (cachedMonsters == null) {
+        cachedMonsters = buildMonsters();
+      }
+      return cachedMonsters;
+    }
+  }
+
+  private static List<SpawnDefinition> buildMonsters() {
     List<SpawnDefinition> result = new ArrayList<>();
     result.addAll(scan("com.perso.T4C.monster", Set.of(SpawnKind.AUTO, SpawnKind.MONSTER)));
     result.addAll(scan("com.perso.T4C.npc", Set.of(SpawnKind.MONSTER)));

@@ -23,6 +23,7 @@ import com.perso.T4C.ui.FontManager;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class LoadingScreen implements Screen {
   private final MyGame game;
@@ -47,7 +48,12 @@ public class LoadingScreen implements Screen {
     game.customFont = FontManager.getInstance().getT4CBeaulieuFont(22, Color.WHITE);
     loadAllAssetsRecursive(SOUNDS_DIR);
     SoundManager.init(game.assetManager);
-    game.startMapPreloadAsync();
+    CompletableFuture.runAsync(
+        () -> {
+          com.perso.T4C.teleport.TeleportRegistry.load();
+          com.perso.T4C.spawn.SpawnRegistry.monsters();
+          com.perso.T4C.spawn.SpawnRegistry.npcs();
+        });
   }
 
   private void initGameCursor() {
@@ -76,14 +82,13 @@ public class LoadingScreen implements Screen {
       batch.draw(loadingImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
     batch.end();
-    if (game.assetManager.getQueuedAssets() > 0) {
-      try {
-        game.assetManager.update();
-      } catch (Exception e) {
-        handleLoadingError(e);
-      }
+    boolean assetsLoaded = false;
+    try {
+      assetsLoaded = game.assetManager.update();
+    } catch (Exception e) {
+      handleLoadingError(e);
     }
-    if (game.assetManager.update()) {
+    if (assetsLoaded) {
       if (!failedSounds.isEmpty() && !retryingFailedAssets) {
         retryingFailedAssets = true;
         System.out.println("Retrying " + failedSounds.size() + " sound file(s) as Music...");

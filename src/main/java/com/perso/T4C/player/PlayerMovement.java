@@ -123,17 +123,17 @@ public class PlayerMovement {
     if (directInput) {
       path.clear();
     }
-    NativeTimingProfile timing = NativeTimingProfile.current();
-    // continueActiveGridStep multiplies this unit budget by MOVX/MOVY.
-    // Convert the existing world speed to native movement units so changing
-    // the profile does not unexpectedly slow the player down.
     float travelBudget =
         GameConstants.PLAYER_SPEED
             * Math.max(0f, delta)
-            / timing.movX()
             * player.getEffectiveSpeedMultiplier();
     boolean advancedThisUpdate = false;
+    int safetyIterations = 0;
     while (true) {
+      if (++safetyIterations > 256) {
+        moving = advancedThisUpdate;
+        return;
+      }
       Coordinates pos = player.getCoordinates();
       if (activeGridStep && !isAtExpectedActiveStepPosition(pos)) {
         clearActiveGridStep();

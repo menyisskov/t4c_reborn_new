@@ -30,6 +30,7 @@ import com.perso.T4C.combat.SeraphArrivalAnimation;
 import com.perso.T4C.combat.SeraphAuraService;
 import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.config.MapDefinition;
+import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.death.DeathPenaltyService;
 import com.perso.T4C.entity.NameRenderer;
@@ -217,6 +218,7 @@ public class MainGameScreen implements Screen {
   private final com.perso.T4C.profiler.GameProfiler gameProfiler =
       new com.perso.T4C.profiler.GameProfiler();
   private long profilerFrameIndex = 0;
+  private float simulationAccumulator;
   private static final String COMPANION_VANISH_SPELL = "spell.light";
   private static final String LEVEL_UP_SOUND = "Seraph.wav";
   private static final String MUSIC_ZONES_SUFFIX = ".musiczones.json";
@@ -255,6 +257,8 @@ public class MainGameScreen implements Screen {
 
   boolean advanceLoading() throws GameException {
     if (loadingStep >= loadingStepCount()) return false;
+    long stepStartedAt = System.nanoTime();
+    int stepBeingLoaded = loadingStep;
     switch (loadingStep) {
       case 0 -> initializeCharacterAndWorld();
       case 1 -> initializeWorldData();
@@ -266,6 +270,10 @@ public class MainGameScreen implements Screen {
       default -> throw new IllegalStateException("Unknown loading step: " + loadingStep);
     }
     loadingStep++;
+    log.info(
+        "Loading step {} completed in {}ms",
+        stepBeingLoaded,
+        (System.nanoTime() - stepStartedAt) / 1_000_000L);
     return loadingStep < loadingStepCount();
   }
 
@@ -334,6 +342,7 @@ public class MainGameScreen implements Screen {
         INITIAL_WARMUP_CHUNK_BUDGET,
         INITIAL_WARMUP_TMPL_BUDGET,
         INITIAL_WARMUP_DECOR_BUDGET);
+    game.startMapPreloadAsync();
     displayInitialized = true;
   }
 
@@ -3499,6 +3508,14 @@ public class MainGameScreen implements Screen {
   }
 
   private void updateEntities(float delta) {
+    NativeTimingProfile timing = NativeTimingProfile.current();
+    simulationAccumulator += Math.max(0f, Math.min(delta, 0.25f));
+    float simulationStep = 1f / timing.fps();
+    if (simulationAccumulator < simulationStep) {
+      return;
+    }
+    simulationAccumulator -= simulationStep;
+    delta = simulationStep;
     floatingDamage.update(delta);
     if (player != null) {
       if (SeraphAuraService.synchronize(player)) {

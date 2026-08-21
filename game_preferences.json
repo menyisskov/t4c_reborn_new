@@ -4,7 +4,7 @@
   "brightness": 1.0487804,
   "fullscreen": false,
   "vSync": true,
-  "enable32FPS": false,
+  "enable32FPS": true,
   "showHudValues": false,
   "transparentGui": true,
   "seraphAnimation": true,
