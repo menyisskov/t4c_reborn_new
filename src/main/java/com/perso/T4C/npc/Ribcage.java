@@ -48,7 +48,7 @@ public final class Ribcage extends ScriptedNpc {
           return;
         }
 
-        int p = c.flag("__FLAG_ADDON_STORYLINE_PROGRESS");
+        int p = c.flag("ADDON_STORYLINE_PROGRESS");
 
         if (p == 17 && c.hasItem("heart_of_gluriurl")) {
 
@@ -62,7 +62,7 @@ public final class Ribcage extends ScriptedNpc {
 
           c.giveItem("darkstone");
 
-          c.flag("__FLAG_ADDON_STORYLINE_PROGRESS", 18);
+          c.flag("ADDON_STORYLINE_PROGRESS", 18);
 
           c.systemMessageKey("message.gluriurl.gypsy");
 

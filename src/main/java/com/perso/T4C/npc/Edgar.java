@@ -116,7 +116,7 @@ public final class Edgar extends ScriptedNpc {
       public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
         if (c.flag("__SHAKE_EDGAR") > 1) c.sayKey("npc.edgar.refuse");
-        else if (c.flag("__FLAG_ADDON_STORYLINE_PROGRESS") < 42) c.sayKey("npc.edgar.busy");
+        else if (c.flag("ADDON_STORYLINE_PROGRESS") < 42) c.sayKey("npc.edgar.busy");
         else c.sayKey("npc.edgar.thanks");
       }
 

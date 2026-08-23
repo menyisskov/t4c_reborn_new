@@ -46,7 +46,7 @@ public final class CarmanSpawner extends ScriptedNpc {
       @Override
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
-        if (c.flag("__FLAG_ADDON_USER_SPAWNED_CARMAN") == 1) {
+        if (c.flag("ADDON_USER_SPAWNED_CARMAN") == 1) {
 
           c.sayKey("npc.carmanspawner.ruse");
 

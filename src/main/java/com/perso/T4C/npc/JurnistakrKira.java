@@ -9,7 +9,13 @@ import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "JurnistakrKira", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "JurnistakrKira",
+    x = 1698,
+    y = 1152,
+    z = 0,
+    stationary = false,
+    aggressive = false)
 public final class JurnistakrKira extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

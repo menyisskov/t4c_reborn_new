@@ -77,7 +77,7 @@ public final class Tristan extends ScriptedNpc {
           int q = c.flag("ADDON_SERAPH_ARMOR_QUEST");
 
           if (q == 1) c.sayKey("npc.tristan.progress.quest");
-          else if (c.flag("NUMBER_OF_REMORTS") >= 1) {
+          else if (c.flag("__FLAG_NUMBER_OF_REMORTS") >= 1) {
 
             c.sayKey("npc.tristan.progress.winged");
 
@@ -124,7 +124,7 @@ public final class Tristan extends ScriptedNpc {
 
             c.sayKey("npc.tristan.digging");
 
-            if (c.flag("NUMBER_OF_REMORTS") >= 1) c.flag("ADDON_SERAPH_ARMOR_QUEST", 1);
+            if (c.flag("__FLAG_NUMBER_OF_REMORTS") >= 1) c.flag("ADDON_SERAPH_ARMOR_QUEST", 1);
 
             return true;
           }

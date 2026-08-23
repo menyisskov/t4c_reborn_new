@@ -165,15 +165,22 @@ public final class Gypsy extends ScriptedNpc {
             if (k.contains("REGENERATION")) {
 
               giveChoice(
-                  c, "AmuletOfRegeneration", "GemOfRegeneration", "npc.gypsy.choice.regeneration");
+                  c,
+                  "item.amulet_of_regeneration",
+                  "item.gem_of_regeneration",
+                  "npc.gypsy.choice.regeneration");
 
             } else if (k.contains("RENEWAL")) {
 
-              giveChoice(c, "AmuletOfRenewal", "GemOfRenewal", "npc.gypsy.choice.renewal");
+              giveChoice(
+                  c,
+                  "item.amulet_of_renewal",
+                  "item.gem_of_renewal",
+                  "npc.gypsy.choice.renewal");
 
             } else if (k.contains("QUIVER")) {
 
-              c.giveItem("TrueshotQuiver");
+              c.giveItem("item.trueshot_quiver");
 
               c.sayKey("npc.gypsy.choice.quiver");
 

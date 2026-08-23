@@ -151,11 +151,7 @@ public final class ColosseumClerk extends ScriptedNpc {
 
           String k = text == null ? "" : text.trim().toUpperCase(java.util.Locale.ROOT);
 
-          if (c.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA") > 0
-              && !k.equals("BYE")
-              && !k.equals("LEAVE")
-              && !k.equals("EXIT")
-              && !k.equals("QUIT")) {
+          if (c.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA") > 0) {
 
             c.sayKey("npc.colosseumclerk.busy");
 
@@ -215,9 +211,26 @@ public final class ColosseumClerk extends ScriptedNpc {
             return true;
           }
 
-          if (k.equals("BYE") || k.equals("LEAVE") || k.equals("EXIT") || k.equals("QUIT")) {
+          // The original script uses a two-step confirmation: LEAVE/BYE/QUIT/FAREWELL/EXIT
+          // asks whether the player is leaving, then LEAVING performs the teleport.
+          if (k.startsWith("LEAVING")) {
+
+            c.sayKey("npc.colosseumclerk.leave");
+
+            c.teleport(343, 492, 0);
 
             c.endConversation();
+
+            return true;
+          }
+
+          if (k.equals("BYE")
+              || k.equals("LEAVE")
+              || k.equals("EXIT")
+              || k.equals("QUIT")
+              || k.equals("FAREWELL")) {
+
+            c.sayKey("npc.topic.colosseumclerk.8");
 
             return true;
           }

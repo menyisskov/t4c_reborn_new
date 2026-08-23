@@ -71,7 +71,9 @@ public final class Sabrina extends ScriptedNpc {
 
           c.sayKey("npc.sabrina.heal");
 
-          c.castTargetSpell(10270);
+          c.player().applyHeal(c.player().getMaxHp(), c.player().getMaxHp());
+
+          c.castTargetSpell("spell.npc_cantrip_serious_heal");
 
           return true;
         }

@@ -189,12 +189,12 @@ public final class WitchDoctorKwarlgloth extends ScriptedNpc {
 
           if (yes
               && c.itemCount("bloodstone_ring") >= 4
-              && c.itemCount("sacrificial_dagger_of_bleeding") >= 3
+              && c.itemCount("item.dagger_of_bleeding") >= 3
               && c.player().getGold() >= 20000) {
 
             for (int i = 0; i < 4; i++) c.takeItem("bloodstone_ring");
 
-            for (int i = 0; i < 3; i++) c.takeItem("sacrificial_dagger_of_bleeding");
+            for (int i = 0; i < 3; i++) c.takeItem("item.dagger_of_bleeding");
 
             c.player().addGold(-20000);
 

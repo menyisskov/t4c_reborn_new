@@ -12,6 +12,7 @@ import java.util.List;
 
 @Spawn(type = "Custodian", x = 1080, y = 1400, z = 0, stationary = true, aggressive = false)
 public final class Custodian extends ScriptedNpc {
+  private static final String DIALOG_STATE = "__CUSTODIAN_DIALOG_STATE";
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";
@@ -109,25 +110,34 @@ public final class Custodian extends ScriptedNpc {
 
           int progress = c.flag("ADDON_STORYLINE_PROGRESS");
 
+          c.flag(DIALOG_STATE, 0);
+
           if (progress < 34) {
 
-            c.sayKey("npc.custodian.blocked");
+            c.sayKey("npc.cpp.intl.11950");
 
             return;
           }
 
           if (progress == 34) {
 
-            c.sayKey("npc.custodian.ritePrompt");
+            c.sayKey("npc.cpp.intl.11951");
 
-            c.askYesNo("RITE");
+            return;
+          }
+
+          if (progress == 35) {
+
+            c.sayKey("npc.cpp.intl.11952");
+
+            c.askYesNo("READY");
 
             return;
           }
 
           if (c.hasFlag("ADDON_CUSTODIAN_ACCESS", 1)) {
 
-            c.sayKey("npc.custodian.accessPrompt");
+            c.sayKey("npc.custodian.access_prompt");
 
             c.askYesNo("GO_UP");
 
@@ -142,25 +152,80 @@ public final class Custodian extends ScriptedNpc {
 
           String k = keyword == null ? "" : keyword.toUpperCase(java.util.Locale.ROOT);
 
+          int dialogueState = c.flag(DIALOG_STATE);
+
+          if (dialogueState != 0) {
+
+            return answerRitePhrase(c, dialogueState, k);
+          }
+
           if (k.equals("ACCESS") && c.hasFlag("ADDON_CUSTODIAN_ACCESS", 1)) {
 
-            c.sayKey("npc.custodian.accessPrompt");
+            c.sayKey("npc.topic.custodian.4");
 
             c.askYesNo("GO_UP");
 
             return true;
           }
 
+          if (k.equals("BARBARIAN")) {
+
+            c.sayKey(
+                c.flag("ADDON_STORYLINE_PROGRESS") == 34
+                    ? "npc.topic.custodian.0"
+                    : "npc.cpp.intl.11957");
+
+            return true;
+          }
+
+          if (k.equals("UNEDUCATED")) {
+
+            c.sayKey(
+                c.flag("ADDON_STORYLINE_PROGRESS") == 34
+                    ? "npc.topic.custodian.1"
+                    : "npc.cpp.intl.11957");
+
+            return true;
+          }
+
+          if (k.contains("RITE") && k.contains("PASSAGE")) {
+
+            if (c.flag("ADDON_STORYLINE_PROGRESS") == 34) {
+
+              c.sayKey("npc.topic.custodian.2");
+
+              c.flag("ADDON_STORYLINE_PROGRESS", 35);
+
+            } else if (c.flag("ADDON_STORYLINE_PROGRESS") == 35)
+              c.sayKey("npc.custodian.phrases");
+            else c.sayKey("npc.cpp.intl.11957");
+
+            return true;
+          }
+
+          if (k.equals("DOS VANESLAE NAVIDAL")
+              || k.equals("KADRIM LOK UNGRIM DOK")
+              || k.equals("SOMALINA OUNDI INESORA")
+              || k.equals("THARRGRA NETHDROVAR")) {
+
+            c.sayKey(
+                c.flag("ADDON_STORYLINE_PROGRESS") == 35
+                    ? "npc.topic.custodian.3"
+                    : "npc.cpp.intl.11957");
+
+            return true;
+          }
+
           if (k.equals("NAME")) {
 
-            c.sayKey("npc.custodian.name");
+            c.sayKey("npc.topic.custodian.5");
 
             return true;
           }
 
           if (k.equals("WORK")) {
 
-            c.sayKey("npc.custodian.work");
+            c.sayKey("npc.topic.custodian.6");
 
             return true;
           }
@@ -171,7 +236,7 @@ public final class Custodian extends ScriptedNpc {
               || k.equals("FAREWELL")
               || k.equals("EXIT")) {
 
-            c.sayKey("npc.custodian.bye");
+            c.sayKey("npc.topic.custodian.7");
 
             c.endConversation();
 
@@ -186,15 +251,61 @@ public final class Custodian extends ScriptedNpc {
 
           if ("GO_UP".equals(prompt) && yes) {
 
-            c.sayKey("npc.custodian.goUp");
+            c.sayKey("npc.custodian.go_up");
 
             c.teleport(1081, 1465, 0);
 
             c.endConversation();
 
-          } else if ("GO_UP".equals(prompt)) c.sayKey("npc.custodian.later");
-          else if ("RITE".equals(prompt) && yes) c.sayKey("npc.custodian.firstPhrase");
-          else if ("RITE".equals(prompt)) c.sayKey("npc.custodian.refuse");
+          } else if ("GO_UP".equals(prompt)) c.sayKey("npc.custodian.stay");
+          else if ("READY".equals(prompt) && yes) {
+
+            c.sayKey("npc.cpp.intl.11969");
+
+            c.flag(DIALOG_STATE, 1);
+
+          } else if ("READY".equals(prompt)) c.sayKey("npc.custodian.not_ready");
+          else return false;
+
+          return true;
+        }
+
+        private boolean answerRitePhrase(NpcBehaviorContext c, int state, String answer) {
+
+          boolean correct =
+              switch (state) {
+                case 1 -> answer.contains("TO LOOK UPON ONE") && answer.contains("SELF");
+                case 2 -> answer.contains("ONE MUST ONLY HAVE EYES");
+                case 3 -> answer.contains("TO RECOGNIZE ONE") && answer.contains("OWN IGNORANCE");
+                case 4 -> answer.contains("ONE MUST OPEN THESE EYES");
+                default -> false;
+              };
+
+          if (!correct) {
+
+            c.sayKey("npc.custodian.rite_failed");
+
+            c.flag(DIALOG_STATE, 0);
+
+            c.endConversation();
+
+            return true;
+          }
+
+          if (state == 4) {
+
+            c.sayKey("npc.custodian.rite_complete");
+
+            c.flag("ADDON_CUSTODIAN_ACCESS", 1);
+
+            c.flag(DIALOG_STATE, 0);
+
+          } else {
+
+            c.sayKey("npc.custodian.phrase_" + (state + 1));
+
+            c.flag(DIALOG_STATE, state + 1);
+          }
 
           return true;
         }

@@ -89,7 +89,7 @@ public final class Venadar extends ScriptedNpc {
 
         } else {
 
-          c.sayKey("npc.venadar.welcome");
+          c.sayKey("npc.cpp.intl.10237");
         }
       }
 

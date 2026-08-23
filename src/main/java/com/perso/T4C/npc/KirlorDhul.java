@@ -141,7 +141,7 @@ public final class KirlorDhul extends ScriptedNpc {
       @Override
       public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
-        if (c.flag("__FLAG_ADDON_STORYLINE_PROGRESS") == 21) c.sayKey("npc.kirlor.after");
+        if (c.flag("ADDON_STORYLINE_PROGRESS") == 21) c.sayKey("npc.kirlor.after");
         else c.sayKey("npc.kirlor.welcome");
       }
 

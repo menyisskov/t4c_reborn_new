@@ -177,7 +177,7 @@ public final class DariusMoonglow extends ScriptedNpc {
 
             c.player().applyHeal(c.player().getMaxHp(), c.player().getMaxHp());
 
-            c.castTargetSpell(10767);
+            c.castTargetSpell("spell.npc_cantrip_serious_heal");
 
             c.sayKey("npc.darius.heal.free");
 
@@ -226,7 +226,7 @@ public final class DariusMoonglow extends ScriptedNpc {
           c.sayKey("npc.darius.heal.done");
         }
 
-        c.castTargetSpell(10767);
+        c.castTargetSpell("spell.npc_cantrip_serious_heal");
 
         return true;
       }

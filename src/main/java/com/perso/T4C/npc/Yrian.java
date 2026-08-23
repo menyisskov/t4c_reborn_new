@@ -156,7 +156,7 @@ public final class Yrian extends ScriptedNpc {
         @Override
         public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
-          int p = c.flag("__FLAG_ADDON_STORYLINE_PROGRESS");
+          int p = c.flag("ADDON_STORYLINE_PROGRESS");
 
           if (p < 13) c.sayKey("npc.yrian.start.welcome");
           else if (p == 13) {
@@ -187,21 +187,21 @@ public final class Yrian extends ScriptedNpc {
 
           if (keyword.equals("COMMANDER")) {
 
-            if (c.flag("__FLAG_ADDON_STORYLINE_PROGRESS") == 13)
-              c.flag("__FLAG_ADDON_STORYLINE_PROGRESS", 14);
+            if (c.flag("ADDON_STORYLINE_PROGRESS") == 13)
+              c.flag("ADDON_STORYLINE_PROGRESS", 14);
 
             return StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
           }
 
           if (keyword.equals("CRYPT")) {
 
-            if (c.flag("__FLAG_ADDON_STORYLINE_PROGRESS") == 15) {
+            if (c.flag("ADDON_STORYLINE_PROGRESS") == 15) {
 
               c.giveItem("guardian_ring_of_vitality");
 
               c.giveItem("gem_of_vitality");
 
-              c.flag("__FLAG_ADDON_STORYLINE_PROGRESS", 16);
+              c.flag("ADDON_STORYLINE_PROGRESS", 16);
             }
 
             return StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
