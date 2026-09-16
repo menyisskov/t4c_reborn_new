@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_air_helmet",
+  "name": "Empyrean Air Helmet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 49.53,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20495,
+      "statId": 12,
+      "expression": "42"
+    },
+    {
+      "boostId": 20496,
+      "statId": 13,
+      "expression": "42"
+    },
+    {
+      "boostId": 20497,
+      "statId": 14,
+      "expression": "42"
+    },
+    {
+      "boostId": 20498,
+      "statId": 15,
+      "expression": "42"
+    },
+    {
+      "boostId": 20499,
+      "statId": 21,
+      "expression": "12"
+    },
+    {
+      "boostId": 20500,
+      "statId": 22,
+      "expression": "42"
+    },
+    {
+      "boostId": 20501,
+      "statId": 16,
+      "expression": "18"
+    }
+  ]
+}

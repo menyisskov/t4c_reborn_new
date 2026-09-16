@@ -1,0 +1,63 @@
+{
+  "key": "ancient_celestial_water_protector",
+  "name": "Ancient Celestial Water Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 25.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20119,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 20120,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 20121,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 20122,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 20123,
+      "statId": 21,
+      "expression": "6"
+    },
+    {
+      "boostId": 20124,
+      "statId": 22,
+      "expression": "6"
+    },
+    {
+      "boostId": 20125,
+      "statId": 18,
+      "expression": "9"
+    }
+  ]
+}

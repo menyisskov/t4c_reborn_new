@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_water_armor",
+  "name": "Empyrean Water Armor",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 171.75,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20432,
+      "statId": 12,
+      "expression": "71"
+    },
+    {
+      "boostId": 20433,
+      "statId": 13,
+      "expression": "71"
+    },
+    {
+      "boostId": 20434,
+      "statId": 14,
+      "expression": "71"
+    },
+    {
+      "boostId": 20435,
+      "statId": 15,
+      "expression": "71"
+    },
+    {
+      "boostId": 20436,
+      "statId": 21,
+      "expression": "41"
+    },
+    {
+      "boostId": 20437,
+      "statId": 22,
+      "expression": "71"
+    },
+    {
+      "boostId": 20438,
+      "statId": 18,
+      "expression": "61"
+    }
+  ]
+}

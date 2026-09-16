@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_air_helmet",
+  "name": "Ancient Celestial Air Helmet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 33.02,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20147,
+      "statId": 12,
+      "expression": "28"
+    },
+    {
+      "boostId": 20148,
+      "statId": 13,
+      "expression": "28"
+    },
+    {
+      "boostId": 20149,
+      "statId": 14,
+      "expression": "28"
+    },
+    {
+      "boostId": 20150,
+      "statId": 15,
+      "expression": "28"
+    },
+    {
+      "boostId": 20151,
+      "statId": 21,
+      "expression": "8"
+    },
+    {
+      "boostId": 20152,
+      "statId": 22,
+      "expression": "28"
+    },
+    {
+      "boostId": 20153,
+      "statId": 16,
+      "expression": "12"
+    }
+  ]
+}

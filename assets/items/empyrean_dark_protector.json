@@ -1,0 +1,63 @@
+{
+  "key": "empyrean_dark_protector",
+  "name": "Empyrean Dark Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 38.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20425,
+      "statId": 12,
+      "expression": "9"
+    },
+    {
+      "boostId": 20426,
+      "statId": 13,
+      "expression": "9"
+    },
+    {
+      "boostId": 20427,
+      "statId": 14,
+      "expression": "9"
+    },
+    {
+      "boostId": 20428,
+      "statId": 15,
+      "expression": "9"
+    },
+    {
+      "boostId": 20429,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20430,
+      "statId": 22,
+      "expression": "9"
+    },
+    {
+      "boostId": 20431,
+      "statId": 24,
+      "expression": "14"
+    }
+  ]
+}

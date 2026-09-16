@@ -1,0 +1,63 @@
+{
+  "key": "ancient_celestial_light_protector",
+  "name": "Ancient Celestial Light Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 25.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20245,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 20246,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 20247,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 20248,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 20249,
+      "statId": 21,
+      "expression": "6"
+    },
+    {
+      "boostId": 20250,
+      "statId": 22,
+      "expression": "6"
+    },
+    {
+      "boostId": 20251,
+      "statId": 23,
+      "expression": "9"
+    }
+  ]
+}

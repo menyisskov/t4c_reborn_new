@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.screen.Inventory;
+import com.perso.T4C.gui.screen.LocationsScreen;
 import com.perso.T4C.gui.screen.QuestScreen;
 import com.perso.T4C.gui.screen.SpellBook;
 import com.perso.T4C.gui.screen.Statistics;
@@ -124,6 +125,15 @@ public class GameInputHandler {
         && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
             || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))) {
       if (mapToggle != null) mapToggle.run();
+    }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.L)
+        && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+            || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))) {
+      if (GuiManager.isCurrent(LocationsScreen.class)) {
+        GuiManager.close();
+      } else {
+        GuiManager.open(new LocationsScreen(player));
+      }
     }
     if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
       if (debugOverlayToggle != null) {

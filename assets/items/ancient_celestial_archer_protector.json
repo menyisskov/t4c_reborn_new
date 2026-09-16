@@ -1,0 +1,68 @@
+{
+  "key": "ancient_celestial_archer_protector",
+  "name": "Ancient Celestial Archer Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 25.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 500,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20340,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 20341,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 20342,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 20343,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 20344,
+      "statId": 21,
+      "expression": "6"
+    },
+    {
+      "boostId": 20345,
+      "statId": 22,
+      "expression": "6"
+    },
+    {
+      "boostId": 20346,
+      "statId": 6,
+      "expression": "9"
+    },
+    {
+      "boostId": 20347,
+      "statId": 10035,
+      "expression": "68"
+    }
+  ]
+}

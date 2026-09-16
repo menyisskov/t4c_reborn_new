@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_fire_leggings",
+  "name": "Ancient Celestial Fire Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 38.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20028,
+      "statId": 12,
+      "expression": "29"
+    },
+    {
+      "boostId": 20029,
+      "statId": 13,
+      "expression": "29"
+    },
+    {
+      "boostId": 20030,
+      "statId": 14,
+      "expression": "29"
+    },
+    {
+      "boostId": 20031,
+      "statId": 15,
+      "expression": "29"
+    },
+    {
+      "boostId": 20032,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20033,
+      "statId": 22,
+      "expression": "29"
+    },
+    {
+      "boostId": 20034,
+      "statId": 17,
+      "expression": "14"
+    }
+  ]
+}

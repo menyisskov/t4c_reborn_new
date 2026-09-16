@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_fire_boots",
+  "name": "Ancient Celestial Fire Boots",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot",
+  "appearanceInventory": "64kInvPlateArmorFeet",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 34.29,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 265,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20007,
+      "statId": 12,
+      "expression": "29"
+    },
+    {
+      "boostId": 20008,
+      "statId": 13,
+      "expression": "29"
+    },
+    {
+      "boostId": 20009,
+      "statId": 14,
+      "expression": "29"
+    },
+    {
+      "boostId": 20010,
+      "statId": 15,
+      "expression": "29"
+    },
+    {
+      "boostId": 20011,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20012,
+      "statId": 22,
+      "expression": "29"
+    },
+    {
+      "boostId": 20013,
+      "statId": 17,
+      "expression": "12"
+    }
+  ]
+}

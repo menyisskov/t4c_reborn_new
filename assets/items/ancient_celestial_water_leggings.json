@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_water_leggings",
+  "name": "Ancient Celestial Water Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 38.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20112,
+      "statId": 12,
+      "expression": "29"
+    },
+    {
+      "boostId": 20113,
+      "statId": 13,
+      "expression": "29"
+    },
+    {
+      "boostId": 20114,
+      "statId": 14,
+      "expression": "29"
+    },
+    {
+      "boostId": 20115,
+      "statId": 15,
+      "expression": "29"
+    },
+    {
+      "boostId": 20116,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20117,
+      "statId": 22,
+      "expression": "29"
+    },
+    {
+      "boostId": 20118,
+      "statId": 18,
+      "expression": "14"
+    }
+  ]
+}

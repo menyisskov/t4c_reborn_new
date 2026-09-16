@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_dark_boots",
+  "name": "Ancient Celestial Dark Boots",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot",
+  "appearanceInventory": "64kInvPlateArmorFeet",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 34.29,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 265,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20049,
+      "statId": 12,
+      "expression": "29"
+    },
+    {
+      "boostId": 20050,
+      "statId": 13,
+      "expression": "29"
+    },
+    {
+      "boostId": 20051,
+      "statId": 14,
+      "expression": "29"
+    },
+    {
+      "boostId": 20052,
+      "statId": 15,
+      "expression": "29"
+    },
+    {
+      "boostId": 20053,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20054,
+      "statId": 22,
+      "expression": "29"
+    },
+    {
+      "boostId": 20055,
+      "statId": 24,
+      "expression": "12"
+    }
+  ]
+}

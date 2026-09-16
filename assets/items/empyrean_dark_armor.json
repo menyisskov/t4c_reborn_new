@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_dark_armor",
+  "name": "Empyrean Dark Armor",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 171.75,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20390,
+      "statId": 12,
+      "expression": "71"
+    },
+    {
+      "boostId": 20391,
+      "statId": 13,
+      "expression": "71"
+    },
+    {
+      "boostId": 20392,
+      "statId": 14,
+      "expression": "71"
+    },
+    {
+      "boostId": 20393,
+      "statId": 15,
+      "expression": "71"
+    },
+    {
+      "boostId": 20394,
+      "statId": 21,
+      "expression": "41"
+    },
+    {
+      "boostId": 20395,
+      "statId": 22,
+      "expression": "71"
+    },
+    {
+      "boostId": 20396,
+      "statId": 24,
+      "expression": "61"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_water_armor",
+  "name": "Ancient Celestial Water Armor",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 114.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20084,
+      "statId": 12,
+      "expression": "49"
+    },
+    {
+      "boostId": 20085,
+      "statId": 13,
+      "expression": "49"
+    },
+    {
+      "boostId": 20086,
+      "statId": 14,
+      "expression": "49"
+    },
+    {
+      "boostId": 20087,
+      "statId": 15,
+      "expression": "49"
+    },
+    {
+      "boostId": 20088,
+      "statId": 21,
+      "expression": "29"
+    },
+    {
+      "boostId": 20089,
+      "statId": 22,
+      "expression": "49"
+    },
+    {
+      "boostId": 20090,
+      "statId": 18,
+      "expression": "41"
+    }
+  ]
+}

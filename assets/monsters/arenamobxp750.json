@@ -1,0 +1,70 @@
+{
+  "name": "ArenaMobXP750",
+  "displayName": "${monster.arenamobxp750}",
+  "health": 95794,
+  "xpPerHit": 0,
+  "xpOnDeath": 30195375,
+  "hitDamageMin": 1,
+  "hitDamageMax": 4,
+  "respawnTime": 30000,
+  "walkPattern": "Agmorkian#h",
+  "attackPattern": "AgmorkianA#h",
+  "deathPattern": "AgmorkianC!p",
+  "soundAttack": "Kraanian Attack.wav",
+  "soundDeath": "Kraanian Dying.wav",
+  "soundHit": "Kraanian Hit.wav",
+  "gold": {
+    "min": 0,
+    "max": 0
+  },
+  "loot": [],
+  "stats": {
+    "intel": 915,
+    "end": 689,
+    "will": 689,
+    "str": 765,
+    "agi": 689,
+    "wis": 689,
+    "luck": 165
+  },
+  "resists": [
+    46,
+    94,
+    46,
+    94,
+    70,
+    5000,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100
+  ],
+  "level": 750,
+  "dodge": 3010,
+  "armorClass": {
+    "min": 0,
+    "max": 1136354190
+  },
+  "appearance": 20036,
+  "aggro": 100,
+  "clan": 0,
+  "canAttack": true,
+  "attacks": [
+    {
+      "formula": "1d 1286 + 1013 ",
+      "combatAttack": 9010,
+      "percentage": 20
+    }
+  ],
+  "tameable": false,
+  "tameMaxLevel": 0,
+  "spawnAliases": [],
+  "sourceEvents": {
+    "OnPopup": " \r\n  \tCastSpellSelf(\"spell.mob_arena_major_regeneration_spell\") \t\r\n\tSimpleMonster::OnPopup( UNIT_FUNC_PARAM );\r\n",
+    "OnDeath": "\r\n    INIT_HANDLER\r\n\tif( target != NULL )\r\n\t{\r\n\t\tGiveItem(41702)\r\n\t\tPRIVATE_SYSTEM_MESSAGE(INTL( 10682, \"You receive a battle token for your efforts.\"))\r\n\t}\r\n    CLOSE_HANDLER\r\n\r\n\tCastSpellSelf(\"spell.mob_arena_level_spell\")\r\n\r\n\tSimpleMonster::OnDeath( UNIT_FUNC_PARAM );\r\n",
+    "@spell.spell.mob_arena_level_spell": "GiveFlag(__FLAG_ARENA_LEVEL,750)",
+    "OnDestroy": "\r\n\tIF(CheckGlobalFlag(__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA) > 0)\r\n\t\tGiveGlobalFlag(__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA, CheckGlobalFlag(__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA) - 1)\r\n\tENDIF\r\n\r\n\tSimpleMonster::OnDestroy( UNIT_FUNC_PARAM );\r\n"
+  }
+}

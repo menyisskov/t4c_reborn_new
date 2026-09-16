@@ -59,6 +59,8 @@ public class MyGame extends Game {
   @Override
   public void create() {
     Gdx.app.setLogLevel(Application.LOG_DEBUG);
+    com.perso.T4C.monster.json.MonsterJsonLoader.loadAndRegister();
+    com.perso.T4C.item.json.ItemJsonLoader.loadAndRegister();
     batch = new SpriteBatch();
     assetManager = new AssetManager();
     cursorManager = new GameCursorManager();

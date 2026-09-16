@@ -1,0 +1,63 @@
+{
+  "key": "empyrean_earth_protector",
+  "name": "Empyrean Earth Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 38.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20551,
+      "statId": 12,
+      "expression": "9"
+    },
+    {
+      "boostId": 20552,
+      "statId": 13,
+      "expression": "9"
+    },
+    {
+      "boostId": 20553,
+      "statId": 14,
+      "expression": "9"
+    },
+    {
+      "boostId": 20554,
+      "statId": 15,
+      "expression": "9"
+    },
+    {
+      "boostId": 20555,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20556,
+      "statId": 22,
+      "expression": "9"
+    },
+    {
+      "boostId": 20557,
+      "statId": 19,
+      "expression": "14"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "key": "ancient_celestial_archer_armor",
+  "name": "Ancient Celestial Archer Armor",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 114.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 500,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20300,
+      "statId": 12,
+      "expression": "49"
+    },
+    {
+      "boostId": 20301,
+      "statId": 13,
+      "expression": "49"
+    },
+    {
+      "boostId": 20302,
+      "statId": 14,
+      "expression": "49"
+    },
+    {
+      "boostId": 20303,
+      "statId": 15,
+      "expression": "49"
+    },
+    {
+      "boostId": 20304,
+      "statId": 21,
+      "expression": "29"
+    },
+    {
+      "boostId": 20305,
+      "statId": 22,
+      "expression": "49"
+    },
+    {
+      "boostId": 20306,
+      "statId": 6,
+      "expression": "41"
+    },
+    {
+      "boostId": 20307,
+      "statId": 10035,
+      "expression": "307"
+    }
+  ]
+}

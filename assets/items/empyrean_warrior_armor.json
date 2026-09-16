@@ -1,0 +1,69 @@
+{
+  "key": "empyrean_warrior_armor",
+  "name": "Empyrean Warrior Armor",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 171.75,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 500,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20600,
+      "statId": 12,
+      "expression": "71"
+    },
+    {
+      "boostId": 20601,
+      "statId": 13,
+      "expression": "71"
+    },
+    {
+      "boostId": 20602,
+      "statId": 14,
+      "expression": "71"
+    },
+    {
+      "boostId": 20603,
+      "statId": 15,
+      "expression": "71"
+    },
+    {
+      "boostId": 20604,
+      "statId": 21,
+      "expression": "41"
+    },
+    {
+      "boostId": 20605,
+      "statId": 22,
+      "expression": "71"
+    },
+    {
+      "boostId": 20606,
+      "statId": 3,
+      "expression": "61"
+    },
+    {
+      "boostId": 20607,
+      "statId": 8,
+      "expression": "409"
+    }
+  ]
+}

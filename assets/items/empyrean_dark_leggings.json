@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_dark_leggings",
+  "name": "Empyrean Dark Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 57.15,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20418,
+      "statId": 12,
+      "expression": "44"
+    },
+    {
+      "boostId": 20419,
+      "statId": 13,
+      "expression": "44"
+    },
+    {
+      "boostId": 20420,
+      "statId": 14,
+      "expression": "44"
+    },
+    {
+      "boostId": 20421,
+      "statId": 15,
+      "expression": "44"
+    },
+    {
+      "boostId": 20422,
+      "statId": 21,
+      "expression": "14"
+    },
+    {
+      "boostId": 20423,
+      "statId": 22,
+      "expression": "44"
+    },
+    {
+      "boostId": 20424,
+      "statId": 24,
+      "expression": "21"
+    }
+  ]
+}

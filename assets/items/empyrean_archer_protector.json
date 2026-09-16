@@ -1,0 +1,68 @@
+{
+  "key": "empyrean_archer_protector",
+  "name": "Empyrean Archer Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 38.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 500,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20688,
+      "statId": 12,
+      "expression": "9"
+    },
+    {
+      "boostId": 20689,
+      "statId": 13,
+      "expression": "9"
+    },
+    {
+      "boostId": 20690,
+      "statId": 14,
+      "expression": "9"
+    },
+    {
+      "boostId": 20691,
+      "statId": 15,
+      "expression": "9"
+    },
+    {
+      "boostId": 20692,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20693,
+      "statId": 22,
+      "expression": "9"
+    },
+    {
+      "boostId": 20694,
+      "statId": 6,
+      "expression": "14"
+    },
+    {
+      "boostId": 20695,
+      "statId": 10035,
+      "expression": "91"
+    }
+  ]
+}

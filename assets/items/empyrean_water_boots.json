@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_water_boots",
+  "name": "Empyrean Water Boots",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot",
+  "appearanceInventory": "64kInvPlateArmorFeet",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 51.435,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 265,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20439,
+      "statId": 12,
+      "expression": "42"
+    },
+    {
+      "boostId": 20440,
+      "statId": 13,
+      "expression": "42"
+    },
+    {
+      "boostId": 20441,
+      "statId": 14,
+      "expression": "42"
+    },
+    {
+      "boostId": 20442,
+      "statId": 15,
+      "expression": "42"
+    },
+    {
+      "boostId": 20443,
+      "statId": 21,
+      "expression": "12"
+    },
+    {
+      "boostId": 20444,
+      "statId": 22,
+      "expression": "42"
+    },
+    {
+      "boostId": 20445,
+      "statId": 18,
+      "expression": "18"
+    }
+  ]
+}

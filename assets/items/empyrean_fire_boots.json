@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_fire_boots",
+  "name": "Empyrean Fire Boots",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot",
+  "appearanceInventory": "64kInvPlateArmorFeet",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 51.435,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 265,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20355,
+      "statId": 12,
+      "expression": "42"
+    },
+    {
+      "boostId": 20356,
+      "statId": 13,
+      "expression": "42"
+    },
+    {
+      "boostId": 20357,
+      "statId": 14,
+      "expression": "42"
+    },
+    {
+      "boostId": 20358,
+      "statId": 15,
+      "expression": "42"
+    },
+    {
+      "boostId": 20359,
+      "statId": 21,
+      "expression": "12"
+    },
+    {
+      "boostId": 20360,
+      "statId": 22,
+      "expression": "42"
+    },
+    {
+      "boostId": 20361,
+      "statId": 17,
+      "expression": "18"
+    }
+  ]
+}

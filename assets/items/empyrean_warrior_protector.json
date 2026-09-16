@@ -1,0 +1,68 @@
+{
+  "key": "empyrean_warrior_protector",
+  "name": "Empyrean Warrior Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 38.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 500,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20640,
+      "statId": 12,
+      "expression": "9"
+    },
+    {
+      "boostId": 20641,
+      "statId": 13,
+      "expression": "9"
+    },
+    {
+      "boostId": 20642,
+      "statId": 14,
+      "expression": "9"
+    },
+    {
+      "boostId": 20643,
+      "statId": 15,
+      "expression": "9"
+    },
+    {
+      "boostId": 20644,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20645,
+      "statId": 22,
+      "expression": "9"
+    },
+    {
+      "boostId": 20646,
+      "statId": 3,
+      "expression": "14"
+    },
+    {
+      "boostId": 20647,
+      "statId": 8,
+      "expression": "91"
+    }
+  ]
+}

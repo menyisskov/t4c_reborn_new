@@ -1,0 +1,63 @@
+{
+  "key": "ancient_celestial_earth_protector",
+  "name": "Ancient Celestial Earth Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 25.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20203,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 20204,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 20205,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 20206,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 20207,
+      "statId": 21,
+      "expression": "6"
+    },
+    {
+      "boostId": 20208,
+      "statId": 22,
+      "expression": "6"
+    },
+    {
+      "boostId": 20209,
+      "statId": 19,
+      "expression": "9"
+    }
+  ]
+}

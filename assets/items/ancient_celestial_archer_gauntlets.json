@@ -1,0 +1,71 @@
+{
+  "key": "ancient_celestial_archer_gauntlets",
+  "name": "Ancient Celestial Archer Gauntlets",
+  "bodyPart": "LEFT_HAND",
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL",
+  "appearanceEquippedSecondary": "PupPlateGloveR",
+  "appearanceInventory": "64kInvPlateGlove",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 34.29,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 500,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 263,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20316,
+      "statId": 12,
+      "expression": "29"
+    },
+    {
+      "boostId": 20317,
+      "statId": 13,
+      "expression": "29"
+    },
+    {
+      "boostId": 20318,
+      "statId": 14,
+      "expression": "29"
+    },
+    {
+      "boostId": 20319,
+      "statId": 15,
+      "expression": "29"
+    },
+    {
+      "boostId": 20320,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20321,
+      "statId": 22,
+      "expression": "29"
+    },
+    {
+      "boostId": 20322,
+      "statId": 6,
+      "expression": "12"
+    },
+    {
+      "boostId": 20323,
+      "statId": 10035,
+      "expression": "92"
+    }
+  ]
+}

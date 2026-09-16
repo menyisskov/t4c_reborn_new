@@ -51,6 +51,28 @@ public final class MonsterRegistry {
     byAlias = null;
   }
 
+  /**
+   * Merges additional definitions (e.g. loaded from JSON) alongside the ones already registered,
+   * instead of replacing them like {@link #registerDefinitions}.
+   */
+  public static synchronized void registerAdditionalDefinitions(List<MonsterDef> extra) {
+    if (extra == null || extra.isEmpty()) {
+      return;
+    }
+    List<MonsterDef> merged = new java.util.ArrayList<>(javaDefinitions);
+    merged.addAll(extra);
+    javaDefinitions = List.copyOf(merged);
+    cache = null;
+    byName = null;
+    byNormalizedName = null;
+    byAlias = null;
+  }
+
+  /** Reverts to the classpath-scanned Java definitions, undoing any {@code registerAdditionalDefinitions} calls. Test-only. */
+  public static synchronized void resetToGeneratedDefinitions() {
+    registerGeneratedFactories();
+  }
+
   private static void registerGeneratedFactories() {
     String packageName = MonsterRegistry.class.getPackageName().replace(".core", "");
     String packagePath = packageName.replace('.', '/');
