@@ -1,0 +1,63 @@
+{
+  "key": "empyrean_fire_protector",
+  "name": "Empyrean Fire Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 38.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20383,
+      "statId": 12,
+      "expression": "9"
+    },
+    {
+      "boostId": 20384,
+      "statId": 13,
+      "expression": "9"
+    },
+    {
+      "boostId": 20385,
+      "statId": 14,
+      "expression": "9"
+    },
+    {
+      "boostId": 20386,
+      "statId": 15,
+      "expression": "9"
+    },
+    {
+      "boostId": 20387,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20388,
+      "statId": 22,
+      "expression": "9"
+    },
+    {
+      "boostId": 20389,
+      "statId": 17,
+      "expression": "14"
+    }
+  ]
+}

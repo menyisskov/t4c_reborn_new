@@ -1,0 +1,69 @@
+{
+  "key": "empyrean_warrior_boots",
+  "name": "Empyrean Warrior Boots",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot",
+  "appearanceInventory": "64kInvPlateArmorFeet",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 51.435,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 500,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 265,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20608,
+      "statId": 12,
+      "expression": "42"
+    },
+    {
+      "boostId": 20609,
+      "statId": 13,
+      "expression": "42"
+    },
+    {
+      "boostId": 20610,
+      "statId": 14,
+      "expression": "42"
+    },
+    {
+      "boostId": 20611,
+      "statId": 15,
+      "expression": "42"
+    },
+    {
+      "boostId": 20612,
+      "statId": 21,
+      "expression": "12"
+    },
+    {
+      "boostId": 20613,
+      "statId": 22,
+      "expression": "42"
+    },
+    {
+      "boostId": 20614,
+      "statId": 3,
+      "expression": "18"
+    },
+    {
+      "boostId": 20615,
+      "statId": 8,
+      "expression": "123"
+    }
+  ]
+}

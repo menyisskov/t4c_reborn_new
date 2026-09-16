@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_water_leggings",
+  "name": "Empyrean Water Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 57.15,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20460,
+      "statId": 12,
+      "expression": "44"
+    },
+    {
+      "boostId": 20461,
+      "statId": 13,
+      "expression": "44"
+    },
+    {
+      "boostId": 20462,
+      "statId": 14,
+      "expression": "44"
+    },
+    {
+      "boostId": 20463,
+      "statId": 15,
+      "expression": "44"
+    },
+    {
+      "boostId": 20464,
+      "statId": 21,
+      "expression": "14"
+    },
+    {
+      "boostId": 20465,
+      "statId": 22,
+      "expression": "44"
+    },
+    {
+      "boostId": 20466,
+      "statId": 18,
+      "expression": "21"
+    }
+  ]
+}

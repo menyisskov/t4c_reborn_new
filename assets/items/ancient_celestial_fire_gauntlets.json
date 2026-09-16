@@ -1,0 +1,66 @@
+{
+  "key": "ancient_celestial_fire_gauntlets",
+  "name": "Ancient Celestial Fire Gauntlets",
+  "bodyPart": "LEFT_HAND",
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL",
+  "appearanceEquippedSecondary": "PupPlateGloveR",
+  "appearanceInventory": "64kInvPlateGlove",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 34.29,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 263,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20014,
+      "statId": 12,
+      "expression": "29"
+    },
+    {
+      "boostId": 20015,
+      "statId": 13,
+      "expression": "29"
+    },
+    {
+      "boostId": 20016,
+      "statId": 14,
+      "expression": "29"
+    },
+    {
+      "boostId": 20017,
+      "statId": 15,
+      "expression": "29"
+    },
+    {
+      "boostId": 20018,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20019,
+      "statId": 22,
+      "expression": "29"
+    },
+    {
+      "boostId": 20020,
+      "statId": 17,
+      "expression": "12"
+    }
+  ]
+}

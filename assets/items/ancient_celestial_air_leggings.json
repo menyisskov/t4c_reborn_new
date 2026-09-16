@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_air_leggings",
+  "name": "Ancient Celestial Air Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 38.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20154,
+      "statId": 12,
+      "expression": "29"
+    },
+    {
+      "boostId": 20155,
+      "statId": 13,
+      "expression": "29"
+    },
+    {
+      "boostId": 20156,
+      "statId": 14,
+      "expression": "29"
+    },
+    {
+      "boostId": 20157,
+      "statId": 15,
+      "expression": "29"
+    },
+    {
+      "boostId": 20158,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 20159,
+      "statId": 22,
+      "expression": "29"
+    },
+    {
+      "boostId": 20160,
+      "statId": 16,
+      "expression": "14"
+    }
+  ]
+}

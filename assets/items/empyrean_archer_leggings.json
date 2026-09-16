@@ -1,0 +1,69 @@
+{
+  "key": "empyrean_archer_leggings",
+  "name": "Empyrean Archer Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 57.15,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 500,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20680,
+      "statId": 12,
+      "expression": "44"
+    },
+    {
+      "boostId": 20681,
+      "statId": 13,
+      "expression": "44"
+    },
+    {
+      "boostId": 20682,
+      "statId": 14,
+      "expression": "44"
+    },
+    {
+      "boostId": 20683,
+      "statId": 15,
+      "expression": "44"
+    },
+    {
+      "boostId": 20684,
+      "statId": 21,
+      "expression": "14"
+    },
+    {
+      "boostId": 20685,
+      "statId": 22,
+      "expression": "44"
+    },
+    {
+      "boostId": 20686,
+      "statId": 6,
+      "expression": "21"
+    },
+    {
+      "boostId": 20687,
+      "statId": 10035,
+      "expression": "136"
+    }
+  ]
+}

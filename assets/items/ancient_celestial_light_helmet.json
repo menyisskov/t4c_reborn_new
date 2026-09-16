@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_light_helmet",
+  "name": "Ancient Celestial Light Helmet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 33.02,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20231,
+      "statId": 12,
+      "expression": "28"
+    },
+    {
+      "boostId": 20232,
+      "statId": 13,
+      "expression": "28"
+    },
+    {
+      "boostId": 20233,
+      "statId": 14,
+      "expression": "28"
+    },
+    {
+      "boostId": 20234,
+      "statId": 15,
+      "expression": "28"
+    },
+    {
+      "boostId": 20235,
+      "statId": 21,
+      "expression": "8"
+    },
+    {
+      "boostId": 20236,
+      "statId": 22,
+      "expression": "28"
+    },
+    {
+      "boostId": 20237,
+      "statId": 23,
+      "expression": "12"
+    }
+  ]
+}

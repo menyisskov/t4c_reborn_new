@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_light_armor",
+  "name": "Ancient Celestial Light Armor",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 114.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20210,
+      "statId": 12,
+      "expression": "49"
+    },
+    {
+      "boostId": 20211,
+      "statId": 13,
+      "expression": "49"
+    },
+    {
+      "boostId": 20212,
+      "statId": 14,
+      "expression": "49"
+    },
+    {
+      "boostId": 20213,
+      "statId": 15,
+      "expression": "49"
+    },
+    {
+      "boostId": 20214,
+      "statId": 21,
+      "expression": "29"
+    },
+    {
+      "boostId": 20215,
+      "statId": 22,
+      "expression": "49"
+    },
+    {
+      "boostId": 20216,
+      "statId": 23,
+      "expression": "41"
+    }
+  ]
+}

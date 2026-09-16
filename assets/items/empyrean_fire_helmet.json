@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_fire_helmet",
+  "name": "Empyrean Fire Helmet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 49.53,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20369,
+      "statId": 12,
+      "expression": "42"
+    },
+    {
+      "boostId": 20370,
+      "statId": 13,
+      "expression": "42"
+    },
+    {
+      "boostId": 20371,
+      "statId": 14,
+      "expression": "42"
+    },
+    {
+      "boostId": 20372,
+      "statId": 15,
+      "expression": "42"
+    },
+    {
+      "boostId": 20373,
+      "statId": 21,
+      "expression": "12"
+    },
+    {
+      "boostId": 20374,
+      "statId": 22,
+      "expression": "42"
+    },
+    {
+      "boostId": 20375,
+      "statId": 17,
+      "expression": "18"
+    }
+  ]
+}

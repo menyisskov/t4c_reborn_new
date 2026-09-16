@@ -1,0 +1,33 @@
+{
+  "name": "Sewer Rat",
+  "displayName": "Sewer Rat",
+  "health": 45,
+  "xpPerHit": 2,
+  "xpOnDeath": 34,
+  "hitDamageMin": 3,
+  "hitDamageMax": 7,
+  "respawnTime": 30000,
+  "walkPattern": "Rat#f",
+  "attackPattern": "RatA#i",
+  "deathPattern": "RatC!j",
+  "soundAttack": "Rat Attack.wav",
+  "soundDeath": "Rat Dying.wav",
+  "soundHit": "Rat Hit.wav",
+  "gold": { "min": 2, "max": 9 },
+  "loot": [
+    { "item": "Torch", "chance": 0.03 }
+  ],
+  "stats": { "str": 20, "end": 18, "agi": 17, "intel": 15, "will": 0, "wis": 15, "luck": 0 },
+  "resists": [124, 62, 93, 93, 93, 5000, 100, 100, 100, 100, 100, 100],
+  "level": 3,
+  "dodge": 18,
+  "aggro": 55,
+  "clan": 16,
+  "canAttack": true,
+  "attacks": [
+    { "formula": "1d6+2", "combatAttack": 28, "percentage": 100 }
+  ],
+  "tameable": true,
+  "tameMaxLevel": 12,
+  "spawnAliases": ["SewerRat"]
+}

@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_fire_armor",
+  "name": "Ancient Celestial Fire Armor",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 114.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20000,
+      "statId": 12,
+      "expression": "49"
+    },
+    {
+      "boostId": 20001,
+      "statId": 13,
+      "expression": "49"
+    },
+    {
+      "boostId": 20002,
+      "statId": 14,
+      "expression": "49"
+    },
+    {
+      "boostId": 20003,
+      "statId": 15,
+      "expression": "49"
+    },
+    {
+      "boostId": 20004,
+      "statId": 21,
+      "expression": "29"
+    },
+    {
+      "boostId": 20005,
+      "statId": 22,
+      "expression": "49"
+    },
+    {
+      "boostId": 20006,
+      "statId": 17,
+      "expression": "41"
+    }
+  ]
+}

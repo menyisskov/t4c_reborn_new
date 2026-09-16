@@ -1,0 +1,64 @@
+{
+  "key": "ancient_celestial_water_helmet",
+  "name": "Ancient Celestial Water Helmet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 33.02,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20105,
+      "statId": 12,
+      "expression": "28"
+    },
+    {
+      "boostId": 20106,
+      "statId": 13,
+      "expression": "28"
+    },
+    {
+      "boostId": 20107,
+      "statId": 14,
+      "expression": "28"
+    },
+    {
+      "boostId": 20108,
+      "statId": 15,
+      "expression": "28"
+    },
+    {
+      "boostId": 20109,
+      "statId": 21,
+      "expression": "8"
+    },
+    {
+      "boostId": 20110,
+      "statId": 22,
+      "expression": "28"
+    },
+    {
+      "boostId": 20111,
+      "statId": 18,
+      "expression": "12"
+    }
+  ]
+}

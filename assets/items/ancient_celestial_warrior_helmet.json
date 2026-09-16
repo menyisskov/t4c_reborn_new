@@ -1,0 +1,69 @@
+{
+  "key": "ancient_celestial_warrior_helmet",
+  "name": "Ancient Celestial Warrior Helmet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 33.02,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 500,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20276,
+      "statId": 12,
+      "expression": "28"
+    },
+    {
+      "boostId": 20277,
+      "statId": 13,
+      "expression": "28"
+    },
+    {
+      "boostId": 20278,
+      "statId": 14,
+      "expression": "28"
+    },
+    {
+      "boostId": 20279,
+      "statId": 15,
+      "expression": "28"
+    },
+    {
+      "boostId": 20280,
+      "statId": 21,
+      "expression": "8"
+    },
+    {
+      "boostId": 20281,
+      "statId": 22,
+      "expression": "28"
+    },
+    {
+      "boostId": 20282,
+      "statId": 3,
+      "expression": "12"
+    },
+    {
+      "boostId": 20283,
+      "statId": 8,
+      "expression": "89"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "key": "ancient_celestial_warrior_armor",
+  "name": "Ancient Celestial Warrior Armor",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 114.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 500,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20252,
+      "statId": 12,
+      "expression": "49"
+    },
+    {
+      "boostId": 20253,
+      "statId": 13,
+      "expression": "49"
+    },
+    {
+      "boostId": 20254,
+      "statId": 14,
+      "expression": "49"
+    },
+    {
+      "boostId": 20255,
+      "statId": 15,
+      "expression": "49"
+    },
+    {
+      "boostId": 20256,
+      "statId": 21,
+      "expression": "29"
+    },
+    {
+      "boostId": 20257,
+      "statId": 22,
+      "expression": "49"
+    },
+    {
+      "boostId": 20258,
+      "statId": 3,
+      "expression": "41"
+    },
+    {
+      "boostId": 20259,
+      "statId": 8,
+      "expression": "307"
+    }
+  ]
+}

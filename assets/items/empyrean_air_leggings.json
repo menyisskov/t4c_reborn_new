@@ -1,0 +1,64 @@
+{
+  "key": "empyrean_air_leggings",
+  "name": "Empyrean Air Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 57.15,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20502,
+      "statId": 12,
+      "expression": "44"
+    },
+    {
+      "boostId": 20503,
+      "statId": 13,
+      "expression": "44"
+    },
+    {
+      "boostId": 20504,
+      "statId": 14,
+      "expression": "44"
+    },
+    {
+      "boostId": 20505,
+      "statId": 15,
+      "expression": "44"
+    },
+    {
+      "boostId": 20506,
+      "statId": 21,
+      "expression": "14"
+    },
+    {
+      "boostId": 20507,
+      "statId": 22,
+      "expression": "44"
+    },
+    {
+      "boostId": 20508,
+      "statId": 16,
+      "expression": "21"
+    }
+  ]
+}

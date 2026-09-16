@@ -1,0 +1,68 @@
+{
+  "key": "ancient_celestial_warrior_protector",
+  "name": "Ancient Celestial Warrior Protector",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 25.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 500,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20292,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 20293,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 20294,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 20295,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 20296,
+      "statId": 21,
+      "expression": "6"
+    },
+    {
+      "boostId": 20297,
+      "statId": 22,
+      "expression": "6"
+    },
+    {
+      "boostId": 20298,
+      "statId": 3,
+      "expression": "9"
+    },
+    {
+      "boostId": 20299,
+      "statId": 8,
+      "expression": "68"
+    }
+  ]
+}

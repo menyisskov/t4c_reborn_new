@@ -1,0 +1,69 @@
+{
+  "key": "empyrean_warrior_helmet",
+  "name": "Empyrean Warrior Helmet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 49.53,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 500,
+    "agility": 0,
+    "intelligence": 200,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20624,
+      "statId": 12,
+      "expression": "42"
+    },
+    {
+      "boostId": 20625,
+      "statId": 13,
+      "expression": "42"
+    },
+    {
+      "boostId": 20626,
+      "statId": 14,
+      "expression": "42"
+    },
+    {
+      "boostId": 20627,
+      "statId": 15,
+      "expression": "42"
+    },
+    {
+      "boostId": 20628,
+      "statId": 21,
+      "expression": "12"
+    },
+    {
+      "boostId": 20629,
+      "statId": 22,
+      "expression": "42"
+    },
+    {
+      "boostId": 20630,
+      "statId": 3,
+      "expression": "18"
+    },
+    {
+      "boostId": 20631,
+      "statId": 8,
+      "expression": "118"
+    }
+  ]
+}

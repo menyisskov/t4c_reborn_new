@@ -117,7 +117,7 @@ public final class ColosseumClerk extends ScriptedNpc {
 
   private static final int[] ARENA_SLICES = {
     50, 60, 70, 80, 90, 100, 120, 130, 140, 150, 160, 170, 180, 190, 200, 225, 300, 325, 350, 375,
-    400, 425, 450, 475, 500
+    400, 425, 450, 475, 500, 525, 550, 575, 600, 625, 650, 675, 700, 725, 750
   };
 
   private static final NpcBehavior BEHAVIOR =
