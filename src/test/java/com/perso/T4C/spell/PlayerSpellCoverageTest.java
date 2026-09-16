@@ -96,7 +96,7 @@ class PlayerSpellCoverageTest {
     assertNotNull(spell);
     String description = com.perso.T4C.i18n.I18n.resolve(spell.getDescription());
     assertTrue(
-        description.startsWith("Gain de Niveau:"),
-        "LevelUp's description must start with \"Gain de Niveau:\", was: " + description);
+        description.startsWith("Level Up:"),
+        "LevelUp's description must start with \"Level Up:\", was: " + description);
   }
 }

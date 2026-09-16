@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 class I18nTypographyTest {
   @Test
   void replacesCurlyApostrophesUnsupportedByBitmapFont() {
-    String translated = I18n.key("item.sign.sign_8");
-    assertFalse(translated.contains("’"));
-    assertTrue(translated.contains("L'enseigne"));
+    String resolved = I18n.resolve("It’s a trap");
+    assertFalse(resolved.contains("’"));
+    assertTrue(resolved.contains("It's a trap"));
   }
 
   @Test

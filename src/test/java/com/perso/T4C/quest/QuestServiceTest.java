@@ -105,7 +105,7 @@ class QuestServiceTest {
     assertEquals(QuestService.STATUS_ACTIVE, restored.getQuestFlag(QuestService.statusFlag(QUEST)));
     assertEquals(0, restored.getGold(), "the fifteenth kill must not pay the reward");
     assertEquals(0, restored.getCurrentXp(), "the fifteenth kill must not pay XP");
-    assertTrue(messages.get(messages.size() - 1).contains("Retournez voir"));
+    assertTrue(messages.get(messages.size() - 1).contains("Return to see"));
     assertTrue(
         service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), restored).contains("15/15"));
     assertEquals(QuestService.STATUS_ACTIVE, restored.getQuestFlag(QuestService.statusFlag(QUEST)));
