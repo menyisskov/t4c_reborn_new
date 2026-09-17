@@ -1868,3 +1868,2713 @@ So, do you know that person?
 [2026-08-23T15:30:57.4050957] Vous : leaving
 [2026-08-23T15:31:05.9641352] Vous avez gagné 99 pièces d'or
 [2026-08-23T15:31:06.4178072] Vous avez gagné 207 pièces d'or
+[2026-09-16T13:05:14.2764828] Bienvenue dans T4C Reborn.
+[2026-09-16T13:05:20.1623139] GM: .noclip [on|off|toggle] | .teleport [to] X,Y,Z | .speed N|up|down|reset
+[2026-09-16T13:05:20.1623139] GM: .setLevel/.setXp/.setGold/.setHp/.setMana X
+[2026-09-16T13:05:20.1623139] GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X
+[2026-09-16T13:05:20.1623139] GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .repair
+[2026-09-16T13:05:36.6535687] Vous : MonsterManager.spawnMonster
+[2026-09-16T13:05:41.9693655] Vous avez gagné 103 pièces d'or
+[2026-09-16T13:05:58.6798869] GM: unknown command .monster (type .help)
+[2026-09-16T13:06:10.9175583] Vous avez gagné 193 pièces d'or
+[2026-09-16T13:06:13.3263483] Vous avez gagné 173 pièces d'or
+[2026-09-16T13:06:29.1737035] GM: Summoned monster Sewer Rat
+[2026-09-16T13:06:31.6590623] Vous avez gagné 208 pièces d'or
+[2026-09-16T13:06:32.1395197] Vous avez ramassé Améthyste brute
+[2026-09-16T13:06:35.4677034] Vous avez gagné 8 pièces d'or
+[2026-09-16T13:06:43.1964862] Vous avez gagné 157 pièces d'or
+[2026-09-16T13:06:47.3871363] Welcome back, Lynania.
+[2026-09-16T13:06:52.3389805] Vous : help
+[2026-09-16T13:06:54.0610085] Welcome back, Lynania.
+[2026-09-16T13:07:01.4264438] Vous avez gagné 153 pièces d'or
+[2026-09-16T13:07:03.3789421] Vous avez gagné 260 pièces d'or
+[2026-09-16T13:07:04.5977615] La cible est trop éloignée.
+[2026-09-16T13:07:05.3167163] La cible est trop éloignée.
+[2026-09-16T13:07:06.7212423] Vous avez gagné 6 pièces d'or
+[2026-09-16T13:07:10.2398135] GM: Summoned monster Sewer Rat
+[2026-09-16T13:07:11.8481858] GM: Summoned monster Sewer Rat
+[2026-09-16T13:07:23.048258] GM: unknown monster "Makrsh P'tangh"
+[2026-09-16T13:07:25.3227565] GM: unknown monster "Makrsh P'tang"
+[2026-09-16T13:07:30.6604123] Vous avez gagné 9 pièces d'or
+[2026-09-16T13:07:31.5188488] Vous avez gagné 158 pièces d'or
+[2026-09-16T13:07:33.294286] Vous avez gagné 161 pièces d'or
+[2026-09-16T13:07:33.4489671] La cible est trop éloignée.
+[2026-09-16T13:07:34.2408276] La cible est trop éloignée.
+[2026-09-16T13:07:34.3981875] La cible est trop éloignée.
+[2026-09-16T13:07:35.6604831] Vous avez gagné 4 pièces d'or
+[2026-09-16T13:07:37.0183498] Vous avez gagné 2 pièces d'or
+[2026-09-16T13:08:09.0443233] Vous avez gagné 9 pièces d'or
+[2026-09-16T13:08:10.4776564] Vous avez gagné 5 pièces d'or
+[2026-09-16T13:08:11.2361808] Vous avez gagné 6 pièces d'or
+[2026-09-16T13:08:15.8655814] GM: unknown monster "Makrsh P'tangaa"
+[2026-09-16T13:08:20.1149837] Vous avez gagné 101 pièces d'or
+[2026-09-16T13:08:20.4483304] Vous avez gagné 180 pièces d'or
+[2026-09-16T13:09:17.8415632] Vous avez gagné 182 pièces d'or
+[2026-09-16T13:09:18.5967211] Vous avez gagné 193 pièces d'or
+[2026-09-16T13:09:19.3614679] Vous avez gagné 100 pièces d'or
+[2026-09-16T13:09:22.1966332] Vous avez gagné 161 pièces d'or
+[2026-09-16T13:09:24.0913729] Vous avez gagné 209 pièces d'or
+[2026-09-16T13:10:17.476625] GM: Summoned monster MakrshPtangh2
+[2026-09-16T13:10:21.3710061] Niveau supérieur! Vous avez atteint le niveau 177.
+[2026-09-16T13:10:21.3710061] Vous avez gagné 21 HP et 19 Mana.
+[2026-09-16T13:10:27.7054535] Niveau supérieur! Vous avez atteint le niveau 178.
+[2026-09-16T13:10:27.7054535] Vous avez gagné 23 HP et 20 Mana.
+[2026-09-16T13:10:31.5346784] Vous avez gagné 1258 pièces d'or
+[2026-09-16T13:10:33.1044096] Vous avez ramassé Gantelets en plaques antiques
+[2026-09-16T13:10:38.5083359] GM: Summoned monster MakrshPtangh2
+[2026-09-16T13:10:41.9505557] Niveau supérieur! Vous avez atteint le niveau 179.
+[2026-09-16T13:10:41.9505557] Vous avez gagné 21 HP et 20 Mana.
+[2026-09-16T13:10:47.2703628] Niveau supérieur! Vous avez atteint le niveau 180.
+[2026-09-16T13:10:47.2703628] Vous avez gagné 22 HP et 19 Mana.
+[2026-09-16T13:10:51.0877917] Vous avez gagné 1107 pièces d'or
+[2026-09-16T13:10:53.5197525] Vous avez gagné 220 pièces d'or
+[2026-09-16T13:10:54.4557306] Vous avez gagné 145 pièces d'or
+[2026-09-16T13:10:57.6167003] Vous avez gagné 176 pièces d'or
+[2026-09-16T13:10:59.9143294] Vous avez ramassé Calcaire brut
+[2026-09-16T13:11:01.7027551] GM: Summoned monster MakrshPtangh2
+[2026-09-16T13:11:02.2597084] GM: Summoned monster MakrshPtangh2
+[2026-09-16T13:11:04.4575085] Niveau supérieur! Vous avez atteint le niveau 181.
+[2026-09-16T13:11:04.4575085] Vous avez gagné 21 HP et 18 Mana.
+[2026-09-16T13:11:10.6782732] Niveau supérieur! Vous avez atteint le niveau 182.
+[2026-09-16T13:11:10.6792731] Vous avez gagné 22 HP et 20 Mana.
+[2026-09-16T13:11:16.7947473] Niveau supérieur! Vous avez atteint le niveau 183.
+[2026-09-16T13:11:16.7957503] Vous avez gagné 23 HP et 19 Mana.
+[2026-09-16T13:11:19.1925681] Vous avez gagné 405 pièces d'or
+[2026-09-16T13:11:23.2662715] Niveau supérieur! Vous avez atteint le niveau 184.
+[2026-09-16T13:11:23.2662715] Vous avez gagné 23 HP et 20 Mana.
+[2026-09-16T13:11:25.5670554] Vous avez gagné 838 pièces d'or
+[2026-09-16T13:11:31.0076055] Niveau supérieur! Vous avez atteint le niveau 185.
+[2026-09-16T13:11:31.0086056] Vous avez gagné 21 HP et 20 Mana.
+[2026-09-16T13:11:37.8833207] Niveau supérieur! Vous avez atteint le niveau 186.
+[2026-09-16T13:11:37.8843242] Vous avez gagné 22 HP et 18 Mana.
+[2026-09-16T13:11:42.4395061] Vous avez gagné 1454 pièces d'or
+[2026-09-16T13:11:45.4369565] Niveau supérieur! Vous avez atteint le niveau 187.
+[2026-09-16T13:11:45.4379568] Vous avez gagné 22 HP et 18 Mana.
+[2026-09-16T13:11:50.7832986] Niveau supérieur! Vous avez atteint le niveau 188.
+[2026-09-16T13:11:50.7832986] Vous avez gagné 21 HP et 19 Mana.
+[2026-09-16T13:11:50.7832986] Vous avez gagné 1170 pièces d'or
+[2026-09-16T13:11:58.6843923] Niveau supérieur! Vous avez atteint le niveau 189.
+[2026-09-16T13:11:58.6843923] Vous avez gagné 22 HP et 18 Mana.
+[2026-09-16T13:12:04.0264615] Vous avez gagné 1302 pièces d'or
+[2026-09-16T13:12:06.7651739] Niveau supérieur! Vous avez atteint le niveau 190.
+[2026-09-16T13:12:06.766174] Vous avez gagné 23 HP et 20 Mana.
+[2026-09-16T13:12:13.5907568] Niveau supérieur! Vous avez atteint le niveau 191.
+[2026-09-16T13:12:13.5907568] Vous avez gagné 22 HP et 18 Mana.
+[2026-09-16T13:12:17.4175771] Vous avez gagné 798 pièces d'or
+[2026-09-16T13:12:32.9177721] Niveau supérieur! Vous avez atteint le niveau 192.
+[2026-09-16T13:12:32.9177721] Vous avez gagné 22 HP et 20 Mana.
+[2026-09-16T13:12:37.5467102] Vous ne possédez plus cet objet.
+[2026-09-16T13:12:40.6555106] GM: unknown command .heal (type .help)
+[2026-09-16T13:13:36.044731] Niveau supérieur! Vous avez atteint le niveau 193.
+[2026-09-16T13:13:36.044731] Vous avez gagné 22 HP et 20 Mana.
+[2026-09-16T13:13:36.8110817] Vous avez gagné 1489 pièces d'or
+[2026-09-16T13:13:43.3522603] Niveau supérieur! Vous avez atteint le niveau 194.
+[2026-09-16T13:13:43.3522603] Vous avez gagné 21 HP et 18 Mana.
+[2026-09-16T13:13:49.4442351] Vous avez gagné 964 pièces d'or
+[2026-09-16T13:13:56.8293043] Niveau supérieur! Vous avez atteint le niveau 195.
+[2026-09-16T13:13:56.8303041] Vous avez gagné 22 HP et 20 Mana.
+[2026-09-16T13:14:05.2447133] Niveau supérieur! Vous avez atteint le niveau 196.
+[2026-09-16T13:14:05.245718] Vous avez gagné 22 HP et 20 Mana.
+[2026-09-16T13:14:08.3040101] Vous avez gagné 1456 pièces d'or
+[2026-09-16T13:14:13.6197169] Niveau supérieur! Vous avez atteint le niveau 197.
+[2026-09-16T13:14:13.6197169] Vous avez gagné 23 HP et 18 Mana.
+[2026-09-16T13:14:15.2091981] GM: HP set to 60000 / 60000
+[2026-09-16T13:14:21.2707924] Niveau supérieur! Vous avez atteint le niveau 198.
+[2026-09-16T13:14:21.2707924] Vous avez gagné 22 HP et 19 Mana.
+[2026-09-16T13:14:21.2717944] Vous avez gagné 507 pièces d'or
+[2026-09-16T13:14:22.2502187] Vous avez ramassé Ancient broad Hache +3
+[2026-09-16T13:14:23.7248156] Vous êtes trop loin pour ramasser cet objet
+[2026-09-16T13:14:24.1507123] Vous êtes trop loin pour ramasser cet objet
+[2026-09-16T13:14:25.9431885] Vous avez ramassé Protecteur de plaque antique
+[2026-09-16T13:14:35.0139631] Niveau supérieur! Vous avez atteint le niveau 199.
+[2026-09-16T13:14:35.0139631] Vous avez gagné 23 HP et 18 Mana.
+[2026-09-16T13:14:39.5973758] Vous avez gagné 1163 pièces d'or
+[2026-09-16T13:15:02.4404854] Niveau supérieur! Vous avez atteint le niveau 200.
+[2026-09-16T13:15:02.4404854] Vous avez gagné 21 HP et 18 Mana.
+[2026-09-16T13:15:09.5230868] GM: unknown command .setac (type .help)
+[2026-09-16T13:15:10.8493895] Niveau supérieur! Vous avez atteint le niveau 201.
+[2026-09-16T13:15:10.8493895] Vous avez gagné 21 HP et 19 Mana.
+[2026-09-16T13:15:13.9076646] Vous avez gagné 487 pièces d'or
+[2026-09-16T13:15:19.274997] GM: HP set to 100000 / 100000
+[2026-09-16T13:15:36.3333706] Vous avez gagné 160 pièces d'or
+[2026-09-16T13:15:37.5665128] Vous avez gagné 264 pièces d'or
+[2026-09-16T13:15:39.4244735] Niveau supérieur! Vous avez atteint le niveau 202.
+[2026-09-16T13:15:39.4244735] Vous avez gagné 22 HP et 19 Mana.
+[2026-09-16T13:15:44.7749672] Vous avez gagné 902 pièces d'or
+[2026-09-16T13:15:51.9331897] Niveau supérieur! Vous avez atteint le niveau 203.
+[2026-09-16T13:15:51.9331897] Vous avez gagné 21 HP et 19 Mana.
+[2026-09-16T13:15:59.7176578] Niveau supérieur! Vous avez atteint le niveau 204.
+[2026-09-16T13:15:59.7176578] Vous avez gagné 21 HP et 20 Mana.
+[2026-09-16T13:16:02.7758654] Vous avez gagné 812 pièces d'or
+[2026-09-16T13:16:03.7577093] Vous avez ramassé Ancient platemail Jambières
+[2026-09-16T13:58:50.6052331] Bienvenue dans T4C Reborn.
+[2026-09-16T13:58:53.3784259] GM: Summoned item ancient_celestial_fire_armor
+[2026-09-16T13:59:06.8951247] Il vous faut 400 en endurance pour équiper Ancient Celestial Fire Armor.
+[2026-09-16T13:59:28.271175] GM: unknown command .setend (type .help)
+[2026-09-16T14:00:08.1949509] GM: unknown item "tension_primordiale_ultime"
+[2026-09-16T14:01:43.8539809] GM: unknown command .setend (type .help)
+[2026-09-16T14:01:51.1468185] Welcome back, Lynania.
+[2026-09-16T14:01:53.9730148] In the colosseum, fighters of all rank and caliber come to test their abilities against powerful creatures. However, if you don't feel like fighting, it is possible to become a spectator.
+[2026-09-16T14:01:53.9730148] Vous : colosseum
+[2026-09-16T14:01:58.1100891] Welcome back, Lynania.
+[2026-09-16T14:02:01.3996652] Vous avez gagné 90 pièces d'or
+[2026-09-16T14:02:02.210569] Vous avez gagné 125 pièces d'or
+[2026-09-16T14:02:02.9293883] Vous avez gagné 193 pièces d'or
+[2026-09-16T14:02:04.1190979] Vous avez gagné 74 pièces d'or
+[2026-09-16T14:02:05.078286] Welcome back, Lynania.
+[2026-09-16T14:02:07.1796284] Would you like to enter one of my arenas and test your fighting skills?
+[2026-09-16T14:02:07.1796284] Vous : test
+[2026-09-16T14:02:10.7293547] Will you fight in the battleground or in the colosseum?
+[2026-09-16T14:02:10.7303571] Vous : yes
+[2026-09-16T14:02:16.331195] Enjoy the show!
+[2026-09-16T14:02:16.331195] Vous : colosseum
+[2026-09-16T14:02:17.8225144] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:02:25.7560003] The arena is used by adventurers of all levels to better hone their skills in battle, as well as the occasional battle token.
+[2026-09-16T14:02:25.7560003] Vous : colosseum
+[2026-09-16T14:02:29.1973346] Whenever an opponent is slain, there is a chance it will drop a battle token. The harder your opponent is relatively to you, the more chances you have of receiving a token. These tokens can then be traded in for temporary ability enhancements before each fight.
+[2026-09-16T14:02:29.1988365] Vous : battle
+[2026-09-16T14:02:33.040307] Are you ready to fight in the arena?
+[2026-09-16T14:02:33.0408189] Vous : fight
+[2026-09-16T14:02:35.7801927] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:02:35.7801927] Vous : yes
+[2026-09-16T14:02:37.9143838] La cible est trop éloignée.
+[2026-09-16T14:02:43.8100543] You receive a battle token for your efforts.
+[2026-09-16T14:02:45.8483414] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:02:50.5162609] Vous : next ys
+[2026-09-16T14:02:55.4070105] Are you ready to fight in the arena?
+[2026-09-16T14:02:55.4070105] Vous : fight
+[2026-09-16T14:02:57.1651489] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:02:57.1661497] Vous : yes
+[2026-09-16T14:03:00.5200523] La cible n'est pas en ligne de vue.
+[2026-09-16T14:03:01.036101] La cible n'est pas en ligne de vue.
+[2026-09-16T14:03:03.5338532] Niveau supérieur! Vous avez atteint le niveau 202.
+[2026-09-16T14:03:03.5338532] Vous avez gagné 23 HP et 18 Mana.
+[2026-09-16T14:03:07.4075443] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:03:12.1645974] The arena is used by adventurers of all levels to better hone their skills in battle, as well as the occasional battle token.
+[2026-09-16T14:03:12.1660991] Vous : colosseum
+[2026-09-16T14:03:18.6583022] Whenever an opponent is slain, there is a chance it will drop a battle token. The harder your opponent is relatively to you, the more chances you have of receiving a token. These tokens can then be traded in for temporary ability enhancements before each fight.
+[2026-09-16T14:03:18.6593033] Vous : battle
+[2026-09-16T14:03:24.5249889] Are you ready to fight in the arena?
+[2026-09-16T14:03:24.5249889] Vous : fight
+[2026-09-16T14:03:27.3080305] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:03:27.3090313] Vous : yes
+[2026-09-16T14:04:12.2348058] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:04:14.7931623] Your arena difficulty is now 300.
+[2026-09-16T14:04:14.7931623] Vous : increase
+[2026-09-16T14:04:20.4840092] You have already changed the level of difficulty. Fight with your current settings first.
+[2026-09-16T14:04:20.4850097] Vous : increase
+[2026-09-16T14:04:24.0349678] Are you ready to fight in the arena?
+[2026-09-16T14:04:24.0349678] Vous : fight
+[2026-09-16T14:04:24.84181] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:04:24.84181] Vous : yes
+[2026-09-16T14:04:32.2549522] You receive a battle token for your efforts.
+[2026-09-16T14:04:32.2549522] Niveau supérieur! Vous avez atteint le niveau 203.
+[2026-09-16T14:04:32.2549522] Vous avez gagné 24 HP et 20 Mana.
+[2026-09-16T14:04:35.6847733] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:04:38.0927525] Your arena difficulty is now 325.
+[2026-09-16T14:04:38.0937563] Vous : increase
+[2026-09-16T14:04:41.6936247] Whoa! Not so fast! There are certain procedures you will have to learn about before I will let you fight.
+[2026-09-16T14:04:41.6936247] Vous : fight yes
+[2026-09-16T14:04:42.4518468] Whoa! Not so fast! There are certain procedures you will have to learn about before I will let you fight.
+[2026-09-16T14:04:42.4518468] Vous : fight yes
+[2026-09-16T14:04:46.5520515] Are you ready to fight in the arena?
+[2026-09-16T14:04:46.5520515] Vous : fight
+[2026-09-16T14:04:47.3587324] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:04:47.3597324] Vous : yes
+[2026-09-16T14:04:57.6037368] You receive a battle token for your efforts.
+[2026-09-16T14:04:57.604738] Niveau supérieur! Vous avez atteint le niveau 204.
+[2026-09-16T14:04:57.604738] Vous avez gagné 24 HP et 20 Mana.
+[2026-09-16T14:05:01.9364102] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:05:04.393657] Your arena difficulty is now 350.
+[2026-09-16T14:05:04.3946604] Vous : increase
+[2026-09-16T14:05:06.3355799] Are you ready to fight in the arena?
+[2026-09-16T14:05:06.3355799] Vous : fight
+[2026-09-16T14:05:07.0519253] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:05:07.0519253] Vous : yes
+[2026-09-16T14:05:16.9273041] You receive a battle token for your efforts.
+[2026-09-16T14:05:16.9273041] Niveau supérieur! Vous avez atteint le niveau 205.
+[2026-09-16T14:05:16.9283039] Vous avez gagné 25 HP et 19 Mana.
+[2026-09-16T14:05:20.1107673] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:05:22.3862024] Your arena difficulty is now 375.
+[2026-09-16T14:05:22.3872024] Vous : increase
+[2026-09-16T14:05:23.3277729] Are you ready to fight in the arena?
+[2026-09-16T14:05:23.3287734] Vous : fight
+[2026-09-16T14:05:23.9845357] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:05:23.9855369] Vous : yes
+[2026-09-16T14:05:32.6541641] You receive a battle token for your efforts.
+[2026-09-16T14:05:32.6551648] Niveau supérieur! Vous avez atteint le niveau 206.
+[2026-09-16T14:05:32.6551648] Vous avez gagné 25 HP et 20 Mana.
+[2026-09-16T14:05:35.7938666] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:05:47.6200372] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:05:50.5785191] Your arena difficulty is now 400.
+[2026-09-16T14:05:50.5785191] Vous : increase
+[2026-09-16T14:05:51.5035133] Are you ready to fight in the arena?
+[2026-09-16T14:05:51.5035133] Vous : fight
+[2026-09-16T14:05:52.1457748] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:05:52.1457748] Vous : yes
+[2026-09-16T14:06:02.5461743] You receive a battle token for your efforts.
+[2026-09-16T14:06:02.5471748] Niveau supérieur! Vous avez atteint le niveau 207.
+[2026-09-16T14:06:02.5471748] Vous avez gagné 26 HP et 19 Mana.
+[2026-09-16T14:06:09.879248] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:06:12.2456629] Your arena difficulty is now 425.
+[2026-09-16T14:06:12.2456629] Vous : increase
+[2026-09-16T14:06:13.3286872] Are you ready to fight in the arena?
+[2026-09-16T14:06:13.3296873] Vous : fight
+[2026-09-16T14:06:14.1938647] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:06:14.1938647] Vous : yes
+[2026-09-16T14:06:27.8999271] You receive a battle token for your efforts.
+[2026-09-16T14:06:27.8999271] Niveau supérieur! Vous avez atteint le niveau 208.
+[2026-09-16T14:06:27.8999271] Vous avez gagné 25 HP et 19 Mana.
+[2026-09-16T14:06:46.9721839] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:06:49.187877] Vous : increwase
+[2026-09-16T14:06:51.3378853] Your arena difficulty is now 450.
+[2026-09-16T14:06:51.3388847] Vous : increase
+[2026-09-16T14:06:53.0964481] Are you ready to fight in the arena?
+[2026-09-16T14:06:53.0974511] Vous : fight
+[2026-09-16T14:06:54.2395882] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:06:54.2395882] Vous : yes
+[2026-09-16T14:07:08.9584167] You receive a battle token for your efforts.
+[2026-09-16T14:07:08.9594166] Niveau supérieur! Vous avez atteint le niveau 209.
+[2026-09-16T14:07:08.9594166] Vous avez gagné 26 HP et 20 Mana.
+[2026-09-16T14:07:12.6221336] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:07:14.6715838] Your arena difficulty is now 475.
+[2026-09-16T14:07:14.673087] Vous : increase
+[2026-09-16T14:07:16.2390107] Are you ready to fight in the arena?
+[2026-09-16T14:07:16.2390107] Vous : fight
+[2026-09-16T14:07:17.005365] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:07:17.0063655] Vous : yes
+[2026-09-16T14:07:31.8437834] You receive a battle token for your efforts.
+[2026-09-16T14:07:31.8447834] Niveau supérieur! Vous avez atteint le niveau 210.
+[2026-09-16T14:07:31.8447834] Vous avez gagné 25 HP et 18 Mana.
+[2026-09-16T14:07:59.3217498] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:08:01.7970766] Your arena difficulty is now 500.
+[2026-09-16T14:08:01.7970766] Vous : increase
+[2026-09-16T14:08:03.9222121] Are you ready to fight in the arena?
+[2026-09-16T14:08:03.9222121] Vous : fight
+[2026-09-16T14:08:04.6406656] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:08:04.6406656] Vous : yes
+[2026-09-16T14:08:20.0158013] You receive a battle token for your efforts.
+[2026-09-16T14:08:20.0168015] Niveau supérieur! Vous avez atteint le niveau 211.
+[2026-09-16T14:08:20.0168015] Vous avez gagné 26 HP et 20 Mana.
+[2026-09-16T14:09:27.9258663] GM: All equipment repaired
+[2026-09-16T14:12:40.0082224] GM: unknown item "ancient_celestial_archer_armor  .summon item ancient_celestial_archer_boots  .summon item ancient_celestial_archer_gauntlets  .summon item ancient_celestial_archer_helmet  .summon item ancient_celestial_archer_leggings  .summon item ancient_ce"
+[2026-09-16T14:13:11.0342091] Vous ne pouvez pas équiper cet objet dans cet emplacement.
+[2026-09-16T14:13:39.0411606] GM: Summoned item ancient_celestial_archer_armor
+[2026-09-16T14:13:58.6102698] GM: Summoned item ancient_celestial_archer_boots
+[2026-09-16T14:14:16.2219154] GM: Summoned item ancient_celestial_archer_gauntlets
+[2026-09-16T14:14:41.8087862] GM: Summoned item ancient_celestial_archer_helmet
+[2026-09-16T14:14:54.0237231] GM: Summoned item ancient_celestial_archer_leggings
+[2026-09-16T14:15:11.0285788] GM: Summoned item ancient_celestial_archer_protector
+[2026-09-16T14:19:03.6132578] Bienvenue dans T4C Reborn.
+[2026-09-16T14:24:12.2844314] GM: unknown item "ring_of_the_archer"
+[2026-09-16T14:27:13.1283757] Bienvenue dans T4C Reborn.
+[2026-09-16T14:27:20.4440358] GM: Summoned item ring_of_the_archer
+[2026-09-16T14:27:50.8766576] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:27:52.9918434] Are you ready to fight in the arena?
+[2026-09-16T14:27:52.9918434] Vous : fight
+[2026-09-16T14:27:53.7801336] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:27:53.781133] Vous : yes
+[2026-09-16T14:28:10.1900144] You receive a battle token for your efforts.
+[2026-09-16T14:28:10.1910144] Niveau supérieur! Vous avez atteint le niveau 212.
+[2026-09-16T14:28:10.1910144] Vous avez gagné 28 HP et 19 Mana.
+[2026-09-16T14:28:13.1094037] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:28:16.1085899] Your arena difficulty is now 525.
+[2026-09-16T14:28:16.1095911] Vous : increase
+[2026-09-16T14:28:17.2423747] Are you ready to fight in the arena?
+[2026-09-16T14:28:17.2433763] Vous : fight
+[2026-09-16T14:28:17.9514617] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:28:17.9514617] Vous : yes
+[2026-09-16T14:28:36.0444329] You receive a battle token for your efforts.
+[2026-09-16T14:28:36.0444329] Niveau supérieur! Vous avez atteint le niveau 213.
+[2026-09-16T14:28:36.0454327] Vous avez gagné 26 HP et 20 Mana.
+[2026-09-16T14:28:42.9255021] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:28:45.150876] Your arena difficulty is now 550.
+[2026-09-16T14:28:45.1518763] Vous : increase
+[2026-09-16T14:28:47.2270169] Are you ready to fight in the arena?
+[2026-09-16T14:28:47.2270169] Vous : fight
+[2026-09-16T14:28:48.0180439] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:28:48.0190445] Vous : yes
+[2026-09-16T14:29:07.1298936] You receive a battle token for your efforts.
+[2026-09-16T14:29:07.1308933] Niveau supérieur! Vous avez atteint le niveau 214.
+[2026-09-16T14:29:07.1308933] Vous avez gagné 28 HP et 18 Mana.
+[2026-09-16T14:29:31.2949612] GM: Endurance set to 550
+[2026-09-16T14:29:38.253258] GM: unknown command .agi (type .help)
+[2026-09-16T14:29:44.5619717] GM: Dexterity set to 3500
+[2026-09-16T14:29:47.753355] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:29:49.661373] Your arena difficulty is now 575.
+[2026-09-16T14:29:49.6623735] Vous : increase
+[2026-09-16T14:29:51.3862613] Are you ready to fight in the arena?
+[2026-09-16T14:29:51.3862613] Vous : fight
+[2026-09-16T14:29:52.278792] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:29:52.278792] Vous : yes
+[2026-09-16T14:30:08.5391562] You receive a battle token for your efforts.
+[2026-09-16T14:30:08.5401563] Niveau supérieur! Vous avez atteint le niveau 215.
+[2026-09-16T14:30:08.5401563] Vous avez gagné 33 HP et 20 Mana.
+[2026-09-16T14:30:14.7295838] GM: Dexterity set to 9000
+[2026-09-16T14:30:18.1203016] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:30:20.2786009] Your arena difficulty is now 600.
+[2026-09-16T14:30:20.2796014] Vous : increase
+[2026-09-16T14:30:21.5707945] Are you ready to fight in the arena?
+[2026-09-16T14:30:21.5707945] Vous : fight
+[2026-09-16T14:30:22.2488558] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:30:22.2498564] Vous : yes
+[2026-09-16T14:30:38.3720926] You receive a battle token for your efforts.
+[2026-09-16T14:30:38.3735969] Niveau supérieur! Vous avez atteint le niveau 216.
+[2026-09-16T14:30:38.3735969] Vous avez gagné 35 HP et 18 Mana.
+[2026-09-16T14:31:21.3096867] GM: Strength set to 3000
+[2026-09-16T14:31:32.0134985] GM: Endurance set to 4000
+[2026-09-16T14:31:37.2140258] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:31:39.1632921] Your arena difficulty is now 625.
+[2026-09-16T14:31:39.1642921] Vous : increase
+[2026-09-16T14:31:40.2806487] Are you ready to fight in the arena?
+[2026-09-16T14:31:40.2816494] Vous : fight
+[2026-09-16T14:31:40.9637024] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:31:40.9637024] Vous : yes
+[2026-09-16T14:31:55.397976] You receive a battle token for your efforts.
+[2026-09-16T14:31:55.397976] Niveau supérieur! Vous avez atteint le niveau 217.
+[2026-09-16T14:31:55.3989765] Vous avez gagné 208 HP et 20 Mana.
+[2026-09-16T14:32:05.756521] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:32:09.2216843] Your arena difficulty is now 650.
+[2026-09-16T14:32:09.2231868] Vous : increase
+[2026-09-16T14:32:10.2479199] Are you ready to fight in the arena?
+[2026-09-16T14:32:10.2479199] Vous : fight
+[2026-09-16T14:32:10.9064006] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:32:10.9074025] Vous : yes
+[2026-09-16T14:32:26.4781822] You receive a battle token for your efforts.
+[2026-09-16T14:32:26.4781822] Niveau supérieur! Vous avez atteint le niveau 218.
+[2026-09-16T14:32:26.4781822] Vous avez gagné 206 HP et 19 Mana.
+[2026-09-16T14:32:45.8817177] GM: unknown command .archery (type .help)
+[2026-09-16T14:36:55.1877065] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:36:57.213076] Your arena difficulty is now 675.
+[2026-09-16T14:36:57.2135791] Vous : increase
+[2026-09-16T14:36:59.84682] Are you ready to fight in the arena?
+[2026-09-16T14:36:59.84682] Vous : fight
+[2026-09-16T14:37:00.6377232] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:37:00.6387238] Vous : yes
+[2026-09-16T14:37:11.1144292] GM: Skill points set to 10000
+[2026-09-16T14:37:16.537468] You receive a battle token for your efforts.
+[2026-09-16T14:37:16.537468] Niveau supérieur! Vous avez atteint le niveau 219.
+[2026-09-16T14:37:16.5389704] Vous avez gagné 206 HP et 20 Mana.
+[2026-09-16T14:37:28.8212337] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:37:32.7798684] Your arena difficulty is now 700.
+[2026-09-16T14:37:32.7808686] Vous : increase
+[2026-09-16T14:37:33.8892071] Are you ready to fight in the arena?
+[2026-09-16T14:37:33.8892071] Vous : fight
+[2026-09-16T14:37:35.0720074] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:37:35.0720074] Vous : yes
+[2026-09-16T14:37:55.9802476] You receive a battle token for your efforts.
+[2026-09-16T14:37:55.9812438] Niveau supérieur! Vous avez atteint le niveau 220.
+[2026-09-16T14:37:55.9812438] Vous avez gagné 207 HP et 20 Mana.
+[2026-09-16T14:37:59.4058149] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:38:03.1557689] Your arena difficulty is now 725.
+[2026-09-16T14:38:03.1557689] Vous : increase
+[2026-09-16T14:38:05.8223611] Are you ready to fight in the arena?
+[2026-09-16T14:38:05.8233614] Vous : fight
+[2026-09-16T14:38:07.2224231] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:38:07.2234233] Vous : yes
+[2026-09-16T14:38:27.9506234] You receive a battle token for your efforts.
+[2026-09-16T14:38:27.9516243] Niveau supérieur! Vous avez atteint le niveau 221.
+[2026-09-16T14:38:27.9516243] Vous avez gagné 206 HP et 19 Mana.
+[2026-09-16T14:38:32.9657465] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:38:35.3735894] Your arena difficulty is now 750.
+[2026-09-16T14:38:35.3735894] Vous : increase
+[2026-09-16T14:38:36.3322684] Are you ready to fight in the arena?
+[2026-09-16T14:38:36.3322684] Vous : fight
+[2026-09-16T14:38:37.9066017] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:38:37.9076019] Vous : yes
+[2026-09-16T14:38:55.3318915] You receive a battle token for your efforts.
+[2026-09-16T14:38:55.3318915] Niveau supérieur! Vous avez atteint le niveau 222.
+[2026-09-16T14:38:55.3318915] Vous avez gagné 208 HP et 19 Mana.
+[2026-09-16T14:39:06.2366721] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:39:09.6999601] Your arena difficulty is now 750.
+[2026-09-16T14:39:09.6999601] Vous : increase
+[2026-09-16T14:39:10.6580068] Are you ready to fight in the arena?
+[2026-09-16T14:39:10.6580068] Vous : fight
+[2026-09-16T14:39:12.0158855] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:39:12.0168854] Vous : yes
+[2026-09-16T14:39:47.3895938] You receive a battle token for your efforts.
+[2026-09-16T14:39:47.3895938] Niveau supérieur! Vous avez atteint le niveau 223.
+[2026-09-16T14:39:47.3895938] Vous avez gagné 208 HP et 18 Mana.
+[2026-09-16T14:40:01.4258752] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:40:03.3839123] Are you ready to fight in the arena?
+[2026-09-16T14:40:03.3849135] Vous : fight
+[2026-09-16T14:40:04.0765435] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:40:04.0765435] Vous : yes
+[2026-09-16T14:40:35.959835] You receive a battle token for your efforts.
+[2026-09-16T14:40:35.9608352] Niveau supérieur! Vous avez atteint le niveau 224.
+[2026-09-16T14:40:35.9608352] Vous avez gagné 208 HP et 19 Mana.
+[2026-09-16T14:40:44.318481] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:40:47.0603822] Will you be leaving the arena or are you ready to fight?
+[2026-09-16T14:40:47.061383] Vous : leave
+[2026-09-16T14:40:57.4612825] Will you be leaving the arena or are you ready to fight?
+[2026-09-16T14:40:57.4612825] Vous : leave
+[2026-09-16T14:41:01.111071] Vous : yes
+[2026-09-16T14:41:05.1939692] It was a pleasure having you here. You are welcome to come again!
+[2026-09-16T14:41:05.1939692] Vous : leaving
+[2026-09-16T14:41:08.585368] Niveau supérieur! Vous avez atteint le niveau 225.
+[2026-09-16T14:41:08.585368] Vous avez gagné 207 HP et 19 Mana.
+[2026-09-16T14:41:08.585368] Niveau supérieur! Vous avez atteint le niveau 226.
+[2026-09-16T14:41:08.5863679] Vous avez gagné 206 HP et 19 Mana.
+[2026-09-16T14:41:08.5863679] Vous avez gagné 147 pièces d'or
+[2026-09-16T14:41:10.117679] Niveau supérieur! Vous avez atteint le niveau 227.
+[2026-09-16T14:41:10.117679] Vous avez gagné 206 HP et 18 Mana.
+[2026-09-16T14:41:10.117679] Niveau supérieur! Vous avez atteint le niveau 228.
+[2026-09-16T14:41:10.117679] Vous avez gagné 208 HP et 20 Mana.
+[2026-09-16T14:41:10.1186819] Vous avez gagné 156 pièces d'or
+[2026-09-16T14:41:13.0006731] Niveau supérieur! Vous avez atteint le niveau 229.
+[2026-09-16T14:41:13.0006731] Vous avez gagné 208 HP et 19 Mana.
+[2026-09-16T14:41:13.0016731] Niveau supérieur! Vous avez atteint le niveau 230.
+[2026-09-16T14:41:13.0016731] Vous avez gagné 206 HP et 20 Mana.
+[2026-09-16T14:41:13.0016731] Vous avez gagné 231 pièces d'or
+[2026-09-16T14:42:10.164088] Niveau supérieur! Vous avez atteint le niveau 231.
+[2026-09-16T14:42:10.164088] Vous avez gagné 208 HP et 19 Mana.
+[2026-09-16T14:42:10.164088] Niveau supérieur! Vous avez atteint le niveau 232.
+[2026-09-16T14:42:10.164088] Vous avez gagné 208 HP et 19 Mana.
+[2026-09-16T14:42:10.164088] Vous avez gagné 182 pièces d'or
+[2026-09-16T14:42:13.9351497] Niveau supérieur! Vous avez atteint le niveau 233.
+[2026-09-16T14:42:13.9361541] Vous avez gagné 206 HP et 18 Mana.
+[2026-09-16T14:42:13.9361541] Niveau supérieur! Vous avez atteint le niveau 234.
+[2026-09-16T14:42:13.9361541] Vous avez gagné 207 HP et 18 Mana.
+[2026-09-16T14:42:13.9361541] Vous avez gagné 154 pièces d'or
+[2026-09-16T14:42:15.8774253] Niveau supérieur! Vous avez atteint le niveau 235.
+[2026-09-16T14:42:15.8774253] Vous avez gagné 207 HP et 18 Mana.
+[2026-09-16T14:42:15.878425] Niveau supérieur! Vous avez atteint le niveau 236.
+[2026-09-16T14:42:15.878425] Vous avez gagné 206 HP et 20 Mana.
+[2026-09-16T14:42:15.878425] Vous avez gagné 105 pièces d'or
+[2026-09-16T14:43:00.9724748] Niveau supérieur! Vous avez atteint le niveau 237.
+[2026-09-16T14:43:00.9734752] Vous avez gagné 207 HP et 18 Mana.
+[2026-09-16T14:43:00.9734752] Niveau supérieur! Vous avez atteint le niveau 238.
+[2026-09-16T14:43:00.9734752] Vous avez gagné 208 HP et 18 Mana.
+[2026-09-16T14:43:00.9734752] Vous avez gagné 176 pièces d'or
+[2026-09-16T14:43:01.9567925] Niveau supérieur! Vous avez atteint le niveau 239.
+[2026-09-16T14:43:01.9567925] Vous avez gagné 207 HP et 18 Mana.
+[2026-09-16T14:43:01.9567925] Niveau supérieur! Vous avez atteint le niveau 240.
+[2026-09-16T14:43:01.9567925] Vous avez gagné 208 HP et 18 Mana.
+[2026-09-16T14:43:01.9567925] Vous avez gagné 153 pièces d'or
+[2026-09-16T14:43:10.0940132] GM: Summoned monster MakrshPtangh2\
+[2026-09-16T14:43:12.6631935] Niveau supérieur! Vous avez atteint le niveau 241.
+[2026-09-16T14:43:12.6636977] Vous avez gagné 206 HP et 18 Mana.
+[2026-09-16T14:43:13.4211861] Niveau supérieur! Vous avez atteint le niveau 242.
+[2026-09-16T14:43:13.4221871] Vous avez gagné 207 HP et 19 Mana.
+[2026-09-16T14:43:14.1885583] Niveau supérieur! Vous avez atteint le niveau 243.
+[2026-09-16T14:43:14.1885583] Vous avez gagné 206 HP et 19 Mana.
+[2026-09-16T14:43:14.9533037] Niveau supérieur! Vous avez atteint le niveau 244.
+[2026-09-16T14:43:14.9538069] Vous avez gagné 207 HP et 20 Mana.
+[2026-09-16T14:43:15.721055] Niveau supérieur! Vous avez atteint le niveau 245.
+[2026-09-16T14:43:15.721055] Vous avez gagné 207 HP et 19 Mana.
+[2026-09-16T14:43:16.4815341] Niveau supérieur! Vous avez atteint le niveau 246.
+[2026-09-16T14:43:16.4830396] Vous avez gagné 207 HP et 20 Mana.
+[2026-09-16T14:43:17.2459447] Niveau supérieur! Vous avez atteint le niveau 247.
+[2026-09-16T14:43:17.2469451] Vous avez gagné 206 HP et 19 Mana.
+[2026-09-16T14:43:18.0169257] Niveau supérieur! Vous avez atteint le niveau 248.
+[2026-09-16T14:43:18.0179242] Vous avez gagné 208 HP et 20 Mana.
+[2026-09-16T14:43:18.7798586] Niveau supérieur! Vous avez atteint le niveau 249.
+[2026-09-16T14:43:18.7798586] Vous avez gagné 208 HP et 20 Mana.
+[2026-09-16T14:43:19.5360407] Niveau supérieur! Vous avez atteint le niveau 250.
+[2026-09-16T14:43:19.5360407] Vous avez gagné 208 HP et 20 Mana.
+[2026-09-16T14:43:20.3056598] Niveau supérieur! Vous avez atteint le niveau 251.
+[2026-09-16T14:43:20.3056598] Vous avez gagné 206 HP et 18 Mana.
+[2026-09-16T14:43:21.0717501] Niveau supérieur! Vous avez atteint le niveau 252.
+[2026-09-16T14:43:21.0717501] Vous avez gagné 208 HP et 20 Mana.
+[2026-09-16T14:43:21.0717501] Niveau supérieur! Vous avez atteint le niveau 253.
+[2026-09-16T14:43:21.0717501] Vous avez gagné 206 HP et 20 Mana.
+[2026-09-16T14:43:21.0717501] Vous avez gagné 783 pièces d'or
+[2026-09-16T14:43:24.5332886] GM: All equipment repaired
+[2026-09-16T14:43:29.2692963] GM: .noclip [on|off|toggle] | .teleport [to] X,Y,Z | .speed N|up|down|reset
+[2026-09-16T14:43:29.2692963] GM: .setLevel/.setXp/.setGold/.setHp/.setMana X
+[2026-09-16T14:43:29.2692963] GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X
+[2026-09-16T14:43:29.2702963] GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .repair
+[2026-09-16T14:43:43.2851616] GM: Learned spell ${spell.boulders}
+[2026-09-16T14:43:59.4716412] Niveau supérieur! Vous avez atteint le niveau 254.
+[2026-09-16T14:43:59.4716412] Vous avez gagné 207 HP et 18 Mana.
+[2026-09-16T14:44:00.4731788] Niveau supérieur! Vous avez atteint le niveau 255.
+[2026-09-16T14:44:00.4731788] Vous avez gagné 208 HP et 19 Mana.
+[2026-09-16T14:44:01.5135128] Niveau supérieur! Vous avez atteint le niveau 256.
+[2026-09-16T14:44:01.5135128] Vous avez gagné 208 HP et 19 Mana.
+[2026-09-16T14:44:02.5037585] Niveau supérieur! Vous avez atteint le niveau 257.
+[2026-09-16T14:44:02.5037585] Vous avez gagné 207 HP et 19 Mana.
+[2026-09-16T14:44:03.537516] Niveau supérieur! Vous avez atteint le niveau 258.
+[2026-09-16T14:44:03.537516] Vous avez gagné 206 HP et 18 Mana.
+[2026-09-16T14:44:04.5281547] Niveau supérieur! Vous avez atteint le niveau 259.
+[2026-09-16T14:44:04.5291547] Vous avez gagné 208 HP et 18 Mana.
+[2026-09-16T14:44:05.5383501] Niveau supérieur! Vous avez atteint le niveau 260.
+[2026-09-16T14:44:05.5383501] Vous avez gagné 206 HP et 20 Mana.
+[2026-09-16T14:44:06.5663047] Niveau supérieur! Vous avez atteint le niveau 261.
+[2026-09-16T14:44:06.5663047] Vous avez gagné 207 HP et 18 Mana.
+[2026-09-16T14:44:06.6609654] GM: unknown command .setint (type .help)
+[2026-09-16T14:44:07.5937118] Niveau supérieur! Vous avez atteint le niveau 262.
+[2026-09-16T14:44:07.5947171] Vous avez gagné 207 HP et 20 Mana.
+[2026-09-16T14:44:08.6195256] Niveau supérieur! Vous avez atteint le niveau 263.
+[2026-09-16T14:44:08.6195256] Vous avez gagné 206 HP et 18 Mana.
+[2026-09-16T14:44:09.6518967] Niveau supérieur! Vous avez atteint le niveau 264.
+[2026-09-16T14:44:09.6518967] Vous avez gagné 207 HP et 18 Mana.
+[2026-09-16T14:44:10.6522705] Niveau supérieur! Vous avez atteint le niveau 265.
+[2026-09-16T14:44:10.6522705] Vous avez gagné 206 HP et 19 Mana.
+[2026-09-16T14:44:11.6569212] Niveau supérieur! Vous avez atteint le niveau 266.
+[2026-09-16T14:44:11.6569212] Vous avez gagné 206 HP et 20 Mana.
+[2026-09-16T14:44:12.6815586] Niveau supérieur! Vous avez atteint le niveau 267.
+[2026-09-16T14:44:12.6815586] Vous avez gagné 206 HP et 19 Mana.
+[2026-09-16T14:44:13.6718635] Niveau supérieur! Vous avez atteint le niveau 268.
+[2026-09-16T14:44:13.6718635] Vous avez gagné 208 HP et 19 Mana.
+[2026-09-16T14:44:14.7078737] Niveau supérieur! Vous avez atteint le niveau 269.
+[2026-09-16T14:44:14.7088738] Vous avez gagné 208 HP et 20 Mana.
+[2026-09-16T14:44:15.0274678] GM: Intelligence set to 3000
+[2026-09-16T14:44:15.7392593] Niveau supérieur! Vous avez atteint le niveau 270.
+[2026-09-16T14:44:15.7392593] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:44:16.77177] Niveau supérieur! Vous avez atteint le niveau 271.
+[2026-09-16T14:44:16.77177] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:44:17.7733526] Niveau supérieur! Vous avez atteint le niveau 272.
+[2026-09-16T14:44:17.7733526] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:44:18.8054363] Niveau supérieur! Vous avez atteint le niveau 273.
+[2026-09-16T14:44:18.8054363] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:44:19.8059929] Niveau supérieur! Vous avez atteint le niveau 274.
+[2026-09-16T14:44:19.8059929] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:44:20.835566] Niveau supérieur! Vous avez atteint le niveau 275.
+[2026-09-16T14:44:20.8365655] Vous avez gagné 207 HP et 108 Mana.
+[2026-09-16T14:44:21.832277] Niveau supérieur! Vous avez atteint le niveau 276.
+[2026-09-16T14:44:21.832277] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:44:22.8311287] Niveau supérieur! Vous avez atteint le niveau 277.
+[2026-09-16T14:44:22.8311287] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:44:23.8283651] Niveau supérieur! Vous avez atteint le niveau 278.
+[2026-09-16T14:44:23.8283651] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:44:24.8545766] Niveau supérieur! Vous avez atteint le niveau 279.
+[2026-09-16T14:44:24.8545766] Vous avez gagné 208 HP et 109 Mana.
+[2026-09-16T14:44:25.8562723] Niveau supérieur! Vous avez atteint le niveau 280.
+[2026-09-16T14:44:25.8572722] Vous avez gagné 206 HP et 109 Mana.
+[2026-09-16T14:44:40.8890504] Niveau supérieur! Vous avez atteint le niveau 281.
+[2026-09-16T14:44:40.8890504] Vous avez gagné 207 HP et 109 Mana.
+[2026-09-16T14:44:41.8895278] Niveau supérieur! Vous avez atteint le niveau 282.
+[2026-09-16T14:44:41.8895278] Vous avez gagné 206 HP et 110 Mana.
+[2026-09-16T14:44:42.8889287] Niveau supérieur! Vous avez atteint le niveau 283.
+[2026-09-16T14:44:42.8889287] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:44:44.077149] Niveau supérieur! Vous avez atteint le niveau 284.
+[2026-09-16T14:44:44.077149] Vous avez gagné 206 HP et 110 Mana.
+[2026-09-16T14:44:44.9474079] Niveau supérieur! Vous avez atteint le niveau 285.
+[2026-09-16T14:44:44.948408] Vous avez gagné 206 HP et 110 Mana.
+[2026-09-16T14:44:45.94771] Niveau supérieur! Vous avez atteint le niveau 286.
+[2026-09-16T14:44:45.94771] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:44:46.9473135] Niveau supérieur! Vous avez atteint le niveau 287.
+[2026-09-16T14:44:46.9478252] Vous avez gagné 207 HP et 109 Mana.
+[2026-09-16T14:44:47.9739799] Niveau supérieur! Vous avez atteint le niveau 288.
+[2026-09-16T14:44:47.9749799] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:44:48.9812282] Niveau supérieur! Vous avez atteint le niveau 289.
+[2026-09-16T14:44:48.9812282] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:44:49.9987309] Niveau supérieur! Vous avez atteint le niveau 290.
+[2026-09-16T14:44:49.9987309] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:44:51.0378296] Niveau supérieur! Vous avez atteint le niveau 291.
+[2026-09-16T14:44:51.0388295] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:44:52.0389533] Niveau supérieur! Vous avez atteint le niveau 292.
+[2026-09-16T14:44:52.0389533] Vous avez gagné 207 HP et 109 Mana.
+[2026-09-16T14:44:53.0310737] Niveau supérieur! Vous avez atteint le niveau 293.
+[2026-09-16T14:44:53.0320739] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:44:54.0641799] Niveau supérieur! Vous avez atteint le niveau 294.
+[2026-09-16T14:44:54.0641799] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:44:55.0663481] Niveau supérieur! Vous avez atteint le niveau 295.
+[2026-09-16T14:44:55.0663481] Vous avez gagné 207 HP et 109 Mana.
+[2026-09-16T14:44:55.3716853] GM: unknown command .fire (type .help)
+[2026-09-16T14:44:56.098234] Niveau supérieur! Vous avez atteint le niveau 296.
+[2026-09-16T14:44:56.0992341] Vous avez gagné 206 HP et 110 Mana.
+[2026-09-16T14:44:57.1235368] Niveau supérieur! Vous avez atteint le niveau 297.
+[2026-09-16T14:44:57.1240425] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:44:58.1244515] Niveau supérieur! Vous avez atteint le niveau 298.
+[2026-09-16T14:44:58.1254517] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:44:59.1561537] Niveau supérieur! Vous avez atteint le niveau 299.
+[2026-09-16T14:44:59.1571578] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:00.181209] Niveau supérieur! Vous avez atteint le niveau 300.
+[2026-09-16T14:45:00.181209] Vous avez gagné 206 HP et 109 Mana.
+[2026-09-16T14:45:01.189838] Niveau supérieur! Vous avez atteint le niveau 301.
+[2026-09-16T14:45:01.189838] Vous avez gagné 206 HP et 109 Mana.
+[2026-09-16T14:45:02.2055489] Niveau supérieur! Vous avez atteint le niveau 302.
+[2026-09-16T14:45:02.2065485] Vous avez gagné 208 HP et 109 Mana.
+[2026-09-16T14:45:03.2150903] Niveau supérieur! Vous avez atteint le niveau 303.
+[2026-09-16T14:45:03.2150903] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:04.2410916] Niveau supérieur! Vous avez atteint le niveau 304.
+[2026-09-16T14:45:04.2420916] Vous avez gagné 208 HP et 109 Mana.
+[2026-09-16T14:45:05.2812836] Niveau supérieur! Vous avez atteint le niveau 305.
+[2026-09-16T14:45:05.2812836] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:06.2944712] Niveau supérieur! Vous avez atteint le niveau 306.
+[2026-09-16T14:45:06.2944712] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:45:07.3315476] Niveau supérieur! Vous avez atteint le niveau 307.
+[2026-09-16T14:45:07.3315476] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:45:08.3425759] Niveau supérieur! Vous avez atteint le niveau 308.
+[2026-09-16T14:45:08.3425759] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:45:09.3566577] Niveau supérieur! Vous avez atteint le niveau 309.
+[2026-09-16T14:45:09.3566577] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:45:10.3555568] Niveau supérieur! Vous avez atteint le niveau 310.
+[2026-09-16T14:45:10.3555568] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:45:11.3570045] Niveau supérieur! Vous avez atteint le niveau 311.
+[2026-09-16T14:45:11.3580041] Vous avez gagné 207 HP et 109 Mana.
+[2026-09-16T14:45:12.3902352] Niveau supérieur! Vous avez atteint le niveau 312.
+[2026-09-16T14:45:12.3902352] Vous avez gagné 207 HP et 109 Mana.
+[2026-09-16T14:45:13.3819439] Niveau supérieur! Vous avez atteint le niveau 313.
+[2026-09-16T14:45:13.3819439] Vous avez gagné 207 HP et 108 Mana.
+[2026-09-16T14:45:14.3838551] Niveau supérieur! Vous avez atteint le niveau 314.
+[2026-09-16T14:45:14.3838551] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:45:15.5821075] Niveau supérieur! Vous avez atteint le niveau 315.
+[2026-09-16T14:45:15.583107] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:16.4161215] Niveau supérieur! Vous avez atteint le niveau 316.
+[2026-09-16T14:45:16.4161215] Vous avez gagné 208 HP et 109 Mana.
+[2026-09-16T14:45:17.4500504] Niveau supérieur! Vous avez atteint le niveau 317.
+[2026-09-16T14:45:17.4510509] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:18.4680402] Niveau supérieur! Vous avez atteint le niveau 318.
+[2026-09-16T14:45:18.4680402] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:45:19.4501428] Niveau supérieur! Vous avez atteint le niveau 319.
+[2026-09-16T14:45:19.4501428] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:45:19.4501428] Niveau supérieur! Vous avez atteint le niveau 320.
+[2026-09-16T14:45:19.4501428] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:19.4511429] Vous avez gagné 139 pièces d'or
+[2026-09-16T14:45:19.5066614] Niveau supérieur! Vous avez atteint le niveau 321.
+[2026-09-16T14:45:19.5066614] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:20.2125293] Niveau supérieur! Vous avez atteint le niveau 322.
+[2026-09-16T14:45:20.2125293] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:45:20.2125293] Niveau supérieur! Vous avez atteint le niveau 323.
+[2026-09-16T14:45:20.2125293] Vous avez gagné 206 HP et 109 Mana.
+[2026-09-16T14:45:20.2125293] Vous avez gagné 114 pièces d'or
+[2026-09-16T14:45:21.9170906] Niveau supérieur! Vous avez atteint le niveau 324.
+[2026-09-16T14:45:21.9170906] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:45:22.6779152] Niveau supérieur! Vous avez atteint le niveau 325.
+[2026-09-16T14:45:22.678916] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:23.4504492] Niveau supérieur! Vous avez atteint le niveau 326.
+[2026-09-16T14:45:23.4504492] Vous avez gagné 207 HP et 108 Mana.
+[2026-09-16T14:45:24.2101915] Niveau supérieur! Vous avez atteint le niveau 327.
+[2026-09-16T14:45:24.2101915] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:45:24.9747862] Niveau supérieur! Vous avez atteint le niveau 328.
+[2026-09-16T14:45:24.9747862] Vous avez gagné 208 HP et 109 Mana.
+[2026-09-16T14:45:25.7411678] Niveau supérieur! Vous avez atteint le niveau 329.
+[2026-09-16T14:45:25.7411678] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:45:26.5086573] Niveau supérieur! Vous avez atteint le niveau 330.
+[2026-09-16T14:45:26.5086573] Vous avez gagné 207 HP et 108 Mana.
+[2026-09-16T14:45:27.2668338] Niveau supérieur! Vous avez atteint le niveau 331.
+[2026-09-16T14:45:27.2678346] Vous avez gagné 206 HP et 109 Mana.
+[2026-09-16T14:45:27.2678346] Niveau supérieur! Vous avez atteint le niveau 332.
+[2026-09-16T14:45:27.2678346] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:27.2678346] Vous avez gagné 258 pièces d'or
+[2026-09-16T14:45:27.2678346] Niveau supérieur! Vous avez atteint le niveau 333.
+[2026-09-16T14:45:27.2678346] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:45:28.0496203] Niveau supérieur! Vous avez atteint le niveau 334.
+[2026-09-16T14:45:28.0496203] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:45:28.8494005] Niveau supérieur! Vous avez atteint le niveau 335.
+[2026-09-16T14:45:28.8504005] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:45:54.0864305] Bienvenue dans T4C Reborn.
+[2026-09-16T14:47:20.4452204] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T14:47:24.2621736] The arena is used by adventurers of all levels to better hone their skills in battle, as well as the occasional battle token.
+[2026-09-16T14:47:24.2621736] Vous : colosseum
+[2026-09-16T14:47:29.4014944] Are you ready to fight in the arena?
+[2026-09-16T14:47:29.4024976] Vous : arena
+[2026-09-16T14:47:31.4627666] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T14:47:31.4637665] Vous : yes
+[2026-09-16T14:47:49.8635527] The door is locked but there is a note on it. The note reads:
+[2026-09-16T14:47:51.6486928] The door is locked but there is a note on it. The note reads:
+[2026-09-16T14:47:58.1303733] Niveau supérieur! Vous avez atteint le niveau 336.
+[2026-09-16T14:47:58.1303733] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:47:58.1453886] Niveau supérieur! Vous avez atteint le niveau 337.
+[2026-09-16T14:47:58.1453886] Vous avez gagné 207 HP et 108 Mana.
+[2026-09-16T14:47:58.1463885] Niveau supérieur! Vous avez atteint le niveau 338.
+[2026-09-16T14:47:58.1463885] Vous avez gagné 207 HP et 108 Mana.
+[2026-09-16T14:47:58.1463885] Niveau supérieur! Vous avez atteint le niveau 339.
+[2026-09-16T14:47:58.1463885] Vous avez gagné 208 HP et 109 Mana.
+[2026-09-16T14:47:58.1463885] Niveau supérieur! Vous avez atteint le niveau 340.
+[2026-09-16T14:47:58.1463885] Vous avez gagné 206 HP et 110 Mana.
+[2026-09-16T14:47:58.1463885] Niveau supérieur! Vous avez atteint le niveau 341.
+[2026-09-16T14:47:58.1474885] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:47:58.1474885] Niveau supérieur! Vous avez atteint le niveau 342.
+[2026-09-16T14:47:58.1474885] Vous avez gagné 206 HP et 109 Mana.
+[2026-09-16T14:47:58.1474885] Niveau supérieur! Vous avez atteint le niveau 343.
+[2026-09-16T14:47:58.1474885] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:47:58.1474885] Niveau supérieur! Vous avez atteint le niveau 344.
+[2026-09-16T14:47:58.1474885] Vous avez gagné 206 HP et 110 Mana.
+[2026-09-16T14:47:58.1487276] Niveau supérieur! Vous avez atteint le niveau 345.
+[2026-09-16T14:47:58.1487276] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:47:58.1487276] Niveau supérieur! Vous avez atteint le niveau 346.
+[2026-09-16T14:47:58.1487276] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:47:58.1487276] Niveau supérieur! Vous avez atteint le niveau 347.
+[2026-09-16T14:47:58.149731] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:47:58.149731] Niveau supérieur! Vous avez atteint le niveau 348.
+[2026-09-16T14:47:58.149731] Vous avez gagné 206 HP et 109 Mana.
+[2026-09-16T14:47:58.149731] Niveau supérieur! Vous avez atteint le niveau 349.
+[2026-09-16T14:47:58.149731] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:47:58.15073] Niveau supérieur! Vous avez atteint le niveau 350.
+[2026-09-16T14:47:58.15073] Vous avez gagné 208 HP et 109 Mana.
+[2026-09-16T14:47:58.15073] Niveau supérieur! Vous avez atteint le niveau 351.
+[2026-09-16T14:47:58.15073] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:47:58.15073] Niveau supérieur! Vous avez atteint le niveau 352.
+[2026-09-16T14:47:58.15073] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:47:58.1517308] Niveau supérieur! Vous avez atteint le niveau 353.
+[2026-09-16T14:47:58.1517308] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:47:58.1517308] Niveau supérieur! Vous avez atteint le niveau 354.
+[2026-09-16T14:47:58.1517308] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:47:58.1517308] Niveau supérieur! Vous avez atteint le niveau 355.
+[2026-09-16T14:47:58.1517308] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:47:58.1517308] Niveau supérieur! Vous avez atteint le niveau 356.
+[2026-09-16T14:47:58.1517308] Vous avez gagné 207 HP et 110 Mana.
+[2026-09-16T14:47:58.1528675] Niveau supérieur! Vous avez atteint le niveau 357.
+[2026-09-16T14:47:58.1528675] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:47:58.1528675] Niveau supérieur! Vous avez atteint le niveau 358.
+[2026-09-16T14:47:58.1528675] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:47:58.1528675] Niveau supérieur! Vous avez atteint le niveau 359.
+[2026-09-16T14:47:58.1528675] Vous avez gagné 208 HP et 109 Mana.
+[2026-09-16T14:47:58.1528675] Niveau supérieur! Vous avez atteint le niveau 360.
+[2026-09-16T14:47:58.1538676] Vous avez gagné 208 HP et 110 Mana.
+[2026-09-16T14:47:58.1538676] Niveau supérieur! Vous avez atteint le niveau 361.
+[2026-09-16T14:47:58.1538676] Vous avez gagné 206 HP et 108 Mana.
+[2026-09-16T14:47:58.1538676] Niveau supérieur! Vous avez atteint le niveau 362.
+[2026-09-16T14:47:58.1538676] Vous avez gagné 208 HP et 108 Mana.
+[2026-09-16T14:47:58.1548675] Vous avez gagné 7 pièces d'or
+[2026-09-16T14:48:05.903849] Vous avez gagné 5 pièces d'or
+[2026-09-16T14:48:05.9068833] Les rats du sous-sol du temple : 11/15
+[2026-09-16T14:48:09.4629429] Vous avez gagné 3 pièces d'or
+[2026-09-16T14:48:09.4639425] Les rats du sous-sol du temple : 12/15
+[2026-09-16T14:48:10.8464665] Vous avez gagné 2 pièces d'or
+[2026-09-16T14:48:10.8474674] Les rats du sous-sol du temple : 13/15
+[2026-09-16T14:48:11.6777431] Vous avez gagné 3 pièces d'or
+[2026-09-16T14:48:11.6777431] Les rats du sous-sol du temple : 14/15
+[2026-09-16T14:48:13.3034468] Vous avez gagné 2 pièces d'or
+[2026-09-16T14:48:13.3064468] Les rats du sous-sol du temple terminée. Retournez voir Lighthaven Samaritan.
+[2026-09-16T14:48:14.4696521] Vous avez gagné 1 pièces d'or
+[2026-09-16T14:48:17.3285782] Vous avez gagné 3 pièces d'or
+[2026-09-16T14:48:25.9716591] Vous avez gagné 3 pièces d'or
+[2026-09-16T14:48:37.679862] Vous avez gagné 5 pièces d'or
+[2026-09-16T14:48:39.8954515] Vous avez gagné 3 pièces d'or
+[2026-09-16T14:48:49.7289441] Vous avez gagné 5 pièces d'or
+[2026-09-16T14:48:49.9968963] Vous avez gagné 5 pièces d'or
+[2026-09-16T14:48:51.755092] Vous avez gagné 2 pièces d'or
+[2026-09-16T14:48:52.4868058] Vous avez gagné 4 pièces d'or
+[2026-09-16T14:48:54.655324] Vous avez gagné 4 pièces d'or
+[2026-09-16T14:48:55.6358431] Vous avez gagné 1 pièces d'or
+[2026-09-16T14:49:07.5788483] Hello. Welcome to Lighthaven. Do you have any questions?
+[2026-09-16T14:49:10.178027] Just answer yes or no, all right?
+[2026-09-16T14:49:10.178027] Vous : saqueust
+[2026-09-16T14:49:12.3886792] Wonderful. I'm here to answer them. If you notice I've put the emphasis on a keyword, simply say that word and I'll give you further information on it.
+[2026-09-16T14:49:12.3886792] Vous : yes
+[2026-09-16T14:49:15.1047324] Not every NPC uses keywords, but most folks have something specific to say about certain topics. Make note of them and bring it up in the conversation. They might have more to say than it first appears.
+[2026-09-16T14:49:15.1057317] Vous : keyword
+[2026-09-16T14:49:17.5403783] I can tell you about several things, but I need to know whether you want basic information or advanced information. So which one is it?
+[2026-09-16T14:49:17.5403783] Vous : help
+[2026-09-16T14:49:22.9901998] If you're all right with the basics I've already explained, how about we now discuss some more serious topics, such as spells, skills, and quests? Or would you rather hear more about the environment, the world and the cities?
+[2026-09-16T14:49:22.9917017] Vous : advanced
+[2026-09-16T14:49:25.2916057] Thank you for spending some time with an old man. Come again.
+[2026-09-16T14:49:25.2921089] Vous : bye
+[2026-09-16T14:49:29.0225923] During the course of your adventures, several inhabitants of the world will ask you for assistance in return for certain rewards, whether it be gold, items or information. We refer to this as quests. Make sure you jot down a few notes when you embark on a quest, lest you never finish it and miss some important clue. Quests can either be minor or major, depending on whether they have something to do with the over-arcing storyline or not.
+[2026-09-16T14:49:29.0235941] Vous : quest
+[2026-09-16T14:49:32.5109039] Thank you for spending some time with an old man. Come again.
+[2026-09-16T14:49:32.5119037] Vous : bye
+[2026-09-16T16:45:38.0784238] Bienvenue dans T4C Reborn.
+[2026-09-16T16:45:39.6526159] Hello. Welcome to Lighthaven. Do you have any questions?
+[2026-09-16T16:45:49.8456249] Ahh finally! I have waited long for one such as yourself. I am surprised you made it this far. Come now, I will show you the true meaning of pain!
+[2026-09-16T16:45:59.701115] Vous avez gagné 1225 pièces d'or
+[2026-09-16T17:28:18.9981178] GM: unknown command .rebirth (type .help)
+[2026-09-16T17:30:19.523458] Bienvenue dans T4C Reborn.
+[2026-09-16T17:32:26.6337629] Bienvenue dans T4C Reborn.
+[2026-09-16T17:32:35.0762054] GM: Rebirth performed (remort 2)
+[2026-09-16T17:39:14.6028837] Bienvenue dans T4C Reborn.
+[2026-09-16T17:39:17.404369] GM: Rebirth performed (remort 3)
+[2026-09-16T17:39:29.8412687] Welcome, young one. I am here to assist you in preparing for your new life.
+[2026-09-16T17:39:33.6040748] Vous : assiust
+[2026-09-16T17:39:35.4578981] You have energy to spend. Speak with my associates, then return when it is all spent.
+[2026-09-16T17:39:35.4588977] Vous : assist
+[2026-09-16T17:39:43.670961] I am here to help you increase your elemental powers by focusing your energy.
+[2026-09-16T17:39:53.9511788] This increase of 5 power will cost 1 points of energy. Is this acceptable?
+[2026-09-16T17:39:53.9511788] Vous : earth
+[2026-09-16T17:39:56.1095274] It is done. Your elemental power has increased.
+[2026-09-16T17:39:56.1095274] Vous : yes
+[2026-09-16T17:39:58.4763012] To increase your earth power by 5, you will need to spend 1 point of energy. Is this acceptable?
+[2026-09-16T17:39:58.4763012] Vous : earth yes
+[2026-09-16T17:39:59.6446066] To increase your earth power by 5, you will need to spend 1 point of energy. Is this acceptable?
+[2026-09-16T17:39:59.6446066] Vous : earth yes
+[2026-09-16T17:40:03.7842036] Vous : yes
+[2026-09-16T17:40:06.1434219] This increase of 5 power will cost 2 points of energy. Is this acceptable?
+[2026-09-16T17:40:06.144424] Vous : earth
+[2026-09-16T17:40:08.1934818] It is done. Your elemental power has increased.
+[2026-09-16T17:40:08.1934818] Vous : yes
+[2026-09-16T17:40:10.2926461] This increase of 5 power will cost 3 points of energy. Is this acceptable?
+[2026-09-16T17:40:10.2936472] Vous : earth
+[2026-09-16T17:40:11.9504509] It is done. Your elemental power has increased.
+[2026-09-16T17:40:11.9504509] Vous : yes
+[2026-09-16T17:40:14.9005761] This increase of 5 power will cost 4 points of energy. Is this acceptable?
+[2026-09-16T17:40:14.9005761] Vous : earth
+[2026-09-16T17:40:15.9676109] It is done. Your elemental power has increased.
+[2026-09-16T17:40:15.9676109] Vous : yes
+[2026-09-16T17:40:18.6337982] This increase of 5 power will cost 5 points of energy. Is this acceptable?
+[2026-09-16T17:40:18.6347993] Vous : earth
+[2026-09-16T17:40:19.8579585] You do not have enough energy to increase this elemental power.
+[2026-09-16T17:40:19.8594653] Vous : yes
+[2026-09-16T17:40:22.8848864] Vous : bye
+[2026-09-16T17:42:03.2887203] GM: Rebirth performed (remort 4)
+[2026-09-16T17:42:12.4156537] GM: Rebirth performed (remort 5)
+[2026-09-16T17:42:13.0914031] GM: Rebirth performed (remort 6)
+[2026-09-16T17:42:13.640506] GM: Rebirth performed (remort 7)
+[2026-09-16T17:42:14.5316057] GM: Rebirth performed (remort 8)
+[2026-09-16T17:42:15.1733836] GM: Rebirth performed (remort 9)
+[2026-09-16T17:42:15.6833849] GM: Rebirth performed (remort 10)
+[2026-09-16T17:42:16.173057] GM: Rebirth performed (remort 11)
+[2026-09-16T17:42:16.6566927] GM: Rebirth performed (remort 12)
+[2026-09-16T17:42:17.1152727] GM: Rebirth performed (remort 13)
+[2026-09-16T17:42:17.5324126] GM: Rebirth performed (remort 14)
+[2026-09-16T17:42:17.9407398] GM: Rebirth performed (remort 15)
+[2026-09-16T17:42:18.3304954] GM: Rebirth performed (remort 16)
+[2026-09-16T17:42:20.7826698] GM: Rebirth performed (remort 17)
+[2026-09-16T17:42:21.7819299] GM: Rebirth performed (remort 18)
+[2026-09-16T17:42:26.1164756] Welcome, young one. I am here to assist you in preparing for your new life.
+[2026-09-16T17:42:31.2214829] Vous : bye
+[2026-09-16T17:42:32.765486] GM: Rebirth performed (remort 19)
+[2026-09-16T17:42:33.5982334] GM: Rebirth performed (remort 20)
+[2026-09-16T17:42:35.0316007] GM: Rebirth performed (remort 21)
+[2026-09-16T17:42:35.5057389] GM: Rebirth performed (remort 22)
+[2026-09-16T17:42:36.6652071] GM: Rebirth performed (remort 23)
+[2026-09-16T17:42:37.0983952] GM: Rebirth performed (remort 24)
+[2026-09-16T17:42:37.4903395] GM: Rebirth performed (remort 25)
+[2026-09-16T17:42:37.9224231] GM: Rebirth performed (remort 26)
+[2026-09-16T17:42:38.2826257] GM: Rebirth performed (remort 27)
+[2026-09-16T17:42:38.6326907] GM: Rebirth performed (remort 28)
+[2026-09-16T17:42:38.9658161] GM: Rebirth performed (remort 29)
+[2026-09-16T17:42:39.3068215] GM: Rebirth performed (remort 30)
+[2026-09-16T17:42:39.6826241] GM: Rebirth performed (remort 31)
+[2026-09-16T17:42:40.0405964] GM: Rebirth performed (remort 32)
+[2026-09-16T17:42:40.3904135] GM: Rebirth performed (remort 33)
+[2026-09-16T17:42:40.7573831] GM: Rebirth performed (remort 34)
+[2026-09-16T17:42:41.1083544] GM: Rebirth performed (remort 35)
+[2026-09-16T17:42:41.4736002] GM: Rebirth performed (remort 36)
+[2026-09-16T17:42:41.832719] GM: Rebirth performed (remort 37)
+[2026-09-16T17:42:42.1905548] GM: Rebirth performed (remort 38)
+[2026-09-16T17:42:42.5577017] GM: Rebirth performed (remort 39)
+[2026-09-16T17:42:42.9150773] GM: Rebirth performed (remort 40)
+[2026-09-16T17:42:43.2826664] GM: Rebirth performed (remort 41)
+[2026-09-16T17:42:43.6402783] GM: Rebirth performed (remort 42)
+[2026-09-16T17:42:43.9991744] GM: Rebirth performed (remort 43)
+[2026-09-16T17:42:44.3495131] GM: Rebirth performed (remort 44)
+[2026-09-16T17:42:44.7150964] GM: Rebirth performed (remort 45)
+[2026-09-16T17:42:45.0743818] GM: Rebirth performed (remort 46)
+[2026-09-16T17:42:45.4322357] GM: Rebirth performed (remort 47)
+[2026-09-16T17:42:45.7817306] GM: Rebirth performed (remort 48)
+[2026-09-16T17:42:46.1324358] GM: Rebirth performed (remort 49)
+[2026-09-16T17:42:46.4987888] GM: Rebirth performed (remort 50)
+[2026-09-16T17:42:46.8660743] GM: Rebirth performed (remort 51)
+[2026-09-16T17:42:47.2155212] GM: Rebirth performed (remort 52)
+[2026-09-16T17:42:47.5902612] GM: Rebirth performed (remort 53)
+[2026-09-16T17:42:47.9484443] GM: Rebirth performed (remort 54)
+[2026-09-16T17:42:48.3151021] GM: Rebirth performed (remort 55)
+[2026-09-16T17:42:48.6662221] GM: Rebirth performed (remort 56)
+[2026-09-16T17:42:49.0239037] GM: Rebirth performed (remort 57)
+[2026-09-16T17:42:49.3734834] GM: Rebirth performed (remort 58)
+[2026-09-16T17:42:49.7403565] GM: Rebirth performed (remort 59)
+[2026-09-16T17:42:50.1316155] GM: Rebirth performed (remort 60)
+[2026-09-16T17:42:50.7160728] GM: Rebirth performed (remort 61)
+[2026-09-16T17:42:51.891486] GM: Rebirth performed (remort 62)
+[2026-09-16T17:42:52.351745] GM: Rebirth performed (remort 63)
+[2026-09-16T17:42:52.7570425] GM: Rebirth performed (remort 64)
+[2026-09-16T17:42:53.1404353] GM: Rebirth performed (remort 65)
+[2026-09-16T17:42:53.5246231] GM: Rebirth performed (remort 66)
+[2026-09-16T17:42:53.8906132] GM: Rebirth performed (remort 67)
+[2026-09-16T17:42:54.265974] GM: Rebirth performed (remort 68)
+[2026-09-16T17:42:54.6508893] GM: Rebirth performed (remort 69)
+[2026-09-16T17:42:55.1732476] GM: Rebirth performed (remort 70)
+[2026-09-16T18:00:13.493993] Bienvenue dans T4C Reborn.
+[2026-09-16T18:00:27.0347278] Welcome, young one. I am here to assist you in preparing for your new life. You have 10 points of energy to spend.
+[2026-09-16T18:00:29.8902643] Vous : שדדןדא
+[2026-09-16T18:00:32.3104002] You have energy to spend. Speak with my associates, then return when it is all spent.
+[2026-09-16T18:00:32.3104002] Vous : assist
+[2026-09-16T18:00:35.2106822] Vous : bey
+[2026-09-16T18:01:30.4067178] I am here to help you increase your elemental powers by focusing your energy.
+[2026-09-16T18:02:49.4065892] It is done. Your elemental power has increased 4 times, costing 10 points of energy. You have 0 points of energy remaining.
+[2026-09-16T18:02:49.4065892] Vous : earth 370
+[2026-09-16T18:04:05.330464] GM: Rebirth performed (remort 71)
+[2026-09-16T18:07:12.1902736] Bienvenue dans T4C Reborn.
+[2026-09-16T18:07:20.3971366] GM: Rebirth performed (remort 72)
+[2026-09-16T18:07:25.3529774] Welcome, young one. I am here to assist you in preparing for your new life. You have 365 points of energy to spend.
+[2026-09-16T18:07:28.9913301] You have energy to spend. Speak with my associates, then return when it is all spent.
+[2026-09-16T18:07:28.992329] Vous : assist
+[2026-09-16T18:07:31.5650497] Vous : bye
+[2026-09-16T18:07:36.1316952] I am here to help you increase your elemental powers by focusing your energy.
+[2026-09-16T18:07:53.5070669] It is done. Your elemental power has increased 26 times, costing 351 points of energy. You have 14 points of energy remaining.
+[2026-09-16T18:07:53.5080734] Vous : earth 360
+[2026-09-16T18:08:24.2256755] I am here to help you increase your elemental powers by focusing your energy.
+[2026-09-16T18:08:30.0410299] It is done. Your elemental power has increased 4 times, costing 10 points of energy. You have 4 points of energy remaining.
+[2026-09-16T18:08:30.0410299] Vous : light 16
+[2026-09-16T18:08:43.0664761] It is done. Your elemental power has increased 2 times, costing 3 points of energy. You have 1 points of energy remaining.
+[2026-09-16T18:08:43.0674221] Vous : fire 3
+[2026-09-16T18:08:47.6412733] It is done. Your elemental power has increased 1 times, costing 1 points of energy. You have 0 points of energy remaining.
+[2026-09-16T18:08:47.6422748] Vous : water 1
+[2026-09-16T18:08:51.4993762] Vous : bye
+[2026-09-16T18:08:56.8584115] You are ready for the final stage of your transformation. We can begin.
+[2026-09-16T18:09:00.3426231] The preparations are complete. You will soon be transported to Lighthaven.
+[2026-09-16T18:09:00.3436246] Vous : ready
+[2026-09-16T18:09:03.2830749] The preparations are complete. You will soon be transported to Lighthaven.
+[2026-09-16T18:09:03.2840742] Vous : begin
+[2026-09-16T18:09:13.2333687] When you are ready, we may begin the final stage of your transformation.
+[2026-09-16T18:09:16.8075541] The preparations are complete. You will soon be transported to Lighthaven.
+[2026-09-16T18:09:16.8085559] Vous : ready
+[2026-09-16T18:09:49.5526315] Bienvenue dans T4C Reborn.
+[2026-09-16T18:09:59.0976731] Welcome, young one. I am here to assist you in preparing for your new life. You have 365 points of energy to spend.
+[2026-09-16T18:10:02.4443388] You have energy to spend. Speak with my associates, then return when it is all spent.
+[2026-09-16T18:10:02.4455053] Vous : assist
+[2026-09-16T18:10:04.7933502] Vous : bye
+[2026-09-16T18:10:05.4784223] I cannot help until you have spent all your energy. Return when you are done.
+[2026-09-16T18:10:08.0011904] Vous : bye
+[2026-09-16T18:10:11.446424] I am here to help you increase your elemental powers by focusing your energy. You have 365 points of energy to spend.
+[2026-09-16T18:10:14.7962336] It is done. Your elemental power has increased 26 times, costing 351 points of energy. You have 14 points of energy remaining.
+[2026-09-16T18:10:14.7972354] Vous : earth 365
+[2026-09-16T18:10:24.0687002] It is done. Your elemental power has increased 4 times, costing 10 points of energy. You have 4 points of energy remaining.
+[2026-09-16T18:10:24.0697048] Vous : light 10
+[2026-09-16T18:10:26.7103083] It is done. Your elemental power has increased 2 times, costing 3 points of energy. You have 1 points of energy remaining.
+[2026-09-16T18:10:26.7113072] Vous : fire 3
+[2026-09-16T18:10:30.7286699] This increase of 5 power will cost 1 points of energy. Is this acceptable?
+[2026-09-16T18:10:30.7286699] Vous : water
+[2026-09-16T18:10:36.221646] It is done. Your elemental power has increased. You have 0 points of energy remaining.
+[2026-09-16T18:10:36.221646] Vous : yes
+[2026-09-16T18:10:39.1774166] Vous : bye
+[2026-09-16T18:10:54.527402] You are ready for the final stage of your transformation. We can begin.
+[2026-09-16T18:11:01.80029] GM: Rebirth performed (remort 73)
+[2026-09-16T18:11:02.8552469] GM: Rebirth performed (remort 74)
+[2026-09-16T18:11:03.5460871] GM: Rebirth performed (remort 75)
+[2026-09-16T18:11:04.321879] GM: Rebirth performed (remort 76)
+[2026-09-16T18:11:05.2376574] GM: Rebirth performed (remort 77)
+[2026-09-16T18:11:06.0716403] GM: Rebirth performed (remort 78)
+[2026-09-16T18:11:06.88762] GM: Rebirth performed (remort 79)
+[2026-09-16T18:11:07.5804122] GM: Rebirth performed (remort 80)
+[2026-09-16T18:11:08.2453831] GM: Rebirth performed (remort 81)
+[2026-09-16T18:11:08.8958316] GM: Rebirth performed (remort 82)
+[2026-09-16T18:11:10.7630643] GM: Rebirth performed (remort 83)
+[2026-09-16T18:11:13.4547018] GM: Rebirth performed (remort 84)
+[2026-09-16T18:11:14.2878439] GM: Rebirth performed (remort 85)
+[2026-09-16T18:11:14.9705893] GM: Rebirth performed (remort 86)
+[2026-09-16T18:11:15.546138] GM: Rebirth performed (remort 87)
+[2026-09-16T18:11:16.8879673] GM: Rebirth performed (remort 88)
+[2026-09-16T18:11:17.8044353] GM: Rebirth performed (remort 89)
+[2026-09-16T18:11:18.7633098] GM: Rebirth performed (remort 90)
+[2026-09-16T18:11:22.5292622] GM: Rebirth performed (remort 91)
+[2026-09-16T18:11:24.0636084] GM: Rebirth performed (remort 92)
+[2026-09-16T18:11:24.7384608] GM: Rebirth performed (remort 93)
+[2026-09-16T18:11:25.7793229] GM: Rebirth performed (remort 94)
+[2026-09-16T18:11:26.7380802] GM: Rebirth performed (remort 95)
+[2026-09-16T18:11:27.6967251] GM: Rebirth performed (remort 96)
+[2026-09-16T18:11:28.3967805] GM: Rebirth performed (remort 97)
+[2026-09-16T18:11:30.4796098] GM: Rebirth performed (remort 98)
+[2026-09-16T18:11:31.2217371] GM: Rebirth performed (remort 99)
+[2026-09-16T18:11:33.6378619] GM: Rebirth performed (remort 100)
+[2026-09-16T18:11:34.3222654] GM: Rebirth performed (remort 101)
+[2026-09-16T18:11:36.6727774] GM: Rebirth performed (remort 102)
+[2026-09-16T18:11:37.3146026] GM: Rebirth performed (remort 103)
+[2026-09-16T18:11:37.8909763] GM: Rebirth performed (remort 104)
+[2026-09-16T18:11:38.4385731] GM: Rebirth performed (remort 105)
+[2026-09-16T18:11:47.4585309] Bienvenue dans T4C Reborn.
+[2026-09-16T18:11:57.2528845] Welcome, young one. I am here to assist you in preparing for your new life. You have 530 points of energy to spend.
+[2026-09-16T18:11:59.8720849] You have energy to spend. Speak with my associates, then return when it is all spent.
+[2026-09-16T18:11:59.8720849] Vous : assist
+[2026-09-16T18:12:04.5832194] I am here to help you increase your elemental powers by focusing your energy. You have 530 points of energy to spend.
+[2026-09-16T18:12:07.409224] It is done. Your elemental power has increased 32 times, costing 528 points of energy. You have 2 points of energy remaining.
+[2026-09-16T18:12:07.409224] Vous : earth 530
+[2026-09-16T18:12:12.5894657] This increase of 5 power will cost 1 points of energy. Is this acceptable?
+[2026-09-16T18:12:12.5894657] Vous : light
+[2026-09-16T18:12:14.9833437] It is done. Your elemental power has increased. You have 1 points of energy remaining.
+[2026-09-16T18:12:14.9843438] Vous : yes
+[2026-09-16T18:12:17.9810213] You do not have enough energy to increase this elemental power.
+[2026-09-16T18:12:17.9823384] Vous : light 1
+[2026-09-16T18:12:24.0055662] Vous : bye
+[2026-09-16T18:12:28.5166974] I cannot help until you have spent all your energy. Return when you are done.
+[2026-09-16T18:12:30.7890504] There are many things in life that we know and understand. This is not one of them.
+[2026-09-16T18:12:30.7900474] Vous : ready
+[2026-09-16T18:12:36.2058828] Go talk to my associates. They will explain how to use your extra energy.
+[2026-09-16T18:12:36.2068832] Vous : assist
+[2026-09-16T18:12:41.1228757] Vous : bye
+[2026-09-16T18:12:45.1012485] I am here to help you increase your elemental powers by focusing your energy. You have 1 points of energy to spend.
+[2026-09-16T18:12:51.4833657] This increase of 5 power will cost 2 points of energy. Is this acceptable?
+[2026-09-16T18:12:51.4843672] Vous : light
+[2026-09-16T18:12:55.915433] This increase of 5 power will cost 1 points of energy. Is this acceptable?
+[2026-09-16T18:12:55.915433] Vous : fire
+[2026-09-16T18:12:57.79309] It is done. Your elemental power has increased. You have 0 points of energy remaining.
+[2026-09-16T18:12:57.79309] Vous : yes
+[2026-09-16T18:13:00.7248857] Vous : bye
+[2026-09-16T18:13:04.8509679] You are ready for the final stage of your transformation. We can begin.
+[2026-09-16T18:13:06.5320267] The preparations are complete. You will soon be transported to Lighthaven.
+[2026-09-16T18:13:06.6330694] Vous : ready
+[2026-09-16T18:13:30.1505442] Vous avez gagné 4 pièces d'or
+[2026-09-16T18:13:30.1510563] Vous avez gagné 1 pièces d'or
+[2026-09-16T18:13:32.0024601] Niveau supérieur! Vous avez atteint le niveau 2.
+[2026-09-16T18:13:32.0034664] Vous avez gagné 35 HP et 32 Mana.
+[2026-09-16T18:13:32.0179731] Vous avez gagné 5 pièces d'or
+[2026-09-16T18:13:32.0250291] Vous avez gagné 1 pièces d'or
+[2026-09-16T18:13:35.5436362] Vous avez gagné 3 pièces d'or
+[2026-09-16T18:13:44.3383311] Vous avez gagné 8 pièces d'or
+[2026-09-16T18:13:47.2213538] Vous avez gagné 7 pièces d'or
+[2026-09-16T18:13:50.8873991] Niveau supérieur! Vous avez atteint le niveau 3.
+[2026-09-16T18:13:50.8873991] Vous avez gagné 33 HP et 31 Mana.
+[2026-09-16T18:13:50.8873991] Vous avez gagné 11 pièces d'or
+[2026-09-16T18:13:55.8550003] Vous ne pouvez pas équiper cet objet dans cet emplacement.
+[2026-09-16T18:14:03.6881406] Il vous faut 690 en agilité pour équiper Flèche des vagues silencieuses.
+[2026-09-16T18:14:07.1544408] Vous ne pouvez pas équiper cet objet dans cet emplacement.
+[2026-09-16T18:14:17.0218772] Vous ne pouvez pas équiper cet objet dans cet emplacement.
+[2026-09-16T18:14:20.364135] Vous ne pouvez pas équiper cet objet dans cet emplacement.
+[2026-09-16T18:14:22.3972976] Il vous faut 750 en agilité pour équiper Ring of the Archer.
+[2026-09-16T18:14:33.3056773] Il vous faut 750 en agilité pour équiper Ring of the Archer.
+[2026-09-16T18:14:44.3176324] Vous avez gagné 11 pièces d'or
+[2026-09-16T18:15:50.7292953] Niveau supérieur! Vous avez atteint le niveau 4.
+[2026-09-16T18:15:50.7292953] Vous avez gagné 34 HP et 31 Mana.
+[2026-09-16T18:15:50.9146758] Niveau supérieur! Vous avez atteint le niveau 5.
+[2026-09-16T18:15:50.9146758] Vous avez gagné 33 HP et 30 Mana.
+[2026-09-16T18:15:50.9156761] Vous avez gagné 80 pièces d'or
+[2026-09-16T18:15:50.916682] Niveau supérieur! Vous avez atteint le niveau 6.
+[2026-09-16T18:15:50.916682] Vous avez gagné 33 HP et 32 Mana.
+[2026-09-16T18:15:50.916682] Vous avez gagné 76 pièces d'or
+[2026-09-16T18:15:53.6684854] Vous avez gagné 58 pièces d'or
+[2026-09-16T18:16:00.6065567] Niveau supérieur! Vous avez atteint le niveau 7.
+[2026-09-16T18:16:00.6065567] Vous avez gagné 35 HP et 32 Mana.
+[2026-09-16T18:16:00.6065567] Vous avez gagné 100 pièces d'or
+[2026-09-16T18:16:05.0003399] Vous avez gagné 73 pièces d'or
+[2026-09-16T18:16:08.2239831] Niveau supérieur! Vous avez atteint le niveau 8.
+[2026-09-16T18:16:08.2239831] Vous avez gagné 35 HP et 32 Mana.
+[2026-09-16T18:16:08.2239831] Vous avez gagné 112 pièces d'or
+[2026-09-16T18:16:10.7975542] Vous avez gagné 50 pièces d'or
+[2026-09-16T18:16:11.9024916] Niveau supérieur! Vous avez atteint le niveau 9.
+[2026-09-16T18:16:11.9024916] Vous avez gagné 33 HP et 30 Mana.
+[2026-09-16T18:16:11.9024916] Vous avez gagné 100 pièces d'or
+[2026-09-16T18:16:15.3521317] Vous avez gagné 91 pièces d'or
+[2026-09-16T18:16:22.1969634] Vous avez gagné 49 pièces d'or
+[2026-09-16T18:16:22.3785374] Vous avez ramassé Stack de demon tree wood
+[2026-09-16T18:16:25.6837956] Niveau supérieur! Vous avez atteint le niveau 10.
+[2026-09-16T18:16:25.6847998] Vous avez gagné 34 HP et 30 Mana.
+[2026-09-16T18:16:25.6847998] Vous avez gagné 72 pièces d'or
+[2026-09-16T18:16:32.9314684] Vous avez gagné 83 pièces d'or
+[2026-09-16T18:16:32.9324712] Vous avez gagné 59 pièces d'or
+[2026-09-16T18:17:03.0555897] GM: HP set to 3000 / 3000
+[2026-09-16T18:17:06.5454683] Vous avez gagné 94 pièces d'or
+[2026-09-16T18:17:08.6361809] Niveau supérieur! Vous avez atteint le niveau 11.
+[2026-09-16T18:17:08.6371816] Vous avez gagné 33 HP et 31 Mana.
+[2026-09-16T18:17:08.6371816] Vous avez gagné 126 pièces d'or
+[2026-09-16T18:17:12.5787425] Vous avez gagné 101 pièces d'or
+[2026-09-16T18:17:16.2963291] Vous avez gagné 111 pièces d'or
+[2026-09-16T18:17:46.9047197] Vous avez gagné 51 pièces d'or
+[2026-09-16T18:17:50.5478476] Niveau supérieur! Vous avez atteint le niveau 12.
+[2026-09-16T18:17:50.5488466] Vous avez gagné 33 HP et 31 Mana.
+[2026-09-16T18:17:50.5488466] Vous avez gagné 105 pièces d'or
+[2026-09-16T18:18:01.5821999] Vous avez gagné 101 pièces d'or
+[2026-09-16T18:19:13.3265537] Bienvenue dans T4C Reborn.
+[2026-09-16T18:19:40.9171233] Vous avez gagné 124 pièces d'or
+[2026-09-16T18:20:48.0902556] Niveau supérieur! Vous avez atteint le niveau 11.
+[2026-09-16T18:20:48.0912564] Vous avez gagné 34 HP et 30 Mana.
+[2026-09-16T18:20:48.1052769] Vous avez gagné 115 pièces d'or
+[2026-09-16T18:21:12.1074264] Niveau supérieur! Vous avez atteint le niveau 12.
+[2026-09-16T18:21:12.1084272] Vous avez gagné 34 HP et 30 Mana.
+[2026-09-16T18:21:12.1084272] Vous avez gagné 317 pièces d'or
+[2026-09-16T18:21:12.2333508] Vous avez ramassé Manastone
+[2026-09-16T18:22:11.6346612] Il vous faut 690 en agilité pour équiper Tension Primordiale Ultime.
+[2026-09-16T18:22:13.2443503] Il vous faut 690 en agilité pour équiper Flèche des vagues silencieuses.
+[2026-09-16T18:26:13.5278112] Aucune cible à proximité.
+[2026-09-16T18:26:14.6281129] Aucune cible à proximité.
+[2026-09-16T18:26:15.0887948] Aucune cible à proximité.
+[2026-09-16T18:26:16.3485172] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:16.6190473] Aucune cible à proximité.
+[2026-09-16T18:26:16.8817556] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:17.0701729] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:17.7216876] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:17.8831794] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:18.224593] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:20.3132762] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:20.5676656] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:20.9160191] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:21.1752609] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:21.3709411] Aucune cible à proximité.
+[2026-09-16T18:26:21.8202807] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:22.0755346] La cible n'est pas en ligne de vue.
+[2026-09-16T18:26:31.6983811] Hello, and welcome.
+[2026-09-16T18:26:33.7979834] Vous : sdsdbuy
+[2026-09-16T18:26:35.2358882] Vous : teach
+[2026-09-16T18:26:40.9041215] skill.barrier passe à 12!
+[2026-09-16T18:26:40.9041215] skill.clear_thought passe à 14!
+[2026-09-16T18:26:57.4701781] GM: unknown command .skill.barrier (type .help)
+[2026-09-16T18:27:09.0117742] Vous : ddddddd
+[2026-09-16T18:27:13.7973281] Aucune cible à proximité.
+[2026-09-16T20:04:32.6227923] Bienvenue dans T4C Reborn.
+[2026-09-16T20:09:19.5008079] Bienvenue dans T4C Reborn.
+[2026-09-16T20:09:43.8345545] Niveau supérieur! Vous avez atteint le niveau 13.
+[2026-09-16T20:09:43.8345545] Vous avez gagné 33 HP et 31 Mana.
+[2026-09-16T20:09:45.1807914] Niveau supérieur! Vous avez atteint le niveau 14.
+[2026-09-16T20:09:45.1807914] Vous avez gagné 35 HP et 30 Mana.
+[2026-09-16T20:09:46.6811746] Niveau supérieur! Vous avez atteint le niveau 15.
+[2026-09-16T20:09:46.6811746] Vous avez gagné 34 HP et 32 Mana.
+[2026-09-16T20:09:46.6822413] Vous avez gagné 80 pièces d'or
+[2026-09-16T20:09:48.1795795] Vous avez gagné 157 pièces d'or
+[2026-09-16T20:09:48.4151984] Niveau supérieur! Vous avez atteint le niveau 16.
+[2026-09-16T20:09:48.4151984] Vous avez gagné 35 HP et 31 Mana.
+[2026-09-16T20:09:51.4801841] Niveau supérieur! Vous avez atteint le niveau 17.
+[2026-09-16T20:09:51.4811843] Vous avez gagné 33 HP et 30 Mana.
+[2026-09-16T20:09:51.5821044] Niveau supérieur! Vous avez atteint le niveau 18.
+[2026-09-16T20:09:51.5821044] Vous avez gagné 35 HP et 30 Mana.
+[2026-09-16T20:09:51.5821044] Vous avez gagné 141 pièces d'or
+[2026-09-16T20:09:51.5831045] Vous avez gagné 148 pièces d'or
+[2026-09-16T20:09:51.5901043] Niveau supérieur! Vous avez atteint le niveau 19.
+[2026-09-16T20:09:51.5911055] Vous avez gagné 35 HP et 30 Mana.
+[2026-09-16T20:09:51.5916101] Vous avez gagné 111 pièces d'or
+[2026-09-16T20:09:51.5916101] Vous avez gagné 73 pièces d'or
+[2026-09-16T20:09:55.796875] Niveau supérieur! Vous avez atteint le niveau 20.
+[2026-09-16T20:09:55.7978749] Vous avez gagné 34 HP et 30 Mana.
+[2026-09-16T20:09:55.7988746] Niveau supérieur! Vous avez atteint le niveau 21.
+[2026-09-16T20:09:55.7988746] Vous avez gagné 34 HP et 31 Mana.
+[2026-09-16T20:09:55.7988746] Vous avez gagné 85 pièces d'or
+[2026-09-16T20:09:56.8326336] Vous avez gagné 162 pièces d'or
+[2026-09-16T20:09:57.5383989] Vous avez gagné 169 pièces d'or
+[2026-09-16T20:10:01.4873003] Niveau supérieur! Vous avez atteint le niveau 22.
+[2026-09-16T20:10:01.4873003] Vous avez gagné 34 HP et 32 Mana.
+[2026-09-16T20:10:01.4886074] Vous avez gagné 62 pièces d'or
+[2026-09-16T20:10:01.6374292] Vous avez ramassé Les yeux de tarentule
+[2026-09-16T20:10:05.823227] Niveau supérieur! Vous avez atteint le niveau 23.
+[2026-09-16T20:10:05.823227] Vous avez gagné 34 HP et 32 Mana.
+[2026-09-16T20:10:05.823227] Vous avez gagné 114 pièces d'or
+[2026-09-16T20:10:06.2134939] Vous avez gagné 165 pièces d'or
+[2026-09-16T20:10:06.9474006] Vous avez gagné 120 pièces d'or
+[2026-09-16T20:10:15.2384132] Niveau supérieur! Vous avez atteint le niveau 24.
+[2026-09-16T20:10:15.2394136] Vous avez gagné 35 HP et 30 Mana.
+[2026-09-16T20:10:26.0923814] Vous avez gagné 69 pièces d'or
+[2026-09-16T20:10:27.625618] Niveau supérieur! Vous avez atteint le niveau 25.
+[2026-09-16T20:10:27.625618] Vous avez gagné 33 HP et 32 Mana.
+[2026-09-16T20:10:29.3259142] Vous avez gagné 75 pièces d'or
+[2026-09-16T20:10:30.0930249] Niveau supérieur! Vous avez atteint le niveau 26.
+[2026-09-16T20:10:30.0930249] Vous avez gagné 34 HP et 31 Mana.
+[2026-09-16T20:10:30.0930249] Vous avez gagné 158 pièces d'or
+[2026-09-16T20:10:30.6266414] Vous avez gagné 118 pièces d'or
+[2026-09-16T20:10:31.3844118] Vous avez gagné 151 pièces d'or
+[2026-09-16T20:10:36.0094465] Niveau supérieur! Vous avez atteint le niveau 27.
+[2026-09-16T20:10:36.0094465] Vous avez gagné 33 HP et 31 Mana.
+[2026-09-16T20:10:36.7677477] Vous avez gagné 65 pièces d'or
+[2026-09-16T20:10:38.8598517] Vous avez gagné 71 pièces d'or
+[2026-09-16T20:10:39.0103015] Niveau supérieur! Vous avez atteint le niveau 28.
+[2026-09-16T20:10:39.011301] Vous avez gagné 33 HP et 32 Mana.
+[2026-09-16T20:10:39.301127] Vous avez gagné 124 pièces d'or
+[2026-09-16T20:10:40.7084044] Ahhh, at last we meet. Welcome, Lynania. As you no doubt have guessed, I am the Oracle.
+[2026-09-16T20:22:57.4825838] Welcome to T4C Reborn.
+[2026-09-16T20:23:15.1538153] You are too far away to interact with this object
+[2026-09-16T20:23:35.2085778] Level up! You have reached level 29.
+[2026-09-16T20:23:35.2095802] You gained 33 HP and 31 Mana.
+[2026-09-16T20:23:37.4240909] Level up! You have reached level 30.
+[2026-09-16T20:23:37.4250899] You gained 35 HP and 32 Mana.
+[2026-09-16T20:23:37.4250899] Level up! You have reached level 31.
+[2026-09-16T20:23:37.4250899] You gained 33 HP and 32 Mana.
+[2026-09-16T20:23:37.4260905] Level up! You have reached level 32.
+[2026-09-16T20:23:37.4260905] You gained 34 HP and 30 Mana.
+[2026-09-16T20:23:37.4260905] Level up! You have reached level 33.
+[2026-09-16T20:23:37.4270939] You gained 34 HP and 31 Mana.
+[2026-09-16T20:23:38.4304757] Level up! You have reached level 34.
+[2026-09-16T20:23:38.4304757] You gained 33 HP and 32 Mana.
+[2026-09-16T20:23:38.4304757] Level up! You have reached level 35.
+[2026-09-16T20:23:38.4304757] You gained 34 HP and 30 Mana.
+[2026-09-16T20:23:38.4316055] You gained 175 gold coins
+[2026-09-16T20:23:38.4336398] Level up! You have reached level 36.
+[2026-09-16T20:23:38.4336398] You gained 34 HP and 31 Mana.
+[2026-09-16T20:23:38.4336398] Level up! You have reached level 37.
+[2026-09-16T20:23:38.4346397] You gained 35 HP and 30 Mana.
+[2026-09-16T20:23:38.4346397] You gained 166 gold coins
+[2026-09-16T20:23:42.1968369] Level up! You have reached level 38.
+[2026-09-16T20:23:42.1968369] You gained 34 HP and 31 Mana.
+[2026-09-16T20:23:42.6049934] Level up! You have reached level 39.
+[2026-09-16T20:23:42.6059945] You gained 35 HP and 30 Mana.
+[2026-09-16T20:23:42.8155353] Level up! You have reached level 40.
+[2026-09-16T20:23:42.8155353] You gained 34 HP and 31 Mana.
+[2026-09-16T20:23:42.8155353] Level up! You have reached level 41.
+[2026-09-16T20:23:42.8155353] You gained 35 HP and 32 Mana.
+[2026-09-16T20:23:42.8165351] Level up! You have reached level 42.
+[2026-09-16T20:23:42.8175353] You gained 33 HP and 31 Mana.
+[2026-09-16T20:23:42.8175353] You gained 190 gold coins
+[2026-09-16T20:23:42.8246009] Level up! You have reached level 43.
+[2026-09-16T20:23:42.8246009] You gained 34 HP and 31 Mana.
+[2026-09-16T20:23:42.8256009] Level up! You have reached level 44.
+[2026-09-16T20:23:42.8256009] You gained 33 HP and 30 Mana.
+[2026-09-16T20:23:42.8256009] You gained 125 gold coins
+[2026-09-16T20:23:43.6969807] Level up! You have reached level 45.
+[2026-09-16T20:23:43.6969807] You gained 33 HP and 32 Mana.
+[2026-09-16T20:23:45.5893252] Level up! You have reached level 46.
+[2026-09-16T20:23:45.5903256] You gained 34 HP and 30 Mana.
+[2026-09-16T20:23:45.5903256] Level up! You have reached level 47.
+[2026-09-16T20:23:45.5903256] You gained 33 HP and 32 Mana.
+[2026-09-16T20:23:46.6065313] Level up! You have reached level 48.
+[2026-09-16T20:23:46.6065313] You gained 34 HP and 32 Mana.
+[2026-09-16T20:23:46.6075315] Level up! You have reached level 49.
+[2026-09-16T20:23:46.6075315] You gained 33 HP and 31 Mana.
+[2026-09-16T20:23:48.4306066] Level up! You have reached level 50.
+[2026-09-16T20:23:48.4306066] You gained 34 HP and 32 Mana.
+[2026-09-16T20:23:48.431607] Level up! You have reached level 51.
+[2026-09-16T20:23:48.431607] You gained 33 HP and 31 Mana.
+[2026-09-16T20:23:48.431607] Level up! You have reached level 52.
+[2026-09-16T20:23:48.4326072] You gained 35 HP and 30 Mana.
+[2026-09-16T20:23:49.4565315] Level up! You have reached level 53.
+[2026-09-16T20:23:49.4565315] You gained 34 HP and 32 Mana.
+[2026-09-16T20:23:52.4553013] Level up! You have reached level 54.
+[2026-09-16T20:23:52.456301] You gained 33 HP and 31 Mana.
+[2026-09-16T20:23:52.456301] You gained 149 gold coins
+[2026-09-16T20:23:52.4889554] Level up! You have reached level 55.
+[2026-09-16T20:23:52.4889554] You gained 34 HP and 31 Mana.
+[2026-09-16T20:23:52.7817788] Level up! You have reached level 56.
+[2026-09-16T20:23:52.7817788] You gained 33 HP and 32 Mana.
+[2026-09-16T20:23:52.7817788] Level up! You have reached level 57.
+[2026-09-16T20:23:52.7817788] You gained 34 HP and 30 Mana.
+[2026-09-16T20:23:52.782779] Level up! You have reached level 58.
+[2026-09-16T20:23:52.782779] You gained 35 HP and 32 Mana.
+[2026-09-16T20:23:52.782779] You gained 205 gold coins
+[2026-09-16T20:23:52.7837779] Level up! You have reached level 59.
+[2026-09-16T20:23:52.7837779] You gained 35 HP and 32 Mana.
+[2026-09-16T20:23:52.7837779] You gained 163 gold coins
+[2026-09-16T20:23:53.3867827] You are too far away to harvest this plant.
+[2026-09-16T20:23:53.9361195] You are too far away to harvest this plant.
+[2026-09-16T20:23:54.7962711] You begin harvesting Moonthistle...
+[2026-09-16T20:23:55.8135015] Level up! You have reached level 60.
+[2026-09-16T20:23:55.8145019] You gained 34 HP and 30 Mana.
+[2026-09-16T20:23:57.4006277] Level up! You have reached level 61.
+[2026-09-16T20:23:57.4006277] You gained 35 HP and 32 Mana.
+[2026-09-16T20:23:57.4016286] You gained 151 gold coins
+[2026-09-16T20:23:59.7801167] You harvested Moonthistle.
+[2026-09-16T20:24:00.2547854] Level up! You have reached level 62.
+[2026-09-16T20:24:00.2557849] You gained 33 HP and 31 Mana.
+[2026-09-16T20:24:01.8135023] Level up! You have reached level 63.
+[2026-09-16T20:24:01.8145004] You gained 34 HP and 30 Mana.
+[2026-09-16T20:24:01.8145004] You gained 174 gold coins
+[2026-09-16T20:24:02.6575409] Level up! You have reached level 64.
+[2026-09-16T20:24:02.6575409] You gained 35 HP and 31 Mana.
+[2026-09-16T20:24:02.6575409] You gained 95 gold coins
+[2026-09-16T20:24:27.6635241] Level up! You have reached level 65.
+[2026-09-16T20:24:27.6635241] You gained 35 HP and 31 Mana.
+[2026-09-16T20:24:30.4567387] Level up! You have reached level 66.
+[2026-09-16T20:24:30.4577386] You gained 34 HP and 32 Mana.
+[2026-09-16T20:24:31.9564447] Level up! You have reached level 67.
+[2026-09-16T20:24:31.9564447] You gained 34 HP and 31 Mana.
+[2026-09-16T20:24:31.9564447] You gained 216 gold coins
+[2026-09-16T20:24:33.6624409] Level up! You have reached level 68.
+[2026-09-16T20:24:33.6634403] You gained 33 HP and 30 Mana.
+[2026-09-16T20:24:35.1663013] Level up! You have reached level 69.
+[2026-09-16T20:24:35.1673008] You gained 35 HP and 32 Mana.
+[2026-09-16T20:24:35.1673008] You gained 128 gold coins
+[2026-09-16T20:24:36.3149156] Level up! You have reached level 70.
+[2026-09-16T20:24:36.3149156] You gained 33 HP and 31 Mana.
+[2026-09-16T20:24:36.3159182] You gained 217 gold coins
+[2026-09-16T20:24:44.6347147] Level up! You have reached level 71.
+[2026-09-16T20:24:44.6357174] You gained 35 HP and 32 Mana.
+[2026-09-16T20:24:47.6343696] Level up! You have reached level 72.
+[2026-09-16T20:24:47.6343696] You gained 34 HP and 31 Mana.
+[2026-09-16T20:24:49.1327147] Level up! You have reached level 73.
+[2026-09-16T20:24:49.1337152] You gained 34 HP and 30 Mana.
+[2026-09-16T20:24:49.1337152] You gained 357 gold coins
+[2026-09-16T20:24:49.4836588] Level up! You have reached level 74.
+[2026-09-16T20:24:49.4836588] You gained 34 HP and 31 Mana.
+[2026-09-16T20:24:53.0429239] Level up! You have reached level 75.
+[2026-09-16T20:24:53.0439239] You gained 34 HP and 32 Mana.
+[2026-09-16T20:24:53.0439239] You gained 78 gold coins
+[2026-09-16T20:24:55.4836878] Level up! You have reached level 76.
+[2026-09-16T20:24:55.4846872] You gained 33 HP and 31 Mana.
+[2026-09-16T20:24:56.984919] Level up! You have reached level 77.
+[2026-09-16T20:24:56.984919] You gained 35 HP and 30 Mana.
+[2026-09-16T20:24:56.984919] You gained 163 gold coins
+[2026-09-16T20:25:00.0503731] You gained 184 gold coins
+[2026-09-16T20:25:00.8104151] Level up! You have reached level 78.
+[2026-09-16T20:25:00.8104151] You gained 35 HP and 30 Mana.
+[2026-09-16T20:25:03.8393031] Level up! You have reached level 79.
+[2026-09-16T20:25:03.840305] You gained 34 HP and 33 Mana.
+[2026-09-16T20:25:08.308481] Level up! You have reached level 80.
+[2026-09-16T20:25:08.308481] You gained 33 HP and 31 Mana.
+[2026-09-16T20:25:08.3094853] You gained 141 gold coins
+[2026-09-16T20:25:11.3427777] Level up! You have reached level 81.
+[2026-09-16T20:25:11.3427777] You gained 34 HP and 33 Mana.
+[2026-09-16T20:25:11.3427777] You gained 246 gold coins
+[2026-09-16T20:25:18.1747051] You need 750 agility to equip Ring of the Archer.
+[2026-09-16T20:25:20.667526] Level up! You have reached level 82.
+[2026-09-16T20:25:20.667526] You gained 33 HP and 31 Mana.
+[2026-09-16T20:25:22.2487851] You need 750 agility to equip Ring of the Archer.
+[2026-09-16T20:25:26.6673131] Level up! You have reached level 83.
+[2026-09-16T20:25:26.6673131] You gained 35 HP and 32 Mana.
+[2026-09-16T20:25:26.6673131] You gained 377 gold coins
+[2026-09-16T20:25:31.9022288] Level up! You have reached level 84.
+[2026-09-16T20:25:31.9022288] You gained 33 HP and 31 Mana.
+[2026-09-16T20:25:33.3985664] You gained 104 gold coins
+[2026-09-16T20:25:47.6928641] Level up! You have reached level 85.
+[2026-09-16T20:25:47.6928641] You gained 33 HP and 33 Mana.
+[2026-09-16T20:25:49.1021131] You gained 128 gold coins
+[2026-09-16T20:25:50.6949356] Level up! You have reached level 86.
+[2026-09-16T20:25:50.6949356] You gained 35 HP and 32 Mana.
+[2026-09-16T20:25:51.6507533] Level up! You have reached level 87.
+[2026-09-16T20:25:51.6507533] You gained 33 HP and 33 Mana.
+[2026-09-16T20:25:51.6517572] You gained 262 gold coins
+[2026-09-16T20:25:51.6527569] Level up! You have reached level 88.
+[2026-09-16T20:25:51.6527569] You gained 34 HP and 32 Mana.
+[2026-09-16T20:25:51.6527569] Level up! You have reached level 89.
+[2026-09-16T20:25:51.6527569] You gained 33 HP and 32 Mana.
+[2026-09-16T20:25:51.6527569] You gained 260 gold coins
+[2026-09-16T20:25:52.2257926] Level up! You have reached level 90.
+[2026-09-16T20:25:52.2257926] You gained 33 HP and 33 Mana.
+[2026-09-16T20:25:52.2257926] You gained 205 gold coins
+[2026-09-16T20:25:52.524795] Level up! You have reached level 91.
+[2026-09-16T20:25:52.524795] You gained 35 HP and 32 Mana.
+[2026-09-16T20:25:52.524795] Level up! You have reached level 92.
+[2026-09-16T20:25:52.5257959] You gained 33 HP and 32 Mana.
+[2026-09-16T20:25:52.5257959] You gained 287 gold coins
+[2026-09-16T20:25:54.4585239] You gained 85 gold coins
+[2026-09-16T20:26:02.1486724] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T20:26:04.7484569] Will you be leaving the arena or are you ready to fight?
+[2026-09-16T20:26:04.7494616] Vous : leave
+[2026-09-16T20:26:07.3232213] Will you be leaving the arena or are you ready to fight?
+[2026-09-16T20:26:07.3242215] Vous : bye
+[2026-09-16T20:26:08.6493201] Will you be leaving the arena or are you ready to fight?
+[2026-09-16T20:26:08.6493201] Vous : leave
+[2026-09-16T20:26:09.8769773] Vous : yes
+[2026-09-16T20:26:12.0488165] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T20:26:13.3823481] Are you ready to fight in the arena?
+[2026-09-16T20:26:13.3823481] Vous : arena
+[2026-09-16T20:26:16.1574233] Will you be leaving the arena or are you ready to fight?
+[2026-09-16T20:26:16.1574233] Vous : leave
+[2026-09-16T20:26:20.9159473] It was a pleasure having you here. You are welcome to come again!
+[2026-09-16T20:26:20.9159473] Vous : leaving
+[2026-09-16T20:26:22.8404998] Welcome back, Lynania.
+[2026-09-16T20:26:29.3575236] In the colosseum, fighters of all rank and caliber come to test their abilities against powerful creatures. However, if you don't feel like fighting, it is possible to become a spectator.
+[2026-09-16T20:26:29.3575236] Vous : colosseum
+[2026-09-16T20:26:32.1941206] Level up! You have reached level 93.
+[2026-09-16T20:26:32.1941206] You gained 34 HP and 31 Mana.
+[2026-09-16T20:26:32.1951209] You gained 116 gold coins
+[2026-09-16T20:26:32.3745729] Would you like to enter one of my arenas and test your fighting skills?
+[2026-09-16T20:26:32.3745729] Vous : test
+[2026-09-16T20:26:37.0908442] Will you fight in the battleground or in the colosseum?
+[2026-09-16T20:26:37.0918443] Vous : yes
+[2026-09-16T20:26:38.5834656] Welcome back, Lynania.
+[2026-09-16T20:26:45.4401888] Enjoy the show!
+[2026-09-16T20:26:45.4401888] Vous : battleground
+[2026-09-16T20:27:35.5501029] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T20:27:38.4831936] Will you be leaving the arena or are you ready to fight?
+[2026-09-16T20:27:38.4831936] Vous : leave
+[2026-09-16T20:27:40.3584855] It was a pleasure having you here. You are welcome to come again!
+[2026-09-16T20:27:40.3584855] Vous : leaving
+[2026-09-16T20:27:42.1588795] Welcome back, Lynania.
+[2026-09-16T20:27:43.9615125] You gained 134 gold coins
+[2026-09-16T20:27:44.8348965] Would you like to enter one of my arenas and test your fighting skills?
+[2026-09-16T20:27:44.8348965] Vous : test
+[2026-09-16T20:27:47.2428111] Will you fight in the battleground or in the colosseum?
+[2026-09-16T20:27:47.2428111] Vous : yes
+[2026-09-16T20:27:50.8683527] Enjoy the show!
+[2026-09-16T20:27:50.8683527] Vous : colosseum
+[2026-09-16T20:27:52.8515634] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T20:27:56.6266296] Are you ready to fight in the arena?
+[2026-09-16T20:27:56.6266296] Vous : fight
+[2026-09-16T20:27:58.3756188] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T20:27:58.3756188] Vous : yes
+[2026-09-16T20:28:01.6261007] You receive a battle token for your efforts.
+[2026-09-16T20:28:04.0861297] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T20:28:05.9353719] Vous : next
+[2026-09-16T20:28:07.7349128] Your arena difficulty is now 120.
+[2026-09-16T20:28:07.7359133] Vous : increase
+[2026-09-16T20:28:09.3765121] Vous : increas
+[2026-09-16T20:28:11.9184121] You have already changed the level of difficulty. Fight with your current settings first.
+[2026-09-16T20:28:11.9184121] Vous : increase
+[2026-09-16T20:28:14.6935057] Are you ready to fight in the arena?
+[2026-09-16T20:28:14.6935057] Vous : fight
+[2026-09-16T20:28:15.3923052] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T20:28:15.3933145] Vous : yes
+[2026-09-16T20:28:18.2198095] You receive a battle token for your efforts.
+[2026-09-16T20:29:26.331749] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T20:31:11.2137057] GM: Gold set to 100000
+[2026-09-16T20:31:14.6344768] GM: Gold set to 10000000
+[2026-09-16T20:37:29.0808902] Welcome to T4C Reborn.
+[2026-09-16T20:37:35.1581217] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T20:37:40.5319721] Your arena difficulty is now 750.
+[2026-09-16T20:37:40.5319721] You selected 3 opponent(s).
+[2026-09-16T20:37:40.5319721] Are you ready to fight in the arena?
+[2026-09-16T20:37:40.532975] Vous : fight 750 3
+[2026-09-16T20:37:47.1765063] You have already changed the level of difficulty. Fight with your current settings first.
+[2026-09-16T20:37:47.1765063] Vous : fight 750
+[2026-09-16T20:37:51.7351015] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T20:37:51.7351015] Vous : yes
+[2026-09-16T20:39:09.867765] You receive a battle token for your efforts.
+[2026-09-16T20:39:09.9418472] Level up! You have reached level 94.
+[2026-09-16T20:39:09.9418472] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9563497] Level up! You have reached level 95.
+[2026-09-16T20:39:09.9573513] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9573513] Level up! You have reached level 96.
+[2026-09-16T20:39:09.9573513] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9573513] Level up! You have reached level 97.
+[2026-09-16T20:39:09.9583504] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9583504] Level up! You have reached level 98.
+[2026-09-16T20:39:09.9583504] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9583504] Level up! You have reached level 99.
+[2026-09-16T20:39:09.9583504] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9583504] Level up! You have reached level 100.
+[2026-09-16T20:39:09.9583504] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9583504] Level up! You have reached level 101.
+[2026-09-16T20:39:09.9597378] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9597378] Level up! You have reached level 102.
+[2026-09-16T20:39:09.9597378] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9597378] Level up! You have reached level 103.
+[2026-09-16T20:39:09.9597378] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9607415] Level up! You have reached level 104.
+[2026-09-16T20:39:09.9607415] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9607415] Level up! You have reached level 105.
+[2026-09-16T20:39:09.9607415] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9607415] Level up! You have reached level 106.
+[2026-09-16T20:39:09.9607415] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9607415] Level up! You have reached level 107.
+[2026-09-16T20:39:09.9607415] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9621482] Level up! You have reached level 108.
+[2026-09-16T20:39:09.9621482] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9621482] Level up! You have reached level 109.
+[2026-09-16T20:39:09.9621482] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9621482] Level up! You have reached level 110.
+[2026-09-16T20:39:09.9621482] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9631525] Level up! You have reached level 111.
+[2026-09-16T20:39:09.9631525] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9631525] Level up! You have reached level 112.
+[2026-09-16T20:39:09.9631525] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9631525] Level up! You have reached level 113.
+[2026-09-16T20:39:09.9631525] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9641566] Level up! You have reached level 114.
+[2026-09-16T20:39:09.9641566] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9641566] Level up! You have reached level 115.
+[2026-09-16T20:39:09.9641566] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9641566] Level up! You have reached level 116.
+[2026-09-16T20:39:09.9641566] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9651561] Level up! You have reached level 117.
+[2026-09-16T20:39:09.9651561] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9651561] Level up! You have reached level 118.
+[2026-09-16T20:39:09.9651561] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9651561] Level up! You have reached level 119.
+[2026-09-16T20:39:09.9651561] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9651561] Level up! You have reached level 120.
+[2026-09-16T20:39:09.9664002] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9664002] Level up! You have reached level 121.
+[2026-09-16T20:39:09.9664002] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9664002] Level up! You have reached level 122.
+[2026-09-16T20:39:09.9664002] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9664002] Level up! You have reached level 123.
+[2026-09-16T20:39:09.9664002] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9664002] Level up! You have reached level 124.
+[2026-09-16T20:39:09.9674027] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9674027] Level up! You have reached level 125.
+[2026-09-16T20:39:09.9674027] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9674027] Level up! You have reached level 126.
+[2026-09-16T20:39:09.9674027] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9674027] Level up! You have reached level 127.
+[2026-09-16T20:39:09.9684041] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9684041] Level up! You have reached level 128.
+[2026-09-16T20:39:09.9684041] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9684041] Level up! You have reached level 129.
+[2026-09-16T20:39:09.9684041] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9684041] Level up! You have reached level 130.
+[2026-09-16T20:39:09.9694042] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9694042] Level up! You have reached level 131.
+[2026-09-16T20:39:09.9694042] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9694042] Level up! You have reached level 132.
+[2026-09-16T20:39:09.9694042] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9694042] Level up! You have reached level 133.
+[2026-09-16T20:39:09.9694042] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9694042] Level up! You have reached level 134.
+[2026-09-16T20:39:09.9694042] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9694042] Level up! You have reached level 135.
+[2026-09-16T20:39:09.9709075] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9709075] Level up! You have reached level 136.
+[2026-09-16T20:39:09.9709075] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9709075] Level up! You have reached level 137.
+[2026-09-16T20:39:09.9709075] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9709075] Level up! You have reached level 138.
+[2026-09-16T20:39:09.9709075] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9719112] Level up! You have reached level 139.
+[2026-09-16T20:39:09.9719112] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9719112] Level up! You have reached level 140.
+[2026-09-16T20:39:09.9719112] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9719112] Level up! You have reached level 141.
+[2026-09-16T20:39:09.9719112] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9719112] Level up! You have reached level 142.
+[2026-09-16T20:39:09.9719112] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9733713] Level up! You have reached level 143.
+[2026-09-16T20:39:09.9733713] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9733713] Level up! You have reached level 144.
+[2026-09-16T20:39:09.9733713] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9733713] Level up! You have reached level 145.
+[2026-09-16T20:39:09.9733713] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9733713] Level up! You have reached level 146.
+[2026-09-16T20:39:09.9743742] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9743742] Level up! You have reached level 147.
+[2026-09-16T20:39:09.9743742] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9743742] Level up! You have reached level 148.
+[2026-09-16T20:39:09.9743742] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9743742] Level up! You have reached level 149.
+[2026-09-16T20:39:09.9743742] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9743742] Level up! You have reached level 150.
+[2026-09-16T20:39:09.9753738] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9753738] Level up! You have reached level 151.
+[2026-09-16T20:39:09.9753738] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9753738] Level up! You have reached level 152.
+[2026-09-16T20:39:09.9753738] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9753738] Level up! You have reached level 153.
+[2026-09-16T20:39:09.976374] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.976374] Level up! You have reached level 154.
+[2026-09-16T20:39:09.976374] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.976374] Level up! You have reached level 155.
+[2026-09-16T20:39:09.976374] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.976374] Level up! You have reached level 156.
+[2026-09-16T20:39:09.976374] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.976374] Level up! You have reached level 157.
+[2026-09-16T20:39:09.9773735] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9773735] Level up! You have reached level 158.
+[2026-09-16T20:39:09.9773735] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9773735] Level up! You have reached level 159.
+[2026-09-16T20:39:09.9773735] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9773735] Level up! You have reached level 160.
+[2026-09-16T20:39:09.9773735] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9773735] Level up! You have reached level 161.
+[2026-09-16T20:39:09.9773735] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9773735] Level up! You have reached level 162.
+[2026-09-16T20:39:09.9788552] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9788552] Level up! You have reached level 163.
+[2026-09-16T20:39:09.9788552] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9788552] Level up! You have reached level 164.
+[2026-09-16T20:39:09.9788552] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9788552] Level up! You have reached level 165.
+[2026-09-16T20:39:09.979859] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.979859] Level up! You have reached level 166.
+[2026-09-16T20:39:09.979859] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.979859] Level up! You have reached level 167.
+[2026-09-16T20:39:09.979859] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.979859] Level up! You have reached level 168.
+[2026-09-16T20:39:09.979859] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9808595] Level up! You have reached level 169.
+[2026-09-16T20:39:09.9808595] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9808595] Level up! You have reached level 170.
+[2026-09-16T20:39:09.9808595] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9808595] Level up! You have reached level 171.
+[2026-09-16T20:39:09.9808595] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9808595] Level up! You have reached level 172.
+[2026-09-16T20:39:09.9808595] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9808595] Level up! You have reached level 173.
+[2026-09-16T20:39:09.9808595] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9808595] Level up! You have reached level 174.
+[2026-09-16T20:39:09.9808595] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9823439] Level up! You have reached level 175.
+[2026-09-16T20:39:09.9823439] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9823439] Level up! You have reached level 176.
+[2026-09-16T20:39:09.9823439] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9823439] Level up! You have reached level 177.
+[2026-09-16T20:39:09.9823439] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9823439] Level up! You have reached level 178.
+[2026-09-16T20:39:09.9823439] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9823439] Level up! You have reached level 179.
+[2026-09-16T20:39:09.9823439] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9836101] Level up! You have reached level 180.
+[2026-09-16T20:39:09.9836101] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9836101] Level up! You have reached level 181.
+[2026-09-16T20:39:09.9836101] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9836101] Level up! You have reached level 182.
+[2026-09-16T20:39:09.9836101] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9836101] Level up! You have reached level 183.
+[2026-09-16T20:39:09.9836101] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9849138] Level up! You have reached level 184.
+[2026-09-16T20:39:09.9849138] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9849138] Level up! You have reached level 185.
+[2026-09-16T20:39:09.9849138] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9849138] Level up! You have reached level 186.
+[2026-09-16T20:39:09.9849138] You gained 35 HP and 33 Mana.
+[2026-09-16T20:39:09.9859174] Level up! You have reached level 187.
+[2026-09-16T20:39:09.9859174] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9859174] Level up! You have reached level 188.
+[2026-09-16T20:39:09.9859174] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9859174] Level up! You have reached level 189.
+[2026-09-16T20:39:09.9859174] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9869178] Level up! You have reached level 190.
+[2026-09-16T20:39:09.9869178] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9869178] Level up! You have reached level 191.
+[2026-09-16T20:39:09.9869178] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9869178] Level up! You have reached level 192.
+[2026-09-16T20:39:09.9879184] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9879184] Level up! You have reached level 193.
+[2026-09-16T20:39:09.9879184] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9879184] Level up! You have reached level 194.
+[2026-09-16T20:39:09.9879184] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9879184] Level up! You have reached level 195.
+[2026-09-16T20:39:09.9879184] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9879184] Level up! You have reached level 196.
+[2026-09-16T20:39:09.9889181] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9889181] Level up! You have reached level 197.
+[2026-09-16T20:39:09.9889181] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9889181] Level up! You have reached level 198.
+[2026-09-16T20:39:09.9889181] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9889181] Level up! You have reached level 199.
+[2026-09-16T20:39:09.9899176] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9899176] Level up! You have reached level 200.
+[2026-09-16T20:39:09.9899176] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9899176] Level up! You have reached level 201.
+[2026-09-16T20:39:09.9899176] You gained 33 HP and 33 Mana.
+[2026-09-16T20:39:09.9899176] Level up! You have reached level 202.
+[2026-09-16T20:39:09.9899176] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9909174] Level up! You have reached level 203.
+[2026-09-16T20:39:09.9909174] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9909174] Level up! You have reached level 204.
+[2026-09-16T20:39:09.9909174] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9909174] Level up! You have reached level 205.
+[2026-09-16T20:39:09.9909174] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9909174] Level up! You have reached level 206.
+[2026-09-16T20:39:09.9909174] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9920039] Level up! You have reached level 207.
+[2026-09-16T20:39:09.9920039] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9920039] Level up! You have reached level 208.
+[2026-09-16T20:39:09.9920039] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9920039] Level up! You have reached level 209.
+[2026-09-16T20:39:09.9920039] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9920039] Level up! You have reached level 210.
+[2026-09-16T20:39:09.9930042] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9930042] Level up! You have reached level 211.
+[2026-09-16T20:39:09.9930042] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9930042] Level up! You have reached level 212.
+[2026-09-16T20:39:09.9930042] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9930042] Level up! You have reached level 213.
+[2026-09-16T20:39:09.9930042] You gained 34 HP and 32 Mana.
+[2026-09-16T20:39:09.9930042] Level up! You have reached level 214.
+[2026-09-16T20:39:09.9930042] You gained 34 HP and 33 Mana.
+[2026-09-16T20:39:09.9940132] Level up! You have reached level 215.
+[2026-09-16T20:39:09.9940132] You gained 35 HP and 32 Mana.
+[2026-09-16T20:39:09.9940132] Level up! You have reached level 216.
+[2026-09-16T20:39:09.9940132] You gained 34 HP and 31 Mana.
+[2026-09-16T20:39:09.9940132] Level up! You have reached level 217.
+[2026-09-16T20:39:09.9950177] You gained 35 HP and 31 Mana.
+[2026-09-16T20:39:09.9950177] Level up! You have reached level 218.
+[2026-09-16T20:39:09.9950177] You gained 33 HP and 32 Mana.
+[2026-09-16T20:39:09.9950177] Level up! You have reached level 219.
+[2026-09-16T20:39:09.9950177] You gained 33 HP and 31 Mana.
+[2026-09-16T20:39:09.9960171] Level up! You have reached level 220.
+[2026-09-16T20:39:09.9960171] You gained 34 HP and 32 Mana.
+[2026-09-16T20:43:06.0276896] Welcome to T4C Reborn.
+[2026-09-16T20:43:37.2618394] The target is not in line of sight.
+[2026-09-16T20:43:38.5821185] The target is not in line of sight.
+[2026-09-16T20:47:37.5194323] Welcome to T4C Reborn.
+[2026-09-16T20:47:51.5405509] Welcome. I have every spell known to this world for sale. Say spells to browse my wares.
+[2026-09-16T20:47:55.3258458] Vous : teach
+[2026-09-16T20:47:57.438162] Vous : learn
+[2026-09-16T20:49:20.6996114] You learned 3 spells: Meteore, Boulders, Benediction!
+[2026-09-16T21:10:00.1368208] Welcome to T4C Reborn.
+[2026-09-16T21:12:03.7503173] Ahh finally! I have waited long for one such as yourself. I am surprised you made it this far. Come now, I will show you the true meaning of pain!
+[2026-09-16T21:13:52.9656867] Level up! You have reached level 221.
+[2026-09-16T21:13:52.9656867] You gained 34 HP and 37 Mana.
+[2026-09-16T21:13:55.2598823] Level up! You have reached level 222.
+[2026-09-16T21:13:55.2598823] You gained 33 HP and 38 Mana.
+[2026-09-16T21:13:56.8990696] Level up! You have reached level 223.
+[2026-09-16T21:13:56.8990696] You gained 34 HP and 37 Mana.
+[2026-09-16T21:13:58.4406384] Level up! You have reached level 224.
+[2026-09-16T21:13:58.4406384] You gained 34 HP and 36 Mana.
+[2026-09-16T21:14:01.4989046] Level up! You have reached level 225.
+[2026-09-16T21:14:01.4989046] You gained 33 HP and 38 Mana.
+[2026-09-16T21:14:07.6160792] Level up! You have reached level 226.
+[2026-09-16T21:14:07.6160792] You gained 33 HP and 37 Mana.
+[2026-09-16T21:14:07.6160792] You gained 869 gold coins
+[2026-09-16T21:17:37.4613512] Welcome to T4C Reborn.
+[2026-09-16T21:18:38.2321949] Welcome. I have every spell known to this world for sale. Say spells to browse my wares.
+[2026-09-16T21:18:40.0328983] Vous : learn
+[2026-09-16T21:18:43.6891537] You learned LevelUp!
+[2026-09-16T21:19:02.4495183] You learned Light!
+[2026-09-16T21:19:17.4074389] You learned Healing!
+[2026-09-16T21:19:22.9574194] You learned Tranquility!
+[2026-09-16T21:19:38.9755607] You learned Wrath of the Ancients!
+[2026-09-16T21:20:08.567288] Teleport debug: ON
+[2026-09-16T21:21:25.1352105] GM: unknown item "empyrean_earth_armor  .summon item empyrean_earth_boots  .summon item empyrean_earth_gauntlets  .summon item empyrean_earth_helmet  .summon item empyrean_earth_leggings  .summon item empyrean_earth_protector"
+[2026-09-16T21:21:33.4954539] GM: Summoned item empyrean_earth_armor
+[2026-09-16T21:21:57.3435728] GM: Summoned item ancient_celestial_earth_boots
+[2026-09-16T21:22:56.4574618] GM: Summoned item ancient_celestial_earth_gauntlets
+[2026-09-16T21:23:14.9656588] GM: Summoned item empyrean_earth_gauntlets
+[2026-09-16T21:23:23.8902437] GM: Summoned item empyrean_earth_helmet
+[2026-09-16T21:23:32.5493725] GM: Summoned item empyrean_earth_leggings
+[2026-09-16T21:23:40.2415656] GM: Summoned item empyrean_earth_protector
+[2026-09-16T21:29:11.0054606] The target is not in line of sight.
+[2026-09-16T21:29:35.914457] Collision debug: ON
+[2026-09-16T21:29:37.8322491] Collision debug: OFF
+[2026-09-16T21:29:38.1155142] Collision debug: ON
+[2026-09-16T21:29:40.7724044] Collision debug: OFF
+[2026-09-16T21:29:41.0976322] Collision debug: ON
+[2026-09-16T21:29:41.939095] Collision debug: OFF
+[2026-09-16T21:29:42.4056762] Collision debug: ON
+[2026-09-16T21:29:43.0392496] Collision debug: OFF
+[2026-09-16T21:34:39.0509833] Welcome to T4C Reborn.
+[2026-09-16T21:35:29.04754] You are too exhausted to cast a spell.
+[2026-09-16T21:38:43.3950069] GM: Summoned item empyrean_earth_staff
+[2026-09-16T21:38:49.344415] GM: Summoned item focus_of_the_earth_empyrean
+[2026-09-16T21:38:54.1954712] You must equip a bow to be able to use a quiver.
+[2026-09-16T21:38:59.7451604] You must equip a bow to be able to use a quiver.
+[2026-09-16T21:39:03.4031099] You must equip a bow to be able to use a quiver.
+[2026-09-16T21:39:11.0612227] You must equip a bow to be able to use a quiver.
+[2026-09-16T21:40:17.0223349] Welcome. I have every spell known to this world for sale. Say spells to browse my wares.
+[2026-09-16T21:40:19.3063364] Vous : learn
+[2026-09-16T21:40:49.8393118] You learned 3 spells: Protection, Earthen Strength, Stoneskin!
+[2026-09-16T21:42:25.165286] You are too exhausted to cast a spell.
+[2026-09-16T21:42:39.9263719] The portal's energy has been depleted and is no longer operational.
+[2026-09-16T21:42:47.2030443] You step through the portal and appear somewhere else.
+[2026-09-16T21:42:53.4856003] Ahh finally! I have waited long for one such as yourself. I am surprised you made it this far. Come now, I will show you the true meaning of pain!
+[2026-09-16T21:42:58.4598134] You are too exhausted to cast a spell.
+[2026-09-16T21:43:04.6853828] You are too exhausted to cast a spell.
+[2026-09-16T21:44:28.0442165] The target is not in line of sight.
+[2026-09-16T21:44:29.1436995] The target is not in line of sight.
+[2026-09-16T21:44:29.2945201] The target is not in line of sight.
+[2026-09-16T21:44:31.3431937] Vous : earn
+[2026-09-16T21:44:32.1933591] The target is not in line of sight.
+[2026-09-16T21:44:33.5934026] Vous : learn
+[2026-09-16T21:44:35.1444964] Welcome. I have every spell known to this world for sale. Say spells to browse my wares.
+[2026-09-16T21:44:36.6883387] Vous : learn
+[2026-09-16T21:44:50.9860828] You learned Mana Surge!
+[2026-09-16T21:45:44.0289937] Welcome. I have every spell known to this world for sale. Say spells to browse my wares.
+[2026-09-16T21:45:45.4908586] Vous : learn
+[2026-09-16T21:45:53.2733914] You learned Barriere!
+[2026-09-16T21:45:58.3615617] You learned Mana Shield!
+[2026-09-16T21:46:14.7496945] Teleport debug: ON
+[2026-09-16T21:46:23.7324004] Teleport debug: OFF
+[2026-09-16T21:46:35.2140408] Teleport debug: ON
+[2026-09-16T22:16:20.2168731] Welcome to T4C Reborn.
+[2026-09-16T22:17:00.4407534] GM: unknown item "empyrean_earth_staff"
+[2026-09-16T22:17:06.0144045] GM: unknown item "empyrean_earth_amce"
+[2026-09-16T22:17:08.7366783] GM: unknown item "empyrean_earth_mace"
+[2026-09-16T22:17:12.3070027] GM: unknown item "empyrean_earth_scepter"
+[2026-09-16T22:17:26.7154843] GM: unknown item "empyrean_earth_sceptere"
+[2026-09-16T22:17:38.4274029] GM: Summoned item empyrean_earth_sceptre
+[2026-09-16T22:17:42.3250435] You must equip a bow to be able to use a quiver.
+[2026-09-16T22:17:55.2994136] You must equip a bow to be able to use a quiver.
+[2026-09-16T22:19:03.4425564] You are too exhausted to cast a spell.
+[2026-09-16T22:19:04.0499626] You are too exhausted to cast a spell.
+[2026-09-16T22:19:04.2756519] You are too exhausted to cast a spell.
+[2026-09-16T22:19:04.4754232] You are too exhausted to cast a spell.
+[2026-09-16T22:19:04.9358509] Welcome. I have every spell known to this world for sale. Say spells to browse my wares.
+[2026-09-16T22:19:06.7839848] Vous : leartn
+[2026-09-16T22:19:08.1607671] Vous : learn
+[2026-09-16T22:19:25.2526487] GM: Gold set to 99999999
+[2026-09-16T22:19:30.7852128] You learned Land Slide!
+[2026-09-16T22:19:40.9838621] You learned Divine Veil!
+[2026-09-16T22:20:28.3862902] Vous : bye
+[2026-09-16T22:20:33.0598925] Ahh finally! I have waited long for one such as yourself. I am surprised you made it this far. Come now, I will show you the true meaning of pain!
+[2026-09-16T22:20:47.8922367] You are too exhausted to cast a spell.
+[2026-09-16T22:20:49.3137463] You are too exhausted to cast a spell.
+[2026-09-16T22:20:53.7669089] You are too exhausted to cast a spell.
+[2026-09-16T22:20:55.8384405] You are too exhausted to cast a spell.
+[2026-09-16T22:20:56.7719566] You are too exhausted to cast a spell.
+[2026-09-16T22:21:00.0608573] This spell is not ready yet.
+[2026-09-16T22:21:00.6267486] This spell is not ready yet.
+[2026-09-16T22:21:01.6291008] This spell is not ready yet.
+[2026-09-16T22:21:02.0976749] This spell is not ready yet.
+[2026-09-16T22:21:02.3167346] This spell is not ready yet.
+[2026-09-16T22:21:35.4306538] You are too exhausted to cast a spell.
+[2026-09-16T22:21:35.6308201] You are too exhausted to cast a spell.
+[2026-09-16T22:21:36.0897792] You are too exhausted to cast a spell.
+[2026-09-16T22:21:36.3027776] You are too exhausted to cast a spell.
+[2026-09-16T22:21:36.5063704] You are too exhausted to cast a spell.
+[2026-09-16T22:21:36.7019376] You are too exhausted to cast a spell.
+[2026-09-16T22:21:37.1291069] You are too exhausted to cast a spell.
+[2026-09-16T22:21:37.3307821] You are too exhausted to cast a spell.
+[2026-09-16T22:21:37.5136228] You are too exhausted to cast a spell.
+[2026-09-16T22:21:38.4487538] Teleport debug: ON
+[2026-09-16T22:21:40.8188972] You are too exhausted to cast a spell.
+[2026-09-16T22:21:55.1444211] This spell is not ready yet.
+[2026-09-16T22:21:55.3792386] This spell is not ready yet.
+[2026-09-16T22:21:55.6216389] This spell is not ready yet.
+[2026-09-16T22:21:55.8646009] This spell is not ready yet.
+[2026-09-16T22:22:00.6328312] You are too exhausted to cast a spell.
+[2026-09-16T22:22:00.8961915] You are too exhausted to cast a spell.
+[2026-09-16T22:22:01.114173] You are too exhausted to cast a spell.
+[2026-09-16T22:22:21.6895727] You are too exhausted to cast a spell.
+[2026-09-16T22:22:22.3325662] You are too exhausted to cast a spell.
+[2026-09-16T22:22:22.4909267] You are too exhausted to cast a spell.
+[2026-09-16T22:22:29.7230813] Welcome. I have every spell known to this world for sale. Say spells to browse my wares.
+[2026-09-16T22:22:31.9664283] Vous : learn
+[2026-09-16T22:23:09.9075763] You learned Turn Undead!
+[2026-09-16T22:23:14.9980237] You learned Undead Annihilation!
+[2026-09-16T22:23:19.7479906] You learned Clemancy!
+[2026-09-16T22:24:18.0249934] Vous : bye
+[2026-09-16T22:24:41.2339641] This spell is not ready yet.
+[2026-09-16T22:24:41.4998074] This spell is not ready yet.
+[2026-09-16T22:24:41.7575495] This spell is not ready yet.
+[2026-09-16T22:24:42.0171929] This spell is not ready yet.
+[2026-09-16T22:24:42.2506356] This spell is not ready yet.
+[2026-09-16T22:24:42.5168513] This spell is not ready yet.
+[2026-09-16T22:24:42.767974] This spell is not ready yet.
+[2026-09-16T22:24:43.2251828] This spell is not ready yet.
+[2026-09-16T22:24:43.550633] This spell is not ready yet.
+[2026-09-16T22:24:44.1670728] This spell is not ready yet.
+[2026-09-16T22:24:44.5508388] This spell is not ready yet.
+[2026-09-16T22:24:45.0416956] This spell is not ready yet.
+[2026-09-16T22:24:51.4867168] Teleport debug: OFF
+[2026-09-16T22:24:52.3157428] You are too exhausted to cast a spell.
+[2026-09-16T22:24:54.4316427] You are too exhausted to cast a spell.
+[2026-09-16T22:25:09.5668241] Ahh finally! I have waited long for one such as yourself. I am surprised you made it this far. Come now, I will show you the true meaning of pain!
+[2026-09-16T22:25:18.3821111] Level up! You have reached level 221.
+[2026-09-16T22:25:18.3821111] You gained 34 HP and 45 Mana.
+[2026-09-16T22:25:20.2118318] You are too exhausted to cast a spell.
+[2026-09-16T22:25:38.3370927] GM: unknown command .setlight (type .help)
+[2026-09-16T22:25:44.3205984] GM: unknown command .powerlight (type .help)
+[2026-09-16T22:25:50.4598692] GM: unknown command .light (type .help)
+[2026-09-16T22:25:52.6040541] GM: .noclip [on|off|toggle] | .teleport [to] X,Y,Z | .speed N|up|down|reset
+[2026-09-16T22:25:52.6050548] GM: .setLevel/.setXp/.setGold/.setHp/.setMana X
+[2026-09-16T22:25:52.6050548] GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X
+[2026-09-16T22:25:52.6050548] GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .repair | .rebirth
+[2026-09-16T22:26:25.6193696] Level up! You have reached level 222.
+[2026-09-16T22:26:25.6203678] You gained 33 HP and 45 Mana.
+[2026-09-16T22:26:25.8467023] You are too exhausted to cast a spell.
+[2026-09-16T22:27:17.3896502] You are too exhausted to cast a spell.
+[2026-09-16T22:27:44.6616718] GM: Mana set to 15000 / 15000
+[2026-09-16T22:27:51.8627439] You are too exhausted to cast a spell.
+[2026-09-16T22:27:57.7867024] This spell is not ready yet.
+[2026-09-16T22:27:58.1577467] This spell is not ready yet.
+[2026-09-16T22:27:58.4108922] This spell is not ready yet.
+[2026-09-16T22:27:58.9393052] This spell is not ready yet.
+[2026-09-16T22:27:59.4821203] This spell is not ready yet.
+[2026-09-16T22:27:59.7384646] This spell is not ready yet.
+[2026-09-16T22:28:00.0867853] This spell is not ready yet.
+[2026-09-16T22:28:00.3509645] This spell is not ready yet.
+[2026-09-16T22:28:00.6408541] This spell is not ready yet.
+[2026-09-16T22:28:00.8870129] This spell is not ready yet.
+[2026-09-16T22:28:01.3086929] This spell is not ready yet.
+[2026-09-16T22:28:02.47288] This spell is not ready yet.
+[2026-09-16T22:28:08.8949993] This spell is not ready yet.
+[2026-09-16T22:28:10.6635499] This spell is not ready yet.
+[2026-09-16T22:28:30.6547155] Level up! You have reached level 223.
+[2026-09-16T22:28:30.6547155] You gained 35 HP and 43 Mana.
+[2026-09-16T22:29:25.9313867] Level up! You have reached level 224.
+[2026-09-16T22:29:25.9313867] You gained 35 HP and 45 Mana.
+[2026-09-16T22:30:23.0069127] Level up! You have reached level 225.
+[2026-09-16T22:30:23.0069127] You gained 35 HP and 45 Mana.
+[2026-09-16T22:30:39.1660345] You are too exhausted to cast a spell.
+[2026-09-16T22:31:08.192949] Welcome to T4C Reborn.
+[2026-09-16T22:31:35.6901487] GM: Level set to 260
+[2026-09-16T22:31:40.7942216] The target is not in line of sight.
+[2026-09-16T22:31:43.7868257] Welcome. I have every spell known to this world for sale. Say spells to browse my wares.
+[2026-09-16T22:31:45.4368805] Vous : learn
+[2026-09-16T22:31:52.5692512] You learned Omega Planetoids!
+[2026-09-16T22:32:26.2128448] GM: light power set (now 666 total)
+[2026-09-16T22:32:45.6285552] Ahh finally! I have waited long for one such as yourself. I am surprised you made it this far. Come now, I will show you the true meaning of pain!
+[2026-09-16T22:33:17.6772455] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T22:33:21.1100321] Are you ready to fight in the arena?
+[2026-09-16T22:33:21.1113352] Vous : fight
+[2026-09-16T22:33:22.9397637] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T22:33:22.9397637] Vous : yes
+[2026-09-16T22:33:38.1147229] You receive a battle token for your efforts.
+[2026-09-16T22:33:38.1147229] Level up! You have reached level 261.
+[2026-09-16T22:33:38.115723] You gained 33 HP and 44 Mana.
+[2026-09-16T22:33:38.128749] Level up! You have reached level 262.
+[2026-09-16T22:33:38.1297491] You gained 35 HP and 44 Mana.
+[2026-09-16T22:33:38.1297491] Level up! You have reached level 263.
+[2026-09-16T22:33:38.1297491] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:38.1297491] Level up! You have reached level 264.
+[2026-09-16T22:33:38.1297491] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:38.1297491] Level up! You have reached level 265.
+[2026-09-16T22:33:38.1308936] You gained 33 HP and 44 Mana.
+[2026-09-16T22:33:38.1308936] Level up! You have reached level 266.
+[2026-09-16T22:33:38.1308936] You gained 33 HP and 46 Mana.
+[2026-09-16T22:33:38.1308936] Level up! You have reached level 267.
+[2026-09-16T22:33:38.1308936] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:38.1308936] Level up! You have reached level 268.
+[2026-09-16T22:33:38.1308936] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:38.1318934] Level up! You have reached level 269.
+[2026-09-16T22:33:38.1318934] You gained 35 HP and 44 Mana.
+[2026-09-16T22:33:38.1318934] Level up! You have reached level 270.
+[2026-09-16T22:33:38.1318934] You gained 35 HP and 46 Mana.
+[2026-09-16T22:33:38.1318934] Level up! You have reached level 271.
+[2026-09-16T22:33:38.1318934] You gained 33 HP and 44 Mana.
+[2026-09-16T22:33:38.1328881] Level up! You have reached level 272.
+[2026-09-16T22:33:38.1328881] You gained 34 HP and 44 Mana.
+[2026-09-16T22:33:38.1328881] Level up! You have reached level 273.
+[2026-09-16T22:33:38.1328881] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:38.1328881] Level up! You have reached level 274.
+[2026-09-16T22:33:38.1328881] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:38.1328881] Level up! You have reached level 275.
+[2026-09-16T22:33:38.1338884] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:38.1338884] Level up! You have reached level 276.
+[2026-09-16T22:33:38.1338884] You gained 34 HP and 44 Mana.
+[2026-09-16T22:33:38.1338884] Level up! You have reached level 277.
+[2026-09-16T22:33:38.1338884] You gained 34 HP and 44 Mana.
+[2026-09-16T22:33:38.1338884] Level up! You have reached level 278.
+[2026-09-16T22:33:38.1338884] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:38.1348879] Level up! You have reached level 279.
+[2026-09-16T22:33:38.1348879] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:38.1348879] Level up! You have reached level 280.
+[2026-09-16T22:33:38.1348879] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:38.1348879] Level up! You have reached level 281.
+[2026-09-16T22:33:38.1348879] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:38.1348879] Level up! You have reached level 282.
+[2026-09-16T22:33:38.1348879] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:38.1348879] Level up! You have reached level 283.
+[2026-09-16T22:33:38.1363805] You gained 34 HP and 44 Mana.
+[2026-09-16T22:33:38.1363805] Level up! You have reached level 284.
+[2026-09-16T22:33:38.1363805] You gained 34 HP and 44 Mana.
+[2026-09-16T22:33:38.1363805] Level up! You have reached level 285.
+[2026-09-16T22:33:38.1363805] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:38.1363805] Level up! You have reached level 286.
+[2026-09-16T22:33:38.1373844] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:38.1373844] Level up! You have reached level 287.
+[2026-09-16T22:33:38.1373844] You gained 35 HP and 44 Mana.
+[2026-09-16T22:33:38.1373844] Level up! You have reached level 288.
+[2026-09-16T22:33:38.1373844] You gained 33 HP and 46 Mana.
+[2026-09-16T22:33:38.1373844] Level up! You have reached level 289.
+[2026-09-16T22:33:38.1383831] You gained 35 HP and 46 Mana.
+[2026-09-16T22:33:38.1383831] Level up! You have reached level 290.
+[2026-09-16T22:33:38.1383831] You gained 33 HP and 46 Mana.
+[2026-09-16T22:33:38.1383831] Level up! You have reached level 291.
+[2026-09-16T22:33:38.1383831] You gained 35 HP and 44 Mana.
+[2026-09-16T22:33:38.1383831] Level up! You have reached level 292.
+[2026-09-16T22:33:38.1383831] You gained 33 HP and 46 Mana.
+[2026-09-16T22:33:38.1383831] Level up! You have reached level 293.
+[2026-09-16T22:33:38.1398876] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:38.1398876] Level up! You have reached level 294.
+[2026-09-16T22:33:38.1398876] You gained 34 HP and 44 Mana.
+[2026-09-16T22:33:38.1398876] Level up! You have reached level 295.
+[2026-09-16T22:33:38.1398876] You gained 34 HP and 44 Mana.
+[2026-09-16T22:33:38.1398876] Level up! You have reached level 296.
+[2026-09-16T22:33:38.1409088] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:38.1409088] Level up! You have reached level 297.
+[2026-09-16T22:33:38.1409088] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:38.1409088] Level up! You have reached level 298.
+[2026-09-16T22:33:38.1409088] You gained 35 HP and 44 Mana.
+[2026-09-16T22:33:38.1419093] Level up! You have reached level 299.
+[2026-09-16T22:33:38.1419093] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:38.1419093] Level up! You have reached level 300.
+[2026-09-16T22:33:38.1419093] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:38.1419093] Level up! You have reached level 301.
+[2026-09-16T22:33:38.1419093] You gained 35 HP and 44 Mana.
+[2026-09-16T22:33:38.1429098] Level up! You have reached level 302.
+[2026-09-16T22:33:38.1429098] You gained 33 HP and 44 Mana.
+[2026-09-16T22:33:38.1429098] Level up! You have reached level 303.
+[2026-09-16T22:33:38.1429098] You gained 35 HP and 44 Mana.
+[2026-09-16T22:33:38.1429098] Level up! You have reached level 304.
+[2026-09-16T22:33:38.1429098] You gained 33 HP and 46 Mana.
+[2026-09-16T22:33:38.1439104] Level up! You have reached level 305.
+[2026-09-16T22:33:38.1439104] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:51.1157347] You receive a battle token for your efforts.
+[2026-09-16T22:33:51.1167423] Level up! You have reached level 306.
+[2026-09-16T22:33:51.1167423] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:51.1167423] Level up! You have reached level 307.
+[2026-09-16T22:33:51.1167423] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:51.1167423] Level up! You have reached level 308.
+[2026-09-16T22:33:51.1167423] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:51.1177346] Level up! You have reached level 309.
+[2026-09-16T22:33:51.1177346] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:51.1177346] Level up! You have reached level 310.
+[2026-09-16T22:33:51.1177346] You gained 35 HP and 46 Mana.
+[2026-09-16T22:33:51.1177346] Level up! You have reached level 311.
+[2026-09-16T22:33:51.1177346] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:51.1177346] Level up! You have reached level 312.
+[2026-09-16T22:33:51.1187346] You gained 33 HP and 44 Mana.
+[2026-09-16T22:33:51.1187346] Level up! You have reached level 313.
+[2026-09-16T22:33:51.1187346] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:51.1187346] Level up! You have reached level 314.
+[2026-09-16T22:33:51.1187346] You gained 35 HP and 44 Mana.
+[2026-09-16T22:33:51.1187346] Level up! You have reached level 315.
+[2026-09-16T22:33:51.1187346] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:51.1187346] Level up! You have reached level 316.
+[2026-09-16T22:33:51.1197406] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:51.1197406] Level up! You have reached level 317.
+[2026-09-16T22:33:51.1197406] You gained 34 HP and 44 Mana.
+[2026-09-16T22:33:51.1197406] Level up! You have reached level 318.
+[2026-09-16T22:33:51.1197406] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:51.1197406] Level up! You have reached level 319.
+[2026-09-16T22:33:51.1197406] You gained 35 HP and 46 Mana.
+[2026-09-16T22:33:51.120869] Level up! You have reached level 320.
+[2026-09-16T22:33:51.120869] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:51.120869] Level up! You have reached level 321.
+[2026-09-16T22:33:51.120869] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:51.120869] Level up! You have reached level 322.
+[2026-09-16T22:33:51.120869] You gained 33 HP and 46 Mana.
+[2026-09-16T22:33:51.120869] Level up! You have reached level 323.
+[2026-09-16T22:33:51.120869] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:51.1218687] Level up! You have reached level 324.
+[2026-09-16T22:33:51.1218687] You gained 35 HP and 46 Mana.
+[2026-09-16T22:33:51.1218687] Level up! You have reached level 325.
+[2026-09-16T22:33:51.1218687] You gained 33 HP and 46 Mana.
+[2026-09-16T22:33:51.1218687] Level up! You have reached level 326.
+[2026-09-16T22:33:51.1218687] You gained 33 HP and 44 Mana.
+[2026-09-16T22:33:51.1218687] Level up! You have reached level 327.
+[2026-09-16T22:33:51.1218687] You gained 35 HP and 46 Mana.
+[2026-09-16T22:33:51.1228682] Level up! You have reached level 328.
+[2026-09-16T22:33:51.1228682] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:51.1228682] Level up! You have reached level 329.
+[2026-09-16T22:33:51.1228682] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:51.1228682] Level up! You have reached level 330.
+[2026-09-16T22:33:51.1228682] You gained 35 HP and 45 Mana.
+[2026-09-16T22:33:51.1228682] Level up! You have reached level 331.
+[2026-09-16T22:33:51.1228682] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:51.1238685] Level up! You have reached level 332.
+[2026-09-16T22:33:51.1238685] You gained 33 HP and 46 Mana.
+[2026-09-16T22:33:51.1238685] Level up! You have reached level 333.
+[2026-09-16T22:33:51.1238685] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:51.1238685] Level up! You have reached level 334.
+[2026-09-16T22:33:51.1238685] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:51.1238685] Level up! You have reached level 335.
+[2026-09-16T22:33:51.1238685] You gained 34 HP and 45 Mana.
+[2026-09-16T22:33:51.12487] Level up! You have reached level 336.
+[2026-09-16T22:33:51.12487] You gained 34 HP and 46 Mana.
+[2026-09-16T22:33:51.12487] Level up! You have reached level 337.
+[2026-09-16T22:33:51.12487] You gained 33 HP and 45 Mana.
+[2026-09-16T22:33:51.12487] Level up! You have reached level 338.
+[2026-09-16T22:33:51.12487] You gained 35 HP and 46 Mana.
+[2026-09-16T22:33:51.12487] Level up! You have reached level 339.
+[2026-09-16T22:33:51.1258695] You gained 33 HP and 45 Mana.
+[2026-09-16T22:34:26.9952947] You receive a battle token for your efforts.
+[2026-09-16T22:34:26.9952947] Level up! You have reached level 340.
+[2026-09-16T22:34:26.9952947] You gained 35 HP and 44 Mana.
+[2026-09-16T22:34:26.9962948] Level up! You have reached level 341.
+[2026-09-16T22:34:26.9962948] You gained 33 HP and 46 Mana.
+[2026-09-16T22:34:26.9962948] Level up! You have reached level 342.
+[2026-09-16T22:34:26.9962948] You gained 35 HP and 45 Mana.
+[2026-09-16T22:34:26.9962948] Level up! You have reached level 343.
+[2026-09-16T22:34:26.9962948] You gained 35 HP and 44 Mana.
+[2026-09-16T22:34:26.9962948] Level up! You have reached level 344.
+[2026-09-16T22:34:26.9972951] You gained 33 HP and 45 Mana.
+[2026-09-16T22:34:26.9972951] Level up! You have reached level 345.
+[2026-09-16T22:34:26.9972951] You gained 33 HP and 46 Mana.
+[2026-09-16T22:34:26.9972951] Level up! You have reached level 346.
+[2026-09-16T22:34:26.9972951] You gained 35 HP and 44 Mana.
+[2026-09-16T22:34:26.9972951] Level up! You have reached level 347.
+[2026-09-16T22:34:26.9972951] You gained 33 HP and 44 Mana.
+[2026-09-16T22:34:26.9982947] Level up! You have reached level 348.
+[2026-09-16T22:34:26.9982947] You gained 34 HP and 44 Mana.
+[2026-09-16T22:34:26.9982947] Level up! You have reached level 349.
+[2026-09-16T22:34:26.9982947] You gained 33 HP and 45 Mana.
+[2026-09-16T22:34:26.9982947] Level up! You have reached level 350.
+[2026-09-16T22:34:26.9982947] You gained 34 HP and 46 Mana.
+[2026-09-16T22:34:26.9982947] Level up! You have reached level 351.
+[2026-09-16T22:34:26.9982947] You gained 33 HP and 45 Mana.
+[2026-09-16T22:34:26.9982947] Level up! You have reached level 352.
+[2026-09-16T22:34:26.9982947] You gained 33 HP and 46 Mana.
+[2026-09-16T22:34:26.9982947] Level up! You have reached level 353.
+[2026-09-16T22:34:26.9982947] You gained 35 HP and 44 Mana.
+[2026-09-16T22:34:26.9982947] Level up! You have reached level 354.
+[2026-09-16T22:34:26.9997967] You gained 34 HP and 45 Mana.
+[2026-09-16T22:34:26.9997967] Level up! You have reached level 355.
+[2026-09-16T22:34:26.9997967] You gained 35 HP and 45 Mana.
+[2026-09-16T22:34:26.9997967] Level up! You have reached level 356.
+[2026-09-16T22:34:26.9997967] You gained 35 HP and 45 Mana.
+[2026-09-16T22:34:26.9997967] Level up! You have reached level 357.
+[2026-09-16T22:34:26.9997967] You gained 34 HP and 46 Mana.
+[2026-09-16T22:34:26.9997967] Level up! You have reached level 358.
+[2026-09-16T22:34:27.0007989] You gained 34 HP and 46 Mana.
+[2026-09-16T22:34:27.0007989] Level up! You have reached level 359.
+[2026-09-16T22:34:27.0007989] You gained 35 HP and 44 Mana.
+[2026-09-16T22:34:27.0007989] Level up! You have reached level 360.
+[2026-09-16T22:34:27.0007989] You gained 34 HP and 46 Mana.
+[2026-09-16T22:34:27.0007989] Level up! You have reached level 361.
+[2026-09-16T22:34:27.0007989] You gained 33 HP and 45 Mana.
+[2026-09-16T22:34:27.0007989] Level up! You have reached level 362.
+[2026-09-16T22:34:27.0017989] You gained 33 HP and 46 Mana.
+[2026-09-16T22:34:27.0017989] Level up! You have reached level 363.
+[2026-09-16T22:34:27.0017989] You gained 35 HP and 45 Mana.
+[2026-09-16T22:34:27.0017989] Level up! You have reached level 364.
+[2026-09-16T22:34:27.0017989] You gained 35 HP and 45 Mana.
+[2026-09-16T22:34:27.0017989] Level up! You have reached level 365.
+[2026-09-16T22:34:27.0027999] You gained 33 HP and 44 Mana.
+[2026-09-16T22:34:27.0027999] Level up! You have reached level 366.
+[2026-09-16T22:34:27.0027999] You gained 33 HP and 44 Mana.
+[2026-09-16T22:34:27.0027999] Level up! You have reached level 367.
+[2026-09-16T22:34:27.0027999] You gained 34 HP and 45 Mana.
+[2026-09-16T22:34:27.0027999] Level up! You have reached level 368.
+[2026-09-16T22:34:27.0027999] You gained 33 HP and 46 Mana.
+[2026-09-16T22:35:59.266216] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T22:36:01.9166801] Are you ready to fight in the arena?
+[2026-09-16T22:36:01.9166801] Vous : fight
+[2026-09-16T22:36:02.7756401] Vous : ues
+[2026-09-16T22:36:03.9009853] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T22:36:03.9019859] Vous : yes
+[2026-09-16T22:36:13.1007696] GM: earth power set (now 2092 total)
+[2026-09-16T22:36:13.3178013] You receive a battle token for your efforts.
+[2026-09-16T22:36:13.3178013] Level up! You have reached level 369.
+[2026-09-16T22:36:13.3178013] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:13.3178013] Level up! You have reached level 370.
+[2026-09-16T22:36:13.3178013] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:13.3188014] Level up! You have reached level 371.
+[2026-09-16T22:36:13.3188014] You gained 34 HP and 54 Mana.
+[2026-09-16T22:36:13.3188014] Level up! You have reached level 372.
+[2026-09-16T22:36:13.3188014] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:13.3188014] Level up! You have reached level 373.
+[2026-09-16T22:36:13.3188014] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:13.319802] Level up! You have reached level 374.
+[2026-09-16T22:36:13.319802] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:13.319802] Level up! You have reached level 375.
+[2026-09-16T22:36:13.319802] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:13.319802] Level up! You have reached level 376.
+[2026-09-16T22:36:13.3203055] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:13.3203055] Level up! You have reached level 377.
+[2026-09-16T22:36:13.3203055] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:13.3203055] Level up! You have reached level 378.
+[2026-09-16T22:36:13.3203055] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:13.3203055] Level up! You have reached level 379.
+[2026-09-16T22:36:13.3203055] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:13.3203055] Level up! You have reached level 380.
+[2026-09-16T22:36:13.3203055] You gained 34 HP and 54 Mana.
+[2026-09-16T22:36:13.3213102] Level up! You have reached level 381.
+[2026-09-16T22:36:13.3213102] You gained 35 HP and 54 Mana.
+[2026-09-16T22:36:13.3213102] Level up! You have reached level 382.
+[2026-09-16T22:36:13.3213102] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:13.3213102] Level up! You have reached level 383.
+[2026-09-16T22:36:13.3213102] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:13.3213102] Level up! You have reached level 384.
+[2026-09-16T22:36:13.3213102] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:13.3213102] Level up! You have reached level 385.
+[2026-09-16T22:36:13.3223103] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:13.3223103] Level up! You have reached level 386.
+[2026-09-16T22:36:13.3223103] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:13.3223103] Level up! You have reached level 387.
+[2026-09-16T22:36:13.3223103] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:13.3223103] Level up! You have reached level 388.
+[2026-09-16T22:36:13.3223103] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:13.3223103] Level up! You have reached level 389.
+[2026-09-16T22:36:13.3223103] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:13.3233095] Level up! You have reached level 390.
+[2026-09-16T22:36:13.3233095] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:13.3233095] Level up! You have reached level 391.
+[2026-09-16T22:36:13.3233095] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:13.3233095] Level up! You have reached level 392.
+[2026-09-16T22:36:13.3233095] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:13.3233095] Level up! You have reached level 393.
+[2026-09-16T22:36:13.3233095] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:13.3233095] Level up! You have reached level 394.
+[2026-09-16T22:36:13.3233095] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:20.3751996] You receive a battle token for your efforts.
+[2026-09-16T22:36:20.3761987] Level up! You have reached level 395.
+[2026-09-16T22:36:20.3761987] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:20.3761987] Level up! You have reached level 396.
+[2026-09-16T22:36:20.3761987] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:20.3761987] Level up! You have reached level 397.
+[2026-09-16T22:36:20.3761987] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:20.3761987] Level up! You have reached level 398.
+[2026-09-16T22:36:20.3761987] You gained 35 HP and 54 Mana.
+[2026-09-16T22:36:20.3761987] Level up! You have reached level 399.
+[2026-09-16T22:36:20.3761987] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:20.3761987] Level up! You have reached level 400.
+[2026-09-16T22:36:20.3776763] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:20.3776763] Level up! You have reached level 401.
+[2026-09-16T22:36:20.3776763] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:20.3776763] Level up! You have reached level 402.
+[2026-09-16T22:36:20.3776763] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:20.3776763] Level up! You have reached level 403.
+[2026-09-16T22:36:20.3776763] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:20.3776763] Level up! You have reached level 404.
+[2026-09-16T22:36:20.3776763] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:20.3776763] Level up! You have reached level 405.
+[2026-09-16T22:36:20.3776763] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:20.3776763] Level up! You have reached level 406.
+[2026-09-16T22:36:20.3776763] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:20.3776763] Level up! You have reached level 407.
+[2026-09-16T22:36:20.3791286] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:20.3791286] Level up! You have reached level 408.
+[2026-09-16T22:36:20.3791286] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:20.3791286] Level up! You have reached level 409.
+[2026-09-16T22:36:20.3791286] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:20.3791286] Level up! You have reached level 410.
+[2026-09-16T22:36:20.3791286] You gained 35 HP and 54 Mana.
+[2026-09-16T22:36:20.3791286] Level up! You have reached level 411.
+[2026-09-16T22:36:20.3791286] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:20.3801322] Level up! You have reached level 412.
+[2026-09-16T22:36:20.3801322] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:20.3801322] Level up! You have reached level 413.
+[2026-09-16T22:36:20.3801322] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:20.3801322] Level up! You have reached level 414.
+[2026-09-16T22:36:20.3801322] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:20.3801322] Level up! You have reached level 415.
+[2026-09-16T22:36:20.3801322] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:20.3801322] Level up! You have reached level 416.
+[2026-09-16T22:36:20.3801322] You gained 34 HP and 54 Mana.
+[2026-09-16T22:36:26.4433517] You receive a battle token for your efforts.
+[2026-09-16T22:36:26.4443511] Level up! You have reached level 417.
+[2026-09-16T22:36:26.4443511] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:26.4443511] Level up! You have reached level 418.
+[2026-09-16T22:36:26.4443511] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:26.4443511] Level up! You have reached level 419.
+[2026-09-16T22:36:26.4443511] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:26.4443511] Level up! You have reached level 420.
+[2026-09-16T22:36:26.4443511] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:26.4443511] Level up! You have reached level 421.
+[2026-09-16T22:36:26.4443511] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:26.4443511] Level up! You have reached level 422.
+[2026-09-16T22:36:26.4443511] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:26.4458257] Level up! You have reached level 423.
+[2026-09-16T22:36:26.4458257] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:26.4458257] Level up! You have reached level 424.
+[2026-09-16T22:36:26.4458257] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:26.4458257] Level up! You have reached level 425.
+[2026-09-16T22:36:26.4458257] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:26.4458257] Level up! You have reached level 426.
+[2026-09-16T22:36:26.4458257] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:26.4468289] Level up! You have reached level 427.
+[2026-09-16T22:36:26.4468289] You gained 34 HP and 54 Mana.
+[2026-09-16T22:36:26.4468289] Level up! You have reached level 428.
+[2026-09-16T22:36:26.4468289] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:26.4468289] Level up! You have reached level 429.
+[2026-09-16T22:36:26.4468289] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:26.4468289] Level up! You have reached level 430.
+[2026-09-16T22:36:26.4468289] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:26.4468289] Level up! You have reached level 431.
+[2026-09-16T22:36:26.4468289] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:26.4468289] Level up! You have reached level 432.
+[2026-09-16T22:36:26.4468289] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:26.4468289] Level up! You have reached level 433.
+[2026-09-16T22:36:26.4468289] You gained 35 HP and 54 Mana.
+[2026-09-16T22:36:26.4481677] Level up! You have reached level 434.
+[2026-09-16T22:36:26.4481677] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:26.4481677] Level up! You have reached level 435.
+[2026-09-16T22:36:26.4481677] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:26.4481677] Level up! You have reached level 436.
+[2026-09-16T22:36:26.4481677] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:26.4481677] Level up! You have reached level 437.
+[2026-09-16T22:36:26.4481677] You gained 35 HP and 54 Mana.
+[2026-09-16T22:36:30.3079834] Ahh finally! I have waited long for one such as yourself. I am surprised you made it this far. Come now, I will show you the true meaning of pain!
+[2026-09-16T22:36:48.6666698] The target is too far away.
+[2026-09-16T22:36:50.5420113] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T22:36:52.3421768] Are you ready to fight in the arena?
+[2026-09-16T22:36:52.3431768] Vous : fight
+[2026-09-16T22:36:53.2931204] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T22:36:53.2931204] Vous : yes
+[2026-09-16T22:36:58.1262082] You receive a battle token for your efforts.
+[2026-09-16T22:36:58.1262082] Level up! You have reached level 438.
+[2026-09-16T22:36:58.1262082] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:58.1272083] Level up! You have reached level 439.
+[2026-09-16T22:36:58.1272083] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:58.1272083] Level up! You have reached level 440.
+[2026-09-16T22:36:58.1272083] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:58.1272083] Level up! You have reached level 441.
+[2026-09-16T22:36:58.1272083] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:58.1272083] Level up! You have reached level 442.
+[2026-09-16T22:36:58.1272083] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:58.1272083] Level up! You have reached level 443.
+[2026-09-16T22:36:58.1272083] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:58.1282084] Level up! You have reached level 444.
+[2026-09-16T22:36:58.1282084] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:58.1282084] Level up! You have reached level 445.
+[2026-09-16T22:36:58.1282084] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:58.1282084] Level up! You have reached level 446.
+[2026-09-16T22:36:58.1282084] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:58.1282084] Level up! You have reached level 447.
+[2026-09-16T22:36:58.1282084] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:58.1282084] Level up! You have reached level 448.
+[2026-09-16T22:36:58.1282084] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:58.1292083] Level up! You have reached level 449.
+[2026-09-16T22:36:58.1292083] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:58.1292083] Level up! You have reached level 450.
+[2026-09-16T22:36:58.1292083] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:58.1292083] Level up! You have reached level 451.
+[2026-09-16T22:36:58.1292083] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:58.1292083] Level up! You have reached level 452.
+[2026-09-16T22:36:58.1292083] You gained 34 HP and 55 Mana.
+[2026-09-16T22:36:58.1292083] Level up! You have reached level 453.
+[2026-09-16T22:36:58.1292083] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:58.1292083] Level up! You have reached level 454.
+[2026-09-16T22:36:58.1292083] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:58.1302082] Level up! You have reached level 455.
+[2026-09-16T22:36:58.1302082] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:58.1302082] Level up! You have reached level 456.
+[2026-09-16T22:36:58.1302082] You gained 33 HP and 53 Mana.
+[2026-09-16T22:36:58.1322739] You receive a battle token for your efforts.
+[2026-09-16T22:36:58.1322739] Level up! You have reached level 457.
+[2026-09-16T22:36:58.1322739] You gained 33 HP and 54 Mana.
+[2026-09-16T22:36:58.1332734] Level up! You have reached level 458.
+[2026-09-16T22:36:58.1332734] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:58.1332734] Level up! You have reached level 459.
+[2026-09-16T22:36:58.1332734] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:58.1332734] Level up! You have reached level 460.
+[2026-09-16T22:36:58.1332734] You gained 35 HP and 55 Mana.
+[2026-09-16T22:36:58.1332734] Level up! You have reached level 461.
+[2026-09-16T22:36:58.1332734] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:58.1332734] Level up! You have reached level 462.
+[2026-09-16T22:36:58.1332734] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:58.1342732] Level up! You have reached level 463.
+[2026-09-16T22:36:58.1342732] You gained 35 HP and 53 Mana.
+[2026-09-16T22:36:58.1342732] Level up! You have reached level 464.
+[2026-09-16T22:36:58.1342732] You gained 34 HP and 54 Mana.
+[2026-09-16T22:36:58.1342732] Level up! You have reached level 465.
+[2026-09-16T22:36:58.1342732] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:58.1342732] Level up! You have reached level 466.
+[2026-09-16T22:36:58.1342732] You gained 34 HP and 54 Mana.
+[2026-09-16T22:36:58.1342732] Level up! You have reached level 467.
+[2026-09-16T22:36:58.1342732] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:58.1342732] Level up! You have reached level 468.
+[2026-09-16T22:36:58.1352737] You gained 33 HP and 55 Mana.
+[2026-09-16T22:36:58.1352737] Level up! You have reached level 469.
+[2026-09-16T22:36:58.1352737] You gained 35 HP and 54 Mana.
+[2026-09-16T22:36:58.1352737] Level up! You have reached level 470.
+[2026-09-16T22:36:58.1352737] You gained 34 HP and 54 Mana.
+[2026-09-16T22:36:58.1352737] Level up! You have reached level 471.
+[2026-09-16T22:36:58.1352737] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:58.1352737] Level up! You have reached level 472.
+[2026-09-16T22:36:58.1352737] You gained 34 HP and 53 Mana.
+[2026-09-16T22:36:58.1352737] Level up! You have reached level 473.
+[2026-09-16T22:36:58.1352737] You gained 34 HP and 54 Mana.
+[2026-09-16T22:36:58.1362733] Level up! You have reached level 474.
+[2026-09-16T22:36:58.1362733] You gained 34 HP and 54 Mana.
+[2026-09-16T22:37:05.1152205] You receive a battle token for your efforts.
+[2026-09-16T22:37:05.1152205] Level up! You have reached level 475.
+[2026-09-16T22:37:05.1152205] You gained 35 HP and 54 Mana.
+[2026-09-16T22:37:05.1152205] Level up! You have reached level 476.
+[2026-09-16T22:37:05.1152205] You gained 34 HP and 53 Mana.
+[2026-09-16T22:37:05.1152205] Level up! You have reached level 477.
+[2026-09-16T22:37:05.1162214] You gained 33 HP and 54 Mana.
+[2026-09-16T22:37:05.1162214] Level up! You have reached level 478.
+[2026-09-16T22:37:05.1162214] You gained 33 HP and 55 Mana.
+[2026-09-16T22:37:05.1162214] Level up! You have reached level 479.
+[2026-09-16T22:37:05.1162214] You gained 35 HP and 54 Mana.
+[2026-09-16T22:37:05.1162214] Level up! You have reached level 480.
+[2026-09-16T22:37:05.1162214] You gained 35 HP and 54 Mana.
+[2026-09-16T22:37:05.1162214] Level up! You have reached level 481.
+[2026-09-16T22:37:05.1162214] You gained 35 HP and 55 Mana.
+[2026-09-16T22:37:05.1162214] Level up! You have reached level 482.
+[2026-09-16T22:37:05.1172212] You gained 35 HP and 53 Mana.
+[2026-09-16T22:37:05.1172212] Level up! You have reached level 483.
+[2026-09-16T22:37:05.1172212] You gained 34 HP and 53 Mana.
+[2026-09-16T22:37:05.1172212] Level up! You have reached level 484.
+[2026-09-16T22:37:05.1172212] You gained 34 HP and 53 Mana.
+[2026-09-16T22:37:05.1172212] Level up! You have reached level 485.
+[2026-09-16T22:37:05.1172212] You gained 35 HP and 54 Mana.
+[2026-09-16T22:37:05.1172212] Level up! You have reached level 486.
+[2026-09-16T22:37:05.1172212] You gained 35 HP and 54 Mana.
+[2026-09-16T22:37:05.1172212] Level up! You have reached level 487.
+[2026-09-16T22:37:05.1172212] You gained 35 HP and 53 Mana.
+[2026-09-16T22:37:05.118221] Level up! You have reached level 488.
+[2026-09-16T22:37:05.118221] You gained 33 HP and 54 Mana.
+[2026-09-16T22:37:05.118221] Level up! You have reached level 489.
+[2026-09-16T22:37:05.118221] You gained 33 HP and 55 Mana.
+[2026-09-16T22:37:05.118221] Level up! You have reached level 490.
+[2026-09-16T22:37:05.118221] You gained 34 HP and 55 Mana.
+[2026-09-16T22:37:56.7797884] GM: unknown command .setwis (type .help)
+[2026-09-16T22:38:00.4112649] Vous : wis 9000
+[2026-09-16T22:38:04.2442512] GM: Wisdom set to 9000
+[2026-09-16T22:38:09.5950376] GM: Strength set to 3000
+[2026-09-16T22:38:30.2443845] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T22:38:33.3614366] Are you ready to fight in the arena?
+[2026-09-16T22:38:33.3624375] Vous : fight
+[2026-09-16T22:38:35.1281634] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T22:38:35.129166] Vous : yes
+[2026-09-16T22:38:38.6788269] You receive a battle token for your efforts.
+[2026-09-16T22:38:38.6788269] Level up! You have reached level 491.
+[2026-09-16T22:38:38.6788269] You gained 33 HP and 172 Mana.
+[2026-09-16T22:38:38.6798287] Level up! You have reached level 492.
+[2026-09-16T22:38:38.6798287] You gained 35 HP and 173 Mana.
+[2026-09-16T22:38:38.6798287] Level up! You have reached level 493.
+[2026-09-16T22:38:38.6798287] You gained 35 HP and 173 Mana.
+[2026-09-16T22:38:38.6798287] Level up! You have reached level 494.
+[2026-09-16T22:38:38.6798287] You gained 35 HP and 173 Mana.
+[2026-09-16T22:38:38.6803327] Level up! You have reached level 495.
+[2026-09-16T22:38:38.6803327] You gained 35 HP and 172 Mana.
+[2026-09-16T22:38:38.6803327] Level up! You have reached level 496.
+[2026-09-16T22:38:38.6803327] You gained 34 HP and 173 Mana.
+[2026-09-16T22:38:38.6803327] Level up! You have reached level 497.
+[2026-09-16T22:38:38.6803327] You gained 34 HP and 173 Mana.
+[2026-09-16T22:38:38.6803327] Level up! You have reached level 498.
+[2026-09-16T22:38:38.6803327] You gained 35 HP and 172 Mana.
+[2026-09-16T22:38:38.6803327] Level up! You have reached level 499.
+[2026-09-16T22:38:38.6803327] You gained 33 HP and 171 Mana.
+[2026-09-16T22:38:38.6803327] Level up! You have reached level 500.
+[2026-09-16T22:38:38.6813365] You gained 34 HP and 172 Mana.
+[2026-09-16T22:38:38.6813365] Level up! You have reached level 501.
+[2026-09-16T22:38:38.6813365] You gained 33 HP and 171 Mana.
+[2026-09-16T22:38:38.6813365] Level up! You have reached level 502.
+[2026-09-16T22:38:38.6813365] You gained 34 HP and 173 Mana.
+[2026-09-16T22:38:38.6813365] Level up! You have reached level 503.
+[2026-09-16T22:38:38.6813365] You gained 34 HP and 171 Mana.
+[2026-09-16T22:38:38.6813365] Level up! You have reached level 504.
+[2026-09-16T22:38:38.6813365] You gained 33 HP and 173 Mana.
+[2026-09-16T22:38:38.6813365] Level up! You have reached level 505.
+[2026-09-16T22:38:38.6813365] You gained 34 HP and 172 Mana.
+[2026-09-16T22:38:44.704134] You receive a battle token for your efforts.
+[2026-09-16T22:38:44.704134] Level up! You have reached level 506.
+[2026-09-16T22:38:44.7051339] You gained 35 HP and 173 Mana.
+[2026-09-16T22:38:44.7051339] Level up! You have reached level 507.
+[2026-09-16T22:38:44.7051339] You gained 33 HP and 171 Mana.
+[2026-09-16T22:38:44.7051339] Level up! You have reached level 508.
+[2026-09-16T22:38:44.7051339] You gained 34 HP and 172 Mana.
+[2026-09-16T22:38:44.7051339] Level up! You have reached level 509.
+[2026-09-16T22:38:44.7051339] You gained 35 HP and 171 Mana.
+[2026-09-16T22:38:44.7051339] Level up! You have reached level 510.
+[2026-09-16T22:38:44.7051339] You gained 35 HP and 171 Mana.
+[2026-09-16T22:38:44.7061339] Level up! You have reached level 511.
+[2026-09-16T22:38:44.7061339] You gained 34 HP and 173 Mana.
+[2026-09-16T22:38:44.7061339] Level up! You have reached level 512.
+[2026-09-16T22:38:44.7061339] You gained 33 HP and 173 Mana.
+[2026-09-16T22:38:44.7061339] Level up! You have reached level 513.
+[2026-09-16T22:38:44.7061339] You gained 33 HP and 172 Mana.
+[2026-09-16T22:38:44.7061339] Level up! You have reached level 514.
+[2026-09-16T22:38:44.7061339] You gained 35 HP and 173 Mana.
+[2026-09-16T22:38:44.7071343] Level up! You have reached level 515.
+[2026-09-16T22:38:44.7071343] You gained 35 HP and 171 Mana.
+[2026-09-16T22:38:44.7071343] Level up! You have reached level 516.
+[2026-09-16T22:38:44.7071343] You gained 33 HP and 172 Mana.
+[2026-09-16T22:38:44.7071343] Level up! You have reached level 517.
+[2026-09-16T22:38:44.7071343] You gained 33 HP and 172 Mana.
+[2026-09-16T22:38:44.7071343] Level up! You have reached level 518.
+[2026-09-16T22:38:44.7071343] You gained 35 HP and 171 Mana.
+[2026-09-16T22:38:44.7071343] Level up! You have reached level 519.
+[2026-09-16T22:38:44.7085542] You gained 35 HP and 171 Mana.
+[2026-09-16T22:38:44.7085542] Level up! You have reached level 520.
+[2026-09-16T22:38:44.7085542] You gained 34 HP and 173 Mana.
+[2026-09-16T22:38:51.1760805] You receive a battle token for your efforts.
+[2026-09-16T22:38:51.1770808] Level up! You have reached level 521.
+[2026-09-16T22:38:51.1770808] You gained 34 HP and 171 Mana.
+[2026-09-16T22:38:51.1770808] Level up! You have reached level 522.
+[2026-09-16T22:38:51.1770808] You gained 35 HP and 173 Mana.
+[2026-09-16T22:38:51.1770808] Level up! You have reached level 523.
+[2026-09-16T22:38:51.1770808] You gained 35 HP and 173 Mana.
+[2026-09-16T22:38:51.1770808] Level up! You have reached level 524.
+[2026-09-16T22:38:51.1770808] You gained 34 HP and 173 Mana.
+[2026-09-16T22:38:51.1780805] Level up! You have reached level 525.
+[2026-09-16T22:38:51.1780805] You gained 33 HP and 172 Mana.
+[2026-09-16T22:38:51.1780805] Level up! You have reached level 526.
+[2026-09-16T22:38:51.1780805] You gained 34 HP and 173 Mana.
+[2026-09-16T22:38:51.1780805] Level up! You have reached level 527.
+[2026-09-16T22:38:51.1780805] You gained 35 HP and 171 Mana.
+[2026-09-16T22:38:51.1780805] Level up! You have reached level 528.
+[2026-09-16T22:38:51.1780805] You gained 35 HP and 171 Mana.
+[2026-09-16T22:38:51.1780805] Level up! You have reached level 529.
+[2026-09-16T22:38:51.1780805] You gained 33 HP and 172 Mana.
+[2026-09-16T22:38:51.1780805] Level up! You have reached level 530.
+[2026-09-16T22:38:51.1790808] You gained 34 HP and 173 Mana.
+[2026-09-16T22:38:51.1790808] Level up! You have reached level 531.
+[2026-09-16T22:38:51.1790808] You gained 35 HP and 173 Mana.
+[2026-09-16T22:38:51.1790808] Level up! You have reached level 532.
+[2026-09-16T22:38:51.1790808] You gained 35 HP and 172 Mana.
+[2026-09-16T22:38:51.1790808] Level up! You have reached level 533.
+[2026-09-16T22:38:51.1790808] You gained 34 HP and 171 Mana.
+[2026-09-16T22:38:51.1790808] Level up! You have reached level 534.
+[2026-09-16T22:38:51.1790808] You gained 33 HP and 171 Mana.
+[2026-09-16T22:38:59.1452696] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T22:39:01.1369433] Are you ready to fight in the arena?
+[2026-09-16T22:39:01.1369433] Vous : fight
+[2026-09-16T22:39:02.62919] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T22:39:02.62919] Vous : yes
+[2026-09-16T22:39:06.5128458] You receive a battle token for your efforts.
+[2026-09-16T22:39:06.5128458] Level up! You have reached level 535.
+[2026-09-16T22:39:06.5138468] You gained 33 HP and 171 Mana.
+[2026-09-16T22:39:06.5138468] Level up! You have reached level 536.
+[2026-09-16T22:39:06.5138468] You gained 34 HP and 173 Mana.
+[2026-09-16T22:39:06.5138468] Level up! You have reached level 537.
+[2026-09-16T22:39:06.5138468] You gained 34 HP and 171 Mana.
+[2026-09-16T22:39:06.5138468] Level up! You have reached level 538.
+[2026-09-16T22:39:06.5138468] You gained 35 HP and 173 Mana.
+[2026-09-16T22:39:06.5138468] Level up! You have reached level 539.
+[2026-09-16T22:39:06.5138468] You gained 34 HP and 172 Mana.
+[2026-09-16T22:39:06.5138468] Level up! You have reached level 540.
+[2026-09-16T22:39:06.5138468] You gained 35 HP and 171 Mana.
+[2026-09-16T22:39:06.5148467] Level up! You have reached level 541.
+[2026-09-16T22:39:06.5148467] You gained 34 HP and 172 Mana.
+[2026-09-16T22:39:06.5148467] Level up! You have reached level 542.
+[2026-09-16T22:39:06.5148467] You gained 35 HP and 173 Mana.
+[2026-09-16T22:39:06.5148467] Level up! You have reached level 543.
+[2026-09-16T22:39:06.5148467] You gained 33 HP and 173 Mana.
+[2026-09-16T22:39:06.5148467] Level up! You have reached level 544.
+[2026-09-16T22:39:06.5148467] You gained 34 HP and 171 Mana.
+[2026-09-16T22:39:06.5148467] Level up! You have reached level 545.
+[2026-09-16T22:39:06.5148467] You gained 34 HP and 171 Mana.
+[2026-09-16T22:39:06.5148467] Level up! You have reached level 546.
+[2026-09-16T22:39:06.5158466] You gained 34 HP and 172 Mana.
+[2026-09-16T22:39:06.5158466] Level up! You have reached level 547.
+[2026-09-16T22:39:06.5158466] You gained 34 HP and 172 Mana.
+[2026-09-16T22:39:16.8388626] GM: Wisdom set to 15384
+[2026-09-16T22:39:21.7634855] You receive a battle token for your efforts.
+[2026-09-16T22:39:21.7634855] Level up! You have reached level 548.
+[2026-09-16T22:39:21.7634855] You gained 33 HP and 279 Mana.
+[2026-09-16T22:39:21.7634855] Level up! You have reached level 549.
+[2026-09-16T22:39:21.7634855] You gained 34 HP and 277 Mana.
+[2026-09-16T22:39:21.7634855] Level up! You have reached level 550.
+[2026-09-16T22:39:21.7634855] You gained 35 HP and 279 Mana.
+[2026-09-16T22:39:21.7634855] Level up! You have reached level 551.
+[2026-09-16T22:39:21.7634855] You gained 34 HP and 277 Mana.
+[2026-09-16T22:39:21.7649105] Level up! You have reached level 552.
+[2026-09-16T22:39:21.7649105] You gained 33 HP and 278 Mana.
+[2026-09-16T22:39:21.7649105] Level up! You have reached level 553.
+[2026-09-16T22:39:21.7649105] You gained 33 HP and 279 Mana.
+[2026-09-16T22:39:21.7649105] Level up! You have reached level 554.
+[2026-09-16T22:39:21.7649105] You gained 33 HP and 279 Mana.
+[2026-09-16T22:39:21.7649105] Level up! You have reached level 555.
+[2026-09-16T22:39:21.7649105] You gained 34 HP and 278 Mana.
+[2026-09-16T22:39:21.7649105] Level up! You have reached level 556.
+[2026-09-16T22:39:21.7649105] You gained 34 HP and 277 Mana.
+[2026-09-16T22:39:21.7649105] Level up! You have reached level 557.
+[2026-09-16T22:39:21.7649105] You gained 33 HP and 279 Mana.
+[2026-09-16T22:39:21.7649105] Level up! You have reached level 558.
+[2026-09-16T22:39:21.7649105] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:21.7649105] Level up! You have reached level 559.
+[2026-09-16T22:39:21.7649105] You gained 34 HP and 279 Mana.
+[2026-09-16T22:39:21.7663422] Level up! You have reached level 560.
+[2026-09-16T22:39:21.7663422] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:22.4301643] You are too exhausted to cast a spell.
+[2026-09-16T22:39:24.2718795] You receive a battle token for your efforts.
+[2026-09-16T22:39:24.2718795] Level up! You have reached level 561.
+[2026-09-16T22:39:24.2728846] You gained 34 HP and 279 Mana.
+[2026-09-16T22:39:24.2728846] Level up! You have reached level 562.
+[2026-09-16T22:39:24.2728846] You gained 34 HP and 277 Mana.
+[2026-09-16T22:39:24.2728846] Level up! You have reached level 563.
+[2026-09-16T22:39:24.2728846] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:24.2728846] Level up! You have reached level 564.
+[2026-09-16T22:39:24.2728846] You gained 34 HP and 279 Mana.
+[2026-09-16T22:39:24.2728846] Level up! You have reached level 565.
+[2026-09-16T22:39:24.2738833] You gained 35 HP and 279 Mana.
+[2026-09-16T22:39:24.2738833] Level up! You have reached level 566.
+[2026-09-16T22:39:24.2738833] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:24.2738833] Level up! You have reached level 567.
+[2026-09-16T22:39:24.2738833] You gained 33 HP and 278 Mana.
+[2026-09-16T22:39:24.2738833] Level up! You have reached level 568.
+[2026-09-16T22:39:24.2738833] You gained 35 HP and 278 Mana.
+[2026-09-16T22:39:24.2738833] Level up! You have reached level 569.
+[2026-09-16T22:39:24.2738833] You gained 34 HP and 279 Mana.
+[2026-09-16T22:39:24.2738833] Level up! You have reached level 570.
+[2026-09-16T22:39:24.2738833] You gained 34 HP and 278 Mana.
+[2026-09-16T22:39:24.2748835] Level up! You have reached level 571.
+[2026-09-16T22:39:24.2748835] You gained 33 HP and 279 Mana.
+[2026-09-16T22:39:24.2748835] Level up! You have reached level 572.
+[2026-09-16T22:39:24.2748835] You gained 33 HP and 278 Mana.
+[2026-09-16T22:39:33.722616] GM: earth power set (now 5592 total)
+[2026-09-16T22:39:37.6046881] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T22:39:39.3465827] Are you ready to fight in the arena?
+[2026-09-16T22:39:39.3465827] Vous : fight
+[2026-09-16T22:39:41.113607] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T22:39:41.113607] Vous : yes
+[2026-09-16T22:39:44.997546] You receive a battle token for your efforts.
+[2026-09-16T22:39:44.997546] Level up! You have reached level 573.
+[2026-09-16T22:39:44.9985453] You gained 34 HP and 279 Mana.
+[2026-09-16T22:39:44.9985453] Level up! You have reached level 574.
+[2026-09-16T22:39:44.9985453] You gained 34 HP and 277 Mana.
+[2026-09-16T22:39:44.9985453] Level up! You have reached level 575.
+[2026-09-16T22:39:44.9985453] You gained 34 HP and 279 Mana.
+[2026-09-16T22:39:44.9985453] Level up! You have reached level 576.
+[2026-09-16T22:39:44.9985453] You gained 34 HP and 278 Mana.
+[2026-09-16T22:39:44.9985453] Level up! You have reached level 577.
+[2026-09-16T22:39:44.9985453] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:44.9985453] Level up! You have reached level 578.
+[2026-09-16T22:39:44.9985453] You gained 35 HP and 278 Mana.
+[2026-09-16T22:39:44.9985453] Level up! You have reached level 579.
+[2026-09-16T22:39:44.9985453] You gained 35 HP and 279 Mana.
+[2026-09-16T22:39:45.0000476] Level up! You have reached level 580.
+[2026-09-16T22:39:45.0000476] You gained 34 HP and 277 Mana.
+[2026-09-16T22:39:45.0000476] Level up! You have reached level 581.
+[2026-09-16T22:39:45.0000476] You gained 33 HP and 279 Mana.
+[2026-09-16T22:39:45.0000476] Level up! You have reached level 582.
+[2026-09-16T22:39:45.0000476] You gained 34 HP and 278 Mana.
+[2026-09-16T22:39:45.0000476] Level up! You have reached level 583.
+[2026-09-16T22:39:45.0000476] You gained 35 HP and 279 Mana.
+[2026-09-16T22:39:45.0000476] Level up! You have reached level 584.
+[2026-09-16T22:39:45.0000476] You gained 34 HP and 279 Mana.
+[2026-09-16T22:39:45.0032407] You receive a battle token for your efforts.
+[2026-09-16T22:39:45.0032407] Level up! You have reached level 585.
+[2026-09-16T22:39:45.0032407] You gained 34 HP and 278 Mana.
+[2026-09-16T22:39:45.0032407] Level up! You have reached level 586.
+[2026-09-16T22:39:45.0032407] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:45.0032407] Level up! You have reached level 587.
+[2026-09-16T22:39:45.0032407] You gained 35 HP and 279 Mana.
+[2026-09-16T22:39:45.0032407] Level up! You have reached level 588.
+[2026-09-16T22:39:45.0032407] You gained 33 HP and 278 Mana.
+[2026-09-16T22:39:45.0032407] Level up! You have reached level 589.
+[2026-09-16T22:39:45.0032407] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:45.0032407] Level up! You have reached level 590.
+[2026-09-16T22:39:45.0032407] You gained 33 HP and 278 Mana.
+[2026-09-16T22:39:45.0046906] Level up! You have reached level 591.
+[2026-09-16T22:39:45.0046906] You gained 35 HP and 278 Mana.
+[2026-09-16T22:39:45.0046906] Level up! You have reached level 592.
+[2026-09-16T22:39:45.0046906] You gained 33 HP and 278 Mana.
+[2026-09-16T22:39:45.0046906] Level up! You have reached level 593.
+[2026-09-16T22:39:45.0046906] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:45.0046906] Level up! You have reached level 594.
+[2026-09-16T22:39:45.0046906] You gained 35 HP and 278 Mana.
+[2026-09-16T22:39:45.0046906] Level up! You have reached level 595.
+[2026-09-16T22:39:45.0046906] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:55.6475124] You receive a battle token for your efforts.
+[2026-09-16T22:39:55.6485124] Level up! You have reached level 596.
+[2026-09-16T22:39:55.6485124] You gained 33 HP and 277 Mana.
+[2026-09-16T22:39:55.6485124] Level up! You have reached level 597.
+[2026-09-16T22:39:55.6485124] You gained 33 HP and 279 Mana.
+[2026-09-16T22:39:55.6485124] Level up! You have reached level 598.
+[2026-09-16T22:39:55.6485124] You gained 34 HP and 278 Mana.
+[2026-09-16T22:39:55.6485124] Level up! You have reached level 599.
+[2026-09-16T22:39:55.6485124] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:55.6485124] Level up! You have reached level 600.
+[2026-09-16T22:39:55.6485124] You gained 34 HP and 278 Mana.
+[2026-09-16T22:39:55.6485124] Level up! You have reached level 601.
+[2026-09-16T22:39:55.6485124] You gained 33 HP and 278 Mana.
+[2026-09-16T22:39:55.6500146] Level up! You have reached level 602.
+[2026-09-16T22:39:55.6500146] You gained 34 HP and 277 Mana.
+[2026-09-16T22:39:55.6500146] Level up! You have reached level 603.
+[2026-09-16T22:39:55.6500146] You gained 35 HP and 277 Mana.
+[2026-09-16T22:39:55.6500146] Level up! You have reached level 604.
+[2026-09-16T22:39:55.6500146] You gained 34 HP and 279 Mana.
+[2026-09-16T22:39:55.6500146] Level up! You have reached level 605.
+[2026-09-16T22:39:55.6500146] You gained 35 HP and 279 Mana.
+[2026-09-16T22:39:55.6500146] Level up! You have reached level 606.
+[2026-09-16T22:39:55.6500146] You gained 33 HP and 279 Mana.
+[2026-09-16T22:40:03.4899963] Teleport debug: ON
+[2026-09-16T22:40:08.0967198] Teleport debug: OFF
+[2026-09-16T22:40:09.8307598] You are too exhausted to cast a spell.
+[2026-09-16T22:40:12.1227855] You are too exhausted to cast a spell.
+[2026-09-16T22:40:14.8219306] You are too exhausted to cast a spell.
+[2026-09-16T22:40:16.6466049] You are too exhausted to cast a spell.
+[2026-09-16T22:40:19.9221702] You are too exhausted to cast a spell.
+[2026-09-16T22:40:21.5222419] You are too exhausted to cast a spell.
+[2026-09-16T22:40:34.8501062] Ahh finally! I have waited long for one such as yourself. I am surprised you made it this far. Come now, I will show you the true meaning of pain!
+[2026-09-16T22:40:41.5041263] Level up! You have reached level 607.
+[2026-09-16T22:40:41.5051266] You gained 35 HP and 277 Mana.
+[2026-09-16T22:40:44.3584234] You are too exhausted to cast a spell.
+[2026-09-16T22:40:44.5548537] You gained 782 gold coins
+[2026-09-16T22:41:00.0569371] GM: unknown command .spawn (type .help)
+[2026-09-16T22:42:12.0538325] GM: Summoned monster ArenaMobXP750
+[2026-09-16T22:42:13.3526682] GM: Summoned monster ArenaMobXP750
+[2026-09-16T22:42:14.3940313] GM: Summoned monster ArenaMobXP750
+[2026-09-16T22:42:16.2944603] GM: Summoned monster ArenaMobXP750
+[2026-09-16T22:42:17.5526473] GM: Summoned monster ArenaMobXP750
+[2026-09-16T22:42:31.8197673] GM: Summoned monster Arch Drake
+[2026-09-16T22:42:40.3744325] GM: Summoned monster ArenaMobXP750
+[2026-09-16T22:42:41.5824975] GM: Summoned monster ArenaMobXP750
+[2026-09-16T22:42:43.3759869] Ah! A new contestant! Welcome to the colosseum, my friend.
+[2026-09-16T22:42:47.86759] Are you ready to fight in the arena?
+[2026-09-16T22:42:47.86759] Vous : fight
+[2026-09-16T22:42:48.8259101] Your opponent has entered the arena. Prepare yourself!
+[2026-09-16T22:42:48.8259101] Vous : yes
+[2026-09-16T22:42:50.0012004] I cannot help you until all the monsters have been defeated.
+[2026-09-16T22:42:55.6934073] You receive a battle token for your efforts.
+[2026-09-16T22:42:55.6934073] Level up! You have reached level 608.
+[2026-09-16T22:42:55.6934073] You gained 33 HP and 279 Mana.
+[2026-09-16T22:42:55.6944074] Level up! You have reached level 609.
+[2026-09-16T22:42:55.6944074] You gained 34 HP and 278 Mana.
+[2026-09-16T22:42:55.6944074] Level up! You have reached level 610.
+[2026-09-16T22:42:55.6944074] You gained 35 HP and 277 Mana.
+[2026-09-16T22:42:55.6944074] Level up! You have reached level 611.
+[2026-09-16T22:42:55.6944074] You gained 35 HP and 279 Mana.
+[2026-09-16T22:42:55.6944074] Level up! You have reached level 612.
+[2026-09-16T22:42:55.6944074] You gained 34 HP and 279 Mana.
+[2026-09-16T22:42:55.6954074] Level up! You have reached level 613.
+[2026-09-16T22:42:55.6954074] You gained 33 HP and 278 Mana.
+[2026-09-16T22:42:55.6954074] Level up! You have reached level 614.
+[2026-09-16T22:42:55.6954074] You gained 35 HP and 278 Mana.
+[2026-09-16T22:42:55.6954074] Level up! You have reached level 615.
+[2026-09-16T22:42:55.6954074] You gained 34 HP and 278 Mana.
+[2026-09-16T22:42:55.6954074] Level up! You have reached level 616.
+[2026-09-16T22:42:55.6954074] You gained 34 HP and 277 Mana.
+[2026-09-16T22:42:55.6954074] Level up! You have reached level 617.
+[2026-09-16T22:42:55.6954074] You gained 34 HP and 279 Mana.
+[2026-09-16T22:42:55.6954074] Level up! You have reached level 618.
+[2026-09-16T22:42:55.6954074] You gained 35 HP and 278 Mana.
+[2026-09-16T22:42:56.8514232] You are too exhausted to cast a spell.
+[2026-09-16T22:42:58.7178493] You are too exhausted to cast a spell.
+[2026-09-16T22:42:59.2513297] You receive a battle token for your efforts.
+[2026-09-16T22:42:59.2524579] Level up! You have reached level 619.
+[2026-09-16T22:42:59.2524579] You gained 34 HP and 278 Mana.
+[2026-09-16T22:42:59.2524579] Level up! You have reached level 620.
+[2026-09-16T22:42:59.2524579] You gained 33 HP and 277 Mana.
+[2026-09-16T22:42:59.2524579] Level up! You have reached level 621.
+[2026-09-16T22:42:59.2524579] You gained 35 HP and 278 Mana.
+[2026-09-16T22:42:59.2524579] Level up! You have reached level 622.
+[2026-09-16T22:42:59.2534602] You gained 33 HP and 279 Mana.
+[2026-09-16T22:42:59.2534602] Level up! You have reached level 623.
+[2026-09-16T22:42:59.2534602] You gained 33 HP and 278 Mana.
+[2026-09-16T22:42:59.2534602] Level up! You have reached level 624.
+[2026-09-16T22:42:59.2534602] You gained 35 HP and 278 Mana.
+[2026-09-16T22:42:59.2534602] Level up! You have reached level 625.
+[2026-09-16T22:42:59.2534602] You gained 33 HP and 277 Mana.
+[2026-09-16T22:42:59.2534602] Level up! You have reached level 626.
+[2026-09-16T22:42:59.2544602] You gained 33 HP and 277 Mana.
+[2026-09-16T22:42:59.2544602] Level up! You have reached level 627.
+[2026-09-16T22:42:59.2544602] You gained 35 HP and 278 Mana.
+[2026-09-16T22:42:59.2544602] Level up! You have reached level 628.
+[2026-09-16T22:42:59.2544602] You gained 35 HP and 278 Mana.
+[2026-09-16T22:43:02.4850588] You receive a battle token for your efforts.
+[2026-09-16T22:43:02.4850588] Level up! You have reached level 629.
+[2026-09-16T22:43:02.4860577] You gained 33 HP and 278 Mana.
+[2026-09-16T22:43:02.4860577] Level up! You have reached level 630.
+[2026-09-16T22:43:02.4860577] You gained 34 HP and 278 Mana.
+[2026-09-16T22:43:02.4860577] Level up! You have reached level 631.
+[2026-09-16T22:43:02.4860577] You gained 33 HP and 277 Mana.
+[2026-09-16T22:43:02.4860577] Level up! You have reached level 632.
+[2026-09-16T22:43:02.4860577] You gained 35 HP and 277 Mana.
+[2026-09-16T22:43:02.4860577] Level up! You have reached level 633.
+[2026-09-16T22:43:02.4860577] You gained 35 HP and 278 Mana.
+[2026-09-16T22:43:02.4860577] Level up! You have reached level 634.
+[2026-09-16T22:43:02.4870521] You gained 34 HP and 277 Mana.
+[2026-09-16T22:43:02.4870521] Level up! You have reached level 635.
+[2026-09-16T22:43:02.4870521] You gained 33 HP and 277 Mana.
+[2026-09-16T22:43:02.4870521] Level up! You have reached level 636.
+[2026-09-16T22:43:02.4870521] You gained 34 HP and 279 Mana.
+[2026-09-16T22:43:02.4870521] Level up! You have reached level 637.
+[2026-09-16T22:43:02.4870521] You gained 33 HP and 278 Mana.
+[2026-09-16T22:43:02.4870521] Level up! You have reached level 638.
+[2026-09-16T22:43:02.4870521] You gained 35 HP and 279 Mana.
+[2026-09-16T22:43:08.5682055] Ah! A new contestant! Welcome to the colosseum, my friend.

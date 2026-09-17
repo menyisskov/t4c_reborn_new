@@ -128,6 +128,8 @@ public class Player extends Stats {
   @Getter private Map<String, Integer> itemCharges = new HashMap<>();
   @Getter private List<Double> inventoryDurability = new ArrayList<>();
   @Getter private Map<BodyPart, Double> equippedDurability = new HashMap<>();
+  @Getter private List<String> storage = new ArrayList<>();
+  @Getter private int storageGold = 0;
 
   public Player(Object... parts) throws GameException {
     this.animations = new PlayerAnimations(parts);
@@ -202,6 +204,14 @@ public class Player extends Stats {
   public void setInventory(List<String> inventory) {
     this.inventory = inventory == null ? new ArrayList<>() : new ArrayList<>(inventory);
     this.inventoryDurability = new ArrayList<>();
+  }
+
+  public void setStorage(List<String> storage) {
+    this.storage = storage == null ? new ArrayList<>() : new ArrayList<>(storage);
+  }
+
+  public void setStorageGold(int storageGold) {
+    this.storageGold = Math.max(0, storageGold);
   }
 
   public void setInventoryDurability(List<Double> durability) {
@@ -736,7 +746,8 @@ public class Player extends Stats {
           default -> Integer.MIN_VALUE;
         };
     String normalized = element == null ? "" : element.toLowerCase();
-    return 100
+    int base = normalized.equals("light") ? 5000 : 100;
+    return base
         + buffStatBonuses.getOrDefault("resist:" + normalized, 0)
         + getQuestFlag("legacy:resist:" + normalized)
         + EquipmentBonusRules.bonus(this, stat);

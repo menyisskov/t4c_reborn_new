@@ -73,20 +73,59 @@ public final class RemortNPC5 extends ScriptedNpc {
       @Override
       public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
-        c.sayKey(
-            c.flag("__FLAG_REMORT_PROCESS") == 0
-                ? "npc.remort.epilan.need_alphan"
-                : c.flag("__FLAG_REMORT_POINTS") > 0
-                    ? "npc.remort.epilan.welcome"
-                    : "npc.remort.epilan.empty");
+        if (c.flag("__FLAG_REMORT_PROCESS") == 0) c.sayKey("npc.remort.epilan.need_alphan");
+        else if (c.flag("__FLAG_REMORT_POINTS") > 0)
+          c.sayKey("npc.remort.epilan.welcome", c.flag("__FLAG_REMORT_POINTS"));
+        else c.sayKey("npc.remort.epilan.empty");
+      }
+
+      private void spendBulk(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String stat, int budget) {
+
+        int purchased = 0;
+
+        while (purchased < budget && c.flag("__FLAG_REMORT_POINTS") >= 1) {
+
+          c.flag("__FLAG_REMORT_POINTS", c.flag("__FLAG_REMORT_POINTS") - 1);
+
+          if (stat.equals("health")) c.player().setMaxHp(c.player().getMaxHp() + 10);
+          else c.player().setMaxMana(c.player().getMaxMana() + 5);
+
+          purchased++;
+        }
+
+        if (purchased == 0) c.sayKey("npc.remort.epilan.not_enough");
+        else
+          c.sayKey(
+              "npc.remort.epilan.bulk_done", purchased, purchased, c.flag("__FLAG_REMORT_POINTS"));
       }
 
       @Override
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
-        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+        String raw = text == null ? "" : text.trim();
+
+        String[] parts = raw.split("\\s+", 2);
+
+        String k = parts[0].toUpperCase(java.util.Locale.ROOT);
+
+        Integer budget = null;
+
+        if (parts.length > 1) {
+
+          try {
+            budget = Integer.parseInt(parts[1].trim());
+          } catch (NumberFormatException ignored) {
+          }
+        }
 
         if (k.equals("HEALTH")) {
+
+          if (budget != null && budget > 0) {
+
+            spendBulk(c, "health", budget);
+
+            return true;
+          }
 
           c.sayKey("npc.remort.epilan.health");
 
@@ -96,6 +135,13 @@ public final class RemortNPC5 extends ScriptedNpc {
         }
 
         if (k.equals("MANA")) {
+
+          if (budget != null && budget > 0) {
+
+            spendBulk(c, "mana", budget);
+
+            return true;
+          }
 
           c.sayKey("npc.remort.epilan.mana");
 
@@ -130,7 +176,7 @@ public final class RemortNPC5 extends ScriptedNpc {
           c.player().setMaxMana(c.player().getMaxMana() + 5);
         }
 
-        c.sayKey("npc.remort.epilan.done");
+        c.sayKey("npc.remort.epilan.done", c.flag("__FLAG_REMORT_POINTS"));
 
         return true;
       }

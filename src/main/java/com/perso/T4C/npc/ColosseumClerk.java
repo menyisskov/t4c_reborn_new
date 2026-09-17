@@ -167,6 +167,49 @@ public final class ColosseumClerk extends ScriptedNpc {
             return true;
           }
 
+          java.util.regex.Matcher fightArgs =
+              java.util.regex.Pattern.compile("^(?:FIGHT|ARENA)\\s+(\\d+)(?:\\s+([1-3]))?$")
+                  .matcher(k);
+
+          if (fightArgs.matches()) {
+
+            if (c.flag("__FLAG_USER_HAS_CHANGED_DIFFICULTY_LEVEL") == 1) {
+
+              c.sayKey("npc.colosseumclerk.difficulty.locked");
+
+              return true;
+            }
+
+            initialiseArenaSlice(c);
+
+            int requested = Integer.parseInt(fightArgs.group(1));
+
+            int snapped = snapArenaSlice(requested);
+
+            c.flag("__FLAG_USER_LEVEL_SLICE", snapped);
+
+            c.flag("__FLAG_ARENA_LEVEL", snapped);
+
+            c.flag("__FLAG_USER_HAS_CHANGED_DIFFICULTY_LEVEL", 1);
+
+            c.say(I18n.message("npc.colosseumclerk.difficulty", snapped));
+
+            if (fightArgs.group(2) != null) {
+
+              int opponents = Integer.parseInt(fightArgs.group(2));
+
+              c.flag("__ARENA_OPPONENTS", opponents);
+
+              c.say(I18n.message("npc.colosseumclerk.opponents", opponents));
+            }
+
+            c.sayKey("npc.colosseumclerk.fight.ask");
+
+            c.askYesNo("fight");
+
+            return true;
+          }
+
           if (k.equals("INCREASE") || k.equals("DECREASE")) {
 
             if (c.globalFlag("__GLOBAL_FLAG_NUMBER_MONSTERS_IN_ARENA") > 0) {

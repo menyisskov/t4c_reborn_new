@@ -25,7 +25,7 @@ public final class Protection {
         "Healing.wav",
         "Mind Shield.wav",
         0,
-        "180000",
+        "1200000",
         "0",
         3712,
         null,

@@ -1,0 +1,400 @@
+﻿name,displayName,level,health,mana,xpPerHit,xpOnDeath,hitDamageMin,hitDamageMax,goldMin,goldMax,str,end,agi,intel,will,wis,luck,dodge,acMin,acMax,aggro,speed,canAttack,tameable,tameMaxLevel,respawnTimeMs,lootItems
+Deranged Orderly,Infirmier dérangé,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,true,false,0,30000,C5 Permit:0.05|J3 Permit:0.5
+MOBPURIFIER1,Purifier,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+Madman,Mad Man,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,true,false,0,30000,C2 Permit:0.15|F1 Permit:0.3
+Raving Lunatic,Fou délirant,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,true,false,0,30000,G4 Permit:0.4|I4 Permit:0.2
+Raving Lunatic,Fou délirant,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,true,false,0,30000,G4 Permit:0.4|I4 Permit:0.2
+TROLLBIGBRUDDALBASHAH1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLBIGWORVIKTOR1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLBLUDFIGHTOR1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLCLANGBANGAH1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLGRUBBRINGAH1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLMADLIMBMANGLOR1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLMEANHEADDRUMMAH1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLMOONFIREDANSAH1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLMUNCHHUNTOR1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLPROTEKTERRITOR1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLSTANDANBONKAH1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+TROLLTOTEMHERBDOKTOR1,monstre,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,false,0,30000,
+BLOODLUST,Blood Lust,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+Bat,Chauve-souris,1,27,0,1,21,2,5,1,5,12,15,18,16,0,14,0,14,0,0,50,0,true,false,0,30000,Torch:0.05|Light healing potion:0.02
+Brown Rat,Rat brun,1,27,0,1,21,2,5,1,5,16,15,15,16,0,15,0,14,0,0,50,0,true,true,10,30000,Torch:0.02
+CARMAN,Hel,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+CENTAURMANAWEAVER,Centaur Manaweaver,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+GLURIURL,Gluriurl {God of Corruption},1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBBLACKPROPHET,Black Prophet,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBDARKCLERIC,Dark Cleric,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBDARKNOBLE,Dark Noble,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBGEHENNAREAVER,Gehenna Reaver,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBGIANTBLACKWIDOW,Giant Black Widow,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBHERETICWARRIOR,Heretic Warrior,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBILLUSIONWEAVER,Illusion Weaver,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBMADBERSERKERDEMON,Mad Berserker Demon,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBMERCENARYLEADER,Mercenary Leader,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBMERCENARYLIEUTENANTA,Mercenary Lieutenant A,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBMERCENARYLIEUTENANTB,Mercenary Lieutenant B,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBMERCENARYLIEUTENANTC,Mercenary Lieutenant C,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBMORDRED,Commander Mordred,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBNEOFLARE,Ne of Lare,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBNIGHTRETRIEVER,Night Retriever,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBPURIFIER,Purifier,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBQUENTINTARANTULA,Quentin Tarantula,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBSHADOWSTALKER,Shadowstalker,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+MOBSHRIEKERRODENT,Shrieker Rodent,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+OLINHAAD2,Olin Haad,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+URIKTHIEF,Thief,1,100,0,1,100,1,2,0,0,10,10,10,10,10,10,10,0,0,0,0,0,true,false,0,30000,
+Dungeon Bat,Chauve-souris de donjon,2,41,0,1,34,3,7,3,11,17,16,16,17,0,16,0,23,0,0,40,0,true,false,0,30000,
+Green Slime,Boue verte,2,41,0,1,34,3,7,3,11,15,10,25,17,0,16,0,8,0,1074266112,60,0,true,false,0,30000,
+Large Rat,Gros rat,2,41,0,1,34,3,7,3,11,15,10,25,17,0,16,0,10,0,0,50,0,true,false,0,30000,
+Decaying Zombie,Zombie en décomposition,3,55,0,1,46,4,8,5,16,18,17,17,18,0,17,0,22,0,1072693248,50,0,true,false,0,30000,Torch:0.03|Light healing potion:0.05
+Giant Bat,Chauve-souris géante,3,55,0,1,46,4,8,5,16,18,17,17,18,0,17,0,27,0,0,50,0,true,false,0,30000,
+Olin Haad Guard 3,Garde d'Olin Haad,3,55,0,1,46,4,8,5,16,18,17,17,18,0,17,0,22,0,1072693248,-100,0,true,false,0,30000,
+Sewer Rat,Sewer Rat,3,45,0,2,34,3,7,2,9,20,18,17,15,0,15,0,18,0,0,55,0,true,true,12,30000,Torch:0.03
+Undead Bat,Chauve-souris morte-vivante,3,55,0,1,46,4,8,5,16,18,17,17,18,0,17,0,27,0,0,90,0,true,false,0,30000,Decaying Bat Wings:0.05
+Giant Spider,Araignée géante,4,69,0,1,60,4,10,7,22,19,18,18,19,0,18,0,26,0,0,50,0,true,false,0,30000,Torch:0.05|Light healing potion:0.05
+Mummy,Mummy,4,69,0,1,59,4,10,7,22,19,15,18,19,0,16,0,26,0,1073741824,70,0,true,false,0,30000,Torch:0.05|Light healing potion:0.05
+Olin Haad Guard 4,Garde d'Olin Haad,4,69,0,1,59,4,10,7,22,19,18,18,19,0,18,0,26,0,1073741824,-100,0,true,false,0,30000,
+Skeleton,Squelette,4,69,0,1,59,4,10,7,22,18,18,18,18,0,18,0,26,0,1073741824,100,0,true,false,0,30000,Leather gloves:0.03|Ring of confidence:0.01|Healing potion:0.02|Light healing potion:0.03|Skeleton bone:7.0E-4
+Atrocity,Atrocity,5,84,0,1,77,5,12,8,27,20,20,20,20,0,18,0,30,0,1073741824,55,0,true,false,0,30000,Light healing potion:0.03|Light healing potion:0.05|Iron key:0.005
+EDGAR,Edgar Gimplestratten,5,84,0,8,400,5,12,8,27,20,19,19,21,19,19,16,30,0,1073741824,-100,0,true,false,0,30000,
+Goblin,Goblin,5,84,0,1,77,5,12,8,27,20,19,19,21,0,19,0,30,0,1073741824,40,0,true,false,0,30000,Goblin leather armor:0.005|Iron ring:0.01|Light healing potion:0.06|Healing potion:0.02
+Olin Haad Guard 5,Garde d'Olin Haad,5,84,0,1,77,5,12,8,27,20,19,19,21,0,19,0,30,0,1073741824,100,0,true,false,0,30000,
+Brigand,Brigand,7,116,0,1,112,6,15,12,38,21,21,21,23,0,21,0,43,0,1073741824,40,0,true,false,0,30000,Leather gloves:0.01|Leather pants:0.01|Leather Helmet:0.01|Light healing potion:0.15|Iron key:0.01
+MOBMERCENARYA,Mercenary,7,116,0,9,563,6,15,12,38,21,21,21,23,21,21,21,43,0,1073741824,50,0,true,false,0,30000,
+MOBMERCENARYB,Mercenary,7,116,0,9,563,6,15,12,38,21,21,21,23,21,21,21,43,0,1073741824,50,0,true,false,0,30000,
+MOBMERCENARYC,Mercenary,7,116,0,9,563,6,15,12,38,21,21,21,23,21,21,21,43,0,1073741824,50,0,true,false,0,30000,
+MOBMERCENARYC,Mercenary,7,116,0,9,563,6,15,12,38,21,21,21,23,21,21,21,43,0,1073741824,50,0,true,false,0,30000,
+Goblin Scout,Éclaireur gobelin,8,132,0,2,136,7,17,14,44,23,22,22,24,0,22,0,42,0,1074790400,40,0,true,false,0,30000,Goblin leather armor:0.004|Leather belt:0.01|Light healing potion:0.05|Ring of light:0.01|Healing potion:0.01
+Organic Waste,Déchets organiques,8,132,0,2,135,7,17,14,44,23,22,22,24,0,22,0,22,0,1075838976,40,0,true,false,0,30000,
+Tomb Raider,Pilleur de tombes,8,264,0,2,272,7,17,28,88,22,22,22,22,0,22,0,47,0,1074266112,100,0,true,false,0,30000,Torch:0.1|Leather pants:0.03|Dagger of Piercing:0.05|Iron key:0.005|Healing potion:0.1|Shimmering white robe:0.01
+Wandering Orc,Orc errant,8,132,0,2,136,7,17,14,44,23,22,22,24,0,22,0,42,0,1074790400,40,0,true,false,0,30000,Studded leather armor:0.01|Studded leather pants:0.01|Studded leather helmet:0.01|Light healing potion:0.02|Flail of stability:5.0E-4
+Orc Scout,Éclaireur orc,9,148,0,2,157,8,18,16,49,24,23,23,25,0,23,0,46,0,1074790400,50,0,true,false,0,30000,Studded leather armor:0.004|Studded leather pants:0.003|Studded leather helmet:0.01
+OLINHAADELITEGUARD,Olin Haad Elite Guard,10,500000,0,0,0,1,5,0,0,200,220,240,200,250,210,220,50,0,0,100,0,true,false,0,30000,
+Olin Haad Soldier 10,Soldat Olin Haad,10,164,0,2,184,9,20,17,55,25,23,23,27,0,23,0,50,0,1075052544,100,0,true,false,0,30000,
+PIG,A Pig,10,300,0,0,0,1,4,0,0,20,20,25,55,55,55,55,30,0,1073741824,-100,0,true,false,0,30000,
+Poisonous Snake,Serpent venimeux,10,164,0,2,184,9,20,17,55,25,24,24,25,0,23,0,50,0,1075052544,30,0,true,false,0,30000,
+PuppetMaster,Maître des Marionnettes,10,500,0,1,1,11,20,1,1,100,100,100,100,0,100,0,100,0,1077149696,70,0,true,false,0,30000,
+Dark Spider,Araignée sombre,11,181,0,2,209,9,22,19,60,26,24,24,28,0,24,0,54,0,0,50,0,true,false,0,30000,Vial of Spider Venom:0.04
+Scavenger Bat,Chauve-souris charognarde,11,181,0,2,209,9,22,19,60,25,24,24,28,0,24,0,79,0,0,50,0,true,false,0,30000,
+Cursed Being,Être maudit,12,199,0,2,235,10,23,21,66,30,25,26,20,0,25,0,58,0,1075314688,50,0,true,false,0,30000,Diamond necklace:0.003|Leather belt:0.04|Iron ring:0.05
+Giant Wasp,Guêpe géante,12,199,0,2,236,10,23,21,66,27,25,25,29,0,25,0,88,0,0,50,0,true,false,0,30000,Wasp wax:0.01
+Goblin Warrior,Guerrier gobelin,12,199,0,2,235,10,23,21,66,27,25,25,29,0,25,0,58,0,1075314688,50,0,true,false,0,30000,Goblin Blade:0.004|Light healing potion:0.02|Iron key:0.005
+Graax,Graax,12,398,0,2,470,10,23,42,132,27,25,25,29,0,25,0,58,0,1075314688,50,0,true,false,0,30000,Rusted long sword:0.05|Light healing potion:0.06|Mana elixir:0.05|Ring of light:0.04|Leather belt:0.04
+Guurk,Guurk,12,398,0,2,460,8,23,42,132,20,25,25,36,0,25,0,68,0,1075314688,50,0,true,false,0,30000,Potion of mana:0.05|Mana elixir:0.05|Leather belt:0.04
+Olin Haad Soldier 12,Soldat Olin Haad,12,199,0,2,235,10,23,21,66,27,25,25,29,0,25,0,58,0,1075314688,100,0,true,false,0,30000,
+Orc Warrior,Guerrier orque,12,199,0,2,235,10,23,21,66,27,23,26,29,0,25,0,58,0,1075314688,50,0,true,false,0,30000,Feather:0.01|Leather armor:0.003|Studded leather helmet:0.009|Dagger of Piercing:8.0E-4|Iron key:0.01|Healing potion:0.01
+Psi monk,Psi-monk,13,215,0,2,268,12,25,23,71,28,26,26,30,0,26,0,55,0,1076101120,50,0,true,false,0,30000,Light healing potion:0.02|Monk white sash:0.02|Rang kwan:0.03|Shimmering white robe:0.01
+Psykowasp Scout,Éclaireur psykowasp,13,217,0,2,267,11,25,23,71,28,26,26,30,0,26,0,62,0,1075314688,100,0,true,false,0,30000,Psykowasp nectar:0.003
+Scar-Face Razek,Razek au visage cicatrisé,13,434,0,2,534,11,25,46,142,28,26,26,30,0,26,0,62,0,1075314688,50,0,true,false,0,30000,Healing potion:0.05|Polished long sword:0.04|Studded leather armor:0.04|Studded leather boots:0.03|Studded leather gloves:0.03|Studded leather pants:0.03
+Skeleton Guardian,Gardien squelette,13,217,0,2,267,11,25,23,71,27,26,26,30,0,26,0,62,0,1075314688,50,0,true,false,0,30000,Leather belt:0.02|Iron key:0.0069999998|Healing potion:0.02|Skeleton bone:8.0E-4
+Wizard Mummy,Maman magicienne,13,217,0,2,267,11,25,23,71,28,26,26,30,0,26,0,62,0,1075314688,50,0,true,false,0,30000,Torch:0.05
+Animated Corpse,Cadavre animé,14,235,0,2,301,12,27,25,77,29,27,27,31,0,27,0,66,0,1075576832,50,0,true,false,0,30000,Ring of confidence:0.01|Skeleton bone:0.003
+Assassin,Assassin,14,235,0,2,302,12,27,25,77,29,27,27,31,0,27,0,66,0,1075052544,50,0,true,false,0,30000,Light healing potion:0.05|Golden ring:5.0E-4
+Assassin,Assassin,14,235,0,2,302,12,27,25,77,29,27,27,31,0,27,0,66,0,1075052544,50,0,true,false,0,30000,Light healing potion:0.05|Golden ring:5.0E-4
+Battle priest,Prêtre de bataille,14,235,0,2,298,11,27,25,77,29,27,27,31,0,27,0,66,0,1075576832,0,0,true,false,0,30000,Mace of strength:0.05|Ring of the healer:0.0075|Potion of lesser protection from evil:0.02|Leather armor:0.01|Potion of cure poison:0.02
+Kraanian Worker,Ouvrier Kraanien,14,235,0,2,301,12,27,25,77,28,32,27,29,0,27,0,66,0,1075576832,50,0,true,false,0,30000,
+Plague Rat,Rat de la peste,14,235,0,2,303,12,27,25,77,29,27,27,31,0,27,0,76,0,0,50,0,true,false,0,30000,
+Psykowasp Feeder,Mangeoire à psykowasp,14,200,0,3,328,12,36,25,77,29,27,27,31,0,27,0,66,0,1075052544,75,0,true,false,0,30000,Feeder eyes:0.05|Psykowasp nectar:0.003
+Corrupted Goblin,Gobelin corrompu,15,254,0,2,337,13,29,26,82,30,28,28,33,0,28,0,70,0,1075576832,100,0,true,false,0,30000,
+Faith warrior,Guerrier de la foi,15,244,0,2,362,14,36,26,82,30,28,28,33,0,28,0,50,0,1075052544,50,0,true,false,0,30000,Sword of Light:0.01|Light healing potion:0.02|Studded leather armor:0.01|Studded leather pants:0.01|Potion of fury:0.02
+Goblin Bomberman,Bombardier gobelin,15,254,0,2,337,13,29,26,82,30,28,28,33,0,28,0,70,0,1075576832,50,0,true,false,0,30000,
+Goblin Subchief,Sous-chef gobelin,15,254,0,2,337,13,29,26,82,32,28,28,33,0,28,0,70,0,1075576832,50,0,true,false,0,30000,Ringmail armor:0.008|Potion of mana:0.02|Leather belt:0.01|Light healing potion:0.05|Flask of Goblin Blood:0.005
+Mad Patient,Patient fou,15,254,0,0,0,13,29,0,0,30,28,28,33,0,28,0,70,0,1075576832,100,0,true,false,0,30000,A3 Permit:0.1|E5 Permit:0.2
+OLINHAADCOMMANDER,Commander Owain,15,254,0,0,0,13,29,0,0,30,28,28,33,28,28,17,70,0,1088421888,100,0,true,false,0,30000,
+Orc Shaman,Chaman orc,15,254,0,2,337,13,29,26,82,25,30,28,35,0,26,0,70,0,1075576832,50,0,true,false,0,30000,Feather:0.01|Iron ring:0.005|Light healing potion:0.01|Potion of mana:0.01|Woodland robe:0.001
+Psykowasp Warrior,Guerrier psykowasp,15,254,0,2,337,13,29,26,82,30,28,28,33,0,28,0,70,0,1075576832,100,0,true,false,0,30000,Psykowasp nectar:0.004
+Ruk,Ruk le miner,15,508,0,2,674,13,29,52,164,30,28,28,33,0,28,0,70,0,1075576832,50,0,true,false,0,30000,Golden ring:0.05|Goblin leather armor:0.05|Goblin Blade:0.05
+Skeleton Warrior,Guerrier squelette,15,254,0,2,337,13,29,26,82,30,35,28,34,0,28,0,70,0,1075576832,50,0,true,false,0,30000,Rusted long sword:0.01|Leather belt:0.05|Healing potion:0.03|Skeleton bone:9.0000004E-4
+Raider,Raider,16,274,0,2,376,14,31,28,88,31,29,29,34,0,29,0,74,0,1075314688,50,0,true,false,0,30000,Ringmail armor:0.006|Leather boots:0.01|Iron key:0.08|Healing potion:0.02
+Kraanian Flyer,Kraanian-réclamation,17,293,0,2,413,14,33,30,93,32,30,30,35,0,30,0,118,0,0,50,0,true,false,0,30000,
+Loon,Loon,17,293,0,0,0,14,33,0,0,32,30,30,35,0,30,0,78,0,1075838976,50,0,true,false,0,30000,D4 Permit:0.15|H2 Permit:0.2
+Taintscale,Taintscale,17,293,0,2,410,14,33,30,93,32,30,30,35,0,30,0,78,0,1075838976,100,0,true,false,0,30000,
+Bonedead,Bonedead,18,626,0,2,906,15,35,64,198,33,31,31,36,0,31,0,82,0,1075970048,70,0,true,false,0,30000,Potion of mana:0.02|Mana elixir:0.05|Light healing potion:0.02|Potion of fury:0.1|Amulet of dodging:0.01
+Crazed Nurse,Infirmière folle,18,313,0,0,0,0,0,0,0,33,31,0,0,0,0,0,82,0,1075970048,50,0,true,false,0,30000,J1 Permit:0.05|B1 Permit:0.2
+Goblin Chieftain,Chef gobelin,18,313,0,2,453,15,35,32,99,33,31,31,36,0,31,0,82,0,1075970048,70,0,true,false,0,30000,Feather:0.01|Flask of Goblin Blood:0.005|Iron key:0.009|Ringmail armor:5.0E-4|Ringmail leggings:5.0E-4|Ringmail helmet:5.0E-4
+Kraanian Milipede,Mille-pattes kranien,18,313,0,2,453,15,35,32,99,33,31,31,36,0,31,0,82,0,1075970048,50,0,true,false,0,30000,Kraanian egg:0.02
+Mrish Yellowblood,Mrish Sang-Jaune,18,626,0,2,906,15,35,64,198,33,31,31,36,0,31,0,82,0,1075970048,50,0,true,false,0,30000,Studded leather armor:0.02|Studded leather pants:0.03|Studded leather boots:0.03|Ringmail gauntlets:0.04|Ringmail boots:0.04|Goblin Blade:0.03|Ring of the bear:0.04|Round shield:0.05|Healing potion:0.03|Red cape:0.04
+Psykowasp Trooper,Soldat psykowasp,18,313,0,2,453,15,35,32,99,33,31,31,36,0,31,0,82,0,1075970048,100,0,true,false,0,30000,Psykowasp nectar:0.005
+Templar,Templar,18,313,0,2,453,15,35,32,99,33,31,31,36,0,31,0,82,0,1075970048,0,0,true,false,0,30000,Templar ring:0.01|Polished short sword:0.01|Iron ring:0.02
+Defiler,Defiler,19,334,0,2,496,16,37,34,104,34,32,32,37,0,32,0,86,0,1075970048,100,0,true,false,0,30000,
+Goblin Warchief,Chef de guerre gobelin,19,334,0,2,496,16,37,34,104,34,32,32,37,0,32,0,86,0,1075970048,70,0,true,false,0,30000,Feather:0.01|Golden ring:0.001|Bracelet of power:5.0E-4|Iron key:0.0069999998|Ringmail armor:5.0E-4|Ringmail leggings:5.0E-4|Ringmail helmet:5.0E-4|Flask of Goblin Blood:0.005
+Trish Yellowblood,Trish sang-jaune,19,668,0,2,993,16,37,68,208,34,32,32,37,0,32,0,86,0,1075970048,50,0,true,false,0,30000,Studded leather armor:0.02|Studded leather pants:0.03|Studded leather boots:0.03|Ringmail gauntlets:0.04|Ringmail boots:0.04|Goblin Blade:0.03|Ring of the bear:0.04
+Antelope,Antelope,20,353,0,0,0,0,0,0,0,0,0,0,0,0,0,0,90,0,1076101120,-100,0,false,false,0,30000,Antelope skin:0.2
+Fugar,Fugar le smelly,20,706,0,3,1086,17,39,70,220,35,32,32,39,0,32,0,90,0,1076101120,50,0,true,false,0,30000,Studded leather armor:0.02|Studded leather gloves:0.03|Studded leather pants:0.03|Studded leather helmet:0.03|Studded leather boots:0.03|Goblin Blade:0.02|Light healing potion:0.02|Light healing potion:0.02|Torch:0.05
+Goblin Warlord,Seigneur de guerre gobelin,20,353,0,3,543,17,39,35,110,35,32,32,39,0,32,0,90,0,1076101120,50,0,true,false,0,30000,Sword of fury:0.02|Flask of Goblin Blood:0.005|Ringmail armor:5.0E-4|Ringmail leggings:5.0E-4|Ringmail helmet:5.0E-4
+Olin Haad Brigand,Brigand,20,353,0,3,543,17,39,35,110,35,32,32,39,0,32,0,90,0,1076101120,100,0,true,false,0,30000,
+Paladin,Paladin,20,353,0,3,543,17,39,35,110,35,32,32,39,0,32,0,90,0,1076101120,0,0,true,false,0,30000,Sword of Light:0.01|Healing potion:0.02|Potion of partial protection from evil:0.02|Polished short sword:0.01
+Wild Horse,Cheval sauvage,20,353,0,0,0,0,0,0,0,0,0,0,0,0,0,0,90,0,1076101120,-100,0,false,true,30,30000,
+Fallen Warrior,Guerrier déchu,21,374,0,3,590,18,41,37,115,36,33,33,40,0,33,0,94,0,1076101120,100,0,true,false,0,30000,Corrupt heart:0.1
+Orc Deserter,Déserteur orc,21,374,0,3,590,18,41,37,115,36,33,33,40,0,33,0,94,0,1076101120,30,0,true,false,0,30000,Light healing potion:0.02|Healing potion:0.03|Orcish shield:0.005|Ring of the bear:0.01|Potion of mana:0.02|Flask of crystal water:1.0E-4
+Battle bard,Barde de combat,22,396,0,3,641,19,43,39,121,37,34,34,41,0,34,0,98,0,1076232192,0,0,true,false,0,30000,Rusted long sword:0.01|Leather armor:0.01|Leather boots:0.01|Leather pants:0.01
+Demon Tree,Arbre démoniaque,22,396,0,3,641,19,43,39,121,37,34,34,41,0,34,0,98,0,1076232192,50,0,true,false,0,30000,Light healing potion:0.02|Healing potion:0.03|Red gem:0.005|Demon Tree Leaf:0.05|Demon tree wood:0.05
+MOBRUNAWAYPATIENT,Runaway Patient,22,396,0,16,3207,19,43,39,121,37,34,34,41,34,34,19,98,0,1093664768,100,0,true,false,0,30000,
+Psykowasp Devastator,Dévastateur Psykowasp,22,396,0,3,641,19,43,39,121,37,34,34,41,0,34,0,98,0,1076232192,100,0,true,false,0,30000,Devastator eyes:0.03|Psykowasp nectar:0.006
+Blackguard,Blackguard,23,418,0,3,699,20,46,41,126,38,35,35,42,0,35,0,117,0,1075838976,50,0,true,false,0,30000,Light healing potion:0.02|Healing potion:0.02|Ring of the bear:0.01|Yellow gem:0.005|Golden chalice:0.003|Fine steel short sword:0.005
+Corrupt Adept,Adepte corrompu,23,418,0,3,699,20,46,41,126,38,35,35,42,0,35,0,102,0,1076232192,100,0,true,false,0,30000,
+Rogue Mage,Mage voyou,23,418,0,3,699,20,46,41,126,38,35,35,42,0,35,0,117,0,1075838976,50,0,true,false,0,30000,Light healing potion:0.02|Mana elixir:0.03|Ring of the bear:0.01|Green gem:0.005|Pouch of Woody Nightshade:5.0E-4|Pouch of Witch Hazel:0.001|Golden chalice:5.0E-4
+Roshnak Tul,Roshnak Tul,23,842,0,3,1349,20,40,82,252,30,35,35,50,0,35,0,175,0,1076232192,50,0,true,false,0,30000,Pouch of yellow powder:0.07|Ringmail armor:0.0069999998|Ringmail gauntlets:0.01|Ringmail helmet:0.01|Ringmail leggings:0.01|Crude orcish necklace:0.002|Ringmail boots:0.01|Mana elixir:0.03|Healing potion:0.02
+Desperate Prisoner,Prisonnier désespéré,24,440,0,3,765,21,48,43,132,39,36,36,43,0,36,0,106,0,1076363264,50,0,true,false,0,30000,Light healing potion:0.02|Rusted short sword:0.05
+Dune Raider,Pilleur de dunes,24,440,0,3,754,21,48,43,132,39,36,36,43,0,36,0,106,0,1076363264,50,0,true,false,0,30000,Light healing potion:0.02|Flask of crystal water:0.01|Ring of the bear:0.01|Chaos Sword:0.01
+Nightbreed,Nightbreed,24,440,0,3,758,21,48,43,132,39,36,36,43,0,36,0,166,0,0,50,0,true,false,0,30000,
+Araf Kul,Araf'Kul,25,926,0,3,1620,22,50,88,274,40,37,37,45,0,37,0,110,0,1076363264,100,0,true,false,0,30000,Leaf of a pink tree:0.1|human bone:0.07|Pouch of yellow powder:0.18|Light healing potion:0.1
+Corrupt Follower,Adepte corrompu,25,463,0,3,810,22,50,44,137,40,37,37,45,0,37,0,110,0,1076363264,100,0,true,false,0,30000,
+GORLOKBLOODAXE,Gorlok Bloodaxe,25,463,0,17,4050,22,50,0,0,40,37,37,45,37,37,20,110,0,1094713344,100,0,true,false,0,30000,
+Olin Haad Private Guard,Garde privée Olin Haad,25,463,0,3,810,22,50,44,137,40,37,37,45,0,37,0,110,0,1076363264,100,0,true,false,0,30000,
+Psykowasp Commander,Commandant Psykowasp,25,463,0,3,810,22,50,44,137,40,37,37,45,0,37,0,110,0,1076363264,100,0,true,false,0,30000,Psykowasp nectar:0.0069999998
+Giant Scorpion,Scorpion géant,27,510,0,3,933,24,55,48,148,42,39,39,47,0,39,0,83,0,1077149696,50,0,true,false,0,30000,
+Bugar Pouchsnatcher,Voleur de pochettes Bugar,28,1066,0,3,2014,25,58,100,304,43,40,40,48,0,40,0,122,0,1076625408,50,0,true,false,0,30000,Red cape:0.03|Bracelet of power:0.02|Fine steel scimitar:0.001
+Sand Worm,Ver de sable,28,533,0,3,1004,25,58,50,154,43,40,40,48,0,40,0,92,0,1077149696,50,0,true,false,0,30000,
+Sun knight,Chevalier du soleil,28,533,0,3,1027,25,62,50,154,43,40,40,48,0,40,0,122,0,1076101120,0,0,true,false,0,30000,Sword of Light:0.05|Manastone:0.02|Polished short sword:0.01|Round shield:0.01
+Flesh Eater,Mangeur de chair,29,558,0,3,1072,26,60,52,159,44,41,41,49,0,41,0,126,0,1076625408,50,0,true,false,0,30000,Light healing potion:0.02|Healing potion:0.03|Potion of mana:0.02|Mummy bandages:0.02
+Count Hemogoblin,Comte Hémogobelin,30,1162,0,3,2308,28,63,106,330,45,41,41,51,0,41,0,130,0,1076756480,100,0,true,false,0,30000,Red cape:0.08|Potion of mana:0.03|Manastone:0.05|Light healing potion:0.04|Flask of Goblin Blood:0.05|Goblin Blade:0.03|Skeleton bone:0.0075
+DOKTORSPINE,Doktor Spine,30,581,0,19,5771,28,63,53,165,45,41,41,51,41,41,21,130,0,1097859072,100,0,true,false,0,30000,
+DRVONPYRE,Dr. Von Pyre,30,581,0,19,5771,28,63,53,165,45,41,41,51,41,41,21,130,0,1097859072,75,0,true,false,0,30000,
+Doom Guard,Garde funeste,30,581,0,3,1154,28,63,53,165,45,41,41,51,0,41,0,130,0,1076756480,50,0,true,false,0,30000,Light healing potion:0.02|Potion of mana:0.03|Potion of fury:0.01|Skeleton bone:0.001|Pouch of Black Snakeroot:0.02|Skeleton bone:0.008
+Drain Rat,Rat de vidange,30,631,0,3,1052,28,43,53,165,45,41,41,51,0,41,0,130,0,1077477376,100,0,true,false,0,30000,Ring of the forester:0.004|Drachenstaff:0.005|Raindrop:0.02|Scroll of minor combat sense:0.01|Light healing potion:0.02
+Eye-Patched Qardos,Qardos aux yeux bandés,30,1162,0,3,2314,28,63,106,330,45,41,41,51,0,41,0,165,0,1075838976,50,0,true,false,0,30000,Rhodar hammer:0.06|Flask of crystal water:0.008
+Gorben,Gorben le mad,30,1676,0,3,2926,50,77,106,330,45,41,41,51,0,41,0,100,0,1077018624,100,0,true,false,0,30000,Golden ring:5.0E-4|Light healing potion:0.1|Ringmail armor:5.0E-4|Ringmail leggings:5.0E-4|Ringmail helmet:5.0E-4
+Jade Kingsnake,Serpent royal de jade,30,581,0,3,1158,41,50,53,165,45,41,41,51,0,41,0,100,0,1075052544,100,0,true,false,0,30000,Drachenhelm:0.005|Grim sword of war:0.02|Scroll of orientation center:0.01
+Jailkeeper,Gardien costaud,30,581,0,3,1154,28,63,53,165,45,41,41,51,0,41,0,130,0,1076756480,50,0,true,false,0,30000,Light healing potion:0.02|Rusted long sword:0.05
+Minotaur Warrior,Guerrier minotaure,30,581,0,3,1154,28,63,53,165,45,41,41,51,0,41,0,130,0,1076756480,50,0,true,false,0,30000,Light healing potion:0.02|Healing potion:0.02|Potion of fury:0.01|Ring of the bear:0.01|Blue gem:0.008|Flask of crystal water:0.001|Dead Fishes:0.008|Flask of bluish liquid:0.01
+Olin Haad Sentry,Sentinelle Olin Haad,30,581,0,3,1154,28,63,53,165,45,41,41,51,0,41,0,130,0,1076756480,100,0,true,false,0,30000,
+T-Bone,T-Bone,30,1162,0,3,2308,28,63,106,330,45,41,41,51,0,41,0,130,0,1076756480,50,0,true,false,0,30000,Ringmail helmet:0.002|Ringmail armor:0.001|Ringmail boots:0.002|Ringmail leggings:0.002|Polished broadsword:0.001|Mana elixir:0.01|Ring of the bear:0.01|Skeleton bone:0.01
+Taunting Horror,Horreur provocateur,30,581,0,3,1154,28,63,53,165,45,41,41,51,0,41,0,130,0,1076756480,50,0,true,false,0,30000,Light healing potion:0.02|Torch:0.02|Sapphire bracelet:0.01|Potion of fury:0.02|Potion of mana:0.01
+Tarantula,Tarantula,31,606,0,4,1235,29,66,55,170,46,42,42,52,0,42,0,134,0,1075052544,50,0,true,false,0,30000,Tarantula eyes:0.03
+Deep One,Un profond,32,631,0,4,1311,30,69,57,176,47,43,43,53,0,43,0,138,0,1076887552,50,0,true,false,0,30000,Light healing potion:0.02|Potion of fury:0.05
+Orc Berserker,Berserker orque,32,631,0,4,1311,30,69,57,176,47,43,43,53,0,43,0,138,0,1076887552,100,0,true,false,0,30000,Light healing potion:0.02|Orcish shield:0.005|Flask of crystal water:1.0E-4|Potion of fury:0.01|Ringmail helmet:0.003|Ringmail armor:0.002|Ringmail boots:0.0034999999|Ringmail leggings:0.003|Potion of Heroism:0.01
+Cobra,Cobra,33,657,0,4,1390,31,71,59,181,48,44,44,54,0,44,0,142,0,1075314688,50,0,true,false,0,30000,
+Death Stinger,Dard de la mort,33,657,0,4,1393,31,71,59,181,48,44,44,54,0,44,0,222,0,0,50,0,true,false,0,30000,Wasp wax:0.2
+FakeIllusionWeaver,Tisserand d'illusions,34,10,0,0,1,0,0,0,0,49,45,45,55,0,45,0,146,0,0,50,0,true,false,0,30000,
+Orc Battlemage,Mage de bataille orc,34,684,0,4,1480,33,74,61,187,49,45,45,55,0,45,0,146,0,1076953088,50,0,true,false,0,30000,Light healing potion:0.02|Mana elixir:0.04|Polished long sword:0.02|Pouch of Woody Nightshade:0.01|Pouch of Witch Hazel:0.008|Potion of Heroism:0.01
+Failed Summon,Invocation échouée,35,710,0,4,1566,34,78,62,192,50,46,46,57,0,46,0,60,0,1078034432,50,0,true,false,0,30000,
+FakeGriroesh,Griroesh,35,10,0,0,1,34,78,0,0,50,46,46,57,0,46,0,150,0,0,100,0,true,false,0,30000,
+Griroesh,Griroesh,35,710,0,4,1575,34,78,62,192,50,46,46,57,0,46,0,150,0,1076953088,100,0,true,false,0,30000,Ring of confidence:0.01|Ring of darkness:0.01|Iron ring:0.01|Demon skull:0.01|Bracelet of power:0.001|Dark key:0.02|Healing potion:0.05
+Grudish Earchewer,Chercheur d'oreille grossier,35,1420,0,4,3150,34,78,124,384,50,46,46,57,0,46,0,150,0,1076953088,50,0,true,false,0,30000,Potion of fury:0.04|Serious healing potion:0.03|Polished hand axe:0.01
+MADMADRIGAN,Mad Madrigan,35,710,0,22,7875,34,78,62,192,50,46,46,57,46,46,22,150,0,1099431936,50,0,true,false,0,30000,
+MOBDELWOBBLE,Delwobble the Mad Summoner,35,1420,0,22,15750,34,78,124,384,50,46,46,57,46,46,22,150,0,1099431936,100,0,true,false,0,30000,
+Minotaur Chieftain,Chef minotaure,35,710,0,4,1575,34,78,62,192,50,46,46,57,0,46,0,150,0,1076953088,50,0,true,false,0,30000,Potion of fury:0.008|Light healing potion:0.02|Potion of mana:0.02|Fine steel long sword:0.01|Pouch of Blue Cohosh:0.01|Minotaur clan ring:0.005|Flask of bluish liquid:0.01|Potion of mana:0.02|Wooden shield:0.01
+Nightblade,Nightblade,35,710,0,4,1575,34,78,62,192,50,46,46,57,0,46,0,150,0,1076953088,50,0,true,false,0,30000,Light healing potion:0.02|Potion of mana:0.02|Polished short sword:0.01|Pouch of Blue Cohosh:0.01|Golden chalice:0.008
+Quelet Hon The Thirsty,Quelet Hon le thirsty,35,1420,0,4,3154,34,78,124,384,35,46,46,75,0,44,0,170,0,1076494336,50,0,true,false,0,30000,Skeleton bone:0.02|Mana elixir:0.02
+Wererat,Wererat,35,710,0,4,1583,34,78,62,192,50,46,46,57,0,46,0,180,0,0,50,0,true,false,0,30000,
+Acid Slime,Boue acide,36,737,0,4,1666,36,81,64,198,51,47,47,58,0,47,0,69,0,1078034432,50,0,true,false,0,30000,
+Liedric Throatcutter,Liedric Coupe-gorge,37,1534,0,4,3518,35,84,132,406,52,48,48,59,0,48,0,200,0,1076363264,50,0,true,false,0,30000,Golden chalice:0.1|Critical healing potion:0.05|Pouch of Blue Cohosh:0.03|Polished hand axe:0.02
+Skrull,Skrull,37,765,0,9,3535,37,84,132,406,52,48,48,59,0,48,0,158,0,1077018624,70,0,true,false,0,30000,Ringmail armor:0.002|Ringmail boots:0.0034999999|Ringmail leggings:0.003|Potion of mana:0.02|Light healing potion:0.02|Skeleton bone:0.01
+Bend Hayjes,Bend Hayjes le rotten,38,1620,0,4,3745,39,87,136,418,53,49,49,60,0,49,0,160,0,1076756480,100,0,true,false,0,30000,Mummy bandages:0.05|Mana elixir:0.05
+Blaarg Toemangler,Blaarg Toemangler,38,1584,0,4,3729,38,87,136,418,53,49,49,60,0,49,0,130,0,1077084160,100,0,true,false,0,30000,Rusted hand axe:0.01|Human foot:0.05|Orcish shield:0.05
+Minotaur Shaman,Chaman Minotaure,38,792,0,4,1864,38,87,68,209,53,49,49,60,0,49,0,162,0,1077084160,50,0,true,false,0,30000,Light healing potion:0.02|Manastone:0.03|Sapphire bracelet:0.01|Dead Fishes:0.01|Pouch of Blue Cohosh:0.03|Pouch of Black Snakeroot:0.02|Pouch of Woody Nightshade:0.01|Rune etched robe of protection:0.002
+Vampire Bat,Chauve-souris vampire,38,792,0,4,1874,38,87,68,209,53,49,49,60,0,49,0,257,0,0,50,0,true,false,0,30000,Vampire bat wings:0.04
+Death Jester,Bouffon de la mort,39,1642,0,4,3960,40,91,140,430,54,50,50,61,0,50,0,166,0,1077084160,50,0,true,false,0,30000,Healing potion:0.05|Polished broadsword:0.01|Round shield:0.03|Death Jester Skull:1.0|Crown of the Jester:0.01|Skeleton bone:0.01|Pouch of Witch Hazel:0.01|Magical lute:0.5
+Thadoss,Thadoss le moaner,39,1642,0,4,3960,40,91,140,428,54,50,50,61,0,50,0,166,0,1077084160,100,0,true,false,0,30000,Manastone:0.04
+CENTAURTRACKER,Centaur Tracker,40,847,0,24,10452,42,94,71,220,55,50,50,63,50,50,23,170,0,1101004800,-100,0,true,false,0,30000,
+CENTAURTRACKER1,Centaur Tracker,40,847,0,24,10452,42,94,71,220,55,50,50,63,50,50,23,170,0,1101004800,-100,0,true,false,0,30000,
+Death Chosen,Mort choisie,40,847,0,4,2090,42,94,71,220,55,50,50,63,0,50,0,170,0,1077149696,50,0,true,false,0,30000,Gleaming shard:0.02|Potion of fury:0.05|Red cape:0.01|Defender:0.01|Stone key:0.01|Skeleton bone:0.001|Scalemail leggings:2.0E-4|Scalemail gauntlets:2.0E-4
+Grott,Grott,40,1694,0,4,4174,40,95,142,440,55,50,50,63,0,50,0,200,0,1076756480,-100,0,true,false,0,30000,Shaman mantle:0.07|Jade ring of sorcery:0.05|Mana elixir:0.04|Manastone:0.03|Serious healing potion:0.04|Flask of crystal water:0.03
+Headsmasher,Headsmasher,40,1694,0,4,4181,42,94,142,442,55,50,50,63,0,50,0,170,0,1077149696,50,0,true,false,0,30000,Mana elixir:0.05|Potion of mana:0.02|Potion of fury:0.01|Fine steel short sword:0.001|Sapphire bracelet:0.01
+Lighthaven Ranger,Ranger de Lighthaven,40,847,0,0,0,42,94,0,0,55,50,50,63,0,50,0,170,0,1077149696,-100,0,true,false,0,30000,
+Nightcreeper,Nightcreeper,40,847,0,4,2090,42,94,71,220,55,50,50,63,0,50,0,170,0,1077149696,100,0,true,false,0,30000,Ring of the rogue:0.03|Serious healing potion:0.03|Elven leather armor:0.001|Elven leather belt:0.001|Elven leather boots:0.001|Elven leather gloves:0.001|Elven leather helmet:0.001|Elven leather leggings:0.001|Dagger of bleeding:0.02|Villain skull:0.04|Rough malachite:0.02|Rough limestone:0.001|Hickory recurve bow:0.005|Cord of treachery:0.003|Rough emerald:0.004|Flask of crystal water:0.01
+Orc Guardian,Gardien orc,40,847,0,4,2090,42,94,71,220,55,50,50,63,0,50,0,170,0,1077149696,50,0,true,false,0,30000,Light healing potion:0.02|Potion of mana:0.02|Sapphire bracelet:0.01|Orcish shield:0.0069999998|Potion of fury:0.02|Stone key:0.01|Fine steel scimitar:5.0E-4|Pouch of Woody Nightshade:0.01
+Pack Wolf,Loup de meute,40,847,0,4,2090,42,94,71,220,55,50,50,63,0,50,0,170,0,1077149696,75,0,true,true,40,30000,Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001|Finely cut aquamarine:5.0E-4|Finely cut sapphire:0.002|Finely cut amethyst:0.01
+Ratsputin,Ratsputin le wererat,40,847,0,9,4192,42,94,142,440,55,50,50,63,0,50,0,170,0,1076101120,100,0,true,false,0,30000,Potion of mana:0.04|Dead Fishes:0.005
+Sandlord,Sandlord,40,1694,0,4,4181,42,94,142,440,55,50,50,63,0,50,0,170,0,1077149696,50,0,true,false,0,30000,
+Wasp Drone,Drone guêpe,40,847,0,4,2090,42,94,71,220,55,50,50,63,0,50,0,170,0,1077149696,0,0,true,false,0,30000,Wasp wax:0.005|Rough malachite:0.02|Rough limestone:0.001|Finely cut malachite:0.01|Finely cut emerald:0.002|Finely cut limestone:5.0E-4|Rough emerald:0.004
+Broken One,Cassé,41,876,0,5,2203,43,98,73,225,56,51,51,64,0,51,0,174,0,1077149696,50,0,true,false,0,30000,Gleaming shard:0.02
+Hoofcrusher,Hoofcrusher,41,1752,0,5,4406,43,98,146,450,56,51,51,64,0,51,0,174,0,1077149696,50,0,true,false,0,30000,Manastone:0.02|Light healing potion:0.02|Healing potion:0.05|Sapphire bracelet:0.01|Minotaur clan ring:0.005
+Bulldaoza,Bulldaoza,42,1812,0,5,4661,45,102,150,461,57,52,52,65,0,52,0,178,0,1077215232,50,0,true,false,0,30000,Potion of fury:0.01|Light healing potion:0.02|Skeleton bone:0.01
+DEEPONEBOSS,Deep One,42,1812,0,25,23307,45,102,150,462,57,52,52,65,52,52,23,178,0,1101529088,100,0,true,false,0,30000,
+Hurbag Nailripper,Hurbag Coupe-ongles,42,1808,0,5,4659,45,102,150,462,50,50,50,83,0,50,0,178,0,1077215232,50,0,true,false,0,30000,Orcish shield:0.05|Rusted hand axe:0.02|Mana elixir:0.04|Serious healing potion:0.05
+SKRAUGGRUBBRINGAH,Skraug Grubbringah,42,906,0,38,17480,45,102,75,231,57,52,52,65,52,52,23,178,0,1101529088,100,0,true,false,0,30000,
+Stinkbreath,Stinkbreath,42,1812,0,5,4661,45,102,150,462,57,52,52,65,0,52,0,178,0,1077215232,50,0,true,false,0,30000,Healing potion:0.05|Healing potion:0.05|Potion of fury:0.02|Potion of fury:0.05|Orcish shield:0.0025|Polished long sword:0.001
+Crypt Stalker,Traqueur de crypte,43,936,0,5,2440,46,105,77,236,58,53,53,66,0,53,0,182,0,1077215232,100,0,true,false,0,30000,
+Bandaged Horror,Horreur bandée,44,966,0,5,2574,48,109,79,242,59,54,54,67,0,54,0,186,0,1077280768,50,0,true,false,0,30000,Potion of fury:0.05|Mummy bandages:0.03|Gleaming shard:0.02
+Shrieking Horror,Horreur hurlante,44,967,0,5,2574,48,109,79,242,59,54,54,67,0,54,0,186,0,1077280768,50,0,true,false,0,30000,Light healing potion:0.02|Potion of mana:0.02|Healing potion:0.02|Sapphire bracelet:0.01|Potion of fury:0.05|Mummy bandages:0.02
+DWARTHONSTONEFACE,Dwarthon Stoneface,45,1992,0,27,27084,50,113,160,494,60,55,55,69,55,55,24,190,0,1102053376,-100,0,true,false,0,30000,
+GRIMISH,Grimish,45,996,0,27,13542,50,113,80,247,60,55,55,69,55,55,24,190,0,1102053376,-100,0,true,false,0,30000,
+Pilferer,Pilferer,45,996,0,5,2708,50,113,80,247,60,55,55,69,0,55,0,190,0,1077280768,100,0,true,false,0,30000,Serious healing potion:0.01|Villain skull:0.05|Dagger of bleeding:0.02|Lost Psalms of Artherk p1:0.01|Lost Psalms of Artherk p2:0.01|Lost Psalms of Artherk p3:0.01|Lost Psalms of Artherk p4:0.01|Lost Psalms of Artherk p5:0.01|Rough moonstone:0.001|Rough diamond:0.004|Rough agate:0.02|Hickory recurve bow:0.005|Flask of crystal water:0.0025|Flask of crystal water:0.01
+Roaming Corpse,Cadavre errant,45,996,0,5,2708,50,113,80,247,60,55,55,69,0,55,0,190,0,1077280768,100,0,true,false,0,30000,
+Roaming Cadaver,Cadavre itinérant,46,996,0,5,3000,54,122,84,258,62,57,57,71,0,57,0,190,0,1077280768,100,0,true,false,0,30000,
+Skeleton Warlock,Démoniste squelette,46,1027,0,5,2859,52,118,82,253,61,56,56,70,0,56,0,194,0,1077346304,50,0,true,false,0,30000,Gleaming shard:0.02|Light healing potion:0.02|Manastone:0.02|Potion of fury:0.05|Red cape:0.01|Stone key:0.01|Skeleton bone:0.002|Garb of the dead:0.001
+Colony Sentinel,Sentinelle de colonie,47,1058,0,5,3000,54,122,84,258,62,57,57,71,0,57,0,198,0,1077346304,100,0,true,false,0,30000,Wasp wax:0.005|Rough aquamarine:0.001|Rough sapphire:0.004|Rough amethyst:0.02|Finely cut aquamarine:5.0E-4|Finely cut sapphire:0.002|Finely cut amethyst:0.01
+Blood Hound,Chien de sang,48,1090,0,5,3148,56,126,86,264,63,58,58,72,0,58,0,202,0,1077411840,25,0,true,false,0,30000,Blackened iron key:0.05|Rough agate:0.02|Rough diamond:0.004|Rough moonstone:0.001
+Dark Axe,Hache noire,48,2180,0,5,6297,56,126,172,528,63,58,58,72,0,58,0,202,0,1077411840,50,0,true,false,0,30000,Healing potion:0.05|Potion of fury:0.05|Red cape:0.05|Ringmail boots:0.005|Ringmail gauntlets:0.005|Ringmail helmet:0.005|Ringmail leggings:0.002|Ringmail armor:0.001
+Wolfhound,Wolfhound,48,1090,0,5,3148,56,126,86,264,63,58,58,72,0,58,0,202,0,1077411840,100,0,true,false,0,30000,Rough limestone:0.001|Rough malachite:0.02|Rough emerald:0.004
+ArenaMobXP50,Arena experience monster (level 50),50,1153,0,0,5193,1,4,0,0,65,59,59,75,59,59,25,210,0,1103626240,100,0,true,false,0,30000,
+Dark Custodian,Gardien sombre,50,1153,0,5,3432,60,135,89,275,65,59,59,75,0,59,0,75,0,1079083008,100,0,true,false,0,30000,Drachensword:0.003|Serious healing potion:0.02|Mana elixir:0.02|Scroll of resist fire:0.01|Scroll of resist ice:0.01|Scroll of protection:0.01
+Drain Spider,Araignée de vidange,50,1153,0,6,3462,60,135,89,275,65,59,59,75,0,59,0,210,0,1077477376,100,0,true,false,0,30000,Drachenrobe:0.005|Bow of the Spiders:0.02|Raincloak:0.02|Mana elixir:0.02|Mana elixir:0.02|Scroll of orientation middle:0.01
+Night Hunter,Chasseur de nuit,50,1153,0,6,3462,60,135,89,275,65,59,59,75,0,59,0,210,0,1077477376,75,0,true,false,0,30000,Blackened iron key:0.05|Rough amethyst:0.02|Rough aquamarine:0.001|Rough sapphire:0.004|Torch:0.05|Light healing potion:0.05|Potion of cure rabies:0.05|Potion of fury:0.01|Flask of crystal water:0.01
+Ribbon Fiend,Démon du ruban,50,1153,0,6,3462,60,135,89,275,65,59,59,75,0,59,0,210,0,1077477376,100,0,false,false,0,30000,Mana elixir:0.01|Rough garnet:0.001|Rough ruby:0.004|Rough carnelian:0.02|Garb of the dead:0.005|Blackened iron key:0.005
+Unseen Bat,Chauve-souris invisible,50,1153,0,6,3462,60,135,89,275,65,59,59,75,0,59,0,210,0,1077477376,75,0,true,false,0,30000,Rough amethyst:0.02|Rough aquamarine:0.001|Rough sapphire:0.004
+Cave Dweller,Habitant des cavernes,52,1219,0,5,3614,59,133,93,286,67,61,61,77,0,61,0,218,0,1077542912,90,0,true,false,0,30000,Rough sapphire:0.004|Rough aquamarine:0.001|Rough amethyst:0.02|Manastone:0.03|Serious healing potion:0.03|Healing potion:0.03|Flask of crystal water:0.01
+Creeper,Creeper,52,1219,0,5,3615,59,133,93,286,67,61,61,77,0,61,0,218,0,1077542912,100,0,true,false,0,30000,
+Howling Terror,Terreur hurlante,52,1219,0,5,3614,59,133,93,286,67,61,61,77,0,61,0,218,0,1077542912,100,0,true,false,0,30000,Rough moonstone:0.001|Rough diamond:0.004|Rough agate:0.02|Blackened iron key:0.005
+Apparition,Apparition,55,1321,0,6,4062,63,143,98,302,70,64,64,81,0,64,0,230,0,1077608448,100,0,true,false,0,30000,
+CENTAURSENTINEL,Centaur Sentinel,55,1321,0,30,20312,63,143,98,302,70,64,64,81,64,64,26,230,0,1104674816,-100,0,true,false,0,30000,
+CENTAURSENTINEL1,Centaur Sentinel,55,1321,0,30,20312,63,143,98,302,70,64,64,81,64,64,26,230,0,1104674816,-100,0,true,false,0,30000,
+Chaos Spawn,Apparition du chaos,55,1321,0,6,4062,63,143,98,302,70,64,64,81,0,64,0,230,0,1077608448,100,0,true,false,0,30000,Chaos key:0.04|Serious healing potion:0.03|Scale mail:0.005|High metal flail:0.01|Rough carnelian:0.02|Rough ruby:0.004|Rough garnet:0.001|Cracked blue bracer:0.005
+Dead Bolt,Pêne dormant,55,2642,0,6,8125,63,143,196,604,70,64,64,81,0,64,0,230,0,1077608448,50,0,true,false,0,30000,Potion of fury:0.05|Plate boots:0.001|Skeleton bone:0.01|Pouch of Witch Hazel:0.01
+Foul Muck,Sale boue,55,1321,0,6,4062,63,143,98,302,70,64,64,81,0,64,0,230,0,1077608448,100,0,true,false,0,30000,Rough aquamarine:0.001|Rough sapphire:0.004|Rough amethyst:0.02
+Hive Defender,Défenseur de la ruche,55,1321,0,6,4062,63,143,98,302,70,64,64,81,0,64,0,230,0,1077608448,100,0,true,false,0,30000,Wasp wax:0.005|Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001
+Leprechaun,Leprechaun,55,1321,0,6,4062,0,0,98,302,70,64,64,81,0,64,0,230,0,1077608448,100,0,true,false,0,30000,Mana prism:0.01|Mana elixir:0.01|Rough malachite:0.02|Rough limestone:0.001|Rough emerald:0.004|Hickory compound bow:0.005|Flask of crystal water:0.01
+MOBREDEYEDCENTAUR,Red-Eyed Centaur,55,1000000,0,0,0,63,143,0,0,70,64,64,81,64,64,26,65000,0,1199433472,50,0,true,false,0,30000,
+Worshipper,Worshipper,55,1321,0,6,4062,63,143,98,302,70,64,64,81,0,64,0,230,0,1077608448,100,0,true,false,0,30000,
+Zzartgax,Zzartgax,55,1321,0,6,8125,63,143,196,604,70,64,64,81,0,64,0,230,0,1077608448,100,0,true,false,0,30000,
+Skullfire,Skullfire,56,1356,0,12,8424,64,106,200,616,71,65,65,82,0,65,0,234,0,1077673984,50,0,true,false,0,30000,Torch:0.02|Potion of mana:0.05|Mana elixir:0.02|Pouch of Witch Hazel:0.008|Skeleton bone:0.0069999998
+Warg,Warg,56,1356,0,6,4212,64,146,100,308,71,65,65,82,0,65,0,234,0,1077673984,100,0,true,false,0,30000,Rough moonstone:0.001|Rough diamond:0.004|Rough agate:0.02
+Gremlin,Gremlin,57,1391,0,6,4385,66,150,102,313,72,66,66,83,0,66,0,238,0,1077673984,100,0,true,false,0,30000,Mana elixir:0.01|Rough carnelian:0.02|Rough ruby:0.004|Rough garnet:0.001|Hickory compound bow:0.005
+Creeping Sludge,Boue rampante,58,1426,0,6,4540,67,153,104,319,71,67,67,84,0,67,0,242,0,1077739520,100,0,true,false,0,30000,Rough agate:0.02|Rough diamond:0.004|Rough moonstone:0.001
+Morlokk,Morlokk,59,1462,0,6,4708,69,156,106,324,74,68,68,85,0,68,0,246,0,1077739520,100,0,true,false,0,30000,Rough carnelian:0.02|Rough garnet:0.001|Rough ruby:0.004|Manastone:0.01|Mithril blade:0.01|Potion of clear thought:0.02|Flask of crystal water:0.01
+Acid Zombie,Zombi acide,60,1497,0,6,4869,0,0,107,330,75,68,68,87,0,68,0,250,0,1077805056,100,0,true,false,0,30000,Serious healing potion:0.03|High metal long sword:0.01|Potion of fury:0.02|Potion of clear thought:0.02|Rough carnelian:0.02|Rough ruby:0.004|Rough garnet:0.001|Finely cut carnelian:0.01|Finely cut ruby:0.002|Finely cut garnet:5.0E-4
+Arachnofiend,Arachnofiend,60,1497,0,6,4869,70,159,107,330,75,68,68,87,0,68,0,250,0,1077805056,100,0,true,false,0,30000,Tarantula fang:0.03|Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001|Tarantula eyes:0.03
+ArenaMobXP60,Arena experience monster (level 60),60,1497,0,0,7304,1,4,0,0,75,68,68,87,68,68,27,250,0,1106247680,100,0,true,false,0,30000,
+CENTAURAVENGER,Centaur Avenger,60,1497,0,32,24348,70,159,107,330,75,68,68,87,68,68,27,250,0,1106247680,50,0,true,false,0,30000,
+CENTAURAVENGER1,Centaur Avenger,60,1497,0,32,24348,70,159,107,330,75,68,68,87,68,68,27,250,0,1106247680,50,0,true,false,0,30000,
+Chaos Demon,Démon du chaos,60,1497,0,6,4869,70,159,107,330,75,68,68,87,0,68,0,250,0,1077805056,100,0,true,false,0,30000,
+Darkness Demon,Démon des ténèbres,60,1497,0,6,4869,70,159,107,330,75,68,68,87,0,68,0,730,0,1077805056,100,0,true,false,0,30000,
+SHADEEN,Shadeen the Dagger,60,1000000,0,0,0,70,159,0,0,75,68,68,87,68,68,27,65535,0,1199433472,-100,0,true,false,0,30000,
+SKRAUGSTANDANBONKAH,Skraug Standanbonkah,60,1497,0,48,36522,70,159,107,330,75,68,68,87,68,68,27,250,0,1106247680,100,0,true,false,0,30000,
+Shadowfiend,Shadowfiend,60,1497,0,6,4869,70,159,107,330,75,68,68,87,0,68,0,250,0,1077805056,100,0,true,false,0,30000,Polished bone key:0.03|Manastone:0.01|Mithril chainmail boots:0.01|Mithril chainmail armor:0.005|Mithril chainmail gauntlets:0.01|Mithril chainmail girdle:0.01|Mithril chainmail helmet:0.01|Mithril chainmail leggings:0.01|Adamantite blade:0.001|Rough moonstone:0.001|Rough diamond:0.004|Rough agate:0.02|Finely cut agate:0.01|Finely cut diamond:0.002|Finely cut moonstone:5.0E-4
+Terror Demon,Démon de la terreur,60,1497,0,6,4869,70,159,107,330,75,68,68,87,0,68,0,250,0,1077805056,100,0,true,false,0,30000,
+VICARASGOTH,Vicar Asgoth,60,1497,0,0,72997,88,201,107,330,75,68,68,87,100,68,34,250,0,1106247680,100,0,true,false,0,30000,
+VICARKERVIAN,Vicar Kervian,60,1497,0,0,72997,88,201,107,330,75,68,68,87,100,68,34,250,0,1106247680,100,0,true,false,0,30000,
+VICARRAMIEL,Vicar Ramiel,60,1497,0,0,72997,88,201,107,330,75,68,68,87,100,68,34,250,0,1106247680,100,0,true,false,0,30000,
+VICARVHARMES,Vicar Vharmes,60,1497,0,0,72997,88,201,107,330,75,68,68,87,100,68,34,250,0,1106247680,100,0,true,false,0,30000,
+Yoggoth Worm,Ver Yoggoth,60,1497,0,6,4869,0,0,107,330,75,68,68,87,0,68,0,250,0,1077805056,100,0,true,false,0,30000,Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001|Finely cut amethyst:0.01|Finely cut sapphire:0.002|Finely cut moonstone:5.0E-4
+Yoggoth Worm,Ver Yoggoth,60,1497,0,6,4869,0,0,107,330,75,68,68,87,0,68,0,250,0,1077805056,100,0,true,false,0,30000,Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001|Finely cut amethyst:0.01|Finely cut sapphire:0.002|Finely cut moonstone:5.0E-4
+Berserker Rat,Rat berserker,62,1571,0,6,5224,73,166,111,341,77,70,70,89,0,70,0,258,0,1077870592,100,0,true,false,0,30000,Potion of nimbleness:0.05|Rough agate:0.02|Rough diamond:0.004|Rough moonstone:0.001
+Bone Demon,Démon osseux,62,1571,0,6,5224,73,166,111,341,77,70,70,89,0,70,0,258,0,1077870592,100,0,true,false,0,30000,Mana elixir:0.01|Mithril blade 1:0.01|Scale mail:0.005|Scalemail boots:0.01|Scalemail gauntlets:0.01|Scalemail helmet:0.01|Scalemail leggings:0.005|Scalemail protector:0.01|Rough malachite:0.02|Rough limestone:0.001|Rough emerald:0.004
+GHUNDARGRUMBLEFOOT,Ghundarg Rumblefoot,62,3142,0,33,52248,73,166,222,682,77,70,70,89,70,70,27,258,0,1106771968,-100,0,true,false,0,30000,
+Spectral Knight,Chevalier spectral,64,1646,0,6,5592,76,173,115,352,79,62,72,91,0,72,0,266,0,1077936128,100,0,true,false,0,30000,Manastone:0.01|Mithril blade:0.01|Rough garnet:0.001|Rough ruby:0.004|Rough carnelian:0.02|Spectral helm:0.005|Large shield:0.0025
+Crypt Custodian,Gardien de la crypte,65,1684,0,6,5780,78,176,116,357,80,73,73,93,0,73,0,270,0,1077936128,100,0,true,false,0,30000,Mana elixir:0.01|Critical healing potion:0.03|Mithril long sword:0.0025|Rough malachite:0.02|Rough limestone:0.001|Rough emerald:0.004|Runed halberd:0.005
+Great Wolf,Grand loup,65,1684,0,6,5780,78,176,116,357,80,73,73,93,0,73,0,270,0,1077936128,100,0,true,false,0,30000,Rough limestone:0.001|Rough malachite:0.02|Finely cut limestone:5.0E-4|Finely cut emerald:0.002|Finely cut malachite:0.01|Rough emerald:0.004
+Kraanian Plague,Peste Kraanienne,65,1684,0,6,5780,78,176,116,357,80,73,73,93,0,73,0,270,0,1077936128,100,0,true,false,0,30000,
+Necrospider,Necrospider,65,1684,0,6,5780,78,176,116,357,80,73,73,93,0,73,0,270,0,1077936128,100,0,true,false,0,30000,Spider venom:0.03|Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001
+Wraith Bat,Chauve-souris spectrale,65,1684,0,6,5780,78,176,116,357,80,73,73,93,0,73,0,270,0,1077936128,100,0,true,false,0,30000,Rough garnet:0.001|Rough ruby:0.004|Rough carnelian:0.02
+SKRAUGCLANGBANGAH,Skraug Clangbangah,66,1723,0,51,44808,79,180,118,363,81,74,74,94,74,74,28,274,0,1107558400,100,0,true,false,0,30000,
+Kraanian Stomper,Piétineur Kraanien,67,1762,0,7,6168,81,183,120,368,82,75,75,95,0,75,0,278,0,1077968896,100,0,true,false,0,30000,Yellow crystal shard:0.1
+Carrion Crawler,Chenille charognarde,68,1801,0,7,6369,82,187,122,374,83,76,76,96,0,76,0,282,0,1078001664,75,0,true,false,0,30000,Mana prism:0.01|Rough garnet:0.001|Rough ruby:0.004|Rough carnelian:0.02
+Kraanian Reaper,Faucheur Kraanien,68,1801,0,7,6369,82,187,122,374,83,76,76,96,0,76,0,282,0,1078001664,100,0,true,false,0,30000,
+MOBOBSIDIANCONCLAVEKNIGHT,Obsidian Conclave Knight,68,1801,0,35,31845,82,187,122,374,83,76,76,96,76,76,28,282,0,1107820544,100,0,true,false,0,30000,
+AARONBROWNBARK,A Walking Tree,70,3758,0,36,67760,85,194,250,770,85,77,77,99,77,77,29,290,0,1108082688,-100,0,true,false,0,30000,
+ArenaMobXP70,Arena experience monster (level 70),70,1879,0,0,10164,1,4,0,0,85,77,77,99,77,77,29,290,0,1108082688,100,0,true,false,0,30000,
+Deathstalker,Deathstalker,70,1879,0,7,6776,85,194,125,385,85,77,77,99,0,77,0,290,0,1078034432,100,0,true,false,0,30000,Polished bone key:0.05|Adamantite blade:0.0025|Collector book:0.005|Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001|Cord of treachery:0.01|Flask of crystal water:0.01|Flask of crystal water:0.005
+Skeletal Centaur,Centaure squelettique,70,1879,0,7,6776,85,194,125,385,85,77,77,99,0,77,0,290,0,1078034432,100,0,true,false,0,30000,Rough malachite:0.02|Rough limestone:0.001|Rough emerald:0.004
+Widow Hatchling,Veuve nouveau-née,70,1879,0,7,6776,0,0,125,385,85,77,77,99,0,77,0,290,0,1078034432,100,0,true,false,0,30000,Spider venom:0.01|Rough amethyst:0.02|Rough sapphire:0.004|Rough moonstone:0.001|Flask of liquid spider silk:0.005
+Draconis Knight,Chevalier Draconis,72,1961,0,7,7198,88,201,129,396,87,79,79,101,0,79,0,298,0,1078067200,100,0,true,false,0,30000,
+Draconis Magus,Mage Draconis,72,1961,0,7,7198,88,201,129,396,87,79,79,101,0,79,0,298,0,1078067200,100,0,true,false,0,30000,
+CENTAURCHAMPION,Centaur Champion,75,2086,0,37,39279,93,211,134,412,90,82,82,105,82,82,30,310,0,1108606976,-100,0,true,false,0,30000,
+CENTAURCHAMPION1,Centaur Champion,75,2086,0,37,39279,93,211,134,412,90,82,82,105,82,82,30,310,0,1108606976,-100,0,true,false,0,30000,
+Dark Warlord,Seigneur de guerre sombre,75,2086,0,7,7855,93,211,134,412,90,82,82,105,0,82,0,310,0,1078099968,100,0,true,false,0,30000,Twisted key:0.03|Mana prism:0.01|High metal hand axe:0.005|Rough garnet:0.001|Rough ruby:0.004|Rough carnelian:0.02|Gem of the Immortal:0.07
+MOBGIANTBLACKWIDOW1,Giant Black Widow,75,2086,0,37,39279,93,211,134,412,90,82,82,105,82,82,30,310,0,1108606976,100,0,true,false,0,30000,
+MOBHUNTER1,A Powerful Hunter,75,2086,0,37,39279,93,211,0,0,20,22,24,20,25,21,22,310,0,1108606976,-100,0,true,false,0,30000,
+MOBHUNTER2,A Powerful Hunter,75,2086,0,37,39279,93,211,0,0,20,22,24,20,25,21,22,310,0,1108606976,-100,0,true,false,0,30000,
+Mysticist,Mysticist,75,3011,0,3,5950,30,90,134,412,90,82,82,105,0,82,0,500,0,1077805056,100,0,true,false,0,30000,Escape scroll:0.008|Drachenshield:0.004|Cloak of the Skull:0.02|Manastone:0.01|Scroll of detect hidden:0.01|Scroll of detect invisible:0.01|Scroll of earthen strength:0.01|Scroll of orientation middle:0.03
+SKRAUGMOONFIREDANSAH,Skraug Moonfiredansah,75,2086,0,56,58919,93,211,134,412,90,82,82,105,82,82,30,310,0,1108606976,100,0,true,false,0,30000,
+Skeleton Warder,Gardien squelette,75,2086,0,7,7855,93,211,134,412,90,82,82,105,0,82,0,310,0,1078099968,100,0,true,false,0,30000,Warders cloak:0.02
+Woodstalker,Woodstalker,75,2086,0,7,7855,93,211,134,412,90,82,82,105,0,82,0,310,0,1078099968,100,0,true,false,0,30000,Drachenplate:0.003|Scroll of orientation center:0.05|Hickory compound bow:0.01|Bone tipped arrow:0.02
+SKRAUGMEANHEADDRUMMAH,Skraug Meanheaddrummah,76,2129,0,59,63618,102,233,136,418,91,83,83,106,83,83,30,314,0,1108869120,100,0,true,false,0,30000,
+ArenaMobXP80,Arena experience monster (level 80),80,2301,0,0,14113,1,4,0,0,95,86,86,111,86,86,31,330,0,1109393408,100,0,true,false,0,30000,
+Fenris Wolf,Fenris loup,80,2301,0,8,9409,108,245,143,440,95,86,86,111,0,86,0,330,0,1078198272,100,0,true,false,0,30000,Rough agate:0.02|Rough diamond:0.004|Rough moonstone:0.001|Finely cut agate:0.01|Finely cut diamond:0.002|Finely cut moonstone:5.0E-4|Prismatic armband:0.02
+Gangrene Carrier,Porteur de gangrène,80,2301,0,8,9409,108,245,143,440,95,86,86,111,0,86,0,330,0,1078198272,100,0,true,false,0,30000,Rough agate:0.02|Rough diamond:0.004|Rough moonstone:0.001|Garb of the dead:0.005
+Nemesis,Nemesis,80,2301,0,8,9409,108,245,143,440,95,86,86,111,0,86,0,330,0,1078198272,100,0,true,false,0,30000,Rough moonstone:0.001|Rough diamond:0.004|Rough agate:0.02
+Foul Fiend,Mauvais démon,82,2390,0,8,9876,110,251,147,451,97,88,88,113,0,88,0,338,0,1078231040,100,0,true,false,0,30000,Mana elixir:0.01|Rough carnelian:0.02|Rough ruby:0.004|Rough garnet:0.001
+Putrid Beast,Bête putride,83,2435,0,8,10129,112,254,149,456,98,89,89,114,0,89,0,342,0,1078231040,100,0,true,false,0,30000,Manastone:0.01|Rough malachite:0.02|Rough limestone:0.001|Rough emerald:0.004
+Fiend Of The Pale,Fiend de le pale,85,2527,0,8,10634,115,260,152,467,100,91,91,117,0,91,0,350,0,1078263808,100,0,true,false,0,30000,Key of the Banished:0.05|Mana elixir:0.01|High metal hand axe 1:0.0025|Rough limestone:0.001|Rough malachite:0.02|Rough emerald:0.004
+Toll Troll,Troll à péage,85,2527,0,8,10634,115,260,152,467,100,91,91,117,0,91,0,350,0,1078263808,100,0,true,false,0,30000,Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001|Gothic shield:0.0025|High metal bastard sword:0.0025
+MOBSHRIEKERRODENT1,Shrieker Rodent,88,2667,0,42,57052,119,269,158,484,103,94,94,120,94,94,32,362,0,1110441984,100,0,true,false,0,30000,
+ArenaMobXP90,Arena experience monster (level 90),90,2761,0,0,17921,1,4,0,0,105,95,95,123,95,95,33,370,0,1110704128,100,0,true,false,0,30000,
+MOBCELESTIALCOBRA,Celestial Cobra,90,2761,0,43,59738,121,276,161,495,105,95,95,123,95,95,33,370,0,1110704128,75,0,true,false,0,30000,
+MOBCELESTIALCOBRA1,Celestial Cobra,90,2761,0,43,59738,121,276,161,495,105,95,95,123,95,95,33,370,0,1110704128,75,0,true,false,0,30000,
+Mortal Wombat,Wombat mortel,90,2301,0,8,9409,108,245,143,440,95,86,86,111,0,86,0,330,0,1078198272,100,0,true,false,0,30000,Polished bone key:0.05|Rough garnet:0.001|Rough ruby:0.004|Rough carnelian:0.02|Finely cut carnelian:0.01|Finely cut ruby:0.002|Finely cut garnet:5.0E-4|Oak compound bow:0.005
+Obsidian Assassin,Assassin d'obsidienne,90,2761,0,8,11947,121,276,161,495,105,95,95,123,0,95,0,370,0,1078362112,100,0,true,false,0,30000,Key of the Lost Soul:0.03|Manastone:0.01|Mithril chainmail armor:0.005|Mithril chainmail boots:0.01|Mithril chainmail gauntlets:0.01|Mithril chainmail girdle:0.01|Mithril chainmail helmet:0.01|Mithril chainmail leggings:0.01|Collector book:0.005|Rough garnet:0.001|Rough ruby:0.004|Rough carnelian:0.02|Translucent wristband:0.02
+MOBFLESHGOLEM,Flesh Golem,95,6012,0,44,133443,128,291,340,1044,110,100,100,129,100,100,34,390,0,1111228416,-100,0,true,false,0,30000,
+MOBGAUZECORPSE1,Gauze Corpse,95,3006,0,44,66721,128,291,170,522,110,100,100,129,100,100,34,390,0,1111228416,100,0,true,false,0,30000,
+MOBQUENTINTARANTULA1,Quentin Tarantula,95,3006,0,44,66721,128,291,170,522,110,100,100,129,100,100,34,390,0,1111228416,100,0,true,false,0,30000,
+ZHAKAR,Zhakar,95,1000000,0,0,0,128,291,340,1044,110,100,100,129,100,100,34,65535,0,1232348160,-100,0,true,false,0,30000,
+ANTHORTHEMAD,Anthor the Mad,100,6500,0,0,369905,135,306,0,0,115,104,104,135,104,104,35,410,0,1112014848,100,0,true,false,0,30000,
+ArenaMobXP100,Arena experience monster (level 100),100,3259,0,0,22247,1,4,0,0,115,104,104,135,104,104,35,410,0,1112014848,100,0,true,false,0,30000,
+Bthastan,B'thastan,100,3259,0,9,14831,0,0,179,550,115,104,104,135,0,104,0,410,0,1078525952,100,0,true,false,0,30000,
+Centaur Archer,Archer centaure,100,1000,0,0,0,1,100,0,0,100,100,100,100,0,100,0,100,0,1079574528,-100,0,true,false,0,30000,
+Centaur King,Roi centaure,100,1000,0,0,0,1,100,0,0,100,100,100,100,0,100,0,100,0,1079574528,-100,0,true,false,0,30000,
+Centaur Shaman,Chaman centaure,100,1000,0,0,0,1,100,0,0,100,100,100,100,0,100,0,100,0,1079574528,-100,0,true,false,0,30000,
+Centaur Warrior,Guerrier centaure,100,1000,0,0,0,1,100,0,0,100,100,100,100,0,100,0,100,0,1079574528,-100,0,true,false,0,30000,
+DOPPELGANGER,Doppelganger,100,50000,0,0,0,1,5,0,0,115,104,104,135,104,104,35,0,0,0,100,0,true,false,0,30000,
+Dragon,Dark Fang,100,1000000,0,0,0,1,4,0,0,20,22,24,20,10000,21,22,65535,0,1232348160,-100,0,true,false,0,30000,
+FENRIR,Fenrir,100,6500,0,0,369905,135,306,0,0,115,104,104,135,104,104,35,410,0,1112014848,100,0,true,false,0,30000,
+Forest Guardian,Gardien de la forêt,100,3259,0,0,0,135,306,0,0,85,74,74,285,0,74,0,410,0,1078525952,-100,0,true,false,0,30000,Light healing potion:0.15
+JORMUNGAND,Jormung and,100,6500,0,0,369905,135,306,0,0,115,104,104,135,104,104,35,410,0,1112014848,100,0,true,false,0,30000,
+KAHPLETHGUARD11,monstre,100,32590,0,4,74158,135,306,179,550,115,104,104,135,104,104,35,410,0,1112014848,-100,0,true,false,0,30000,
+KAHPLETHGUARD2,A Skraug Guard,100,32590,0,4,74158,135,306,179,550,115,104,104,135,104,104,35,410,0,1112014848,-100,0,true,false,0,30000,
+KAHPLETHGUARD21,monstre,100,32590,0,4,74158,135,306,179,550,115,104,104,135,104,104,35,410,0,1112014848,-100,0,true,false,0,30000,
+Lich,Lich,100,10000,0,0,0,1,10,0,0,100,100,100,100,0,100,0,100,0,1079574528,0,0,true,false,0,30000,
+MOONTUGGUARD1,A Skraug Sentry,100,32590,0,4,74158,135,306,189,550,115,104,104,135,104,104,35,410,0,1112014848,-100,0,true,false,0,30000,
+MOONTUGGUARD11,monstre,100,32590,0,4,74158,135,306,189,550,115,104,104,135,104,104,35,410,0,1112014848,-100,0,true,false,0,30000,
+MOONTUGGUARD2,A Sentry,100,32590,0,4,74158,135,306,189,550,115,104,104,135,104,104,35,410,0,1112014848,-100,0,true,false,0,30000,
+MOONTUGGUARD21,monstre,100,32590,0,4,74158,135,306,189,550,115,104,104,135,104,104,35,410,0,1112014848,-100,0,true,false,0,30000,
+OLINHAAD3,Olin Haad,100,1000000,0,0,0,70,159,0,0,200,220,240,200,250,210,220,1,0,1176256512,-100,0,true,false,0,30000,
+Robin Hood,Robin des Bois,100,5000,0,1,1,20,46,1,1,100,100,100,100,0,100,0,100,0,1079574528,100,0,true,false,0,30000,
+Shadow Demon,Démon de l'ombre,100,3259,0,9,14831,135,306,179,550,115,104,104,135,0,104,0,410,0,1078525952,100,0,true,false,0,30000,Mana prism:0.01|Rough amethyst:0.02|Rough sapphire:0.004|Rough aquamarine:0.001
+Skeleton King,Roi Squelette,100,10000,0,0,0,1,10,0,0,100,100,100,100,0,100,0,100,0,1079574528,0,0,true,false,0,30000,
+Skeleton Servant 1,Serviteur squelette 1,100,10000,0,0,0,1,10,0,0,100,100,100,100,0,100,0,100,0,1079574528,0,0,true,false,0,30000,
+Skeleton Servant 2,Serviteur squelette 2,100,10000,0,0,0,1,10,0,0,100,100,100,100,0,100,0,100,0,1079574528,0,0,true,false,0,30000,
+Skraug Peon,Péon Skraug,100,1000,0,0,0,1,100,0,0,100,100,100,100,0,100,0,100,0,1079574528,-100,0,true,false,0,30000,
+Skraug Shaman,Chaman Skraug,100,1000,0,0,0,1,100,0,0,100,100,100,100,0,100,0,100,0,1079574528,-100,0,true,false,0,30000,
+Skraug Shaman 2,Chaman Skraug 2,100,1000,0,0,0,1,10,0,0,100,100,100,100,0,100,0,0,0,1076101120,0,0,true,false,0,30000,
+Skraug Skavenger,"Skraug, le skavenger",100,1000,0,0,0,1,100,0,0,100,100,100,100,0,100,0,100,0,1079574528,-100,0,true,false,0,30000,
+Skraug Warrior,Guerrier Skraug,100,1000,0,0,0,1,100,0,0,100,100,100,100,0,100,0,100,0,1079574528,-100,0,true,false,0,30000,
+Skraug peon 2,Skraug Péon 2,100,100,0,0,0,1,10,0,0,100,100,100,100,0,100,0,0,0,1072693248,0,0,true,false,0,30000,
+Skraug skavenger 2,Skraug Scavenger 2,100,1000,0,0,0,1,10,0,0,100,100,100,100,0,100,0,0,0,1076101120,0,0,true,false,0,30000,
+Skraug warrior 2,Guerrier Skraug 2,100,100,0,0,0,1,10,0,0,100,100,100,100,0,100,0,10,0,1076101120,0,0,true,false,0,30000,
+TimeElemental,Élémentaire du temps,100,100000,0,0,0,0,0,0,0,500,500,500,500,0,500,0,1000,0,1079574528,100,0,true,false,0,30000,
+VENADAR,A Frightening Beast,100,1879,0,0,0,85,194,0,0,85,77,77,99,77,77,29,290,0,1108082688,-100,0,true,false,0,30000,
+MOBNEOFLARE1,Ne of Lare,110,3797,0,47,90380,148,337,197,605,125,113,113,147,113,113,37,450,0,1113325568,100,0,true,false,0,30000,
+ArenaMobXP120,Arena experience monster (level 120),120,4373,0,0,32571,1,4,0,0,135,122,122,159,122,122,39,490,0,1114636288,100,0,true,false,0,30000,
+Bthonian,B'thonian,120,4373,0,9,21714,0,0,215,660,135,122,122,159,0,122,0,490,0,1078853632,100,0,true,false,0,30000,Shiny silver key:0.15
+Oracle Quickness Guardian,Élémentaire du temps,120,4373,0,9,21714,0,0,215,660,135,122,122,159,0,122,0,490,0,1078853632,100,0,true,false,0,30000,
+Bthurkhan,B'thurkhan,125,4677,0,10,23665,0,0,224,687,140,127,127,165,0,127,0,510,0,1078919168,100,0,true,false,0,30000,Solid gold key:0.15
+ORACLEGUARDIAN1B,A Timeless Guardian,125,4677,0,50,118327,169,383,224,687,140,127,127,165,127,127,40,510,0,1115160576,100,0,true,false,0,30000,
+ORACLEGUARDIAN1D,A Timeless Guardian,125,4677,0,50,118327,169,383,224,687,140,127,127,165,127,127,40,510,0,1115160576,100,0,true,false,0,30000,
+ORACLEGUARDIAN1E,A Timeless Guardian,125,4677,0,50,118327,169,383,224,687,140,127,127,165,127,127,40,510,0,1115160576,100,0,true,false,0,30000,
+Oracle Gate Guardian 1,Gardien éthéré,125,4677,0,10,23665,0,0,224,687,140,127,127,165,0,127,0,510,0,1078919168,100,0,true,false,0,30000,
+Oracle Gate Guardian 2,Gardien éthéré,125,4677,0,10,23665,0,0,224,687,140,127,127,165,0,127,0,510,0,1078919168,100,0,true,false,0,30000,
+ArenaMobXP130,Arena experience monster (level 130),130,4988,0,0,38537,1,4,0,0,145,131,131,171,131,131,41,530,0,1115815936,100,0,true,false,0,30000,
+ORACLEVULNERABLEGUARDIAN,Oracle Gatekeeper,130,4988,0,51,128457,125,348,233,715,145,131,131,171,131,131,41,780,0,1115815936,100,0,true,false,0,30000,
+Oracle Invulnerable Guardian,Gardien d'accès Oracle,130,498800,0,0,0,125,348,0,0,145,131,131,171,0,131,0,780,0,1090021872,100,0,true,false,0,30000,
+ArenaMobXP140,Arena experience monster (level 140),140,5641,0,0,45172,1,4,0,0,155,140,140,183,140,140,43,570,0,1116471296,100,0,true,false,0,30000,
+Time Guardian,Gardien du temps,140,5641,0,10,30115,149,389,251,770,155,140,140,183,0,140,0,570,0,1079083008,100,0,true,false,0,30000,
+Undead Sentinel,Une sentinelle morte-vivante,140,5641,0,10,30115,189,429,251,770,155,140,140,183,0,140,0,570,0,1079083008,100,0,true,false,0,30000,
+ArenaMobXP150,Arena experience monster (level 150),150,6334,0,0,52432,1,4,0,0,165,149,149,195,149,149,45,610,0,1117126656,100,0,true,false,0,30000,
+GABRIELARCHONIS,Gabriel Archonis,150,10000000,0,0,0,1,5,0,0,165,149,149,195,149,149,45,0,0,1176255488,-100,0,true,false,0,30000,
+GAENENELTHORN,Gaenen Elthorn,150,10000000,0,0,0,1,5,0,0,165,149,149,195,149,149,45,0,0,1176255488,-100,0,true,false,0,30000,
+HARVESTEROFLIFE,Harvester of Life,150,12700,0,0,174770,203,460,0,0,165,149,149,195,149,149,45,610,0,1117126656,100,0,true,false,0,30000,
+MAKRSHPTANGHSPAWNER,An Undead Guardian,150,6334,0,15,45000,203,460,269,825,165,149,149,195,149,149,45,610,0,1117126656,100,0,true,false,0,30000,
+MOBYOGGOTHWORM1,Yoggoth Worm,150,1497,0,32,24348,70,159,107,330,75,68,68,87,68,68,27,250,0,1106247680,50,0,true,false,0,30000,
+SKRAUGBIGWORVIKTOR,Skraug Bigworviktor,150,2301,0,40,47045,108,245,143,440,95,86,86,111,86,86,31,330,0,1109393408,100,0,true,false,0,30000,
+SKRAUGBLUDFIGHTOR,Skraug Bludfightor,150,1801,0,35,31845,82,187,122,374,83,76,76,96,76,76,28,282,0,1107820544,100,0,true,false,0,30000,
+SKRAUGMADLIMBMANGLOR,Skraug Madlimbmanglor,150,2044,0,37,38173,91,208,133,407,89,81,81,103,81,81,29,306,0,1108606976,100,0,true,false,0,30000,
+SKRAUGMUNCHHUNTOR,Skraug Munchhuntor,150,966,0,26,12870,48,109,89,242,59,54,54,67,54,54,23,186,0,1102053376,100,0,true,false,0,30000,
+SKRAUGPROTEKTERRITOR,Skraug Protekterritor,150,1426,0,31,22704,67,153,104,319,73,67,67,84,67,67,26,242,0,1105723392,100,0,true,false,0,30000,
+SKRAUGTOTEMHERBDOKTOR,Skraug Totemherbdoktor,150,2086,0,37,39279,93,211,134,412,90,82,82,105,82,82,30,310,0,1108606976,100,0,true,false,0,30000,
+Time Protector,Protecteur de temps,150,6334,0,11,34954,0,0,269,825,165,149,149,195,0,149,0,610,0,1079164928,100,0,true,false,0,30000,Bracer of leaves:0.05
+Undead Guardian,Un gardien mort-vivant,150,6334,0,11,34955,203,460,269,825,165,149,149,195,0,149,0,610,0,1079164928,100,0,true,false,0,30000,
+ArenaMobXP160,Arena experience monster (level 160),160,7065,0,0,63251,1,4,0,0,175,158,158,207,158,158,47,650,0,1117782016,100,0,true,false,0,30000,
+ArenaMobXP170,Arena experience monster (level 170),170,7834,0,0,106624,1,4,0,0,185,167,167,219,167,167,49,690,0,1118437376,100,0,true,false,0,30000,
+ArenaMobXP180,Arena experience monster (level 180),180,8643,0,0,159844,1,4,0,0,195,176,176,231,176,176,51,730,0,1119092736,100,0,true,false,0,30000,
+ArenaMobXP190,Arena experience monster (level 190),190,9490,0,0,224009,1,4,0,0,205,185,185,243,185,185,53,770,0,1119748096,100,0,true,false,0,30000,
+ArenaMobXP200,Arena experience monster (level 200),200,10375,0,0,300213,1,4,0,0,215,194,194,255,194,194,55,810,0,1120403456,100,0,true,false,0,30000,
+EXITGATE,An Exit Gate,200,1000000,0,0,0,1,4,0,0,500,500,500,500,500,500,500,65535,0,1232348160,-100,0,true,false,0,30000,
+MakrshPtangh2,Makrsh P'Tangh,200,52500,0,50,200000,1,10,400,1500,215,194,194,255,200,200,55,890,0,100,100,0,true,false,0,30000,item.black_locust_composite_bow_3:0.03|item.ancient_two_handed_sword_3:0.01|item.ancient_broad_axe_3:0.01|item.ancient_morningstar_3:0.01|item.shield_of_the_ages:0.02|item.ancient_platemail_armor:0.01|item.ancient_plate_protector:0.04|item.ancient_platemail_gauntlets:0.05|item.ancient_platemail_helmet:0.02|item.ancient_platemail_leggings:0.04|item.ancient_platemail_boots:0.05
+ArenaMobXP225,Arena experience monster (level 225),225,12761,0,0,551278,1,4,0,0,240,217,217,285,217,217,60,910,0,1121976320,100,0,true,false,0,30000,
+Lesser Drake,Petit Drake,250,15385,0,0,0,1,10,449,1375,265,239,239,315,0,239,0,1010,0,1079984128,50,0,true,false,0,30000,
+ArenaMobXP300,Arena experience monster (level 300),300,21361,0,0,1996275,1,4,0,0,315,284,284,375,284,284,75,1210,0,1125515264,100,0,true,false,0,30000,
+ArenaMobXP325,Arena experience monster (level 325),325,24716,0,0,2781103,1,4,0,0,340,307,307,405,307,307,80,1310,0,1126301696,100,0,true,false,0,30000,
+ArenaMobXP350,Arena experience monster (level 350),350,28306,0,0,3757615,1,4,0,0,365,329,329,435,329,329,85,1410,0,1127153664,100,0,true,false,0,30000,
+ArenaMobXP375,Arena experience monster (level 375),375,32144,0,0,4953688,1,4,0,0,390,352,352,465,352,352,90,1510,0,1127940096,100,0,true,false,0,30000,
+ArenaMobXP400,Arena experience monster (level 400),400,36217,0,0,6396077,1,4,0,0,415,374,374,495,374,374,95,1610,0,1128792064,100,0,true,false,0,30000,
+ArenaMobXP425,Arena experience monster (level 425),425,40540,0,0,8113191,1,4,0,0,440,397,397,525,397,397,100,1710,0,1129578496,100,0,true,false,0,30000,
+ArenaMobXP450,Arena experience monster (level 450),450,45097,0,0,10138310,1,4,0,0,465,419,419,555,419,419,105,1810,0,1130430464,100,0,true,false,0,30000,
+ArenaMobXP475,Arena experience monster (level 475),475,49903,0,0,12501070,1,4,0,0,490,442,442,585,442,442,110,1910,0,1131216896,100,0,true,false,0,30000,
+ArenaMobXP500,Arena experience monster (level 500),500,54943,0,0,15236180,1,4,0,0,515,464,464,615,464,464,115,2010,0,1132068864,100,0,true,false,0,30000,
+Greater Drake,Grand Drake,500,54943,0,0,0,676,1533,899,2750,515,464,464,615,0,464,0,2010,0,1081032704,50,0,true,false,0,30000,
+Arch Drake,Arch Drake,1000,206623,0,0,0,1353,3067,1799,5500,1015,914,914,1215,0,914,0,4010,0,1082081280,50,0,true,false,0,30000,
+Test Skeleton Centaur,Test du Centaure Squelette,1000,500,0,1,1,11,20,1,1,100,100,100,100,0,100,0,10,0,1076101120,100,0,true,false,0,30000,

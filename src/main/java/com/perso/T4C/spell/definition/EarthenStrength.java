@@ -25,7 +25,7 @@ public final class EarthenStrength {
         "Healing.wav",
         "Rocks Fly.wav",
         0,
-        "300000",
+        "1200000",
         "0",
         26329,
         null,

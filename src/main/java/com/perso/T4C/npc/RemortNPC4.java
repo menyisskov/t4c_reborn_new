@@ -89,18 +89,41 @@ public final class RemortNPC4 extends ScriptedNpc {
       @Override
       public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
-        c.sayKey(
-            c.flag("__FLAG_REMORT_PROCESS") == 0
-                ? "npc.remort.del aan.need_alphan"
-                : c.flag("__FLAG_REMORT_POINTS") > 0
-                    ? "npc.remort.del aan.welcome"
-                    : "npc.remort.del aan.empty");
+        if (c.flag("__FLAG_REMORT_PROCESS") == 0) c.sayKey("npc.remort.del aan.need_alphan");
+        else if (c.flag("__FLAG_REMORT_POINTS") > 0)
+          c.sayKey("npc.remort.del aan.welcome", c.flag("__FLAG_REMORT_POINTS"));
+        else c.sayKey("npc.remort.del aan.empty");
+      }
+
+      private static final int COST = 2;
+
+      private void spendBulk(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String e, int budget) {
+
+        int purchased = 0, spent = 0;
+
+        while (spent + COST <= budget && c.flag("__FLAG_REMORT_POINTS") >= COST) {
+
+          c.flag("__FLAG_REMORT_POINTS", c.flag("__FLAG_REMORT_POINTS") - COST);
+
+          c.player().setBaseElementResistance(e, c.player().getElementResistance(e) + 10);
+
+          spent += COST;
+
+          purchased++;
+        }
+
+        if (purchased == 0) c.sayKey("npc.remort.del aan.not_enough");
+        else
+          c.sayKey(
+              "npc.remort.del aan.bulk_done", purchased, spent, c.flag("__FLAG_REMORT_POINTS"));
       }
 
       @Override
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
-        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+        String raw = text == null ? "" : text.trim();
+
+        String k = raw.toUpperCase(java.util.Locale.ROOT);
 
         if (k.contains("RESISTANCE")) {
 
@@ -109,16 +132,37 @@ public final class RemortNPC4 extends ScriptedNpc {
           return true;
         }
 
+        String[] parts = raw.split("\\s+", 2);
+
+        String word = parts[0].toUpperCase(java.util.Locale.ROOT);
+
+        Integer budget = null;
+
+        if (parts.length > 1) {
+
+          try {
+            budget = Integer.parseInt(parts[1].trim());
+          } catch (NumberFormatException ignored) {
+          }
+        }
+
         String e =
-            k.equals("FIRE")
+            word.equals("FIRE")
                 ? "fire"
-                : k.equals("WATER")
+                : word.equals("WATER")
                     ? "water"
-                    : k.equals("AIR")
+                    : word.equals("AIR")
                         ? "air"
-                        : k.equals("EARTH") ? "earth" : k.equals("DARK") ? "dark" : null;
+                        : word.equals("EARTH") ? "earth" : word.equals("DARK") ? "dark" : null;
 
         if (e != null) {
+
+          if (budget != null && budget > 0) {
+
+            spendBulk(c, e, budget);
+
+            return true;
+          }
 
           c.sayKey("npc.remort.del aan.cost");
 
@@ -140,18 +184,18 @@ public final class RemortNPC4 extends ScriptedNpc {
 
         String e = s.substring(7);
 
-        if (c.flag("__FLAG_REMORT_POINTS") < 2) {
+        if (c.flag("__FLAG_REMORT_POINTS") < COST) {
 
           c.sayKey("npc.remort.del aan.not_enough");
 
           return true;
         }
 
-        c.flag("__FLAG_REMORT_POINTS", c.flag("__FLAG_REMORT_POINTS") - 2);
+        c.flag("__FLAG_REMORT_POINTS", c.flag("__FLAG_REMORT_POINTS") - COST);
 
         c.player().setBaseElementResistance(e, c.player().getElementResistance(e) + 10);
 
-        c.sayKey("npc.remort.del aan.done");
+        c.sayKey("npc.remort.del aan.done", c.flag("__FLAG_REMORT_POINTS"));
 
         return true;
       }

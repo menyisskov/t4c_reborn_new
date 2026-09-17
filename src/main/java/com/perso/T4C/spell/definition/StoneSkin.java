@@ -25,7 +25,7 @@ public final class StoneSkin {
         "Rocks Fly.wav",
         null,
         0,
-        "300000",
+        "1200000",
         "0",
         59326,
         null,

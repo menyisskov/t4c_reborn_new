@@ -167,8 +167,7 @@ public final class InventoryService {
   private static boolean conflictsWithEquippedWeapon(Player player, ItemDefinition candidate) {
     ItemDefinition mainHand =
         ItemRegistry.findByKey(player.getEquippedItems().get(BodyPart.WEAPON));
-    boolean candidateIsQuiver = candidate.getBodyPart() == BodyPart.WEAPON2;
-    if (candidateIsQuiver && mainHand != null && !mainHand.isBow()) {
+    if (isQuiver(candidate) && mainHand != null && !mainHand.isBow()) {
       return true;
     }
     if (candidate.getBodyPart() != BodyPart.WEAPON || candidate.isBow()) {
@@ -176,7 +175,12 @@ public final class InventoryService {
     }
     ItemDefinition offHand =
         ItemRegistry.findByKey(player.getEquippedItems().get(BodyPart.WEAPON2));
-    return offHand != null && offHand.getBodyPart() == BodyPart.WEAPON2;
+    return offHand != null && isQuiver(offHand);
+  }
+
+  private static boolean isQuiver(ItemDefinition item) {
+    String key = item.getKey();
+    return key != null && (key.contains("quiver") || key.contains("arrow"));
   }
 
   public static Result unequip(Player player, BodyPart slot) {

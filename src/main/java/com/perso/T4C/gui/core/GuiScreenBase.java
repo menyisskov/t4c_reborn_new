@@ -292,4 +292,8 @@ public abstract class GuiScreenBase {
   public boolean onKeyDown(int keycode) {
     return false;
   }
+
+  public boolean onKeyTyped(char character) {
+    return false;
+  }
 }

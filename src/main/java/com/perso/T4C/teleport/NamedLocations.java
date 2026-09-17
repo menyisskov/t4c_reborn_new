@@ -15,8 +15,12 @@ public final class NamedLocations {
         new NamedLocation("Lighthaven", 2941, 1062, 0),
         new NamedLocation("Silversky", 1495, 2470, 0),
         new NamedLocation("Windhowl", 1812, 1293, 0),
-        new NamedLocation("Colosseum", 1730, 1830, 0),
+        new NamedLocation("Colosseum", 1725, 1825, 0),
         new NamedLocation("Home", 2951, 1038, 0),
-        new NamedLocation("Makrsh Ptangh", 2265, 295, 1));
+        new NamedLocation("Makrsh Ptangh", 2265, 295, 1),
+        new NamedLocation("Stonecrest", 144, 737, 0),
+        new NamedLocation("Tarantula Pond", 773, 1831, 0),
+        new NamedLocation("Skraug Camp", 601, 172, 0),
+        new NamedLocation("The Oracle", 2968, 2141, 2));
   }
 }

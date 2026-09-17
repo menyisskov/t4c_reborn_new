@@ -506,9 +506,11 @@ public class MonsterManager {
               entry.z);
           continue;
         }
-        pendingSpawns.add(
-            new PendingSpawn(def, entry.x, entry.y, entry.stationary, entry.aggressive));
-        queued++;
+        for (int i = 0; i < com.perso.T4C.config.GameConstants.SPAWN_COUNT_MULTIPLIER; i++) {
+          pendingSpawns.add(
+              new PendingSpawn(def, entry.x, entry.y, entry.stationary, entry.aggressive));
+          queued++;
+        }
       }
       log.info("Queued {} monster spawn(s) from {}", queued, source.path());
     } catch (Exception e) {

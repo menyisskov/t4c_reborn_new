@@ -34,6 +34,31 @@ class ColosseumClerkTest {
   }
 
   @Test
+  void fightWithLevelSetsSnappedDifficultyAndAsksToFight() throws Exception {
+    ColosseumClerk clerk = new ColosseumClerk(new NpcContext(null));
+    NpcBehavior behavior = clerk.publicBehavior();
+    Player player = new Player();
+    NpcBehaviorContext context = new NpcBehaviorContext(clerk, player);
+
+    assertTrue(behavior.onKeyword(context, "fight 500"));
+    assertEquals(500, context.flag("__FLAG_USER_LEVEL_SLICE"));
+    assertEquals(500, context.flag("__FLAG_ARENA_LEVEL"));
+    assertEquals(1, context.flag("__FLAG_USER_HAS_CHANGED_DIFFICULTY_LEVEL"));
+  }
+
+  @Test
+  void fightWithLevelAndOpponentsSetsBoth() throws Exception {
+    ColosseumClerk clerk = new ColosseumClerk(new NpcContext(null));
+    NpcBehavior behavior = clerk.publicBehavior();
+    Player player = new Player();
+    NpcBehaviorContext context = new NpcBehaviorContext(clerk, player);
+
+    assertTrue(behavior.onKeyword(context, "fight 500 3"));
+    assertEquals(500, context.flag("__FLAG_ARENA_LEVEL"));
+    assertEquals(3, context.flag("__ARENA_OPPONENTS"));
+  }
+
+  @Test
   void clerkRefusesCommandsWhileAnArenaMonsterRemains() throws Exception {
     ColosseumClerk clerk = new ColosseumClerk(new NpcContext(null));
     NpcBehavior behavior = clerk.publicBehavior();

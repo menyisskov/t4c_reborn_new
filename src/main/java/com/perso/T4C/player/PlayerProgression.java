@@ -18,6 +18,7 @@ public final class PlayerProgression {
     if (player == null || amount <= 0) {
       return;
     }
+    amount = Math.round(amount * com.perso.T4C.config.GameConstants.SERVER_XP_RATE);
     if (applyMultiplier) {
       amount = Math.round(amount * (1f + player.getBuffXpMultiplier()));
     }

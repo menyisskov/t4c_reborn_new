@@ -5,11 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.perso.T4C.audio.SoundManager;
+import com.perso.T4C.config.GamePreferencesStore;
+import com.perso.T4C.config.MacroBinding;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.core.GuiScreenBase;
+import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.gui.widget.GuiAnimatedSprite;
 import com.perso.T4C.gui.widget.GuiBoxedText;
+import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiText;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
@@ -63,6 +67,11 @@ public class SpellBook extends GuiScreenBase {
   private final PlayerHUD hud;
   private final List<GuiText> pageLabels = new ArrayList<>();
   private final List<GuiAnimatedSprite> pageSprites = new ArrayList<>();
+  private final List<GuiButton> pageButtons = new ArrayList<>();
+  private static final float MACRO_BTN_DX = 195f;
+  private static final float MACRO_BTN_DY = -2f;
+  private static final float MACRO_BTN_W = 20f;
+  private static final float MACRO_BTN_H = 16f;
   private final List<SpellBookEntry> spells = new ArrayList<>();
   private int currentPage = 0;
   private SpellBookEntry draggedSpell;
@@ -165,6 +174,10 @@ public class SpellBook extends GuiScreenBase {
     if (!pageSprites.isEmpty()) {
       animatedSprites.removeAll(pageSprites);
       pageSprites.clear();
+    }
+    if (!pageButtons.isEmpty()) {
+      buttons.removeAll(pageButtons);
+      pageButtons.clear();
     }
     int start = currentPage * 4;
     for (int i = 0; i < 4; i++) {
@@ -289,6 +302,43 @@ public class SpellBook extends GuiScreenBase {
         LINE_H,
         () -> level,
         GuiBoxedText.Align.LEFT);
+    addMacroToggleButton(entry, slotX, slotY + topY);
+  }
+
+  private void addMacroToggleButton(SpellBookEntry entry, float slotX, float topY) {
+    var normal = GuiSprites.load("GUI_ButtonUp");
+    var hover = GuiSprites.load("GUI_ButtonHUp");
+    var pressed = GuiSprites.load("GUI_ButtonDown");
+    if (normal == null || hover == null || pressed == null) {
+      return;
+    }
+    String spellName = entry.quickSlotSpellName;
+    var font = FontManager.getInstance().getTahomaFont(12, Color.BLACK, true);
+    GuiButton button =
+        new GuiButton(
+                normal,
+                hover,
+                pressed,
+                slotX + MACRO_BTN_DX,
+                topY + NAME_DY + MACRO_BTN_DY,
+                () -> toggleMacro(spellName))
+            .setSize(MACRO_BTN_W, MACRO_BTN_H)
+            .withLabel(font, () -> isMacro(spellName) ? "-" : "+");
+    buttons.add(button);
+    pageButtons.add(button);
+  }
+
+  private boolean isMacro(String spellName) {
+    return GamePreferencesStore.get().getMacros().stream()
+        .anyMatch(m -> spellName.equals(m.getSpellName()));
+  }
+
+  private void toggleMacro(String spellName) {
+    List<MacroBinding> macros = GamePreferencesStore.get().getMacros();
+    if (!macros.removeIf(m -> spellName.equals(m.getSpellName()))) {
+      macros.add(new MacroBinding(spellName, MacroBinding.UNBOUND, 0));
+    }
+    GamePreferencesStore.save();
   }
 
   private void addPageBox(

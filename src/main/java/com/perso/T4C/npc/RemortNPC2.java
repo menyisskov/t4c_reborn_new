@@ -91,14 +91,78 @@ public final class RemortNPC2 extends ScriptedNpc {
       public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
         if (c.flag("__FLAG_REMORT_PROCESS") == 0) c.sayKey("npc.remort.betran.need_alphan");
-        else if (c.flag("__FLAG_REMORT_POINTS") > 0) c.sayKey("npc.remort.betran.welcome");
+        else if (c.flag("__FLAG_REMORT_POINTS") > 0)
+          c.sayKey("npc.remort.betran.welcome", c.flag("__FLAG_REMORT_POINTS"));
         else c.sayKey("npc.remort.betran.empty");
+      }
+
+      private int currentValue(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String a) {
+
+        return switch (a) {
+          case "strength" -> c.player().getStrength();
+
+          case "agility" -> c.player().getDexterity();
+
+          case "endurance" -> c.player().getEndurance();
+
+          case "intelligence" -> c.player().getIntelligence();
+
+          default -> c.player().getWisdom();
+        };
+      }
+
+      private void setValue(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String a, int v) {
+
+        if (a.equals("strength")) c.player().setStrength(v);
+        else if (a.equals("agility")) c.player().setDexterity(v);
+        else if (a.equals("endurance")) c.player().setEndurance(v);
+        else if (a.equals("intelligence")) c.player().setIntelligence(v);
+        else c.player().setWisdom(v);
+      }
+
+      private int costFor(int delta) {
+
+        return delta == 0 ? 1 : delta <= 3 ? 2 : delta <= 6 ? 3 : delta == 7 ? 4 : 5;
+      }
+
+      private void spendBulk(
+          com.perso.T4C.npc.behavior.NpcBehaviorContext c, String a, int budget) {
+
+        int purchased = 0, spent = 0;
+
+        while (spent < budget) {
+
+          int current = currentValue(c, a);
+
+          int delta = current - (20 + c.flag("__FLAG_NUMBER_OF_REMORTS") * 5);
+
+          if (delta > 9) break;
+
+          int cost = costFor(delta);
+
+          if (spent + cost > budget || c.flag("__FLAG_REMORT_POINTS") < cost) break;
+
+          c.flag("__FLAG_REMORT_POINTS", c.flag("__FLAG_REMORT_POINTS") - cost);
+
+          setValue(c, a, current + 1);
+
+          spent += cost;
+
+          purchased++;
+        }
+
+        if (purchased == 0) c.sayKey("npc.remort.betran.not_enough");
+        else
+          c.sayKey(
+              "npc.remort.betran.bulk_done", purchased, spent, c.flag("__FLAG_REMORT_POINTS"));
       }
 
       @Override
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
-        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+        String raw = text == null ? "" : text.trim();
+
+        String k = raw.toUpperCase(java.util.Locale.ROOT);
 
         if (k.contains("ATTRIBUTE") || k.equals("STAT")) {
 
@@ -110,38 +174,48 @@ public final class RemortNPC2 extends ScriptedNpc {
           return true;
         }
 
+        String[] parts = raw.split("\\s+", 2);
+
+        String word = parts[0].toUpperCase(java.util.Locale.ROOT);
+
+        Integer budget = null;
+
+        if (parts.length > 1) {
+
+          try {
+            budget = Integer.parseInt(parts[1].trim());
+          } catch (NumberFormatException ignored) {
+          }
+        }
+
         String a =
-            k.equals("STRENGTH")
+            word.equals("STRENGTH")
                 ? "strength"
-                : k.equals("AGILITY")
+                : word.equals("AGILITY")
                     ? "agility"
-                    : k.equals("ENDURANCE")
+                    : word.equals("ENDURANCE")
                         ? "endurance"
-                        : k.equals("INTELLIGENCE")
+                        : word.equals("INTELLIGENCE")
                             ? "intelligence"
-                            : k.equals("WISDOM") ? "wisdom" : null;
+                            : word.equals("WISDOM") ? "wisdom" : null;
 
         if (a != null) {
 
-          int current =
-              switch (a) {
-                case "strength" -> c.player().getStrength();
+          if (budget != null && budget > 0) {
 
-                case "agility" -> c.player().getDexterity();
+            spendBulk(c, a, budget);
 
-                case "endurance" -> c.player().getEndurance();
+            return true;
+          }
 
-                case "intelligence" -> c.player().getIntelligence();
-
-                default -> c.player().getWisdom();
-              };
+          int current = currentValue(c, a);
 
           int delta = current - (20 + c.flag("__FLAG_NUMBER_OF_REMORTS") * 5);
 
           if (delta > 9) c.sayKey("npc.remort.betran.cap");
           else {
 
-            int cost = delta == 0 ? 1 : delta <= 3 ? 2 : delta <= 6 ? 3 : delta == 7 ? 4 : 5;
+            int cost = costFor(delta);
 
             c.sayKey("npc.remort.betran.cost", cost);
 
@@ -164,21 +238,10 @@ public final class RemortNPC2 extends ScriptedNpc {
 
         String a = s.substring(7);
 
-        int current =
-            switch (a) {
-              case "strength" -> c.player().getStrength();
-
-              case "agility" -> c.player().getDexterity();
-
-              case "endurance" -> c.player().getEndurance();
-
-              case "intelligence" -> c.player().getIntelligence();
-
-              default -> c.player().getWisdom();
-            };
+        int current = currentValue(c, a);
 
         int delta = current - (20 + c.flag("__FLAG_NUMBER_OF_REMORTS") * 5),
-            cost = delta == 0 ? 1 : delta <= 3 ? 2 : delta <= 6 ? 3 : delta == 7 ? 4 : 5;
+            cost = costFor(delta);
 
         if (delta > 9 || c.flag("__FLAG_REMORT_POINTS") < cost) {
 
@@ -189,13 +252,9 @@ public final class RemortNPC2 extends ScriptedNpc {
 
         c.flag("__FLAG_REMORT_POINTS", c.flag("__FLAG_REMORT_POINTS") - cost);
 
-        if (a.equals("strength")) c.player().setStrength(current + 1);
-        else if (a.equals("agility")) c.player().setDexterity(current + 1);
-        else if (a.equals("endurance")) c.player().setEndurance(current + 1);
-        else if (a.equals("intelligence")) c.player().setIntelligence(current + 1);
-        else c.player().setWisdom(current + 1);
+        setValue(c, a, current + 1);
 
-        c.sayKey("npc.remort.betran.done");
+        c.sayKey("npc.remort.betran.done", c.flag("__FLAG_REMORT_POINTS"));
 
         return true;
       }

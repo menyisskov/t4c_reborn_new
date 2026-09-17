@@ -25,7 +25,7 @@ public final class ManaSurge {
         "Healing.wav",
         "Mind Shield.wav",
         0,
-        "180000",
+        "1200000",
         "0",
         107028,
         null,

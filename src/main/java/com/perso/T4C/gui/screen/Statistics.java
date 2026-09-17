@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.perso.T4C.combat.ArmorClassRules;
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.gui.core.GuiClickZone;
 import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.core.GuiScreenBase;
 import com.perso.T4C.gui.core.GuiSprites;
@@ -33,6 +34,7 @@ public class Statistics extends GuiScreenBase {
   private final Map<String, Integer> pendingAllocations = new LinkedHashMap<>();
   private final Map<String, GuiButton> statUpButtons = new LinkedHashMap<>();
   private final Map<String, GuiButton> statDownButtons = new LinkedHashMap<>();
+  private final List<GuiClickZone> tabZones = new ArrayList<>();
   private GuiButton applyButton;
 
   public Statistics(Player player) {
@@ -44,8 +46,40 @@ public class Statistics extends GuiScreenBase {
     }
     centerOnScreen();
     addCloseButton();
+    addTabs();
     addStatLabels();
     addStatPointButtons();
+  }
+
+  private void addTabs() {
+    if (background == null || player == null) return;
+    var white = Color.WHITE;
+    var gold = Color.valueOf("F2B705");
+    var activeTabFont = FontManager.getInstance().getJetBrainsMonoFont(12, gold);
+    var tabFont = FontManager.getInstance().getJetBrainsMonoFont(12, white);
+    labels.add(
+        new GuiText(activeTabFont, x + 10f, y + 15f, () -> "[ " + I18n.key("ui.character_sheet") + " ]"));
+    labels.add(
+        new GuiText(
+            tabFont, x + 150f, y + 15f, () -> "[ " + I18n.key("ui.elemental_stats") + " ]"));
+    tabZones.add(
+        new GuiClickZone(
+            x + 150f,
+            y + 5f,
+            130f,
+            16f,
+            () -> GuiManager.open(new com.perso.T4C.gui.screen.ElementalStats(player))));
+  }
+
+  @Override
+  public void onTouchUp(float screenX, float screenY) {
+    for (GuiClickZone zone : new ArrayList<>(tabZones)) {
+      if (zone.contains(screenX, screenY)) {
+        zone.run();
+        return;
+      }
+    }
+    super.onTouchUp(screenX, screenY);
   }
 
   private void addCloseButton() {

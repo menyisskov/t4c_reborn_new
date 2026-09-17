@@ -53,6 +53,11 @@ public final class GamePreferencesStore {
     if (value.getChatLogFilename() == null || value.getChatLogFilename().isBlank()) {
       value.setChatLogFilename("t4c-chat.log");
     }
+    if (value.getMacros() == null) {
+      value.setMacros(new java.util.ArrayList<>());
+    } else {
+      value.getMacros().removeIf(m -> m == null || m.getSpellName() == null || m.getSpellName().isBlank());
+    }
     return value;
   }
 

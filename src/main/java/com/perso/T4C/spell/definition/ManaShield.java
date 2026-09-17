@@ -25,7 +25,7 @@ public final class ManaShield {
         "Healing.wav",
         "Mind Shield.wav",
         0,
-        "120000",
+        "1200000",
         "0",
         39246,
         null,

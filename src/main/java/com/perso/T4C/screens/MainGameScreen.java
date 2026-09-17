@@ -1502,6 +1502,38 @@ public class MainGameScreen implements Screen {
     castDefensiveSpell(spell);
   }
 
+  private boolean tryFireMacro(int keycode) {
+    int heldModifiers = 0;
+    if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+        || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) {
+      heldModifiers |= com.perso.T4C.config.MacroBinding.MOD_CTRL;
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+        || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+      heldModifiers |= com.perso.T4C.config.MacroBinding.MOD_SHIFT;
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)
+        || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)) {
+      heldModifiers |= com.perso.T4C.config.MacroBinding.MOD_ALT;
+    }
+    for (com.perso.T4C.config.MacroBinding macro : GamePreferencesStore.get().getMacros()) {
+      if (macro.getKeycode() != keycode || macro.getModifiers() != heldModifiers) {
+        continue;
+      }
+      SpellData spell = SpellRegistry.findByName(macro.getSpellName());
+      if (spell == null
+          || player.getSpells() == null
+          || !player.getSpells().contains(macro.getSpellName())) {
+        showSystemMessage(
+            I18n.message("message.macro_spell_unknown", I18n.resolve(macro.getSpellName())));
+        return true;
+      }
+      handleQuickbarSpell(spell, -1);
+      return true;
+    }
+    return false;
+  }
+
   private void handleQuickbarItem(String itemName, int slotNumber) {
     com.perso.T4C.item.ItemUseService.Result result =
         com.perso.T4C.item.ItemUseService.useOnSelf(
@@ -3995,6 +4027,17 @@ public class MainGameScreen implements Screen {
               targetNearestMonster();
               return true;
             }
+            if (keycode == Input.Keys.M
+                && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                    || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+                && !GuiManager.isOpen()
+                && !isTextInputActive()) {
+              GuiManager.open(new com.perso.T4C.gui.screen.MacrosScreen());
+              return true;
+            }
+            if (!GuiManager.isOpen() && !isTextInputActive() && tryFireMacro(keycode)) {
+              return true;
+            }
             if (keycode == Input.Keys.ESCAPE
                 && (currentAttackTarget != null
                     || selectedMonster != null
@@ -4023,6 +4066,14 @@ public class MainGameScreen implements Screen {
             if (keycode == Input.Keys.F11) {
               boolean fullscreen = DisplayModeToggle.toggle();
               showSystemMessage(DisplayModeToggle.message(fullscreen));
+              return true;
+            }
+            return false;
+          }
+
+          @Override
+          public boolean keyTyped(char character) {
+            if (GuiManager.isOpen() && GuiManager.onKeyTyped(character)) {
               return true;
             }
             return false;

@@ -17,6 +17,7 @@ import com.perso.T4C.ui.FontManager;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -25,6 +26,7 @@ public class GuiInventory extends AbstractGuiElement {
   private static final float CELL_PADDING = 4f;
   private static final float RESIZE_HANDLE_SIZE = 10f;
   private final Player player;
+  private final Supplier<List<String>> itemsSupplier;
   private float width;
   private float height;
   private float scrollOffset;
@@ -43,8 +45,23 @@ public class GuiInventory extends AbstractGuiElement {
   }
 
   public GuiInventory(Player player, float x, float y, float width, float height) {
+    this(player, player == null ? List::of : player::getInventory, x, y, width, height);
+  }
+
+  public GuiInventory(Supplier<List<String>> itemsSupplier, float x, float y, float width, float height) {
+    this(null, itemsSupplier, x, y, width, height);
+  }
+
+  private GuiInventory(
+      Player player,
+      Supplier<List<String>> itemsSupplier,
+      float x,
+      float y,
+      float width,
+      float height) {
     super(x, y);
     this.player = player;
+    this.itemsSupplier = itemsSupplier;
     this.width = width;
     this.height = height;
     this.durabilityFont = FontManager.getInstance().getJetBrainsMonoFont(10, Color.WHITE);
@@ -56,10 +73,7 @@ public class GuiInventory extends AbstractGuiElement {
   }
 
   public ItemHit hitTest(float screenX, float screenY) {
-    if (player == null) {
-      return null;
-    }
-    List<String> items = player.getInventory();
+    List<String> items = itemsSupplier.get();
     if (items == null || items.isEmpty()) {
       return null;
     }
@@ -151,10 +165,7 @@ public class GuiInventory extends AbstractGuiElement {
   }
 
   private void drawItems(SpriteBatch batch) {
-    if (player == null) {
-      return;
-    }
-    List<String> items = player.getInventory();
+    List<String> items = itemsSupplier.get();
     if (items == null || items.isEmpty()) {
       return;
     }
@@ -185,7 +196,7 @@ public class GuiInventory extends AbstractGuiElement {
       } else {
         GuiDraw.drawRegionFlipped(batch, region, cursorX, cursorY, w, h);
         ItemDefinition definition = ItemDefinition.get(itemName);
-        if (ItemDurabilityService.isRepairable(definition)) {
+        if (player != null && ItemDurabilityService.isRepairable(definition)) {
           double durability = ItemDurabilityService.inventory(player, stack.firstIndex);
           durabilityFont.setColor(
               durability >= 50 ? Color.GREEN : durability >= 25 ? Color.ORANGE : Color.RED);
@@ -218,7 +229,8 @@ public class GuiInventory extends AbstractGuiElement {
   }
 
   private float getContentHeight() {
-    if (player == null || player.getInventory() == null) {
+    List<String> items = itemsSupplier.get();
+    if (items == null) {
       return 0f;
     }
     float innerW = width - 2f * PADDING;
@@ -228,7 +240,7 @@ public class GuiInventory extends AbstractGuiElement {
     float cursorX = 0f;
     float totalHeight = 0f;
     float rowHeight = 0f;
-    for (StackEntry stack : stacks(player.getInventory())) {
+    for (StackEntry stack : stacks(items)) {
       String itemName = stack.itemName;
       TextureRegion region = resolveInventoryRegion(itemName);
       if (region == null) {
@@ -262,14 +274,14 @@ public class GuiInventory extends AbstractGuiElement {
 
   private List<StackEntry> stacks(List<String> items) {
     Map<String, int[]> grouped = new LinkedHashMap<>();
-    ItemDurabilityService.synchronize(player);
+    if (player != null) ItemDurabilityService.synchronize(player);
     if (items != null)
       for (int i = 0; i < items.size(); i++) {
         String key = items.get(i);
         if (key == null) continue;
         ItemDefinition definition = ItemDefinition.get(key);
         String groupKey =
-            ItemDurabilityService.isRepairable(definition)
+            player != null && ItemDurabilityService.isRepairable(definition)
                 ? key + "\u0000" + ItemDurabilityService.inventory(player, i)
                 : key;
         int[] v = grouped.get(groupKey);

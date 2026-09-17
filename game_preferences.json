@@ -1,17 +1,79 @@
 {
   "musicVolume": 0.071428575,
   "effectsVolume": 0.72619045,
-  "brightness": 1.0487804,
+  "brightness": 0.9717742,
   "fullscreen": false,
   "vSync": true,
   "enable32FPS": true,
-  "showHudValues": false,
+  "showHudValues": true,
   "transparentGui": true,
   "seraphAnimation": true,
-  "xpBarText": false,
+  "xpBarText": true,
   "highQualityFont": true,
   "logNpcMessages": true,
   "logPlayerMessages": true,
   "chatLogging": true,
-  "chatLogFilename": "t4c-chat.log"
+  "chatLogFilename": "t4c-chat.log",
+  "macros": [
+    {
+      "spellName": "${spell.bless}",
+      "keycode": 30,
+      "modifiers": 1
+    },
+    {
+      "spellName": "${spell.tranquility}",
+      "keycode": 52,
+      "modifiers": 1
+    },
+    {
+      "spellName": "${spell.light}",
+      "keycode": 49,
+      "modifiers": 1
+    },
+    {
+      "spellName": "${spell.protection}",
+      "keycode": 134,
+      "modifiers": 0
+    },
+    {
+      "spellName": "${spell.stone_skin}",
+      "keycode": 135,
+      "modifiers": 0
+    },
+    {
+      "spellName": "${spell.earthen_strength}",
+      "keycode": 33,
+      "modifiers": 1
+    },
+    {
+      "spellName": "${spell.mana_surge}",
+      "keycode": 138,
+      "modifiers": 1
+    },
+    {
+      "spellName": "${spell.mana_shield}",
+      "keycode": 136,
+      "modifiers": 0
+    },
+    {
+      "spellName": "${spell.barrier}",
+      "keycode": 133,
+      "modifiers": 0
+    },
+    {
+      "spellName": "${spell.undead_annihilation}",
+      "keycode": 140,
+      "modifiers": 0
+    },
+    {
+      "spellName": "${spell.clemancy}",
+      "keycode": 132,
+      "modifiers": 0
+    },
+    {
+      "spellName": "${spell.omega_planetoids}",
+      "keycode": 137,
+      "modifiers": 0
+    }
+  ]
 }

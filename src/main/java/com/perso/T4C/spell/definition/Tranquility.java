@@ -25,7 +25,7 @@ public final class Tranquility {
         "Healing.wav",
         null,
         0,
-        "300000",
+        "1200000",
         "0",
         62051,
         null,
@@ -46,6 +46,6 @@ public final class Tranquility {
                 List.of(
                     new SpellData.T4cEffect.EffectParam(1, null),
                     new SpellData.T4cEffect.EffectParam(2, "wis"),
-                    new SpellData.T4cEffect.EffectParam(3, "self.true_wis/3")))));
+                    new SpellData.T4cEffect.EffectParam(3, "self.true_wis/2")))));
   }
 }

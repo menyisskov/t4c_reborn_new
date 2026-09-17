@@ -18,7 +18,7 @@ import java.util.List;
 public final class XpCurveExtender {
   private XpCurveExtender() {}
 
-  private static final int NEW_MAX_LEVEL = 500;
+  private static final int NEW_MAX_LEVEL = 700;
 
   public static void main(String[] args) throws IOException {
     String outputPath =

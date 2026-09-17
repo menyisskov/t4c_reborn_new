@@ -32,7 +32,11 @@ public final class RebirthBehavior {
 
     player.setRebirthCount(remorts);
 
-    player.setQuestFlag("__FLAG_REMORT_POINTS", GameConstants.REBIRTH_REMORT_POINTS_PER_REBIRTH);
+    int remortPoints =
+        GameConstants.REBIRTH_REMORT_POINTS_PER_REBIRTH
+            + (remorts - 1) * GameConstants.REBIRTH_REMORT_POINTS_PER_EXTRA_REMORT;
+
+    player.setQuestFlag("__FLAG_REMORT_POINTS", remortPoints);
 
     player.setQuestFlag("__FLAG_REMORT_PROCESS", 0);
 
@@ -93,7 +97,9 @@ public final class RebirthBehavior {
 
     for (BodyPart slot : new ArrayList<>(player.getEquippedItems().keySet())) {
 
-      if (!regalia.contains(player.getEquippedItems().get(slot)))
+      String equippedKey = player.getEquippedItems().get(slot);
+
+      if (equippedKey == null || !regalia.contains(equippedKey))
         InventoryService.unequip(player, slot);
     }
 
@@ -107,6 +113,8 @@ public final class RebirthBehavior {
 
       InventoryService.equip(player, definition.getBodyPart(), key);
     }
+
+    InventoryService.add(player, "item.torch");
 
     PlayerAppearanceDefaults.applyDefaults(player);
 

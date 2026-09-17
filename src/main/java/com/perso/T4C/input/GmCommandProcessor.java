@@ -8,6 +8,7 @@ import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.monster.core.MonsterManager;
+import com.perso.T4C.npc.behavior.RebirthBehavior;
 import com.perso.T4C.npc.core.NPCManager;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
@@ -116,6 +117,12 @@ public final class GmCommandProcessor {
           break;
         case "repair":
           repair(player, arg);
+          break;
+        case "rebirth":
+          rebirth(player, arg);
+          break;
+        case "setpower", "power":
+          setElementPower(player, arg);
           break;
         case "collision", "noclip":
           collision(player, arg, "noclip".equals(cmd));
@@ -310,6 +317,34 @@ public final class GmCommandProcessor {
     ok("All equipment repaired", player);
   }
 
+  private void rebirth(Player player, String arg) {
+    if (!arg.isBlank()) {
+      SystemMessage.showShared("GM: usage .rebirth");
+      return;
+    }
+    RebirthBehavior.perform(player);
+    player.setWorldPosition(1315 * GRID_W, 920 * GRID_H, 1);
+    ok("Rebirth performed (remort " + player.getRebirthCount() + ")", player);
+  }
+
+  private static final List<String> ELEMENTS = List.of("fire", "water", "air", "earth", "light", "dark");
+
+  private void setElementPower(Player player, String arg) {
+    String[] parts = arg.split("\\s+", 2);
+    if (parts.length < 2) {
+      SystemMessage.showShared("GM: usage .setpower <element> <value>");
+      return;
+    }
+    String element = parts[0].toLowerCase(Locale.ROOT);
+    if (!ELEMENTS.contains(element)) {
+      SystemMessage.showShared("GM: unknown element \"" + element + "\" (fire/water/air/earth/light/dark)");
+      return;
+    }
+    int value = parseInt(parts[1].trim());
+    player.setQuestFlag("legacy:power:" + element, value);
+    ok(element + " power set (now " + player.getElementPower(element) + " total)", player);
+  }
+
   private void collision(Player player, String arg, boolean noclipSyntax) {
     String mode = arg == null ? "" : arg.trim().toLowerCase();
     if (mode.isEmpty() || "toggle".equals(mode)) {
@@ -384,7 +419,7 @@ public final class GmCommandProcessor {
     SystemMessage.showShared(
         "GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X");
     SystemMessage.showShared(
-        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .repair");
+        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .repair | .rebirth | .setpower ELEMENT X");
   }
 
   private static int parseInt(String s) {

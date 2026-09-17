@@ -2720,6 +2720,8 @@ public final class ItemDefinitions {
         ItemItemMithrilPlateBoots.definition(),
         ItemItemMithrilPlateGauntlets.definition(),
         ItemItemMithrilPlateHelmet.definition(),
-        ItemItemMithrilPlateLeggings.definition());
+        ItemItemMithrilPlateLeggings.definition(),
+        ItemItemEmpyreanEarthSceptre.definition(),
+        ItemItemFocusOfTheEarthEmpyrean.definition());
   }
 }

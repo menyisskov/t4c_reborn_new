@@ -1,6 +1,8 @@
 package com.perso.T4C.config;
 
 public class GameConstants {
+  public static final int SPAWN_COUNT_MULTIPLIER = 2;
+  public static final float SERVER_XP_RATE = 5f;
   public static final int WINDOW_WIDTH = 1280;
   public static final int WINDOW_HEIGHT = 768;
   public static final boolean FULLSCREEN = false;
@@ -57,8 +59,9 @@ public class GameConstants {
   public static final float BOW_ATTACK_RANGE = 15f * GRID_W;
   public static final String BOW_PROJECTILE_SPRITE = "64kArrowNormal";
   public static final int QUIVER_STRUCTURE_ID = 8;
-  public static final long REBIRTH_MAX_REMORTS = 10L;
+  public static final long REBIRTH_MAX_REMORTS = 100L;
   public static final int REBIRTH_REMORT_POINTS_PER_REBIRTH = 10;
+  public static final int REBIRTH_REMORT_POINTS_PER_EXTRA_REMORT = 5;
   public static final int REBIRTH_BASE_ATTRIBUTE = 20;
   public static final int REBIRTH_ATTRIBUTE_PER_REMORT = 5;
   public static final int REBIRTH_ELEMENT_BASE = 100;

@@ -59,6 +59,11 @@
       "boostId": 20522,
       "statId": 19,
       "expression": "61"
+    },
+    {
+      "boostId": 20696,
+      "statId": 4,
+      "expression": "123"
     }
   ]
 }

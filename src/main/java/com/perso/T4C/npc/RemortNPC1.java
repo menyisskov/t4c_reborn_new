@@ -91,7 +91,7 @@ public final class RemortNPC1 extends ScriptedNpc {
 
           int p = c.flag("__FLAG_REMORT_PROCESS");
 
-          if (p == 0) c.sayKey("npc.remortnpc1.welcome");
+          if (p == 0) c.sayKey("npc.remortnpc1.welcome", c.flag("__FLAG_REMORT_POINTS"));
           else if (p == 1 && c.flag("__FLAG_REMORT_POINTS") > 0) c.sayKey("npc.remortnpc1.spend");
           else if (p == 1) {
 
@@ -128,7 +128,10 @@ public final class RemortNPC1 extends ScriptedNpc {
 
               c.sayKey("npc.remortnpc1.teleport");
 
-              c.castTargetSpell("spell.remort_teleport_spell");
+              c.teleport(
+                  com.perso.T4C.config.GameConstants.REBIRTH_RETURN_TILE_X,
+                  com.perso.T4C.config.GameConstants.REBIRTH_RETURN_TILE_Y,
+                  com.perso.T4C.config.GameConstants.REBIRTH_RETURN_Z);
 
             } else c.sayKey("npc.remortnpc1.notready");
 

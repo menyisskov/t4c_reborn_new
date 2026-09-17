@@ -74,4 +74,11 @@ public final class GuiManager {
     }
     return false;
   }
+
+  public static boolean onKeyTyped(char character) {
+    if (current != null) {
+      return current.onKeyTyped(character);
+    }
+    return false;
+  }
 }

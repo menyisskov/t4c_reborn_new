@@ -1,0 +1,85 @@
+16:45:27.694 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP525 (arenamobxp525.json)
+16:45:27.696 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP550 (arenamobxp550.json)
+16:45:27.696 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP575 (arenamobxp575.json)
+16:45:27.696 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP600 (arenamobxp600.json)
+16:45:27.696 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP625 (arenamobxp625.json)
+16:45:27.697 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP650 (arenamobxp650.json)
+16:45:27.698 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP675 (arenamobxp675.json)
+16:45:27.698 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP700 (arenamobxp700.json)
+16:45:27.698 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP725 (arenamobxp725.json)
+16:45:27.698 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: ArenaMobXP750 (arenamobxp750.json)
+16:45:27.699 [main] INFO  c.p.T.monster.json.MonsterJsonLoader -- Loaded JSON monster definition: Sewer Rat (sewer_rat.json)
+16:45:27.958 [main] INFO  c.perso.T4C.item.json.ItemJsonLoader -- Loaded 97 JSON item definition(s) from assets/items
+[PlayerStateStore] Loaded player_state from: C:\Users\menyi\repos\t4c_reborn_new\characters\627442f4-4f9d-4606-aa43-7c85edb47ad8.json
+[PlayerStateStore] Loaded player_state from: C:\Users\menyi\repos\t4c_reborn_new\characters\c2fb61ad-db24-4d75-82b3-28d73b31d7b1.json
+[PlayerStateStore] Loaded player_state from: C:\Users\menyi\repos\t4c_reborn_new\characters\627442f4-4f9d-4606-aa43-7c85edb47ad8.json
+[PlayerStateStore] Loaded player_state from: C:\Users\menyi\repos\t4c_reborn_new\characters\627442f4-4f9d-4606-aa43-7c85edb47ad8.json
+16:45:36.517 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loading step 0 completed in 0ms
+16:45:36.519 [main] INFO  com.perso.T4C.helper.MapReader -- Loading binary map: C:\Users\menyi\repos\t4c_reborn_new\assets\maps\worldmap\worldmap.mapbin (READ-ONLY)
+16:45:36.928 [main] INFO  com.perso.T4C.helper.MapReader -- Binary map loaded in 408ms (3072x3072 tiles)
+16:45:36.943 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loaded 7061 music zone(s) from assets\maps\worldmap\worldmap.musiczones.bin
+16:45:36.945 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loaded 1118 teleport(s) from Java definitions
+16:45:36.964 [main] INFO  c.perso.T4C.helper.CollisionReader -- Loaded collision map: 3072x3072
+16:45:36.965 [main] INFO  c.perso.T4C.helper.CollisionManager -- CollisionManager initialized with 3072x3072 map
+16:45:36.965 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Collision map loaded successfully
+16:45:36.965 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loading step 1 completed in 448ms
+16:45:37.869 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loading step 2 completed in 902ms
+16:45:37.912 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loading step 3 completed in 42ms
+16:45:37.913 [main] INFO  c.p.T4C.monster.core.MonsterManager -- Cleared all monsters
+16:45:38.010 [main] INFO  c.p.T4C.monster.core.MonsterManager -- Queued 4701 monster spawn(s) from java:SpawnRegistry
+16:45:38.010 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Cleared all NPCs
+16:45:38.013 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Loaded 646 NPC spawn(s) from java:SpawnRegistry
+16:45:38.013 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loading step 4 completed in 100ms
+16:45:38.022 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loading step 5 completed in 8ms
+16:45:38.132 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loading step 6 completed in 109ms
+16:45:38.132 [map-preloader] INFO  com.perso.T4C.helper.MapReader -- Loading binary map: C:\Users\menyi\repos\t4c_reborn_new\assets\maps\dungeon\DungeonMap.mapbin (READ-ONLY)
+16:45:38.312 [map-preloader] INFO  com.perso.T4C.helper.MapReader -- Binary map loaded in 180ms (3072x3072 tiles)
+16:45:38.313 [map-preloader] INFO  com.perso.T4C.helper.MapReader -- Loading binary map: C:\Users\menyi\repos\t4c_reborn_new\assets\maps\cavern\CavernMap.mapbin (READ-ONLY)
+16:45:38.520 [map-preloader] INFO  com.perso.T4C.helper.MapReader -- Binary map loaded in 207ms (3072x3072 tiles)
+16:45:38.520 [map-preloader] INFO  com.perso.T4C.helper.MapReader -- Loading binary map: C:\Users\menyi\repos\t4c_reborn_new\assets\maps\underworld\underworld.mapbin (READ-ONLY)
+16:45:38.889 [map-preloader] INFO  com.perso.T4C.helper.MapReader -- Binary map loaded in 369ms (3072x3072 tiles)
+16:45:39.288 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Mouse entered NPC: Lighthaven Samaritan at position (93792, 17152) - Mouse at (93756, 17130)
+16:45:39.344 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Mouse left NPC: Lighthaven Samaritan
+16:45:39.504 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Mouse entered NPC: Lighthaven Samaritan at position (93792, 17152) - Mouse at (93784, 17094)
+16:45:39.652 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Player interacting with NPC: Lighthaven Samaritan
+16:45:41.529 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Mouse left NPC: Lighthaven Samaritan
+16:45:46.956 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Loaded 9 music zone(s) from assets\maps\dungeon\DungeonMap.musiczones.bin
+16:45:46.969 [main] INFO  c.perso.T4C.helper.CollisionReader -- Loaded collision map: 3072x3072
+16:45:46.969 [main] INFO  c.perso.T4C.helper.CollisionManager -- CollisionManager initialized with 3072x3072 map
+16:45:46.969 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Collision map loaded successfully
+16:45:46.998 [main] INFO  c.p.T4C.monster.core.MonsterManager -- Cleared all monsters
+16:45:46.999 [main] INFO  c.p.T4C.monster.core.MonsterManager -- Queued 2728 monster spawn(s) from java:SpawnRegistry
+16:45:46.999 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Cleared all NPCs
+16:45:47.001 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Loaded 147 NPC spawn(s) from java:SpawnRegistry
+16:45:47.009 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Switched to map DUNGEON at Z=1
+16:45:47.016 [main] INFO  c.perso.T4C.screens.MainGameScreen -- Player teleported to (2265, 295, 1)
+16:45:47.685 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Mouse entered NPC: Makrsh P'Tangh at position (72480, 4720) - Mouse at (72440, 4695)
+16:45:47.932 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Mouse left NPC: Makrsh P'Tangh
+16:45:49.736 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Mouse entered NPC: Makrsh P'Tangh at position (72480, 4720) - Mouse at (72515, 4686)
+16:45:49.882 [main] INFO  com.perso.T4C.npc.core.NPCManager -- Player interacting with NPC: Makrsh P'Tangh
+16:45:51.077 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 aggroed player at distance 255.2
+16:45:51.078 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 casts monster spell 10709 for 205 damage!
+16:45:51.606 [main] INFO  c.perso.T4C.screens.MainGameScreen -- MakrshPtangh2 spell 10709 hits player for 75 damage (water resistance=270)
+16:45:52.169 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 5195 damage! Health: 47305/52500
+16:45:52.578 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 casts monster spell 10708 for 280 damage!
+16:45:52.951 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 4375 damage! Health: 42930/52500
+16:45:53.108 [main] INFO  c.perso.T4C.screens.MainGameScreen -- MakrshPtangh2 spell 10708 hits player for 103 damage (water resistance=270)
+16:45:53.708 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 4539 damage! Health: 38391/52500
+16:45:54.077 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 casts monster spell 10596 for 203 damage!
+16:45:54.574 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 4737 damage! Health: 33654/52500
+16:45:55.116 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 4584 damage! Health: 29070/52500
+16:45:55.580 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 casts monster spell 10709 for 269 damage!
+16:45:55.876 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 5263 damage! Health: 23807/52500
+16:45:55.964 [main] INFO  c.perso.T4C.screens.MainGameScreen -- MakrshPtangh2 spell 10709 hits player for 99 damage (water resistance=270)
+16:45:56.637 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 4222 damage! Health: 19585/52500
+16:45:57.082 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 casts monster spell 10710 for 313 damage!
+16:45:57.408 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 5225 damage! Health: 14360/52500
+16:45:57.489 [main] INFO  c.perso.T4C.screens.MainGameScreen -- MakrshPtangh2 spell 10710 hits player for 115 damage (water resistance=270)
+16:45:58.174 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 4201 damage! Health: 10159/52500
+16:45:58.581 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 casts monster spell 10708 for 262 damage!
+16:45:58.936 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 5381 damage! Health: 4778/52500
+16:45:58.968 [main] INFO  c.perso.T4C.screens.MainGameScreen -- MakrshPtangh2 spell 10708 hits player for 97 damage (water resistance=270)
+16:45:59.700 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 takes 5269 damage! Health: -491/52500
+16:45:59.700 [main] INFO  c.perso.T4C.monster.core.BaseMonster -- MakrshPtangh2 has been slain!
+16:45:59.701 [main] INFO  c.p.T4C.objects.GroundItemManager -- Loot at (72080, 2082): 1225 gold (granted), 0 item(s) on ground
+[Pixmap] Pixmap already disposed!
