@@ -1,0 +1,40 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          direct_prompt: |
+            Review this pull request (#${{ github.event.pull_request.number }}
+            in ${{ github.repository }}).
+
+            Before anything else, read AGENTS.md at the repository root — it
+            is the binding review protocol for this repo (scope rules,
+            severity bar, and the one-review-round-then-fix-verification-only
+            rule). Follow it exactly, including checking whether an earlier
+            automated review already commented on this PR before deciding
+            whether you are doing an original review or fix verification.
+
+            Post your findings as PR review comments (or a fix-verification
+            status update, per AGENTS.md section 3). Approve the pull
+            request only when AGENTS.md section 4's conditions are met.
+          claude_args: |
+            --allowedTools "Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(gh api:*)"
