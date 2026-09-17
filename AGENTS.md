@@ -1,11 +1,11 @@
 # AGENTS.md — PR Review Protocol
 
-This file governs any automated agent (the `claude-review` GitHub Actions
-workflow, or a Claude Code session asked to review or babysit a pull request
-in this repo) that posts review comments on a pull request here. It does
-**not** relax or replace `AGENT.md` (the general engineering charter) — it
-adds review-specific scope rules that take precedence over a reviewer's own
-instincts about what's "worth mentioning."
+This file governs any automated agent — the repo's configured code-review
+bot (e.g. a Codex-based review workflow), or a Claude Code session asked to
+review or babysit a pull request — that posts review comments on a pull
+request here. It does **not** relax or replace `AGENT.md` (the general
+engineering charter) — it adds review-specific scope rules that take
+precedence over a reviewer's own instincts about what's "worth mentioning."
 
 The two failure modes this file exists to prevent: a reviewer that wanders
 outside the PR's actual purpose and buries real feedback under nitpicks and
