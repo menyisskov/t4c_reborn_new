@@ -58,7 +58,10 @@ public final class RurikCinderwatch extends ScriptedNpc {
                       "${npc.topic_keyword.rurikcinderwatch.2.1}",
                       "${npc.topic_keyword.rurikcinderwatch.2.2}"),
                   "${npc.topic.rurikcinderwatch.2}",
-                  List.of()),
+                  List.of(
+                      new NpcSpec.Action(
+                          ActionType.OPEN_SPELL_LEARNING,
+                          List.of("cinderburst", "emberheart_resolve")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.rurikcinderwatch.3.0}",

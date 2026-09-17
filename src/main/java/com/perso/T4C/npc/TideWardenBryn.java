@@ -58,7 +58,10 @@ public final class TideWardenBryn extends ScriptedNpc {
                       "${npc.topic_keyword.tidewardenbryn.2.1}",
                       "${npc.topic_keyword.tidewardenbryn.2.2}"),
                   "${npc.topic.tidewardenbryn.2}",
-                  List.of()),
+                  List.of(
+                      new NpcSpec.Action(
+                          ActionType.OPEN_SPELL_LEARNING,
+                          List.of("riptide_surge", "drowned_ward")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.tidewardenbryn.3.0}",
