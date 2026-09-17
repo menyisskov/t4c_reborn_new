@@ -84,15 +84,24 @@ This is the hard rule and it does not bend:
 This rule exists so a PR author can fix what was flagged and get to green
 without an automated reviewer moving the goalposts every push.
 
-## 4. What "approved" means for auto-merge
+## 4. What "ready to merge" means
 
-This repo merges a PR automatically once its required checks pass,
-including the automated review check. That check should only report
-approval when:
-- No comment from the original review is still outstanding (all are fixed,
-  or a human has explicitly overridden one), and
-- CI (`Build and test`) is green on the current head.
+There is no separate automated approval check in this repo. The PR's
+driving agent (a Claude Code session; see `.claude/skills/steward/SKILL.md`
+for its exact mechanics) merges directly, once:
+- Codex's review has finished (not still "🔄 Running"), and
+- CI (`Build and test`) is green on the current head, with no merge
+  conflict, and
+- every finding from the original review has an explicit fix-or-skip
+  decision from the steward.
 
-Do not approve a PR with any unresolved original-review comment still
-open, and do not hold up a PR over anything that falls outside Sections 1–2
-of this file.
+A steward's own considered skip is a legitimate way to clear a finding —
+it does not require a human to sign off on each one. It is only legitimate
+for a finding that doesn't clear Section 2's severity bar (or is otherwise
+wrong/out of scope); a finding that does clear that bar must actually be
+fixed and pushed, not skipped, before the PR is ready.
+
+"Ready to merge" is not the same as "zero open comments." A PR with
+consciously-skipped nitpicks is ready; a PR with an unaddressed Section-2
+finding is not, and nothing outside Sections 1–2 should hold a PR up in
+the first place.

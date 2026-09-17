@@ -34,12 +34,15 @@ comments if you're ever the one leaving them.
    - There is no round limit and no obligation to reach "zero open
      comments." The bar is "nothing important left unaddressed," not
      "every comment resolved."
-3. If you pushed fixes, Codex will typically re-review the new commit. Read
-   that pass the same way — judge each new finding on its own merits. This
-   routine re-review after a real push is not the scope-creep AGENTS.md's
-   one-review-round rule is guarding against (that rule binds a reviewer
-   re-litigating an *unchanged* diff, not reviewing a diff that actually
-   changed).
+3. If you pushed fixes, Codex will typically re-review the new commit. Per
+   `AGENTS.md` Section 3, that pass is fix-verification only against the
+   findings from step 2 above — not a license to raise anything new, even
+   something the fix commit itself introduced. If Codex raises a new
+   finding on a later pass anyway, that's out of protocol on Codex's part;
+   use your own judgment on whether it's worth a follow-up (it never blocks
+   *this* merge under Section 4, since it wasn't part of the original
+   review), and consider flagging the out-of-protocol behavior to the user
+   if it keeps happening.
 
 ## Merging
 
