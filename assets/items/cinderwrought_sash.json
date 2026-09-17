@@ -1,0 +1,31 @@
+{
+  "key": "cinderwrought_sash",
+  "name": "Cinderwrought Sash",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 30.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 380,
+    "strength": 200,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 31009, "statId": 13, "expression": "20" },
+    { "boostId": 31010, "statId": 17, "expression": "22" },
+    { "boostId": 31011, "statId": 3, "expression": "18" }
+  ]
+}

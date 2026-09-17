@@ -277,7 +277,20 @@ public final class TrainingCatalog {
                   List.of(
                       o("chain_lightning", 15, 35700, true),
                       o("vortex_of_air", 18, 60800, true),
-                      o("nimbleness", 19, 72688, true)))));
+                      o("nimbleness", 19, 72688, true)))),
+          Map.entry(
+              "TideWardenBryn",
+              new E(
+                  true,
+                  List.of(
+                      o("riptide_surge", 30, 50000, true), o("drowned_ward", 33, 65000, true)))),
+          Map.entry(
+              "RurikCinderwatch",
+              new E(
+                  true,
+                  List.of(
+                      o("cinderburst", 45, 140000, true),
+                      o("emberheart_resolve", 44, 100000, true)))));
 
   public static NpcBehavior get(String id) {
 
