@@ -42,7 +42,7 @@ public final class DeathPenaltyService {
 
   public record Result(
       boolean pvp,
-      int xpLost,
+      long xpLost,
       int goldLost,
       int goldDropped,
       List<String> droppedItems,
@@ -102,8 +102,8 @@ public final class DeathPenaltyService {
         droppedCharges.add(charges);
       }
     }
-    int earnedThisLevel = Math.max(0, player.getCurrentXp());
-    int xpLost = percentage(earnedThisLevel, rates.xpPercent());
+    long earnedThisLevel = Math.max(0, player.getCurrentXp());
+    long xpLost = percentageLong(earnedThisLevel, rates.xpPercent());
     player.setCurrentXp(Math.max(0, player.getCurrentXp() - xpLost));
     int goldLost = percentage(player.getGold(), rates.goldPercent());
     int goldDropped = percentage(goldLost, rates.goldDropPercent());
@@ -124,5 +124,9 @@ public final class DeathPenaltyService {
 
   private static int percentage(int value, int percent) {
     return (int) Math.min(Integer.MAX_VALUE, (long) Math.max(0, value) * percent / 100L);
+  }
+
+  private static long percentageLong(long value, int percent) {
+    return Math.max(0, value) * percent / 100L;
   }
 }

@@ -1618,8 +1618,8 @@ public class T4CContentStudio {
   private XpCurve.Entry xpCurveEntryFromMap(Map<String, Object> item) {
     return new XpCurve.Entry(
         integer(item.get("level"), 0),
-        integer(item.get("xpToNextLevel"), 0),
-        integer(item.get("totalXp"), 0));
+        longValue(item.get("xpToNextLevel"), 0),
+        longValue(item.get("totalXp"), 0));
   }
 
   Map<String, Object> questToMap(QuestDef definition) {
@@ -2693,6 +2693,17 @@ public class T4CContentStudio {
     }
     try {
       return Integer.parseInt(str(value).trim());
+    } catch (Exception e) {
+      return fallback;
+    }
+  }
+
+  private long longValue(Object value, long fallback) {
+    if (value instanceof Number number) {
+      return number.longValue();
+    }
+    try {
+      return Long.parseLong(str(value).trim());
     } catch (Exception e) {
       return fallback;
     }

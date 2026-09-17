@@ -66,7 +66,7 @@ public final class GmCommandProcessor {
           setLevel(player, parseInt(arg));
           break;
         case "xp", "setxp":
-          setXp(player, parseInt(arg));
+          setXp(player, parseLong(arg));
           break;
         case "gold", "setgold":
           setGold(player, parseInt(arg));
@@ -145,13 +145,13 @@ public final class GmCommandProcessor {
     if (level < 1) level = 1;
     player.setLevel(level);
     if (xpCurve != null) {
-      int next = xpCurve.getXpToNextLevel(level);
+      long next = xpCurve.getXpToNextLevel(level);
       if (next > 0) player.setXpToNextLevel(next);
     }
     ok("Level set to " + player.getLevel(), player);
   }
 
-  private void setXp(Player player, int xp) {
+  private void setXp(Player player, long xp) {
     player.setCurrentXp(Math.max(0, xp));
     ok("XP set to " + player.getCurrentXp(), player);
   }
@@ -425,6 +425,11 @@ public final class GmCommandProcessor {
   private static int parseInt(String s) {
     if (s == null || s.isEmpty()) throw new NumberFormatException("empty");
     return Integer.parseInt(s);
+  }
+
+  private static long parseLong(String s) {
+    if (s == null || s.isEmpty()) throw new NumberFormatException("empty");
+    return Long.parseLong(s);
   }
 
   private static Integer tryParseInt(String s) {

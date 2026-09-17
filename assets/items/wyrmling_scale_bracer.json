@@ -1,0 +1,31 @@
+{
+  "key": "wyrmling_scale_bracer",
+  "name": "Wyrmling Scale Bracer",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 480,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 32200, "statId": 13, "expression": "34" },
+    { "boostId": 32201, "statId": 12, "expression": "22" },
+    { "boostId": 32202, "statId": 2, "expression": "28" }
+  ]
+}

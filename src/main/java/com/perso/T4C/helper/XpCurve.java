@@ -36,12 +36,12 @@ public final class XpCurve {
     return Collections.unmodifiableList(entries);
   }
 
-  public int getXpToNextLevel(int level) {
+  public long getXpToNextLevel(int level) {
     Entry entry = byLevel.get(level);
     return entry != null ? entry.xpToNextLevel : 0;
   }
 
-  public int getTotalXp(int level) {
+  public long getTotalXp(int level) {
     Entry entry = byLevel.get(level);
     return entry != null ? entry.totalXp : 0;
   }
@@ -55,7 +55,7 @@ public final class XpCurve {
       level = 1;
       player.setLevel(level);
     }
-    int xpToNext = getXpToNextLevel(level);
+    long xpToNext = getXpToNextLevel(level);
     if (xpToNext > 0) {
       player.setXpToNextLevel(xpToNext);
     }
@@ -70,10 +70,10 @@ public final class XpCurve {
   @Getter
   public static class Entry {
     private final int level;
-    private final int xpToNextLevel;
-    private final int totalXp;
+    private final long xpToNextLevel;
+    private final long totalXp;
 
-    public Entry(int level, int xpToNextLevel, int totalXp) {
+    public Entry(int level, long xpToNextLevel, long totalXp) {
       this.level = level;
       this.xpToNextLevel = xpToNextLevel;
       this.totalXp = totalXp;

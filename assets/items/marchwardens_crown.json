@@ -1,0 +1,33 @@
+{
+  "key": "marchwardens_crown",
+  "name": "Marchwarden's Crown",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 52.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 550,
+    "strength": 350,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 250,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 32003, "statId": 15, "expression": "24" },
+    { "boostId": 32004, "statId": 3, "expression": "20" },
+    { "boostId": 32005, "statId": 4, "expression": "18" },
+    { "boostId": 32006, "statId": 8, "expression": "30" }
+  ]
+}

@@ -11,6 +11,10 @@ public final class QuestDefinitions {
         LighthavenSamaritanRats.definition(),
         OrtanalasBridgeGoblins.definition(),
         SilverskyTideWarden.definition(),
-        EmberfangHillsBounty.definition());
+        EmberfangHillsBounty.definition(),
+        WindhowlMarchesCentaurs.definition(),
+        HollowMarchWights.definition(),
+        AerieWyrmlingCull.definition(),
+        BastionWardenSiege.definition());
   }
 }
