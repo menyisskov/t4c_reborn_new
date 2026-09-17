@@ -31,7 +31,7 @@ class WdaItemDefinitionMigrationTest {
   @Test
   void allWdaEquipmentBoostsAreStoredInTheBinaryRegistry() {
     int count = ItemRegistry.load().stream().mapToInt(item -> item.getBoosts().size()).sum();
-    assertEquals(909, count);
+    assertEquals(929, count);
     ItemDefinition sword = require("Fine steel short sword 2");
     assertEquals(1, sword.getBoosts().size());
     assertEquals(296, sword.getBoosts().get(0).getBoostId());

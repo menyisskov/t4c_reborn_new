@@ -43,7 +43,9 @@ class PlayerProgressionTest {
     player.setCurrentHp(60);
     player.setMaxMana(100);
     player.setMana(40);
-    new PlayerProgression(new Random(7)).addXp(player, 100, XpCurve.load("java"), false);
+    // 20 raw XP * SERVER_XP_RATE (5x) = exactly 100, triggering exactly one level-up so this
+    // test isolates a single roll of the original per-level gain formula.
+    new PlayerProgression(new Random(7)).addXp(player, 20, XpCurve.load("java"), false);
     int hpGain = player.getMaxHp() - 100;
     int manaGain = player.getMaxMana() - 100;
     assertTrue(hpGain >= 11 && hpGain <= 13);

@@ -124,21 +124,22 @@ class QuestServiceTest {
         QuestService.STATUS_COMPLETED, restored.getQuestFlag(QuestService.statusFlag(QUEST)));
     assertEquals(15, restored.getQuestFlag(QuestService.killsFlag(QUEST)));
     assertEquals(500, restored.getGold());
-    assertEquals(2, restored.getLevel());
+    assertEquals(4, restored.getLevel());
     assertEquals(
-        200,
+        277,
         restored.getCurrentXp(),
-        "300 exact XP at level 1 spends 100 on level-up and leaves 200");
-    assertEquals(5, restored.getStatPoints());
-    assertEquals(15, restored.getSkillPoints());
+        "300 reward XP scaled 5x by SERVER_XP_RATE (1500) spends 100+360+763 across three"
+            + " level-ups and leaves 277");
+    assertEquals(15, restored.getStatPoints(), "5 stat points per level-up, three level-ups");
+    assertEquals(45, restored.getSkillPoints(), "15 skill points per level-up, three level-ups");
     assertEquals(17, saves.get(), "acceptance, fifteen kills and turn-in must each persist");
     assertNull(service.turnInReadyQuests(QUEST.getGiverNpc(), restored));
     assertEquals(
         "Déjà terminée", service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), restored));
     assertFalse(service.recordKill(restored, "Brown Rat", 1, 304, 383));
     assertEquals(500, restored.getGold());
-    assertEquals(2, restored.getLevel());
-    assertEquals(200, restored.getCurrentXp());
+    assertEquals(4, restored.getLevel());
+    assertEquals(277, restored.getCurrentXp());
     assertEquals(17, saves.get(), "a completed one-time quest must never save or pay again");
   }
 }
