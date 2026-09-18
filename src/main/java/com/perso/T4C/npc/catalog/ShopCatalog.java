@@ -480,7 +480,35 @@ public final class ShopCatalog {
                   "light_healing_potion",
                   "healing_potion",
                   "serious_healing_potion",
-                  "potion_of_mana")));
+                  "potion_of_mana")),
+          Map.entry(
+              "QuartermasterElenna",
+              List.of(
+                  "mithril_long_sword",
+                  "mithril_blade",
+                  "mithril_flail",
+                  "mithril_battle_axe",
+                  "mithril_broadsword",
+                  "mithril_scimitar",
+                  "mithril_bastard_sword",
+                  "mithril_two_handed_sword",
+                  "adamantite_broadsword",
+                  "adamantite_scimitar",
+                  "oak_composite_bow",
+                  "cedar_composite_bow",
+                  "large_shield",
+                  "tower_shield")),
+          Map.entry(
+              "WayfarerBryndis",
+              List.of(
+                  "torch",
+                  "light_healing_potion",
+                  "healing_potion",
+                  "serious_healing_potion",
+                  "potion_of_mana",
+                  "scroll_of_avalon",
+                  "scroll_of_lighthaven",
+                  "symbol_of_hope")));
 
   public static NpcBehavior get(String id) {
 
