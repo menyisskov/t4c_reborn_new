@@ -17,6 +17,18 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Fey Warden", x = 1225, y = 1485, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1360, y = 1385, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1170, y = 1415, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1195, y = 1319, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1253, y = 1293, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1315, y = 1306, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1222, y = 1379, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1266, y = 1366, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1321, y = 1364, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1222, y = 1433, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1261, y = 1424, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1325, y = 1423, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1249, y = 1461, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1291, y = 1480, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1236, y = 1502, z = 0, stationary = false, aggressive = false)
 public final class FeyWarden extends DataMonster {
   public static final String SOUND_ATTACK = "Electrik.wav";
   public static final String SOUND_DEATH = "Tree Ent Dying.wav";
