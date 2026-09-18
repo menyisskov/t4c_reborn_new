@@ -4,7 +4,9 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.spawn.Spawn;
 
+@Spawn(type = "Lesser Drake", x = 1900, y = 1950, z = 0, stationary = false, aggressive = true)
 public final class LesserDrake extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";
@@ -30,7 +32,7 @@ public final class LesserDrake extends DataMonster {
         15385,
         0,
         0,
-        0,
+        550000,
         1,
         10,
         30000L,
@@ -42,7 +44,7 @@ public final class LesserDrake extends DataMonster {
         SOUND_HIT,
         449,
         1375,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("aeries_drakeheart_signet", 0.012f)),
         false,
         0.0f,
         265,
@@ -76,7 +78,7 @@ public final class LesserDrake extends DataMonster {
             new MonsterDef.Attack("", 0, 25, 10616, 0, 1)),
         false,
         0,
-        java.util.List.of(),
+        java.util.List.of("LesserDrake"),
         java.util.Map.of());
   }
 }

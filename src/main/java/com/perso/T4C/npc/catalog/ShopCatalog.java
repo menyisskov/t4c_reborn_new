@@ -42,7 +42,9 @@ public final class ShopCatalog {
           "scroll_of_silversky",
           "scroll_of_stonecrest",
           "symbol_of_hope",
-          "mandrake");
+          "mandrake",
+          "acolytes_tarnished_locket",
+          "sunken_vestment");
 
   private static final List<String> KARAHN =
       List.of(

@@ -1,0 +1,34 @@
+{
+  "key": "ignaroks_emberfang_claw",
+  "name": "Ignarok's Emberfang Claw",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupBattleDagger",
+  "appearanceInventory": "64kInvBattleDagger",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 480,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 40
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d180+140",
+  "atkDelay": "900",
+  "boosts": [
+    { "boostId": 31014, "statId": 17, "expression": "35" },
+    { "boostId": 31015, "statId": 8, "expression": "40" },
+    { "boostId": 31016, "statId": 10, "expression": "30" }
+  ]
+}

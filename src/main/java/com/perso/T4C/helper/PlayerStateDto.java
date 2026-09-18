@@ -24,8 +24,8 @@ public class PlayerStateDto {
   public int maxMana;
   public int mana;
   public int level;
-  public int currentXp;
-  public int xpToNextLevel;
+  public long currentXp;
+  public long xpToNextLevel;
   public int statPoints;
   public int skillPoints;
   public int rebirthCount;

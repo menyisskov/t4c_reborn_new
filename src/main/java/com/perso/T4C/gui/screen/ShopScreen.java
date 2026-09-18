@@ -327,7 +327,7 @@ public class ShopScreen extends GuiListScreen {
     ShopEntry entry = (ShopEntry) row;
     if (selling)
       return InventoryService.count(player, entry.def.getKey()) <= entry.count
-          ? "Quantité insuffisante"
+          ? I18n.key("message.insufficient_quantity")
           : null;
     return player.getGold() < basketCost() + entry.effectivePrice
         ? I18n.key("message.not_enough_gold")

@@ -57,7 +57,7 @@ class SpriteBinIOTest {
         List.of(
             sprite("Ground_Water (1, 1)", 128),
             sprite("CastleWall_North", 4096),
-            sprite("Éclair_Accentué", 64));
+            sprite("Café_Naïve_Test", 64));
     assertEquals(1, SpriteBinIO.writeSharded(dir, BASE, sprites));
     assertTrue(Files.isRegularFile(dir.resolve("sprites_0.bin")));
     assertFalse(Files.exists(dir.resolve("sprites_1.bin")));

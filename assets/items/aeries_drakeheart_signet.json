@@ -1,0 +1,32 @@
+{
+  "key": "aeries_drakeheart_signet",
+  "name": "Aerie's Drakeheart Signet",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 5",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 900,
+    "strength": 600,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 60
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 32203, "statId": 17, "expression": "55" },
+    { "boostId": 32204, "statId": 13, "expression": "45" },
+    { "boostId": 32205, "statId": 3, "expression": "35" },
+    { "boostId": 32206, "statId": 10, "expression": "40" }
+  ]
+}

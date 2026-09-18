@@ -1,0 +1,33 @@
+{
+  "key": "crown_of_the_hollow_king",
+  "name": "Crown of the Hollow King",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 68.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 700,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 400,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 32103, "statId": 22, "expression": "40" },
+    { "boostId": 32104, "statId": 24, "expression": "45" },
+    { "boostId": 32105, "statId": 4, "expression": "25" },
+    { "boostId": 32106, "statId": 8, "expression": "35" }
+  ]
+}

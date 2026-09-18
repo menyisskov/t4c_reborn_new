@@ -30,6 +30,8 @@ public class ItemJsonDef {
   public int structure = 2;
   public int appearanceId = 0;
   public boolean undroppable = false;
+  public String dmgFormula;
+  public String atkDelay;
   public List<BoostJson> boosts = List.of();
 
   public ItemDefinition toItemDefinition() {
@@ -73,8 +75,8 @@ public class ItemJsonDef {
         numId,
         structure,
         appearanceId,
-        null,
-        "0",
+        dmgFormula,
+        atkDelay == null || atkDelay.isBlank() ? "0" : atkDelay,
         0,
         0,
         false,

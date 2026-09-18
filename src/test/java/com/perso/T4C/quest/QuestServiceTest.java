@@ -19,7 +19,7 @@ class QuestServiceTest {
   private static final QuestDef QUEST =
       new QuestDef(
           "lighthaven_samaritan_rats",
-          "Les rats du sous-sol du temple",
+          "The Temple Basement Rats",
           "LighthavenSamaritan",
           "Brown Rat",
           15,
@@ -29,9 +29,9 @@ class QuestServiceTest {
           120,
           500,
           300,
-          "Offre",
-          "Réussite",
-          "Déjà terminée");
+          "Offer",
+          "Success",
+          "Already completed");
 
   @Test
   void legacyNewbieMarkerActivatesTheRatQuestAndTracksProgress() {
@@ -75,7 +75,7 @@ class QuestServiceTest {
     Player player = new Player();
     player.setLevel(1);
     player.setXpToNextLevel(100);
-    assertEquals("Offre", service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), player));
+    assertEquals("Offer", service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), player));
     assertEquals(QuestService.STATUS_ACTIVE, player.getQuestFlag(QuestService.statusFlag(QUEST)));
     assertEquals(0, player.getQuestFlag(QuestService.killsFlag(QUEST)));
     assertEquals(1, saves.get());
@@ -119,7 +119,7 @@ class QuestServiceTest {
         true,
         List.of(new SpellData.SpellEffect("ATTRIBUTE", "exp", "100", "")));
     assertEquals(1f, restored.getBuffXpMultiplier());
-    assertEquals("Réussite", service.turnInReadyQuests(QUEST.getGiverNpc(), restored));
+    assertEquals("Success", service.turnInReadyQuests(QUEST.getGiverNpc(), restored));
     assertEquals(
         QuestService.STATUS_COMPLETED, restored.getQuestFlag(QuestService.statusFlag(QUEST)));
     assertEquals(15, restored.getQuestFlag(QuestService.killsFlag(QUEST)));
@@ -135,7 +135,7 @@ class QuestServiceTest {
     assertEquals(17, saves.get(), "acceptance, fifteen kills and turn-in must each persist");
     assertNull(service.turnInReadyQuests(QUEST.getGiverNpc(), restored));
     assertEquals(
-        "Déjà terminée", service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), restored));
+        "Already completed", service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), restored));
     assertFalse(service.recordKill(restored, "Brown Rat", 1, 304, 383));
     assertEquals(500, restored.getGold());
     assertEquals(4, restored.getLevel());

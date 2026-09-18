@@ -1,0 +1,33 @@
+{
+  "key": "mordrenns_drowned_cowl",
+  "name": "Mordrenn's Drowned Cowl",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 45.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 480,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 230,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 31000, "statId": 14, "expression": "22" },
+    { "boostId": 31001, "statId": 22, "expression": "18" },
+    { "boostId": 31002, "statId": 18, "expression": "24" },
+    { "boostId": 31003, "statId": 4, "expression": "15" }
+  ]
+}

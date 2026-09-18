@@ -1,0 +1,32 @@
+{
+  "key": "bastion_sentinels_mantle",
+  "name": "Bastion Sentinel's Mantle",
+  "bodyPart": "CAPE",
+  "appearanceEquippedPrimary": "PupBlackCape",
+  "appearanceInventory": "64kIconCape",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 88.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 1400,
+    "strength": 900,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 32300, "statId": 15, "expression": "60" },
+    { "boostId": 32301, "statId": 13, "expression": "50" },
+    { "boostId": 32302, "statId": 2, "expression": "60" }
+  ]
+}

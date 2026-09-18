@@ -10,6 +10,11 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
+// Real, pre-existing, fully-wired legacy NPC (shop, day/night hours, the Rhodar's Hammer quest
+// interaction) — this class only adds one thing: topic 16 and its GOBLIN/SLAYER/BOUNTY keyword
+// handling in onKeyword() below, activating the "kill 500 goblins, get Goblin Slayer" line
+// canon's `npc.topic.rhodarheatforge.5` text already described but never wired to real logic.
+// See docs/content-ideas/2026-09-canon-verified-additions.md.
 @Spawn(type = "RhodarHeatforge", x = 1493, y = 2423, z = 0, stationary = false, aggressive = false)
 public final class RhodarHeatforge extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
@@ -120,6 +125,13 @@ public final class RhodarHeatforge extends ScriptedNpc {
                       "${npc.topic_keyword.rhodarheatforge.15.3}",
                       "${npc.topic_keyword.rhodarheatforge.15.4}"),
                   "${npc.topic.rhodarheatforge.15}",
+                  List.of()),
+              new NpcSpec.DialogueTopic(
+                  List.of(
+                      "${npc.topic_keyword.rhodarheatforge.16.0}",
+                      "${npc.topic_keyword.rhodarheatforge.16.1}",
+                      "${npc.topic_keyword.rhodarheatforge.16.2}"),
+                  "${npc.topic.rhodarheatforge.16}",
                   List.of())),
           "ShopKeeper",
           new NpcSpec.CombatProfile(100, 1000000, 20, 22, 24, 1000000, 370, 65535, "1d36+27"));
@@ -194,6 +206,28 @@ public final class RhodarHeatforge extends ScriptedNpc {
             c.askYesNo("hammer");
 
           } else c.sayKey("npc.rhodar.hammer.none");
+
+          return true;
+        }
+
+        if (k.contains("GOBLIN") || k.contains("SLAYER") || k.contains("BOUNTY")) {
+
+          if (c.flag("__GOBLIN_SLAYER_GIVEN") == 1) {
+
+            c.sayKey("npc.rhodar.goblinslayer.done");
+
+          } else if (c.flag("__GOBLINS_KILLED_BY_HERO") >= 500) {
+
+            c.giveItem("goblin_slayer");
+
+            c.flag("__GOBLIN_SLAYER_GIVEN", 1);
+
+            c.sayKey("npc.rhodar.goblinslayer.reward");
+
+          } else {
+
+            c.sayKey("npc.rhodar.goblinslayer.progress");
+          }
 
           return true;
         }

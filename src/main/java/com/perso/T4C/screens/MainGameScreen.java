@@ -1087,13 +1087,30 @@ public class MainGameScreen implements Screen {
               });
         });
     monsterManager.setPlayerKillCallback(
-        monster ->
-            questService.recordKill(
-                player,
-                monster.getCanonicalName(),
-                currentMap.getZ(),
-                monster.getTileX(),
-                monster.getTileY()));
+        monster -> {
+          questService.recordKill(
+              player,
+              monster.getCanonicalName(),
+              currentMap.getZ(),
+              monster.getTileX(),
+              monster.getTileY());
+          trackGoblinTrustProgress(monster);
+        });
+  }
+
+  /**
+   * Mirak Nira's "100 goblins for Windhowl trust" storyline (see {@code npc.mirak.trust.*} in
+   * lang.json and {@code MirakNira.java}) reads this flag but nothing ever incremented it, so the
+   * quest was silently unwinnable. Any player kill of a GOBLIN-clan monster, anywhere, counts.
+   */
+  private void trackGoblinTrustProgress(com.perso.T4C.monster.core.BaseMonster monster) {
+    com.perso.T4C.monster.core.MonsterClan clan =
+        com.perso.T4C.monster.core.MonsterClanRelations.resolveClan(
+            monster.getClass().getSimpleName(), monster.getCanonicalName());
+    if (clan == com.perso.T4C.monster.core.MonsterClan.GOBLIN) {
+      player.setQuestFlag(
+          "__GOBLINS_KILLED_BY_HERO", player.getQuestFlag("__GOBLINS_KILLED_BY_HERO") + 1);
+    }
   }
 
   private static String elementName(int element) {

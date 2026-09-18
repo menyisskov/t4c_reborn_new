@@ -1,0 +1,30 @@
+{
+  "key": "acolytes_tarnished_locket",
+  "name": "Acolyte's Tarnished Locket",
+  "bodyPart": "NECK",
+  "appearanceInventory": "64kInvNecklace 2",
+  "price": 8500,
+  "weight": 1,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 100,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 120,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 31007, "statId": 14, "expression": "8" },
+    { "boostId": 31008, "statId": 22, "expression": "6" }
+  ]
+}

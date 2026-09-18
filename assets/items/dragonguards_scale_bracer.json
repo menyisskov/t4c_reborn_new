@@ -1,0 +1,31 @@
+{
+  "key": "dragonguards_scale_bracer",
+  "name": "Dragonguard's Scale Bracer",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 900,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 33015, "statId": 13, "expression": "55" },
+    { "boostId": 33016, "statId": 2, "expression": "45" },
+    { "boostId": 33017, "statId": 9, "expression": "30" }
+  ]
+}

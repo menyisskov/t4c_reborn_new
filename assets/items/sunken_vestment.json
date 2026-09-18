@@ -1,0 +1,31 @@
+{
+  "key": "sunken_vestment",
+  "name": "Sunken Vestment",
+  "bodyPart": "CAPE",
+  "appearanceEquippedPrimary": "PupBlackCape",
+  "appearanceInventory": "64kIconCape",
+  "price": 15000,
+  "weight": 2,
+  "armorClass": 26.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 150,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 180,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 31012, "statId": 14, "expression": "12" },
+    { "boostId": 31013, "statId": 1, "expression": "10" }
+  ]
+}

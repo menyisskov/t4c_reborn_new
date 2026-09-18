@@ -24,8 +24,8 @@ public class Stats {
   protected int maxMana;
   protected int mana;
   protected int level;
-  protected int currentXp;
-  protected int xpToNextLevel;
+  protected long currentXp;
+  protected long xpToNextLevel;
   protected int statPoints;
   protected int skillPoints;
   protected List<String> spells;
