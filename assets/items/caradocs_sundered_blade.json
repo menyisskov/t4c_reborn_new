@@ -1,0 +1,35 @@
+{
+  "key": "caradocs_sundered_blade",
+  "name": "Caradoc's Sundered Blade",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupBattleSword",
+  "appearanceInventory": "64kInvBattleSword",
+  "price": 0,
+  "weight": 10,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 1900,
+    "strength": 1250,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 100
+  },
+  "attackSpeed": 1500.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d420+390",
+  "atkDelay": "1500",
+  "boosts": [
+    { "boostId": 34000, "statId": 8, "expression": "70" },
+    { "boostId": 34001, "statId": 10, "expression": "95" },
+    { "boostId": 34002, "statId": 3, "expression": "65" },
+    { "boostId": 34003, "statId": 24, "expression": "55" }
+  ]
+}

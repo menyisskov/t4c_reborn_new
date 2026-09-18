@@ -1436,6 +1436,7 @@ public final class ItemDefinitions {
         ItemItemScrollOfStonecrest.definition(),
         ItemItemScrollOfTrueSight.definition(),
         ItemItemScrollOfWindhowl.definition(),
+        ScrollOfAvalon.definition(),
         ItemItemScrollToNissus.definition(),
         ItemItemSecretDocument.definition(),
         ItemItemSeraphPlate.definition(),
