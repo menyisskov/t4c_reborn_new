@@ -11,20 +11,20 @@ import org.junit.jupiter.api.Test;
 
 class ScriptedNpcKeywordTest {
   private final NpcSpec.DialogueTopic topic =
-      new NpcSpec.DialogueTopic(List.of("sorts"), null, List.of());
+      new NpcSpec.DialogueTopic(List.of("spells"), null, List.of());
 
   @Test
   void keywordMatchingIgnoresCasePunctuationAndAccents() {
-    assertTrue(ScriptedNpc.matches(topic, "SORTS !"));
-    assertTrue(ScriptedNpc.matches(topic, "Montrez-moi vos sorts, Iraltok."));
+    assertTrue(ScriptedNpc.matches(topic, "SPELLS!"));
+    assertTrue(ScriptedNpc.matches(topic, "Show me your spells, Iraltok."));
     assertTrue(
         ScriptedNpc.matches(
-            new NpcSpec.DialogueTopic(List.of("guérison"), null, List.of()), "GUERISON."));
+            new NpcSpec.DialogueTopic(List.of("café"), null, List.of()), "CAFE."));
   }
 
   @Test
   void keywordMatchingUsesWholeWords() {
-    assertFalse(ScriptedNpc.matches(topic, "ressorts"));
+    assertFalse(ScriptedNpc.matches(topic, "misspells"));
   }
 
   @Test

@@ -1,1650 +1,1718 @@
-# Audit comportemental T4C 1.68 / implémentation Java
+# T4C 1.68 behavioral audit / Java implementation
 
-Sources de référence analysées :
+Reference sources analyzed:
 
-- Client natif 1.68 RC14h : `elestranobaron/Client`, commit `7fa6abf`.
-- Serveur natif associé : `elestranobaron/Server`, commit `ea0a8b5`.
-- Implémentation comparée : workspace Java courant.
+- Native 1.68 RC14h client: `elestranobaron/Client`, commit `7fa6abf`.
+- Associated native server: `elestranobaron/Server`, commit `ea0a8b5`.
+- Compared implementation: current Java workspace.
 
-Ce document recense uniquement les écarts déjà vérifiés dans le code. `Absent` signifie qu’aucun point d’entrée ou service Java correspondant n’a été trouvé ; `Partiel` signifie qu’une partie locale existe mais que le comportement 1.68 complet n’est pas reproduit.
+This document lists only the discrepancies already verified in the code. `Absent` means that no corresponding Java entry point or service was found; `Partial` means that a local part exists but the full 1.68 behavior is not reproduced.
 
-## 1. Architecture réseau et autorité
+## 1. Network architecture and authority
 
-| Domaine | Client/serveur 1.68 | Java actuel | État |
+| Domain | 1.68 client/server | Current Java | State |
 |---|---|---|---|
-| Transport | UDP avec en-tête, checksum, fragmentation, files de paquets, ACK et timeouts | Aucun package réseau, paquet ou socket dans `src/main/java` | Absent |
-| Mouvement | Huit requêtes directionnelles `RQ_Move*`, envoyées au serveur ; la file de mouvement est limitée à 25 | Déplacement local continu avec budget de distance par frame et chemin local dans `PlayerMovement` | Partiel / comportement différent |
-| Autorité d’état | Le client reçoit les positions, unités, HP, XP, or, mana, poids et effets via paquets | État principalement local dans `Player` et les services Java | Partiel |
-| Anti-saturation | Les paquets de mouvement sont abandonnés au-delà de 25 éléments en file | Aucun équivalent réseau | Absent |
-| Synchronisation | Paquets d’existence/unité manquante, unités périphériques, position et état serveur | Aucun mécanisme équivalent | Absent |
+| Transport | UDP with header, checksum, fragmentation, packet queues, ACK and timeouts | No network package, packet or socket in `src/main/java` | Absent |
+| Movement | Eight directional `RQ_Move*` requests, sent to the server; the movement queue is capped at 25 | Continuous local movement with a per-frame distance budget and local pathing in `PlayerMovement` | Partial / different behavior |
+| State authority | The client receives positions, units, HP, XP, gold, mana, weight and effects via packets | State mostly local in `Player` and the Java services | Partial |
+| Anti-flood | Movement packets are dropped past 25 queued items | No network equivalent | Absent |
+| Synchronization | Existence/missing-unit packets, peripheral units, server position and state | No equivalent mechanism | Absent |
 
-Preuves natives : `ComPacketHeader.h`, `Comm.cpp`, `Packet.cpp`, `PacketTypes.h`.
+Native evidence: `ComPacketHeader.h`, `Comm.cpp`, `Packet.cpp`, `PacketTypes.h`.
 
-## 2. Temporisations client vérifiées
+## 2. Verified client timings
 
-Le client 1.68 configure explicitement les valeurs suivantes dans `Comm.cpp` :
+The 1.68 client explicitly configures the following values in `Comm.cpp`:
 
-| Action | Délai maximum | ACK maximum |
+| Action | Max delay | Max ACK |
 |---|---:|---:|
-| Mouvement | 0 ms | 0 |
-| Attaque | 500 ms | 3 |
-| Sort | 1000 ms | 5 |
-| Compétence | 1000 ms | 3 |
-| Téléportation | 750 ms | 5 |
-| Vol | 1000 ms | 3 |
-| Flèche touchée/manquée | 500 ms | 3 |
-| Coffre | 500 ms | 5 |
-| Commerce | 500 ms | 5 |
+| Movement | 0 ms | 0 |
+| Attack | 500 ms | 3 |
+| Spell | 1000 ms | 5 |
+| Skill | 1000 ms | 3 |
+| Teleport | 750 ms | 5 |
+| Rob | 1000 ms | 3 |
+| Arrow hit/miss | 500 ms | 3 |
+| Chest | 500 ms | 5 |
+| Trade | 500 ms | 5 |
 
-L’implémentation Java contient des cooldowns locaux d’attaque/sort/compétence, mais pas la couche ACK, retransmission, rejet et file d’attente qui donne leur sémantique au client original. Les valeurs ne peuvent donc pas être considérées comme équivalentes au comportement 1.68.
+The Java implementation contains local attack/spell/skill cooldowns, but not the ACK, retransmission, rejection and queueing layer that gives them their semantics in the original client. The values therefore cannot be considered equivalent to 1.68 behavior.
 
-## 3. Fonctionnalités réseau absentes
+## 3. Missing network features
 
-Les paquets suivants existent dans le client original mais aucun service Java correspondant n’a été trouvé :
+The following packets exist in the original client but no corresponding Java service was found:
 
-- compte et cycle de connexion : `RQ_RegisterAccount`, `RQ_PutPlayerInGame`, `RQ_DeletePlayer`, `RQ_CreatePlayer`, `RQ_ReturnToMenu`, `RQ_AuthenticateServerVersion` ;
-- synchronisation joueurs : `RQ_GetPlayerPos`, `RQ_GetStatus`, `RQ_GetOnlinePlayerList`, `RQ_GetUnitName`, `RQ_GetNearItems` ;
-- effets et ressources : `RQ_HPchanged`, `RQ_XPchanged`, `RQ_ManaChanged`, `RQ_UpdateWeight`, `RQ_CreateEffectStatus`, `RQ_DispellEffectStatus` ;
-- monde : `RQ_WeatherMsg`, `RQ_GetTime`, `RQ_OpenURL` ;
-- vol et tir : `RQ_Rob`, `RQ_DispellRob`, `RQ_ArrowHit`, `RQ_ArrowMiss` ;
-- guildes : `RQ_GuildInvite`, `RQ_GuildKick`, `RQ_GuildLeave`, `RQ_GuildAlterRights`, `RQ_GuildRename`, `RQ_GuildInviteAnswer`.
+- account and connection cycle: `RQ_RegisterAccount`, `RQ_PutPlayerInGame`, `RQ_DeletePlayer`, `RQ_CreatePlayer`, `RQ_ReturnToMenu`, `RQ_AuthenticateServerVersion`;
+- player synchronization: `RQ_GetPlayerPos`, `RQ_GetStatus`, `RQ_GetOnlinePlayerList`, `RQ_GetUnitName`, `RQ_GetNearItems`;
+- effects and resources: `RQ_HPchanged`, `RQ_XPchanged`, `RQ_ManaChanged`, `RQ_UpdateWeight`, `RQ_CreateEffectStatus`, `RQ_DispellEffectStatus`;
+- world: `RQ_WeatherMsg`, `RQ_GetTime`, `RQ_OpenURL`;
+- rob and shooting: `RQ_Rob`, `RQ_DispellRob`, `RQ_ArrowHit`, `RQ_ArrowMiss`;
+- guilds: `RQ_GuildInvite`, `RQ_GuildKick`, `RQ_GuildLeave`, `RQ_GuildAlterRights`, `RQ_GuildRename`, `RQ_GuildInviteAnswer`.
 
-Le Java contient des objets, sorts ou compétences portant parfois un nom similaire, mais pas le protocole ni les transitions d’état multi-joueur correspondants.
+The Java code contains items, spells or skills that sometimes carry a similar name, but not the protocol or the corresponding multiplayer state transitions.
 
-## 4. Commerce joueur-joueur
+## 4. Player-to-player trading
 
-Le serveur original implémente `TradeMgr2` dans `Trade.h`/`Trade.cpp` avec :
+The original server implements `TradeMgr2` in `Trade.h`/`Trade.cpp` with:
 
-- états de commerce `Invalid`, `Inviting`, `Trading` ;
-- états individuels `EditingItems`, `Ready`, `Confirmed` ;
-- validation de distance, disponibilité des deux joueurs et poids disponible ;
-- verrou global des opérations ;
-- ajout/retrait d’objets depuis un conteneur intermédiaire ;
-- remise automatique des objets au sac en cas d’annulation ou de perturbation ;
-- confirmation des deux parties avant transfert ;
-- notifications client séparées pour contenu, statut, début, annulation et fin.
+- trade states `Invalid`, `Inviting`, `Trading`;
+- individual states `EditingItems`, `Ready`, `Confirmed`;
+- validation of distance, availability of both players and available weight;
+- a global operation lock;
+- adding/removing items from an intermediate container;
+- automatic return of items to the backpack on cancellation or disruption;
+- confirmation from both parties before transfer;
+- separate client notifications for content, status, start, cancellation and end.
 
-Le Java n’a ni package `trade`, ni `TradeService`, ni machine d’état ou transfert atomique entre deux joueurs. Écart : **fonctionnalité absente**.
+The Java code has neither a `trade` package, nor a `TradeService`, nor a state machine or atomic transfer between two players. Gap: **feature absent**.
 
-## 5. Groupes
+## 5. Groups
 
-`Group.h`/`Group.cpp` du serveur original fournit : invitations, chef, exclusion, départ, portée des membres, partage automatique, distribution de l’XP de kill, distribution de l’or, mise à jour de la liste et HP des membres.
+The original server's `Group.h`/`Group.cpp` provides: invitations, leader, kicking, leaving, member range, automatic sharing, kill-XP distribution, gold distribution, member list updates and member HP.
 
-Le Java n’a ni package `group`, ni service de groupe, ni modèle de membre/chef/invitation. Les classes `SpawnGroup` concernent uniquement les groupes de spawn et ne reproduisent pas ce système. Écart : **fonctionnalité absente**.
+The Java code has neither a `group` package, nor a group service, nor a member/leader/invitation model. The `SpawnGroup` classes are only about spawn groups and do not reproduce this system. Gap: **feature absent**.
 
-## 6. Guildes
+## 6. Guilds
 
-Le client contient `GuildUI` et les requêtes de gestion de guilde ; le serveur contient `Guilds` et les traitements associés. Le Java ne possède pas de service ou modèle de guilde multi-joueur. Les noms d’objets comme `GuildChest` ne constituent pas cette fonctionnalité. Écart : **fonctionnalité absente**.
+The client contains `GuildUI` and the guild-management requests; the server contains `Guilds` and the associated handling. The Java code has no multiplayer guild service or model. Item names like `GuildChest` do not constitute this feature. Gap: **feature absent**.
 
-## 7. Règles de combat déjà équivalentes ou presque
+## 7. Combat rules already equivalent or nearly so
 
-Les éléments suivants ne doivent pas être comptés comme absents :
+The following should not be counted as absent:
 
-- la précision originale `rnd(attackSkill) + rnd(attackAgi / 3) - rnd(dodgeSkill) - rnd(targetAgi / 3)` est reproduite dans `CombatResolver` ;
-- les dégâts naturels originaux sont reproduits dans `CombatMath` pour mêlée et arc ;
-- le Java possède des profils attaque/esquive, résistance, parade et pénalités d’équipement.
+- the original accuracy formula `rnd(attackSkill) + rnd(attackAgi / 3) - rnd(dodgeSkill) - rnd(targetAgi / 3)` is reproduced in `CombatResolver`;
+- the original raw damage is reproduced in `CombatMath` for melee and bow;
+- the Java code has attack/dodge profiles, resistance, parry and equipment penalties.
 
-Les écarts restants de combat portent sur l’intégration serveur, la transmission des résultats, les timers réseau et les comportements client des unités distantes, pas sur cette formule de précision de base.
+The remaining combat gaps concern server integration, result transmission, network timers and remote-unit client behavior, not this basic accuracy formula.
 
-## 8. Déplacement
+## 8. Movement
 
-Le client original manipule des directions discrètes T4C (8 directions) et envoie des requêtes serveur. Le Java utilise une interpolation locale avec réservation de pas, glissement vers des directions adjacentes et chemin local dans `PlayerMovement`.
+The original client uses discrete T4C directions (8 directions) and sends server requests. The Java code uses local interpolation with step reservation, sliding toward adjacent directions and local pathing in `PlayerMovement`.
 
-Différences vérifiées :
+Verified differences:
 
-- pas de validation serveur ni de correction de position reçue ;
-- pas de file de requêtes ni de limite de 25 mouvements ;
-- le Java peut exécuter plusieurs pas dans une frame selon le budget de déplacement ;
-- les blocages et glissements sont décidés localement, alors que le client original attend le résultat du serveur ;
-- les événements de déplacement des autres unités ne proviennent pas d’un flux réseau.
+- no server validation or correction of a received position;
+- no request queue or 25-move limit;
+- the Java code can execute several steps in one frame depending on the movement budget;
+- blocking and sliding are decided locally, whereas the original client waits for the server's result;
+- other units' movement events do not come from a network stream.
 
-## 9. Inventaire, objets et conteneurs
+## 9. Inventory, items and containers
 
-Le serveur original représente chaque entrée par un objet avec identifiant, apparence, référence statique, quantité et charges. `ItemContainer::Put` refuse l’ajout lorsque le poids de la quantité complète dépasse le poids libre, puis empile les objets compatibles selon leur caractère unique. La sérialisation envoie séparément quantité et charges (`ItemContainer.cpp`).
+The original server represents each entry as an object with an ID, appearance, static reference, quantity and charges. `ItemContainer::Put` refuses to add an item when the weight of the full quantity exceeds the free weight, then stacks compatible items according to their uniqueness. Serialization sends quantity and charges separately (`ItemContainer.cpp`).
 
-Le Java représente l’inventaire de `Player` comme une `List<String>` et maintient les charges dans une map séparée. `InventoryService` reproduit plusieurs validations utiles (poids, unicité, exigences, emplacement, durabilité), mais il n’existe pas d’identifiant d’instance d’objet ni de quantité portée par une instance.
+The Java code represents `Player`'s inventory as a `List<String>` and keeps charges in a separate map. `InventoryService` reproduces several useful validations (weight, uniqueness, requirements, slot, durability), but there is no item-instance ID or quantity carried by an instance.
 
-Différences vérifiées :
+Verified differences:
 
-- les quantités originales sont des champs d’objet et sont transmises avec l’ID ; le Java modélise les quantités empilées par répétition de clés dans une liste ;
-- les objets originaux peuvent être ciblés par ID d’instance dans les requêtes ; le Java cible principalement une clé et parfois un index ;
-- la sérialisation client originale distingue apparence, ID, référence statique, quantité et charges ; le Java n’a pas de sérialiseur de paquet équivalent ;
-- les opérations atomiques du conteneur original sont verrouillées côté serveur ; les opérations Java sont locales et non transactionnelles entre deux acteurs.
+- original quantities are object fields and are transmitted with the ID; the Java code models stacked quantities by repeating keys in a list;
+- original items can be targeted by instance ID in requests; the Java code mostly targets a key and sometimes an index;
+- the original client serialization distinguishes appearance, ID, static reference, quantity and charges; the Java code has no equivalent packet serializer;
+- the original container's atomic operations are locked server-side; Java operations are local and not transactional between two actors.
 
-Le calcul Java de poids existe, mais il ne reproduit pas la sémantique multi-instance et multi-client du conteneur serveur original.
+The Java weight calculation exists, but it does not reproduce the original server container's multi-instance, multi-client semantics.
 
-## 10. Coffres et objets interactifs
+## 10. Chests and interactive objects
 
-Le client original reçoit un contenu de coffre via `RQ_ChestContents`, puis utilise des opérations distinctes `RQ_ChestAddItemFromBackpack`, `RQ_ChestRemoveItemToBackpack`, `RQ_ShowChest` et `RQ_HideChest`. Le coffre est donc un conteneur persistant présenté au client, avec transferts explicites dans les deux sens.
+The original client receives chest contents via `RQ_ChestContents`, then uses separate operations `RQ_ChestAddItemFromBackpack`, `RQ_ChestRemoveItemToBackpack`, `RQ_ShowChest` and `RQ_HideChest`. The chest is therefore a persistent container presented to the client, with explicit transfers in both directions.
 
-Le Java possède `ChestService`, mais son comportement actuel est différent : l’ouverture tire un loot local, le fait apparaître au sol et applique un respawn local ; il n’existe pas de conteneur de coffre manipulable, de transfert coffre/sac, de paquets d’ouverture/fermeture ou de contenu persistant par joueur.
+The Java code has `ChestService`, but its current behavior is different: opening it rolls local loot, drops it on the ground and applies a local respawn; there is no manipulable chest container, no chest/backpack transfer, no open/close packets and no per-player persistent content.
 
-Écart : **le Java implémente des coffres de loot locaux, pas les coffres-containers 1.68**.
+Gap: **the Java code implements local loot chests, not the 1.68 container chests**.
 
-## 11. Achat et vente auprès des PNJ
+## 11. Buying and selling from NPCs
 
-Le client original distingue les listes d’achat et de vente (`RQ_SendBuyItemList`, `RQ_SendSellItemList`) et les requêtes d’objets. Le serveur dispose de conteneurs d’objets, de quantités, poids et identifiants d’instances pour valider les opérations.
+The original client distinguishes buy and sell lists (`RQ_SendBuyItemList`, `RQ_SendSellItemList`) and item requests. The server has item containers, quantities, weight and instance IDs to validate operations.
 
-Le Java possède `ShopScreen` et calcule un prix de vente égal à la moitié du prix d’achat. La transaction est directement appliquée au `Player` local. Aucun stock de vendeur, identifiant d’offre, vérification serveur, réservation de quantité ou transaction atomique n’est présent.
+The Java code has `ShopScreen` and computes a sell price equal to half the buy price. The transaction is applied directly to the local `Player`. There is no vendor stock, offer ID, server check, quantity reservation or atomic transaction.
 
-Écarts vérifiés :
+Verified gaps:
 
-- interface locale présente, mais absence du protocole et de l’autorité serveur ;
-- prix de vente codé comme `price / 2`, alors que le serveur original laisse la règle au contenu/serveur et peut distinguer les listes d’achat et de vente ;
-- pas de stock vendeur persistant ni de quantité d’offre portée par instance ;
-- pas de retour réseau pour confirmer ou refuser l’achat/vente.
+- a local UI is present, but the protocol and server authority are absent;
+- the sell price is hardcoded as `price / 2`, whereas the original server leaves the rule to content/server and can distinguish buy and sell lists;
+- no persistent vendor stock or offer quantity carried per instance;
+- no network feedback to confirm or refuse the buy/sell.
 
-## 12. Utilisation et équipement
+## 12. Use and equipment
 
-Le Java couvre l’équipement, les exigences, les charges et la durabilité dans `InventoryService`/`ItemUseService`. L’écart restant est architectural : le client original envoie `RQ_UseObject`, `RQ_EquipObject` et `RQ_UnequipObject` et attend la mise à jour serveur de l’inventaire, de l’équipement, du poids et des charges. Le Java applique directement la mutation locale et ne peut pas reproduire les rejets concurrents ou les corrections d’état du serveur.
+The Java code covers equipping, requirements, charges and durability in `InventoryService`/`ItemUseService`. The remaining gap is architectural: the original client sends `RQ_UseObject`, `RQ_EquipObject` and `RQ_UnequipObject` and waits for the server to update inventory, equipment, weight and charges. The Java code applies the local mutation directly and cannot reproduce concurrent rejections or server state corrections.
 
-## Synthèse intermédiaire — sorts
+## Intermediate summary — spells
 
-## 13. Sorts, effets et ressources
+## 13. Spells, effects and resources
 
-Le Java possède une couverture importante : `SpellCastingService`, `SpellEffectManager`, `SpellRenderer`, effets persistants, cooldowns, coût de mana, portée, ligne de vue, projectiles et effets visuels. Le client/serveur original possède les mêmes grandes familles via `RQ_CastSpell`, `RQ_SpellEffect`, `RQ_CreateEffectStatus`, `RQ_DispellEffectStatus`, `RQ_ManaChanged` et les gestionnaires natifs de sorts/effets.
+The Java code has substantial coverage: `SpellCastingService`, `SpellEffectManager`, `SpellRenderer`, persistent effects, cooldowns, mana cost, range, line of sight, projectiles and visual effects. The original client/server has the same broad families via `RQ_CastSpell`, `RQ_SpellEffect`, `RQ_CreateEffectStatus`, `RQ_DispellEffectStatus`, `RQ_ManaChanged` and the native spell/effect handlers.
 
-Les différences de fonctionnement restent néanmoins vérifiées :
+The functional differences remain verified, however:
 
-- le client original ne décide pas localement du résultat d’un sort : il envoie l’ID et les paramètres puis reçoit l’effet, les changements de mana et les statuts ; le Java applique localement le coût, l’exhaustion, le cooldown et plusieurs effets ;
-- le client original synchronise séparément l’impact visuel (`RQ_SpellEffect`) et le statut persistant (`RQ_CreateEffectStatus`/`RQ_DispellEffectStatus`) ; le Java peut déclencher rendu et mutation dans le même flux local ;
-- les effets appliqués aux unités distantes, les corrections de mana et les expirations reçues du serveur n’ont pas d’équivalent réseau Java ;
-- le Java fixe `MAXIMUM_CAST_RANGE_TILES` à 20 dans `SpellCastingService`, alors que le client original n’est pas l’autorité de cette limite et la reçoit du comportement serveur/du sort ; cette constante peut donc diverger selon le sort ;
-- les callbacks Java de projectile (`Runnable onImpact`) exécutent la conséquence localement après animation, alors que le client original reçoit l’événement de résultat depuis le serveur.
+- the original client does not decide a spell's outcome locally: it sends the ID and parameters, then receives the effect, mana changes and statuses; the Java code applies cost, exhaustion, cooldown and several effects locally;
+- the original client separately synchronizes the visual impact (`RQ_SpellEffect`) and the persistent status (`RQ_CreateEffectStatus`/`RQ_DispellEffectStatus`); the Java code can trigger rendering and mutation in the same local flow;
+- effects applied to remote units, mana corrections and expirations received from the server have no Java network equivalent;
+- the Java code hardcodes `MAXIMUM_CAST_RANGE_TILES` to 20 in `SpellCastingService`, whereas the original client is not the authority on this limit and receives it from server/spell behavior; this constant can therefore diverge per spell;
+- Java projectile callbacks (`Runnable onImpact`) execute the consequence locally after the animation, whereas the original client receives the outcome event from the server.
 
-État : **fonctionnalité locale partielle, non équivalente en multijoueur et potentiellement divergente pour les timings/résultats**.
+State: **partial local feature, not multiplayer-equivalent and potentially divergent for timings/results**.
 
-## 14. Ressources et régénération
+## 14. Resources and regeneration
 
-Le serveur original expose `HPregen`, `ManaRegen` et `FaithRegen` dans `GAME_RULES`, et le client reçoit les changements HP/mana par paquets. Le Java possède une régénération périodique locale HP/mana dans `Player.update` et `RegenerationRules`, mais :
+The original server exposes `HPregen`, `ManaRegen` and `FaithRegen` in `GAME_RULES`, and the client receives HP/mana changes via packets. The Java code has periodic local HP/mana regeneration in `Player.update` and `RegenerationRules`, but:
 
-- aucune ressource `faith` jouable n’a été trouvée dans le modèle Java ;
-- les changements de ressources ne sont pas diffusés à d’autres clients ;
-- une correction serveur après désynchronisation est impossible sans transport réseau ;
-- la fréquence locale de tick (2 secondes dans `RegenerationRules`) n’est pas une preuve d’identité avec tous les chemins de régénération du serveur original.
+- no playable `faith` resource was found in the Java model;
+- resource changes are not broadcast to other clients;
+- a server correction after desync is impossible without network transport;
+- the local tick frequency (2 seconds in `RegenerationRules`) is not proof of identity with all of the original server's regeneration paths.
 
-État : **HP/mana partiels, foi absente, synchronisation absente**.
+State: **HP/mana partial, faith absent, synchronization absent**.
 
-## Synthèse intermédiaire — chat
+## Intermediate summary — chat
 
-## 15. Chat et canaux
+## 15. Chat and channels
 
-Le client original possède un système de chatter serveur avec messages directs, shout, page, discussion indirecte, canaux, liste des canaux, liste des utilisateurs d’un canal et ajout/retrait d’un canal. Les paquets sont traités dans `Packet.cpp` et l’interface les émet depuis `ChatterUI.cpp`.
+The original client has a server-side chat system with direct messages, shout, page, indirect discussion, channels, channel lists, a channel's user list and joining/leaving a channel. The packets are handled in `Packet.cpp` and the UI emits them from `ChatterUI.cpp`.
 
-Le Java possède `GameChat`, mais ce composant est une console locale : `addLocalMessage`, `addNpcMessage` et `addSystemMessage` alimentent directement la liste d’affichage, et le submit handler est local. Aucun transport, canal serveur, liste d’utilisateurs, message privé, shout/page ou accusé de réception n’a été trouvé.
+The Java code has `GameChat`, but this component is a local console: `addLocalMessage`, `addNpcMessage` and `addSystemMessage` feed the display list directly, and the submit handler is local. No transport, server channel, user list, private message, shout/page or acknowledgment was found.
 
-État : **affichage de chat présent, communication 1.68 absente**.
+State: **chat display present, 1.68 communication absent**.
 
-## 16. Mort, pénalités et résurrection
+## 16. Death, penalties and resurrection
 
-- L’original distingue les morts contre monstre et contre joueur, avec des paramètres séparés pour XP, sac, équipement, or perdu et or lâché. Les valeurs spéciales 900–999 représentent une pénalité progressive dépendant du niveau.
-- L’original applique la perte d’XP au-dessus du seuil du niveau courant. Le Java utilise `DeathPenaltyService` sur `currentXp` ; l’équivalence dépend donc de la sémantique exacte de `currentXp` et doit être verrouillée par test de niveau.
-- L’original exclut explicitement les objets non jetables et manipule des instances avec quantité/charges. Le Java transmet les objets/charges à `spawnCorpse`, mais utilise des réglages par défaut codés et une représentation d’inventaire moins riche.
-- La résurrection Java remet le joueur à la moitié des PV maximum, comme `GAME_RULES::DeathPenalties`. Les traitements de mode bataille, équipes, récompenses de meurtre et karma présents dans le serveur original ne sont pas reproduits par une logique d’équipe identifiable dans le Java.
+- The original distinguishes deaths against a monster from deaths against a player, with separate parameters for XP, backpack, equipment, gold lost and gold dropped. The special values 900–999 represent a progressive, level-dependent penalty.
+- The original applies XP loss above the current level's threshold. The Java code uses `DeathPenaltyService` on `currentXp`; equivalence therefore depends on the exact semantics of `currentXp` and must be locked down with a per-level test.
+- The original explicitly excludes non-droppable items and manipulates instances with quantity/charges. The Java code passes items/charges to `spawnCorpse`, but uses hardcoded default settings and a less rich inventory representation.
+- Java resurrection puts the player back at half of max HP, like `GAME_RULES::DeathPenalties`. The battle-mode handling, teams, kill rewards and karma present in the original server are not reproduced by any identifiable team logic in the Java code.
 
-## 17. PNJ, dialogues et quêtes
+## 17. NPCs, dialogues and quests
 
-- Le client 1.68 envoie des requêtes distinctes de conversation indirecte, dirigée et de page ; les réponses serveur contrôlent texte, choix et effets. Le Java passe directement de `NPCInputHandler` à `NPCManager`/`NpcScriptEngine`, sans requête ni confirmation serveur.
-- Le Java possède une couverture importante de scripts PNJ et un `QuestService` fonctionnel : flags, objectifs de monstres dans une zone, récompenses XP/or et persistance. Cela ne garantit pas l’équivalence des scripts originaux : les commandes serveur doivent encore être comparées handler par handler.
-- La progression générique Java est limitée au nom du monstre, monde et zone circulaire. Les objectifs originaux fondés sur objets précis, variables, groupes, PvP, chronomètres, dialogues conditionnels ou événements de carte nécessitent un handler dédié.
-- Le journal Java (`QuestScreen`) est local ; il ne remplace pas la synchronisation d’état et les événements serveur du client 1.68.
+- The 1.68 client sends separate requests for indirect conversation, directed conversation and paging; server responses control text, choices and effects. The Java code goes directly from `NPCInputHandler` to `NPCManager`/`NpcScriptEngine`, with no server request or confirmation.
+- The Java code has substantial NPC script coverage and a functional `QuestService`: flags, monster objectives within a zone, XP/gold rewards and persistence. This does not guarantee equivalence with the original scripts: the server commands still need to be compared handler by handler.
+- Generic Java progression is limited to monster name, world and a circular zone. Original objectives based on specific items, variables, groups, PvP, timers, conditional dialogue or map events require a dedicated handler.
+- The Java quest log (`QuestScreen`) is local; it does not replace the state synchronization and server events of the 1.68 client.
 
-## 18. Météo, éclairage et rendu de carte
+## 18. Weather, lighting and map rendering
 
-- Le client original contient un système météo explicite (`weather.cpp/.h`) avec pluie, neige, intensité, état activé/désactivé et rendu des particules. Aucun gestionnaire Java de pluie/neige, aucun état météo synchronisé et aucun traitement du paquet météo 1.68 n'a été trouvé.
+- The original client contains an explicit weather system (`weather.cpp/.h`) with rain, snow, intensity, an on/off state and particle rendering. No Java rain/snow manager, no synchronized weather state and no handling of the 1.68 weather packet was found.
 
-Le détail du chemin natif est également fonctionnel : `RQ_WeatherMsg` (paquet 104) reçoit un effet `1`, `2` ou `3` pour pluie, neige ou brouillard et une valeur `OFF`/`ON`. La pluie conserve des positions aléatoires de gouttes et peut afficher des éclairs à intensité élevée ; la neige conserve ses flocons et leur variante de sprite entre les dessins. `bShowWeatherEffects` peut en plus masquer ces effets côté client, sans annuler nécessairement l’état reçu.
+  The native path's detail is also functional: `RQ_WeatherMsg` (packet 104) receives an effect of `1`, `2` or `3` for rain, snow or fog, and an `OFF`/`ON` value. Rain keeps random drop positions and can display lightning at high intensity; snow keeps its flakes and their sprite variant between draws. `bShowWeatherEffects` can additionally hide these effects client-side, without necessarily cancelling the received state.
 
-Le Java ne dispose ni du décodage de ces trois effets, ni d’un état persistant d’intensité/particules, ni du filtrage d’affichage météo équivalent. Une météo éventuellement représentée par des éléments de carte statiques ne peut donc pas reproduire l’activation serveur, l’évolution des particules, les éclairs et la séparation entre état reçu et option d’affichage du client 1.68.
-- Le client original contient aussi `LightMap`, avec création/fusion de lightmaps et effets d'éclairage par zone. Le Java possède un `DayNightCycle` qui applique un niveau d'ambiance global, mais aucune équivalence trouvée pour une lightmap locale fusionnée tuile par tuile.
+  The Java code has neither the decoding of these three effects, nor a persistent intensity/particle state, nor equivalent weather-display filtering. Any weather represented by static map elements therefore cannot reproduce server activation, particle evolution, lightning and the 1.68 client's separation between received state and display option.
+- The original client also contains `LightMap`, with lightmap creation/merging and per-zone lighting effects. The Java code has a `DayNightCycle` that applies a global ambience level, but no equivalent was found for a locally merged, tile-by-tile lightmap.
 
-`LightMap::MakeBaseLightMap` initialise une surface de lumière demi-résolution, puis `MergeLightMap` fusionne les sources locales (dont la torche principale) avant que `MakeLightingFX` ne multiplie les canaux RGB de chaque pixel source par la valeur de lumière. Le chemin haute qualité (`bLightHightGraph`) change en plus l’algorithme de fusion et d’application. La valeur `LIGHT` reçue pour le joueur et les autres unités alimente ces sources ; ce n’est donc pas seulement une teinte globale choisie au changement de jour.
+  `LightMap::MakeBaseLightMap` initializes a half-resolution light surface, then `MergeLightMap` merges local sources (including the main torch) before `MakeLightingFX` multiplies each source pixel's RGB channels by the light value. The high-quality path (`bLightHightGraph`) additionally changes the merge and application algorithm. The `LIGHT` value received for the player and other units feeds these sources; this is therefore not just a global tint picked at day change.
 
-Le `DayNightCycle` Java ne reproduit pas cette chaîne de fusion, la résolution demi-écran, le traitement RGB par pixel ou la sélection haute/basse qualité native. Une torche, une unité lumineuse ou un objet dont la valeur `LIGHT` change peut donc éclairer une zone différente, sans modifier les pixels voisins avec le même dégradé que le client 1.68.
-- Les collisions et le pathfinding Java existent et sont plutôt plus explicites que le simple rendu : cartes de collision, ligne de vue, diagonales et clearance sont gérées. L'écart restant est l'absence de validation serveur/réseau, donc un déplacement local peut être accepté alors que le client 1.68 aurait reçu une position corrigée.
+  Java's `DayNightCycle` does not reproduce this merge chain, the half-screen resolution, per-pixel RGB processing or the native high/low quality selection. A torch, a light-emitting unit or an object whose `LIGHT` value changes can therefore light a different area, without altering neighboring pixels with the same gradient as the 1.68 client.
+- Java collision and pathfinding exist and are rather more explicit than plain rendering: collision maps, line of sight, diagonals and clearance are handled. The remaining gap is the absence of server/network validation, so a local move can be accepted where the 1.68 client would have received a corrected position.
 
-## 19. État actuel de l’audit
+## 19. Current state of the audit
 
-Les domaines réseau, paquets, règles serveur, déplacement, combat, inventaire, objets, coffres, boutiques, sorts, ressources, groupes, guildes, chat, mort, PNJ, quêtes, météo, éclairage et collisions ont été examinés. Les différences critiques sont désormais documentées ; les seuls approfondissements restants sont des comparaisons de contenu exhaustives (chaque script/animation/objet) et des tests de scénarios pour quantifier les écarts déjà identifiés.
+The network, packets, server rules, movement, combat, inventory, items, chests, shops, spells, resources, groups, guilds, chat, death, NPCs, quests, weather, lighting and collision domains have been reviewed. The critical differences are now documented; the only remaining deep-dives are exhaustive content comparisons (each script/animation/item) and scenario tests to quantify the gaps already identified.
 
-## 20. Compte, personnages et sélection
+## 20. Account, characters and selection
 
-- Le client 1.68 prévoit un cycle serveur pour inscription de compte, suppression de personnage, création de personnage, authentification de version, arrivée séraphin et nombre maximal de personnages (`RQ_RegisterAccount`, `RQ_DeletePlayer`, `RQ_CreatePlayer`, `RQ_AuthenticateServerVersion`, `RQ_SeraphArrival`, `RQ_MaxCharactersPerAccountInfo`).
-- Le Java utilise `LocalCharacterStore`, `characters.json` et un fichier JSON par personnage. La création, suppression, activation, nom, sexe, statistiques, inventaire initial, or initial et emplacement de départ sont exécutés localement, sans compte, identifiant serveur, validation distante, réservation de nom ou retour d'erreur réseau.
-- Le Java limite localement le roster à trois personnages. Cette valeur n'est pas négociée avec un serveur comme le prévoit le paquet de capacité du client original.
-- La persistance locale est atomique pour les fichiers JSON, mais elle ne fournit pas les garanties d'un stockage de compte partagé : deux clients peuvent créer le même nom, écraser un état, ou conserver un personnage supprimé dans une autre copie locale.
+- The 1.68 client provides a server cycle for account registration, character deletion, character creation, version authentication, seraph arrival and the maximum number of characters (`RQ_RegisterAccount`, `RQ_DeletePlayer`, `RQ_CreatePlayer`, `RQ_AuthenticateServerVersion`, `RQ_SeraphArrival`, `RQ_MaxCharactersPerAccountInfo`).
+- The Java code uses `LocalCharacterStore`, `characters.json` and one JSON file per character. Creation, deletion, activation, name, sex, stats, starting inventory, starting gold and starting location are all done locally, with no account, server ID, remote validation, name reservation or network error feedback.
+- The Java code locally caps the roster at three characters. This value is not negotiated with a server the way the original client's capability packet provides for.
+- Local persistence is atomic for the JSON files, but it does not provide the guarantees of shared account storage: two clients can create the same name, overwrite a state, or keep a deleted character in another local copy.
 
-## 21. Unités distantes et multijoueur visible
+## 21. Remote units and visible multiplayer
 
-- Le protocole client original possède des mises à jour d'unité (`RQ_UnitUpdate`), unités périphériques, mise à jour de groupe et états de membres. Le client doit donc créer, actualiser et retirer des personnages/monstres distants selon les notifications serveur.
-- Dans le Java, les classes de personnage repérées concernent le joueur local (`Player`, `PlayerAnimations`, `PlayerHUD`) ; les managers de monstres/NPC gèrent des entités locales issues des spawns, pas un registre de joueurs distants alimenté par paquets.
-- Il manque donc les fonctions observables suivantes : apparition/disparition d'un autre joueur, interpolation ou correction de sa position, apparence distante reçue, PV/mana/effets distants, animation d'attaque distante et retrait sur déconnexion. Les groupes Java sont absents, ce qui empêche aussi l'affichage synchronisé des membres.
+- The original client protocol has unit updates (`RQ_UnitUpdate`), peripheral units, group updates and member states. The client must therefore create, refresh and remove remote characters/monsters according to server notifications.
+- In the Java code, the identified character classes concern the local player (`Player`, `PlayerAnimations`, `PlayerHUD`); the monster/NPC managers handle local entities coming from spawns, not a registry of remote players fed by packets.
+- The following observable functions are therefore missing: another player appearing/disappearing, interpolation or correction of their position, a received remote appearance, remote HP/mana/effects, remote attack animation and removal on disconnect. Java groups are absent, which also prevents synchronized display of members.
 
-## 22. Téléportation, fast mode et séraphin
+## 22. Teleportation, fast mode and seraph
 
-- Le client 1.68 traite la téléportation comme une requête dédiée avec délai/ACK (`RQ_TeleportPlayer`, 750 ms, 5 ACK), et possède également un état fast mode (`RQ_PlayerFastMode`). Le Java téléporte directement le joueur lors d'objets, scripts ou déplacements locaux ; aucune réponse serveur, refus de destination, coût, cooldown ou correction n'est disponible.
-- Le Java contient des registres de téléportation et des animations séraphin, mais ce sont des données/effets locaux. Ils ne constituent pas l'équivalent du cycle serveur `RQ_Seraph`, `RQ_SeraphArrival` et des validations de renaissance.
-- Une téléportation locale peut donc contourner collision, zone sûre, combat, poids, sort lancé ou restrictions de carte qui étaient validés par le serveur original.
+- The 1.68 client treats teleportation as a dedicated request with a delay/ACK (`RQ_TeleportPlayer`, 750 ms, 5 ACK), and also has a fast-mode state (`RQ_PlayerFastMode`). The Java code teleports the player directly via items, scripts or local movement; no server response, destination refusal, cost, cooldown or correction is available.
+- The Java code contains teleport registries and seraph animations, but these are local data/effects. They are not the equivalent of the `RQ_Seraph`, `RQ_SeraphArrival` server cycle and rebirth validations.
+- A local teleport can therefore bypass collision, safe zone, combat, weight, an active spell cast, or map restrictions that were validated by the original server.
 
-## 23. Sons, musique et animations
+## 23. Sounds, music and animations
 
-- Le client natif charge les sons via une base de données d'identifiants (`DatabaseLoadVSB`, `GameSounds`, `SoundFX`) et possède des sons dédiés pour les contrôles d'interface, objets, combat, zones, donjons et boss. Le Java a un `SoundManager` basé sur des noms de fichiers et couvre plusieurs sons d'interface, de sorts et de monstres, mais ne reproduit pas le routage par identifiant du client natif.
-- Le Java joue les sons d'attaque PNJ au démarrage de la pose et les sons de blessure/mort dans les callbacks locaux. Le client 1.68 reçoit l'état de l'unité et orchestre le rendu/sound côté client ; sans unités distantes, le Java ne peut pas jouer les sons des actions des autres joueurs.
-- `PlayerAnimations` fixe la durée d'une frame à `0.05f` et termine une attaque en conservant la dernière pose. Le client natif délègue les séquences à ses systèmes de sprites/animations et aux données de ressources. L'identité exacte des durées, du nombre de frames, de la pose finale et du déclenchement sonore n'est donc pas démontrée comme équivalente ; elle doit être validée animation par animation.
-- La musique Java est sélectionnée par zones rectangulaires locales (`musicZones`). Le client natif possède en plus une logique de changement de musique par région, donjon et boss (`GameMusic.cpp`) ; aucune preuve ne permet d'affirmer que toutes ces priorités et transitions sont conservées dans les données Java.
+- The native client loads sounds via an ID database (`DatabaseLoadVSB`, `GameSounds`, `SoundFX`) and has dedicated sounds for UI controls, items, combat, zones, dungeons and bosses. The Java code has a `SoundManager` based on file names and covers several UI, spell and monster sounds, but does not reproduce the native client's ID-based routing.
+- The Java code plays NPC attack sounds when the pose starts and hit/death sounds in local callbacks. The 1.68 client receives the unit's state and orchestrates rendering/sound client-side; without remote units, the Java code cannot play other players' action sounds.
+- `PlayerAnimations` sets a frame's duration to `0.05f` and ends an attack by holding the last pose. The native client delegates sequences to its sprite/animation systems and resource data. The exact identity of durations, frame counts, final pose and sound triggering is therefore not proven equivalent; it must be validated animation by animation.
+- Java music is selected by local rectangular zones (`musicZones`). The native client additionally has region/dungeon/boss music-change logic (`GameMusic.cpp`); there is no proof that all of these priorities and transitions are preserved in the Java data.
 
-## 24. Couverture réelle des commandes de scripts PNJ
+## 24. Actual coverage of NPC script commands
 
-La lecture du chemin d'exécution de `NpcScriptEngine` révèle des écarts plus précis que la simple présence des classes PNJ :
+Reading `NpcScriptEngine`'s execution path reveals gaps more precise than the mere presence of NPC classes:
 
-- `SendBuyItemList`, `SendTeachSkillList`, `SendTrainSkillList`, `SendTeachFormuleList` et `CreateFormuleList` sont reconnus par des branches vides. Ils ne produisent donc aucun paquet ni aucune ouverture de liste par eux-mêmes ; l'interface Java doit reconstruire l'offre à partir du résultat local.
-- `HealPlayer`/`Heal` ne reproduisent pas un soin serveur : le moteur pose un indicateur `heal`, puis la conséquence dépend du code appelant local. Il n'y a pas de validation de distance, coût, cible distante ou correction réseau.
-- `CastSpellTarget` et `CastSpellSelf` collectent des identifiants et les exécutent localement. Le serveur original pouvait appliquer résistances, cible, zone, effets persistants, cooldowns et broadcasts à plusieurs unités avant de répondre au client.
-- `SUMMON`/`SUMMON2` créent des demandes locales de spawn. Ils ne reproduisent pas la réservation d'unité serveur, la visibilité périphérique, les limites de population, ni la diffusion aux autres clients.
-- Le moteur Java ignore par construction toute commande non couverte par ses branches de parsing ; la présence d'un script importé ne prouve donc pas que chaque macro C++ est fonctionnelle. Les scripts portant sur variables serveur, commerce, formules, groupes, guildes, timers ou effets de carte sont particulièrement sensibles à cette perte silencieuse.
+- `SendBuyItemList`, `SendTeachSkillList`, `SendTrainSkillList`, `SendTeachFormuleList` and `CreateFormuleList` are recognized by empty branches. They therefore produce no packet and no list opening by themselves; the Java UI has to rebuild the offer from the local result.
+- `HealPlayer`/`Heal` do not reproduce a server-side heal: the engine sets a `heal` flag, then the consequence depends on the local calling code. There is no distance validation, cost, remote target or network correction.
+- `CastSpellTarget` and `CastSpellSelf` collect IDs and execute them locally. The original server could apply resistances, targeting, zone, persistent effects, cooldowns and broadcasts to several units before responding to the client.
+- `SUMMON`/`SUMMON2` create local spawn requests. They do not reproduce server unit reservation, peripheral visibility, population limits, or broadcasting to other clients.
+- The Java engine, by construction, ignores any command not covered by its parsing branches; the presence of an imported script therefore does not prove that every C++ macro is functional. Scripts involving server variables, trade, formulas, groups, guilds, timers or map effects are especially prone to this silent loss.
 
-## 25. Compétences, statistiques et progression
+## 25. Skills, statistics and progression
 
-- Le client original distingue liste de compétences, liste d'entraînement, liste d'achat, utilisation d'une compétence, statut, points de compétences/statistiques, XP, niveau, or, PV, mana et poids (`RQ_GetSkillList`, `RQ_GetTrainSkillList`, `RQ_GetBuySkillList`, `RQ_UseSkill`, `RQ_GetStatus`, `RQ_SkillStatPoints`, `RQ_XPchanged`, `RQ_LevelUp`, `RQ_GoldChange`, `RQ_HPchanged`, `RQ_ManaChanged`, `RQ_UpdateWeight`).
-- Le Java possède des écrans et mutations locales : `Statistics` modifie les points de caractéristiques, `TrainScreen` dépense directement l'or et augmente une compétence, et `PlayerProgression` attribue directement XP, niveau, points, PV et mana. Il n'existe ni réponse serveur, ni refus distant, ni transaction d'entraînement, ni diffusion aux autres unités.
-- La progression Java donne cinq points de statistiques et quinze points de compétence au niveau supérieur. Ces nombres et les gains aléatoires PV/mana sont des règles Java ; ils n'ont pas encore été démontrés identiques aux règles/configuration du serveur 1.68.
-- L'interface Java n'expose que les compétences de combat `attack`, `dodge` et `archery` dans le tableau de statistiques, alors que le protocole original prévoit une liste dynamique de compétences. Les compétences scriptées, actives, passives ou dépendantes d'une liste serveur peuvent donc être absentes de l'interface et du cycle d'utilisation.
-- Le client original reçoit les changements de ressources et d'XP comme événements séparés. Le Java modifie l'état puis l'affichage localement ; un rollback, un plafond serveur, une dépense concurrente ou une perte de paquet n'a pas d'équivalent.
+- The original client distinguishes skill list, training list, buy list, using a skill, status, skill/stat points, XP, level, gold, HP, mana and weight (`RQ_GetSkillList`, `RQ_GetTrainSkillList`, `RQ_GetBuySkillList`, `RQ_UseSkill`, `RQ_GetStatus`, `RQ_SkillStatPoints`, `RQ_XPchanged`, `RQ_LevelUp`, `RQ_GoldChange`, `RQ_HPchanged`, `RQ_ManaChanged`, `RQ_UpdateWeight`).
+- The Java code has screens and local mutations: `Statistics` modifies stat points, `TrainScreen` spends gold directly and raises a skill, and `PlayerProgression` directly grants XP, level, points, HP and mana. There is no server response, no remote refusal, no training transaction and no broadcast to other units.
+- Java progression grants five stat points and fifteen skill points per level-up. These numbers and the random HP/mana gains are Java rules; they have not yet been shown to be identical to the 1.68 server's rules/configuration.
+- The Java UI only exposes the combat skills `attack`, `dodge` and `archery` in the stats table, whereas the original protocol provides for a dynamic skill list. Scripted, active, passive or server-list-dependent skills can therefore be missing from the UI and the use cycle.
+- The original client receives resource and XP changes as separate events. The Java code mutates state and then the display locally; a rollback, a server cap, a concurrent spend or a lost packet has no equivalent.
 
-## 26. Options client et effets graphiques configurables
+## 26. Client options and configurable graphics effects
 
-- Les options natives comprennent, en plus du volume musique/son et de la luminosité, son de page, qualité d'éclairage, qualité d'effets, eau animée, dithering, alpha de l'interface, animation séraphin, affichage des statuts, texte de barre XP, affichage de l'or et mode 32 FPS (`SaveGame.h`).
-- Les préférences Java couvrent volume, luminosité, plein écran, VSync, valeurs HUD, transparence GUI, animation séraphin, texte XP, qualité de police et journalisation. Les options natives eau animée, éclairage haut niveau, effets graphiques, dithering, son de page, affichage de l'or et cadence 32 FPS ne sont pas représentées comme réglages Java équivalents.
-- Ce n'est pas seulement une différence d'interface : ces drapeaux modifient le rendu, l'animation et certains retours audio du client 1.68. Leur absence force un comportement Java unique, quelle que soit la configuration historique du joueur.
+- The native options include, in addition to music/sound volume and brightness: page sound, lighting quality, effects quality, animated water, dithering, UI alpha, seraph animation, status display, XP bar text, gold display and 32 FPS mode (`SaveGame.h`).
+- The Java preferences cover volume, brightness, fullscreen, VSync, HUD values, GUI transparency, seraph animation, XP text, font quality and logging. The native options for animated water, high-level lighting, graphics effects, dithering, page sound, gold display and the 32 FPS rate are not represented as equivalent Java settings.
+- This is not just a UI difference: these flags change the rendering, animation and some audio feedback of the 1.68 client. Their absence forces a single Java behavior regardless of the player's historical configuration.
 
-## 27. Macros, raccourcis, curseurs et ciblage
+## 27. Macros, shortcuts, cursors and targeting
 
-- Le client natif possède `MacroHandler` : association d'une combinaison `VKey` à un callback, remplacement/suppression d'une macro, activation/désactivation globale et verrouillage de macros pendant certains états. Le Java ne possède pas de gestionnaire de macros utilisateur comparable ; ses raccourcis sont codés directement dans les écrans et handlers.
-- Le natif distingue notamment curseur d'attaque, curseur d'attaque à distance et curseur de sort (`CombatCursor.h`), avec sélection de cible et comportement dépendant du mode d'attaque. Le Java possède des curseurs et cibles locales, mais la sélection ne peut viser que ses monstres/NPC chargés localement et ne reçoit aucune cible/unité distante.
-- Le client original conserve aussi des mécanismes d'ignore-list et de touches accélératrices dans sa couche macro/localisation. Aucun stockage Java d'une ignore-list joueur ni filtrage des messages par nom n'a été trouvé.
-- Les annulations Java (`clearCurrentAttackTarget`, annulation de sort, fermeture d'écran) interrompent des actions locales. Elles ne reproduisent pas les requêtes d'annulation, statuts intermédiaires et ACK du client/serveur 1.68.
+- The native client has `MacroHandler`: binding a `VKey` combination to a callback, replacing/removing a macro, global enable/disable and locking macros during certain states. The Java code has no comparable user macro manager; its shortcuts are hardcoded directly in the screens and handlers.
+- The native client notably distinguishes attack cursor, ranged-attack cursor and spell cursor (`CombatCursor.h`), with target selection and behavior depending on the attack mode. The Java code has local cursors and targets, but selection can only target its locally loaded monsters/NPCs and receives no remote target/unit.
+- The original client also keeps ignore-list mechanisms and accelerator keys in its macro/localization layer. No Java storage of a player ignore-list or message filtering by name was found.
+- Java cancellations (`clearCurrentAttackTarget`, spell cancellation, closing a screen) interrupt local actions. They do not reproduce the 1.68 client/server's cancellation requests, intermediate statuses and ACKs.
 
-## 28. Intégrité et sécurité du transport
+## 28. Transport integrity and security
 
-- Le client natif calcule des CRC16 dans `CommCenter`, chiffre/déchiffre les paquets (`TFCCrypt::EncryptS/DecryptS`, `EncryptC/DecryptC`) et rejette un paquet lorsque le contrôle ou le déchiffrement échoue. Les paquets sécurisés utilisent également des délais/ACK dédiés.
-- Le Java ne contient pas de transport réseau, de CRC, de chiffrement ou d'authentification de paquet. Toutes les mutations locales (or, XP, objets, téléportation, compétences et sorts) sont donc appelables sans la couche d'intégrité du client 1.68.
-- Le client natif possède en outre une authentification de version serveur (`RQ_AuthenticateServerVersion`). Le Java n'effectue pas de négociation de version avant de lancer le monde local ; une incompatibilité de données ne peut donc pas être refusée au même moment.
-- Cet écart est fonctionnel et sécuritaire : il affecte la validation des messages, la détection de paquets altérés/répétés et la compatibilité entre versions, pas uniquement l'implémentation technique du réseau.
+- The native client computes CRC16 in `CommCenter`, encrypts/decrypts packets (`TFCCrypt::EncryptS/DecryptS`, `EncryptC/DecryptC`) and rejects a packet when the check or decryption fails. Secured packets also use dedicated delays/ACKs.
+- The Java code contains no network transport, CRC, encryption or packet authentication. All local mutations (gold, XP, items, teleportation, skills and spells) are therefore callable without the 1.68 client's integrity layer.
+- The native client additionally has server version authentication (`RQ_AuthenticateServerVersion`). The Java code does not perform a version negotiation before launching the local world; a data incompatibility therefore cannot be refused at the same point.
+- This gap is both functional and security-related: it affects message validation, detection of tampered/replayed packets, and cross-version compatibility, not just the technical network implementation.
 
-## 29. Mondes, transitions et changement de carte
+## 29. Worlds, transitions and map changes
 
-- Les deux implémentations déclarent quatre mondes de 3072×3072 : monde principal, donjon, caverne et monde souterrain. La correspondance de base des fichiers est donc présente côté Java (`MapDefinition`) et côté client natif (`V2_WorldMap.Map`, `V2_DungeonMap.Map`, `V2_CavernMap.Map`, `V2_Underworld.Map`).
-- Le client natif, lors d'un téléport/changement de monde, verrouille le monde, valide les coordonnées dans `[0,3072]`, charge la carte de zone, change la position, puis lance une transition de fondu avant de déverrouiller. Le Java change directement la carte/position dans `MainGameScreen` et ses registres de téléportation ; aucun cycle de verrouillage réseau équivalent n'est présent.
-- Le natif applique des traitements d'ambiance dépendant du monde et de la position : `NTime.cpp` force notamment des teintes spécifiques aux cavernes, donjons et à certaines zones du monde souterrain. Le Java utilise `DayNightCycle` avec une ambiance globale, sans équivalence confirmée pour ces teintes par monde/zone.
-- Le rendu Java précharge ses quatre cartes et conserve des drops par monde, mais les états dynamiques natifs (objets reçus, unités périphériques, météo, lightmap, fade et musique déclenchés lors de la transition) ne sont pas transférés comme un état atomique de changement de monde.
+- Both implementations declare four 3072×3072 worlds: main world, dungeon, cavern and underworld. The basic file correspondence is therefore present on both the Java side (`MapDefinition`) and the native client side (`V2_WorldMap.Map`, `V2_DungeonMap.Map`, `V2_CavernMap.Map`, `V2_Underworld.Map`).
+- The native client, on a teleport/world change, locks the world, validates coordinates within `[0,3072]`, loads the zone map, changes the position, then plays a fade transition before unlocking. The Java code changes the map/position directly in `MainGameScreen` and its teleport registries; no equivalent network locking cycle is present.
+- The native client applies world- and position-dependent ambience processing: `NTime.cpp` notably forces specific tints for caverns, dungeons and certain underworld zones. The Java code uses `DayNightCycle` with a global ambience, with no confirmed equivalent for these per-world/per-zone tints.
+- Java rendering preloads its four maps and keeps drops per world, but the native dynamic states (received items, peripheral units, weather, lightmap, fade and music triggered during the transition) are not carried over as a single atomic world-change state.
 
-## 30. Champs de personnage perdus ou simplifiés à la sauvegarde
+## 30. Character fields lost or simplified on save
 
-La structure native `TFCPlayer` contient des champs que `PlayerStateDto` ne possède pas comme données de premier rang :
+The native `TFCPlayer` structure contains fields that `PlayerStateDto` does not have as first-class data:
 
-- charisme et chance (`Cha`, `Lck`) ;
-- foi et foi maximale (`Faith`, `MaxFaith`) ;
-- classe d'armure et poids/max poids ;
-- puissances et résistances élémentaires structurées pour terre/feu/eau/air/ténèbres/lumière ;
-- statistiques vraies et bonus séparés (`bStr`, `bEnd`, etc.) ;
-- compteurs de morts, kills, séries de meurtres et points PvP ;
-- indicateurs d'état serveur comme `CanRunScripts` et `CanSlayUsers`.
+- charisma and luck (`Cha`, `Lck`);
+- faith and max faith (`Faith`, `MaxFaith`);
+- armor class and weight/max weight;
+- structured elemental powers and resistances for earth/fire/water/air/darkness/light;
+- true stats and separate bonuses (`bStr`, `bEnd`, etc.);
+- death counters, kills, kill streaks and PvP points;
+- server state flags like `CanRunScripts` and `CanSlayUsers`.
 
-Le Java encode certains bonus/résistances dans des flags de quête et possède des calculs d'équipement, mais ce stockage indirect n'est pas équivalent à des champs natifs sérialisés. Il ne garantit ni la conservation complète de la valeur, ni la distinction valeur de base/valeur effective, ni la compatibilité avec un personnage 1.68.
+The Java code encodes some bonuses/resistances in quest flags and has equipment calculations, but this indirect storage is not equivalent to serialized native fields. It guarantees neither full value retention, nor the base-value/effective-value distinction, nor compatibility with a 1.68 character.
 
-Les buffs Java sauvegardés contiennent principalement nom et durée. Le client/serveur natif synchronise des statuts avec leurs données d'effet, icône, puissance et cible ; après rechargement Java, un effet complexe peut donc être affiché ou recalculé différemment, et les effets sur unités distantes sont de toute façon absents.
+Saved Java buffs mainly contain a name and a duration. The native client/server synchronizes statuses along with their effect data, icon, power and target; after a Java reload, a complex effect can therefore be displayed or recalculated differently, and effects on remote units are absent regardless.
 
-## 31. Paquets spécialisés et fonctions rares
+## 31. Specialized packets and rare functions
 
-- Le protocole natif possède des événements distincts de vol (`RQ_Rob`, `RQ_DispelRob`), de flèche touchée/manquée (`RQ_ArrowHit`, `RQ_ArrowMiss`), de météo (`RQ_WeatherMsg`), d'ouverture d'URL (`RQ_OpenURL`), d'information serveur (`RQ_InfoMessage`) et de mise à jour du drapeau GM (`RQ_GodFlagUpdate`).
-- Le Java contient un projectile d'arc et des règles de combat à distance, mais pas de résultat réseau séparé touché/manqué pour une flèche. Le projectile local ne prouve donc pas que la consommation de flèche, le timing du dégât, le message de miss et l'état de la cible suivent le client 1.68.
-- Aucun service Java de vol avec synchronisation, annulation de vol, notification de victime ou restauration d'état n'a été trouvé. L'icône `rob` dans l'écran de statistiques n'est pas une implémentation du mécanisme natif.
-- Les fonctions météo, URL reçue du serveur, messages d'information et drapeaux GM sont absentes comme traitements Java dédiés. Les éléments séraphins présents dans Java couvrent une animation/aura locale, mais pas la totalité des événements serveur spécialisés.
+- The native protocol has distinct events for robbery (`RQ_Rob`, `RQ_DispelRob`), arrow hit/miss (`RQ_ArrowHit`, `RQ_ArrowMiss`), weather (`RQ_WeatherMsg`), opening a URL (`RQ_OpenURL`), server information (`RQ_InfoMessage`) and GM-flag updates (`RQ_GodFlagUpdate`).
+- The Java code has a bow projectile and ranged combat rules, but no separate network hit/miss result for an arrow. The local projectile therefore does not prove that arrow consumption, damage timing, the miss message and the target's state follow the 1.68 client.
+- No Java robbery service with synchronization, rob cancellation, victim notification or state restoration was found. The `rob` icon in the stats screen is not an implementation of the native mechanism.
+- Weather features, a server-received URL, information messages and GM flags are absent as dedicated Java handling. The seraph elements present in the Java code cover a local animation/aura, but not the full set of specialized server events.
 
-## 32. Slots d'équipement et apparence
+## 32. Equipment slots and appearance
 
-- Le client natif stocke 36 apparences d'objet (`Object[36]`) et définit 16 emplacements historiques : corps, pieds, gants, casque, jambes, anneaux, bracelet, collier, armes droite/gauche, deux mains, ceinture et manches. Le Java expose 23 valeurs `BodyPart`, dont plusieurs slots synthétiques (`BACK`, `HAIR`, `HAT`, `MASK`, `CAPE`, `ROBELEGS`, `BOOT`, `WEAPON2`, `SHIELD`).
-- Cette modélisation Java est plus détaillée pour certains équipements, mais elle n'est pas un mapping un-à-un du tableau natif. Les règles de remplacement arme/bouclier, manches/gants, casque/cheveux et robe/jambes peuvent donc produire une apparence différente même quand l'objet logique est identique.
-- Java applique des règles de concealment et préserve les suffixes de palette lors d'un override. Le client natif résout les apparences via ses groupes d'objets/palettes et ses tables `Apparence.h`; l'équivalence de chaque groupe et de chaque combinaison de sexe n'est pas démontrée par les seuls tests de présence.
-- Le natif manipule aussi apparence, ID d'instance et référence de base séparément dans les objets d'équipement. Le Java stocke principalement une clé d'objet puis dérive le sprite ; deux instances visuellement identiques avec des données différentes ne peuvent pas être distinguées par le rendu local.
+- The native client stores 36 item appearances (`Object[36]`) and defines 16 historical slots: body, feet, gloves, helmet, legs, rings, bracelet, necklace, right/left weapons, both hands, belt and sleeves. The Java code exposes 23 `BodyPart` values, including several synthetic slots (`BACK`, `HAIR`, `HAT`, `MASK`, `CAPE`, `ROBELEGS`, `BOOT`, `WEAPON2`, `SHIELD`).
+- This Java model is more detailed for some equipment, but it is not a one-to-one mapping of the native array. The weapon/shield, sleeves/gloves, helmet/hair and robe/legs replacement rules can therefore produce a different appearance even when the logical item is identical.
+- Java applies concealment rules and preserves palette suffixes on an override. The native client resolves appearances via its item/palette groups and its `Apparence.h` tables; equivalence for each group and each sex combination is not demonstrated by presence tests alone.
+- The native code also handles appearance, instance ID and base reference separately in equipment objects. The Java code mainly stores an item key and then derives the sprite; two visually identical instances with different data cannot be distinguished by local rendering.
 
-## 33. Objets de carte, animations et profondeur
+## 33. Map objects, animations and depth
 
-- Le client natif maintient une liste d'objets visuels avec ID, type/apparence, position, direction, luminosité, PV, objet attaché et texte de nom/guilde. Il possède des chemins distincts pour objet normal, ombre, animation, overlay animé et objets 3D (`VisualObjectList.h`).
-- Le Java possède bien `ObjectRenderer`, des frames, des sons d'ouverture/fermeture, des flags `behind` et un tri de profondeur. Cette couverture est donc partielle mais réelle, contrairement aux domaines réseau.
-- L'écart vérifié restant est l'éclairage dynamique : le natif associe plusieurs lightmaps (`lmPlayerLight`, `lmOtherPlayerLight`, torches/lampes) et met à jour la lumière des objets ; aucun système Java équivalent de fusion de lightmap par joueur/torche n'a été trouvé.
-- Le natif possède des tuiles d'eau animée et un lissage des raccords d'eau (`AnimWater01`, `WaterSmooth`, `DrawWaterLevel`). Le Java possède le rendu de terrain et de mosaïques, mais aucun cycle explicite d'eau animée ni réglage Java correspondant à `bAnimatedWater`.
-- Les objets Java utilisent des positions/mappings logiques et un état d'animation local. Ils ne reçoivent pas les changements d'objet, déplacements, suppressions ou overlays d'une liste d'objets serveur, de sorte que les états interactifs multi-client restent différents.
+- The native client maintains a list of visual objects with ID, type/appearance, position, direction, brightness, HP, attached item and name/guild text. It has separate paths for normal objects, shadows, animation, animated overlay and 3D objects (`VisualObjectList.h`).
+- The Java code does have `ObjectRenderer`, frames, open/close sounds, `behind` flags and depth sorting. This coverage is therefore partial but real, unlike the network domains.
+- The remaining verified gap is dynamic lighting: the native code combines several lightmaps (`lmPlayerLight`, `lmOtherPlayerLight`, torches/lamps) and updates object lighting; no equivalent Java system for merging a per-player/per-torch lightmap was found.
+- The native code has animated water tiles and smoothing of water seams (`AnimWater01`, `WaterSmooth`, `DrawWaterLevel`). The Java code has terrain and tile rendering, but no explicit animated-water cycle or Java setting corresponding to `bAnimatedWater`.
+- Java objects use logical positions/mappings and a local animation state. They do not receive object changes, movements, removals or overlays from a server object list, so multi-client interactive states remain different.
 
-## 34. Caméra, zoom et conversion écran-monde
+## 34. Camera, zoom and screen-to-world conversion
 
-Les dimensions de base sont alignées : le client original initialise des tuiles de 32×16 pixels, une dimension virtuelle de 256×256, des mondes de 3072×3072 et quatre mondes. Cela ne suffit pas à établir une équivalence de caméra.
+The base dimensions are aligned: the original client initializes 32×16-pixel tiles, a 256×256 virtual size, 3072×3072 worlds and four worlds. This is not enough to establish camera equivalence.
 
-Le client original possède un état de zoom explicite. `Global::SetZoomStatus` le limite entre 0 et 14, et l'option `bEnableZoom` permet de le désactiver. Chaque niveau modifie de 5 % les dimensions d'écran effectives. La conversion souris-vers-monde compense ce zoom, et les noms/textes de dialogue reçoivent aussi des offsets liés au zoom.
+The original client has an explicit zoom state. `Global::SetZoomStatus` caps it between 0 and 14, and the `bEnableZoom` option allows disabling it. Each level changes the effective screen dimensions by 5%. Mouse-to-world conversion compensates for this zoom, and dialogue names/text also receive zoom-related offsets.
 
-Le client Java ne possède ni état de zoom correspondant, ni préférence de zoom, ni équivalent de `SetZoomStatus`. Il utilise une caméra orthographique libGDX, un `ScreenViewport`, une conversion `unproject` et un alignement sur les pixels. Les comportements divergent donc lorsque le client 1.68 est zoomé ou lorsque la résolution change :
+The Java client has neither a corresponding zoom state, nor a zoom preference, nor an equivalent of `SetZoomStatus`. It uses a libGDX orthographic camera, a `ScreenViewport`, an `unproject` conversion and pixel alignment. Behaviors therefore diverge whenever the 1.68 client is zoomed or the resolution changes:
 
-- nombre de tuiles visibles et limite de culling ;
-- cellule du monde sélectionnée par un clic ;
-- ciblage près des bords de l'écran ;
-- position des noms, labels et dialogues ;
-- relation entre coordonnées HUD et coordonnées monde.
+- number of visible tiles and the culling limit;
+- the world cell selected by a click;
+- targeting near screen edges;
+- position of names, labels and dialogues;
+- the relationship between HUD coordinates and world coordinates.
 
-La fonction native `ScreenPosToWL` utilise en outre des décalages asymétriques autour du centre de l'écran, avec les bases 32 pixels horizontalement et 16 verticalement. Java délègue à `camera.unproject`, qui suit un autre algorithme de projection. Même au zoom 0, l'équivalence doit être vérifiée par un test pixel par pixel pour chaque résolution supportée ; les dimensions de tuile identiques ne suffisent pas.
+The native `ScreenPosToWL` function also uses asymmetric offsets around the screen center, with base values of 32 pixels horizontally and 16 vertically. Java delegates to `camera.unproject`, which follows a different projection algorithm. Even at zoom 0, equivalence must be verified with a pixel-by-pixel test for each supported resolution; identical tile dimensions are not enough.
 
-## 35. Modèle d'entrée souris/clavier et états d'interface
+## 35. Mouse/keyboard input model and UI states
 
-Le client natif ne traite pas seulement des touches instantanées. `MouseAction.cpp` transforme explicitement les événements en `DRAG`, `DROP`, `CLICK`, `DOUBLE_CLICK` et `DOWN`, puis les distribue aux contrôles via des messages distincts. Cette distinction est utilisée par les interfaces d'inventaire, coffre, échange, macro et sélection.
+The native client does not just handle instantaneous key presses. `MouseAction.cpp` explicitly turns events into `DRAG`, `DROP`, `CLICK`, `DOUBLE_CLICK` and `DOWN`, then dispatches them to controls via distinct messages. This distinction is used by the inventory, chest, trade, macro and selection UIs.
 
-Le Java possède des écrans GUI et des contrôles libGDX, mais `GameInputHandler` ne gère directement que le déplacement clavier, quelques raccourcis globaux et des toggles de debug/carte. Aucun équivalent central natif de la séquence `DOWN → DRAG → DROP`, de la double activation et de la capture souris pendant un drag n'est présent dans ce handler. Les écrans Java peuvent donc répondre à un clic local tout en divergeant sur les cas suivants : déplacement d'un objet sans relâcher sur une zone valide, double-clic d'utilisation, clic droit contextuel, annulation d'un drag hors fenêtre et priorité entre GUI et monde.
+The Java code has GUI screens and libGDX controls, but `GameInputHandler` only directly handles keyboard movement, a few global shortcuts and debug/map toggles. No central native equivalent of the `DOWN → DRAG → DROP` sequence, of double-activation, or of mouse capture during a drag is present in this handler. Java screens can therefore respond to a local click while diverging on the following cases: moving an item without releasing it over a valid area, double-click use, contextual right-click, cancelling a drag outside the window, and priority between the GUI and the world.
 
-Le clavier natif maintient également un état DirectInput de 256 touches et produit des événements de relâchement pour les lettres, chiffres, Entrée, Échap, Retour arrière, espace, plus et moins. Le Java interroge principalement `isKeyPressed`/`isKeyJustPressed` et réserve la saisie texte aux widgets. La répétition, le moment de déclenchement et la consommation d'une touche par un écran ne sont donc pas garantis identiques, en particulier pour les macros et les actions maintenues.
+The native keyboard also maintains a 256-key DirectInput state and produces release events for letters, digits, Enter, Escape, Backspace, space, plus and minus. The Java code mostly polls `isKeyPressed`/`isKeyJustPressed` and reserves text entry for widgets. Repetition, the timing of a trigger and a key being consumed by a screen are therefore not guaranteed to be identical, in particular for macros and held actions.
 
-Enfin, le client natif restaure le zoom après certains traitements souris (`GetlastScrollStatus` puis `SetZoomStatus`). Le Java n'a pas cette restauration d'état, ce qui renforce l'écart entre navigation, interaction d'interface et coordonnées monde.
+Finally, the native client restores zoom after certain mouse operations (`GetlastScrollStatus` then `SetZoomStatus`). The Java code has no such state restoration, which widens the gap between navigation, UI interaction and world coordinates.
 
-## 36. Déplacement, chemin et autorité de collision
+## 36. Movement, pathing and collision authority
 
-Le client natif représente le déplacement par huit requêtes discrètes (`RQ_MoveNorth` à `RQ_MoveNorthWest`). Après un clic, `MovePl` appelle `Player::ScreenPosToWL`, construit une suite de mouvements avec `pfSetPosition`/`pfGetNextMovement`, puis envoie le prochain déplacement. Ces requêtes ont un ACK configuré à zéro délai : le client ne simule donc pas une validation serveur équivalente à une animation locale continue ; il avance selon les réponses/états reçus.
+The native client represents movement with eight discrete requests (`RQ_MoveNorth` through `RQ_MoveNorthWest`). After a click, `MovePl` calls `Player::ScreenPosToWL`, builds a sequence of moves with `pfSetPosition`/`pfGetNextMovement`, then sends the next move. These requests have their ACK configured at zero delay: the client therefore does not simulate a server validation equivalent to a continuous local animation; it advances according to the responses/states it receives.
 
-Le Java suit une autre architecture : `PlayerMovement.move` consomme un budget de pixels par frame (`PLAYER_SPEED × delta`), réserve localement une case, interpole la position et applique directement la collision. En cas de blocage, il tente automatiquement des directions adjacentes pour glisser autour de l'obstacle.
+The Java code follows a different architecture: `PlayerMovement.move` consumes a per-frame pixel budget (`PLAYER_SPEED × delta`), locally reserves a tile, interpolates position and applies collision directly. When blocked, it automatically tries adjacent directions to slide around the obstacle.
 
-Les différences fonctionnelles vérifiées sont donc :
+The verified functional differences are therefore:
 
-- le Java peut déplacer le personnage à une position intermédiaire entre deux cases, alors que le protocole natif raisonne en pas directionnels transmis ;
-- le Java décide localement si une case et l'empreinte du joueur sont franchissables, tandis que le client natif transmet l'intention et reçoit la position autoritative ;
-- le Java peut choisir une direction latérale de repli non demandée par le joueur à cause de `tryReserveAdjacentDirection` ; ce glissement automatique n'est pas démontré dans `MovePl` natif ;
-- la vitesse effective Java dépend du delta de frame et de multiplicateurs locaux, alors que le rythme historique dépend de la cadence des requêtes, des réponses et des règles serveur ;
-- un désaccord de collision, un déplacement interdit ou une correction de position n'a pas d'équivalent réseau dans le Java local.
+- the Java code can move the character to a position between two tiles, whereas the native protocol reasons in transmitted directional steps;
+- the Java code decides locally whether a tile and the player's footprint are passable, whereas the native client transmits intent and receives the authoritative position;
+- the Java code can pick a sideways fallback direction not requested by the player because of `tryReserveAdjacentDirection`; this automatic sliding is not demonstrated in the native `MovePl`;
+- effective Java speed depends on the frame delta and local multipliers, whereas the historical pace depends on request cadence, responses and server rules;
+- a collision disagreement, a forbidden move or a position correction has no network equivalent in local Java.
 
-Même si les deux clients utilisent une grille 32×16 et huit directions, leurs décisions de déplacement ne sont donc pas interchangeables. Une comparaison complète doit tester au minimum : diagonale contre angle bloqué, bord de carte, obstacle sur l'empreinte haute du personnage, destination téléportable, maintien d'une touche, clic maintenu et correction de position.
+Even though both clients use a 32×16 grid and eight directions, their movement decisions are therefore not interchangeable. A full comparison must test at least: diagonal vs. blocked corner, map edge, an obstacle on the character's upper footprint, a teleportable destination, holding a key, holding a click, and position correction.
 
-## 37. Ciblage, portée et ligne de vue
+## 37. Targeting, range and line of sight
 
-Le client natif maintient une cible par identifiant d'unité (`TargetID`, `FollowID`, `FreezeID`) à partir de la grille d'objets `GridID`. Le clic d'attaque peut sélectionner, suivre ou verrouiller une unité ; le double-clic active le verrouillage si l'option `bLockTarget` est activée. Les interfaces envoient ensuite l'identifiant de la cible au serveur, après vérification que l'objet existe dans la liste des unités reçues.
+The native client keeps one target per unit ID (`TargetID`, `FollowID`, `FreezeID`) drawn from the `GridID` object grid. An attack click can select, follow or lock a unit; double-click enables locking if the `bLockTarget` option is on. The UIs then send the target's ID to the server, after checking that the object exists in the received unit list.
 
-Le Java sélectionne principalement des instances locales de `BaseMonster`/`BaseNPC` et peut choisir le monstre le plus proche. Il ne possède pas de table d'identifiants réseau comparable pour les joueurs et unités périphériques. Le verrouillage Java est donc un état de référence locale, pas le même contrat que `TargetID`/`FreezeID` synchronisé.
+The Java code mainly selects local instances of `BaseMonster`/`BaseNPC` and can pick the nearest monster. It has no comparable network ID table for players and peripheral units. Java locking is therefore a local reference state, not the same contract as a synchronized `TargetID`/`FreezeID`.
 
-La validation est également placée à un autre endroit :
+Validation is also placed at a different point:
 
-- le natif affiche le curseur et transmet la cible/position ; la validation effective de portée, ligne de vue, état vivant, droit d'attaque et correction de position relève du serveur 1.68 ;
-- le Java refuse localement certaines actions via `hasLineOfSight`, la distance et les collisions avant d'appliquer le résultat ; aucune réponse serveur ne peut confirmer ou contredire ce choix.
+- the native client displays the cursor and transmits the target/position; the actual validation of range, line of sight, alive state, right to attack and position correction belongs to the 1.68 server;
+- the Java code locally refuses certain actions via `hasLineOfSight`, distance and collisions before applying the result; no server response can confirm or contradict this choice.
 
-Pour les sorts positionnels, Java calcule la distance avec `distance / max(GRID_W, GRID_H)` et échantillonne la ligne en pas de collision. Ce calcul ne reproduit pas automatiquement une portée native éventuelle exprimée en cases, ni les règles serveur pour une cible occupant plusieurs cases. Une différence est particulièrement probable sur les diagonales, les coins de murs, les cibles proches de la limite de portée et les sorts de zone : Java peut exclure une cible avant impact alors que le client natif aurait envoyé la requête, ou l'inverse.
+For positional spells, Java computes distance with `distance / max(GRID_W, GRID_H)` and samples the line in collision steps. This calculation does not automatically reproduce any native range expressed in tiles, nor the server rules for a target occupying several tiles. A difference is especially likely on diagonals, wall corners, targets near the range limit and area spells: Java can exclude a target before impact where the native client would have sent the request, or the reverse.
 
-Le natif distingue aussi attaque normale, attaque à distance, attaque magique et suivi par des curseurs/états séparés. Le Java partage davantage le même pipeline de sélection et d'application locale ; les transitions attaque → sort → suivi, l'annulation par clic droit et le verrouillage de cible ne disposent donc pas du même automate d'état.
+The native code also distinguishes normal attack, ranged attack, magic attack and follow via separate cursors/states. The Java code shares more of the same selection and local-application pipeline; the attack → spell → follow transitions, right-click cancellation and target locking therefore do not have the same state machine.
 
-## 38. États temporaires, buffs et dissipation
+## 38. Temporary states, buffs and dispelling
 
-Le protocole natif possède deux événements dédiés : `RQ_CreateEffectStatus` (83) et `RQ_DispellEffectStatus` (84). La création transporte un identifiant numérique d'effet, le temps restant, le temps total, l'identifiant d'icône et une description. La dissipation retire l'effet par son identifiant numérique, indépendamment du nom du sort.
+The native protocol has two dedicated events: `RQ_CreateEffectStatus` (83) and `RQ_DispellEffectStatus` (84). Creation carries a numeric effect ID, remaining time, total time, an icon ID and a description. Dispelling removes the effect by its numeric ID, independent of the spell's name.
 
-Le Java applique les buffs directement après le lancement local d'un sort. `Player.ActiveBuff` les indexe principalement par nom de sort et conserve description, icône, expiration et une liste d'effets Java. Il n'existe pas d'identifiant d'effet natif reçu du serveur, ni de paquet séparé de création/mise à jour/dissipation. Les conséquences sont :
+The Java code applies buffs directly after a spell is cast locally. `Player.ActiveBuff` indexes them mainly by spell name and keeps a description, icon, expiration and a list of Java effects. There is no native effect ID received from the server, nor a separate creation/update/dispel packet. The consequences are:
 
-- deux effets provenant d'un même nom ou deux instances d'un même sort ne peuvent pas être distingués comme dans le protocole natif ;
-- un renouvellement Java remplace/recalcule le buff local, alors que le client natif peut recevoir une nouvelle durée et un nouvel identifiant d'effet ;
-- la durée affichée et la durée effective Java démarrent au moment du cast local, pas à la réception de l'événement serveur ;
-- la dissipation par nom Java ne garantit pas la suppression du bon effet lorsque plusieurs effets sont actifs ;
-- les effets persistants sur unités distantes, leur icône et leur expiration ne sont pas synchronisés.
+- two effects coming from the same name, or two instances of the same spell, cannot be distinguished the way the native protocol distinguishes them;
+- a Java renewal replaces/recomputes the local buff, whereas the native client can receive a new duration and a new effect ID;
+- the displayed duration and the effective Java duration start at the moment of the local cast, not at the reception of the server event;
+- dispelling by name in Java does not guarantee removing the right effect when several effects are active;
+- persistent effects on remote units, their icon and their expiration are not synchronized.
 
-Le Java ajoute des ticks locaux de régénération HP/mana et des règles locales pour invisibilité, détection, stun et effets périodiques. Le client 1.68, lui, affiche l'état transmis et reçoit les changements d'effet du serveur ; il ne peut pas déduire localement qu'un tick a réellement été accepté. Un désaccord de durée, de renouvellement, de dissipation ou de tick produit donc un état Java différent même si l'animation de sort est identique.
+The Java code adds local HP/mana regeneration ticks and local rules for invisibility, detection, stun and periodic effects. The 1.68 client, for its part, displays the transmitted state and receives effect changes from the server; it cannot locally infer that a tick was actually accepted. A disagreement in duration, renewal, dispelling or tick therefore produces a different Java state even if the spell's animation is identical.
 
-## 39. Musique, ambiance et sons d'interaction
+## 39. Music, ambience and interaction sounds
 
-Le client natif ne choisit pas la musique uniquement à partir d'un fichier de zones externe. `GameMusic::LoadNewSound` commence par le monde courant, le niveau et l'état extérieur, puis applique une longue série de régions géométriques (rectangles et zones diagonales) pour sélectionner boss, extérieur, forêt, donjon, caverne, tristesse, silence ou bruits. Les priorités sont déterminées par l'ordre des tests natifs et certains changements sont déclenchés lors d'un changement de monde.
+The native client does not pick music solely from an external zone file. `GameMusic::LoadNewSound` starts from the current world, level and outdoor state, then applies a long series of geometric regions (rectangles and diagonal zones) to select boss, outdoor, forest, dungeon, cavern, sadness, silence or noise music. Priorities are determined by the order of the native tests, and some changes are triggered on a world change.
 
-Le Java choisit la dernière `MusicZoneEntry` contenant la case du joueur, recharge les zones JSON/binaire, puis appelle `SoundManager.playAmbient`. Il n'a pas démontré la reprise de toutes les régions codées dans `GameMusic.cpp`, ni la variable `OutSide` dépendant du niveau, ni les priorités exactes entre régions superposées. Une carte qui ne possède pas de fichier Java de zones peut donc jouer aucune musique ou une musique différente du client 1.68.
+The Java code picks the last `MusicZoneEntry` containing the player's tile, reloads the JSON/binary zones, then calls `SoundManager.playAmbient`. It has not demonstrated reproducing every region coded in `GameMusic.cpp`, nor the level-dependent `OutSide` variable, nor the exact priorities between overlapping regions. A map with no Java zone file can therefore play no music, or different music than the native client.
 
-Les deux systèmes diffèrent aussi dans la gestion de lecture :
+The two systems also differ in playback handling:
 
-- le natif conserve une piste courante, la remplace via un gestionnaire protégé par section critique et peut utiliser musique streaming ou CD (`bUseCD`) ; il arrête/libère la piste pendant une transition ;
-- Java arrête et détruit directement `ambientMusic`, recrée un `Music` libGDX et le boucle ; il ne gère pas le mode CD, le fondu de transition, la file de lecture ou la priorité native ;
-- le natif possède des sons liés aux sprites/objets et à l'interface (`GameSounds`, `ItemDragSounds`) avec des identifiants de ressources ; Java résout surtout un nom de fichier puis joue un `Sound` ou un `Music` selon ce qui est disponible ;
-- le natif sépare son musique, sons et contrôles de volume dans plusieurs gestionnaires/threads, tandis que Java utilise une résolution locale et ignore silencieusement les erreurs de chargement.
+- the native code keeps a current track, replaces it via a manager protected by a critical section, and can use streaming or CD music (`bUseCD`); it stops/releases the track during a transition;
+- Java directly stops and destroys `ambientMusic`, recreates a libGDX `Music` and loops it; it does not handle CD mode, transition fade, a playback queue or native priority;
+- the native code has sounds tied to sprites/objects and to the UI (`GameSounds`, `ItemDragSounds`) with resource IDs; Java mostly resolves a file name and then plays a `Sound` or a `Music` depending on what is available;
+- the native code separates music, sound and volume controls across several managers/threads, whereas Java uses local resolution and silently ignores loading errors.
 
-Ces écarts changent le résultat audible : transitions sans coupure ou avec coupure, piste choisie dans une zone de boss/ville, répétition d'un son d'interface, volume après modification des options et réaction lorsqu'un fichier manque.
+These gaps change the audible result: seamless or non-seamless transitions, which track plays in a boss/town zone, a UI sound repeating, volume after changing options, and behavior when a file is missing.
 
-## 40. Localisation et catalogue de textes
+## 40. Localization and text catalogue
 
-Le client natif possède trois catalogues distincts (`LocalString`, `GUILocalString` et `GUIDELocalString`) chargés depuis la langue sélectionnée. La langue est un choix explicite parmi English, French, Italian, Portugal, Spanish, German et Korean ; elle est stockée dans `Player.szLanguage` et peut être rechargée à chaud lorsque le launcher signale un changement. Les textes sont adressés par index numérique stable (`g_LocalString[xxx]`) et les formats natifs utilisent `sprintf`/`FORMAT` avec les paramètres du message.
+The native client has three distinct catalogues (`LocalString`, `GUILocalString` and `GUIDELocalString`) loaded from the selected language. The language is an explicit choice among English, French, Italian, Portuguese, Spanish, German and Korean; it is stored in `Player.szLanguage` and can be hot-reloaded when the launcher signals a change. Texts are addressed by a stable numeric index (`g_LocalString[xxx]`), and native formatting uses `sprintf`/`FORMAT` with the message's parameters.
 
-Le Java utilise un unique catalogue JSON `assets/i18n/lang.json`, des clés textuelles et un fallback sur la clé ou la valeur fournie. `I18n.reload` échoue si le fichier manque ou est vide, et aucune préférence Java correspondant aux sept langues natives ni aucun rechargement déclenché par une langue serveur n'a été trouvé.
+The Java code uses a single JSON catalogue, `assets/i18n/lang.json`, text keys and a fallback to the key or the supplied value. `I18n.reload` fails if the file is missing or empty, and no Java preference corresponding to the seven native languages, nor any reload triggered by a server-provided language, was found. (This is an intentional simplification in this project — see `AGENT.md`'s "Language: English only" section — not a gap to close: the game only needs to ship one language, English.)
 
-Cette différence affecte le fonctionnement visible :
+This difference affects visible behavior:
 
-- le client natif peut recharger les textes de jeu, d'interface et d'aide séparément après réception de la langue ; Java ne recharge qu'une carte JSON commune ;
-- les scripts et messages importés qui référencent un index natif (`INTL(id, texte)`) ne correspondent pas automatiquement à une clé Java ;
-- le formatage des paramètres et les règles de longueur/encodage ne sont pas les mêmes ;
-- le fallback Java affiche parfois une clé technique (`ui.xxx`, `message.xxx`) alors que le natif dispose d'un texte indexé ;
-- les textes envoyés par serveur restent des chaînes déjà formées dans Java, alors que le client natif peut les afficher dans le catalogue correspondant et construire certains messages localement.
+- the native client can reload game, UI and help texts separately after receiving the language; Java only reloads a single shared JSON map;
+- imported scripts and messages that reference a native index (`INTL(id, text)`) do not automatically correspond to a Java key;
+- parameter formatting and length/encoding rules are not the same;
+- the Java fallback sometimes displays a technical key (`ui.xxx`, `message.xxx`) where the native client has indexed text;
+- server-sent texts remain already-formed strings in Java, whereas the native client can display them in the matching catalogue and build some messages locally.
 
-Le Java a donc une infrastructure de traduction réelle, mais elle ne garantit ni la couverture des catalogues 1.68, ni l'identité des langues disponibles, ni la compatibilité avec les références `INTL` des scripts PNJ.
+The Java code therefore has a real translation infrastructure, but it guarantees neither coverage of the 1.68 catalogues, nor identity of the available languages (nor should it, per this project's English-only direction), nor compatibility with NPC scripts' `INTL` references.
 
-## 41. Création, relance et sélection de personnage
+## 41. Character creation, reroll and selection
 
-Le client natif traite la création, la suppression et la relance comme des opérations serveur : `RQ_CreatePlayer` (25), `RQ_DeletePlayer` (15) et `RQ_Reroll` (31) ont chacun une file d'ACK et un nombre maximal de tentatives. Le nombre de personnages autorisé est reçu via `RQ_MaxCharacters` (103), donc il n'est pas une constante purement client.
+The native client treats creation, deletion and reroll as server operations: `RQ_CreatePlayer` (25), `RQ_DeletePlayer` (15) and `RQ_Reroll` (31) each have an ACK queue and a maximum retry count. The allowed number of characters is received via `RQ_MaxCharacters` (103), so it is not a purely client-side constant.
 
-Le Java exécute ces opérations dans `CharacterSelectionScreen` et `LocalCharacterStore`, avec un maximum fixé à `MAX_CHARACTERS = 3`, des fichiers JSON locaux et un UUID local par personnage. La création écrit immédiatement l'état et le roster ; la suppression efface le fichier local ; la relance modifie les valeurs de la session locale. Aucun refus serveur, verrouillage de compte, conflit simultané, ACK, quota reçu ou rollback distant n'existe.
+The Java code performs these operations in `CharacterSelectionScreen` and `LocalCharacterStore`, with a hardcoded maximum of `MAX_CHARACTERS = 3`, local JSON files and a local UUID per character. Creation writes the state and roster immediately; deletion erases the local file; reroll modifies the local session's values. There is no server refusal, account lock, concurrent conflict, ACK, received quota or remote rollback.
 
-Le Java ajoute en outre une création par questionnaire d'affinités, un sexe et une table de valeurs initiales (`starting gold`, objets, potions, torches et compétences). Le client natif affiche les valeurs reçues par le serveur après `RQ_Reroll`/création ; ces règles initiales Java ne sont pas prouvées identiques aux règles 1.68 et peuvent créer un personnage avec un inventaire, un or ou des statistiques différents.
+The Java code additionally adds affinity-questionnaire-based creation, a sex, and a table of starting values (starting gold, items, potions, torches and skills). The native client displays the values received from the server after `RQ_Reroll`/creation; these Java starting rules are not proven identical to the 1.68 rules and can create a character with different inventory, gold or stats.
 
-Les contraintes de nom et de roster divergent également : Java vérifie localement l'unicité dans son fichier JSON et normalise le nom avant écriture, alors que le client natif transmet le nom au serveur et affiche l'erreur renvoyée. Une seconde instance Java, un changement de compte ou une suppression externe ne peut pas être arbitré par le roster local.
+Name and roster constraints also diverge: Java checks uniqueness locally in its JSON file and normalizes the name before writing, whereas the native client sends the name to the server and displays the returned error. A second Java instance, an account change or an external deletion cannot be arbitrated by the local roster.
 
-## 42. Carte du monde, mini-carte et changement de zone affichée
+## 42. World map, minimap and displayed zone change
 
-Le client natif charge `Zone_Map.dat` pour le monde courant, maintient une fenêtre autour de la position du joueur et calcule la zone courante par la valeur de la cellule de cette carte 3072×3072. `ValidMapZonePosition` déclenche un changement de zone affiché lorsque la cellule change ; `GetDisplayZoneName` récupère ensuite le nom correspondant à la table `m_ZoneInfo[monde][zone]`. Le changement de monde peut aussi remplacer la bitmap de carte et réinitialiser la zone.
+The native client loads `Zone_Map.dat` for the current world, keeps a window around the player's position and computes the current zone from that 3072×3072 map's cell value. `ValidMapZonePosition` triggers a displayed zone change when the cell changes; `GetDisplayZoneName` then retrieves the name from the `m_ZoneInfo[world][zone]` table. A world change can also replace the map bitmap and reset the zone.
 
-Le Java possède une carte du monde réelle (`GuiWorldMap`/`OriginalRtMap`) et un marqueur joueur, mais la mise à jour de la zone affichée n'est pas reliée à une table native `Zone_Map.dat` équivalente. `MainGameScreen` initialise notamment l'affichage avec `zone.lighthaven`; aucune routine Java comparable à `ValidMapZonePosition`/`ForceDisplayZone` n'a été trouvée pour recalculer automatiquement les noms des zones natives à chaque cellule.
+The Java code has an actual world map (`GuiWorldMap`/`OriginalRtMap`) and a player marker, but the displayed zone update is not tied to an equivalent native `Zone_Map.dat` table. `MainGameScreen` notably initializes the display with `zone.lighthaven`; no Java routine comparable to `ValidMapZonePosition`/`ForceDisplayZone` was found to automatically recompute native zone names for each cell.
 
-Les conséquences fonctionnelles sont :
+The functional consequences are:
 
-- le fond de carte peut être correct tandis que le nom de zone, son apparition temporaire et son déclenchement diffèrent ;
-- la carte native distingue carte de monde, carte de donjon/caverne et fenêtre de vue chargée autour du joueur ; Java reconstruit la vue via `OriginalRtMap` et garde un marqueur positionné dans un cadre fixe ;
-- les zones non déclarées dans la table Java ne peuvent pas produire le même nom ou le même événement d'entrée de zone ;
-- `ForceDisplayZone` natif permet de forcer une zone après téléportation ou transition, sans équivalent confirmé dans le cycle Java.
+- the map background can be correct while the zone name, its temporary appearance and its triggering differ;
+- the native map distinguishes world map, dungeon/cavern map and a view window loaded around the player; Java rebuilds the view via `OriginalRtMap` and keeps a marker positioned in a fixed frame;
+- zones not declared in the Java table cannot produce the same name or the same zone-entry event;
+- the native `ForceDisplayZone` can force a zone after a teleport or transition, with no confirmed equivalent in the Java cycle.
 
-## 43. Vie de session, keep-alive et AFK
+## 43. Session liveness, keep-alive and AFK
 
-Le client natif maintient un état de vie de la couche réseau (`PacketCenter::KeepAlive`, `isAlive`, `isHalf`, `SetAlive`, `LongLive`). Il distingue un état réseau normal d'un état dégradé après plusieurs secondes sans activité et considère le client perdu après un délai de 120 secondes. Le `CommCenter` possède en parallèle un timeout de backlog, des paquets en attente et des retransmissions ACK.
+The native client maintains a network-layer liveness state (`PacketCenter::KeepAlive`, `isAlive`, `isHalf`, `SetAlive`, `LongLive`). It distinguishes a normal network state from a degraded state after several seconds without activity, and considers the client lost after a 120-second delay. `CommCenter` in parallel has a backlog timeout, pending packets and ACK retransmissions.
 
-La configuration native conserve aussi un statut AFK et un message AFK (`dwAfkStatus`, `strAfkMessage`) avec l'adresse de compte et les paramètres de session. Le client peut donc afficher ou transmettre un état d'absence distinct de la simple absence de mouvement.
+The native configuration also keeps an AFK status and an AFK message (`dwAfkStatus`, `strAfkMessage`) alongside the account address and session parameters. The client can therefore display or transmit an away state distinct from simply not moving.
 
-Le Java n'a pas de transport réseau ni de couche de session exposant un keep-alive, un état moitié-vivant, une retransmission ou une déconnexion après timeout. Il n'existe pas non plus de statut AFK persistant avec message associé dans `GamePreferences`, `PlayerStateDto` ou `GameChat`. Une fenêtre Java ouverte, une pause de rendu ou un joueur immobile restent donc des états locaux sans conséquence de session comparable au client 1.68.
+The Java code has no network transport or session layer exposing a keep-alive, a half-alive state, retransmission, or a timeout-based disconnect. There is also no persistent AFK status with an associated message in `GamePreferences`, `PlayerStateDto` or `GameChat`. An open Java window, a rendering pause or a motionless player therefore remain local states with no session consequence comparable to the 1.68 client.
 
-Cet écart se manifeste lors d'une perte réseau, d'un serveur silencieux, d'une reprise après latence, d'une fermeture de fenêtre ou d'une inactivité prolongée : le natif peut afficher un état dégradé puis fermer la session, alors que Java conserve le monde et les mutations locales.
+This gap shows up on a network loss, a silent server, resuming after latency, closing the window, or prolonged inactivity: the native client can display a degraded state and then close the session, whereas Java keeps the world and local mutations going.
 
-## 44. Cadence d'animation et timing des sprites
+## 44. Animation cadence and sprite timing
 
-Le client natif centralise l'animation dans ses sprites V2 et son rythme d'affichage. Il possède une option `b32FPS` dans `SaveGame`, des compteurs globaux d'animation d'eau (`GetAnimWaterFrame`/`StepAnimWaterFrame`) et des ressources VSB/VSF décrivant les frames et leurs métadonnées. Les changements de cadence et les états d'animation sont donc liés au timer du client et aux ressources chargées.
+The native client centralizes animation in its V2 sprites and its display rhythm. It has a `b32FPS` option in `SaveGame`, global water-animation counters (`GetAnimWaterFrame`/`StepAnimWaterFrame`) and VSB/VSF resources describing frames and their metadata. Cadence changes and animation states are therefore tied to the client's timer and to the loaded resources.
 
-Le Java fixe des durées dans le code : `PlayerAnimations.FRAME_DURATION = 0.05f` et `NPCAnimations.FRAME_DURATION = 0.10f`, puis fait avancer les frames avec le `delta` libGDX. Il n'a pas de réglage 32 FPS correspondant, ni de cadence extraite des métadonnées d'animation natives. Les animations de joueur et de PNJ peuvent donc être deux fois plus rapides/lentes selon la cadence historique de la ressource, et leur vitesse varie avec le delta de frame.
+The Java code hardcodes durations: `PlayerAnimations.FRAME_DURATION = 0.05f` and `NPCAnimations.FRAME_DURATION = 0.10f`, then advances frames with libGDX's `delta`. It has no corresponding 32 FPS setting, nor a cadence extracted from native animation metadata. Player and NPC animations can therefore be twice as fast/slow depending on the resource's historical cadence, and their speed varies with the frame delta.
 
-Les états diffèrent aussi : Java remet l'animation de marche à la frame 0 lorsqu'il n'y a plus de mouvement, conserve une pose finale d'attaque et active les animations PNJ statiques selon `standingIdle`. Le natif sépare les sprites d'attente, marche, attaque, distance et effets via ses objets/animations V2. Sans table de correspondance frame par frame, l'apparence de l'attaque, la durée de la pose finale, le flip et le moment où le son se déclenche ne sont pas garantis identiques.
+States also differ: Java resets the walk animation to frame 0 once there is no more movement, keeps a final attack pose, and enables static NPC animations via `standingIdle`. The native code separates idle, walk, attack, ranged and effect sprites via its V2 objects/animations. Without a frame-by-frame correspondence table, the attack's appearance, the final pose's duration, the flip, and the moment the sound triggers are not guaranteed to be identical.
 
-## 45. Formats de ressources, palettes et comportement en cas d'absence
+## 45. Resource formats, palettes and missing-resource behavior
 
-Le client natif charge les ressources depuis des bases indexées et empaquetées (`T4CGameFile.vsb`, `VSBDataBase`, `CV2Sprite`/VSF), avec des références par identifiant, palette et chunk. `GameIcons` conserve des maps d'objets et de sons et retourne toujours un sprite/son de secours (`???` ou ressource d'erreur) lorsqu'un identifiant n'est pas trouvé. Le rendu reste donc généralement dans la boucle de jeu même si une ressource est absente.
+The native client loads resources from indexed, packed databases (`T4CGameFile.vsb`, `VSBDataBase`, `CV2Sprite`/VSF), with references by ID, palette and chunk. `GameIcons` keeps item and sound maps and always returns a fallback sprite/sound (`???` or an error resource) when an ID is not found. Rendering therefore generally stays in the game loop even if a resource is missing.
 
-Le Java charge principalement des textures PNG et métadonnées via `SpriteLoader`, avec des caches de `TextureRegion`, des générations de texture et des caches de chunks/tiles composés. Les palettes et variantes sont résolues par des fichiers de mapping Java, et les ressources manquantes passent par des renderers de tuile manquante, des régions nulles ou des exceptions selon l'écran.
+The Java code mainly loads PNG textures and metadata via `SpriteLoader`, with `TextureRegion` caches, texture generations and composed chunk/tile caches. Palettes and variants are resolved through Java mapping files, and missing resources go through missing-tile renderers, null regions or exceptions depending on the screen.
 
-Les différences fonctionnelles sont les suivantes :
+The functional differences are:
 
-- un même identifiant natif n'implique pas le même résultat si le mapping palette Java est absent ou incomplet ;
-- le natif peut fournir un sprite d'erreur non nul, alors qu'un écran Java peut masquer l'élément, dessiner une tuile de remplacement ou interrompre le chargement ;
-- le natif libère/recharge ses ressources empaquetées par index et référence, Java invalide ses textures/caches et reconstruit des fichiers PNG ;
-- les erreurs de ressource n'ont pas le même effet sur la liste d'objets, les frames d'animation, les offsets et les sons associés ;
-- une modification de palette ou d'offset n'est donc pas nécessairement visible au même moment et ne provoque pas le même invalidation de cache.
+- the same native ID does not imply the same result if the Java palette mapping is absent or incomplete;
+- the native code can supply a non-null error sprite, whereas a Java screen can hide the element, draw a placeholder tile or interrupt loading;
+- the native code frees/reloads its packed resources by index and reference; Java invalidates its textures/caches and rebuilds PNG files;
+- resource errors do not have the same effect on the object list, animation frames, offsets and associated sounds;
+- a palette or offset change is therefore not necessarily visible at the same moment and does not cause the same cache invalidation.
 
-Les deux clients possèdent un mécanisme de cache, mais leurs contrats de résolution et de secours sont différents : la présence d'un fichier PNG Java ne prouve pas que l'identifiant, la palette, la frame et le fallback correspondent à la ressource V2 1.68.
+Both clients have a caching mechanism, but their resolution and fallback contracts are different: the presence of a Java PNG file does not prove that the ID, palette, frame and fallback match the 1.68 V2 resource.
 
-## 46. Focus, pause, redimensionnement et restauration graphique
+## 46. Focus, pause, resizing and graphics restoration
 
-Le client natif traite explicitement les transitions de fenêtre (`WM_ACTIVATE`, `WM_KILLFOCUS`, `WM_SETFOCUS`). À la sortie, il désacquiert le clavier et la souris DirectInput ; au retour, il réacquiert les périphériques, rétablit le focus logique et restaure les surfaces DirectDraw avant de reprendre l'affichage. Il possède aussi l'option `bLockResize`, qui bloque les redimensionnements de la fenêtre pendant le jeu.
+The native client explicitly handles window transitions (`WM_ACTIVATE`, `WM_KILLFOCUS`, `WM_SETFOCUS`). On losing focus, it releases DirectInput keyboard and mouse; on returning, it reacquires the devices, restores logical focus and restores DirectDraw surfaces before resuming display. It also has the `bLockResize` option, which blocks window resizing during play.
 
-Le Java implémente bien `resize()` et `resume()` via libGDX : les viewports/caméras sont recalculés et le HUD appelle `recoverAfterDisplayChange()`. En revanche, `pause()` est vide dans `MainGameScreen` et aucune logique de jeu équivalente à l'acquisition/libération des périphériques, au verrouillage de redimensionnement ou à la restauration explicite des surfaces/palettes natives n'a été trouvée.
+The Java code does implement `resize()` and `resume()` via libGDX: viewports/cameras are recomputed and the HUD calls `recoverAfterDisplayChange()`. However, `pause()` is empty in `MainGameScreen`, and no game logic equivalent to acquiring/releasing devices, resize locking, or explicit restoration of native surfaces/palettes was found.
 
-Les conséquences divergent lors d'un Alt-Tab, d'une minimisation, d'une perte de contexte graphique ou d'un redimensionnement pendant une action : le backend Java peut restaurer le contexte OpenGL, mais le jeu ne reproduit pas les états focus/pause/reprise ni les transitions de périphériques du client 1.68. Le mouvement, les entrées maintenues, l'audio et les timers peuvent donc continuer ou reprendre à un moment différent.
+The consequences diverge on an Alt-Tab, a minimize, a lost graphics context or a resize during an action: the Java backend can restore the OpenGL context, but the game does not reproduce the 1.68 client's focus/pause/resume states or device transitions. Movement, held inputs, audio and timers can therefore continue or resume at a different point.
 
-## 47. Capture d'écran intégrée aux macros
+## 47. Screenshot capture built into macros
 
-Le client natif expose une action de capture d'écran (`MacroHandler::TakeScreenShot`) et appelle `VideoCapture::TakeDesktopSnapshot`, y compris depuis la boucle réseau/jeu. La capture est donc une fonction utilisateur intégrée au client et à ses macros, avec un état de demande consommé par la boucle de rendu.
+The native client exposes a screenshot action (`MacroHandler::TakeScreenShot`) and calls `VideoCapture::TakeDesktopSnapshot`, including from the network/game loop. Capture is therefore a user feature built into the client and its macros, with a request state consumed by the render loop.
 
-Aucun équivalent de capture d'écran ou d'action macro correspondante n'a été trouvé dans le Java. Les touches et actions disponibles ne peuvent donc pas reproduire ce comportement 1.68 ; une capture externe du système ne constitue pas la même fonction intégrée ni le même moment de prise d'image.
+No equivalent screenshot capability or corresponding macro action was found in the Java code. The available keys and actions therefore cannot reproduce this 1.68 behavior; an external system capture is not the same built-in feature nor the same moment of image capture.
 
-## 48. Panneaux sociaux et opérations joueur-à-joueur
+## 48. Social panels and player-to-player operations
 
-L’interface native contient des panneaux dédiés et distincts pour `GroupPlayUI`, `GuildUI`, `TradeUI` (avec `BuyUI`/`SellUI`), `RobUI`, `ChatterUI`, `MacroUI`, `EffectStatusUI` et `ChestUI`. Ces panneaux sont alimentés par les réponses réseau et maintiennent des états d’attente, de sélection et de confirmation propres à chaque opération.
+The native UI contains dedicated, separate panels for `GroupPlayUI`, `GuildUI`, `TradeUI` (with `BuyUI`/`SellUI`), `RobUI`, `ChatterUI`, `MacroUI`, `EffectStatusUI` and `ChestUI`. These panels are fed by network responses and maintain waiting, selection and confirmation states specific to each operation.
 
-Le Java possède des écrans d’inventaire, de boutique, de coffre et de sorts, mais aucun écran ou service équivalent pour le groupe, la guilde, l’échange joueur-à-joueur, le vol, les macros utilisateur ou la gestion complète des effets réseau. Les occurrences de `guild`, `group`, `trade` ou `rob` restantes correspondent principalement à des données de PNJ, des compétences ou des icônes ; elles ne constituent pas ces workflows interactifs.
+The Java code has inventory, shop, chest and spell screens, but no equivalent screen or service for group, guild, player-to-player trade, robbery, user macros or full network-effect management. The remaining occurrences of `guild`, `group`, `trade` or `rob` mainly correspond to NPC data, skills or icons; they do not constitute these interactive workflows.
 
-Même lorsqu’une compétence ou une donnée d’apparence existe côté Java, il manque donc le cycle fonctionnel complet : invitation/demande, réponse distante, verrouillage des sélections, validation des deux parties, annulation, mise à jour des participants et fermeture synchronisée. L’interface Java ne peut pas reproduire les états intermédiaires du client 1.68.
+Even where a skill or an appearance datum exists on the Java side, the full functional cycle is therefore missing: invitation/request, remote response, locking selections, validation from both parties, cancellation, participant updates and synchronized closing. The Java UI cannot reproduce the 1.68 client's intermediate states.
 
-## 49. Vérification de version et mise à jour avant connexion
+## 49. Version check and update before connecting
 
-Le client natif possède un flux de lancement distinct qui lit la version, envoie `RQ_AuthenticateServerVersion` (paquet 99), traite les réponses d’authentification et appelle `WebPatchUpdate` avec l’IP, le compte, le mot de passe et la version du client. Le démarrage peut donc être interrompu ou orienté vers une mise à jour avant l’accès au monde.
+The native client has a distinct launch flow that reads the version, sends `RQ_AuthenticateServerVersion` (packet 99), handles the authentication responses and calls `WebPatchUpdate` with the IP, account, password and client version. Startup can therefore be interrupted or redirected to an update before world access.
 
-Le Java ne présente pas de launcher/patcher ni de négociation de version réseau comparable. `CharacterSelectionScreen` et `LocalCharacterStore` travaillent sur des personnages locaux et ne vérifient pas une version serveur avant l’entrée en jeu. Un client Java ancien, modifié ou incompatible peut donc atteindre les écrans de jeu sans le contrôle préalable imposé par le flux natif 1.68.
+The Java code has no comparable launcher/patcher or network version negotiation. `CharacterSelectionScreen` and `LocalCharacterStore` work on local characters and do not check a server version before entering the game. An old, modified or incompatible Java client can therefore reach the game screens without the preliminary check the native 1.68 flow imposes.
 
-## 50. Données de profil client persistées
+## 50. Persisted client profile data
 
-`CSaveGame` natif ne sauvegarde pas seulement les options : il conserve, par compte et personnage, l’inventaire d’interface, trois familles de macros (objets, sorts, compétences), les canaux de discussion avec mot de passe/couleur/activation, la liste d’ignorés, les coffres mémorisés et une carte RTMap de 10 couches en 192×192 cases. Ces données sont rechargées avec le profil avant le jeu.
+The native `CSaveGame` does not just save options: per account and character, it keeps the UI inventory, three macro families (items, spells, skills), chat channels with password/color/activation, the ignore list, remembered chests and a 10-layer RTMap of 192×192 tiles. This data is reloaded with the profile before play.
 
-`GamePreferences` Java ne persiste que quelques volumes, options graphiques et journaux. `LocalCharacterStore`/`PlayerStateStore` persistent l’état local du personnage, mais aucun modèle équivalent complet pour macros par type, canaux privés, liste d’ignorés, coffres mémorisés ou cases RTMap n’a été trouvé. Après changement de personnage, redémarrage ou changement de compte, les raccourcis, canaux, filtres sociaux et révélations de carte ne suivent donc pas les mêmes règles que dans le client 1.68.
+The Java `GamePreferences` only persists a few volumes, graphics options and logs. `LocalCharacterStore`/`PlayerStateStore` persist the character's local state, but no full equivalent model for per-type macros, private channels, ignore list, remembered chests or RTMap tiles was found. After a character change, a restart or an account change, shortcuts, channels, social filters and map reveals therefore do not follow the same rules as in the 1.68 client.
 
-## 51. Raccourcis globaux et macros clavier
+## 51. Global shortcuts and keyboard macros
 
-Le client natif installe explicitement des raccourcis Ctrl configurables pour l’inventaire (`I`), statistiques/personnage (`S`), mode d’attaque (`C`), chat (`L`), groupe (`G`), sorts (`P`), macros (`M`), options (`O`), carte (`W`), échange (`T`), capture d’écran (`H`), taille du chat (`A`) et identification des objets (`V`). Les touches peuvent être remplacées dans le profil et sont exécutées par `Custom.gMacro`/`MacroUI`.
+The native client explicitly installs configurable Ctrl shortcuts for inventory (`I`), stats/character (`S`), attack mode (`C`), chat (`L`), group (`G`), spells (`P`), macros (`M`), options (`O`), map (`W`), trade (`T`), screenshot (`H`), chat size (`A`) and item identification (`V`). Keys can be reassigned in the profile and are executed by `Custom.gMacro`/`MacroUI`.
 
-Le Java code en dur un sous-ensemble différent : Ctrl+T ouvre les statistiques, Ctrl+P les sorts, Ctrl+I l’inventaire, Ctrl+Q les quêtes et Ctrl+W la carte ; F1/F2/F3/R pilotent en plus des outils locaux. Il n’existe pas de résolution générique des macros natives ni de correspondance pour plusieurs actions (`C`, `L`, `G`, `M`, `O`, `H`, `A`, `V`). Les mêmes combinaisons de touches déclenchent donc des fonctions différentes, et les raccourcis personnalisés du client 1.68 ne sont pas portables dans Java.
+The Java code hardcodes a different subset: Ctrl+T opens stats, Ctrl+P spells, Ctrl+I inventory, Ctrl+Q quests and Ctrl+W the map; F1/F2/F3/R additionally drive local tools. There is no generic resolution of native macros nor a mapping for several actions (`C`, `L`, `G`, `M`, `O`, `H`, `A`, `V`). The same key combinations therefore trigger different functions, and the 1.68 client's custom shortcuts are not portable to Java.
 
-## 52. Touches d’accès extraites des traductions
+## 52. Hotkeys extracted from translations
 
-Les catalogues natifs `GUILocalString` et `GUIDELocalString` analysent les chaînes d’interface, extraient une lettre précédée d’un underscore comme touche d’accès et l’exposent par `GetHotKey`. La touche peut donc être localisée avec le texte et changer selon la langue sans modifier le code de la fenêtre.
+The native `GUILocalString` and `GUIDELocalString` catalogues parse UI strings, extract a letter preceded by an underscore as a hotkey, and expose it via `GetHotKey`. The key can therefore be localized along with the text and change per language without modifying the window's code.
 
-Le catalogue Java `I18n` résout les textes et leurs paramètres, mais aucune extraction ou utilisation de touche d’accès/mnemonic n’a été trouvée. Les commandes Java restent liées aux touches codées dans les handlers ; une traduction ne peut donc pas déplacer automatiquement le raccourci associé à un bouton, et les versions linguistiques ne reproduisent pas le comportement interactif des menus natifs.
+The Java `I18n` catalogue resolves texts and their parameters, but no hotkey/mnemonic extraction or use was found. Java commands remain tied to the keys hardcoded in the handlers; a translation therefore cannot automatically move the shortcut associated with a button, and language variants do not reproduce the native menus' interactive behavior.
 
-## 55. Statistiques XP/heure et statistiques PvP affichées dans le chat
+## 55. XP/hour stats and PvP stats displayed in chat
 
-Le client natif contient deux outils d’observation dédiés : `XpStat` mémorise le début d’une mesure, calcule l’XP gagnée, le temps écoulé et la vitesse moyenne en XP/heure ; `PvpRanking` affiche les points PvP, kills/morts courants et totaux, ainsi que les séries de meurtres. Les résultats sont injectés dans le backscroll de `ChatterUI` et restent consultables comme messages système.
+The native client contains two dedicated observation tools: `XpStat` records the start of a measurement and computes XP gained, elapsed time and average speed in XP/hour; `PvpRanking` displays PvP points, current and total kills/deaths, and kill streaks. The results are injected into `ChatterUI`'s backscroll and remain viewable as system messages.
 
-Aucun équivalent Java de `XpStat` ou `PvpRanking` n’a été trouvé. Le Java conserve ou affiche certaines valeurs de progression et de combat, mais ne propose pas ces mesures démarrables, leur calcul temporel XP/heure, ni le rapport PvP complet dans l’historique du chat. Le suivi de progression et la consultation des statistiques ne fonctionnent donc pas comme dans le client 1.68.
+No Java equivalent of `XpStat` or `PvpRanking` was found. The Java code keeps or displays some progression and combat values, but does not offer these start/stop measurements, their XP/hour time calculation, or the full PvP report in the chat history. Progress tracking and stat review therefore do not work the way they do in the 1.68 client.
 
-## 56. Durée et gestion des textes au-dessus des personnages
+## 56. Duration and handling of overhead character text
 
-`TFCObject` natif conserve séparément le texte de parole et le nom : le texte est centré, limité par `MaxOverheadLines` et peut recevoir un offset de lignes. La purge temporisée est différenciée : `ChkText` expire le texte du joueur principal après 10 secondes, mais laisse celui des unités distantes jusqu’à 25 secondes ; un `StopTalkText` explicite peut toutefois le supprimer avant. Le nom dispose de son propre état `DisplayName`/`StopNameDisplay`.
+The native `TFCObject` keeps speech text and the name separately: the text is centered, capped by `MaxOverheadLines`, and can receive a line offset. Timed purging is differentiated: `ChkText` expires the main player's text after 10 seconds, but leaves remote units' text up to 25 seconds; an explicit `StopTalkText` can remove it earlier. The name has its own `DisplayName`/`StopNameDisplay` state.
 
-Le Java impose une expiration de 10 secondes pour le texte de parole du joueur (`talkTextExpiresAt`) et une durée paramétrée pour les noms (`showNameFor`), sans distinction Java équivalente de 25 secondes pour les unités distantes. Le nombre de lignes, la découpe, les offsets et le moment de disparition ne suivent donc pas le cycle natif ; un message provenant d’une autre unité peut disparaître trop tôt ou se superposer différemment.
+The Java code imposes a 10-second expiration for the player's speech text (`talkTextExpiresAt`) and a configured duration for names (`showNameFor`), with no Java-side equivalent 25-second distinction for remote units. The number of lines, wrapping, offsets and the moment of disappearance therefore do not follow the native cycle; a message from another unit can disappear too early or overlap differently.
 
-## 57. Aide intégrée, lettres et pages graphiques
+## 57. Built-in help, letters and graphic pages
 
-`RTHelp` natif est une vraie fenêtre paginée : 12 pages d’aide, 2 pages de lettres, 4 pages de carte du monde, une page de labyrinthe et une image spéciale. Les pages sont des ressources graphiques localisées selon `Player.szLanguage`, avec boutons précédent/suivant, fermeture et modes d’affichage distincts (aide, lettres, cartes). Le raccourci Ctrl+W ouvre également ce système dans le client natif.
+The native `RTHelp` is a real paginated window: 12 help pages, 2 letter pages, 4 world-map pages, a maze page and a special image. The pages are graphic resources localized according to `Player.szLanguage`, with previous/next buttons, closing, and distinct display modes (help, letters, maps). Ctrl+W also opens this system in the native client.
 
-Le Java contient une carte du monde et des textes d’aide ponctuels dans le chat, mais aucun écran paginé équivalent à `RTHelp`, aucun ensemble de pages graphiques localisées ni navigation aide/lettres/labyrinthe. L’utilisateur Java ne dispose donc pas du même contenu d’assistance ni du même parcours d’apprentissage intégré.
+The Java code has a world map and occasional help texts in chat, but no paginated screen equivalent to `RTHelp`, no set of localized graphic pages and no help/letters/maze navigation. The Java user therefore does not have the same assistance content or the same built-in learning path.
 
-## 58. Enregistrement vidéo du jeu
+## 58. In-game video recording
 
-En plus de la capture ponctuelle d’écran, le natif possède `NMVideoCapture` avec `StartCapture`, `CaptureFrame` et `StopCapture`. Les callbacks Ctrl+B/Ctrl+N sont prévus pour démarrer et arrêter l’enregistrement, tandis que la boucle de rendu capture les frames et écrit un flux vidéo ; des messages de début et de fin sont ajoutés au chat système.
+In addition to one-off screenshot capture, the native client has `NMVideoCapture` with `StartCapture`, `CaptureFrame` and `StopCapture`. The Ctrl+B/Ctrl+N callbacks are set up to start and stop recording, while the render loop captures frames and writes a video stream; start and end messages are added to the system chat.
 
-Le Java ne contient pas de composant d’enregistrement vidéo ni de capture de frames pilotable par macro. Les outils de profilage/JFR et la capture externe éventuelle ne produisent pas la vidéo du framebuffer du jeu ni les mêmes messages et transitions d’état que le client natif.
+The Java code has no video-recording component nor macro-drivable frame capture. Profiling/JFR tools and any possible external capture do not produce the game's framebuffer video nor the same messages and state transitions as the native client.
 
-## 59. Formatage et retour à la ligne des textes
+## 59. Text formatting and line wrapping
 
-Le moteur natif `FormatText` ne fait pas qu’afficher une chaîne : il mesure chaque mot avec la police active, découpe selon une largeur en pixels, ajoute une indentation configurable aux lignes suivantes et interprète le marqueur système `<>` comme une rupture forcée du formatage. Le nombre de lignes et les offsets sont ensuite utilisés par les widgets et les bulles de dialogue.
+The native `FormatText` engine does more than display a string: it measures each word with the active font, wraps according to a pixel width, adds a configurable indent to subsequent lines, and interprets the system marker `<>` as a forced formatting break. The resulting line count and offsets are then used by widgets and dialogue bubbles.
 
-Le Java utilise plusieurs chemins libGDX (`BitmapFont`, `GlyphLayout`, `NameRenderer`) avec des retours à la ligne et limites propres à chaque écran. Aucun traitement global du marqueur natif `<>`, de son indentation et de ses règles de découpe par police n’a été trouvé. Une même phrase longue, un dialogue formaté ou une bulle au-dessus d’un personnage peut donc être coupée sur des mots différents et occuper une hauteur différente.
+The Java code uses several libGDX paths (`BitmapFont`, `GlyphLayout`, `NameRenderer`) with wrapping and limits specific to each screen. No global handling of the native `<>` marker, its indentation, or its per-font wrapping rules was found. The same long sentence, a formatted dialogue, or a bubble above a character can therefore break on different words and occupy a different height.
 
-## 53. Options visuelles et d’interface sans équivalent Java
+## 53. Visual and UI options with no Java equivalent
 
-Les options natives pilotent des comportements précis : `bShowItemSpec` affiche les caractéristiques au survol, `bLockTarget` modifie le double-clic de ciblage, `bHighFont` sélectionne une police de taille supérieure, `bOldStatBar` choisit l’ancien ou le nouveau format de barre de statistiques, `bShowNewLife` active les éléments de vie modernes, `bShowNewOmbrage` change l’ombrage, `bShowAnimDecorsLight` active la lumière des décors animés, `bShowWeatherEffects` filtre pluie/neige/brouillard, `bDisplayMacroFullScreen` agrandit la macro-interface et `bEnableDisplayGold` contrôle l’affichage de l’or.
+The native options drive specific behaviors: `bShowItemSpec` shows stats on hover, `bLockTarget` changes double-click targeting, `bHighFont` selects a larger font, `bOldStatBar` picks the old or new stat-bar format, `bShowNewLife` enables modern life elements, `bShowNewOmbrage` changes shading, `bShowAnimDecorsLight` enables animated-decor lighting, `bShowWeatherEffects` filters rain/snow/fog, `bDisplayMacroFullScreen` enlarges the macro UI, and `bEnableDisplayGold` controls gold display.
 
-`GamePreferences` Java ne contient pas ces commutateurs séparés. Il propose notamment `showHudValues`, `transparentGui`, `seraphAnimation` et `xpBarText`, mais ces préférences ne correspondent pas aux mêmes branches natives et aucun réglage Java ne permet de sélectionner les variantes de barre, police, ombrage, lumière des décors, météo, survol d’objet ou macro plein écran. Le rendu et les informations visibles restent donc imposés par le code Java, même quand le client 1.68 permettait à l’utilisateur de les désactiver.
+The Java `GamePreferences` does not contain these separate switches. It notably offers `showHudValues`, `transparentGui`, `seraphAnimation` and `xpBarText`, but these preferences do not correspond to the same native branches, and no Java setting allows selecting bar variants, font, decor shading, decor lighting, weather, item hover, or fullscreen macros. Rendering and the visible information therefore remain dictated by the Java code, even where the 1.68 client let the user turn them off.
 
-## 54. Routage des événements souris et double-clic
+## 54. Mouse event routing and double-click
 
-Le natif distingue explicitement `DM_DOWN`, `DM_CLICK`, `DM_DOUBLE_CLICK`, `DM_DRAG`, `DM_DROP` et les clics du bouton droit. `MouseAction.cpp` route ces états vers l’interface, le dialogue, l’utilisation d’objet, le ramassage, le combat ou le déplacement ; tant qu’une interface bloque le mouvement, les actions de déplacement sont suspendues. Le double-clic peut en outre verrouiller la cible lorsque `bLockTarget` est actif.
+The native code explicitly distinguishes `DM_DOWN`, `DM_CLICK`, `DM_DOUBLE_CLICK`, `DM_DRAG`, `DM_DROP` and right-button clicks. `MouseAction.cpp` routes these states to the UI, dialogue, item use, pickup, combat or movement; as long as a UI blocks movement, movement actions are suspended. Double-click can additionally lock the target when `bLockTarget` is on.
 
-Le Java possède des traitements `touchDown`/`touchUp` et certains glisser-déposer pour l’inventaire et la barre rapide, mais les handlers de monde n’exposent pas une machine d’états générale équivalente au double-clic natif. Le ciblage, le ramassage et le déplacement sont dispatchés par des handlers séparés et ne partagent pas le même verrouillage optionnel. Un double-clic ou un glisser sur une cible peut donc produire un déplacement, une attaque ou une interaction différente selon l’ordre des processors libGDX, alors que le client 1.68 centralise cette décision dans `MouseAction`.
+The Java code has `touchDown`/`touchUp` handling and some drag-and-drop for the inventory and the quick bar, but the world handlers do not expose a general state machine equivalent to the native double-click. Targeting, pickup and movement are dispatched by separate handlers and do not share the same optional lock. A double-click or a drag onto a target can therefore produce a different move, attack or interaction depending on the order of the libGDX processors, whereas the 1.68 client centralizes this decision in `MouseAction`.
 
-## 60. Sélection de sort et capture de la prochaine cible
+## 60. Spell selection and next-target capture
 
-Dans `SpellUI` natif, sélectionner un sort ne lance pas seulement une action immédiate : pour un sort nécessitant une cible, le client installe une capture explicite du prochain événement souris (`LockNextEvent(DM_CLICK, ...)`). Le clic suivant est alors consommé par le handler de cible (position ou unité), au lieu d’être interprété comme un déplacement ou une interaction générique. Le double-clic sur un sort de la liste appelle directement `CastSpell`, et la page affiche simultanément l’icône, le coût de mana transmis avec le sort et l’état de sélection, avec un son de sélection.
+In the native `SpellUI`, selecting a spell does not just trigger an immediate action: for a spell that needs a target, the client installs an explicit capture of the next mouse event (`LockNextEvent(DM_CLICK, ...)`). The next click is then consumed by the target handler (position or unit), instead of being interpreted as movement or a generic interaction. Double-clicking a spell in the list directly calls `CastSpell`, and the page simultaneously shows the icon, the mana cost sent with the spell, and the selection state, with a selection sound.
 
-Le `SpellBook` Java implémente surtout la sélection visuelle, le changement de page et le glisser-déposer vers les quick-slots ; son `onTouchDown` mémorise un sort à faire glisser et son `onTouchUp` l’affecte à un slot. Aucun état commun équivalent à « prochain clic capturé pour cibler le sort » ni double-clic de la liste lançant directement le sort n’a été trouvé. Les sorts Java sont déclenchés par les raccourcis/handlers de `MainGameScreen`, qui choisissent déjà la cible (soi, unité hostile ou position) avant l’appel à `SpellCastingService`. Cela change le parcours utilisateur et peut laisser un clic de ciblage agir comme déplacement ou autre interaction dans les cas où le client 1.68 attendait obligatoirement la cible du sort.
+The Java `SpellBook` mainly implements visual selection, page switching and drag-and-drop to the quick-slots; its `onTouchDown` remembers a spell to drag and its `onTouchUp` assigns it to a slot. No common state equivalent to "next click captured to target the spell", nor a list double-click that directly casts the spell, was found. Java spells are triggered by `MainGameScreen`'s shortcuts/handlers, which already pick the target (self, hostile unit, or position) before calling `SpellCastingService`. This changes the user flow and can let a targeting click act as movement or another interaction in cases where the 1.68 client necessarily waited for the spell's target.
 
-Les macros de sorts natives persistent également une structure dédiée (icône, identifiant, touche, position rapide et nom), chargée par `ClientInitialize`. Les quick-slots Java persistent une association de nom de sort, mais pas ce modèle de macro complet ni son comportement de lancement/capture associé.
+Native spell macros also persist a dedicated structure (icon, ID, key, quick-slot position and name), loaded by `ClientInitialize`. The Java quick-slots persist a spell-name association, but not this full macro model nor its associated cast/capture behavior.
 
-## 61. Sélection multiple dans les fenêtres d’apprentissage et de commerce
+## 61. Multi-selection in the training and trading windows
 
-Les fenêtres natives `BuyUI`, `SellUI`, `SkillTeachUI` et `SkillTrainUI` ont un état de panier par ligne : le clic sur les contrôles recalcule immédiatement le total, l’or restant et la quantité, puis le bouton d’action sérialise la liste complète dans une requête (`RQ_SendBuyItemList`, `RQ_SendSellItemList`, `RQ_SendTeachSkillList` ou `RQ_SendTrainSkillList`). Le double-clic sur une ligne est un raccourci fonctionnel : il réutilise le clic de quantité et peut envoyer directement la sélection selon le contexte. Les vérifications de capacité, de prix et d’or sont donc visibles avant l’envoi, mais la validation finale appartient au serveur.
+The native `BuyUI`, `SellUI`, `SkillTeachUI` and `SkillTrainUI` windows have a per-row basket state: clicking the controls immediately recomputes the total, remaining gold and quantity, and the action button then serializes the full list into a request (`RQ_SendBuyItemList`, `RQ_SendSellItemList`, `RQ_SendTeachSkillList` or `RQ_SendTrainSkillList`). Double-clicking a row is a functional shortcut: it reuses the quantity click and can directly send the selection depending on context. Capacity, price and gold checks are therefore visible before sending, but final validation belongs to the server.
 
-`LearnScreen` Java possède bien un panier, mais son interaction passe par des boutons +/- génériques ajoutés par `GuiListScreen`; aucun double-clic de ligne équivalent aux handlers natifs n’a été trouvé. Surtout, `learnBasket()` déduit directement l’or et les points, modifie les niveaux/flags et marque les sorts appris localement, au lieu de sérialiser une requête native de liste et d’attendre les mises à jour serveur correspondantes. Même lorsque le résultat nominal est identique, une sélection multiple, un double-clic, une désynchronisation ou un refus serveur ne suit donc pas le même comportement que le client 1.68.
+The Java `LearnScreen` does have a basket, but its interaction goes through generic +/- buttons added by `GuiListScreen`; no row double-click equivalent to the native handlers was found. Above all, `learnBasket()` directly deducts gold and points, modifies levels/flags and marks spells as learned locally, instead of serializing a native list request and waiting for the corresponding server updates. Even where the nominal result is identical, a multi-selection, a double-click, a desync or a server refusal therefore does not follow the same behavior as the 1.68 client.
 
-## 62. Interaction avec les effets actifs
+## 62. Interacting with active effects
 
-`EffectStatusUI` natif ne fait pas qu’afficher des icônes : il trie les effets, limite la vue à sept emplacements, ajoute un défilement, supprime les effets expirés à chaque recalcul et affiche dans l’aide le temps restant au format heures/minutes/secondes. Un double-clic sur un effet tente de relancer le sort correspondant ; si ce sort ne peut pas être relancé, le client recherche aussi un objet du sac dont le nom est extrait de la description de l’effet et envoie `RQ_UseObject`. En cas d’échec, il écrit un message système dans le chat.
+The native `EffectStatusUI` does more than display icons: it sorts effects, caps the view at seven slots, adds scrolling, removes expired effects on every recompute, and shows the remaining time in hours/minutes/seconds format in its tooltip. Double-clicking an effect tries to recast the corresponding spell; if that spell cannot be recast, the client also looks for a backpack item whose name is extracted from the effect's description and sends `RQ_UseObject`. On failure, it writes a system message to chat.
 
-Le Java affiche tous les `ActiveBuff` les uns sous les autres dans `PlayerHUD`, sans limite native de sept éléments ni boutons de défilement. Le survol fournit une infobulle, mais aucun double-clic d’effet ne reproduit la séquence native « recast puis recherche d’objet dans le sac ». La dissipation existe dans les services de jeu, mais le parcours client et le fallback objet sont différents ; les effets nombreux peuvent aussi dépasser la zone HUD au lieu d’être paginés.
+The Java code displays every `ActiveBuff` stacked one below another in `PlayerHUD`, with no native seven-item cap or scroll buttons. Hovering provides a tooltip, but no effect double-click reproduces the native "recast, then search the backpack for an item" sequence. Dispelling exists in the game services, but the client flow and the item fallback are different; a large number of effects can also overflow the HUD area instead of being paginated.
 
-## 63. Canaux de discussion, ignore et changement de destination
+## 63. Chat channels, ignore list and destination switching
 
-`ChatterUI` natif maintient une liste de canaux nommés, avec couleur, mot de passe, activation individuelle et sélection du canal courant. L’entrée clavier possède plusieurs destinations distinctes : jeu, page privée, canal sélectionné et commande GM. L’utilisateur peut rejoindre un canal, en sortir/masquer ses messages, consulter les utilisateurs, envoyer une page privée et gérer une liste d’ignorés persistée dans `SaveGame`. Les messages système sont séparés des messages de canal et la file système est limitée à cinq éléments avant suppression des plus anciens.
+The native `ChatterUI` maintains a list of named channels, with color, password, individual activation and selection of the current channel. Keyboard input has several distinct destinations: game, private page, selected channel and GM command. The user can join a channel, leave it/hide its messages, view its users, send a private page, and manage an ignore list persisted in `SaveGame`. System messages are separate from channel messages, and the system queue is capped at five items before the oldest are dropped.
 
-Le Java dispose d’un `GameChat` orienté zone de texte et d’un journal optionnel, mais aucune structure équivalente de canaux persistés avec couleur/mot de passe/activation, aucune liste d’ignorés native et aucun routage unifié jeu/page/canal comparable n’a été trouvé. Les raccourcis et commandes Java sont dispatchés par des handlers distincts ; changer de destination, ignorer un joueur ou restaurer les canaux après redémarrage ne reproduit donc pas l’état du client 1.68. La rétention des messages système et leur séparation visuelle sont également différentes.
+The Java code has a `GameChat` oriented around a text area and an optional log, but no equivalent structure of persisted channels with color/password/activation, no native ignore list, and no unified game/page/channel routing comparable to it was found. Java shortcuts and commands are dispatched by separate handlers; switching destination, ignoring a player, or restoring channels after a restart therefore does not reproduce the 1.68 client's state. Retention of system messages and their visual separation are also different.
 
-## 64. Carte temps réel et mémoire de carte
+## 64. Real-time map and map memory
 
-`RTMap` natif reconstruit la vue autour de la position du joueur à partir du monde courant, applique le masque de visibilité et utilise `CSaveGame::GetRTMapVal` pour retrouver la conversion des coordonnées. Le fichier de sauvegarde contient une mémoire de carte distincte par monde (jusqu’à 10 mondes, avec une grille de 192×192 valeurs dans `SaveGame.h`) ; cette mémoire permet de conserver les zones déjà révélées entre les sessions. La fenêtre possède aussi son propre masque, son marqueur de position et une conversion différente selon les anciennes cartes ou les cartes haute résolution.
+The native `RTMap` rebuilds the view around the player's position from the current world, applies the visibility mask, and uses `CSaveGame::GetRTMapVal` to look up coordinate conversion. The save file contains a separate map memory per world (up to 10 worlds, with a 192×192-value grid in `SaveGame.h`); this memory keeps already-revealed areas across sessions. The window also has its own mask, its position marker, and a different conversion depending on old maps or high-resolution maps.
 
-`GuiWorldMap` Java recrée correctement une vue locale à partir de `OriginalRtMap` et applique un masque graphique statique, mais aucune lecture/écriture d’une mémoire de découverte par joueur et par monde n’a été trouvée dans `PlayerStateStore` ou `PlayerStateDto`. La vue Java est donc recalculée depuis la carte complète à chaque ouverture, avec un état de révélation qui ne suit pas la persistance native. Les deux clients peuvent afficher la même position et la même palette tout en révélant des zones différentes après déplacement ou redémarrage.
+The Java `GuiWorldMap` correctly recreates a local view from `OriginalRtMap` and applies a static graphic mask, but no reading/writing of a per-player, per-world discovery memory was found in `PlayerStateStore` or `PlayerStateDto`. The Java view is therefore recomputed from the full map every time it opens, with a reveal state that does not follow native persistence. Both clients can display the same position and the same palette while revealing different areas after movement or a restart.
 
-## 65. Fenêtre au premier plan et glisser-déposer global
+## 65. Foreground window and global drag-and-drop
 
-`GameUI` natif maintient un contrôle de premier plan partagé par toute l’interface. Une fenêtre modale peut demander ce contrôle, empêcher les autres enfants de recevoir les clics et le rendre explicitement à sa fermeture. Le glisser-déposer est également global : la source, le visiteur d’événement, le parent et la position initiale sont conservés dans `GameUI`, ce qui permet à une zone de dépôt différente de la fenêtre source de finaliser ou d’annuler l’opération. Le déplacement minimum avant affichage de l’aide est aussi testé par une distance précise, afin qu’un clic bref ne démarre pas un drag ou une aide intempestive.
+The native `GameUI` maintains a foreground control shared by the entire UI. A modal window can request this control, prevent other children from receiving clicks, and explicitly hand it back on closing. Drag-and-drop is also global: the source, the event visitor, the parent and the initial position are kept in `GameUI`, which lets a drop zone different from the source window finalize or cancel the operation. The minimum movement before showing help is also tested against a precise distance, so a brief click does not start an unwanted drag or help popup.
 
-Le Java possède des états de drag locaux dans `Inventory`, `SpellBook` et `PlayerHUD`, et `GuiManager` ouvre/ferme des écrans, mais aucune capture globale unique de la source et du parent équivalente à `GameUI::SetDragItem` n’a été trouvée. Les zones de dépôt sont donc couplées à chaque écran (inventaire vers quick-slot, sort vers quick-slot, etc.) et une fenêtre ouverte par-dessus ne partage pas nécessairement le même verrou d’entrée avec le monde. Un drag commencé dans une interface puis déplacé vers une autre, ou une fermeture pendant ce drag, peut ainsi être annulé ou interprété différemment du client natif.
+The Java code has local drag states in `Inventory`, `SpellBook` and `PlayerHUD`, and `GuiManager` opens/closes screens, but no single global capture of the source and parent equivalent to `GameUI::SetDragItem` was found. Drop zones are therefore coupled to each screen (inventory to quick-slot, spell to quick-slot, etc.), and a window opened on top does not necessarily share the same input lock with the world. A drag started in one UI and then moved to another, or a close during that drag, can therefore be cancelled or interpreted differently than in the native client.
 
-## 140. Gestionnaire global des fenêtres : superposition native contre écran unique Java
+## 140. Global window manager: native stacking vs. single Java screen
 
-`RootBoxUI` natif conserve une collection de fenêtres simultanément visibles, un `foregroundChild`, une liste de fenêtres minimisées et un routage global des clics gauche/droit, du glisser, de la molette, du texte et des touches. L’ouverture d’un panneau plein écran minimise automatiquement le chat et les macros ; la carte, l’aide et la fiche d’objet ont encore des règles de priorité spécifiques. Le rendu dessine d’abord les fenêtres minimisées puis la fenêtre au premier plan, tandis que `IsMouseOwned` empêche le monde de recevoir un événement déjà consommé par l’interface.
+The native `RootBoxUI` keeps a collection of simultaneously visible windows, a `foregroundChild`, a list of minimized windows, and global routing of left/right clicks, drag, wheel, text and keys. Opening a fullscreen panel automatically minimizes chat and macros; the map, help and the item detail sheet still have specific priority rules. Rendering draws the minimized windows first and then the foreground window, while `IsMouseOwned` prevents the world from receiving an event already consumed by the UI.
 
-`GuiManager` Java ne conserve qu’une seule référence `current`. L’ouverture d’un nouvel écran dispose immédiatement l’ancien, et les événements sont transmis uniquement à cet écran ; les éléments HUD sont gérés à côté, sans pile globale de fenêtres minimisées ni `foregroundChild` partagé. Le Java ne peut donc pas reproduire les combinaisons natives « chat + macros + panneau minimisé », les priorités inter-fenêtres ou le routage d’un même événement entre fenêtres superposées.
+The Java `GuiManager` only keeps a single `current` reference. Opening a new screen immediately disposes of the old one, and events are only forwarded to that screen; HUD elements are managed separately, with no global stack of minimized windows or a shared `foregroundChild`. The Java code therefore cannot reproduce native combinations like "chat + macros + minimized panel", cross-window priorities, or routing the same event between stacked windows.
 
-## 66. Minimap locale et filtrage des objets
+## 66. Local minimap and item filtering
 
-`SideMenu` natif génère une TMI locale autour du joueur en lisant le monde courant, puis filtre les objets selon leur groupe (`m_bShowThisObjType`). Le panneau peut donc afficher ou masquer séparément différentes catégories d’objets proches, changer de monde et reconstruire la zone sans recharger l’ensemble de la carte. Ce filtrage est indépendant de la carte mondiale `RTMap` et du simple marqueur de position.
+The native `SideMenu` generates a local TMI around the player by reading the current world, then filters items by their group (`m_bShowThisObjType`). The panel can therefore show or hide different categories of nearby items separately, change world and rebuild the zone without reloading the whole map. This filtering is independent of the `RTMap` world map and the simple position marker.
 
-Le Java fournit `GuiWorldMap`/`MapScreen` pour la carte mondiale et les gestionnaires d’objets pour les interactions, mais aucun composant de minimap locale équivalent au TMI du `SideMenu` ni tableau de filtres persistants par groupe d’objet n’a été trouvé dans le HUD. Les objets proches sont donc rendus par le monde ou traités par les handlers, sans la même possibilité de les masquer sélectivement dans une mini-carte. La navigation et la lisibilité des éléments proches diffèrent ainsi même lorsque la carte mondiale est correcte.
+The Java code provides `GuiWorldMap`/`MapScreen` for the world map and object managers for interactions, but no local minimap component equivalent to `SideMenu`'s TMI, nor a persistent per-object-group filter table, was found in the HUD. Nearby items are therefore rendered by the world or handled by the managers, without the same ability to selectively hide them in a minimap. Navigation and the legibility of nearby elements therefore differ even when the world map is correct.
 
-## 67. Cycle de prise d’effet et de sauvegarde des options
+## 67. Options apply-and-save cycle
 
-`OptionsUI` natif charge les valeurs binaires de `OptionParam` à l’ouverture, utilise des plages discrètes (volume 0–10, luminosité 2–10), applique plusieurs réglages aux branches de rendu/audio pendant la session et appelle `g_SaveGame.bSave()` lors de la fermeture de la fenêtre. Le nom du fichier de journal peut être modifié par une popup dédiée, puis réinjecté dans le chatter. Les valeurs ne sont donc pas de simples préférences d’affichage : elles modifient le comportement courant et sont sauvegardées avec le profil client.
+The native `OptionsUI` loads `OptionParam`'s binary values on open, uses discrete ranges (volume 0–10, brightness 2–10), applies several settings to the render/audio branches during the session, and calls `g_SaveGame.bSave()` when the window closes. The log file name can be changed via a dedicated popup, then fed back into the chatter. The values are therefore not simple display preferences: they change current behavior and are saved with the client profile.
 
-Le Java stocke des valeurs flottantes normalisées (volume 0–1, luminosité clampée 0,5–1,25) dans un fichier JSON séparé et ne possède pas le même cycle unique « chargement de la fenêtre → application de tous les effets → sauvegarde à la fermeture ». Plusieurs réglages natifs sont absents ou seulement représentés par une approximation (`highQualityFont`, journalisation, transparence), et le format ainsi que les bornes diffèrent. Une valeur importée ou réglée à l’identique n’a donc pas nécessairement le même effet immédiat ni la même compatibilité de persistance.
+The Java code stores normalized float values (volume 0–1, brightness clamped 0.5–1.25) in a separate JSON file and does not have the same single "window load → apply all effects → save on close" cycle. Several native settings are absent or only approximated (`highQualityFont`, logging, transparency), and the format as well as the bounds differ. A value imported or set identically therefore does not necessarily have the same immediate effect nor the same persistence compatibility.
 
-## 68. Double-clic d’objet, équipement et macros d’inventaire
+## 68. Item double-click, equipping and inventory macros
 
-Dans `InventoryUI` natif, le double-clic sur une ligne d’inventaire est une action dédiée : il tente d’utiliser l’objet, ou de l’équiper selon son type, et envoie ensuite `RQ_UseObject`/les requêtes d’équipement. Le clic droit demande séparément le nom puis les informations détaillées de l’objet. Un drag vers un coffre ou un échange passe par une popup de quantité et les paquets spécifiques ; un drag impossible est restauré à sa position d’origine. Le bouton Macro transforme aussi l’objet en macro persistante identifiée par son `baseId`, puis la macro recherche l’instance correspondante dans le sac avant de l’utiliser.
+In the native `InventoryUI`, double-clicking an inventory row is a dedicated action: it tries to use the item, or equip it depending on its type, and then sends `RQ_UseObject`/the equip requests. Right-click separately requests the name and then the item's detailed info. A drag to a chest or a trade goes through a quantity popup and specific packets; a failed drag is restored to its original position. The Macro button also turns the item into a persistent macro identified by its `baseId`, and the macro then looks up the matching instance in the backpack before using it.
 
-`Inventory` Java gère le drag et l’auto-équipement dans des handlers de toucher, mais aucune machine d’événements générale ne reproduit le double-clic natif, le clic droit « nom puis info », la popup de quantité inter-conteneurs et le retour global vers la position source. Les quick-slots Java associent un nom à un emplacement ; ils ne reproduisent pas les macros d’objet natives basées sur l’identifiant de base et la recherche d’une instance disponible. Un même geste sur une pile, un objet équipable ou un item provenant d’un coffre peut donc déclencher une action différente ou ne pas offrir le même choix de quantité.
+The Java `Inventory` handles drag and auto-equip in touch handlers, but no general event machine reproduces the native double-click, the "name then info" right-click, the cross-container quantity popup, or the global return to the source position. Java quick-slots associate a name with a slot; they do not reproduce native item macros based on the base ID and the lookup of an available instance. The same gesture on a stack, an equippable item, or an item from a chest can therefore trigger a different action or not offer the same quantity choice.
 
-## 69. Feuille de personnage : liste complète des compétences et utilisation
+## 69. Character sheet: full skill list and usage
 
-`CharacterUI` natif demande la liste des compétences au serveur (`RQ_GetSkillList`), construit une liste défilante de toutes les compétences reçues et affiche pour chacune l’icône, la valeur courante, la valeur vraie/non modifiée et une description détaillée. Le double-clic sur une compétence utilisable appelle `UseSkill`; selon le type, l’action est immédiate ou capture le prochain clic de position/unité via `LockNextEvent(DM_CLICK, ...)`. Les macros de compétences reprennent ensuite l’identifiant numérique de la compétence et la recherchent dans la liste reçue avant exécution.
+The native `CharacterUI` requests the skill list from the server (`RQ_GetSkillList`), builds a scrollable list of every skill received, and displays for each one the icon, the current value, the true/unmodified value, and a detailed description. Double-clicking a usable skill calls `UseSkill`; depending on the type, the action is immediate or it captures the next position/unit click via `LockNextEvent(DM_CLICK, ...)`. Skill macros then reuse the skill's numeric ID and look it up in the received list before executing.
 
-`Statistics` Java affiche une sélection fixe de compétences de combat (`attack`, `dodge`, `archery`) et les valeurs de base/effectives, mais ne reproduit pas la liste serveur complète, son défilement, les compétences activables par double-clic ni la capture de cible propre aux compétences. Les raccourcis Java n’utilisent pas non plus le modèle natif de macro par identifiant de compétence. Une compétence apprise ou fournie dynamiquement par le monde peut donc être absente de la feuille Java ou ne disposer d’aucun parcours d’utilisation équivalent.
+The Java `Statistics` displays a fixed selection of combat skills (`attack`, `dodge`, `archery`) and their base/effective values, but does not reproduce the full server list, its scrolling, double-click-activatable skills, or the target capture specific to skills. Java shortcuts also do not use the native per-skill-ID macro model. A skill learned or dynamically granted by the world can therefore be missing from the Java sheet or have no equivalent use flow.
 
-## 70. Informations de feuille absentes ou non alimentées
+## 70. Missing or unpopulated sheet information
 
-La feuille native affiche effectivement la chance (`Lck`), les kills et morts courants, le poids courant/maximum et le poids restant, les six résistances et six puissances élémentaires, ainsi que le karma transformé en neuf libellés localisés selon des seuils précis. Elle distingue aussi les HP vrais des HP maximum modifiés par les bonus et affiche l’XP restante jusqu’au niveau suivant. Ces champs sont rafraîchis à partir de l’état reçu par `RQ_GetStatus`.
+The native sheet actually displays luck (`Lck`), current kills and deaths, current/max weight and remaining weight, the six elemental resistances and six elemental powers, and karma turned into nine localized labels according to precise thresholds. It also distinguishes true HP from max HP as modified by bonuses, and displays the XP remaining to the next level. These fields are refreshed from the state received via `RQ_GetStatus`.
 
-`Statistics` Java réserve certains libellés (karma, XP restante), mais ne les alimente pas systématiquement avec une valeur native équivalente ; la chance, les compteurs de kills/morts et le détail du poids restant ne sont pas présentés comme dans `CharacterUI`. L’état Java conserve parfois le karma dans le DTO, sans reproduire la conversion localisée par seuils. La feuille peut donc sembler complète visuellement tout en donnant moins d’informations effectives et en réagissant différemment aux mises à jour de statut.
+The Java `Statistics` reserves some labels (karma, remaining XP) but does not systematically populate them with an equivalent native value; luck, kill/death counters and the remaining-weight detail are not presented the way `CharacterUI` presents them. The Java state sometimes keeps karma in the DTO, without reproducing the localized threshold-based conversion. The sheet can therefore look visually complete while giving less actual information and reacting differently to status updates.
 
-## 71. Interface de guilde et permissions d’actions
+## 71. Guild UI and action permissions
 
-`GuildUI` natif récupère explicitement la liste des membres avec `RQ_GuildGetMembers`, conserve l’identifiant, le nom et une chaîne de droits de la guilde, puis n’affiche les boutons d’invitation et d’exclusion que si les bits de permission correspondants sont actifs. La sélection d’un membre peut ouvrir une page, l’invitation capture le prochain clic sur une unité du monde, et l’acceptation d’une invitation passe par une popup avec nom de guilde, nom de l’émetteur et choix oui/non. Les membres proches et éloignés, ainsi que le chef, ont des couleurs différentes dans la liste et les contrôles de départ/exclusion envoient des requêtes distinctes.
+The native `GuildUI` explicitly fetches the member list with `RQ_GuildGetMembers`, keeps the guild's ID, name and a rights string, and only shows the invite and kick buttons if the corresponding permission bits are set. Selecting a member can open a page, inviting captures the next click on a world unit, and accepting an invitation goes through a popup with the guild name, the sender's name and a yes/no choice. Nearby and distant members, as well as the leader, have different colors in the list, and the leave/kick controls send distinct requests.
 
-Dans le Java, aucune fenêtre de guilde interactive équivalente ni gestionnaire de droits/membres/invitations associé aux paquets natifs n’a été trouvé. Les éléments `guild`/`clan` existants concernent surtout les clans de monstres ou des comportements de PNJ, pas la guilde du joueur. L’utilisateur Java ne dispose donc pas du même flux d’acceptation d’invitation, de ciblage d’un joueur à inviter, de filtrage par permissions, de couleur de proximité ou de mise à jour serveur de la liste des membres.
+In the Java code, no equivalent interactive guild window, nor a rights/members/invitations manager tied to the native packets, was found. The existing `guild`/`clan` elements are mostly about monster clans or NPC behaviors, not the player's guild. The Java user therefore does not have the same invitation-acceptance flow, target-a-player-to-invite, permission filtering, proximity coloring, or server-driven member-list update.
 
-## 72. Groupe : partage automatique, états de membres et ciblage
+## 72. Group: automatic sharing, member states and targeting
 
-`GroupPlayUI` natif conserve pour chaque membre un identifiant, un nom, un statut de chef et un pourcentage de HP mis à jour séparément. La fenêtre distingue le chef et les membres proches/éloignés par couleur, affiche des barres de vie réduites dans le HUD, et active/désactive les boutons invitation, départ, exclusion et partage automatique selon le rôle courant. L’invitation cible le prochain clic sur une unité, tandis que l’acceptation d’une demande passe par une popup ; le changement de partage automatique envoie une action propre au serveur.
+The native `GroupPlayUI` keeps, for each member, an ID, a name, a leader status and a separately updated HP percentage. The window distinguishes the leader and nearby/distant members by color, shows reduced life bars in the HUD, and enables/disables the invite, leave, kick and auto-share buttons depending on the current role. Inviting targets the next click on a unit, while accepting a request goes through a popup; toggling auto-share sends a dedicated action to the server.
 
-Le Java ne contient pas d’interface de groupe joueur équivalente avec membres distants, chef, HP en pourcentage, partage automatique et boutons conditionnés par le rôle. Les recherches `group`/`party` renvoient surtout des effets, des comportements de monstres ou des données de jeu, sans workflow de groupe réseau comparable. Les combats Java peuvent donc fonctionner sur des cibles locales sans fournir les informations de groupe, le suivi HUD et les transitions d’invitation du client 1.68.
-## 73. Échange joueur-à-joueur : état bilatéral et validation
+The Java code contains no equivalent player-group UI with remote members, a leader, percentage HP, auto-sharing and role-conditioned buttons. Searches for `group`/`party` mostly return effects, monster behaviors or game data, with no comparable network group workflow. Java combat can therefore work on local targets without providing the 1.68 client's group information, HUD tracking and invitation transitions.
 
-Dans le client 1.68, l’échange entre joueurs n’est pas une simple fenêtre d’inventaire : il possède un état de session piloté par le serveur. La fenêtre maintient séparément les objets et l’or proposés par le joueur local et par l’autre joueur, ainsi que les deux états de validation (`myStatus` et `otherStatus`). Les événements natifs couvrent explicitement le démarrage, l’annulation, la fin de l’échange et le changement de statut de chaque participant.
+## 73. Player-to-player trade: bilateral state and validation
 
-Les déplacements d’objets passent par des requêtes dédiées dans les deux sens (sac vers échange, échange vers sac) et prennent une quantité explicite. Le client affiche donc un sélecteur de quantité pour les piles, avec une limite calculée, au lieu de déplacer systématiquement toute la pile. La fermeture de l’interface alors qu’un échange est actif envoie une annulation, et le contenu du sac est rafraîchi depuis l’état serveur.
+In the 1.68 client, trading between players is not a simple inventory window: it has a server-driven session state. The window separately keeps the items and gold offered by the local player and by the other player, as well as both validation states (`myStatus` and `otherStatus`). Native events explicitly cover starting, cancelling, ending the trade, and each participant's status change.
 
-Dans le Java actuel, `ShopScreen`, l’inventaire et les coffres existent, mais aucune implémentation équivalente à `TradeUI` n’a été trouvée : pas d’offre bilatérale joueur/joueur, de statut de confirmation local/distant, d’événements start/cancel/finish, ni de transfert quantifié dans les deux directions. Il manque donc le comportement transactionnel complet : validation des deux côtés, annulation cohérente, verrouillage de l’offre et résolution atomique/rollback côté serveur. Les mécanismes d’offre repérés dans le Java concernent des boutiques ou des écrans internes et ne constituent pas cet échange joueur-à-joueur.
-## 74. Session réseau : perte de connexion, ACK et reprise d’état
+Item movements go through dedicated requests in both directions (backpack to trade, trade to backpack) and take an explicit quantity. The client therefore shows a quantity selector for stacks, with a computed limit, instead of always moving the whole stack. Closing the UI while a trade is active sends a cancellation, and the backpack's contents are refreshed from the server state.
 
-Le client 1.68 utilise une couche de communication persistante avec connexions suivies individuellement, paquets fragmentés/réassemblés, identifiants de paquets reçus, paquets en attente d’ACK, retransmission/expiration et liste des connexions perdues. `PacketCenter::KeepAlive()` est appelé à chaque tour de boucle pour détecter un blocage ou une attente infinie. La maintenance vérifie les timeouts des paquets, des fragments et de la connexion, puis retire la connexion expirée. La fermeture finale envoie également un paquet explicite de déconnexion.
+In the current Java code, `ShopScreen`, the inventory and chests exist, but no implementation equivalent to `TradeUI` was found: no bilateral player/player offer, no local/remote confirmation status, no start/cancel/finish events, and no quantified transfer in both directions. The full transactional behavior is therefore missing: validation on both sides, consistent cancellation, offer locking, and atomic resolution/rollback on the server side. The offer-related mechanisms found in the Java code concern shops or internal screens and do not constitute this player-to-player trade.
 
-Le Java actuel ne contient pas de couche réseau de jeu équivalente dans `src/main/java` : les occurrences de connexion/session/keepalive/reconnexion sont absentes, tandis que les mots `teleport` et `zone` correspondent à des fonctions locales de contenu et de rendu. Il n’existe donc pas de comportement comparable pour la détection de perte, les ACK, la déduplication, la fragmentation, la retransmission, la reprise ou le nettoyage des états UI/jeu après déconnexion. Le déplacement et le changement de carte Java restent locaux ; ils ne peuvent pas être comparés à une transition confirmée par serveur avec restauration d’état.
-## 75. Vol à la tire (`RobUI`) : sélection et exécution
+## 74. Network session: connection loss, ACK and state recovery
 
-Le client 1.68 possède une interface dédiée au vol à la tire. Elle reçoit l’autorisation (`canRob`), le nom de la cible et une liste d’objets exposés, affiche les objets avec leur apparence, identifiant de base, identifiant d’instance et quantité, permet d’en sélectionner un, puis d’exécuter l’action via un bouton séparé. L’interface sait aussi refuser l’action et se fermer explicitement.
+The 1.68 client uses a persistent communication layer with individually tracked connections, fragmented/reassembled packets, received-packet IDs, packets awaiting ACK, retransmission/expiry, and a list of lost connections. `PacketCenter::KeepAlive()` is called on every loop iteration to detect a stall or an infinite wait. Maintenance checks packet, fragment and connection timeouts, then removes the expired connection. Final closing also sends an explicit disconnect packet.
 
-Le Java contient bien une référence de contenu/compétence nommée `rob` et un identifiant de sort, mais aucune fenêtre ou logique équivalente à `RobUI`, aucun inventaire de la cible sélectionnable et aucune commande d’exécution/validation du vol n’ont été trouvés. La présence du nom dans les définitions ne fournit donc pas le fonctionnement natif : sélection de l’objet, autorisation serveur, résultat, refus et fermeture manquent.
-## 76. Fiche détaillée d’objet et requête serveur
+The current Java code has no equivalent game network layer in `src/main/java`: occurrences of connection/session/keepalive/reconnection are absent, while the words `teleport` and `zone` correspond to local content and rendering functions. There is therefore no comparable behavior for loss detection, ACKs, deduplication, fragmentation, retransmission, recovery, or cleaning up UI/game state after a disconnect. Java movement and map changes remain local; they cannot be compared to a server-confirmed transition with state restoration.
 
-Le client 1.68 possède une fiche d’objet (`RTItemI`) alimentée par `RQ_QueryItemInfo`. Un clic droit sur un objet au sol ou dans l’inventaire peut demander au serveur sa description complète : statistiques directes, résistances/pouvoirs, compétences, bonus et valeurs min/max. La fiche colore aussi l’objet selon le nombre de bonus et distingue les informations d’un objet d’inventaire de celles d’un objet au sol. Elle est affichée dans une fenêtre dédiée, puis invalidée lorsque la réponse disparaît ou lorsqu’une nouvelle requête est lancée.
+## 75. Pickpocketing (`RobUI`): selection and execution
 
-Le Java affiche des tooltips construits localement à partir de `ItemDefinition`/de valeurs connues, mais aucun équivalent de requête d’information d’objet, de réponse asynchrone, de fiche `RTItemI` ou de calcul d’affichage des bonus min/max n’a été trouvé. Un objet au sol ne bénéficie donc pas du même cycle d’inspection serveur, et les données visibles peuvent être limitées aux définitions statiques locales.
-## 77. Vente aux marchands : prix et identité des objets
+The 1.68 client has a dedicated pickpocketing UI. It receives the permission (`canRob`), the target's name and a list of exposed items, displays the items with their appearance, base ID, instance ID and quantity, lets the player select one, then execute the action via a separate button. The UI can also refuse the action and close explicitly.
 
-La vente native (`SellUI`) reçoit du serveur une liste de vente contenant, pour chaque entrée, l’identifiant d’instance (`dwID`), l’apparence, le prix, la quantité disponible et `maxQty`. La sélection modifie le total demandé et le montant restant, puis `RQ_SendSellItemList` renvoie au serveur les couples identifiant d’instance/quantité vendue. Le serveur garde donc le contrôle du prix, de la disponibilité et de l’objet exact consommé.
+The Java code does have a content/skill reference named `rob` and a spell ID, but no window or logic equivalent to `RobUI`, no selectable target inventory, and no rob execution/validation command were found. The name's presence in the definitions therefore does not provide the native functionality: item selection, server permission, result, refusal and closing are all missing.
 
-Dans `ShopScreen.forSelling`, le Java reconstruit les entrées à partir de clés d’objets locales, fixe le prix à `def.getPrice() / 2`, limite la quantité par un simple comptage d’objets et, à la confirmation, détruit localement les objets puis crédite immédiatement l’or. Il n’y a pas d’identifiant d’instance, de prix transmis par le marchand, de `maxQty` serveur ni de requête de vente équivalente. Deux objets identiques avec durabilité/bonus différents ne peuvent donc pas suivre le même comportement que dans le client 1.68, et une vente locale n’a pas la validation/rollback serveur natif.
-## 78. Achat marchand : panier local contre validation serveur
+## 76. Detailed item sheet and server request
 
-`BuyUI` construit un panier de plusieurs références, affiche le prix courant et vérifie localement l’or disponible, mais la confirmation envoie au serveur la liste des identifiants et quantités (`RQ_SendBuyItemList`). Le serveur reste l’autorité pour le stock, le prix final, le poids/volume d’inventaire et la création effective des objets.
+The 1.68 client has an item sheet (`RTItemI`) fed by `RQ_QueryItemInfo`. A right-click on a ground item or an inventory item can ask the server for its full description: direct stats, resistances/powers, skills, bonuses and min/max values. The sheet also colors the item according to its bonus count and distinguishes inventory-item info from ground-item info. It is shown in a dedicated window, then invalidated when the response disappears or a new request is issued.
 
-Le Java déduit immédiatement l’or et ajoute directement les clés dans la liste d’inventaire de `Player`. `ShopScreen` ne possède pas de panier soumis à un serveur, de réponse d’achat, de contrôle de stock distant ou de compensation en cas d’échec. Le comportement visible peut donc diverger dès qu’un prix, une quantité disponible ou une contrainte d’inventaire est différente de la définition locale.
-## 79. Statistiques XP/heure et statistiques PvP
+The Java code displays tooltips built locally from `ItemDefinition`/known values, but no equivalent of an item-info request, an async response, an `RTItemI` sheet, or a min/max bonus display calculation was found. A ground item therefore does not get the same server inspection cycle, and the visible data can be limited to the local static definitions.
 
-Le client natif contient deux services distincts qui transforment les données reçues en messages dans l’historique de chat. `XpStat` mémorise l’XP de départ et l’horodatage, calcule l’XP gagnée, le temps écoulé et la vitesse moyenne horaire, puis affiche les résultats formatés. `PvpRanking` affiche séparément les points PvP, kills/morts courants et totaux, meilleure série et série en cours.
+## 77. Selling to merchants: item price and identity
 
-Le Java calcule et affiche certaines valeurs d’XP ou de PvP dans les écrans de statistiques, mais ne reproduit pas ce cycle natif de démarrage/arrêt de mesure, de calcul horaire et d’injection dans l’historique de chat. Les statistiques natives sont donc une fonction interactive persistante du client, pas seulement des champs de feuille de personnage ; ce parcours manque ou reste différent dans le Java.
-## 80. Inventaire du protocole client : 131 opérations natives sans équivalent Java
+The native sale (`SellUI`) receives a sell list from the server containing, for each entry, the instance ID (`dwID`), appearance, price, available quantity and `maxQty`. Selecting an item updates the requested total and the remaining amount, then `RQ_SendSellItemList` sends the server pairs of instance ID / sold quantity. The server therefore keeps control of price, availability and the exact item consumed.
 
-Le dépouillement de `PacketTypes.h` trouve 131 symboles `RQ_` distincts. Ils couvrent notamment les huit directions de déplacement, les ACK, la création/suppression de personnage, l’authentification de version, les changements de monde, les mises à jour d’unités, les objets périphériques, les HP/mana/poids/XP, l’équipement, l’utilisation d’objets, les coffres, les achats/ventes, les échanges, les groupes, les guildes, les canaux de discussion, les effets, les sorts, les compétences, le vol, la météo, la mort, le séraphin et les statistiques PvP.
+In `ShopScreen.forSelling`, the Java code rebuilds entries from local item keys, hardcodes the price as `def.getPrice() / 2`, caps the quantity by a simple item count, and on confirmation destroys the items locally and immediately credits the gold. There is no instance ID, no price transmitted by the merchant, no server `maxQty`, and no equivalent sell request. Two identical items with different durability/bonuses therefore cannot follow the same behavior as in the 1.68 client, and a local sale has no native server validation/rollback.
 
-Le Java ne contient pas de `PacketTypes`, de sérialiseur client T4C, de dispatcher de réponses ou de couche de sockets de jeu. Les classes portant des noms comme `Request`, `PhysicalAttackRequest` ou les endpoints HTTP du Content Studio ne sont pas des implémentations de ces paquets : elles servent à l’éditeur ou à des appels locaux. Par conséquent, toute opération `RQ_` reste absente comme contrat d’exécution Java, même lorsqu’un écran ou une mutation locale porte un nom fonctionnel similaire. Les sections précédentes détaillent les conséquences par domaine ; ce comptage fournit la vérification globale de la couverture protocolaire.
-## 81. Intégrité des fichiers de jeu avant connexion
+## 78. Buying from a merchant: local basket vs. server validation
 
-Le démarrage natif vérifie des fichiers externes avant de poursuivre : index `gamefiles\MD.MD`, présence de `T4CGameFile.VSB` et de `VSBInfo.Txt`, puis comparaison de la taille du fichier de ressources avec la valeur déclarée. En cas d’absence ou de taille incohérente, il affiche une boîte d’erreur et interrompt/rejoue le chemin de chargement. Le client peut aussi lancer le WebPatch avant l’authentification et conserver les paramètres de serveur/login issus du launcher.
+`BuyUI` builds a basket of several references, shows the current price and locally checks available gold, but confirmation sends the server the list of IDs and quantities (`RQ_SendBuyItemList`). The server remains the authority for stock, the final price, inventory weight/volume and actually creating the items.
 
-Le Java charge ses ressources à la demande via `SpriteLoader`, avec des exceptions souvent absorbées ou des replis graphiques. Il ne possède pas de phase d’amorçage qui valide un index global et la taille d’un conteneur de ressources avant l’entrée en jeu, ni de WebPatch/launcher intégré équivalent. Une installation partiellement ou incorrectement patchée peut donc atteindre l’écran de jeu avec des ressources manquantes, alors que le client 1.68 bloque ou relance la mise à jour plus tôt.
-## 82. Raccourcis globaux et désactivation des macros en fenêtre modale
+The Java code immediately deducts the gold and adds the keys straight into `Player`'s inventory list. `ShopScreen` has no server-submitted basket, no purchase response, no remote stock check, and no compensation on failure. Visible behavior can therefore diverge as soon as a price, an available quantity, or an inventory constraint differs from the local definition.
 
-Le client natif installe dans `MacroHandler` des raccourcis globaux Ctrl+I (inventaire), Ctrl+S (personnage), Ctrl+C (mode attaque), Ctrl+L (chat), Ctrl+G (groupe), Ctrl+P (sorts), Ctrl+M (macros), Ctrl+O (options), Ctrl+W (carte), Ctrl+T (échange), Ctrl+H (capture), Ctrl+A (taille du chat) et Ctrl+V (identifier les objets). Les raccourcis sont remplaçables par le profil, appelés avant les autres traitements clavier et désactivables temporairement (`DisableMacroCall`) pendant l’édition d’une macro ou certaines popups.
+## 79. XP/hour stats and PvP stats
 
-Le Java `GameInputHandler` ne reprend qu’un sous-ensemble de ces combinaisons et les redirige vers des écrans/états locaux ; plusieurs ouvertures natives (groupe, échange, macros, options, identification globale, capture) n’ont pas de cible fonctionnelle équivalente. Les écrans Java n’utilisent pas non plus un registre central de callbacks avec blocage global des macros : selon la fenêtre active, une touche peut être ignorée, traitée par le chat ou agir sur le jeu. Le même raccourci et la même séquence d’ouverture ne sont donc pas garantis.
-## 83. Événements système serveur : pages, messages, heure et URL
+The native client contains two distinct services that turn received data into chat-history messages. `XpStat` records the starting XP and the timestamp, computes XP gained, elapsed time and average hourly speed, then displays the formatted results. `PvpRanking` separately displays PvP points, current and total kills/deaths, best streak and current streak.
 
-Le client 1.68 traite plusieurs réponses qui ne sont pas de simples lignes de chat : `RQ_MessageOfDay` affiche le message du jour, `RQ_ServerMessage` et `RQ_InfoMessage` alimentent des files/présentations système distinctes, `RQ_Page` et `RQ_TogglePage` gèrent les pages privées avec activation/désactivation, et `RQ_OpenURL` transmet une URL à l’action système du client. `RQ_GetTime` synchronise aussi une information d’heure serveur. `RQ_PlayerFastMode` modifie un mode d’exécution reçu/confirmé par le serveur, et `RQ_SafePlug` participe au contrôle anti-déconnexion/anti-plug natif.
+The Java code computes and displays some XP or PvP values in the stats screens, but does not reproduce this native start/stop measurement cycle, the hourly calculation, or the injection into chat history. The native stats are therefore a persistent interactive client feature, not just character-sheet fields; this flow is missing or different in the Java code.
 
-Le Java possède un `GameChat` et des `SystemMessage`, mais pas de dispatcher de ces réponses ni de distinction protocolaire entre message du jour, message serveur, info, page privée activée/désactivée et canal de discussion. Aucun cycle d’heure serveur, d’ouverture d’URL reçue, de mode rapide confirmé ou de `SafePlug` équivalent n’a été trouvé. Les textes Java ressemblant à des messages système sont donc produits localement et ne reproduisent pas les transitions, files, permissions ou actions externes du client 1.68.
-## 84. Opérations natives résiduelles : rafraîchissement, existence et nettoyage
+## 80. Client protocol inventory: 131 native operations with no Java equivalent
 
-Le contrôle inverse des symboles de `PacketTypes.h` laisse plusieurs opérations fonctionnelles qui ne sont pas des doublons de simples écrans :
+Combing through `PacketTypes.h` finds 131 distinct `RQ_` symbols. They cover, among other things, the eight movement directions, ACKs, character creation/deletion, version authentication, world changes, unit updates, peripheral items, HP/mana/weight/XP, equipment, item use, chests, buying/selling, trades, groups, guilds, chat channels, effects, spells, skills, robbery, weather, death, seraph and PvP stats.
 
-- `RQ_ViewBackpack` et `RQ_ViewEquiped` demandent au serveur un état frais du sac et de l’équipement ;
-- `RQ_QueryItemName` résout le nom d’une instance, notamment dans les coffres, l’inventaire et l’échange, avant affichage ;
-- `RQ_JunkItems` envoie au serveur la liste des identifiants d’objets jetés en une action ;
-- `RQ_UseItemByAppearance` et `RQ_CannotFindItemByAppearance` gèrent l’utilisation par apparence et le retour d’échec lorsque l’instance n’existe plus ;
-- `RQ_MissingUnit`, `RQ_QueryUnitExistence` et `RQ_SendPeriphericObjects` maintiennent la cohérence des unités autour du joueur ;
-- `RQ_QueryNameExistence`, `RQ_QueryPatchServerInfo` et `RQ_QueryServerVersion` arbitrent respectivement le nom, le patch et la compatibilité serveur ;
-- `RQ_NotifyGroupDisband` et `RQ_ToggleChatterListening` propagent des changements distants qui ferment/actualisent les interfaces concernées.
+The Java code has no `PacketTypes`, no T4C client serializer, no response dispatcher and no game socket layer. Classes with names like `Request`, `PhysicalAttackRequest` or the Content Studio's HTTP endpoints are not implementations of these packets: they serve the editor or local calls. As a result, every `RQ_` operation remains absent as a Java execution contract, even where a screen or a local mutation carries a similarly-sounding functional name. The preceding sections detail the consequences per domain; this count provides the overall verification of protocol coverage.
 
-Le Java modifie directement les listes locales d’inventaire/équipement, connaît les noms par `ItemRegistry`, ne dispose pas d’action groupée de rebut soumise au serveur et ne possède pas de cycle de rafraîchissement d’unités périphériques. Les recherches ne montrent pas non plus de réponses Java équivalentes pour l’existence d’un nom/unité, le patch, la dissolution d’un groupe ou l’écoute des canaux. Ces opérations complètent les écarts de protocole généraux : elles expliquent précisément pourquoi une liste Java locale peut rester valide visuellement tout en étant déjà obsolète ou invalide côté 1.68.
-## 85. Rafraîchissement des points, sorts, remort et classement PvP
+## 81. Game file integrity before connecting
 
-Le client 1.68 possède des requêtes distinctes pour relire les points de compétences (`RQ_GetSkillStatPoints`), envoyer un entraînement de caractéristiques (`RQ_SendStatTrain`), envoyer une liste d’apprentissage de sorts (`RQ_SendSpellList`), demander le remort (`RQ_Remort`), récupérer la liste de personnages/PC personnelle (`RQ_GetPersonnalPClist`) et demander le classement/statut PvP (`RQ_GetPvpRanking`). Chaque opération a son propre ACK et ses réponses alimentent ensuite les écrans concernés.
+The native startup checks external files before proceeding: the `gamefiles\MD.MD` index, the presence of `T4CGameFile.VSB` and `VSBInfo.Txt`, then compares the resource file's size against the declared value. On absence or a size mismatch, it shows an error box and interrupts/replays the loading path. The client can also launch WebPatch before authentication and keep the server/login parameters coming from the launcher.
 
-Le Java modifie les statistiques, les compétences, les sorts appris, le remort et les données PvP directement dans `Player`/les écrans, avec sauvegarde locale. Il n’existe pas de distinction entre demande, acceptation, refus et rafraîchissement serveur pour ces opérations. Une double validation, un coût différent, un plafond de points ou une modification effectuée par un autre état serveur ne peut donc pas produire la même transition que dans le client 1.68.
-## 86. Horloge et cycle jour/nuit : temps serveur contre temps local
+The Java code loads its resources on demand via `SpriteLoader`, with exceptions often swallowed or graphics fallbacks. It has no bootstrap phase that validates a global index and a resource container's size before entering the game, nor an equivalent built-in WebPatch/launcher. A partially or incorrectly patched install can therefore reach the game screen with missing resources, whereas the 1.68 client blocks or re-triggers the update earlier.
 
-La réponse native `RQ_GetTime` transporte séparément seconde, minute, heure, jour, semaine, mois et année dans `g_TimeStructure`. Le temps affiché et les effets qui en dépendent partent donc d’une référence serveur reçue, même si le client continue ensuite à faire tourner ses compteurs locaux.
+## 82. Global shortcuts and macro disabling in modal windows
 
-Le Java instancie `DayNightCycle` avec une heure par défaut ou une heure relue de `PlayerStateStore`, puis l’incrémente avec `delta`. Cette horloge n’est jamais recalée par une réponse serveur. Deux clients lancés à des moments différents peuvent donc avoir des phases jour/nuit différentes, alors que le client 1.68 converge vers la date/heure du serveur.
-## 87. Flèches : résultat serveur et collision du projectile
+The native client installs global shortcuts in `MacroHandler`: Ctrl+I (inventory), Ctrl+S (character), Ctrl+C (attack mode), Ctrl+L (chat), Ctrl+G (group), Ctrl+P (spells), Ctrl+M (macros), Ctrl+O (options), Ctrl+W (map), Ctrl+T (trade), Ctrl+H (capture), Ctrl+A (chat size) and Ctrl+V (identify items). Shortcuts can be reassigned by the profile, are invoked before other keyboard handling, and can be temporarily disabled (`DisableMacroCall`) while editing a macro or during certain popups.
 
-Le client 1.68 reçoit `RQ_ArrowHit` avec l’identifiant du tireur, celui de la cible et le nouveau pourcentage de HP, puis lance `ShootArrow` et `PlAttack` avec cet état déjà résolu. `RQ_ArrowMiss` transporte au contraire le tireur, la position finale et un indicateur de collision ; le client joue alors la trajectoire et le résultat d’échec sans recalculer le jet de précision.
+The Java `GameInputHandler` only implements a subset of these combinations and redirects them to local screens/states; several native openings (group, trade, macros, options, global identify, capture) have no equivalent functional target. Java screens also do not use a central callback registry with a global macro lock: depending on the active window, a key can be ignored, handled by chat, or act on the game. The same shortcut and the same opening sequence are therefore not guaranteed.
 
-Dans `MainGameScreen`, le Java lance le projectile puis exécute `applyBowImpact` dans le callback visuel. `CombatResolver` décide localement du hit/miss et des dégâts au moment de l’impact, avant mise à jour de la cible. La collision visuelle, le résultat de combat et la diminution des HP ne suivent donc pas le contrat 1.68 : un projectile Java peut atteindre l’écran alors que le client natif aurait reçu un miss, ou inversement, et le résultat n’est pas corrigé par un paquet serveur.
-## 88. Effets de sorts : paquet de résultat contre résolution locale
+## 83. Server system events: pages, messages, time and URL
 
-La réponse native `RQ_SpellEffect` ne contient pas seulement l’identifiant du sort : elle transporte le caster, la cible, les positions de cible et de caster, ainsi que `spellEffectId` et `spellChildId`. Le client choisit ensuite le déplacement et le suivi de l’effet (`Follow`), la position finale et la présentation offensive ou bénéfique à partir de cette réponse. L’animation est donc déclenchée par un résultat réseau qui peut être différent de la tentative initiale.
+The 1.68 client handles several responses that are not simple chat lines: `RQ_MessageOfDay` displays the message of the day, `RQ_ServerMessage` and `RQ_InfoMessage` feed distinct system queues/presentations, `RQ_Page` and `RQ_TogglePage` manage private pages with enable/disable, and `RQ_OpenURL` passes a URL to the client's system action. `RQ_GetTime` also synchronizes a piece of server time information. `RQ_PlayerFastMode` changes an execution mode received/confirmed by the server, and `RQ_SafePlug` takes part in the native anti-disconnect/anti-plug control.
 
-Le Java appelle `SpellEffectManager.resolve(...)` dans les callbacks d’impact de `MainGameScreen`, puis modifie localement HP, mana, buffs, drains, effets persistants et invocations. Aucun paquet de résultat équivalent, aucune validation serveur et aucun rollback n’intervient entre le lancement visuel et cette mutation. Le Java fait donc de la fin d’animation l’autorité de l’effet ; le client 1.68 fait de la réponse `RQ_SpellEffect` l’autorité, ce qui change les cas de cible morte, déplacée, hors portée, refusée ou déjà modifiée par un autre joueur.
-## 89. Lancement de sort : validation locale complète sans requête `RQ_CastSpell`
+The Java code has a `GameChat` and `SystemMessage`s, but no dispatcher for these responses and no protocol-level distinction between message of the day, server message, info, private page enabled/disabled, and chat channel. No server-time cycle, no received-URL opening, no confirmed fast mode, and no equivalent `SafePlug` were found. Java text that looks like system messages is therefore produced locally and does not reproduce the 1.68 client's transitions, queues, permissions or external actions.
 
-Dans le protocole client 1.68, `RQ_CastSpell` est une opération distincte de `RQ_SpellEffect` : le lancement et son résultat d’impact ne sont pas une seule mutation locale. Le Java n’a pas de transport de cette requête. `SpellCastingService.begin(...)` valide localement le sort connu, la cible, le PvP, la ligne de vue, le cooldown, l’épuisement, le coût de mana et le taux de réussite, puis décrémente immédiatement le mana et active les cooldowns/exhaustions.
+## 84. Residual native operations: refresh, existence and cleanup
 
-Cela reproduit une règle de gameplay plausible, mais pas le fonctionnement réseau 1.68 : le client Java peut consommer les ressources et démarrer l’animation avant toute acceptation distante, sans acquittement, refus serveur, resynchronisation ou correction du coût. La validation locale devient également dépendante des statistiques et de la formule Java, alors que le client natif délègue la décision finale à l’échange `RQ_CastSpell` puis attend les réponses serveur.
-## 90. Statuts persistants : création réseau et expiration locale
+Cross-checking `PacketTypes.h`'s symbols leaves several functional operations that are not just duplicates of plain screens:
 
-Le client natif traite `RQ_CreateEffectStatus` (paquet 83) avec un identifiant d’effet, le temps restant, la durée totale, l’identifiant d’icône et une description, puis appelle `EffectStatusUI::AddEffect`. L’interface des effets persistants est donc alimentée par une notification serveur dédiée, indépendante du paquet d’impact visuel.
+- `RQ_ViewBackpack` and `RQ_ViewEquiped` ask the server for a fresh state of the backpack and equipment;
+- `RQ_QueryItemName` resolves an instance's name, notably in chests, inventory and trade, before display;
+- `RQ_JunkItems` sends the server the list of discarded item IDs in one action;
+- `RQ_UseItemByAppearance` and `RQ_CannotFindItemByAppearance` handle use-by-appearance and the failure feedback when the instance no longer exists;
+- `RQ_MissingUnit`, `RQ_QueryUnitExistence` and `RQ_SendPeriphericObjects` maintain the consistency of units around the player;
+- `RQ_QueryNameExistence`, `RQ_QueryPatchServerInfo` and `RQ_QueryServerVersion` respectively arbitrate name, patch and server compatibility;
+- `RQ_NotifyGroupDisband` and `RQ_ToggleChatterListening` propagate remote changes that close/refresh the relevant UIs.
 
-Le Java crée directement des `Player.ActiveBuff` depuis `SpellEffectManager`, `ItemUseService`, `SeraphAuraService` ou la restauration locale, puis fait décroître les durées dans `Player`. Il n’existe pas de message serveur séparé qui puisse créer, remplacer, prolonger ou retirer un statut. L’icône, la description, le temps restant et les contributions aux statistiques peuvent ainsi diverger lorsque le serveur 1.68 applique un statut sans animation, le remplace, le dissipe ou refuse l’application locale.
-## 91. Dissipation de statut : `RQ_DispellEffectStatus` absent
+The Java code directly modifies the local inventory/equipment lists, knows names via `ItemRegistry`, has no server-submitted bulk-discard action, and has no peripheral-unit refresh cycle. The searches also show no Java equivalent responses for name/unit existence, patch info, group dissolution, or channel listening. These operations round out the general protocol gaps: they explain precisely why a local Java list can remain visually valid while already being stale or invalid on the 1.68 side.
 
-Le protocole natif possède aussi `RQ_DispellEffectStatus` (paquet 84), qui appelle `EffectStatusUI::DispellEffect` avec l’identifiant de l’effet. La suppression d’un statut n’est donc pas seulement une expiration du compteur client : le serveur peut retirer explicitement un effet à tout moment.
+## 85. Refreshing points, spells, remort and PvP ranking
 
-Le Java ne montre pas de dispatcher réseau ni de méthode équivalente recevant un identifiant d’effet ; `Player.dispelBuff(...)` est appelé par des services locaux et par la logique de jeu Java. Une dissipation distante, un remplacement par ID ou un retrait simultané ne peut donc pas être reproduit fidèlement, et les bonus de statistiques liés au buff peuvent rester actifs jusqu’à l’expiration/au nettoyage local.
-## 92. Ressources du personnage : mises à jour serveur séparées
+The 1.68 client has distinct requests to re-read skill points (`RQ_GetSkillStatPoints`), send a stat-training action (`RQ_SendStatTrain`), send a spell-learning list (`RQ_SendSpellList`), request remort (`RQ_Remort`), fetch the personal character list (`RQ_GetPersonnalPClist`), and request PvP ranking/status (`RQ_GetPvpRanking`). Each operation has its own ACK, and the responses then feed the relevant screens.
 
-Le client natif traite `RQ_GetStatus` comme un état complet initial/rafraîchi (HP et maximum, mana et maximum, XP, or, poids et autres champs), puis traite séparément `RQ_HPchanged` avec le HP courant, `RQ_ManaChanged` avec le mana courant et `RQ_UpdateWeight` avec poids et poids maximum. Ces paquets mettent à jour la feuille de personnage indépendamment des animations de combat ou d’utilisation d’objet.
+The Java code modifies stats, skills, learned spells, remort and PvP data directly in `Player`/the screens, with local saving. There is no distinction between request, acceptance, refusal and server refresh for these operations. Double validation, a different cost, a point cap, or a change made by some other server state therefore cannot produce the same transition as in the 1.68 client.
 
-Le Java ne possède pas ces canaux de synchronisation : `Player` est modifié directement par `SpellCastingService`, `SpellEffectManager`, les écrans de boutique/entraînement et les services locaux, puis sauvegardé dans `PlayerStateStore`. Il n’y a ni snapshot serveur périodique, ni distinction entre ressource acceptée et ressource prédite, ni correction lorsque HP, mana, or ou poids ont changé hors de l’action locale. Les écrans peuvent donc afficher une valeur cohérente avec l’action Java mais différente de l’état 1.68 attendu.
-## 94. Cycle d’échange : démarrage, contenu, statuts et terminaison
+## 86. Clock and day/night cycle: server time vs. local time
 
-Le client natif reçoit des événements séparés pour l’invitation, le démarrage, le contenu de chaque côté (`RQ_TradeContents`), les statuts de validation (`RQ_TradeSetStatus`), l’annulation et la fin (`RQ_TradeCancel`, `RQ_TradeFinish`). La fenêtre est donc pilotée par un état bilatéral serveur : une modification de contenu ou de validation peut invalider l’accord précédent avant la clôture.
+The native `RQ_GetTime` response carries second, minute, hour, day, week, month and year separately in `g_TimeStructure`. The displayed time and the effects that depend on it therefore start from a received server reference, even though the client then keeps running its own local counters.
 
-Le Java possède une interface d’échange, mais les recherches ne montrent pas de transport de ces événements ni de machine d’état réseau correspondante. L’état local ne peut donc pas reproduire une invitation refusée, une annulation distante, une modification simultanée de l’autre inventaire ou la réinitialisation des validations après changement de contenu.
-## 95. Groupe : invitation et états distants non séparés
+The Java code instantiates `DayNightCycle` with a default time or a time reloaded from `PlayerStateStore`, then increments it with `delta`. This clock is never resynced by a server response. Two clients started at different times can therefore have different day/night phases, whereas the 1.68 client converges on the server's date/time.
 
-Le client natif distingue l’invitation (`RQ_GroupInvite`), la liste des invitations à actualiser, la liste des membres, le départ, l’exclusion et le partage automatique (`RQ_GroupToggleAutoSplit`). Les HP des membres sont aussi actualisés par un paquet dédié (`RQ_UpdateGroupMemberHp`) et la fenêtre est vidée lorsqu’un départ ou une dissolution est reçu.
+## 87. Arrows: server result and projectile collision
 
-Le Java n’a pas de dispatcher de ces événements protocolaire : ses informations de groupe sont produites par l’état local et les écrans. Il manque donc les transitions d’invitation en attente, acceptation/refus, exclusion distante, partage automatique confirmé et HP d’un membre mis à jour sans rechargement complet.
-## 96. Objets au sol : cohérence serveur contre ramassage local
+The 1.68 client receives `RQ_ArrowHit` with the shooter's ID, the target's ID and the new HP percentage, then triggers `ShootArrow` and `PlAttack` with this already-resolved state. `RQ_ArrowMiss`, conversely, carries the shooter, the final position and a collision flag; the client then plays the trajectory and the miss outcome without recomputing the accuracy roll.
 
-Le client natif reçoit les objets proches et leurs mises à jour par le protocole (`RQ_GetNearItems`, `RQ_GetObject`, `RQ_ViewGroundItemIndentContent`). Lorsqu’un objet n’est plus présent ou ne peut pas être obtenu, le client le retire de sa liste et affiche l’état d’échec approprié ; le dépôt dans un conteneur (`RQ_DepositObject`) est également une transition réseau.
+In `MainGameScreen`, the Java code fires the projectile and then runs `applyBowImpact` in the visual callback. `CombatResolver` decides hit/miss and damage locally at the moment of impact, before updating the target. Visual collision, the combat result and HP reduction therefore do not follow the 1.68 contract: a Java projectile can land on screen where the native client would have received a miss, or the reverse, and the result is not corrected by a server packet.
 
-Le Java possède `GroundItemManager`, mais il crée les drops depuis le loot local, les affiche et les retire immédiatement au ramassage après validation locale de distance, poids et inventaire. Il n’existe pas d’identifiant d’objet serveur, de réponse de ramassage, de suppression distante ni de requête de détail d’apparence. Deux clients peuvent donc voir le même drop Java comme disponible alors que le client 1.68 l’a déjà consommé, déplacé ou déclaré introuvable.
-## 97. Discussion : canaux et listes serveur absents
+## 88. Spell effects: result packet vs. local resolution
 
-Le client natif distingue les conversations indirectes et dirigées, les cris, les messages de canal et les messages reçus, puis reçoit séparément la liste des canaux et la liste des utilisateurs avec leur titre et leur état d’écoute. Les opérations d’entrée, sortie, ajout/suppression et écoute d’un canal sont donc des changements d’état serveur, pas uniquement un préfixe dans le texte.
+The native `RQ_SpellEffect` response does not just carry the spell's ID: it carries the caster, the target, the target's and caster's positions, plus `spellEffectId` and `spellChildId`. The client then picks the effect's movement and follow behavior (`Follow`), its final position and its offensive-or-beneficial presentation from this response. The animation is therefore triggered by a network result that can differ from the initial attempt.
 
-`GameChat` Java possède une saisie, un historique, une autocomplétion et un affichage local, mais aucune liste d’utilisateurs/canaux alimentée par protocole ni routage confirmé des messages privés, directs, cris et canaux. Les commandes textuelles Java ne reproduisent donc pas les droits, abonnements, filtres et retours d’erreur de la discussion 1.68.
-## 93. Mise à jour d’effet : durée et icône reçues séparément du buff Java
+The Java code calls `SpellEffectManager.resolve(...)` in `MainGameScreen`'s impact callbacks, then locally modifies HP, mana, buffs, drains, persistent effects and summons. No equivalent result packet, no server validation and no rollback occur between the visual cast and this mutation. The Java code therefore makes the end of the animation the effect's authority; the 1.68 client makes the `RQ_SpellEffect` response the authority, which changes the outcome when the target is dead, moved, out of range, refused, or already modified by another player.
 
-Le client natif reçoit la création d’un effet avec un identifiant, une durée courante, une durée totale et une icône (`RQ_CreateEffectStatus`), puis peut le supprimer par son identifiant (`RQ_DispellEffectStatus`). L’interface peut ainsi rafraîchir la durée ou remplacer l’icône d’un effet déjà présent sans recalculer l’effet depuis le sort local.
+## 89. Casting a spell: full local validation with no `RQ_CastSpell` request
 
-Le Java construit ses `ActiveBuff` depuis l’utilisation locale d’un sort ou d’un objet, avec une durée et une icône issues de ses propres définitions. Il ne dispose pas d’un rafraîchissement distant indépendant par identifiant dans le chemin de jeu ; une correction de durée, d’icône ou de remplacement envoyée par le serveur ne peut donc pas suivre la même transition que dans le client 1.68.
+In the 1.68 client protocol, `RQ_CastSpell` is a separate operation from `RQ_SpellEffect`: the cast and its impact result are not a single local mutation. The Java code has no transport for this request. `SpellCastingService.begin(...)` locally validates the known spell, the target, PvP, line of sight, cooldown, exhaustion, mana cost and success rate, then immediately deducts mana and activates cooldowns/exhaustion.
 
-## 98. XP et montée de niveau : notification serveur contre boucle locale
+This reproduces a plausible gameplay rule, but not 1.68's network behavior: the Java client can consume resources and start the animation before any remote acceptance, with no acknowledgment, server refusal, resync or cost correction. Local validation also becomes dependent on Java's own stats and formula, whereas the native client delegates the final decision to the `RQ_CastSpell` exchange and then waits for server responses.
 
-Le paquet natif de montée de niveau reçoit le nouveau niveau, l’XP restante/à atteindre, les HP et maximum, le mana et maximum, puis déclenche l’effet visuel de niveau supérieur. `RQ_XPchanged` reçoit séparément une XP 64 bits et met à jour les statistiques d’XP sans demander au client de recalculer lui-même le seuil.
+## 90. Persistent statuses: network creation and local expiration
 
-Le Java fait l’inverse dans `PlayerProgression.addXp(...)` : il ajoute une quantité locale, boucle sur `xpToNextLevel`, augmente le niveau, ajoute les points et applique les gains HP/mana. Cette boucle peut produire un niveau ou des gains différents si la courbe, le multiplicateur de buff, l’XP déjà consommée ou la réponse serveur ne concordent pas ; le Java ne reçoit ni niveau autoritaire ni XP 64 bits de correction.
-## 99. Arrêt imposé par le serveur
+The native client handles `RQ_CreateEffectStatus` (packet 83) with an effect ID, remaining time, total duration, an icon ID and a description, then calls `EffectStatusUI::AddEffect`. The persistent-effects UI is therefore fed by a dedicated server notification, independent of the visual-impact packet.
 
-Le client natif traite `RQ_ExitGame` comme une fermeture distante : il affiche le message d’arrêt, ferme l’application et réinitialise l’état de connexion. Le Java ne montre qu’un écran de confirmation de sortie volontaire et aucun événement serveur équivalent pour arrêt, maintenance ou déconnexion forcée.
-## 100. Actions GM et informations de marionnette : portée différente
+The Java code creates `Player.ActiveBuff`s directly from `SpellEffectManager`, `ItemUseService`, `SeraphAuraService` or local restoration, then decays the durations in `Player`. There is no separate server message that can create, replace, extend or remove a status. The icon, description, remaining time and stat contributions can therefore diverge whenever the 1.68 server applies a status with no animation, replaces it, dispels it, or refuses the local application.
 
-Le client natif réserve des opérations spéciales à l’état serveur : `RQ_PuppetInformation` concerne les informations d’une unité/marionnette, `RQ_GodCreateObject` crée un objet contrôlé par le serveur et `RQ_BroadcastTextChange` déplace le texte attaché à une unité. `RQ_BreakConversation` force aussi la fermeture du dialogue courant, tandis que `RQ_Attack` peut être reçu comme ordre d’animation/attaque d’une unité distante.
+## 91. Status dispelling: `RQ_DispellEffectStatus` absent
 
-Le Java expose des commandes GM locales et des scripts NPC, mais elles modifient directement `Player`, les monstres ou les objets sans protocole de permission, création serveur, diffusion ou interruption distante de dialogue. Un GM Java peut donc obtenir un effet local sans reproduire l’autorité, la visibilité pour les autres clients ni les mises à jour d’unités du client 1.68.
-## 101. ACK, délais et surveillance de la connexion par opération
+The native protocol also has `RQ_DispellEffectStatus` (packet 84), which calls `EffectStatusUI::DispellEffect` with the effect's ID. Removing a status is therefore not just a client counter expiring: the server can explicitly remove an effect at any time.
 
-Le client natif associe à chaque type de paquet un profil d’ACK et de délai différent dans `Comm.cpp` : déplacement et mises à jour instantanées n’attendent pas comme un achat, un sort, un échange ou une transition de session. `RQ_Ack` est traité séparément, tandis que `PacketCenter::isAlive()` surveille aussi l’absence de trafic pendant environ 120 secondes.
+The Java code shows no network dispatcher and no equivalent method receiving an effect ID; `Player.dispelBuff(...)` is called by local services and by Java game logic. A remote dispel, a replacement by ID, or a simultaneous removal therefore cannot be reproduced faithfully, and the buff's stat bonuses can remain active until local expiration/cleanup.
 
-Le Java n’a pas de couche de paquets de jeu, de numéro/attente d’ACK, de retransmission ou de délai par opération. Ses appels HTTP de contenu et son état local ne peuvent donc pas reproduire les blocages, expirations, indicateurs de connexion ou répétitions contrôlées du client 1.68.
-## 102. Paquet de mort : branche native sans traitement client visible
+## 92. Character resources: separate server updates
 
-Dans cette source 1.68, la branche `RQ_YouDied` est bien déclarée mais son traitement dans `Packet.cpp` est vide ; le client ne réalise donc pas, dans cette branche, la pénalité et la résurrection. Le Java exécute au contraire toute la pénalité dans `configurePlayerDeathCallback` : perte d’XP/or, drops, déplacement au point de réapparition, remise en état et sauvegarde.
+The native client treats `RQ_GetStatus` as a full initial/refreshed state (HP and max, mana and max, XP, gold, weight and other fields), then separately handles `RQ_HPchanged` with current HP, `RQ_ManaChanged` with current mana, and `RQ_UpdateWeight` with weight and max weight. These packets update the character sheet independently of combat or item-use animations.
 
-Il ne s’agit pas d’une équivalence manquante à ajouter silencieusement : c’est une différence de responsabilité démontrée par le code. Le Java a déplacé dans le client une transition que cette branche native laisse au flux serveur/autre gestionnaire, ce qui peut modifier le moment, la source des valeurs et la possibilité d’une correction distante.
-## 103. Entrée dans le monde : synchronisation native contre chargement local
+The Java code has no such synchronization channels: `Player` is modified directly by `SpellCastingService`, `SpellEffectManager`, the shop/training screens and local services, then saved in `PlayerStateStore`. There is no periodic server snapshot, no distinction between an accepted resource and a predicted one, and no correction when HP, mana, gold or weight changed outside the local action. Screens can therefore display a value consistent with the Java action but different from the expected 1.68 state.
 
-Après la préparation du personnage, le client natif demande les objets proches (`RQ_GetNearItems`), marque l’état `EnterGame`, puis envoie `RQ_FromPreInGameToInGame`. Cette transition coordonne le chargement des unités, le nettoyage du chat, le fondu d’écran et l’activation réelle des contrôles ; elle est soumise au serveur et à ses réponses.
+## 94. Trade cycle: start, content, statuses and completion
 
-Le Java charge `LocalCharacterStore`, construit directement `MainGameScreen` et restaure l’état JSON local dans `CharacterLoadingScreen`. Il n’y a ni `PutPlayerInGame`, ni liste de personnages distante, ni synchronisation d’entrée avant activation du monde. Un personnage supprimé ou modifié par une autre session reste donc sélectionnable localement, et le Java peut entrer dans une carte avec un état que le client 1.68 aurait refusé ou rechargé.
-## 104. Arrivée séraphin et remort : déclenchement réseau contre détection locale
+The native client receives separate events for the invitation, the start, each side's content (`RQ_TradeContents`), the validation statuses (`RQ_TradeSetStatus`), cancellation and completion (`RQ_TradeCancel`, `RQ_TradeFinish`). The window is therefore driven by a bilateral server state: a content or validation change can invalidate the prior agreement before closing.
 
-Le client natif traite `RQ_SeraphArrival` avec les coordonnées, l’identité d’unité, la lumière, le type et le statut transmis, puis traite `RQ_Remort` en réinitialisant notamment les macros. L’animation et l’état affiché dépendent donc d’une notification réseau et du résultat du remort.
+The Java code has a trade UI, but the search shows no transport for these events nor a matching network state machine. The local state therefore cannot reproduce a refused invitation, a remote cancellation, a simultaneous change to the other party's inventory, or validations resetting after a content change.
 
-Le Java déduit l’arrivée séraphin à partir de l’état local du joueur dans `startSeraphArrivalIfNeeded()` et déclenche son animation/son blocage de mouvement sans paquet `RQ_SeraphArrival`. Les téléportations sont aussi déclenchées par des définitions Java lorsqu’une tuile est atteinte. Il manque la confirmation distante, les coordonnées imposées par le serveur, la mise à jour des autres unités et la réinitialisation native des macros au remort.
-## 105. Drapeau serveur d’autorisation de scripts
+## 95. Group: invitation and remote states not separated
 
-`RQ_GodFlagUpdate` transporte un identifiant de drapeau et son état ; pour le drapeau concerné, le client natif active ou désactive `Player.CanRunScripts`. Le serveur peut donc retirer à chaud l’autorisation d’exécuter certaines actions scriptées ou GM côté client.
+The native client distinguishes the invitation (`RQ_GroupInvite`), the invitation list to refresh, the member list, leaving, kicking, and auto-sharing (`RQ_GroupToggleAutoSplit`). Members' HP is also refreshed by a dedicated packet (`RQ_UpdateGroupMemberHp`), and the window is cleared when a departure or disbandment is received.
 
-Le Java expose `GmCommandProcessor` et l’exécution des scripts NPC sans traitement d’un drapeau réseau équivalent. Ses permissions sont déterminées par la présence du composant/commande et l’état local, pas par une bascule serveur reçue. Une révocation distante ou un changement de contexte d’administration n’a donc pas la même portée.
-## 106. Mise à jour et existence des unités visibles
+The Java code has no dispatcher for these protocol events: its group information is produced by local state and the screens. It is therefore missing the pending-invitation, accept/refuse, remote-kick, confirmed-auto-share, and a member's HP updated-without-a-full-reload transitions.
 
-Le client natif reçoit `RQ_UnitUpdate`/`SetUnitStat` pour modifier l’état d’une unité déjà connue, et utilise `RQ_MissingUnit` ou `RQ_QueryUnitExistence` pour marquer une unité absente, la supprimer ou vérifier qu’elle existe encore. `RQ_SendPeriphericObjects` alimente en outre la zone autour du joueur ; les objets distants ne sont pas conservés indéfiniment dans la liste client.
+## 96. Ground items: server consistency vs. local pickup
 
-Le Java met à jour les monstres et NPC par leurs boucles locales (`MonsterManager`, `NPCManager`) et retire les entités selon leurs propres règles de distance, mort ou compagnon. Il n’existe pas d’identifiant réseau, de réponse d’existence ou de refresh périphérique serveur. Une unité créée, déplacée, tuée ou supprimée dans un autre état de jeu ne peut donc pas être réconciliée avec le client Java.
-## 107. Identité et nom d’instance d’objet
+The native client receives nearby items and their updates via the protocol (`RQ_GetNearItems`, `RQ_GetObject`, `RQ_ViewGroundItemIndentContent`). When an item is no longer present or cannot be obtained, the client removes it from its list and shows the appropriate failure state; depositing into a container (`RQ_DepositObject`) is also a network transition.
 
-Le client natif demande le nom d’une instance par identifiant (`RQ_QueryItemName`) pour le sac, le coffre et les deux côtés de l’échange ; il reçoit ensuite ce nom et le rattache à l’instance correspondante. `RQ_QueryItemInfo` est également prévu pour les informations détaillées d’objet, alors que la définition visuelle et l’instance sont deux notions distinctes.
+The Java code has `GroundItemManager`, but it creates drops from local loot, displays them, and removes them immediately on pickup after locally validating distance, weight and inventory. There is no server item ID, no pickup response, no remote removal, and no appearance-detail request. Two clients can therefore see the same Java drop as available where the 1.68 client has already consumed, moved, or declared it not found.
 
-Le Java résout les objets par clé/numéro dans `ItemRegistry` et affiche les caractéristiques statiques de `ItemDefinition`. Ses listes d’inventaire, coffre, drops et échange ne portent pas l’identifiant d’instance natif ni une réponse de nom différée. Deux objets de même définition mais d’état différent (charges, durabilité, flags ou propriété de quête) sont donc traités comme le même type local.
-## 108. Opérations natives restantes : absence d’actions unitaires Java
+## 97. Chat: channels and server lists absent
 
-Le protocole conserve des opérations unitaires distinctes que le Java ne transporte pas : les huit directions (`RQ_MoveEast`, `RQ_MoveSouth`, etc.), les conversations (`RQ_IndirectTalk`, `RQ_DirectedTalk`, `RQ_Shout`), l’entrée/sortie et l’ajout/retrait d’un canal, ainsi que les messages utilisateur/canal. De même, le groupe sépare invitation, jonction, exclusion, départ, mise à jour des membres et mise à jour de la liste d’invitations ; l’échange sépare ajout depuis le sac, retrait et nettoyage.
+The native client distinguishes indirect and directed conversations, shouts, channel messages and received messages, then separately receives the channel list and the user list with their title and listening state. Joining, leaving, adding/removing and listening to a channel are therefore server state changes, not just a text prefix.
 
-Les classes Java peuvent reproduire une partie de l’affichage ou appeler directement `Player.move`, `GameChat`, les écrans de groupe et l’échange, mais aucune de ces actions n’est sérialisée avec le type, l’ordre, l’ACK et l’échec natifs. La couverture visuelle partielle ne constitue donc pas une équivalence de fonctionnement : les validations et transitions inter-client de chacune de ces opérations restent absentes.
-## 109. Compétence active : retour serveur contre cooldown local
+The Java `GameChat` has input, history, autocompletion and a local display, but no protocol-fed user/channel list and no confirmed routing of private, direct, shout and channel messages. Java text commands therefore do not reproduce the permissions, subscriptions, filters and error feedback of 1.68's chat.
 
-Le client natif demande la liste des compétences (`RQ_GetSkillList`) au serveur et reçoit ensuite les états utilisables. Le retour d’utilisation contient un identifiant de compétence et un code de résultat (`SkillID`, `Return`) ; l’activation et l’échec ne sont donc pas déduits uniquement du bouton pressé.
+## 93. Effect update: duration and icon received separately from the Java buff
 
-Le Java utilise `SkillService.use(...)`, vérifie localement le niveau, les attributs, le cooldown et les conditions, puis déclenche le cooldown/mutation sans réponse serveur. Une compétence refusée, modifiée ou consommée par un autre état peut donc produire un effet Java différent, sans code de retour ni resynchronisation de la compétence.
-## 110. Attaque normale : paquet d’animation et HP autoritaires
+The native client receives an effect's creation with an ID, a current duration, a total duration and an icon (`RQ_CreateEffectStatus`), and can then remove it by its ID (`RQ_DispellEffectStatus`). The UI can therefore refresh the duration or replace the icon of an already-present effect without recomputing the effect from the local spell.
 
-Le client natif reçoit les attaques validées avec l’attaquant, le défenseur, leurs positions et, pour une touche, le HP résultant (`pHp`) ; il lance ensuite `PlAttack`/`SetAttack`. Une attaque manquée produit une branche distincte qui anime l’attaque sans appliquer de dégâts. La précision et le montant final ne sont donc pas recalculés par le client à l’impact.
+The Java code builds its `ActiveBuff`s from the local use of a spell or item, with a duration and icon coming from its own definitions. It has no independent remote refresh by ID in the game path; a duration correction, icon change, or replacement sent by the server therefore cannot follow the same transition as in the 1.68 client.
 
-Le Java appelle `CombatResolver.resolve(...)` dans les callbacks locaux de `MainGameScreen`, `MonsterManager` et `BaseMonster`, puis applique directement les HP et les morts. Le même code décide à la fois du jet, du résultat et du rendu. Comme pour les flèches, cela permet des divergences de touche, de miss, de dégâts et de timing dès qu’un état distant devrait être prioritaire.
-## 111. Équipement et utilisation d’objet : requêtes natives sans mutation locale immédiate
+## 98. XP and leveling up: server notification vs. local loop
 
-Le protocole natif distingue `RQ_EquipObject`, `RQ_UnequipObject` et `RQ_UseObject`, chacun soumis à son profil d’ACK. Le client envoie l’action sur l’instance, puis attend que les réponses d’état mettent à jour l’équipement, l’apparence, les charges et les caractéristiques ; l’équipement affiché n’est donc pas une preuve d’acceptation.
+The native level-up packet receives the new level, the remaining/needed XP, HP and max, mana and max, then triggers the level-up visual effect. `RQ_XPchanged` separately receives a 64-bit XP value and updates the XP stats without asking the client to recompute the threshold itself.
 
-Le Java exécute `InventoryService.equip/unequip` et `ItemUseService.useOnSelf` directement depuis `Inventory` ou `MainGameScreen`, actualise les apparences, les charges et les effets, puis sauvegarde localement. Une contrainte serveur, un conflit d’instance, un objet déjà utilisé ou une réponse d’échec ne peut pas annuler cette mutation.
-## 112. SafePlug : autorisation serveur de fermeture
+The Java code does the opposite in `PlayerProgression.addXp(...)`: it adds a local amount, loops over `xpToNextLevel`, raises the level, adds points and applies HP/mana gains. This loop can produce a different level or different gains if the curve, the buff multiplier, the XP already spent, or the server response do not match; the Java code receives neither an authoritative level nor a corrective 64-bit XP value.
 
-Le client natif traite `RQ_SafePlug` avec un statut binaire : un statut interdit le logoff (`boInterruptLogoff`), tandis que l’autre autorise la fermeture forcée (`boForceLogoff`). Cette décision est reçue du serveur et s’applique au moment de la déconnexion, indépendamment de la fenêtre de confirmation.
+## 99. Server-forced shutdown
 
-Le Java ne possède pas de statut SafePlug ni de garde de déconnexion serveur. `ExitGameConfirmScreen` déclenche une sortie locale sans pouvoir être bloqué ou forcé par une réponse de session. Le moment et la sécurité de la fermeture diffèrent donc du client 1.68.
+The native client handles `RQ_ExitGame` as a remote close: it shows the shutdown message, closes the application, and resets the connection state. The Java code only shows a voluntary-exit confirmation screen and has no equivalent server event for shutdown, maintenance, or forced disconnect.
 
-## 134. Compétences : valeur vraie, valeur effective et droit d’utilisation perdus
+## 100. GM actions and puppet information: different scope
 
-La réponse native `RQ_GetSkillList` transmet pour chaque compétence son identifiant, son nom, sa description, sa valeur courante (`dwStrength`), sa valeur vraie/non modifiée (`dwTrueStrength`) et un indicateur d’utilisation (`bUse`). Le client conserve ces champs séparément dans `USER_SKILL`, les affiche dans `CharacterUI` et n’autorise le double-clic ou la macro que si la compétence reçue est utilisable. La réponse d’exécution ajoute ensuite `SkillID` et `Return`, afin que le résultat réel soit fourni par le serveur.
+The native client reserves special operations to server state: `RQ_PuppetInformation` concerns a unit/puppet's information, `RQ_GodCreateObject` creates a server-controlled object, and `RQ_BroadcastTextChange` moves the text attached to a unit. `RQ_BreakConversation` also forces the current dialogue to close, while `RQ_Attack` can be received as an animation/attack order for a remote unit.
 
-Le Java charge `SkillDefinition`/`SkillRegistry` et stocke essentiellement un niveau local par identifiant. `SkillService.use` déduit l’autorisation du niveau et de son cooldown, puis applique immédiatement les mutations (`meditate`, `sneak`) ; il n’existe pas de paire valeur vraie/effective, de flag `bUse` reçu, ni de retour serveur `Return` par compétence. Les bonus qui modifient seulement la valeur effective, les refus serveur et l’état utilisable peuvent donc être affichés ou exécutés différemment.
+The Java code exposes local GM commands and NPC scripts, but they modify `Player`, monsters or items directly, with no permission protocol, server-side creation, broadcast, or remote dialogue interruption. A Java GM can therefore get a local effect without reproducing the 1.68 client's authority, visibility to other clients, or unit updates.
 
-## 113. Dialogue NPC : conversation serveur et affichage local découplés
+## 101. Per-operation ACK, delay and connection monitoring
 
-Dans le client 1.68, un clic/parole vers un NPC construit `RQ_DirectedTalk` avec les coordonnées du NPC, son identifiant, la direction calculée du personnage, la couleur et le texte. Une parole générale passe par `RQ_IndirectTalk`. Le serveur peut ensuite renvoyer `RQ_GetUnitName` (identifiant, nom, couleur et nom de guilde) et `RQ_BreakConversation`, ce dernier réinitialisant explicitement la cible et l’état de conversation ; les textes au-dessus des unités sont donc liés à des identifiants et à une session de dialogue, pas seulement à une fenêtre locale.
+The native client associates each packet type with a different ACK/delay profile in `Comm.cpp`: movement and instant updates do not wait the way a purchase, a spell, a trade or a session transition does. `RQ_Ack` is handled separately, while `PacketCenter::isAlive()` also watches for about 120 seconds of no traffic.
 
-Le Java traite le clic et la touche Entrée dans `NPCInputHandler`, puis `NPCManager`/les `NpcSpec` avancent directement un dialogue local (`welcomeText`, `DialogueTopic`, réponses et actions). Il n’existe pas de transport de `RQ_DirectedTalk`/`RQ_IndirectTalk`, de retour `RQ_GetUnitName` avec couleur/guilde, ni de paquet d’interruption qui invalide la conversation. Un dialogue Java peut donc continuer ou déclencher une action alors que le serveur 1.68 aurait refusé la distance, la cible, le texte ou interrompu la conversation.
+The Java code has no game packet layer, no ACK numbering/waiting, no retransmission, and no per-operation delay. Its content HTTP calls and its local state therefore cannot reproduce the 1.68 client's stalls, timeouts, connection indicators, or controlled repeats.
 
-## 114. Cycle personnage : roster local contre compte serveur
+## 102. Death packet: native branch with no visible client handling
 
-Le client natif expose des requêtes de session et de compte distinctes : `RQ_RegisterAccount`, `RQ_CreatePlayer`, `RQ_DeletePlayer`, `RQ_GetPersonnalPClist`, `RQ_PutPlayerInGame`, `RQ_ReturnToMenu`, `RQ_Reroll`, ainsi qu’une réponse `RQ_MaxCharactersPerAccountInfo`. Le serveur fournit donc la liste, les limites, l’identité et les résultats d’opération ; la sélection et le retour en jeu sont des transitions réseau, pas seulement des changements d’écran.
+In this 1.68 source, the `RQ_YouDied` branch is indeed declared but its handling in `Packet.cpp` is empty; the client therefore does not, in that branch, apply the penalty and resurrection. The Java code, by contrast, runs the whole penalty in `configurePlayerDeathCallback`: XP/gold loss, drops, moving to the respawn point, state reset and saving.
 
-Le Java utilise `LocalCharacterStore` et `characters.json` pour créer, supprimer, lister et charger les personnages, applique localement `MAX_CHARACTERS`, puis entre dans `MainGameScreen`. Il n’y a pas de compte/session serveur ni de réponse d’acceptation pour ces opérations. Deux clients, une suppression distante, une limite de compte ou une création concurrente ne peuvent donc pas produire les mêmes erreurs et états que le client 1.68.
+This is not a missing equivalence to silently add: it is a difference in responsibility demonstrated by the code. The Java code moved into the client a transition that this native branch leaves to the server flow/another handler, which can change the timing, the source of the values, and the possibility of a remote correction.
 
-## 115. Scripts de conversation : conditions persistantes et effets serveur absents
+## 103. Entering the world: native synchronization vs. local loading
 
-Les scripts NPC livrés avec le client/source 1.68 décrivent des conversations qui consultent et modifient des flags persistants, vérifient le niveau, l’or, les objets, les délais, proposent des décisions Oui/Non, retirent plusieurs objets, donnent des objets ou déclenchent un téléport. Le dialogue est donc une façade d’un script serveur transactionnel : le texte affiché dépend de l’état réel du personnage et l’effet ne doit être appliqué qu’après validation de cette transaction.
+After character preparation, the native client requests nearby items (`RQ_GetNearItems`), sets the `EnterGame` state, then sends `RQ_FromPreInGameToInGame`. This transition coordinates loading units, clearing chat, the screen fade, and actually enabling controls; it is subject to the server and its responses.
 
-Le Java représente principalement un NPC par `NpcSpec.DialogueTopic` (mots-clés, réponse, actions) et avance la conversation côté client. Même lorsque des `ActionType` existent, ils ne remplacent pas l’exécution atomique des conditions et consommations du script serveur 1.68. Une réponse peut être visible sans que les préconditions soient celles du serveur, ou une récompense/consommation peut être appliquée localement sans confirmation ni rollback.
+The Java code loads `LocalCharacterStore`, directly builds `MainGameScreen`, and restores the local JSON state in `CharacterLoadingScreen`. There is no `PutPlayerInGame`, no remote character list, and no entry synchronization before the world is activated. A character deleted or modified by another session therefore remains locally selectable, and the Java code can enter a map with a state the 1.68 client would have refused or reloaded.
 
-## 116. Canaux de discussion et groupe : états distants non représentés
+## 104. Seraph arrival and remort: network trigger vs. local detection
 
-Le client natif reçoit des listes structurées de canaux et d’utilisateurs (`RQ_GetChatterChannelList`, `RQ_GetChatterUserList`) avec état d’écoute, titre et guilde. Il reçoit aussi les mises à jour de groupe avec identifiant, nom, niveau, pourcentage de HP, chef et partage automatique ; `RQ_GroupInvite` ouvre une invitation distante et `RQ_GroupLeave`/la dissolution vide explicitement la liste. Les ajouts, retraits et messages de canal sont des opérations séparées du chat général.
+The native client handles `RQ_SeraphArrival` with the transmitted coordinates, unit identity, light, type and status, then handles `RQ_Remort`, which notably resets macros. The animation and the displayed state therefore depend on a network notification and the remort's result.
 
-Le Java possède `GameChat` comme zone d’affichage/saisie, mais aucune représentation équivalente de canaux, utilisateurs abonnés, guildes, invitations, membres ou HP de groupe n’a été trouvée. Les messages peuvent être affichés localement, sans synchroniser l’abonnement, la liste des interlocuteurs, le partage d’expérience ou la sortie du groupe. Le comportement social et les mises à jour inter-clients divergent donc même si la saisie textuelle fonctionne.
+The Java code infers the seraph arrival from the player's local state in `startSeraphArrivalIfNeeded()` and triggers its animation/movement lock with no `RQ_SeraphArrival` packet. Teleports are also triggered by Java definitions when a tile is reached. Missing are the remote confirmation, server-imposed coordinates, updating other units, and the native macro reset on remort.
 
-## 135. Annuaire des canaux : rafraîchissement périodique et écoute individuelle absents
+## 105. Server script-authorization flag
 
-Dans `ChatterUI`, l’ouverture de la fenêtre demande la liste publique des canaux (`RQ_GetChatterChannelList`). La sélection d’un canal demande ensuite sa liste d’utilisateurs (`RQ_GetChatterUserList`) avec le nom du canal ; cette liste est rafraîchie automatiquement toutes les dix secondes. Chaque utilisateur reçu possède au minimum nom, titre, guilde et état d’écoute. Le bouton d’écoute envoie en plus le canal et le nouvel état (`RQ_ToggleChatterListening`).
+`RQ_GodFlagUpdate` carries a flag ID and its state; for the relevant flag, the native client enables or disables `Player.CanRunScripts`. The server can therefore revoke, on the fly, the permission to run certain scripted or GM actions client-side.
 
-`GameChat` Java ne possède ni annuaire de canaux, ni sélection d’un canal distant, ni liste d’utilisateurs, ni rafraîchissement périodique, ni abonnement d’écoute par canal. Le chat Java est donc une conversation locale/générale et ne reproduit pas la visibilité, le filtrage ou l’actualisation du système de canaux 1.68.
+The Java code exposes `GmCommandProcessor` and NPC script execution with no handling of an equivalent network flag. Its permissions are determined by the presence of the component/command and local state, not by a received server toggle. A remote revocation or an admin-context change therefore does not have the same scope.
 
-## 136. Aide intégrée : manuel paginé et aides contextuelles absents
+## 106. Updating and checking the existence of visible units
 
-Le client 1.68 instancie `RTHelp` comme une fenêtre native dédiée. Elle contient douze pages d’aide (`Help0` à `Help11`), deux pages de lettres, quatre pages de cartes et une page de labyrinthe, avec navigation précédente/suivante et affichage conditionnel. Elle est ouverte automatiquement lors de la première entrée en jeu (`Show(true, 0, 0)`) et peut aussi être affichée pour des aides spéciales, par exemple après l’utilisation d’une lettre particulière. L’interface globale traite cette fenêtre comme un écran modal qui masque/minimise les autres panneaux.
+The native client receives `RQ_UnitUpdate`/`SetUnitStat` to change the state of an already-known unit, and uses `RQ_MissingUnit` or `RQ_QueryUnitExistence` to flag a unit as absent, remove it, or check that it still exists. `RQ_SendPeriphericObjects` also feeds the area around the player; remote items are not kept indefinitely in the client's list.
 
-Le Java ne possède pas de `RTHelp`, de manuel paginé, de pages de cartes/labyrinthe ni de déclenchement contextuel lié à l’utilisation d’objets. `F1` est affectée à l’overlay de debug dans `GameInputHandler`, pas à l’aide du joueur. Même si des textes d’aide existent dans les scripts ou les commandes GM, ils ne reproduisent pas le parcours et le verrouillage modal du manuel 1.68.
+The Java code updates monsters and NPCs through their own local loops (`MonsterManager`, `NPCManager`) and removes entities according to their own distance, death, or companion rules. There is no network ID, no existence response, and no server peripheral refresh. A unit created, moved, killed or removed in another game state therefore cannot be reconciled with the Java client.
 
-## 137. AFK et réponse automatique aux pages : état persistant absent
+## 107. Item instance identity and name
 
-Le client natif sauvegarde `dwAfkStatus` et un message AFK de 2048 caractères dans sa configuration. Les commandes `!AFK ON`, `!AFK OFF`, `!AFK VIEW` et `!AFK MESSAGE ...` modifient cet état. Lorsqu’une page privée arrive, le client répond automatiquement par `RQ_Page` avec le message configuré, tout en évitant les boucles et le flood sur certains textes ; les pages ignorées sont filtrées avant ce traitement.
+The native client requests an instance's name by ID (`RQ_QueryItemName`) for the backpack, a chest, and both sides of a trade; it then receives that name and attaches it to the matching instance. `RQ_QueryItemInfo` is also provided for detailed item information, since the visual definition and the instance are two distinct notions.
 
-Le Java ne possède ni état AFK persistant, ni commande équivalente, ni réponse automatique aux messages privés. `GameChat` affiche/saisit du texte mais ne reproduit pas la distinction entre page reçue, auto-réponse, anti-boucle et liste d’ignorés du client 1.68.
+The Java code resolves items by key/number in `ItemRegistry` and displays `ItemDefinition`'s static stats. Its inventory, chest, drop and trade lists do not carry the native instance ID nor a deferred name response. Two items with the same definition but different state (charges, durability, flags or quest ownership) are therefore treated as the same local type.
 
-## 138. Capture d’écran : macro native et répertoire dédié absents
+## 108. Remaining native operations: no Java per-unit actions
 
-Le client 1.68 associe la capture d’écran à une macro configurable, par défaut `Ctrl+H`, capture le bureau ou la fenêtre selon le chemin d’exécution, crée le dossier `ScreenShot` dans le répertoire de sauvegarde puis écrit l’image. Le drapeau `TakeScreenShot` est consommé dans la boucle de rendu, ce qui garantit une capture après le rendu d’une frame.
+The protocol keeps distinct per-unit operations that the Java code does not transport: the eight directions (`RQ_MoveEast`, `RQ_MoveSouth`, etc.), conversations (`RQ_IndirectTalk`, `RQ_DirectedTalk`, `RQ_Shout`), joining/leaving and adding/removing a channel, as well as user/channel messages. Likewise, the group operation separates invitation, joining, kicking, leaving, member updates and invitation-list updates; trading separates adding from the backpack, removal, and cleanup.
 
-Le Java ne contient pas de macro de capture ni de traitement `TakeScreenShot` dans `GameInputHandler`/les préférences. Ses raccourcis locaux affectent le debug, les coordonnées, la téléportation ou le rechargement des ressources ; la capture et son stockage automatique ne correspondent donc pas au comportement natif.
+Java classes can reproduce part of the display or call `Player.move`, `GameChat`, the group screens and trading directly, but none of these actions are serialized with the native type, order, ACK and failure. Partial visual coverage is therefore not functional equivalence: the validations and inter-client transitions of each of these operations remain absent.
 
-## 139. Options graphiques et d’interface : le modèle Java ne couvre qu’un sous-ensemble
+## 109. Active skill: server feedback vs. local cooldown
 
-`OptionParam` natif persiste, en plus du son et de la luminosité, des bascules qui modifient immédiatement le fonctionnement du client : éclairage graphique élevé, effets graphiques élevés, eau animée, dithering, transparence GUI, animation séraphin, affichage du statut, texte de barre d’XP, affichage de l’or, cadence 32 FPS, macro plein écran, verrouillage de cible, verrouillage du redimensionnement, police haute, zoom, hyperchat, fiche de spécifications d’objet, nouvelle barre de vie, ancienne barre de statistiques, ombrage et lumière des décors animés, ainsi que les effets météo. `OptionsUI` applique directement plusieurs changements au moteur (`ResetAnimWater`, activation/désactivation des effets de statut, zoom et redimensionnement).
+The native client requests the skill list (`RQ_GetSkillList`) from the server and then receives the usable states. The use-response carries a skill ID and a result code (`SkillID`, `Return`); activation and failure are therefore not inferred solely from the button pressed.
 
-`GamePreferences` Java ne contient que volumes, luminosité, plein écran/VSync, quelques valeurs HUD, animation séraphin, texte XP, police et journalisation. Il ne possède pas les interrupteurs natifs d’eau animée, éclairage/effets, dithering, or, 32 FPS, zoom, cible verrouillée, hyperchat, fiche objet, anciennes/nouvelles barres, ombres/lumières de décors ou météo. Ces comportements Java sont donc imposés par le moteur ou absents, sans possibilité de reproduire les profils d’options 1.68.
+The Java code uses `SkillService.use(...)`, locally checks level, attributes, cooldown and conditions, then triggers the cooldown/mutation with no server response. A skill refused, modified, or consumed by another state can therefore produce a different Java effect, with no return code and no skill resync.
 
-## 117. Échange : opérations de contenu et nettoyage serveur manquants
+## 110. Normal attack: authoritative animation packet and HP
 
-Dans le protocole 1.68, l’échange ne se limite pas à une fenêtre : `RQ_TradeInvite` crée l’invitation, `RQ_TradeStarted` ouvre la session, `RQ_TradeAddItemFromBackpack` et `RQ_TradeRemoveItemToBackpack` déplacent des instances entre sac et offre, `RQ_TradeClear` annule le contenu, puis `RQ_TradeSetStatus` et `RQ_TradeFinish` valident ou terminent la transaction. Le client reçoit la liste d’offre via `RQ_TradeContents` et doit refléter les changements de l’autre joueur.
+The native client receives validated attacks with the attacker, the defender, their positions, and, for a hit, the resulting HP (`pHp`); it then triggers `PlAttack`/`SetAttack`. A miss produces a separate branch that animates the attack without applying damage. Accuracy and the final amount are therefore not recomputed by the client on impact.
 
-Le Java ne dispose pas d’un transport d’échange ni d’un état bilatéral autoritaire correspondant ; ses services d’inventaire et interfaces locales peuvent seulement modifier le joueur courant. Il manque donc l’identité distante des objets, le nettoyage imposé par l’autre partie, le verrouillage avant validation et la distinction entre annulation, refus et réussite de la transaction.
+The Java code calls `CombatResolver.resolve(...)` in local callbacks in `MainGameScreen`, `MonsterManager` and `BaseMonster`, then applies HP and deaths directly. The same code decides the roll, the result and the rendering all at once. As with arrows, this allows divergence in hit, miss, damage and timing whenever a remote state should take priority.
 
-## 118. Commandes sociales unitaires : absence des demandes d’adhésion et de gestion
+## 111. Equipping and using items: native requests with no immediate local mutation
 
-Le jeu 1.68 distingue les demandes d’entrée/sortie de canal (`RQ_EnterChatterChannel`, `RQ_AddRemoveChatterChannel`, `RQ_RemoveFromChatterChannel`), l’envoi privé et canal (`RQ_SendChatterMessage`, `RQ_SendChatterChannelMessage`), et les réponses de groupe (`RQ_GroupJoin`, `RQ_GroupKick`, `RQ_UpdateGroupInviteList`, `RQ_UpdateGroupMembers`). Chaque action peut être acceptée, refusée ou modifier la liste distante sans que le client puisse l’inférer de la seule saisie.
+The native protocol distinguishes `RQ_EquipObject`, `RQ_UnequipObject` and `RQ_UseObject`, each subject to its own ACK profile. The client sends the action on the instance, then waits for the state responses to update equipment, appearance, charges and stats; the displayed equipment is therefore not proof of acceptance.
 
-Le Java ne possède pas ces commandes ni une couche de résultat social. `GameChat` accepte le texte et l’affiche, mais ne peut pas représenter une invitation en attente, une adhésion confirmée, une exclusion par le chef, une liste d’invitations ou un message privé adressé à un identifiant serveur. Les mêmes noms visibles dans l’interface ne garantissent donc pas le même routage ni les mêmes transitions d’état.
+The Java code runs `InventoryService.equip/unequip` and `ItemUseService.useOnSelf` directly from `Inventory` or `MainGameScreen`, updates appearances, charges and effects, then saves locally. A server constraint, an instance conflict, an already-used item, or a failure response cannot undo this mutation.
 
-## 119. État visuel des unités : lumière, statut et apparence serveur
+## 112. SafePlug: server authorization to close
 
-Lors de l’ajout ou de la mise à jour d’une unité, le client natif lit séparément le type, les coordonnées, la lumière, le statut et les HP. Les réponses peuvent ensuite modifier l’équipement composé d’un personnage (`SetPuppet` : corps, pieds, gants, casque, jambes, armes, cape), le nom/couleur/guilde, ou créer/retirer un effet de statut. La lumière reçue peut même être appliquée au joueur et alimenter le rendu de la carte et des torches.
+The native client handles `RQ_SafePlug` with a binary status: one status forbids logoff (`boInterruptLogoff`), while the other authorizes a forced logoff (`boForceLogoff`). This decision is received from the server and applies at disconnect time, independent of the confirmation window.
 
-`BaseNPC`, `Monster` et les entités Java construisent leur apparence depuis des définitions locales et conservent leurs HP/comportements locaux, sans état réseau équivalent pour `LIGHT`, le byte `STATUS`, les effets serveur, l’identité de guilde ou le paquet de composition reçu. Le rendu Java peut donc afficher un sprite plausible, mais pas reproduire une transformation d’équipement, une invisibilité/état spécial, une aura, une lumière de personnage ou une mise à jour distante arrivée après le spawn.
+The Java code has no SafePlug status and no server disconnect guard. `ExitGameConfirmScreen` triggers a local exit that cannot be blocked or forced by a session response. The timing and safety of closing therefore differ from the 1.68 client.
 
-## 120. Préférences persistantes : macros, canaux et listes locales non équivalentes
+## 134. Skills: true value, effective value and usability lost
 
-`CSaveGame` du client 1.68 sauvegarde par compte/personnage les macros d’objets, de sorts et de compétences, les canaux avec mot de passe/couleur/écoute, la liste d’ignorés, le contenu de coffre mémorisé, l’inventaire local et de nombreux réglages graphiques et d’interface : zoom, cible verrouillée, affichage de l’or, 32 FPS, effets d’eau, météo, éclairage des décors, barres de statut et macros plein écran.
+The native `RQ_GetSkillList` response transmits, for each skill, its ID, name, description, current value (`dwStrength`), true/unmodified value (`dwTrueStrength`) and a usability flag (`bUse`). The client keeps these fields separately in `USER_SKILL`, displays them in `CharacterUI`, and only allows double-click or macro use if the received skill is usable. The execution response then adds `SkillID` and `Return`, so the actual result is provided by the server.
 
-`GamePreferences` Java ne conserve qu’un sous-ensemble (volumes, luminosité, plein écran, VSync, quelques textes HUD et logs). Les macros, canaux, ignore-list, cache de coffre, verrouillage de cible, zoom et plusieurs options de rendu 1.68 n’ont pas d’équivalent persistant identifié. Une même installation ne retrouve donc pas le même état utilisateur après redémarrage, et certaines options natives qui changent directement l’interaction ou le rendu sont absentes plutôt que simplement présentées différemment.
+The Java code loads `SkillDefinition`/`SkillRegistry` and essentially stores one local level per ID. `SkillService.use` infers permission from the level and its cooldown, then immediately applies the mutations (`meditate`, `sneak`); there is no true/effective value pair, no received `bUse` flag, and no per-skill server `Return`. Bonuses that only change the effective value, server refusals, and the usable state can therefore be displayed or executed differently.
 
-## 121. Contrôle de combat : verrouillage double-clic et attaque forcée
+## 113. NPC dialogue: server conversation and local display decoupled
 
-Dans `MouseAction::Combat`, le client natif transforme un double-clic en verrouillage de cible lorsque `bLockTarget` est actif (`FreezeID`), distingue clic, double-clic et glisser, et réserve Shift à une requête d’attaque spéciale périodiquement limitée. Le clic droit identifie l’unité sous le curseur au lieu de déclencher le même chemin que le clic gauche.
+In the 1.68 client, clicking/talking to an NPC builds `RQ_DirectedTalk` with the NPC's coordinates, its ID, the character's computed direction, the color and the text. General speech goes through `RQ_IndirectTalk`. The server can then send back `RQ_GetUnitName` (ID, name, color and guild name) and `RQ_BreakConversation`, the latter explicitly resetting the target and conversation state; overhead text is therefore tied to IDs and a dialogue session, not just a local window.
 
-Le Java sélectionne directement une cible au clic dans `MonsterInputHandler`, tandis que `ClickToMoveHandler` ignore Shift pour le déplacement. Aucun double-clic ne reproduit le verrouillage natif et aucune requête d’attaque Shift avec ses limites temporelles n’est générée. Le ciblage persistant, l’attaque forcée et le comportement clic droit/gauche ne sont donc pas équivalents, même si l’auto-combat Java conserve une cible en mémoire.
+The Java code handles the click and the Enter key in `NPCInputHandler`, then `NPCManager`/the `NpcSpec`s directly advance a local dialogue (`welcomeText`, `DialogueTopic`, responses and actions). There is no transport for `RQ_DirectedTalk`/`RQ_IndirectTalk`, no `RQ_GetUnitName` response with color/guild, and no interruption packet that invalidates the conversation. A Java dialogue can therefore continue or trigger an action where the 1.68 server would have refused the distance, the target, the text, or interrupted the conversation.
 
-## 122. Musique et sons : moteur Java présent, sélection native non équivalente
+## 114. Character cycle: local roster vs. server account
 
-`GameMusic` du client natif choisit une musique selon le monde, la zone, le donjon, la caverne, le boss, la tristesse ou les bruits ambiants. Il arrête/libère l’ancienne piste, charge la nouvelle en streaming, évite de relancer une piste identique et applique le volume musical sauvegardé. Le gestionnaire de sons traite séparément les effets d’animation, d’interface et de page, avec un volume d’effets distinct.
+The native client exposes distinct session and account requests: `RQ_RegisterAccount`, `RQ_CreatePlayer`, `RQ_DeletePlayer`, `RQ_GetPersonnalPClist`, `RQ_PutPlayerInGame`, `RQ_ReturnToMenu`, `RQ_Reroll`, plus an `RQ_MaxCharactersPerAccountInfo` response. The server therefore provides the list, the limits, the identity and the operation results; selection and returning to the game are network transitions, not just screen changes.
 
-Le Java possède bien `SoundManager`, `MusicZoneBinaryIO` et des zones musicales rectangulaires chargées par `MainGameScreen`; il joue une ambiance en boucle et applique le volume de préférence. L’écart n’est donc pas une absence totale d’audio. En revanche, cette sélection dépend de fichiers de zones Java et de la dernière entrée contenant la case, alors que `GameMusic.cpp` encode aussi l’ordre de priorité des régions, les mondes, donjons, cavernes, boss, états de tristesse et bruits ambiants. Le Java ne démontre pas non plus l’équivalent de tous les sons natifs de page, d’interface et de transition. Une zone superposée, un boss ou un changement de monde peut donc choisir une piste différente ou aucune piste malgré la présence du moteur audio.
+The Java code uses `LocalCharacterStore` and `characters.json` to create, delete, list and load characters, locally applies `MAX_CHARACTERS`, then enters `MainGameScreen`. There is no server account/session and no acceptance response for these operations. Two clients, a remote deletion, an account limit, or a concurrent creation therefore cannot produce the same errors and states as the 1.68 client.
 
+## 115. Conversation scripts: persistent conditions and server effects absent
 
-## 123. Pages privées : notification, réponse et bascule réseau absentes
+The NPC scripts shipped with the 1.68 client/source describe conversations that read and modify persistent flags, check level, gold, items, delays, offer Yes/No decisions, remove several items, give items, or trigger a teleport. Dialogue is therefore a front end for a transactional server script: the displayed text depends on the character's actual state, and the effect must only be applied once that transaction is validated.
 
-Le client natif reçoit une page (`RQ_Page`), distingue au moins la page reçue, la réponse et l’utilisateur introuvable, joue éventuellement un son (`bPageSound`), ajoute le texte au backscroll puis peut répondre en renvoyant `RQ_Page` avec le destinataire. Le bouton de page inverse `bPageEnable` et envoie `RQ_TogglePage` au serveur ; ce n’est pas un simple filtre local.
+The Java code mainly represents an NPC via `NpcSpec.DialogueTopic` (keywords, response, actions) and advances the conversation client-side. Even where `ActionType`s exist, they do not replace the atomic execution of the 1.68 server script's conditions and consumptions. A response can be shown without the preconditions matching the server's, or a reward/consumption can be applied locally with no confirmation or rollback.
 
-Le Java ne présente pas de mode page, de destinataire courant, de réponse à une page ou de bascule réseau équivalente dans `GameChat`. Une notification privée ne peut donc pas déclencher le son, le type de message, le routage retour ou le refus « utilisateur introuvable » du client 1.68 ; elle est au mieux traitée comme du texte général.
+## 116. Chat channels and group: remote states not represented
 
-## 124. Livre de sorts : état de liste serveur contre catalogue statique
+The native client receives structured lists of channels and users (`RQ_GetChatterChannelList`, `RQ_GetChatterUserList`) with listening state, title and guild. It also receives group updates with ID, name, level, HP percentage, leader and auto-share; `RQ_GroupInvite` opens a remote invitation, and `RQ_GroupLeave`/disbandment explicitly clears the list. Joining, leaving and channel messages are operations separate from general chat.
 
-`RQ_SendSpellList` transmet un marqueur de mise à jour, le mana courant et maximum, puis pour chaque sort l’identifiant, le type de cible, le coût de mana, la durée, le niveau, l’élément, le type mental/physique, l’icône, la description et le nom. Le client reconstruit alors le livre à partir de cette réponse et non d’une liste complète supposée connue localement.
+The Java code has `GameChat` as a display/input area, but no equivalent representation of channels, subscribed users, guilds, invitations, members or group HP was found. Messages can be displayed locally, without synchronizing subscription, the list of interlocutors, XP sharing, or leaving the group. Social behavior and cross-client updates therefore diverge even where text entry works.
 
-Le Java charge `SpellRegistry` et `SpellData` depuis ses définitions, puis utilise `SpellBook` et `SpellCastingService` avec les sorts appris du joueur. Il n’existe pas de remplacement réseau de la liste, du mana ou des métadonnées par personnage. Un sort appris, retiré, modifié, renommé ou temporairement indisponible côté serveur peut donc rester visible et lançable selon l’état local Java.
+## 135. Channel directory: periodic refresh and individual listening absent
 
-## 125. Offres d’apprentissage : prérequis et droits serveur absents
+In `ChatterUI`, opening the window requests the public channel list (`RQ_GetChatterChannelList`). Selecting a channel then requests its user list (`RQ_GetChatterUserList`) with the channel's name; this list is automatically refreshed every ten seconds. Each received user has at least a name, title, guild and listening state. The listen button also sends the channel and the new state (`RQ_ToggleChatterListening`).
 
-Les réponses natives `RQ_SendTrainSkillList` et `RQ_SendTeachSkillList` incluent les points disponibles, le droit d’apprendre (`canHave`), l’identifiant, le niveau courant ou maximum, le prix, le nom, et pour l’enseignement les prérequis, les points requis et l’icône. L’offre affichée est donc recalculée par le serveur pour le personnage et le NPC au moment de la demande.
+The Java `GameChat` has no channel directory, no selecting a remote channel, no user list, no periodic refresh, and no per-channel listening subscription. Java chat is therefore a local/general conversation and does not reproduce the visibility, filtering or refreshing of the 1.68 channel system.
 
-Le Java construit `TrainingCatalog` et des `LearnScreen.TrainingOffer` localement, puis `SkillService` modifie directement les points, l’or et les compétences. Le modèle d’offre Java ne transporte pas l’ensemble des champs natifs (notamment prérequis textuels, icône et refus serveur par entrée) et ne reçoit pas de liste recalculée. Une compétence temporairement interdite ou un coût modifié côté serveur peut ainsi être proposée ou validée différemment.
+## 136. Built-in help: paginated manual and contextual help absent
 
-## 126. Feuille de personnage : champs natifs non modélisés à l’identique
+The 1.68 client instantiates `RTHelp` as a dedicated native window. It contains twelve help pages (`Help0` through `Help11`), two letter pages, four map pages and a maze page, with previous/next navigation and conditional display. It is opened automatically on first entering the game (`Show(true, 0, 0)`) and can also be shown for special help, for example after using a particular letter. The overall UI treats this window as a modal screen that hides/minimizes other panels.
 
-`RQ_GetStatus` met à jour séparément HP/maximum, mana/maximum, expérience 64 bits, AC de base et effective, huit statistiques de base/effectives (force, endurance, agilité, volonté, sagesse, intelligence, chance), points de statistiques, niveau, points de compétence, poids/poids maximum, karma, vraie vie maximum, puis six puissances et six résistances élémentaires. Le client rafraîchit ensuite simultanément la feuille de personnage et l’équipement.
+The Java code has no `RTHelp`, no paginated manual, no map/maze pages, and no contextual trigger tied to item use. `F1` is assigned to the debug overlay in `GameInputHandler`, not to player help. Even where help texts exist in scripts or GM commands, they do not reproduce the 1.68 manual's flow and modal lock.
 
-Le modèle Java `Stats` contient surtout les valeurs effectives de force, dextérité, endurance, intelligence, sagesse, HP, mana, XP, points et karma ; il n’expose pas le couple base/effectif natif, l’AC, la volonté, la chance, le poids ou la vraie vie maximum comme champs équivalents. Les résistances et puissances sont reconstruites via des maps de buffs/flags et non reçues dans un snapshot serveur. La feuille Java peut donc afficher une valeur plausible sans reproduire les distinctions et recalculs du statut 1.68.
+## 137. AFK and automatic page replies: persistent state absent
 
-## 127. Classement PvP : compteurs et séries serveur absents
+The native client saves `dwAfkStatus` and a 2048-character AFK message in its configuration. The `!AFK ON`, `!AFK OFF`, `!AFK VIEW` and `!AFK MESSAGE ...` commands change this state. When a private page arrives, the client automatically replies via `RQ_Page` with the configured message, while avoiding loops and flooding on certain texts; ignored pages are filtered before this handling.
 
-Le client 1.68 possède un paquet `RQ_GetPvpRanking` dédié, acquitté séparément, qui transmet sept valeurs : morts totales, kills totaux, morts/kills courants, meilleure série, série courante et points PvP. `PvpRanking` les affiche dans une interface dédiée ; ces valeurs ne sont pas déduites des événements graphiques de combat.
+The Java code has no persistent AFK state, no equivalent command, and no automatic reply to private messages. `GameChat` displays/accepts text but does not reproduce the 1.68 client's distinction between a received page, an auto-reply, loop prevention, and the ignore list.
 
-Le Java possède un indicateur de mort PvP utilisé par `DeathPenaltyService`, mais aucune structure de classement équivalente ni les sept compteurs reçus par le client natif. Les kills, séries et points PvP ne sont donc ni synchronisés ni affichables selon le même état persistant ; une mort ou un kill local ne produit pas automatiquement le résultat de classement 1.68.
+## 138. Screenshot capture: native macro and dedicated directory absent
 
-## 128. Objets au sol : synchronisation initiale et identité d’instance
+The 1.68 client ties screenshot capture to a configurable macro, `Ctrl+H` by default, captures the desktop or the window depending on the execution path, creates the `ScreenShot` folder in the save directory, and then writes the image. The `TakeScreenShot` flag is consumed in the render loop, which guarantees a capture after a frame is rendered.
 
-À l’entrée en jeu, le client natif demande explicitement `RQ_GetNearItems`, puis reçoit les objets proches avec coordonnées, type, identifiant, lumière, statut et HP/état associé. Il renvoie cette demande après certaines transitions afin de rétablir le voisinage réel ; le joueur et les objets sont traités différemment selon l’identifiant reçu. Le ramassage et la disparition reposent donc sur une instance serveur, pas uniquement sur le nom d’un item à une case.
+The Java code has no capture macro and no `TakeScreenShot` handling in `GameInputHandler`/the preferences. Its local shortcuts affect debug, coordinates, teleportation, or reloading resources; capture and its automatic storage therefore do not correspond to native behavior.
 
-Le Java fait apparaître les objets au sol via `GroundItemManager.dropItem`, `spawnFromLoot` et `spawnCorpse`, puis `GroundItemClickHandler` appelle directement `pickUpAt` et ajoute l’item à l’inventaire. Il n’existe pas de demande `GetNearItems`, de réponse d’existence, de lumière/statut d’instance ni de resynchronisation serveur après entrée ou changement de monde. Un objet déjà ramassé, concurrent ou modifié par le serveur peut donc rester visible ou être ajouté localement.
+## 139. Graphics and UI options: the Java model covers only a subset
 
-## 129. Coffre : contenu et déplacement d’instances autorisés par serveur
+The native `OptionParam` persists, in addition to sound and brightness, toggles that immediately change the client's behavior: high graphics lighting, high graphics effects, animated water, dithering, GUI transparency, seraph animation, status display, XP-bar text, gold display, 32 FPS cadence, fullscreen macro, target lock, resize lock, high-res font, zoom, hyperchat, item spec sheet, new life bar, old stat bar, decor shading and animated-decor lighting, and weather effects. `OptionsUI` applies several changes directly to the engine (`ResetAnimWater`, enabling/disabling status effects, zoom and resizing).
 
-Le protocole natif sépare `RQ_ShowChest`, `RQ_HideChest` et `RQ_ChestContents`. Le contenu reçu comprend, pour chaque objet, apparence, identifiant d’instance, identifiant de base, quantité et charges. Les dépôts/retraits déclenchent ensuite des requêtes distinctes et la réponse peut changer l’apparence d’un objet ou du joueur via `RQ_DepositObject`; l’interface n’est visible et valide que selon l’état reçu.
+The Java `GamePreferences` only contains volumes, brightness, fullscreen/VSync, a few HUD values, seraph animation, XP text, font and logging. It has none of the native switches for animated water, lighting/effects, dithering, gold, 32 FPS, zoom, locked target, hyperchat, item sheet, old/new bars, decor shading/lighting, or weather. These Java behaviors are therefore imposed by the engine or absent, with no way to reproduce 1.68's option profiles.
 
-Le Java ouvre `ChestService` à partir d’une définition locale de coffre, tire le butin, ajoute directement l’or/les items et applique un cooldown local. Il ne transporte pas le contenu structuré du coffre, les identifiants d’instance, les charges reçues, ni les requêtes de dépôt/retrait avec ACK. Deux joueurs ou une fermeture serveur ne peuvent donc pas converger vers le même coffre Java.
+## 117. Trade: content operations and server cleanup missing
 
-## 130. Effets temporaires : rendu similaire, autorité différente
+In the 1.68 protocol, trading is not just a window: `RQ_TradeInvite` creates the invitation, `RQ_TradeStarted` opens the session, `RQ_TradeAddItemFromBackpack` and `RQ_TradeRemoveItemToBackpack` move instances between the backpack and the offer, `RQ_TradeClear` clears the content, and then `RQ_TradeSetStatus` and `RQ_TradeFinish` validate or end the transaction. The client receives the offer list via `RQ_TradeContents` and must reflect the other player's changes.
 
-Le client natif ne déduit pas l’activation d’un buff de l’animation du sort : `RQ_CreateEffectStatus` impose l’identifiant, le temps déjà écoulé, la durée totale, l’icône et la description ; `RQ_DispellEffectStatus` supprime ensuite l’effet par identifiant. Le compteur visuel reste ainsi aligné sur le temps serveur et peut être remplacé ou dissipé sans relancer le sort localement.
+The Java code has no trade transport nor a matching authoritative bilateral state; its inventory services and local UIs can only modify the current player. Missing, therefore, are the remote identity of items, cleanup imposed by the other party, locking before validation, and the distinction between cancelling, refusing and successfully completing the transaction.
 
-Le Java possède bien `Player.ActiveBuff` et affiche icône, description et durée dans `PlayerHUD`, mais crée et expire ces buffs directement depuis `SpellEffectManager`/`Player`. Il manque le flux de création, remplacement et dissipation par identifiant serveur ; un buff Java peut donc rester actif après une dissipation distante, ou expirer à un instant différent malgré un rendu visuellement comparable.
+## 118. Individual social commands: join requests and management absent
 
-## 131. Mode rapide : opération native distincte du multiplicateur Java
+The 1.68 game distinguishes channel join/leave requests (`RQ_EnterChatterChannel`, `RQ_AddRemoveChatterChannel`, `RQ_RemoveFromChatterChannel`), private and channel sending (`RQ_SendChatterMessage`, `RQ_SendChatterChannelMessage`), and group responses (`RQ_GroupJoin`, `RQ_GroupKick`, `RQ_UpdateGroupInviteList`, `RQ_UpdateGroupMembers`). Each action can be accepted, refused, or change the remote list without the client being able to infer it from input alone.
 
-Le protocole 1.68 réserve `RQ_PlayerFastMode` à une opération dédiée avec son propre profil d’ACK. Le client natif distingue ainsi un mode de déplacement rapide contrôlé par le protocole des mouvements ordinaires et des animations accélérées ; ce n’est pas seulement une valeur graphique locale.
+The Java code has none of these commands nor a social-result layer. `GameChat` accepts and displays text, but cannot represent a pending invitation, a confirmed join, a kick by the leader, an invitation list, or a private message addressed to a server ID. The same names visible in the UI therefore do not guarantee the same routing or the same state transitions.
 
-Le Java ne possède pas de gestionnaire de `RQ_PlayerFastMode`. Sa vitesse effective est le produit de multiplicateurs de buff et de `gmSpeedMultiplier`, ce dernier étant modifiable par une commande locale `.speed`. Le mode rapide natif, son activation/refus et sa synchronisation avec le serveur ne sont donc pas représentés par le même état.
+## 119. Visual unit state: light, status and server appearance
 
-## 132. Version client/serveur : authentification et patch conditionnel absents
+When adding or updating a unit, the native client separately reads the type, coordinates, light, status and HP. Responses can then change a character's composed equipment (`SetPuppet`: body, feet, gloves, helmet, legs, weapons, cape), name/color/guild, or create/remove a status effect. The received light value can even be applied to the player and feed the rendering of the map and torches.
 
-Le client natif embarque une version numérique (`Version::GetVersion`), l’envoie pendant l’inscription/entrée, demande ou reçoit la version serveur, puis envoie `RQ_AuthenticateServerVersion`. Une version incompatible prend une branche d’erreur dédiée ; si le serveur indique une version supérieure, le client peut lancer `WebPatchUpdate` avant de poursuivre. L’entrée en jeu est ensuite séquencée avec `RQ_PutPlayerInGame`, `RQ_GetNearItems` et `RQ_FromPreInGameToInGame`.
+`BaseNPC`, `Monster` and the Java entities build their appearance from local definitions and keep their own local HP/behaviors, with no network-equivalent state for `LIGHT`, the `STATUS` byte, server effects, guild identity, or a received composition packet. Java rendering can therefore show a plausible sprite, but cannot reproduce an equipment transformation, an invisibility/special state, an aura, a character light, or a remote update arriving after spawn.
 
-Le Java ne possède pas cette négociation de version serveur, cette authentification de protocole ni ce patch conditionnel avant de construire la partie. Il charge ses catalogues, cartes et personnages locaux directement. Une incompatibilité de données ou de version ne produit donc pas le refus contrôlé et la séquence de resynchronisation du client 1.68.
+## 120. Persistent preferences: macros, channels and local lists not equivalent
 
-## 133. Exploration de carte : le Java affiche une carte statique, sans mémoire RTMap
+The 1.68 client's `CSaveGame` saves, per account/character, item, spell and skill macros, channels with password/color/listening, the ignore list, remembered chest content, the local inventory, and many graphics/UI settings: zoom, locked target, gold display, 32 FPS, water effects, weather, decor lighting, status bars and fullscreen macros.
 
-Le client natif possède une mémoire d’exploration par monde dans `CSaveGame` : `m_uchRTMap[10][192][192]`. Elle est initialisée, chargée et sauvegardée dans le fichier de compte/personnage. `SetRTMapVal` marque une cellule visitée et `TFCSocket.cpp` l’appelle lors de la mise à jour de la position du joueur. L’exploration est donc un état persistant, distinct de la simple carte graphique.
+The Java `GamePreferences` only keeps a subset (volumes, brightness, fullscreen, VSync, a few HUD texts and logs). Macros, channels, the ignore list, the chest cache, target lock, zoom and several 1.68 rendering options have no identified persistent equivalent. The same install therefore does not recover the same user state after a restart, and some native options that directly change interaction or rendering are absent rather than merely presented differently.
 
-Le Java charge bien l’image originale via `OriginalRtMap` et applique seulement le masque graphique `GUI_RTMapMask` dans `GuiWorldMap`. `MapScreen` reconstruit la vue autour de la position courante ; je ne trouve aucun tableau de cellules visitées par monde, ni lecture/écriture de cet état dans `PlayerStateStore`. Conséquence : la carte Java ne reproduit pas le brouillard/progression d’exploration persistante du client 1.68 et son état ne survit pas à un changement de session.
+## 121. Combat control: double-click lock and forced attack
 
-## 142. Modèles 3D et sons attachés aux unités : rendu 2D Java
+In `MouseAction::Combat`, the native client turns a double-click into a target lock when `bLockTarget` is on (`FreezeID`), distinguishes click, double-click and drag, and reserves Shift for a periodically rate-limited special-attack request. Right-click identifies the unit under the cursor instead of triggering the same path as left-click.
 
-`VisualObjectList` natif réserve un tableau `VObject3D` et instancie des `Sprite3D` pour de nombreuses unités (par exemple Beholder, Wizard, Goblin, Mummy, Demon, Minotaur, Rat, Bat, Spider et Skeleton). Chaque modèle possède ses dimensions, directions, frames et parfois plusieurs sons d’attaque, de douleur ou de mort dans `Object3DSound`. Le type d’objet reçu détermine donc non seulement une apparence, mais aussi un chemin de rendu et une table sonore dédiée.
+The Java code selects a target directly on click in `MonsterInputHandler`, while `ClickToMoveHandler` ignores Shift for movement. No double-click reproduces the native lock, and no Shift attack request with its time limits is generated. Persistent targeting, forced attack and left/right-click behavior are therefore not equivalent, even though Java auto-combat keeps a target in memory.
 
-Le Java rend les monstres, NPC et objets avec `EntityAnimationsBase`, `PlayerAnimations`, `ObjectRenderer` et des textures 2D ; aucune classe ou branche `Sprite3D`/`Type3D` équivalente n’a été trouvée dans le chemin de jeu. Les sons Java sont associés à des actions ou définitions de sorts/monstres, pas à une table native de variantes par modèle 3D. Les unités natives utilisant ce chemin peuvent donc avoir une silhouette, une orientation, des frames et des sons différents dans le Java.
+## 122. Music and sounds: Java engine present, native selection not equivalent
 
-## 143. Ampleur du registre 3D : 153 chargements natifs, zéro référence Java
+The native client's `GameMusic` picks music based on world, zone, dungeon, cavern, boss, sadness, or ambient noise. It stops/releases the old track, loads the new one via streaming, avoids restarting an identical track, and applies the saved music volume. The sound manager separately handles animation, UI and page effects, with a distinct effects volume.
 
-Le balayage de `VisualObjectList.cpp` trouve 153 appels `LoadSprite3D`, en plus des enregistrements d’objets et des entrées `Object3DSound`. Ce n’est donc pas un cas isolé limité à un monstre ou à un décor particulier : le client 1.68 dispose d’un registre substantiel de modèles 3D avec leur cycle de libération et leurs sons.
+The Java code does have `SoundManager`, `MusicZoneBinaryIO` and rectangular music zones loaded by `MainGameScreen`; it plays a looping ambience and applies the preference volume. The gap is therefore not a total absence of audio. However, this selection depends on Java zone files and the last entry containing the tile, whereas `GameMusic.cpp` also encodes the priority order of regions, worlds, dungeons, caverns, bosses, sadness states and ambient noise. The Java code also does not demonstrate the equivalent of all native page, UI and transition sounds. An overlapping zone, a boss, or a world change can therefore pick a different track or no track at all despite the audio engine being present.
 
-Le balayage de `src/main/java` ne trouve aucune référence `Sprite3D`, `LoadSprite3D`, `Type3D` ou `Object3DSound`. L’écart identifié à la section précédente est ainsi structurel et mesurable, pas seulement une différence de nommage dans une définition.
+## 123. Private pages: notification, reply and network toggle absent
 
-## 144. Capture vidéo native : pipeline optionnel absent du Java
+The native client receives a page (`RQ_Page`), distinguishes at least a received page, a reply, and "user not found", optionally plays a sound (`bPageSound`), adds the text to the backscroll, and can then reply by sending `RQ_Page` back with the recipient. The page button toggles `bPageEnable` and sends `RQ_TogglePage` to the server; this is not just a local filter.
 
-Le client natif embarque `NMVideoCapture` avec `StartCapture`, `StopCapture` et `CaptureFrame`, ainsi que les callbacks `StartCapture`/`EndCapture` qui affichent l’état de la capture dans le chat. Le pipeline est parfois désactivé ou ses macros sont commentées dans cette révision, mais le code de capture par frames et son intégration à la boucle de rendu existent bien dans le client 1.68.
+The Java code has no page mode, no current recipient, no reply-to-a-page, and no equivalent network toggle in `GameChat`. A private notification therefore cannot trigger the sound, the message type, the return routing, or the "user not found" refusal of the 1.68 client; at best it is treated as general text.
 
-Le Java ne contient aucune classe ou branche de capture vidéo, aucun état de session vidéo et aucune commande équivalente. Même en tenant compte du caractère optionnel du chemin natif, il n’existe donc pas de capacité Java correspondante pour enregistrer les frames du jeu ou afficher le début/la fin de cet enregistrement.
+## 124. Spellbook: server list state vs. static catalogue
 
-## 145. Éditeur de chat : historique, destinations et commandes locales différents
+`RQ_SendSpellList` transmits an update marker, current and max mana, and then for each spell its ID, target type, mana cost, duration, level, element, mental/physical type, icon, description and name. The client then rebuilds the spellbook from this response rather than from a full list assumed to be known locally.
 
-Les deux clients possèdent un historique et un presse-papiers : le Java limite son historique à 50 entrées et son texte à 256 caractères, tandis que `ChatterUI` natif conserve jusqu’à 128 textes envoyés. Le natif parcourt cet historique avec son itérateur `rollbackTyped` et réinitialise la saisie au-delà des extrémités ; le Java utilise un index borné dans sa `List<String>`. Les deux offrent copie/collage, mais le natif injecte les caractères dans l’entrée active, alors que le Java normalise les retours ligne en espaces et tronque le collage à la longueur maximale.
+The Java code loads `SpellRegistry` and `SpellData` from its definitions, then uses `SpellBook` and `SpellCastingService` with the player's learned spells. There is no network replacement of the list, mana, or per-character metadata. A spell learned, removed, modified, renamed, or temporarily unavailable server-side can therefore remain visible and castable according to the local Java state.
 
-Le natif possède trois états de destination explicites : `SendToGame`, `SendToPage` et `SendToChannel`. La touche Entrée construit alors des paquets et des préfixes différents selon le mode ; les boutons de page et de canal changent directement `textInputState`. `GameChat` Java n’a qu’un `submitHandler` et une zone d’entrée générale : aucun éditeur équivalent ne maintient une destination page/canal ni le routage de saisie correspondant dans le widget.
+## 125. Training offers: prerequisites and server rights absent
 
-Enfin, `ChatterUI` intercepte localement des commandes de test/diagnostic (`.fog`, `.rain`, `.snow`, `.star`, `.dagger`, `.spell`) et les transforme en actions visuelles ou effets de sort sans les envoyer au jeu. La recherche du Java ne trouve pas ce parseur de commandes locales dans `GameChat` ; son traitement de commandes est séparé du widget et ne reproduit pas cette table de commandes client 1.68. Une saisie identique peut donc modifier uniquement le rendu natif, mais être envoyée ou traitée différemment par le Java.
+The native `RQ_SendTrainSkillList` and `RQ_SendTeachSkillList` responses include available points, the right to learn (`canHave`), the ID, the current or max level, the price, the name, and, for teaching, the prerequisites, required points and icon. The displayed offer is therefore recomputed by the server for the character and the NPC at request time.
 
-## 211. Autocomplétion Java d’une commande GM sans équivalent natif
+The Java code builds `TrainingCatalog` and `LearnScreen.TrainingOffer`s locally, then `SkillService` directly modifies points, gold and skills. The Java offer model does not carry all of the native fields (notably textual prerequisites, icon and a per-entry server refusal) and does not receive a recomputed list. A skill temporarily forbidden or a cost changed server-side can therefore be offered or validated differently.
 
-`GameChat.autocomplete()` reconnaît spécifiquement les entrées correspondant à `\.summon\s+(npc|monster)\s+(.+)`. Lorsque le curseur est en fin de ligne, la touche Tab demande au fournisseur Java les noms correspondant au préfixe, remplace le texte et fait défiler les candidats aux pressions suivantes ; l’opération est enregistrée dans l’annulation.
+## 126. Character sheet: native fields not modeled identically
 
-Aucune logique d’autocomplétion, de fournisseur de candidats ou de remplacement par Tab n’est présente dans `ChatterUI.cpp` ou dans les contrôles de saisie du client 1.68. Le natif possède des commandes locales et des macros, mais l’utilisateur doit saisir leurs textes manuellement. Le Java ajoute donc une assistance de commande spécifique aux GM, avec un comportement de Tab et de cycle de candidats absent du client original.
-## 146. Macros clavier globales : registre configurable absent du Java
+`RQ_GetStatus` separately updates HP/max, mana/max, 64-bit experience, base and effective AC, eight base/effective stats (strength, endurance, agility, willpower, wisdom, intelligence, luck), stat points, level, skill points, weight/max weight, karma, true max life, and then six elemental powers and six elemental resistances. The client then refreshes the character sheet and equipment simultaneously.
 
-Le client 1.68 installe un registre de macros globales (`Custom.gMacro`) et laisse le launcher remplacer les touches de plusieurs actions. Les raccourcis par défaut couvrent notamment inventaire (`Ctrl+I`), personnage (`Ctrl+S`), mode attaque (`Ctrl+C`), chat (`Ctrl+L`), groupe (`Ctrl+G`), sorts (`Ctrl+P`), macros (`Ctrl+M`), options (`Ctrl+O`), carte (`Ctrl+W`), commerce (`Ctrl+T`), capture d’écran (`Ctrl+H`), redimensionnement du chat (`Ctrl+A`) et identification des objets (`Ctrl+V`). La configuration du launcher peut fournir les touches effectives et activer/désactiver plusieurs de ces entrées.
+The Java `Stats` model mainly contains the effective values of strength, dexterity, endurance, intelligence, wisdom, HP, mana, XP, points and karma; it does not expose the native base/effective pair, AC, willpower, luck, weight, or true max life as equivalent fields. Resistances and powers are rebuilt via buff/flag maps rather than received in a server snapshot. The Java sheet can therefore display a plausible value without reproducing 1.68's status distinctions and recalculations.
 
-Le Java ne contient aucun registre `gMacro`, `VKey`, `AddNewMacro` ou équivalent dans le chemin de jeu. Ses touches sont traitées localement par les écrans et handlers LibGDX ; elles ne constituent pas une table de raccourcis reconfigurable et centralisée. Il n’y a donc pas d’équivalence fonctionnelle pour remapper globalement une action, pour conserver cette configuration du launcher, ni pour garantir qu’une même combinaison ouvre la même fenêtre quel que soit l’écran courant.
+## 127. PvP ranking: server counters and streaks absent
 
-## 213. Commandes natives `!` de diagnostic absentes du chat Java
+The 1.68 client has a dedicated `RQ_GetPvpRanking` packet, acknowledged separately, that transmits seven values: total deaths, total kills, current deaths/kills, best streak, current streak, and PvP points. `PvpRanking` displays them in a dedicated UI; these values are not inferred from combat's visual events.
 
-En plus des commandes de test visuel en point, `main2.cpp` traite localement plusieurs commandes préfixées par `!` : `!AFK` gère l’état et le message d’absence, `!POS` active l’affichage de la position sur la carte, `!Clear` vide le backscroll, `!FPS` bascule l’affichage du compteur d’images et `!Pvp stat` affiche le classement PvP. Ces commandes sont consommées par le client et ne deviennent pas des messages de jeu ordinaires.
+The Java code has a PvP-death flag used by `DeathPenaltyService`, but no equivalent ranking structure nor the seven counters received by the native client. Kills, streaks and PvP points are therefore neither synchronized nor displayable from the same persistent state; a local death or kill does not automatically produce the 1.68 ranking result.
 
-Le Java ne possède pas de parseur `!` équivalent dans `GameChat` ou `GmCommandProcessor` : ce dernier n’intercepte que les lignes commençant par `.`. Le Java ne peut donc pas activer/désactiver localement l’AFK natif, l’affichage de position/FPS, ni vider le backscroll avec les mêmes commandes ; ses overlays de coordonnées/debug et ses statistiques sont déclenchés par d’autres contrôles et ne suivent pas la même syntaxe ni le même état persistant.
+## 128. Ground items: initial synchronization and instance identity
 
-## 212. Jeu de commandes GM local différent
+On entering the game, the native client explicitly requests `RQ_GetNearItems`, then receives nearby items with coordinates, type, ID, light, status and associated HP/state. It resends this request after certain transitions to restore the real neighborhood; the player and items are treated differently depending on the received ID. Pickup and disappearance therefore rely on a server instance, not just an item's name at a tile.
 
-`GmCommandProcessor` Java intercepte toute ligne commençant par un point et exécute localement des commandes telles que `.level`, `.xp`, `.gold`, `.hp`, `.mana`, les modifications d’attributs/points, `.teleport X,Y,Z`, `.learn`, `.repair`, `.collision`/`.noclip` et `.speed`. Ces commandes modifient directement `Player`, l’inventaire, les compétences, la position ou la collision, puis affichent un message local ; elles ne passent par aucune requête serveur.
+The Java code spawns ground items via `GroundItemManager.dropItem`, `spawnFromLoot` and `spawnCorpse`, and then `GroundItemClickHandler` calls `pickUpAt` directly and adds the item to the inventory. There is no `GetNearItems` request, no existence response, no instance light/status, and no server resync after entering or changing worlds. An item already picked up, contested, or changed by the server can therefore remain visible or be added locally.
 
-Le client natif 1.68 ne possède pas ce parseur GM général. Ses commandes locales documentées dans `ChatterUI` sont limitées aux tests visuels (`.fog`, `.rain`, `.snow`, `.star`, `.dagger`, `.spell`) et ne modifient pas les niveaux, l’or, les points, les compétences, la réparation ou la position persistée du personnage. Une chaîne GM identique n’a donc pas la même portée : le Java expose une console d’administration locale de gameplay que le client original ne fournit pas.
+## 129. Chest: content and instance movement authorized by the server
 
-## 147. Raccourcis effectivement câblés : plusieurs combinaisons ne déclenchent pas la même action
+The native protocol separates `RQ_ShowChest`, `RQ_HideChest` and `RQ_ChestContents`. The received content includes, for each item, appearance, instance ID, base ID, quantity and charges. Deposits/withdrawals then trigger distinct requests, and the response can change an item's or the player's appearance via `RQ_DepositObject`; the UI is only visible and valid according to the received state.
 
-La table native associe par défaut `Ctrl+S` au personnage, `Ctrl+T` au commerce, `Ctrl+G` au groupe, `Ctrl+P` aux sorts, `Ctrl+O` aux options et `Ctrl+W` à la carte. Le code Java câble au contraire `Ctrl+T` sur `Statistics`, `Ctrl+P` sur `SpellBook`, `Ctrl+I` sur `Inventory`, `Ctrl+Q` sur `QuestScreen` et `Ctrl+W` sur la carte. Il n’expose pas les ouvertures globales natives du personnage, du groupe, du commerce ou des macros sous ces mêmes raccourcis ; `Ctrl+T` est notamment une divergence directe et observable (commerce natif contre statistiques Java).
+The Java code opens `ChestService` from a local chest definition, rolls the loot, adds the gold/items directly, and applies a local cooldown. It does not carry the chest's structured content, instance IDs, received charges, or deposit/withdraw requests with ACKs. Two players or a server-side close therefore cannot converge on the same Java chest.
 
-La boucle Win32 native traite séparément `WM_KEYDOWN`, `WM_CHAR`, `WM_UNICHAR`, l’état Ctrl/Shift et les messages système ; `F10` est explicitement neutralisée et les touches passent par le registre de macros avant la distribution des actions. Le Java distribue les événements LibGDX à `GuiManager`, `GameInputHandler` et aux handlers d’écran, avec des fonctions de debug/rechargement locales (`F1`, `F2`, `F3`, `F8`, `F9`, `F11`) qui n’appartiennent pas au comportement joueur du client 1.68. La même touche peut donc ouvrir une interface, activer un outil de développement ou ne rien faire selon le client.
+## 130. Temporary effects: similar rendering, different authority
 
-Enfin, le Java utilise `S`/`W`/`A`/`D` et les flèches pour le déplacement dans `GameInputHandler`, tandis que le natif réserve ces combinaisons Ctrl aux macros et maintient un état clavier distinct. Sans couche de priorité de macros équivalente, une combinaison modifiée peut à la fois rester visible comme touche de mouvement et ne pas suivre le verrouillage/consommation d’événement du client natif.
+The native client does not infer a buff's activation from the spell's animation: `RQ_CreateEffectStatus` dictates the ID, the time already elapsed, the total duration, the icon and the description; `RQ_DispellEffectStatus` then removes the effect by ID. The visual counter thus stays aligned with server time and can be replaced or dispelled without recasting the spell locally.
 
-## 148. Perte de focus et Alt-Tab : acquisition des périphériques absente du Java
+The Java code does have `Player.ActiveBuff` and displays icon, description and duration in `PlayerHUD`, but creates and expires these buffs directly from `SpellEffectManager`/`Player`. It is missing the creation, replacement and dispel-by-server-ID flow; a Java buff can therefore remain active after a remote dispel, or expire at a different moment despite visually comparable rendering.
 
-À la sortie et au retour d’Alt-Tab, le client natif traite `WM_ACTIVATE` : il libère puis réacquiert le clavier et la souris DirectInput, restaure les surfaces DirectDraw en plein écran, réinitialise l’état Ctrl et met à jour l’état de focus de l’application. Cette séquence évite qu’une touche reste considérée comme enfoncée et permet de reprendre le rendu après perte de surface.
+## 131. Fast mode: native operation distinct from the Java multiplier
 
-Le Java ne possède pas cette séquence dans `MainGameScreen` : `pause()` est vide, `resume()` ne réacquiert aucun périphérique et aucune restauration de surface ou remise à zéro globale des modificateurs n’est effectuée. LibGDX gère la fenêtre, mais cela ne reproduit pas les transitions d’état du client 1.68. Après une perte de focus, le déplacement, les touches Ctrl/Shift ou le rendu peuvent donc reprendre avec un état différent.
+The 1.68 protocol reserves `RQ_PlayerFastMode` for a dedicated operation with its own ACK profile. The native client thus distinguishes a protocol-controlled fast-movement mode from ordinary movement and sped-up animations; it is not just a local graphics value.
 
-## 149. Conversion souris → grille : validation native par VirtualGrid absente
+The Java code has no handler for `RQ_PlayerFastMode`. Its effective speed is the product of buff multipliers and `gmSpeedMultiplier`, the latter changeable by a local `.speed` command. The native fast mode, its activation/refusal, and its server synchronization are therefore not represented by the same state.
 
-`DirectXInput::SetVirtualGrid` configure une grille virtuelle dérivée de la taille de la fenêtre. `GetStatus` convertit le déplacement souris en coordonnées de case avec les offsets historiques du client (`+48`, `-8`) et ne renvoie la case que si `VirtualGrid` l’autorise ; une case hors grille ou non valide devient `(0,0)`. Le clic natif est donc filtré et quantifié avant d’atteindre les actions d’interface ou du monde.
+## 132. Client/server version: authentication and conditional patch absent
 
-Le Java convertit principalement les coordonnées écran par `camera.unproject`, puis divise par `GRID_W`/`GRID_H` dans les handlers. `ObjectClickHandler` cherche ensuite une position d’objet et applique sa distance d’interaction, mais ne possède pas le même masque `VirtualGrid`, les mêmes offsets ni le même rejet précoce de case invalide. À bord de la fenêtre, sur une zone non marchable ou lors d’un zoom/redimensionnement, le clic peut ainsi être attribué à une case ou à une interaction différente du client 1.68.
+The native client embeds a numeric version (`Version::GetVersion`), sends it during registration/entry, requests or receives the server version, and then sends `RQ_AuthenticateServerVersion`. An incompatible version takes a dedicated error branch; if the server reports a higher version, the client can run `WebPatchUpdate` before continuing. Entering the game is then sequenced with `RQ_PutPlayerInGame`, `RQ_GetNearItems` and `RQ_FromPreInGameToInGame`.
 
-## 150. File d’événements souris : traitement différé et synchronisé absent
+The Java code has no such server-version negotiation, protocol authentication, or conditional patch before building the game session. It loads its local catalogues, maps and characters directly. A data or version mismatch therefore does not produce the 1.68 client's controlled refusal and resync sequence.
 
-Le client natif possède `UIMouseEvent`, une file globale protégée par verrou qui mémorise séparément `LeftMouseDown`, `LeftMouseUp`, `RightMouseDown`, `RightMouseUp`, molette et `Drag`, avec la position de chaque événement. Le thread de souris ajoute les événements puis `RootBoxUI` les résout dans la boucle d’interface ; l’état de l’interface peut donc consommer, ordonner ou différer un événement sans exécuter directement le code du périphérique.
+## 133. Map exploration: Java shows a static map, with no RTMap memory
 
-Le Java transmet les événements LibGDX directement aux `InputMultiplexer`, écrans et handlers (`touchDown`, `touchUp`, `scrolled`) sans file centrale `MousePos` protégée ni phase de résolution séparée. Un clic Java est donc traité dans le contexte immédiat de la frame et de l’ordre courant des processors ; il n’existe pas de contrat natif équivalent pour mettre en file un drag/molette, le rejouer après verrouillage d’une fenêtre ou garantir le même ordre entre thread d’entrée et rendu.
+The native client has a per-world exploration memory in `CSaveGame`: `m_uchRTMap[10][192][192]`. It is initialized, loaded and saved in the account/character file. `SetRTMapVal` marks a cell visited, and `TFCSocket.cpp` calls it when the player's position updates. Exploration is therefore persistent state, distinct from the plain graphic map.
 
-## 152. Défilement des listes : contrôleur natif commun absent
+The Java code does load the original image via `OriginalRtMap` and only applies the static `GUI_RTMapMask` graphic mask in `GuiWorldMap`. `MapScreen` rebuilds the view around the current position; no per-world array of visited cells, nor any read/write of this state in `PlayerStateStore`, was found. Consequence: the Java map does not reproduce the 1.68 client's persistent fog/exploration progress, and its state does not survive a session change.
 
-`ScrollUI` est un contrôleur réutilisable du client 1.68 pour les listes de compétences, coffres, canaux, utilisateurs, options et historique de chat. Il possède une position bornée par la taille de liste, des régions distinctes haut/bas/barre libre, un bouton de curseur, le glisser du curseur, la répétition d’un bouton maintenu (`pressUp`/`pressDown`/`nextPress`) et un réglage de son de défilement. Les listes natives partagent donc les mêmes règles de déplacement et de rafraîchissement via `ScrollChanged`.
+## 142. 3D models and sounds attached to units: 2D Java rendering
 
-Le Java répartit le défilement entre `GameChat`, `GuiInventory`, `GuiListScreen`, `ShopScreen`, `OptionsScreen` et d’autres écrans, avec des pas et des bornes propres à chaque classe. Certains widgets acceptent la molette, d’autres des boutons de page ; le curseur graphique de boutique est notamment un bouton sans action de déplacement. Aucun contrôleur de jeu commun ne reproduit simultanément le clic haut/bas, le maintien avec répétition, le glisser de barre, le clamp natif et le son optionnel. Une même interaction de molette, de maintien ou de drag ne produit donc pas un comportement homogène 1.68 dans les différentes fenêtres Java.
+The native `VisualObjectList` reserves a `VObject3D` array and instantiates `Sprite3D`s for many units (for example Beholder, Wizard, Goblin, Mummy, Demon, Minotaur, Rat, Bat, Spider and Skeleton). Each model has its own dimensions, directions, frames, and sometimes several attack, pain or death sounds in `Object3DSound`. The received object type therefore determines not just an appearance, but also a rendering path and a dedicated sound table.
 
-## 151. Erreurs critiques : boîte modale native et interruption du flux absentes
+The Java code renders monsters, NPCs and objects with `EntityAnimationsBase`, `PlayerAnimations`, `ObjectRenderer` and 2D textures; no equivalent `Sprite3D`/`Type3D` class or branch was found in the game path. Java sounds are tied to actions or spell/monster definitions, not to a native per-3D-model variant table. Native units using this path can therefore have a different silhouette, orientation, frames and sounds in the Java code.
 
-Le client natif centralise les erreurs critiques dans `AppManagement::SetError` et `WarningBox`. Il restaure la vue DirectX avant d’appeler une `MessageBox` Windows au premier plan ; certaines erreurs de chargement ou de périphérique déclenchent ensuite une exception/fermeture, au lieu de laisser le monde continuer avec un état partiellement initialisé. Les erreurs de ressources ont donc un point de sortie et une présentation utilisateur déterminés.
+## 143. Scale of the 3D registry: 153 native loads, zero Java references
 
-Le Java mélange exceptions `GameException`, journalisation, messages d’écran et `catch` silencieux. Plusieurs composants (`GameChat`, `GuiWorldMap`, `PlayerStateStore`, `GuiPlayerPart`, gestionnaires de ressources) absorbent l’erreur ou utilisent un repli local, tandis que d’autres écrans interrompent leur chargement. Il n’existe pas de boîte modale critique globale qui restaure la vue, bloque l’entrée et impose la fermeture/reconnexion selon la même politique ; une ressource défectueuse peut donc produire un écran incomplet ou une partie encore active là où le client 1.68 aurait arrêté le flux.
+Scanning `VisualObjectList.cpp` finds 153 `LoadSprite3D` calls, in addition to object registrations and `Object3DSound` entries. This is therefore not an isolated case limited to a particular monster or decoration: the 1.68 client has a substantial registry of 3D models with their own release cycle and sounds.
 
-## 153. Profils de polices et fallback : sélection native non reproduite
+Scanning `src/main/java` finds no `Sprite3D`, `LoadSprite3D`, `Type3D` or `Object3DSound` reference. The gap identified in the previous section is therefore structural and measurable, not just a naming difference in one definition.
 
-Le client natif crée des profils séparés pour `Tahoma` (système), `Verdana` (informations), `T4C BeaulieuxV2` (texte principal et boutons) et `Arial` (nouvelle interface), puis applique des tailles distinctes au menu, aux descriptions, aux compétences, aux messages système et aux boutons. L’option `bHighFont` modifie les tailles valides de ces profils ; les métriques sont ensuite utilisées par `FormatText` pour calculer les retours à la ligne et les hauteurs d’interface.
+## 144. Native video capture: optional pipeline absent from Java
 
-Le Java utilise principalement `T4CBeaulieu`, `JetBrains Mono`, `Verdana`, `Tahoma`, `HATTEN` et `Chewy`, avec des fallbacks différents selon l’environnement. `FontManager` génère les glyphes FreeType avec un supersampling et un filtre texture, mais ne conserve pas les mêmes profils natifs (notamment `T4C BeaulieuxV2`/Arial), ni la sélection `bHighFont` par famille et taille. Les mesures de texte, les retours à la ligne et la hauteur des boutons/dialogues peuvent donc changer même lorsque la chaîne et la taille logique affichée semblent identiques.
+The native client embeds `NMVideoCapture` with `StartCapture`, `StopCapture` and `CaptureFrame`, as well as the `StartCapture`/`EndCapture` callbacks that display the capture state in chat. The pipeline is sometimes disabled, or its macros are commented out, in this revision, but the per-frame capture code and its integration into the render loop do exist in the 1.68 client.
 
-## 154. Résolution des palettes de sprites : algorithme V2 générique absent
+The Java code contains no video-capture class or branch, no video-session state, and no equivalent command. Even accounting for the native path being optional, there is therefore no corresponding Java capability to record the game's frames or to show the start/end of such a recording.
 
-`CV2PalManager::GetPal` charge la base compressée `V2ColorI.dpd`, recherche la meilleure entrée par identifiant de sprite et numéro de palette, distingue les numéros à un ou deux chiffres et conserve un fallback de palette de référence. `CV2Sprite` transmet ensuite cette palette à la décompression du sprite, applique la couleur transparente et convertit chaque index de pixel en couleur de surface. Une même ressource V2 peut donc changer d’apparence à partir d’un simple numéro de palette sans fichier sprite distinct.
+## 145. Chat editor: history, destinations and local commands different
 
-Le Java résout principalement des noms PNG/mappings et ne possède pas de gestionnaire générique équivalent à `GetPal(spriteId, paletteNumber)`. `SpriteLoader` ne régénère que quelques variantes spécialisées (par exemple les palettes d’energy-ball) ou des régions masquées ; le reste dépend de fichiers déjà colorisés, de suffixes et d’overrides. Les changements de palette natifs, leur fallback et leur invalidation de cache ne sont donc pas reproduits pour l’ensemble des sprites 1.68.
+Both clients have a history and a clipboard: Java caps its history at 50 entries and its text at 256 characters, while the native `ChatterUI` keeps up to 128 sent texts. The native code walks this history with its `rollbackTyped` iterator and resets the input past the ends; Java uses a bounded index into its `List<String>`. Both offer copy/paste, but the native code injects characters into the active input, whereas Java normalizes line breaks into spaces and truncates the paste to the max length.
 
-## 155. Flags d’effets V2 : équivalents Java seulement partiels
+The native code has three explicit destination states: `SendToGame`, `SendToPage` and `SendToChannel`. The Enter key then builds different packets and prefixes depending on the mode; the page and channel buttons directly change `textInputState`. The Java `GameChat` only has a `submitHandler` and a general input area: no equivalent editor maintains a page/channel destination or the corresponding input routing in the widget.
 
-Le rendu natif transporte les effets dans `V2SPRITEFX.dwFX` à chaque blit : miroir horizontal, absence de correction, clipping, contour, dithering, ajustement plein écran et `FX_NODRAW`. `DrawSpriteNSemiTrans` reçoit en plus un niveau alpha explicite ; les chemins `TransAlphaImproved` et `TransAlphaGlow` réalisent la semi-transparence et les halos avec détection des pixels voisins. Ces flags sont utilisés aussi bien par les fenêtres (`FX_NOCORRECTION`) que par les ombres, barres de vie, objets superposés et effets sélectionnés.
+Finally, `ChatterUI` locally intercepts test/diagnostic commands (`.fog`, `.rain`, `.snow`, `.star`, `.dagger`, `.spell`) and turns them into visual actions or spell effects without sending them to the game. Searching the Java code finds no such local command parser in `GameChat`; its command handling is separate from the widget and does not reproduce this 1.68 client command table. The same input can therefore only change native rendering, while being sent or handled differently by the Java code.
 
-Le Java possède des équivalents ciblés pour le flip, le contour de survol, l’alpha d’occlusion et certains masques de sorts, mais pas un objet d’effets V2 générique propagé par tous les sprites. Aucun chemin commun ne reproduit les flags `FX_DITHER`, `FX_NOCORRECTION`, `FX_FIT2SCREEN` et `FX_NODRAW`, ni les algorithmes natifs de glow/semi-transparence par voisinage ; l’alpha LibGDX reste un blend RGBA général. Les ombres, interfaces corrigées, sprites partiellement masqués et effets lumineux peuvent donc avoir une apparence différente, être recadrés différemment ou rester visibles lorsqu’un dessin natif aurait été supprimé.
+## 211. Java autocompletion of a GM command with no native equivalent
 
-## 156. Fondu global de transition : overlay local Java au lieu de l’état de palette natif
+`GameChat.autocomplete()` specifically recognizes entries matching `\.summon\s+(npc|monster)\s+(.+)`. When the cursor is at the end of the line, the Tab key asks the Java provider for names matching the prefix, replaces the text, and cycles through candidates on subsequent presses; the operation is recorded for undo.
 
-Le client natif possède `PalManagement`, qui protège l’état de fondu par section critique, expose `FadeToBlack`, `FadeOut` et `inFadeOut`, et modifie la palette visible jusqu’au noir. Les transitions de monde utilisent cet état partagé avec `World.SetFading`/`World.RealFading` : le fondu n’est donc pas seulement un widget, il peut verrouiller le déroulement visuel pendant le changement de carte et être interrogé par la boucle principale.
+No autocompletion logic, candidate provider, or Tab-replacement is present in `ChatterUI.cpp` or in the 1.68 client's input controls. The native code has local commands and macros, but the user has to type their text manually. The Java code therefore adds GM-specific command assistance, with Tab and candidate-cycling behavior absent from the original client.
 
-Le Java dispose d’un fondu de durée limitée dans `GuiMapZoneDisplay` et de quelques overlays locaux, mais aucune gestionnaire global de palette/transition avec état `inFadeOut`, verrouillage et coordination avec le changement de monde. Un changement de carte, une reconnexion ou une transition forcée peut donc afficher le nouvel état directement ou avec une temporisation propre à l’écran, sans garantir le même moment de masquage, de déverrouillage des contrôles ou de reprise du rendu que le client 1.68.
+## 146. Global keyboard macros: configurable registry absent from Java
 
-## 157. Expiration des buffs : clignotement natif sous 15 secondes absent
+The 1.68 client installs a registry of global macros (`Custom.gMacro`) and lets the launcher reassign the keys for several actions. The default shortcuts notably cover inventory (`Ctrl+I`), character (`Ctrl+S`), attack mode (`Ctrl+C`), chat (`Ctrl+L`), group (`Ctrl+G`), spells (`Ctrl+P`), macros (`Ctrl+M`), options (`Ctrl+O`), map (`Ctrl+W`), trade (`Ctrl+T`), screenshot (`Ctrl+H`), chat resizing (`Ctrl+A`) and item identification (`Ctrl+V`). The launcher's configuration can supply the effective keys and enable/disable several of these entries.
 
-`EffectStatusUI` natif conserve pour chaque effet un identifiant, une durée initiale, une échéance, une icône et une description. Lorsqu’il reste au plus 15 secondes, l’icône est masquée pendant les 300 premières millisecondes de chaque seconde ; la jauge continue parallèlement à diminuer et les effets expirés sont retirés par `CalcEffectInfo`. Les effets infinis suivent un chemin séparé sans échéance.
+The Java code has no `gMacro`, `VKey`, `AddNewMacro` registry or equivalent in the game path. Its keys are handled locally by the LibGDX screens and handlers; they do not form a centralized, reconfigurable shortcut table. There is therefore no functional equivalent for globally remapping an action, for keeping this launcher configuration, or for guaranteeing that the same combination opens the same window regardless of the current screen.
 
-Le Java conserve bien des `ActiveBuff`, affiche une icône et une barre de durée dans `PlayerHUD`, et traite les buffs infinis. En revanche, `renderActiveBuffs` dessine l’icône à chaque frame sans la phase de clignotement native sous 15 secondes. La lisibilité et le signal d’urgence avant expiration diffèrent donc, même lorsque la durée et l’icône du buff sont correctement disponibles.
+## 213. Native `!` diagnostic commands absent from Java chat
 
-## 158. Animation des widgets : avancement par dessin natif contre durée Java
+In addition to the dotted visual test commands, `main2.cpp` locally handles several `!`-prefixed commands: `!AFK` manages the away state and message, `!POS` enables position display on the map, `!Clear` empties the backscroll, `!FPS` toggles the frame-counter display, and `!Pvp stat` shows the PvP ranking. These commands are consumed by the client and do not become ordinary game messages.
 
-`AnimUI` natif stocke une liste de `GraphUI`, dessine `frames[currentFrame]`, puis incrémente l’index à chaque appel de `Draw` ; à la fin de la liste il revient à zéro. `Stop` remet explicitement l’index à 0 et l’animation dépend donc directement de la cadence effective de la boucle de rendu 1.68 (avec éventuellement l’alpha demandé par la frame). Ce mécanisme est utilisé par les séquences d’interface composées de sprites successifs.
+The Java code has no equivalent `!` parser in `GameChat` or `GmCommandProcessor`: the latter only intercepts lines starting with `.`. The Java code therefore cannot locally toggle the native AFK, position/FPS display, or clear the backscroll with the same commands; its coordinate/debug overlays and its stats are triggered by other controls and do not follow the same syntax or the same persistent state.
 
-`GuiAnimatedSprite` Java fait au contraire progresser ses frames selon un temps de frame (`frameTime`) accumulé dans `update`, indépendamment du nombre de dessins effectués. Une pause, un ralentissement ou une variation de FPS n’a donc pas la même incidence : le natif peut ralentir ou accélérer l’animation avec ses appels de dessin, tandis que Java cherche à conserver une durée temporelle. Les séquences UI ne peuvent pas être considérées identiques sans une table de cadence et un mode d’horloge communs.
+## 212. Different local GM command set
 
-## 159. Curseurs de réglage : pas et flèches natives absents du `GuiSlider`
+The Java `GmCommandProcessor` intercepts any line starting with a dot and locally executes commands such as `.level`, `.xp`, `.gold`, `.hp`, `.mana`, attribute/point changes, `.teleport X,Y,Z`, `.learn`, `.repair`, `.collision`/`.noclip` and `.speed`. These commands directly modify `Player`, the inventory, skills, position or collision, then display a local message; none of them go through any server request.
 
-`SliderUI` natif travaille sur une plage entière (`minRange`/`maxRange`) avec un `step`. Un clic dans la piste arrondit la position au pas, le glisser conserve ce quantificateur, les flèches gauche/droite déplacent d’un pas et bornent la valeur ; chaque changement notifie un `EventVisitor` et peut jouer un son de pression/relâchement. Le curseur est donc utilisable aussi bien par drag que par incrément discret.
+The native 1.68 client has no such general GM parser. Its local commands, documented in `ChatterUI`, are limited to visual tests (`.fog`, `.rain`, `.snow`, `.star`, `.dagger`, `.spell`) and do not change the character's levels, gold, points, skills, repair, or persisted position. An identical GM string therefore does not have the same scope: the Java code exposes a local gameplay administration console that the original client does not provide.
 
-`GuiSlider` Java convertit directement la position en valeur continue normalisée `[0,1]`. Il ne possède ni plage entière, ni pas, ni boutons fléchés, ni notification conditionnée par changement, ni sons de contrôle. Les réglages Java peuvent ainsi prendre des valeurs intermédiaires ou ne pas offrir les incréments clavier/clic du client 1.68, même lorsque la largeur et le thumb semblent identiques.
+## 147. Actually wired shortcuts: several combinations do not trigger the same action
 
-## 160. Interaction répétée avec le même PNJ : temporisation native de 5 secondes absente
+The native table by default binds `Ctrl+S` to the character sheet, `Ctrl+T` to trade, `Ctrl+G` to the group, `Ctrl+P` to spells, `Ctrl+O` to options, and `Ctrl+W` to the map. The Java code, by contrast, wires `Ctrl+T` to `Statistics`, `Ctrl+P` to `SpellBook`, `Ctrl+I` to `Inventory`, `Ctrl+Q` to `QuestScreen` and `Ctrl+W` to the map. It does not expose the native global openings for the character sheet, group, trade or macros under these same shortcuts; `Ctrl+T` in particular is a direct, observable divergence (native trade vs. Java statistics).
 
-Dans `MouseAction::Talking`, le client natif mémorise `TalkToID` et `TalkTime`. Un clic sur le même PNJ ne renvoie pas immédiatement une nouvelle demande : il faut changer de cible ou attendre plus de 5 secondes ; l’identification et la recherche de distance sont protégées par le verrou de la liste d’objets avant l’envoi. Cette temporisation limite les répétitions de dialogue dues aux clics/double-clics.
+The native Win32 loop separately handles `WM_KEYDOWN`, `WM_CHAR`, `WM_UNICHAR`, the Ctrl/Shift state, and system messages; `F10` is explicitly neutralized, and keys pass through the macro registry before actions are dispatched. The Java code dispatches LibGDX events to `GuiManager`, `GameInputHandler` and the screen handlers, with local debug/reload functions (`F1`, `F2`, `F3`, `F8`, `F9`, `F11`) that are not part of the 1.68 client's player-facing behavior. The same key can therefore open a UI, trigger a dev tool, or do nothing, depending on the client.
 
-Le Java route directement le clic vers `NPCManager.onClick`/`handleDialogClick` et ne possède pas de garde globale `TalkToID` + délai de 5 secondes dans `NPCInputHandler`. Les contrôles propres à chaque quête peuvent avoir leurs propres timers, mais ils ne remplacent pas cette protection commune : un clic répété sur le même PNJ peut donc rouvrir ou avancer un dialogue plus souvent que dans le client 1.68.
+Finally, the Java code uses `S`/`W`/`A`/`D` and the arrow keys for movement in `GameInputHandler`, while the native code reserves these Ctrl combinations for macros and keeps a distinct keyboard state. With no equivalent macro-priority layer, a remapped combination can simultaneously remain visible as a movement key and not follow the native client's event locking/consumption.
 
-## 161. Émission des déplacements : garde native de 500 ms avant une nouvelle direction
+## 148. Losing focus and Alt-Tab: device reacquisition absent from Java
 
-Dans `TFCSocket`, après l’envoi d’une direction, le client natif mémorise `Try` et n’autorise une nouvelle requête de déplacement qu’après plus de 500 ms, avec en plus les conditions `!Move` et `!NeedRedraw`. Chaque direction (les huit `RQ_Move...`) réinitialise cette horloge. Cette garde sépare la cadence d’émission réseau de l’animation locale et évite d’empiler des demandes pendant qu’un déplacement est encore traité.
+On leaving and returning from Alt-Tab, the native client handles `WM_ACTIVATE`: it releases and then reacquires DirectInput keyboard and mouse, restores DirectDraw surfaces in fullscreen, resets the Ctrl state, and updates the application's focus state. This sequence prevents a key from staying stuck as "pressed" and allows rendering to resume after a surface loss.
 
-Le Java fait avancer `PlayerMovement` avec le `delta` de LibGDX et des réservations de pas ; `GameInputHandler`/`ClickToMoveHandler` n’ont pas de garde réseau `Try` de 500 ms, puisqu’il n’existe pas de requête de déplacement T4C à attendre. Une pression maintenue ou un changement rapide de direction peut donc produire une cadence locale continue, avec des transitions de pas et de blocage différentes de la séquence d’ordres du client 1.68.
+The Java code has no such sequence in `MainGameScreen`: `pause()` is empty, `resume()` reacquires no device, and no surface restoration or global modifier reset is performed. LibGDX manages the window, but this does not reproduce the 1.68 client's state transitions. After a focus loss, movement, the Ctrl/Shift keys, or rendering can therefore resume in a different state.
 
-## 162. Disponibilité globale du nom : requête serveur native absente
+## 149. Mouse-to-grid conversion: native VirtualGrid validation absent
 
-Dans l’état `TFC_CHOOSE_NAME`, la validation du client natif envoie le paquet 90 (`RQ_QueryNameExistence`, commenté `RQ_ChooseName` dans `TFCSocket.cpp`) avec le nom saisi. Cette requête possède son propre profil d’attente (`1000 ms`, trois essais) dans `Comm.cpp` : l’absence du nom du roster local ne suffit donc pas, car l’état partagé des autres comptes est décidé par le serveur.
+`DirectXInput::SetVirtualGrid` configures a virtual grid derived from the window's size. `GetStatus` converts mouse movement into tile coordinates using the client's historical offsets (`+48`, `-8`) and only returns the tile if `VirtualGrid` allows it; a tile outside the grid or invalid becomes `(0,0)`. A native click is therefore filtered and quantized before reaching UI or world actions.
 
-Le Java de `LocalCharacterStore`/`CharacterCreationRules` normalise le nom, vérifie sa syntaxe et le compare uniquement aux personnages du fichier JSON local. Il n’existe pas de requête d’existence globale ni de réponse de conflit entre installations : deux comptes peuvent donc accepter localement le même nom, alors que le client 1.68 attendrait la réponse serveur avant de poursuivre la création.
+The Java code mainly converts screen coordinates via `camera.unproject`, then divides by `GRID_W`/`GRID_H` in the handlers. `ObjectClickHandler` then looks for an object position and applies its interaction distance, but does not have the same `VirtualGrid` mask, the same offsets, or the same early rejection of an invalid tile. At the window's edge, over non-walkable ground, or during a zoom/resize, a click can therefore be attributed to a different tile or interaction than in the 1.68 client.
 
-## 163. Chaîne de démarrage : états logo, introduction, titre et crédits absents
+## 150. Mouse event queue: deferred, synchronized handling absent
 
-`TFCFlag.h` et la boucle de `main2.cpp` définissent une chaîne d’états distincts : connexion, ligne d’introduction, logo, splash, introduction, écran de titre, menu, choix du personnage, avertissements et crédits. `TFCSocket.cpp` fait progresser ces états selon les temporisations, les touches et les réponses de connexion ; le menu peut revenir au choix de personnage, à l’introduction ou aux crédits avant d’entrer dans `TFC_PLAY`.
+The native client has `UIMouseEvent`, a global lock-protected queue that separately records `LeftMouseDown`, `LeftMouseUp`, `RightMouseDown`, `RightMouseUp`, wheel and `Drag`, along with each event's position. The mouse thread adds events, and `RootBoxUI` then resolves them in the UI loop; the UI's state can therefore consume, order, or defer an event without directly running the device's code.
 
-Le Java ne possède pas de screens équivalents pour le logo/splash, l’introduction, le titre ou les crédits. Le démarrage arrive directement sur la sélection locale (`CharacterSelectionScreen`), puis sur `CharacterLoadingScreen`/`MainGameScreen`. Il manque donc les transitions temporisées, les interruptions clavier, les avertissements de connexion et les retours au menu qui font partie du parcours fonctionnel du client 1.68, même si certaines images ou boutons de sélection ont été réutilisés.
+The Java code passes LibGDX events straight to the `InputMultiplexer`, screens and handlers (`touchDown`, `touchUp`, `scrolled`) with no central lock-protected `MousePos` queue and no separate resolution phase. A Java click is therefore handled in the immediate context of the frame and the current processor order; there is no native-equivalent contract for queuing a drag/wheel event, replaying it after a window locks, or guaranteeing the same order between the input thread and rendering.
 
-## 164. Aides contextuelles du début de jeu : drapeaux `EventHelp` absents
+## 152. List scrolling: common native controller absent
 
-En plus du manuel paginé, le client natif conserve un état global `g_EventHelp` protégé par verrou. Il active ou désactive séparément les aides « acheter une potion », « pas d’argent », « PV », « acheter une torche », « statistiques » et « compétences » ; l’état `OutSide` dépend aussi du monde, du niveau et de l’entrée dans une zone extérieure ou souterraine. Ces drapeaux sont modifiés après les mises à jour de statut et certaines transitions de musique/monde, puis consommés par l’affichage d’aide. Ils permettent donc de ne montrer une indication qu’au moment approprié et de la désactiver après progression du débutant.
+`ScrollUI` is a reusable controller in the 1.68 client for skill, chest, channel, user, options and chat-history lists. It has a position bounded by the list size, distinct top/bottom/free-bar regions, a thumb button, thumb dragging, held-button repetition (`pressUp`/`pressDown`/`nextPress`), and a scroll-sound setting. Native lists therefore share the same movement and refresh rules via `ScrollChanged`.
 
-Le Java ne possède pas de registre global équivalent, de verrou d’accès ni de consommateur d’aides conditionné par niveau, argent, PV, torches et zone. Les textes de PNJ et les messages Java peuvent informer le joueur, mais ils ne reproduisent pas les transitions « aide en attente → aide affichée → drapeau consommé » ni la coordination avec l’état extérieur du client 1.68.
+The Java code splits scrolling across `GameChat`, `GuiInventory`, `GuiListScreen`, `ShopScreen`, `OptionsScreen` and other screens, with steps and bounds specific to each class. Some widgets accept the wheel, others use page buttons; the shop's graphical thumb in particular is a button with no drag action. No common game controller simultaneously reproduces up/down clicks, held-repeat, bar dragging, the native clamp, and the optional sound. The same wheel, hold, or drag interaction therefore does not produce uniform 1.68 behavior across the different Java windows.
 
-## 165. Rafraîchissement de composition visuelle : `RQ_QueryPuppetInfo` absent
+## 151. Critical errors: native modal box and flow interruption absent
 
-Le client natif envoie le paquet 68 (`RQ_QueryPuppetInfo`) lorsqu’il doit obtenir ou réactualiser l’apparence composée d’une unité. La réponse `SetPuppet` remplit les champs d’équipement du personnage (corps, pieds, gants, casque, jambes, armes et cape), puis `Puppet::SetPuppet` recalcule les couches, les parties masquées, les ailes/capes spéciales et les sprites correspondants. Cette requête permet de corriger l’apparence après une mise à jour distante, même si l’unité existait déjà dans `VisualObjectList`.
+The native client centralizes critical errors in `AppManagement::SetError` and `WarningBox`. It restores the DirectX view before calling a foreground Windows `MessageBox`; some loading or device errors then trigger an exception/close, instead of letting the world continue with a partially initialized state. Resource errors therefore have a determined exit point and user presentation.
 
-Le Java applique ses apparences depuis l’inventaire et les définitions locales (`PlayerAppearanceDefaults`, `PlayerAnimations`, `BodyPart`) et ne possède ni paquet 68, ni tampon `PuppetInfo` reçu, ni réinterrogation serveur d’une unité. Une modification d’équipement, de cape, d’ailes ou de composition effectuée ailleurs ne peut donc pas forcer le même rafraîchissement ; l’apparence locale peut rester ancienne ou être recomposée selon des règles Java différentes.
+The Java code mixes `GameException`s, logging, on-screen messages, and silent `catch` blocks. Several components (`GameChat`, `GuiWorldMap`, `PlayerStateStore`, `GuiPlayerPart`, resource managers) swallow the error or use a local fallback, while other screens interrupt their loading. There is no global critical modal box that restores the view, blocks input, and enforces closing/reconnecting under the same policy; a faulty resource can therefore produce an incomplete screen or a still-active session where the 1.68 client would have stopped the flow.
 
-## 166. État joueur incomplet : foi, résistances, poids et permissions natives absents
+## 153. Font profiles and fallback: native selection not reproduced
 
-`TFCPlayer` ne stocke pas seulement les attributs affichés : il possède aussi `Faith`/`MaxFaith`, `AC`, `Weight`/`MaxWeight`, les huit attributs incluant agilité et chance, des compteurs de morts/tueries/PvP, `Power` et `Resist` par élément, ainsi que `CanRunScripts` et `CanSlayUsers`. Ces champs sont mis à jour par les messages de statut et servent de contexte à l’interface, aux restrictions et aux actions autorisées ; ils sont distincts des simples bonus temporaires.
+The native client creates separate profiles for `Tahoma` (system), `Verdana` (information), `T4C BeaulieuxV2` (main text and buttons) and `Arial` (new UI), then applies distinct sizes to the menu, descriptions, skills, system messages and buttons. The `bHighFont` option changes these profiles' valid sizes; the metrics are then used by `FormatText` to compute line wrapping and UI heights.
 
-Le modèle Java `Stats`/`PlayerStateDto` ne contient pas de foi, de poids, d’agilité, de chance, d’AC, de puissances/résistances élémentaires ni de compteurs PvP. Les résistances et attributs rencontrés dans `Player` sont seulement des contributions de buffs, et les commandes GM Java ne constituent pas des permissions reçues par personnage. Une réponse de statut 1.68 portant ces valeurs ne peut donc pas être représentée fidèlement : HUD, prérequis, surcharge, dégâts élémentaires et actions administrativement interdites peuvent diverger.
+The Java code mainly uses `T4CBeaulieu`, `JetBrains Mono`, `Verdana`, `Tahoma`, `HATTEN` and `Chewy`, with different fallbacks depending on the environment. `FontManager` generates FreeType glyphs with supersampling and a texture filter, but does not keep the same native profiles (notably `T4C BeaulieuxV2`/Arial), nor the `bHighFont` selection per family and size. Text measurements, line wrapping and button/dialogue height can therefore change even when the displayed string and logical size look identical.
 
-## 167. Double-clic sur les objets narratifs : lettres et cartes ouvrables absents
+## 154. Sprite palette resolution: generic V2 algorithm absent
 
-`InventoryUI::InventoryGridEvent::LeftDblClicked` possède un chemin spécial avant l’utilisation générique. Les lettres d’Owain et de Crimsonscale sont interceptées, ainsi que la carte du labyrinthe ; le client restaure le drag et ouvre `RTHelp` dans le mode de page approprié. Il parcourt aussi `m_vImageDisplay` : tout objet dont le nom correspond à une image narrative connue ouvre `RTHelp::ShowSpecial` avec cette image. L’objet est ainsi consultable sans être consommé comme une potion ou envoyé comme une utilisation ordinaire.
+`CV2PalManager::GetPal` loads the compressed `V2ColorI.dpd` database, looks up the best entry by sprite ID and palette number, distinguishes one- and two-digit numbers, and keeps a reference-palette fallback. `CV2Sprite` then passes this palette to the sprite's decompression, applies the transparent color, and converts each pixel index to a surface color. The same V2 resource can therefore change appearance from a simple palette number with no separate sprite file.
 
-Le Java contient des définitions et des traductions pour ces objets, mais `Inventory` délègue le double-clic à `ItemUseService`, qui traite les consommables/sorts et les charges ; aucun équivalent de `ShowSpecial`, de table d’images narratives ou de fenêtre modale de lecture n’a été trouvé. Une lettre, une carte ou un autre objet illustré ne déclenche donc pas le même affichage spécial et peut être traité comme un objet générique, rester sans action ou suivre une logique de consommation différente.
+The Java code mainly resolves PNG names/mappings and has no generic manager equivalent to `GetPal(spriteId, paletteNumber)`. `SpriteLoader` only regenerates a few specialized variants (for example energy-ball palettes) or masked regions; the rest depends on already-colorized files, suffixes and overrides. Native palette changes, their fallback, and their cache invalidation are therefore not reproduced for the full set of 1.68 sprites.
 
-## 168. Validation de version du profil local : en-tête natif absent du JSON Java
+## 155. V2 effect flags: only partial Java equivalents
 
-`CSaveGame::bLoad` attend l’en-tête binaire exact `BL_V2SAVEGAME_V004` avant de lire, dans un ordre défini, l’inventaire d’interface, les trois familles de macros, les canaux, les ignorés, le coffre, les options et les dix couches de carte révélée. Si l’en-tête ne correspond pas, le client marque `InvalideSaveGame` et libère les collections au lieu d’interpréter le contenu comme un profil valide.
+Native rendering carries effects in `V2SPRITEFX.dwFX` on every blit: horizontal mirror, no correction, clipping, outline, dithering, fullscreen adjustment, and `FX_NODRAW`. `DrawSpriteNSemiTrans` additionally receives an explicit alpha level; the `TransAlphaImproved` and `TransAlphaGlow` paths implement semi-transparency and glows with neighboring-pixel detection. These flags are used by windows (`FX_NOCORRECTION`) just as much as by shadows, life bars, stacked items and selected effects.
 
-`PlayerStateStore.load` lit directement le JSON et le désérialise avec Gson, sans numéro de schéma, signature ou validation de structure équivalente. Les champs manquants sont acceptés avec leurs valeurs par défaut et les champs supplémentaires sont ignorés ; un fichier ancien, partiellement écrit ou provenant d’une autre version peut donc être chargé comme un état exploitable plutôt que rejeté et réinitialisé comme le profil 1.68.
+The Java code has targeted equivalents for flipping, hover outlines, occlusion alpha and some spell masks, but not a generic V2 effects object propagated by every sprite. No common path reproduces the `FX_DITHER`, `FX_NOCORRECTION`, `FX_FIT2SCREEN` and `FX_NODRAW` flags, nor the native neighbor-based glow/semi-transparency algorithms; LibGDX alpha remains a general RGBA blend. Shadows, corrected UIs, partially masked sprites and light effects can therefore look different, be cropped differently, or remain visible where a native draw would have been suppressed.
 
-## 169. Objet narratif `__OBJ_DARK_STONE` : identifiant natif sans définition Java
+## 156. Global fade transition: local Java overlay instead of native palette state
 
-La liste d’objets du serveur 1.68 déclare `__OBJ_DARK_STONE` avec l’identifiant 41839. Le client peut donc recevoir cette instance dans l’inventaire et la traiter comme un objet serveur, notamment dans la séquence narrative du squelette/Gluriurl ; les scripts originaux la distinguent de la Heartstone et vérifient sa présence par l’identifiant d’objet.
+The native client has `PalManagement`, which protects the fade state with a critical section, exposes `FadeToBlack`, `FadeOut` and `inFadeOut`, and modifies the visible palette down to black. World transitions use this shared state via `World.SetFading`/`World.RealFading`: the fade is therefore not just a widget — it can lock the visual flow during a map change and be queried by the main loop.
 
-Le Java contient les traductions et plusieurs textes de quête mentionnant la pierre sombre, mais aucune `ItemDefinition`/entrée `ItemRegistry` pour `dark_stone` ou l’identifiant 41839 n’a été trouvée. Une récompense, un drop ou un test de quête qui fournit réellement cet objet ne peut donc pas être résolu par l’inventaire Java comme un objet normal : il risque d’être ignoré, affiché sans définition ou de ne pas pouvoir être consommé/retiré correctement.
+The Java code has a time-limited fade in `GuiMapZoneDisplay` and a few local overlays, but no global palette/transition manager with an `inFadeOut` state, locking, and coordination with the world change. A map change, a reconnect, or a forced transition can therefore show the new state directly or with a screen-specific delay, with no guarantee of the same moment of masking, control unlocking, or render resumption as the 1.68 client.
 
-## 170. Sons d’unité et de parade : table native par famille non reproduite
+## 157. Buff expiration: native under-15-second blinking absent
 
-Le client natif associe à chaque famille `Object3D` des sons d’attaque, de blessure, de mort et de parade (`onAttack`, `onAttacked`, `onKilled`, `onParry`), puis copie ces vagues dans l’objet lors de son initialisation. Les familles Beholder, Goblin, Mummy, Demon, Minotaur, Rat, Spider et Skeleton, entre autres, ont des tables spécifiques ; le son de blessure peut donc différer du son d’attaque ou de mort, et une parade possède un événement audio séparé.
+The native `EffectStatusUI` keeps, for each effect, an ID, an initial duration, a deadline, an icon and a description. When at most 15 seconds remain, the icon is hidden during the first 300 milliseconds of every second; the gauge keeps decreasing in parallel, and expired effects are removed by `CalcEffectInfo`. Infinite effects follow a separate path with no deadline.
 
-Le Java possède `soundAttack`, `soundDeath` et `soundHit` dans `MonsterDef`/`BaseMonster`, et `BaseMonster.takeDamage` joue effectivement `soundHit` pour un dégât non létal. En revanche, cette valeur est un son unique configuré par définition, sans table `onAttack/onAttacked/onKilled/onParry` par famille ; aucun appel équivalent à `onParry` n’a été trouvé dans le chemin de combat Java. Les blessures peuvent donc produire un son, mais les variantes natives et le son dédié de parade ne sont pas reproduits.
+The Java code does keep `ActiveBuff`s, shows an icon and a duration bar in `PlayerHUD`, and handles infinite buffs. However, `renderActiveBuffs` draws the icon every frame with no native under-15-second blink phase. Readability and the urgency signal before expiration therefore differ, even when the buff's duration and icon are correctly available.
 
-## 171. Sons de blessure et de mort du joueur absents du chemin Java
+## 158. Widget animation: native draw-driven advance vs. Java duration
 
-Dans le client natif, le modèle joueur chargé par `VisualObjectList` (case 71, `LoadBodyPart`) associe explicitement aux états de l’unité des sons d’attaque, de blessure et de mort : `Male Hit 1/2`, `Male Dying 1/2`, ainsi que les variantes `Female Hit 1/2` et `Female Dying 1/2`. Ces sons sont enregistrés dans `Object3DSound[71]` avec les sons d’attaque.
+The native `AnimUI` stores a list of `GraphUI`, draws `frames[currentFrame]`, then increments the index on every `Draw` call; at the end of the list it wraps back to zero. `Stop` explicitly resets the index to 0, so the animation depends directly on the 1.68 render loop's effective cadence (with the frame's requested alpha, if any). This mechanism is used by UI sequences made of successive sprites.
 
-Dans Java, `Player.attack()` joue bien `Whooshh 1/2/3` ou `Bow Attack.wav`, mais `Player.takeDamage()` ne déclenche aucun son de blessure. `handleDeath()` déclenche uniquement le callback de mort ou la réapparition locale ; aucune lecture des variantes homme/femme de blessure ou de mort n’est présente dans le chemin `Player`.
+The Java `GuiAnimatedSprite`, by contrast, advances its frames according to a frame time (`frameTime`) accumulated in `update`, independent of how many draws actually happened. A pause, a slowdown, or an FPS change therefore does not have the same impact: the native code can slow down or speed up the animation through its draw calls, whereas Java tries to preserve a wall-clock duration. UI sequences cannot be considered identical without a shared cadence table and clock mode.
 
-Impact : le joueur Java reste silencieux lorsqu’il reçoit des dégâts et lorsqu’il meurt, alors que le client 1.68 sélectionne ces sons selon le modèle/sexe visuel.
+## 159. Adjustment sliders: native step and arrows absent from `GuiSlider`
 
-## 172. Curseurs d’action animés du client natif réduits à une icône Java
+The native `SliderUI` works over an integer range (`minRange`/`maxRange`) with a `step`. A click in the track rounds the position to the step, dragging preserves this quantization, and the left/right arrows move by one step and clamp the value; every change notifies an `EventVisitor` and can play a press/release sound. The slider can therefore be used both by dragging and by discrete increment.
 
-Au démarrage, le client natif charge des séquences dédiées pour `AttackCursor00..08`, `64kCursorBow-a..k`, `TakeCursor00..10` et `TalkCursor00/01`. `CombatCursor` sélectionne ces animations selon l’action (attaque au corps-à-corps, arc, prise ou dialogue) et le contexte de cible ; le curseur est donc un état visuel de l’action en cours, pas seulement une image fixe.
+The Java `GuiSlider` converts the position directly into a continuous, normalized `[0,1]` value. It has no integer range, no step, no arrow buttons, no change-conditioned notification, and no control sounds. Java settings can therefore take intermediate values or fail to offer the 1.68 client's keyboard/click increments, even when the width and thumb look identical.
 
-Le Java expose un curseur d’attaque statique et un `GameCursorManager` qui anime partiellement les curseurs d’arc et de dialogue. En revanche, aucune séquence `TakeCursor` équivalente n’a été trouvée, et l’attaque au corps-à-corps ne possède pas la séquence native `AttackCursor00..08`. Le gestionnaire Java ne relie pas non plus ces curseurs à la grille native de catégories et d’état hostile ; le feedback du pointeur reste donc incomplet et peut choisir une action différente dans les contextes `GET`, attaque et unité devenue hostile.
+## 160. Repeated interaction with the same NPC: native 5-second delay absent
 
-## 173. Gestion du cadavre : délai natif de son et de suppression absent
+In `MouseAction::Talking`, the native client remembers `TalkToID` and `TalkTime`. Clicking the same NPC does not immediately resend a new request: the player must switch target or wait more than 5 seconds; identification and distance lookup are protected by the object list's lock before sending. This delay limits dialogue repeats caused by clicks/double-clicks.
 
-Lorsqu’une unité meurt, `VisualObjectList` conserve l’état `Killed`, mémorise `KillTimer` et bloque ses directions. Après au moins 500 ms, et seulement lorsque sa file de déplacement est vide, le client joue le son de mort puis convertit l’unité vers son type de cadavre. Pour les types de monstres concernés, `CurrentCorpseFrame` est ensuite avancé à travers les frames de cadavre ; l’objet n’est marqué supprimable qu’après environ 5 secondes (`KillType`/`DeleteMe`).
+The Java code routes the click directly to `NPCManager.onClick`/`handleDialogClick` and has no global `TalkToID` + 5-second-delay guard in `NPCInputHandler`. Per-quest controls can have their own timers, but they do not replace this shared protection: a repeated click on the same NPC can therefore reopen or advance a dialogue more often than in the 1.68 client.
 
-Le Java lance l’animation de mort du monstre, avec une durée codée d’une seconde, puis `shouldRemoveAfterDeath()` autorise la suppression dès que cette animation est terminée pour un monstre sans respawn. Il ne conserve pas un état natif `Killed` avec attente de file de déplacement, conversion différée vers un type de cadavre, progression des frames de cadavre et délai uniforme de cinq secondes. La durée de visibilité du cadavre et le moment du son de mort peuvent donc différer sensiblement.
+## 161. Sending movement: native 500 ms guard before a new direction
 
-## 174. Invisibilité logique non appliquée au rendu du joueur Java
+In `TFCSocket`, after sending a direction, the native client remembers `Try` and only allows a new movement request after more than 500 ms, plus the `!Move` and `!NeedRedraw` conditions. Each direction (the eight `RQ_Move...`) resets this clock. This guard separates the network send cadence from local animation and avoids stacking requests while a move is still being processed.
 
-Le client natif transmet l’état `bInvisible` dans `TFCObject` et les chemins de rendu `Icon3D` ajoutent alors `FX_NODRAW` : l’unité n’est effectivement pas dessinée, tout en restant présente dans la liste d’objets. Ce n’est pas uniquement une règle de combat ou de détection.
+The Java code advances `PlayerMovement` with LibGDX's `delta` and step reservations; `GameInputHandler`/`ClickToMoveHandler` have no 500 ms `Try` network guard, since there is no T4C movement request to wait for. A held key or a rapid direction change can therefore produce a continuous local cadence, with step and blocking transitions different from the 1.68 client's order sequence.
 
-Le Java possède bien `Player.hidden` et `isHidden()` pour les profils de combat et une dissipation lors du déplacement, mais `Player.render`, `render` avec shader et `renderOcclusionReveal` appellent directement `PlayerAnimations` sans tester cet état. Une invisibilité active peut donc continuer à afficher le joueur (et son rendu d’occlusion), alors que le client 1.68 le masque graphiquement.
+## 162. Global name availability: native server request absent
 
-## 175. Invisibilité dynamique des NPC/monstres distants non représentée
+In the `TFC_CHOOSE_NAME` state, native client validation sends packet 90 (`RQ_QueryNameExistence`, commented `RQ_ChooseName` in `TFCSocket.cpp`) with the entered name. This request has its own wait profile (1000 ms, three attempts) in `Comm.cpp`: the name being absent from the local roster is not enough, because the shared state of other accounts is decided by the server.
 
-Dans le client natif, `bInvisible` est un champ de `TFCObject`, donc il s’applique à toute unité reçue : joueur, NPC ou monstre. Les paquets d’unité peuvent changer cet état après la création et le moteur le transmet au renderer avec `FX_NODRAW`.
+The Java code in `LocalCharacterStore`/`CharacterCreationRules` normalizes the name, checks its syntax, and compares it only against the characters in the local JSON file. There is no global existence request and no cross-install conflict response: two accounts can therefore both locally accept the same name, where the 1.68 client would wait for the server response before continuing creation.
 
-Le Java ne possède pas de champ d’invisibilité dynamique dans `BaseNPC`, `ScriptedNpc` ou `BaseMonster`, ni de test correspondant dans leurs méthodes de rendu. Les nombreuses définitions Java utilisant `@invisible` décrivent un sprite absent dès le spawn ; elles ne remplacent pas une unité normalement visible qui devient invisible puis redevient visible sur notification serveur. Ce changement d’état distant ne peut donc pas être reproduit pour les NPC/monstres.
+## 163. Startup chain: logo, intro, title and credits states absent
 
-## 176. Révélation furtive locale au déplacement non présente dans le client natif
+`TFCFlag.h` and the `main2.cpp` loop define a distinct state chain: connection, intro line, logo, splash, introduction, title screen, menu, character selection, warnings, and credits. `TFCSocket.cpp` advances these states according to timers, keys, and connection responses; the menu can go back to character selection, the intro, or the credits before entering `TFC_PLAY`.
 
-`Player.tickSneakUpkeep()` Java vérifie à chaque mise à jour si le joueur caché se déplace, compte les témoins et appelle localement `StealthRules.staysHidden(...)`. Un déplacement peut donc révéler immédiatement le joueur selon un tirage local, sans réponse réseau.
+The Java code has no equivalent screens for the logo/splash, intro, title or credits. Startup goes directly to local selection (`CharacterSelectionScreen`), then `CharacterLoadingScreen`/`MainGameScreen`. Missing, therefore, are the timed transitions, keyboard interruptions, connection warnings, and returns to the menu that are part of the 1.68 client's functional flow, even where some selection images or buttons were reused.
 
-Dans le client 1.68, `bInvisible` est un état reçu/actualisé sur l’unité ; le rendu applique ou retire `FX_NODRAW`, mais le client ne décide pas lui-même de la réussite de la furtivité à partir du mouvement et d’un compteur de témoins. Le Java peut ainsi révéler un joueur que le serveur natif laisserait caché, ou conserver l’état malgré une mise à jour serveur absente, en plus du problème de rendu décrit ci-dessus.
+## 164. Early-game contextual hints: `EventHelp` flags absent
 
-## 177. Identité et cycle de vie des effets enfants de sort non reproduits
+In addition to the paginated manual, the native client keeps a lock-protected global `g_EventHelp` state. It separately enables or disables the "buy a potion", "no money", "HP", "buy a torch", "stats" and "skills" hints; the `OutSide` state also depends on the world, level, and entering an outdoor or underground zone. These flags are changed after status updates and certain music/world transitions, then consumed by the help display. They therefore let a hint be shown only at the right moment and turned off once the beginner has progressed.
 
-Pour `RQ_SpellEffect`, le client natif lit `spellEffectId` et `spellChildId`, crée l’objet visuel avec ces identifiants, puis utilise `Follow` et `SummonID` pour relier projectile, impact et effet enfant. `Packet.cpp` contient une table explicite de variantes (boules colorées, météores, éclairs, soins, malédictions, etc.) vers leur animation enfant/base. Ces identifiants permettent de distinguer les effets simultanés et de les déplacer ou remplacer selon la réponse serveur.
+The Java code has no equivalent global registry, no access lock, and no hint consumer conditioned on level, gold, HP, torches and zone. NPC text and Java messages can inform the player, but they do not reproduce the "hint pending → hint shown → flag consumed" transitions nor the coordination with the 1.68 client's outdoor state.
 
-Le Java crée des `SpellProjectile` et `SpellImpact` avec le nom visuel et une callback `onImpact`. Les `SummonRequest` servent à créer des entités de jeu, mais aucun identifiant d’effet/effet enfant reçu du serveur n’est conservé dans `SpellRenderer`, et il n’existe pas de table de rattachement `spellEffectId`/`spellChildId` pour mettre à jour ou retirer un effet déjà affiché. Deux effets visuellement identiques peuvent donc être fusionnés, terminés au mauvais moment ou rester indépendants lorsqu’une réponse native les traiterait comme parent/enfant.
+## 165. Visual composition refresh: `RQ_QueryPuppetInfo` absent
 
-## 178. Correction verticale des noms/bulles dépendante du modèle absente
+The native client sends packet 68 (`RQ_QueryPuppetInfo`) when it needs to get or refresh a unit's composed appearance. The `SetPuppet` response fills in the character's equipment fields (body, feet, gloves, helmet, legs, weapons and cape), and `Puppet::SetPuppet` then recomputes the layers, masked parts, special wings/capes and the matching sprites. This request lets the appearance be corrected after a remote update, even if the unit already existed in `VisualObjectList`.
 
-Le client natif initialise `TFCObject::TextCorrection` avec des valeurs différentes selon le type visuel (`-20`, `-40`, `-80`, `-90`, `-120`, etc.). `VisualObjectList` ajoute ensuite cette correction à la position du nom et du texte de parole ; elle compense donc la hauteur réelle du sprite, y compris pour les modèles 3D et les familles de monstres.
+The Java code applies its appearances from the inventory and local definitions (`PlayerAppearanceDefaults`, `PlayerAnimations`, `BodyPart`) and has neither packet 68, nor a received `PuppetInfo` buffer, nor a server re-query for a unit. An equipment, cape, wings or composition change made elsewhere therefore cannot force the same refresh; the local appearance can stay stale or be recomposed under different Java rules.
 
-Le Java utilise des offsets génériques dans `NameRenderer`, `NPCAnimations` et les renderers d’entités, sans table équivalente indexée par type visuel ni champ `TextCorrection` reçu/initialisé par unité. Un même nom ou une même bulle se place ainsi trop haut ou trop bas selon la taille du sprite, alors que le client 1.68 ajuste cette position par modèle.
-## 179. Nom de guilde et couleurs d’unité dynamiques absents du rendu Java
+## 166. Incomplete player state: faith, resistances, weight and native permissions absent
 
-Le client natif reçoit l’identité visuelle d’une unité avec plusieurs attributs séparés : `SetName(..., color)` met à jour le nom et sa couleur, tandis que `SetGuildName(..., color)` met à jour le nom de guilde et sa couleur. `TFCObject` conserve `NameColor`, `GuildName` et `GuildColor`, puis `DrawName` dessine le nom de guilde avec un objet texte distinct au-dessus ou au-dessous du nom de l’unité.
+`TFCPlayer` does not just store the displayed attributes: it also has `Faith`/`MaxFaith`, `AC`, `Weight`/`MaxWeight`, the eight attributes including agility and luck, death/kill/PvP counters, `Power` and `Resist` per element, and `CanRunScripts` and `CanSlayUsers`. These fields are updated by status messages and serve as context for the UI, restrictions and allowed actions; they are distinct from simple temporary bonuses.
 
-Dans le Java actuel, `NameRenderer` utilise une couleur de nom fixe et les entités exposent seulement un nom d’affichage localisé/statique. Aucun état `GuildName`/`GuildColor` par unité ni mise à jour équivalente n’existe dans le chemin de rendu des joueurs, PNJ et monstres. Le client Java ne peut donc pas reproduire un changement distant de nom, l’étiquette de guilde au-dessus de l’unité ou les couleurs d’identité propres à chaque unité.
+The Java `Stats`/`PlayerStateDto` model contains no faith, weight, agility, luck, AC, elemental powers/resistances, or PvP counters. The resistances and attributes found in `Player` are only buff contributions, and Java GM commands do not constitute per-character received permissions. A 1.68 status response carrying these values therefore cannot be represented faithfully: HUD, prerequisites, overload, elemental damage, and administratively forbidden actions can diverge.
 
-## 180. Verrouillage de cible au double-clic absent
+## 167. Double-clicking narrative items: openable letters and maps absent
 
-Dans `MouseAction.cpp`, lorsque l’option native `bLockTarget` est active, un double-clic en combat appelle `Objects.Lock(42)` et mémorise la cellule dans `FreezeID`. Les clics et déplacements suivants réutilisent alors cette cible au lieu de recalculer librement la cible sous le curseur ; le verrou est aussi annulé par les transitions de combat prévues par le client.
+`InventoryUI::InventoryGridEvent::LeftDblClicked` has a special path before generic use. Owain's and Crimsonscale's letters are intercepted, as is the maze map; the client restores the drag and opens `RTHelp` in the appropriate page mode. It also walks `m_vImageDisplay`: any item whose name matches a known narrative image opens `RTHelp::ShowSpecial` with that image. The item can therefore be viewed without being consumed like a potion or sent through ordinary use.
 
-Le Java possède des cibles temporaires pour les sorts et des sélections d’interface, mais aucune option équivalente, aucun `FreezeID`/état de cible verrouillée et aucune branche de double-clic qui fixe la cible de combat. Un déplacement du curseur ou une nouvelle interaction peut donc changer la cible Java alors que le client 1.68 conserve celle verrouillée.
+The Java code has definitions and translations for these items, but `Inventory` delegates double-click to `ItemUseService`, which handles consumables/spells and charges; no equivalent of `ShowSpecial`, a narrative-image table, or a modal reading window was found. A letter, a map, or another illustrated item therefore does not trigger the same special display and can be treated as a generic item, have no action at all, or follow a different consumption rule.
 
-## 181. Sélection native par cellule occupée et empilement d’objets différente du hit-test Java
+## 168. Local profile version validation: native header absent from Java JSON
 
-Le client natif reconstruit une grille d’identifiants à chaque affichage (`VisualObjectList::IdentifyAll`). Chaque cellule couverte par un objet reçoit son `ID` selon l’ordre d’empilement ; `GridID(x2,y2)` est ensuite la seule source de vérité pour parler, voir, utiliser, ramasser ou attaquer. `Objects.Identify` et `Objects.NoIdentify` modifient cet état de grille, et une même cellule peut donc sélectionner l’objet visuel placé au premier plan plutôt qu’un rectangle arbitraire.
+`CSaveGame::bLoad` expects the exact binary header `BL_V2SAVEGAME_V004` before reading, in a defined order, the UI inventory, the three macro families, channels, the ignore list, the chest, options, and the ten layers of revealed map. If the header does not match, the client flags `InvalideSaveGame` and frees the collections instead of interpreting the content as a valid profile.
 
-Le Java teste principalement `isMouseOver` sur des rectangles/bounds d’entités, puis parcourt les listes de managers (`NameableEntityHandler`, `NPCManager`, `MonsterInputHandler`, `GroundItemManager`). Il n’existe pas de grille d’ID visuelle commune qui arbitre toutes les catégories et les couches avant le dispatch d’action. Un clic sur une zone où se superposent joueur, PNJ, monstre, objet ou décor peut donc sélectionner une entité différente, ou déclencher une action différente, du client 1.68.
+`PlayerStateStore.load` reads the JSON directly and deserializes it with Gson, with no schema number, signature, or equivalent structure validation. Missing fields are accepted with their default values, and extra fields are ignored; an old, partially written, or other-version file can therefore be loaded as a usable state instead of being rejected and reset like the 1.68 profile.
 
-## 182. Position étendue des objets multi-cellules non conservée par le Java
+## 169. Narrative item `__OBJ_DARK_STONE`: native ID with no Java definition
 
-Le mode natif `See()` calcule le décalage entre le curseur et l’origine du monde, essaie plusieurs cellules voisines avec `Objects::RealPos`, puis enregistre le résultat dans `Objects::SetExtended`. L’identification d’un objet ne fournit donc pas seulement son ID : elle conserve aussi la partie de l’empreinte visuelle réellement pointée, information réutilisable par les actions `USE`, `GET` et `USE_ONSITE`.
+The 1.68 server's item list declares `__OBJ_DARK_STONE` with ID 41839. The client can therefore receive this instance in the inventory and treat it as a server item, notably in the skeleton/Gluriurl narrative sequence; the original scripts distinguish it from the Heartstone and check for its presence by item ID.
 
-Le Java possède des bounds locaux (`isMouseOver`) pour les PNJ, monstres, drops et herbes, mais aucune position étendue par objet ni équivalent de `RealPos`/`SetExtended`. Une interaction sur une décoration ou un objet couvrant plusieurs cases ne peut donc pas transmettre la même sous-position : le Java traite le rectangle entier comme une zone uniforme ou choisit seulement l’entité de sa liste.
+The Java code contains the translations and several quest texts mentioning the dark stone, but no `ItemDefinition`/`ItemRegistry` entry for `dark_stone` or ID 41839 was found. A reward, drop, or quest check that actually supplies this item therefore cannot be resolved by the Java inventory as a normal item: it risks being ignored, shown with no definition, or failing to be consumed/removed correctly.
 
-## 183. Résultat serveur des flèches et trajectoire de raté non reproduits
+## 170. Unit attack and parry sounds: native per-family table not reproduced
 
-Le client natif ne déduit pas le résultat d’un tir à partir de l’animation d’attaque. `RQ_ArrowHit` fournit le lanceur, la cible et le nouveau pourcentage de PV ; `ShootArrow` actualise alors les PV de la cible, calcule la direction du lanceur et déplace le projectile jusqu’à la cible. `RQ_ArrowMiss` fournit au contraire une position finale et un indicateur de collision ; `ShootArrow` extrapole la flèche hors écran lorsqu’elle rate sans collision, ou la fait terminer sur place lorsqu’elle rencontre un obstacle.
+The native client associates attack, hit, death and parry sounds (`onAttack`, `onAttacked`, `onKilled`, `onParry`) with each `Object3D` family, then copies these waves into the object on initialization. The Beholder, Goblin, Mummy, Demon, Minotaur, Rat, Spider and Skeleton families, among others, have specific tables; the hit sound can therefore differ from the attack or death sound, and a parry has its own separate audio event.
 
-Le Java possède une animation d’attaque à l’arc et des formules locales (`CombatResult`, `CombatMath`), mais aucun cycle distinct `ArrowHit`/`ArrowMiss` avec position finale, collision, pourcentage de PV reçu et trajectoire extrapolée. Le rendu peut donc jouer une animation d’arc sans reproduire le point d’impact, le raté hors écran ou la mise à jour serveur du tir natif.
+The Java code has `soundAttack`, `soundDeath` and `soundHit` in `MonsterDef`/`BaseMonster`, and `BaseMonster.takeDamage` does play `soundHit` for non-lethal damage. However, this value is a single sound configured per definition, with no per-family `onAttack/onAttacked/onKilled/onParry` table; no equivalent call to `onParry` was found in the Java combat path. Hits can therefore produce a sound, but the native variants and the dedicated parry sound are not reproduced.
 
-## 184. Passage dynamique d’une unité en état hostile et changement de curseur absent
+## 171. Player hit and death sounds absent from the Java path
 
-Dans `VisualObjectList::SetEvil`, lorsqu’un sort offensif atteint le joueur, le client natif cherche l’unité attaquante, la convertit dynamiquement en catégorie monstre (`Friendly = VOL_MONSTER`) si nécessaire, lui assigne le curseur hostile et reconstruit sa grille d’identification. `SetAttack` applique une transition similaire lorsque l’unité attaque le joueur. L’état visuel et le type d’interaction peuvent donc changer sans recréer l’unité.
+In the native client, the player model loaded by `VisualObjectList` (case 71, `LoadBodyPart`) explicitly ties attack, hit and death sounds to the unit's states: `Male Hit 1/2`, `Male Dying 1/2`, as well as the `Female Hit 1/2` and `Female Dying 1/2` variants. These sounds are registered in `Object3DSound[71]` along with the attack sounds.
 
-Le Java possède des drapeaux locaux `isHostile` pour certains PNJ et une classification statique des monstres, mais pas d’état d’hostilité dynamique partagé par toutes les unités, de conversion de catégorie ni de changement de curseur déclenché par l’attaque reçue. Une unité initialement neutre ou joueur ne change donc pas automatiquement de comportement d’identification comme dans le client 1.68.
+In Java, `Player.attack()` does play `Whooshh 1/2/3` or `Bow Attack.wav`, but `Player.takeDamage()` triggers no hit sound. `handleDeath()` only triggers the death callback or the local respawn; no playback of the male/female hit or death variants is present in the `Player` path.
 
-## 185. Curseurs contextuels des objets du monde non mappés dans le Java
+Impact: the Java player stays silent when taking damage and when dying, whereas the 1.68 client picks these sounds based on the visual model/sex.
 
-Le client natif possède une table `DefaultMouseCursor` par groupe d’objet : une porte ou un coffre reçoit `USE`, un PNJ `TALK`, un objet ramassable `GET`, une chaise ou une caisse non interactive `NONE`, et ces valeurs sont recalculées lorsque l’objet change de type ou d’état. Le curseur affiché dépend donc directement de l’objet sous la cellule et annonce l’action que le clic va dispatcher.
+## 172. Native animated action cursors reduced to a single Java icon
 
-Le `GameCursorManager` Java ne propose que les modes globaux défaut, attaque, sort, arc et dialogue. `ObjectClickHandler` traite les objets au clic, mais aucun mapping objet → `GET`/`USE`/`NONE` n’est appliqué au pointeur. Une porte, un coffre, un drop ou un décor non interactif peuvent donc présenter le même curseur général avant le clic, contrairement au feedback contextuel du client 1.68.
+On startup, the native client loads dedicated sequences for `AttackCursor00..08`, `64kCursorBow-a..k`, `TakeCursor00..10` and `TalkCursor00/01`. `CombatCursor` selects these animations according to the action (melee attack, bow, pickup or dialogue) and the target context; the cursor is therefore a visual state of the current action, not just a still image.
 
-## 186. Curseur dessiné dans la scène native contre curseur système Java
+The Java code exposes a static attack cursor and a `GameCursorManager` that partially animates the bow and dialogue cursors. However, no equivalent `TakeCursor` sequence was found, and melee attack has no native `AttackCursor00..08` sequence. The Java manager also does not tie these cursors to the native grid of categories and hostile state; pointer feedback therefore remains incomplete and can pick a different action in `GET`, attack, and unit-turned-hostile contexts.
 
-`CMouseCursor::DrawCursor` rend le sprite du curseur directement dans la surface DirectX, avec une zone de clipping à la taille de la fenêtre, des corrections d’offset liées au zoom et un calcul de direction pour les curseurs forcés. Le curseur natif suit donc les coordonnées de rendu du jeu et reste soumis aux mêmes transformations que les sprites de l’interface.
+## 173. Corpse handling: native sound and removal delay absent
 
-`GameCursorManager` Java fabrique au contraire un objet `Cursor` LibGDX (`Gdx.graphics.newCursor`) et le remet au système avec `Gdx.graphics.setCursor`. Il n’existe pas de dessin du curseur dans le `SpriteBatch`, ni de clipping/offset de scène équivalent. Le hotspot, la mise à l’échelle DPI, le passage hors fenêtre et le positionnement par rapport à un zoom peuvent donc différer du client 1.68 même avec la même image source.
+When a unit dies, `VisualObjectList` keeps the `Killed` state, records `KillTimer`, and blocks its directions. After at least 500 ms, and only once its movement queue is empty, the client plays the death sound and then converts the unit to its corpse type. For the relevant monster types, `CurrentCorpseFrame` is then advanced through the corpse frames; the object is only marked removable after about 5 seconds (`KillType`/`DeleteMe`).
 
-## 187. File d’événements de déplacement/attaque native contre animation Java non mise en file
+The Java code plays the monster's death animation, with a hardcoded one-second duration, and `shouldRemoveAfterDeath()` allows removal as soon as this animation ends for a monster with no respawn. It keeps no native `Killed` state with a wait on the movement queue, deferred conversion to a corpse type, corpse-frame progression, or a uniform five-second delay. The corpse's visible duration and the timing of the death sound can therefore differ noticeably.
 
-`TFCObject` natif possède une `MovingQueue<Deplacement>`. `SetAttack` et les mises à jour de mouvement y ajoutent les événements reçus ; la boucle de `VisualObjectList` les retire dans l’ordre, vérifie le nombre d’éléments en attente et ne supprime l’unité qu’une fois la file vidée. Plusieurs attaques ou corrections de position arrivant entre deux frames sont donc conservées et jouées séquentiellement.
+## 174. Logical invisibility not applied to Java player rendering
 
-Dans le Java, `PlayerAnimations` garde un seul état `attacking`/`attackFrame`, et `BaseMonster` ne démarre une attaque que si `!animations.isAttacking()`. Une nouvelle attaque ou animation reçue pendant la précédente n’est pas placée dans une file par unité ; elle est retardée par le cooldown ou ignorée par la garde d’animation. Sous rafale d’événements, l’ordre et le nombre de poses visibles divergent donc du client 1.68.
+The native client transmits the `bInvisible` state in `TFCObject`, and the `Icon3D` render paths then add `FX_NODRAW`: the unit is effectively not drawn, while remaining present in the object list. This is not just a combat or detection rule.
 
-## 188. Direction d’attaque forcée par le serveur absente
+The Java code does have `Player.hidden` and `isHidden()` for combat profiles and dispelling on movement, but `Player.render`, the shader `render`, and `renderOcclusionReveal` call `PlayerAnimations` directly with no test of this state. An active invisibility can therefore keep showing the player (and its occlusion rendering), whereas the 1.68 client hides it graphically.
 
-`VisualObjectList::SetAttack` reçoit un paramètre `forcedDirection`. Lorsque celui-ci est non nul, il remplace la direction calculée entre l’attaquant et le défenseur avant l’ajout de l’attaque dans `MovingQueue`. Le client natif peut ainsi afficher une attaque dans une direction imposée par le serveur, même si la position locale de la cible donnerait une autre orientation.
+## 175. Dynamic invisibility of remote NPCs/monsters not represented
 
-Le Java appelle `PlayerAnimations.startAttack` avec l’angle courant du mouvement et `BaseMonster`/`MonsterManager` orientent l’unité par `faceToward` à partir des positions locales. Aucun champ ou événement de direction forcée n’est transmis au chemin d’animation. Une correction serveur, une attaque sans cible ou une direction imposée produit donc une pose différente dans le Java.
+In the native client, `bInvisible` is a `TFCObject` field, so it applies to any received unit: player, NPC, or monster. Unit packets can change this state after creation, and the engine passes it to the renderer with `FX_NODRAW`.
 
-## 189. Orientation immédiate native et convention de direction différente
+The Java code has no dynamic invisibility field in `BaseNPC`, `ScriptedNpc` or `BaseMonster`, nor a matching check in their render methods. The many Java definitions using `@invisible` describe a sprite absent from spawn onward; they do not replace a normally visible unit that becomes invisible and then visible again on a server notification. This remote state change therefore cannot be reproduced for NPCs/monsters.
 
-`SetDirection` natif travaille sur les offsets de grille `OX/OY`, produit les directions numériques 1 à 9 et accepte `bSetNow` : l’appel peut seulement calculer la direction destinée à une attaque en file, ou modifier immédiatement `Object->Direction`. Lorsque les deux offsets coïncident, le natif retombe explicitement sur la direction 1.
+## 176. Local stealth reveal on movement not present in the native client
 
-Le Java conserve des angles textuels (`000`, `045`, `090`, `135`, etc.) avec un booléen de miroir, et `faceToward` ne fait rien lorsque les deux positions sont identiques. Il n’a pas de distinction équivalente entre direction calculée pour une action future et direction appliquée immédiatement. Les cas de cible sur la même cellule, de correction d’offset ou d’événement d’attaque sans cible n’aboutissent donc pas à la même orientation.
+Java's `Player.tickSneakUpkeep()` checks on every update whether the hidden player is moving, counts witnesses, and locally calls `StealthRules.staysHidden(...)`. A move can therefore immediately reveal the player based on a local roll, with no network response.
 
-## 190. Références d’attachement et suppression différée des objets visuels absentes
+In the 1.68 client, `bInvisible` is a state received/updated on the unit; rendering applies or removes `FX_NODRAW`, but the client does not itself decide stealth success from movement and a witness count. The Java code can therefore reveal a player the native server would have kept hidden, or keep the state despite a missing server update, on top of the rendering issue described above.
 
-Le client natif maintient `TFCObject::Count` sur l’objet parent lorsqu’un effet, une invocation ou un autre objet visuel est ajouté avec `AttachID`. La suppression du parent est alors différée (`DeleteMe`) tant que ce compteur n’est pas revenu à zéro ; à la destruction de chaque enfant, le compteur est décrémenté. Cette règle s’applique aussi aux objets hors zone et aux objets en mouvement, afin d’éviter de supprimer le support avant ses visuels attachés.
+## 177. Spell child-effect identity and lifecycle not reproduced
 
-Le Java sépare `SpellImpact`, `SpellProjectile` et `ChannelEffect` dans des listes de rendu qui expirent indépendamment par leurs frames, leur durée ou leur handle. `GroundItem` ne possède pas de `AttachID` ni de compteur de références visuelles. Il n’existe donc pas de garde générique empêchant la disparition d’une unité ou d’un objet parent tant qu’un enfant visuel natif lui est encore rattaché ; selon le moment de l’expiration, un effet peut rester orphelin ou disparaître avec son support, au lieu de suivre le cycle de vie coordonné du client 1.68.
+For `RQ_SpellEffect`, the native client reads `spellEffectId` and `spellChildId`, creates the visual object with these IDs, then uses `Follow` and `SummonID` to link the projectile, the impact, and the child effect. `Packet.cpp` contains an explicit table of variants (colored orbs, meteors, lightning, heals, curses, etc.) mapped to their child/base animation. These IDs let simultaneous effects be told apart and be moved or replaced according to the server response.
 
-## 191. Météo serveur et particules d’environnement absentes du runtime Java
+The Java code creates `SpellProjectile`s and `SpellImpact`s with the visual name and an `onImpact` callback. `SummonRequest`s are used to create game entities, but no effect/child-effect ID received from the server is kept in `SpellRenderer`, and there is no `spellEffectId`/`spellChildId` linking table to update or remove an already-displayed effect. Two visually identical effects can therefore be merged, ended at the wrong time, or remain independent where a native response would treat them as parent/child.
 
-Le client natif traite `RQ_WeatherMsg` avec un effet et un état `ON/OFF` séparés : pluie, neige et brouillard sont mémorisés distinctement. `Tileset` initialise ou arrête les états de transition, puis `CWeather::DrawRain` et `DrawSnow` tirent des positions de gouttes/flocons, les réutilisent entre les frames et ajoutent parfois des éclairs selon l’intensité. La météo reçue du serveur est donc un état global rendu au-dessus de la scène, pas seulement une option graphique locale.
+## 178. Model-dependent vertical correction for names/bubbles absent
 
-Dans le Java, aucune classe, état ou boucle de rendu équivalente à `CWeather`, `RQ_WeatherMsg`, `DrawRain` ou `DrawSnow` n’a été trouvée dans le runtime de jeu ; les occurrences `rain`/`snow` concernent des noms d’objets ou de sorts. `GamePreferences` peut mémoriser des réglages, mais aucune pluie, neige, brouillard, éclair ou transition météo n’est générée dans `MainGameScreen`/les renderers. Une météo activée par le serveur 1.68 est donc ignorée visuellement par le Java.
+The native client initializes `TFCObject::TextCorrection` with different values depending on the visual type (`-20`, `-40`, `-80`, `-90`, `-120`, etc.). `VisualObjectList` then adds this correction to the position of the name and speech text; it therefore compensates for the sprite's real height, including for 3D models and monster families.
 
-## 192. Eau animée du terrain et cadence globale native non reproduites
+The Java code uses generic offsets in `NameRenderer`, `NPCAnimations` and the entity renderers, with no equivalent table indexed by visual type and no `TextCorrection` field received/initialized per unit. The same name or bubble therefore sits too high or too low depending on the sprite's size, whereas the 1.68 client adjusts this position per model.
 
-Le client natif possède six frames `AnimWater01`. `TileSet::DrawWaterLevel` parcourt les cellules compilées, reconnaît les familles de terrain et de bord d’eau animées, puis dessine chaque tuile avec la frame globale courante. Cette frame avance toutes les trois exécutions de `DrawWaterLevel` et est remise à zéro lorsque l’option `bAnimatedWater` change. L’animation concerne donc la texture du sol et ses raccords, avec une cadence commune à toute la scène.
+## 179. Guild name and dynamic unit colors absent from Java rendering
 
-Le Java sait reconnaître qu’un terrain contient le mot `water` et sait générer des raccords de terrain, mais `GroundRenderer` ne possède pas de compteur de frames d’eau ni de sélection périodique des six variantes natives. La seule animation d’objet générique observée dans `ObjectRenderer` avance à 120 ms et `isAmbientAnimation` ne reconnaît que les sprites de type `shop sign-`. Les surfaces d’eau Java restent donc statiques ou suivent un mapping différent, et l’activation/désactivation de l’option native ne réinitialise aucune animation de terrain équivalente.
+The native client receives a unit's visual identity with several separate attributes: `SetName(..., color)` updates the name and its color, while `SetGuildName(..., color)` updates the guild name and its color. `TFCObject` keeps `NameColor`, `GuildName` and `GuildColor`, and `DrawName` then draws the guild name with a separate text object above or below the unit's name.
 
-## 193. Éclairage animé des fontaines et moulins absent du rendu Java
+In the current Java code, `NameRenderer` uses a fixed name color, and entities only expose a localized/static display name. No `GuildName`/`GuildColor` state per unit, nor an equivalent update, exists in the player, NPC and monster render path. The Java client therefore cannot reproduce a remote name change, the guild label above a unit, or per-unit identity colors.
 
-Pour certains décors, le client natif ne dessine pas toujours le sprite statique. Avec `bShowAnimDecorsLight`, `BIG_FONTAINE_1`, `BIG_MOULIND` et `BIG_MOULING` ajoutent une animation de superposition (`AddOverlapAnim`) identifiée par l’objet et rendue ensuite par `DrawObjectAnimOverLapID`. La fontaine et les deux orientations du moulin peuvent donc produire une couche lumineuse animée indépendante du décor de base ; la désactivation de l’option revient explicitement au sprite fixe.
+## 180. Double-click target lock absent
 
-Le Java possède un `DecorRenderer` et un `ObjectRenderer`, mais leur chemin de décor sélectionne une région statique et leur seule animation ambiante générique identifiée vise les enseignes `shop sign-`. `DayNightCycle` applique une ambiance globale, sans état de superposition par fontaine/moulin ni option `ShowAnimDecorsLight`. Ces décors Java ne reproduisent donc pas l’éclairage animé natif et ne basculent pas entre les deux chemins selon le réglage 1.68.
+In `MouseAction.cpp`, when the native `bLockTarget` option is on, a double-click in combat calls `Objects.Lock(42)` and remembers the cell in `FreezeID`. Subsequent clicks and moves then reuse this target instead of freely recomputing the target under the cursor; the lock is also cancelled by the combat transitions the client provides for.
 
-## 194. Priorité et consommation des macros clavier natives absentes
+The Java code has temporary targets for spells and UI selections, but no equivalent option, no `FreezeID`/locked-target state, and no double-click branch that fixes the combat target. Moving the cursor or a new interaction can therefore change the Java target where the 1.68 client keeps the locked one.
 
-Dans `TFC_PLAY`, le client natif construit une clé composée de la touche, de Ctrl et de Shift, puis essaie successivement les macros système (`Custom.gMacro`) et les macros utilisateur (`MacroUI`). Si l’une réussit, l’événement est consommé et `RootBoxUI::VKeyInput` ne reçoit pas la touche ; seules les touches non reconnues atteignent ensuite le traitement normal. `MacroHandler::CallMacro` peut en outre être globalement désactivé et refuse l’appel lorsque `DoNotMove` est actif. Une macro peut donc empêcher simultanément une action d’interface ou de déplacement.
+## 181. Native selection by occupied cell and item stacking differs from the Java hit-test
 
-Dans le Java, les recherches dans le chemin de jeu (`MainGameScreen`, `GameInputHandler`, `GuiManager`) ne montrent ni registre de macros par combinaison Ctrl/Shift, ni étape de consommation avant la distribution normale, ni drapeau global `DoNotMove` appliqué à l’appel d’une macro. Les raccourcis sont traités par les écrans ou handlers concernés, et certaines combinaisons Shift servent directement au déplacement/à la sélection. Une touche configurée comme macro native peut donc ouvrir une autre action, parvenir à l’interface ou ne rien faire dans le Java au lieu de bloquer exactement le même événement.
+The native client rebuilds an ID grid on every display (`VisualObjectList::IdentifyAll`). Every cell covered by an object receives its `ID` according to stacking order; `GridID(x2,y2)` is then the sole source of truth for talking, seeing, using, picking up, or attacking. `Objects.Identify` and `Objects.NoIdentify` modify this grid state, so the same cell can select the visually front-most object rather than an arbitrary rectangle.
 
-## 195. Statistiques et écran de classement PvP natifs absents
+The Java code mainly tests `isMouseOver` against entity rectangles/bounds, then walks the manager lists (`NameableEntityHandler`, `NPCManager`, `MonsterInputHandler`, `GroundItemManager`). There is no shared visual ID grid arbitrating every category and layer before dispatching an action. A click on an area where player, NPC, monster, item and decor overlap can therefore select a different entity, or trigger a different action, than the 1.68 client.
 
-Le client 1.68 traite `RQ_GetPvpRanking` et reçoit séparément les morts totales, les tueries totales, les morts et tueries de la période courante, la série actuelle, la meilleure série et les points PvP. `PvpRanking::myPvpStat` compose ensuite plusieurs messages d’information dédiés (`PVP Points`, `Current kills`, `Current serial killing`, `Current deaths`, `Best serial killing`, `Total kills`, `Total deaths`). Ces valeurs ne sont pas déduites des quêtes ou du niveau : elles proviennent du classement/état PvP serveur.
+## 182. Extended position of multi-cell objects not kept by Java
 
-Le Java ne possède ni `PvpRanking`, ni champs `TotalKillNumber`/`CurrentPvpPoint`, ni requête ou écran de classement équivalent. Ses compteurs de kills rencontrés dans `QuestService` servent à la progression de quêtes, et `Stats` conserve des compétences/points plutôt que les séries PvP. Une mise à jour PvP native ne peut donc pas alimenter le HUD, les messages ou un classement Java, et une mort ou une victoire Java ne produit pas les mêmes statistiques persistantes.
+The native `See()` mode computes the offset between the cursor and the world origin, tries several neighboring cells with `Objects::RealPos`, and then records the result via `Objects::SetExtended`. Identifying an object therefore does not just provide its ID: it also keeps the part of the visual footprint actually pointed at, information reused by the `USE`, `GET` and `USE_ONSITE` actions.
 
-## 196. Deuxième couche de cape native non représentée dans le modèle Java
+The Java code has local bounds (`isMouseOver`) for NPCs, monsters, drops and grass, but no per-object extended position and no equivalent of `RealPos`/`SetExtended`. An interaction on a decoration or an object spanning several tiles therefore cannot carry the same sub-position: the Java code treats the whole rectangle as a uniform area or just picks the entity from its list.
 
-Le `Puppet` natif distingue `PUP_CAPE` et `PUP_CAPE_2` dans ses tables `BodyOrder`, `BodyOrderA`, `BodyOrderAR` et `BodyOrderR`. La seconde couche est placée différemment selon la direction, l’attaque et le retournement ; elle sert notamment à conserver le bon recouvrement avec le corps, les bras, les armes et le bouclier. Elle fait partie de la composition envoyée/reconstruite par `SetPuppet`, au même titre que les autres parties d’équipement.
+## 183. Arrow server result and miss trajectory not reproduced
 
-Le Java possède `BodyPart.CAPE`, mais aucune valeur `CAPE_2`. Dans `PuppetBodyOrder`, l’index correspondant à `PUP_CAPE_2` est explicitement `null` dans `INDEX_TO_BODY_PART`, donc la table d’ordre ne peut pas rendre une seconde ressource de cape. Les personnages Java qui utilisent une cape à plusieurs couches ou une variante nécessitant cette partie auront ainsi un recouvrement, une silhouette ou une cape incomplète par rapport au client 1.68.
+The native client does not infer a shot's result from the attack animation. `RQ_ArrowHit` supplies the shooter, the target, and the new HP percentage; `ShootArrow` then updates the target's HP, computes the shooter's direction, and moves the projectile to the target. `RQ_ArrowMiss`, conversely, supplies a final position and a collision flag; `ShootArrow` extrapolates the arrow off-screen when it misses with no collision, or has it stop in place when it hits an obstacle.
 
-## 197. Masque de visibilité des parties du personnage non reproduit
+The Java code has a bow-attack animation and local formulas (`CombatResult`, `CombatMath`), but no distinct `ArrowHit`/`ArrowMiss` cycle with a final position, collision, received HP percentage, and extrapolated trajectory. Rendering can therefore play a bow animation without reproducing the native shot's impact point, off-screen miss, or server update.
 
-Le rendu natif ne parcourt pas aveuglément toutes les parties chargées : chaque entrée de `BodyOrder`, `BodyOrderA`, `BodyOrderAR` ou `BodyOrderR` est d’abord filtrée par `Object->VisiblePart & Pow2(part)`. Le `Puppet` peut ainsi masquer séparément une main, un bras, un casque, des cheveux, une robe, une cape, un bouclier ou une arme selon l’équipement, le sexe, la pose d’attaque et la variante visuelle, tout en conservant la partie chargée pour d’autres états.
+## 184. Dynamic transition of a unit to hostile state and cursor change absent
 
-Le Java collecte les parties présentes dans `partMap` et les dessine selon `PuppetBodyOrder`, mais aucune propriété `VisiblePart` ni masque de bits par entité/pose n’a été trouvée dans `PlayerAnimations`, `Player` ou `BodyPart`. Une partie configurée reste donc candidate au rendu même lorsque le client natif la désactiverait pour un équipement ou une pose donnée ; le résultat peut afficher des couches superposées (par exemple cheveux/casque, membres sous une robe ou arme secondaire) que le client 1.68 cache.
+In `VisualObjectList::SetEvil`, when an offensive spell hits the player, the native client looks up the attacking unit, dynamically converts it to the monster category (`Friendly = VOL_MONSTER`) if needed, assigns it the hostile cursor, and rebuilds its identification grid. `SetAttack` applies a similar transition when the unit attacks the player. The visual state and interaction type can therefore change without recreating the unit.
 
-## 198. Ombre d’unité native semi-transparente et optionnelle non équivalente
+The Java code has local `isHostile` flags for some NPCs and a static monster classification, but no dynamic hostility state shared across all units, no category conversion, and no cursor change triggered by a received attack. A unit initially neutral or player-aligned therefore does not automatically change identification behavior the way it does in the 1.68 client.
 
-Le client natif possède un passe séparé `DrawObjectShadow`, activé uniquement avec `bShowNewOmbrage`. Il rend `PlayerShadow` et les ombres des objets/unités avec `DrawSpriteNSemiTrans`, un niveau de transparence explicite (`dwNiveauTrans = 160`), les coordonnées interpolées `OX/OY + MovX/MovY`, des passes distinctes pour l’ordre de profondeur et des exceptions liées aux portes, au joueur mort et aux effets séraphins.
+## 185. World-object contextual cursors not mapped in Java
 
-Le Java charge des régions suffixées `Shd` dans `EntityAnimationsBase` et les dessine directement dans le même chemin d’animation, sans passe globale `DrawObjectShadow`, sans réglage `bShowNewOmbrage`, sans alpha natif fixe 160 ni filtrage de type/profondeur équivalent. Les ombres Java peuvent donc être absentes lorsque la ressource `Shd` manque, rester opaques ou suivre une autre interpolation, et ne peuvent pas reproduire le basculement global ancien/nouveau du client 1.68.
+The native client has a `DefaultMouseCursor` table per object group: a door or a chest gets `USE`, an NPC gets `TALK`, a pickupable item gets `GET`, a non-interactive chair or crate gets `NONE`, and these values are recomputed when the object changes type or state. The displayed cursor therefore depends directly on the object under the cell and announces the action the click will dispatch.
 
-## 199. Carte de lumière locale native absente du rendu Java
+The Java `GameCursorManager` only offers the global default, attack, spell, bow and dialogue modes. `ObjectClickHandler` handles objects on click, but no object → `GET`/`USE`/`NONE` mapping is applied to the pointer. A door, a chest, a drop, or a non-interactive decoration can therefore show the same general cursor before the click, unlike the 1.68 client's contextual feedback.
 
-Le moteur natif calcule `CurrentLight` et `CurrentLow` à partir de la lumière du joueur et de chaque objet visuel, avec une atténuation dépendant de sa distance dans la grille. Il fusionne ensuite plusieurs cartes (`lmPlayerLight`, `lmOtherPlayerLight`, torches, lanternes, poutres et chandelles) par `LightMap::MergeLightMap`, puis applique `MakeLightingFX` à la surface rendue. Une torche, un joueur éclairé ou un décor lumineux modifie donc localement les pixels voisins, indépendamment de la luminosité ambiante générale.
+## 186. Cursor drawn in the native scene vs. Java system cursor
 
-Le Java applique un `DayNightCycle` global et un overlay uniforme de luminosité dans `MainGameScreen`; aucun `LightMap` par zone, aucune fusion de sources ponctuelles et aucune propriété de lumière locale par objet n’a été trouvée dans `GroundRenderer`, `ObjectRenderer` ou les entités. Les cartes souterraines et les scènes comportant torches, lanternes, joueurs lumineux ou effets d’éclairage ne produisent donc pas les mêmes halos ni la même illumination locale que le client 1.68.
+`CMouseCursor::DrawCursor` renders the cursor sprite directly into the DirectX surface, with a clip region sized to the window, zoom-related offset corrections, and a direction calculation for forced cursors. The native cursor therefore follows the game's own render coordinates and is subject to the same transforms as UI sprites.
 
-## 201. Reprise après perte de focus : réacquisition native des entrées absente du Java
+The Java `GameCursorManager`, by contrast, builds a LibGDX `Cursor` object (`Gdx.graphics.newCursor`) and hands it to the system via `Gdx.graphics.setCursor`. There is no cursor drawing in the `SpriteBatch`, nor an equivalent scene clip/offset. Hotspot, DPI scaling, moving outside the window, and positioning relative to a zoom level can therefore differ from the 1.68 client even with the same source image.
 
-Lors de `WM_ACTIVATE`, le client 1.68 traite explicitement la sortie et le retour d'Alt-Tab : il désacquiert la souris DirectInput et le clavier quand la fenêtre devient inactive, puis réacquiert les deux périphériques au retour. En mode plein écran, il restaure également les surfaces DirectDraw (`DXDRestoreSurfaceF`/`DXDRestoreSurface`) avant de reprendre l'affichage. `WM_SETFOCUS` remet en outre `CTRL_State` à zéro afin qu'une touche Ctrl maintenue avant le changement de fenêtre ne reste pas considérée comme pressée.
+## 187. Native movement/attack event queue vs. Java animation with no queuing
 
-Dans `MainGameScreen`, `pause()` est vide et `resume()` ne recalcule que la caméra HUD et appelle `hud.recoverAfterDisplayChange()`. Aucun chemin Java équivalent ne suspend/réinitialise l'état des entrées, ne réacquiert un périphérique, ne restaure les surfaces de rendu ou ne remet à zéro les modificateurs clavier lors d'une perte de focus. Après Alt-Tab, minimisation ou changement de contexte graphique, le Java peut donc conserver une action/modificateur dans un état différent ou reprendre avec des ressources d'affichage invalidées, alors que le client natif a une séquence dédiée de sortie et de reprise.
+The native `TFCObject` has a `MovingQueue<Deplacement>`. `SetAttack` and movement updates add received events to it; `VisualObjectList`'s loop removes them in order, checks the number of pending items, and only removes the unit once the queue is empty. Several attacks or position corrections arriving between two frames are therefore kept and played sequentially.
 
-## 202. Courbe de volume audio différente entre DirectSound et LibGDX
+In the Java code, `PlayerAnimations` keeps a single `attacking`/`attackFrame` state, and `BaseMonster` only starts an attack if `!animations.isAttacking()`. A new attack or animation received while the previous one is playing is not placed in a per-unit queue; it is delayed by the cooldown or ignored by the animation guard. Under a burst of events, the order and number of visible poses therefore diverge from the 1.68 client.
 
-Le client natif stocke le volume des effets et de la musique sur une échelle discrète de 0 à 10. Pour un son chargé en mémoire, `T3VSBSound::SetVolume` transmet à DirectSound `-166 * (10 - v)` (centièmes de décibel), et le niveau zéro arrête le buffer. La lecture d'un son en jeu est en plus conditionnée par `dwSoundVol`, tandis que les flux (`TS_STREAMING`) suivent un chemin distinct. Le volume natif n'est donc pas une simple multiplication linéaire de l'amplitude PCM.
+## 188. Server-forced attack direction absent
 
-`GamePreferences` Java conserve `musicVolume` et `effectsVolume` comme flottants `[0,1]`, puis transmet directement ces valeurs à `Music.setVolume` ou `Sound.play`. Aucun remappage de l'échelle 0–10 vers l'atténuation DirectSound n'existe, et les chemins mémoire/streaming natifs ne sont pas différenciés par le même état. À réglage utilisateur comparable, les niveaux intermédiaires, le seuil de silence et la réaction d'un effet ou d'une musique chargée dans un autre type de buffer ne produisent donc pas le même résultat audible.
+`VisualObjectList::SetAttack` receives a `forcedDirection` parameter. When it is non-zero, it replaces the direction computed between the attacker and the defender before the attack is added to `MovingQueue`. The native client can therefore display an attack in a server-imposed direction, even if the target's local position would give a different orientation.
 
-## 204. Hauteur d'affichage par défaut différente (1280×800 natif contre 1280×768 Java)
+The Java code calls `PlayerAnimations.startAttack` with the movement's current angle, and `BaseMonster`/`MonsterManager` orient the unit via `faceToward` from local positions. No forced-direction field or event is passed to the animation path. A server correction, an attack with no target, or an imposed direction therefore produces a different pose in the Java code.
 
-Le constructeur `Global` du client 1.68 appelle explicitement `SetDisplaySize(1280,800)`. Cette hauteur sert ensuite de référence aux surfaces DirectDraw, aux limites de clipping, au positionnement des éléments bas de l'écran, au chargement des ressources `..._<ScreenH>` et aux conversions de la grille virtuelle.
+## 189. Native immediate orientation and a different direction convention
 
-`GameConstants` Java fixe `WINDOW_WIDTH = 1280` mais `WINDOW_HEIGHT = 768`, et `MyGame` utilise cette valeur lors de `setWindowedMode`. Même à largeur identique, les 32 pixels manquants modifient le cadrage vertical, la position relative du HUD/chat, les zones cliquables et les calculs qui prennent la hauteur courante comme base. Le Java ne reproduit donc pas la géométrie d'affichage par défaut du client 1.68.
+The native `SetDirection` works on grid offsets `OX/OY`, produces numeric directions 1 through 9, and accepts `bSetNow`: the call can either just compute the direction intended for a queued attack, or immediately change `Object->Direction`. When both offsets coincide, the native code explicitly falls back to direction 1.
 
-## 205. Format de pixels et transparence : surfaces 16 bits/RGB565 natives contre RGBA8888 Java
+The Java code keeps textual angles (`000`, `045`, `090`, `135`, etc.) with a mirror boolean, and `faceToward` does nothing when both positions are identical. It has no equivalent distinction between a direction computed for a future action and one applied immediately. Cases of a target on the same cell, an offset correction, or a targetless attack event therefore do not end up with the same orientation.
 
-`DXDCreate` initialise les surfaces du client 1.68 avec `ScreenBPP = 16`. Les sprites et les routines d'effets manipulent donc des mots 16 bits, convertissent les couleurs en RGB565 (`5 bits rouge, 6 bits vert, 5 bits bleu`) et définissent une couleur-clé DirectDraw précise pour la transparence. Les tests de masque, de glow, de semi-transparence et de raccordement comparent ces valeurs quantifiées, parfois avec les masques `wRMask`, `wGMask` et `wBMask` de la surface vidéo.
+## 190. Attachment references and deferred removal of visual objects absent
 
-Le Java crée au contraire les Pixmaps et textures de ces chemins en `RGBA8888` et s'appuie sur l'alpha/blending OpenGL. La couleur-clé 16 bits n'est pas quantifiée de la même façon et un pixel proche de la clé native peut rester visible ou devenir transparent différemment ; les mélanges de canaux et les dégradés semi-transparents produisent également des valeurs différentes. Même avec les mêmes images source et les mêmes coordonnées, le rendu pixel par pixel ne peut donc pas être identique dans les contours, les halos et les masques d'objets.
+The native client keeps `TFCObject::Count` on the parent object whenever an effect, a summon, or another visual object is added with `AttachID`. Removing the parent is then deferred (`DeleteMe`) as long as this counter has not returned to zero; on each child's destruction, the counter is decremented. This rule also applies to off-screen and moving objects, so as to avoid removing the support before its attached visuals.
 
-## 206. Redimensionnement de fenêtre toujours interdit dans le Java
+The Java code splits `SpellImpact`, `SpellProjectile` and `ChannelEffect` into render lists that expire independently by their frames, duration, or handle. `GroundItem` has no `AttachID` and no visual reference counter. There is therefore no generic guard preventing a parent unit or object from disappearing while a native visual child is still attached to it; depending on the timing of expiration, an effect can be left orphaned or disappear with its support, instead of following the 1.68 client's coordinated lifecycle.
 
-Le client 1.68 possède un réglage `bLockResize` : les messages de bordure (`WM_NCHITTEST`) bloquent les zones de redimensionnement uniquement lorsque cette option est active. Lorsqu'elle est désactivée, la fenêtre peut être redimensionnée et le client recalcule son affichage à partir de la largeur/hauteur courantes, avec ses corrections de viewport et ses ressources dépendantes de la résolution.
+## 191. Server weather and environment particles absent from the Java runtime
 
-`MyGame` appelle systématiquement `config.setResizable(false)`, sans préférence Java correspondante ni état permettant d'autoriser le redimensionnement. Le Java interdit donc également les profils natifs où `bLockResize` est désactivé, et ne peut pas reproduire le redimensionnement interactif suivi d'une mise à jour des coordonnées, du HUD et des zones de clic.
+The native client handles `RQ_WeatherMsg` with a separate effect and `ON/OFF` state: rain, snow and fog are remembered distinctly. `Tileset` initializes or stops the transition states, and `CWeather::DrawRain` and `DrawSnow` then draw drop/flake positions, reuse them between frames, and sometimes add lightning depending on intensity. Weather received from the server is therefore global state rendered on top of the scene, not just a local graphics option.
 
-## 203. Algorithmes de raccordement des tuiles natives non équivalents aux compositions Tmpl Java
+In the Java code, no class, state or render loop equivalent to `CWeather`, `RQ_WeatherMsg`, `DrawRain` or `DrawSnow` was found in the game runtime; the `rain`/`snow` occurrences are object or spell names. `GamePreferences` can store settings, but no rain, snow, fog, lightning, or weather transition is generated in `MainGameScreen`/the renderers. Weather activated by the 1.68 server is therefore visually ignored by the Java code.
 
-`Tileset.cpp` contient plusieurs passes dédiées de raccordement (`Smootage`, `Smootage2`, `Smootage3` et `WaterSmooth`). Pour chaque variante directionnelle, elles lisent les surfaces de deux terrains et choisissent le pixel source selon le masque de la troisième surface : certaines variantes testent la couleur-clé DirectDraw, d'autres la valeur de masque `0`, `0x7FFF` ou le masque RGB de la carte vidéo. Les tables natives couvrent les directions normales, diagonales et les distances `X2` à `X5`, avec des tables séparées pour l'eau.
+## 192. Animated terrain water and the native global cadence not reproduced
 
-Le Java ne passe pas par ces tables ni par ces sentinelles DirectDraw. `GroundRenderer.renderTmplTile` lit un masque Pixmap, utilise son octet alpha/couleur comme clé exacte vers un terrain, prend le pixel correspondant ou un terrain transparent de secours, puis met en cache une texture composée. Il n'existe pas de sélection native équivalente par variante `Smoothing`/`Smoothing2`, de test du color-key RGB ou de passe `WaterSmooth`. Les raccords de terrain et les transitions eau/terre peuvent donc choisir une source différente sur les bords, les diagonales et les masques partiellement transparents, même lorsque les noms de tuiles et les dimensions restent identiques.
+The native client has six `AnimWater01` frames. `TileSet::DrawWaterLevel` walks the compiled cells, recognizes animated terrain and water-edge families, then draws each tile with the current global frame. This frame advances every three `DrawWaterLevel` runs and is reset when the `bAnimatedWater` option changes. The animation therefore concerns the ground texture and its seams, with a cadence shared across the whole scene.
 
-## 200. Cache RTMap natif non invalidé lors d'un changement de monde à coordonnées identiques
+The Java code can recognize that a terrain contains the word `water` and can generate terrain seams, but `GroundRenderer` has no water-frame counter and no periodic selection of the six native variants. The only generic object animation observed in `ObjectRenderer` advances at 120 ms, and `isAmbientAnimation` only recognizes `shop sign-`-type sprites. Java water surfaces therefore remain static or follow a different mapping, and toggling the native option resets no equivalent terrain animation.
 
-Dans `RTMap::CreateRTMap`, le client 1.68 considère la vue comme déjà chargée lorsque `m_dwLoadX == xPos*2` et `m_dwLoadY == yPos`; le test sur `m_dwLoadW == World` est explicitement commenté. Si le personnage passe dans un autre monde en gardant les mêmes coordonnées, la fonction peut donc réutiliser l'image et le masque du monde précédent au lieu de recharger la carte et sa mémoire d'exploration. Le monde n'est réinitialisé qu'à la destruction/cachage de la fenêtre ou lors d'un déplacement qui invalide ce cache.
+## 193. Animated fountain and mill lighting absent from Java rendering
 
-`GuiWorldMap` Java inclut au contraire `world` dans sa clé (`renderedTileX`, `renderedTileY`, `renderedWorld`) et reconstruit la vue dès que le monde change. Le résultat diverge dans ce cas précis : le natif peut afficher une vue périmée, alors que le Java bascule immédiatement vers le monde demandé.
+For certain decorations, the native client does not always draw the static sprite. With `bShowAnimDecorsLight`, `BIG_FONTAINE_1`, `BIG_MOULIND` and `BIG_MOULING` add an overlay animation (`AddOverlapAnim`) identified by the object and then rendered by `DrawObjectAnimOverLapID`. The fountain and both mill orientations can therefore produce an animated light layer independent of the base decoration; turning the option off explicitly reverts to the fixed sprite.
 
-Le traitement des mondes hors plage diffère aussi : le natif remet `iWorld` à 0 dans `LoadRTWorld`, mais `CreateRTMap` retourne après avoir vidé la sortie si `World > 7`; le Java borne directement le monde à `[0,7]` avant le chargement. Une valeur de monde invalide ne produit donc pas la même carte de repli.
+The Java code has a `DecorRenderer` and an `ObjectRenderer`, but their decoration path selects a static region, and their only identified generic ambient animation targets `shop sign-` signs. `DayNightCycle` applies a global ambience, with no per-fountain/mill overlay state and no `ShowAnimDecorsLight` option. These Java decorations therefore do not reproduce the native animated lighting and do not switch between the two paths according to the 1.68 setting.
 
-## 207. Synchronisation du premier chargement différente
+## 194. Native keyboard macro priority and consumption absent
 
-Le client natif crée un thread `FirstInitObject` et maintient `g_bFirstLoadComplete` à faux tant que cette initialisation n'est pas terminée. La boucle de chargement continue de dessiner `LOAD<ScreenW>.PCX`, le texte de progression et le conseil du jour, puis attend explicitement le drapeau avant de poursuivre. Ce thread initialise la liste d'objets (`Objects.Create`) et crée notamment les sons mémoire `Open Box`, `Equip` et `Vampire Dying` avant de libérer le démarrage.
+In `TFC_PLAY`, the native client builds a composite key from the key, Ctrl and Shift, then tries system macros (`Custom.gMacro`) and user macros (`MacroUI`) in turn. If either succeeds, the event is consumed and `RootBoxUI::VKeyInput` never receives the key; only unrecognized keys then reach normal handling. `MacroHandler::CallMacro` can also be globally disabled and refuses the call while `DoNotMove` is active. A macro can therefore simultaneously block a UI or movement action.
 
-`LoadingScreen` Java met en file tous les WAV/MP3/OGG trouvés sous le dossier des sons et lance en parallèle `startMapPreloadAsync()`. Le passage à `CharacterSelectionScreen` dépend de la fin de l'`AssetManager`, pas de la fin de `mapPreloadExecutor` ; les cartes peuvent donc encore être chargées après l'écran de sélection et être ouvertes à la demande via `getOrLoadMapReader`. Le natif bloque son étape de démarrage sur son initialisation dédiée, alors que le Java autorise une progression d'interface pendant un préchargement de carte encore incomplet.
+In the Java code, searches in the game path (`MainGameScreen`, `GameInputHandler`, `GuiManager`) show no registry of macros by Ctrl/Shift combination, no consumption step before normal dispatch, and no global `DoNotMove` flag applied to a macro call. Shortcuts are handled by the relevant screens or handlers, and some Shift combinations go straight to movement/selection. A key configured as a native macro can therefore open a different action, reach the UI, or do nothing in the Java code instead of blocking exactly the same event.
 
-## 208. Éditeur de texte natif beaucoup plus limité que l’éditeur du chat Java
+## 195. Native PvP stats and ranking screen absent
 
-`NewInterface/EditUI.cpp` du client 1.68 ne gère que l’insertion au curseur, `Backspace`, `DeleteChar`, le déplacement gauche/droite et le saut de mots avec CTRL. `LeftClick` est encore un TODO et ne positionne pas le curseur dans le texte. Il n’y a ni ancre de sélection, ni sélection par SHIFT, ni copier/couper/coller, ni annulation ; la limite par défaut est de 256 caractères et un filtre optionnel décide seulement si le caractère entrant est accepté.
+The 1.68 client handles `RQ_GetPvpRanking` and separately receives total deaths, total kills, current-period deaths and kills, current streak, best streak, and PvP points. `PvpRanking::myPvpStat` then composes several dedicated info messages (`PVP Points`, `Current kills`, `Current serial killing`, `Current deaths`, `Best serial killing`, `Total kills`, `Total deaths`). These values are not inferred from quests or level: they come from the server's PvP ranking/state.
 
-`GameChat.java` implémente au contraire la sélection (SHIFT et CTRL+A), le presse-papiers (`CTRL+C/X/V`), l’annulation (`CTRL+Z`), le déplacement HOME/END, l’historique et la répétition temporisée de gauche/droite/Backspace. Le collage remplace les retours à la ligne par des espaces et respecte la limite après suppression de la sélection. Le comportement Java est donc fonctionnellement plus riche que l’éditeur natif 1.68 ; une comparaison d’ergonomie ou de tests clavier ne peut pas être considérée équivalente même si la longueur maximale de 256 caractères coïncide.
+The Java code has no `PvpRanking`, no `TotalKillNumber`/`CurrentPvpPoint` fields, and no equivalent ranking request or screen. Its kill counters found in `QuestService` serve quest progression, and `Stats` keeps skills/points rather than PvP streaks. A native PvP update therefore cannot feed the HUD, messages, or a Java ranking, and a Java death or victory does not produce the same persistent stats.
 
-## 209. Durabilité et réparation ajoutées par le Java sans équivalent client natif
+## 196. Native second cape layer not represented in the Java model
 
-Dans `Packet.cpp`, le client 1.68 ne maintient pas une jauge de durabilité locale par objet. Lorsqu’une réponse `RQ_GetObject` signale un objet inutilisable/cassé, il affiche le message localisé « The object is broken and cannot be used » puis supprime l’objet identifié de `VisualObjectList`. Les autres erreurs d’objet marquent l’unité comme manquante ou la retirent ; aucune valeur de durabilité, usure par coup ou écran de réparation n’est calculée par ce client.
+The native `Puppet` distinguishes `PUP_CAPE` and `PUP_CAPE_2` in its `BodyOrder`, `BodyOrderA`, `BodyOrderAR` and `BodyOrderR` tables. The second layer is positioned differently depending on direction, attack and flipping; it notably keeps correct overlap with the body, arms, weapons and shield. It is part of the composition sent/rebuilt by `SetPuppet`, just like the other equipment parts.
 
-Le Java introduit au contraire `ItemDurabilityService` avec des pourcentages par entrée d’inventaire et emplacement équipé, une usure à l’attaque et à la mort, le blocage des bonus/attaques lorsque l’équipement est cassé, l’affichage de la jauge et un `RepairScreen` qui facture la réparation individuelle ou globale. Ces règles sont donc une mécanique Java supplémentaire : elles peuvent casser, déséquiper implicitement ou réparer localement un objet dans des situations où le client 1.68 aurait seulement reçu une erreur serveur et retiré l’objet concerné, sans partager la même économie ni le même état d’instance.
+The Java code has `BodyPart.CAPE`, but no `CAPE_2` value. In `PuppetBodyOrder`, the index corresponding to `PUP_CAPE_2` is explicitly `null` in `INDEX_TO_BODY_PART`, so the order table cannot render a second cape resource. Java characters using a multi-layer cape, or a variant requiring this part, will therefore have incomplete overlap, silhouette, or cape compared to the 1.68 client.
 
-## 210. Récolte d’herbes ajoutée au Java
+## 197. Character-part visibility mask not reproduced
 
-L’arborescence du client 1.68 ne contient pas de gestionnaire d’herbes, de nœud récoltable, de canal de récolte ou de requête de récolte. Les interactions de monde du client portent sur les objets, unités, coffres, sorts et déplacements ; aucune classe native ne crée des plantes aléatoires, ne les marque comme récoltées ou ne distribue un objet après un temps de canalisation.
+Native rendering does not blindly walk every loaded part: each `BodyOrder`, `BodyOrderA`, `BodyOrderAR` or `BodyOrderR` entry is first filtered by `Object->VisiblePart & Pow2(part)`. `Puppet` can therefore separately hide a hand, an arm, a helmet, hair, a robe, a cape, a shield, or a weapon depending on equipment, sex, attack pose, and visual variant, while still keeping the part loaded for other states.
 
-Le Java possède au contraire `HerbManager`, `HerbNode` et `HarvestChannel`. Il tire une définition parmi plusieurs herbes pondérées, crée des nœuds dans la carte, affiche leur nom au survol/clic droit, impose une durée de canalisation et une tolérance de déplacement, puis mémorise les cellules récoltées jusqu’à la session. Cette mécanique et ses règles de disponibilité sont donc entièrement supplémentaires au client natif 1.68 ; elles peuvent afficher une interaction, consommer du temps et produire un objet là où le client original ne présentait aucun élément récoltable.
+The Java code collects the present parts in `partMap` and draws them according to `PuppetBodyOrder`, but no `VisiblePart` property or per-entity/per-pose bitmask was found in `PlayerAnimations`, `Player`, or `BodyPart`. A configured part therefore stays a rendering candidate even where the native client would disable it for a given piece of equipment or pose; the result can show stacked layers (for example hair/helmet, limbs under a robe, or a secondary weapon) that the 1.68 client hides.
 
-## 214. Syntaxes natives de routage du chat absentes du chemin Java
+## 198. Native semi-transparent, optional unit shadow not equivalent
 
-Dans `main2.cpp`, le client 1.68 interprète le premier caractère du texte avant d’envoyer le paquet : `:message` devient un `RQ_Shout`, tandis que les chaînes courtes `:)` et `:p` restent des messages ordinaires (avec l’exception historique `:k`/`:K`). `/nom message` devient une page privée `RQ_Page` si l’option de pages est active ; un destinataire entre guillemets permet les noms composés, par exemple `/"First Last" message`. Le client bloque aussi l’envoi d’une page en mode AFK et affiche un retour local si le destinataire est ignoré. Enfin, `;message` est transmis au canal actuellement sélectionné via `SendMessageToCurrentChannel`.
+The native client has a separate `DrawObjectShadow` pass, enabled only with `bShowNewOmbrage`. It renders `PlayerShadow` and object/unit shadows with `DrawSpriteNSemiTrans`, an explicit transparency level (`dwNiveauTrans = 160`), interpolated `OX/OY + MovX/MovY` coordinates, separate depth-ordering passes, and exceptions for doors, the dead player, and seraph effects.
 
-`GameChat` Java remet le texte complet à un unique `submitHandler`. `MainGameScreen` ne route ensuite que les commandes commençant par `.` vers `GmCommandProcessor`; sinon il affiche le texte au-dessus du joueur et le transmet éventuellement à la conversation NPC active. Aucun parseur Java équivalent pour `:`, `/`, `;`, les guillemets de destinataire, l’état AFK ou la liste d’ignorés n’est présent dans ce chemin. Un joueur Java peut donc produire un texte local/NPC là où le client 1.68 changeait de type de paquet, de canal et de contrôle d’envoi.
+The Java code loads regions suffixed `Shd` in `EntityAnimationsBase` and draws them directly in the same animation path, with no global `DrawObjectShadow` pass, no `bShowNewOmbrage` setting, no fixed native alpha of 160, and no equivalent type/depth filtering. Java shadows can therefore be absent when the `Shd` resource is missing, stay opaque, or follow a different interpolation, and cannot reproduce the 1.68 client's global old/new toggle.
 
-## 215. Traitement des exceptions fatales et rapport de crash non équivalent
+## 199. Native local lightmap absent from Java rendering
 
-Le client natif installe `CExpFltr::Filter` avec `SetUnhandledExceptionFilter`. Pour une violation d’accès, division par zéro, débordement de pile, instruction illégale ou autre exception Win32, il construit un diagnostic, appelle `LogException` (date, adresse, code/description et contexte registres), exécute la procédure d’arrêt puis termine le processus avec le code 1. Le filtre limite aussi le nombre de fautes et possède une configuration de redémarrage automatique.
+The native engine computes `CurrentLight` and `CurrentLow` from the player's light and every visual object's, with attenuation depending on grid distance. It then merges several maps (`lmPlayerLight`, `lmOtherPlayerLight`, torches, lanterns, beams and candles) via `LightMap::MergeLightMap`, and applies `MakeLightingFX` to the rendered surface. A torch, a lit player, or a light-emitting decoration therefore locally changes neighboring pixels, independent of overall ambient brightness.
 
-Le runtime Java ne présente pas d’installation équivalente de `Thread.setDefaultUncaughtExceptionHandler`, de rapport de crash avec contexte machine, de compteur global de fautes ou de redémarrage configuré dans le chemin du jeu. Les erreurs locales sont souvent attrapées et ignorées, tandis qu’une exception non interceptée dépend du comportement générique de la JVM. Le diagnostic, le fichier produit, le moment de fermeture et la possibilité de reprise après crash diffèrent donc du client 1.68.
+The Java code applies a global `DayNightCycle` and a uniform brightness overlay in `MainGameScreen`; no per-zone `LightMap`, no merging of point sources, and no per-object local light property were found in `GroundRenderer`, `ObjectRenderer`, or the entities. Underground maps and scenes with torches, lanterns, lit players, or lighting effects therefore do not produce the same halos or local illumination as the 1.68 client.
 
-## 216. Banque audio VSB chiffrée et chargement par morceaux absents du Java
+## 201. Recovering from focus loss: native input reacquisition absent from Java
 
-Le client natif regroupe les effets et musiques dans `gamefiles\\T4CGameFile.vsb`. `VSBDataBase::LoadIndex` lit un index d’identifiants, offsets, tailles, fréquence et profondeur audio ; `MemMapFile::CpyMemory` déchiffre ensuite les octets avec une table XOR dépendant de la position (bloc de 4096 octets). `LoadChunck` fournit les segments à `T3VSBFilter`, qui garde un compteur de références et ne charge que les portions nécessaires au décodeur. Le démarrage vérifie aussi l’intégrité et peut reconstruire/décompresser la banque VSB.
+On `WM_ACTIVATE`, the 1.68 client explicitly handles leaving and returning from Alt-Tab: it releases the DirectInput mouse and keyboard when the window becomes inactive, then reacquires both devices on return. In fullscreen mode, it also restores the DirectDraw surfaces (`DXDRestoreSurfaceF`/`DXDRestoreSurface`) before resuming display. `WM_SETFOCUS` additionally resets `CTRL_State` to zero so a Ctrl key held before the window change is not left considered pressed.
 
-`SoundManager` Java recherche au contraire un fichier audio individuel dans `Paths.SOUNDS_DIR`, le charge comme `Sound` ou `Music` via LibGDX, puis ignore les erreurs de chargement. Aucun lecteur d’index VSB, déchiffrement XOR positionnel, cache de chunks, compteur de références audio ou vérification de `T4CGameFile.vsb` n’est utilisé par le runtime Java. Une installation contenant uniquement la banque native, un identifiant sonore sans fichier séparé ou une banque partiellement corrompue ne produit donc pas le même chargement ni le même comportement de repli.
+In `MainGameScreen`, `pause()` is empty and `resume()` only recomputes the HUD camera and calls `hud.recoverAfterDisplayChange()`. No equivalent Java path suspends/resets input state, reacquires a device, restores render surfaces, or resets keyboard modifiers on a focus loss. After Alt-Tab, minimizing, or a graphics context change, the Java code can therefore keep an action/modifier in a different state or resume with invalidated display resources, whereas the native client has a dedicated exit-and-resume sequence.
 
-## 217. Résolution totale des icônes et sons inconnus contre retours `null` Java
+## 202. Different audio volume curve between DirectSound and LibGDX
 
-`GameIcons::operator()` et `GameSounds::operator()` sont conçus comme des fonctions totales : un identifiant non enregistré renvoie respectivement un sprite `???` ou le son générique `Generic Drop Item`. Les appels de l’interface et du glisser-déposer conservent ainsi un objet visuel/audio valide même lorsqu’une liaison de contenu manque.
+The native client stores effects and music volume on a discrete 0-to-10 scale. For a sound loaded in memory, `T3VSBSound::SetVolume` passes DirectSound `-166 * (10 - v)` (hundredths of a decibel), and level zero stops the buffer. In-game playback is also gated by `dwSoundVol`, while streams (`TS_STREAMING`) follow a separate path. Native volume is therefore not a simple linear multiplication of PCM amplitude.
 
-`SpriteLoader` Java renvoie au contraire `null` pour un nom absent, un ID hors limites, une image vide ou une palette indisponible ; `SoundManager` abandonne silencieusement la lecture si aucun fichier ne peut être chargé. Les appels Java doivent donc tester l’absence et peuvent supprimer le dessin, le feedback sonore ou l’élément d’interface, alors que le client 1.68 affichait/jouait systématiquement son fallback identifié. Le résultat d’une donnée de contenu incomplète n’est donc pas équivalent.
+The Java `GamePreferences` keeps `musicVolume` and `effectsVolume` as `[0,1]` floats, then passes these values directly to `Music.setVolume` or `Sound.play`. No remapping of the 0–10 scale to DirectSound attenuation exists, and the native memory/streaming paths are not differentiated by the same state. At a comparable user setting, intermediate levels, the silence threshold, and how a sound loaded in a different buffer type reacts therefore do not produce the same audible result.
 
-## 218. Catalogues de langue chiffrés et repli natif différents du JSON Java
+## 204. Different default display height (native 1280×800 vs. Java 1280×768)
 
-`LocalString::LoadAllStrings` ouvre `English.elng` ou `French.elng` en binaire, puis déchiffre chaque octet avec une table pseudo-aléatoire déterministe de 7 823 positions. Le fichier décodé est ensuite analysé en entrées `[id]`, et une langue demandée qui manque revient à l’anglais ; un index supérieur au nombre d’entrées revient à la dernière chaîne chargée. Les catalogues GUI et aide suivent le même principe de ressources binaires indexées.
+The 1.68 client's `Global` constructor explicitly calls `SetDisplaySize(1280,800)`. This height then serves as the reference for DirectDraw surfaces, clipping limits, positioning bottom-of-screen elements, loading `..._<ScreenH>` resources, and virtual-grid conversions.
 
-`I18n` Java lit directement `assets/i18n/lang.json` en UTF-8 avec des clés textuelles. Un fichier absent/vide provoque une exception, une clé absente renvoie la clé ou le fallback fourni, et aucun déchiffrement, contrôle de taille d’entrée ou repli vers la dernière chaîne n’existe. Le Java ne peut donc pas consommer directement les catalogues `.elng` du client 1.68 et ne réagit pas de la même manière à une langue ou une entrée de traduction manquante/corrompue.
+The Java `GameConstants` sets `WINDOW_WIDTH = 1280` but `WINDOW_HEIGHT = 768`, and `MyGame` uses this value in `setWindowedMode`. Even at identical width, the missing 32 pixels change vertical framing, the relative position of the HUD/chat, clickable areas, and any calculation that uses the current height as a base. The Java code therefore does not reproduce the 1.68 client's default display geometry.
 
-## 219. Politique de collision des liaisons d’icônes et de sons différente
+## 205. Pixel format and transparency: native 16-bit/RGB565 surfaces vs. Java RGBA8888
 
-Dans `GameIcons::BindSprite` et `GameSounds::BindSound`, les liaisons sont insérées dans une `std::map` avec `insert`. Si un même ID numérique est lié plusieurs fois, la première entrée reste celle retournée ; l’objet sprite/son nouvellement créé pour la liaison en collision est détruit. Le client natif utilise donc explicitement une politique « première liaison gagnante ».
+`DXDCreate` initializes the 1.68 client's surfaces with `ScreenBPP = 16`. Sprites and effect routines therefore work with 16-bit words, convert colors to RGB565 (5 bits red, 6 bits green, 5 bits blue), and define a precise DirectDraw color key for transparency. Mask, glow, semi-transparency and seam tests compare these quantized values, sometimes against the video surface's `wRMask`, `wGMask` and `wBMask` masks.
 
-Les définitions Java (`ItemIconDefinitions` et les registres de contenu) reposent sur des maps/entrées statiques et ne reproduisent pas ce contrat d’insertion runtime : une collision de clé lors d’une construction immutable peut échouer au chargement, tandis qu’une map mutable utilisant `put` remplacerait la liaison précédente. Selon le chemin de génération/import, le même contenu dupliqué peut donc être rejeté, remplacer l’icône existante ou empêcher le démarrage, au lieu de conserver silencieusement la première liaison comme le client 1.68.
+The Java code, by contrast, creates the Pixmaps and textures for these paths in `RGBA8888` and relies on OpenGL alpha/blending. The 16-bit color key is not quantized the same way, and a pixel close to the native key can stay visible or become transparent differently; channel blending and semi-transparent gradients also produce different values. Even with the same source images and the same coordinates, pixel-by-pixel rendering therefore cannot be identical in outlines, glows, and object masks.
 
-## 220. Résolution du minuteur système native absente du démarrage Java
+## 206. Window resizing always forbidden in Java
 
-Au démarrage, `main2.cpp` appelle `timeGetDevCaps`, puis `timeBeginPeriod(caps.wPeriodMin)` afin d’augmenter la résolution du minuteur Windows utilisé par les boucles de rendu, de maintenance et les attentes de cadence. Le client termine ensuite cette période avec `timeEndPeriod`. Cette configuration s’ajoute aux temporisations internes de 17/34 FPS et réduit l’arrondi des `Sleep`/mesures `timeGetTime`.
+The 1.68 client has a `bLockResize` setting: border messages (`WM_NCHITTEST`) only block resize regions when this option is on. When it is off, the window can be resized, and the client recomputes its display from the current width/height, with its viewport corrections and resolution-dependent resources.
 
-Le Java s’appuie sur la cadence LibGDX, `delta`, `System.nanoTime` et les services de temporisation de la JVM, sans demande équivalente de résolution du minuteur système. Même lorsque les mêmes durées nominales sont configurées, la granularité de réveil, le jitter des animations, la répétition d’entrée et les délais courts ne suivent donc pas nécessairement le profil temporel du client 1.68.
+`MyGame` always calls `config.setResizable(false)`, with no corresponding Java preference or state to allow resizing. The Java code therefore also forbids the native profiles where `bLockResize` is off, and cannot reproduce interactive resizing followed by updating coordinates, the HUD, and click areas.
 
-## 221. Algorithme de déplacement au clic : poursuite gloutonne native contre A* Java
+## 203. Native tile-seam algorithms not equivalent to Java's Tmpl compositing
 
-`Pf.cpp` ne construit pas une liste de nœuds ni une carte de coûts. `pfSetPosition` mémorise seulement la case cible et la dernière position ; `pfGetNextMovement` compare les signes de `xDif`/`yDif` et renvoie directement l’une des huit directions. Si le joueur n’a pas effectué le pas attendu, la fonction renvoie 0 ; un mode `Force` peut en outre remplacer cette direction par l’angle du curseur, et `pfStopMovement` annule la poursuite. Le client 1.68 suit donc une cible par choix glouton à chaque pas, sans rechercher un détour optimal autour d’un obstacle.
+`Tileset.cpp` contains several dedicated seam-smoothing passes (`Smootage`, `Smootage2`, `Smootage3` and `WaterSmooth`). For each directional variant, they read the surfaces of two terrains and pick the source pixel according to a third surface's mask: some variants test the DirectDraw color key, others test the mask value `0`, `0x7FFF`, or the video card's RGB mask. The native tables cover normal and diagonal directions and distances `X2` through `X5`, with separate tables for water.
 
-Le Java possède `Pathfinding.findPath`, une file de priorité, des scores `g/f`, une heuristique octile, un coût diagonal `1.4142135` et l’examen de voisins jusqu’à trouver une route. Il peut donc calculer un détour, comparer plusieurs chemins et continuer vers la cible malgré un obstacle, tandis que le client natif s’arrête ou choisit seulement le prochain axe vers la cible. Sur une carte avec mur, couloir ou obstacle diagonal, les deux clients ne sélectionnent pas la même suite de cases, même avant de considérer l’autorité réseau et l’interpolation déjà décrites.
+The Java code does not go through these tables or these DirectDraw sentinels. `GroundRenderer.renderTmplTile` reads a Pixmap mask, uses its alpha/color byte as an exact key into a terrain, takes the matching pixel or a fallback transparent terrain, and then caches a composed texture. There is no native-equivalent selection by `Smoothing`/`Smoothing2` variant, RGB color-key test, or `WaterSmooth` pass. Terrain seams and water/land transitions can therefore pick a different source at edges, diagonals, and partially transparent masks, even when tile names and dimensions stay identical.
 
-## 222. Validation des diagonales et interdiction du « corner cutting » différentes
+## 200. Native RTMap cache not invalidated on a world change at identical coordinates
 
-Dans `Pathfinding.java`, tout voisin diagonal est rejeté si l’une des deux cases orthogonales adjacentes est bloquée (`sideX/sideY` ou `sideX2/sideY2`). Le chemin Java ne peut donc pas passer en diagonale dans l’angle formé par deux obstacles, même si la case diagonale elle-même est libre ; il cherche un autre trajet ou déclare la destination inaccessible.
+In `RTMap::CreateRTMap`, the 1.68 client considers the view already loaded when `m_dwLoadX == xPos*2` and `m_dwLoadY == yPos`; the `m_dwLoadW == World` check is explicitly commented out. If the character switches to a different world while keeping the same coordinates, the function can therefore reuse the previous world's image and mask instead of reloading the map and its exploration memory. The world is only reset when the window is destroyed/cached, or on a move that invalidates this cache.
 
-`pfGetNextMovement` natif ne consulte pas la carte de collision pour choisir le prochain pas : après comparaison des écarts, il renvoie directement `2`, `4`, `6` ou `8` pour une diagonale (et le mode `Force` peut encore imposer l’angle du curseur). La collision et l’acceptation du pas sont décidées par le flux serveur/état joueur, pas par ce test local des deux côtés. Dans un angle bloqué, le Java refuse donc l’intention avant émission, alors que le natif peut envoyer la diagonale puis attendre une correction, un refus ou un état inchangé.
+The Java `GuiWorldMap`, by contrast, includes `world` in its key (`renderedTileX`, `renderedTileY`, `renderedWorld`) and rebuilds the view as soon as the world changes. The result diverges in this specific case: the native code can show a stale view, whereas Java switches immediately to the requested world.
 
-## 223. Rapprochement natif de la cible après correction absent du mouvement Java
+Handling of out-of-range worlds also differs: the native code resets `iWorld` to 0 in `LoadRTWorld`, but `CreateRTMap` returns after clearing the output if `World > 7`; the Java code directly clamps the world to `[0,7]` before loading. An invalid world value therefore does not produce the same fallback map.
 
-Le client natif possède `pfNearPosition`, appelé par `MouseAction`, `TFCSocket` et plusieurs branches de traitement des réponses. Cette fonction déplace progressivement la cible mémorisée (`pfSaveXPosition`/`pfSaveYPosition`) d’une case vers la position réelle du joueur avant de recalculer le prochain mouvement. Le chemin automatique est ainsi rapproché de la position autoritative après un retard, une correction ou une réponse de déplacement, au lieu de conserver aveuglément l’ancienne destination.
+## 207. Different first-load synchronization
 
-`PlayerMovement` Java conserve sa destination/réservation de pas et, en cas de divergence, efface l’étape active puis recalcule avec l’entrée courante ; il n’a pas d’équivalent qui rapproche progressivement une cible persistante de la position corrigée avant de reprendre le chemin. Après une correction de position, un clic maintenu ou une réponse retardée simulée, le natif et le Java peuvent donc reprendre vers des cases différentes.
+The native client creates a `FirstInitObject` thread and keeps `g_bFirstLoadComplete` false until this initialization finishes. The loading loop keeps drawing `LOAD<ScreenW>.PCX`, the progress text, and the tip of the day, then explicitly waits on the flag before continuing. This thread initializes the object list (`Objects.Create`) and notably creates the in-memory sounds `Open Box`, `Equip` and `Vampire Dying` before releasing startup.
 
-## 224. Fenêtres temporelles de double-clic non uniformes
+The Java `LoadingScreen` queues every WAV/MP3/OGG found under the sounds folder and, in parallel, launches `startMapPreloadAsync()`. Moving on to `CharacterSelectionScreen` depends on the `AssetManager` finishing, not on `mapPreloadExecutor` finishing; maps can therefore still be loading after the selection screen and get opened on demand via `getOrLoadMapReader`. The native code blocks its startup step on its own dedicated initialization, whereas Java allows UI progress while a map preload is still incomplete.
 
-`GameUI` natif fixe `ClickTime` à 250 ms et `RootBoxUI` compare directement deux horodatages `timeGetTime` pour transformer le second clic en `GWIN_MSG_DBLCLICK`. Cette même convention alimente les listes, les panneaux et les actions de monde qui reçoivent `DM_DOUBLE_CLICK` ; elle est indépendante du délai configuré par l’utilisateur dans Windows.
+## 208. Native text editor much more limited than the Java chat editor
 
-Le Java ne possède pas une constante globale équivalente : `Inventory` reconnaît un double-clic sous 300 ms, tandis que `ClickToMoveHandler` utilise 350 ms pour la barre rapide. Les autres écrans passent par les événements LibGDX ou leurs propres handlers. Un second clic entre 250 et 350 ms peut donc être un double-clic natif mais un clic simple dans un écran Java, ou déclencher une utilisation Java là où le client 1.68 ne l’aurait pas classée comme double-clic.
-## 225. Contrôles de défilement natifs continus et répétition au maintien absents des listes Java
+The 1.68 client's `NewInterface/EditUI.cpp` only handles insertion at the cursor, Backspace, DeleteChar, left/right movement, and CTRL word-jumping. `LeftClick` is still a TODO and does not place the cursor in the text. There is no selection anchor, no SHIFT selection, no copy/cut/paste, and no undo; the default limit is 256 characters, and an optional filter only decides whether an incoming character is accepted.
 
-`ScrollUI` natif est un contrôleur partagé par les listes, grilles, textes, inventaire, coffre, commerce, compétences, guilde, options et historique du chat. Un clic sur une flèche déplace d’abord d’une ligne, puis le maintien répète l’action toutes les 100 ms. Un clic dans la piste saute de 5 lignes selon la moitié visée ; le bouton peut être glissé et convertit sa position en `linePos`. Les bornes sont centralisées sur `0..listSize-1`, et chaque changement appelle `ScrollChanged`.
+`GameChat.java`, by contrast, implements selection (SHIFT and CTRL+A), clipboard (CTRL+C/X/V), undo (CTRL+Z), HOME/END movement, history, and timed repeat for left/right/Backspace. Pasting replaces line breaks with spaces and respects the limit after removing the selection. Java behavior is therefore functionally richer than the native 1.68 editor; an ergonomics or keyboard-test comparison cannot be considered equivalent even though the 256-character maximum coincides.
 
-Le Java n’a pas ce contrat global : `GuiChat` fait défiler la molette par 3 lignes, `GuiInventory` par pixels (`amountY * 24`), `GuiOptionList` par une ligne, et `GuiListScreen` par pages de six entrées. Les listes de commerce Java n’exposent pas le même bouton de piste/glisser ni le saut natif de 5 lignes, et le maintien d’une flèche n’est pas traité par une répétition commune à 100 ms. À position identique du curseur ou après un maintien, le nombre de lignes visibles, le moment de la mise à jour, le son et la sélection active divergent donc du client 1.68.
+## 209. Durability and repair added by Java with no native client equivalent
 
-## 226. Matrice des touches de déplacement et dépendance au pavé numérique différentes
+In `Packet.cpp`, the 1.68 client does not keep a local per-item durability gauge. When an `RQ_GetObject` response flags an item as unusable/broken, it shows the localized message "The object is broken and cannot be used" and then removes the identified object from `VisualObjectList`. Other item errors mark the unit as missing or remove it; no durability value, per-hit wear, or repair screen is computed by this client.
 
-Dans `TFCSocket.cpp`, le déplacement manuel natif lit l’état DirectInput brut. Les huit directions acceptent les flèches, et aussi `NumPad 2/4/6/8` lorsque le calcul local de `NumLock` les rend actifs ; `NumPad 1/3/7/9` et `End/Home/PgDn/PgUp` fournissent en plus les quatre diagonales. Avant d’émettre, le client refuse le déplacement si Ctrl ou Shift est maintenu, si `ChestUI` ou `TradeUI` bloque le monde, ou si `DoNotMove`/`boKeyProcess` l’interdit. Chaque touche est testée séparément dans la boucle, après la combinaison diagonale, avec une vérification `GridBlocking` sur l’offset correspondant.
+The Java code, by contrast, introduces `ItemDurabilityService` with per-inventory-entry and per-equipped-slot percentages, wear on attack and on death, blocking bonuses/attacks when equipment is broken, a gauge display, and a `RepairScreen` that charges for individual or bulk repair. These rules are therefore an additional Java mechanic: they can break, implicitly unequip, or locally repair an item in situations where the 1.68 client would only have received a server error and removed the item in question, with neither the same economy nor the same instance state.
 
-`GameInputHandler` Java ne lit que WASD (avec variantes Q/Z) et les quatre flèches : aucune touche du pavé numérique, aucune substitution Home/End/PgUp/PgDn et aucune dépendance équivalente à l’état NumLock n’est présente. Le filtrage Java repose principalement sur `textInputActive`, et ne reproduit pas la combinaison native « Ctrl/Shift bloque le déplacement » ni les mêmes états `ChestUI`/`TradeUI` et `DoNotMove`. Une pression du pavé numérique, de Shift ou de Ctrl peut donc déplacer le personnage dans un cas où le client 1.68 ne l’aurait pas fait, tandis que plusieurs diagonales natives ne produisent aucune entrée Java.
-## 227. Aide contextuelle des grilles au clic droit non reproduite globalement
+## 210. Herb gathering added to Java
 
-`GridUI::RightMouseUp` natif traite tout clic droit bref dans la grille : sur une case vide, il appelle l’aide de la grille ; sur une case occupée, il affiche l’aide de l’élément si `allowHelp` est actif puis transmet aussi `RightMouseUp` à l’élément ; hors des limites, il affiche encore l’aide de la grille. Cette résolution est commune aux grilles d’inventaire, coffre, échange et autres panneaux, et s’effectue après la capture de la sélection au `RightMouseDown`.
+The 1.68 client's tree contains no herb manager, no harvestable node, no gathering channel, and no gathering request. The client's world interactions concern items, units, chests, spells, and movement; no native class spawns random plants, marks them as harvested, or hands out an item after a channeling time.
 
-Le Java ne possède pas ce routage d’aide générique. `GroundItemClickHandler` affiche seulement le nom d’un drop sous le curseur et `ObjectClickHandler` seulement le nom d’un objet mappé ; un clic droit sur une case vide, hors objet, ou sur un contrôle sans handler dédié est consommé sans aide de grille. Le Java ne transmet donc pas systématiquement le clic droit à la cellule sélectionnée ni ne distingue l’aide de la grille de l’aide de l’élément comme le client 1.68.
-## 228. Format et emplacement de configuration utilisateur incompatibles
+The Java code, by contrast, has `HerbManager`, `HerbNode` and `HarvestChannel`. It rolls a definition among several weighted herbs, creates nodes on the map, shows their name on hover/right-click, enforces a channeling duration and a movement tolerance, and remembers harvested tiles for the session. This mechanic and its availability rules are therefore entirely additional to the native 1.68 client; they can display an interaction, consume time, and produce an item where the original client had no harvestable element at all.
 
-`Global::ReadClientConfig` natif construit automatiquement le chemin `CSIDL_PERSONAL\Rebirth\T4CV2`, crée les répertoires, puis lit `T4C.dat` en binaire. Le fichier contient dans un ordre et des tailles fixes le nom de compte, l’adresse IP, le statut AFK, un message AFK de 2048 octets, les drapeaux debug/FPS/position, `FirstTimeAddon` et `WebpatchEnable`; `WriteClientConfig` réécrit ces mêmes blocs. Le client recharge cette configuration avant l’initialisation de la langue, des captures, des journaux et du launcher.
+## 214. Native chat routing syntaxes absent from the Java path
 
-Le Java charge `game_preferences.json`, `characters.json` et `player_state.json` depuis le répertoire de travail, avec Gson et des champs JSON indépendants. Il ne lit ni n’écrit `T4C.dat`, ne crée pas le chemin utilisateur natif et ne conserve pas dans ce fichier binaire les mêmes informations de compte/IP, AFK, addon, webpatch et flags de diagnostic. Copier un profil 1.68 ou changer le répertoire de lancement ne produit donc pas le même état persistant, et une configuration native existante est invisible pour Java.
-## 229. Système de domestication et de compagnon ajouté dans le Java
+In `main2.cpp`, the 1.68 client interprets the text's first character before sending the packet: `:message` becomes an `RQ_Shout`, while the short strings `:)` and `:p` remain ordinary messages (with the historical exception of `:k`/`:K`). `/name message` becomes a private page `RQ_Page` if the page option is on; a quoted recipient allows multi-word names, for example `/"First Last" message`. The client also blocks sending a page while in AFK mode and shows local feedback if the recipient is ignored. Finally, `;message` is sent to the currently selected channel via `SendMessageToCurrentChannel`.
 
-Le client 1.68 utilise le terme `Puppet` pour la composition visuelle d’un personnage : `RQ_PuppetInformation`/`SetPuppet` transmettent les parties d’équipement et reconstruisent les couches du sprite. Dans les sources natives du client, aucune séquence de domestication, barre de canalisation, registre de compagnon, mode d’IA, perte de compagnon ou sauvegarde d’un animal apprivoisé n’a été trouvée ; un monstre reste une unité visuelle/combat reçue du serveur.
+The Java `GameChat` hands the full text to a single `submitHandler`. `MainGameScreen` then only routes commands starting with `.` to `GmCommandProcessor`; otherwise it shows the text above the player and possibly forwards it to the active NPC conversation. No equivalent Java parser for `:`, `/`, `;`, quoted recipients, the AFK state, or the ignore list is present in this path. A Java player can therefore produce local/NPC text where the 1.68 client would have changed packet type, channel, and send control.
 
-Le Java ajoute une mécanique complète : `TameValidator` vérifie la cible et le niveau, `TameChannel` impose une canalisation et une tolérance de déplacement, `TamedCompanionFactory` transforme le monstre, `CompanionManager` gère le compagnon, ses modes, son XP et ses attaques, et `PlayerStateStore` le restaure entre les sessions. Un sort de domptage peut donc créer et conserver une unité alliée dans Java alors qu’aucun parcours équivalent n’existe dans le client 1.68 ; les combats, dégâts, effets et règles de disparition qui en découlent sont des comportements supplémentaires.
-## 230. Source temporelle et seuils jour/nuit différents
+## 215. Fatal exception handling and crash reporting not equivalent
 
-Le client natif reçoit l’heure complète avec `RQ_GetTime` (`seconde`, `minute`, `heure`, jour, semaine, mois et année), la recopie dans `g_TimeStructure`, puis avance cette structure dans la boucle réseau avec `AddSeconde`. `NTime::SetLight` applique des paliers précis : nuit 00:00–04:00 et 21:00–24:00, aube 04:00–08:00, transition vers le jour 08:00–10:00, jour 10:00–19:00 et transition du soir 19:00–21:00. Les couleurs sont calculées séparément en canaux entiers 5 bits, et les mondes 1/2 ou certaines zones du monde 3 forcent en plus les teintes donjon/caverne.
+The native client installs `CExpFltr::Filter` via `SetUnhandledExceptionFilter`. For an access violation, division by zero, stack overflow, illegal instruction, or other Win32 exception, it builds a diagnostic, calls `LogException` (date, address, code/description, and register context), runs the shutdown procedure, and then terminates the process with code 1. The filter also caps the number of faults and has an auto-restart configuration.
 
-`DayNightCycle` Java démarre par défaut à 07:00, avance avec le `delta` local de LibGDX et sauvegarde une heure flottante dans `PlayerStateStore`; aucun paquet Java équivalent à `RQ_GetTime` ne la recale sur une horloge serveur. Ses seuils sont nuit 18:00–06:00, transitions autour de 05:00–07:00 et 17:00–19:00, avec un overlay noir global. À une même heure nominale, les plages d’obscurité, la couleur, la précision temporelle et la réaction aux mondes souterrains ne sont donc pas celles du client 1.68.
-## 231. Quantification et rejet des coordonnées souris différents
+The Java runtime has no equivalent installation of `Thread.setDefaultUncaughtExceptionHandler`, no crash report with machine context, no global fault counter, and no configured restart in the game path. Local errors are often caught and ignored, while an uncaught exception depends on the JVM's generic behavior. Diagnostics, the produced file, the moment of closing, and the possibility of resuming after a crash therefore differ from the 1.68 client.
 
-`DirectXInput::SetVirtualGrid` natif définit une grille virtuelle dépendante de la fenêtre. `GetStatus` convertit ensuite la souris en case en appliquant les offsets historiques du client (`+48` sur X et `-8` sur Y), puis vérifie que la case appartient à `VirtualGrid`. Une position hors grille ou invalide est normalisée en `(0,0)` avant d’être transmise aux actions ; le clic n’est donc pas interprété comme une coordonnée arbitraire hors monde.
+## 216. Encrypted VSB audio bank and chunked loading absent from Java
 
-Le Java déprojette directement le pixel avec la caméra LibGDX, puis plusieurs handlers convertissent séparément avec `(int)(world / GRID_W)` et `(int)(world / GRID_H)`. La caméra, le viewport et le point d’origine remplacent les offsets/limites natifs, sans grille virtuelle commune ni valeur sentinelle `(0,0)` pour un clic invalide. Un clic sur les bords, dans une zone négative ou pendant un changement de caméra peut ainsi viser une autre tuile, atteindre un handler d’objet ou déclencher un déplacement là où le client 1.68 aurait rejeté/normalisé la position.
-## 232. Nettoyage des actions et de l'interface pendant un changement de monde
+The native client bundles effects and music in `gamefiles\T4CGameFile.vsb`. `VSBDataBase::LoadIndex` reads an index of IDs, offsets, sizes, sample rate, and bit depth; `MemMapFile::CpyMemory` then decrypts the bytes with a position-dependent XOR table (4096-byte blocks). `LoadChunck` supplies segments to `T3VSBFilter`, which keeps a reference count and only loads the portions the decoder needs. Startup also checks integrity and can rebuild/decompress the VSB bank.
 
-- Le client natif traite le changement de monde comme une transition exclusive : il active `DoNotMove`, appelle `CloseAllUI()`, arrête le pathfinding, réinitialise la musique et ne réautorise le jeu qu'après le chargement et le fondu de la nouvelle zone. Les fenêtres et les interactions de l'ancienne zone ne peuvent donc pas rester actives pendant le transfert.
-- Dans `MainGameScreen.switchMapForZ`, le Java reconstruit le renderer et les gestionnaires de NPC/monstres, mais n'appelle pas `GuiManager.close()` et ne possède pas de verrou global équivalent. Il annule explicitement la récolte (`cancelHarvest()`), mais pas le canal d'apprivoisement ni les autres progressions/effets de sort en cours. Une fenêtre ouverte ou une action transitoire peut donc survivre au changement de carte selon son propre état, au lieu d'être invalidée atomiquement comme dans le client 1.68.
-## 233. Réinitialisation et repopulation des unités autour du joueur
+The Java `SoundManager`, by contrast, looks up an individual audio file in `Paths.SOUNDS_DIR`, loads it as a `Sound` or `Music` via LibGDX, and then ignores loading errors. No VSB index reader, positional XOR decryption, chunk cache, audio reference counter, or `T4CGameFile.vsb` check is used by the Java runtime. An install containing only the native bank, a sound ID with no separate file, or a partially corrupted bank therefore does not produce the same loading or fallback behavior.
 
-- Après un changement de monde, le client natif exécute `Objects.DeleteAll()` sous verrou, reconstruit les objets statiques/animés, déplace le joueur, puis envoie explicitement le paquet serveur `GetNearUnits` (opcode 60) avant de reprendre l'état de jeu. Les unités visibles sont donc une nouvelle fenêtre de proximité fournie par le serveur et non un reliquat de la zone précédente.
-- `switchMapForZ` Java recrée `NPCManager` et `MonsterManager` à partir des spawns locaux de la carte et conserve séparément le compagnon. Il n'existe pas de requête `GetNearUnits`, de registre d'unités distantes ni de phase serveur équivalente ; le contenu visible dépend donc du fichier de carte et des gestionnaires locaux, avec une sémantique différente pour les joueurs/monstres apparus ou disparus pendant la transition.
-## 234. Sélection et bornage de quantité pour les transferts d'objets
+## 217. Total resolution of unknown icons and sounds vs. Java `null` returns
 
-- Le client natif propose dans `ChestUI` et `TradeUI` une popup de quantité commune avec curseur borné par la quantité disponible, champ numérique filtré, longueur maximale de 9 caractères et validation qui rabat une valeur supérieure au stock réel. Pour une quantité maximale de 1, la popup renseigne automatiquement `1` et valide directement ; la quantité confirmée est ensuite envoyée dans une requête de transfert dédiée.
-- Le Java n'a pas de popup équivalente ni de transfert de piles vers un coffre ou un échange joueur-à-joueur. `ChestService` ouvre un loot et le dépose au sol, tandis que l'inventaire et la boutique manipulent localement des clés/répétitions et des incréments unitaires. Une opération « déplacer N objets » et ses bornes/confirmations ne suivent donc pas le comportement UI et protocolaire du client 1.68.
-## 235. Arrêt coordonné des threads internes
+`GameIcons::operator()` and `GameSounds::operator()` are designed as total functions: an unregistered ID returns a `???` sprite or the generic `Generic Drop Item` sound, respectively. UI and drag-and-drop calls therefore always keep a valid visual/audio object even when a content binding is missing.
 
-- Le client natif possède des états d'arrêt séparés pour le son, le contrôle sonore, le dessin, la maintenance, la souris et le CD. `AppManagement::AsyncClose` notifie d'abord les interfaces, positionne `g_boQuitApp`, réveille les événements bloquants, attend ou suspend les threads encore actifs et libère ensuite les handles/ressources. Le réseau, le rendu, les entrées et les sons ne sont donc pas simplement détruits dans l'ordre de l'appelant.
-- Le Java est principalement mono-boucle LibGDX : `MainGameScreen.dispose()` libère ses ressources et `MyGame.dispose()` arrête le préchargeur de cartes, mais il n'existe pas d'état d'arrêt partagé entre entrée, logique réseau, rendu et audio, ni de coordination équivalente de files/threads. Une sortie pendant un chargement, une action ou une lecture audio ne suit donc pas les mêmes garanties d'achèvement et de nettoyage que le client 1.68.
-## 236. Clé de tri des objets visuels différente
+The Java `SpriteLoader`, by contrast, returns `null` for a missing name, an out-of-range ID, an empty image, or an unavailable palette; `SoundManager` silently gives up playback if no file can be loaded. Java calls therefore have to test for absence and can drop the drawing, the sound feedback, or the UI element, whereas the 1.68 client always displayed/played its identified fallback. The result of incomplete content data is therefore not equivalent.
 
-- `VisualObjectList::Sort` natif trie les unités selon une clé calculée à partir de `OY + OC`, puis départage les égalités avec `OC`, `OX` et l'identifiant d'objet attaché. Le tri intervient après le filtrage des objets hors fenêtre et la vérification des files de mouvement/enfants ; les objets attachés peuvent donc rester groupés avec leur parent et leur ordre de dessin dépend de la position interpolée, pas seulement de la tuile.
-- Le Java sépare les passes sol, décors, entités et effets. `DecorRenderer` utilise une clé basée sur le nom du décor, la coordonnée Y et `getZOrderFast`, tandis que les entités sont rendues dans leur propre parcours ; aucune clé commune équivalente à `OY + OC → OC → OX → AttachID` n’arbitre toutes les catégories. Des chevauchements entre décor, unité, ombre et effet peuvent donc être dessinés dans un ordre différent du client 1.68, même lorsque les positions de grille sont identiques.
-## 237. Fenêtre de culling et conservation des objets hors écran différentes
+## 218. Encrypted language catalogues and native fallback different from Java JSON
 
-- Le client natif conserve une fenêtre fixe autour du joueur via `VisualObjectList::RangeWidth` et `RangeHeight`, indépendante du viewport graphique. Pendant la mise à jour, un objet dont `abs(OX) > RangeWidth` ou `abs(OY) > RangeHeight` est supprimé s’il est de type inférieur à `30000`, n’a pas `allowOutOfBound` et ne possède pas d’enfant (`Count == 0`). Les objets attachés décrémentent alors le compteur de leur parent ; certains objets système et les objets marqués hors-borne échappent à cette suppression. Les objets statiques et animés sont en outre réinjectés sur les bords avec des comparaisons exactes à `RangeWidth - 1`/`RangeHeight - 1`.
-- Le Java calcule `renderStartX/Y` et `renderEndX/Y` depuis la caméra, ajoute un buffer de trois tuiles et un débord décor séparé, puis `NPCManager` et `MonsterManager` ignorent les entités hors de cette zone pendant leur mise à jour. Cette logique est une optimisation de visibilité liée à la caméra : elle ne supprime pas selon une règle commune de durée de vie, ne porte pas d’équivalent à `allowOutOfBound`, `Count`, `Type >= 30000` ou `AttachID`, et les décors/entités ont des marges distinctes. Une unité ou un objet natif conservé ou détruit au bord de la fenêtre peut donc être mis à jour, réinjecté ou disparaître à un moment différent dans Java.
-## 238. Prétraitement conditionnel des scripts PNJ non équivalent
+`LocalString::LoadAllStrings` opens `English.elng` or `French.elng` in binary, then decrypts each byte with a deterministic pseudo-random table of 7,823 positions. The decoded file is then parsed into `[id]` entries, and a requested language that is missing falls back to English; an index beyond the entry count falls back to the last loaded string. The GUI and help catalogues follow the same indexed-binary-resource principle.
 
-- Les sources natives des PNJ sont des fichiers C/C++ intégrés au client/serveur : elles contiennent des directives de préprocesseur (`#ifdef`, `#ifndef`, `#define`, `#endif`) et des blocs commentés qui sélectionnent ou retirent des dialogues, quêtes et handlers selon la variante compilée. Le comportement réellement disponible dans une build 1.68 dépend donc de la configuration de compilation, avant même l'exécution du dialogue.
-- Le Java passe le texte de `originalScript.sourceScript()` directement à `NpcScriptEngine`. `statements(...)` ignore seulement les lignes vides, `//`, `/*` ou `*` ; aucune passe de préprocesseur ne résout les symboles ou ne supprime les branches `#ifdef/#else/#endif`. Les directives présentes dans les scripts importés deviennent donc des lignes inconnues ou du texte non exécutable, et les variantes de build natives ne peuvent pas être sélectionnées de la même façon. Deux installations utilisant une définition native différente peuvent ainsi partager le même comportement Java, alors que le client/serveur 1.68 n'exécutait qu'une branche compilée.
-## 239. Sélection et double-clic des listes génériques différents
+The Java `I18n` reads `assets/i18n/lang.json` directly in UTF-8 with text keys. A missing/empty file throws an exception, a missing key returns the key or the supplied fallback, and there is no decryption, entry-size check, or fallback to the last string. The Java code therefore cannot directly consume the 1.68 client's `.elng` catalogues and does not react the same way to a missing/corrupted language or translation entry. (As with section 40, this is an intentional simplification for this project's English-only scope — see `AGENT.md` — not a gap that needs closing.)
 
-- `ListUI` natif est un contrôle commun à plusieurs fenêtres : il maintient une sélection d'item, de colonne et de ligne. Un clic gauche sélectionne la ligne, un double-clic est détecté dès le `LeftMouseDown` et déclenche l'action de l'item, tandis qu'un clic droit sélectionne également l'item et affiche son aide (ou l'aide par défaut de la liste). La sélection reste disponible pour l'événement visiteur, y compris après un défilement, et les colonnes d'une même ligne sont manipulées ensemble.
-- Le Java n'a pas de `ListUI` central avec ce contrat. `GuiListScreen` compose des boutons/rows propres à chaque écran ; les sélections et callbacks sont implémentés séparément dans `ShopScreen`, `RepairScreen`, `QuestScreen`, etc. Aucun routage générique ne reproduit simultanément le double-clic natif, la sélection de colonne/ligne, l'aide au clic droit et la transmission de la sélection à un visiteur. Un clic droit ou un double-clic sur une liste Java peut donc être ignoré ou suivre le handler local de l'écran, au lieu de sélectionner et d'ouvrir l'aide/action de la ligne comme en 1.68.
-## 240. Pagination des paragraphes et retour à la ligne différents
+## 219. Different collision policy for icon and sound bindings
 
-- `TextPageUI` natif ne stocke pas seulement une chaîne déjà rendue : il conserve une liste de paragraphes avec texte, couleur, taille de police, nombre de lignes calculé et indicateur `allowNewLine`. `AddText` recalcule le nombre total de lignes selon la largeur de la zone, `UpdateViewSize` ajuste la capacité visible et `ScrollChanged` reconstruit les `TextObject` affichés à partir de l'offset courant. Le même contrôle peut donc mélanger des paragraphes colorés, des retours forcés et du texte automatiquement reflué dans une zone défilante.
-- Le Java répartit ce besoin entre `GuiBoxedText`/`GlyphLayout`, `SystemMessage` et `GameChat`. Le wrapping, la couleur, la hauteur et le défilement sont recalculés par écran ou par composant ; aucun modèle commun de paragraphe avec `allowNewLine`, taille de police stockée et offset de lignes natif n'est exposé. Un texte injecté dans une aide, une page ou un journal peut donc produire des coupures, une hauteur et une position de défilement différentes, même lorsque le contenu et la largeur visuelle semblent identiques.
-## 241. Cycle de la touche Échap et état du menu différents
+In `GameIcons::BindSprite` and `GameSounds::BindSound`, bindings are inserted into a `std::map` with `insert`. If the same numeric ID is bound more than once, the first entry remains the one returned; the sprite/sound object newly created for the colliding binding is destroyed. The native client therefore explicitly uses a "first binding wins" policy.
 
-- Dans `RootBoxUI::VKeyInput`, Échap ne ferme pas simplement la fenêtre active. Si une fenêtre plein écran est ouverte, le natif masque le chat et le TMI puis restaure les macros ; sinon il fait progresser l'état persistant du menu (`MENU_BOTH` → chat seul/TMI → aucun, selon la combinaison courante), affiche ou masque `SideMenu` et `ChatterUI`, et met à jour `dwMenuState`. Une fenêtre au premier plan reçoit toutefois la touche en priorité, ce qui rend le cycle dépendant du focus global.
-- Le Java donne à chaque écran sa propre règle Échap : les écrans appellent généralement `GuiManager.close()`, puis `MainGameScreen` ouvre `OptionsScreen` lorsqu'aucune interface n'est active. Il n'existe pas de cycle persistant chat/TMI/macros, ni de restauration/minimisation coordonnée des panneaux. Une pression répétée d'Échap ne produit donc pas les mêmes états intermédiaires et peut ouvrir les options Java là où le client 1.68 ne faisait que basculer l'interface de proximité.
-## 242. Filtrage élémentaire du livre de sorts absent du Java
+The Java definitions (`ItemIconDefinitions` and the content registries) rely on static maps/entries and do not reproduce this runtime insertion contract: a key collision during an immutable build can fail at load time, while a mutable map using `put` would replace the previous binding. Depending on the generation/import path, the same duplicated content can therefore be rejected, replace the existing icon, or prevent startup, instead of silently keeping the first binding the way the 1.68 client does.
 
-- `SpellUI` natif expose sept boutons d'élément (feu, eau, air, terre, lumière, ténèbres et normal). Le clic reconstruit temporairement l'index des pages en ne gardant que les sorts de l'élément choisi, replace la vue sur la première page du résultat, puis restaure la page précédente si aucun sort ne correspond. Les quatre emplacements de la page sont donc une vue filtrée de la liste reçue, et non toujours les quatre sorts consécutifs du livre complet.
-- `SpellBook` Java reconstruit toujours les pages avec `currentPage * 4` dans la liste complète `spells`. Il n'a pas de boutons/état de filtre élémentaire ni de recalcul d'index par élément ; un joueur ne peut donc pas obtenir la même vue ciblée, le même retour de page ou le même comportement « aucun résultat » que dans le client 1.68, même si chaque `SpellData` possède une information d'élément exploitable par le moteur de sort.
-## 243. Rappel du dernier sort lancé absent du Java
+## 220. Native system timer resolution absent from Java startup
 
-- `SpellUI` natif conserve `lastSpell` à chaque lancement réussi/engagé. `CastLastSpell` recherche ensuite cet identifiant dans le livre et relance le sort avec `autoTargetSelf == false` et le chemin `noCallback` prévu pour les actions répétées ; `MouseAction` appelle cette fonction dans plusieurs parcours de clic/attaque. Le rappel dépend donc de l'identifiant du sort encore présent dans la liste, et non du dernier emplacement de macro utilisé.
-- Le Java ne possède pas de champ ou de service `lastSpell` équivalent. `MainGameScreen` garde des états transitoires (`selectedTargetedSpell`, `currentAttackSpell`, `lastClickedBuffSpellName`) et les quick-slots mémorisent un nom par emplacement, mais aucun geste général ne recherche puis ne relance le dernier sort par son identifiant après fermeture du livre ou changement de cible. Un rappel natif peut donc relancer le sort alors que le Java ne fait rien, conserve seulement une cible en attente ou réutilise un slot différent.
-## 244. Priorité de type de cible pour les sorts différente
+At startup, `main2.cpp` calls `timeGetDevCaps`, then `timeBeginPeriod(caps.wPeriodMin)` to increase the resolution of the Windows timer used by the render loop, maintenance, and cadence waits. The client later ends this period with `timeEndPeriod`. This configuration is layered on top of the internal 17/34 FPS timing and reduces rounding in `Sleep`/`timeGetTime` measurements.
 
-- Avant de capturer le clic de ciblage, `SpellUI::CastSpell` configure le mode de grille des objets : `monsterPriority` pour les sorts visant les monstres, `playerPriority` pour les joueurs et `equalPriority` pour les sorts acceptant tout type d'unité. Le gestionnaire natif peut ainsi résoudre une superposition selon la catégorie autorisée ; pour un sort d'unité, `CastSpellUnit` n'envoie rien si aucun identifiant d'unité valide n'est trouvé, tandis que le sort positionnel peut envoyer une position sans unité.
-- Le Java classe principalement le sort avec `isHostileUnitSpell`, `isTameSpell`, `isPositionTargetSpell` et des handlers distincts. Il sélectionne un monstre/NPC local ou une position selon le chemin choisi, sans mode de grille commun qui arbitre une superposition joueur-monstre et sans la même distinction native entre absence d'unité (aucun envoi) et position de secours. Dans une case contenant plusieurs catégories ou une cible devenue invalide entre le clic et le lancement, le candidat retenu et l'action résultante peuvent donc différer.
-## 245. Ordre des sorts dans le livre différent
+The Java code relies on the LibGDX cadence, `delta`, `System.nanoTime`, and the JVM's own timing services, with no equivalent request to raise the system timer's resolution. Even when the same nominal durations are configured, wake-up granularity, animation jitter, input repetition, and short delays therefore do not necessarily follow the 1.68 client's timing profile.
 
-- `SpellUI::UpdateSpells` trie systématiquement la liste reçue avec `Spell::operator<` : d'abord par élément numérique, puis par niveau croissant. Les quatre cases d'une page et le résultat des filtres élémentaires suivent donc cet ordre, quelle que soit l'ordre d'arrivée du paquet serveur.
-- `SpellBook` Java parcourt `player.getSpells()` dans son ordre courant et ajoute chaque sort sans tri. Les définitions globales Java sont, elles, triées par identifiant lorsqu'elles sont découvertes, mais ce tri n'est pas appliqué à la liste personnelle dans `loadSpells()`. À liste reçue identique, les sorts peuvent donc apparaître sur des pages et dans des positions différentes du client 1.68, ce qui change aussi le sort sélectionné par un clic ou un glisser-déposer.
-## 246. Description d'un sort dans le livre non affichée de la même façon
+## 221. Click-to-move algorithm: native greedy pursuit vs. Java A*
 
-- Lors de `SpellPageUI::FillSpellPage`, le natif place `spell.desc` dans l'aide du contrôle (`GetHelpText()->SetText`). La description est donc disponible au survol/clic d'aide de chaque case, en plus du nom, niveau, durée, type, coût et icône affichés dans la page.
-- `SpellBook.addSpellEntry` Java affiche uniquement le nom, type, durée, mana, niveau et icône. La méthode ne crée pas d'aide ou de tooltip à partir de `SpellData` (et son `onTouchDown` démarre un glisser-déposer sur l'icône). La description reçue/définie pour le sort n'est donc pas consultable depuis la case du livre comme dans le client 1.68 ; le geste peut engager un drag là où le natif fournit l'information contextuelle.
-## 247. Conversion d'affichage des durées de sorts différente
+`Pf.cpp` does not build a node list or a cost map. `pfSetPosition` only remembers the target tile and the last position; `pfGetNextMovement` compares the signs of `xDif`/`yDif` and directly returns one of the eight directions. If the player has not made the expected step, the function returns 0; a `Force` mode can additionally replace this direction with the cursor's angle, and `pfStopMovement` cancels the pursuit. The 1.68 client therefore follows a target by a greedy choice at every step, with no search for an optimal detour around an obstacle.
 
-- Le client natif reçoit une durée numérique en millisecondes et la formate dans `FillSpellPage` selon plusieurs branches : durée supérieure à une minute en minutes avec secondes résiduelles, durée supérieure à une seconde en secondes, durée nulle comme « instantané », et durée inférieure ou égale à une seconde avec une présentation dédiée. Les libellés et la combinaison minutes/secondes proviennent du catalogue localisé, pas d'une chaîne fournie par le serveur.
-- `SpellData` Java stocke `duration` comme `String` et `SpellBook` l'affiche directement ; une valeur vide devient seulement le texte codé `instant`. Il n'existe pas dans ce chemin de conversion millisecondes → minutes/secondes ni de branche pour les durées sub-secondes. Une définition numérique, une durée fractionnaire ou une traduction différente peut donc apparaître littéralement ou avec un format différent de la fiche native.
-## 248. Type et interprétation du coût de mana différents
+The Java code has `Pathfinding.findPath`, a priority queue, `g/f` scores, an octile heuristic, a diagonal cost of `1.4142135`, and neighbor examination until it finds a route. It can therefore compute a detour, compare several paths, and keep heading to the target despite an obstacle, whereas the native client stops or only picks the next axis toward the target. On a map with a wall, a corridor, or a diagonal obstacle, the two clients therefore do not pick the same sequence of tiles, even before considering the network authority and interpolation already described.
 
-- Dans la structure native `SpellUI::Spell`, `manaCost` est un `WORD` reçu avec la liste de sorts ; `FillSpellPage` le convertit avec `itoa` et affiche donc une valeur entière fixe. Le coût visible est le champ transmis pour ce sort, sans expression aléatoire à évaluer dans l'interface.
-- `SpellData` Java stocke au contraire `manaCost` comme `String` et le livre l'affiche sans conversion. Le moteur Java peut ensuite interpréter cette chaîne comme une formule de dés (`DiceFormula`) dans `SpellCastingService`. Une définition telle que `1d6`, une chaîne vide ou une valeur non numérique peut donc produire un texte et un coût effectif différents du couple natif « entier reçu / entier affiché ».
-## 249. Couleurs et aide des compétences différentes
+## 222. Different diagonal validation and "corner cutting" prevention
 
-- `CharacterUI::UpdateSkills` choisit la couleur de la valeur selon deux axes natifs : compétence utilisable ou non (`bUse`) et valeur effective supérieure, égale ou inférieure à la valeur vraie. Il produit ainsi six états visuels (gris/vert foncé/rouge si inutilisable, blanc/vert pâle/rouge pâle si utilisable) et compose l'aide avec la description et le couple `dwStrength / dwTrueStrength`.
-- `Statistics` Java ne rend que trois compétences fixes et `buffedStatLabel` affiche la valeur effective seulement lorsqu'elle est supérieure, avec vert, sinon la valeur de base en blanc. Il n'a pas la matrice rouge/gris de `bUse`, ne distingue pas une valeur effective inférieure dans l'affichage et ne compose pas l'aide native description + `effective/true`. Un bonus négatif, une compétence désactivée ou une compétence temporairement inutilisable n'a donc pas le même feedback visuel.
-## 250. Modes d'activation des boutons différents
+In `Pathfinding.java`, any diagonal neighbor is rejected if either of the two adjacent orthogonal tiles is blocked (`sideX/sideY` or `sideX2/sideY2`). The Java path therefore cannot cut diagonally through the corner formed by two obstacles, even if the diagonal tile itself is free; it looks for another route or declares the destination unreachable.
 
-- `ButtonUI` natif distingue le clic simple et le double-clic dans `LeftMouseUp`, joue les sons de pression/libération séparément et possède un mode `enableDragCycle` : pendant `DragCycle`, l'événement peut rappeler périodiquement `LeftClicked` tant que le bouton est maintenu. Le contrôle peut donc servir à des boutons répétés ou à des actions ayant un traitement spécifique du double-clic.
-- `GuiButton` Java ne porte qu'un `Runnable` unique appelé lors d'un relâchement gauche resté dans la zone ; il ne possède ni callback double-clic, ni mode de répétition pendant drag, ni séparation configurable des sons pression/libération. Un maintien, un double-clic ou un relâchement après déplacement ne déclenche donc pas les mêmes callbacks qu'un `ButtonUI` natif configuré pour ces modes.
-## 251. Visibilité et cadence du curseur de saisie différentes
+The native `pfGetNextMovement` does not consult the collision map to pick the next step: after comparing the deltas, it directly returns `2`, `4`, `6`, or `8` for a diagonal (and `Force` mode can still impose the cursor's angle). Collision and step acceptance are decided by the server flow/player state, not by this local both-sides test. At a blocked corner, the Java code therefore refuses the intent before sending it, whereas the native code can send the diagonal and then wait for a correction, a refusal, or an unchanged state.
 
-- `EditUI` natif n'affiche son curseur que lorsque `EnableCursor` est actif et que le parent considère le contrôle comme dernier élément cliqué. Son état alterne avec deux délais configurables de 300 ms (`cursorBlinkOnTime` et `cursorBlinkOffTime`) ; le texte est dessiné avec `textOffset` et reste découpé par le rectangle de l'éditeur. La perte du focus parent masque donc le curseur même si le champ existe encore.
-- `GameChat` Java affiche le curseur tant que le chat est `active`, avec une alternance basée sur une période fixe de 350 ms, sans notion de `parentUI`/dernier contrôle cliqué ni de paramètre `EnableCursor` par champ. Son `inputScroll` suit le curseur, mais l’état de visibilité dépend de l’activation globale du chat. Un champ conservé ouvert ou une saisie superposée peut ainsi montrer/masquer le curseur et le faire clignoter à un moment différent du client 1.68.
-## 252. Capture des fenêtres et redimensionnement générique différents
+## 223. Native target easing after correction absent from Java movement
 
-- `BoxUI` natif est un conteneur de dispatch : il cherche le premier enfant visible touché, mais laisse la fenêtre enfant au premier plan détourner l'événement si elle n'est pas dans cette hiérarchie. Les clics gauche/droit, la molette, le clavier et `DragCycle` sont ensuite transmis au contrôle ciblé ; le clic droit sans enfant ouvre l'aide de la boîte. `DragCycle` est régulé globalement à environ 100 ms et la fenêtre affichée est replacée en tête de la liste racine par `Show(true)`.
-- Le Java ajoute dans `GuiScreenBase` un geste transversal qui n'est pas une opération de `BoxUI` native : Ctrl-glisser déplace n'importe quel `GuiResizable`/élément candidat, tandis que Shift-glisser redimensionne son bord le plus proche avec une taille minimale de 8 pixels. Cette capture intervient avant les handlers propres de l'écran et journalise le résultat au relâchement ; elle ne reproduit ni la priorité `foregroundChild`, ni la transmission native de `DragCycle`, ni l'aide contextuelle du clic droit. Selon la touche modificatrice et le point de clic, Java peut donc déplacer/redimensionner une fenêtre que le client 1.68 aurait seulement utilisée pour dispatcher un contrôle, ou empêcher son événement enfant.
-## 253. Nombre de questions et sélection du questionnaire de création différents
+The native client has `pfNearPosition`, called by `MouseAction`, `TFCSocket`, and several response-handling branches. This function progressively moves the remembered target (`pfSaveXPosition`/`pfSaveYPosition`) one tile toward the player's actual position before recomputing the next move. The automatic path is thus eased back toward the authoritative position after a delay, a correction, or a movement response, instead of blindly keeping the old destination.
 
-- Le client 1.68 mélange séparément les huit questions et les cinq réponses de chaque question (`Shuffle`). Il affiche ensuite seulement les quatre premières questions du parcours : à chaque réponse, il incrémente une des cinq affinités, puis envoie immédiatement `RQ_CreatePlayer` avec les cinq compteurs, le sexe et le nom lorsque `QuestionNumber == 4`. Les quatre questions présentées sont donc un tirage sans remise parmi huit, avec un ordre de réponses propre à chaque question.
-- `CharacterSelectionScreen` Java mélange bien huit questions et cinq réponses, mais `acceptQuestionAnswer()` continue jusqu'à épuiser les huit entrées (`questionnaire.size() == 8`) avant de générer les statistiques et de poursuivre. Le Java demande donc deux fois plus de choix au joueur et accumule des affinités différentes pour une même graine/tirage ; le moment de la création et les statistiques initiales ne peuvent pas correspondre au parcours 1.68, même si les textes et l'ordre des cinq réponses sont par ailleurs repris.
+The Java `PlayerMovement` keeps its destination/step reservation and, on a mismatch, clears the active step and recomputes with the current input; it has no equivalent that progressively eases a persistent target toward the corrected position before resuming the path. After a position correction, a held click, or a simulated delayed response, the native and Java clients can therefore resume toward different tiles.
+
+## 224. Non-uniform double-click time windows
+
+The native `GameUI` sets `ClickTime` to 250 ms, and `RootBoxUI` directly compares two `timeGetTime` timestamps to turn the second click into `GWIN_MSG_DBLCLICK`. This same convention feeds the lists, panels, and world actions that receive `DM_DOUBLE_CLICK`; it is independent of the delay the user configured in Windows.
+
+The Java code has no equivalent global constant: `Inventory` recognizes a double-click under 300 ms, while `ClickToMoveHandler` uses 350 ms for the quick bar. Other screens go through LibGDX events or their own handlers. A second click between 250 and 350 ms can therefore be a native double-click but a single click in a Java screen, or trigger a Java use action where the 1.68 client would not have classified it as a double-click.
+
+## 225. Native continuous scroll controls and hold-to-repeat absent from Java lists
+
+The native `ScrollUI` is a controller shared by lists, grids, text, inventory, chest, trade, skills, guild, options, and chat history. Clicking an arrow first moves by one line, then holding repeats the action every 100 ms. Clicking in the track jumps by 5 lines depending on which half was targeted; the thumb can be dragged and converts its position into `linePos`. The bounds are centralized over `0..listSize-1`, and every change calls `ScrollChanged`.
+
+The Java code has no such shared contract: `GuiChat` scrolls the wheel by 3 lines, `GuiInventory` by pixels (`amountY * 24`), `GuiOptionList` by one line, and `GuiListScreen` by pages of six entries. Java trade lists do not expose the same track thumb/drag or the native 5-line jump, and holding an arrow is not handled by a shared 100 ms repeat. At the same cursor position or after a hold, the number of visible lines, the moment of the update, the sound, and the active selection therefore diverge from the 1.68 client.
+
+## 226. Different movement-key matrix and numpad dependency
+
+In `TFCSocket.cpp`, native manual movement reads the raw DirectInput state. The eight directions accept the arrow keys, and also `NumPad 2/4/6/8` when the local `NumLock` computation makes them active; `NumPad 1/3/7/9` and `End/Home/PgDn/PgUp` additionally provide the four diagonals. Before sending, the client refuses movement if Ctrl or Shift is held, if `ChestUI` or `TradeUI` blocks the world, or if `DoNotMove`/`boKeyProcess` forbids it. Each key is tested separately in the loop, after the diagonal combination, with a `GridBlocking` check on the matching offset.
+
+The Java `GameInputHandler` only reads WASD (with Q/Z variants) and the four arrow keys: no numpad key, no Home/End/PgUp/PgDn substitution, and no equivalent dependency on the NumLock state are present. Java filtering mainly relies on `textInputActive`, and does not reproduce the native "Ctrl/Shift blocks movement" combination nor the same `ChestUI`/`TradeUI` and `DoNotMove` states. Pressing a numpad key, Shift, or Ctrl can therefore move the character in a case where the 1.68 client would not have, while several native diagonals produce no Java input at all.
+
+## 227. Right-click grid contextual help not reproduced globally
+
+The native `GridUI::RightMouseUp` handles every brief right-click in the grid: on an empty cell, it calls the grid's help; on an occupied cell, it shows the item's help if `allowHelp` is on and also forwards `RightMouseUp` to the item; outside the bounds, it still shows the grid's help. This resolution is shared by the inventory, chest, trade, and other panel grids, and happens after selection is captured on `RightMouseDown`.
+
+The Java code has no such generic help routing. `GroundItemClickHandler` only shows a drop's name under the cursor, and `ObjectClickHandler` only a mapped object's name; a right-click on an empty cell, outside an object, or on a control with no dedicated handler is consumed with no grid help. The Java code therefore does not systematically forward the right-click to the selected cell nor distinguish grid help from item help the way the 1.68 client does.
+
+## 228. Incompatible user configuration format and location
+
+The native `Global::ReadClientConfig` automatically builds the path `CSIDL_PERSONAL\Rebirth\T4CV2`, creates the directories, and then reads `T4C.dat` in binary. The file contains, in a fixed order and with fixed sizes, the account name, IP address, AFK status, a 2048-byte AFK message, debug/FPS/position flags, `FirstTimeAddon`, and `WebpatchEnable`; `WriteClientConfig` rewrites these same blocks. The client reloads this configuration before initializing language, capture, logs, and the launcher.
+
+The Java code loads `game_preferences.json`, `characters.json`, and `player_state.json` from the working directory, using Gson and independent JSON fields. It neither reads nor writes `T4C.dat`, does not create the native user path, and does not keep the same account/IP, AFK, addon, webpatch, and diagnostic-flag information in that binary file. Copying a 1.68 profile, or changing the launch directory, therefore does not produce the same persistent state, and an existing native configuration is invisible to Java.
+
+## 229. Taming and companion system added in Java
+
+The 1.68 client uses the term `Puppet` for a character's visual composition: `RQ_PuppetInformation`/`SetPuppet` transmit equipment parts and rebuild the sprite's layers. In the client's native sources, no taming sequence, channeling bar, companion registry, AI mode, companion loss, or tamed-animal save was found; a monster remains a visual/combat unit received from the server.
+
+The Java code adds a full mechanic: `TameValidator` checks the target and level, `TameChannel` imposes channeling and a movement tolerance, `TamedCompanionFactory` converts the monster, `CompanionManager` manages the companion, its modes, its XP and its attacks, and `PlayerStateStore` restores it across sessions. A taming spell can therefore create and keep an allied unit in Java where no equivalent path exists in the 1.68 client; the resulting combat, damage, effects, and disappearance rules are all additional behavior.
+
+## 230. Different time source and day/night thresholds
+
+The native client receives the full time via `RQ_GetTime` (second, minute, hour, day, week, month and year), copies it into `g_TimeStructure`, and then advances this structure in the network loop with `AddSeconde`. `NTime::SetLight` applies precise thresholds: night 00:00–04:00 and 21:00–24:00, dawn 04:00–08:00, transition to day 08:00–10:00, day 10:00–19:00, and evening transition 19:00–21:00. Colors are computed separately in integer 5-bit channels, and worlds 1/2 or certain world-3 zones additionally force dungeon/cavern tints.
+
+The Java `DayNightCycle` starts at 07:00 by default, advances with LibGDX's local `delta`, and saves a floating-point hour in `PlayerStateStore`; no Java packet equivalent to `RQ_GetTime` resyncs it against a server clock. Its thresholds are night 18:00–06:00, with transitions around 05:00–07:00 and 17:00–19:00, using a global black overlay. At the same nominal hour, the darkness ranges, the color, the time precision, and the reaction to underground worlds are therefore not those of the 1.68 client.
+
+## 231. Different mouse-coordinate quantization and rejection
+
+The native `DirectXInput::SetVirtualGrid` defines a window-dependent virtual grid. `GetStatus` then converts the mouse into a tile by applying the client's historical offsets (`+48` on X and `-8` on Y), then checks that the tile belongs to `VirtualGrid`. A position outside the grid or invalid is normalized to `(0,0)` before being passed to actions; a click is therefore never interpreted as an arbitrary off-world coordinate.
+
+The Java code unprojects the pixel directly with the LibGDX camera, and then several handlers separately convert it with `(int)(world / GRID_W)` and `(int)(world / GRID_H)`. The camera, viewport, and origin point replace the native offsets/limits, with no shared virtual grid and no `(0,0)` sentinel value for an invalid click. A click at the edges, in a negative area, or during a camera change can therefore target a different tile, reach an object handler, or trigger movement where the 1.68 client would have rejected/normalized the position.
+
+## 232. Cleaning up actions and the UI during a world change
+
+- The native client treats a world change as an exclusive transition: it sets `DoNotMove`, calls `CloseAllUI()`, stops pathfinding, resets the music, and only re-enables play after the new zone's load and fade. Windows and interactions from the old zone therefore cannot stay active during the transfer.
+- In `MainGameScreen.switchMapForZ`, the Java code rebuilds the renderer and the NPC/monster managers, but does not call `GuiManager.close()` and has no equivalent global lock. It explicitly cancels harvesting (`cancelHarvest()`), but not the taming channel or other in-progress spell progressions/effects. An open window or a transient action can therefore survive the map change depending on its own state, instead of being atomically invalidated the way the 1.68 client does.
+
+## 233. Resetting and repopulating units around the player
+
+- After a world change, the native client runs `Objects.DeleteAll()` under lock, rebuilds static/animated objects, moves the player, and then explicitly sends the server packet `GetNearUnits` (opcode 60) before resuming game state. Visible units are therefore a new proximity window supplied by the server, not a leftover from the previous zone.
+- The Java `switchMapForZ` recreates `NPCManager` and `MonsterManager` from the map's local spawns and keeps the companion separately. There is no `GetNearUnits` request, no remote-unit registry, and no equivalent server phase; visible content therefore depends on the map file and the local managers, with different semantics for players/monsters that appeared or disappeared during the transition.
+
+## 234. Quantity selection and clamping for item transfers
+
+- The native client offers, in `ChestUI` and `TradeUI`, a shared quantity popup with a slider clamped by the available quantity, a filtered numeric field, a 9-character max length, and validation that clamps a value above the real stock. For a maximum quantity of 1, the popup automatically fills in `1` and validates directly; the confirmed quantity is then sent in a dedicated transfer request.
+- The Java code has no equivalent popup and no transfer of stacks to a chest or a player-to-player trade. `ChestService` opens loot and drops it on the ground, while the inventory and shop locally handle keys/repetitions and unit increments. A "move N items" operation and its bounds/confirmations therefore do not follow the 1.68 client's UI and protocol behavior.
+
+## 235. Coordinated shutdown of internal threads
+
+- The native client has separate shutdown states for sound, sound control, drawing, maintenance, mouse, and CD. `AppManagement::AsyncClose` first notifies the UIs, sets `g_boQuitApp`, wakes blocking events, waits for or suspends still-active threads, and then releases handles/resources. Networking, rendering, input, and sound are therefore not simply destroyed in the caller's order.
+- The Java code is mainly a single LibGDX loop: `MainGameScreen.dispose()` frees its resources and `MyGame.dispose()` stops the map preloader, but there is no shared shutdown state between input, network logic, rendering, and audio, and no equivalent queue/thread coordination. Exiting during a load, an action, or audio playback therefore does not follow the same completion and cleanup guarantees as the 1.68 client.
+
+## 236. Different visual-object sort key
+
+- The native `VisualObjectList::Sort` sorts units by a key computed from `OY + OC`, then breaks ties with `OC`, `OX`, and the attached object's ID. Sorting happens after filtering out-of-window objects and checking movement/child queues; attached objects can therefore stay grouped with their parent, and their draw order depends on the interpolated position, not just the tile.
+- The Java code splits ground, decor, entity, and effect passes. `DecorRenderer` uses a key based on the decoration's name, its Y coordinate, and `getZOrderFast`, while entities are rendered in their own pass; there is no shared key equivalent to `OY + OC → OC → OX → AttachID` arbitrating every category. Overlaps between decor, unit, shadow, and effect can therefore be drawn in a different order than the 1.68 client, even when the grid positions are identical.
+
+## 237. Different culling window and off-screen object retention
+
+- The native client keeps a fixed window around the player via `VisualObjectList::RangeWidth` and `RangeHeight`, independent of the graphics viewport. During an update, an object whose `abs(OX) > RangeWidth` or `abs(OY) > RangeHeight` is removed if its type is below `30000`, it lacks `allowOutOfBound`, and it has no child (`Count == 0`). Attached objects then decrement their parent's counter; certain system objects and objects flagged out-of-bound are exempt from this removal. Static and animated objects are also reinjected at the edges with exact comparisons against `RangeWidth - 1`/`RangeHeight - 1`.
+- The Java code computes `renderStartX/Y` and `renderEndX/Y` from the camera, adds a three-tile buffer plus a separate decor overrun, and then `NPCManager` and `MonsterManager` ignore entities outside this zone during their update. This logic is a camera-tied visibility optimization: it does not remove things by a shared lifetime rule, has no equivalent to `allowOutOfBound`, `Count`, `Type >= 30000`, or `AttachID`, and decor/entities have distinct margins. A native unit or object kept or destroyed at the edge of the window can therefore be updated, reinjected, or disappear at a different moment in the Java code.
+
+## 238. Conditional NPC script preprocessing not equivalent
+
+- The native NPC sources are C/C++ files built into the client/server: they contain preprocessor directives (`#ifdef`, `#ifndef`, `#define`, `#endif`) and commented-out blocks that select or remove dialogues, quests, and handlers depending on the compiled variant. The behavior actually available in a 1.68 build therefore depends on the compile configuration, even before the dialogue runs.
+- The Java code passes `originalScript.sourceScript()`'s text directly to `NpcScriptEngine`. `statements(...)` only skips blank lines, `//`, `/*`, or `*`; no preprocessor pass resolves symbols or strips `#ifdef/#else/#endif` branches. Directives present in imported scripts therefore become unknown lines or non-executable text, and the native build variants cannot be selected the same way. Two installs using a different native `#define` can therefore share the same Java behavior, where the 1.68 client/server would have run only one compiled branch.
+
+## 239. Different generic list selection and double-click
+
+- The native `ListUI` is a control shared by several windows: it maintains an item, column, and row selection. A left click selects the row, a double-click is detected as early as `LeftMouseDown` and triggers the item's action, while a right-click also selects the item and shows its help (or the list's default help). Selection stays available to the event visitor, including after scrolling, and the columns of the same row are manipulated together.
+- The Java code has no central `ListUI` with this contract. `GuiListScreen` composes buttons/rows specific to each screen; selections and callbacks are implemented separately in `ShopScreen`, `RepairScreen`, `QuestScreen`, etc. No generic routing simultaneously reproduces the native double-click, column/row selection, right-click help, and passing the selection to a visitor. A right-click or a double-click on a Java list can therefore be ignored or follow the screen's local handler, instead of selecting and opening the row's help/action as in 1.68.
+
+## 240. Different paragraph pagination and line wrapping
+
+- The native `TextPageUI` does not just store an already-rendered string: it keeps a list of paragraphs with text, color, font size, a computed line count, and an `allowNewLine` flag. `AddText` recomputes the total line count based on the area's width, `UpdateViewSize` adjusts the visible capacity, and `ScrollChanged` rebuilds the displayed `TextObject`s from the current offset. The same control can therefore mix colored paragraphs, forced line breaks, and text automatically reflowed in a scrolling area.
+- The Java code splits this need across `GuiBoxedText`/`GlyphLayout`, `SystemMessage`, and `GameChat`. Wrapping, color, height, and scrolling are recomputed per screen or per component; no shared paragraph model with `allowNewLine`, a stored font size, and a native line offset is exposed. Text injected into a help window, a page, or a log can therefore produce different line breaks, height, and scroll position, even when the content and the visual width look identical.
+
+## 241. Different Escape-key cycle and menu state
+
+- In `RootBoxUI::VKeyInput`, Escape does not simply close the active window. If a fullscreen window is open, the native code hides chat and the TMI and then restores the macros; otherwise it advances the menu's persistent state (`MENU_BOTH` → chat only/TMI → none, depending on the current combination), shows or hides `SideMenu` and `ChatterUI`, and updates `dwMenuState`. A foreground window, however, receives the key with priority, which makes the cycle depend on global focus.
+- The Java code gives each screen its own Escape rule: screens generally call `GuiManager.close()`, and `MainGameScreen` then opens `OptionsScreen` when no UI is active. There is no persistent chat/TMI/macros cycle, and no coordinated restore/minimize of panels. Repeatedly pressing Escape therefore does not produce the same intermediate states and can open the Java options screen where the 1.68 client would only have toggled the proximity UI.
+
+## 242. Elemental spellbook filtering absent from Java
+
+- The native `SpellUI` exposes seven element buttons (fire, water, air, earth, light, darkness, and normal). Clicking one temporarily rebuilds the page index, keeping only spells of the chosen element, moves the view to the first page of the result, and restores the previous page if no spell matches. The page's four slots are therefore a filtered view of the received list, not always four consecutive spells from the full book.
+- The Java `SpellBook` always rebuilds pages with `currentPage * 4` over the full `spells` list. It has no elemental-filter buttons/state and no per-element index recomputation; a player therefore cannot get the same targeted view, the same page fallback, or the same "no results" behavior as in the 1.68 client, even though each `SpellData` carries element information the spell engine could use.
+
+## 243. Recasting the last spell absent from Java
+
+- The native `SpellUI` keeps `lastSpell` updated on every successful/engaged cast. `CastLastSpell` then looks up this ID in the spellbook and recasts the spell with `autoTargetSelf == false` and the `noCallback` path meant for repeated actions; `MouseAction` calls this function from several click/attack paths. The recast therefore depends on the spell's ID still being present in the list, not on the last macro slot used.
+- The Java code has no equivalent `lastSpell` field or service. `MainGameScreen` keeps transient states (`selectedTargetedSpell`, `currentAttackSpell`, `lastClickedBuffSpellName`), and the quick-slots remember a name per slot, but no general gesture looks up and recasts the last spell by its ID after closing the spellbook or changing target. A native recast can therefore relaunch the spell while the Java code does nothing, only keeps a pending target, or reuses a different slot.
+
+## 244. Different target-type priority for spells
+
+- Before capturing the targeting click, `SpellUI::CastSpell` sets the object grid's mode: `monsterPriority` for spells aimed at monsters, `playerPriority` for players, and `equalPriority` for spells accepting any unit type. The native handler can therefore resolve an overlap according to the allowed category; for a unit spell, `CastSpellUnit` sends nothing if no valid unit ID is found, while a positional spell can send a position with no unit.
+- The Java code mainly classifies the spell with `isHostileUnitSpell`, `isTameSpell`, `isPositionTargetSpell`, and separate handlers. It picks a local monster/NPC or a position depending on the chosen path, with no shared grid mode arbitrating a player-monster overlap and no native distinction between "no unit found" (nothing sent) and a fallback position. On a tile containing several categories, or a target that became invalid between the click and the cast, the chosen candidate and the resulting action can therefore differ.
+
+## 245. Different spell order in the spellbook
+
+- `SpellUI::UpdateSpells` always sorts the received list with `Spell::operator<`: first by numeric element, then by ascending level. The four slots of a page, and the result of elemental filters, therefore follow this order regardless of the order the server packet arrived in.
+- The Java `SpellBook` walks `player.getSpells()` in its current order and adds each spell with no sorting. Java's global definitions are sorted by ID when discovered, but this sort is not applied to the personal list in `loadSpells()`. With an identical received list, spells can therefore appear on different pages and in different positions than in the 1.68 client, which also changes which spell a click or a drag-and-drop selects.
+
+## 246. A spellbook entry's description not shown the same way
+
+- During `SpellPageUI::FillSpellPage`, the native code places `spell.desc` into the control's help (`GetHelpText()->SetText`). The description is therefore available on hover/help-click for each slot, in addition to the name, level, duration, type, cost, and icon shown on the page.
+- Java's `SpellBook.addSpellEntry` only displays the name, type, duration, mana, level, and icon. The method creates no help or tooltip from `SpellData` (and its `onTouchDown` starts a drag on the icon instead). The spell's received/defined description is therefore not viewable from the spellbook slot the way it is in the 1.68 client; the gesture can start a drag where the native code provides contextual information.
+
+## 247. Different display conversion for spell durations
+
+- The native client receives a numeric duration in milliseconds and formats it in `FillSpellPage` through several branches: a duration over a minute is shown in minutes with leftover seconds, a duration over a second in seconds, a zero duration as "instant", and a duration of one second or less with a dedicated presentation. The labels and the minutes/seconds combination come from the localized catalogue, not from a string supplied by the server.
+- Java's `SpellData` stores `duration` as a `String`, and `SpellBook` displays it directly; an empty value only becomes the hardcoded text `instant`. This path has no milliseconds → minutes/seconds conversion and no branch for sub-second durations. A numeric definition, a fractional duration, or a differently worded translation can therefore appear literally or in a format different from the native sheet.
+
+## 248. Different mana-cost type and interpretation
+
+- In the native `SpellUI::Spell` structure, `manaCost` is a `WORD` received with the spell list; `FillSpellPage` converts it with `itoa` and therefore displays a fixed integer value. The visible cost is the field transmitted for that spell, with no random expression to evaluate in the UI.
+- Java's `SpellData`, by contrast, stores `manaCost` as a `String`, and the spellbook displays it with no conversion. The Java engine can then interpret this string as a dice formula (`DiceFormula`) in `SpellCastingService`. A definition such as `1d6`, an empty string, or a non-numeric value can therefore produce a displayed text and an effective cost different from the native "received integer / displayed integer" pair.
+
+## 249. Different skill colors and help
+
+- `CharacterUI::UpdateSkills` picks the value's color along two native axes: whether the skill is usable (`bUse`), and whether the effective value is higher, equal to, or lower than the true value. It thus produces six visual states (gray/dark green/red if unusable, white/pale green/pale red if usable) and builds the help text from the description plus the `dwStrength` / `dwTrueStrength` pair.
+- Java's `Statistics` only renders three fixed skills, and `buffedStatLabel` shows the effective value in green only when it is higher, otherwise the base value in white. It lacks `bUse`'s red/gray matrix, does not distinguish a lower effective value in its display, and does not build the native description + `effective/true` help text. A negative bonus, a disabled skill, or a temporarily unusable skill therefore does not get the same visual feedback.
+
+## 250. Different button activation modes
+
+- The native `ButtonUI` distinguishes a single click from a double-click in `LeftMouseUp`, plays press/release sounds separately, and has an `enableDragCycle` mode: during `DragCycle`, the event can periodically call `LeftClicked` back as long as the button is held. The control can therefore serve repeat buttons or actions with special double-click handling.
+- Java's `GuiButton` only carries a single `Runnable` called on a left release that stayed within the area; it has no double-click callback, no drag-hold repeat mode, and no configurable separation of press/release sounds. A hold, a double-click, or a release after moving therefore does not trigger the same callbacks as a native `ButtonUI` configured for these modes.
+
+## 251. Different input-cursor visibility and blink cadence
+
+- The native `EditUI` only shows its cursor when `EnableCursor` is on and the parent considers the control the last-clicked element. Its state alternates with two configurable 300 ms delays (`cursorBlinkOnTime` and `cursorBlinkOffTime`); the text is drawn with `textOffset` and stays clipped by the editor's rectangle. Losing the parent's focus therefore hides the cursor even though the field still exists.
+- Java's `GameChat` shows the cursor as long as chat is `active`, alternating on a fixed 350 ms period, with no notion of a `parentUI`/last-clicked control and no per-field `EnableCursor` setting. Its `inputScroll` follows the cursor, but visibility depends on chat's global activation. A field left open, or an overlapping input, can therefore show/hide the cursor and blink it at a different moment than the 1.68 client.
+
+## 252. Different window capture and generic resizing
+
+- The native `BoxUI` is a dispatch container: it looks for the first visible child hit, but lets a foreground child window intercept the event if it is not part of that hierarchy. Left/right clicks, the wheel, the keyboard, and `DragCycle` are then forwarded to the targeted control; a right-click with no child opens the box's help. `DragCycle` is globally rate-limited to about 100 ms, and the shown window is moved to the front of the root list by `Show(true)`.
+- The Java code adds, in `GuiScreenBase`, a cross-cutting gesture that is not a native `BoxUI` operation: Ctrl-drag moves any candidate `GuiResizable`/element, while Shift-drag resizes its nearest edge down to a minimum size of 8 pixels. This capture happens before the screen's own handlers and logs the result on release; it reproduces neither the native `foregroundChild` priority, nor native `DragCycle` forwarding, nor right-click contextual help. Depending on the modifier key and the click point, the Java code can therefore move/resize a window the 1.68 client would only have used to dispatch to a control, or block its child event.
+
+## 253. Different question count and selection in the character-creation questionnaire
+
+- The 1.68 client separately shuffles the eight questions and the five answers of each question (`Shuffle`). It then shows only the first four questions of the run: on each answer, it increments one of five affinities, then immediately sends `RQ_CreatePlayer` with the five counters, the sex, and the name once `QuestionNumber == 4`. The four questions shown are therefore a draw without replacement from eight, with an answer order specific to each question.
+- The Java `CharacterSelectionScreen` does shuffle eight questions and five answers, but `acceptQuestionAnswer()` keeps going until all eight entries are exhausted (`questionnaire.size() == 8`) before generating stats and continuing. The Java code therefore asks the player twice as many choices and accumulates different affinities for the same seed/draw; the moment of creation and the starting stats cannot match the 1.68 flow, even though the texts and the order of the five answers are otherwise reused.

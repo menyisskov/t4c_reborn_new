@@ -14,23 +14,23 @@ class BaseNpcDialogFormattingTest {
   @Test
   void removesAllQuotationMarksFromDisplayedNpcDialogue() {
     assertEquals(
-        "Parlez de magie, oracle et portail.",
-        BaseNPC.removeNpcDialogueQuotes("Parlez de \"magie\", “oracle” et «portail»."));
+        "Speak of magic, oracle and portal.",
+        BaseNPC.removeNpcDialogueQuotes("Speak of \"magic\", “oracle” and «portal»."));
   }
 
   @Test
   void removesQuotesOnlyAroundInteractiveKeywords() {
     assertEquals(
-        "Parlez-moi de Dark One, mais gardez \"cette citation\".",
+        "Tell me of Dark One, but keep \"this quote\".",
         BaseNPC.stripDialogKeywordQuotes(
-            "Parlez-moi de \"Dark One\", mais gardez \"cette citation\".", List.of("dark one")));
+            "Tell me of \"Dark One\", but keep \"this quote\".", List.of("dark one")));
   }
 
   @Test
-  void supportsFrenchAndCurlyQuotationMarks() {
+  void supportsGuillemetAndCurlyQuotationMarks() {
     assertEquals(
-        "Cherchez magie puis oracle.",
+        "Seek magic then oracle.",
         BaseNPC.stripDialogKeywordQuotes(
-            "Cherchez «magie» puis “oracle”.", List.of("magie", "oracle")));
+            "Seek «magic» then “oracle”.", List.of("magic", "oracle")));
   }
 }
