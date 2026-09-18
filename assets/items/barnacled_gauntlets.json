@@ -1,0 +1,33 @@
+{
+  "key": "barnacled_gauntlets",
+  "name": "Barnacled Gauntlets",
+  "bodyPart": "LEFT_HAND",
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL",
+  "appearanceEquippedSecondary": "PupPlateGloveR",
+  "appearanceInventory": "64kInvPlateGlove",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 8.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 200,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 33009, "statId": 2, "expression": "14" },
+    { "boostId": 33010, "statId": 14, "expression": "10" }
+  ]
+}

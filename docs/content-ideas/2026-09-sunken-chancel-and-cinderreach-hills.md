@@ -7,27 +7,39 @@ make the cut — are easy to review in one place before merging.
 ## Research note: t4cfantasy.com / t4cbible.com
 
 The task was to mine `t4cfantasy.com` (Addon/Bible pages) and `t4cbible.com` for lore to build
-from. Both domains are blocked by this environment's network egress proxy (`EGRESS_BLOCKED`) —
-same limitation the `item-creator`, `npc-monster-creator`, and `quest-creator` skills already
-flag. Direct fetches of `t4cfantasy.com/Addon`, `t4cfantasy.com/Bible/*`, and `t4cbible.com/*`
-all failed. Web search (not blocked) surfaced enough real T4C lore to ground this pass without
-inventing wholesale:
+from. Both domains were blocked by this environment's network egress proxy (`EGRESS_BLOCKED`) at
+the time this pass was written — same limitation the `item-creator`, `npc-monster-creator`, and
+`quest-creator` skills flagged. Web search (not blocked) surfaced enough real T4C lore to ground
+this pass without inventing wholesale, but several details below turned out to be wrong once a
+later pass got real site access.
 
-- The game world is **Althea**, spanning the islands **Arakas**, **Raven's Dust**, and
-  **Stoneheim**, with a fourth "Ancient Land" island added later in the original game's history.
-- T4C Bible categorizes monsters by island/source: Arakas, Raven's Dust, Stoneheim, Seraph,
-  Add-on, Beta, and Mini-Boss tiers.
-- Raven's Dust content includes Bane's Island, the City of Silversky, Deep Ones Cave, Skeleton
-  Cave, and the RD Crypt (with Zhakar's Tower) — which lines up suggestively with this repo's
-  existing `Silversky` named location and the `Zhakar` trainer NPC already in `TrainingCatalog`.
+**Update (see `2026-09-canon-verified-additions.md`): egress to both domains is now open, and the
+claims below have been checked against the real site.** Corrections:
 
-**This could not be cross-checked further** — someone with working access to
-`t4cfantasy.com/Bible` and `t4cbible.com` should verify the two zones below (and the backlog
-ideas) don't collide with or contradict official zone geography, faction names, or monster
-identities before treating them as canon. Everything below was built from what's *already
-committed* in this codebase (`assets/i18n/lang.json` lore hooks, `NamedLocations.java`,
-`MonsterClanRelations.java`) plus the web-search fragments above, per the existing skills'
-"don't invent lore you can't verify" rule.
+- The game world **is** named Althea (confirmed) — but the "fourth 'Ancient Land' island" claim
+  was wrong. The real fourth-and-later add-on islands are **Avalon, Atlantis, Paradise, Egypt,
+  Oblivion, and Arena** (six of them, not one; no zone is named "Ancient Land").
+- The monster-category list was half right: **Arakas, Raven's Dust, Stoneheim, Seraph, and Add-on
+  are real categories**, but there is no "Beta" category — the actual 7th color-coded category on
+  `/Bible/Monster` is **"GM"** (a small mixed set, including the Lesser/Greater/**Arch** Drake
+  ladder). There's also an unlisted 8th category, **Colosseum**. Mini-Boss is not its own
+  category — it's an italic modifier that cuts across every other category.
+- Raven's Dust content is mostly right (Bane's Island, Deep Ones Cave, and the RD Crypt are all
+  real), but the site never calls it "**City of** Silversky" — just "Silversky". More
+  importantly, **Zhakar's Tower and the RD Crypt are two separate, independent locations**, not
+  one nested inside the other — and Zhakar the NPC himself is stationed at a third place, the
+  "Tower of Sorcery". This repo's existing `Zhakar` trainer NPC lines up fine with his canon role
+  (mage/spell trainer) regardless.
+- One pleasant surprise: `LesserDrake`/`GreaterDrake`'s stats in this codebase (health 15,385 at
+  level 250; health 54,943 at level 500) turned out to be **exact matches** for the real T4C GM-
+  category Drake ladder once it could be checked — the web-search-sourced numbers from this pass
+  were correct, not just plausible.
+
+Everything in this file was built from what was *already committed* in this codebase
+(`assets/i18n/lang.json` lore hooks, `NamedLocations.java`, `MonsterClanRelations.java`) plus the
+web-search fragments above, per the existing skills' "don't invent lore you can't verify" rule —
+left as originally written below (not rewritten in place) so the two passes stay easy to diff;
+see the newer doc for what was corrected and added once real site access existed.
 
 ## What shipped in this pass
 

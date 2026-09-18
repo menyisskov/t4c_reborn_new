@@ -47,7 +47,9 @@ public final class CentaurWarrior extends DataMonster {
         SOUND_HIT,
         190,
         600,
-        java.util.List.of(new MonsterDef.LootDrop("centaur_warband_ring", 0.03f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("centaur_warband_ring", 0.03f),
+            new MonsterDef.LootDrop("bow_of_centaur_slaying", 0.008f)),
         false,
         0.0f,
         130,

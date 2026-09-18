@@ -1,0 +1,34 @@
+{
+  "key": "goblin_slayer",
+  "name": "Goblin Slayer",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupBattleSword",
+  "appearanceInventory": "64kInvBattleSword",
+  "price": 0,
+  "weight": 9,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 600,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 150,
+    "attack": 70
+  },
+  "attackSpeed": 1450.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d310+240",
+  "atkDelay": "1450",
+  "boosts": [
+    { "boostId": 33003, "statId": 8, "expression": "45" },
+    { "boostId": 33004, "statId": 10, "expression": "55" },
+    { "boostId": 33005, "statId": 3, "expression": "40" }
+  ]
+}

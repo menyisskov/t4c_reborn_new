@@ -51,7 +51,15 @@ public final class SkywatchIlvara extends ScriptedNpc {
               new NpcSpec.DialogueTopic(
                   List.of("${npc.topic_keyword.skywatchilvara.2.0}"),
                   "${npc.topic.skywatchilvara.2}",
-                  List.of())),
+                  List.of()),
+              new NpcSpec.DialogueTopic(
+                  List.of(
+                      "${npc.topic_keyword.skywatchilvara.3.0}",
+                      "${npc.topic_keyword.skywatchilvara.3.1}"),
+                  "${npc.topic.skywatchilvara.3}",
+                  List.of(
+                      new NpcSpec.Action(
+                          ActionType.OPEN_SPELL_LEARNING, List.of("sentinel"))))),
           "SkywatchIlvaraNPC",
           new NpcSpec.CombatProfile(100, 1000000, 65, 67, 63, 1000000, 250, 65535, "1d23+16"));
 

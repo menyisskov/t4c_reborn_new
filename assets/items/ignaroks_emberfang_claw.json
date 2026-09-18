@@ -24,6 +24,8 @@
   "structure": 2,
   "appearanceId": 0,
   "undroppable": false,
+  "dmgFormula": "1d180+140",
+  "atkDelay": "900",
   "boosts": [
     { "boostId": 31014, "statId": 17, "expression": "35" },
     { "boostId": 31015, "statId": 8, "expression": "40" },

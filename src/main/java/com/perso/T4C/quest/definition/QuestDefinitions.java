@@ -15,6 +15,8 @@ public final class QuestDefinitions {
         WindhowlMarchesCentaurs.definition(),
         HollowMarchWights.definition(),
         AerieWyrmlingCull.definition(),
-        BastionWardenSiege.definition());
+        BastionWardenSiege.definition(),
+        DeepOnesCavePurge.definition(),
+        DrakesLairVigil.definition());
   }
 }

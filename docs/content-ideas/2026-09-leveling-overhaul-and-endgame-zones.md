@@ -88,3 +88,17 @@ gain one level at level 430; the calibrated value is 4.75M).
 - Spawn placement is grep-verified against every other `@Spawn` coordinate (zero collisions in
   each zone's radius), not visually verified in the map editor — same caveat as the previous
   content pass, for the same reason (no display in this environment).
+
+## Update: canon cross-check (see `2026-09-canon-verified-additions.md`)
+
+Written without access to `t4cfantasy.com`/`t4cbible.com` (egress was blocked at the time — see
+the previous doc's research note for the same limitation). A later pass got real site access and
+confirmed `LesserDrake` (level 250, health 15,385) and `GreaterDrake` (level 500, health 54,943)
+are **exact matches** for the real T4C "GM"-category Drake ladder, not just plausible numbers —
+and that the real ladder has one more rung above them: **Arch Drake, level 1000, health 206,623**.
+The newer pass adds a fifth zone, Drake's Lair, that activates that missing top rung — a natural
+capstone for this pass's level-1000 curve cap, since Arch Drake sits exactly there. It also
+surfaced a real, previously-dormant limitation this pass didn't hit: `MonsterDef.xpOnDeath` and
+`QuestDef.rewardXp` are both still `int`, which the level-1000 curve's own math can overflow —
+worth knowing if a future pass calibrates a boss above roughly level 800. See the newer doc for
+specifics.

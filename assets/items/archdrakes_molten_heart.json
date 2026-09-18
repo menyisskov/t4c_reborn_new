@@ -1,0 +1,32 @@
+{
+  "key": "archdrakes_molten_heart",
+  "name": "Arch Drake's Molten Heart",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 95.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 2600,
+    "strength": 1800,
+    "agility": 0,
+    "intelligence": 1000,
+    "wisdom": 0,
+    "attack": 130
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 33011, "statId": 17, "expression": "180" },
+    { "boostId": 33012, "statId": 13, "expression": "140" },
+    { "boostId": 33013, "statId": 3, "expression": "60" },
+    { "boostId": 33014, "statId": 2, "expression": "70" }
+  ]
+}

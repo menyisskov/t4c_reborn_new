@@ -1,0 +1,34 @@
+{
+  "key": "bow_of_centaur_slaying",
+  "name": "Bow of Centaur Slaying",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "appearanceInventory": "64kInvLongBow",
+  "price": 0,
+  "weight": 6,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 200,
+    "agility": 700,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 60
+  },
+  "attackSpeed": 1100.0,
+  "unique": false,
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d90+180+5*arrow_dmg/4",
+  "atkDelay": "1100",
+  "boosts": [
+    { "boostId": 33000, "statId": 10035, "expression": "50" },
+    { "boostId": 33001, "statId": 8, "expression": "20" },
+    { "boostId": 33002, "statId": 10, "expression": "25" }
+  ]
+}
