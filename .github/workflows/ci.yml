@@ -28,12 +28,23 @@ jobs:
         run: scripts/ci-select-tests.sh "$BASE_REF" "$HEAD_REF" >> "$GITHUB_OUTPUT"
 
       - name: Show CI plan
+        # Read every selector output through env + "$VAR", never ${{ }}
+        # interpolated straight into the script text: these values are
+        # derived from file/package names a PR's own diff controls, and
+        # ${{ }} substitutes as raw text before bash ever parses the line -
+        # an untrusted value there is a shell injection, not just data. A
+        # real "$VAR" expansion never gets re-parsed as code.
+        env:
+          SKIP: ${{ steps.select.outputs.skip }}
+          TEST_MODE: ${{ steps.select.outputs.test_mode }}
+          REASON: ${{ steps.select.outputs.reason }}
+          TEST_CLASSES: ${{ steps.select.outputs.test_classes }}
         run: |
-          echo "skip: ${{ steps.select.outputs.skip }}"
-          echo "test_mode: ${{ steps.select.outputs.test_mode }}"
-          echo "reason: ${{ steps.select.outputs.reason }}"
-          if [[ "${{ steps.select.outputs.test_mode }}" == "scoped" ]]; then
-            echo "test classes: ${{ steps.select.outputs.test_classes }}"
+          echo "skip: $SKIP"
+          echo "test_mode: $TEST_MODE"
+          echo "reason: $REASON"
+          if [[ "$TEST_MODE" == "scoped" ]]; then
+            echo "test classes: $TEST_CLASSES"
           fi
 
       - name: Set up JDK 17
@@ -54,7 +65,9 @@ jobs:
 
       - name: Test (scoped)
         if: steps.select.outputs.skip != 'true' && steps.select.outputs.test_mode == 'scoped'
-        run: mvn -B "-Dtest=${{ steps.select.outputs.test_classes }}" -DfailIfNoTests=false test
+        env:
+          TEST_CLASSES: ${{ steps.select.outputs.test_classes }}
+        run: mvn -B "-Dtest=$TEST_CLASSES" -DfailIfNoTests=false test
 
       - name: Upload surefire reports
         if: failure()

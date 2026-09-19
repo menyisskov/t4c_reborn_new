@@ -7,16 +7,26 @@
 # stdout. Run it locally with any two refs to see what it would decide, e.g.:
 #   scripts/ci-select-tests.sh origin/main HEAD
 #
-# Design notes (see CI_TEST_SELECTION.md for the full rationale): this
-# project is a single Maven module with several registries (items, monsters,
-# spells, NPCs, quests) that get scanned by cross-cutting "parity"/
-# "integrity"/"coverage" tests living in unrelated packages (e.g. a monster
-# change can break com/perso/T4C/npc/LighthavenSamaritanTest.java). Naive
-# "only run tests in the changed package" selection would let those regress
-# silently, which is exactly the class of bug this repo's CI was originally
-# added to catch (see CHANGELOG.md's 2026-09-17 CI entry). So: any change
-# that could plausibly ripple out is answered with the full suite; only
-# clearly-local changes get a scoped run.
+# Design notes: this project is a single Maven module with several
+# registries (items, monsters, spells, NPCs, quests) that get scanned by
+# cross-cutting "parity"/"integrity"/"coverage" tests living in unrelated
+# packages (e.g. a monster change can break
+# com/perso/T4C/npc/LighthavenSamaritanTest.java). Naive "only run tests in
+# the changed package" selection would let those regress silently, which is
+# exactly the class of bug this repo's CI was originally added to catch (see
+# CHANGELOG.md's 2026-09-17 CI entry).
+#
+# An earlier version of this script tried to narrow that risk with a
+# heuristic (pull in any test that imports one of the five registry
+# classes) instead of a blanket fallback. Codex's review of that version
+# caught a real gap: a change to com/perso/T4C/npc/core/NpcScripts.java
+# could break com/perso/T4C/spell/SelfDestructSpellRegistryTest.java, which
+# exercises NpcScripts but doesn't import a registry class at all, so the
+# heuristic missed it. There is no reliable way to enumerate "who depends on
+# this package's behavior" from source text alone, so content-registry
+# packages (and anything foundational enough that most of the codebase
+# depends on it) always get the full suite - only genuinely leaf/local
+# packages (render, audio, gui, ...) get scoped.
 
 set -euo pipefail
 
@@ -94,16 +104,22 @@ if [[ -z "$FULL_REASON" ]] && grep -qE '^src/main/java/com/perso/T4C/[^/]+\.java
   FULL_REASON="a root-level entry-point/tooling class changed"
 fi
 
-# Packages nearly everything else depends on transitively - no reliable way
-# to scope tests to "everyone who might be affected", so play it safe.
+# Packages nearly everything else depends on transitively (no reliable way
+# to scope tests to "everyone who might be affected"), plus the packages
+# that define the item/monster/spell/npc/quest registries several
+# cross-cutting tests scan from unrelated packages (see the module
+# docstring above for why a narrower heuristic isn't safe here) - both
+# groups always get the full suite.
 FOUNDATIONAL_PACKAGES="helper entity model world mapping config content exception"
+CONTENT_PACKAGES="item monster spell npc quest tools"
+ALWAYS_FULL_PACKAGES="$FOUNDATIONAL_PACKAGES $CONTENT_PACKAGES"
 TOUCHED_PACKAGES="$( { grep -oE '^src/(main|test)/java/com/perso/T4C/[^/]+/' <<<"$CHANGED_FILES" || true; } | sed -E 's#^src/(main|test)/java/com/perso/T4C/##;s#/$##' | sort -u)"
 
 if [[ -z "$FULL_REASON" ]]; then
   for pkg in $TOUCHED_PACKAGES; do
-    for f in $FOUNDATIONAL_PACKAGES; do
+    for f in $ALWAYS_FULL_PACKAGES; do
       if [[ "$pkg" == "$f" ]]; then
-        FULL_REASON="foundational package '$pkg' changed"
+        FULL_REASON="package '$pkg' changed (foundational or content-registry-defining)"
         break 2
       fi
     done
@@ -124,23 +140,9 @@ if [[ -n "$FULL_REASON" ]]; then
 fi
 
 # --- 4. Scoped selection -----------------------------------------------
-# Registry-sensitive test classes: any test file that imports one of the
-# five content registries. These get pulled in whenever a change touches a
-# package that feeds one of those registries, regardless of which package
-# the test itself lives in - see the module docstring above.
-REGISTRY_IMPORT_PATTERN='^import com\.perso\.T4C\.(item\.ItemRegistry|monster\.core\.MonsterRegistry|spell\.SpellRegistry|npc\.core\.NpcFactoryRegistry|quest\.QuestRegistry);'
-CONTENT_PACKAGES="item monster spell npc quest tools"
-
-NEEDS_REGISTRY_TESTS=false
-for pkg in $TOUCHED_PACKAGES; do
-  for c in $CONTENT_PACKAGES; do
-    if [[ "$pkg" == "$c" ]]; then
-      NEEDS_REGISTRY_TESTS=true
-      break 2
-    fi
-  done
-done
-
+# Reaching here means every touched package is neither foundational nor
+# content-registry-defining (both fall back to full above), so it's safe to
+# run just the touched packages' own tests.
 TEST_CLASSES=""
 
 for pkg in $TOUCHED_PACKAGES; do
@@ -150,12 +152,6 @@ for pkg in $TOUCHED_PACKAGES; do
     done < <(find "src/test/java/com/perso/T4C/$pkg" -name '*.java')
   fi
 done
-
-if [[ "$NEEDS_REGISTRY_TESTS" == true ]]; then
-  while IFS= read -r f; do
-    TEST_CLASSES="$TEST_CLASSES $(basename "$f" .java)"
-  done < <(grep -rlE "$REGISTRY_IMPORT_PATTERN" src/test/java --include='*.java')
-fi
 
 # Any test file changed directly always runs, even if its package wasn't
 # otherwise implicated (e.g. a brand-new test with no matching main change).
