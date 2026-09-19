@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0010`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0011`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -22,6 +22,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0007 | English-only localization pass | Fix/Process | Done | `a8d76b1` | [2026-09-18](CHANGELOG.md#2026-09-18--english-only-localization-pass-t4c-0007) |
 | T4C-0008 | Canon-verified content pass (Goblin Slayer, Arch Drake, Deep Ones Cave, Sentinel) | Content | Done | `67d940e` | [2026-09-18](CHANGELOG.md#2026-09-18--canon-verified-content-pass-t4c-0008) |
 | T4C-0009 | Avalon island expansion | Content | Done | `09ad82d`, `40e0f19`, `2127376`, `a3c968a`, `cd7bdf3`, `d607f66` | [2026-09-18–19](CHANGELOG.md#2026-09-1819--avalon-island-expansion-t4c-0009) |
+| T4C-0010 | CI: skip on docs-only changes, scoped test selection | Process/Tooling | Done | (pending) | [2026-09-19](CHANGELOG.md#2026-09-19--smarter-ci-skip-docs-only-changes-scope-test-runs-t4c-0010) |
 
 ## Type legend
 

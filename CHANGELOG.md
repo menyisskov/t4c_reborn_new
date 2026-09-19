@@ -15,6 +15,29 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-19 — Smarter CI: skip docs-only changes, scope test runs (T4C-0010)
+
+### Added
+- `scripts/ci-select-tests.sh` decides, from the diff between the base and
+  head commit, whether CI has anything to do at all (skip), needs to run
+  every test (full), or can run a scoped subset (scoped) — runnable and
+  testable locally against any two refs.
+
+### Changed
+- `.github/workflows/ci.yml`: a docs/process-only change (no `src/`,
+  `assets/`, or `pom.xml` touched) now skips compile and test entirely.
+  Compile always runs, unconditionally, whenever the job doesn't skip.
+  Content-registry-defining packages (`item`/`monster`/`spell`/`npc`/
+  `quest`/`tools`), `assets/`, `pom.xml`, foundational packages
+  (`helper`/`entity`/`model`/`world`/`mapping`/`config`/`content`/
+  `exception`), root-level entry classes, and >6 touched packages at once
+  all fall back to the full suite — this codebase has several
+  cross-cutting "registry parity" tests (e.g. `SpellRegistryParityTest`,
+  `LighthavenSamaritanTest`) that live in a different package than the
+  content that can break them, so naive per-package test scoping would let
+  those regress silently. A narrower change (e.g. `render`/`audio`/`gui`
+  only) now runs only the touched package's own tests.
+
 ## 2026-09-18–19 — Avalon island expansion (T4C-0009)
 
 ### Added
