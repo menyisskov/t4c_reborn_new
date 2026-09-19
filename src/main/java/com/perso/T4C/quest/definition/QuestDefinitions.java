@@ -17,6 +17,8 @@ public final class QuestDefinitions {
         AerieWyrmlingCull.definition(),
         BastionWardenSiege.definition(),
         DeepOnesCavePurge.definition(),
-        DrakesLairVigil.definition());
+        DrakesLairVigil.definition(),
+        AvalonWildsVigil.definition(),
+        FadingVeilReckoning.definition());
   }
 }

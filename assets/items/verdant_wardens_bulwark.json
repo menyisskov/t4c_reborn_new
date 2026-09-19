@@ -1,0 +1,32 @@
+{
+  "key": "verdant_wardens_bulwark",
+  "name": "Verdant Warden's Bulwark",
+  "bodyPart": "SHIELD",
+  "appearanceEquippedPrimary": "PupSkavenShield3",
+  "appearanceInventory": "64kInvSkavenShield3",
+  "price": 0,
+  "weight": 14,
+  "armorClass": 94.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 2200,
+    "strength": 1400,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 34008, "statId": 15, "expression": "95" },
+    { "boostId": 34009, "statId": 2, "expression": "80" },
+    { "boostId": 34010, "statId": 10008, "expression": "40" }
+  ]
+}
