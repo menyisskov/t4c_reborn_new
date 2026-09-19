@@ -1,0 +1,44 @@
+# Task Ledger
+
+A lightweight, in-repo task tracker. This project doesn't use an external
+issue tracker, so every unit of content/feature work gets a sequential ID
+here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
+commit message, a `CHANGELOG.md` entry, or a PR description back to "what
+was this work and why."
+
+**Next free ID: `T4C-0010`.** When starting new work, claim the next ID,
+add a row below with status `Planned`/`In Progress`, and flip it to `Done`
+(with a commit range and a `CHANGELOG.md` entry) when it ships. See
+`CLAUDE.md` for the full policy this file is part of.
+
+| ID | Title | Type | Status | Commits | Changelog |
+|---|---|---|---|---|---|
+| T4C-0001 | JSON content pipeline, armor sets, level cap 500 | Content/Systems | Done | `a7e7247` | [2026-09-16](CHANGELOG.md#2026-09-16--json-content-pipeline-armor-sets-level-cap-500-t4c-0001) |
+| T4C-0002 | Rebirth economy, storage, spell vendor, macros | Content/Systems | Done | `0404411` | [2026-09-17](CHANGELOG.md#2026-09-17--rebirth-economy-storage-and-quality-of-life-pass-t4c-0002) |
+| T4C-0003 | Content-authoring Claude skills | Process/Tooling | Done | `0f2cba7`, `2bfcd38`, `99e6f39`, `1758ed7` | [2026-09-17](CHANGELOG.md#2026-09-17--content-authoring-skills-t4c-0003-processtooling) |
+| T4C-0004 | Sunken Chancel & Cinderreach Hills zones | Content | Done | `8f67c16` | [2026-09-17](CHANGELOG.md#2026-09-17--sunken-chancel--cinderreach-hills-zones-t4c-0004) |
+| T4C-0005 | Leveling overhaul (XP overflow fix) + 4 endgame zones 100–500 | Content/Fix | Done | `a8c3f55` | [2026-09-17](CHANGELOG.md#2026-09-17--leveling-overhaul--4-endgame-zones-levels-100500-t4c-0005) |
+| T4C-0006 | Fix new spells unlearnable via TrainingCatalog | Fix | Done | `52db68e` | [2026-09-17](CHANGELOG.md#2026-09-17--spell-learnability-fix-t4c-0006) |
+| T4C-0007 | English-only localization pass | Fix/Process | Done | `a8d76b1` | [2026-09-18](CHANGELOG.md#2026-09-18--english-only-localization-pass-t4c-0007) |
+| T4C-0008 | Canon-verified content pass (Goblin Slayer, Arch Drake, Deep Ones Cave, Sentinel) | Content | Done | `67d940e` | [2026-09-18](CHANGELOG.md#2026-09-18--canon-verified-content-pass-t4c-0008) |
+| T4C-0009 | Avalon island expansion | Content | Done | `09ad82d`, `40e0f19`, `2127376`, `a3c968a`, `cd7bdf3`, `d607f66` | [2026-09-18–19](CHANGELOG.md#2026-09-1819--avalon-island-expansion-t4c-0009) |
+
+## Type legend
+
+- **Content** — new/changed in-world content (zones, monsters, items,
+  spells, quests, NPCs, maps).
+- **Systems** — new or changed game mechanics/economy (rebirth, storage,
+  progression curves, UI infra).
+- **Fix** — bug fix with no new content.
+- **Process/Tooling** — repo/dev workflow (skills, CI, review policy) with
+  no in-game effect.
+
+## Backfill note
+
+T4C-0001 through T4C-0009 were assigned retroactively on 2026-09-19 while
+setting up this ledger and `CHANGELOG.md`, by walking `git log` for the
+project's content/feature passes. Earlier history (companion/taming system,
+HUD rework, original NPC/quest content, etc.) predates this tracking effort
+and was not backfilled with IDs — only the passes covered by
+`CHANGELOG.md` are. Everything from T4C-0010 onward is tracked live, as the
+work happens.
