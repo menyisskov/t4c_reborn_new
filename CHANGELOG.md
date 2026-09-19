@@ -38,6 +38,21 @@ _Nothing pending._
   those regress silently. A narrower change (e.g. `render`/`audio`/`gui`
   only) now runs only the touched package's own tests.
 
+### Fixed
+- Codex's review of this pass caught two real issues before merge, both
+  fixed in the same pass rather than as follow-ups: selector outputs
+  (including test-file-derived class names, which a PR's own diff
+  controls) are now passed through `env:` and expanded as `"$VAR"` instead
+  of being interpolated with `${{ }}` directly into `run:` script text —
+  the latter is a shell-injection vector, since a maliciously-named test
+  file could execute arbitrary commands in the CI runner. A first version
+  of the content-package handling above tried a narrower heuristic (only
+  pull in tests that import one of the five registry classes) instead of
+  a blanket full-suite fallback; that heuristic missed real cross-package
+  dependencies with no such import (e.g. a `NpcScripts` change breaking
+  `SelfDestructSpellRegistryTest`), so it was dropped in favor of the
+  simpler, safer full-suite fallback described above.
+
 ## 2026-09-18–19 — Avalon island expansion (T4C-0009)
 
 ### Added
