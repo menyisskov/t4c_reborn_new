@@ -97,7 +97,7 @@ fi
 # Packages nearly everything else depends on transitively - no reliable way
 # to scope tests to "everyone who might be affected", so play it safe.
 FOUNDATIONAL_PACKAGES="helper entity model world mapping config content exception"
-TOUCHED_PACKAGES="$(grep -oE '^src/(main|test)/java/com/perso/T4C/[^/]+/' <<<"$CHANGED_FILES" | sed -E 's#^src/(main|test)/java/com/perso/T4C/##;s#/$##' | sort -u)"
+TOUCHED_PACKAGES="$( { grep -oE '^src/(main|test)/java/com/perso/T4C/[^/]+/' <<<"$CHANGED_FILES" || true; } | sed -E 's#^src/(main|test)/java/com/perso/T4C/##;s#/$##' | sort -u)"
 
 if [[ -z "$FULL_REASON" ]]; then
   for pkg in $TOUCHED_PACKAGES; do
