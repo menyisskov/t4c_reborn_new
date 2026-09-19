@@ -12,8 +12,43 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          # Just enough history to diff against the previous commit/PR base -
+          # this repo's .git is large (binary sprite/map assets), so a full
+          # fetch-depth: 0 here would be expensive on every run. If history
+          # is ever insufficient, scripts/ci-select-tests.sh fails safe to
+          # the full test suite rather than guessing.
+          fetch-depth: 10
+
+      - name: Select tests
+        id: select
+        env:
+          BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: scripts/ci-select-tests.sh "$BASE_REF" "$HEAD_REF" >> "$GITHUB_OUTPUT"
+
+      - name: Show CI plan
+        # Read every selector output through env + "$VAR", never ${{ }}
+        # interpolated straight into the script text: these values are
+        # derived from file/package names a PR's own diff controls, and
+        # ${{ }} substitutes as raw text before bash ever parses the line -
+        # an untrusted value there is a shell injection, not just data. A
+        # real "$VAR" expansion never gets re-parsed as code.
+        env:
+          SKIP: ${{ steps.select.outputs.skip }}
+          TEST_MODE: ${{ steps.select.outputs.test_mode }}
+          REASON: ${{ steps.select.outputs.reason }}
+          TEST_CLASSES: ${{ steps.select.outputs.test_classes }}
+        run: |
+          echo "skip: $SKIP"
+          echo "test_mode: $TEST_MODE"
+          echo "reason: $REASON"
+          if [[ "$TEST_MODE" == "scoped" ]]; then
+            echo "test classes: $TEST_CLASSES"
+          fi
 
       - name: Set up JDK 17
+        if: steps.select.outputs.skip != 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -21,10 +56,18 @@ jobs:
           cache: maven
 
       - name: Compile
+        if: steps.select.outputs.skip != 'true'
         run: mvn -B -DskipTests compile
 
-      - name: Test
+      - name: Test (full suite)
+        if: steps.select.outputs.skip != 'true' && steps.select.outputs.test_mode == 'full'
         run: mvn -B test
+
+      - name: Test (scoped)
+        if: steps.select.outputs.skip != 'true' && steps.select.outputs.test_mode == 'scoped'
+        env:
+          TEST_CLASSES: ${{ steps.select.outputs.test_classes }}
+        run: mvn -B "-Dtest=$TEST_CLASSES" -DfailIfNoTests=false test
 
       - name: Upload surefire reports
         if: failure()
