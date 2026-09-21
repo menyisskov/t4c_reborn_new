@@ -47,12 +47,12 @@ jobs:
             echo "test classes: $TEST_CLASSES"
           fi
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         if: steps.select.outputs.skip != 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
           cache: maven
 
       - name: Compile
