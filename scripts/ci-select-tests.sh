@@ -167,6 +167,15 @@ if [[ -z "$TEST_CLASSES" ]]; then
   exit 0
 fi
 
+# Cross-cutting architecture guards assert properties of packages other than
+# their own, so scoping them to "their" package would defeat them:
+# ServerPurityTest checks that the rule packages the headless server loads
+# stay free of libGDX, and a gdx import added to combat/ or skill/ - neither
+# foundational nor content-registry-defining, so both scope - would
+# otherwise never be checked. Appended after the emptiness test above so it
+# can't mask the "matched no test class" full-suite fallback.
+TEST_CLASSES="$(tr ' ,' '\n\n' <<<"$TEST_CLASSES ServerPurityTest" | sed '/^$/d' | sort -u | paste -sd, -)"
+
 emit test_mode scoped
 emit test_classes "$TEST_CLASSES"
 emit reason "scoped to packages: $(tr '\n' ' ' <<<"$TOUCHED_PACKAGES")"
