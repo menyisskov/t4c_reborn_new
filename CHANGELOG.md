@@ -15,6 +15,44 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-21 — MMO server groundwork: Java 21, libGDX purity guard (T4C-0011)
+
+First step of the client/server split. The original T4C was an MMO and this
+recreation's single-player-only shape is an artifact of how it was rebuilt,
+not a design goal — so the desktop client is being moved toward rendering a
+world the server owns. Nothing player-visible changes in this pass.
+
+### Added
+- `ServerPurityTest` guards the rule packages the future headless server
+  will load (`combat`, `spell`, `item`, `quest`, `skill`, `death`,
+  `monster/loot`, `model`) against libGDX references. All 5,794 files across
+  them are gdx-free today apart from four presentation classes
+  (`CombatGeometry`, `CompanionCastVfxHook`, `NpcCastVfxHook`,
+  `TameChannel`), recorded as known violations so the list doubles as the
+  remaining client/server split work. A companion test fails once a recorded
+  violation is cleaned up, so the list can't rot. A server has no GL
+  context, so this class of mistake otherwise surfaces as a crash on a
+  headless box rather than a compile error on a developer's desktop.
+
+### Changed
+- Toolchain moves to Java 21 LTS (`maven.compiler` 17 → 21, CI JDK 17 → 21).
+  The server wants virtual threads for thread-per-connection socket
+  handling; bumping the whole project keeps one toolchain rather than
+  splitting versions per module.
+- `scripts/ci-select-tests.sh` always appends `ServerPurityTest` in scoped
+  mode. The guard asserts properties of packages other than its own, and
+  `combat`/`skill`/`death` are neither foundational nor
+  content-registry-defining — so they scope, and a gdx import added there
+  would previously have run only that package's own tests and never been
+  checked. Appended after the existing "matched no test class" check so it
+  cannot mask that full-suite fallback.
+
+### Notes
+- `mvn spotless:apply` currently reformats 526 pre-existing files: CI runs
+  compile and test but never `spotless:check`, so formatting has drifted.
+  Left alone deliberately rather than bundling an unrelated 526-file diff
+  into this pass.
+
 ## 2026-09-19 — Smarter CI: skip docs-only changes, scope test runs (T4C-0010)
 
 ### Added
