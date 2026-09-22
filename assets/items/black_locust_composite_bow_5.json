@@ -1,0 +1,32 @@
+{
+  "key": "black_locust_composite_bow_5",
+  "name": "Black Locust Composite Bow +5",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 0,
+  "weight": 11,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 138,
+    "strength": 590,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 448,
+  "undroppable": false,
+  "dmgFormula": "1d178+345+3*arrow_dmg",
+  "atkDelay": "750",
+  "boosts": [
+    { "boostId": 35005, "statId": 10035, "expression": "true_skill(35)*80/100" }
+  ]
+}

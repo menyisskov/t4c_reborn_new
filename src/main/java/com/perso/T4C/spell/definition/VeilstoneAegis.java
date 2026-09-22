@@ -3,13 +3,18 @@ package com.perso.T4C.spell.definition;
 import com.perso.T4C.spell.SpellData;
 import java.util.List;
 
-public final class DivineVeil {
-  private DivineVeil() {}
+/**
+ * Originally authored under the name "Divine Veil", which turned out to collide with a real
+ * t4cfantasy.com/Addon "Ancient tier" spell name; renamed to an invented name, keeping the same
+ * mechanics/spellId. See {@code LeywardBastion} for this ward's higher-tier sibling.
+ */
+public final class VeilstoneAegis {
+  private VeilstoneAegis() {}
 
   public static SpellData definition() {
     return new SpellData(
-        "${spell.divine_veil}",
-        "${spell.description.divine_veil}",
+        "${spell.veilstone_aegis}",
+        "${spell.description.veilstone_aegis}",
         "1000",
         0,
         20,

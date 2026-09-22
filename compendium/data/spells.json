@@ -5166,9 +5166,9 @@
     ]
   },
   {
-    "key": "spell.clemancy",
+    "key": "spell.wellspring_mercy",
     "isNew": true,
-    "name": "Clemancy",
+    "name": "Wellspring Mercy",
     "description": "Calls forth a wave of divine mercy, greatly restoring health to the caster and any nearby grouped allies.",
     "manaCost": "1000",
     "minInt": 30,
@@ -5208,9 +5208,9 @@
     ]
   },
   {
-    "key": "spell.divine_veil",
+    "key": "spell.veilstone_aegis",
     "isNew": true,
-    "name": "Divine Veil",
+    "name": "Veilstone Aegis",
     "description": "Wraps the target in a shimmering veil, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
     "manaCost": "1000",
     "minInt": 20,
@@ -5329,9 +5329,9 @@
     ]
   },
   {
-    "key": "spell.undead_annihilation",
+    "key": "spell.sunscour",
     "isNew": true,
-    "name": "Undead Annihilation",
+    "name": "Sunscour",
     "description": "Obliterates an undead target with sacred words of banishment far more potent than Turn Undead.",
     "manaCost": "30",
     "minInt": 100,
@@ -5370,9 +5370,9 @@
     ]
   },
   {
-    "key": "spell.omega_planetoids",
+    "key": "spell.gravebreaker",
     "isNew": true,
-    "name": "Omega Planetoids",
+    "name": "Gravebreaker",
     "description": "Rains massive planetoid fragments upon the target, dealing twice the damage of Land Slide. This spell has a small area of effect.",
     "manaCost": "96",
     "minInt": 200,
@@ -5402,6 +5402,268 @@
           {
             "paramId": 2,
             "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*6)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.voidreave_lance",
+    "isNew": true,
+    "name": "Voidreave Lance",
+    "description": "Hurls a lance of raw void energy at the target, piercing armor and flesh alike.",
+    "manaCost": "18",
+    "minInt": 260,
+    "minWis": 90,
+    "minLevel": 320,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1850000,
+    "spellId": 99906,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d42+112+self.int/10)*self.dark/target.r_dark)*7)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.stormcallers_judgment",
+    "isNew": true,
+    "name": "Stormcaller's Judgment",
+    "description": "Calls down a violent lightning storm upon the target. This spell has a small area of effect.",
+    "manaCost": "26",
+    "minInt": 360,
+    "minWis": 140,
+    "minLevel": 480,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 2400000,
+    "spellId": 99907,
+    "element": 3,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.sanctum_ward",
+    "isNew": true,
+    "name": "Sanctum Ward",
+    "description": "Raises a greater standing ward around the caster's party, granting large bonuses to air, water, earth, fire and dark resistance, armor class, and maximum hit points.",
+    "manaCost": "2200",
+    "minInt": 50,
+    "minWis": 480,
+    "minLevel": 550,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 6,
+    "duration": "60000",
+    "price": 2600000,
+    "spellId": 99908,
+    "element": 5,
+    "targetType": 5,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "250"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_water"
+          },
+          {
+            "paramId": 3,
+            "expression": "250"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_air"
+          },
+          {
+            "paramId": 3,
+            "expression": "250"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_earth"
+          },
+          {
+            "paramId": 3,
+            "expression": "250"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "250"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "150"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "max hp"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.wis*2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.emberqueens_wrath",
+    "isNew": true,
+    "name": "Emberqueen's Wrath",
+    "description": "Engulfs the target in an inferno of royal fire. This spell has a small area of effect.",
+    "manaCost": "38",
+    "minInt": 440,
+    "minWis": 170,
+    "minLevel": 650,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 3100000,
+    "spellId": 99909,
+    "element": 1,
+    "targetType": 19,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)"
           },
           {
             "paramId": 3,
@@ -5641,9 +5903,9 @@
     ]
   },
   {
-    "key": "spell.sentinel",
+    "key": "spell.leyward_bastion",
     "isNew": true,
-    "name": "Sentinel",
+    "name": "Leyward Bastion",
     "description": "Raises a standing ward around the caster's party, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
     "manaCost": "1600",
     "minInt": 30,
@@ -5752,6 +6014,48 @@
           {
             "paramId": 2,
             "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.cataclysms_herald",
+    "isNew": true,
+    "name": "Cataclysm's Herald",
+    "description": "Summons a crushing deluge upon the target, heralding the end of all who stand against it. This spell has a small area of effect.",
+    "manaCost": "58",
+    "minInt": 560,
+    "minWis": 240,
+    "minLevel": 900,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 4200000,
+    "spellId": 99916,
+    "element": 4,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)"
           },
           {
             "paramId": 3,

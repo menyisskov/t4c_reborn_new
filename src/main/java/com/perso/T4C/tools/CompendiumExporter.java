@@ -84,11 +84,16 @@ public final class CompendiumExporter {
           "DrownedWard",
           "Cinderburst",
           "EmberheartResolve",
-          "Clemancy",
-          "DivineVeil",
-          "UndeadAnnihilation",
-          "OmegaPlanetoids",
-          "Sentinel",
+          "WellspringMercy",
+          "VeilstoneAegis",
+          "Sunscour",
+          "Gravebreaker",
+          "LeywardBastion",
+          "VoidreaveLance",
+          "StormcallersJudgment",
+          "SanctumWard",
+          "EmberqueensWrath",
+          "CataclysmsHerald",
           "AvalonGateway");
 
   private static final Set<String> NEW_NPC_IDS =

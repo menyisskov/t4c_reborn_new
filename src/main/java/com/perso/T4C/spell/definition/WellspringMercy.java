@@ -3,13 +3,18 @@ package com.perso.T4C.spell.definition;
 import com.perso.T4C.spell.SpellData;
 import java.util.List;
 
-public final class Clemancy {
-  private Clemancy() {}
+/**
+ * Originally authored under the name "Clemancy", which turned out to collide with a real
+ * t4cfantasy.com/Addon "Ancient tier" spell name; renamed to an invented name, keeping the same
+ * mechanics/spellId.
+ */
+public final class WellspringMercy {
+  private WellspringMercy() {}
 
   public static SpellData definition() {
     return new SpellData(
-        "${spell.clemancy}",
-        "${spell.description.clemancy}",
+        "${spell.wellspring_mercy}",
+        "${spell.description.wellspring_mercy}",
         "1000",
         5,
         30,

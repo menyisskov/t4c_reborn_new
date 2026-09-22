@@ -3,13 +3,18 @@ package com.perso.T4C.spell.definition;
 import com.perso.T4C.spell.SpellData;
 import java.util.List;
 
-public final class OmegaPlanetoids {
-  private OmegaPlanetoids() {}
+/**
+ * Originally authored under the name "Omega Planetoids", which turned out to collide with a real
+ * t4cfantasy.com/Addon "Ancient tier" spell name; renamed to an invented name, keeping the same
+ * mechanics/spellId.
+ */
+public final class Gravebreaker {
+  private Gravebreaker() {}
 
   public static SpellData definition() {
     return new SpellData(
-        "${spell.omega_planetoids}",
-        "${spell.description.omega_planetoids}",
+        "${spell.gravebreaker}",
+        "${spell.description.gravebreaker}",
         "96",
         2,
         200,

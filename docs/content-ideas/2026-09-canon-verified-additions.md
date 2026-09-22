@@ -1,5 +1,17 @@
 # Content pass: canon-verified additions (Goblin Slayer, Bow of Centaur Slaying, Drake's Lair, Deep Ones Cave loot/quest)
 
+## Update: the "Ancient tier" spells were renamed (T4C-0018)
+
+This doc's "Ancient tier" spells (Sentinel, Divine Veil, Clemancy, Undead Annihilation, Omega
+Planetoids) were originally named after the real t4cfantasy.com/Addon spell list documented
+below — on later reflection, a fork adding *new* content shouldn't reuse the *real* game's own
+spell names, since that collides with the genuine article rather than inventing alongside it.
+T4C-0018 renamed all five to invented names with identical mechanics/`spellId`s: Sentinel →
+Leyward Bastion, Divine Veil → Veilstone Aegis, Clemancy → Wellspring Mercy, Undead Annihilation
+→ Sunscour, Omega Planetoids → Gravebreaker. The research below (what the real Addon tier
+actually contains) is left as-is as a historical record — just don't take the old spell names as
+what's currently shipped.
+
 The two previous content-idea passes (`2026-09-sunken-chancel-and-cinderreach-hills.md`,
 `2026-09-leveling-overhaul-and-endgame-zones.md`) were both written with `t4cfantasy.com` and
 `t4cbible.com` blocked by this environment's network egress proxy. This pass had real access to

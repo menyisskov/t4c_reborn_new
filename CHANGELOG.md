@@ -56,6 +56,57 @@ before it and claims 0019 to avoid an ID collision on merge._
   vice versa (catches a typo silently hiding a location), and a zone-unlock flag (and its fast
   travel entry) survives `RebirthBehavior.perform()`.
 
+## 2026-09-22 — Spell renames, Apex-tier spells, enchanted gear, and warrior/archer armor fix (T4C-0018)
+
+### Fixed
+- Five spells added by earlier passes (T4C-0004/T4C-0009) were literally named after real
+  t4cfantasy.com/Addon "Ancient tier" spells (Sentinel, Divine Veil, Clemancy, Undead
+  Annihilation, Omega Planetoids) — a fork adding new content shouldn't reuse the real game's own
+  spell names. Renamed to invented names with identical mechanics/`spellId`s: Sentinel → Leyward
+  Bastion, Divine Veil → Veilstone Aegis, Clemancy → Wellspring Mercy, Undead Annihilation →
+  Sunscour, Omega Planetoids → Gravebreaker. Archmage Thalindra and Skywatch Ilvara's dialogue/
+  training wiring, and the compendium exporter's allow-list, updated to match.
+- `tools/ArmorSetGenerator.java`'s warrior/archer armor flavors (Ancient Celestial and Empyrean
+  tiers) were mechanically identical to their mage/elemental siblings — same Armor Class, and the
+  same intelligence/wisdom requirement stacked *on top of* the strength/agility gate, so a
+  "warrior" set demanded mage stats too. Now genuinely physical-class gear: ~65% of the mage
+  tier's AC, no intelligence/wisdom requirement at all, and a flat endurance boost the mage
+  flavors don't get, on top of the existing strength/agility + attack/archery skill split. All 24
+  warrior/archer armor pieces regenerated; the 72 mage/elemental pieces are unaffected (Empyrean's
+  36 elemental files show only cosmetic `boostId` renumbering from the shared counter).
+- (Codex review, same pass) `SpellRegistry.findByName` had no alias for the five just-renamed
+  spell keys, so a character who'd already learned one under its old name (a real, checked-in
+  save has `${spell.divine_veil}` etc. in its spell list) would silently lose it — spellbook
+  omits it, casting rejects it as unlearned. Added the five old→new key mappings to the registry's
+  existing `canonicalAlias` table (the same mechanism already used for a couple of legacy
+  spell-key renames), with a new `SpellRenameBackwardCompatTest` locking in all five.
+- (Codex review, same pass) The nine new weapons/shields had no in-game acquisition path at all —
+  `price: 0` with no shop listing and no loot entry. Added all nine to `LordoftheShops`'
+  `ShopCatalog` list, right after their own line's existing +1/+2/+3 tiers (which are sold the
+  same way, also at `price: 0` — an existing, consistent convention for these exact lines, not
+  something this pass introduced).
+
+### Added
+- Five new "Apex tier" player spells (levels 320-900) filling the gap between the existing
+  "Elder tier" (40-260) and the level-1000 curve cap / Avalon boss band (550-650): Voidreave
+  Lance (320, dark bolt), Stormcaller's Judgment (480, air AOE), Sanctum Ward (550, defensive
+  group ward), Emberqueen's Wrath (650, fire AOE), Cataclysm's Herald (900, water AOE capstone).
+  Also taught by Archmage Thalindra at the Avalon Sanctuary Spell Trainer's Tower.
+- Six new enchanted weapons extending two existing top-tier legacy lines one/two ranks past their
+  previous +3 ceiling: Adamantite Two-Handed Sword +4/+5, Mithril Two-Handed Sword +4/+5, Black
+  Locust Composite Bow +4/+5 — each continuing that line's own established damage-dice/flat-bonus/
+  skill-boost growth curve, sold by LordoftheShops alongside their line's existing +1/+2/+3 tiers.
+- Three new Adamantite Shield tiers (+3/+4/+5) — this codebase had no shield enchant-tier line at
+  all before now; adds one on top of the existing unenchanted Adamantite Shield (also sold by
+  LordoftheShops), with AC, parry skill, and endurance scaling per tier.
+
+### Notes
+- `item/json/ItemJsonDef.java` already supports `dmgFormula`/`atkDelay` pass-through (four
+  existing JSON items — `goblin_slayer`, `bow_of_centaur_slaying`, `caradocs_sundered_blade`,
+  `ignaroks_emberfang_claw` — already use it) — the `item-creator` skill's documented "JSON
+  weapons can't have real damage" limitation is stale and no longer applies; no engine change was
+  needed for the new weapons' real, scaled damage.
+
 ## 2026-09-22 — XP-per-level chart on the compendium Systems page (T4C-0017)
 
 ### Added

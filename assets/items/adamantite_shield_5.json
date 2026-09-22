@@ -1,0 +1,31 @@
+{
+  "key": "adamantite_shield_5",
+  "name": "Adamantite Shield +5",
+  "bodyPart": "SHIELD",
+  "appearanceEquippedPrimary": "PupCentaurShield",
+  "appearanceInventory": "64kInvCentaurShield1",
+  "price": 0,
+  "weight": 12,
+  "armorClass": 43,
+  "dodgeLost": 38,
+  "requirements": {
+    "endurance": 230,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 460,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 35010, "statId": 10008, "expression": "350" },
+    { "boostId": 35011, "statId": 2, "expression": "170" }
+  ]
+}
