@@ -29,16 +29,31 @@ registries by `tools/CompendiumExporter.java` — never hand-edit those files di
 reference/curation files the exporter reads back in and bundles alongside the generated
 ones).
 
+**`.github/workflows/compendium.yml` does this automatically** on every push to `main`: it
+recompiles, re-runs the exporter, and pushes a `chore: regenerate compendium data` commit
+straight to `main` if anything drifted (stat tweaks, new loot, reworded quest text, etc.). So
+for changes to *already-tracked* content, you don't need to do anything — the site catches up
+on its own after merge.
+
+You still need to run it yourself, locally, when:
+
+- You're adding a **genuinely new** zone/monster/spell/NPC/quest and want to see it on the
+  site before merging (CI only runs after a push to `main`, not on PR branches).
+- The new content needs a source-code change first — the "is this new" allow-lists at the top
+  of `CompendiumExporter.java` (`NEW_MONSTER_NAMES`, `NEW_SPELL_CLASSES`, `NEW_NPC_IDS`,
+  `NEW_QUEST_IDS`) are hand-curated (there's no `isNew`/rarity field in the game data itself),
+  so a class name has to be added there — and, for a new zone, a row added to
+  `compendium/data/zones.json` — before the exporter will pick it up at all. CI regenerating
+  on merge doesn't skip this step; it just means you don't *also* have to commit the
+  regenerated JSON by hand once the allow-lists are updated.
+
 ```bash
 mvn -q compile
 mvn -q dependency:build-classpath -Dmdep.outputFile=/tmp/cp.txt
 java -cp "target/classes:$(cat /tmp/cp.txt)" com.perso.T4C.tools.CompendiumExporter compendium/data
 ```
 
-This overwrites `compendium/data/*.json` and `compendium/data.js`. Re-run it any time new
-content ships so the site stays current, and update the curated allow-lists at the top of
-`CompendiumExporter.java` (`NEW_MONSTER_NAMES`, `NEW_SPELL_CLASSES`, `NEW_NPC_IDS`,
-`NEW_QUEST_IDS`) plus `compendium/data/zones.json` when a new content pass adds a zone.
+This overwrites `compendium/data/*.json` and `compendium/data.js`.
 
 ## Scope
 

@@ -15,6 +15,28 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-22 — CI auto-regenerates compendium data on push to main (T4C-0013)
+
+### Added
+- `.github/workflows/compendium.yml`: on every push to `main`, recompiles, re-runs
+  `tools/CompendiumExporter.java`, and pushes a `chore: regenerate compendium data` commit
+  straight to `main` if `compendium/data.js`/`compendium/data/*.json` drifted (stat tweaks,
+  reworded quest/dialogue text, new loot entries, etc. on already-tracked content). Guards
+  against re-triggering itself on its own push via a `[skip compendium]` tag in its commit
+  message.
+
+### Notes
+- This does not make brand-new content (a new zone/monster/spell/NPC/quest) appear on the
+  site automatically — the exporter's "is this new" allow-lists are hand-curated (the game
+  data has no `isNew`/rarity field to key off), so adding a genuinely new class still needs a
+  source change to `CompendiumExporter.java` (and, for a new zone, a `compendium/data/zones.json`
+  row) before this workflow's regeneration has anything new to pick up. See
+  `compendium/README.md`'s "Regenerating the data" section for exactly when this workflow
+  covers you and when it doesn't.
+- Pushes straight to `main` with no review step, per explicit request — if `main` ever gets
+  branch protection requiring PRs, this workflow's push will start failing and will need to
+  switch to opening a PR instead.
+
 ## 2026-09-22 — Local compendium website (T4C-0012)
 
 A static, searchable stat-sheet site (`compendium/`) documenting everything this fork added
