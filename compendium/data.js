@@ -34,11 +34,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 124,
-        "fire": 62,
+        "earth": 62,
         "water": 93,
-        "earth": 93,
-        "light": 100,
-        "dark": 100
+        "fire": 93,
+        "dark": 93,
+        "light": 5000
       },
       "loot": [
         {
@@ -90,11 +90,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 95,
+        "earth": 95,
         "water": 135,
-        "earth": 85,
-        "light": 100,
-        "dark": 100
+        "fire": 85,
+        "dark": 160,
+        "light": 35
       },
       "loot": [
         {
@@ -146,11 +146,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 70,
-        "fire": 130,
+        "earth": 130,
         "water": 150,
-        "earth": 80,
-        "light": 100,
-        "dark": 100
+        "fire": 80,
+        "dark": 100,
+        "light": 100
       },
       "loot": [
         {
@@ -202,11 +202,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 90,
-        "fire": 100,
+        "earth": 100,
         "water": 180,
-        "earth": 70,
-        "light": 100,
-        "dark": 100
+        "fire": 70,
+        "dark": 220,
+        "light": 25
       },
       "loot": [
         {
@@ -258,11 +258,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 90,
+        "earth": 90,
         "water": 60,
-        "earth": 180,
-        "light": 100,
-        "dark": 100
+        "fire": 180,
+        "dark": 100,
+        "light": 100
       },
       "loot": [
         {
@@ -314,11 +314,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 85,
+        "earth": 85,
         "water": 55,
-        "earth": 190,
-        "light": 100,
-        "dark": 100
+        "fire": 190,
+        "dark": 110,
+        "light": 95
       },
       "loot": [
         {
@@ -370,11 +370,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 95,
+        "earth": 95,
         "water": 45,
-        "earth": 240,
-        "light": 100,
-        "dark": 100
+        "fire": 240,
+        "dark": 120,
+        "light": 100
       },
       "loot": [
         {
@@ -426,11 +426,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 130,
+        "earth": 130,
         "water": 100,
-        "earth": 90,
-        "light": 100,
-        "dark": 100
+        "fire": 90,
+        "dark": 100,
+        "light": 100
       },
       "loot": [
         {
@@ -486,11 +486,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 140,
+        "earth": 140,
         "water": 100,
-        "earth": 90,
-        "light": 100,
-        "dark": 100
+        "fire": 90,
+        "dark": 110,
+        "light": 100
       },
       "loot": [
         {
@@ -546,11 +546,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 100,
+        "earth": 100,
         "water": 100,
-        "earth": 90,
-        "light": 100,
-        "dark": 100
+        "fire": 90,
+        "dark": 170,
+        "light": 30
       },
       "loot": [
         {
@@ -602,11 +602,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 100,
+        "earth": 100,
         "water": 100,
-        "earth": 110,
-        "light": 100,
-        "dark": 100
+        "fire": 110,
+        "dark": 240,
+        "light": 15
       },
       "loot": [
         {
@@ -658,11 +658,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 130,
-        "fire": 80,
+        "earth": 80,
         "water": 90,
-        "earth": 130,
-        "light": 100,
-        "dark": 100
+        "fire": 130,
+        "dark": 100,
+        "light": 100
       },
       "loot": [
         {
@@ -714,11 +714,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 63,
-        "fire": 5000,
+        "earth": 5000,
         "water": 63,
-        "earth": -63,
-        "light": 100,
-        "dark": 100
+        "fire": -63,
+        "dark": 63,
+        "light": 5000
       },
       "loot": [
         {
@@ -786,11 +786,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 130,
-        "fire": 140,
+        "earth": 140,
         "water": 110,
-        "earth": 70,
-        "light": 100,
-        "dark": 100
+        "fire": 70,
+        "dark": 60,
+        "light": 150
       },
       "loot": [
         {
@@ -850,11 +850,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 140,
-        "fire": 100,
+        "earth": 100,
         "water": 120,
-        "earth": 70,
-        "light": 100,
-        "dark": 100
+        "fire": 70,
+        "dark": 110,
+        "light": 90
       },
       "loot": [
         {
@@ -914,11 +914,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 90,
-        "fire": 140,
+        "earth": 140,
         "water": 100,
-        "earth": 120,
-        "light": 100,
-        "dark": 100
+        "fire": 120,
+        "dark": 100,
+        "light": 100
       },
       "loot": [
         {
@@ -970,11 +970,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 110,
-        "fire": 90,
+        "earth": 90,
         "water": 100,
-        "earth": 80,
-        "light": 100,
-        "dark": 100
+        "fire": 80,
+        "dark": 160,
+        "light": 40
       },
       "loot": [
         {
@@ -1034,11 +1034,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 63,
-        "fire": 5000,
+        "earth": 5000,
         "water": 63,
-        "earth": -63,
-        "light": 100,
-        "dark": 100
+        "fire": -63,
+        "dark": 63,
+        "light": 5000
       },
       "loot": [
         {
@@ -1075,7 +1075,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP525",
-      "displayName": "${monster.arenamobxp525}",
+      "displayName": "ArenaMobXP525",
       "origin": "new",
       "level": 525,
       "health": 58014,
@@ -1106,11 +1106,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1126,7 +1126,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP550",
-      "displayName": "${monster.arenamobxp550}",
+      "displayName": "ArenaMobXP550",
       "origin": "new",
       "level": 550,
       "health": 62212,
@@ -1157,11 +1157,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1208,11 +1208,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 80,
-        "fire": 140,
+        "earth": 140,
         "water": 110,
-        "earth": 100,
-        "light": 100,
-        "dark": 100
+        "fire": 100,
+        "dark": 200,
+        "light": 20
       },
       "loot": [
         {
@@ -1272,11 +1272,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 70,
-        "fire": 130,
+        "earth": 130,
         "water": 100,
-        "earth": 90,
-        "light": 100,
-        "dark": 100
+        "fire": 90,
+        "dark": 170,
+        "light": 30
       },
       "loot": [
         {
@@ -1305,7 +1305,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP575",
-      "displayName": "${monster.arenamobxp575}",
+      "displayName": "ArenaMobXP575",
       "origin": "new",
       "level": 575,
       "health": 66410,
@@ -1336,11 +1336,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1356,7 +1356,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP600",
-      "displayName": "${monster.arenamobxp600}",
+      "displayName": "ArenaMobXP600",
       "origin": "new",
       "level": 600,
       "health": 70607,
@@ -1387,11 +1387,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1438,11 +1438,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 100,
-        "fire": 90,
+        "earth": 90,
         "water": 90,
-        "earth": 120,
-        "light": 100,
-        "dark": 100
+        "fire": 120,
+        "dark": 250,
+        "light": 10
       },
       "loot": [
         {
@@ -1487,7 +1487,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP625",
-      "displayName": "${monster.arenamobxp625}",
+      "displayName": "ArenaMobXP625",
       "origin": "new",
       "level": 625,
       "health": 74805,
@@ -1518,11 +1518,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1538,7 +1538,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP650",
-      "displayName": "${monster.arenamobxp650}",
+      "displayName": "ArenaMobXP650",
       "origin": "new",
       "level": 650,
       "health": 79003,
@@ -1569,11 +1569,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1620,11 +1620,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 120,
-        "fire": 180,
+        "earth": 180,
         "water": 150,
-        "earth": 60,
-        "light": 100,
-        "dark": 100
+        "fire": 60,
+        "dark": 130,
+        "light": 160
       },
       "loot": [
         {
@@ -1653,7 +1653,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP675",
-      "displayName": "${monster.arenamobxp675}",
+      "displayName": "ArenaMobXP675",
       "origin": "new",
       "level": 675,
       "health": 83201,
@@ -1684,11 +1684,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1704,7 +1704,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP700",
-      "displayName": "${monster.arenamobxp700}",
+      "displayName": "ArenaMobXP700",
       "origin": "new",
       "level": 700,
       "health": 87399,
@@ -1735,11 +1735,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1755,7 +1755,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP725",
-      "displayName": "${monster.arenamobxp725}",
+      "displayName": "ArenaMobXP725",
       "origin": "new",
       "level": 725,
       "health": 91596,
@@ -1786,11 +1786,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1806,7 +1806,7 @@ window.T4C_DATA = {
     },
     {
       "name": "ArenaMobXP750",
-      "displayName": "${monster.arenamobxp750}",
+      "displayName": "ArenaMobXP750",
       "origin": "new",
       "level": 750,
       "health": 95794,
@@ -1837,11 +1837,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 46,
-        "fire": 94,
-        "water": 46,
         "earth": 94,
-        "light": 100,
-        "dark": 100
+        "water": 46,
+        "fire": 94,
+        "dark": 70,
+        "light": 5000
       },
       "loot": [],
       "attacks": [
@@ -1888,11 +1888,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 63,
-        "fire": 5000,
+        "earth": 5000,
         "water": 63,
-        "earth": -63,
-        "light": 100,
-        "dark": 100
+        "fire": -63,
+        "dark": 63,
+        "light": 5000
       },
       "loot": [
         {
@@ -1944,11 +1944,11 @@ window.T4C_DATA = {
       },
       "resists": {
         "air": 63,
-        "fire": 5000,
+        "earth": 5000,
         "water": 63,
-        "earth": -63,
-        "light": 100,
-        "dark": 100
+        "fire": -63,
+        "dark": 63,
+        "light": 5000
       },
       "loot": [
         {
@@ -1978,78 +1978,8 @@ window.T4C_DATA = {
   ],
   "spells": [
     {
-      "key": "spell.doppelganger_self_damage_1",
-      "isNew": false,
-      "category": "player",
-      "name": "Doppelganger: Internal Damage 1",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 1,
-      "maxDamage": 1,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 0,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 0,
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "spell.doppelganger_self_damage_2",
-      "isNew": false,
-      "category": "player",
-      "name": "Doppelganger: Internal Damage 2",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 1,
-      "maxDamage": 1,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 0,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 0,
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "spell.doppelganger_self_damage_3",
-      "isNew": false,
-      "category": "player",
-      "name": "Doppelganger: Internal Damage 3",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 1,
-      "maxDamage": 1,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 0,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 0,
-      "pvp": false,
-      "effects": []
-    },
-    {
       "key": "spell.level_up",
       "isNew": false,
-      "category": "player",
       "name": "LevelUp",
       "description": "Level Up: a column of light lifts the caster, briefly increasing all of their attributes by 10%.",
       "manaCost": "0",
@@ -2153,55 +2083,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.npc_cantrip_flak",
-      "isNew": false,
-      "category": "player",
-      "name": "PNJ cantrip flak",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 0,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 0,
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "spell.npc_self_destruct_2_minutes",
-      "isNew": false,
-      "category": "player",
-      "name": "NPC: Self-destruct in 2 Minutes",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 0,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 0,
-      "pvp": false,
-      "effects": []
-    },
-    {
       "key": "spell.tame_beast",
       "isNew": false,
-      "category": "player",
       "name": "Tame Beast",
       "description": "Channels to tame a beast.",
       "manaCost": "10",
@@ -2226,7 +2109,6 @@ window.T4C_DATA = {
     {
       "key": "spell.fire_dart",
       "isNew": false,
-      "category": "player",
       "name": "Fire Dart",
       "description": "Hurls a small flaming projectile at the target.",
       "manaCost": "1",
@@ -2268,7 +2150,6 @@ window.T4C_DATA = {
     {
       "key": "spell.flaming_arrow",
       "isNew": false,
-      "category": "player",
       "name": "Flaming Arrow",
       "description": "Hurls a small flaming projectile at the target.",
       "manaCost": "3",
@@ -2310,7 +2191,6 @@ window.T4C_DATA = {
     {
       "key": "spell.fire_bolt",
       "isNew": false,
-      "category": "player",
       "name": "Fire Bolt",
       "description": "Hurls a concentrated bolt of fire at the target.",
       "manaCost": "6",
@@ -2352,7 +2232,6 @@ window.T4C_DATA = {
     {
       "key": "spell.fireball",
       "isNew": false,
-      "category": "player",
       "name": "Fireball",
       "description": "Launches a ball of fire at the target. This spell has a medium area of effect.",
       "manaCost": "7",
@@ -2393,52 +2272,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.lighthaven_gateway",
-      "isNew": false,
-      "category": "player",
-      "name": "Lighthaven Gateway",
-      "description": "Teleports the caster to the stone circle at Lighthaven, on Arakas.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10019,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "2941"
-            },
-            {
-              "paramId": 2,
-              "expression": "1062"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.poison",
       "isNew": false,
-      "category": "player",
       "name": "Poison",
       "description": "Gradually drains the target's hit points over a long duration.",
       "manaCost": "2",
@@ -2500,7 +2335,6 @@ window.T4C_DATA = {
     {
       "key": "spell.ice_shard",
       "isNew": false,
-      "category": "player",
       "name": "Ice Shard",
       "description": "Hurls a small shard of ice at the target.",
       "manaCost": "3",
@@ -2542,7 +2376,6 @@ window.T4C_DATA = {
     {
       "key": "spell.poison_arrow",
       "isNew": false,
-      "category": "player",
       "name": "poison fleche",
       "description": "Hurls a small poison-tipped projectile at the target.",
       "manaCost": "5",
@@ -2601,7 +2434,6 @@ window.T4C_DATA = {
     {
       "key": "spell.freeze",
       "isNew": false,
-      "category": "player",
       "name": "Gel",
       "description": "Sharply drops the temperature around the target.",
       "manaCost": "5",
@@ -2643,7 +2475,6 @@ window.T4C_DATA = {
     {
       "key": "spell.ice_bolt",
       "isNew": false,
-      "category": "player",
       "name": "Ice Bolt",
       "description": "Hurls a small bolt of ice at the target.",
       "manaCost": "6",
@@ -2685,7 +2516,6 @@ window.T4C_DATA = {
     {
       "key": "spell.dust_devil",
       "isNew": false,
-      "category": "player",
       "name": "Dust Devil",
       "description": "Creates a whirlwind of dust and air and hurls it at the target.",
       "manaCost": "2",
@@ -2727,7 +2557,6 @@ window.T4C_DATA = {
     {
       "key": "spell.lightning_bolt",
       "isNew": false,
-      "category": "player",
       "name": "Lightning Bolt",
       "description": "Hurls a lightning bolt at the target.",
       "manaCost": "4",
@@ -2769,7 +2598,6 @@ window.T4C_DATA = {
     {
       "key": "spell.word_of_recall",
       "isNew": false,
-      "category": "player",
       "name": "Word of Recall",
       "description": "Magically brings the caster back to their sanctuary.",
       "manaCost": "100",
@@ -2864,7 +2692,6 @@ window.T4C_DATA = {
     {
       "key": "spell.call_lightning",
       "isNew": false,
-      "category": "player",
       "name": "Call Lightning",
       "description": "Summons a powerful bolt of lightning above the target and brings it crashing down.",
       "manaCost": "7",
@@ -2906,7 +2733,6 @@ window.T4C_DATA = {
     {
       "key": "spell.heal_light",
       "isNew": false,
-      "category": "player",
       "name": "Light Heal",
       "description": "Restores hit points to the target.",
       "manaCost": "2",
@@ -2948,7 +2774,6 @@ window.T4C_DATA = {
     {
       "key": "spell.heal_serious",
       "isNew": false,
-      "category": "player",
       "name": "Serious Heal",
       "description": "Restores hit points to the target.",
       "manaCost": "4",
@@ -2990,7 +2815,6 @@ window.T4C_DATA = {
     {
       "key": "spell.heal_critical",
       "isNew": false,
-      "category": "player",
       "name": "Critical Heal",
       "description": "Restores hit points to the target.",
       "manaCost": "7",
@@ -3032,7 +2856,6 @@ window.T4C_DATA = {
     {
       "key": "spell.stone_shard",
       "isNew": false,
-      "category": "player",
       "name": "Stone Shard",
       "description": "Hurls a small shard of stone at the target.",
       "manaCost": "2",
@@ -3074,7 +2897,6 @@ window.T4C_DATA = {
     {
       "key": "spell.shatter",
       "isNew": false,
-      "category": "player",
       "name": "Fracassement",
       "description": "Strikes the target with enough force to shatter it to pieces.",
       "manaCost": "5",
@@ -3116,7 +2938,6 @@ window.T4C_DATA = {
     {
       "key": "spell.curse",
       "isNew": false,
-      "category": "player",
       "name": "Malediction",
       "description": "Severely hinders the target's ability to use light spells, particularly healing spells.",
       "manaCost": "5",
@@ -3158,7 +2979,6 @@ window.T4C_DATA = {
     {
       "key": "spell.chaos_shield",
       "isNew": false,
-      "category": "player",
       "name": "Chaos Shield",
       "description": "A protective shield that retaliates against every physical attack with a powerful burst of fire.",
       "manaCost": "0",
@@ -3201,7 +3021,6 @@ window.T4C_DATA = {
     {
       "key": "spell.essence_of_drake",
       "isNew": false,
-      "category": "player",
       "name": "Essence of Drake",
       "description": "A healing spell reserved for game masters.",
       "manaCost": "0",
@@ -3243,7 +3062,6 @@ window.T4C_DATA = {
     {
       "key": "spell.tetrashock",
       "isNew": false,
-      "category": "player",
       "name": "Tetrashock",
       "description": "A protective shield that retaliates against every physical attack with a powerful electric discharge.",
       "manaCost": "0",
@@ -3289,7 +3107,6 @@ window.T4C_DATA = {
     {
       "key": "spell.flame_wave",
       "isNew": false,
-      "category": "player",
       "name": "Flame Wave",
       "description": "Unleashes a powerful wave of fire in a circular area around the caster. This spell has a fairly wide area of effect.",
       "manaCost": "10",
@@ -3332,7 +3149,6 @@ window.T4C_DATA = {
     {
       "key": "spell.ice_ball",
       "isNew": false,
-      "category": "player",
       "name": "Ice Ball",
       "description": "Drops a heavily compacted ice projectile onto the target.",
       "manaCost": "11",
@@ -3374,7 +3190,6 @@ window.T4C_DATA = {
     {
       "key": "spell.chain_lightning",
       "isNew": false,
-      "category": "player",
       "name": "Chain Lightning",
       "description": "Sends a powerful bolt of lightning through the target. This spell has a fairly wide area of effect.",
       "manaCost": "7",
@@ -3417,7 +3232,6 @@ window.T4C_DATA = {
     {
       "key": "spell.vortex_of_air",
       "isNew": false,
-      "category": "player",
       "name": "Vortex of Air",
       "description": "Hurls a swirling mass of compressed air at the target.",
       "manaCost": "10",
@@ -3459,7 +3273,6 @@ window.T4C_DATA = {
     {
       "key": "spell.electric_shield",
       "isNew": false,
-      "category": "player",
       "name": "Electric Shield",
       "description": "A protective shield that retaliates against every physical attack with a weak energy discharge.",
       "manaCost": "24",
@@ -3505,7 +3318,6 @@ window.T4C_DATA = {
     {
       "key": "spell.earthquake",
       "isNew": false,
-      "category": "player",
       "name": "Earthquake",
       "description": "Violently shakes the ground around the caster without dealing damage. This spell has a very large area of effect.",
       "manaCost": "11",
@@ -3548,7 +3360,6 @@ window.T4C_DATA = {
     {
       "key": "spell.wrath_of_drake",
       "isNew": false,
-      "category": "player",
       "name": "Wrath of Drake",
       "description": "An offensive spell reserved for game masters. Warning: this spell is not subject to PvP rules and has a very large area of effect. Use with caution.",
       "manaCost": "0",
@@ -3590,7 +3401,6 @@ window.T4C_DATA = {
     {
       "key": "spell.light",
       "isNew": false,
-      "category": "player",
       "name": "Light",
       "description": "Allows everyone near the caster to see clearly, even in darkness.",
       "manaCost": "10",
@@ -3631,52 +3441,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.windhowl_gateway",
-      "isNew": false,
-      "category": "player",
-      "name": "Windhowl Gateway",
-      "description": "Teleports the caster to the stone circle of Windhowl, on Arakas.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10098,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "1812"
-            },
-            {
-              "paramId": 2,
-              "expression": "1293"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.lesser_drain",
       "isNew": false,
-      "category": "player",
       "name": "Lesser Drain",
       "description": "Drains the target's hit points and heals the caster for the same amount.",
       "manaCost": "3",
@@ -3711,7 +3477,6 @@ window.T4C_DATA = {
     {
       "key": "spell.plague",
       "isNew": false,
-      "category": "player",
       "name": "Plague",
       "description": "Plague reduces the target's maximum hit points and its ability to cast light spells, while periodically dealing minor damage.",
       "manaCost": "40",
@@ -3789,7 +3554,6 @@ window.T4C_DATA = {
     {
       "key": "spell.protection",
       "isNew": false,
-      "category": "player",
       "name": "Protection",
       "description": "Increases the target's armor class.",
       "manaCost": "9",
@@ -3830,52 +3594,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.silversky_gateway",
-      "isNew": false,
-      "category": "player",
-      "name": "Silversky Gateway",
-      "description": "Teleports the caster to the stone circle at Silversky, on Raven's Dust.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10121,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "1495"
-            },
-            {
-              "paramId": 2,
-              "expression": "2470"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.barrier",
       "isNew": false,
-      "category": "player",
       "name": "Barriere",
       "description": "Increases the target's armor class.",
       "manaCost": "10",
@@ -3918,7 +3638,6 @@ window.T4C_DATA = {
     {
       "key": "spell.earthen_strength",
       "isNew": false,
-      "category": "player",
       "name": "Earthen Strength",
       "description": "Increases the target's strength.",
       "manaCost": "30",
@@ -3961,7 +3680,6 @@ window.T4C_DATA = {
     {
       "key": "spell.minor_combat_sense",
       "isNew": false,
-      "category": "player",
       "name": "Minor Combat Sense",
       "description": "Increases the target's attack, dodge, and archery skills.",
       "manaCost": "6",
@@ -4035,7 +3753,6 @@ window.T4C_DATA = {
     {
       "key": "spell.meteor",
       "isNew": false,
-      "category": "player",
       "name": "Meteore",
       "description": "Drops a meteor fragment from the sky that devastates the target on impact. This spell has a small area of effect.",
       "manaCost": "23",
@@ -4078,7 +3795,6 @@ window.T4C_DATA = {
     {
       "key": "spell.rain_of_fire",
       "isNew": false,
-      "category": "player",
       "name": "Rain of Fire",
       "description": "Rains fire from the sky to consume the target. This spell has a fairly wide area of effect.",
       "manaCost": "12",
@@ -4121,7 +3837,6 @@ window.T4C_DATA = {
     {
       "key": "spell.flare",
       "isNew": false,
-      "category": "player",
       "name": "Flare",
       "description": "Sets the target ablaze from within.",
       "manaCost": "14",
@@ -4163,7 +3878,6 @@ window.T4C_DATA = {
     {
       "key": "spell.firestorm",
       "isNew": false,
-      "category": "player",
       "name": "Firestorm",
       "description": "Creates a violent firestorm around the target. This spell has a large area of effect.",
       "manaCost": "18",
@@ -4206,7 +3920,6 @@ window.T4C_DATA = {
     {
       "key": "spell.inferno",
       "isNew": false,
-      "category": "player",
       "name": "Inferno",
       "description": "Wraps the target in a devouring blaze.",
       "manaCost": "19",
@@ -4248,7 +3961,6 @@ window.T4C_DATA = {
     {
       "key": "spell.mana_burst",
       "isNew": false,
-      "category": "player",
       "name": "Mana Burst",
       "description": "Hurls a bolt of pure mana at the target. Due to its unique nature, this spell can be cast much faster than others.",
       "manaCost": "8",
@@ -4290,7 +4002,6 @@ window.T4C_DATA = {
     {
       "key": "spell.glacier",
       "isNew": false,
-      "category": "player",
       "name": "Glacier",
       "description": "Creates an immense glacier and drops it onto the target.",
       "manaCost": "13",
@@ -4332,7 +4043,6 @@ window.T4C_DATA = {
     {
       "key": "spell.ice_storm",
       "isNew": false,
-      "category": "player",
       "name": "Ice Storm",
       "description": "Creates a storm of ice shards and hurls it at the target. This spell has a large area of effect.",
       "manaCost": "15",
@@ -4375,7 +4085,6 @@ window.T4C_DATA = {
     {
       "key": "spell.blizzard",
       "isNew": false,
-      "category": "player",
       "name": "Blizzard",
       "description": "Creates a violent snowstorm centered on the target. This spell has a large area of effect.",
       "manaCost": "17",
@@ -4418,7 +4127,6 @@ window.T4C_DATA = {
     {
       "key": "spell.avalanche",
       "isNew": false,
-      "category": "player",
       "name": "Avalanche",
       "description": "Hurls an immense cascade of snow and ice at the target. This spell has a large area of effect.",
       "manaCost": "19",
@@ -4461,7 +4169,6 @@ window.T4C_DATA = {
     {
       "key": "spell.tsunami",
       "isNew": false,
-      "category": "player",
       "name": "Tsunami",
       "description": "Crashes a giant wave down on the target.",
       "manaCost": "22",
@@ -4503,7 +4210,6 @@ window.T4C_DATA = {
     {
       "key": "spell.healing",
       "isNew": false,
-      "category": "player",
       "name": "Healing",
       "description": "Restores hit points to the target.",
       "manaCost": "13",
@@ -4545,7 +4251,6 @@ window.T4C_DATA = {
     {
       "key": "spell.mass_healing",
       "isNew": false,
-      "category": "player",
       "name": "Mass Healing",
       "description": "Restores hit points to the target and to all nearby group members. This spell has a fairly wide area of effect.",
       "manaCost": "15",
@@ -4588,7 +4293,6 @@ window.T4C_DATA = {
     {
       "key": "spell.mana_surge",
       "isNew": false,
-      "category": "player",
       "name": "Mana Surge",
       "description": "Increases the target's elemental powers.",
       "manaCost": "39",
@@ -4710,7 +4414,6 @@ window.T4C_DATA = {
     {
       "key": "spell.healing_mist",
       "isNew": false,
-      "category": "player",
       "name": "Healing Mist",
       "description": "Restores hit points to the target and to all nearby group members. This spell has an extremely large area of effect.",
       "manaCost": "17",
@@ -4753,7 +4456,6 @@ window.T4C_DATA = {
     {
       "key": "spell.tornado",
       "isNew": false,
-      "category": "player",
       "name": "Tornado",
       "description": "Wraps the target in a swirling mass of condensed air. This spell has a large area of effect.",
       "manaCost": "18",
@@ -4796,7 +4498,6 @@ window.T4C_DATA = {
     {
       "key": "spell.hurricane",
       "isNew": false,
-      "category": "player",
       "name": "Hurricane",
       "description": "Strikes the target with violent winds and lightning. This spell has an extremely large area of effect.",
       "manaCost": "20",
@@ -4839,7 +4540,6 @@ window.T4C_DATA = {
     {
       "key": "spell.major_combat_sense",
       "isNew": false,
-      "category": "player",
       "name": "Major Combat Sense",
       "description": "Greatly increases the target's strength as well as their attack, dodge, and archery skills.",
       "manaCost": "15",
@@ -4929,7 +4629,6 @@ window.T4C_DATA = {
     {
       "key": "spell.turn_undead",
       "isNew": false,
-      "category": "player",
       "name": "Turn Undead",
       "description": "Strikes an undead target with powerful sacred words of banishment.",
       "manaCost": "5",
@@ -4971,7 +4670,6 @@ window.T4C_DATA = {
     {
       "key": "spell.mana_shield",
       "isNew": false,
-      "category": "player",
       "name": "Mana Shield",
       "description": "Increases the target's elemental resistances.",
       "manaCost": "14",
@@ -5077,7 +4775,6 @@ window.T4C_DATA = {
     {
       "key": "spell.stone_skin",
       "isNew": false,
-      "category": "player",
       "name": "Stoneskin",
       "description": "The caster's skin becomes as hard as stone, increasing their armor class.",
       "manaCost": "45",
@@ -5119,7 +4816,6 @@ window.T4C_DATA = {
     {
       "key": "spell.clear_thought",
       "isNew": false,
-      "category": "player",
       "name": "Clear Thought",
       "description": "Increases the caster's intelligence.",
       "manaCost": "21",
@@ -5161,7 +4857,6 @@ window.T4C_DATA = {
     {
       "key": "spell.entangle",
       "isNew": false,
-      "category": "player",
       "name": "Enchevetrement",
       "description": "Temporarily reduces the target's ability to move and dodge attacks.",
       "manaCost": "10",
@@ -5205,71 +4900,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.entangle_effect",
-      "isNew": false,
-      "category": "player",
-      "name": "Entangle Effect",
-      "description": "Temporarily reduces the target's ability to move and dodge attacks.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": true,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "if(self.str>500?5000:5000+1d(12501-(self.str*25)))",
-      "price": 233,
-      "spellId": 10151,
-      "element": 2,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "dodge"
-            },
-            {
-              "paramId": 3,
-              "expression": "-(self.dodge*3/4)"
-            }
-          ]
-        },
-        {
-          "effectType": 9,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "10349"
-            },
-            {
-              "paramId": 2,
-              "expression": "OnTimer"
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            },
-            {
-              "paramId": 4
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.drain_life",
       "isNew": false,
-      "category": "player",
       "name": "Drain Life",
       "description": "Drains the target's hit points and heals the caster for the same amount.",
       "manaCost": "6",
@@ -5316,7 +4948,6 @@ window.T4C_DATA = {
     {
       "key": "spell.resist_fire",
       "isNew": false,
-      "category": "player",
       "name": "Resist Fire",
       "description": "Increases the caster's resistance to fire attacks.",
       "manaCost": "10",
@@ -5358,7 +4989,6 @@ window.T4C_DATA = {
     {
       "key": "spell.tranquility",
       "isNew": false,
-      "category": "player",
       "name": "Tranquility",
       "description": "Increases the caster's wisdom.",
       "manaCost": "45",
@@ -5400,7 +5030,6 @@ window.T4C_DATA = {
     {
       "key": "spell.greater_drain",
       "isNew": false,
-      "category": "player",
       "name": "Greater Drain",
       "description": "Drains the target's hit points and heals the caster for the same amount.",
       "manaCost": "10",
@@ -5446,7 +5075,6 @@ window.T4C_DATA = {
     {
       "key": "spell.resist_ice",
       "isNew": false,
-      "category": "player",
       "name": "Resist Ice",
       "description": "Increases the caster's resistance to water and ice attacks.",
       "manaCost": "11",
@@ -5488,7 +5116,6 @@ window.T4C_DATA = {
     {
       "key": "spell.fire_shield",
       "isNew": false,
-      "category": "player",
       "name": "Fire Shield",
       "description": "A protective shield that retaliates against every physical attack with a small burst of fire.",
       "manaCost": "22",
@@ -5534,7 +5161,6 @@ window.T4C_DATA = {
     {
       "key": "spell.nimbleness",
       "isNew": false,
-      "category": "player",
       "name": "Nimbleness",
       "description": "Greatly increases the caster's agility and dodge skill.",
       "manaCost": "11",
@@ -5592,7 +5218,6 @@ window.T4C_DATA = {
     {
       "key": "spell.vaporize",
       "isNew": false,
-      "category": "player",
       "name": "Vaporize",
       "description": "A destruction spell reserved for game masters. Warning: this spell destroys any object, NPC, or player it is cast on.",
       "manaCost": "0",
@@ -5622,7 +5247,6 @@ window.T4C_DATA = {
     {
       "key": "spell.drake_s_blades_of_vengeance",
       "isNew": false,
-      "category": "player",
       "name": "Drake's Blades of Vengeance",
       "description": "This spell is reserved for Vircom staff and experienced game masters.",
       "manaCost": "0",
@@ -5665,7 +5289,6 @@ window.T4C_DATA = {
     {
       "key": "spell.cure_poison",
       "isNew": false,
-      "category": "player",
       "name": "Cure Poison",
       "description": "Eliminates all poisons present in the target's body.",
       "manaCost": "2",
@@ -5730,7 +5353,6 @@ window.T4C_DATA = {
     {
       "key": "spell.dispel",
       "isNew": false,
-      "category": "player",
       "name": "Dissipation",
       "description": "Dispels most harmful effects affecting the target.",
       "manaCost": "13",
@@ -6055,7 +5677,6 @@ window.T4C_DATA = {
     {
       "key": "spell.sunken_woods_gateway",
       "isNew": false,
-      "category": "player",
       "name": "Sunken Woods Gateway",
       "description": "Teleports the caster to the stone circle of Sunken Woods, on Stoneheim.",
       "manaCost": "self.maxmana",
@@ -6123,7 +5744,6 @@ window.T4C_DATA = {
     {
       "key": "spell.lighthaven_gateway",
       "isNew": false,
-      "category": "player",
       "name": "Lighthaven Gateway",
       "description": "Teleports the caster to the stone circle at Lighthaven, on Arakas.",
       "manaCost": "self.maxmana",
@@ -6190,7 +5810,6 @@ window.T4C_DATA = {
     {
       "key": "spell.windhowl_gateway",
       "isNew": false,
-      "category": "player",
       "name": "Windhowl Gateway",
       "description": "Teleports the caster to the stone circle of Windhowl, on Arakas.",
       "manaCost": "self.maxmana",
@@ -6257,7 +5876,6 @@ window.T4C_DATA = {
     {
       "key": "spell.druid_s_point_gateway",
       "isNew": false,
-      "category": "player",
       "name": "Druid's Point Gateway",
       "description": "Teleports the caster to the stone circle at Druid's Point, on Arakas.",
       "manaCost": "self.maxmana",
@@ -6324,7 +5942,6 @@ window.T4C_DATA = {
     {
       "key": "spell.silversky_gateway",
       "isNew": false,
-      "category": "player",
       "name": "Silversky Gateway",
       "description": "Teleports the caster to the stone circle at Silversky, on Raven's Dust.",
       "manaCost": "self.maxmana",
@@ -6391,7 +6008,6 @@ window.T4C_DATA = {
     {
       "key": "spell.wizard_s_vale_gateway",
       "isNew": false,
-      "category": "player",
       "name": "Wizard's Vale Gateway",
       "description": "Teleports the caster to the stone circle of Wizard's Vale, on Raven's Dust.",
       "manaCost": "self.maxmana",
@@ -6458,7 +6074,6 @@ window.T4C_DATA = {
     {
       "key": "spell.stonecrest_gateway",
       "isNew": false,
-      "category": "player",
       "name": "Stonecrest Gateway",
       "description": "Teleports the caster to the stone circle of Stonecrest, on Stoneheim.",
       "manaCost": "self.maxmana",
@@ -6525,7 +6140,6 @@ window.T4C_DATA = {
     {
       "key": "spell.invisibility",
       "isNew": false,
-      "category": "player",
       "name": "Invisibilite",
       "description": "Renders the target completely invisible.",
       "manaCost": "70",
@@ -6564,7 +6178,6 @@ window.T4C_DATA = {
     {
       "key": "spell.detect_invisible",
       "isNew": false,
-      "category": "player",
       "name": "Detect Invisible",
       "description": "Allows the caster to see invisible monsters and player characters.",
       "manaCost": "60",
@@ -6603,7 +6216,6 @@ window.T4C_DATA = {
     {
       "key": "spell.detect_hidden",
       "isNew": false,
-      "category": "player",
       "name": "Detect Hidden",
       "description": "Allows the caster to see hidden monsters, objects, and player characters.",
       "manaCost": "90",
@@ -6642,7 +6254,6 @@ window.T4C_DATA = {
     {
       "key": "spell.true_sight",
       "isNew": false,
-      "category": "player",
       "name": "True Sight",
       "description": "Allows the caster to see everything that is hidden or invisible.",
       "manaCost": "80",
@@ -6692,7 +6303,6 @@ window.T4C_DATA = {
     {
       "key": "spell.boulders",
       "isNew": false,
-      "category": "player",
       "name": "Boulders",
       "description": "Drops several sizable boulders onto the target. This spell has a small area of effect.",
       "manaCost": "16",
@@ -6735,7 +6345,6 @@ window.T4C_DATA = {
     {
       "key": "spell.soul_steal",
       "isNew": false,
-      "category": "player",
       "name": "Soul Steal",
       "description": "Drains the target's hit points and heals the caster for the same amount.",
       "manaCost": "16",
@@ -6781,7 +6390,6 @@ window.T4C_DATA = {
     {
       "key": "spell.bless",
       "isNew": false,
-      "category": "player",
       "name": "Benediction",
       "description": "Increases the target's maximum hit points as well as their attack and archery skills.",
       "manaCost": "140",
@@ -6855,7 +6463,6 @@ window.T4C_DATA = {
     {
       "key": "spell.lighthaven_improved_gateway",
       "isNew": false,
-      "category": "player",
       "name": "Lighthaven Improved Gateway",
       "description": "Teleports the caster and their group to the stone circle at Lighthaven, on Arakas.",
       "manaCost": "self.maxmana",
@@ -6920,133 +6527,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.test_sanctuary_island",
-      "isNew": false,
-      "category": "player",
-      "name": "Test: Sanctuary Island",
-      "description": "This spell is intended solely for testing and must only be used or given to a Vircom staff member.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 233,
-      "spellId": 10297,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 3,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "20020"
-            },
-            {
-              "paramId": 2,
-              "expression": "2884352000"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.test_temporary_sanctuary_island",
-      "isNew": false,
-      "category": "player",
-      "name": "Test: Temporary Sanctuary Island",
-      "description": "This spell is intended solely for testing and must only be used or given to a Vircom staff member.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 233,
-      "spellId": 10298,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 3,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "20020"
-            },
-            {
-              "paramId": 2,
-              "expression": "2884352000"
-            }
-          ]
-        },
-        {
-          "effectType": 9,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "10299"
-            },
-            {
-              "paramId": 2,
-              "expression": "OnTimer"
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            },
-            {
-              "paramId": 4,
-              "expression": "10000"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.entangle_effect_2",
-      "isNew": false,
-      "category": "player",
-      "name": "Entangle Effect 2",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10349,
-      "element": 2,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
       "key": "spell.wrath_of_marc",
       "isNew": false,
-      "category": "player",
       "name": "Wrath of Marc",
       "description": "Completely paralyzes the target for a very long duration.",
       "manaCost": "0",
@@ -7091,333 +6573,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.test_marked_for_death",
-      "isNew": false,
-      "category": "player",
-      "name": "Test Marked for Death",
-      "description": "The soul struck by this curse must quickly find an exorcist to expel the evil dwelling within it.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "180000",
-      "price": 233,
-      "spellId": 10446,
-      "element": 6,
-      "targetType": 4,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 9,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "10447"
-            },
-            {
-              "paramId": 2,
-              "expression": "OnTimer"
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            },
-            {
-              "paramId": 4,
-              "expression": "180000"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.test_mass_plague",
-      "isNew": false,
-      "category": "player",
-      "name": "Test: Mass Plague",
-      "description": "This spell is reserved for testing and must only be used by a Vircom employee.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 233,
-      "spellId": 10466,
-      "element": 0,
-      "targetType": 4,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "item.escape_scroll",
-      "isNew": false,
-      "category": "player",
-      "name": "Escape Scroll",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10672,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "709"
-            },
-            {
-              "paramId": 2,
-              "expression": "1340"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "item.ancient_ring",
-      "isNew": false,
-      "category": "player",
-      "name": "Ancient Ring",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10687,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 9,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "10688"
-            },
-            {
-              "paramId": 2,
-              "expression": "OnTimer"
-            },
-            {
-              "paramId": 3,
-              "expression": "if(self.viewflag(30398)=0?100:0)"
-            },
-            {
-              "paramId": 4,
-              "expression": "500"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "item.ancient_ring",
-      "isNew": false,
-      "category": "player",
-      "name": "Ancient Ring",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10688,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "if(self.viewflag(30398)=0?100:0)",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "342"
-            },
-            {
-              "paramId": 2,
-              "expression": "248"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        },
-        {
-          "effectType": 3,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "30398"
-            },
-            {
-              "paramId": 2,
-              "expression": "1"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.npc_theoran_boost",
-      "isNew": false,
-      "category": "player",
-      "name": "PNJ Theoran Boost",
-      "description": "Increases the target's elemental resistances.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "150000",
-      "price": 233,
-      "spellId": 10692,
-      "element": 5,
-      "targetType": 4,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_air"
-            },
-            {
-              "paramId": 3,
-              "expression": "target.true_r_air/5"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_earth"
-            },
-            {
-              "paramId": 3,
-              "expression": "target.true_r_earth/5"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_water"
-            },
-            {
-              "paramId": 3,
-              "expression": "target.true_r_water/5"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_dark"
-            },
-            {
-              "paramId": 3,
-              "expression": "target.true_r_dark/5"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_fire"
-            },
-            {
-              "paramId": 3,
-              "expression": "target.true_r_fire/5"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.remort_aura",
       "isNew": false,
-      "category": "player",
       "name": "Remort Aura",
       "description": "A permanent offensive and defensive aura, usable only by seraphs and growing in power with each rebirth.",
       "manaCost": "0",
@@ -7504,479 +6661,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.npc_cantrip_flak",
-      "isNew": false,
-      "category": "player",
-      "name": "PNJ cantrip flak",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 10707,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "spell.stonecrest_gateway",
-      "isNew": false,
-      "category": "player",
-      "name": "Stonecrest Gateway",
-      "description": "Teleports the caster to the stone circle of Stonecrest, on Stoneheim.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10711,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "205"
-            },
-            {
-              "paramId": 2,
-              "expression": "671"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "item.runed_stone_tablet",
-      "isNew": false,
-      "category": "player",
-      "name": "Runed pierre Tablet",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10749,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 9,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "10756"
-            },
-            {
-              "paramId": 2,
-              "expression": "OnTimer"
-            },
-            {
-              "paramId": 3,
-              "expression": "if(self.viewflag(30509)=3?100:0)"
-            },
-            {
-              "paramId": 4,
-              "expression": "1000"
-            }
-          ]
-        },
-        {
-          "effectType": 9,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "10755"
-            },
-            {
-              "paramId": 2,
-              "expression": "OnTimer"
-            },
-            {
-              "paramId": 3,
-              "expression": "if(self.viewflag(30509)=2?100:0)"
-            },
-            {
-              "paramId": 4,
-              "expression": "1000"
-            }
-          ]
-        },
-        {
-          "effectType": 9,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "10754"
-            },
-            {
-              "paramId": 2,
-              "expression": "OnTimer"
-            },
-            {
-              "paramId": 3,
-              "expression": "if(self.viewflag(30507)>4?if(self.viewflag(30475)>27?if(self.viewflag(30509)<=1?100:0):100):100)"
-            },
-            {
-              "paramId": 4,
-              "expression": "1000"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.npc_self_destruct_2_minutes",
-      "isNew": false,
-      "category": "player",
-      "name": "NPC: Self-destruct in 2 Minutes",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 10752,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "item.runed_stone_tablet",
-      "isNew": false,
-      "category": "player",
-      "name": "Runed pierre Tablet",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10754,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "2326+1d4"
-            },
-            {
-              "paramId": 2,
-              "expression": "727+1d8"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        },
-        {
-          "effectType": 3,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "30509"
-            },
-            {
-              "paramId": 2,
-              "expression": "if(self.viewflag(30475)<28?1:2)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "item.runed_stone_tablet",
-      "isNew": false,
-      "category": "player",
-      "name": "Runed pierre Tablet",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10755,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 3,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "30509"
-            },
-            {
-              "paramId": 2,
-              "expression": "if(self.viewflag(30552)<1?1:3)"
-            }
-          ]
-        },
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "871+1d4"
-            },
-            {
-              "paramId": 2,
-              "expression": "2083+1d8"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "item.runed_stone_tablet",
-      "isNew": false,
-      "category": "player",
-      "name": "Runed pierre Tablet",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 0,
-      "spellId": 10756,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 3,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "30509"
-            },
-            {
-              "paramId": 2,
-              "expression": "1"
-            }
-          ]
-        },
-        {
-          "effectType": 7,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "681+1d4"
-            },
-            {
-              "paramId": 2,
-              "expression": "827+1d8"
-            },
-            {
-              "paramId": 3,
-              "expression": "0"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.self_destruct_5_seconds",
-      "isNew": false,
-      "category": "player",
-      "name": "Self-destruct in 5 Seconds",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "5",
-      "price": 0,
-      "spellId": 10765,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "spell.doppelganger_self_damage_1",
-      "isNew": false,
-      "category": "player",
-      "name": "Doppelganger: Internal Damage 1",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 1,
-      "maxDamage": 1,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 10778,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "spell.doppelganger_self_damage_2",
-      "isNew": false,
-      "category": "player",
-      "name": "Doppelganger: Internal Damage 2",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 1,
-      "maxDamage": 1,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 10779,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "spell.doppelganger_self_damage_3",
-      "isNew": false,
-      "category": "player",
-      "name": "Doppelganger: Internal Damage 3",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 1,
-      "maxDamage": 1,
-      "cooldownSeconds": 0,
-      "price": 0,
-      "spellId": 10780,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
-      "key": "spell.self_destruct_20_seconds",
-      "isNew": false,
-      "category": "player",
-      "name": "Self-destruct in 20 Seconds",
-      "description": "",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 1,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "20",
-      "price": 0,
-      "spellId": 10797,
-      "element": 0,
-      "targetType": 0,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
       "key": "spell.lighthaven_portal",
       "isNew": false,
-      "category": "player",
       "name": "Lighthaven Portal",
       "description": "Summons a portal allowing teleportation to the stone circle at Lighthaven, on Arakas.",
       "manaCost": "self.maxmana",
@@ -8013,73 +6699,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.essence_of_seraph_effect",
-      "isNew": false,
-      "category": "player",
-      "name": "Essence of Seraph Effect",
-      "description": "Increases the target's armor class, hit points, and mana regeneration. This effect is overwhelming for mortals.",
-      "manaCost": "0",
-      "minInt": 0,
-      "minWis": 0,
-      "minLevel": 0,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "15000",
-      "price": 233,
-      "spellId": 10804,
-      "element": 0,
-      "targetType": 5,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "true"
-            },
-            {
-              "paramId": 2,
-              "expression": "AC"
-            },
-            {
-              "paramId": 3,
-              "expression": "self.ac/4"
-            }
-          ]
-        },
-        {
-          "effectType": 9,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "10805"
-            },
-            {
-              "paramId": 2,
-              "expression": "OnTimer"
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            },
-            {
-              "paramId": 4,
-              "expression": "0"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.druid_s_point_portal",
       "isNew": false,
-      "category": "player",
       "name": "Druid's Point Portal",
       "description": "Summons a portal allowing teleportation to the stone circle at Druid's Point, on Arakas.",
       "manaCost": "self.maxmana",
@@ -8118,7 +6739,6 @@ window.T4C_DATA = {
     {
       "key": "spell.silversky_portal",
       "isNew": false,
-      "category": "player",
       "name": "Silversky Portal",
       "description": "Summons a portal allowing teleportation to the stone circle at Silversky, on Raven's Dust.",
       "manaCost": "self.maxmana",
@@ -8157,7 +6777,6 @@ window.T4C_DATA = {
     {
       "key": "spell.stonecrest_portal",
       "isNew": false,
-      "category": "player",
       "name": "Stonecrest Portal",
       "description": "Summons a portal allowing teleportation to the stone circle of Stonecrest, on Stoneheim.",
       "manaCost": "self.maxmana",
@@ -8196,7 +6815,6 @@ window.T4C_DATA = {
     {
       "key": "spell.sunken_woods_portal",
       "isNew": false,
-      "category": "player",
       "name": "Sunken Woods Portal",
       "description": "Summons a portal allowing teleportation to the stone circle of Sunken Woods, on Stoneheim.",
       "manaCost": "self.maxmana",
@@ -8235,7 +6853,6 @@ window.T4C_DATA = {
     {
       "key": "spell.windhowl_portal",
       "isNew": false,
-      "category": "player",
       "name": "Windhowl Portal",
       "description": "Summons a portal allowing teleportation to the stone circle of Windhowl, on Arakas.",
       "manaCost": "self.maxmana",
@@ -8272,34 +6889,8 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.wizard_s_vale_portal",
-      "isNew": false,
-      "category": "player",
-      "name": "Wizard's Vale Portal",
-      "description": "Summons a portal allowing teleportation to the stone circle of Wizard's Vale, on Raven's Dust.",
-      "manaCost": "self.maxmana",
-      "minInt": 109,
-      "minWis": 106,
-      "minLevel": 92,
-      "isAttack": false,
-      "lineOfSight": true,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 268038,
-      "spellId": 10811,
-      "element": 0,
-      "targetType": 6,
-      "attackType": 1,
-      "successRate": "100",
-      "pvp": false,
-      "effects": []
-    },
-    {
       "key": "spell.ice_shield",
       "isNew": false,
-      "category": "player",
       "name": "Ice Shield",
       "description": "Retaliates against every physical attack with a cloud of ice.",
       "manaCost": "100",
@@ -8346,7 +6937,6 @@ window.T4C_DATA = {
     {
       "key": "spell.wrath_of_the_ancients",
       "isNew": false,
-      "category": "player",
       "name": "Wrath of the Ancients",
       "description": "The rage of the vanished races contained in the blood of a New Race sometimes unleashes itself against its foes.",
       "manaCost": "0",
@@ -8393,7 +6983,6 @@ window.T4C_DATA = {
     {
       "key": "spell.sanctuary",
       "isNew": false,
-      "category": "player",
       "name": "Sanctuary",
       "description": "Briefly protects the caster from all bodily harm.",
       "manaCost": "120",
@@ -8515,7 +7104,6 @@ window.T4C_DATA = {
     {
       "key": "spell.land_slide",
       "isNew": false,
-      "category": "player",
       "name": "Land Slide",
       "description": "Buries the target beneath a collapsing hillside, dealing three times the damage of Boulders. This spell has a small area of effect.",
       "manaCost": "48",
@@ -8558,7 +7146,6 @@ window.T4C_DATA = {
     {
       "key": "spell.clemancy",
       "isNew": true,
-      "category": "player",
       "name": "Clemancy",
       "description": "Calls forth a wave of divine mercy, greatly restoring health to the caster and any nearby grouped allies.",
       "manaCost": "1000",
@@ -8601,7 +7188,6 @@ window.T4C_DATA = {
     {
       "key": "spell.divine_veil",
       "isNew": true,
-      "category": "player",
       "name": "Divine Veil",
       "description": "Wraps the target in a shimmering veil, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
       "manaCost": "1000",
@@ -8723,7 +7309,6 @@ window.T4C_DATA = {
     {
       "key": "spell.undead_annihilation",
       "isNew": true,
-      "category": "player",
       "name": "Undead Annihilation",
       "description": "Obliterates an undead target with sacred words of banishment far more potent than Turn Undead.",
       "manaCost": "30",
@@ -8765,7 +7350,6 @@ window.T4C_DATA = {
     {
       "key": "spell.omega_planetoids",
       "isNew": true,
-      "category": "player",
       "name": "Omega Planetoids",
       "description": "Rains massive planetoid fragments upon the target, dealing twice the damage of Land Slide. This spell has a small area of effect.",
       "manaCost": "96",
@@ -8808,7 +7392,6 @@ window.T4C_DATA = {
     {
       "key": "spell.riptide_surge",
       "isNew": true,
-      "category": "player",
       "name": "Riptide Surge",
       "description": "Slams a single foe with a crushing surge of water, scaling with the caster's intelligence.",
       "manaCost": "10",
@@ -8850,7 +7433,6 @@ window.T4C_DATA = {
     {
       "key": "spell.drowned_ward",
       "isNew": true,
-      "category": "player",
       "name": "Drowned Ward",
       "description": "Wraps the caster or an ally in a tide-blessed ward, raising water and dark resistance along with armor class.",
       "manaCost": "55",
@@ -8924,7 +7506,6 @@ window.T4C_DATA = {
     {
       "key": "spell.cinderburst",
       "isNew": true,
-      "category": "player",
       "name": "Cinderburst",
       "description": "Detonates a searing burst of fire around the target, scorching anyone caught nearby.",
       "manaCost": "16",
@@ -8967,7 +7548,6 @@ window.T4C_DATA = {
     {
       "key": "spell.emberheart_resolve",
       "isNew": true,
-      "category": "player",
       "name": "Emberheart Resolve",
       "description": "Hardens the caster or an ally with a fire-forged resolve, boosting fire resistance, armor class, and vitality.",
       "manaCost": "90",
@@ -9041,7 +7621,6 @@ window.T4C_DATA = {
     {
       "key": "spell.sentinel",
       "isNew": true,
-      "category": "player",
       "name": "Sentinel",
       "description": "Raises a standing ward around the caster's party, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
       "manaCost": "1600",
@@ -9163,7 +7742,6 @@ window.T4C_DATA = {
     {
       "key": "spell.avalon_gateway",
       "isNew": true,
-      "category": "player",
       "name": "Avalon Gateway",
       "description": "Teleports the caster to the sanctuary of Avalon.",
       "manaCost": "0",

@@ -32,11 +32,11 @@
     },
     "resists": {
       "air": 124,
-      "fire": 62,
+      "earth": 62,
       "water": 93,
-      "earth": 93,
-      "light": 100,
-      "dark": 100
+      "fire": 93,
+      "dark": 93,
+      "light": 5000
     },
     "loot": [
       {
@@ -88,11 +88,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 95,
+      "earth": 95,
       "water": 135,
-      "earth": 85,
-      "light": 100,
-      "dark": 100
+      "fire": 85,
+      "dark": 160,
+      "light": 35
     },
     "loot": [
       {
@@ -144,11 +144,11 @@
     },
     "resists": {
       "air": 70,
-      "fire": 130,
+      "earth": 130,
       "water": 150,
-      "earth": 80,
-      "light": 100,
-      "dark": 100
+      "fire": 80,
+      "dark": 100,
+      "light": 100
     },
     "loot": [
       {
@@ -200,11 +200,11 @@
     },
     "resists": {
       "air": 90,
-      "fire": 100,
+      "earth": 100,
       "water": 180,
-      "earth": 70,
-      "light": 100,
-      "dark": 100
+      "fire": 70,
+      "dark": 220,
+      "light": 25
     },
     "loot": [
       {
@@ -256,11 +256,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 90,
+      "earth": 90,
       "water": 60,
-      "earth": 180,
-      "light": 100,
-      "dark": 100
+      "fire": 180,
+      "dark": 100,
+      "light": 100
     },
     "loot": [
       {
@@ -312,11 +312,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 85,
+      "earth": 85,
       "water": 55,
-      "earth": 190,
-      "light": 100,
-      "dark": 100
+      "fire": 190,
+      "dark": 110,
+      "light": 95
     },
     "loot": [
       {
@@ -368,11 +368,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 95,
+      "earth": 95,
       "water": 45,
-      "earth": 240,
-      "light": 100,
-      "dark": 100
+      "fire": 240,
+      "dark": 120,
+      "light": 100
     },
     "loot": [
       {
@@ -424,11 +424,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 130,
+      "earth": 130,
       "water": 100,
-      "earth": 90,
-      "light": 100,
-      "dark": 100
+      "fire": 90,
+      "dark": 100,
+      "light": 100
     },
     "loot": [
       {
@@ -484,11 +484,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 140,
+      "earth": 140,
       "water": 100,
-      "earth": 90,
-      "light": 100,
-      "dark": 100
+      "fire": 90,
+      "dark": 110,
+      "light": 100
     },
     "loot": [
       {
@@ -544,11 +544,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 100,
+      "earth": 100,
       "water": 100,
-      "earth": 90,
-      "light": 100,
-      "dark": 100
+      "fire": 90,
+      "dark": 170,
+      "light": 30
     },
     "loot": [
       {
@@ -600,11 +600,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 100,
+      "earth": 100,
       "water": 100,
-      "earth": 110,
-      "light": 100,
-      "dark": 100
+      "fire": 110,
+      "dark": 240,
+      "light": 15
     },
     "loot": [
       {
@@ -656,11 +656,11 @@
     },
     "resists": {
       "air": 130,
-      "fire": 80,
+      "earth": 80,
       "water": 90,
-      "earth": 130,
-      "light": 100,
-      "dark": 100
+      "fire": 130,
+      "dark": 100,
+      "light": 100
     },
     "loot": [
       {
@@ -712,11 +712,11 @@
     },
     "resists": {
       "air": 63,
-      "fire": 5000,
+      "earth": 5000,
       "water": 63,
-      "earth": -63,
-      "light": 100,
-      "dark": 100
+      "fire": -63,
+      "dark": 63,
+      "light": 5000
     },
     "loot": [
       {
@@ -784,11 +784,11 @@
     },
     "resists": {
       "air": 130,
-      "fire": 140,
+      "earth": 140,
       "water": 110,
-      "earth": 70,
-      "light": 100,
-      "dark": 100
+      "fire": 70,
+      "dark": 60,
+      "light": 150
     },
     "loot": [
       {
@@ -848,11 +848,11 @@
     },
     "resists": {
       "air": 140,
-      "fire": 100,
+      "earth": 100,
       "water": 120,
-      "earth": 70,
-      "light": 100,
-      "dark": 100
+      "fire": 70,
+      "dark": 110,
+      "light": 90
     },
     "loot": [
       {
@@ -912,11 +912,11 @@
     },
     "resists": {
       "air": 90,
-      "fire": 140,
+      "earth": 140,
       "water": 100,
-      "earth": 120,
-      "light": 100,
-      "dark": 100
+      "fire": 120,
+      "dark": 100,
+      "light": 100
     },
     "loot": [
       {
@@ -968,11 +968,11 @@
     },
     "resists": {
       "air": 110,
-      "fire": 90,
+      "earth": 90,
       "water": 100,
-      "earth": 80,
-      "light": 100,
-      "dark": 100
+      "fire": 80,
+      "dark": 160,
+      "light": 40
     },
     "loot": [
       {
@@ -1032,11 +1032,11 @@
     },
     "resists": {
       "air": 63,
-      "fire": 5000,
+      "earth": 5000,
       "water": 63,
-      "earth": -63,
-      "light": 100,
-      "dark": 100
+      "fire": -63,
+      "dark": 63,
+      "light": 5000
     },
     "loot": [
       {
@@ -1073,7 +1073,7 @@
   },
   {
     "name": "ArenaMobXP525",
-    "displayName": "${monster.arenamobxp525}",
+    "displayName": "ArenaMobXP525",
     "origin": "new",
     "level": 525,
     "health": 58014,
@@ -1104,11 +1104,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1124,7 +1124,7 @@
   },
   {
     "name": "ArenaMobXP550",
-    "displayName": "${monster.arenamobxp550}",
+    "displayName": "ArenaMobXP550",
     "origin": "new",
     "level": 550,
     "health": 62212,
@@ -1155,11 +1155,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1206,11 +1206,11 @@
     },
     "resists": {
       "air": 80,
-      "fire": 140,
+      "earth": 140,
       "water": 110,
-      "earth": 100,
-      "light": 100,
-      "dark": 100
+      "fire": 100,
+      "dark": 200,
+      "light": 20
     },
     "loot": [
       {
@@ -1270,11 +1270,11 @@
     },
     "resists": {
       "air": 70,
-      "fire": 130,
+      "earth": 130,
       "water": 100,
-      "earth": 90,
-      "light": 100,
-      "dark": 100
+      "fire": 90,
+      "dark": 170,
+      "light": 30
     },
     "loot": [
       {
@@ -1303,7 +1303,7 @@
   },
   {
     "name": "ArenaMobXP575",
-    "displayName": "${monster.arenamobxp575}",
+    "displayName": "ArenaMobXP575",
     "origin": "new",
     "level": 575,
     "health": 66410,
@@ -1334,11 +1334,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1354,7 +1354,7 @@
   },
   {
     "name": "ArenaMobXP600",
-    "displayName": "${monster.arenamobxp600}",
+    "displayName": "ArenaMobXP600",
     "origin": "new",
     "level": 600,
     "health": 70607,
@@ -1385,11 +1385,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1436,11 +1436,11 @@
     },
     "resists": {
       "air": 100,
-      "fire": 90,
+      "earth": 90,
       "water": 90,
-      "earth": 120,
-      "light": 100,
-      "dark": 100
+      "fire": 120,
+      "dark": 250,
+      "light": 10
     },
     "loot": [
       {
@@ -1485,7 +1485,7 @@
   },
   {
     "name": "ArenaMobXP625",
-    "displayName": "${monster.arenamobxp625}",
+    "displayName": "ArenaMobXP625",
     "origin": "new",
     "level": 625,
     "health": 74805,
@@ -1516,11 +1516,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1536,7 +1536,7 @@
   },
   {
     "name": "ArenaMobXP650",
-    "displayName": "${monster.arenamobxp650}",
+    "displayName": "ArenaMobXP650",
     "origin": "new",
     "level": 650,
     "health": 79003,
@@ -1567,11 +1567,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1618,11 +1618,11 @@
     },
     "resists": {
       "air": 120,
-      "fire": 180,
+      "earth": 180,
       "water": 150,
-      "earth": 60,
-      "light": 100,
-      "dark": 100
+      "fire": 60,
+      "dark": 130,
+      "light": 160
     },
     "loot": [
       {
@@ -1651,7 +1651,7 @@
   },
   {
     "name": "ArenaMobXP675",
-    "displayName": "${monster.arenamobxp675}",
+    "displayName": "ArenaMobXP675",
     "origin": "new",
     "level": 675,
     "health": 83201,
@@ -1682,11 +1682,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1702,7 +1702,7 @@
   },
   {
     "name": "ArenaMobXP700",
-    "displayName": "${monster.arenamobxp700}",
+    "displayName": "ArenaMobXP700",
     "origin": "new",
     "level": 700,
     "health": 87399,
@@ -1733,11 +1733,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1753,7 +1753,7 @@
   },
   {
     "name": "ArenaMobXP725",
-    "displayName": "${monster.arenamobxp725}",
+    "displayName": "ArenaMobXP725",
     "origin": "new",
     "level": 725,
     "health": 91596,
@@ -1784,11 +1784,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1804,7 +1804,7 @@
   },
   {
     "name": "ArenaMobXP750",
-    "displayName": "${monster.arenamobxp750}",
+    "displayName": "ArenaMobXP750",
     "origin": "new",
     "level": 750,
     "health": 95794,
@@ -1835,11 +1835,11 @@
     },
     "resists": {
       "air": 46,
-      "fire": 94,
-      "water": 46,
       "earth": 94,
-      "light": 100,
-      "dark": 100
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
     },
     "loot": [],
     "attacks": [
@@ -1886,11 +1886,11 @@
     },
     "resists": {
       "air": 63,
-      "fire": 5000,
+      "earth": 5000,
       "water": 63,
-      "earth": -63,
-      "light": 100,
-      "dark": 100
+      "fire": -63,
+      "dark": 63,
+      "light": 5000
     },
     "loot": [
       {
@@ -1942,11 +1942,11 @@
     },
     "resists": {
       "air": 63,
-      "fire": 5000,
+      "earth": 5000,
       "water": 63,
-      "earth": -63,
-      "light": 100,
-      "dark": 100
+      "fire": -63,
+      "dark": 63,
+      "light": 5000
     },
     "loot": [
       {

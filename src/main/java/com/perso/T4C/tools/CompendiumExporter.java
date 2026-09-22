@@ -14,6 +14,7 @@ import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.quest.definition.QuestDefinitions;
 import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.spell.definition.SpellDefinitions;
 import java.io.File;
 import java.io.FileReader;
@@ -178,7 +179,7 @@ public final class CompendiumExporter {
 
       Map<String, Object> m = new LinkedHashMap<>();
       m.put("name", def.getName());
-      m.put("displayName", I18n.resolve(def.getDisplayName()));
+      m.put("displayName", resolveOrFallback(def.getDisplayName(), def.getName()));
       m.put("origin", origin);
       m.put("level", def.getLevel());
       m.put("health", def.getHealth());
@@ -237,6 +238,20 @@ public final class CompendiumExporter {
     return out;
   }
 
+  /**
+   * {@link I18n#resolve} returns its input unchanged when the key isn't in lang.json - some
+   * JSON-authored monsters (the level 525-750 Colosseum ladder) reference i18n keys that were
+   * never added to the catalogue, so resolving them leaves a literal {@code ${monster.xxx}}
+   * placeholder. Fall back to the raw spawn name rather than publish that placeholder verbatim.
+   */
+  private static String resolveOrFallback(String i18nValue, String fallback) {
+    String resolved = I18n.resolve(i18nValue);
+    if (resolved != null && resolved.startsWith("${") && resolved.endsWith("}")) {
+      return fallback;
+    }
+    return resolved;
+  }
+
   private static final Set<String> JSON_MONSTER_NAMES = loadJsonMonsterNames();
 
   private static Set<String> loadJsonMonsterNames() {
@@ -255,17 +270,15 @@ public final class CompendiumExporter {
     return names;
   }
 
-  private static final String[] RESIST_LABELS = {
-    "air", "fire", "water", "earth", "?4", "?5", "?6", "?7", "?8", "?9", "?10", "light", "dark"
-  };
-
+  // Matches BaseMonster#getElementResistance's element-code -> combatResists-index mapping
+  // exactly (air=0, earth=1, water=2, fire=3, dark=4, light=5) - do not reorder without
+  // re-checking that switch, the array itself carries no labels.
   private static Map<String, Integer> resistMap(int[] resists) {
     Map<String, Integer> out = new LinkedHashMap<>();
     if (resists == null) return out;
-    String[] labels = {"air", "fire", "water", "earth", "light", "dark"};
-    int[] indices = {0, 1, 2, 3, 10, 11};
-    for (int i = 0; i < labels.length && indices[i] < resists.length; i++) {
-      out.put(labels[i], resists[indices[i]]);
+    String[] labels = {"air", "earth", "water", "fire", "dark", "light"};
+    for (int i = 0; i < labels.length && i < resists.length; i++) {
+      out.put(labels[i], resists[i]);
     }
     return out;
   }
@@ -274,60 +287,71 @@ public final class CompendiumExporter {
 
   private static List<Map<String, Object>> exportSpells() {
     List<Map<String, Object>> out = new ArrayList<>();
-    for (SpellData spell : SpellDefinitions.all()) {
-      String key = spell.getKey();
+    Set<String> seenClasses = new java.util.HashSet<>();
+    // SpellRegistry.playerCastableSpells() is the game's own authoritative filter - it already
+    // excludes mob-only/item-triggered/test/npc-only spells and dedupes aliases, so trust it
+    // rather than re-deriving the same rule from key prefixes.
+    for (SpellData spell : SpellRegistry.playerCastableSpells()) {
       String simpleClass = classNameGuess(spell);
-      boolean isNew = NEW_SPELL_CLASSES.contains(simpleClass);
-      String category =
-          key != null && key.startsWith("spell.mob_")
-              ? "monster"
-              : key != null && key.startsWith("spell.item_") ? "item-triggered" : "player";
-      if (!isNew && !"player".equals(category)) continue;
-      Map<String, Object> s = new LinkedHashMap<>();
-      s.put("key", key);
-      s.put("isNew", isNew);
-      s.put("category", category);
-      s.put("name", I18n.resolve(spell.getName()));
-      s.put("description", I18n.resolve(spell.getDescription()));
-      s.put("manaCost", spell.getManaCost());
-      s.put("minInt", spell.getMinInt());
-      s.put("minWis", spell.getMinWis());
-      s.put("minLevel", spell.getMinLevel());
-      s.put("isAttack", spell.isAttack());
-      s.put("lineOfSight", spell.isLineOfSight());
-      s.put("minDamage", spell.getMinDamage());
-      s.put("maxDamage", spell.getMaxDamage());
-      s.put("cooldownSeconds", spell.getCooldownSeconds());
-      s.put("duration", spell.getDuration());
-      s.put("price", spell.getPrice());
-      s.put("spellId", spell.getSpellId());
-      s.put("element", spell.getElement());
-      s.put("targetType", spell.getTargetType());
-      s.put("attackType", spell.getAttackType());
-      s.put("successRate", spell.getSuccessRate());
-      s.put("pvp", spell.isPvp());
-      List<Map<String, Object>> effects = new ArrayList<>();
-      if (spell.getT4cEffects() != null) {
-        for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
-          Map<String, Object> e = new LinkedHashMap<>();
-          e.put("effectType", effect.getEffectType());
-          List<Map<String, Object>> params = new ArrayList<>();
-          if (effect.getParameters() != null) {
-            for (SpellData.T4cEffect.EffectParam p : effect.getParameters()) {
-              Map<String, Object> pm = new LinkedHashMap<>();
-              pm.put("paramId", p.getParamId());
-              pm.put("expression", p.getExpression());
-              params.add(pm);
-            }
-          }
-          e.put("parameters", params);
-          effects.add(e);
-        }
+      seenClasses.add(simpleClass);
+      out.add(spellToMap(spell, NEW_SPELL_CLASSES.contains(simpleClass)));
+    }
+    // A couple of curated new spells (e.g. AvalonGateway, a travel spell with no icon) are
+    // real new content but fail playerCastableSpells()'s "has an icon" check, which exists for
+    // the in-game training UI, not for "is this new content worth documenting" - add them back
+    // explicitly rather than silently dropping them.
+    for (SpellData spell : SpellDefinitions.all()) {
+      String simpleClass = classNameGuess(spell);
+      if (NEW_SPELL_CLASSES.contains(simpleClass) && seenClasses.add(simpleClass)) {
+        out.add(spellToMap(spell, true));
       }
-      s.put("effects", effects);
-      out.add(s);
     }
     return out;
+  }
+
+  private static Map<String, Object> spellToMap(SpellData spell, boolean isNew) {
+    Map<String, Object> s = new LinkedHashMap<>();
+    s.put("key", spell.getKey());
+    s.put("isNew", isNew);
+    s.put("name", I18n.resolve(spell.getName()));
+    s.put("description", I18n.resolve(spell.getDescription()));
+    s.put("manaCost", spell.getManaCost());
+    s.put("minInt", spell.getMinInt());
+    s.put("minWis", spell.getMinWis());
+    s.put("minLevel", spell.getMinLevel());
+    s.put("isAttack", spell.isAttack());
+    s.put("lineOfSight", spell.isLineOfSight());
+    s.put("minDamage", spell.getMinDamage());
+    s.put("maxDamage", spell.getMaxDamage());
+    s.put("cooldownSeconds", spell.getCooldownSeconds());
+    s.put("duration", spell.getDuration());
+    s.put("price", spell.getPrice());
+    s.put("spellId", spell.getSpellId());
+    s.put("element", spell.getElement());
+    s.put("targetType", spell.getTargetType());
+    s.put("attackType", spell.getAttackType());
+    s.put("successRate", spell.getSuccessRate());
+    s.put("pvp", spell.isPvp());
+    List<Map<String, Object>> effects = new ArrayList<>();
+    if (spell.getT4cEffects() != null) {
+      for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
+        Map<String, Object> e = new LinkedHashMap<>();
+        e.put("effectType", effect.getEffectType());
+        List<Map<String, Object>> params = new ArrayList<>();
+        if (effect.getParameters() != null) {
+          for (SpellData.T4cEffect.EffectParam p : effect.getParameters()) {
+            Map<String, Object> pm = new LinkedHashMap<>();
+            pm.put("paramId", p.getParamId());
+            pm.put("expression", p.getExpression());
+            params.add(pm);
+          }
+        }
+        e.put("parameters", params);
+        effects.add(e);
+      }
+    }
+    s.put("effects", effects);
+    return s;
   }
 
   private static String classNameGuess(SpellData spell) {

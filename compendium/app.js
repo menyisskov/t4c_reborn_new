@@ -81,7 +81,9 @@
     return (chance * 100).toFixed(chance < 0.01 ? 2 : 1) + "%";
   }
 
-  var ELEMENT_NAMES = { 0: "water", 1: "fire", 2: "earth", 3: "air", 4: "water", 5: "light", 6: "dark" };
+  // Element code 0 is unaligned/default (e.g. Tame Beast) - deliberately not mapped, so it
+  // shows no element tag instead of being folded into Water.
+  var ELEMENT_NAMES = { 1: "fire", 2: "earth", 3: "air", 4: "water", 5: "light", 6: "dark" };
   function elementName(code) { return ELEMENT_NAMES[code] || null; }
 
   function elPill(el) {
@@ -103,6 +105,7 @@
     if (Number(item.price) === 0) return { tier: "rare", label: "Rare (drop only)" };
     return { tier: "common", label: "Common (shop)" };
   }
+  var RARITY_RANK = { legendary: 4, set: 3, rare: 2, common: 1 };
 
   function rarityTag(item) {
     var r = rarityOf(item);
@@ -350,7 +353,7 @@
         { key: "xpOnDeath", label: "XP", numeric: true },
         { key: "aggro", label: "Aggro", numeric: true },
         { key: "origin", label: "Origin", render: function (m) { return originTag(m.origin); } },
-        { key: "zone", label: "Zone", render: function (m) { return monsterZone[m.name] ? zoneLink(monsterZone[m.name]) : "—"; } },
+        { key: "zone", label: "Zone", render: function (m) { return monsterZone[m.name] ? zoneLink(monsterZone[m.name]) : "—"; }, sortValue: function (m) { return monsterZone[m.name] || ""; } },
       ],
       searchFields: ["displayName", "name"],
       filters: [
@@ -434,8 +437,8 @@
         { key: "name", label: "Name", render: function (it) { return itemLink(it.key); } },
         { key: "bodyPart", label: "Slot" },
         { key: "price", label: "Price", numeric: true, render: function (it) { return it.price ? fmtNum(it.price) : "—"; } },
-        { key: "rarity", label: "Rarity", render: function (it) { return rarityTag(it); } },
-        { key: "zone", label: "Source", render: function (it) { return itemZone[it.key] ? zoneLink(itemZone[it.key]) : (itemDroppedBy[it.key] ? "monster drop" : (itemSoldBy[it.key] ? "shop" : "—")); } },
+        { key: "rarity", label: "Rarity", render: function (it) { return rarityTag(it); }, sortValue: function (it) { return RARITY_RANK[rarityOf(it).tier] || 0; } },
+        { key: "zone", label: "Source", render: function (it) { return itemZone[it.key] ? zoneLink(itemZone[it.key]) : (itemDroppedBy[it.key] ? "monster drop" : (itemSoldBy[it.key] ? "shop" : "—")); }, sortValue: function (it) { return itemZone[it.key] || (itemDroppedBy[it.key] ? "monster drop" : (itemSoldBy[it.key] ? "shop" : "")); } },
       ],
       searchFields: ["name", "key"],
       filters: [
@@ -568,9 +571,9 @@
       columns: [
         { key: "displayName", label: "Name", render: function (n) { return npcLink(n.id); } },
         { key: "origin", label: "Origin", render: function (n) { return originTag(n.origin); } },
-        { key: "zone", label: "Zone", render: function (n) { return npcZone[n.id] ? npcZone[n.id].map(zoneLink).join(", ") : "—"; } },
-        { key: "topics", label: "Dialogue topics", numeric: true, render: function (n) { return (n.topics || []).length; } },
-        { key: "shop", label: "Sells", render: function (n) { return SHOPS[n.id] ? SHOPS[n.id].length + " items" : "—"; } },
+        { key: "zone", label: "Zone", render: function (n) { return npcZone[n.id] ? npcZone[n.id].map(zoneLink).join(", ") : "—"; }, sortValue: function (n) { return (npcZone[n.id] || []).join(", "); } },
+        { key: "topics", label: "Dialogue topics", numeric: true, render: function (n) { return (n.topics || []).length; }, sortValue: function (n) { return (n.topics || []).length; } },
+        { key: "shop", label: "Sells", render: function (n) { return SHOPS[n.id] ? SHOPS[n.id].length + " items" : "—"; }, sortValue: function (n) { return (SHOPS[n.id] || []).length; } },
       ],
       searchFields: ["displayName", "id"],
       filters: [{ label: "Origin", field: "origin", options: uniq(NPCS.map(function (n) { return n.origin; })) }],
@@ -714,6 +717,16 @@
 
   // -------------------------------------------------------------- list page
 
+  function looksNumeric(v) {
+    return typeof v === "number" || (typeof v === "string" && /^-?\d+(\.\d+)?$/.test(v.trim()));
+  }
+
+  function compareValues(av, bv) {
+    if (looksNumeric(av) && looksNumeric(bv)) return parseFloat(av) - parseFloat(bv);
+    if (typeof av === "boolean" || typeof bv === "boolean") return (av ? 1 : 0) - (bv ? 1 : 0);
+    return String(av || "").localeCompare(String(bv || ""));
+  }
+
   function uniq(arr) {
     var seen = {};
     var out = [];
@@ -781,11 +794,9 @@
         }
       });
       if (st.sort) {
-        rows.sort(function (a, b) {
-          var av = a[st.sort], bv = b[st.sort];
-          if (typeof av === "string") return av.localeCompare(bv) * st.dir;
-          return ((av || 0) - (bv || 0)) * st.dir;
-        });
+        var sortCol = cfg.columns.filter(function (c) { return c.key === st.sort; })[0];
+        var accessor = sortCol && sortCol.sortValue ? sortCol.sortValue : function (r) { return r[st.sort]; };
+        rows.sort(function (a, b) { return compareValues(accessor(a), accessor(b)) * st.dir; });
       }
       countEl.textContent = rows.length + " / " + cfg.rows.length;
       bodyEl.innerHTML = rows.map(function (r) {
