@@ -154,25 +154,21 @@ reliable ways to check:
    filters `packed.name()` case-insensitively for your candidate substring, e.g. `"Ring"` or
    `"Cape"`, to list the real names available for that slot. Delete the snippet afterward.
 
-## Weapons: a real limitation to flag before promising one
+## Weapons: `dmgFormula`/`atkDelay` are supported
 
-`ItemJsonDef.toItemDefinition()` (in `item/json/ItemJsonDef.java`) always passes `dmgFormula =
-null` and `atkDelay = "0"` into the underlying `ItemDefinition` — **the JSON schema does not
-expose a weapon damage formula at all**, even though legacy weapons have one (e.g.
-`item/definition/CedarLongbow1.java` sets `dmgFormula = "1d59+133+5*arrow_dmg/4"`). Combat code
-(`helper/CombatMath.java`, `rollDefinitionDamage`) checks: if `dmgFormula` is null/empty/"0", it
-falls back to a flat, strength/dexterity-independent 1–4 damage roll. **A WEAPON authored purely
-as JSON today will deal weak, generic fallback damage regardless of its stats.**
-
-If asked to add a new weapon with real, scaled damage, don't silently hand-write a legacy Java
-`ItemDefinition` class to route around this (that goes against the JSON convention and the
-"don't hand-write new Java item classes" rule). Instead, surface the gap to the user and offer
-the honest fix: extend `ItemJsonDef` (and its `toItemDefinition()`) to also accept and pass
-through `dmgFormula`/`atkDelay`, mirroring how legacy items express them — a small, additive
-change consistent with the existing pattern, not a new hand-authored item class. Do this only if
-the user wants it; a purely cosmetic/stat-boost weapon (e.g. a dagger that's mostly a
-skill-boost item, like `CedarLongbow1`'s archery boost) is fine to add via JSON as-is, since its
-`boosts[]` still work normally — only the base weapon-damage number is affected.
+`ItemJsonDef` (in `item/json/ItemJsonDef.java`) has `dmgFormula`/`atkDelay` fields that
+`toItemDefinition()` passes straight through to the underlying `ItemDefinition`, exactly like
+legacy weapons (e.g. `item/definition/CedarLongbow1.java` sets `dmgFormula =
+"1d59+133+5*arrow_dmg/4"`). **A JSON-authored weapon gets real, scaled damage as long as you set
+`dmgFormula`** — see `assets/items/caradocs_sundered_blade.json`, `ignaroks_emberfang_claw.json`,
+`goblin_slayer.json`, `bow_of_centaur_slaying.json` for working examples (T4C-0018 added more:
+`adamantite_two_handed_sword_4/5.json`, `black_locust_composite_bow_4/5.json`, etc.). If
+`dmgFormula` is left `null`/blank, combat code (`helper/CombatMath.java`, `rollDefinitionDamage`)
+falls back to a flat, strength/dexterity-independent 1-4 damage roll — fine for a purely
+cosmetic/stat-boost weapon, but always set `dmgFormula` on anything meant to actually hit hard.
+When extending an existing named tier line (e.g. adding a +4/+5 on top of legacy +1/+2/+3 Java
+definitions), read the line's own prior tiers for its established dice/flat-bonus/boost growth
+curve and continue it — don't invent a new curve from scratch.
 
 ## Buy vs. drop, and scaling rarity to power
 
@@ -247,8 +243,8 @@ carry AC 38.1) — don't zero out their AC by default just because they're acces
    by reusing a name already seen in `assets/items/*.json` or `ArmorSetGenerator.java`; if you
    need something new, verify it exists via the `SpriteBinIO` snippet method — never guess a
    name.
-6. If it's a **weapon**, stop and flag the `dmgFormula`/`atkDelay` gap above before promising
-   real scaled damage.
+6. If it's a **weapon**, set `dmgFormula`/`atkDelay` (see above) so it deals real, scaled damage
+   instead of the generic 1-4 fallback.
 7. Decide buy vs. drop: set `price` (0 or shop value); if buyable, add the key to a shop list in
    `ShopCatalog.java`; if a drop, add a `loot` entry with a power-appropriate `chance` to a
    suitable monster's JSON in `assets/monsters/`.

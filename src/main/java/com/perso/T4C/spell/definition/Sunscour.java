@@ -3,13 +3,18 @@ package com.perso.T4C.spell.definition;
 import com.perso.T4C.spell.SpellData;
 import java.util.List;
 
-public final class UndeadAnnihilation {
-  private UndeadAnnihilation() {}
+/**
+ * Originally authored under the name "Undead Annihilation", which turned out to collide with a
+ * real t4cfantasy.com/Addon "Ancient tier" spell name; renamed to an invented name, keeping the
+ * same mechanics/spellId.
+ */
+public final class Sunscour {
+  private Sunscour() {}
 
   public static SpellData definition() {
     return new SpellData(
-        "${spell.undead_annihilation}",
-        "${spell.description.undead_annihilation}",
+        "${spell.sunscour}",
+        "${spell.description.sunscour}",
         "30",
         0,
         100,

@@ -6,14 +6,14 @@
   "appearanceInventory": "64kInvPlateArmorSleeves",
   "price": 0,
   "weight": 8,
-  "armorClass": 114.5,
+  "armorClass": 74.425,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 400,
     "strength": 500,
     "agility": 0,
-    "intelligence": 150,
-    "wisdom": 150,
+    "intelligence": 0,
+    "wisdom": 0,
     "attack": 0
   },
   "attackSpeed": 0.0,
@@ -64,6 +64,11 @@
       "boostId": 20259,
       "statId": 8,
       "expression": "307"
+    },
+    {
+      "boostId": 20260,
+      "statId": 2,
+      "expression": "25"
     }
   ]
 }
