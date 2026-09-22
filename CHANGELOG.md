@@ -15,6 +15,18 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-22 — XP-per-level chart on the compendium Systems page (T4C-0017)
+
+### Added
+- `tools/CompendiumExporter.java` now exports `xpcurve.json` (and bundles it into `data.js` as
+  `xpCurve`): every `XpCurveDefinitions` entry (levels 1-1000, `xpToNextLevel`/`totalXp`) plus
+  `GameConstants.SERVER_XP_RATE`, the flat multiplier the server applies to monster XP grants
+  before it's checked against this curve.
+- Compendium Systems page: a log-scale line chart of XP required per level (the curve spans
+  100 XP at level 1 to ~4.9T at level 999, so linear would flatten the entire early game to a
+  single pixel), with a hover/keyboard crosshair + tooltip (level, XP to next level, total XP
+  so far) and a collapsible milestone table for the same data without hovering.
+
 ## 2026-09-22 — Fix mislabeled attack "hit chance" on compendium monster pages (T4C-0016)
 
 ### Fixed

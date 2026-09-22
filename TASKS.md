@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0017`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0018`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -29,6 +29,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0014 | Deterministic NPC ordering in compendium exporter | Process/Tooling | Done | `0282e7c` | [2026-09-22](CHANGELOG.md#2026-09-22--deterministic-npc-ordering-in-compendium-exporter-t4c-0014) |
 | T4C-0015 | Monster balance report generator (audit new bosses vs. legacy curve) | Process/Tooling | Done | `6757374` | [2026-09-22](CHANGELOG.md#2026-09-22--monster-balance-report-generator-t4c-0015) |
 | T4C-0016 | Fix mislabeled attack "hit chance" on compendium monster pages | Fix | Done | `3f7fd65` | [2026-09-22](CHANGELOG.md#2026-09-22--fix-mislabeled-attack-hit-chance-on-compendium-monster-pages-t4c-0016) |
+| T4C-0017 | XP-per-level chart on the compendium Systems page | Content/Tooling | Done | (pending) | [2026-09-22](CHANGELOG.md#2026-09-22--xp-per-level-chart-on-the-compendium-systems-page-t4c-0017) |
 
 ## Type legend
 

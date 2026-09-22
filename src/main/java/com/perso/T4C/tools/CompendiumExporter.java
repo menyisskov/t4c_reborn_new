@@ -5,7 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.perso.T4C.config.GameConstants;
+import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.mapping.definition.XpCurveDefinitions;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.monster.json.MonsterJsonLoader;
@@ -135,6 +138,7 @@ public final class CompendiumExporter {
     writeJson(outDir.resolve("npcs.json"), exportNpcs());
     writeJson(outDir.resolve("items.json"), exportItems());
     writeJson(outDir.resolve("shops.json"), shops);
+    writeJson(outDir.resolve("xpcurve.json"), exportXpCurve());
 
     // Bundle everything (generated + the hand-authored zones/statids/meta files, if present)
     // into a single data.js so the site works by opening index.html directly, no local server
@@ -147,6 +151,7 @@ public final class CompendiumExporter {
     bundle.put("npcs", exportNpcs());
     bundle.put("items", exportItems());
     bundle.put("shops", shops);
+    bundle.put("xpCurve", exportXpCurve());
     bundle.put("zones", readHandAuthored(outDir.resolve("zones.json")));
     bundle.put("statIds", readHandAuthored(outDir.resolve("statids.json")));
     bundle.put("meta", readHandAuthored(outDir.resolve("meta.json")));
@@ -510,6 +515,29 @@ public final class CompendiumExporter {
         System.err.println("Skipping item file " + f + ": " + ex);
       }
     }
+    return out;
+  }
+
+  // -------------------------------------------------------------- xp curve
+
+  /**
+   * The live leveling curve ({@link XpCurveDefinitions}, levels 1-1000), for the Systems page's
+   * XP-per-level chart. {@code serverXpRate} is {@link GameConstants#SERVER_XP_RATE}, the flat
+   * multiplier applied to every monster's granted XP ({@code PlayerProgression#addXp}) - it does
+   * not change the curve itself, only how many real kills a given {@code xpToNextLevel} costs.
+   */
+  private static Map<String, Object> exportXpCurve() {
+    List<Map<String, Object>> entries = new ArrayList<>();
+    for (XpCurve.Entry e : XpCurveDefinitions.all()) {
+      Map<String, Object> row = new LinkedHashMap<>();
+      row.put("level", e.getLevel());
+      row.put("xpToNextLevel", e.getXpToNextLevel());
+      row.put("totalXp", e.getTotalXp());
+      entries.add(row);
+    }
+    Map<String, Object> out = new LinkedHashMap<>();
+    out.put("serverXpRate", GameConstants.SERVER_XP_RATE);
+    out.put("entries", entries);
     return out;
   }
 
