@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0014`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0015`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -26,6 +26,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0011 | MMO server groundwork: Java 21, libGDX purity guard | Process/Tooling | Done | `8aef3a8`, `148752b` | [2026-09-21](CHANGELOG.md#2026-09-21--mmo-server-groundwork-java-21-libgdx-purity-guard-t4c-0011) |
 | T4C-0012 | Local compendium website (items/spells/monsters/NPCs/quests/zones) | Content/Tooling | Done | `e0170f1` | [2026-09-22](CHANGELOG.md#2026-09-22--local-compendium-website-t4c-0012) |
 | T4C-0013 | CI auto-regenerates compendium data on push to main | Process/Tooling | Done | `c0c15e7` | [2026-09-22](CHANGELOG.md#2026-09-22--ci-auto-regenerates-compendium-data-on-push-to-main-t4c-0013) |
+| T4C-0014 | Deterministic NPC ordering in compendium exporter | Process/Tooling | In Progress | | |
 
 ## Type legend
 

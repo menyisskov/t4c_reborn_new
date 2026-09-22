@@ -398,7 +398,13 @@ public final class CompendiumExporter {
 
   private static List<Map<String, Object>> exportNpcs() {
     List<Map<String, Object>> out = new ArrayList<>();
-    for (NpcFactoryRegistry.Registration reg : NpcFactoryRegistry.registrations()) {
+    // NpcFactoryRegistry.registrations() order follows classpath-scan/directory-listing order,
+    // which is not guaranteed stable across machines/filesystems - sort by id so re-running this
+    // exporter on a different machine (e.g. CI) doesn't produce a pure-reorder diff.
+    List<NpcFactoryRegistry.Registration> sortedRegs =
+        new ArrayList<>(NpcFactoryRegistry.registrations());
+    sortedRegs.sort(Comparator.comparing(NpcFactoryRegistry.Registration::id));
+    for (NpcFactoryRegistry.Registration reg : sortedRegs) {
       boolean isNew = NEW_NPC_IDS.contains(reg.id());
       boolean activated = ACTIVATED_NPC_IDS.contains(reg.id());
       if (!isNew && !activated) continue;

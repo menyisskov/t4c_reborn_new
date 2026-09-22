@@ -1,5 +1,50 @@
 [
   {
+    "id": "ArchmageThalindra",
+    "origin": "new",
+    "displayName": "Archmage Thalindra",
+    "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the Ancient tier here and nowhere else on this coast.",
+    "topics": [
+      {
+        "keywords": [
+          "train",
+          "learn",
+          "teach",
+          "spell"
+        ],
+        "response": "Sentinel, Divine Veil, Clemancy, Undead Annihilation, Omega Planetoids - the Ancient tier. Study hard, and the ley lines beneath this isle will lend you their strength.",
+        "actions": [
+          "OPEN_SPELL_LEARNING:sentinel,divine_veil,clemancy,undead_annihilation,omega_planetoids"
+        ]
+      },
+      {
+        "keywords": [
+          "wilds"
+        ],
+        "response": "The Wilds' fey draw on the same ley lines I do, gentler than my own working. That kinship is the only reason they still tolerate a tower full of spellbooks in their woods.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "ancient"
+        ],
+        "response": "The Ancient tier was never meant to be taught lightly - it demands a caster already tempered by two hundred levels of hard-won craft. Come back when you're ready.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "ElderOphira",
     "origin": "new",
     "displayName": "Elder Ophira",
@@ -68,6 +113,94 @@
     }
   },
   {
+    "id": "GrandmasterVoss",
+    "origin": "new",
+    "displayName": "Grandmaster Voss",
+    "welcomeText": "Few make it this far and fewer still make it back. What do you need, champion?",
+    "topics": [
+      {
+        "keywords": [
+          "quest",
+          "wardens"
+        ],
+        "response": "The Bastion Wardens have held that ruin for longer than anyone living remembers. Break enough of them and the old wards will finally weaken.",
+        "actions": [
+          "GIVE_QUEST:bastion_warden_siege"
+        ]
+      },
+      {
+        "keywords": [
+          "greater drake",
+          "bastion"
+        ],
+        "response": "The Greater Drake sleeps at the bastion's heart. Every warden that falls is one less reason for it to stay asleep. Think on that before you wake it.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "bye"
+        ],
+        "response": "May whatever you worship still be listening where you're going.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "KeeperTamsin",
+    "origin": "new",
+    "displayName": "Keeper Tamsin",
+    "welcomeText": "Careful where you step. Something's been dragging people under since the tide turned.",
+    "topics": [
+      {
+        "keywords": [
+          "quest",
+          "deep ones"
+        ],
+        "response": "Deep Ones have been dragging travelers under all along this stretch of the coast. Thin their numbers and I'll see you paid for it.",
+        "actions": [
+          "GIVE_QUEST:deep_ones_cave_purge"
+        ]
+      },
+      {
+        "keywords": [
+          "bigger",
+          "boss"
+        ],
+        "response": "There's a bigger one down there. The others answer to it. I wouldn't go looking for it without help.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "bye"
+        ],
+        "response": "Stay off the wet ground after dark. That's when they surface.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "MarshalTorrhen",
     "origin": "new",
     "displayName": "Marshal Torrhen",
@@ -120,34 +253,34 @@
     }
   },
   {
-    "id": "WardenCael",
+    "id": "OutriderKaelis",
     "origin": "new",
-    "displayName": "Warden Cael",
-    "welcomeText": "Don't linger past dusk here. The barrows wake at dark, and something crowned still walks among them.",
+    "displayName": "Outrider Kaelis",
+    "welcomeText": "Turn back if you're not ready. What's past this ridge doesn't forgive.",
     "topics": [
       {
         "keywords": [
           "quest",
-          "wights"
+          "dragonguard"
         ],
-        "response": "Wights have been crawling out of the old barrows south of the marches. Put them back down and I'll pay you from the March Watch's own coffer.",
+        "response": "Kraanian Dragonguard hold the approach to the old drakes' lair, further out than anything we've mapped before. Cull enough of them and the Vigil will pay you well.",
         "actions": [
-          "GIVE_QUEST:hollow_march_wights"
+          "GIVE_QUEST:drakes_lair_vigil"
         ]
       },
       {
         "keywords": [
-          "hollow king",
-          "crown"
+          "arch drake",
+          "lair"
         ],
-        "response": "They call him the Hollow King. No one remembers which king he was in life. Whatever crowned him now isn't a kindness.",
+        "response": "Something older than the Greater Drake sleeps past the guard line. The maps just call it the Arch Drake. I hope they're wrong.",
         "actions": []
       },
       {
         "keywords": [
           "bye"
         ],
-        "response": "Keep your torch lit. It's the only mercy the barrows understand.",
+        "response": "Don't go past the guard line alone. I mean that as a warning, not a dare.",
         "actions": []
       }
     ],
@@ -161,218 +294,6 @@
       "attackSkill": 250,
       "dodge": 65535,
       "damageFormula": "1d23+16"
-    }
-  },
-  {
-    "id": "WayfarerBryndis",
-    "origin": "new",
-    "displayName": "Wayfarer Bryndis",
-    "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of Avalon before you leave - you'll thank me the first time you need to get back here in a hurry.",
-    "topics": [
-      {
-        "keywords": [
-          "travel",
-          "scroll"
-        ],
-        "response": "The Scroll of Avalon carries you straight to the Sanctuary temple, no matter how far you've wandered. Cheap insurance, if you ask me.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "gateway"
-        ],
-        "response": "The Avalon Gateway is the spell woven into that scroll. Ask Archmage Thalindra if you'd rather learn to cast it yourself.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "veil"
-        ],
-        "response": "I don't sell passage into the Veil. Nobody sane charters that road on purpose.",
-        "actions": []
-      }
-    ],
-    "combatProfile": {
-      "level": 100,
-      "maxHp": 1000000,
-      "strength": 65,
-      "endurance": 67,
-      "dexterity": 63,
-      "armorClass": 1000000,
-      "attackSkill": 250,
-      "dodge": 65535,
-      "damageFormula": "1d23+16"
-    }
-  },
-  {
-    "id": "TideWardenBryn",
-    "origin": "new",
-    "displayName": "Tide Warden Bryn",
-    "welcomeText": "The tide brought something foul ashore near Silversky. Stand with me, or move along.",
-    "topics": [
-      {
-        "keywords": [
-          "quest",
-          "chancel"
-        ],
-        "response": "Drowned Acolytes have been crawling out of the flooded chancel east of town, dragging folk under the waves. Thin their numbers and I'll see you paid.",
-        "actions": [
-          "GIVE_QUEST:silversky_tide_warden"
-        ]
-      },
-      {
-        "keywords": [
-          "mordrenn",
-          "inquisitor"
-        ],
-        "response": "Mordrenn was a priest once, before the tide claimed him. Now he calls himself an Inquisitor and holds court in the drowned chancel, judging anyone who wades too close.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "teach",
-          "spell",
-          "train"
-        ],
-        "response": "I picked up a working or two studying the tide magic that keeps those cultists breathing underwater. Ask to TEACH if you want to learn.",
-        "actions": [
-          "OPEN_SPELL_LEARNING:riptide_surge,drowned_ward"
-        ]
-      },
-      {
-        "keywords": [
-          "silversky",
-          "coast"
-        ],
-        "response": "Silversky's coast used to be calm. Since the chancel woke up, the fishing fleets won't sail past the old lighthouse without an escort.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "bye"
-        ],
-        "response": "Safe travels. Keep your boots dry.",
-        "actions": []
-      }
-    ],
-    "combatProfile": {
-      "level": 100,
-      "maxHp": 1000000,
-      "strength": 65,
-      "endurance": 67,
-      "dexterity": 63,
-      "armorClass": 1000000,
-      "attackSkill": 250,
-      "dodge": 65535,
-      "damageFormula": "1d23+16"
-    }
-  },
-  {
-    "id": "ArchmageThalindra",
-    "origin": "new",
-    "displayName": "Archmage Thalindra",
-    "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the Ancient tier here and nowhere else on this coast.",
-    "topics": [
-      {
-        "keywords": [
-          "train",
-          "learn",
-          "teach",
-          "spell"
-        ],
-        "response": "Sentinel, Divine Veil, Clemancy, Undead Annihilation, Omega Planetoids - the Ancient tier. Study hard, and the ley lines beneath this isle will lend you their strength.",
-        "actions": [
-          "OPEN_SPELL_LEARNING:sentinel,divine_veil,clemancy,undead_annihilation,omega_planetoids"
-        ]
-      },
-      {
-        "keywords": [
-          "wilds"
-        ],
-        "response": "The Wilds' fey draw on the same ley lines I do, gentler than my own working. That kinship is the only reason they still tolerate a tower full of spellbooks in their woods.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "ancient"
-        ],
-        "response": "The Ancient tier was never meant to be taught lightly - it demands a caster already tempered by two hundred levels of hard-won craft. Come back when you're ready.",
-        "actions": []
-      }
-    ],
-    "combatProfile": {
-      "level": 100,
-      "maxHp": 1000000,
-      "strength": 65,
-      "endurance": 67,
-      "dexterity": 63,
-      "armorClass": 1000000,
-      "attackSkill": 250,
-      "dodge": 65535,
-      "damageFormula": "1d23+16"
-    }
-  },
-  {
-    "id": "GrandmasterVoss",
-    "origin": "new",
-    "displayName": "Grandmaster Voss",
-    "welcomeText": "Few make it this far and fewer still make it back. What do you need, champion?",
-    "topics": [
-      {
-        "keywords": [
-          "quest",
-          "wardens"
-        ],
-        "response": "The Bastion Wardens have held that ruin for longer than anyone living remembers. Break enough of them and the old wards will finally weaken.",
-        "actions": [
-          "GIVE_QUEST:bastion_warden_siege"
-        ]
-      },
-      {
-        "keywords": [
-          "greater drake",
-          "bastion"
-        ],
-        "response": "The Greater Drake sleeps at the bastion's heart. Every warden that falls is one less reason for it to stay asleep. Think on that before you wake it.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "bye"
-        ],
-        "response": "May whatever you worship still be listening where you're going.",
-        "actions": []
-      }
-    ],
-    "combatProfile": {
-      "level": 100,
-      "maxHp": 1000000,
-      "strength": 65,
-      "endurance": 67,
-      "dexterity": 63,
-      "armorClass": 1000000,
-      "attackSkill": 250,
-      "dodge": 65535,
-      "damageFormula": "1d23+16"
-    }
-  },
-  {
-    "id": "StorageChest",
-    "origin": "new",
-    "displayName": "Storage Chest",
-    "spriteBase": "@static:Vault",
-    "welcomeText": "",
-    "topics": [],
-    "combatProfile": {
-      "level": 100,
-      "maxHp": 1000000,
-      "strength": 500,
-      "endurance": 500,
-      "dexterity": 500,
-      "armorClass": 1000000,
-      "attackSkill": 1,
-      "dodge": 65535,
-      "damageFormula": "1d3"
     }
   },
   {
@@ -569,91 +490,6 @@
     }
   },
   {
-    "id": "SisterIlyndra",
-    "origin": "new",
-    "displayName": "Sister Ilyndra",
-    "welcomeText": "Peace to you, traveler. This temple stands open to anyone the Veil has bruised, whichever side of the seam you call home.",
-    "topics": [
-      {
-        "keywords": [
-          "sanctuary",
-          "refuge"
-        ],
-        "response": "This temple sits at the seam on purpose. Neither the Wilds nor the Veil can claim consecrated ground.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "wilds"
-        ],
-        "response": "The Wilds still sing, if you know how to listen. I pray it stays that way.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "veil"
-        ],
-        "response": "I have prayed over the Veil's dead more times than I can count. None of my prayers have slowed it. Go carefully if you must go there at all.",
-        "actions": []
-      }
-    ],
-    "combatProfile": {
-      "level": 100,
-      "maxHp": 1000000,
-      "strength": 65,
-      "endurance": 67,
-      "dexterity": 63,
-      "armorClass": 1000000,
-      "attackSkill": 250,
-      "dodge": 65535,
-      "damageFormula": "1d23+16"
-    }
-  },
-  {
-    "id": "OutriderKaelis",
-    "origin": "new",
-    "displayName": "Outrider Kaelis",
-    "welcomeText": "Turn back if you're not ready. What's past this ridge doesn't forgive.",
-    "topics": [
-      {
-        "keywords": [
-          "quest",
-          "dragonguard"
-        ],
-        "response": "Kraanian Dragonguard hold the approach to the old drakes' lair, further out than anything we've mapped before. Cull enough of them and the Vigil will pay you well.",
-        "actions": [
-          "GIVE_QUEST:drakes_lair_vigil"
-        ]
-      },
-      {
-        "keywords": [
-          "arch drake",
-          "lair"
-        ],
-        "response": "Something older than the Greater Drake sleeps past the guard line. The maps just call it the Arch Drake. I hope they're wrong.",
-        "actions": []
-      },
-      {
-        "keywords": [
-          "bye"
-        ],
-        "response": "Don't go past the guard line alone. I mean that as a warning, not a dare.",
-        "actions": []
-      }
-    ],
-    "combatProfile": {
-      "level": 100,
-      "maxHp": 1000000,
-      "strength": 65,
-      "endurance": 67,
-      "dexterity": 63,
-      "armorClass": 1000000,
-      "attackSkill": 250,
-      "dodge": 65535,
-      "damageFormula": "1d23+16"
-    }
-  },
-  {
     "id": "RurikCinderwatch",
     "origin": "new",
     "displayName": "Rurik Cinderwatch",
@@ -717,34 +553,31 @@
     }
   },
   {
-    "id": "KeeperTamsin",
+    "id": "SisterIlyndra",
     "origin": "new",
-    "displayName": "Keeper Tamsin",
-    "welcomeText": "Careful where you step. Something's been dragging people under since the tide turned.",
+    "displayName": "Sister Ilyndra",
+    "welcomeText": "Peace to you, traveler. This temple stands open to anyone the Veil has bruised, whichever side of the seam you call home.",
     "topics": [
       {
         "keywords": [
-          "quest",
-          "deep ones"
+          "sanctuary",
+          "refuge"
         ],
-        "response": "Deep Ones have been dragging travelers under all along this stretch of the coast. Thin their numbers and I'll see you paid for it.",
-        "actions": [
-          "GIVE_QUEST:deep_ones_cave_purge"
-        ]
-      },
-      {
-        "keywords": [
-          "bigger",
-          "boss"
-        ],
-        "response": "There's a bigger one down there. The others answer to it. I wouldn't go looking for it without help.",
+        "response": "This temple sits at the seam on purpose. Neither the Wilds nor the Veil can claim consecrated ground.",
         "actions": []
       },
       {
         "keywords": [
-          "bye"
+          "wilds"
         ],
-        "response": "Stay off the wet ground after dark. That's when they surface.",
+        "response": "The Wilds still sing, if you know how to listen. I pray it stays that way.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "veil"
+        ],
+        "response": "I have prayed over the Veil's dead more times than I can count. None of my prayers have slowed it. Go carefully if you must go there at all.",
         "actions": []
       }
     ],
@@ -758,24 +591,6 @@
       "attackSkill": 250,
       "dodge": 65535,
       "damageFormula": "1d23+16"
-    }
-  },
-  {
-    "id": "SpellMerchant",
-    "origin": "new",
-    "displayName": "Ilarion the Spell Merchant",
-    "welcomeText": "Welcome. I have every spell known to this world for sale. Say \"spells\" to browse my wares.",
-    "topics": [],
-    "combatProfile": {
-      "level": 100,
-      "maxHp": 1000000,
-      "strength": 500,
-      "endurance": 500,
-      "dexterity": 500,
-      "armorClass": 1000000,
-      "attackSkill": 1,
-      "dodge": 65535,
-      "damageFormula": "1d3"
     }
   },
   {
@@ -818,6 +633,191 @@
         "actions": [
           "OPEN_SPELL_LEARNING:sentinel"
         ]
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "SpellMerchant",
+    "origin": "new",
+    "displayName": "Ilarion the Spell Merchant",
+    "welcomeText": "Welcome. I have every spell known to this world for sale. Say \"spells\" to browse my wares.",
+    "topics": [],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 500,
+      "endurance": 500,
+      "dexterity": 500,
+      "armorClass": 1000000,
+      "attackSkill": 1,
+      "dodge": 65535,
+      "damageFormula": "1d3"
+    }
+  },
+  {
+    "id": "StorageChest",
+    "origin": "new",
+    "displayName": "Storage Chest",
+    "spriteBase": "@static:Vault",
+    "welcomeText": "",
+    "topics": [],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 500,
+      "endurance": 500,
+      "dexterity": 500,
+      "armorClass": 1000000,
+      "attackSkill": 1,
+      "dodge": 65535,
+      "damageFormula": "1d3"
+    }
+  },
+  {
+    "id": "TideWardenBryn",
+    "origin": "new",
+    "displayName": "Tide Warden Bryn",
+    "welcomeText": "The tide brought something foul ashore near Silversky. Stand with me, or move along.",
+    "topics": [
+      {
+        "keywords": [
+          "quest",
+          "chancel"
+        ],
+        "response": "Drowned Acolytes have been crawling out of the flooded chancel east of town, dragging folk under the waves. Thin their numbers and I'll see you paid.",
+        "actions": [
+          "GIVE_QUEST:silversky_tide_warden"
+        ]
+      },
+      {
+        "keywords": [
+          "mordrenn",
+          "inquisitor"
+        ],
+        "response": "Mordrenn was a priest once, before the tide claimed him. Now he calls himself an Inquisitor and holds court in the drowned chancel, judging anyone who wades too close.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "teach",
+          "spell",
+          "train"
+        ],
+        "response": "I picked up a working or two studying the tide magic that keeps those cultists breathing underwater. Ask to TEACH if you want to learn.",
+        "actions": [
+          "OPEN_SPELL_LEARNING:riptide_surge,drowned_ward"
+        ]
+      },
+      {
+        "keywords": [
+          "silversky",
+          "coast"
+        ],
+        "response": "Silversky's coast used to be calm. Since the chancel woke up, the fishing fleets won't sail past the old lighthouse without an escort.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "bye"
+        ],
+        "response": "Safe travels. Keep your boots dry.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "WardenCael",
+    "origin": "new",
+    "displayName": "Warden Cael",
+    "welcomeText": "Don't linger past dusk here. The barrows wake at dark, and something crowned still walks among them.",
+    "topics": [
+      {
+        "keywords": [
+          "quest",
+          "wights"
+        ],
+        "response": "Wights have been crawling out of the old barrows south of the marches. Put them back down and I'll pay you from the March Watch's own coffer.",
+        "actions": [
+          "GIVE_QUEST:hollow_march_wights"
+        ]
+      },
+      {
+        "keywords": [
+          "hollow king",
+          "crown"
+        ],
+        "response": "They call him the Hollow King. No one remembers which king he was in life. Whatever crowned him now isn't a kindness.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "bye"
+        ],
+        "response": "Keep your torch lit. It's the only mercy the barrows understand.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "WayfarerBryndis",
+    "origin": "new",
+    "displayName": "Wayfarer Bryndis",
+    "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of Avalon before you leave - you'll thank me the first time you need to get back here in a hurry.",
+    "topics": [
+      {
+        "keywords": [
+          "travel",
+          "scroll"
+        ],
+        "response": "The Scroll of Avalon carries you straight to the Sanctuary temple, no matter how far you've wandered. Cheap insurance, if you ask me.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "gateway"
+        ],
+        "response": "The Avalon Gateway is the spell woven into that scroll. Ask Archmage Thalindra if you'd rather learn to cast it yourself.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "veil"
+        ],
+        "response": "I don't sell passage into the Veil. Nobody sane charters that road on purpose.",
+        "actions": []
       }
     ],
     "combatProfile": {
