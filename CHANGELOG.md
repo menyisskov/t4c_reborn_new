@@ -15,6 +15,16 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-22 — Deterministic NPC ordering in compendium exporter (T4C-0014)
+
+### Fixed
+- `tools/CompendiumExporter.java`'s NPC export followed `NpcFactoryRegistry.registrations()`'s
+  classpath-scan order, which is not guaranteed stable across machines/filesystems — running the
+  exporter locally and via the `compendium.yml` CI workflow (T4C-0013) on GitHub's runners
+  produced the same NPC records in different orders, showing up as pure-reorder noise in
+  `compendium/data/npcs.json`/`data.js` diffs with no actual content change. Now sorted by NPC id
+  before export.
+
 ## 2026-09-22 — CI auto-regenerates compendium data on push to main (T4C-0013)
 
 ### Added
