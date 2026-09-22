@@ -677,9 +677,178 @@
     );
   });
 
+  // ---------------------------------------------------------- xp curve chart
+
+  var XP_CURVE = DATA.xpCurve || { serverXpRate: 1, entries: [] };
+  var XP_CHART_W = 900;
+  var XP_CHART_H = 320;
+  var XP_CHART_PAD = { l: 66, r: 16, t: 14, b: 34 };
+
+  function xpCompact(n) {
+    n = Number(n);
+    var val, suffix;
+    if (n >= 1e12) { val = n / 1e12; suffix = "T"; }
+    else if (n >= 1e9) { val = n / 1e9; suffix = "B"; }
+    else if (n >= 1e6) { val = n / 1e6; suffix = "M"; }
+    else if (n >= 1e3) { val = n / 1e3; suffix = "K"; }
+    else return String(n);
+    // Exact powers of ten (every axis gridline) round-trip to a whole number - drop the
+    // trailing ".0" for those, but keep one decimal of precision for in-between values
+    // (a curve endpoint like 4.9T) since flooring would lose exactly what makes it interesting.
+    return val.toFixed(val >= 10 ? 0 : 1).replace(/\.0$/, "") + suffix;
+  }
+
+  // Precomputes the scales shared by the static render and the hover layer, so the two never
+  // drift apart. Level 1000 (xpToNextLevel 0, the level cap) is excluded from the curve itself
+  // and called out in the caption instead - log(0) is undefined and it would otherwise plot as
+  // a cliff to the axis floor.
+  function xpChartScales() {
+    var entries = (XP_CURVE.entries || []).filter(function (e) { return e.xpToNextLevel > 0; });
+    if (!entries.length) return null;
+    var minLevel = entries[0].level;
+    var maxLevel = entries[entries.length - 1].level;
+    var maxXp = entries.reduce(function (m, e) { return Math.max(m, e.xpToNextLevel); }, 0);
+    var logMin = 2; // 10^2 = 100, level 1's cost
+    var logMax = Math.max(logMin + 1, Math.ceil(Math.log(maxXp) / Math.LN10));
+    var plotW = XP_CHART_W - XP_CHART_PAD.l - XP_CHART_PAD.r;
+    var plotH = XP_CHART_H - XP_CHART_PAD.t - XP_CHART_PAD.b;
+    return {
+      entries: entries, minLevel: minLevel, maxLevel: maxLevel, maxXp: maxXp, logMin: logMin, logMax: logMax,
+      xPix: function (level) { return XP_CHART_PAD.l + ((level - minLevel) / (maxLevel - minLevel)) * plotW; },
+      yPix: function (xp) {
+        var t = (Math.log(Math.max(xp, 1)) / Math.LN10 - logMin) / (logMax - logMin);
+        return XP_CHART_PAD.t + (1 - t) * plotH;
+      }
+    };
+  }
+
+  function xpCurveChartHtml() {
+    var s = xpChartScales();
+    if (!s) return "";
+
+    var path = s.entries.map(function (e, i) {
+      return (i === 0 ? "M" : "L") + s.xPix(e.level).toFixed(1) + "," + s.yPix(e.xpToNextLevel).toFixed(1);
+    }).join(" ");
+
+    var gridlines = "";
+    for (var p = s.logMin; p <= s.logMax; p++) {
+      var y = s.yPix(Math.pow(10, p)).toFixed(1);
+      gridlines +=
+        '<line class="chart-grid" x1="' + XP_CHART_PAD.l + '" x2="' + (XP_CHART_W - XP_CHART_PAD.r) + '" y1="' + y + '" y2="' + y + '"></line>' +
+        '<text class="chart-axis-label" x="' + (XP_CHART_PAD.l - 8) + '" y="' + (Number(y) + 4).toFixed(1) + '" text-anchor="end">' + xpCompact(Math.pow(10, p)) + "</text>";
+    }
+
+    var levelTicks = [s.minLevel];
+    var step = s.maxLevel <= 200 ? 25 : s.maxLevel <= 500 ? 50 : 100;
+    for (var lvl = step; lvl < s.maxLevel; lvl += step) levelTicks.push(lvl);
+    levelTicks.push(s.maxLevel);
+    var xTicks = levelTicks.map(function (lvl) {
+      return '<text class="chart-axis-label" x="' + s.xPix(lvl).toFixed(1) + '" y="' + (XP_CHART_H - XP_CHART_PAD.b + 18) + '" text-anchor="middle">' + lvl + "</text>";
+    }).join("");
+
+    var milestones = [1, 5, 10, 25, 50];
+    for (var m = 100; m < s.maxLevel; m += 50) milestones.push(m);
+    milestones.push(s.maxLevel);
+    var milestoneRows = milestones.map(function (lvl) {
+      var e = s.entries[lvl - s.minLevel];
+      return (
+        "<tr><td>" + e.level + "</td><td class=\"num\">" + fmtNum(e.xpToNextLevel) + "</td><td class=\"num\">" + fmtNum(e.totalXp) + "</td></tr>"
+      );
+    }).join("");
+
+    return (
+      '<section class="panel" id="xpCurvePanel">' +
+      "<h2>XP required per level</h2>" +
+      '<p class="lead">XP needed to advance from each level to the next — log scale, since the curve spans ' +
+      xpCompact(s.entries[0].xpToNextLevel) + " at level 1 to " + xpCompact(s.maxXp) + " at level " + s.maxLevel +
+      ". Monster kills are multiplied " + XP_CURVE.serverXpRate + "x by the server (<code>GameConstants.SERVER_XP_RATE</code>)" +
+      " before being applied against this curve. Level " + (s.maxLevel + 1) + " is the level cap (no further XP needed).</p>" +
+      '<div class="chart-wrap">' +
+      '<svg id="xpCurveSvg" viewBox="0 0 ' + XP_CHART_W + " " + XP_CHART_H + '" role="img" aria-label="XP required to reach each level, log scale">' +
+      gridlines + xTicks +
+      '<path class="chart-line" d="' + path + '"></path>' +
+      '<circle id="xpCurveDot" class="chart-dot" r="4" style="display:none"></circle>' +
+      '<line id="xpCurveCrosshair" class="chart-crosshair" y1="' + XP_CHART_PAD.t + '" y2="' + (XP_CHART_H - XP_CHART_PAD.b) + '" style="display:none"></line>' +
+      '<rect id="xpCurveHit" tabindex="0" x="' + XP_CHART_PAD.l + '" y="' + XP_CHART_PAD.t + '" width="' + (XP_CHART_W - XP_CHART_PAD.l - XP_CHART_PAD.r) +
+      '" height="' + (XP_CHART_H - XP_CHART_PAD.t - XP_CHART_PAD.b) + '" fill="transparent"></rect>' +
+      "</svg>" +
+      '<div id="xpCurveTooltip" class="chart-tooltip" role="status" style="display:none"></div>' +
+      "</div>" +
+      "<details class=\"xp-table-toggle\"><summary>View milestone levels as a table</summary>" +
+      '<div class="table-wrap"><table class="data-table"><thead><tr><th>Level</th><th>XP to next level</th><th>Total XP so far</th></tr></thead>' +
+      "<tbody>" + milestoneRows + "</tbody></table></div></details>" +
+      "</section>"
+    );
+  }
+
+  function wireXpCurveChart() {
+    var s = xpChartScales();
+    var svg = document.getElementById("xpCurveSvg");
+    if (!s || !svg) return;
+
+    var hit = document.getElementById("xpCurveHit");
+    var dot = document.getElementById("xpCurveDot");
+    var crosshair = document.getElementById("xpCurveCrosshair");
+    var tooltip = document.getElementById("xpCurveTooltip");
+    var wrap = svg.parentElement;
+
+    function show(level) {
+      level = Math.max(s.minLevel, Math.min(s.maxLevel, Math.round(level)));
+      var entry = s.entries[level - s.minLevel];
+      if (!entry) return;
+      var x = s.xPix(entry.level);
+      var y = s.yPix(entry.xpToNextLevel);
+      dot.setAttribute("cx", x);
+      dot.setAttribute("cy", y);
+      dot.style.display = "";
+      crosshair.setAttribute("x1", x);
+      crosshair.setAttribute("x2", x);
+      crosshair.style.display = "";
+
+      tooltip.innerHTML =
+        "<strong>Level " + entry.level + "</strong>" +
+        '<div class="row"><span>XP to next level</span><span>' + fmtNum(entry.xpToNextLevel) + "</span></div>" +
+        '<div class="row"><span>Total XP so far</span><span>' + fmtNum(entry.totalXp) + "</span></div>";
+      tooltip.style.display = "";
+
+      var svgRect = svg.getBoundingClientRect();
+      var wrapRect = wrap.getBoundingClientRect();
+      var pxX = (x / XP_CHART_W) * svgRect.width + (svgRect.left - wrapRect.left);
+      var pxY = (y / XP_CHART_H) * svgRect.height + (svgRect.top - wrapRect.top);
+      var left = pxX + 14;
+      if (left + 190 > wrapRect.width) left = pxX - 204;
+      tooltip.style.left = Math.max(0, left) + "px";
+      tooltip.style.top = Math.max(0, pxY - 54) + "px";
+    }
+
+    function hide() {
+      dot.style.display = "none";
+      crosshair.style.display = "none";
+      tooltip.style.display = "none";
+    }
+
+    function levelFromClientX(clientX) {
+      var rect = svg.getBoundingClientRect();
+      var svgX = ((clientX - rect.left) / rect.width) * XP_CHART_W;
+      return s.minLevel + ((svgX - XP_CHART_PAD.l) / (XP_CHART_W - XP_CHART_PAD.l - XP_CHART_PAD.r)) * (s.maxLevel - s.minLevel);
+    }
+
+    hit.addEventListener("pointermove", function (evt) { show(levelFromClientX(evt.clientX)); });
+    hit.addEventListener("pointerdown", function (evt) { show(levelFromClientX(evt.clientX)); });
+    hit.addEventListener("pointerleave", hide);
+    hit.addEventListener("focus", function () { show((s.minLevel + s.maxLevel) / 2); });
+    hit.addEventListener("blur", hide);
+    hit.addEventListener("keydown", function (evt) {
+      var current = tooltip.style.display === "none" ? (s.minLevel + s.maxLevel) / 2 : Number((tooltip.querySelector("strong") || {}).textContent.replace(/\D+/g, "")) || s.minLevel;
+      if (evt.key === "ArrowRight") { show(current + 1); evt.preventDefault(); }
+      else if (evt.key === "ArrowLeft") { show(current - 1); evt.preventDefault(); }
+    });
+  }
+
   // ---------------------------------------------------------------- systems
 
   route("systems", function () {
+    setTimeout(wireXpCurveChart, 0);
     var timeline = (META.systemsPasses || []).map(function (p) {
       return (
         '<div class="timeline-item"><h3>' + esc(p.title) + " <code>" + esc(p.pass) + '</code></h3>' +
@@ -708,6 +877,7 @@
     return (
       '<div class="page-header"><p class="eyebrow">Systems &amp; economy</p><h1>Systems, economy and process passes</h1>' +
       '<p class="lead">Non-zone changes: rebirth/economy tuning, engine fixes, and standalone content not tied to a single zone.</p></div>' +
+      '<div class="section-title">Leveling curve</div>' + xpCurveChartHtml() +
       '<div class="section-title">Pass timeline</div><div class="timeline">' + timeline + "</div>" +
       '<div class="section-title">Armor sets</div>' + collections +
       '<div class="section-title">Standalone items</div>' + panel("Not part of a zone or set", standalone) +
