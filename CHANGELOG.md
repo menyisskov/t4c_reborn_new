@@ -15,6 +15,67 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-22 — CI auto-regenerates compendium data on push to main (T4C-0013)
+
+### Added
+- `.github/workflows/compendium.yml`: on every push to `main`, recompiles, re-runs
+  `tools/CompendiumExporter.java`, and pushes a `chore: regenerate compendium data` commit
+  straight to `main` if `compendium/data.js`/`compendium/data/*.json` drifted (stat tweaks,
+  reworded quest/dialogue text, new loot entries, etc. on already-tracked content). Guards
+  against re-triggering itself on its own push via a `[skip compendium]` tag in its commit
+  message.
+
+### Notes
+- This does not make brand-new content (a new zone/monster/spell/NPC/quest) appear on the
+  site automatically — the exporter's "is this new" allow-lists are hand-curated (the game
+  data has no `isNew`/rarity field to key off), so adding a genuinely new class still needs a
+  source change to `CompendiumExporter.java` (and, for a new zone, a `compendium/data/zones.json`
+  row) before this workflow's regeneration has anything new to pick up. See
+  `compendium/README.md`'s "Regenerating the data" section for exactly when this workflow
+  covers you and when it doesn't.
+- Pushes straight to `main` with no review step, per explicit request — if `main` ever gets
+  branch protection requiring PRs, this workflow's push will start failing and will need to
+  switch to opening a PR instead.
+
+## 2026-09-22 — Local compendium website (T4C-0012)
+
+A static, searchable stat-sheet site (`compendium/`) documenting everything this fork added
+on top of the original game — zones, monsters, items, spells, NPCs, quests — styled after
+the classic `t4cfantasy.com` stat sheet but modern, cross-linked, and colored by item
+rarity/spell element. Opens directly from the filesystem (`compendium/index.html`), no
+server or build step required.
+
+### Added
+- `tools/CompendiumExporter.java`: a runnable dumper that reads the live game registries
+  (`MonsterRegistry`, `SpellDefinitions`, `QuestDefinitions`, `NpcFactoryRegistry`,
+  `ShopCatalog`, `assets/items/*.json`) and every i18n string they reference, filters to a
+  curated "new since fork" allow-list cross-referenced against `CHANGELOG.md`/
+  `docs/content-ideas/`, and writes both per-category JSON files and a single bundled
+  `compendium/data.js` (`window.T4C_DATA`).
+- `compendium/index.html` + `app.css` + `app.js`: a vanilla-JS, dependency-free, hash-routed
+  single-page site — global fuzzy search, sortable/filterable tables for monsters/items/
+  spells/NPCs, full monster characteristic pages (stats, resists, attacks, loot tables with
+  drop-chance bars), item pages with `boosts[]` decoded into human-readable stat names
+  (`statId` reference table) and a derived rarity tier (Legendary/Set/Rare/Common) used for
+  color-coding, spell pages with element-colored tags, NPC dialogue-tree pages, and full
+  quest walkthrough pages (offer/completion/completed text, objective geofence shown on a
+  schematic minimap, rewards).
+- `compendium/data/{zones,statids,meta}.json`: hand-curated reference data the exporter
+  can't derive from code — zone name/level-range/biome/world-placement/summary (sourced from
+  `docs/content-ideas/*.md`'s exact coordinates), the item `statId` → label table (from
+  `.claude/skills/item-creator/references/stat-ids.md`), and non-zone systems/economy passes
+  plus the armor-set and Colosseum-ladder collections for the Systems page.
+- `compendium/README.md`: how to open the site and how to regenerate its data after a new
+  content pass.
+
+### Notes
+- Scope is new-since-fork content only (10 zones, 33 monsters, 120 items, 10 new spells + the
+  full player spellbook for context, 16 NPCs, 10 quests) rather than the entire legacy game
+  database — see the README's "Scope" section.
+- The Ancient Celestial / Empyrean armor sets (96 of the 120 items) have no shop or monster
+  drop source in the current codebase (`price: 0`, no loot-table reference anywhere) — the
+  Systems page documents this rather than inventing a fake source.
+
 ## 2026-09-21 — MMO server groundwork: Java 21, libGDX purity guard (T4C-0011)
 
 First step of the client/server split. The original T4C was an MMO and this

@@ -1,0 +1,5806 @@
+[
+  {
+    "key": "spell.level_up",
+    "isNew": false,
+    "name": "LevelUp",
+    "description": "Level Up: a column of light lifts the caster, briefly increasing all of their attributes by 10%.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 1,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "300000",
+    "price": 0,
+    "spellId": 0,
+    "element": 0,
+    "targetType": 5,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "strength"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.str/10"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "agility"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.agi/10"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "endurance"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.end/10"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "intelligence"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.int/10"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "wisdom"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.wis/10"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.tame_beast",
+    "isNew": false,
+    "name": "Tame Beast",
+    "description": "Channels to tame a beast.",
+    "manaCost": "10",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 1,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 30,
+    "duration": "5",
+    "price": 0,
+    "spellId": 0,
+    "element": 0,
+    "targetType": 2,
+    "attackType": 0,
+    "successRate": "100",
+    "pvp": false,
+    "effects": []
+  },
+  {
+    "key": "spell.fire_dart",
+    "isNew": false,
+    "name": "Fire Dart",
+    "description": "Hurls a small flaming projectile at the target.",
+    "manaCost": "1",
+    "minInt": 21,
+    "minWis": 15,
+    "minLevel": 2,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 532,
+    "spellId": 10009,
+    "element": 1,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d17+6+self.int/23)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.flaming_arrow",
+    "isNew": false,
+    "name": "Flaming Arrow",
+    "description": "Hurls a small flaming projectile at the target.",
+    "manaCost": "3",
+    "minInt": 44,
+    "minWis": 15,
+    "minLevel": 10,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 20372,
+    "spellId": 10016,
+    "element": 1,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d28+16+self.int/19)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.fire_bolt",
+    "isNew": false,
+    "name": "Fire Bolt",
+    "description": "Hurls a concentrated bolt of fire at the target.",
+    "manaCost": "6",
+    "minInt": 80,
+    "minWis": 16,
+    "minLevel": 22,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 24370,
+    "spellId": 10017,
+    "element": 1,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d45+31+self.int/16)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.fireball",
+    "isNew": false,
+    "name": "Fireball",
+    "description": "Launches a ball of fire at the target. This spell has a medium area of effect.",
+    "manaCost": "7",
+    "minInt": 94,
+    "minWis": 16,
+    "minLevel": 27,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 34726,
+    "spellId": 10018,
+    "element": 1,
+    "targetType": 17,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d52+37+self.int/14)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d52+37+self.int/14)*self.fire/target.r_fire)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.poison",
+    "isNew": false,
+    "name": "Poison",
+    "description": "Gradually drains the target's hit points over a long duration.",
+    "manaCost": "2",
+    "minInt": 30,
+    "minWis": 18,
+    "minLevel": 7,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "20100",
+    "price": 3017,
+    "spellId": 10020,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10021"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      },
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((self.int/21)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ice_shard",
+    "isNew": false,
+    "name": "Ice Shard",
+    "description": "Hurls a small shard of ice at the target.",
+    "manaCost": "3",
+    "minInt": 34,
+    "minWis": 19,
+    "minLevel": 9,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 17200,
+    "spellId": 10022,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d21+13+self.int/20)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.poison_arrow",
+    "isNew": false,
+    "name": "poison fleche",
+    "description": "Hurls a small poison-tipped projectile at the target.",
+    "manaCost": "5",
+    "minInt": 51,
+    "minWis": 23,
+    "minLevel": 17,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "501",
+    "price": 15466,
+    "spellId": 10023,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d30+12+self.int/17)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10024"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.freeze",
+    "isNew": false,
+    "name": "Gel",
+    "description": "Sharply drops the temperature around the target.",
+    "manaCost": "5",
+    "minInt": 57,
+    "minWis": 24,
+    "minLevel": 20,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 20625,
+    "spellId": 10025,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d20+21+self.int/16)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ice_bolt",
+    "isNew": false,
+    "name": "Ice Bolt",
+    "description": "Hurls a small bolt of ice at the target.",
+    "manaCost": "6",
+    "minInt": 68,
+    "minWis": 26,
+    "minLevel": 25,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 30418,
+    "spellId": 10026,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d39+31+self.int/15)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.dust_devil",
+    "isNew": false,
+    "name": "Dust Devil",
+    "description": "Creates a whirlwind of dust and air and hurls it at the target.",
+    "manaCost": "2",
+    "minInt": 21,
+    "minWis": 21,
+    "minLevel": 6,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 2388,
+    "spellId": 10027,
+    "element": 3,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d16+6+self.int/42+self.wis/42)*self.air/target.r_air)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.lightning_bolt",
+    "isNew": false,
+    "name": "Lightning Bolt",
+    "description": "Hurls a lightning bolt at the target.",
+    "manaCost": "4",
+    "minInt": 30,
+    "minWis": 30,
+    "minLevel": 15,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 12348,
+    "spellId": 10028,
+    "element": 3,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d26+12+self.int/36+self.wis/36)*self.air/target.r_air)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.word_of_recall",
+    "isNew": false,
+    "name": "Word of Recall",
+    "description": "Magically brings the caster back to their sanctuary.",
+    "manaCost": "100",
+    "minInt": 36,
+    "minWis": 36,
+    "minLevel": 21,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 18753,
+    "spellId": 10029,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 11,
+        "parameters": []
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10716"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10715"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10714"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10713"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10769"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.call_lightning",
+    "isNew": false,
+    "name": "Call Lightning",
+    "description": "Summons a powerful bolt of lightning above the target and brings it crashing down.",
+    "manaCost": "7",
+    "minInt": 42,
+    "minWis": 41,
+    "minLevel": 26,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 32545,
+    "spellId": 10030,
+    "element": 3,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d37+20+self.int/30+self.wis/30)*self.air/target.r_air)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.heal_light",
+    "isNew": false,
+    "name": "Light Heal",
+    "description": "Restores hit points to the target.",
+    "manaCost": "2",
+    "minInt": 15,
+    "minWis": 19,
+    "minLevel": 3,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 897,
+    "spellId": 10032,
+    "element": 5,
+    "targetType": 3,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "(1d5+8+self.wis/23)*self.light/100)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.heal_serious",
+    "isNew": false,
+    "name": "Serious Heal",
+    "description": "Restores hit points to the target.",
+    "manaCost": "4",
+    "minInt": 16,
+    "minWis": 34,
+    "minLevel": 13,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 8177,
+    "spellId": 10033,
+    "element": 5,
+    "targetType": 3,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "(1d5+20+self.wis/18)*self.light/100)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.heal_critical",
+    "isNew": false,
+    "name": "Critical Heal",
+    "description": "Restores hit points to the target.",
+    "manaCost": "7",
+    "minInt": 17,
+    "minWis": 55,
+    "minLevel": 27,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 110825,
+    "spellId": 10034,
+    "element": 5,
+    "targetType": 3,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "(1d6+37+self.wis/14)*self.light/100)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.stone_shard",
+    "isNew": false,
+    "name": "Stone Shard",
+    "description": "Hurls a small shard of stone at the target.",
+    "manaCost": "2",
+    "minInt": 17,
+    "minWis": 20,
+    "minLevel": 4,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1328,
+    "spellId": 10035,
+    "element": 2,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d9+11+self.wis/22)*self.earth/target.r_earth)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.shatter",
+    "isNew": false,
+    "name": "Fracassement",
+    "description": "Strikes the target with enough force to shatter it to pieces.",
+    "manaCost": "5",
+    "minInt": 26,
+    "minWis": 37,
+    "minLevel": 18,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 14292,
+    "spellId": 10037,
+    "element": 2,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d5+26+self.wis/17)*self.earth/target.r_earth)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.curse",
+    "isNew": false,
+    "name": "Malediction",
+    "description": "Severely hinders the target's ability to use light spells, particularly healing spells.",
+    "manaCost": "5",
+    "minInt": 74,
+    "minWis": 16,
+    "minLevel": 20,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "30000",
+    "price": 17200,
+    "spellId": 10038,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "light"
+          },
+          {
+            "paramId": 3,
+            "expression": "-(target.true_light*2/3)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.chaos_shield",
+    "isNew": false,
+    "name": "Chaos Shield",
+    "description": "A protective shield that retaliates against every physical attack with a powerful burst of fire.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "300000",
+    "price": 233,
+    "spellId": 10060,
+    "element": 1,
+    "targetType": 4,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10061"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnAttacked"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.essence_of_drake",
+    "isNew": false,
+    "name": "Essence of Drake",
+    "description": "A healing spell reserved for game masters.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "150000",
+    "price": 233,
+    "spellId": 10063,
+    "element": 2,
+    "targetType": 4,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "6d666"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.tetrashock",
+    "isNew": false,
+    "name": "Tetrashock",
+    "description": "A protective shield that retaliates against every physical attack with a powerful electric discharge.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "300000",
+    "price": 233,
+    "spellId": 10073,
+    "element": 0,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10074"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnAttacked"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.flame_wave",
+    "isNew": false,
+    "name": "Flame Wave",
+    "description": "Unleashes a powerful wave of fire in a circular area around the caster. This spell has a fairly wide area of effect.",
+    "manaCost": "10",
+    "minInt": 133,
+    "minWis": 16,
+    "minLevel": 40,
+    "isAttack": true,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 67637,
+    "spellId": 10076,
+    "element": 1,
+    "targetType": 18,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "0"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d71+52+self.int/12)*self.fire/target.r_fire)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ice_ball",
+    "isNew": false,
+    "name": "Ice Ball",
+    "description": "Drops a heavily compacted ice projectile onto the target.",
+    "manaCost": "11",
+    "minInt": 110,
+    "minWis": 35,
+    "minLevel": 45,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 82378,
+    "spellId": 10077,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d61+53+self.int/11)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.chain_lightning",
+    "isNew": false,
+    "name": "Chain Lightning",
+    "description": "Sends a powerful bolt of lightning through the target. This spell has a fairly wide area of effect.",
+    "manaCost": "7",
+    "minInt": 46,
+    "minWis": 45,
+    "minLevel": 30,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "100",
+    "price": 41584,
+    "spellId": 10078,
+    "element": 3,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d41+23+self.int/28+self.wis/28)*self.air/target.r_air)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d41+23+self.int/28+self.wis/28)*self.air/target.r_air)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.vortex_of_air",
+    "isNew": false,
+    "name": "Vortex of Air",
+    "description": "Hurls a swirling mass of compressed air at the target.",
+    "manaCost": "10",
+    "minInt": 56,
+    "minWis": 55,
+    "minLevel": 40,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 67637,
+    "spellId": 10080,
+    "element": 3,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d52+30+self.int/24+self.wis/24)*self.air/target.r_air)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.electric_shield",
+    "isNew": false,
+    "name": "Electric Shield",
+    "description": "A protective shield that retaliates against every physical attack with a weak energy discharge.",
+    "manaCost": "24",
+    "minInt": 65,
+    "minWis": 64,
+    "minLevel": 49,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "120000",
+    "price": 94941,
+    "spellId": 10081,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10083"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnHit"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.earthquake",
+    "isNew": false,
+    "name": "Earthquake",
+    "description": "Violently shakes the ground around the caster without dealing damage. This spell has a very large area of effect.",
+    "manaCost": "11",
+    "minInt": 43,
+    "minWis": 71,
+    "minLevel": 47,
+    "isAttack": true,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 88576,
+    "spellId": 10082,
+    "element": 2,
+    "targetType": 18,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "0"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d29+72+self.wis/11)*self.earth/target.r_earth)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.wrath_of_drake",
+    "isNew": false,
+    "name": "Wrath of Drake",
+    "description": "An offensive spell reserved for game masters. Warning: this spell is not subject to PvP rules and has a very large area of effect. Use with caution.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": true,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 233,
+    "spellId": 10085,
+    "element": 1,
+    "targetType": 8,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1000*self.int/self.wis)*100/target.r_fire)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.light",
+    "isNew": false,
+    "name": "Light",
+    "description": "Allows everyone near the caster to see clearly, even in darkness.",
+    "manaCost": "10",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "600000",
+    "price": 233,
+    "spellId": 10097,
+    "element": 1,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "TRUE"
+          },
+          {
+            "paramId": 2,
+            "expression": "Radiance"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.lesser_drain",
+    "isNew": false,
+    "name": "Lesser Drain",
+    "description": "Drains the target's hit points and heals the caster for the same amount.",
+    "manaCost": "3",
+    "minInt": 50,
+    "minWis": 15,
+    "minLevel": 12,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 7152,
+    "spellId": 10099,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 10,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-( ( 1d21 + 13 + self.int/18 ) * self.dark/target.r_dark )"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.plague",
+    "isNew": false,
+    "name": "Plague",
+    "description": "Plague reduces the target's maximum hit points and its ability to cast light spells, while periodically dealing minor damage.",
+    "manaCost": "40",
+    "minInt": 112,
+    "minWis": 16,
+    "minLevel": 33,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "300000",
+    "price": 48897,
+    "spellId": 10107,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "light"
+          },
+          {
+            "paramId": 3,
+            "expression": "-(target.light/50)"
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10105"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "if(target.r_dark<=1000?100:0)"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "max hp"
+          },
+          {
+            "paramId": 3,
+            "expression": "-target.maxhp/4"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.protection",
+    "isNew": false,
+    "name": "Protection",
+    "description": "Increases the target's armor class.",
+    "manaCost": "9",
+    "minInt": 20,
+    "minWis": 25,
+    "minLevel": 8,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 3712,
+    "spellId": 10115,
+    "element": 2,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "TRUE"
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "(3+self.int/100+self.wis/50)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.barrier",
+    "isNew": false,
+    "name": "Barriere",
+    "description": "Increases the target's armor class.",
+    "manaCost": "10",
+    "minInt": 59,
+    "minWis": 24,
+    "minLevel": 21,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 18753,
+    "spellId": 10123,
+    "element": 4,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "TRUE"
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "(5+self.int/50+self.wis/25)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.earthen_strength",
+    "isNew": false,
+    "name": "Earthen Strength",
+    "description": "Increases the target's strength.",
+    "manaCost": "30",
+    "minInt": 29,
+    "minWis": 43,
+    "minLevel": 23,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 26329,
+    "spellId": 10124,
+    "element": 2,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "TRUE"
+          },
+          {
+            "paramId": 2,
+            "expression": "strength"
+          },
+          {
+            "paramId": 3,
+            "expression": "(10+self.wis/15+self.int/20)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.minor_combat_sense",
+    "isNew": false,
+    "name": "Minor Combat Sense",
+    "description": "Increases the target's attack, dodge, and archery skills.",
+    "manaCost": "6",
+    "minInt": 55,
+    "minWis": 31,
+    "minLevel": 24,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "60000",
+    "price": 28346,
+    "spellId": 10125,
+    "element": 0,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "dodge"
+          },
+          {
+            "paramId": 3,
+            "expression": "(target.true_dodge/4)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "attack"
+          },
+          {
+            "paramId": 3,
+            "expression": "(target.true_attack/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "skill 35"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_skill(35)/3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.meteor",
+    "isNew": false,
+    "name": "Meteore",
+    "description": "Drops a meteor fragment from the sky that devastates the target on impact. This spell has a small area of effect.",
+    "manaCost": "23",
+    "minInt": 309,
+    "minWis": 18,
+    "minLevel": 100,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 307129,
+    "spellId": 10126,
+    "element": 1,
+    "targetType": 19,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d157+125+self.int/7)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-((1d157+125+self.int/7)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.rain_of_fire",
+    "isNew": false,
+    "name": "Rain of Fire",
+    "description": "Rains fire from the sky to consume the target. This spell has a fairly wide area of effect.",
+    "manaCost": "12",
+    "minInt": 171,
+    "minWis": 17,
+    "minLevel": 53,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 103297,
+    "spellId": 10127,
+    "element": 1,
+    "targetType": 19,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d89+68+self.int/10)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d89+68+self.int/10)*self.fire/target.r_fire)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.flare",
+    "isNew": false,
+    "name": "Flare",
+    "description": "Sets the target ablaze from within.",
+    "manaCost": "14",
+    "minInt": 191,
+    "minWis": 17,
+    "minLevel": 60,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 132824,
+    "spellId": 10128,
+    "element": 1,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d58+65+self.int/9)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.firestorm",
+    "isNew": false,
+    "name": "Firestorm",
+    "description": "Creates a violent firestorm around the target. This spell has a large area of effect.",
+    "manaCost": "18",
+    "minInt": 238,
+    "minWis": 17,
+    "minLevel": 76,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 196028,
+    "spellId": 10129,
+    "element": 1,
+    "targetType": 19,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d122+96+self.int/8)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d122+96+self.int/8)*self.fire/target.r_fire)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.inferno",
+    "isNew": false,
+    "name": "Inferno",
+    "description": "Wraps the target in a devouring blaze.",
+    "manaCost": "19",
+    "minInt": 259,
+    "minWis": 17,
+    "minLevel": 83,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 226492,
+    "spellId": 10130,
+    "element": 1,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d76+89+self.int/8)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.mana_burst",
+    "isNew": false,
+    "name": "Mana Burst",
+    "description": "Hurls a bolt of pure mana at the target. Due to its unique nature, this spell can be cast much faster than others.",
+    "manaCost": "8",
+    "minInt": 63,
+    "minWis": 39,
+    "minLevel": 32,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 46410,
+    "spellId": 10131,
+    "element": 0,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "if(target.r_air<4000?-(1d26+33+self.int/13):0)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.glacier",
+    "isNew": false,
+    "name": "Glacier",
+    "description": "Creates an immense glacier and drops it onto the target.",
+    "manaCost": "13",
+    "minInt": 130,
+    "minWis": 40,
+    "minLevel": 55,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 110825,
+    "spellId": 10132,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d72+64+self.int/10)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ice_storm",
+    "isNew": false,
+    "name": "Ice Storm",
+    "description": "Creates a storm of ice shards and hurls it at the target. This spell has a large area of effect.",
+    "manaCost": "15",
+    "minInt": 152,
+    "minWis": 44,
+    "minLevel": 65,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 151580,
+    "spellId": 10133,
+    "element": 4,
+    "targetType": 19,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d83+75+self.int/9)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d83+75+self.int/9)*self.water/target.r_water)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.blizzard",
+    "isNew": false,
+    "name": "Blizzard",
+    "description": "Creates a violent snowstorm centered on the target. This spell has a large area of effect.",
+    "manaCost": "17",
+    "minInt": 170,
+    "minWis": 48,
+    "minLevel": 74,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 187630,
+    "spellId": 10134,
+    "element": 4,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d52+72+self.int/8)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d52+72+self.int/8)*self.water/target.r_water)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.avalanche",
+    "isNew": false,
+    "name": "Avalanche",
+    "description": "Hurls an immense cascade of snow and ice at the target. This spell has a large area of effect.",
+    "manaCost": "19",
+    "minInt": 187,
+    "minWis": 52,
+    "minLevel": 82,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 222039,
+    "spellId": 10135,
+    "element": 4,
+    "targetType": 19,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d101+94+self.int/8)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d101+94+self.int/8)*self.water/target.r_water)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.tsunami",
+    "isNew": false,
+    "name": "Tsunami",
+    "description": "Crashes a giant wave down on the target.",
+    "manaCost": "22",
+    "minInt": 217,
+    "minWis": 58,
+    "minLevel": 96,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 287334,
+    "spellId": 10136,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d65+93+self.int/7)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.healing",
+    "isNew": false,
+    "name": "Healing",
+    "description": "Restores hit points to the target.",
+    "manaCost": "13",
+    "minInt": 18,
+    "minWis": 96,
+    "minLevel": 55,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 115014,
+    "spellId": 10137,
+    "element": 5,
+    "targetType": 3,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "(1d7+71+self.wis/10)*self.light/100)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.mass_healing",
+    "isNew": false,
+    "name": "Mass Healing",
+    "description": "Restores hit points to the target and to all nearby group members. This spell has a fairly wide area of effect.",
+    "manaCost": "15",
+    "minInt": 19,
+    "minWis": 108,
+    "minLevel": 63,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 143966,
+    "spellId": 10138,
+    "element": 5,
+    "targetType": 15,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "(1d7+81+self.wis/9)*self.light/100)"
+          },
+          {
+            "paramId": 2,
+            "expression": "(1d7+81+self.wis/9)*self.light/100)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.mana_surge",
+    "isNew": false,
+    "name": "Mana Surge",
+    "description": "Increases the target's elemental powers.",
+    "manaCost": "39",
+    "minInt": 174,
+    "minWis": 17,
+    "minLevel": 54,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 107028,
+    "spellId": 10139,
+    "element": 0,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "earth"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_earth/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "air"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_air/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_fire/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "water"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_water/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "light"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_light/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_dark/4"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.healing_mist",
+    "isNew": false,
+    "name": "Healing Mist",
+    "description": "Restores hit points to the target and to all nearby group members. This spell has an extremely large area of effect.",
+    "manaCost": "17",
+    "minInt": 20,
+    "minWis": 125,
+    "minLevel": 75,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 191811,
+    "spellId": 10140,
+    "element": 5,
+    "targetType": 15,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "(1d8+95+self.wis/8)*self.light/100)"
+          },
+          {
+            "paramId": 2,
+            "expression": "(1d8+95+self.wis/8)*self.light/100)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.tornado",
+    "isNew": false,
+    "name": "Tornado",
+    "description": "Wraps the target in a swirling mass of condensed air. This spell has a large area of effect.",
+    "manaCost": "18",
+    "minInt": 96,
+    "minWis": 93,
+    "minLevel": 79,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 208881,
+    "spellId": 10142,
+    "element": 3,
+    "targetType": 19,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d144+67+self.int/16+self.wis/16)*self.air/target.r_air)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d144+67+self.int/16+self.wis/16)*self.air/target.r_air)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.hurricane",
+    "isNew": false,
+    "name": "Hurricane",
+    "description": "Strikes the target with violent winds and lightning. This spell has an extremely large area of effect.",
+    "manaCost": "20",
+    "minInt": 105,
+    "minWis": 102,
+    "minLevel": 88,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 249249,
+    "spellId": 10143,
+    "element": 3,
+    "targetType": 19,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d159+75+self.int/14+self.wis/14)*self.air/target.r_air)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d159+75+self.int/14+self.wis/14)*self.air/target.r_air)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.major_combat_sense",
+    "isNew": false,
+    "name": "Major Combat Sense",
+    "description": "Greatly increases the target's strength as well as their attack, dodge, and archery skills.",
+    "manaCost": "15",
+    "minInt": 114,
+    "minWis": 64,
+    "minLevel": 66,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "30000",
+    "price": 155442,
+    "spellId": 10144,
+    "element": 0,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "dodge"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_dodge/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "attack"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_attack/2"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "STR"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_str/4"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "skill 35"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_skill(35)/2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.turn_undead",
+    "isNew": false,
+    "name": "Turn Undead",
+    "description": "Strikes an undead target with powerful sacred words of banishment.",
+    "manaCost": "5",
+    "minInt": 16,
+    "minWis": 43,
+    "minLevel": 19,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 18843,
+    "spellId": 10145,
+    "element": 5,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level))"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.mana_shield",
+    "isNew": false,
+    "name": "Mana Shield",
+    "description": "Increases the target's elemental resistances.",
+    "manaCost": "14",
+    "minInt": 76,
+    "minWis": 28,
+    "minLevel": 29,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 39246,
+    "spellId": 10146,
+    "element": 4,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_r_dark/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_r_fire/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_earth"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_r_earth/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_water"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_r_water/3"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_air"
+          },
+          {
+            "paramId": 3,
+            "expression": "target.true_r_air/3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.stone_skin",
+    "isNew": false,
+    "name": "Stoneskin",
+    "description": "The caster's skin becomes as hard as stone, increasing their armor class.",
+    "manaCost": "45",
+    "minInt": 37,
+    "minWis": 59,
+    "minLevel": 37,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 59326,
+    "spellId": 10147,
+    "element": 2,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "(10+self.int/25+self.wis/13)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.clear_thought",
+    "isNew": false,
+    "name": "Clear Thought",
+    "description": "Increases the caster's intelligence.",
+    "manaCost": "21",
+    "minInt": 74,
+    "minWis": 28,
+    "minLevel": 28,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "180000",
+    "price": 36960,
+    "spellId": 10149,
+    "element": 4,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "int"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.true_int/4"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.entangle",
+    "isNew": false,
+    "name": "Enchevetrement",
+    "description": "Temporarily reduces the target's ability to move and dodge attacks.",
+    "manaCost": "10",
+    "minInt": 34,
+    "minWis": 52,
+    "minLevel": 31,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 43972,
+    "spellId": 10150,
+    "element": 2,
+    "targetType": 9,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10151"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "50*self.earth/target.r_earth"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.drain_life",
+    "isNew": false,
+    "name": "Drain Life",
+    "description": "Drains the target's hit points and heals the caster for the same amount.",
+    "manaCost": "6",
+    "minInt": 83,
+    "minWis": 16,
+    "minLevel": 23,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 22057,
+    "spellId": 10152,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 10,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "if(target.r_dark=5025?0:-((1d19+17+self.int/30)*self.dark/target.r_dark))"
+          },
+          {
+            "paramId": 2,
+            "expression": "0"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.resist_fire",
+    "isNew": false,
+    "name": "Resist Fire",
+    "description": "Increases the caster's resistance to fire attacks.",
+    "manaCost": "10",
+    "minInt": 105,
+    "minWis": 34,
+    "minLevel": 43,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "60000",
+    "price": 76350,
+    "spellId": 10154,
+    "element": 4,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.true_r_fire"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.tranquility",
+    "isNew": false,
+    "name": "Tranquility",
+    "description": "Increases the caster's wisdom.",
+    "manaCost": "45",
+    "minInt": 17,
+    "minWis": 71,
+    "minLevel": 38,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 62051,
+    "spellId": 10168,
+    "element": 5,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "wis"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.true_wis/2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.greater_drain",
+    "isNew": false,
+    "name": "Greater Drain",
+    "description": "Drains the target's hit points and heals the caster for the same amount.",
+    "manaCost": "10",
+    "minInt": 136,
+    "minWis": 16,
+    "minLevel": 41,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 70497,
+    "spellId": 10169,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 10,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "if(target.r_dark=5025?0:-((1d28+30+self.int/24)*self.dark/target.r_dark))"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.resist_ice",
+    "isNew": false,
+    "name": "Resist Ice",
+    "description": "Increases the caster's resistance to water and ice attacks.",
+    "manaCost": "11",
+    "minInt": 150,
+    "minWis": 16,
+    "minLevel": 46,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "60000",
+    "price": 85456,
+    "spellId": 10170,
+    "element": 1,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_water"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.true_r_water"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.fire_shield",
+    "isNew": false,
+    "name": "Fire Shield",
+    "description": "A protective shield that retaliates against every physical attack with a small burst of fire.",
+    "manaCost": "22",
+    "minInt": 156,
+    "minWis": 16,
+    "minLevel": 48,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "120000",
+    "price": 91738,
+    "spellId": 10171,
+    "element": 1,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10167"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnHit"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.nimbleness",
+    "isNew": false,
+    "name": "Nimbleness",
+    "description": "Greatly increases the caster's agility and dodge skill.",
+    "manaCost": "11",
+    "minInt": 60,
+    "minWis": 59,
+    "minLevel": 44,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "60000",
+    "price": 79343,
+    "spellId": 10172,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "agility"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.true_agi/4"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "dodge"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.true_dodge/2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.vaporize",
+    "isNew": false,
+    "name": "Vaporize",
+    "description": "A destruction spell reserved for game masters. Warning: this spell destroys any object, NPC, or player it is cast on.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 233,
+    "spellId": 10210,
+    "element": 0,
+    "targetType": 0,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 12,
+        "parameters": []
+      }
+    ]
+  },
+  {
+    "key": "spell.drake_s_blades_of_vengeance",
+    "isNew": false,
+    "name": "Drake's Blades of Vengeance",
+    "description": "This spell is reserved for Vircom staff and experienced game masters.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 233,
+    "spellId": 10215,
+    "element": 0,
+    "targetType": 18,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "0"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(self.int*self.int)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.cure_poison",
+    "isNew": false,
+    "name": "Cure Poison",
+    "description": "Eliminates all poisons present in the target's body.",
+    "manaCost": "2",
+    "minInt": 26,
+    "minWis": 17,
+    "minLevel": 5,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1825,
+    "spellId": 10236,
+    "element": 4,
+    "targetType": 4,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10020"
+          },
+          {
+            "paramId": 2,
+            "expression": "75"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10344"
+          },
+          {
+            "paramId": 2,
+            "expression": "75"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10649"
+          },
+          {
+            "paramId": 2,
+            "expression": "50"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.dispel",
+    "isNew": false,
+    "name": "Dissipation",
+    "description": "Dispels most harmful effects affecting the target.",
+    "manaCost": "13",
+    "minInt": 99,
+    "minWis": 57,
+    "minLevel": 56,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 118499,
+    "spellId": 10248,
+    "element": 0,
+    "targetType": 4,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10107"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10038"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10364"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10350"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10378"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10351"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10352"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10379"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10348"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10359"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10386"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10382"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10358"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10375"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10320"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10385"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10652"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10391"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10384"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10381"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10473"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10453"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 13,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10452"
+          },
+          {
+            "paramId": 2,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.sunken_woods_gateway",
+    "isNew": false,
+    "name": "Sunken Woods Gateway",
+    "description": "Teleports the caster to the stone circle of Sunken Woods, on Stoneheim.",
+    "manaCost": "self.maxmana",
+    "minInt": 86,
+    "minWis": 84,
+    "minLevel": 70,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "9000",
+    "price": 171252,
+    "spellId": 10250,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10239"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "10000"
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10238"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.lighthaven_gateway",
+    "isNew": false,
+    "name": "Lighthaven Gateway",
+    "description": "Teleports the caster to the stone circle at Lighthaven, on Arakas.",
+    "manaCost": "self.maxmana",
+    "minInt": 86,
+    "minWis": 84,
+    "minLevel": 70,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "9000",
+    "price": 171252,
+    "spellId": 10251,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10238"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10240"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "10000"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.windhowl_gateway",
+    "isNew": false,
+    "name": "Windhowl Gateway",
+    "description": "Teleports the caster to the stone circle of Windhowl, on Arakas.",
+    "manaCost": "self.maxmana",
+    "minInt": 86,
+    "minWis": 84,
+    "minLevel": 70,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "9000",
+    "price": 171252,
+    "spellId": 10252,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10238"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10243"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "10000"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.druid_s_point_gateway",
+    "isNew": false,
+    "name": "Druid's Point Gateway",
+    "description": "Teleports the caster to the stone circle at Druid's Point, on Arakas.",
+    "manaCost": "self.maxmana",
+    "minInt": 86,
+    "minWis": 84,
+    "minLevel": 70,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "9000",
+    "price": 171252,
+    "spellId": 10253,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10249"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "10000"
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10238"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.silversky_gateway",
+    "isNew": false,
+    "name": "Silversky Gateway",
+    "description": "Teleports the caster to the stone circle at Silversky, on Raven's Dust.",
+    "manaCost": "self.maxmana",
+    "minInt": 86,
+    "minWis": 84,
+    "minLevel": 70,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "9000",
+    "price": 171252,
+    "spellId": 10254,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10238"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10241"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "10000"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.wizard_s_vale_gateway",
+    "isNew": false,
+    "name": "Wizard's Vale Gateway",
+    "description": "Teleports the caster to the stone circle of Wizard's Vale, on Raven's Dust.",
+    "manaCost": "self.maxmana",
+    "minInt": 86,
+    "minWis": 84,
+    "minLevel": 70,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "9000",
+    "price": 171252,
+    "spellId": 10255,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10238"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10244"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "10000"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.stonecrest_gateway",
+    "isNew": false,
+    "name": "Stonecrest Gateway",
+    "description": "Teleports the caster to the stone circle of Stonecrest, on Stoneheim.",
+    "manaCost": "self.maxmana",
+    "minInt": 86,
+    "minWis": 84,
+    "minLevel": 70,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "9000",
+    "price": 171252,
+    "spellId": 10256,
+    "element": 3,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10238"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10242"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "10000"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.invisibility",
+    "isNew": false,
+    "name": "Invisibilite",
+    "description": "Renders the target completely invisible.",
+    "manaCost": "70",
+    "minInt": 74,
+    "minWis": 72,
+    "minLevel": 58,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "300000",
+    "price": 122612,
+    "spellId": 10257,
+    "element": 3,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 15,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "100"
+          },
+          {
+            "paramId": 2,
+            "expression": "30015"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.detect_invisible",
+    "isNew": false,
+    "name": "Detect Invisible",
+    "description": "Allows the caster to see invisible monsters and player characters.",
+    "manaCost": "60",
+    "minInt": 162,
+    "minWis": 16,
+    "minLevel": 50,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "300000",
+    "price": 92500,
+    "spellId": 10258,
+    "element": 1,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 16,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "100"
+          },
+          {
+            "paramId": 2,
+            "expression": "30020"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.detect_hidden",
+    "isNew": false,
+    "name": "Detect Hidden",
+    "description": "Allows the caster to see hidden monsters, objects, and player characters.",
+    "manaCost": "90",
+    "minInt": 118,
+    "minWis": 16,
+    "minLevel": 35,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "600000",
+    "price": 54017,
+    "spellId": 10259,
+    "element": 1,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 17,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "100"
+          },
+          {
+            "paramId": 2,
+            "expression": "30003"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.true_sight",
+    "isNew": false,
+    "name": "True Sight",
+    "description": "Allows the caster to see everything that is hidden or invisible.",
+    "manaCost": "80",
+    "minInt": 56,
+    "minWis": 98,
+    "minLevel": 69,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "300000",
+    "price": 167246,
+    "spellId": 10262,
+    "element": 2,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 16,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "100"
+          },
+          {
+            "paramId": 2
+          }
+        ]
+      },
+      {
+        "effectType": 17,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "100"
+          },
+          {
+            "paramId": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.boulders",
+    "isNew": false,
+    "name": "Boulders",
+    "description": "Drops several sizable boulders onto the target. This spell has a small area of effect.",
+    "manaCost": "16",
+    "minInt": 55,
+    "minWis": 95,
+    "minLevel": 67,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 159341,
+    "spellId": 10263,
+    "element": 2,
+    "targetType": 17,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d37+101+self.wis/9)*self.earth/target.r_earth)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-((1d37+101+self.wis/9)*self.earth/target.r_earth)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.soul_steal",
+    "isNew": false,
+    "name": "Soul Steal",
+    "description": "Drains the target's hit points and heals the caster for the same amount.",
+    "manaCost": "16",
+    "minInt": 215,
+    "minWis": 17,
+    "minLevel": 68,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 163275,
+    "spellId": 10264,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 10,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "if(target.r_dark=5025?0:-((1d44+48+self.int/18)*self.dark/target.r_dark))"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.bless",
+    "isNew": false,
+    "name": "Benediction",
+    "description": "Increases the target's maximum hit points as well as their attack and archery skills.",
+    "manaCost": "140",
+    "minInt": 19,
+    "minWis": 102,
+    "minLevel": 59,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1800000",
+    "price": 126673,
+    "spellId": 10267,
+    "element": 5,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "max hp"
+          },
+          {
+            "paramId": 3,
+            "expression": "1d(self.wis/4)+self.wis"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "attack"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.wis/2"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "skill 35"
+          },
+          {
+            "paramId": 3,
+            "expression": "self.wis/2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.lighthaven_improved_gateway",
+    "isNew": false,
+    "name": "Lighthaven Improved Gateway",
+    "description": "Teleports the caster and their group to the stone circle at Lighthaven, on Arakas.",
+    "manaCost": "self.maxmana",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "19000",
+    "price": 233,
+    "spellId": 10275,
+    "element": 3,
+    "targetType": 15,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10276"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10240"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnTimer"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "20000"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.wrath_of_marc",
+    "isNew": false,
+    "name": "Wrath of Marc",
+    "description": "Completely paralyzes the target for a very long duration.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "120000",
+    "price": 233,
+    "spellId": 10400,
+    "element": 2,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 14,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "120000"
+          },
+          {
+            "paramId": 2,
+            "expression": "120000"
+          },
+          {
+            "paramId": 3,
+            "expression": "120000"
+          },
+          {
+            "paramId": 4,
+            "expression": "if(target.viewflag(30400)>0?0:100)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.remort_aura",
+    "isNew": false,
+    "name": "Remort Aura",
+    "description": "A permanent offensive and defensive aura, usable only by seraphs and growing in power with each rebirth.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "infinite",
+    "price": 233,
+    "spellId": 10696,
+    "element": 0,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10699"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnHit"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "200"
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10698"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnAttackHit"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "200"
+          }
+        ]
+      },
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10697"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnHit"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "200"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.lighthaven_portal",
+    "isNew": false,
+    "name": "Lighthaven Portal",
+    "description": "Summons a portal allowing teleportation to the stone circle at Lighthaven, on Arakas.",
+    "manaCost": "self.maxmana",
+    "minInt": 109,
+    "minWis": 106,
+    "minLevel": 92,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 268038,
+    "spellId": 10798,
+    "element": 0,
+    "targetType": 6,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 6,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "NPC"
+          },
+          {
+            "paramId": 2,
+            "expression": "PORTALSPELLLIGHTHAVEN"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.druid_s_point_portal",
+    "isNew": false,
+    "name": "Druid's Point Portal",
+    "description": "Summons a portal allowing teleportation to the stone circle at Druid's Point, on Arakas.",
+    "manaCost": "self.maxmana",
+    "minInt": 109,
+    "minWis": 106,
+    "minLevel": 92,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 268038,
+    "spellId": 10806,
+    "element": 0,
+    "targetType": 6,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 6,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "NPC"
+          },
+          {
+            "paramId": 2,
+            "expression": "PORTALSPELLDRUIDPOINT"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.silversky_portal",
+    "isNew": false,
+    "name": "Silversky Portal",
+    "description": "Summons a portal allowing teleportation to the stone circle at Silversky, on Raven's Dust.",
+    "manaCost": "self.maxmana",
+    "minInt": 109,
+    "minWis": 106,
+    "minLevel": 92,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 268038,
+    "spellId": 10807,
+    "element": 0,
+    "targetType": 6,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 6,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "NPC"
+          },
+          {
+            "paramId": 2,
+            "expression": "PORTALSPELLSILVERSKY"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.stonecrest_portal",
+    "isNew": false,
+    "name": "Stonecrest Portal",
+    "description": "Summons a portal allowing teleportation to the stone circle of Stonecrest, on Stoneheim.",
+    "manaCost": "self.maxmana",
+    "minInt": 109,
+    "minWis": 106,
+    "minLevel": 92,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 268038,
+    "spellId": 10808,
+    "element": 0,
+    "targetType": 6,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 6,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "NPC"
+          },
+          {
+            "paramId": 2,
+            "expression": "PORTALSPELLSTONECREST"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.sunken_woods_portal",
+    "isNew": false,
+    "name": "Sunken Woods Portal",
+    "description": "Summons a portal allowing teleportation to the stone circle of Sunken Woods, on Stoneheim.",
+    "manaCost": "self.maxmana",
+    "minInt": 109,
+    "minWis": 106,
+    "minLevel": 92,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 268038,
+    "spellId": 10809,
+    "element": 0,
+    "targetType": 6,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 6,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "NPC"
+          },
+          {
+            "paramId": 2,
+            "expression": "PORTALSPELLSUNKENWOODS"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.windhowl_portal",
+    "isNew": false,
+    "name": "Windhowl Portal",
+    "description": "Summons a portal allowing teleportation to the stone circle of Windhowl, on Arakas.",
+    "manaCost": "self.maxmana",
+    "minInt": 109,
+    "minWis": 106,
+    "minLevel": 92,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 268038,
+    "spellId": 10810,
+    "element": 0,
+    "targetType": 6,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 6,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "NPC"
+          },
+          {
+            "paramId": 2,
+            "expression": "PORTALSPELLWINDHOWL"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ice_shield",
+    "isNew": false,
+    "name": "Ice Shield",
+    "description": "Retaliates against every physical attack with a cloud of ice.",
+    "manaCost": "100",
+    "minInt": 191,
+    "minWis": 53,
+    "minLevel": 84,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "300000",
+    "price": 230978,
+    "spellId": 10812,
+    "element": 4,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10813"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnHit"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.wrath_of_the_ancients",
+    "isNew": false,
+    "name": "Wrath of the Ancients",
+    "description": "The rage of the vanished races contained in the blood of a New Race sometimes unleashes itself against its foes.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "infinite",
+    "price": 233,
+    "spellId": 10815,
+    "element": 0,
+    "targetType": 0,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 9,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "10816"
+          },
+          {
+            "paramId": 2,
+            "expression": "OnHit"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          },
+          {
+            "paramId": 4,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.sanctuary",
+    "isNew": false,
+    "name": "Sanctuary",
+    "description": "Briefly protects the caster from all bodily harm.",
+    "manaCost": "120",
+    "minInt": 18,
+    "minWis": 91,
+    "minLevel": 52,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "60000",
+    "price": 99632,
+    "spellId": 10997,
+    "element": 5,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "50000"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_water"
+          },
+          {
+            "paramId": 3,
+            "expression": "50000"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_air"
+          },
+          {
+            "paramId": 3,
+            "expression": "50000"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_earth"
+          },
+          {
+            "paramId": 3,
+            "expression": "50000"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "50000"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "9000"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.land_slide",
+    "isNew": false,
+    "name": "Land Slide",
+    "description": "Buries the target beneath a collapsing hillside, dealing three times the damage of Boulders. This spell has a small area of effect.",
+    "manaCost": "48",
+    "minInt": 165,
+    "minWis": 285,
+    "minLevel": 200,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 750000,
+    "spellId": 99901,
+    "element": 2,
+    "targetType": 17,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.clemancy",
+    "isNew": true,
+    "name": "Clemancy",
+    "description": "Calls forth a wave of divine mercy, greatly restoring health to the caster and any nearby grouped allies.",
+    "manaCost": "1000",
+    "minInt": 30,
+    "minWis": 150,
+    "minLevel": 75,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 5,
+    "duration": "0",
+    "price": 250000,
+    "spellId": 99902,
+    "element": 5,
+    "targetType": 15,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "(1d14+247+self.wis/8)*self.light/100"
+          },
+          {
+            "paramId": 2,
+            "expression": "(1d14+247+self.wis/8)*self.light/100"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.divine_veil",
+    "isNew": true,
+    "name": "Divine Veil",
+    "description": "Wraps the target in a shimmering veil, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
+    "manaCost": "1000",
+    "minInt": 20,
+    "minWis": 60,
+    "minLevel": 40,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 5,
+    "duration": "30000",
+    "price": 80000,
+    "spellId": 99903,
+    "element": 5,
+    "targetType": 5,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_water"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_air"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_earth"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.undead_annihilation",
+    "isNew": true,
+    "name": "Undead Annihilation",
+    "description": "Obliterates an undead target with sacred words of banishment far more potent than Turn Undead.",
+    "manaCost": "30",
+    "minInt": 100,
+    "minWis": 260,
+    "minLevel": 120,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 115000,
+    "spellId": 99904,
+    "element": 5,
+    "targetType": 11,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.omega_planetoids",
+    "isNew": true,
+    "name": "Omega Planetoids",
+    "description": "Rains massive planetoid fragments upon the target, dealing twice the damage of Land Slide. This spell has a small area of effect.",
+    "manaCost": "96",
+    "minInt": 200,
+    "minWis": 340,
+    "minLevel": 260,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1500000,
+    "spellId": 99905,
+    "element": 2,
+    "targetType": 17,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*6)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*6)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.riptide_surge",
+    "isNew": true,
+    "name": "Riptide Surge",
+    "description": "Slams a single foe with a crushing surge of water, scaling with the caster's intelligence.",
+    "manaCost": "10",
+    "minInt": 110,
+    "minWis": 35,
+    "minLevel": 45,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 68000,
+    "spellId": 99910,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d44+48+self.int/13)*self.water/target.r_water)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.drowned_ward",
+    "isNew": true,
+    "name": "Drowned Ward",
+    "description": "Wraps the caster or an ally in a tide-blessed ward, raising water and dark resistance along with armor class.",
+    "manaCost": "55",
+    "minInt": 22,
+    "minWis": 80,
+    "minLevel": 48,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1800000",
+    "price": 93000,
+    "spellId": 99911,
+    "element": 4,
+    "targetType": 3,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_water"
+          },
+          {
+            "paramId": 3,
+            "expression": "20+self.wis/8"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "12+self.wis/12"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "8+self.wis/20"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.cinderburst",
+    "isNew": true,
+    "name": "Cinderburst",
+    "description": "Detonates a searing burst of fire around the target, scorching anyone caught nearby.",
+    "manaCost": "16",
+    "minInt": 215,
+    "minWis": 17,
+    "minLevel": 68,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 190000,
+    "spellId": 99912,
+    "element": 1,
+    "targetType": 17,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-((1d111+86+self.int/10)*self.fire/target.r_fire)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d111+86+self.int/10)*self.fire/target.r_fire)*(20-r)/20)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.emberheart_resolve",
+    "isNew": true,
+    "name": "Emberheart Resolve",
+    "description": "Hardens the caster or an ally with a fire-forged resolve, boosting fire resistance, armor class, and vitality.",
+    "manaCost": "90",
+    "minInt": 20,
+    "minWis": 100,
+    "minLevel": 66,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1800000",
+    "price": 140000,
+    "spellId": 99913,
+    "element": 1,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "24+self.wis/6"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "max hp"
+          },
+          {
+            "paramId": 3,
+            "expression": "1d(self.wis/6)+self.wis/2"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "6+self.wis/25"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.sentinel",
+    "isNew": true,
+    "name": "Sentinel",
+    "description": "Raises a standing ward around the caster's party, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
+    "manaCost": "1600",
+    "minInt": 30,
+    "minWis": 90,
+    "minLevel": 200,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 5,
+    "duration": "45000",
+    "price": 220000,
+    "spellId": 99914,
+    "element": 5,
+    "targetType": 5,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_water"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_air"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_earth"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.avalon_gateway",
+    "isNew": true,
+    "name": "Avalon Gateway",
+    "description": "Teleports the caster to the sanctuary of Avalon.",
+    "manaCost": "0",
+    "minInt": 0,
+    "minWis": 0,
+    "minLevel": 0,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 0,
+    "spellId": 99915,
+    "element": 0,
+    "targetType": 5,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 7,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "1340"
+          },
+          {
+            "paramId": 2,
+            "expression": "1477"
+          },
+          {
+            "paramId": 3,
+            "expression": "0"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,1976 @@
+[
+  {
+    "name": "Sewer Rat",
+    "displayName": "Sewer Rat",
+    "origin": "new",
+    "level": 3,
+    "health": 45,
+    "mana": 0,
+    "xpPerHit": 2,
+    "xpOnDeath": 34,
+    "hitDamageMin": 3,
+    "hitDamageMax": 7,
+    "respawnTimeMs": 30000,
+    "goldMin": 2,
+    "goldMax": 9,
+    "dodge": 18,
+    "acMin": 0,
+    "acMax": 0,
+    "aggro": 55,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": true,
+    "tameMaxLevel": 12,
+    "stats": {
+      "str": 20,
+      "end": 18,
+      "agi": 17,
+      "intel": 15,
+      "will": 0,
+      "wis": 15,
+      "luck": 0
+    },
+    "resists": {
+      "air": 124,
+      "earth": 62,
+      "water": 93,
+      "fire": 93,
+      "dark": 93,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "Torch",
+        "chance": 0.03
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d6+2",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Drowned Acolyte",
+    "displayName": "Drowned Acolyte",
+    "origin": "new",
+    "level": 38,
+    "health": 1050,
+    "mana": 0,
+    "xpPerHit": 5,
+    "xpOnDeath": 4200,
+    "hitDamageMin": 35,
+    "hitDamageMax": 65,
+    "respawnTimeMs": 30000,
+    "goldMin": 60,
+    "goldMax": 200,
+    "dodge": 165,
+    "acMin": 0,
+    "acMax": 25,
+    "aggro": 60,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 50,
+      "end": 46,
+      "agi": 46,
+      "intel": 60,
+      "will": 0,
+      "wis": 48,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 95,
+      "water": 135,
+      "fire": 85,
+      "dark": 160,
+      "light": 35
+    },
+    "loot": [
+      {
+        "item": "healing_potion",
+        "chance": 0.04
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d58+42",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Tideclaw Crab",
+    "displayName": "Tideclaw Crab",
+    "origin": "new",
+    "level": 42,
+    "health": 1180,
+    "mana": 0,
+    "xpPerHit": 6,
+    "xpOnDeath": 4700,
+    "hitDamageMin": 40,
+    "hitDamageMax": 75,
+    "respawnTimeMs": 30000,
+    "goldMin": 75,
+    "goldMax": 230,
+    "dodge": 175,
+    "acMin": 0,
+    "acMax": 30,
+    "aggro": 65,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 54,
+      "end": 54,
+      "agi": 54,
+      "intel": 64,
+      "will": 0,
+      "wis": 54,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 130,
+      "water": 150,
+      "fire": 80,
+      "dark": 100,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "tideclaw_band",
+        "chance": 0.02
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d60+44",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Mordrenn the Drowned Inquisitor",
+    "displayName": "Mordrenn the Drowned Inquisitor",
+    "origin": "new",
+    "level": 50,
+    "health": 1450,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 55000,
+    "hitDamageMin": 70,
+    "hitDamageMax": 120,
+    "respawnTimeMs": 30000,
+    "goldMin": 90,
+    "goldMax": 275,
+    "dodge": 210,
+    "acMin": 0,
+    "acMax": 55,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 60,
+      "end": 58,
+      "agi": 58,
+      "intel": 75,
+      "will": 80,
+      "wis": 60,
+      "luck": 0
+    },
+    "resists": {
+      "air": 90,
+      "earth": 100,
+      "water": 180,
+      "fire": 70,
+      "dark": 220,
+      "light": 25
+    },
+    "loot": [
+      {
+        "item": "mordrenns_drowned_cowl",
+        "chance": 0.01
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d95+72",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Cinder Whelp",
+    "displayName": "Cinder Whelp",
+    "origin": "new",
+    "level": 58,
+    "health": 1650,
+    "mana": 0,
+    "xpPerHit": 6,
+    "xpOnDeath": 6700,
+    "hitDamageMin": 60,
+    "hitDamageMax": 105,
+    "respawnTimeMs": 30000,
+    "goldMin": 100,
+    "goldMax": 320,
+    "dodge": 240,
+    "acMin": 0,
+    "acMax": 60,
+    "aggro": 70,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 69,
+      "end": 69,
+      "agi": 69,
+      "intel": 84,
+      "will": 0,
+      "wis": 69,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 90,
+      "water": 60,
+      "fire": 180,
+      "dark": 100,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "torch",
+        "chance": 0.02
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d100+77",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Ashfang Stalker",
+    "displayName": "Ashfang Stalker",
+    "origin": "new",
+    "level": 63,
+    "health": 1800,
+    "mana": 0,
+    "xpPerHit": 7,
+    "xpOnDeath": 7300,
+    "hitDamageMin": 65,
+    "hitDamageMax": 115,
+    "respawnTimeMs": 30000,
+    "goldMin": 110,
+    "goldMax": 345,
+    "dodge": 260,
+    "acMin": 0,
+    "acMax": 68,
+    "aggro": 75,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 74,
+      "end": 74,
+      "agi": 74,
+      "intel": 90,
+      "will": 0,
+      "wis": 74,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 85,
+      "water": 55,
+      "fire": 190,
+      "dark": 110,
+      "light": 95
+    },
+    "loot": [
+      {
+        "item": "cinderwrought_sash",
+        "chance": 0.02
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d109+84",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Ignarok the Emberfang",
+    "displayName": "Ignarok the Emberfang",
+    "origin": "new",
+    "level": 70,
+    "health": 1950,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 74000,
+    "hitDamageMin": 95,
+    "hitDamageMax": 160,
+    "respawnTimeMs": 30000,
+    "goldMin": 125,
+    "goldMax": 385,
+    "dodge": 290,
+    "acMin": 0,
+    "acMax": 85,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 78,
+      "end": 75,
+      "agi": 75,
+      "intel": 98,
+      "will": 90,
+      "wis": 78,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 95,
+      "water": 45,
+      "fire": 240,
+      "dark": 120,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "ignaroks_emberfang_claw",
+        "chance": 0.008
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d150+140",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Centaur Warrior",
+    "displayName": "Centaur Warrior",
+    "origin": "new",
+    "level": 110,
+    "health": 3800,
+    "mana": 0,
+    "xpPerHit": 8,
+    "xpOnDeath": 14000,
+    "hitDamageMin": 140,
+    "hitDamageMax": 250,
+    "respawnTimeMs": 30000,
+    "goldMin": 190,
+    "goldMax": 600,
+    "dodge": 450,
+    "acMin": 0,
+    "acMax": 90,
+    "aggro": 70,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 130,
+      "end": 120,
+      "agi": 120,
+      "intel": 145,
+      "will": 0,
+      "wis": 120,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 130,
+      "water": 100,
+      "fire": 90,
+      "dark": 100,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "centaur_warband_ring",
+        "chance": 0.03
+      },
+      {
+        "item": "bow_of_centaur_slaying",
+        "chance": 0.008
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d190+147",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Centaur King",
+    "displayName": "Centaur King",
+    "origin": "new",
+    "level": 140,
+    "health": 14100,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 70000,
+    "hitDamageMin": 180,
+    "hitDamageMax": 320,
+    "respawnTimeMs": 30000,
+    "goldMin": 350,
+    "goldMax": 900,
+    "dodge": 570,
+    "acMin": 0,
+    "acMax": 140,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 180,
+      "end": 165,
+      "agi": 140,
+      "intel": 200,
+      "will": 60,
+      "wis": 165,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 140,
+      "water": 100,
+      "fire": 90,
+      "dark": 110,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "marchwardens_crown",
+        "chance": 0.01
+      },
+      {
+        "item": "bow_of_centaur_slaying",
+        "chance": 0.015
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d242+187",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Barrow Wight",
+    "displayName": "Barrow Wight",
+    "origin": "new",
+    "level": 165,
+    "health": 12050,
+    "mana": 0,
+    "xpPerHit": 9,
+    "xpOnDeath": 45000,
+    "hitDamageMin": 220,
+    "hitDamageMax": 380,
+    "respawnTimeMs": 30000,
+    "goldMin": 260,
+    "goldMax": 800,
+    "dodge": 500,
+    "acMin": 0,
+    "acMax": 110,
+    "aggro": 75,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 160,
+      "end": 150,
+      "agi": 140,
+      "intel": 130,
+      "will": 0,
+      "wis": 130,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 100,
+      "water": 100,
+      "fire": 90,
+      "dark": 170,
+      "light": 30
+    },
+    "loot": [
+      {
+        "item": "wight_bound_amulet",
+        "chance": 0.03
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d260+210",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Hollow King",
+    "displayName": "The Hollow King",
+    "origin": "new",
+    "level": 195,
+    "health": 49650,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 180000,
+    "hitDamageMin": 280,
+    "hitDamageMax": 480,
+    "respawnTimeMs": 30000,
+    "goldMin": 500,
+    "goldMax": 1400,
+    "dodge": 640,
+    "acMin": 0,
+    "acMax": 180,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 240,
+      "end": 210,
+      "agi": 160,
+      "intel": 170,
+      "will": 100,
+      "wis": 170,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 100,
+      "water": 100,
+      "fire": 110,
+      "dark": 240,
+      "light": 15
+    },
+    "loot": [
+      {
+        "item": "crown_of_the_hollow_king",
+        "chance": 0.008
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d420+340",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Kraanian Wyrmling",
+    "displayName": "Kraanian Wyrmling",
+    "origin": "new",
+    "level": 220,
+    "health": 20300,
+    "mana": 0,
+    "xpPerHit": 10,
+    "xpOnDeath": 128000,
+    "hitDamageMin": 330,
+    "hitDamageMax": 560,
+    "respawnTimeMs": 30000,
+    "goldMin": 330,
+    "goldMax": 1000,
+    "dodge": 550,
+    "acMin": 0,
+    "acMax": 150,
+    "aggro": 80,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 190,
+      "end": 180,
+      "agi": 160,
+      "intel": 115,
+      "will": 0,
+      "wis": 140,
+      "luck": 0
+    },
+    "resists": {
+      "air": 130,
+      "earth": 80,
+      "water": 90,
+      "fire": 130,
+      "dark": 100,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "wyrmling_scale_bracer",
+        "chance": 0.03
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d330+274",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Lesser Drake",
+    "displayName": "Petit Drake",
+    "origin": "new",
+    "level": 250,
+    "health": 15385,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 550000,
+    "hitDamageMin": 1,
+    "hitDamageMax": 10,
+    "respawnTimeMs": 30000,
+    "goldMin": 449,
+    "goldMax": 1375,
+    "dodge": 1010,
+    "acMin": 0,
+    "acMax": 1079984128,
+    "aggro": 50,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 265,
+      "end": 239,
+      "agi": 239,
+      "intel": 315,
+      "will": 0,
+      "wis": 239,
+      "luck": 0
+    },
+    "resists": {
+      "air": 63,
+      "earth": 5000,
+      "water": 63,
+      "fire": -63,
+      "dark": 63,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "aeries_drakeheart_signet",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "if(1d10=1?target.hp/2:1d429+337)",
+        "value2": 75,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 1
+      },
+      {
+        "formula": "",
+        "value2": 75,
+        "isSpell": true,
+        "spellId": 10095,
+        "rangeMinTiles": 2,
+        "rangeMaxTiles": 20
+      },
+      {
+        "formula": "",
+        "value2": 25,
+        "isSpell": true,
+        "spellId": 10616,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 1
+      }
+    ]
+  },
+  {
+    "name": "Fey Warden",
+    "displayName": "Fey Warden",
+    "origin": "new",
+    "level": 330,
+    "health": 36300,
+    "mana": 0,
+    "xpPerHit": 6,
+    "xpOnDeath": 300000,
+    "hitDamageMin": 180,
+    "hitDamageMax": 400,
+    "respawnTimeMs": 30000,
+    "goldMin": 330,
+    "goldMax": 825,
+    "dodge": 1320,
+    "acMin": 0,
+    "acMax": 200,
+    "aggro": -50,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 300,
+      "end": 280,
+      "agi": 280,
+      "intel": 230,
+      "will": 0,
+      "wis": 300,
+      "luck": 0
+    },
+    "resists": {
+      "air": 130,
+      "earth": 140,
+      "water": 110,
+      "fire": 70,
+      "dark": 60,
+      "light": 150
+    },
+    "loot": [
+      {
+        "item": "light_healing_potion",
+        "chance": 0.15
+      },
+      {
+        "item": "healing_potion",
+        "chance": 0.08
+      },
+      {
+        "item": "torch",
+        "chance": 0.2
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d495+430",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Moonlit Stalker",
+    "displayName": "Moonlit Stalker",
+    "origin": "new",
+    "level": 390,
+    "health": 42900,
+    "mana": 0,
+    "xpPerHit": 7,
+    "xpOnDeath": 430000,
+    "hitDamageMin": 210,
+    "hitDamageMax": 460,
+    "respawnTimeMs": 30000,
+    "goldMin": 390,
+    "goldMax": 975,
+    "dodge": 1560,
+    "acMin": 0,
+    "acMax": 180,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 330,
+      "end": 310,
+      "agi": 430,
+      "intel": 195,
+      "will": 0,
+      "wis": 235,
+      "luck": 0
+    },
+    "resists": {
+      "air": 140,
+      "earth": 100,
+      "water": 120,
+      "fire": 70,
+      "dark": 110,
+      "light": 90
+    },
+    "loot": [
+      {
+        "item": "healing_potion",
+        "chance": 0.1
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.05
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.08
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d585+507",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Bastion Warden",
+    "displayName": "Bastion Warden",
+    "origin": "new",
+    "level": 430,
+    "health": 51800,
+    "mana": 0,
+    "xpPerHit": 11,
+    "xpOnDeath": 4750000,
+    "hitDamageMin": 590,
+    "hitDamageMax": 1000,
+    "respawnTimeMs": 30000,
+    "goldMin": 600,
+    "goldMax": 1750,
+    "dodge": 741,
+    "acMin": 0,
+    "acMax": 280,
+    "aggro": 85,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 300,
+      "end": 290,
+      "agi": 235,
+      "intel": 70,
+      "will": 0,
+      "wis": 175,
+      "luck": 0
+    },
+    "resists": {
+      "air": 90,
+      "earth": 140,
+      "water": 100,
+      "fire": 120,
+      "dark": 100,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "bastion_sentinels_mantle",
+        "chance": 0.03
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d596+515",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Veilbound Wraith",
+    "displayName": "Veilbound Wraith",
+    "origin": "new",
+    "level": 485,
+    "health": 53400,
+    "mana": 0,
+    "xpPerHit": 8,
+    "xpOnDeath": 630000,
+    "hitDamageMin": 260,
+    "hitDamageMax": 560,
+    "respawnTimeMs": 30000,
+    "goldMin": 485,
+    "goldMax": 1200,
+    "dodge": 1940,
+    "acMin": 0,
+    "acMax": 150,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 290,
+      "end": 340,
+      "agi": 435,
+      "intel": 435,
+      "will": 0,
+      "wis": 390,
+      "luck": 0
+    },
+    "resists": {
+      "air": 110,
+      "earth": 90,
+      "water": 100,
+      "fire": 80,
+      "dark": 160,
+      "light": 40
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.08
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.1
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.03
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d728+631",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Greater Drake",
+    "displayName": "Grand Drake",
+    "origin": "new",
+    "level": 500,
+    "health": 54943,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 40000000,
+    "hitDamageMin": 676,
+    "hitDamageMax": 1533,
+    "respawnTimeMs": 30000,
+    "goldMin": 899,
+    "goldMax": 2750,
+    "dodge": 2010,
+    "acMin": 0,
+    "acMax": 1081032704,
+    "aggro": 50,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 515,
+      "end": 464,
+      "agi": 464,
+      "intel": 615,
+      "will": 0,
+      "wis": 464,
+      "luck": 0
+    },
+    "resists": {
+      "air": 63,
+      "earth": 5000,
+      "water": 63,
+      "fire": -63,
+      "dark": 63,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "heartfire_of_the_greater_drake",
+        "chance": 0.01
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d858+675",
+        "value2": 75,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 1
+      },
+      {
+        "formula": "",
+        "value2": 75,
+        "isSpell": true,
+        "spellId": 10095,
+        "rangeMinTiles": 2,
+        "rangeMaxTiles": 20
+      },
+      {
+        "formula": "",
+        "value2": 25,
+        "isSpell": true,
+        "spellId": 10616,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 20
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP525",
+    "displayName": "ArenaMobXP525",
+    "origin": "new",
+    "level": 525,
+    "health": 58014,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 15489313,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2110,
+    "acMin": 0,
+    "acMax": 1132667790,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 540,
+      "end": 487,
+      "agi": 487,
+      "intel": 645,
+      "will": 487,
+      "wis": 487,
+      "luck": 120
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 901 + 709 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP550",
+    "displayName": "ArenaMobXP550",
+    "origin": "new",
+    "level": 550,
+    "health": 62212,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 17123320,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2210,
+    "acMin": 0,
+    "acMax": 1133077390,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 565,
+      "end": 509,
+      "agi": 509,
+      "intel": 675,
+      "will": 509,
+      "wis": 509,
+      "luck": 125
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 944 + 743 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Sir Caradoc, the Sundered Knight",
+    "displayName": "Sir Caradoc, the Sundered Knight",
+    "origin": "new",
+    "level": 550,
+    "health": 62000,
+    "mana": 0,
+    "xpPerHit": 10,
+    "xpOnDeath": 65000000,
+    "hitDamageMin": 740,
+    "hitDamageMax": 1680,
+    "respawnTimeMs": 30000,
+    "goldMin": 1100,
+    "goldMax": 2750,
+    "dodge": 2200,
+    "acMin": 0,
+    "acMax": 550,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 605,
+      "end": 575,
+      "agi": 300,
+      "intel": 220,
+      "will": 0,
+      "wis": 220,
+      "luck": 0
+    },
+    "resists": {
+      "air": 80,
+      "earth": 140,
+      "water": 110,
+      "fire": 100,
+      "dark": 200,
+      "light": 20
+    },
+    "loot": [
+      {
+        "item": "caradocs_sundered_blade",
+        "chance": 0.02
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d825+715",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Sundered Sentinel",
+    "displayName": "Sundered Sentinel",
+    "origin": "new",
+    "level": 560,
+    "health": 61600,
+    "mana": 0,
+    "xpPerHit": 9,
+    "xpOnDeath": 840000,
+    "hitDamageMin": 300,
+    "hitDamageMax": 640,
+    "respawnTimeMs": 30000,
+    "goldMin": 560,
+    "goldMax": 1400,
+    "dodge": 2240,
+    "acMin": 0,
+    "acMax": 500,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 560,
+      "end": 560,
+      "agi": 280,
+      "intel": 170,
+      "will": 0,
+      "wis": 170,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 130,
+      "water": 100,
+      "fire": 90,
+      "dark": 170,
+      "light": 30
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.1
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.05
+      },
+      {
+        "item": "healing_potion",
+        "chance": 0.1
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d840+728",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP575",
+    "displayName": "ArenaMobXP575",
+    "origin": "new",
+    "level": 575,
+    "health": 66410,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 18757327,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2310,
+    "acMin": 0,
+    "acMax": 1133486990,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 590,
+      "end": 532,
+      "agi": 532,
+      "intel": 705,
+      "will": 532,
+      "wis": 532,
+      "luck": 130
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 987 + 777 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP600",
+    "displayName": "ArenaMobXP600",
+    "origin": "new",
+    "level": 600,
+    "health": 70607,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 20391334,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2410,
+    "acMin": 0,
+    "acMax": 1133896590,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 615,
+      "end": 554,
+      "agi": 554,
+      "intel": 735,
+      "will": 554,
+      "wis": 554,
+      "luck": 135
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 1029 + 810 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Ysolde, the Veiled Matriarch",
+    "displayName": "Ysolde, the Veiled Matriarch",
+    "origin": "new",
+    "level": 600,
+    "health": 64000,
+    "mana": 15000,
+    "xpPerHit": 10,
+    "xpOnDeath": 88000000,
+    "hitDamageMin": 600,
+    "hitDamageMax": 1300,
+    "respawnTimeMs": 30000,
+    "goldMin": 1200,
+    "goldMax": 3000,
+    "dodge": 1800,
+    "acMin": 0,
+    "acMax": 180,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 300,
+      "end": 480,
+      "agi": 420,
+      "intel": 840,
+      "will": 0,
+      "wis": 840,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 90,
+      "water": 90,
+      "fire": 120,
+      "dark": 250,
+      "light": 10
+    },
+    "loot": [
+      {
+        "item": "ysoldes_veiled_circlet",
+        "chance": 0.02
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.3
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.3
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d420+400",
+        "value2": 40,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 1
+      },
+      {
+        "formula": "",
+        "value2": 35,
+        "isSpell": true,
+        "spellId": 10094,
+        "rangeMinTiles": 2,
+        "rangeMaxTiles": 15
+      },
+      {
+        "formula": "",
+        "value2": 25,
+        "isSpell": true,
+        "spellId": 10352,
+        "rangeMinTiles": 2,
+        "rangeMaxTiles": 15
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP625",
+    "displayName": "ArenaMobXP625",
+    "origin": "new",
+    "level": 625,
+    "health": 74805,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 22025341,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2510,
+    "acMin": 0,
+    "acMax": 1134306190,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 640,
+      "end": 577,
+      "agi": 577,
+      "intel": 765,
+      "will": 577,
+      "wis": 577,
+      "luck": 140
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 1072 + 844 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP650",
+    "displayName": "ArenaMobXP650",
+    "origin": "new",
+    "level": 650,
+    "health": 79003,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 23659348,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2610,
+    "acMin": 0,
+    "acMax": 1134715790,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 665,
+      "end": 599,
+      "agi": 599,
+      "intel": 795,
+      "will": 599,
+      "wis": 599,
+      "luck": 145
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 1115 + 878 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Verdant Warden",
+    "displayName": "The Verdant Warden",
+    "origin": "new",
+    "level": 650,
+    "health": 92000,
+    "mana": 0,
+    "xpPerHit": 11,
+    "xpOnDeath": 118000000,
+    "hitDamageMin": 860,
+    "hitDamageMax": 1850,
+    "respawnTimeMs": 30000,
+    "goldMin": 1300,
+    "goldMax": 3250,
+    "dodge": 2000,
+    "acMin": 0,
+    "acMax": 650,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 780,
+      "end": 845,
+      "agi": 260,
+      "intel": 390,
+      "will": 0,
+      "wis": 650,
+      "luck": 0
+    },
+    "resists": {
+      "air": 120,
+      "earth": 180,
+      "water": 150,
+      "fire": 60,
+      "dark": 130,
+      "light": 160
+    },
+    "loot": [
+      {
+        "item": "verdant_wardens_bulwark",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "healing_potion",
+        "chance": 0.3
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d975+845",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP675",
+    "displayName": "ArenaMobXP675",
+    "origin": "new",
+    "level": 675,
+    "health": 83201,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 25293355,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2710,
+    "acMin": 0,
+    "acMax": 1135125390,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 690,
+      "end": 622,
+      "agi": 622,
+      "intel": 825,
+      "will": 622,
+      "wis": 622,
+      "luck": 150
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 1158 + 912 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP700",
+    "displayName": "ArenaMobXP700",
+    "origin": "new",
+    "level": 700,
+    "health": 87399,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 26927362,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2810,
+    "acMin": 0,
+    "acMax": 1135534990,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 715,
+      "end": 644,
+      "agi": 644,
+      "intel": 855,
+      "will": 644,
+      "wis": 644,
+      "luck": 155
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 1201 + 946 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP725",
+    "displayName": "ArenaMobXP725",
+    "origin": "new",
+    "level": 725,
+    "health": 91596,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 28561368,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 2910,
+    "acMin": 0,
+    "acMax": 1135944590,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 740,
+      "end": 667,
+      "agi": 667,
+      "intel": 885,
+      "will": 667,
+      "wis": 667,
+      "luck": 160
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 1244 + 980 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "ArenaMobXP750",
+    "displayName": "ArenaMobXP750",
+    "origin": "new",
+    "level": 750,
+    "health": 95794,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 30195375,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 0,
+    "goldMax": 0,
+    "dodge": 3010,
+    "acMin": 0,
+    "acMax": 1136354190,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 765,
+      "end": 689,
+      "agi": 689,
+      "intel": 915,
+      "will": 689,
+      "wis": 689,
+      "luck": 165
+    },
+    "resists": {
+      "air": 46,
+      "earth": 94,
+      "water": 46,
+      "fire": 94,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [],
+    "attacks": [
+      {
+        "formula": "1d 1286 + 1013 ",
+        "value2": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Kraanian Dragonguard",
+    "displayName": "Kraanian Dragonguard",
+    "origin": "new",
+    "level": 750,
+    "health": 130000,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 1190000000,
+    "hitDamageMin": 1100,
+    "hitDamageMax": 2600,
+    "respawnTimeMs": 30000,
+    "goldMin": 900,
+    "goldMax": 2700,
+    "dodge": 3000,
+    "acMin": 0,
+    "acMax": 900,
+    "aggro": 90,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 900,
+      "end": 800,
+      "agi": 800,
+      "intel": 1000,
+      "will": 0,
+      "wis": 800,
+      "luck": 0
+    },
+    "resists": {
+      "air": 63,
+      "earth": 5000,
+      "water": 63,
+      "fire": -63,
+      "dark": 63,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "dragonguards_scale_bracer",
+        "chance": 0.03
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1450+1150",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Arch Drake",
+    "displayName": "Arch Drake",
+    "origin": "activated",
+    "level": 1000,
+    "health": 206623,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 2100000000,
+    "hitDamageMin": 1353,
+    "hitDamageMax": 3067,
+    "respawnTimeMs": 30000,
+    "goldMin": 1799,
+    "goldMax": 5500,
+    "dodge": 4010,
+    "acMin": 0,
+    "acMax": 1082081280,
+    "aggro": 50,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 1015,
+      "end": 914,
+      "agi": 914,
+      "intel": 1215,
+      "will": 0,
+      "wis": 914,
+      "luck": 0
+    },
+    "resists": {
+      "air": 63,
+      "earth": 5000,
+      "water": 63,
+      "fire": -63,
+      "dark": 63,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "archdrakes_molten_heart",
+        "chance": 0.008
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1715+1352",
+        "value2": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      },
+      {
+        "formula": "",
+        "value2": 100,
+        "isSpell": true,
+        "spellId": 10095,
+        "rangeMinTiles": 2,
+        "rangeMaxTiles": 20
+      }
+    ]
+  }
+]

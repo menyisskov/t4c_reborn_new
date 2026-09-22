@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4C Reborn — Compendium</title>
+<meta name="description" content="A searchable stat-sheet compendium of everything added to T4C Reborn on top of the original fork: zones, monsters, items, spells, NPCs and quests.">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div id="topbar">
+    <a class="brand" href="#/">
+      <span class="brand-mark">T4C</span>
+      <span class="brand-text">Reborn Compendium</span>
+    </a>
+    <nav id="mainnav">
+      <a href="#/zones">Zones</a>
+      <a href="#/monsters">Monsters</a>
+      <a href="#/items">Items</a>
+      <a href="#/spells">Spells</a>
+      <a href="#/npcs">NPCs</a>
+      <a href="#/quests">Quests</a>
+      <a href="#/systems">Systems</a>
+    </nav>
+    <div class="search-wrap">
+      <input id="globalSearch" type="search" placeholder="Search everything… (/)" autocomplete="off">
+      <div id="searchResults" class="search-results hidden"></div>
+    </div>
+  </div>
+
+  <main id="app"></main>
+
+  <footer id="pagefoot">
+    <p>Generated from the live game registries by <code>tools/CompendiumExporter.java</code> (T4C-0012). Covers content added on top of the original fork — see <a href="#/systems">Systems &amp; passes</a> for the full changelog cross-reference.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
