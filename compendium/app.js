@@ -662,6 +662,10 @@
         '<div class="quest-step"><span class="num">2</span><div>' +
         "<strong>Kill " + q.requiredKills + "× " + monsterLink(q.targetMonster) + "</strong>" +
         '<p class="lead">Kills only count inside the objective area shown below (world Z ' + q.targetWorldZ + ").</p>" +
+        (q.requiredItemKey
+          ? '<p class="lead">Also collect ' + q.requiredItemQty + "× " + itemLink(q.requiredItemKey) +
+            " (a rare drop) — it's consumed on turn-in.</p>"
+          : "") +
         "</div></div>" +
         '<div class="quest-step"><span class="num">3</span><div>' +
         "<strong>Return to " + npcLink(q.giverNpc) + "</strong>" +
@@ -669,9 +673,16 @@
         '<div class="quest-text-block"><span class="label">If you return again</span>“' + esc(q.completedText) + "”</div>" +
         '<div class="rewards-row"><span class="reward gold">✦ ' + fmtNum(q.rewardGold) + " gold</span>" +
         '<span class="reward xp">✦ ' + fmtNum(q.rewardXp) + " XP</span></div>" +
+        (q.unlockZoneId
+          ? '<p class="lead">Unlocks fast travel to ' + zoneLink(q.unlockZoneId) + ".</p>"
+          : "") +
         "</div></div>") +
       panel("Objective area", '<div class="kv-grid">' +
         kv("Target", monsterLink(q.targetMonster)) + kv("Required kills", q.requiredKills) +
+        (q.requiredItemKey
+          ? kv("Required item", q.requiredItemQty + "× " + itemLink(q.requiredItemKey))
+          : "") +
+        (q.unlockZoneId ? kv("Unlocks zone", zoneLink(q.unlockZoneId)) : "") +
         kv("Center", "(" + q.areaCenterX + ", " + q.areaCenterY + ")") + kv("Radius", q.areaRadiusTiles + " tiles") +
         "</div>" + mapHtml)
     );
