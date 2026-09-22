@@ -7185,9 +7185,9 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.clemancy",
+      "key": "spell.wellspring_mercy",
       "isNew": true,
-      "name": "Clemancy",
+      "name": "Wellspring Mercy",
       "description": "Calls forth a wave of divine mercy, greatly restoring health to the caster and any nearby grouped allies.",
       "manaCost": "1000",
       "minInt": 30,
@@ -7227,9 +7227,9 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.divine_veil",
+      "key": "spell.veilstone_aegis",
       "isNew": true,
-      "name": "Divine Veil",
+      "name": "Veilstone Aegis",
       "description": "Wraps the target in a shimmering veil, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
       "manaCost": "1000",
       "minInt": 20,
@@ -7348,9 +7348,9 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.undead_annihilation",
+      "key": "spell.sunscour",
       "isNew": true,
-      "name": "Undead Annihilation",
+      "name": "Sunscour",
       "description": "Obliterates an undead target with sacred words of banishment far more potent than Turn Undead.",
       "manaCost": "30",
       "minInt": 100,
@@ -7389,9 +7389,9 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.omega_planetoids",
+      "key": "spell.gravebreaker",
       "isNew": true,
-      "name": "Omega Planetoids",
+      "name": "Gravebreaker",
       "description": "Rains massive planetoid fragments upon the target, dealing twice the damage of Land Slide. This spell has a small area of effect.",
       "manaCost": "96",
       "minInt": 200,
@@ -7421,6 +7421,268 @@ window.T4C_DATA = {
             {
               "paramId": 2,
               "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*6)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.voidreave_lance",
+      "isNew": true,
+      "name": "Voidreave Lance",
+      "description": "Hurls a lance of raw void energy at the target, piercing armor and flesh alike.",
+      "manaCost": "18",
+      "minInt": 260,
+      "minWis": 90,
+      "minLevel": 320,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1850000,
+      "spellId": 99906,
+      "element": 6,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d42+112+self.int/10)*self.dark/target.r_dark)*7)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.stormcallers_judgment",
+      "isNew": true,
+      "name": "Stormcaller's Judgment",
+      "description": "Calls down a violent lightning storm upon the target. This spell has a small area of effect.",
+      "manaCost": "26",
+      "minInt": 360,
+      "minWis": 140,
+      "minLevel": 480,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 2400000,
+      "spellId": 99907,
+      "element": 3,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.sanctum_ward",
+      "isNew": true,
+      "name": "Sanctum Ward",
+      "description": "Raises a greater standing ward around the caster's party, granting large bonuses to air, water, earth, fire and dark resistance, armor class, and maximum hit points.",
+      "manaCost": "2200",
+      "minInt": 50,
+      "minWis": 480,
+      "minLevel": 550,
+      "isAttack": false,
+      "lineOfSight": false,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 6,
+      "duration": "60000",
+      "price": 2600000,
+      "spellId": 99908,
+      "element": 5,
+      "targetType": 5,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": false,
+      "effects": [
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_fire"
+            },
+            {
+              "paramId": 3,
+              "expression": "250"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_water"
+            },
+            {
+              "paramId": 3,
+              "expression": "250"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_air"
+            },
+            {
+              "paramId": 3,
+              "expression": "250"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_earth"
+            },
+            {
+              "paramId": 3,
+              "expression": "250"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_dark"
+            },
+            {
+              "paramId": 3,
+              "expression": "250"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "AC"
+            },
+            {
+              "paramId": 3,
+              "expression": "150"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "max hp"
+            },
+            {
+              "paramId": 3,
+              "expression": "self.wis*2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.emberqueens_wrath",
+      "isNew": true,
+      "name": "Emberqueen's Wrath",
+      "description": "Engulfs the target in an inferno of royal fire. This spell has a small area of effect.",
+      "manaCost": "38",
+      "minInt": 440,
+      "minWis": 170,
+      "minLevel": 650,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 3100000,
+      "spellId": 99909,
+      "element": 1,
+      "targetType": 19,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)"
             },
             {
               "paramId": 3,
@@ -7660,9 +7922,9 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.sentinel",
+      "key": "spell.leyward_bastion",
       "isNew": true,
-      "name": "Sentinel",
+      "name": "Leyward Bastion",
       "description": "Raises a standing ward around the caster's party, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
       "manaCost": "1600",
       "minInt": 30,
@@ -7771,6 +8033,48 @@ window.T4C_DATA = {
             {
               "paramId": 2,
               "expression": "AC"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.cataclysms_herald",
+      "isNew": true,
+      "name": "Cataclysm's Herald",
+      "description": "Summons a crushing deluge upon the target, heralding the end of all who stand against it. This spell has a small area of effect.",
+      "manaCost": "58",
+      "minInt": 560,
+      "minWis": 240,
+      "minLevel": 900,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 4200000,
+      "spellId": 99916,
+      "element": 4,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)"
             },
             {
               "paramId": 3,
@@ -7990,7 +8294,7 @@ window.T4C_DATA = {
       "id": "ArchmageThalindra",
       "origin": "new",
       "displayName": "Archmage Thalindra",
-      "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the Ancient tier here and nowhere else on this coast.",
+      "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the Elder tier here and nowhere else on this coast.",
       "topics": [
         {
           "keywords": [
@@ -7999,9 +8303,9 @@ window.T4C_DATA = {
             "teach",
             "spell"
           ],
-          "response": "Sentinel, Divine Veil, Clemancy, Undead Annihilation, Omega Planetoids - the Ancient tier. Study hard, and the ley lines beneath this isle will lend you their strength.",
+          "response": "Leyward Bastion, Veilstone Aegis, Wellspring Mercy, Sunscour, Gravebreaker - the Elder tier. Study hard, and the ley lines beneath this isle will lend you their strength.",
           "actions": [
-            "OPEN_SPELL_LEARNING:sentinel,divine_veil,clemancy,undead_annihilation,omega_planetoids"
+            "OPEN_SPELL_LEARNING:leyward_bastion,veilstone_aegis,wellspring_mercy,sunscour,gravebreaker"
           ]
         },
         {
@@ -8013,10 +8317,19 @@ window.T4C_DATA = {
         },
         {
           "keywords": [
-            "ancient"
+            "elder"
           ],
-          "response": "The Ancient tier was never meant to be taught lightly - it demands a caster already tempered by two hundred levels of hard-won craft. Come back when you're ready.",
+          "response": "The Elder tier was never meant to be taught lightly - it demands a caster already tempered by two hundred levels of hard-won craft. Come back when you're ready.",
           "actions": []
+        },
+        {
+          "keywords": [
+            "apex"
+          ],
+          "response": "Beyond the Elder tier lies the Apex: Voidreave Lance, Stormcaller's Judgment, Sanctum Ward, Emberqueen's Wrath, and Cataclysm's Herald. Only a caster who has already mastered the Elder tier and tempered themselves against the world's very worst has any hope of surviving the toll they take.",
+          "actions": [
+            "OPEN_SPELL_LEARNING:voidreave_lance,stormcallers_judgment,sanctum_ward,emberqueens_wrath,cataclysms_herald"
+          ]
         }
       ],
       "combatProfile": {
@@ -8614,11 +8927,11 @@ window.T4C_DATA = {
         {
           "keywords": [
             "teach",
-            "sentinel"
+            "leyward"
           ],
-          "response": "I can teach you Sentinel, if you've the level and the mind for it - a ward that guards a whole party against the elements at once. Ask to TEACH.",
+          "response": "I can teach you Leyward Bastion, if you've the level and the mind for it - a ward that guards a whole party against the elements at once. Ask to TEACH.",
           "actions": [
-            "OPEN_SPELL_LEARNING:sentinel"
+            "OPEN_SPELL_LEARNING:leyward_bastion"
           ]
         }
       ],
@@ -8856,6 +9169,195 @@ window.T4C_DATA = {
           "boostId": 31008.0,
           "statId": 22.0,
           "expression": "6"
+        }
+      ]
+    },
+    {
+      "key": "adamantite_shield_3",
+      "name": "Adamantite Shield +3",
+      "bodyPart": "SHIELD",
+      "appearanceEquippedPrimary": "PupCentaurShield",
+      "appearanceInventory": "64kInvCentaurShield1",
+      "price": 0.0,
+      "weight": 12.0,
+      "armorClass": 32.0,
+      "dodgeLost": 38.0,
+      "requirements": {
+        "endurance": 230.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 460.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 35006.0,
+          "statId": 10008.0,
+          "expression": "180"
+        },
+        {
+          "boostId": 35007.0,
+          "statId": 2.0,
+          "expression": "80"
+        }
+      ]
+    },
+    {
+      "key": "adamantite_shield_4",
+      "name": "Adamantite Shield +4",
+      "bodyPart": "SHIELD",
+      "appearanceEquippedPrimary": "PupCentaurShield",
+      "appearanceInventory": "64kInvCentaurShield1",
+      "price": 0.0,
+      "weight": 12.0,
+      "armorClass": 37.0,
+      "dodgeLost": 38.0,
+      "requirements": {
+        "endurance": 230.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 460.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 35008.0,
+          "statId": 10008.0,
+          "expression": "260"
+        },
+        {
+          "boostId": 35009.0,
+          "statId": 2.0,
+          "expression": "120"
+        }
+      ]
+    },
+    {
+      "key": "adamantite_shield_5",
+      "name": "Adamantite Shield +5",
+      "bodyPart": "SHIELD",
+      "appearanceEquippedPrimary": "PupCentaurShield",
+      "appearanceInventory": "64kInvCentaurShield1",
+      "price": 0.0,
+      "weight": 12.0,
+      "armorClass": 43.0,
+      "dodgeLost": 38.0,
+      "requirements": {
+        "endurance": 230.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 460.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 35010.0,
+          "statId": 10008.0,
+          "expression": "350"
+        },
+        {
+          "boostId": 35011.0,
+          "statId": 2.0,
+          "expression": "170"
+        }
+      ]
+    },
+    {
+      "key": "adamantite_two_handed_sword_4",
+      "name": "Adamantite Two-Handed Sword +4",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupNormalSword",
+      "appearanceInventory": "64kInvGlinting Sword",
+      "price": 0.0,
+      "weight": 12.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 401.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 1.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": false,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 202.0,
+      "undroppable": false,
+      "dmgFormula": "1d175+300",
+      "atkDelay": "if(1125-self.agi/250*1125/2<600?600:1125-self.agi/250*1125/2)+1d563",
+      "boosts": [
+        {
+          "boostId": 35000.0,
+          "statId": 8.0,
+          "expression": "self.true_attack*65/100"
+        }
+      ]
+    },
+    {
+      "key": "adamantite_two_handed_sword_5",
+      "name": "Adamantite Two-Handed Sword +5",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupNormalSword",
+      "appearanceInventory": "64kInvGlinting Sword",
+      "price": 0.0,
+      "weight": 12.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 401.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 1.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": false,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 202.0,
+      "undroppable": false,
+      "dmgFormula": "1d205+350",
+      "atkDelay": "if(1125-self.agi/250*1125/2<600?600:1125-self.agi/250*1125/2)+1d563",
+      "boosts": [
+        {
+          "boostId": 35001.0,
+          "statId": 8.0,
+          "expression": "self.true_attack*80/100"
         }
       ]
     },
@@ -9300,14 +9802,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 74.425,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -9320,44 +9822,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20300.0,
+          "boostId": 20306.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20301.0,
+          "boostId": 20307.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20302.0,
+          "boostId": 20308.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20303.0,
+          "boostId": 20309.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20304.0,
+          "boostId": 20310.0,
           "statId": 21.0,
           "expression": "29"
         },
         {
-          "boostId": 20305.0,
+          "boostId": 20311.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20306.0,
+          "boostId": 20312.0,
           "statId": 6.0,
           "expression": "41"
         },
         {
-          "boostId": 20307.0,
+          "boostId": 20313.0,
           "statId": 10035.0,
           "expression": "307"
+        },
+        {
+          "boostId": 20314.0,
+          "statId": 2.0,
+          "expression": "25"
         }
       ]
     },
@@ -9369,14 +9876,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 22.289,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -9389,44 +9896,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20308.0,
+          "boostId": 20315.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20309.0,
+          "boostId": 20316.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20310.0,
+          "boostId": 20317.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20311.0,
+          "boostId": 20318.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20312.0,
+          "boostId": 20319.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20313.0,
+          "boostId": 20320.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20314.0,
+          "boostId": 20321.0,
           "statId": 6.0,
           "expression": "12"
         },
         {
-          "boostId": 20315.0,
+          "boostId": 20322.0,
           "statId": 10035.0,
           "expression": "92"
+        },
+        {
+          "boostId": 20323.0,
+          "statId": 2.0,
+          "expression": "7"
         }
       ]
     },
@@ -9440,14 +9952,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 22.289,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -9460,44 +9972,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20316.0,
+          "boostId": 20324.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20317.0,
+          "boostId": 20325.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20318.0,
+          "boostId": 20326.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20319.0,
+          "boostId": 20327.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20320.0,
+          "boostId": 20328.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20321.0,
+          "boostId": 20329.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20322.0,
+          "boostId": 20330.0,
           "statId": 6.0,
           "expression": "12"
         },
         {
-          "boostId": 20323.0,
+          "boostId": 20331.0,
           "statId": 10035.0,
           "expression": "92"
+        },
+        {
+          "boostId": 20332.0,
+          "statId": 2.0,
+          "expression": "7"
         }
       ]
     },
@@ -9509,14 +10026,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 21.463,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -9529,44 +10046,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20324.0,
+          "boostId": 20333.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20325.0,
+          "boostId": 20334.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20326.0,
+          "boostId": 20335.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20327.0,
+          "boostId": 20336.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20328.0,
+          "boostId": 20337.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20329.0,
+          "boostId": 20338.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20330.0,
+          "boostId": 20339.0,
           "statId": 6.0,
           "expression": "12"
         },
         {
-          "boostId": 20331.0,
+          "boostId": 20340.0,
           "statId": 10035.0,
           "expression": "89"
+        },
+        {
+          "boostId": 20341.0,
+          "statId": 2.0,
+          "expression": "7"
         }
       ]
     },
@@ -9578,14 +10100,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 24.765,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -9598,44 +10120,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20332.0,
+          "boostId": 20342.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20333.0,
+          "boostId": 20343.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20334.0,
+          "boostId": 20344.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20335.0,
+          "boostId": 20345.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20336.0,
+          "boostId": 20346.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20337.0,
+          "boostId": 20347.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20338.0,
+          "boostId": 20348.0,
           "statId": 6.0,
           "expression": "14"
         },
         {
-          "boostId": 20339.0,
+          "boostId": 20349.0,
           "statId": 10035.0,
           "expression": "102"
+        },
+        {
+          "boostId": 20350.0,
+          "statId": 2.0,
+          "expression": "8"
         }
       ]
     },
@@ -9646,14 +10173,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 16.51,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -9666,44 +10193,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20340.0,
+          "boostId": 20351.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20341.0,
+          "boostId": 20352.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20342.0,
+          "boostId": 20353.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20343.0,
+          "boostId": 20354.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20344.0,
+          "boostId": 20355.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20345.0,
+          "boostId": 20356.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20346.0,
+          "boostId": 20357.0,
           "statId": 6.0,
           "expression": "9"
         },
         {
-          "boostId": 20347.0,
+          "boostId": 20358.0,
           "statId": 10035.0,
           "expression": "68"
+        },
+        {
+          "boostId": 20359.0,
+          "statId": 2.0,
+          "expression": "6"
         }
       ]
     },
@@ -11255,14 +11787,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 74.425,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -11313,6 +11845,11 @@ window.T4C_DATA = {
           "boostId": 20259.0,
           "statId": 8.0,
           "expression": "307"
+        },
+        {
+          "boostId": 20260.0,
+          "statId": 2.0,
+          "expression": "25"
         }
       ]
     },
@@ -11324,14 +11861,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 22.289,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -11344,44 +11881,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20260.0,
+          "boostId": 20261.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20261.0,
+          "boostId": 20262.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20262.0,
+          "boostId": 20263.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20263.0,
+          "boostId": 20264.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20264.0,
+          "boostId": 20265.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20265.0,
+          "boostId": 20266.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20266.0,
+          "boostId": 20267.0,
           "statId": 3.0,
           "expression": "12"
         },
         {
-          "boostId": 20267.0,
+          "boostId": 20268.0,
           "statId": 8.0,
           "expression": "92"
+        },
+        {
+          "boostId": 20269.0,
+          "statId": 2.0,
+          "expression": "7"
         }
       ]
     },
@@ -11395,14 +11937,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 22.289,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -11415,44 +11957,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20268.0,
+          "boostId": 20270.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20269.0,
+          "boostId": 20271.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20270.0,
+          "boostId": 20272.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20271.0,
+          "boostId": 20273.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20272.0,
+          "boostId": 20274.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20273.0,
+          "boostId": 20275.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20274.0,
+          "boostId": 20276.0,
           "statId": 3.0,
           "expression": "12"
         },
         {
-          "boostId": 20275.0,
+          "boostId": 20277.0,
           "statId": 8.0,
           "expression": "92"
+        },
+        {
+          "boostId": 20278.0,
+          "statId": 2.0,
+          "expression": "7"
         }
       ]
     },
@@ -11464,14 +12011,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 21.463,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -11484,44 +12031,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20276.0,
+          "boostId": 20279.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20277.0,
+          "boostId": 20280.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20278.0,
+          "boostId": 20281.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20279.0,
+          "boostId": 20282.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20280.0,
+          "boostId": 20283.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20281.0,
+          "boostId": 20284.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20282.0,
+          "boostId": 20285.0,
           "statId": 3.0,
           "expression": "12"
         },
         {
-          "boostId": 20283.0,
+          "boostId": 20286.0,
           "statId": 8.0,
           "expression": "89"
+        },
+        {
+          "boostId": 20287.0,
+          "statId": 2.0,
+          "expression": "7"
         }
       ]
     },
@@ -11533,14 +12085,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 24.765,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -11553,44 +12105,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20284.0,
+          "boostId": 20288.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20285.0,
+          "boostId": 20289.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20286.0,
+          "boostId": 20290.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20287.0,
+          "boostId": 20291.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20288.0,
+          "boostId": 20292.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20289.0,
+          "boostId": 20293.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20290.0,
+          "boostId": 20294.0,
           "statId": 3.0,
           "expression": "14"
         },
         {
-          "boostId": 20291.0,
+          "boostId": 20295.0,
           "statId": 8.0,
           "expression": "102"
+        },
+        {
+          "boostId": 20296.0,
+          "statId": 2.0,
+          "expression": "8"
         }
       ]
     },
@@ -11601,14 +12158,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 16.51,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -11621,44 +12178,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20292.0,
+          "boostId": 20297.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20293.0,
+          "boostId": 20298.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20294.0,
+          "boostId": 20299.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20295.0,
+          "boostId": 20300.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20296.0,
+          "boostId": 20301.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20297.0,
+          "boostId": 20302.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20298.0,
+          "boostId": 20303.0,
           "statId": 3.0,
           "expression": "9"
         },
         {
-          "boostId": 20299.0,
+          "boostId": 20304.0,
           "statId": 8.0,
           "expression": "68"
+        },
+        {
+          "boostId": 20305.0,
+          "statId": 2.0,
+          "expression": "6"
         }
       ]
     },
@@ -12181,6 +12743,78 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "black_locust_composite_bow_4",
+      "name": "Black Locust Composite Bow +4",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLongBow",
+      "appearanceInventory": "64kInvLongBow2",
+      "price": 0.0,
+      "weight": 11.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 138.0,
+        "strength": 590.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": true,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 448.0,
+      "undroppable": false,
+      "dmgFormula": "1d155+300+3*arrow_dmg",
+      "atkDelay": "750",
+      "boosts": [
+        {
+          "boostId": 35004.0,
+          "statId": 10035.0,
+          "expression": "true_skill(35)*65/100"
+        }
+      ]
+    },
+    {
+      "key": "black_locust_composite_bow_5",
+      "name": "Black Locust Composite Bow +5",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLongBow",
+      "appearanceInventory": "64kInvLongBow2",
+      "price": 0.0,
+      "weight": 11.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 138.0,
+        "strength": 590.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": true,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 448.0,
+      "undroppable": false,
+      "dmgFormula": "1d178+345+3*arrow_dmg",
+      "atkDelay": "750",
+      "boosts": [
+        {
+          "boostId": 35005.0,
+          "statId": 10035.0,
+          "expression": "true_skill(35)*80/100"
+        }
+      ]
+    },
+    {
       "key": "bow_of_centaur_slaying",
       "name": "Bow of Centaur Slaying",
       "bodyPart": "WEAPON",
@@ -12526,37 +13160,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20474.0,
+          "boostId": 20486.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20475.0,
+          "boostId": 20487.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20476.0,
+          "boostId": 20488.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20477.0,
+          "boostId": 20489.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20478.0,
+          "boostId": 20490.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20479.0,
+          "boostId": 20491.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20480.0,
+          "boostId": 20492.0,
           "statId": 16.0,
           "expression": "61"
         }
@@ -12590,37 +13224,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20481.0,
+          "boostId": 20493.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20482.0,
+          "boostId": 20494.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20483.0,
+          "boostId": 20495.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20484.0,
+          "boostId": 20496.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20485.0,
+          "boostId": 20497.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20486.0,
+          "boostId": 20498.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20487.0,
+          "boostId": 20499.0,
           "statId": 16.0,
           "expression": "18"
         }
@@ -12656,37 +13290,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20488.0,
+          "boostId": 20500.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20489.0,
+          "boostId": 20501.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20490.0,
+          "boostId": 20502.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20491.0,
+          "boostId": 20503.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20492.0,
+          "boostId": 20504.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20493.0,
+          "boostId": 20505.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20494.0,
+          "boostId": 20506.0,
           "statId": 16.0,
           "expression": "18"
         }
@@ -12720,37 +13354,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20495.0,
+          "boostId": 20507.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20496.0,
+          "boostId": 20508.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20497.0,
+          "boostId": 20509.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20498.0,
+          "boostId": 20510.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20499.0,
+          "boostId": 20511.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20500.0,
+          "boostId": 20512.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20501.0,
+          "boostId": 20513.0,
           "statId": 16.0,
           "expression": "18"
         }
@@ -12784,37 +13418,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20502.0,
+          "boostId": 20514.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20503.0,
+          "boostId": 20515.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20504.0,
+          "boostId": 20516.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20505.0,
+          "boostId": 20517.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20506.0,
+          "boostId": 20518.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20507.0,
+          "boostId": 20519.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20508.0,
+          "boostId": 20520.0,
           "statId": 16.0,
           "expression": "21"
         }
@@ -12847,37 +13481,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20509.0,
+          "boostId": 20521.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20510.0,
+          "boostId": 20522.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20511.0,
+          "boostId": 20523.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20512.0,
+          "boostId": 20524.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20513.0,
+          "boostId": 20525.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20514.0,
+          "boostId": 20526.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20515.0,
+          "boostId": 20527.0,
           "statId": 16.0,
           "expression": "14"
         }
@@ -12891,14 +13525,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 171.75,
+      "armorClass": 114.5,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12911,44 +13545,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20648.0,
+          "boostId": 20666.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20649.0,
+          "boostId": 20667.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20650.0,
+          "boostId": 20668.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20651.0,
+          "boostId": 20669.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20652.0,
+          "boostId": 20670.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20653.0,
+          "boostId": 20671.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20654.0,
+          "boostId": 20672.0,
           "statId": 6.0,
           "expression": "61"
         },
         {
-          "boostId": 20655.0,
+          "boostId": 20673.0,
           "statId": 10035.0,
           "expression": "409"
+        },
+        {
+          "boostId": 20674.0,
+          "statId": 2.0,
+          "expression": "37"
         }
       ]
     },
@@ -12960,14 +13599,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 34.29,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12980,44 +13619,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20656.0,
+          "boostId": 20675.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20657.0,
+          "boostId": 20676.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20658.0,
+          "boostId": 20677.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20659.0,
+          "boostId": 20678.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20660.0,
+          "boostId": 20679.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20661.0,
+          "boostId": 20680.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20662.0,
+          "boostId": 20681.0,
           "statId": 6.0,
           "expression": "18"
         },
         {
-          "boostId": 20663.0,
+          "boostId": 20682.0,
           "statId": 10035.0,
           "expression": "123"
+        },
+        {
+          "boostId": 20683.0,
+          "statId": 2.0,
+          "expression": "11"
         }
       ]
     },
@@ -13031,14 +13675,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 34.29,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13051,44 +13695,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20664.0,
+          "boostId": 20684.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20665.0,
+          "boostId": 20685.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20666.0,
+          "boostId": 20686.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20667.0,
+          "boostId": 20687.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20668.0,
+          "boostId": 20688.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20669.0,
+          "boostId": 20689.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20670.0,
+          "boostId": 20690.0,
           "statId": 6.0,
           "expression": "18"
         },
         {
-          "boostId": 20671.0,
+          "boostId": 20691.0,
           "statId": 10035.0,
           "expression": "123"
+        },
+        {
+          "boostId": 20692.0,
+          "statId": 2.0,
+          "expression": "11"
         }
       ]
     },
@@ -13100,14 +13749,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 49.53,
+      "armorClass": 33.02,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13120,44 +13769,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20672.0,
+          "boostId": 20693.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20673.0,
+          "boostId": 20694.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20674.0,
+          "boostId": 20695.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20675.0,
+          "boostId": 20696.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20676.0,
+          "boostId": 20697.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20677.0,
+          "boostId": 20698.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20678.0,
+          "boostId": 20699.0,
           "statId": 6.0,
           "expression": "18"
         },
         {
-          "boostId": 20679.0,
+          "boostId": 20700.0,
           "statId": 10035.0,
           "expression": "118"
+        },
+        {
+          "boostId": 20701.0,
+          "statId": 2.0,
+          "expression": "11"
         }
       ]
     },
@@ -13169,14 +13823,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 57.15,
+      "armorClass": 38.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13189,44 +13843,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20680.0,
+          "boostId": 20702.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20681.0,
+          "boostId": 20703.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20682.0,
+          "boostId": 20704.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20683.0,
+          "boostId": 20705.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20684.0,
+          "boostId": 20706.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20685.0,
+          "boostId": 20707.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20686.0,
+          "boostId": 20708.0,
           "statId": 6.0,
           "expression": "21"
         },
         {
-          "boostId": 20687.0,
+          "boostId": 20709.0,
           "statId": 10035.0,
           "expression": "136"
+        },
+        {
+          "boostId": 20710.0,
+          "statId": 2.0,
+          "expression": "12"
         }
       ]
     },
@@ -13237,14 +13896,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 38.1,
+      "armorClass": 25.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 500.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13257,44 +13916,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20688.0,
+          "boostId": 20711.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20689.0,
+          "boostId": 20712.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20690.0,
+          "boostId": 20713.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20691.0,
+          "boostId": 20714.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20692.0,
+          "boostId": 20715.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20693.0,
+          "boostId": 20716.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20694.0,
+          "boostId": 20717.0,
           "statId": 6.0,
           "expression": "14"
         },
         {
-          "boostId": 20695.0,
+          "boostId": 20718.0,
           "statId": 10035.0,
           "expression": "91"
+        },
+        {
+          "boostId": 20719.0,
+          "statId": 2.0,
+          "expression": "8"
         }
       ]
     },
@@ -13326,37 +13990,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20390.0,
+          "boostId": 20402.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20391.0,
+          "boostId": 20403.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20392.0,
+          "boostId": 20404.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20393.0,
+          "boostId": 20405.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20394.0,
+          "boostId": 20406.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20395.0,
+          "boostId": 20407.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20396.0,
+          "boostId": 20408.0,
           "statId": 24.0,
           "expression": "61"
         }
@@ -13390,37 +14054,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20397.0,
+          "boostId": 20409.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20398.0,
+          "boostId": 20410.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20399.0,
+          "boostId": 20411.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20400.0,
+          "boostId": 20412.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20401.0,
+          "boostId": 20413.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20402.0,
+          "boostId": 20414.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20403.0,
+          "boostId": 20415.0,
           "statId": 24.0,
           "expression": "18"
         }
@@ -13456,37 +14120,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20404.0,
+          "boostId": 20416.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20405.0,
+          "boostId": 20417.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20406.0,
+          "boostId": 20418.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20407.0,
+          "boostId": 20419.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20408.0,
+          "boostId": 20420.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20409.0,
+          "boostId": 20421.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20410.0,
+          "boostId": 20422.0,
           "statId": 24.0,
           "expression": "18"
         }
@@ -13520,37 +14184,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20411.0,
+          "boostId": 20423.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20412.0,
+          "boostId": 20424.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20413.0,
+          "boostId": 20425.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20414.0,
+          "boostId": 20426.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20415.0,
+          "boostId": 20427.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20416.0,
+          "boostId": 20428.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20417.0,
+          "boostId": 20429.0,
           "statId": 24.0,
           "expression": "18"
         }
@@ -13584,37 +14248,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20418.0,
+          "boostId": 20430.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20419.0,
+          "boostId": 20431.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20420.0,
+          "boostId": 20432.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20421.0,
+          "boostId": 20433.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20422.0,
+          "boostId": 20434.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20423.0,
+          "boostId": 20435.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20424.0,
+          "boostId": 20436.0,
           "statId": 24.0,
           "expression": "21"
         }
@@ -13647,37 +14311,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20425.0,
+          "boostId": 20437.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20426.0,
+          "boostId": 20438.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20427.0,
+          "boostId": 20439.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20428.0,
+          "boostId": 20440.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20429.0,
+          "boostId": 20441.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20430.0,
+          "boostId": 20442.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20431.0,
+          "boostId": 20443.0,
           "statId": 24.0,
           "expression": "14"
         }
@@ -13711,44 +14375,39 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20516.0,
+          "boostId": 20528.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20517.0,
+          "boostId": 20529.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20518.0,
+          "boostId": 20530.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20519.0,
+          "boostId": 20531.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20520.0,
+          "boostId": 20532.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20521.0,
+          "boostId": 20533.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20522.0,
+          "boostId": 20534.0,
           "statId": 19.0,
           "expression": "61"
-        },
-        {
-          "boostId": 20696.0,
-          "statId": 4.0,
-          "expression": "123"
         }
       ]
     },
@@ -13780,44 +14439,39 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20523.0,
+          "boostId": 20535.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20524.0,
+          "boostId": 20536.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20525.0,
+          "boostId": 20537.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20526.0,
+          "boostId": 20538.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20527.0,
+          "boostId": 20539.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20528.0,
+          "boostId": 20540.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20529.0,
+          "boostId": 20541.0,
           "statId": 19.0,
           "expression": "18"
-        },
-        {
-          "boostId": 20698.0,
-          "statId": 4.0,
-          "expression": "37"
         }
       ]
     },
@@ -13851,44 +14505,39 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20530.0,
+          "boostId": 20542.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20531.0,
+          "boostId": 20543.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20532.0,
+          "boostId": 20544.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20533.0,
+          "boostId": 20545.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20534.0,
+          "boostId": 20546.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20535.0,
+          "boostId": 20547.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20536.0,
+          "boostId": 20548.0,
           "statId": 19.0,
           "expression": "18"
-        },
-        {
-          "boostId": 20699.0,
-          "statId": 4.0,
-          "expression": "37"
         }
       ]
     },
@@ -13920,44 +14569,39 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20537.0,
+          "boostId": 20549.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20538.0,
+          "boostId": 20550.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20539.0,
+          "boostId": 20551.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20540.0,
+          "boostId": 20552.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20541.0,
+          "boostId": 20553.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20542.0,
+          "boostId": 20554.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20543.0,
+          "boostId": 20555.0,
           "statId": 19.0,
           "expression": "18"
-        },
-        {
-          "boostId": 20700.0,
-          "statId": 4.0,
-          "expression": "35"
         }
       ]
     },
@@ -13989,44 +14633,39 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20544.0,
+          "boostId": 20556.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20545.0,
+          "boostId": 20557.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20546.0,
+          "boostId": 20558.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20547.0,
+          "boostId": 20559.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20548.0,
+          "boostId": 20560.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20549.0,
+          "boostId": 20561.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20550.0,
+          "boostId": 20562.0,
           "statId": 19.0,
           "expression": "21"
-        },
-        {
-          "boostId": 20697.0,
-          "statId": 4.0,
-          "expression": "41"
         }
       ]
     },
@@ -14057,44 +14696,39 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20551.0,
+          "boostId": 20563.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20552.0,
+          "boostId": 20564.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20553.0,
+          "boostId": 20565.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20554.0,
+          "boostId": 20566.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20555.0,
+          "boostId": 20567.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20556.0,
+          "boostId": 20568.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20557.0,
+          "boostId": 20569.0,
           "statId": 19.0,
           "expression": "14"
-        },
-        {
-          "boostId": 20701.0,
-          "statId": 4.0,
-          "expression": "27"
         }
       ]
     },
@@ -14126,37 +14760,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20348.0,
+          "boostId": 20360.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20349.0,
+          "boostId": 20361.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20350.0,
+          "boostId": 20362.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20351.0,
+          "boostId": 20363.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20352.0,
+          "boostId": 20364.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20353.0,
+          "boostId": 20365.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20354.0,
+          "boostId": 20366.0,
           "statId": 17.0,
           "expression": "61"
         }
@@ -14190,37 +14824,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20355.0,
+          "boostId": 20367.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20356.0,
+          "boostId": 20368.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20357.0,
+          "boostId": 20369.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20358.0,
+          "boostId": 20370.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20359.0,
+          "boostId": 20371.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20360.0,
+          "boostId": 20372.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20361.0,
+          "boostId": 20373.0,
           "statId": 17.0,
           "expression": "18"
         }
@@ -14256,37 +14890,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20362.0,
+          "boostId": 20374.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20363.0,
+          "boostId": 20375.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20364.0,
+          "boostId": 20376.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20365.0,
+          "boostId": 20377.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20366.0,
+          "boostId": 20378.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20367.0,
+          "boostId": 20379.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20368.0,
+          "boostId": 20380.0,
           "statId": 17.0,
           "expression": "18"
         }
@@ -14320,37 +14954,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20369.0,
+          "boostId": 20381.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20370.0,
+          "boostId": 20382.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20371.0,
+          "boostId": 20383.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20372.0,
+          "boostId": 20384.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20373.0,
+          "boostId": 20385.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20374.0,
+          "boostId": 20386.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20375.0,
+          "boostId": 20387.0,
           "statId": 17.0,
           "expression": "18"
         }
@@ -14384,37 +15018,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20376.0,
+          "boostId": 20388.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20377.0,
+          "boostId": 20389.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20378.0,
+          "boostId": 20390.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20379.0,
+          "boostId": 20391.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20380.0,
+          "boostId": 20392.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20381.0,
+          "boostId": 20393.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20382.0,
+          "boostId": 20394.0,
           "statId": 17.0,
           "expression": "21"
         }
@@ -14447,37 +15081,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20383.0,
+          "boostId": 20395.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20384.0,
+          "boostId": 20396.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20385.0,
+          "boostId": 20397.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20386.0,
+          "boostId": 20398.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20387.0,
+          "boostId": 20399.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20388.0,
+          "boostId": 20400.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20389.0,
+          "boostId": 20401.0,
           "statId": 17.0,
           "expression": "14"
         }
@@ -14511,37 +15145,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20558.0,
+          "boostId": 20570.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20559.0,
+          "boostId": 20571.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20560.0,
+          "boostId": 20572.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20561.0,
+          "boostId": 20573.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20562.0,
+          "boostId": 20574.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20563.0,
+          "boostId": 20575.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20564.0,
+          "boostId": 20576.0,
           "statId": 23.0,
           "expression": "61"
         }
@@ -14575,37 +15209,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20565.0,
+          "boostId": 20577.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20566.0,
+          "boostId": 20578.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20567.0,
+          "boostId": 20579.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20568.0,
+          "boostId": 20580.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20569.0,
+          "boostId": 20581.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20570.0,
+          "boostId": 20582.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20571.0,
+          "boostId": 20583.0,
           "statId": 23.0,
           "expression": "18"
         }
@@ -14641,37 +15275,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20572.0,
+          "boostId": 20584.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20573.0,
+          "boostId": 20585.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20574.0,
+          "boostId": 20586.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20575.0,
+          "boostId": 20587.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20576.0,
+          "boostId": 20588.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20577.0,
+          "boostId": 20589.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20578.0,
+          "boostId": 20590.0,
           "statId": 23.0,
           "expression": "18"
         }
@@ -14705,37 +15339,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20579.0,
+          "boostId": 20591.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20580.0,
+          "boostId": 20592.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20581.0,
+          "boostId": 20593.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20582.0,
+          "boostId": 20594.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20583.0,
+          "boostId": 20595.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20584.0,
+          "boostId": 20596.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20585.0,
+          "boostId": 20597.0,
           "statId": 23.0,
           "expression": "18"
         }
@@ -14769,37 +15403,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20586.0,
+          "boostId": 20598.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20587.0,
+          "boostId": 20599.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20588.0,
+          "boostId": 20600.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20589.0,
+          "boostId": 20601.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20590.0,
+          "boostId": 20602.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20591.0,
+          "boostId": 20603.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20592.0,
+          "boostId": 20604.0,
           "statId": 23.0,
           "expression": "21"
         }
@@ -14832,37 +15466,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20593.0,
+          "boostId": 20605.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20594.0,
+          "boostId": 20606.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20595.0,
+          "boostId": 20607.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20596.0,
+          "boostId": 20608.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20597.0,
+          "boostId": 20609.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20598.0,
+          "boostId": 20610.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20599.0,
+          "boostId": 20611.0,
           "statId": 23.0,
           "expression": "14"
         }
@@ -14876,14 +15510,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 171.75,
+      "armorClass": 114.5,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14896,44 +15530,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20600.0,
+          "boostId": 20612.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20601.0,
+          "boostId": 20613.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20602.0,
+          "boostId": 20614.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20603.0,
+          "boostId": 20615.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20604.0,
+          "boostId": 20616.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20605.0,
+          "boostId": 20617.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20606.0,
+          "boostId": 20618.0,
           "statId": 3.0,
           "expression": "61"
         },
         {
-          "boostId": 20607.0,
+          "boostId": 20619.0,
           "statId": 8.0,
           "expression": "409"
+        },
+        {
+          "boostId": 20620.0,
+          "statId": 2.0,
+          "expression": "37"
         }
       ]
     },
@@ -14945,14 +15584,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 34.29,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14965,44 +15604,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20608.0,
+          "boostId": 20621.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20609.0,
+          "boostId": 20622.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20610.0,
+          "boostId": 20623.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20611.0,
+          "boostId": 20624.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20612.0,
+          "boostId": 20625.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20613.0,
+          "boostId": 20626.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20614.0,
+          "boostId": 20627.0,
           "statId": 3.0,
           "expression": "18"
         },
         {
-          "boostId": 20615.0,
+          "boostId": 20628.0,
           "statId": 8.0,
           "expression": "123"
+        },
+        {
+          "boostId": 20629.0,
+          "statId": 2.0,
+          "expression": "11"
         }
       ]
     },
@@ -15016,14 +15660,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 34.29,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15036,44 +15680,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20616.0,
+          "boostId": 20630.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20617.0,
+          "boostId": 20631.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20618.0,
+          "boostId": 20632.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20619.0,
+          "boostId": 20633.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20620.0,
+          "boostId": 20634.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20621.0,
+          "boostId": 20635.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20622.0,
+          "boostId": 20636.0,
           "statId": 3.0,
           "expression": "18"
         },
         {
-          "boostId": 20623.0,
+          "boostId": 20637.0,
           "statId": 8.0,
           "expression": "123"
+        },
+        {
+          "boostId": 20638.0,
+          "statId": 2.0,
+          "expression": "11"
         }
       ]
     },
@@ -15085,14 +15734,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 49.53,
+      "armorClass": 33.02,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15105,44 +15754,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20624.0,
+          "boostId": 20639.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20625.0,
+          "boostId": 20640.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20626.0,
+          "boostId": 20641.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20627.0,
+          "boostId": 20642.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20628.0,
+          "boostId": 20643.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20629.0,
+          "boostId": 20644.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20630.0,
+          "boostId": 20645.0,
           "statId": 3.0,
           "expression": "18"
         },
         {
-          "boostId": 20631.0,
+          "boostId": 20646.0,
           "statId": 8.0,
           "expression": "118"
+        },
+        {
+          "boostId": 20647.0,
+          "statId": 2.0,
+          "expression": "11"
         }
       ]
     },
@@ -15154,14 +15808,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 57.15,
+      "armorClass": 38.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15174,44 +15828,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20632.0,
+          "boostId": 20648.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20633.0,
+          "boostId": 20649.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20634.0,
+          "boostId": 20650.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20635.0,
+          "boostId": 20651.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20636.0,
+          "boostId": 20652.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20637.0,
+          "boostId": 20653.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20638.0,
+          "boostId": 20654.0,
           "statId": 3.0,
           "expression": "21"
         },
         {
-          "boostId": 20639.0,
+          "boostId": 20655.0,
           "statId": 8.0,
           "expression": "136"
+        },
+        {
+          "boostId": 20656.0,
+          "statId": 2.0,
+          "expression": "12"
         }
       ]
     },
@@ -15222,14 +15881,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 38.1,
+      "armorClass": 25.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 500.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15242,44 +15901,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20640.0,
+          "boostId": 20657.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20641.0,
+          "boostId": 20658.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20642.0,
+          "boostId": 20659.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20643.0,
+          "boostId": 20660.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20644.0,
+          "boostId": 20661.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20645.0,
+          "boostId": 20662.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20646.0,
+          "boostId": 20663.0,
           "statId": 3.0,
           "expression": "14"
         },
         {
-          "boostId": 20647.0,
+          "boostId": 20664.0,
           "statId": 8.0,
           "expression": "91"
+        },
+        {
+          "boostId": 20665.0,
+          "statId": 2.0,
+          "expression": "8"
         }
       ]
     },
@@ -15311,37 +15975,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20432.0,
+          "boostId": 20444.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20433.0,
+          "boostId": 20445.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20434.0,
+          "boostId": 20446.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20435.0,
+          "boostId": 20447.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20436.0,
+          "boostId": 20448.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20437.0,
+          "boostId": 20449.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20438.0,
+          "boostId": 20450.0,
           "statId": 18.0,
           "expression": "61"
         }
@@ -15375,37 +16039,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20439.0,
+          "boostId": 20451.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20440.0,
+          "boostId": 20452.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20441.0,
+          "boostId": 20453.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20442.0,
+          "boostId": 20454.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20443.0,
+          "boostId": 20455.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20444.0,
+          "boostId": 20456.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20445.0,
+          "boostId": 20457.0,
           "statId": 18.0,
           "expression": "18"
         }
@@ -15441,37 +16105,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20446.0,
+          "boostId": 20458.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20447.0,
+          "boostId": 20459.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20448.0,
+          "boostId": 20460.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20449.0,
+          "boostId": 20461.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20450.0,
+          "boostId": 20462.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20451.0,
+          "boostId": 20463.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20452.0,
+          "boostId": 20464.0,
           "statId": 18.0,
           "expression": "18"
         }
@@ -15505,37 +16169,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20453.0,
+          "boostId": 20465.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20454.0,
+          "boostId": 20466.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20455.0,
+          "boostId": 20467.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20456.0,
+          "boostId": 20468.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20457.0,
+          "boostId": 20469.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20458.0,
+          "boostId": 20470.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20459.0,
+          "boostId": 20471.0,
           "statId": 18.0,
           "expression": "18"
         }
@@ -15569,37 +16233,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20460.0,
+          "boostId": 20472.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20461.0,
+          "boostId": 20473.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20462.0,
+          "boostId": 20474.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20463.0,
+          "boostId": 20475.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20464.0,
+          "boostId": 20476.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20465.0,
+          "boostId": 20477.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20466.0,
+          "boostId": 20478.0,
           "statId": 18.0,
           "expression": "21"
         }
@@ -15632,37 +16296,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20467.0,
+          "boostId": 20479.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20468.0,
+          "boostId": 20480.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20469.0,
+          "boostId": 20481.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20470.0,
+          "boostId": 20482.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20471.0,
+          "boostId": 20483.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20472.0,
+          "boostId": 20484.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20473.0,
+          "boostId": 20485.0,
           "statId": 18.0,
           "expression": "14"
         }
@@ -15859,6 +16523,78 @@ window.T4C_DATA = {
           "boostId": 32006.0,
           "statId": 8.0,
           "expression": "30"
+        }
+      ]
+    },
+    {
+      "key": "mithril_two_handed_sword_4",
+      "name": "Mithril Two-Handed Sword +4",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupNormalSword",
+      "appearanceInventory": "64kInvGlinting Sword",
+      "price": 0.0,
+      "weight": 12.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 329.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 1.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": false,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 202.0,
+      "undroppable": false,
+      "dmgFormula": "1d145+270",
+      "atkDelay": "if(1125-self.agi/250*1125/2<600?600:1125-self.agi/250*1125/2)+1d563",
+      "boosts": [
+        {
+          "boostId": 35002.0,
+          "statId": 8.0,
+          "expression": "self.true_attack*65/100"
+        }
+      ]
+    },
+    {
+      "key": "mithril_two_handed_sword_5",
+      "name": "Mithril Two-Handed Sword +5",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupNormalSword",
+      "appearanceInventory": "64kInvGlinting Sword",
+      "price": 0.0,
+      "weight": 12.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 329.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 1.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": false,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 202.0,
+      "undroppable": false,
+      "dmgFormula": "1d165+310",
+      "atkDelay": "if(1125-self.agi/250*1125/2<600?600:1125-self.agi/250*1125/2)+1d563",
+      "boosts": [
+        {
+          "boostId": 35003.0,
+          "statId": 8.0,
+          "expression": "self.true_attack*80/100"
         }
       ]
     },

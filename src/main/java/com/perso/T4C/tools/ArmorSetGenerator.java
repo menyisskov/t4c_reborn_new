@@ -19,6 +19,13 @@ import java.util.Map;
  * across the 6 pieces proportional to that piece's share of the set's total Armor Class (the same
  * weighting Ancient Platemail's own AC distribution implies), using largest-remainder rounding so
  * each stat's declared total is hit exactly once the full set is worn.
+ *
+ * <p>Warrior/archer flavors are genuinely physical-class gear (T4C-0018): lower AC than the
+ * mage/elemental flavors of the same tier ({@code classAcMultiplier} vs {@code acMultiplier}), no
+ * intelligence/wisdom requirement (mage armor keeps that gate, class armor drops it entirely
+ * rather than stacking str/agi on top of it), and a flat endurance boost the elemental flavors
+ * don't get, on top of the strength/agility + attack/archery skill split every class-flavored
+ * piece already carried.
  */
 public final class ArmorSetGenerator {
   private ArmorSetGenerator() {}
@@ -69,18 +76,25 @@ public final class ArmorSetGenerator {
       String namePrefix,
       String keyPrefix,
       int acMultiplier,
+      double classAcMultiplier,
       long minEnd,
       long minInt,
       long minWis,
       int flatResistTotal,
       int powerTotal,
       int statTotal,
-      int comboTotal) {}
+      int comboTotal,
+      int classEnduranceTotal) {}
 
+  // classAcMultiplier and classEnduranceTotal are warrior/archer-only: their armor carries
+  // noticeably less AC than the same tier's mage/elemental flavors (~65% of the mage AC), traded
+  // for a flat endurance boost mage armor doesn't get, on top of the strength/agility +
+  // attack/archery skill split every class-flavored piece already carried. Mage flavors are
+  // unaffected - they keep using acMultiplier and never read classAcMultiplier/classEnduranceTotal.
   private static final Tier TIER1 =
-      new Tier("Ancient Celestial", "ancient_celestial", 2, 400, 150, 150, 70, 100, 100, 750);
+      new Tier("Ancient Celestial", "ancient_celestial", 2, 1.3, 400, 150, 150, 70, 100, 100, 750, 60);
   private static final Tier TIER2 =
-      new Tier("Empyrean", "empyrean", 3, 550, 200, 200, 100, 150, 150, 1000);
+      new Tier("Empyrean", "empyrean", 3, 2.0, 550, 200, 200, 100, 150, 150, 1000, 90);
 
   private static final List<String> ELEMENTAL_FLAVORS =
       List.of("fire", "dark", "water", "air", "earth", "light");
@@ -111,6 +125,7 @@ public final class ArmorSetGenerator {
     int[] powerSplit = splitByWeight(tier.powerTotal(), totalAc);
     int[] statSplit = splitByWeight(tier.statTotal(), totalAc);
     int[] comboSplit = splitByWeight(tier.comboTotal(), totalAc);
+    int[] classEnduranceSplit = splitByWeight(tier.classEnduranceTotal(), totalAc);
 
     boolean isElemental = classStat == null;
     Element themedElement =
@@ -132,11 +147,14 @@ public final class ArmorSetGenerator {
       json.appearanceInventory = piece.appearanceInventory();
       json.price = 0L;
       json.weight = piece.weight();
-      json.armorClass = round(piece.platemailAc() * tier.acMultiplier());
+      json.armorClass =
+          round(piece.platemailAc() * (isElemental ? tier.acMultiplier() : tier.classAcMultiplier()));
       json.dodgeLost = 0L;
       json.requirements.endurance = tier.minEnd();
-      json.requirements.intelligence = tier.minInt();
-      json.requirements.wisdom = tier.minWis();
+      // Warrior/archer gear is physical-class armor, not a mage robe with a strength sticker on
+      // it - it drops the int/wis gate entirely rather than stacking it on top of str/agi.
+      json.requirements.intelligence = isElemental ? tier.minInt() : 0L;
+      json.requirements.wisdom = isElemental ? tier.minWis() : 0L;
       json.appearanceId = piece.appearanceId();
       json.undroppable = false;
 
@@ -168,11 +186,15 @@ public final class ArmorSetGenerator {
       } else {
         int stat = statSplit[i];
         int combo = comboSplit[i];
+        int classEndurance = classEnduranceSplit[i];
         if (stat > 0) {
           boosts.add(boost(nextBoostId++, classStat.equals("strength") ? 3 : 6, stat));
         }
         if (combo > 0) {
           boosts.add(boost(nextBoostId++, classStat.equals("strength") ? 8 : 10035, combo));
+        }
+        if (classEndurance > 0) {
+          boosts.add(boost(nextBoostId++, 2, classEndurance));
         }
       }
       json.boosts = boosts;

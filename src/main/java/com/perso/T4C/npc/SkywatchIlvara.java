@@ -59,7 +59,7 @@ public final class SkywatchIlvara extends ScriptedNpc {
                   "${npc.topic.skywatchilvara.3}",
                   List.of(
                       new NpcSpec.Action(
-                          ActionType.OPEN_SPELL_LEARNING, List.of("sentinel"))))),
+                          ActionType.OPEN_SPELL_LEARNING, List.of("leyward_bastion"))))),
           "SkywatchIlvaraNPC",
           new NpcSpec.CombatProfile(100, 1000000, 65, 67, 63, 1000000, 250, 65535, "1d23+16"));
 

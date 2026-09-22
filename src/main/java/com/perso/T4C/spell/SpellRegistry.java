@@ -34,6 +34,16 @@ public final class SpellRegistry {
         switch (requested) {
           case "spell.mob_fast_regen", "spell.mob_max_regen" -> "spell.mob_ai_regeneration_spell";
           case "spell.npc_cantrip_serious_heal" -> "spell.heal_serious";
+          // T4C-0018 spell renames (same spellId, new display name/key) - aliased so characters
+          // who already learned these under the old key keep them: their persisted
+          // player.spells entries still hold the old "${spell.<old>}" string, and without this
+          // alias findByName would return null for that string now that the old key/definition
+          // is gone, silently unlearning the spell (spellbook omits it, casting rejects it).
+          case "spell.sentinel" -> "spell.leyward_bastion";
+          case "spell.divine_veil" -> "spell.veilstone_aegis";
+          case "spell.clemancy" -> "spell.wellspring_mercy";
+          case "spell.undead_annihilation" -> "spell.sunscour";
+          case "spell.omega_planetoids" -> "spell.gravebreaker";
           default -> null;
         };
     if (canonicalAlias != null) {

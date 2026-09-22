@@ -3,7 +3,7 @@
     "id": "ArchmageThalindra",
     "origin": "new",
     "displayName": "Archmage Thalindra",
-    "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the Ancient tier here and nowhere else on this coast.",
+    "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the Elder tier here and nowhere else on this coast.",
     "topics": [
       {
         "keywords": [
@@ -12,9 +12,9 @@
           "teach",
           "spell"
         ],
-        "response": "Sentinel, Divine Veil, Clemancy, Undead Annihilation, Omega Planetoids - the Ancient tier. Study hard, and the ley lines beneath this isle will lend you their strength.",
+        "response": "Leyward Bastion, Veilstone Aegis, Wellspring Mercy, Sunscour, Gravebreaker - the Elder tier. Study hard, and the ley lines beneath this isle will lend you their strength.",
         "actions": [
-          "OPEN_SPELL_LEARNING:sentinel,divine_veil,clemancy,undead_annihilation,omega_planetoids"
+          "OPEN_SPELL_LEARNING:leyward_bastion,veilstone_aegis,wellspring_mercy,sunscour,gravebreaker"
         ]
       },
       {
@@ -26,10 +26,19 @@
       },
       {
         "keywords": [
-          "ancient"
+          "elder"
         ],
-        "response": "The Ancient tier was never meant to be taught lightly - it demands a caster already tempered by two hundred levels of hard-won craft. Come back when you're ready.",
+        "response": "The Elder tier was never meant to be taught lightly - it demands a caster already tempered by two hundred levels of hard-won craft. Come back when you're ready.",
         "actions": []
+      },
+      {
+        "keywords": [
+          "apex"
+        ],
+        "response": "Beyond the Elder tier lies the Apex: Voidreave Lance, Stormcaller's Judgment, Sanctum Ward, Emberqueen's Wrath, and Cataclysm's Herald. Only a caster who has already mastered the Elder tier and tempered themselves against the world's very worst has any hope of surviving the toll they take.",
+        "actions": [
+          "OPEN_SPELL_LEARNING:voidreave_lance,stormcallers_judgment,sanctum_ward,emberqueens_wrath,cataclysms_herald"
+        ]
       }
     ],
     "combatProfile": {
@@ -627,11 +636,11 @@
       {
         "keywords": [
           "teach",
-          "sentinel"
+          "leyward"
         ],
-        "response": "I can teach you Sentinel, if you've the level and the mind for it - a ward that guards a whole party against the elements at once. Ask to TEACH.",
+        "response": "I can teach you Leyward Bastion, if you've the level and the mind for it - a ward that guards a whole party against the elements at once. Ask to TEACH.",
         "actions": [
-          "OPEN_SPELL_LEARNING:sentinel"
+          "OPEN_SPELL_LEARNING:leyward_bastion"
         ]
       }
     ],

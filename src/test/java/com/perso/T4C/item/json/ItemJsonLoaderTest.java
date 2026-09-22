@@ -41,13 +41,20 @@ class ItemJsonLoaderTest {
 
     ItemDefinition def = ItemRegistry.findByKey("empyrean_warrior_armor");
     assertNotNull(def, "Empyrean Warrior Armor should be registered from JSON");
-    assertEquals(171.75, def.getArmorClass(), 0.001);
+    // Warrior armor is physical-class gear: noticeably less AC than the same tier's mage/
+    // elemental flavor (114.5 here vs. 171.75 for empyrean_fire_armor's own BODY piece), and no
+    // intelligence/wisdom gate at all (T4C-0018) - see ArmorSetGenerator's classAcMultiplier.
+    assertEquals(114.5, def.getArmorClass(), 0.001);
     assertEquals(550L, def.getMinEnd());
     assertEquals(500L, def.getReqStr());
+    assertEquals(0L, def.getMinInt());
+    assertEquals(0L, def.getMinWis());
 
     boolean hasStrBoost = def.getBoosts().stream().anyMatch(b -> b.getStatId() == 3);
     boolean hasAttackBoost = def.getBoosts().stream().anyMatch(b -> b.getStatId() == 8);
+    boolean hasEnduranceBoost = def.getBoosts().stream().anyMatch(b -> b.getStatId() == 2);
     assertTrue(hasStrBoost, "Warrior armor should grant a strength boost");
     assertTrue(hasAttackBoost, "Warrior armor should grant an attack boost");
+    assertTrue(hasEnduranceBoost, "Warrior armor should grant an endurance boost in place of AC");
   }
 }

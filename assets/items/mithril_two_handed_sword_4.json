@@ -1,0 +1,32 @@
+{
+  "key": "mithril_two_handed_sword_4",
+  "name": "Mithril Two-Handed Sword +4",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupNormalSword",
+  "appearanceInventory": "64kInvGlinting Sword",
+  "price": 0,
+  "weight": 12,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 329,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 1.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": false,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 202,
+  "undroppable": false,
+  "dmgFormula": "1d145+270",
+  "atkDelay": "if(1125-self.agi/250*1125/2<600?600:1125-self.agi/250*1125/2)+1d563",
+  "boosts": [
+    { "boostId": 35002, "statId": 8, "expression": "self.true_attack*65/100" }
+  ]
+}
