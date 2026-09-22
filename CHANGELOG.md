@@ -15,6 +15,18 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-22 — Monster balance report generator (T4C-0015)
+
+### Added
+- `tools/MonsterBalanceReportGenerator.java`: dumps every registered monster (Java + JSON, 427
+  total) with full combat/resist stats to JSON, for auditing new-content bosses against the
+  existing monster/level curve. Used to cross-check every new/activated monster's HP, damage,
+  and `xpOnDeath` against real legacy monsters at comparable levels and against the live XP
+  curve's documented pacing target (~9 kills/level for trash, 3-4 for a boss, accounting for the
+  5x server XP rate). Findings (Mordrenn/Ignarok badly XP-overtuned from before the curve
+  replacement in T4C-0005; four Avalon monsters badly XP-undertuned) reported separately, not
+  yet corrected in this pass.
+
 ## 2026-09-22 — Deterministic NPC ordering in compendium exporter (T4C-0014)
 
 ### Fixed
