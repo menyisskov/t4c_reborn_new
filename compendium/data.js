@@ -7946,58 +7946,167 @@ window.T4C_DATA = {
   ],
   "npcs": [
     {
-      "id": "ElderOphira",
+      "id": "RurikCinderwatch",
       "origin": "new",
-      "displayName": "Elder Ophira",
-      "welcomeText": "Welcome, traveler. I am Elder Ophira of Avalon Sanctuary. You stand at the seam between two halves of one isle - ask, and I will tell you of our plight.",
+      "displayName": "Rurik Cinderwatch",
+      "welcomeText": "Careful past the ridge, friend. The Cinderreach Hills have been smoking worse than usual.",
       "topics": [
         {
           "keywords": [
-            "wilds",
-            "avalon wilds"
+            "quest",
+            "stalkers"
           ],
-          "response": "The Avalon Wilds still answer to the old pact. The fey there remain loyal, the groves unmarred - for now. That could change before the season turns.",
+          "response": "Ashfang Stalkers have been raiding the foothills in packs, and they're bolder every week. Cull enough of them and there's coin in it for you.",
           "actions": [
-            "GIVE_QUEST:avalon_wilds_vigil"
+            "GIVE_QUEST:emberfang_hills_bounty"
           ]
         },
         {
           "keywords": [
-            "veil",
-            "fading veil"
+            "ignarok",
+            "drake"
           ],
-          "response": "South of here spreads the Fading Veil - a blight eating outward from Ysolde's lair. Every season it claims more ground. We do not know how to stop it.",
+          "response": "There's a drake denned up in the hills, one the Stalkers answer to. Ignarok, the old maps call him. I wouldn't go looking for him without a good blade.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "teach",
+            "spell",
+            "train"
+          ],
+          "response": "I've traded a few fire workings off travelers over the years. Ask to TEACH if you've got the coin and the nerve.",
           "actions": [
-            "GIVE_QUEST:fading_veil_reckoning"
+            "OPEN_SPELL_LEARNING:cinderburst,emberheart_resolve"
           ]
         },
         {
           "keywords": [
-            "caradoc"
+            "cinderreach",
+            "hills"
           ],
-          "response": "Sir Caradoc was once the truest knight our isle ever raised. Ysolde bound his spirit to her service when he fell defending the old borders. What walks the Veil now wears his armor, not his honor.",
+          "response": "Cinderreach used to be good grazing land, south of Windhowl. Now half of it's scorched black and the other half is smoking.",
           "actions": []
         },
         {
           "keywords": [
-            "ysolde"
+            "bye"
           ],
-          "response": "Ysolde was no matriarch of ours. She came veiled, in peace, and left the corruption that now bears her name. She is the source of the blight, not merely its steward.",
+          "response": "Watch the wind - it carries the smoke, and worse. Safe travels.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "StorageChest",
+      "origin": "new",
+      "displayName": "Storage Chest",
+      "spriteBase": "@static:Vault",
+      "welcomeText": "",
+      "topics": [],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 500,
+        "endurance": 500,
+        "dexterity": 500,
+        "armorClass": 1000000,
+        "attackSkill": 1,
+        "dodge": 65535,
+        "damageFormula": "1d3"
+      }
+    },
+    {
+      "id": "SkywatchIlvara",
+      "origin": "activated",
+      "displayName": "Skywatch Ilvara",
+      "welcomeText": "You hear the wyrmlings before you see them. If you can hear the Drake itself, you're already too close.",
+      "topics": [
+        {
+          "keywords": [
+            "quest",
+            "wyrmlings"
+          ],
+          "response": "Kraanian Wyrmlings have nested in the aerie east of here, and something far older sleeps above them. Thin the nest and I'll pay you from my own purse.",
+          "actions": [
+            "GIVE_QUEST:aerie_wyrmling_cull"
+          ]
+        },
+        {
+          "keywords": [
+            "drake",
+            "aerie"
+          ],
+          "response": "A true Drake hasn't been seen on this island in a generation. I've spent that long proving the old maps right.",
           "actions": []
         },
         {
           "keywords": [
-            "warden"
+            "bye"
           ],
-          "response": "The Verdant Warden is the last of the old treant guardians still standing his ground against the blight. He answers to no one, not even us - but he has not fallen, and that alone gives us hope.",
+          "response": "Fly low, or don't fly at all. That's the only advice I have for you.",
           "actions": []
         },
         {
           "keywords": [
-            "help",
-            "quest"
+            "teach",
+            "sentinel"
           ],
-          "response": "I have work for capable hands - ask me of the Wilds if you'd stand vigil with our loyal fey, or of the Veil if you'd push back its corruption.",
+          "response": "I can teach you Sentinel, if you've the level and the mind for it - a ward that guards a whole party against the elements at once. Ask to TEACH.",
+          "actions": [
+            "OPEN_SPELL_LEARNING:sentinel"
+          ]
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "WayfarerBryndis",
+      "origin": "new",
+      "displayName": "Wayfarer Bryndis",
+      "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of Avalon before you leave - you'll thank me the first time you need to get back here in a hurry.",
+      "topics": [
+        {
+          "keywords": [
+            "travel",
+            "scroll"
+          ],
+          "response": "The Scroll of Avalon carries you straight to the Sanctuary temple, no matter how far you've wandered. Cheap insurance, if you ask me.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "gateway"
+          ],
+          "response": "The Avalon Gateway is the spell woven into that scroll. Ask Archmage Thalindra if you'd rather learn to cast it yourself.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "veil"
+          ],
+          "response": "I don't sell passage into the Veil. Nobody sane charters that road on purpose.",
           "actions": []
         }
       ],
@@ -8050,91 +8159,6 @@ window.T4C_DATA = {
             "bye"
           ],
           "response": "Watch the tall grass. They ambush from it.",
-          "actions": []
-        }
-      ],
-      "combatProfile": {
-        "level": 100,
-        "maxHp": 1000000,
-        "strength": 65,
-        "endurance": 67,
-        "dexterity": 63,
-        "armorClass": 1000000,
-        "attackSkill": 250,
-        "dodge": 65535,
-        "damageFormula": "1d23+16"
-      }
-    },
-    {
-      "id": "WardenCael",
-      "origin": "new",
-      "displayName": "Warden Cael",
-      "welcomeText": "Don't linger past dusk here. The barrows wake at dark, and something crowned still walks among them.",
-      "topics": [
-        {
-          "keywords": [
-            "quest",
-            "wights"
-          ],
-          "response": "Wights have been crawling out of the old barrows south of the marches. Put them back down and I'll pay you from the March Watch's own coffer.",
-          "actions": [
-            "GIVE_QUEST:hollow_march_wights"
-          ]
-        },
-        {
-          "keywords": [
-            "hollow king",
-            "crown"
-          ],
-          "response": "They call him the Hollow King. No one remembers which king he was in life. Whatever crowned him now isn't a kindness.",
-          "actions": []
-        },
-        {
-          "keywords": [
-            "bye"
-          ],
-          "response": "Keep your torch lit. It's the only mercy the barrows understand.",
-          "actions": []
-        }
-      ],
-      "combatProfile": {
-        "level": 100,
-        "maxHp": 1000000,
-        "strength": 65,
-        "endurance": 67,
-        "dexterity": 63,
-        "armorClass": 1000000,
-        "attackSkill": 250,
-        "dodge": 65535,
-        "damageFormula": "1d23+16"
-      }
-    },
-    {
-      "id": "WayfarerBryndis",
-      "origin": "new",
-      "displayName": "Wayfarer Bryndis",
-      "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of Avalon before you leave - you'll thank me the first time you need to get back here in a hurry.",
-      "topics": [
-        {
-          "keywords": [
-            "travel",
-            "scroll"
-          ],
-          "response": "The Scroll of Avalon carries you straight to the Sanctuary temple, no matter how far you've wandered. Cheap insurance, if you ask me.",
-          "actions": []
-        },
-        {
-          "keywords": [
-            "gateway"
-          ],
-          "response": "The Avalon Gateway is the spell woven into that scroll. Ask Archmage Thalindra if you'd rather learn to cast it yourself.",
-          "actions": []
-        },
-        {
-          "keywords": [
-            "veil"
-          ],
-          "response": "I don't sell passage into the Veil. Nobody sane charters that road on purpose.",
           "actions": []
         }
       ],
@@ -8214,6 +8238,50 @@ window.T4C_DATA = {
       }
     },
     {
+      "id": "KeeperTamsin",
+      "origin": "new",
+      "displayName": "Keeper Tamsin",
+      "welcomeText": "Careful where you step. Something's been dragging people under since the tide turned.",
+      "topics": [
+        {
+          "keywords": [
+            "quest",
+            "deep ones"
+          ],
+          "response": "Deep Ones have been dragging travelers under all along this stretch of the coast. Thin their numbers and I'll see you paid for it.",
+          "actions": [
+            "GIVE_QUEST:deep_ones_cave_purge"
+          ]
+        },
+        {
+          "keywords": [
+            "bigger",
+            "boss"
+          ],
+          "response": "There's a bigger one down there. The others answer to it. I wouldn't go looking for it without help.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "bye"
+          ],
+          "response": "Stay off the wet ground after dark. That's when they surface.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
       "id": "ArchmageThalindra",
       "origin": "new",
       "displayName": "Archmage Thalindra",
@@ -8259,55 +8327,10 @@ window.T4C_DATA = {
       }
     },
     {
-      "id": "GrandmasterVoss",
+      "id": "SpellMerchant",
       "origin": "new",
-      "displayName": "Grandmaster Voss",
-      "welcomeText": "Few make it this far and fewer still make it back. What do you need, champion?",
-      "topics": [
-        {
-          "keywords": [
-            "quest",
-            "wardens"
-          ],
-          "response": "The Bastion Wardens have held that ruin for longer than anyone living remembers. Break enough of them and the old wards will finally weaken.",
-          "actions": [
-            "GIVE_QUEST:bastion_warden_siege"
-          ]
-        },
-        {
-          "keywords": [
-            "greater drake",
-            "bastion"
-          ],
-          "response": "The Greater Drake sleeps at the bastion's heart. Every warden that falls is one less reason for it to stay asleep. Think on that before you wake it.",
-          "actions": []
-        },
-        {
-          "keywords": [
-            "bye"
-          ],
-          "response": "May whatever you worship still be listening where you're going.",
-          "actions": []
-        }
-      ],
-      "combatProfile": {
-        "level": 100,
-        "maxHp": 1000000,
-        "strength": 65,
-        "endurance": 67,
-        "dexterity": 63,
-        "armorClass": 1000000,
-        "attackSkill": 250,
-        "dodge": 65535,
-        "damageFormula": "1d23+16"
-      }
-    },
-    {
-      "id": "StorageChest",
-      "origin": "new",
-      "displayName": "Storage Chest",
-      "spriteBase": "@static:Vault",
-      "welcomeText": "",
+      "displayName": "Ilarion the Spell Merchant",
+      "welcomeText": "Welcome. I have every spell known to this world for sale. Say \"spells\" to browse my wares.",
       "topics": [],
       "combatProfile": {
         "level": 100,
@@ -8319,47 +8342,6 @@ window.T4C_DATA = {
         "attackSkill": 1,
         "dodge": 65535,
         "damageFormula": "1d3"
-      }
-    },
-    {
-      "id": "QuartermasterElenna",
-      "origin": "new",
-      "displayName": "Quartermaster Elenna",
-      "welcomeText": "Quartermaster Elenna, at your service. If you mean to walk the Wilds or the Veil, you'll want better steel than you're carrying.",
-      "topics": [
-        {
-          "keywords": [
-            "gear",
-            "garrison"
-          ],
-          "response": "Everything on this rack was forged or bought for Sanctuary's own garrison. It'll serve you just as well out there.",
-          "actions": []
-        },
-        {
-          "keywords": [
-            "sanctuary"
-          ],
-          "response": "We hold this seam between the Wilds and the Veil. Lose the Sanctuary and both halves of the isle lose their only safe ground.",
-          "actions": []
-        },
-        {
-          "keywords": [
-            "wilds"
-          ],
-          "response": "The Wilds are gentler than the Veil, but don't let that fool you - a Moonlit Stalker will still take your arm off.",
-          "actions": []
-        }
-      ],
-      "combatProfile": {
-        "level": 100,
-        "maxHp": 1000000,
-        "strength": 65,
-        "endurance": 67,
-        "dexterity": 63,
-        "armorClass": 1000000,
-        "attackSkill": 250,
-        "dodge": 65535,
-        "damageFormula": "1d23+16"
       }
     },
     {
@@ -8515,31 +8497,119 @@ window.T4C_DATA = {
       }
     },
     {
-      "id": "SisterIlyndra",
+      "id": "GrandmasterVoss",
       "origin": "new",
-      "displayName": "Sister Ilyndra",
-      "welcomeText": "Peace to you, traveler. This temple stands open to anyone the Veil has bruised, whichever side of the seam you call home.",
+      "displayName": "Grandmaster Voss",
+      "welcomeText": "Few make it this far and fewer still make it back. What do you need, champion?",
       "topics": [
         {
           "keywords": [
-            "sanctuary",
-            "refuge"
+            "quest",
+            "wardens"
           ],
-          "response": "This temple sits at the seam on purpose. Neither the Wilds nor the Veil can claim consecrated ground.",
+          "response": "The Bastion Wardens have held that ruin for longer than anyone living remembers. Break enough of them and the old wards will finally weaken.",
+          "actions": [
+            "GIVE_QUEST:bastion_warden_siege"
+          ]
+        },
+        {
+          "keywords": [
+            "greater drake",
+            "bastion"
+          ],
+          "response": "The Greater Drake sleeps at the bastion's heart. Every warden that falls is one less reason for it to stay asleep. Think on that before you wake it.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "bye"
+          ],
+          "response": "May whatever you worship still be listening where you're going.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "QuartermasterElenna",
+      "origin": "new",
+      "displayName": "Quartermaster Elenna",
+      "welcomeText": "Quartermaster Elenna, at your service. If you mean to walk the Wilds or the Veil, you'll want better steel than you're carrying.",
+      "topics": [
+        {
+          "keywords": [
+            "gear",
+            "garrison"
+          ],
+          "response": "Everything on this rack was forged or bought for Sanctuary's own garrison. It'll serve you just as well out there.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "sanctuary"
+          ],
+          "response": "We hold this seam between the Wilds and the Veil. Lose the Sanctuary and both halves of the isle lose their only safe ground.",
           "actions": []
         },
         {
           "keywords": [
             "wilds"
           ],
-          "response": "The Wilds still sing, if you know how to listen. I pray it stays that way.",
+          "response": "The Wilds are gentler than the Veil, but don't let that fool you - a Moonlit Stalker will still take your arm off.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "WardenCael",
+      "origin": "new",
+      "displayName": "Warden Cael",
+      "welcomeText": "Don't linger past dusk here. The barrows wake at dark, and something crowned still walks among them.",
+      "topics": [
+        {
+          "keywords": [
+            "quest",
+            "wights"
+          ],
+          "response": "Wights have been crawling out of the old barrows south of the marches. Put them back down and I'll pay you from the March Watch's own coffer.",
+          "actions": [
+            "GIVE_QUEST:hollow_march_wights"
+          ]
+        },
+        {
+          "keywords": [
+            "hollow king",
+            "crown"
+          ],
+          "response": "They call him the Hollow King. No one remembers which king he was in life. Whatever crowned him now isn't a kindness.",
           "actions": []
         },
         {
           "keywords": [
-            "veil"
+            "bye"
           ],
-          "response": "I have prayed over the Veil's dead more times than I can count. None of my prayers have slowed it. Go carefully if you must go there at all.",
+          "response": "Keep your torch lit. It's the only mercy the barrows understand.",
           "actions": []
         }
       ],
@@ -8600,53 +8670,31 @@ window.T4C_DATA = {
       }
     },
     {
-      "id": "RurikCinderwatch",
+      "id": "SisterIlyndra",
       "origin": "new",
-      "displayName": "Rurik Cinderwatch",
-      "welcomeText": "Careful past the ridge, friend. The Cinderreach Hills have been smoking worse than usual.",
+      "displayName": "Sister Ilyndra",
+      "welcomeText": "Peace to you, traveler. This temple stands open to anyone the Veil has bruised, whichever side of the seam you call home.",
       "topics": [
         {
           "keywords": [
-            "quest",
-            "stalkers"
+            "sanctuary",
+            "refuge"
           ],
-          "response": "Ashfang Stalkers have been raiding the foothills in packs, and they're bolder every week. Cull enough of them and there's coin in it for you.",
-          "actions": [
-            "GIVE_QUEST:emberfang_hills_bounty"
-          ]
-        },
-        {
-          "keywords": [
-            "ignarok",
-            "drake"
-          ],
-          "response": "There's a drake denned up in the hills, one the Stalkers answer to. Ignarok, the old maps call him. I wouldn't go looking for him without a good blade.",
+          "response": "This temple sits at the seam on purpose. Neither the Wilds nor the Veil can claim consecrated ground.",
           "actions": []
         },
         {
           "keywords": [
-            "teach",
-            "spell",
-            "train"
+            "wilds"
           ],
-          "response": "I've traded a few fire workings off travelers over the years. Ask to TEACH if you've got the coin and the nerve.",
-          "actions": [
-            "OPEN_SPELL_LEARNING:cinderburst,emberheart_resolve"
-          ]
-        },
-        {
-          "keywords": [
-            "cinderreach",
-            "hills"
-          ],
-          "response": "Cinderreach used to be good grazing land, south of Windhowl. Now half of it's scorched black and the other half is smoking.",
+          "response": "The Wilds still sing, if you know how to listen. I pray it stays that way.",
           "actions": []
         },
         {
           "keywords": [
-            "bye"
+            "veil"
           ],
-          "response": "Watch the wind - it carries the smoke, and worse. Safe travels.",
+          "response": "I have prayed over the Veil's dead more times than I can count. None of my prayers have slowed it. Go carefully if you must go there at all.",
           "actions": []
         }
       ],
@@ -8663,107 +8711,59 @@ window.T4C_DATA = {
       }
     },
     {
-      "id": "KeeperTamsin",
+      "id": "ElderOphira",
       "origin": "new",
-      "displayName": "Keeper Tamsin",
-      "welcomeText": "Careful where you step. Something's been dragging people under since the tide turned.",
+      "displayName": "Elder Ophira",
+      "welcomeText": "Welcome, traveler. I am Elder Ophira of Avalon Sanctuary. You stand at the seam between two halves of one isle - ask, and I will tell you of our plight.",
       "topics": [
         {
           "keywords": [
-            "quest",
-            "deep ones"
+            "wilds",
+            "avalon wilds"
           ],
-          "response": "Deep Ones have been dragging travelers under all along this stretch of the coast. Thin their numbers and I'll see you paid for it.",
+          "response": "The Avalon Wilds still answer to the old pact. The fey there remain loyal, the groves unmarred - for now. That could change before the season turns.",
           "actions": [
-            "GIVE_QUEST:deep_ones_cave_purge"
+            "GIVE_QUEST:avalon_wilds_vigil"
           ]
         },
         {
           "keywords": [
-            "bigger",
-            "boss"
+            "veil",
+            "fading veil"
           ],
-          "response": "There's a bigger one down there. The others answer to it. I wouldn't go looking for it without help.",
-          "actions": []
-        },
-        {
-          "keywords": [
-            "bye"
-          ],
-          "response": "Stay off the wet ground after dark. That's when they surface.",
-          "actions": []
-        }
-      ],
-      "combatProfile": {
-        "level": 100,
-        "maxHp": 1000000,
-        "strength": 65,
-        "endurance": 67,
-        "dexterity": 63,
-        "armorClass": 1000000,
-        "attackSkill": 250,
-        "dodge": 65535,
-        "damageFormula": "1d23+16"
-      }
-    },
-    {
-      "id": "SpellMerchant",
-      "origin": "new",
-      "displayName": "Ilarion the Spell Merchant",
-      "welcomeText": "Welcome. I have every spell known to this world for sale. Say \"spells\" to browse my wares.",
-      "topics": [],
-      "combatProfile": {
-        "level": 100,
-        "maxHp": 1000000,
-        "strength": 500,
-        "endurance": 500,
-        "dexterity": 500,
-        "armorClass": 1000000,
-        "attackSkill": 1,
-        "dodge": 65535,
-        "damageFormula": "1d3"
-      }
-    },
-    {
-      "id": "SkywatchIlvara",
-      "origin": "activated",
-      "displayName": "Skywatch Ilvara",
-      "welcomeText": "You hear the wyrmlings before you see them. If you can hear the Drake itself, you're already too close.",
-      "topics": [
-        {
-          "keywords": [
-            "quest",
-            "wyrmlings"
-          ],
-          "response": "Kraanian Wyrmlings have nested in the aerie east of here, and something far older sleeps above them. Thin the nest and I'll pay you from my own purse.",
+          "response": "South of here spreads the Fading Veil - a blight eating outward from Ysolde's lair. Every season it claims more ground. We do not know how to stop it.",
           "actions": [
-            "GIVE_QUEST:aerie_wyrmling_cull"
+            "GIVE_QUEST:fading_veil_reckoning"
           ]
         },
         {
           "keywords": [
-            "drake",
-            "aerie"
+            "caradoc"
           ],
-          "response": "A true Drake hasn't been seen on this island in a generation. I've spent that long proving the old maps right.",
+          "response": "Sir Caradoc was once the truest knight our isle ever raised. Ysolde bound his spirit to her service when he fell defending the old borders. What walks the Veil now wears his armor, not his honor.",
           "actions": []
         },
         {
           "keywords": [
-            "bye"
+            "ysolde"
           ],
-          "response": "Fly low, or don't fly at all. That's the only advice I have for you.",
+          "response": "Ysolde was no matriarch of ours. She came veiled, in peace, and left the corruption that now bears her name. She is the source of the blight, not merely its steward.",
           "actions": []
         },
         {
           "keywords": [
-            "teach",
-            "sentinel"
+            "warden"
           ],
-          "response": "I can teach you Sentinel, if you've the level and the mind for it - a ward that guards a whole party against the elements at once. Ask to TEACH.",
-          "actions": [
-            "OPEN_SPELL_LEARNING:sentinel"
-          ]
+          "response": "The Verdant Warden is the last of the old treant guardians still standing his ground against the blight. He answers to no one, not even us - but he has not fallen, and that alone gives us hope.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "help",
+            "quest"
+          ],
+          "response": "I have work for capable hands - ask me of the Wilds if you'd stand vigil with our loyal fey, or of the Veil if you'd push back its corruption.",
+          "actions": []
         }
       ],
       "combatProfile": {
