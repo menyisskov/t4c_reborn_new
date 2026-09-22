@@ -24,7 +24,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0009 | Avalon island expansion | Content | Done | `09ad82d`, `40e0f19`, `2127376`, `a3c968a`, `cd7bdf3`, `d607f66` | [2026-09-18–19](CHANGELOG.md#2026-09-1819--avalon-island-expansion-t4c-0009) |
 | T4C-0010 | CI: skip on docs-only changes, scoped test selection | Process/Tooling | Done | `d29b421` | [2026-09-19](CHANGELOG.md#2026-09-19--smarter-ci-skip-docs-only-changes-scope-test-runs-t4c-0010) |
 | T4C-0011 | MMO server groundwork: Java 21, libGDX purity guard | Process/Tooling | Done | `8aef3a8`, `148752b` | [2026-09-21](CHANGELOG.md#2026-09-21--mmo-server-groundwork-java-21-libgdx-purity-guard-t4c-0011) |
-| T4C-0012 | Local compendium website (items/spells/monsters/NPCs/quests/zones) | Content/Tooling | Done | _pending push_ | [2026-09-22](CHANGELOG.md#2026-09-22--local-compendium-website-t4c-0012) |
+| T4C-0012 | Local compendium website (items/spells/monsters/NPCs/quests/zones) | Content/Tooling | Done | `e0170f1` | [2026-09-22](CHANGELOG.md#2026-09-22--local-compendium-website-t4c-0012) |
 
 ## Type legend
 
