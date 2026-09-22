@@ -15,6 +15,45 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-22 — Local compendium website (T4C-0012)
+
+A static, searchable stat-sheet site (`compendium/`) documenting everything this fork added
+on top of the original game — zones, monsters, items, spells, NPCs, quests — styled after
+the classic `t4cfantasy.com` stat sheet but modern, cross-linked, and colored by item
+rarity/spell element. Opens directly from the filesystem (`compendium/index.html`), no
+server or build step required.
+
+### Added
+- `tools/CompendiumExporter.java`: a runnable dumper that reads the live game registries
+  (`MonsterRegistry`, `SpellDefinitions`, `QuestDefinitions`, `NpcFactoryRegistry`,
+  `ShopCatalog`, `assets/items/*.json`) and every i18n string they reference, filters to a
+  curated "new since fork" allow-list cross-referenced against `CHANGELOG.md`/
+  `docs/content-ideas/`, and writes both per-category JSON files and a single bundled
+  `compendium/data.js` (`window.T4C_DATA`).
+- `compendium/index.html` + `app.css` + `app.js`: a vanilla-JS, dependency-free, hash-routed
+  single-page site — global fuzzy search, sortable/filterable tables for monsters/items/
+  spells/NPCs, full monster characteristic pages (stats, resists, attacks, loot tables with
+  drop-chance bars), item pages with `boosts[]` decoded into human-readable stat names
+  (`statId` reference table) and a derived rarity tier (Legendary/Set/Rare/Common) used for
+  color-coding, spell pages with element-colored tags, NPC dialogue-tree pages, and full
+  quest walkthrough pages (offer/completion/completed text, objective geofence shown on a
+  schematic minimap, rewards).
+- `compendium/data/{zones,statids,meta}.json`: hand-curated reference data the exporter
+  can't derive from code — zone name/level-range/biome/world-placement/summary (sourced from
+  `docs/content-ideas/*.md`'s exact coordinates), the item `statId` → label table (from
+  `.claude/skills/item-creator/references/stat-ids.md`), and non-zone systems/economy passes
+  plus the armor-set and Colosseum-ladder collections for the Systems page.
+- `compendium/README.md`: how to open the site and how to regenerate its data after a new
+  content pass.
+
+### Notes
+- Scope is new-since-fork content only (10 zones, 33 monsters, 120 items, 10 new spells + the
+  full player spellbook for context, 16 NPCs, 10 quests) rather than the entire legacy game
+  database — see the README's "Scope" section.
+- The Ancient Celestial / Empyrean armor sets (96 of the 120 items) have no shop or monster
+  drop source in the current codebase (`price: 0`, no loot-table reference anywhere) — the
+  Systems page documents this rather than inventing a fake source.
+
 ## 2026-09-21 — MMO server groundwork: Java 21, libGDX purity guard (T4C-0011)
 
 First step of the client/server split. The original T4C was an MMO and this
