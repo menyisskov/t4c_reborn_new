@@ -49,7 +49,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d6+2",
-          "value2": 100,
+          "combatAttack": 28,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -105,7 +106,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d58+42",
-          "value2": 100,
+          "combatAttack": 390,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -161,7 +163,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d60+44",
-          "value2": 100,
+          "combatAttack": 400,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -217,7 +220,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d95+72",
-          "value2": 100,
+          "combatAttack": 950,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -273,7 +277,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d100+77",
-          "value2": 100,
+          "combatAttack": 700,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -329,7 +334,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d109+84",
-          "value2": 100,
+          "combatAttack": 770,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -385,7 +391,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d150+140",
-          "value2": 100,
+          "combatAttack": 1275,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -445,7 +452,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d190+147",
-          "value2": 100,
+          "combatAttack": 1334,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -505,7 +513,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d242+187",
-          "value2": 100,
+          "combatAttack": 2200,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -561,7 +570,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d260+210",
-          "value2": 100,
+          "combatAttack": 1700,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -617,7 +627,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d420+340",
-          "value2": 100,
+          "combatAttack": 3000,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -673,7 +684,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d330+274",
-          "value2": 100,
+          "combatAttack": 2065,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -729,7 +741,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "if(1d10=1?target.hp/2:1d429+337)",
-          "value2": 75,
+          "combatAttack": 3010,
+          "selectionWeight": 75,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -737,7 +750,8 @@ window.T4C_DATA = {
         },
         {
           "formula": "",
-          "value2": 75,
+          "combatAttack": 0,
+          "selectionWeight": 75,
           "isSpell": true,
           "spellId": 10095,
           "rangeMinTiles": 2,
@@ -745,7 +759,8 @@ window.T4C_DATA = {
         },
         {
           "formula": "",
-          "value2": 25,
+          "combatAttack": 0,
+          "selectionWeight": 25,
           "isSpell": true,
           "spellId": 10616,
           "rangeMinTiles": 0,
@@ -809,7 +824,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d495+430",
-          "value2": 100,
+          "combatAttack": 3960,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -873,7 +889,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d585+507",
-          "value2": 100,
+          "combatAttack": 4680,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -929,7 +946,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d596+515",
-          "value2": 100,
+          "combatAttack": 3462,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -993,7 +1011,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d728+631",
-          "value2": 100,
+          "combatAttack": 5820,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1049,7 +1068,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d858+675",
-          "value2": 75,
+          "combatAttack": 6010,
+          "selectionWeight": 75,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1057,7 +1077,8 @@ window.T4C_DATA = {
         },
         {
           "formula": "",
-          "value2": 75,
+          "combatAttack": 0,
+          "selectionWeight": 75,
           "isSpell": true,
           "spellId": 10095,
           "rangeMinTiles": 2,
@@ -1065,7 +1086,8 @@ window.T4C_DATA = {
         },
         {
           "formula": "",
-          "value2": 25,
+          "combatAttack": 0,
+          "selectionWeight": 25,
           "isSpell": true,
           "spellId": 10616,
           "rangeMinTiles": 0,
@@ -1116,7 +1138,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 901 + 709 ",
-          "value2": 20,
+          "combatAttack": 6310,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1167,7 +1190,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 944 + 743 ",
-          "value2": 20,
+          "combatAttack": 6610,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1231,7 +1255,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d825+715",
-          "value2": 100,
+          "combatAttack": 6600,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1295,7 +1320,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d840+728",
-          "value2": 100,
+          "combatAttack": 6720,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1346,7 +1372,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 987 + 777 ",
-          "value2": 20,
+          "combatAttack": 6910,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1397,7 +1424,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 1029 + 810 ",
-          "value2": 20,
+          "combatAttack": 7210,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1461,7 +1489,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d420+400",
-          "value2": 40,
+          "combatAttack": 5000,
+          "selectionWeight": 40,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1469,7 +1498,8 @@ window.T4C_DATA = {
         },
         {
           "formula": "",
-          "value2": 35,
+          "combatAttack": 0,
+          "selectionWeight": 35,
           "isSpell": true,
           "spellId": 10094,
           "rangeMinTiles": 2,
@@ -1477,7 +1507,8 @@ window.T4C_DATA = {
         },
         {
           "formula": "",
-          "value2": 25,
+          "combatAttack": 0,
+          "selectionWeight": 25,
           "isSpell": true,
           "spellId": 10352,
           "rangeMinTiles": 2,
@@ -1528,7 +1559,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 1072 + 844 ",
-          "value2": 20,
+          "combatAttack": 7510,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1579,7 +1611,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 1115 + 878 ",
-          "value2": 20,
+          "combatAttack": 7810,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1643,7 +1676,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d975+845",
-          "value2": 100,
+          "combatAttack": 7800,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1694,7 +1728,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 1158 + 912 ",
-          "value2": 20,
+          "combatAttack": 8110,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1745,7 +1780,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 1201 + 946 ",
-          "value2": 20,
+          "combatAttack": 8410,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1796,7 +1832,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 1244 + 980 ",
-          "value2": 20,
+          "combatAttack": 8710,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1847,7 +1884,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d 1286 + 1013 ",
-          "value2": 20,
+          "combatAttack": 9010,
+          "selectionWeight": 20,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1903,7 +1941,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d1450+1150",
-          "value2": 100,
+          "combatAttack": 9500,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1959,7 +1998,8 @@ window.T4C_DATA = {
       "attacks": [
         {
           "formula": "1d1715+1352",
-          "value2": 100,
+          "combatAttack": 12010,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -1967,7 +2007,8 @@ window.T4C_DATA = {
         },
         {
           "formula": "",
-          "value2": 100,
+          "combatAttack": 0,
+          "selectionWeight": 100,
           "isSpell": true,
           "spellId": 10095,
           "rangeMinTiles": 2,
