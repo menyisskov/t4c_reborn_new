@@ -25232,5 +25232,7 @@
   "quest.passage_to_avalon.title": "Passage to Avalon",
   "quest.passage_to_avalon.offer": "Something about the tide beyond that ruined dock isn't right - a lord of them, the smugglers say, and only he keeps what map they know of the crossing. Clear his reavers from the shore, then take his chart before it goes down with him.",
   "quest.passage_to_avalon.completion": "The reavers are scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive.",
-  "quest.passage_to_avalon.completed": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross."
+  "quest.passage_to_avalon.completed": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross.",
+  "message.quest_ready_needs_item": "%s: kills complete, but you still need %s before you can turn it in.",
+  "message.quest_progress_dialog_item": "Progress: %d/%d kills (%d remaining). You also need %s: %d/%d."
 }

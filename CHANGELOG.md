@@ -48,9 +48,23 @@ before it and claims 0019 to avoid an ID collision on merge._
   flags — only specific named ones (level/stats/equipment) — so access is never lost on
   rebirth/remort.
 
+### Fixed (Codex review)
+- Reaching a quest's kill count while its item objective was still unmet announced the quest as
+  "ready"/reported "0 remaining" with no indication an item was needed at all, so the new
+  zone-unlock progression looked silently stuck. `recordKill`'s notification and
+  `giveOrReport`'s progress dialog now name the required item and how many of it are held
+  whenever the kill count alone isn't enough to turn the quest in.
+- A character whose zone quest was already `STATUS_COMPLETED` on an older save (i.e. from before
+  this pass added `unlockZoneId`) would never receive that zone's `unlock.zone.*` flag or fast
+  travel entry, since only an active quest's turn-in path sets it. `QuestService.hasUnlockedZone`
+  now also derives access directly from any matching quest already at `STATUS_COMPLETED`, so a
+  prior completion is never permanently missed.
+
 ### Tests
 - `QuestServiceItemObjectiveTest`: item-gated turn-in, exact-quantity consumption, zone-unlock
-  flag setting, kill-only quests unaffected.
+  flag setting, kill-only quests unaffected, kills-complete-but-item-missing messaging (both the
+  kill notification and the NPC dialog name the still-needed item), and a pre-existing
+  `STATUS_COMPLETED` quest still unlocking its zone.
 - `NamedLocationsTest`: unconditional locations always visible, zone-gated locations appear only
   after their unlock quest completes, every `NamedLocation.unlockZoneId` matches a real quest and
   vice versa (catches a typo silently hiding a location), and a zone-unlock flag (and its fast

@@ -2,11 +2,13 @@ package com.perso.T4C.quest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.player.Player;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -85,6 +87,62 @@ class QuestServiceItemObjectiveTest {
         "completing an unlockZoneId quest must set the durable zone-unlock flag");
     assertEquals(
         1, player.getQuestFlag(QuestService.zoneUnlockFlag("test_zone")), "flag value is 1");
+  }
+
+  @Test
+  void reachingTheKillCountWithoutTheItemDoesNotAnnounceReady() {
+    List<String> messages = new ArrayList<>();
+    QuestService service =
+        new QuestService(XpCurve.loadDefault(), null, messages::add, () -> List.of(ITEM_QUEST));
+    Player player = new Player();
+    service.giveOrReport(ITEM_QUEST.getId(), ITEM_QUEST.getGiverNpc(), player);
+
+    service.recordKill(player, "Test Monster", 1, 100, 100);
+    service.recordKill(player, "Test Monster", 1, 100, 100);
+
+    // messages: [0] quest accepted, [1] kill 1/2 progress, [2] kill 2/2 - still needs the item.
+    assertEquals(3, messages.size());
+    String finalMessage = messages.get(2);
+    assertTrue(
+        finalMessage.contains("rare_test_relic"),
+        "kills-complete-but-item-missing must name the still-needed item, not claim the quest "
+            + "is ready: " + finalMessage);
+    assertFalse(
+        finalMessage.toLowerCase(java.util.Locale.ROOT).contains("return to see"),
+        "must not use the plain quest_ready wording while the item is still missing");
+  }
+
+  @Test
+  void progressDialogNamesTheStillNeededItemAndHowManyAreHeld() {
+    QuestService service =
+        new QuestService(XpCurve.loadDefault(), null, null, () -> List.of(ITEM_QUEST));
+    Player player = new Player();
+    service.giveOrReport(ITEM_QUEST.getId(), ITEM_QUEST.getGiverNpc(), player);
+    service.recordKill(player, "Test Monster", 1, 100, 100);
+    service.recordKill(player, "Test Monster", 1, 100, 100);
+    player.getInventory().add("rare_test_relic");
+
+    String dialog = service.giveOrReport(ITEM_QUEST.getId(), ITEM_QUEST.getGiverNpc(), player);
+
+    assertTrue(dialog.contains("2/2"), "kill progress must still be reported: " + dialog);
+    assertTrue(
+        dialog.contains("rare_test_relic") && dialog.contains("1/2"),
+        "must report the item objective and how many of it are held: " + dialog);
+  }
+
+  @Test
+  void aQuestAlreadyCompletedBeforeUnlockZoneIdExistedStillUnlocksItsZone() {
+    QuestDef realQuest = QuestRegistry.findById("windhowl_marches_centaurs");
+    assertNotNull(realQuest, "a real quest with a real unlockZoneId must exist for this test");
+    assertNotNull(realQuest.getUnlockZoneId());
+    Player player = new Player();
+    // Simulate a character who finished this quest on an older save, before this pass added the
+    // unlockZoneId/explicit flag - only the completion status survives, never the new flag.
+    player.setQuestFlag(QuestService.statusFlag(realQuest), QuestService.STATUS_COMPLETED);
+
+    assertTrue(
+        QuestService.hasUnlockedZone(player, realQuest.getUnlockZoneId()),
+        "a previously-completed quest must still grant its zone unlock, not just a fresh one");
   }
 
   @Test
