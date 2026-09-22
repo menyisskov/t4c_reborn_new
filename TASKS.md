@@ -27,6 +27,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0012 | Local compendium website (items/spells/monsters/NPCs/quests/zones) | Content/Tooling | Done | `e0170f1` | [2026-09-22](CHANGELOG.md#2026-09-22--local-compendium-website-t4c-0012) |
 | T4C-0013 | CI auto-regenerates compendium data on push to main | Process/Tooling | Done | `c0c15e7` | [2026-09-22](CHANGELOG.md#2026-09-22--ci-auto-regenerates-compendium-data-on-push-to-main-t4c-0013) |
 | T4C-0014 | Deterministic NPC ordering in compendium exporter | Process/Tooling | Done | `0282e7c` | [2026-09-22](CHANGELOG.md#2026-09-22--deterministic-npc-ordering-in-compendium-exporter-t4c-0014) |
+| T4C-0015 | Monster balance report generator (audit new bosses vs. legacy curve) | Process/Tooling | Done | `6757374` | [2026-09-22](CHANGELOG.md#2026-09-22--monster-balance-report-generator-t4c-0015) |
 | T4C-0016 | Fix mislabeled attack "hit chance" on compendium monster pages | Fix | Done | `3f7fd65` | [2026-09-22](CHANGELOG.md#2026-09-22--fix-mislabeled-attack-hit-chance-on-compendium-monster-pages-t4c-0016) |
 
 ## Type legend
