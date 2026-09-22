@@ -224,7 +224,12 @@ public final class CompendiumExporter {
         for (MonsterDef.Attack atk : def.getAttacks()) {
           Map<String, Object> a = new LinkedHashMap<>();
           a.put("formula", atk.getName());
-          a.put("value2", atk.getValue2());
+          // BaseMonster#rollDamage: value1 is the combat-attack score fed into hit-chance
+          // resolution (the real "hit power" stat); value2 is only a selection weight among
+          // multiple eligible attacks at this range, never a hit percentage - do not relabel it
+          // as one (see BaseMonster#pickAttack).
+          a.put("combatAttack", atk.getValue1());
+          a.put("selectionWeight", atk.getValue2());
           a.put("isSpell", atk.isSpell());
           a.put("spellId", atk.getValue3());
           a.put("rangeMinTiles", atk.getValue4());

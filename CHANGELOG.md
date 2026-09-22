@@ -15,6 +15,19 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-22 — Fix mislabeled attack "hit chance" on compendium monster pages (T4C-0016)
+
+### Fixed
+- The compendium's monster detail pages labeled a monster attack's `value2` field as "hit chance
+  %", and never showed `value1` at all. Per `BaseMonster#rollDamage`/`pickAttack`, `value2` is
+  only a selection weight used to pick among several eligible attacks at the same range — never a
+  to-hit percentage — while `value1` is the real combat-attack/hit-power stat fed into hit
+  resolution. Same class of bug Codex flagged in `MonsterBalanceReportGenerator.java` on PR #12
+  (T4C-0015); found here independently while cross-checking the live site against that fix.
+  `tools/CompendiumExporter.java` now exports `combatAttack` (value1) and `selectionWeight`
+  (value2) instead of the old bare `value2`, and `compendium/app.js` displays "attack N" (plus
+  "· weight N" only when a monster has more than one attack to choose among).
+
 ## 2026-09-22 — Monster balance report generator (T4C-0015)
 
 ### Added

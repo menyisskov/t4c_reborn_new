@@ -391,7 +391,7 @@
           return (
             '<div class="attack-row"><span><code>' + esc(a.formula) + "</code>" +
             (a.isSpell ? " · casts spell id " + a.spellId + " (range " + a.rangeMinTiles + "-" + a.rangeMaxTiles + " tiles)" : " · melee") +
-            "</span><span>hit chance " + a.value2 + "%</span></div>"
+            "</span><span>attack " + a.combatAttack + (m.attacks.length > 1 ? " · weight " + a.selectionWeight : "") + "</span></div>"
           );
         }).join("")
       : '<p class="lead">No tracked attack list.</p>';
