@@ -769,6 +769,128 @@ window.T4C_DATA = {
       ]
     },
     {
+      "name": "Tideworn Reaver",
+      "displayName": "Tideworn Reaver",
+      "origin": "new",
+      "level": 280,
+      "health": 29000,
+      "mana": 0,
+      "xpPerHit": 5,
+      "xpOnDeath": 240000,
+      "hitDamageMin": 150,
+      "hitDamageMax": 330,
+      "respawnTimeMs": 30000,
+      "goldMin": 270,
+      "goldMax": 680,
+      "dodge": 1080,
+      "acMin": 0,
+      "acMax": 165,
+      "aggro": 50,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 250,
+        "end": 230,
+        "agi": 230,
+        "intel": 190,
+        "will": 0,
+        "wis": 250,
+        "luck": 0
+      },
+      "resists": {
+        "air": 110,
+        "earth": 120,
+        "water": 95,
+        "fire": 80,
+        "dark": 70,
+        "light": 130
+      },
+      "loot": [
+        {
+          "item": "healing_potion",
+          "chance": 0.1
+        },
+        {
+          "item": "mana_potion",
+          "chance": 0.06
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d410+355",
+          "combatAttack": 3300,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Coastwarden Ithrak",
+      "displayName": "Coastwarden Ithrak",
+      "origin": "new",
+      "level": 300,
+      "health": 40000,
+      "mana": 0,
+      "xpPerHit": 6,
+      "xpOnDeath": 20000000,
+      "hitDamageMin": 450,
+      "hitDamageMax": 1000,
+      "respawnTimeMs": 30000,
+      "goldMin": 700,
+      "goldMax": 1800,
+      "dodge": 1300,
+      "acMin": 0,
+      "acMax": 320,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 360,
+        "end": 340,
+        "agi": 220,
+        "intel": 160,
+        "will": 0,
+        "wis": 160,
+        "luck": 0
+      },
+      "resists": {
+        "air": 90,
+        "earth": 130,
+        "water": 100,
+        "fire": 95,
+        "dark": 180,
+        "light": 25
+      },
+      "loot": [
+        {
+          "item": "tideworn_avalon_chart",
+          "chance": 0.02
+        },
+        {
+          "item": "healing_potion",
+          "chance": 0.2
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d500+430",
+          "combatAttack": 4000,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
       "name": "Fey Warden",
       "displayName": "Fey Warden",
       "origin": "new",
@@ -8140,6 +8262,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 140,
       "rewardGold": 1500,
       "rewardXp": 4000,
+      "requiredItemKey": "mordrenns_drowned_cowl",
+      "requiredItemQty": 1,
+      "unlockZoneId": "sunken_chancel",
       "offerText": "Thin the Drowned Acolytes crawling out of the chancel east of Silversky before they drag anyone else under.",
       "completionText": "You've bled the chancel dry of its acolytes, at least for now. Silversky's coast breathes easier.",
       "completedText": "The tide's calm again, thanks to you. Mordrenn still holds the deep chancel, if you're fool enough to go looking."
@@ -8156,6 +8281,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 140,
       "rewardGold": 2500,
       "rewardXp": 7000,
+      "requiredItemKey": "ignaroks_emberfang_claw",
+      "requiredItemQty": 1,
+      "unlockZoneId": "cinderreach_hills",
       "offerText": "Cull the Ashfang Stalkers raiding the Cinderreach foothills south of Windhowl before their numbers swell further.",
       "completionText": "The Stalker packs are broken up, for now. Ignarok still smolders somewhere up in those hills.",
       "completedText": "The foothills are quiet again. Watch yourself if you go hunting Ignarok himself."
@@ -8172,6 +8300,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 120,
       "rewardGold": 6000,
       "rewardXp": 400000,
+      "requiredItemKey": "marchwardens_crown",
+      "requiredItemQty": 1,
+      "unlockZoneId": "windhowl_marches",
       "offerText": "Drive back the Centaur Warriors raiding the marches west of Windhowl before their king leads a full warband to the walls.",
       "completionText": "The marches are quiet again, for now. Windhowl's watch owes you its thanks.",
       "completedText": "The marches held because of you. The Centaur King still broods somewhere out there, if you're bold enough to find him."
@@ -8188,6 +8319,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 120,
       "rewardGold": 12000,
       "rewardXp": 900000,
+      "requiredItemKey": "crown_of_the_hollow_king",
+      "requiredItemQty": 1,
+      "unlockZoneId": "hollow_march",
       "offerText": "Put down the Barrow Wights crawling out of the old barrows south of the Windhowl Marches.",
       "completionText": "The barrows have gone quiet again. The March Watch won't forget this.",
       "completedText": "The wights are settled, but the Hollow King still walks. Watch yourself if you go looking for him."
@@ -8204,6 +8338,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 140,
       "rewardGold": 25000,
       "rewardXp": 2000000,
+      "requiredItemKey": "aeries_drakeheart_signet",
+      "requiredItemQty": 1,
+      "unlockZoneId": "lesser_drakes_aerie",
       "offerText": "Cull the Kraanian Wyrmlings nesting in the aerie east of the Hollow March before their numbers swell further.",
       "completionText": "The nest is thinned, for now. Ilvara's old maps are looking more credible by the day.",
       "completedText": "The wyrmlings are culled. The Lesser Drake above them, however, is very much awake."
@@ -8220,6 +8357,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 150,
       "rewardGold": 500000,
       "rewardXp": 150000000,
+      "requiredItemKey": "heartfire_of_the_greater_drake",
+      "requiredItemQty": 1,
+      "unlockZoneId": "greater_drakes_bastion",
       "offerText": "Break the Bastion Wardens guarding the ruin east of the Aerie before the old wards protecting the Greater Drake can be renewed.",
       "completionText": "The wardens are broken. Whatever wards they were keeping strong won't hold much longer.",
       "completedText": "The bastion's outer guard is gone. The Greater Drake itself is another matter entirely."
@@ -8236,6 +8376,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 90,
       "rewardGold": 1600,
       "rewardXp": 4200,
+      "requiredItemKey": "depths_wardens_talisman",
+      "requiredItemQty": 1,
+      "unlockZoneId": "deep_ones_cave",
       "offerText": "Deep Ones have been dragging travelers under all along this stretch of the Raven's Dust coast. Thin their numbers before it gets worse.",
       "completionText": "It's quieter here already. Raven's Dust owes you more than it'll ever admit.",
       "completedText": "The Deep Ones haven't forgotten what you did to them. Neither have I - my thanks again."
@@ -8252,9 +8395,31 @@ window.T4C_DATA = {
       "areaRadiusTiles": 150,
       "rewardGold": 5000000,
       "rewardXp": 2000000000,
+      "requiredItemKey": "archdrakes_molten_heart",
+      "requiredItemQty": 1,
+      "unlockZoneId": "drakes_lair",
       "offerText": "Kraanian Dragonguard hold the approach to the old drakes' lair, further out than the Vigil has ever mapped. Break their line before whatever sleeps past it wakes on its own.",
       "completionText": "The guard line is broken. Whatever the Dragonguard were protecting, it's exposed now - for better or worse.",
       "completedText": "The lair's approach is still quiet since you cleared it. Don't get comfortable - something out there is still watching."
+    },
+    {
+      "id": "passage_to_avalon",
+      "title": "Passage to Avalon",
+      "giverNpc": "HarbormasterRangor",
+      "targetMonster": "Tideworn Reaver",
+      "requiredKills": 25,
+      "targetWorldZ": 0,
+      "areaCenterX": 1550,
+      "areaCenterY": 1300,
+      "areaRadiusTiles": 110,
+      "rewardGold": 400000,
+      "rewardXp": 200000000,
+      "requiredItemKey": "tideworn_avalon_chart",
+      "requiredItemQty": 1,
+      "unlockZoneId": "avalon_sanctuary",
+      "offerText": "Something about the tide beyond that ruined dock isn't right - a lord of them, the smugglers say, and only he keeps what map they know of the crossing. Clear his reavers from the shore, then take his chart before it goes down with him.",
+      "completionText": "The reavers are scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive.",
+      "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross."
     },
     {
       "id": "avalon_wilds_vigil",
@@ -8268,6 +8433,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 110,
       "rewardGold": 800000,
       "rewardXp": 400000000,
+      "requiredItemKey": "caradocs_sundered_blade",
+      "requiredItemQty": 1,
+      "unlockZoneId": "avalon_wilds",
       "offerText": "The Fey Wardens of the Wilds still hold to the old pact, but even loyal groves need a blade at their border while the Veil keeps pressing north. Stand vigil with them - thin whatever presses too close.",
       "completionText": "The Wilds breathe easier. The pact holds a little longer because of you.",
       "completedText": "The Wardens still speak well of you. The Wilds remain ours - for now."
@@ -8284,6 +8452,9 @@ window.T4C_DATA = {
       "areaRadiusTiles": 130,
       "rewardGold": 4000000,
       "rewardXp": 1700000000,
+      "requiredItemKey": "ysoldes_veiled_circlet",
+      "requiredItemQty": 1,
+      "unlockZoneId": "fading_veil",
       "offerText": "Veilbound Wraiths spread Ysolde's corruption outward with every season that passes. Push back into the Veil and cut their numbers down before the blight claims ground we can't take back.",
       "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
       "completedText": "The blight hasn't forgotten what you did to it out there. Ysolde surely hasn't either."
@@ -8441,6 +8612,56 @@ window.T4C_DATA = {
             "bye"
           ],
           "response": "May whatever you worship still be listening where you're going.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "HarbormasterRangor",
+      "origin": "new",
+      "displayName": "Harbormaster Rangor",
+      "welcomeText": "Welcome to what's left of the dock. Nobody sails from here anymore - not since the reavers took the shore and Ithrak took their coin.",
+      "topics": [
+        {
+          "keywords": [
+            "avalon",
+            "passage"
+          ],
+          "response": "Coastwarden Ithrak runs the reavers squatting on the shore south of here, and he's the only one left who knows the safe line through the shoal to Avalon. Clear his warband, take his chart off his corpse, and bring it to me - I'll see you're recognized as someone Avalon can trust.",
+          "actions": [
+            "GIVE_QUEST:passage_to_avalon"
+          ]
+        },
+        {
+          "keywords": [
+            "ithrak"
+          ],
+          "response": "Ithrak used to be a knight, they say, before he decided guarding a smuggling route paid better than guarding anything worth guarding.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "crossing"
+          ],
+          "response": "Avalon's out there, past the shoal. Nobody's crossed it on their own in years - not without that chart, or without knowing the tide by heart the way Ithrak did.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "reavers"
+          ],
+          "response": "Watch the tideline past the dock. The reavers don't wait for you to see them first.",
           "actions": []
         }
       ],
@@ -16754,6 +16975,44 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "tideworn_avalon_chart",
+      "name": "Tideworn Avalon Chart",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 4",
+      "price": 0.0,
+      "weight": 1.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 220.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 260.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36100.0,
+          "statId": 18.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 36101.0,
+          "statId": 4.0,
+          "expression": "14"
+        }
+      ]
+    },
+    {
       "key": "verdant_wardens_bulwark",
       "name": "Verdant Warden's Bulwark",
       "bodyPart": "SHIELD",
@@ -22204,6 +22463,33 @@ window.T4C_DATA = {
         "KeeperTamsin"
       ],
       "preExisting": true
+    },
+    {
+      "id": "avalon_sanctuary",
+      "name": "The Avalon Crossing",
+      "pass": "T4C-0019",
+      "levelRange": "260–300",
+      "biome": "Mainland coast",
+      "worldmapCenter": {
+        "x": 1550.0,
+        "y": 1300.0,
+        "radius": 110.0
+      },
+      "summary": "The last stretch of mainland shore before Avalon. Before this pass every NPC and shop that could grant access to Avalon (scroll_of_avalon, the AvalonGateway spell) was itself stationed inside Avalon, so no fresh character could ever reach it - this coastal gate and its access quest (passage_to_avalon) fix that dead end, the same role the Oracle plays for rebirth.",
+      "monsters": [
+        "Tideworn Reaver",
+        "Coastwarden Ithrak"
+      ],
+      "items": [
+        "tideworn_avalon_chart"
+      ],
+      "spells": [],
+      "quests": [
+        "passage_to_avalon"
+      ],
+      "npcs": [
+        "HarbormasterRangor"
+      ]
     },
     {
       "id": "avalon_wilds",

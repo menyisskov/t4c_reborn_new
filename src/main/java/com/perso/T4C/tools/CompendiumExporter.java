@@ -71,7 +71,9 @@ public final class CompendiumExporter {
           "Sundered Sentinel",
           "Sir Caradoc, the Sundered Knight",
           "Ysolde, the Veiled Matriarch",
-          "The Verdant Warden");
+          "The Verdant Warden",
+          "Tideworn Reaver",
+          "Coastwarden Ithrak");
 
   /** Pre-existing legacy monsters that a content pass placed/activated rather than authored. */
   private static final Set<String> ACTIVATED_MONSTER_NAMES = Set.of("Arch Drake");
@@ -109,7 +111,8 @@ public final class CompendiumExporter {
           "KeeperTamsin",
           "MarshalTorrhen",
           "WardenCael",
-          "GrandmasterVoss");
+          "GrandmasterVoss",
+          "HarbormasterRangor");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
@@ -124,7 +127,8 @@ public final class CompendiumExporter {
           "deep_ones_cave_purge",
           "drakes_lair_vigil",
           "avalon_wilds_vigil",
-          "fading_veil_reckoning");
+          "fading_veil_reckoning",
+          "passage_to_avalon");
 
   private static final Set<String> SHOP_EXCLUDED_NPC_IDS =
       Set.of("Boreas", "Yolak", "TtayhMark", "Kiadus", "RhodarHeatforge", "GulfridSteelhammer");
@@ -401,6 +405,9 @@ public final class CompendiumExporter {
       m.put("areaRadiusTiles", q.getAreaRadiusTiles());
       m.put("rewardGold", q.getRewardGold());
       m.put("rewardXp", q.getRewardXp());
+      m.put("requiredItemKey", q.getRequiredItemKey());
+      m.put("requiredItemQty", q.getRequiredItemQty());
+      m.put("unlockZoneId", q.getUnlockZoneId());
       m.put("offerText", I18n.resolve(q.getOfferText()));
       m.put("completionText", I18n.resolve(q.getCompletionText()));
       m.put("completedText", I18n.resolve(q.getCompletedText()));

@@ -7619,6 +7619,44 @@
     ]
   },
   {
+    "key": "tideworn_avalon_chart",
+    "name": "Tideworn Avalon Chart",
+    "bodyPart": "NECK",
+    "appearanceInventory": "64kInvNecklace 4",
+    "price": 0.0,
+    "weight": 1.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 220.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 260.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36100.0,
+        "statId": 18.0,
+        "expression": "16"
+      },
+      {
+        "boostId": 36101.0,
+        "statId": 4.0,
+        "expression": "14"
+      }
+    ]
+  },
+  {
     "key": "verdant_wardens_bulwark",
     "name": "Verdant Warden's Bulwark",
     "bodyPart": "SHIELD",

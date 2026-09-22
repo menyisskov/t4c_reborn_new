@@ -113,6 +113,20 @@
     "preExisting": true
   },
   {
+    "id": "avalon_sanctuary",
+    "name": "The Avalon Crossing",
+    "pass": "T4C-0019",
+    "levelRange": "260–300",
+    "biome": "Mainland coast",
+    "worldmapCenter": { "x": 1550, "y": 1300, "radius": 110 },
+    "summary": "The last stretch of mainland shore before Avalon. Before this pass every NPC and shop that could grant access to Avalon (scroll_of_avalon, the AvalonGateway spell) was itself stationed inside Avalon, so no fresh character could ever reach it - this coastal gate and its access quest (passage_to_avalon) fix that dead end, the same role the Oracle plays for rebirth.",
+    "monsters": ["Tideworn Reaver", "Coastwarden Ithrak"],
+    "items": ["tideworn_avalon_chart"],
+    "spells": [],
+    "quests": ["passage_to_avalon"],
+    "npcs": ["HarbormasterRangor"]
+  },
+  {
     "id": "avalon_wilds",
     "name": "The Avalon Wilds",
     "pass": "T4C-0009",

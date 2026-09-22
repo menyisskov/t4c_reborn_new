@@ -767,6 +767,128 @@
     ]
   },
   {
+    "name": "Tideworn Reaver",
+    "displayName": "Tideworn Reaver",
+    "origin": "new",
+    "level": 280,
+    "health": 29000,
+    "mana": 0,
+    "xpPerHit": 5,
+    "xpOnDeath": 240000,
+    "hitDamageMin": 150,
+    "hitDamageMax": 330,
+    "respawnTimeMs": 30000,
+    "goldMin": 270,
+    "goldMax": 680,
+    "dodge": 1080,
+    "acMin": 0,
+    "acMax": 165,
+    "aggro": 50,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 250,
+      "end": 230,
+      "agi": 230,
+      "intel": 190,
+      "will": 0,
+      "wis": 250,
+      "luck": 0
+    },
+    "resists": {
+      "air": 110,
+      "earth": 120,
+      "water": 95,
+      "fire": 80,
+      "dark": 70,
+      "light": 130
+    },
+    "loot": [
+      {
+        "item": "healing_potion",
+        "chance": 0.1
+      },
+      {
+        "item": "mana_potion",
+        "chance": 0.06
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d410+355",
+        "combatAttack": 3300,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Coastwarden Ithrak",
+    "displayName": "Coastwarden Ithrak",
+    "origin": "new",
+    "level": 300,
+    "health": 40000,
+    "mana": 0,
+    "xpPerHit": 6,
+    "xpOnDeath": 20000000,
+    "hitDamageMin": 450,
+    "hitDamageMax": 1000,
+    "respawnTimeMs": 30000,
+    "goldMin": 700,
+    "goldMax": 1800,
+    "dodge": 1300,
+    "acMin": 0,
+    "acMax": 320,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 360,
+      "end": 340,
+      "agi": 220,
+      "intel": 160,
+      "will": 0,
+      "wis": 160,
+      "luck": 0
+    },
+    "resists": {
+      "air": 90,
+      "earth": 130,
+      "water": 100,
+      "fire": 95,
+      "dark": 180,
+      "light": 25
+    },
+    "loot": [
+      {
+        "item": "tideworn_avalon_chart",
+        "chance": 0.02
+      },
+      {
+        "item": "healing_potion",
+        "chance": 0.2
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d500+430",
+        "combatAttack": 4000,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
     "name": "Fey Warden",
     "displayName": "Fey Warden",
     "origin": "new",

@@ -25,6 +25,9 @@ public final class DrakesLairVigil {
         "${quest.drakes_lair_vigil.offer}",
         "${quest.drakes_lair_vigil.completion}",
         "${quest.drakes_lair_vigil.completed}",
-        null);
+        null,
+        "archdrakes_molten_heart",
+        1,
+        "drakes_lair");
   }
 }

@@ -27,13 +27,14 @@ public final class LocationsScreen extends GuiScreenBase {
   private static final Color WHITE = Color.valueOf("E6D8BC");
 
   private final Player player;
-  private final List<NamedLocation> locations = NamedLocations.all();
+  private final List<NamedLocation> locations;
   private final List<GuiBoxedText> rows = new ArrayList<>();
   private final List<float[]> rowBounds = new ArrayList<>();
   private int firstVisible;
 
   public LocationsScreen(Player player) {
     this.player = player;
+    this.locations = NamedLocations.forPlayer(player);
     background = GuiSprites.load("GUI_BackQuest");
     centerOnScreen();
     addCloseButton(548f, 1f);

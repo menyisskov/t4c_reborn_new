@@ -166,6 +166,56 @@
     }
   },
   {
+    "id": "HarbormasterRangor",
+    "origin": "new",
+    "displayName": "Harbormaster Rangor",
+    "welcomeText": "Welcome to what's left of the dock. Nobody sails from here anymore - not since the reavers took the shore and Ithrak took their coin.",
+    "topics": [
+      {
+        "keywords": [
+          "avalon",
+          "passage"
+        ],
+        "response": "Coastwarden Ithrak runs the reavers squatting on the shore south of here, and he's the only one left who knows the safe line through the shoal to Avalon. Clear his warband, take his chart off his corpse, and bring it to me - I'll see you're recognized as someone Avalon can trust.",
+        "actions": [
+          "GIVE_QUEST:passage_to_avalon"
+        ]
+      },
+      {
+        "keywords": [
+          "ithrak"
+        ],
+        "response": "Ithrak used to be a knight, they say, before he decided guarding a smuggling route paid better than guarding anything worth guarding.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "crossing"
+        ],
+        "response": "Avalon's out there, past the shoal. Nobody's crossed it on their own in years - not without that chart, or without knowing the tide by heart the way Ithrak did.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "reavers"
+        ],
+        "response": "Watch the tideline past the dock. The reavers don't wait for you to see them first.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "KeeperTamsin",
     "origin": "new",
     "displayName": "Keeper Tamsin",

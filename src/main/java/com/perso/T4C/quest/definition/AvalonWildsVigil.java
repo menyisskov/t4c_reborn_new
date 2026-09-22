@@ -26,6 +26,9 @@ public final class AvalonWildsVigil {
         "${quest.avalon_wilds_vigil.offer}",
         "${quest.avalon_wilds_vigil.completion}",
         "${quest.avalon_wilds_vigil.completed}",
-        null);
+        null,
+        "caradocs_sundered_blade",
+        1,
+        "avalon_wilds");
   }
 }

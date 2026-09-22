@@ -1,0 +1,30 @@
+{
+  "key": "tideworn_avalon_chart",
+  "name": "Tideworn Avalon Chart",
+  "bodyPart": "NECK",
+  "appearanceInventory": "64kInvNecklace 4",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 220,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 260,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 36100, "statId": 18, "expression": "16" },
+    { "boostId": 36101, "statId": 4, "expression": "14" }
+  ]
+}

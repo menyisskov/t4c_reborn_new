@@ -25,6 +25,9 @@ public final class DeepOnesCavePurge {
         "${quest.deep_ones_cave_purge.offer}",
         "${quest.deep_ones_cave_purge.completion}",
         "${quest.deep_ones_cave_purge.completed}",
-        null);
+        null,
+        "depths_wardens_talisman",
+        1,
+        "deep_ones_cave");
   }
 }

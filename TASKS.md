@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0019`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0020`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -31,6 +31,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0016 | Fix mislabeled attack "hit chance" on compendium monster pages | Fix | Done | `3f7fd65` | [2026-09-22](CHANGELOG.md#2026-09-22--fix-mislabeled-attack-hit-chance-on-compendium-monster-pages-t4c-0016) |
 | T4C-0017 | XP-per-level chart on the compendium Systems page | Content/Tooling | Done | `dbc3add` | [2026-09-22](CHANGELOG.md#2026-09-22--xp-per-level-chart-on-the-compendium-systems-page-t4c-0017) |
 | T4C-0018 | Rename t4cfantasy-colliding spells, add Apex-tier spells, +4/+5 weapons/shields, fix warrior/archer armor AC | Content/Fix | Done | `c982e26` | [2026-09-22](CHANGELOG.md#2026-09-22--spell-renames-apex-tier-spells-enchanted-gear-and-warriorarcher-armor-fix-t4c-0018) |
+| T4C-0019 | Zone access quests, Avalon dead-end fix, dynamic fast travel | Content/Systems | Done | `43e9890` | [2026-09-22](CHANGELOG.md#2026-09-22--zone-access-quests-avalon-dead-end-fix-dynamic-fast-travel-t4c-0019) |
 
 ## Type legend
 

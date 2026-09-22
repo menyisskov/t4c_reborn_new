@@ -2,11 +2,15 @@ package com.perso.T4C.quest;
 
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.item.InventoryService;
+import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -64,6 +68,19 @@ public final class QuestService {
       return I18n.resolve(definition.getCompletedText());
     }
     int kills = kills(player, definition);
+    String itemKey = definition.getRequiredItemKey();
+    if (itemKey != null && !itemKey.isBlank() && definition.getRequiredItemQty() > 0) {
+      int have = Math.min(
+          definition.getRequiredItemQty(), Collections.frequency(player.getInventory(), itemKey));
+      return I18n.message(
+          "message.quest_progress_dialog_item",
+          kills,
+          definition.getRequiredKills(),
+          Math.max(0, definition.getRequiredKills() - kills),
+          itemDisplayName(itemKey),
+          have,
+          definition.getRequiredItemQty());
+    }
     return I18n.message(
         "message.quest_progress_dialog",
         kills,
@@ -79,7 +96,8 @@ public final class QuestService {
     for (QuestDef definition : loadDefinitions()) {
       if (same(definition.getGiverNpc(), npcName)
           && statusFor(player, definition) == STATUS_ACTIVE
-          && kills(player, definition) >= definition.getRequiredKills()) {
+          && kills(player, definition) >= definition.getRequiredKills()
+          && hasRequiredItem(player, definition)) {
         completionLines.add(complete(definition, player));
       }
     }
@@ -106,8 +124,14 @@ public final class QuestService {
       player.setQuestFlag(killsFlag(definition), next);
       changed = true;
       String title = I18n.resolve(definition.getTitle());
-      if (next >= definition.getRequiredKills()) {
+      if (next >= definition.getRequiredKills() && hasRequiredItem(player, definition)) {
         notifications.add(I18n.message("message.quest_ready", title, giverDisplayName(definition)));
+      } else if (next >= definition.getRequiredKills()) {
+        notifications.add(
+            I18n.message(
+                "message.quest_ready_needs_item",
+                title,
+                itemDisplayName(definition.getRequiredItemKey())));
       } else {
         notifications.add(
             I18n.message("message.quest_progress", title, next, definition.getRequiredKills()));
@@ -130,14 +154,71 @@ public final class QuestService {
     if (statusFor(player, definition) == STATUS_COMPLETED) {
       return I18n.resolve(definition.getCompletedText());
     }
+    consumeRequiredItem(player, definition);
     player.setQuestFlag(statusFlag(definition), STATUS_COMPLETED);
     player.setQuestFlag(killsFlag(definition), definition.getRequiredKills());
     player.addGold(definition.getRewardGold());
     player.addXpExact(definition.getRewardXp(), xpCurve);
+    String zoneId = definition.getUnlockZoneId();
+    if (zoneId != null && !zoneId.isBlank()) {
+      player.setQuestFlag(zoneUnlockFlag(zoneId), 1);
+    }
     persist.run();
     systemMessage.accept(
         I18n.message("message.quest_reward", definition.getRewardGold(), definition.getRewardXp()));
     return I18n.resolve(definition.getCompletionText());
+  }
+
+  /** True unless the quest also requires turning in {@code requiredItemQty} copies of
+   * {@code requiredItemKey} and the player doesn't have enough. Quests with no item objective
+   * (the original shape, and most quests) always pass this check. */
+  private static boolean hasRequiredItem(Player player, QuestDef definition) {
+    String key = definition.getRequiredItemKey();
+    if (key == null || key.isBlank() || definition.getRequiredItemQty() <= 0) return true;
+    return Collections.frequency(player.getInventory(), key) >= definition.getRequiredItemQty();
+  }
+
+  private static void consumeRequiredItem(Player player, QuestDef definition) {
+    String key = definition.getRequiredItemKey();
+    int qty = definition.getRequiredItemQty();
+    if (key == null || key.isBlank() || qty <= 0) return;
+    for (int i = 0; i < qty; i++) {
+      InventoryService.remove(player, -1, key);
+    }
+  }
+
+  /** Player-facing name for an item objective key, so quest messaging can name the item instead
+   * of just gating on it silently. Falls back to the raw key if the item isn't registered. */
+  private static String itemDisplayName(String itemKey) {
+    if (itemKey == null || itemKey.isBlank()) return itemKey;
+    ItemDefinition item = ItemRegistry.findByKey(itemKey);
+    return item == null ? itemKey : I18n.resolve(item.getName());
+  }
+
+  /** The durable, rebirth-proof flag a completed {@code unlockZoneId} quest sets - checked by
+   * the fast-travel menu ({@code NamedLocations}) to decide whether a zone's entry shows. Public
+   * so any other system that also wants to know "has this player unlocked zone X" (a gateway
+   * NPC's dialogue check, a teleport gate, etc.) reads the exact same flag. */
+  public static String zoneUnlockFlag(String zoneId) {
+    return "unlock.zone." + zoneId;
+  }
+
+  /** True once the player has unlocked the given zone: either the explicit flag {@link
+   * #complete} set on turn-in, or (for a character who already completed a quest before this
+   * flag existed, or before that quest had an {@code unlockZoneId} at all) any registered quest
+   * whose {@code unlockZoneId} matches and is already {@link #STATUS_COMPLETED} for this player -
+   * so access is never permanently missed just because it predates the flag. */
+  public static boolean hasUnlockedZone(Player player, String zoneId) {
+    if (player == null || zoneId == null) return false;
+    if (player.getQuestFlag(zoneUnlockFlag(zoneId)) != 0) return true;
+    for (QuestDef definition : QuestRegistry.load()) {
+      if (definition != null
+          && zoneId.equals(definition.getUnlockZoneId())
+          && statusFor(player, definition) == STATUS_COMPLETED) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static int statusFor(Player player, QuestDef definition) {
