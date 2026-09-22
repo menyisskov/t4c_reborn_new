@@ -21,6 +21,9 @@ public final class WindhowlMarchesCentaurs {
         "${quest.windhowl_marches_centaurs.offer}",
         "${quest.windhowl_marches_centaurs.completion}",
         "${quest.windhowl_marches_centaurs.completed}",
-        null);
+        null,
+        "marchwardens_crown",
+        1,
+        "windhowl_marches");
   }
 }

@@ -21,6 +21,9 @@ public final class HollowMarchWights {
         "${quest.hollow_march_wights.offer}",
         "${quest.hollow_march_wights.completion}",
         "${quest.hollow_march_wights.completed}",
-        null);
+        null,
+        "crown_of_the_hollow_king",
+        1,
+        "hollow_march");
   }
 }

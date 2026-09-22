@@ -2,11 +2,13 @@ package com.perso.T4C.quest;
 
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -79,7 +81,8 @@ public final class QuestService {
     for (QuestDef definition : loadDefinitions()) {
       if (same(definition.getGiverNpc(), npcName)
           && statusFor(player, definition) == STATUS_ACTIVE
-          && kills(player, definition) >= definition.getRequiredKills()) {
+          && kills(player, definition) >= definition.getRequiredKills()
+          && hasRequiredItem(player, definition)) {
         completionLines.add(complete(definition, player));
       }
     }
@@ -130,14 +133,49 @@ public final class QuestService {
     if (statusFor(player, definition) == STATUS_COMPLETED) {
       return I18n.resolve(definition.getCompletedText());
     }
+    consumeRequiredItem(player, definition);
     player.setQuestFlag(statusFlag(definition), STATUS_COMPLETED);
     player.setQuestFlag(killsFlag(definition), definition.getRequiredKills());
     player.addGold(definition.getRewardGold());
     player.addXpExact(definition.getRewardXp(), xpCurve);
+    String zoneId = definition.getUnlockZoneId();
+    if (zoneId != null && !zoneId.isBlank()) {
+      player.setQuestFlag(zoneUnlockFlag(zoneId), 1);
+    }
     persist.run();
     systemMessage.accept(
         I18n.message("message.quest_reward", definition.getRewardGold(), definition.getRewardXp()));
     return I18n.resolve(definition.getCompletionText());
+  }
+
+  /** True unless the quest also requires turning in {@code requiredItemQty} copies of
+   * {@code requiredItemKey} and the player doesn't have enough. Quests with no item objective
+   * (the original shape, and most quests) always pass this check. */
+  private static boolean hasRequiredItem(Player player, QuestDef definition) {
+    String key = definition.getRequiredItemKey();
+    if (key == null || key.isBlank() || definition.getRequiredItemQty() <= 0) return true;
+    return Collections.frequency(player.getInventory(), key) >= definition.getRequiredItemQty();
+  }
+
+  private static void consumeRequiredItem(Player player, QuestDef definition) {
+    String key = definition.getRequiredItemKey();
+    int qty = definition.getRequiredItemQty();
+    if (key == null || key.isBlank() || qty <= 0) return;
+    for (int i = 0; i < qty; i++) {
+      InventoryService.remove(player, -1, key);
+    }
+  }
+
+  /** The durable, rebirth-proof flag a completed {@code unlockZoneId} quest sets - checked by
+   * the fast-travel menu ({@code NamedLocations}) to decide whether a zone's entry shows. Public
+   * so any other system that also wants to know "has this player unlocked zone X" (a gateway
+   * NPC's dialogue check, a teleport gate, etc.) reads the exact same flag. */
+  public static String zoneUnlockFlag(String zoneId) {
+    return "unlock.zone." + zoneId;
+  }
+
+  public static boolean hasUnlockedZone(Player player, String zoneId) {
+    return player != null && zoneId != null && player.getQuestFlag(zoneUnlockFlag(zoneId)) != 0;
   }
 
   public static int statusFor(Player player, QuestDef definition) {

@@ -128,6 +128,22 @@
     "completedText": "The lair's approach is still quiet since you cleared it. Don't get comfortable - something out there is still watching."
   },
   {
+    "id": "passage_to_avalon",
+    "title": "Passage to Avalon",
+    "giverNpc": "HarbormasterRangor",
+    "targetMonster": "Tideworn Reaver",
+    "requiredKills": 25,
+    "targetWorldZ": 0,
+    "areaCenterX": 1550,
+    "areaCenterY": 1300,
+    "areaRadiusTiles": 110,
+    "rewardGold": 400000,
+    "rewardXp": 200000000,
+    "offerText": "Something about the tide beyond that ruined dock isn't right - a lord of them, the smugglers say, and only he keeps what map they know of the crossing. Clear his reavers from the shore, then take his chart before it goes down with him.",
+    "completionText": "The reavers are scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive.",
+    "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross."
+  },
+  {
     "id": "avalon_wilds_vigil",
     "title": "Avalon Wilds Vigil",
     "giverNpc": "ElderOphira",

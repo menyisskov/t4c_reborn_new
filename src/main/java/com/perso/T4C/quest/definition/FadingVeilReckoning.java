@@ -25,6 +25,9 @@ public final class FadingVeilReckoning {
         "${quest.fading_veil_reckoning.offer}",
         "${quest.fading_veil_reckoning.completion}",
         "${quest.fading_veil_reckoning.completed}",
-        null);
+        null,
+        "ysoldes_veiled_circlet",
+        1,
+        "fading_veil");
   }
 }

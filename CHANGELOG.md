@@ -15,6 +15,47 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-22 — Zone access quests, Avalon dead-end fix, dynamic fast travel (T4C-0019)
+
+_T4C-0018 is reserved by a separate, still-open pass (spell renames/gear); this one branched
+before it and claims 0019 to avoid an ID collision on merge._
+
+### Added
+- `QuestDef`/`QuestService` gained a real, reusable second objective: a quest can now optionally
+  require turning in `requiredItemQty` copies of `requiredItemKey` (consumed on completion) on
+  top of its existing kill count, and can set a durable `unlockZoneId` flag
+  (`QuestService.zoneUnlockFlag`/`hasUnlockedZone`) when completed. Both are `null`/`0` by
+  default so every quest predating this pass is unaffected; backward-compatible 14- and 15-arg
+  `QuestDef` constructors are unchanged.
+- All 10 of the fork's existing zone quests (Sunken Chancel, Cinderreach Hills, Windhowl
+  Marches, Hollow March, Lesser Drake's Aerie, Greater Drake's Bastion, Drake's Lair, Deep Ones
+  Cave, Avalon Wilds, Fading Veil) now also require turning in that zone's signature boss-drop
+  item, and unlock that zone's fast-travel entry on completion — combining "kill N creatures"
+  with "collect a rare item" as requested, without inventing new items where a real drop already
+  existed for every one of them.
+- **Fixed a real soft-lock, not just new content**: every NPC and shop that could grant access to
+  Avalon (the `scroll_of_avalon` consumable, the `AvalonGateway` spell) was itself stationed
+  inside Avalon, so a fresh character could never reach it at all. Added a coastal gate zone (The
+  Avalon Crossing, mainland shore facing Avalon) with two new monsters (Tideworn Reaver trash,
+  Coastwarden Ithrak boss), one new item (`tideworn_avalon_chart`), a new NPC
+  (`HarbormasterRangor`), and a new access quest (`passage_to_avalon`) that unlocks fast travel
+  into Avalon Sanctuary on completion — the same role the Oracle plays for rebirth access.
+- The Locations (fast-travel) panel is now player-aware: `NamedLocation` gained an optional
+  `unlockZoneId`, and `NamedLocations.forPlayer(Player)` filters to the original always-available
+  landmarks plus any zone whose unlock quest the player has completed. `LocationsScreen` now uses
+  `forPlayer` instead of the previous unconditional `all()`. Zone access (and therefore its fast
+  travel entry) is quest-flag-based, and `RebirthBehavior.perform()` never clears arbitrary quest
+  flags — only specific named ones (level/stats/equipment) — so access is never lost on
+  rebirth/remort.
+
+### Tests
+- `QuestServiceItemObjectiveTest`: item-gated turn-in, exact-quantity consumption, zone-unlock
+  flag setting, kill-only quests unaffected.
+- `NamedLocationsTest`: unconditional locations always visible, zone-gated locations appear only
+  after their unlock quest completes, every `NamedLocation.unlockZoneId` matches a real quest and
+  vice versa (catches a typo silently hiding a location), and a zone-unlock flag (and its fast
+  travel entry) survives `RebirthBehavior.perform()`.
+
 ## 2026-09-22 — XP-per-level chart on the compendium Systems page (T4C-0017)
 
 ### Added
