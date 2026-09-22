@@ -72,8 +72,18 @@ public final class MonsterBalanceReportGenerator {
         for (MonsterDef.Attack atk : def.getAttacks()) {
           Map<String, Object> a = new LinkedHashMap<>();
           a.put("formula", atk.getName());
-          a.put("hitChance", atk.getValue2());
+          // BaseMonster#rollDamage: value1 is the combat-attack score fed into hit-chance
+          // resolution (the real "hit power" stat); value2 is only a selection weight among
+          // multiple eligible attacks at this range, not a hit percentage - do not label it as
+          // one (see BaseMonster#pickAttack).
+          a.put("combatAttack", atk.getValue1());
+          a.put("selectionWeight", atk.getValue2());
           a.put("isSpell", atk.isSpell());
+          if (atk.isSpell()) {
+            a.put("spellId", atk.getSpellId());
+            a.put("minRangeTiles", atk.getMinRangeTiles());
+            a.put("maxRangeTiles", atk.getMaxRangeTiles());
+          }
           attacks.add(a);
         }
       }
