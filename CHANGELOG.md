@@ -33,6 +33,17 @@ _Nothing pending._
   flavors don't get, on top of the existing strength/agility + attack/archery skill split. All 24
   warrior/archer armor pieces regenerated; the 72 mage/elemental pieces are unaffected (Empyrean's
   36 elemental files show only cosmetic `boostId` renumbering from the shared counter).
+- (Codex review, same pass) `SpellRegistry.findByName` had no alias for the five just-renamed
+  spell keys, so a character who'd already learned one under its old name (a real, checked-in
+  save has `${spell.divine_veil}` etc. in its spell list) would silently lose it — spellbook
+  omits it, casting rejects it as unlearned. Added the five old→new key mappings to the registry's
+  existing `canonicalAlias` table (the same mechanism already used for a couple of legacy
+  spell-key renames), with a new `SpellRenameBackwardCompatTest` locking in all five.
+- (Codex review, same pass) The nine new weapons/shields had no in-game acquisition path at all —
+  `price: 0` with no shop listing and no loot entry. Added all nine to `LordoftheShops`'
+  `ShopCatalog` list, right after their own line's existing +1/+2/+3 tiers (which are sold the
+  same way, also at `price: 0` — an existing, consistent convention for these exact lines, not
+  something this pass introduced).
 
 ### Added
 - Five new "Apex tier" player spells (levels 320-900) filling the gap between the existing
@@ -43,11 +54,10 @@ _Nothing pending._
 - Six new enchanted weapons extending two existing top-tier legacy lines one/two ranks past their
   previous +3 ceiling: Adamantite Two-Handed Sword +4/+5, Mithril Two-Handed Sword +4/+5, Black
   Locust Composite Bow +4/+5 — each continuing that line's own established damage-dice/flat-bonus/
-  skill-boost growth curve (drop-only, `price: 0`, matching the existing +1→+2→+3 progression's
-  own convention).
+  skill-boost growth curve, sold by LordoftheShops alongside their line's existing +1/+2/+3 tiers.
 - Three new Adamantite Shield tiers (+3/+4/+5) — this codebase had no shield enchant-tier line at
-  all before now; adds one on top of the existing unenchanted Adamantite Shield, with AC, parry
-  skill, and endurance scaling per tier.
+  all before now; adds one on top of the existing unenchanted Adamantite Shield (also sold by
+  LordoftheShops), with AC, parry skill, and endurance scaling per tier.
 
 ### Notes
 - `item/json/ItemJsonDef.java` already supports `dmgFormula`/`atkDelay` pass-through (four
