@@ -315,7 +315,8 @@ public final class Oracle extends ScriptedNpc {
             return;
           }
 
-          int minimumLevel = 75 + c.flag(REMORTS) * 5;
+          int minimumLevel =
+              com.perso.T4C.npc.behavior.RebirthBehavior.requiredLevelFor(c.flag(REMORTS) + 1);
 
           if (c.player().getLevel() < minimumLevel) {
 

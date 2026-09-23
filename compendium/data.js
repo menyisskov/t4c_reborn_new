@@ -22901,6 +22901,486 @@ window.T4C_DATA = {
       }
     ]
   },
+  "rebirths": {
+    "maxRebirths": 50,
+    "maxLevel": 400,
+    "firstRebirthLevel": 75,
+    "levelPerPreviousRebirth": 5,
+    "energyShop": [
+      {
+        "npc": "Betran",
+        "buys": "Attributes",
+        "details": "Raises strength, endurance, agility, intelligence or wisdom by 1, up to 10 above your new starting value. Each attribute costs more the higher you push it: the 1st point costs 1, the 2nd-4th cost 2, the 5th-7th cost 3, the 8th costs 4 and the 9th-10th cost 5 (30 points to max one attribute)."
+      },
+      {
+        "npc": "Caplan",
+        "buys": "Elemental power",
+        "details": "Raises your power in fire, water, air, earth, light or dark by 5. Costs 1 point at first, rising as that element's power grows."
+      },
+      {
+        "npc": "Del Aan",
+        "buys": "Elemental resistance",
+        "details": "Raises your resistance to fire, water, air, earth or dark by 10 for 2 points."
+      },
+      {
+        "npc": "Epilan",
+        "buys": "Health and mana",
+        "details": "Adds 10 maximum health or 5 maximum mana for 1 point each, with no limit - use it to spend whatever is left over."
+      }
+    ],
+    "rows": [
+      {
+        "rebirth": 1,
+        "requiredLevel": 75,
+        "startingAttributes": 25,
+        "energyPoints": 10,
+        "auraHealChance": 5,
+        "auraRetaliationChance": 5,
+        "auraBurstChance": 1
+      },
+      {
+        "rebirth": 2,
+        "requiredLevel": 80,
+        "startingAttributes": 30,
+        "energyPoints": 15,
+        "auraHealChance": 6,
+        "auraRetaliationChance": 10,
+        "auraBurstChance": 2
+      },
+      {
+        "rebirth": 3,
+        "requiredLevel": 85,
+        "startingAttributes": 35,
+        "energyPoints": 20,
+        "auraHealChance": 7,
+        "auraRetaliationChance": 15,
+        "auraBurstChance": 3
+      },
+      {
+        "rebirth": 4,
+        "requiredLevel": 90,
+        "startingAttributes": 40,
+        "energyPoints": 25,
+        "auraHealChance": 8,
+        "auraRetaliationChance": 20,
+        "auraBurstChance": 4
+      },
+      {
+        "rebirth": 5,
+        "requiredLevel": 95,
+        "startingAttributes": 45,
+        "energyPoints": 30,
+        "auraHealChance": 9,
+        "auraRetaliationChance": 25,
+        "auraBurstChance": 5
+      },
+      {
+        "rebirth": 6,
+        "requiredLevel": 100,
+        "startingAttributes": 50,
+        "energyPoints": 35,
+        "auraHealChance": 10,
+        "auraRetaliationChance": 30,
+        "auraBurstChance": 6
+      },
+      {
+        "rebirth": 7,
+        "requiredLevel": 105,
+        "startingAttributes": 55,
+        "energyPoints": 40,
+        "auraHealChance": 11,
+        "auraRetaliationChance": 35,
+        "auraBurstChance": 7
+      },
+      {
+        "rebirth": 8,
+        "requiredLevel": 110,
+        "startingAttributes": 60,
+        "energyPoints": 45,
+        "auraHealChance": 12,
+        "auraRetaliationChance": 40,
+        "auraBurstChance": 8
+      },
+      {
+        "rebirth": 9,
+        "requiredLevel": 115,
+        "startingAttributes": 65,
+        "energyPoints": 50,
+        "auraHealChance": 13,
+        "auraRetaliationChance": 45,
+        "auraBurstChance": 9
+      },
+      {
+        "rebirth": 10,
+        "requiredLevel": 120,
+        "startingAttributes": 70,
+        "energyPoints": 55,
+        "auraHealChance": 14,
+        "auraRetaliationChance": 50,
+        "auraBurstChance": 10
+      },
+      {
+        "rebirth": 11,
+        "requiredLevel": 125,
+        "startingAttributes": 75,
+        "energyPoints": 60,
+        "auraHealChance": 15,
+        "auraRetaliationChance": 55,
+        "auraBurstChance": 11
+      },
+      {
+        "rebirth": 12,
+        "requiredLevel": 130,
+        "startingAttributes": 80,
+        "energyPoints": 65,
+        "auraHealChance": 16,
+        "auraRetaliationChance": 60,
+        "auraBurstChance": 12
+      },
+      {
+        "rebirth": 13,
+        "requiredLevel": 135,
+        "startingAttributes": 85,
+        "energyPoints": 70,
+        "auraHealChance": 17,
+        "auraRetaliationChance": 65,
+        "auraBurstChance": 13
+      },
+      {
+        "rebirth": 14,
+        "requiredLevel": 140,
+        "startingAttributes": 90,
+        "energyPoints": 75,
+        "auraHealChance": 18,
+        "auraRetaliationChance": 70,
+        "auraBurstChance": 14
+      },
+      {
+        "rebirth": 15,
+        "requiredLevel": 145,
+        "startingAttributes": 95,
+        "energyPoints": 80,
+        "auraHealChance": 19,
+        "auraRetaliationChance": 75,
+        "auraBurstChance": 15
+      },
+      {
+        "rebirth": 16,
+        "requiredLevel": 150,
+        "startingAttributes": 100,
+        "energyPoints": 85,
+        "auraHealChance": 20,
+        "auraRetaliationChance": 80,
+        "auraBurstChance": 16
+      },
+      {
+        "rebirth": 17,
+        "requiredLevel": 155,
+        "startingAttributes": 105,
+        "energyPoints": 90,
+        "auraHealChance": 21,
+        "auraRetaliationChance": 85,
+        "auraBurstChance": 17
+      },
+      {
+        "rebirth": 18,
+        "requiredLevel": 160,
+        "startingAttributes": 110,
+        "energyPoints": 95,
+        "auraHealChance": 22,
+        "auraRetaliationChance": 90,
+        "auraBurstChance": 18
+      },
+      {
+        "rebirth": 19,
+        "requiredLevel": 165,
+        "startingAttributes": 115,
+        "energyPoints": 100,
+        "auraHealChance": 23,
+        "auraRetaliationChance": 95,
+        "auraBurstChance": 19
+      },
+      {
+        "rebirth": 20,
+        "requiredLevel": 170,
+        "startingAttributes": 120,
+        "energyPoints": 105,
+        "auraHealChance": 24,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 20
+      },
+      {
+        "rebirth": 21,
+        "requiredLevel": 175,
+        "startingAttributes": 125,
+        "energyPoints": 110,
+        "auraHealChance": 25,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 21
+      },
+      {
+        "rebirth": 22,
+        "requiredLevel": 180,
+        "startingAttributes": 130,
+        "energyPoints": 115,
+        "auraHealChance": 26,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 22
+      },
+      {
+        "rebirth": 23,
+        "requiredLevel": 185,
+        "startingAttributes": 135,
+        "energyPoints": 120,
+        "auraHealChance": 27,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 23
+      },
+      {
+        "rebirth": 24,
+        "requiredLevel": 190,
+        "startingAttributes": 140,
+        "energyPoints": 125,
+        "auraHealChance": 28,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 24
+      },
+      {
+        "rebirth": 25,
+        "requiredLevel": 195,
+        "startingAttributes": 145,
+        "energyPoints": 130,
+        "auraHealChance": 29,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 25
+      },
+      {
+        "rebirth": 26,
+        "requiredLevel": 200,
+        "startingAttributes": 150,
+        "energyPoints": 135,
+        "auraHealChance": 30,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 26
+      },
+      {
+        "rebirth": 27,
+        "requiredLevel": 205,
+        "startingAttributes": 155,
+        "energyPoints": 140,
+        "auraHealChance": 31,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 27
+      },
+      {
+        "rebirth": 28,
+        "requiredLevel": 210,
+        "startingAttributes": 160,
+        "energyPoints": 145,
+        "auraHealChance": 32,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 28
+      },
+      {
+        "rebirth": 29,
+        "requiredLevel": 215,
+        "startingAttributes": 165,
+        "energyPoints": 150,
+        "auraHealChance": 33,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 29
+      },
+      {
+        "rebirth": 30,
+        "requiredLevel": 220,
+        "startingAttributes": 170,
+        "energyPoints": 155,
+        "auraHealChance": 34,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 30
+      },
+      {
+        "rebirth": 31,
+        "requiredLevel": 225,
+        "startingAttributes": 175,
+        "energyPoints": 160,
+        "auraHealChance": 35,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 31
+      },
+      {
+        "rebirth": 32,
+        "requiredLevel": 230,
+        "startingAttributes": 180,
+        "energyPoints": 165,
+        "auraHealChance": 36,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 32
+      },
+      {
+        "rebirth": 33,
+        "requiredLevel": 235,
+        "startingAttributes": 185,
+        "energyPoints": 170,
+        "auraHealChance": 37,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 33
+      },
+      {
+        "rebirth": 34,
+        "requiredLevel": 240,
+        "startingAttributes": 190,
+        "energyPoints": 175,
+        "auraHealChance": 38,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 34
+      },
+      {
+        "rebirth": 35,
+        "requiredLevel": 245,
+        "startingAttributes": 195,
+        "energyPoints": 180,
+        "auraHealChance": 39,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 35
+      },
+      {
+        "rebirth": 36,
+        "requiredLevel": 250,
+        "startingAttributes": 200,
+        "energyPoints": 185,
+        "auraHealChance": 40,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 36
+      },
+      {
+        "rebirth": 37,
+        "requiredLevel": 255,
+        "startingAttributes": 205,
+        "energyPoints": 190,
+        "auraHealChance": 41,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 37
+      },
+      {
+        "rebirth": 38,
+        "requiredLevel": 260,
+        "startingAttributes": 210,
+        "energyPoints": 195,
+        "auraHealChance": 42,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 38
+      },
+      {
+        "rebirth": 39,
+        "requiredLevel": 265,
+        "startingAttributes": 215,
+        "energyPoints": 200,
+        "auraHealChance": 43,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 39
+      },
+      {
+        "rebirth": 40,
+        "requiredLevel": 270,
+        "startingAttributes": 220,
+        "energyPoints": 205,
+        "auraHealChance": 44,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 40
+      },
+      {
+        "rebirth": 41,
+        "requiredLevel": 275,
+        "startingAttributes": 225,
+        "energyPoints": 210,
+        "auraHealChance": 45,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 41
+      },
+      {
+        "rebirth": 42,
+        "requiredLevel": 280,
+        "startingAttributes": 230,
+        "energyPoints": 215,
+        "auraHealChance": 46,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 42
+      },
+      {
+        "rebirth": 43,
+        "requiredLevel": 285,
+        "startingAttributes": 235,
+        "energyPoints": 220,
+        "auraHealChance": 47,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 43
+      },
+      {
+        "rebirth": 44,
+        "requiredLevel": 290,
+        "startingAttributes": 240,
+        "energyPoints": 225,
+        "auraHealChance": 48,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 44
+      },
+      {
+        "rebirth": 45,
+        "requiredLevel": 295,
+        "startingAttributes": 245,
+        "energyPoints": 230,
+        "auraHealChance": 49,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 45
+      },
+      {
+        "rebirth": 46,
+        "requiredLevel": 300,
+        "startingAttributes": 250,
+        "energyPoints": 235,
+        "auraHealChance": 50,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 46
+      },
+      {
+        "rebirth": 47,
+        "requiredLevel": 305,
+        "startingAttributes": 255,
+        "energyPoints": 240,
+        "auraHealChance": 51,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 47
+      },
+      {
+        "rebirth": 48,
+        "requiredLevel": 310,
+        "startingAttributes": 260,
+        "energyPoints": 245,
+        "auraHealChance": 52,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 48
+      },
+      {
+        "rebirth": 49,
+        "requiredLevel": 315,
+        "startingAttributes": 265,
+        "energyPoints": 250,
+        "auraHealChance": 53,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 49
+      },
+      {
+        "rebirth": 50,
+        "requiredLevel": 320,
+        "startingAttributes": 270,
+        "energyPoints": 255,
+        "auraHealChance": 54,
+        "auraRetaliationChance": 100,
+        "auraBurstChance": 50
+      }
+    ]
+  },
   "zones": [
     {
       "id": "sunken_chancel",

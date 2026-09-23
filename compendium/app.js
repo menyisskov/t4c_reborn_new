@@ -794,6 +794,7 @@
   // ---------------------------------------------------------- xp curve chart
 
   var XP_CURVE = DATA.xpCurve || { serverXpRate: 1, entries: [] };
+  var REBIRTHS = DATA.rebirths || { rows: [], energyShop: [] };
   var XP_CHART_W = 900;
   var XP_CHART_H = 320;
   var XP_CHART_PAD = { l: 66, r: 16, t: 14, b: 34 };
@@ -992,10 +993,58 @@
       '<div class="page-header"><p class="eyebrow">Systems &amp; economy</p><h1>Systems, economy and process passes</h1>' +
       '<p class="lead">Non-zone changes: rebirth/economy tuning, engine fixes, and standalone content not tied to a single zone.</p></div>' +
       '<div class="section-title">Leveling curve</div>' + xpCurveChartHtml() +
+      panel("Rebirths", '<p class="lead">Level requirements, starting attributes, energy points and Seraph aura strength for every rebirth: ' + link("rebirths", "see the Rebirths page") + ".</p>") +
       '<div class="section-title">Pass timeline</div><div class="timeline">' + timeline + "</div>" +
       '<div class="section-title">Armor sets</div>' + collections +
       '<div class="section-title">Standalone items</div>' + panel("Not part of a zone or set", standalone) +
       '<div class="section-title">Colosseum</div>' + colosseumHtml
+    );
+  });
+
+  // -------------------------------------------------------------- rebirths
+
+  route("rebirths", function () {
+    var R = REBIRTHS;
+    if (!R.rows || !R.rows.length) return notFound("Rebirth data");
+    var last = R.rows[R.rows.length - 1];
+
+    var howTo =
+      "<ol class=\"rebirth-steps\">" +
+      "<li>Defeat Gabriel Archonis in the Oracle's trial duel (once - it stays done for every later rebirth).</li>" +
+      "<li>Reach the level in the table below for your next rebirth, then tell the Oracle you are <em>ready to be reborn</em>.</li>" +
+      "<li>You return to level 1 with every attribute reset to the starting value shown, your spells and skills cleared, and the Seraph wings and ring equipped.</li>" +
+      "<li>Speak with Alphan, then spend all of your energy points with his associates (below). Alphan sends you back to Lighthaven once every point is spent.</li>" +
+      "</ol>" +
+      '<p class="lead">You can be reborn at most ' + R.maxRebirths + " times. The level cap is " + R.maxLevel +
+      ", and the last rebirth needs level " + last.requiredLevel + ".</p>";
+
+    var shop = (R.energyShop || []).map(function (v) {
+      return '<div class="rebirth-vendor"><strong>' + esc(v.npc) + "</strong> &middot; " + esc(v.buys) + "<p>" + esc(v.details) + "</p></div>";
+    }).join("") +
+      '<p class="lead">Everything bought with energy lasts one life: your next rebirth resets attributes, elemental power and resistance, and maximum health and mana before granting fresh energy.</p>';
+
+    var rows = R.rows.map(function (r) {
+      return "<tr><td class=\"num\">" + r.rebirth + "</td><td class=\"num\">" + r.requiredLevel +
+        "</td><td class=\"num\">" + r.startingAttributes + "</td><td class=\"num\">" + r.energyPoints +
+        "</td><td class=\"num\">" + r.auraHealChance + "%</td><td class=\"num\">" + r.auraRetaliationChance +
+        "%</td><td class=\"num\">" + r.auraBurstChance + "%</td></tr>";
+    }).join("");
+
+    return (
+      '<div class="page-header"><p class="eyebrow">Systems</p><h1>Rebirths</h1>' +
+      '<p class="lead">What each rebirth asks for and what it gives. Every rebirth needs ' +
+      R.levelPerPreviousRebirth + " more levels than the one before, starts you with " +
+      "higher attributes, grants more energy to spend, and strengthens your Seraph aura.</p></div>" +
+      panel("How to be reborn", howTo) +
+      panel("Spending energy points", shop) +
+      '<div class="section-title">Every rebirth <span class="count">' + R.rows.length + "</span></div>" +
+      '<div class="table-wrap"><table class="data-table"><thead><tr>' +
+      "<th>Rebirth</th><th>Level required</th><th>Starting attributes</th><th>Energy points</th>" +
+      "<th>Aura heal chance</th><th>Aura burn chance</th><th>Aura fire burst chance</th>" +
+      "</tr></thead><tbody>" + rows + "</tbody></table></div>" +
+      '<p class="lead">Starting attributes apply to all five (strength, endurance, agility, intelligence, wisdom). ' +
+      "Aura chances: heal is rolled when you are hit and heals you and nearby allies; burn is rolled when you are hit and damages the attacker; " +
+      "fire burst is rolled when you land a hit and damages enemies around you.</p>"
     );
   });
 

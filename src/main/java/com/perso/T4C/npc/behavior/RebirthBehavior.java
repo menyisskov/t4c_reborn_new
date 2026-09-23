@@ -19,6 +19,33 @@ public final class RebirthBehavior {
 
   private RebirthBehavior() {}
 
+  /** Base level the Oracle asks for before a character's first rebirth. */
+  public static final int FIRST_REBIRTH_LEVEL = 75;
+
+  /** Extra levels the Oracle asks for per rebirth already taken. */
+  public static final int LEVEL_PER_PREVIOUS_REBIRTH = 5;
+
+  /** Character level the Oracle requires before the {@code rebirthNumber}-th rebirth (1-based). */
+  public static int requiredLevelFor(int rebirthNumber) {
+
+    return FIRST_REBIRTH_LEVEL + (rebirthNumber - 1) * LEVEL_PER_PREVIOUS_REBIRTH;
+  }
+
+  /** Value every attribute is reset to by the {@code rebirthNumber}-th rebirth (1-based). */
+  public static int startingAttributeFor(int rebirthNumber) {
+
+    return GameConstants.REBIRTH_BASE_ATTRIBUTE
+        + rebirthNumber * GameConstants.REBIRTH_ATTRIBUTE_PER_REMORT;
+  }
+
+  /** Energy points granted by the {@code rebirthNumber}-th rebirth (1-based), spent with Alphan's
+   * associates before returning to the world. */
+  public static int energyPointsFor(int rebirthNumber) {
+
+    return GameConstants.REBIRTH_REMORT_POINTS_PER_REBIRTH
+        + (rebirthNumber - 1) * GameConstants.REBIRTH_REMORT_POINTS_PER_EXTRA_REMORT;
+  }
+
   /** Whether this character is still below {@link GameConstants#REBIRTH_MAX_REMORTS}. */
   public static boolean canRebirth(Player player) {
 
@@ -45,16 +72,13 @@ public final class RebirthBehavior {
 
     player.setRebirthCount(remorts);
 
-    int remortPoints =
-        GameConstants.REBIRTH_REMORT_POINTS_PER_REBIRTH
-            + (remorts - 1) * GameConstants.REBIRTH_REMORT_POINTS_PER_EXTRA_REMORT;
+    int remortPoints = energyPointsFor(remorts);
 
     player.setQuestFlag("__FLAG_REMORT_POINTS", remortPoints);
 
     player.setQuestFlag("__FLAG_REMORT_PROCESS", 0);
 
-    int attribute =
-        GameConstants.REBIRTH_BASE_ATTRIBUTE + remorts * GameConstants.REBIRTH_ATTRIBUTE_PER_REMORT;
+    int attribute = startingAttributeFor(remorts);
 
     player.setStrength(attribute);
 
