@@ -34,14 +34,39 @@ Small fixes discovered *while* doing a larger pass (e.g. a bugfix found
 mid-zone-build) belong in that pass's own task/changelog entry, not a new
 one — don't fragment one piece of work into several IDs.
 
+### CHANGELOG.md is for players, not engineers
+
+`CHANGELOG.md` is patch notes — write it for someone who plays the game
+and has never opened this repo. Say what was **added, changed, fixed, or
+removed**, in plain language a player would use, not what was edited in
+the code:
+
+- No class/method/variable names, file paths, registry/flag names, or
+  other implementation details (`QuestService`, `hasUnlockedZone`,
+  `unlock.zone.*`, `CompendiumExporter` — none of that belongs here).
+- No mention of tests, refactors, code review findings, or how a fix
+  works internally — just the player-visible result.
+- Describe the thing itself: the zone, item, quest, monster, spell, or
+  behavior, and what's different about it now. "Reaching a quest's kill
+  goal now tells you if you still need to bring back an item" reads fine;
+  "recordKill's notification now checks hasRequiredItem before announcing
+  message.quest_ready" does not.
+- That level of technical detail is exactly right for the **commit
+  message** and PR description — put it there instead, not in the
+  changelog.
+
+This applies to every entry, `Process/Tooling` ones included — even a
+repo-process change has a plain-language version ("the project's rules for
+X changed" reads fine; naming the specific doc/file does not).
+
 ## Format reference
 
 - `TASKS.md`: one markdown table, one row per ID, with a short type/status/
   commit/changelog-link. Keep the "Next free ID" line at the top current.
 - `CHANGELOG.md`: reverse-chronological, one `##` section per pass (not per
   commit), each tagged with its task ID and using `Added`/`Changed`/`Fixed`
-  subsections as needed. See the file's own entries for the expected level
-  of detail.
+  subsections as needed, written in player-facing language (see above). See
+  the file's own entries for the expected level of detail.
 
 ## Other project docs worth knowing about
 
