@@ -381,8 +381,9 @@ public final class CompendiumExporter {
     return s;
   }
 
-  /** A concrete, reproducible damage figure for an attack spell's primary effect (effectType 1,
-   * "center" formula - see SpellEffectManager#resolveHealthDelta), since the raw min/maxDamage
+  /** A concrete, reproducible damage figure for an attack spell's primary effect (effectType 1
+   * or 10 - both are treated as the "health delta" formula by SpellEffectManager#
+   * resolveHealthDelta, effectType 10 being the drain-life variant), since the raw min/maxDamage
    * fields on SpellData are always 0 for every effect-driven spell (the real damage lives in the
    * T4cEffect formula string, not those fields). Evaluated at a fixed, labeled reference: the
    * caster at exactly this spell's own minInt/minWis/minLevel requirements, an untrained (100)
@@ -395,13 +396,18 @@ public final class CompendiumExporter {
   private static Map<String, Object> damageAtReference(SpellData spell) {
     if (!spell.isAttack() || spell.getT4cEffects() == null) return null;
     for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
-      if (effect == null || effect.getEffectType() != 1 || effect.getParameters() == null) continue;
+      if (effect == null || effect.getParameters() == null) continue;
+      int type = effect.getEffectType();
+      if (type != 1 && type != 10) continue;
       String formula = effect.getParameters().isEmpty() ? null : effect.getParameters().get(0).getExpression();
       if (formula == null || formula.isBlank()) continue;
-      // Every damage formula in this codebase is written as a negative health delta
-      // ("-(...)"); DiceFormula#min/#max floor negative results at 0, so strip the sign here
-      // and work with the magnitude directly rather than getting 0-0 back for every spell.
-      String magnitude = formula.startsWith("-") ? formula.substring(1) : formula;
+      // The formula is a "health delta" (negative = damage), sometimes wrapped in a leading
+      // "-(...)" and sometimes with the sign buried inside a conditional (e.g. Mana Burst's
+      // "if(cond?-(...):0)"). Rather than assume the sign sits at the start of the string,
+      // negate the whole expression - the parser supports a leading unary minus over any
+      // sub-expression, including if(...), so this reliably turns "damage" into a positive
+      // magnitude (and a 0-delta miss/resist branch stays 0) regardless of where the "-" is.
+      String magnitude = "-(" + formula + ")";
       DiceFormula.Context ctx =
           new DiceFormula.Context(
               0, 0, 0, spell.getMinInt(), 0, spell.getMinWis(), 0, spell.getMinLevel(),
@@ -540,9 +546,19 @@ public final class CompendiumExporter {
       // weapons sold by LordoftheShops) - exportItems() itself is unfiltered (every JSON item,
       // new or legacy), so an item's sources shouldn't be filtered by the seller's newness
       // either. SHOP_EXCLUDED_NPC_IDS still applies (entries that aren't real shop listings).
-      for (Map.Entry<String, List<String>> entry : new TreeMap<>(m).entrySet()) {
-        if (SHOP_EXCLUDED_NPC_IDS.contains(entry.getKey())) continue;
-        out.put(entry.getKey(), entry.getValue());
+      //
+      // Reading the private M map's own list is only correct for sellers with no runtime
+      // override: ShopCatalog#get() special-cases several ids (e.g. ChryseidaYolangda,
+      // WitchDoctorKwarlgloth, Fali) to a *different* inventory than their own M entry, and
+      // returns null (not a real shop) for others (Boreas, Yolak, ...) despite them having an
+      // M entry. get() is the single source of truth the game itself uses, so call it per id
+      // instead of trusting M's own value directly.
+      java.lang.reflect.Method getMethod = shopCatalog.getDeclaredMethod("get", String.class);
+      for (String npcId : new TreeMap<>(m).keySet()) {
+        if (SHOP_EXCLUDED_NPC_IDS.contains(npcId)) continue;
+        Object behavior = getMethod.invoke(null, npcId);
+        if (!(behavior instanceof com.perso.T4C.npc.behavior.ShopBehavior shop)) continue;
+        out.put(npcId, shop.items());
       }
     } catch (ReflectiveOperationException ex) {
       System.err.println("Could not read ShopCatalog: " + ex);

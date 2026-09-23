@@ -4099,6 +4099,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-( ( 1d21 + 13 + self.int/18 ) * self.dark/target.r_dark )",
+        "min": 16,
+        "max": 36
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 7152,
@@ -4644,8 +4649,8 @@ window.T4C_DATA = {
       "maxDamage": 0,
       "damageAtReference": {
         "formula": "if(target.r_air<4000?-(1d26+33+self.int/13):0)",
-        "min": 0,
-        "max": 0
+        "min": 38,
+        "max": 63
       },
       "cooldownSeconds": 0,
       "duration": "0",
@@ -5628,6 +5633,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "if(target.r_dark=5025?0:-((1d19+17+self.int/30)*self.dark/target.r_dark))",
+        "min": 20,
+        "max": 38
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 22057,
@@ -5756,6 +5766,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "if(target.r_dark=5025?0:-((1d28+30+self.int/24)*self.dark/target.r_dark))",
+        "min": 36,
+        "max": 63
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 70497,
@@ -7076,6 +7091,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "if(target.r_dark=5025?0:-((1d44+48+self.int/18)*self.dark/target.r_dark))",
+        "min": 60,
+        "max": 103
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 163275,
@@ -17801,15 +17821,25 @@ window.T4C_DATA = {
       "light_healing_potion",
       "healing_potion",
       "serious_healing_potion",
-      "potion_of_mana"
+      "potion_of_mana",
+      "mana_elixir",
+      "potion_of_cure_rabies",
+      "scroll_of_lighthaven",
+      "scroll_of_windhowl",
+      "scroll_of_silversky",
+      "scroll_of_stonecrest",
+      "symbol_of_hope",
+      "mandrake",
+      "acolytes_tarnished_locket",
+      "sunken_vestment"
     ],
     "Fali": [
+      "apple",
       "torch",
       "light_healing_potion",
       "potion_of_mana",
       "healing_potion",
-      "serious_healing_potion",
-      "mana_elixir"
+      "iron_ring"
     ],
     "Gwen": [
       "cloth_pants",
@@ -18210,7 +18240,9 @@ window.T4C_DATA = {
       "light_healing_potion",
       "healing_potion",
       "serious_healing_potion",
-      "potion_of_mana"
+      "potion_of_mana",
+      "mana_elixir",
+      "manastone"
     ]
   },
   "lootSources": [

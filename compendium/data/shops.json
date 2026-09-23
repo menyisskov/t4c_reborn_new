@@ -4,15 +4,25 @@
     "light_healing_potion",
     "healing_potion",
     "serious_healing_potion",
-    "potion_of_mana"
+    "potion_of_mana",
+    "mana_elixir",
+    "potion_of_cure_rabies",
+    "scroll_of_lighthaven",
+    "scroll_of_windhowl",
+    "scroll_of_silversky",
+    "scroll_of_stonecrest",
+    "symbol_of_hope",
+    "mandrake",
+    "acolytes_tarnished_locket",
+    "sunken_vestment"
   ],
   "Fali": [
+    "apple",
     "torch",
     "light_healing_potion",
     "potion_of_mana",
     "healing_potion",
-    "serious_healing_potion",
-    "mana_elixir"
+    "iron_ring"
   ],
   "Gwen": [
     "cloth_pants",
@@ -413,6 +423,8 @@
     "light_healing_potion",
     "healing_potion",
     "serious_healing_potion",
-    "potion_of_mana"
+    "potion_of_mana",
+    "mana_elixir",
+    "manastone"
   ]
 }

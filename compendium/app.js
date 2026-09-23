@@ -559,12 +559,12 @@
       (s.isAttack ? panel("Damage", (s.damageAtReference ?
         '<div class="kv-grid">' +
           kv("Damage at reference stats", fmtNum(s.damageAtReference.min) + "–" + fmtNum(s.damageAtReference.max)) +
-          kv("Attack type", s.attackType === 1 ? "Physical (reduced by target AC)" : "Mental (ignores target AC)") +
+          kv("Attack type", s.attackType === 1 ? "Physical" : "Mental") +
           kv("Success rate", s.successRate) +
         "</div>" +
         '<p class="lead">Reference: a caster at exactly this spell\'s own Min Int/Min Wis/Min level, an untrained (100) elemental skill, against a target with neutral (100) resistance. Real damage scales up with the caster\'s trained elemental skill and with/against the target\'s real resistance - this number is for comparing spells, not a promise.</p>' +
         '<div class="loot-row"><span>Formula</span><span><code>' + esc(s.damageAtReference.formula) + '</code></span></div>'
-        : '<div class="kv-grid">' + kv("Attack type", s.attackType === 1 ? "Physical (reduced by target AC)" : "Mental (ignores target AC)") + kv("Success rate", s.successRate) + "</div>")
+        : '<div class="kv-grid">' + kv("Attack type", s.attackType === 1 ? "Physical" : "Mental") + kv("Success rate", s.successRate) + "</div>")
       ) : "") +
       panel("Effects", effectsHtml)
     );
