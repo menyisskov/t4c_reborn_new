@@ -1,0 +1,44 @@
+{
+  "key": "tidecallers_mantle",
+  "name": "Tidecaller's Mantle",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "NMS_NewCape01__pal2",
+  "appearanceInventory": "Inv_NMS_NewCape01__pal2",
+  "price": 1500000,
+  "weight": 2,
+  "armorClass": 40.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 250,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 600,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36203,
+      "statId": 18,
+      "expression": "60"
+    },
+    {
+      "boostId": 36204,
+      "statId": 14,
+      "expression": "40"
+    },
+    {
+      "boostId": 36205,
+      "statId": 1,
+      "expression": "50"
+    }
+  ]
+}

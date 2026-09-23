@@ -7846,27 +7846,27 @@ window.T4C_DATA = {
       "key": "spell.land_slide",
       "isNew": false,
       "name": "Land Slide",
-      "description": "Buries the target beneath a collapsing hillside, dealing three times the damage of Boulders. This spell has a small area of effect.",
-      "manaCost": "48",
-      "minInt": 165,
-      "minWis": 285,
+      "description": "Buries the target beneath a collapsing hillside. This spell has a large area of effect.",
+      "manaCost": "60",
+      "minInt": 120,
+      "minWis": 500,
       "minLevel": 200,
       "isAttack": true,
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
       "damageAtReference": {
-        "formula": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)",
-        "min": 401,
-        "max": 508
+        "formula": "-(((1d40+100+self.wis/4)*self.earth/target.r_earth)*5)",
+        "min": 1130,
+        "max": 1325
       },
       "cooldownSeconds": 0,
       "duration": "0",
-      "price": 750000,
+      "price": 1000000,
       "spellId": 99901,
       "element": 2,
-      "targetType": 17,
-      "attackType": 1,
+      "targetType": 19,
+      "attackType": 2,
       "successRate": "100",
       "pvp": true,
       "effects": [
@@ -7875,11 +7875,11 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)"
+              "expression": "-(((1d40+100+self.wis/4)*self.earth/target.r_earth)*5)"
             },
             {
               "paramId": 2,
-              "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)"
+              "expression": "-(((1d40+100+self.wis/4)*self.earth/target.r_earth)*5)"
             },
             {
               "paramId": 3,
@@ -8056,27 +8056,27 @@ window.T4C_DATA = {
       "key": "spell.sunscour",
       "isNew": true,
       "name": "Sunscour",
-      "description": "Obliterates an undead target with sacred words of banishment far more potent than Turn Undead.",
+      "description": "Sears the target with a scouring beam of sacred sunlight.",
       "manaCost": "30",
-      "minInt": 100,
-      "minWis": 260,
-      "minLevel": 120,
+      "minInt": 90,
+      "minWis": 375,
+      "minLevel": 150,
       "isAttack": true,
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
       "damageAtReference": {
-        "formula": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*12)",
-        "min": 531,
-        "max": 591
+        "formula": "-(((1d30+75+self.wis/4)*self.light/target.r_light)*6)",
+        "min": 1018,
+        "max": 1192
       },
       "cooldownSeconds": 0,
       "duration": "0",
-      "price": 115000,
+      "price": 450000,
       "spellId": 99904,
       "element": 5,
       "targetType": 11,
-      "attackType": 2,
+      "attackType": 1,
       "successRate": "100",
       "pvp": true,
       "effects": [
@@ -8085,7 +8085,7 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*12)"
+              "expression": "-(((1d30+75+self.wis/4)*self.light/target.r_light)*6)"
             },
             {
               "paramId": 2
@@ -8102,26 +8102,26 @@ window.T4C_DATA = {
       "key": "spell.gravebreaker",
       "isNew": true,
       "name": "Gravebreaker",
-      "description": "Rains massive planetoid fragments upon the target, dealing twice the damage of Land Slide. This spell has a small area of effect.",
-      "manaCost": "96",
-      "minInt": 200,
-      "minWis": 340,
-      "minLevel": 260,
+      "description": "Rains a massive fragment of fallen stone upon the target.",
+      "manaCost": "50",
+      "minInt": 150,
+      "minWis": 625,
+      "minLevel": 250,
       "isAttack": true,
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
       "damageAtReference": {
-        "formula": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)",
-        "min": 3913,
-        "max": 4921
+        "formula": "-(((1d50+125+self.wis/4)*self.earth/target.r_earth)*6)",
+        "min": 1693,
+        "max": 1987
       },
       "cooldownSeconds": 0,
       "duration": "0",
-      "price": 1500000,
+      "price": 1250000,
       "spellId": 99905,
       "element": 2,
-      "targetType": 17,
+      "targetType": 11,
       "attackType": 1,
       "successRate": "100",
       "pvp": true,
@@ -8131,11 +8131,10 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)"
+              "expression": "-(((1d50+125+self.wis/4)*self.earth/target.r_earth)*6)"
             },
             {
-              "paramId": 2,
-              "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)"
+              "paramId": 2
             },
             {
               "paramId": 3,
@@ -8150,22 +8149,22 @@ window.T4C_DATA = {
       "isNew": true,
       "name": "Voidreave Lance",
       "description": "Hurls a lance of raw void energy at the target, piercing armor and flesh alike.",
-      "manaCost": "18",
-      "minInt": 260,
-      "minWis": 90,
-      "minLevel": 320,
+      "manaCost": "60",
+      "minInt": 750,
+      "minWis": 180,
+      "minLevel": 300,
       "isAttack": true,
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
       "damageAtReference": {
-        "formula": "-(((1d42+112+self.int/10)*self.dark/target.r_dark)*7)",
-        "min": 973,
-        "max": 1260
+        "formula": "-(((1d60+150+self.int/4)*self.dark/target.r_dark)*6)",
+        "min": 2031,
+        "max": 2385
       },
       "cooldownSeconds": 0,
       "duration": "0",
-      "price": 1850000,
+      "price": 1800000,
       "spellId": 99906,
       "element": 6,
       "targetType": 11,
@@ -8178,7 +8177,7 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d42+112+self.int/10)*self.dark/target.r_dark)*7)"
+              "expression": "-(((1d60+150+self.int/4)*self.dark/target.r_dark)*6)"
             },
             {
               "paramId": 2
@@ -8195,23 +8194,23 @@ window.T4C_DATA = {
       "key": "spell.stormcallers_judgment",
       "isNew": true,
       "name": "Stormcaller's Judgment",
-      "description": "Calls down a violent lightning storm upon the target. This spell has a small area of effect.",
-      "manaCost": "26",
-      "minInt": 360,
-      "minWis": 140,
-      "minLevel": 480,
+      "description": "Calls down a violent lightning storm upon the target. This spell has a large area of effect.",
+      "manaCost": "105",
+      "minInt": 542,
+      "minWis": 542,
+      "minLevel": 350,
       "isAttack": true,
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
       "damageAtReference": {
-        "formula": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)",
-        "min": 1910,
-        "max": 2450
+        "formula": "-(((1d70+175+(self.int+self.wis)/5)*self.air/target.r_air)*5)",
+        "min": 1964,
+        "max": 2309
       },
       "cooldownSeconds": 0,
       "duration": "0",
-      "price": 2400000,
+      "price": 3062500,
       "spellId": 99907,
       "element": 3,
       "targetType": 19,
@@ -8224,11 +8223,11 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)"
+              "expression": "-(((1d70+175+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
             },
             {
               "paramId": 2,
-              "expression": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)"
+              "expression": "-(((1d70+175+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
             },
             {
               "paramId": 3,
@@ -8244,9 +8243,9 @@ window.T4C_DATA = {
       "name": "Sanctum Ward",
       "description": "Raises a greater standing ward around the caster's party, granting large bonuses to air, water, earth, fire and dark resistance, armor class, and maximum hit points.",
       "manaCost": "2200",
-      "minInt": 50,
-      "minWis": 480,
-      "minLevel": 550,
+      "minInt": 240,
+      "minWis": 1000,
+      "minLevel": 400,
       "isAttack": false,
       "lineOfSight": false,
       "minDamage": 0,
@@ -8379,27 +8378,27 @@ window.T4C_DATA = {
       "key": "spell.emberqueens_wrath",
       "isNew": true,
       "name": "Emberqueen's Wrath",
-      "description": "Engulfs the target in an inferno of royal fire. This spell has a small area of effect.",
-      "manaCost": "38",
-      "minInt": 440,
-      "minWis": 170,
-      "minLevel": 650,
+      "description": "Engulfs the target in an inferno of royal fire. This spell has a large area of effect.",
+      "manaCost": "105",
+      "minInt": 875,
+      "minWis": 210,
+      "minLevel": 350,
       "isAttack": true,
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
       "damageAtReference": {
-        "formula": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)",
-        "min": 3198,
-        "max": 4095
+        "formula": "-(((1d70+175+self.int/4)*self.fire/target.r_fire)*5)",
+        "min": 1973,
+        "max": 2318
       },
       "cooldownSeconds": 0,
       "duration": "0",
-      "price": 3100000,
+      "price": 3062500,
       "spellId": 99909,
       "element": 1,
       "targetType": 19,
-      "attackType": 1,
+      "attackType": 2,
       "successRate": "100",
       "pvp": true,
       "effects": [
@@ -8408,11 +8407,11 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)"
+              "expression": "-(((1d70+175+self.int/4)*self.fire/target.r_fire)*5)"
             },
             {
               "paramId": 2,
-              "expression": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)"
+              "expression": "-(((1d70+175+self.int/4)*self.fire/target.r_fire)*5)"
             },
             {
               "paramId": 3,
@@ -8667,8 +8666,8 @@ window.T4C_DATA = {
       "name": "Leyward Bastion",
       "description": "Raises a standing ward around the caster's party, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
       "manaCost": "1600",
-      "minInt": 30,
-      "minWis": 90,
+      "minInt": 120,
+      "minWis": 500,
       "minLevel": 200,
       "isAttack": false,
       "lineOfSight": true,
@@ -8786,23 +8785,23 @@ window.T4C_DATA = {
       "key": "spell.cataclysms_herald",
       "isNew": true,
       "name": "Cataclysm's Herald",
-      "description": "Summons a crushing deluge upon the target, heralding the end of all who stand against it. This spell has a small area of effect.",
-      "manaCost": "58",
-      "minInt": 560,
+      "description": "Summons a crushing deluge upon the target, heralding the end of all who stand against it. This spell has a large area of effect.",
+      "manaCost": "120",
+      "minInt": 1000,
       "minWis": 240,
-      "minLevel": 900,
+      "minLevel": 400,
       "isAttack": true,
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
       "damageAtReference": {
-        "formula": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)",
-        "min": 5958,
-        "max": 7650
+        "formula": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)",
+        "min": 2255,
+        "max": 2650
       },
       "cooldownSeconds": 0,
       "duration": "0",
-      "price": 4200000,
+      "price": 4000000,
       "spellId": 99916,
       "element": 4,
       "targetType": 19,
@@ -8815,11 +8814,1401 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)"
+              "expression": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)"
             },
             {
               "paramId": 2,
-              "expression": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)"
+              "expression": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.scorchbrand",
+      "isNew": true,
+      "name": "Scorchbrand",
+      "description": "Brands the target with a searing lance of white-hot flame.",
+      "manaCost": "30",
+      "minInt": 375,
+      "minWis": 90,
+      "minLevel": 150,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d30+75+self.int/4)*self.fire/target.r_fire)*6)",
+        "min": 1018,
+        "max": 1192
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 450000,
+      "spellId": 99917,
+      "element": 1,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d30+75+self.int/4)*self.fire/target.r_fire)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.pyreburst",
+      "isNew": true,
+      "name": "Pyreburst",
+      "description": "Ignites the ground beneath the target in a roaring funeral pyre. This spell has a large area of effect.",
+      "manaCost": "60",
+      "minInt": 500,
+      "minWis": 120,
+      "minLevel": 200,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d40+100+self.int/4)*self.fire/target.r_fire)*5)",
+        "min": 1130,
+        "max": 1325
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1000000,
+      "spellId": 99918,
+      "element": 1,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d40+100+self.int/4)*self.fire/target.r_fire)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d40+100+self.int/4)*self.fire/target.r_fire)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.magmaheart_lance",
+      "isNew": true,
+      "name": "Magmaheart Lance",
+      "description": "Drives a spear of molten rock straight through the target.",
+      "manaCost": "50",
+      "minInt": 625,
+      "minWis": 150,
+      "minLevel": 250,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d50+125+self.int/4)*self.fire/target.r_fire)*6)",
+        "min": 1693,
+        "max": 1987
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1250000,
+      "spellId": 99919,
+      "element": 1,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d50+125+self.int/4)*self.fire/target.r_fire)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.sunforge_brand",
+      "isNew": true,
+      "name": "Sunforge Brand",
+      "description": "Strikes the target with fire drawn from the heart of a forge that never cools.",
+      "manaCost": "60",
+      "minInt": 750,
+      "minWis": 180,
+      "minLevel": 300,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d60+150+self.int/4)*self.fire/target.r_fire)*6)",
+        "min": 2031,
+        "max": 2385
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1800000,
+      "spellId": 99920,
+      "element": 1,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d60+150+self.int/4)*self.fire/target.r_fire)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.ashfall",
+      "isNew": true,
+      "name": "Ashfall",
+      "description": "Calls down a storm of burning ash and embers that buries everything around the target. This spell has a large area of effect.",
+      "manaCost": "120",
+      "minInt": 1000,
+      "minWis": 240,
+      "minLevel": 400,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)",
+        "min": 2255,
+        "max": 2650
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 4000000,
+      "spellId": 99921,
+      "element": 1,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.rime_lance",
+      "isNew": true,
+      "name": "Rime Lance",
+      "description": "Hurls a lance of ancient, never-melting ice at the target.",
+      "manaCost": "30",
+      "minInt": 375,
+      "minWis": 90,
+      "minLevel": 150,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d30+75+self.int/4)*self.water/target.r_water)*6)",
+        "min": 1018,
+        "max": 1192
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 450000,
+      "spellId": 99922,
+      "element": 4,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d30+75+self.int/4)*self.water/target.r_water)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.frostgale",
+      "isNew": true,
+      "name": "Frostgale",
+      "description": "Whips a freezing gale of sleet and ice across the target and everything near it. This spell has a large area of effect.",
+      "manaCost": "60",
+      "minInt": 500,
+      "minWis": 120,
+      "minLevel": 200,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d40+100+self.int/4)*self.water/target.r_water)*5)",
+        "min": 1130,
+        "max": 1325
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1000000,
+      "spellId": 99923,
+      "element": 4,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d40+100+self.int/4)*self.water/target.r_water)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d40+100+self.int/4)*self.water/target.r_water)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.abyssal_spear",
+      "isNew": true,
+      "name": "Abyssal Spear",
+      "description": "Summons a spear of crushing black water from the ocean deep and drives it into the target.",
+      "manaCost": "50",
+      "minInt": 625,
+      "minWis": 150,
+      "minLevel": 250,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d50+125+self.int/4)*self.water/target.r_water)*6)",
+        "min": 1693,
+        "max": 1987
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1250000,
+      "spellId": 99924,
+      "element": 4,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d50+125+self.int/4)*self.water/target.r_water)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.tidebreaker",
+      "isNew": true,
+      "name": "Tidebreaker",
+      "description": "Slams the target with the full weight of a breaking tide.",
+      "manaCost": "60",
+      "minInt": 750,
+      "minWis": 180,
+      "minLevel": 300,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d60+150+self.int/4)*self.water/target.r_water)*6)",
+        "min": 2031,
+        "max": 2385
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1800000,
+      "spellId": 99925,
+      "element": 4,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d60+150+self.int/4)*self.water/target.r_water)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.drowning_deep",
+      "isNew": true,
+      "name": "Drowning Deep",
+      "description": "Opens a churning whirlpool that drags the target and everything near it under. This spell has a large area of effect.",
+      "manaCost": "105",
+      "minInt": 875,
+      "minWis": 210,
+      "minLevel": 350,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d70+175+self.int/4)*self.water/target.r_water)*5)",
+        "min": 1973,
+        "max": 2318
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 3062500,
+      "spellId": 99926,
+      "element": 4,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d70+175+self.int/4)*self.water/target.r_water)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d70+175+self.int/4)*self.water/target.r_water)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.stonefang",
+      "isNew": true,
+      "name": "Stonefang",
+      "description": "Tears a jagged fang of stone from the earth and drives it into the target.",
+      "manaCost": "30",
+      "minInt": 90,
+      "minWis": 375,
+      "minLevel": 150,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d30+75+self.wis/4)*self.earth/target.r_earth)*6)",
+        "min": 1018,
+        "max": 1192
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 450000,
+      "spellId": 99927,
+      "element": 2,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d30+75+self.wis/4)*self.earth/target.r_earth)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.mountains_fist",
+      "isNew": true,
+      "name": "Mountain's Fist",
+      "description": "Raises a fist of living granite that crashes down on the target.",
+      "manaCost": "60",
+      "minInt": 180,
+      "minWis": 750,
+      "minLevel": 300,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d60+150+self.wis/4)*self.earth/target.r_earth)*6)",
+        "min": 2031,
+        "max": 2385
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1800000,
+      "spellId": 99928,
+      "element": 2,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d60+150+self.wis/4)*self.earth/target.r_earth)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.worldroot_upheaval",
+      "isNew": true,
+      "name": "Worldroot Upheaval",
+      "description": "The roots of the world heave upward, splitting the ground beneath the target. This spell has a large area of effect.",
+      "manaCost": "105",
+      "minInt": 210,
+      "minWis": 875,
+      "minLevel": 350,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d70+175+self.wis/4)*self.earth/target.r_earth)*5)",
+        "min": 1973,
+        "max": 2318
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 3062500,
+      "spellId": 99929,
+      "element": 2,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d70+175+self.wis/4)*self.earth/target.r_earth)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d70+175+self.wis/4)*self.earth/target.r_earth)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.tectonic_ruin",
+      "isNew": true,
+      "name": "Tectonic Ruin",
+      "description": "Shatters the very bedrock beneath the target, collapsing the land around it. This spell has a large area of effect.",
+      "manaCost": "120",
+      "minInt": 240,
+      "minWis": 1000,
+      "minLevel": 400,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)",
+        "min": 2255,
+        "max": 2650
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 4000000,
+      "spellId": 99930,
+      "element": 2,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.galespike",
+      "isNew": true,
+      "name": "Galespike",
+      "description": "Compresses a howling wind into a spike of lightning and hurls it at the target.",
+      "manaCost": "30",
+      "minInt": 232,
+      "minWis": 232,
+      "minLevel": 150,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d30+75+(self.int+self.wis)/5)*self.air/target.r_air)*6)",
+        "min": 1012,
+        "max": 1186
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 450000,
+      "spellId": 99931,
+      "element": 3,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d30+75+(self.int+self.wis)/5)*self.air/target.r_air)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.thunderhead",
+      "isNew": true,
+      "name": "Thunderhead",
+      "description": "Gathers a thunderhead over the target that bursts with a crash of lightning. This spell has a large area of effect.",
+      "manaCost": "60",
+      "minInt": 310,
+      "minWis": 310,
+      "minLevel": 200,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d40+100+(self.int+self.wis)/5)*self.air/target.r_air)*5)",
+        "min": 1125,
+        "max": 1320
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1000000,
+      "spellId": 99932,
+      "element": 3,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d40+100+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d40+100+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.skysplitter",
+      "isNew": true,
+      "name": "Skysplitter",
+      "description": "Splits the sky with a single blinding bolt aimed straight at the target.",
+      "manaCost": "50",
+      "minInt": 387,
+      "minWis": 387,
+      "minLevel": 250,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d50+125+(self.int+self.wis)/5)*self.air/target.r_air)*6)",
+        "min": 1684,
+        "max": 1978
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1250000,
+      "spellId": 99933,
+      "element": 3,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d50+125+(self.int+self.wis)/5)*self.air/target.r_air)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.tempest_lance",
+      "isNew": true,
+      "name": "Tempest Lance",
+      "description": "Hurls a lance of pure storm at the target.",
+      "manaCost": "60",
+      "minInt": 465,
+      "minWis": 465,
+      "minLevel": 300,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d60+150+(self.int+self.wis)/5)*self.air/target.r_air)*6)",
+        "min": 2022,
+        "max": 2376
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1800000,
+      "spellId": 99934,
+      "element": 3,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d60+150+(self.int+self.wis)/5)*self.air/target.r_air)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.heavenfall",
+      "isNew": true,
+      "name": "Heavenfall",
+      "description": "Tears open the heavens, bringing a storm of lightning crashing down around the target. This spell has a large area of effect.",
+      "manaCost": "120",
+      "minInt": 620,
+      "minWis": 620,
+      "minLevel": 400,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)",
+        "min": 2245,
+        "max": 2640
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 4000000,
+      "spellId": 99935,
+      "element": 3,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.nightfang",
+      "isNew": true,
+      "name": "Nightfang",
+      "description": "Sinks fangs of living shadow into the target's very soul.",
+      "manaCost": "30",
+      "minInt": 375,
+      "minWis": 90,
+      "minLevel": 150,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d30+75+self.int/4)*self.dark/target.r_dark)*6)",
+        "min": 1018,
+        "max": 1192
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 450000,
+      "spellId": 99936,
+      "element": 6,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d30+75+self.int/4)*self.dark/target.r_dark)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.shadowblight",
+      "isNew": true,
+      "name": "Shadowblight",
+      "description": "Spreads a creeping blight of shadow over the target and everything near it. This spell has a large area of effect.",
+      "manaCost": "60",
+      "minInt": 500,
+      "minWis": 120,
+      "minLevel": 200,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d40+100+self.int/4)*self.dark/target.r_dark)*5)",
+        "min": 1130,
+        "max": 1325
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1000000,
+      "spellId": 99937,
+      "element": 6,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d40+100+self.int/4)*self.dark/target.r_dark)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d40+100+self.int/4)*self.dark/target.r_dark)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.soulrend",
+      "isNew": true,
+      "name": "Soulrend",
+      "description": "Tears at the target's soul with claws of pure darkness.",
+      "manaCost": "50",
+      "minInt": 625,
+      "minWis": 150,
+      "minLevel": 250,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d50+125+self.int/4)*self.dark/target.r_dark)*6)",
+        "min": 1693,
+        "max": 1987
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1250000,
+      "spellId": 99938,
+      "element": 6,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d50+125+self.int/4)*self.dark/target.r_dark)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.umbral_tide",
+      "isNew": true,
+      "name": "Umbral Tide",
+      "description": "Floods the area around the target with a tide of choking darkness. This spell has a large area of effect.",
+      "manaCost": "105",
+      "minInt": 875,
+      "minWis": 210,
+      "minLevel": 350,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d70+175+self.int/4)*self.dark/target.r_dark)*5)",
+        "min": 1973,
+        "max": 2318
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 3062500,
+      "spellId": 99939,
+      "element": 6,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d70+175+self.int/4)*self.dark/target.r_dark)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d70+175+self.int/4)*self.dark/target.r_dark)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.eclipse_of_ruin",
+      "isNew": true,
+      "name": "Eclipse of Ruin",
+      "description": "Blots out the sun above the target, and everything beneath the eclipse withers. This spell has a large area of effect.",
+      "manaCost": "120",
+      "minInt": 1000,
+      "minWis": 240,
+      "minLevel": 400,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)",
+        "min": 2255,
+        "max": 2650
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 4000000,
+      "spellId": 99940,
+      "element": 6,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.dawnflare",
+      "isNew": true,
+      "name": "Dawnflare",
+      "description": "Bursts with the blinding light of dawn around the target. This spell has a large area of effect.",
+      "manaCost": "60",
+      "minInt": 120,
+      "minWis": 500,
+      "minLevel": 200,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d40+100+self.wis/4)*self.light/target.r_light)*5)",
+        "min": 1130,
+        "max": 1325
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1000000,
+      "spellId": 99941,
+      "element": 5,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d40+100+self.wis/4)*self.light/target.r_light)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d40+100+self.wis/4)*self.light/target.r_light)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.radiant_spear",
+      "isNew": true,
+      "name": "Radiant Spear",
+      "description": "Hurls a spear of hardened light at the target.",
+      "manaCost": "50",
+      "minInt": 150,
+      "minWis": 625,
+      "minLevel": 250,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d50+125+self.wis/4)*self.light/target.r_light)*6)",
+        "min": 1693,
+        "max": 1987
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1250000,
+      "spellId": 99942,
+      "element": 5,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d50+125+self.wis/4)*self.light/target.r_light)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.seraphs_verdict",
+      "isNew": true,
+      "name": "Seraph's Verdict",
+      "description": "Passes a seraph's judgment upon the target in a column of holy light.",
+      "manaCost": "60",
+      "minInt": 180,
+      "minWis": 750,
+      "minLevel": 300,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d60+150+self.wis/4)*self.light/target.r_light)*6)",
+        "min": 2031,
+        "max": 2385
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 1800000,
+      "spellId": 99943,
+      "element": 5,
+      "targetType": 11,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d60+150+self.wis/4)*self.light/target.r_light)*6)"
+            },
+            {
+              "paramId": 2
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.hallowed_nova",
+      "isNew": true,
+      "name": "Hallowed Nova",
+      "description": "Detonates a nova of hallowed light around the target. This spell has a large area of effect.",
+      "manaCost": "105",
+      "minInt": 210,
+      "minWis": 875,
+      "minLevel": 350,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d70+175+self.wis/4)*self.light/target.r_light)*5)",
+        "min": 1973,
+        "max": 2318
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 3062500,
+      "spellId": 99944,
+      "element": 5,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d70+175+self.wis/4)*self.light/target.r_light)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d70+175+self.wis/4)*self.light/target.r_light)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.solar_apotheosis",
+      "isNew": true,
+      "name": "Solar Apotheosis",
+      "description": "Calls down the full fury of the sun upon the target and everything around it. This spell has a large area of effect.",
+      "manaCost": "120",
+      "minInt": 240,
+      "minWis": 1000,
+      "minLevel": 400,
+      "isAttack": true,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)",
+        "min": 2255,
+        "max": 2650
+      },
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 4000000,
+      "spellId": 99945,
+      "element": 5,
+      "targetType": 19,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": true,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)"
+            },
+            {
+              "paramId": 2,
+              "expression": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)"
+            },
+            {
+              "paramId": 3,
+              "expression": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.dawnwell_renewal",
+      "isNew": true,
+      "name": "Dawnwell Renewal",
+      "description": "Calls up a wellspring of dawnlight, greatly restoring health to the caster and any nearby grouped allies.",
+      "manaCost": "600",
+      "minInt": 180,
+      "minWis": 750,
+      "minLevel": 300,
+      "isAttack": false,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 5,
+      "duration": "0",
+      "price": 1800000,
+      "spellId": 99946,
+      "element": 5,
+      "targetType": 15,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": false,
+      "effects": [
+        {
+          "effectType": 1,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "(1d60+300+self.wis/2)*self.light/100"
+            },
+            {
+              "paramId": 2,
+              "expression": "(1d60+300+self.wis/2)*self.light/100"
             },
             {
               "paramId": 3,
@@ -9142,7 +10531,7 @@ window.T4C_DATA = {
       "id": "ArchmageThalindra",
       "origin": "new",
       "displayName": "Archmage Thalindra",
-      "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the Elder tier here and nowhere else on this coast.",
+      "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the high arts here and nowhere else on this coast. Name a school - fire, water, earth, air, dark or light - and I'll show you what it holds.",
       "topics": [
         {
           "keywords": [
@@ -9151,9 +10540,9 @@ window.T4C_DATA = {
             "teach",
             "spell"
           ],
-          "response": "Leyward Bastion, Veilstone Aegis, Wellspring Mercy, Sunscour, Gravebreaker - the Elder tier. Study hard, and the ley lines beneath this isle will lend you their strength.",
+          "response": "Veilstone Aegis, Wellspring Mercy, Leyward Bastion, Dawnwell Renewal, Sanctum Ward - the ley-line wards and mercies. For the killing arts, name a school: fire, water, earth, air, dark or light.",
           "actions": [
-            "OPEN_SPELL_LEARNING:leyward_bastion,veilstone_aegis,wellspring_mercy,sunscour,gravebreaker"
+            "OPEN_SPELL_LEARNING:veilstone_aegis,wellspring_mercy,leyward_bastion,dawnwell_renewal,sanctum_ward"
           ]
         },
         {
@@ -9167,16 +10556,78 @@ window.T4C_DATA = {
           "keywords": [
             "elder"
           ],
-          "response": "The Elder tier was never meant to be taught lightly - it demands a caster already tempered by two hundred levels of hard-won craft. Come back when you're ready.",
+          "response": "The high arts were never meant to be taught lightly. Every school offers the same six rungs - at the hundred-and-fiftieth level, then every fifty levels after, up to the four hundredth - and each rung demands a mind to match it. Come back when you're ready.",
           "actions": []
         },
         {
           "keywords": [
             "apex"
           ],
-          "response": "Beyond the Elder tier lies the Apex: Voidreave Lance, Stormcaller's Judgment, Sanctum Ward, Emberqueen's Wrath, and Cataclysm's Herald. Only a caster who has already mastered the Elder tier and tempered themselves against the world's very worst has any hope of surviving the toll they take.",
+          "response": "The apex of every school is the same distance up the ladder: the four hundredth level, and a mind of a thousand in its governing art. Name a school and I'll show you the whole climb.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "fire"
+          ],
+          "response": "Scorchbrand, Pyreburst, Magmaheart Lance, Sunforge Brand, Emberqueen's Wrath, Ashfall - the pyromancer's ladder. Fire answers to Intelligence.",
           "actions": [
-            "OPEN_SPELL_LEARNING:voidreave_lance,stormcallers_judgment,sanctum_ward,emberqueens_wrath,cataclysms_herald"
+            "OPEN_SPELL_LEARNING:scorchbrand,pyreburst,magmaheart_lance,sunforge_brand,emberqueens_wrath,ashfall"
+          ]
+        },
+        {
+          "keywords": [
+            "water"
+          ],
+          "response": "Rime Lance, Frostgale, Abyssal Spear, Tidebreaker, Drowning Deep, Cataclysm's Herald - the tidecaller's ladder. Water answers to Intelligence.",
+          "actions": [
+            "OPEN_SPELL_LEARNING:rime_lance,frostgale,abyssal_spear,tidebreaker,drowning_deep,cataclysms_herald"
+          ]
+        },
+        {
+          "keywords": [
+            "earth"
+          ],
+          "response": "Stonefang, Land Slide, Gravebreaker, Mountain's Fist, Worldroot Upheaval, Tectonic Ruin - the geomancer's ladder. Earth answers to Wisdom.",
+          "actions": [
+            "OPEN_SPELL_LEARNING:stonefang,land_slide,gravebreaker,mountains_fist,worldroot_upheaval,tectonic_ruin"
+          ]
+        },
+        {
+          "keywords": [
+            "air"
+          ],
+          "response": "Galespike, Thunderhead, Skysplitter, Tempest Lance, Stormcaller's Judgment, Heavenfall - the windweaver's ladder. The storm asks for Intelligence and Wisdom in equal measure.",
+          "actions": [
+            "OPEN_SPELL_LEARNING:galespike,thunderhead,skysplitter,tempest_lance,stormcallers_judgment,heavenfall"
+          ]
+        },
+        {
+          "keywords": [
+            "dark"
+          ],
+          "response": "Nightfang, Shadowblight, Soulrend, Voidreave Lance, Umbral Tide, Eclipse of Ruin - the shadowmancer's ladder. Darkness answers to Intelligence.",
+          "actions": [
+            "OPEN_SPELL_LEARNING:nightfang,shadowblight,soulrend,voidreave_lance,umbral_tide,eclipse_of_ruin"
+          ]
+        },
+        {
+          "keywords": [
+            "light"
+          ],
+          "response": "Sunscour, Dawnflare, Radiant Spear, Seraph's Verdict, Hallowed Nova, Solar Apotheosis - the lightbringer's ladder. Light answers to Wisdom.",
+          "actions": [
+            "OPEN_SPELL_LEARNING:sunscour,dawnflare,radiant_spear,seraphs_verdict,hallowed_nova,solar_apotheosis"
+          ]
+        },
+        {
+          "keywords": [
+            "mantle",
+            "mantles"
+          ],
+          "response": "Every master of a school should wear its colors. Ember red, tide blue, verdant green, storm gold, shadow black, dawn white - woven on the ley lines themselves, and they will only settle on the shoulders of a caster of real standing.",
+          "actions": [
+            "OPEN_SHOP:pyromancers_mantle,tidecallers_mantle,geomancers_mantle,windweavers_mantle,lightbringers_mantle,shadowmancers_mantle"
           ]
         }
       ],
@@ -13752,7 +15203,7 @@ window.T4C_DATA = {
     {
       "key": "bastion_sentinels_mantle",
       "name": "Bastion Sentinel's Mantle",
-      "bodyPart": "CAPE",
+      "bodyPart": "BACK",
       "appearanceEquippedPrimary": "PupBlackCape",
       "appearanceInventory": "64kIconCape",
       "price": 0.0,
@@ -17384,6 +18835,50 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "geomancers_mantle",
+      "name": "Geomancer's Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal7",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal7",
+      "price": 1500000.0,
+      "weight": 2.0,
+      "armorClass": 40.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 250.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 150.0,
+        "wisdom": 600.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36206.0,
+          "statId": 19.0,
+          "expression": "60"
+        },
+        {
+          "boostId": 36207.0,
+          "statId": 15.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36208.0,
+          "statId": 4.0,
+          "expression": "50"
+        }
+      ]
+    },
+    {
       "key": "goblin_slayer",
       "name": "Goblin Slayer",
       "bodyPart": "WEAPON",
@@ -17525,6 +19020,50 @@ window.T4C_DATA = {
           "boostId": 31016.0,
           "statId": 10.0,
           "expression": "30"
+        }
+      ]
+    },
+    {
+      "key": "lightbringers_mantle",
+      "name": "Lightbringer's Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal9",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal9",
+      "price": 1500000.0,
+      "weight": 2.0,
+      "armorClass": 40.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 250.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 150.0,
+        "wisdom": 600.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36213.0,
+          "statId": 23.0,
+          "expression": "60"
+        },
+        {
+          "boostId": 36214.0,
+          "statId": 21.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36215.0,
+          "statId": 4.0,
+          "expression": "50"
         }
       ]
     },
@@ -17699,6 +19238,50 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "pyromancers_mantle",
+      "name": "Pyromancer's Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01",
+      "appearanceInventory": "Inv_NMS_NewCape01",
+      "price": 1500000.0,
+      "weight": 2.0,
+      "armorClass": 40.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 250.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 600.0,
+        "wisdom": 150.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36200.0,
+          "statId": 17.0,
+          "expression": "60"
+        },
+        {
+          "boostId": 36201.0,
+          "statId": 13.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36202.0,
+          "statId": 1.0,
+          "expression": "50"
+        }
+      ]
+    },
+    {
       "key": "ring_of_the_archer",
       "name": "Ring of the Archer",
       "bodyPart": "RING1",
@@ -17723,9 +19306,53 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "shadowmancers_mantle",
+      "name": "Shadowmancer's Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal8",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal8",
+      "price": 1500000.0,
+      "weight": 2.0,
+      "armorClass": 40.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 250.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 600.0,
+        "wisdom": 150.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36216.0,
+          "statId": 24.0,
+          "expression": "60"
+        },
+        {
+          "boostId": 36217.0,
+          "statId": 22.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36218.0,
+          "statId": 1.0,
+          "expression": "50"
+        }
+      ]
+    },
+    {
       "key": "sunken_vestment",
       "name": "Sunken Vestment",
-      "bodyPart": "CAPE",
+      "bodyPart": "BACK",
       "appearanceEquippedPrimary": "PupBlackCape",
       "appearanceInventory": "64kIconCape",
       "price": 15000.0,
@@ -17758,6 +19385,50 @@ window.T4C_DATA = {
           "boostId": 31013.0,
           "statId": 1.0,
           "expression": "10"
+        }
+      ]
+    },
+    {
+      "key": "tidecallers_mantle",
+      "name": "Tidecaller's Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal2",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal2",
+      "price": 1500000.0,
+      "weight": 2.0,
+      "armorClass": 40.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 250.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 600.0,
+        "wisdom": 150.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36203.0,
+          "statId": 18.0,
+          "expression": "60"
+        },
+        {
+          "boostId": 36204.0,
+          "statId": 14.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36205.0,
+          "statId": 1.0,
+          "expression": "50"
         }
       ]
     },
@@ -17926,6 +19597,55 @@ window.T4C_DATA = {
           "boostId": 32102.0,
           "statId": 21.0,
           "expression": "-10"
+        }
+      ]
+    },
+    {
+      "key": "windweavers_mantle",
+      "name": "Windweaver's Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal6",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal6",
+      "price": 1500000.0,
+      "weight": 2.0,
+      "armorClass": 40.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 250.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 375.0,
+        "wisdom": 375.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36209.0,
+          "statId": 16.0,
+          "expression": "60"
+        },
+        {
+          "boostId": 36210.0,
+          "statId": 12.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36211.0,
+          "statId": 1.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36212.0,
+          "statId": 4.0,
+          "expression": "25"
         }
       ]
     },
@@ -18450,6 +20170,14 @@ window.T4C_DATA = {
       "potion_of_mana",
       "mana_elixir",
       "manastone"
+    ],
+    "ArchmageThalindra": [
+      "pyromancers_mantle",
+      "tidecallers_mantle",
+      "geomancers_mantle",
+      "windweavers_mantle",
+      "lightbringers_mantle",
+      "shadowmancers_mantle"
     ]
   },
   "lootSources": [
@@ -21168,3008 +22896,8 @@ window.T4C_DATA = {
       },
       {
         "level": 400,
-        "xpToNextLevel": 128303872,
-        "totalXp": 7419561532
-      },
-      {
-        "level": 401,
-        "xpToNextLevel": 130494741,
-        "totalXp": 7547865404
-      },
-      {
-        "level": 402,
-        "xpToNextLevel": 132723025,
-        "totalXp": 7678360145
-      },
-      {
-        "level": 403,
-        "xpToNextLevel": 134989366,
-        "totalXp": 7811083170
-      },
-      {
-        "level": 404,
-        "xpToNextLevel": 137294420,
-        "totalXp": 7946072536
-      },
-      {
-        "level": 405,
-        "xpToNextLevel": 139638851,
-        "totalXp": 8083366956
-      },
-      {
-        "level": 406,
-        "xpToNextLevel": 142023337,
-        "totalXp": 8223005807
-      },
-      {
-        "level": 407,
-        "xpToNextLevel": 144448567,
-        "totalXp": 8365029144
-      },
-      {
-        "level": 408,
-        "xpToNextLevel": 146915243,
-        "totalXp": 8509477711
-      },
-      {
-        "level": 409,
-        "xpToNextLevel": 149424076,
-        "totalXp": 8656392954
-      },
-      {
-        "level": 410,
-        "xpToNextLevel": 151975793,
-        "totalXp": 8805817030
-      },
-      {
-        "level": 411,
-        "xpToNextLevel": 154571131,
-        "totalXp": 8957792823
-      },
-      {
-        "level": 412,
-        "xpToNextLevel": 157210842,
-        "totalXp": 9112363954
-      },
-      {
-        "level": 413,
-        "xpToNextLevel": 159895690,
-        "totalXp": 9269574796
-      },
-      {
-        "level": 414,
-        "xpToNextLevel": 162626452,
-        "totalXp": 9429470486
-      },
-      {
-        "level": 415,
-        "xpToNextLevel": 165403918,
-        "totalXp": 9592096938
-      },
-      {
-        "level": 416,
-        "xpToNextLevel": 168228893,
-        "totalXp": 9757500856
-      },
-      {
-        "level": 417,
-        "xpToNextLevel": 171102195,
-        "totalXp": 9925729749
-      },
-      {
-        "level": 418,
-        "xpToNextLevel": 174024658,
-        "totalXp": 10096831944
-      },
-      {
-        "level": 419,
-        "xpToNextLevel": 176997129,
-        "totalXp": 10270856602
-      },
-      {
-        "level": 420,
-        "xpToNextLevel": 180020469,
-        "totalXp": 10447853731
-      },
-      {
-        "level": 421,
-        "xpToNextLevel": 183095555,
-        "totalXp": 10627874200
-      },
-      {
-        "level": 422,
-        "xpToNextLevel": 186223280,
-        "totalXp": 10810969755
-      },
-      {
-        "level": 423,
-        "xpToNextLevel": 189404551,
-        "totalXp": 10997193035
-      },
-      {
-        "level": 424,
-        "xpToNextLevel": 192640291,
-        "totalXp": 11186597586
-      },
-      {
-        "level": 425,
-        "xpToNextLevel": 195931442,
-        "totalXp": 11379237877
-      },
-      {
-        "level": 426,
-        "xpToNextLevel": 199278957,
-        "totalXp": 11575169319
-      },
-      {
-        "level": 427,
-        "xpToNextLevel": 202683811,
-        "totalXp": 11774448276
-      },
-      {
-        "level": 428,
-        "xpToNextLevel": 206146992,
-        "totalXp": 11977132087
-      },
-      {
-        "level": 429,
-        "xpToNextLevel": 209669507,
-        "totalXp": 12183279079
-      },
-      {
-        "level": 430,
-        "xpToNextLevel": 213252381,
-        "totalXp": 12392948586
-      },
-      {
-        "level": 431,
-        "xpToNextLevel": 216896655,
-        "totalXp": 12606200967
-      },
-      {
-        "level": 432,
-        "xpToNextLevel": 220603391,
-        "totalXp": 12823097622
-      },
-      {
-        "level": 433,
-        "xpToNextLevel": 224373667,
-        "totalXp": 13043701013
-      },
-      {
-        "level": 434,
-        "xpToNextLevel": 228208581,
-        "totalXp": 13268074680
-      },
-      {
-        "level": 435,
-        "xpToNextLevel": 232109248,
-        "totalXp": 13496283261
-      },
-      {
-        "level": 436,
-        "xpToNextLevel": 236076807,
-        "totalXp": 13728392509
-      },
-      {
-        "level": 437,
-        "xpToNextLevel": 240112412,
-        "totalXp": 13964469316
-      },
-      {
-        "level": 438,
-        "xpToNextLevel": 244217241,
-        "totalXp": 14204581728
-      },
-      {
-        "level": 439,
-        "xpToNextLevel": 248392489,
-        "totalXp": 14448798969
-      },
-      {
-        "level": 440,
-        "xpToNextLevel": 252639375,
-        "totalXp": 14697191458
-      },
-      {
-        "level": 441,
-        "xpToNextLevel": 256959138,
-        "totalXp": 14949830833
-      },
-      {
-        "level": 442,
-        "xpToNextLevel": 261353037,
-        "totalXp": 15206789971
-      },
-      {
-        "level": 443,
-        "xpToNextLevel": 265822356,
-        "totalXp": 15468143008
-      },
-      {
-        "level": 444,
-        "xpToNextLevel": 270368400,
-        "totalXp": 15733965364
-      },
-      {
-        "level": 445,
-        "xpToNextLevel": 274992497,
-        "totalXp": 16004333764
-      },
-      {
-        "level": 446,
-        "xpToNextLevel": 279695996,
-        "totalXp": 16279326261
-      },
-      {
-        "level": 447,
-        "xpToNextLevel": 284480274,
-        "totalXp": 16559022257
-      },
-      {
-        "level": 448,
-        "xpToNextLevel": 289346729,
-        "totalXp": 16843502531
-      },
-      {
-        "level": 449,
-        "xpToNextLevel": 294296783,
-        "totalXp": 17132849260
-      },
-      {
-        "level": 450,
-        "xpToNextLevel": 299331885,
-        "totalXp": 17427146043
-      },
-      {
-        "level": 451,
-        "xpToNextLevel": 304453509,
-        "totalXp": 17726477928
-      },
-      {
-        "level": 452,
-        "xpToNextLevel": 309663152,
-        "totalXp": 18030931437
-      },
-      {
-        "level": 453,
-        "xpToNextLevel": 314962341,
-        "totalXp": 18340594589
-      },
-      {
-        "level": 454,
-        "xpToNextLevel": 320352627,
-        "totalXp": 18655556930
-      },
-      {
-        "level": 455,
-        "xpToNextLevel": 325835589,
-        "totalXp": 18975909557
-      },
-      {
-        "level": 456,
-        "xpToNextLevel": 331412835,
-        "totalXp": 19301745146
-      },
-      {
-        "level": 457,
-        "xpToNextLevel": 337085999,
-        "totalXp": 19633157981
-      },
-      {
-        "level": 458,
-        "xpToNextLevel": 342856745,
-        "totalXp": 19970243980
-      },
-      {
-        "level": 459,
-        "xpToNextLevel": 348726766,
-        "totalXp": 20313100725
-      },
-      {
-        "level": 460,
-        "xpToNextLevel": 354697783,
-        "totalXp": 20661827491
-      },
-      {
-        "level": 461,
-        "xpToNextLevel": 360771549,
-        "totalXp": 21016525274
-      },
-      {
-        "level": 462,
-        "xpToNextLevel": 366949848,
-        "totalXp": 21377296823
-      },
-      {
-        "level": 463,
-        "xpToNextLevel": 373234494,
-        "totalXp": 21744246671
-      },
-      {
-        "level": 464,
-        "xpToNextLevel": 379627333,
-        "totalXp": 22117481165
-      },
-      {
-        "level": 465,
-        "xpToNextLevel": 386130243,
-        "totalXp": 22497108498
-      },
-      {
-        "level": 466,
-        "xpToNextLevel": 392745137,
-        "totalXp": 22883238741
-      },
-      {
-        "level": 467,
-        "xpToNextLevel": 399473960,
-        "totalXp": 23275983878
-      },
-      {
-        "level": 468,
-        "xpToNextLevel": 406318690,
-        "totalXp": 23675457838
-      },
-      {
-        "level": 469,
-        "xpToNextLevel": 413281342,
-        "totalXp": 24081776528
-      },
-      {
-        "level": 470,
-        "xpToNextLevel": 420363965,
-        "totalXp": 24495057870
-      },
-      {
-        "level": 471,
-        "xpToNextLevel": 427568644,
-        "totalXp": 24915421835
-      },
-      {
-        "level": 472,
-        "xpToNextLevel": 434897500,
-        "totalXp": 25342990479
-      },
-      {
-        "level": 473,
-        "xpToNextLevel": 442352694,
-        "totalXp": 25777887979
-      },
-      {
-        "level": 474,
-        "xpToNextLevel": 449936422,
-        "totalXp": 26220240673
-      },
-      {
-        "level": 475,
-        "xpToNextLevel": 457650920,
-        "totalXp": 26670177095
-      },
-      {
-        "level": 476,
-        "xpToNextLevel": 465498462,
-        "totalXp": 27127828015
-      },
-      {
-        "level": 477,
-        "xpToNextLevel": 473481364,
-        "totalXp": 27593326477
-      },
-      {
-        "level": 478,
-        "xpToNextLevel": 481601980,
-        "totalXp": 28066807841
-      },
-      {
-        "level": 479,
-        "xpToNextLevel": 489862708,
-        "totalXp": 28548409821
-      },
-      {
-        "level": 480,
-        "xpToNextLevel": 498265987,
-        "totalXp": 29038272529
-      },
-      {
-        "level": 481,
-        "xpToNextLevel": 506814299,
-        "totalXp": 29536538516
-      },
-      {
-        "level": 482,
-        "xpToNextLevel": 515510168,
-        "totalXp": 30043352815
-      },
-      {
-        "level": 483,
-        "xpToNextLevel": 524356167,
-        "totalXp": 30558862983
-      },
-      {
-        "level": 484,
-        "xpToNextLevel": 533354908,
-        "totalXp": 31083219150
-      },
-      {
-        "level": 485,
-        "xpToNextLevel": 542509054,
-        "totalXp": 31616574058
-      },
-      {
-        "level": 486,
-        "xpToNextLevel": 551821313,
-        "totalXp": 32159083112
-      },
-      {
-        "level": 487,
-        "xpToNextLevel": 561294440,
-        "totalXp": 32710904425
-      },
-      {
-        "level": 488,
-        "xpToNextLevel": 570931240,
-        "totalXp": 33272198865
-      },
-      {
-        "level": 489,
-        "xpToNextLevel": 580734566,
-        "totalXp": 33843130105
-      },
-      {
-        "level": 490,
-        "xpToNextLevel": 590707321,
-        "totalXp": 34423864671
-      },
-      {
-        "level": 491,
-        "xpToNextLevel": 600852462,
-        "totalXp": 35014571992
-      },
-      {
-        "level": 492,
-        "xpToNextLevel": 611172994,
-        "totalXp": 35615424454
-      },
-      {
-        "level": 493,
-        "xpToNextLevel": 621671978,
-        "totalXp": 36226597448
-      },
-      {
-        "level": 494,
-        "xpToNextLevel": 632352528,
-        "totalXp": 36848269426
-      },
-      {
-        "level": 495,
-        "xpToNextLevel": 643217813,
-        "totalXp": 37480621954
-      },
-      {
-        "level": 496,
-        "xpToNextLevel": 654271056,
-        "totalXp": 38123839767
-      },
-      {
-        "level": 497,
-        "xpToNextLevel": 665515540,
-        "totalXp": 38778110823
-      },
-      {
-        "level": 498,
-        "xpToNextLevel": 676954604,
-        "totalXp": 39443626363
-      },
-      {
-        "level": 499,
-        "xpToNextLevel": 688591647,
-        "totalXp": 40120580967
-      },
-      {
-        "level": 500,
-        "xpToNextLevel": 700430126,
-        "totalXp": 40809172614
-      },
-      {
-        "level": 501,
-        "xpToNextLevel": 712473561,
-        "totalXp": 41509602740
-      },
-      {
-        "level": 502,
-        "xpToNextLevel": 724725532,
-        "totalXp": 42222076301
-      },
-      {
-        "level": 503,
-        "xpToNextLevel": 737189685,
-        "totalXp": 42946801833
-      },
-      {
-        "level": 504,
-        "xpToNextLevel": 749869729,
-        "totalXp": 43683991518
-      },
-      {
-        "level": 505,
-        "xpToNextLevel": 762769438,
-        "totalXp": 44433861247
-      },
-      {
-        "level": 506,
-        "xpToNextLevel": 775892652,
-        "totalXp": 45196630685
-      },
-      {
-        "level": 507,
-        "xpToNextLevel": 789243281,
-        "totalXp": 45972523337
-      },
-      {
-        "level": 508,
-        "xpToNextLevel": 802825302,
-        "totalXp": 46761766618
-      },
-      {
-        "level": 509,
-        "xpToNextLevel": 816642764,
-        "totalXp": 47564591920
-      },
-      {
-        "level": 510,
-        "xpToNextLevel": 830699786,
-        "totalXp": 48381234684
-      },
-      {
-        "level": 511,
-        "xpToNextLevel": 845000562,
-        "totalXp": 49211934470
-      },
-      {
-        "level": 512,
-        "xpToNextLevel": 859549357,
-        "totalXp": 50056935032
-      },
-      {
-        "level": 513,
-        "xpToNextLevel": 874350513,
-        "totalXp": 50916484389
-      },
-      {
-        "level": 514,
-        "xpToNextLevel": 889408450,
-        "totalXp": 51790834902
-      },
-      {
-        "level": 515,
-        "xpToNextLevel": 904727665,
-        "totalXp": 52680243352
-      },
-      {
-        "level": 516,
-        "xpToNextLevel": 920312734,
-        "totalXp": 53584971017
-      },
-      {
-        "level": 517,
-        "xpToNextLevel": 936168314,
-        "totalXp": 54505283751
-      },
-      {
-        "level": 518,
-        "xpToNextLevel": 952299146,
-        "totalXp": 55441452065
-      },
-      {
-        "level": 519,
-        "xpToNextLevel": 968710053,
-        "totalXp": 56393751211
-      },
-      {
-        "level": 520,
-        "xpToNextLevel": 985405945,
-        "totalXp": 57362461264
-      },
-      {
-        "level": 521,
-        "xpToNextLevel": 1002391819,
-        "totalXp": 58347867209
-      },
-      {
-        "level": 522,
-        "xpToNextLevel": 1019672757,
-        "totalXp": 59350259028
-      },
-      {
-        "level": 523,
-        "xpToNextLevel": 1037253936,
-        "totalXp": 60369931785
-      },
-      {
-        "level": 524,
-        "xpToNextLevel": 1055140622,
-        "totalXp": 61407185721
-      },
-      {
-        "level": 525,
-        "xpToNextLevel": 1073338174,
-        "totalXp": 62462326343
-      },
-      {
-        "level": 526,
-        "xpToNextLevel": 1091852048,
-        "totalXp": 63535664517
-      },
-      {
-        "level": 527,
-        "xpToNextLevel": 1110687794,
-        "totalXp": 64627516565
-      },
-      {
-        "level": 528,
-        "xpToNextLevel": 1129851062,
-        "totalXp": 65738204359
-      },
-      {
-        "level": 529,
-        "xpToNextLevel": 1149347602,
-        "totalXp": 66868055421
-      },
-      {
-        "level": 530,
-        "xpToNextLevel": 1169183267,
-        "totalXp": 68017403023
-      },
-      {
-        "level": 531,
-        "xpToNextLevel": 1189364011,
-        "totalXp": 69186586290
-      },
-      {
-        "level": 532,
-        "xpToNextLevel": 1209895897,
-        "totalXp": 70375950301
-      },
-      {
-        "level": 533,
-        "xpToNextLevel": 1230785093,
-        "totalXp": 71585846198
-      },
-      {
-        "level": 534,
-        "xpToNextLevel": 1252037878,
-        "totalXp": 72816631291
-      },
-      {
-        "level": 535,
-        "xpToNextLevel": 1273660641,
-        "totalXp": 74068669169
-      },
-      {
-        "level": 536,
-        "xpToNextLevel": 1295659887,
-        "totalXp": 75342329810
-      },
-      {
-        "level": 537,
-        "xpToNextLevel": 1318042232,
-        "totalXp": 76637989697
-      },
-      {
-        "level": 538,
-        "xpToNextLevel": 1340814415,
-        "totalXp": 77956031929
-      },
-      {
-        "level": 539,
-        "xpToNextLevel": 1363983291,
-        "totalXp": 79296846344
-      },
-      {
-        "level": 540,
-        "xpToNextLevel": 1387555837,
-        "totalXp": 80660829635
-      },
-      {
-        "level": 541,
-        "xpToNextLevel": 1411539156,
-        "totalXp": 82048385472
-      },
-      {
-        "level": 542,
-        "xpToNextLevel": 1435940475,
-        "totalXp": 83459924628
-      },
-      {
-        "level": 543,
-        "xpToNextLevel": 1460767151,
-        "totalXp": 84895865103
-      },
-      {
-        "level": 544,
-        "xpToNextLevel": 1486026671,
-        "totalXp": 86356632254
-      },
-      {
-        "level": 545,
-        "xpToNextLevel": 1511726655,
-        "totalXp": 87842658925
-      },
-      {
-        "level": 546,
-        "xpToNextLevel": 1537874860,
-        "totalXp": 89354385580
-      },
-      {
-        "level": 547,
-        "xpToNextLevel": 1564479179,
-        "totalXp": 90892260440
-      },
-      {
-        "level": 548,
-        "xpToNextLevel": 1591547647,
-        "totalXp": 92456739619
-      },
-      {
-        "level": 549,
-        "xpToNextLevel": 1619088440,
-        "totalXp": 94048287266
-      },
-      {
-        "level": 550,
-        "xpToNextLevel": 1647109881,
-        "totalXp": 95667375706
-      },
-      {
-        "level": 551,
-        "xpToNextLevel": 1675620442,
-        "totalXp": 97314485587
-      },
-      {
-        "level": 552,
-        "xpToNextLevel": 1704628745,
-        "totalXp": 98990106029
-      },
-      {
-        "level": 553,
-        "xpToNextLevel": 1734143563,
-        "totalXp": 100694734774
-      },
-      {
-        "level": 554,
-        "xpToNextLevel": 1764173830,
-        "totalXp": 102428878337
-      },
-      {
-        "level": 555,
-        "xpToNextLevel": 1794728635,
-        "totalXp": 104193052167
-      },
-      {
-        "level": 556,
-        "xpToNextLevel": 1825817231,
-        "totalXp": 105987780802
-      },
-      {
-        "level": 557,
-        "xpToNextLevel": 1857449035,
-        "totalXp": 107813598033
-      },
-      {
-        "level": 558,
-        "xpToNextLevel": 1889633634,
-        "totalXp": 109671047068
-      },
-      {
-        "level": 559,
-        "xpToNextLevel": 1922380783,
-        "totalXp": 111560680702
-      },
-      {
-        "level": 560,
-        "xpToNextLevel": 1955700412,
-        "totalXp": 113483061485
-      },
-      {
-        "level": 561,
-        "xpToNextLevel": 1989602628,
-        "totalXp": 115438761897
-      },
-      {
-        "level": 562,
-        "xpToNextLevel": 2024097719,
-        "totalXp": 117428364525
-      },
-      {
-        "level": 563,
-        "xpToNextLevel": 2059196156,
-        "totalXp": 119452462244
-      },
-      {
-        "level": 564,
-        "xpToNextLevel": 2094908596,
-        "totalXp": 121511658400
-      },
-      {
-        "level": 565,
-        "xpToNextLevel": 2131245887,
-        "totalXp": 123606566996
-      },
-      {
-        "level": 566,
-        "xpToNextLevel": 2168219072,
-        "totalXp": 125737812883
-      },
-      {
-        "level": 567,
-        "xpToNextLevel": 2205839388,
-        "totalXp": 127906031955
-      },
-      {
-        "level": 568,
-        "xpToNextLevel": 2244118275,
-        "totalXp": 130111871343
-      },
-      {
-        "level": 569,
-        "xpToNextLevel": 2283067376,
-        "totalXp": 132355989618
-      },
-      {
-        "level": 570,
-        "xpToNextLevel": 2322698543,
-        "totalXp": 134639056994
-      },
-      {
-        "level": 571,
-        "xpToNextLevel": 2363023840,
-        "totalXp": 136961755537
-      },
-      {
-        "level": 572,
-        "xpToNextLevel": 2404055544,
-        "totalXp": 139324779377
-      },
-      {
-        "level": 573,
-        "xpToNextLevel": 2445806154,
-        "totalXp": 141728834921
-      },
-      {
-        "level": 574,
-        "xpToNextLevel": 2488288392,
-        "totalXp": 144174641075
-      },
-      {
-        "level": 575,
-        "xpToNextLevel": 2531515206,
-        "totalXp": 146662929467
-      },
-      {
-        "level": 576,
-        "xpToNextLevel": 2575499777,
-        "totalXp": 149194444673
-      },
-      {
-        "level": 577,
-        "xpToNextLevel": 2620255522,
-        "totalXp": 151769944450
-      },
-      {
-        "level": 578,
-        "xpToNextLevel": 2665796095,
-        "totalXp": 154390199972
-      },
-      {
-        "level": 579,
-        "xpToNextLevel": 2712135398,
-        "totalXp": 157055996067
-      },
-      {
-        "level": 580,
-        "xpToNextLevel": 2759287579,
-        "totalXp": 159768131465
-      },
-      {
-        "level": 581,
-        "xpToNextLevel": 2807267042,
-        "totalXp": 162527419044
-      },
-      {
-        "level": 582,
-        "xpToNextLevel": 2856088445,
-        "totalXp": 165334686086
-      },
-      {
-        "level": 583,
-        "xpToNextLevel": 2905766712,
-        "totalXp": 168190774531
-      },
-      {
-        "level": 584,
-        "xpToNextLevel": 2956317031,
-        "totalXp": 171096541243
-      },
-      {
-        "level": 585,
-        "xpToNextLevel": 3007754866,
-        "totalXp": 174052858274
-      },
-      {
-        "level": 586,
-        "xpToNextLevel": 3060095953,
-        "totalXp": 177060613140
-      },
-      {
-        "level": 587,
-        "xpToNextLevel": 3113356314,
-        "totalXp": 180120709093
-      },
-      {
-        "level": 588,
-        "xpToNextLevel": 3167552257,
-        "totalXp": 183234065407
-      },
-      {
-        "level": 589,
-        "xpToNextLevel": 3222700380,
-        "totalXp": 186401617664
-      },
-      {
-        "level": 590,
-        "xpToNextLevel": 3278817582,
-        "totalXp": 189624318044
-      },
-      {
-        "level": 591,
-        "xpToNextLevel": 3335921062,
-        "totalXp": 192903135626
-      },
-      {
-        "level": 592,
-        "xpToNextLevel": 3394028329,
-        "totalXp": 196239056688
-      },
-      {
-        "level": 593,
-        "xpToNextLevel": 3453157205,
-        "totalXp": 199633085017
-      },
-      {
-        "level": 594,
-        "xpToNextLevel": 3513325834,
-        "totalXp": 203086242222
-      },
-      {
-        "level": 595,
-        "xpToNextLevel": 3574552682,
-        "totalXp": 206599568056
-      },
-      {
-        "level": 596,
-        "xpToNextLevel": 3636856548,
-        "totalXp": 210174120738
-      },
-      {
-        "level": 597,
-        "xpToNextLevel": 3700256568,
-        "totalXp": 213810977286
-      },
-      {
-        "level": 598,
-        "xpToNextLevel": 3764772224,
-        "totalXp": 217511233854
-      },
-      {
-        "level": 599,
-        "xpToNextLevel": 3830423343,
-        "totalXp": 221276006078
-      },
-      {
-        "level": 600,
-        "xpToNextLevel": 3897230112,
-        "totalXp": 225106429421
-      },
-      {
-        "level": 601,
-        "xpToNextLevel": 3965213078,
-        "totalXp": 229003659533
-      },
-      {
-        "level": 602,
-        "xpToNextLevel": 4034393159,
-        "totalXp": 232968872611
-      },
-      {
-        "level": 603,
-        "xpToNextLevel": 4104791647,
-        "totalXp": 237003265770
-      },
-      {
-        "level": 604,
-        "xpToNextLevel": 4176430218,
-        "totalXp": 241108057417
-      },
-      {
-        "level": 605,
-        "xpToNextLevel": 4249330937,
-        "totalXp": 245284487635
-      },
-      {
-        "level": 606,
-        "xpToNextLevel": 4323516265,
-        "totalXp": 249533818572
-      },
-      {
-        "level": 607,
-        "xpToNextLevel": 4399009067,
-        "totalXp": 253857334837
-      },
-      {
-        "level": 608,
-        "xpToNextLevel": 4475832620,
-        "totalXp": 258256343904
-      },
-      {
-        "level": 609,
-        "xpToNextLevel": 4554010618,
-        "totalXp": 262732176524
-      },
-      {
-        "level": 610,
-        "xpToNextLevel": 4633567183,
-        "totalXp": 267286187142
-      },
-      {
-        "level": 611,
-        "xpToNextLevel": 4714526870,
-        "totalXp": 271919754325
-      },
-      {
-        "level": 612,
-        "xpToNextLevel": 4796914676,
-        "totalXp": 276634281195
-      },
-      {
-        "level": 613,
-        "xpToNextLevel": 4880756047,
-        "totalXp": 281431195871
-      },
-      {
-        "level": 614,
-        "xpToNextLevel": 4966076887,
-        "totalXp": 286311951918
-      },
-      {
-        "level": 615,
-        "xpToNextLevel": 5052903569,
-        "totalXp": 291278028805
-      },
-      {
-        "level": 616,
-        "xpToNextLevel": 5141262937,
-        "totalXp": 296330932374
-      },
-      {
-        "level": 617,
-        "xpToNextLevel": 5231182321,
-        "totalXp": 301472195311
-      },
-      {
-        "level": 618,
-        "xpToNextLevel": 5322689543,
-        "totalXp": 306703377632
-      },
-      {
-        "level": 619,
-        "xpToNextLevel": 5415812924,
-        "totalXp": 312026067175
-      },
-      {
-        "level": 620,
-        "xpToNextLevel": 5510581299,
-        "totalXp": 317441880099
-      },
-      {
-        "level": 621,
-        "xpToNextLevel": 5607024018,
-        "totalXp": 322952461398
-      },
-      {
-        "level": 622,
-        "xpToNextLevel": 5705170965,
-        "totalXp": 328559485416
-      },
-      {
-        "level": 623,
-        "xpToNextLevel": 5805052559,
-        "totalXp": 334264656381
-      },
-      {
-        "level": 624,
-        "xpToNextLevel": 5906699769,
-        "totalXp": 340069708940
-      },
-      {
-        "level": 625,
-        "xpToNextLevel": 6010144122,
-        "totalXp": 345976408709
-      },
-      {
-        "level": 626,
-        "xpToNextLevel": 6115417714,
-        "totalXp": 351986552831
-      },
-      {
-        "level": 627,
-        "xpToNextLevel": 6222553220,
-        "totalXp": 358101970545
-      },
-      {
-        "level": 628,
-        "xpToNextLevel": 6331583904,
-        "totalXp": 364324523765
-      },
-      {
-        "level": 629,
-        "xpToNextLevel": 6442543630,
-        "totalXp": 370656107669
-      },
-      {
-        "level": 630,
-        "xpToNextLevel": 6555466875,
-        "totalXp": 377098651299
-      },
-      {
-        "level": 631,
-        "xpToNextLevel": 6670388737,
-        "totalXp": 383654118174
-      },
-      {
-        "level": 632,
-        "xpToNextLevel": 6787344947,
-        "totalXp": 390324506911
-      },
-      {
-        "level": 633,
-        "xpToNextLevel": 6906371883,
-        "totalXp": 397111851858
-      },
-      {
-        "level": 634,
-        "xpToNextLevel": 7027506578,
-        "totalXp": 404018223741
-      },
-      {
-        "level": 635,
-        "xpToNextLevel": 7150786737,
-        "totalXp": 411045730319
-      },
-      {
-        "level": 636,
-        "xpToNextLevel": 7276250743,
-        "totalXp": 418196517056
-      },
-      {
-        "level": 637,
-        "xpToNextLevel": 7403937674,
-        "totalXp": 425472767799
-      },
-      {
-        "level": 638,
-        "xpToNextLevel": 7533887315,
-        "totalXp": 432876705473
-      },
-      {
-        "level": 639,
-        "xpToNextLevel": 7666140169,
-        "totalXp": 440410592788
-      },
-      {
-        "level": 640,
-        "xpToNextLevel": 7800737472,
-        "totalXp": 448076732957
-      },
-      {
-        "level": 641,
-        "xpToNextLevel": 7937721205,
-        "totalXp": 455877470429
-      },
-      {
-        "level": 642,
-        "xpToNextLevel": 8077134110,
-        "totalXp": 463815191634
-      },
-      {
-        "level": 643,
-        "xpToNextLevel": 8219019699,
-        "totalXp": 471892325744
-      },
-      {
-        "level": 644,
-        "xpToNextLevel": 8363422275,
-        "totalXp": 480111345443
-      },
-      {
-        "level": 645,
-        "xpToNextLevel": 8510386940,
-        "totalXp": 488474767718
-      },
-      {
-        "level": 646,
-        "xpToNextLevel": 8659959614,
-        "totalXp": 496985154658
-      },
-      {
-        "level": 647,
-        "xpToNextLevel": 8812187046,
-        "totalXp": 505645114272
-      },
-      {
-        "level": 648,
-        "xpToNextLevel": 8967116835,
-        "totalXp": 514457301318
-      },
-      {
-        "level": 649,
-        "xpToNextLevel": 9124797437,
-        "totalXp": 523424418153
-      },
-      {
-        "level": 650,
-        "xpToNextLevel": 9285278191,
-        "totalXp": 532549215590
-      },
-      {
-        "level": 651,
-        "xpToNextLevel": 9448609326,
-        "totalXp": 541834493781
-      },
-      {
-        "level": 652,
-        "xpToNextLevel": 9614841982,
-        "totalXp": 551283103107
-      },
-      {
-        "level": 653,
-        "xpToNextLevel": 9784028227,
-        "totalXp": 560897945089
-      },
-      {
-        "level": 654,
-        "xpToNextLevel": 9956221070,
-        "totalXp": 570681973316
-      },
-      {
-        "level": 655,
-        "xpToNextLevel": 10131474484,
-        "totalXp": 580638194386
-      },
-      {
-        "level": 656,
-        "xpToNextLevel": 10309843419,
-        "totalXp": 590769668870
-      },
-      {
-        "level": 657,
-        "xpToNextLevel": 10491383820,
-        "totalXp": 601079512289
-      },
-      {
-        "level": 658,
-        "xpToNextLevel": 10676152649,
-        "totalXp": 611570896109
-      },
-      {
-        "level": 659,
-        "xpToNextLevel": 10864207901,
-        "totalXp": 622247048758
-      },
-      {
-        "level": 660,
-        "xpToNextLevel": 11055608623,
-        "totalXp": 633111256659
-      },
-      {
-        "level": 661,
-        "xpToNextLevel": 11250414931,
-        "totalXp": 644166865282
-      },
-      {
-        "level": 662,
-        "xpToNextLevel": 11448688036,
-        "totalXp": 655417280213
-      },
-      {
-        "level": 663,
-        "xpToNextLevel": 11650490257,
-        "totalXp": 666865968249
-      },
-      {
-        "level": 664,
-        "xpToNextLevel": 11855885047,
-        "totalXp": 678516458506
-      },
-      {
-        "level": 665,
-        "xpToNextLevel": 12064937009,
-        "totalXp": 690372343553
-      },
-      {
-        "level": 666,
-        "xpToNextLevel": 12277711920,
-        "totalXp": 702437280562
-      },
-      {
-        "level": 667,
-        "xpToNextLevel": 12494276753,
-        "totalXp": 714714992482
-      },
-      {
-        "level": 668,
-        "xpToNextLevel": 12714699696,
-        "totalXp": 727209269235
-      },
-      {
-        "level": 669,
-        "xpToNextLevel": 12939050176,
-        "totalXp": 739923968931
-      },
-      {
-        "level": 670,
-        "xpToNextLevel": 13167398885,
-        "totalXp": 752863019107
-      },
-      {
-        "level": 671,
-        "xpToNextLevel": 13399817795,
-        "totalXp": 766030417992
-      },
-      {
-        "level": 672,
-        "xpToNextLevel": 13636380191,
-        "totalXp": 779430235787
-      },
-      {
-        "level": 673,
-        "xpToNextLevel": 13877160687,
-        "totalXp": 793066615978
-      },
-      {
-        "level": 674,
-        "xpToNextLevel": 14122235256,
-        "totalXp": 806943776665
-      },
-      {
-        "level": 675,
-        "xpToNextLevel": 14371681254,
-        "totalXp": 821066011921
-      },
-      {
-        "level": 676,
-        "xpToNextLevel": 14625577441,
-        "totalXp": 835437693175
-      },
-      {
-        "level": 677,
-        "xpToNextLevel": 14884004012,
-        "totalXp": 850063270616
-      },
-      {
-        "level": 678,
-        "xpToNextLevel": 15147042623,
-        "totalXp": 864947274628
-      },
-      {
-        "level": 679,
-        "xpToNextLevel": 15414776413,
-        "totalXp": 880094317251
-      },
-      {
-        "level": 680,
-        "xpToNextLevel": 15687290038,
-        "totalXp": 895509093664
-      },
-      {
-        "level": 681,
-        "xpToNextLevel": 15964669692,
-        "totalXp": 911196383702
-      },
-      {
-        "level": 682,
-        "xpToNextLevel": 16247003142,
-        "totalXp": 927161053394
-      },
-      {
-        "level": 683,
-        "xpToNextLevel": 16534379751,
-        "totalXp": 943408056536
-      },
-      {
-        "level": 684,
-        "xpToNextLevel": 16826890511,
-        "totalXp": 959942436287
-      },
-      {
-        "level": 685,
-        "xpToNextLevel": 17124628073,
-        "totalXp": 976769326798
-      },
-      {
-        "level": 686,
-        "xpToNextLevel": 17427686776,
-        "totalXp": 993893954871
-      },
-      {
-        "level": 687,
-        "xpToNextLevel": 17736162676,
-        "totalXp": 1011321641647
-      },
-      {
-        "level": 688,
-        "xpToNextLevel": 18050153584,
-        "totalXp": 1029057804323
-      },
-      {
-        "level": 689,
-        "xpToNextLevel": 18369759092,
-        "totalXp": 1047107957907
-      },
-      {
-        "level": 690,
-        "xpToNextLevel": 18695080609,
-        "totalXp": 1065477716999
-      },
-      {
-        "level": 691,
-        "xpToNextLevel": 19026221393,
-        "totalXp": 1084172797608
-      },
-      {
-        "level": 692,
-        "xpToNextLevel": 19363286587,
-        "totalXp": 1103199019001
-      },
-      {
-        "level": 693,
-        "xpToNextLevel": 19706383250,
-        "totalXp": 1122562305588
-      },
-      {
-        "level": 694,
-        "xpToNextLevel": 20055620398,
-        "totalXp": 1142268688838
-      },
-      {
-        "level": 695,
-        "xpToNextLevel": 20411109035,
-        "totalXp": 1162324309236
-      },
-      {
-        "level": 696,
-        "xpToNextLevel": 20772962190,
-        "totalXp": 1182735418271
-      },
-      {
-        "level": 697,
-        "xpToNextLevel": 21141294958,
-        "totalXp": 1203508380461
-      },
-      {
-        "level": 698,
-        "xpToNextLevel": 21516224535,
-        "totalXp": 1224649675419
-      },
-      {
-        "level": 699,
-        "xpToNextLevel": 21897870257,
-        "totalXp": 1246165899954
-      },
-      {
-        "level": 700,
-        "xpToNextLevel": 22286353640,
-        "totalXp": 1268063770211
-      },
-      {
-        "level": 701,
-        "xpToNextLevel": 22681798422,
-        "totalXp": 1290350123851
-      },
-      {
-        "level": 702,
-        "xpToNextLevel": 23084330600,
-        "totalXp": 1313031922273
-      },
-      {
-        "level": 703,
-        "xpToNextLevel": 23494078474,
-        "totalXp": 1336116252873
-      },
-      {
-        "level": 704,
-        "xpToNextLevel": 23911172691,
-        "totalXp": 1359610331347
-      },
-      {
-        "level": 705,
-        "xpToNextLevel": 24335746284,
-        "totalXp": 1383521504038
-      },
-      {
-        "level": 706,
-        "xpToNextLevel": 24767934721,
-        "totalXp": 1407857250322
-      },
-      {
-        "level": 707,
-        "xpToNextLevel": 25207875947,
-        "totalXp": 1432625185043
-      },
-      {
-        "level": 708,
-        "xpToNextLevel": 25655710429,
-        "totalXp": 1457833060990
-      },
-      {
-        "level": 709,
-        "xpToNextLevel": 26111581206,
-        "totalXp": 1483488771419
-      },
-      {
-        "level": 710,
-        "xpToNextLevel": 26575633933,
-        "totalXp": 1509600352625
-      },
-      {
-        "level": 711,
-        "xpToNextLevel": 27048016931,
-        "totalXp": 1536175986558
-      },
-      {
-        "level": 712,
-        "xpToNextLevel": 27528881236,
-        "totalXp": 1563224003489
-      },
-      {
-        "level": 713,
-        "xpToNextLevel": 28018380649,
-        "totalXp": 1590752884725
-      },
-      {
-        "level": 714,
-        "xpToNextLevel": 28516671788,
-        "totalXp": 1618771265374
-      },
-      {
-        "level": 715,
-        "xpToNextLevel": 29023914138,
-        "totalXp": 1647287937162
-      },
-      {
-        "level": 716,
-        "xpToNextLevel": 29540270106,
-        "totalXp": 1676311851300
-      },
-      {
-        "level": 717,
-        "xpToNextLevel": 30065905075,
-        "totalXp": 1705852121406
-      },
-      {
-        "level": 718,
-        "xpToNextLevel": 30600987457,
-        "totalXp": 1735918026481
-      },
-      {
-        "level": 719,
-        "xpToNextLevel": 31145688752,
-        "totalXp": 1766519013938
-      },
-      {
-        "level": 720,
-        "xpToNextLevel": 31700183601,
-        "totalXp": 1797664702690
-      },
-      {
-        "level": 721,
-        "xpToNextLevel": 32264649849,
-        "totalXp": 1829364886291
-      },
-      {
-        "level": 722,
-        "xpToNextLevel": 32839268602,
-        "totalXp": 1861629536140
-      },
-      {
-        "level": 723,
-        "xpToNextLevel": 33424224284,
-        "totalXp": 1894468804742
-      },
-      {
-        "level": 724,
-        "xpToNextLevel": 34019704706,
-        "totalXp": 1927893029026
-      },
-      {
-        "level": 725,
-        "xpToNextLevel": 34625901122,
-        "totalXp": 1961912733732
-      },
-      {
-        "level": 726,
-        "xpToNextLevel": 35243008294,
-        "totalXp": 1996538634854
-      },
-      {
-        "level": 727,
-        "xpToNextLevel": 35871224561,
-        "totalXp": 2031781643148
-      },
-      {
-        "level": 728,
-        "xpToNextLevel": 36510751901,
-        "totalXp": 2067652867709
-      },
-      {
-        "level": 729,
-        "xpToNextLevel": 37161795998,
-        "totalXp": 2104163619610
-      },
-      {
-        "level": 730,
-        "xpToNextLevel": 37824566315,
-        "totalXp": 2141325415608
-      },
-      {
-        "level": 731,
-        "xpToNextLevel": 38499276161,
-        "totalXp": 2179149981923
-      },
-      {
-        "level": 732,
-        "xpToNextLevel": 39186142761,
-        "totalXp": 2217649258084
-      },
-      {
-        "level": 733,
-        "xpToNextLevel": 39885387332,
-        "totalXp": 2256835400845
-      },
-      {
-        "level": 734,
-        "xpToNextLevel": 40597235155,
-        "totalXp": 2296720788177
-      },
-      {
-        "level": 735,
-        "xpToNextLevel": 41321915651,
-        "totalXp": 2337318023332
-      },
-      {
-        "level": 736,
-        "xpToNextLevel": 42059662456,
-        "totalXp": 2378639938983
-      },
-      {
-        "level": 737,
-        "xpToNextLevel": 42810713502,
-        "totalXp": 2420699601439
-      },
-      {
-        "level": 738,
-        "xpToNextLevel": 43575311095,
-        "totalXp": 2463510314941
-      },
-      {
-        "level": 739,
-        "xpToNextLevel": 44353701996,
-        "totalXp": 2507085626036
-      },
-      {
-        "level": 740,
-        "xpToNextLevel": 45146137506,
-        "totalXp": 2551439328032
-      },
-      {
-        "level": 741,
-        "xpToNextLevel": 45952873547,
-        "totalXp": 2596585465538
-      },
-      {
-        "level": 742,
-        "xpToNextLevel": 46774170748,
-        "totalXp": 2642538339085
-      },
-      {
-        "level": 743,
-        "xpToNextLevel": 47610294536,
-        "totalXp": 2689312509833
-      },
-      {
-        "level": 744,
-        "xpToNextLevel": 48461515221,
-        "totalXp": 2736922804369
-      },
-      {
-        "level": 745,
-        "xpToNextLevel": 49328108091,
-        "totalXp": 2785384319590
-      },
-      {
-        "level": 746,
-        "xpToNextLevel": 50210353499,
-        "totalXp": 2834712427681
-      },
-      {
-        "level": 747,
-        "xpToNextLevel": 51108536961,
-        "totalXp": 2884922781180
-      },
-      {
-        "level": 748,
-        "xpToNextLevel": 52022949251,
-        "totalXp": 2936031318141
-      },
-      {
-        "level": 749,
-        "xpToNextLevel": 52953886499,
-        "totalXp": 2988054267392
-      },
-      {
-        "level": 750,
-        "xpToNextLevel": 53901650291,
-        "totalXp": 3041008153891
-      },
-      {
-        "level": 751,
-        "xpToNextLevel": 54866547767,
-        "totalXp": 3094909804182
-      },
-      {
-        "level": 752,
-        "xpToNextLevel": 55848891730,
-        "totalXp": 3149776351949
-      },
-      {
-        "level": 753,
-        "xpToNextLevel": 56849000746,
-        "totalXp": 3205625243679
-      },
-      {
-        "level": 754,
-        "xpToNextLevel": 57867199255,
-        "totalXp": 3262474244425
-      },
-      {
-        "level": 755,
-        "xpToNextLevel": 58903817677,
-        "totalXp": 3320341443680
-      },
-      {
-        "level": 756,
-        "xpToNextLevel": 59959192527,
-        "totalXp": 3379245261357
-      },
-      {
-        "level": 757,
-        "xpToNextLevel": 61033666525,
-        "totalXp": 3439204453884
-      },
-      {
-        "level": 758,
-        "xpToNextLevel": 62127588713,
-        "totalXp": 3500238120409
-      },
-      {
-        "level": 759,
-        "xpToNextLevel": 63241314573,
-        "totalXp": 3562365709122
-      },
-      {
-        "level": 760,
-        "xpToNextLevel": 64375206147,
-        "totalXp": 3625607023695
-      },
-      {
-        "level": 761,
-        "xpToNextLevel": 65529632158,
-        "totalXp": 3689982229842
-      },
-      {
-        "level": 762,
-        "xpToNextLevel": 66704968134,
-        "totalXp": 3755511862000
-      },
-      {
-        "level": 763,
-        "xpToNextLevel": 67901596538,
-        "totalXp": 3822216830134
-      },
-      {
-        "level": 764,
-        "xpToNextLevel": 69119906894,
-        "totalXp": 3890118426672
-      },
-      {
-        "level": 765,
-        "xpToNextLevel": 70360295918,
-        "totalXp": 3959238333566
-      },
-      {
-        "level": 766,
-        "xpToNextLevel": 71623167656,
-        "totalXp": 4029598629484
-      },
-      {
-        "level": 767,
-        "xpToNextLevel": 72908933618,
-        "totalXp": 4101221797140
-      },
-      {
-        "level": 768,
-        "xpToNextLevel": 74218012916,
-        "totalXp": 4174130730758
-      },
-      {
-        "level": 769,
-        "xpToNextLevel": 75550832408,
-        "totalXp": 4248348743674
-      },
-      {
-        "level": 770,
-        "xpToNextLevel": 76907826841,
-        "totalXp": 4323899576082
-      },
-      {
-        "level": 771,
-        "xpToNextLevel": 78289439000,
-        "totalXp": 4400807402923
-      },
-      {
-        "level": 772,
-        "xpToNextLevel": 79696119855,
-        "totalXp": 4479096841923
-      },
-      {
-        "level": 773,
-        "xpToNextLevel": 81128328716,
-        "totalXp": 4558792961778
-      },
-      {
-        "level": 774,
-        "xpToNextLevel": 82586533388,
-        "totalXp": 4639921290494
-      },
-      {
-        "level": 775,
-        "xpToNextLevel": 84071210330,
-        "totalXp": 4722507823882
-      },
-      {
-        "level": 776,
-        "xpToNextLevel": 85582844816,
-        "totalXp": 4806579034212
-      },
-      {
-        "level": 777,
-        "xpToNextLevel": 87121931099,
-        "totalXp": 4892161879028
-      },
-      {
-        "level": 778,
-        "xpToNextLevel": 88688972579,
-        "totalXp": 4979283810127
-      },
-      {
-        "level": 779,
-        "xpToNextLevel": 90284481974,
-        "totalXp": 5067972782706
-      },
-      {
-        "level": 780,
-        "xpToNextLevel": 91908981496,
-        "totalXp": 5158257264680
-      },
-      {
-        "level": 781,
-        "xpToNextLevel": 93563003025,
-        "totalXp": 5250166246176
-      },
-      {
-        "level": 782,
-        "xpToNextLevel": 95247088290,
-        "totalXp": 5343729249201
-      },
-      {
-        "level": 783,
-        "xpToNextLevel": 96961789056,
-        "totalXp": 5438976337491
-      },
-      {
-        "level": 784,
-        "xpToNextLevel": 98707667310,
-        "totalXp": 5535938126547
-      },
-      {
-        "level": 785,
-        "xpToNextLevel": 100485295449,
-        "totalXp": 5634645793857
-      },
-      {
-        "level": 786,
-        "xpToNextLevel": 102295256480,
-        "totalXp": 5735131089306
-      },
-      {
-        "level": 787,
-        "xpToNextLevel": 104138144216,
-        "totalXp": 5837426345786
-      },
-      {
-        "level": 788,
-        "xpToNextLevel": 106014563476,
-        "totalXp": 5941564490002
-      },
-      {
-        "level": 789,
-        "xpToNextLevel": 107925130294,
-        "totalXp": 6047579053478
-      },
-      {
-        "level": 790,
-        "xpToNextLevel": 109870472126,
-        "totalXp": 6155504183772
-      },
-      {
-        "level": 791,
-        "xpToNextLevel": 111851228068,
-        "totalXp": 6265374655898
-      },
-      {
-        "level": 792,
-        "xpToNextLevel": 113868049068,
-        "totalXp": 6377225883966
-      },
-      {
-        "level": 793,
-        "xpToNextLevel": 115921598153,
-        "totalXp": 6491093933034
-      },
-      {
-        "level": 794,
-        "xpToNextLevel": 118012550652,
-        "totalXp": 6607015531187
-      },
-      {
-        "level": 795,
-        "xpToNextLevel": 120141594428,
-        "totalXp": 6725028081839
-      },
-      {
-        "level": 796,
-        "xpToNextLevel": 122309430112,
-        "totalXp": 6845169676267
-      },
-      {
-        "level": 797,
-        "xpToNextLevel": 124516771340,
-        "totalXp": 6967479106379
-      },
-      {
-        "level": 798,
-        "xpToNextLevel": 126764345002,
-        "totalXp": 7091995877719
-      },
-      {
-        "level": 799,
-        "xpToNextLevel": 129052891485,
-        "totalXp": 7218760222721
-      },
-      {
-        "level": 800,
-        "xpToNextLevel": 131383164928,
-        "totalXp": 7347813114206
-      },
-      {
-        "level": 801,
-        "xpToNextLevel": 133755933480,
-        "totalXp": 7479196279134
-      },
-      {
-        "level": 802,
-        "xpToNextLevel": 136171979562,
-        "totalXp": 7612952212614
-      },
-      {
-        "level": 803,
-        "xpToNextLevel": 138632100135,
-        "totalXp": 7749124192176
-      },
-      {
-        "level": 804,
-        "xpToNextLevel": 141137106971,
-        "totalXp": 7887756292311
-      },
-      {
-        "level": 805,
-        "xpToNextLevel": 143687826935,
-        "totalXp": 8028893399282
-      },
-      {
-        "level": 806,
-        "xpToNextLevel": 146285102262,
-        "totalXp": 8172581226217
-      },
-      {
-        "level": 807,
-        "xpToNextLevel": 148929790850,
-        "totalXp": 8318866328479
-      },
-      {
-        "level": 808,
-        "xpToNextLevel": 151622766551,
-        "totalXp": 8467796119329
-      },
-      {
-        "level": 809,
-        "xpToNextLevel": 154364919473,
-        "totalXp": 8619418885880
-      },
-      {
-        "level": 810,
-        "xpToNextLevel": 157157156284,
-        "totalXp": 8773783805353
-      },
-      {
-        "level": 811,
-        "xpToNextLevel": 160000400520,
-        "totalXp": 8930940961637
-      },
-      {
-        "level": 812,
-        "xpToNextLevel": 162895592907,
-        "totalXp": 9090941362157
-      },
-      {
-        "level": 813,
-        "xpToNextLevel": 165843691678,
-        "totalXp": 9253836955064
-      },
-      {
-        "level": 814,
-        "xpToNextLevel": 168845672907,
-        "totalXp": 9419680646742
-      },
-      {
-        "level": 815,
-        "xpToNextLevel": 171902530841,
-        "totalXp": 9588526319649
-      },
-      {
-        "level": 816,
-        "xpToNextLevel": 175015278241,
-        "totalXp": 9760428850490
-      },
-      {
-        "level": 817,
-        "xpToNextLevel": 178184946731,
-        "totalXp": 9935444128731
-      },
-      {
-        "level": 818,
-        "xpToNextLevel": 181412587154,
-        "totalXp": 10113629075462
-      },
-      {
-        "level": 819,
-        "xpToNextLevel": 184699269929,
-        "totalXp": 10295041662616
-      },
-      {
-        "level": 820,
-        "xpToNextLevel": 188046085423,
-        "totalXp": 10479740932545
-      },
-      {
-        "level": 821,
-        "xpToNextLevel": 191454144324,
-        "totalXp": 10667787017968
-      },
-      {
-        "level": 822,
-        "xpToNextLevel": 194924578023,
-        "totalXp": 10859241162292
-      },
-      {
-        "level": 823,
-        "xpToNextLevel": 198458539004,
-        "totalXp": 11054165740315
-      },
-      {
-        "level": 824,
-        "xpToNextLevel": 202057201240,
-        "totalXp": 11252624279319
-      },
-      {
-        "level": 825,
-        "xpToNextLevel": 205721760598,
-        "totalXp": 11454681480559
-      },
-      {
-        "level": 826,
-        "xpToNextLevel": 209453435250,
-        "totalXp": 11660403241157
-      },
-      {
-        "level": 827,
-        "xpToNextLevel": 213253466094,
-        "totalXp": 11869856676407
-      },
-      {
-        "level": 828,
-        "xpToNextLevel": 217123117180,
-        "totalXp": 12083110142501
-      },
-      {
-        "level": 829,
-        "xpToNextLevel": 221063676148,
-        "totalXp": 12300233259681
-      },
-      {
-        "level": 830,
-        "xpToNextLevel": 225076454667,
-        "totalXp": 12521296935829
-      },
-      {
-        "level": 831,
-        "xpToNextLevel": 229162788896,
-        "totalXp": 12746373390496
-      },
-      {
-        "level": 832,
-        "xpToNextLevel": 233324039938,
-        "totalXp": 12975536179392
-      },
-      {
-        "level": 833,
-        "xpToNextLevel": 237561594310,
-        "totalXp": 13208860219330
-      },
-      {
-        "level": 834,
-        "xpToNextLevel": 241876864427,
-        "totalXp": 13446421813640
-      },
-      {
-        "level": 835,
-        "xpToNextLevel": 246271289084,
-        "totalXp": 13688298678067
-      },
-      {
-        "level": 836,
-        "xpToNextLevel": 250746333958,
-        "totalXp": 13934569967151
-      },
-      {
-        "level": 837,
-        "xpToNextLevel": 255303492111,
-        "totalXp": 14185316301109
-      },
-      {
-        "level": 838,
-        "xpToNextLevel": 259944284506,
-        "totalXp": 14440619793220
-      },
-      {
-        "level": 839,
-        "xpToNextLevel": 264670260536,
-        "totalXp": 14700564077726
-      },
-      {
-        "level": 840,
-        "xpToNextLevel": 269482998560,
-        "totalXp": 14965234338262
-      },
-      {
-        "level": 841,
-        "xpToNextLevel": 274384106443,
-        "totalXp": 15234717336822
-      },
-      {
-        "level": 842,
-        "xpToNextLevel": 279375222121,
-        "totalXp": 15509101443265
-      },
-      {
-        "level": 843,
-        "xpToNextLevel": 284458014162,
-        "totalXp": 15788476665386
-      },
-      {
-        "level": 844,
-        "xpToNextLevel": 289634182347,
-        "totalXp": 16072934679548
-      },
-      {
-        "level": 845,
-        "xpToNextLevel": 294905458258,
-        "totalXp": 16362568861895
-      },
-      {
-        "level": 846,
-        "xpToNextLevel": 300273605878,
-        "totalXp": 16657474320153
-      },
-      {
-        "level": 847,
-        "xpToNextLevel": 305740422202,
-        "totalXp": 16957747926031
-      },
-      {
-        "level": 848,
-        "xpToNextLevel": 311307737862,
-        "totalXp": 17263488348233
-      },
-      {
-        "level": 849,
-        "xpToNextLevel": 316977417760,
-        "totalXp": 17574796086095
-      },
-      {
-        "level": 850,
-        "xpToNextLevel": 322751361716,
-        "totalXp": 17891773503855
-      },
-      {
-        "level": 851,
-        "xpToNextLevel": 328631505128,
-        "totalXp": 18214524865571
-      },
-      {
-        "level": 852,
-        "xpToNextLevel": 334619819643,
-        "totalXp": 18543156370699
-      },
-      {
-        "level": 853,
-        "xpToNextLevel": 340718313841,
-        "totalXp": 18877776190342
-      },
-      {
-        "level": 854,
-        "xpToNextLevel": 346929033937,
-        "totalXp": 19218494504183
-      },
-      {
-        "level": 855,
-        "xpToNextLevel": 353254064486,
-        "totalXp": 19565423538120
-      },
-      {
-        "level": 856,
-        "xpToNextLevel": 359695529113,
-        "totalXp": 19918677602606
-      },
-      {
-        "level": 857,
-        "xpToNextLevel": 366255591249,
-        "totalXp": 20278373131719
-      },
-      {
-        "level": 858,
-        "xpToNextLevel": 372936454883,
-        "totalXp": 20644628722968
-      },
-      {
-        "level": 859,
-        "xpToNextLevel": 379740365330,
-        "totalXp": 21017565177851
-      },
-      {
-        "level": 860,
-        "xpToNextLevel": 386669610013,
-        "totalXp": 21397305543181
-      },
-      {
-        "level": 861,
-        "xpToNextLevel": 393726519259,
-        "totalXp": 21783975153194
-      },
-      {
-        "level": 862,
-        "xpToNextLevel": 400913467109,
-        "totalXp": 22177701672453
-      },
-      {
-        "level": 863,
-        "xpToNextLevel": 408232872148,
-        "totalXp": 22578615139562
-      },
-      {
-        "level": 864,
-        "xpToNextLevel": 415687198346,
-        "totalXp": 22986848011710
-      },
-      {
-        "level": 865,
-        "xpToNextLevel": 423278955916,
-        "totalXp": 23402535210056
-      },
-      {
-        "level": 866,
-        "xpToNextLevel": 431010702192,
-        "totalXp": 23825814165972
-      },
-      {
-        "level": 867,
-        "xpToNextLevel": 438885042520,
-        "totalXp": 24256824868164
-      },
-      {
-        "level": 868,
-        "xpToNextLevel": 446904631166,
-        "totalXp": 24695709910684
-      },
-      {
-        "level": 869,
-        "xpToNextLevel": 455072172243,
-        "totalXp": 25142614541850
-      },
-      {
-        "level": 870,
-        "xpToNextLevel": 463390420656,
-        "totalXp": 25597686714093
-      },
-      {
-        "level": 871,
-        "xpToNextLevel": 471862183064,
-        "totalXp": 26061077134749
-      },
-      {
-        "level": 872,
-        "xpToNextLevel": 480490318858,
-        "totalXp": 26532939317813
-      },
-      {
-        "level": 873,
-        "xpToNextLevel": 489277741164,
-        "totalXp": 27013429636671
-      },
-      {
-        "level": 874,
-        "xpToNextLevel": 498227417859,
-        "totalXp": 27502707377835
-      },
-      {
-        "level": 875,
-        "xpToNextLevel": 507342372609,
-        "totalXp": 28000934795694
-      },
-      {
-        "level": 876,
-        "xpToNextLevel": 516625685929,
-        "totalXp": 28508277168303
-      },
-      {
-        "level": 877,
-        "xpToNextLevel": 526080496255,
-        "totalXp": 29024902854232
-      },
-      {
-        "level": 878,
-        "xpToNextLevel": 535710001050,
-        "totalXp": 29550983350487
-      },
-      {
-        "level": 879,
-        "xpToNextLevel": 545517457917,
-        "totalXp": 30086693351537
-      },
-      {
-        "level": 880,
-        "xpToNextLevel": 555506185744,
-        "totalXp": 30632210809454
-      },
-      {
-        "level": 881,
-        "xpToNextLevel": 565679565865,
-        "totalXp": 31187716995198
-      },
-      {
-        "level": 882,
-        "xpToNextLevel": 576041043245,
-        "totalXp": 31753396561063
-      },
-      {
-        "level": 883,
-        "xpToNextLevel": 586594127688,
-        "totalXp": 32329437604308
-      },
-      {
-        "level": 884,
-        "xpToNextLevel": 597342395065,
-        "totalXp": 32916031731996
-      },
-      {
-        "level": 885,
-        "xpToNextLevel": 608289488574,
-        "totalXp": 33513374127061
-      },
-      {
-        "level": 886,
-        "xpToNextLevel": 619439120012,
-        "totalXp": 34121663615635
-      },
-      {
-        "level": 887,
-        "xpToNextLevel": 630795071082,
-        "totalXp": 34741102735647
-      },
-      {
-        "level": 888,
-        "xpToNextLevel": 642361194717,
-        "totalXp": 35371897806729
-      },
-      {
-        "level": 889,
-        "xpToNextLevel": 654141416437,
-        "totalXp": 36014259001446
-      },
-      {
-        "level": 890,
-        "xpToNextLevel": 666139735724,
-        "totalXp": 36668400417883
-      },
-      {
-        "level": 891,
-        "xpToNextLevel": 678360227432,
-        "totalXp": 37334540153607
-      },
-      {
-        "level": 892,
-        "xpToNextLevel": 690807043214,
-        "totalXp": 38012900381039
-      },
-      {
-        "level": 893,
-        "xpToNextLevel": 703484412984,
-        "totalXp": 38703707424253
-      },
-      {
-        "level": 894,
-        "xpToNextLevel": 716396646407,
-        "totalXp": 39407191837237
-      },
-      {
-        "level": 895,
-        "xpToNextLevel": 729548134411,
-        "totalXp": 40123588483644
-      },
-      {
-        "level": 896,
-        "xpToNextLevel": 742943350734,
-        "totalXp": 40853136618055
-      },
-      {
-        "level": 897,
-        "xpToNextLevel": 756586853502,
-        "totalXp": 41596079968789
-      },
-      {
-        "level": 898,
-        "xpToNextLevel": 770483286827,
-        "totalXp": 42352666822291
-      },
-      {
-        "level": 899,
-        "xpToNextLevel": 784637382449,
-        "totalXp": 43123150109118
-      },
-      {
-        "level": 900,
-        "xpToNextLevel": 799053961401,
-        "totalXp": 43907787491567
-      },
-      {
-        "level": 901,
-        "xpToNextLevel": 813737935708,
-        "totalXp": 44706841452968
-      },
-      {
-        "level": 902,
-        "xpToNextLevel": 828694310117,
-        "totalXp": 45520579388676
-      },
-      {
-        "level": 903,
-        "xpToNextLevel": 843928183867,
-        "totalXp": 46349273698793
-      },
-      {
-        "level": 904,
-        "xpToNextLevel": 859444752483,
-        "totalXp": 47193201882660
-      },
-      {
-        "level": 905,
-        "xpToNextLevel": 875249309609,
-        "totalXp": 48052646635143
-      },
-      {
-        "level": 906,
-        "xpToNextLevel": 891347248881,
-        "totalXp": 48927895944752
-      },
-      {
-        "level": 907,
-        "xpToNextLevel": 907744065829,
-        "totalXp": 49819243193633
-      },
-      {
-        "level": 908,
-        "xpToNextLevel": 924445359814,
-        "totalXp": 50726987259462
-      },
-      {
-        "level": 909,
-        "xpToNextLevel": 941456836015,
-        "totalXp": 51651432619276
-      },
-      {
-        "level": 910,
-        "xpToNextLevel": 958784307435,
-        "totalXp": 52592889455291
-      },
-      {
-        "level": 911,
-        "xpToNextLevel": 976433696966,
-        "totalXp": 53551673762726
-      },
-      {
-        "level": 912,
-        "xpToNextLevel": 994411039474,
-        "totalXp": 54528107459692
-      },
-      {
-        "level": 913,
-        "xpToNextLevel": 1012722483939,
-        "totalXp": 55522518499166
-      },
-      {
-        "level": 914,
-        "xpToNextLevel": 1031374295632,
-        "totalXp": 56535240983105
-      },
-      {
-        "level": 915,
-        "xpToNextLevel": 1050372858328,
-        "totalXp": 57566615278737
-      },
-      {
-        "level": 916,
-        "xpToNextLevel": 1069724676567,
-        "totalXp": 58616988137065
-      },
-      {
-        "level": 917,
-        "xpToNextLevel": 1089436377961,
-        "totalXp": 59686712813632
-      },
-      {
-        "level": 918,
-        "xpToNextLevel": 1109514715537,
-        "totalXp": 60776149191593
-      },
-      {
-        "level": 919,
-        "xpToNextLevel": 1129966570134,
-        "totalXp": 61885663907130
-      },
-      {
-        "level": 920,
-        "xpToNextLevel": 1150798952839,
-        "totalXp": 63015630477264
-      },
-      {
-        "level": 921,
-        "xpToNextLevel": 1172019007474,
-        "totalXp": 64166429430103
-      },
-      {
-        "level": 922,
-        "xpToNextLevel": 1193634013131,
-        "totalXp": 65338448437577
-      },
-      {
-        "level": 923,
-        "xpToNextLevel": 1215651386752,
-        "totalXp": 66532082450708
-      },
-      {
-        "level": 924,
-        "xpToNextLevel": 1238078685762,
-        "totalXp": 67747733837460
-      },
-      {
-        "level": 925,
-        "xpToNextLevel": 1260923610752,
-        "totalXp": 68985812523222
-      },
-      {
-        "level": 926,
-        "xpToNextLevel": 1284194008213,
-        "totalXp": 70246736133974
-      },
-      {
-        "level": 927,
-        "xpToNextLevel": 1307897873324,
-        "totalXp": 71530930142187
-      },
-      {
-        "level": 928,
-        "xpToNextLevel": 1332043352791,
-        "totalXp": 72838828015511
-      },
-      {
-        "level": 929,
-        "xpToNextLevel": 1356638747745,
-        "totalXp": 74170871368302
-      },
-      {
-        "level": 930,
-        "xpToNextLevel": 1381692516689,
-        "totalXp": 75527510116047
-      },
-      {
-        "level": 931,
-        "xpToNextLevel": 1407213278510,
-        "totalXp": 76909202632736
-      },
-      {
-        "level": 932,
-        "xpToNextLevel": 1433209815542,
-        "totalXp": 78316415911246
-      },
-      {
-        "level": 933,
-        "xpToNextLevel": 1459691076695,
-        "totalXp": 79749625726788
-      },
-      {
-        "level": 934,
-        "xpToNextLevel": 1486666180633,
-        "totalXp": 81209316803483
-      },
-      {
-        "level": 935,
-        "xpToNextLevel": 1514144419030,
-        "totalXp": 82695982984116
-      },
-      {
-        "level": 936,
-        "xpToNextLevel": 1542135259869,
-        "totalXp": 84210127403146
-      },
-      {
-        "level": 937,
-        "xpToNextLevel": 1570648350824,
-        "totalXp": 85752262663015
-      },
-      {
-        "level": 938,
-        "xpToNextLevel": 1599693522693,
-        "totalXp": 87322911013839
-      },
-      {
-        "level": 939,
-        "xpToNextLevel": 1629280792902,
-        "totalXp": 88922604536532
-      },
-      {
-        "level": 940,
-        "xpToNextLevel": 1659420369078,
-        "totalXp": 90551885329434
-      },
-      {
-        "level": 941,
-        "xpToNextLevel": 1690122652693,
-        "totalXp": 92211305698512
-      },
-      {
-        "level": 942,
-        "xpToNextLevel": 1721398242768,
-        "totalXp": 93901428351205
-      },
-      {
-        "level": 943,
-        "xpToNextLevel": 1753257939661,
-        "totalXp": 95622826593973
-      },
-      {
-        "level": 944,
-        "xpToNextLevel": 1785712748920,
-        "totalXp": 97376084533634
-      },
-      {
-        "level": 945,
-        "xpToNextLevel": 1818773885214,
-        "totalXp": 99161797282554
-      },
-      {
-        "level": 946,
-        "xpToNextLevel": 1852452776340,
-        "totalXp": 100980571167768
-      },
-      {
-        "level": 947,
-        "xpToNextLevel": 1886761067303,
-        "totalXp": 102833023944108
-      },
-      {
-        "level": 948,
-        "xpToNextLevel": 1921710624479,
-        "totalXp": 104719785011411
-      },
-      {
-        "level": 949,
-        "xpToNextLevel": 1957313539861,
-        "totalXp": 106641495635890
-      },
-      {
-        "level": 950,
-        "xpToNextLevel": 1993582135376,
-        "totalXp": 108598809175751
-      },
-      {
-        "level": 951,
-        "xpToNextLevel": 2030528967299,
-        "totalXp": 110592391311127
-      },
-      {
-        "level": 952,
-        "xpToNextLevel": 2068166830746,
-        "totalXp": 112622920278426
-      },
-      {
-        "level": 953,
-        "xpToNextLevel": 2106508764246,
-        "totalXp": 114691087109172
-      },
-      {
-        "level": 954,
-        "xpToNextLevel": 2145568054421,
-        "totalXp": 116797595873418
-      },
-      {
-        "level": 955,
-        "xpToNextLevel": 2185358240733,
-        "totalXp": 118943163927839
-      },
-      {
-        "level": 956,
-        "xpToNextLevel": 2225893120343,
-        "totalXp": 121128522168572
-      },
-      {
-        "level": 957,
-        "xpToNextLevel": 2267186753049,
-        "totalXp": 123354415288915
-      },
-      {
-        "level": 958,
-        "xpToNextLevel": 2309253466330,
-        "totalXp": 125621602041964
-      },
-      {
-        "level": 959,
-        "xpToNextLevel": 2352107860483,
-        "totalXp": 127930855508294
-      },
-      {
-        "level": 960,
-        "xpToNextLevel": 2395764813854,
-        "totalXp": 130282963368777
-      },
-      {
-        "level": 961,
-        "xpToNextLevel": 2440239488184,
-        "totalXp": 132678728182631
-      },
-      {
-        "level": 962,
-        "xpToNextLevel": 2485547334043,
-        "totalXp": 135118967670815
-      },
-      {
-        "level": 963,
-        "xpToNextLevel": 2531704096383,
-        "totalXp": 137604515004858
-      },
-      {
-        "level": 964,
-        "xpToNextLevel": 2578725820184,
-        "totalXp": 140136219101241
-      },
-      {
-        "level": 965,
-        "xpToNextLevel": 2626628856224,
-        "totalXp": 142714944921425
-      },
-      {
-        "level": 966,
-        "xpToNextLevel": 2675429866950,
-        "totalXp": 145341573777649
-      },
-      {
-        "level": 967,
-        "xpToNextLevel": 2725145832466,
-        "totalXp": 148017003644599
-      },
-      {
-        "level": 968,
-        "xpToNextLevel": 2775794056639,
-        "totalXp": 150742149477065
-      },
-      {
-        "level": 969,
-        "xpToNextLevel": 2827392173323,
-        "totalXp": 153517943533704
-      },
-      {
-        "level": 970,
-        "xpToNextLevel": 2879958152697,
-        "totalXp": 156345335707027
-      },
-      {
-        "level": 971,
-        "xpToNextLevel": 2933510307735,
-        "totalXp": 159225293859724
-      },
-      {
-        "level": 972,
-        "xpToNextLevel": 2988067300795,
-        "totalXp": 162158804167459
-      },
-      {
-        "level": 973,
-        "xpToNextLevel": 3043648150340,
-        "totalXp": 165146871468254
-      },
-      {
-        "level": 974,
-        "xpToNextLevel": 3100272237785,
-        "totalXp": 168190519618594
-      },
-      {
-        "level": 975,
-        "xpToNextLevel": 3157959314480,
-        "totalXp": 171290791856379
-      },
-      {
-        "level": 976,
-        "xpToNextLevel": 3216729508823,
-        "totalXp": 174448751170859
-      },
-      {
-        "level": 977,
-        "xpToNextLevel": 3276603333524,
-        "totalXp": 177665480679682
-      },
-      {
-        "level": 978,
-        "xpToNextLevel": 3337601692989,
-        "totalXp": 180942084013206
-      },
-      {
-        "level": 979,
-        "xpToNextLevel": 3399745890870,
-        "totalXp": 184279685706195
-      },
-      {
-        "level": 980,
-        "xpToNextLevel": 3463057637742,
-        "totalXp": 187679431597065
-      },
-      {
-        "level": 981,
-        "xpToNextLevel": 3527559058943,
-        "totalXp": 191142489234807
-      },
-      {
-        "level": 982,
-        "xpToNextLevel": 3593272702556,
-        "totalXp": 194670048293750
-      },
-      {
-        "level": 983,
-        "xpToNextLevel": 3660221547553,
-        "totalXp": 198263320996306
-      },
-      {
-        "level": 984,
-        "xpToNextLevel": 3728429012094,
-        "totalXp": 201923542543859
-      },
-      {
-        "level": 985,
-        "xpToNextLevel": 3797918961985,
-        "totalXp": 205651971555953
-      },
-      {
-        "level": 986,
-        "xpToNextLevel": 3868715719304,
-        "totalXp": 209449890517938
-      },
-      {
-        "level": 987,
-        "xpToNextLevel": 3940844071195,
-        "totalXp": 213318606237242
-      },
-      {
-        "level": 988,
-        "xpToNextLevel": 4014329278828,
-        "totalXp": 217259450308437
-      },
-      {
-        "level": 989,
-        "xpToNextLevel": 4089197086534,
-        "totalXp": 221273779587265
-      },
-      {
-        "level": 990,
-        "xpToNextLevel": 4165473731122,
-        "totalXp": 225362976673799
-      },
-      {
-        "level": 991,
-        "xpToNextLevel": 4243185951375,
-        "totalXp": 229528450404921
-      },
-      {
-        "level": 992,
-        "xpToNextLevel": 4322360997724,
-        "totalXp": 233771636356296
-      },
-      {
-        "level": 993,
-        "xpToNextLevel": 4403026642121,
-        "totalXp": 238093997354020
-      },
-      {
-        "level": 994,
-        "xpToNextLevel": 4485211188096,
-        "totalXp": 242497023996141
-      },
-      {
-        "level": 995,
-        "xpToNextLevel": 4568943481010,
-        "totalXp": 246982235184237
-      },
-      {
-        "level": 996,
-        "xpToNextLevel": 4654252918511,
-        "totalXp": 251551178665247
-      },
-      {
-        "level": 997,
-        "xpToNextLevel": 4741169461191,
-        "totalXp": 256205431583758
-      },
-      {
-        "level": 998,
-        "xpToNextLevel": 4829723643448,
-        "totalXp": 260946601044949
-      },
-      {
-        "level": 999,
-        "xpToNextLevel": 4919946584565,
-        "totalXp": 265776324688397
-      },
-      {
-        "level": 1000,
         "xpToNextLevel": 0,
-        "totalXp": 270696271272962
+        "totalXp": 7419561532
       }
     ]
   },

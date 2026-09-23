@@ -3,6 +3,7 @@ package com.perso.T4C.input;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 import com.badlogic.gdx.math.Vector2;
+import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.ItemRegistry;
@@ -143,10 +144,11 @@ public final class GmCommandProcessor {
 
   private void setLevel(Player player, int level) {
     if (level < 1) level = 1;
+    level = Math.min(level, GameConstants.MAX_PLAYER_LEVEL);
     player.setLevel(level);
     if (xpCurve != null) {
       long next = xpCurve.getXpToNextLevel(level);
-      if (next > 0) player.setXpToNextLevel(next);
+      if (next > 0 || level >= GameConstants.MAX_PLAYER_LEVEL) player.setXpToNextLevel(next);
     }
     ok("Level set to " + player.getLevel(), player);
   }
@@ -322,7 +324,11 @@ public final class GmCommandProcessor {
       SystemMessage.showShared("GM: usage .rebirth");
       return;
     }
-    RebirthBehavior.perform(player);
+    if (!RebirthBehavior.perform(player)) {
+      SystemMessage.showShared(
+          "GM: already at the rebirth limit (" + GameConstants.REBIRTH_MAX_REMORTS + ")");
+      return;
+    }
     player.setWorldPosition(1315 * GRID_W, 920 * GRID_H, 1);
     ok("Rebirth performed (remort " + player.getRebirthCount() + ")", player);
   }

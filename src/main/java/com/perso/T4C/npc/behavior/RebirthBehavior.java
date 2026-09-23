@@ -19,12 +19,25 @@ public final class RebirthBehavior {
 
   private RebirthBehavior() {}
 
-  public static void perform(Player player) {
+  /** Whether this character is still below {@link GameConstants#REBIRTH_MAX_REMORTS}. */
+  public static boolean canRebirth(Player player) {
+
+    return player != null
+        && player.getQuestFlag("__FLAG_NUMBER_OF_REMORTS") < GameConstants.REBIRTH_MAX_REMORTS;
+  }
+
+  /**
+   * Rebirths the character. Returns {@code false} (and changes nothing) once the character has
+   * already been reborn {@link GameConstants#REBIRTH_MAX_REMORTS} times.
+   */
+  public static boolean perform(Player player) {
 
     if (player == null) {
 
       throw new IllegalArgumentException("player is required");
     }
+
+    if (!canRebirth(player)) return false;
 
     int remorts = player.getQuestFlag("__FLAG_NUMBER_OF_REMORTS") + 1;
 
@@ -119,5 +132,7 @@ public final class RebirthBehavior {
     PlayerAppearanceDefaults.applyDefaults(player);
 
     if (player.getAnimations() != null) player.getAnimations().refresh();
+
+    return true;
   }
 }

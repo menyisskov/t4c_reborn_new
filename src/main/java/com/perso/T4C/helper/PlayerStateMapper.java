@@ -1,6 +1,7 @@
 package com.perso.T4C.helper;
 
 import com.perso.T4C.combat.SeraphAuraService;
+import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
@@ -79,12 +80,22 @@ public final class PlayerStateMapper {
     player.setCurrentHp(state.currentHp);
     player.setMaxMana(state.maxMana);
     player.setMana(state.mana);
-    player.setLevel(state.level);
-    player.setCurrentXp(state.currentXp);
-    player.setXpToNextLevel(state.xpToNextLevel);
+    if (state.level >= GameConstants.MAX_PLAYER_LEVEL) {
+      // Characters saved above the level cap (from before it existed) are brought down to it.
+      player.setLevel(GameConstants.MAX_PLAYER_LEVEL);
+      player.setCurrentXp(0);
+      player.setXpToNextLevel(0);
+    } else {
+      player.setLevel(state.level);
+      player.setCurrentXp(state.currentXp);
+      player.setXpToNextLevel(state.xpToNextLevel);
+    }
     player.setStatPoints(state.statPoints);
     player.setSkillPoints(state.skillPoints);
-    player.setRebirthCount(state.rebirthCount);
+    // Saves from before the rebirth limit can hold more; the Seraph aura scales with this count,
+    // so cap it. The __FLAG_NUMBER_OF_REMORTS quest flag is left as saved: RemortNPC2 derives the
+    // character's base attributes from it, and those were already granted.
+    player.setRebirthCount(Math.min(state.rebirthCount, GameConstants.REBIRTH_MAX_REMORTS));
     player.setSpells(state.spells);
     player.setQuickSlots(state.quickSlots);
     applyActiveBuffs(state, player);

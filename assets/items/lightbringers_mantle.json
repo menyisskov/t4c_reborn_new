@@ -1,0 +1,44 @@
+{
+  "key": "lightbringers_mantle",
+  "name": "Lightbringer's Mantle",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "NMS_NewCape01__pal9",
+  "appearanceInventory": "Inv_NMS_NewCape01__pal9",
+  "price": 1500000,
+  "weight": 2,
+  "armorClass": 40.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 250,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 150,
+    "wisdom": 600,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36213,
+      "statId": 23,
+      "expression": "60"
+    },
+    {
+      "boostId": 36214,
+      "statId": 21,
+      "expression": "40"
+    },
+    {
+      "boostId": 36215,
+      "statId": 4,
+      "expression": "50"
+    }
+  ]
+}

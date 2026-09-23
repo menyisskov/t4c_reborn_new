@@ -59,7 +59,11 @@ public class GameConstants {
   public static final float BOW_ATTACK_RANGE = 15f * GRID_W;
   public static final String BOW_PROJECTILE_SPRITE = "64kArrowNormal";
   public static final int QUIVER_STRUCTURE_ID = 8;
-  public static final long REBIRTH_MAX_REMORTS = 100L;
+  /** Highest character level (T4C-0025); XP stops granting levels here. */
+  public static final int MAX_PLAYER_LEVEL = 400;
+  /** Most times a character can be reborn (T4C-0025). With REBIRTH_BASE_ATTRIBUTE and
+   * REBIRTH_ATTRIBUTE_PER_REMORT that caps a reborn character's starting attributes at 270. */
+  public static final int REBIRTH_MAX_REMORTS = 50;
   public static final int REBIRTH_REMORT_POINTS_PER_REBIRTH = 10;
   public static final int REBIRTH_REMORT_POINTS_PER_EXTRA_REMORT = 5;
   public static final int REBIRTH_BASE_ATTRIBUTE = 20;

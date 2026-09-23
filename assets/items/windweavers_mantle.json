@@ -1,0 +1,49 @@
+{
+  "key": "windweavers_mantle",
+  "name": "Windweaver's Mantle",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "NMS_NewCape01__pal6",
+  "appearanceInventory": "Inv_NMS_NewCape01__pal6",
+  "price": 1500000,
+  "weight": 2,
+  "armorClass": 40.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 250,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 375,
+    "wisdom": 375,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36209,
+      "statId": 16,
+      "expression": "60"
+    },
+    {
+      "boostId": 36210,
+      "statId": 12,
+      "expression": "40"
+    },
+    {
+      "boostId": 36211,
+      "statId": 1,
+      "expression": "25"
+    },
+    {
+      "boostId": 36212,
+      "statId": 4,
+      "expression": "25"
+    }
+  ]
+}

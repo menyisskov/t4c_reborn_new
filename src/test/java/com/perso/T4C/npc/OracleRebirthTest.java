@@ -83,4 +83,32 @@ class OracleRebirthTest {
     assertTrue(Oracle.behavior().onKeyword(context, "ready reborn"));
     assertEquals("REBIRTH", context.pendingYesNo());
   }
+
+  @Test
+  void refusesRebirthOnceTheRebirthLimitIsReached() throws Exception {
+    Player player = eligiblePlayer();
+    player.setLevel(400);
+    int limit = com.perso.T4C.config.GameConstants.REBIRTH_MAX_REMORTS;
+    player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", limit);
+    player.setRebirthCount(limit);
+    NpcBehaviorContext context = context(player);
+    Oracle.behavior().onKeyword(context, "ready reborn");
+    assertNull(context.pendingYesNo());
+    assertTrue(Oracle.behavior().onYesNo(context, "REBIRTH", true));
+    assertEquals(400, player.getLevel());
+    assertEquals(limit, player.getRebirthCount());
+  }
+
+  @Test
+  void theLastAllowedRebirthStartsAtTwoHundredSeventyInEveryAttribute() throws Exception {
+    Player player = eligiblePlayer();
+    player.setLevel(400);
+    int limit = com.perso.T4C.config.GameConstants.REBIRTH_MAX_REMORTS;
+    player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", limit - 1);
+    NpcBehaviorContext context = context(player);
+    Oracle.behavior().onYesNo(context, "REBIRTH", true);
+    assertEquals(limit, player.getRebirthCount());
+    assertEquals(270, player.getIntelligence());
+    assertEquals(270, player.getWisdom());
+  }
 }

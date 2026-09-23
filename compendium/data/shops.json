@@ -426,5 +426,13 @@
     "potion_of_mana",
     "mana_elixir",
     "manastone"
+  ],
+  "ArchmageThalindra": [
+    "pyromancers_mantle",
+    "tidecallers_mantle",
+    "geomancers_mantle",
+    "windweavers_mantle",
+    "lightbringers_mantle",
+    "shadowmancers_mantle"
   ]
 }

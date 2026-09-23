@@ -9,10 +9,10 @@ import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.mapping.definition.XpCurveDefinitions;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.monster.json.MonsterJsonLoader;
+import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.quest.QuestDef;
@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -95,7 +96,37 @@ public final class CompendiumExporter {
           "SanctumWard",
           "EmberqueensWrath",
           "CataclysmsHerald",
-          "AvalonGateway");
+          "AvalonGateway",
+          "Scorchbrand",
+          "Pyreburst",
+          "MagmaheartLance",
+          "SunforgeBrand",
+          "Ashfall",
+          "RimeLance",
+          "Frostgale",
+          "AbyssalSpear",
+          "Tidebreaker",
+          "DrowningDeep",
+          "Stonefang",
+          "MountainsFist",
+          "WorldrootUpheaval",
+          "TectonicRuin",
+          "Galespike",
+          "Thunderhead",
+          "Skysplitter",
+          "TempestLance",
+          "Heavenfall",
+          "Nightfang",
+          "Shadowblight",
+          "Soulrend",
+          "UmbralTide",
+          "EclipseOfRuin",
+          "Dawnflare",
+          "RadiantSpear",
+          "SeraphsVerdict",
+          "HallowedNova",
+          "SolarApotheosis",
+          "DawnwellRenewal");
 
   private static final Set<String> NEW_NPC_IDS =
       Set.of(
@@ -573,6 +604,26 @@ public final class CompendiumExporter {
     } catch (ReflectiveOperationException ex) {
       System.err.println("Could not read ShopCatalog: " + ex);
     }
+    // NPCs can also sell through a dialogue topic's OPEN_SHOP action (e.g. ArchmageThalindra's
+    // mantles) rather than a ShopCatalog entry - include those so the items show a real source.
+    List<NpcFactoryRegistry.Registration> regs =
+        new ArrayList<>(NpcFactoryRegistry.registrations());
+    regs.sort(Comparator.comparing(NpcFactoryRegistry.Registration::id));
+    for (NpcFactoryRegistry.Registration reg : regs) {
+      if (SHOP_EXCLUDED_NPC_IDS.contains(reg.id()) || reg.specification() == null) continue;
+      NpcSpec spec = safeSpec(reg);
+      if (spec == null) continue;
+      Set<String> sold = new LinkedHashSet<>();
+      for (NpcSpec.DialogueTopic topic : spec.topics())
+        for (NpcSpec.Action action : topic.actions())
+          if (action.type() == ActionType.OPEN_SHOP) sold.addAll(action.targets());
+      if (sold.isEmpty()) continue;
+      List<String> merged = new ArrayList<>();
+      Object existing = out.get(reg.id());
+      if (existing instanceof List<?> list) for (Object o : list) merged.add(String.valueOf(o));
+      for (String item : sold) if (!merged.contains(item)) merged.add(item);
+      out.put(reg.id(), merged);
+    }
     return out;
   }
 
@@ -636,14 +687,15 @@ public final class CompendiumExporter {
   // -------------------------------------------------------------- xp curve
 
   /**
-   * The live leveling curve ({@link XpCurveDefinitions}, levels 1-1000), for the Systems page's
+   * The live leveling curve ({@link XpCurve#loadDefault()}, levels 1 to
+   * {@link GameConstants#MAX_PLAYER_LEVEL}), for the Systems page's
    * XP-per-level chart. {@code serverXpRate} is {@link GameConstants#SERVER_XP_RATE}, the flat
    * multiplier applied to every monster's granted XP ({@code PlayerProgression#addXp}) - it does
    * not change the curve itself, only how many real kills a given {@code xpToNextLevel} costs.
    */
   private static Map<String, Object> exportXpCurve() {
     List<Map<String, Object>> entries = new ArrayList<>();
-    for (XpCurve.Entry e : XpCurveDefinitions.all()) {
+    for (XpCurve.Entry e : XpCurve.loadDefault().entries()) {
       Map<String, Object> row = new LinkedHashMap<>();
       row.put("level", e.getLevel());
       row.put("xpToNextLevel", e.getXpToNextLevel());

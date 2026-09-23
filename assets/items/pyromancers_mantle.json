@@ -1,0 +1,44 @@
+{
+  "key": "pyromancers_mantle",
+  "name": "Pyromancer's Mantle",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "NMS_NewCape01",
+  "appearanceInventory": "Inv_NMS_NewCape01",
+  "price": 1500000,
+  "weight": 2,
+  "armorClass": 40.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 250,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 600,
+    "wisdom": 150,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36200,
+      "statId": 17,
+      "expression": "60"
+    },
+    {
+      "boostId": 36201,
+      "statId": 13,
+      "expression": "40"
+    },
+    {
+      "boostId": 36202,
+      "statId": 1,
+      "expression": "50"
+    }
+  ]
+}

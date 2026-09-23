@@ -277,6 +277,13 @@ public final class Oracle extends ScriptedNpc {
             return true;
           }
 
+          if (!com.perso.T4C.npc.behavior.RebirthBehavior.canRebirth(c.player())) {
+
+            c.sayKey("npc.oracle.native.rebirthLimit");
+
+            return true;
+          }
+
           c.sayKey("npc.oracle.native.letItBe");
 
           com.perso.T4C.npc.behavior.RebirthBehavior.perform(c.player());
@@ -297,6 +304,13 @@ public final class Oracle extends ScriptedNpc {
           if (c.flag(DEFEATED_ASSISTANT) != 1) {
 
             c.sayKey("${npc.topic.oracle.0}");
+
+            return;
+          }
+
+          if (!com.perso.T4C.npc.behavior.RebirthBehavior.canRebirth(c.player())) {
+
+            c.sayKey("npc.oracle.native.rebirthLimit");
 
             return;
           }

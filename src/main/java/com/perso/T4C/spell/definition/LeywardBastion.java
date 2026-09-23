@@ -1,5 +1,6 @@
 package com.perso.T4C.spell.definition;
 
+import com.perso.T4C.spell.HighTierSpellCurve;
 import com.perso.T4C.spell.SpellData;
 import java.util.List;
 
@@ -9,7 +10,8 @@ import java.util.List;
  * Veilstone Aegis's own (lower) requirements. Originally authored under the name "Sentinel",
  * which turned out to collide with a real t4cfantasy.com/Addon "Ancient tier" spell name;
  * renamed to an invented name that isn't one of the game's own real spells, keeping the same
- * mechanics/spellId.
+ * mechanics/spellId. T4C-0025 moved its Intelligence/Wisdom gate onto the shared high-tier
+ * curve ({@link HighTierSpellCurve}) at its own level.
  */
 public final class LeywardBastion {
   private LeywardBastion() {}
@@ -20,8 +22,8 @@ public final class LeywardBastion {
         "${spell.description.leyward_bastion}",
         "1600",
         0,
-        30,
-        90,
+        HighTierSpellCurve.secondaryRequirement(200),
+        HighTierSpellCurve.primaryRequirement(200),
         200,
         false,
         true,

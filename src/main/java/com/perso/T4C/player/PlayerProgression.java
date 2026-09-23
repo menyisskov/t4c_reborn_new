@@ -29,6 +29,12 @@ public final class PlayerProgression {
     if (player.getLevel() <= 0) {
       player.setLevel(1);
     }
+    if (player.getLevel() >= com.perso.T4C.config.GameConstants.MAX_PLAYER_LEVEL) {
+      // At the level cap XP no longer counts toward anything.
+      player.setCurrentXp(0);
+      player.setXpToNextLevel(0);
+      return;
+    }
     while (player.getXpToNextLevel() > 0 && player.getCurrentXp() >= player.getXpToNextLevel()) {
       player.setCurrentXp(player.getCurrentXp() - player.getXpToNextLevel());
       player.setLevel(player.getLevel() + 1);
@@ -38,9 +44,10 @@ public final class PlayerProgression {
       player.showLevelUpMessage(player.getLevel(), gains[0], gains[1]);
       player.notifyLevelUp(player.getLevel());
       long next = xpCurve.getXpToNextLevel(player.getLevel());
-      if (next > 0) {
-        player.setXpToNextLevel(next);
-      } else {
+      player.setXpToNextLevel(next);
+      if (next <= 0) {
+        // Level cap reached: no further level-ups.
+        player.setCurrentXp(0);
         break;
       }
     }
