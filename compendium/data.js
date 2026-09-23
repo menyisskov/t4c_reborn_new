@@ -8948,15 +8948,33 @@ window.T4C_DATA = {
       "completedText": "You've already cleared the roads once. Nothing's stopping you from the hills now."
     },
     {
+      "id": "passage_to_kraanhold",
+      "title": "Passage to Kraanhold",
+      "giverNpc": "DockmasterThessaly",
+      "targetMonster": "Toll Troll",
+      "requiredKills": 12,
+      "targetWorldZ": 0,
+      "areaCenterX": 1975,
+      "areaCenterY": 2750,
+      "areaRadiusTiles": 170,
+      "rewardGold": 4000,
+      "rewardXp": 250000,
+      "requiredItemQty": 0,
+      "unlockZoneId": "windhowl_marches",
+      "offerText": "The coast road east of here is thick with trolls, and I won't risk the crossing until it's clear. Thin their numbers and I'll take you to Kraanhold myself.",
+      "completionText": "The road's clear and the trolls scattered. Kraanhold's yours to reach now - Windhowl Marches is the first stretch of it, past the shoals.",
+      "completedText": "You've already cleared the road once. The crossing to Kraanhold is yours whenever you want it."
+    },
+    {
       "id": "windhowl_marches_centaurs",
       "title": "The Windhowl Marches",
       "giverNpc": "MarshalTorrhen",
       "targetMonster": "Centaur Warrior",
       "requiredKills": 20,
       "targetWorldZ": 0,
-      "areaCenterX": 1650,
-      "areaCenterY": 1550,
-      "areaRadiusTiles": 120,
+      "areaCenterX": 2380,
+      "areaCenterY": 2430,
+      "areaRadiusTiles": 140,
       "rewardGold": 6000,
       "rewardXp": 400000,
       "requiredItemKey": "marchwardens_crown",
@@ -8973,9 +8991,9 @@ window.T4C_DATA = {
       "targetMonster": "Barrow Wight",
       "requiredKills": 20,
       "targetWorldZ": 0,
-      "areaCenterX": 1600,
-      "areaCenterY": 1800,
-      "areaRadiusTiles": 120,
+      "areaCenterX": 2500,
+      "areaCenterY": 2700,
+      "areaRadiusTiles": 150,
       "rewardGold": 12000,
       "rewardXp": 900000,
       "requiredItemKey": "crown_of_the_hollow_king",
@@ -8992,9 +9010,9 @@ window.T4C_DATA = {
       "targetMonster": "Kraanian Wyrmling",
       "requiredKills": 20,
       "targetWorldZ": 0,
-      "areaCenterX": 1900,
-      "areaCenterY": 1950,
-      "areaRadiusTiles": 140,
+      "areaCenterX": 2350,
+      "areaCenterY": 2900,
+      "areaRadiusTiles": 160,
       "rewardGold": 25000,
       "rewardXp": 2000000,
       "requiredItemKey": "aeries_drakeheart_signet",
@@ -9011,9 +9029,9 @@ window.T4C_DATA = {
       "targetMonster": "Bastion Warden",
       "requiredKills": 20,
       "targetWorldZ": 0,
-      "areaCenterX": 2000,
-      "areaCenterY": 2300,
-      "areaRadiusTiles": 150,
+      "areaCenterX": 2650,
+      "areaCenterY": 2880,
+      "areaRadiusTiles": 170,
       "rewardGold": 500000,
       "rewardXp": 150000000,
       "requiredItemKey": "heartfire_of_the_greater_drake",
@@ -9049,9 +9067,9 @@ window.T4C_DATA = {
       "targetMonster": "Kraanian Dragonguard",
       "requiredKills": 15,
       "targetWorldZ": 0,
-      "areaCenterX": 2200,
-      "areaCenterY": 2500,
-      "areaRadiusTiles": 150,
+      "areaCenterX": 2850,
+      "areaCenterY": 2780,
+      "areaRadiusTiles": 180,
       "rewardGold": 5000000,
       "rewardXp": 2000000000,
       "requiredItemKey": "archdrakes_molten_heart",
@@ -9160,6 +9178,57 @@ window.T4C_DATA = {
           "actions": [
             "OPEN_SPELL_LEARNING:voidreave_lance,stormcallers_judgment,sanctum_ward,emberqueens_wrath,cataclysms_herald"
           ]
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "DockmasterThessaly",
+      "origin": "new",
+      "displayName": "Dockmaster Thessaly",
+      "welcomeText": "The crossing to Kraanhold isn't a pleasant one. Clear the road trolls harassing the coast first, and I'll see you safely across.",
+      "topics": [
+        {
+          "keywords": [
+            "kraanhold",
+            "crossing"
+          ],
+          "response": "Trolls have been working the coast road east of here for longer than I've kept this dock. Thin their numbers and I'll take you across to Kraanhold myself - can't risk the boat with them still raiding the shore.",
+          "actions": [
+            "GIVE_QUEST:passage_to_kraanhold"
+          ]
+        },
+        {
+          "keywords": [
+            "kraanhold",
+            "continent"
+          ],
+          "response": "Kraanhold. A stretch of coast and mountain out past the shoals - centaurs hold the marches, and it only gets worse from there. Drakes, they say, further up in the peaks.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "trolls"
+          ],
+          "response": "Nothing clever about them, just big and mean. They've gotten bold enough to block the coast road entirely some days.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "boat"
+          ],
+          "response": "Watch the tide line. I've lost more than one boat to trolls wading out after it.",
+          "actions": []
         }
       ],
       "combatProfile": {
@@ -24182,11 +24251,11 @@ window.T4C_DATA = {
       "levelRange": "100–150",
       "biome": "Plains / Centaur warband",
       "worldmapCenter": {
-        "x": 1650.0,
-        "y": 1550.0,
-        "radius": 120.0
+        "x": 2380.0,
+        "y": 2430.0,
+        "radius": 140.0
       },
-      "summary": "Open marchland held by a centaur warband. Centaur Warrior and Centaur King existed as barely-authored placeholder stubs before this pass gave them real stats.",
+      "summary": "Open marchland held by a centaur warband, the entrance province of Kraanhold — a new continent painted for T4C-0024, reached by sea from the mainland. Centaur Warrior and Centaur King existed as barely-authored placeholder stubs before T4C-0005 gave them real stats.",
       "monsters": [
         "Centaur Warrior",
         "Centaur King"
@@ -24198,10 +24267,12 @@ window.T4C_DATA = {
       ],
       "spells": [],
       "quests": [
-        "windhowl_marches_centaurs"
+        "windhowl_marches_centaurs",
+        "passage_to_kraanhold"
       ],
       "npcs": [
-        "MarshalTorrhen"
+        "MarshalTorrhen",
+        "DockmasterThessaly"
       ]
     },
     {
@@ -24211,11 +24282,11 @@ window.T4C_DATA = {
       "levelRange": "150–200",
       "biome": "Undead barrow-field",
       "worldmapCenter": {
-        "x": 1600.0,
-        "y": 1800.0,
-        "radius": 120.0
+        "x": 2500.0,
+        "y": 2700.0,
+        "radius": 150.0
       },
-      "summary": "A barrow-field of restless dead, ruled by a wight king who never let go of his crown.",
+      "summary": "A barrow-field of restless dead, ruled by a wight king who never let go of his crown — Kraanhold's central province, bordering all four of the continent's other provinces.",
       "monsters": [
         "Barrow Wight",
         "The Hollow King"
@@ -24239,11 +24310,11 @@ window.T4C_DATA = {
       "levelRange": "200–260",
       "biome": "Mountain aerie",
       "worldmapCenter": {
-        "x": 1900.0,
-        "y": 1950.0,
-        "radius": 140.0
+        "x": 2350.0,
+        "y": 2900.0,
+        "radius": 160.0
       },
-      "summary": "First rung of the Drake ladder. Kraanian Wyrmlings roost around a Lesser Drake whose stats were already fully authored in the codebase but never placed — activated by this pass.",
+      "summary": "First rung of the Drake ladder, now Kraanhold's western peaks. Kraanian Wyrmlings roost around a Lesser Drake whose stats were already fully authored in the codebase but never placed — activated by T4C-0005.",
       "monsters": [
         "Kraanian Wyrmling",
         "Lesser Drake"
@@ -24269,11 +24340,11 @@ window.T4C_DATA = {
       "levelRange": "400–500",
       "biome": "Mountain bastion",
       "worldmapCenter": {
-        "x": 2000.0,
-        "y": 2300.0,
-        "radius": 150.0
+        "x": 2650.0,
+        "y": 2880.0,
+        "radius": 170.0
       },
-      "summary": "Second rung of the Drake ladder. A stone bastion held by Bastion Wardens around a Greater Drake, another fully-stat'd legacy boss activated for the first time here.",
+      "summary": "Second rung of the Drake ladder, Kraanhold's high country. A stone bastion held by Bastion Wardens around a Greater Drake, another fully-stat'd legacy boss activated for the first time here.",
       "monsters": [
         "Bastion Warden",
         "Greater Drake"
@@ -24297,11 +24368,11 @@ window.T4C_DATA = {
       "levelRange": "750–1000",
       "biome": "Mountain lair",
       "worldmapCenter": {
-        "x": 2200.0,
-        "y": 2500.0,
-        "radius": 150.0
+        "x": 2850.0,
+        "y": 2780.0,
+        "radius": 180.0
       },
-      "summary": "Capstone of the Drake ladder. Kraanian Dragonguards (the one genuinely new monster in this pass) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until this pass gave it one.",
+      "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one.",
       "monsters": [
         "Kraanian Dragonguard",
         "Arch Drake"
@@ -24703,12 +24774,6 @@ window.T4C_DATA = {
           "y": 2471.0
         },
         {
-          "id": "GrandmasterVoss",
-          "displayName": "Grandmaster Voss",
-          "x": 1900.0,
-          "y": 2200.0
-        },
-        {
           "id": "Rawlin",
           "displayName": "A traveling merchant",
           "x": 1589.0,
@@ -24936,533 +25001,636 @@ window.T4C_DATA = {
     {
       "zoneId": "windhowl_marches",
       "image": "maps/windhowl_marches.png",
-      "imageWidth": 1360.0,
-      "imageHeight": 1360.0,
-      "originX": 1480.0,
-      "originY": 1380.0,
+      "imageWidth": 1520.0,
+      "imageHeight": 1520.0,
+      "originX": 2190.0,
+      "originY": 2240.0,
       "pxPerTile": 4.0,
       "npcs": [
         {
           "id": "MarshalTorrhen",
           "displayName": "Marshal Torrhen",
-          "x": 1700.0,
-          "y": 1560.0
+          "x": 2430.0,
+          "y": 2440.0
+        },
+        {
+          "id": "ProfessionTrainer",
+          "displayName": "Profession Trainer",
+          "x": 2500.0,
+          "y": 2500.0
         }
       ],
       "monsters": [
         {
-          "name": "Antelope",
-          "displayName": "Antelope",
-          "x": 1743.0,
-          "y": 1397.0,
-          "tier": "boss"
-        },
-        {
-          "name": "Antelope",
-          "displayName": "Antelope",
-          "x": 1803.0,
-          "y": 1389.0,
-          "tier": "boss"
-        },
-        {
           "name": "Centaur King",
           "displayName": "Centaur King",
-          "x": 1650.0,
-          "y": 1550.0,
+          "x": 2380.0,
+          "y": 2430.0,
           "tier": "boss"
         },
         {
           "name": "Centaur Warrior",
           "displayName": "Centaur Warrior",
-          "x": 1620.0,
-          "y": 1520.0,
+          "x": 2350.0,
+          "y": 2400.0,
           "tier": "trash"
         },
         {
           "name": "Centaur Warrior",
           "displayName": "Centaur Warrior",
-          "x": 1680.0,
-          "y": 1580.0,
+          "x": 2410.0,
+          "y": 2460.0,
           "tier": "trash"
         },
         {
           "name": "Centaur Warrior",
           "displayName": "Centaur Warrior",
-          "x": 1610.0,
-          "y": 1590.0,
+          "x": 2340.0,
+          "y": 2470.0,
           "tier": "trash"
         },
         {
           "name": "Centaur Warrior",
           "displayName": "Centaur Warrior",
-          "x": 1690.0,
-          "y": 1510.0,
+          "x": 2420.0,
+          "y": 2390.0,
           "tier": "trash"
-        },
-        {
-          "name": "Goblin Scout",
-          "displayName": "Goblin Scout",
-          "x": 1766.0,
-          "y": 1381.0,
-          "tier": "boss"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1510.0,
-          "y": 1630.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1545.0,
-          "y": 1540.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1485.0,
-          "y": 1451.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1521.0,
-          "y": 1549.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1511.0,
-          "y": 1572.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1520.0,
-          "y": 1520.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1535.0,
-          "y": 1610.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1490.0,
-          "y": 1650.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1522.0,
-          "y": 1485.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1490.0,
-          "y": 1558.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1481.0,
-          "y": 1612.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Raider",
-          "displayName": "Raider",
-          "x": 1755.0,
-          "y": 1404.0,
-          "tier": "boss"
-        },
-        {
-          "name": "Raider",
-          "displayName": "Raider",
-          "x": 1791.0,
-          "y": 1386.0,
-          "tier": "boss"
         }
       ],
       "namedLocations": [
         {
           "name": "Windhowl Marches",
-          "x": 1650.0,
-          "y": 1550.0
+          "x": 2380.0,
+          "y": 2430.0
         }
       ]
     },
     {
       "zoneId": "hollow_march",
       "image": "maps/hollow_march.png",
-      "imageWidth": 1360.0,
-      "imageHeight": 1360.0,
-      "originX": 1430.0,
-      "originY": 1630.0,
+      "imageWidth": 1600.0,
+      "imageHeight": 1600.0,
+      "originX": 2300.0,
+      "originY": 2500.0,
       "pxPerTile": 4.0,
       "npcs": [
         {
-          "id": "ColosseumClerk",
-          "displayName": "A busy-looking clerk",
-          "x": 1730.0,
-          "y": 1830.0
+          "id": "GrandmasterVoss",
+          "displayName": "Grandmaster Voss",
+          "x": 2550.0,
+          "y": 2780.0
         },
         {
-          "id": "NexusStone6",
-          "displayName": "Nexus Index",
-          "x": 1430.0,
-          "y": 1747.0
+          "id": "ProfessionTrainer",
+          "displayName": "Profession Trainer",
+          "x": 2500.0,
+          "y": 2500.0
         },
         {
           "id": "WardenCael",
           "displayName": "Warden Cael",
-          "x": 1520.0,
-          "y": 1800.0
+          "x": 2420.0,
+          "y": 2700.0
         }
       ],
       "monsters": [
         {
           "name": "Barrow Wight",
           "displayName": "Barrow Wight",
-          "x": 1570.0,
-          "y": 1770.0,
+          "x": 2470.0,
+          "y": 2670.0,
           "tier": "trash"
         },
         {
           "name": "Barrow Wight",
           "displayName": "Barrow Wight",
-          "x": 1630.0,
-          "y": 1830.0,
+          "x": 2530.0,
+          "y": 2730.0,
           "tier": "trash"
         },
         {
           "name": "Barrow Wight",
           "displayName": "Barrow Wight",
-          "x": 1560.0,
-          "y": 1840.0,
+          "x": 2460.0,
+          "y": 2740.0,
           "tier": "trash"
         },
         {
           "name": "Barrow Wight",
           "displayName": "Barrow Wight",
-          "x": 1640.0,
-          "y": 1760.0,
+          "x": 2540.0,
+          "y": 2660.0,
           "tier": "trash"
         },
         {
-          "name": "Death Stinger",
-          "displayName": "Death Stinger",
-          "x": 1432.0,
-          "y": 1758.0,
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2620.0,
+          "y": 2850.0,
           "tier": "boss"
         },
         {
-          "name": "Death Stinger",
-          "displayName": "Death Stinger",
-          "x": 1433.0,
-          "y": 1744.0,
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2690.0,
+          "y": 2840.0,
           "tier": "boss"
         },
         {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1510.0,
-          "y": 1630.0,
-          "tier": "trash"
+          "name": "Greater Drake",
+          "displayName": "Grand Drake",
+          "x": 2650.0,
+          "y": 2880.0,
+          "tier": "boss"
         },
         {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1470.0,
-          "y": 1675.0,
-          "tier": "trash"
+          "name": "Kraanian Wyrmling",
+          "displayName": "Kraanian Wyrmling",
+          "x": 2320.0,
+          "y": 2870.0,
+          "tier": "boss"
         },
         {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1440.0,
-          "y": 1672.0,
-          "tier": "trash"
+          "name": "Kraanian Wyrmling",
+          "displayName": "Kraanian Wyrmling",
+          "x": 2390.0,
+          "y": 2860.0,
+          "tier": "boss"
         },
         {
           "name": "The Hollow King",
           "displayName": "The Hollow King",
-          "x": 1600.0,
-          "y": 1800.0,
-          "tier": "boss"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1490.0,
-          "y": 1650.0,
-          "tier": "boss"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1447.0,
-          "y": 1648.0,
+          "x": 2500.0,
+          "y": 2700.0,
           "tier": "boss"
         }
       ],
       "namedLocations": [
         {
-          "name": "Colosseum",
-          "x": 1725.0,
-          "y": 1825.0
+          "name": "The Hollow March",
+          "x": 2500.0,
+          "y": 2700.0
         },
         {
-          "name": "The Hollow March",
-          "x": 1600.0,
-          "y": 1800.0
+          "name": "Greater Drake's Bastion",
+          "x": 2650.0,
+          "y": 2880.0
         }
       ]
     },
     {
       "zoneId": "lesser_drakes_aerie",
       "image": "maps/lesser_drakes_aerie.png",
-      "imageWidth": 1520.0,
-      "imageHeight": 1520.0,
-      "originX": 1710.0,
-      "originY": 1760.0,
+      "imageWidth": 1680.0,
+      "imageHeight": 1680.0,
+      "originX": 2140.0,
+      "originY": 2690.0,
       "pxPerTile": 4.0,
       "npcs": [
         {
-          "id": "ColosseumClerk",
-          "displayName": "A busy-looking clerk",
-          "x": 1730.0,
-          "y": 1830.0
+          "id": "GrandmasterVoss",
+          "displayName": "Grandmaster Voss",
+          "x": 2550.0,
+          "y": 2780.0
         },
         {
           "id": "SkywatchIlvara",
           "displayName": "Skywatch Ilvara",
-          "x": 1830.0,
-          "y": 1900.0
+          "x": 2280.0,
+          "y": 2850.0
+        },
+        {
+          "id": "WardenCael",
+          "displayName": "Warden Cael",
+          "x": 2420.0,
+          "y": 2700.0
         }
       ],
       "monsters": [
         {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 2530.0,
+          "y": 2730.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 2460.0,
+          "y": 2740.0,
+          "tier": "boss"
+        },
+        {
           "name": "Kraanian Wyrmling",
           "displayName": "Kraanian Wyrmling",
-          "x": 1870.0,
-          "y": 1920.0,
+          "x": 2320.0,
+          "y": 2870.0,
           "tier": "trash"
         },
         {
           "name": "Kraanian Wyrmling",
           "displayName": "Kraanian Wyrmling",
-          "x": 1930.0,
-          "y": 1980.0,
+          "x": 2380.0,
+          "y": 2930.0,
           "tier": "trash"
         },
         {
           "name": "Kraanian Wyrmling",
           "displayName": "Kraanian Wyrmling",
-          "x": 1860.0,
-          "y": 1990.0,
+          "x": 2310.0,
+          "y": 2940.0,
           "tier": "trash"
         },
         {
           "name": "Kraanian Wyrmling",
           "displayName": "Kraanian Wyrmling",
-          "x": 1940.0,
-          "y": 1910.0,
+          "x": 2390.0,
+          "y": 2860.0,
           "tier": "trash"
         },
         {
           "name": "Lesser Drake",
           "displayName": "Petit Drake",
-          "x": 1900.0,
-          "y": 1950.0,
+          "x": 2350.0,
+          "y": 2900.0,
+          "tier": "boss"
+        },
+        {
+          "name": "The Hollow King",
+          "displayName": "The Hollow King",
+          "x": 2500.0,
+          "y": 2700.0,
           "tier": "boss"
         }
       ],
       "namedLocations": [
         {
-          "name": "Colosseum",
-          "x": 1725.0,
-          "y": 1825.0
+          "name": "The Hollow March",
+          "x": 2500.0,
+          "y": 2700.0
         },
         {
           "name": "Lesser Drake's Aerie",
-          "x": 1900.0,
-          "y": 1950.0
+          "x": 2350.0,
+          "y": 2900.0
         }
       ]
     },
     {
       "zoneId": "greater_drakes_bastion",
       "image": "maps/greater_drakes_bastion.png",
-      "imageWidth": 1600.0,
-      "imageHeight": 1600.0,
-      "originX": 1800.0,
-      "originY": 2100.0,
+      "imageWidth": 1760.0,
+      "imageHeight": 1760.0,
+      "originX": 2430.0,
+      "originY": 2660.0,
       "pxPerTile": 4.0,
       "npcs": [
         {
           "id": "GrandmasterVoss",
           "displayName": "Grandmaster Voss",
-          "x": 1900.0,
-          "y": 2200.0
+          "x": 2550.0,
+          "y": 2780.0
         },
         {
           "id": "OutriderKaelis",
           "displayName": "Outrider Kaelis",
-          "x": 2150.0,
-          "y": 2450.0
-        }
-      ],
-      "monsters": [
-        {
-          "name": "Bastion Warden",
-          "displayName": "Bastion Warden",
-          "x": 1970.0,
-          "y": 2270.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Bastion Warden",
-          "displayName": "Bastion Warden",
-          "x": 2030.0,
-          "y": 2330.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Bastion Warden",
-          "displayName": "Bastion Warden",
-          "x": 1960.0,
-          "y": 2340.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Bastion Warden",
-          "displayName": "Bastion Warden",
-          "x": 2040.0,
-          "y": 2260.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Greater Drake",
-          "displayName": "Grand Drake",
-          "x": 2000.0,
-          "y": 2300.0,
-          "tier": "boss"
-        },
-        {
-          "name": "Kraanian Dragonguard",
-          "displayName": "Kraanian Dragonguard",
-          "x": 2170.0,
-          "y": 2470.0,
-          "tier": "boss"
-        },
-        {
-          "name": "Tideclaw Crab",
-          "displayName": "Tideclaw Crab",
-          "x": 1820.0,
-          "y": 2310.0,
-          "tier": "boss"
-        }
-      ],
-      "namedLocations": [
-        {
-          "name": "Greater Drake's Bastion",
-          "x": 2000.0,
-          "y": 2300.0
-        }
-      ]
-    },
-    {
-      "zoneId": "drakes_lair",
-      "image": "maps/drakes_lair.png",
-      "imageWidth": 1600.0,
-      "imageHeight": 1600.0,
-      "originX": 2000.0,
-      "originY": 2300.0,
-      "pxPerTile": 4.0,
-      "npcs": [
-        {
-          "id": "OutriderKaelis",
-          "displayName": "Outrider Kaelis",
-          "x": 2150.0,
-          "y": 2450.0
+          "x": 2800.0,
+          "y": 2730.0
         }
       ],
       "monsters": [
         {
           "name": "Arch Drake",
           "displayName": "Arch Drake",
-          "x": 2200.0,
-          "y": 2500.0,
+          "x": 2850.0,
+          "y": 2780.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 2470.0,
+          "y": 2670.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 2530.0,
+          "y": 2730.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 2460.0,
+          "y": 2740.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 2540.0,
+          "y": 2660.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2620.0,
+          "y": 2850.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2680.0,
+          "y": 2910.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2610.0,
+          "y": 2920.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2690.0,
+          "y": 2840.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Greater Drake",
+          "displayName": "Grand Drake",
+          "x": 2650.0,
+          "y": 2880.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Kraanian Dragonguard",
+          "displayName": "Kraanian Dragonguard",
+          "x": 2820.0,
+          "y": 2750.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Kraanian Dragonguard",
+          "displayName": "Kraanian Dragonguard",
+          "x": 2810.0,
+          "y": 2820.0,
+          "tier": "boss"
+        },
+        {
+          "name": "The Hollow King",
+          "displayName": "The Hollow King",
+          "x": 2500.0,
+          "y": 2700.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "The Hollow March",
+          "x": 2500.0,
+          "y": 2700.0
+        },
+        {
+          "name": "Greater Drake's Bastion",
+          "x": 2650.0,
+          "y": 2880.0
+        },
+        {
+          "name": "Drake's Lair",
+          "x": 2850.0,
+          "y": 2780.0
+        }
+      ]
+    },
+    {
+      "zoneId": "drakes_lair",
+      "image": "maps/drakes_lair.png",
+      "imageWidth": 1840.0,
+      "imageHeight": 1840.0,
+      "originX": 2620.0,
+      "originY": 2550.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "OutriderKaelis",
+          "displayName": "Outrider Kaelis",
+          "x": 2800.0,
+          "y": 2730.0
+        },
+        {
+          "id": "PortalA2",
+          "displayName": "A shimmering portal",
+          "x": 2796.0,
+          "y": 2563.0
+        },
+        {
+          "id": "PortalB4",
+          "displayName": "A shimmering portal",
+          "x": 2809.0,
+          "y": 2550.0
+        },
+        {
+          "id": "PortalC1",
+          "displayName": "A shimmering portal",
+          "x": 2824.0,
+          "y": 2591.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Arch Drake",
+          "displayName": "Arch Drake",
+          "x": 2850.0,
+          "y": 2780.0,
           "tier": "boss"
         },
         {
           "name": "Bastion Warden",
           "displayName": "Bastion Warden",
-          "x": 2030.0,
-          "y": 2330.0,
-          "tier": "boss"
+          "x": 2620.0,
+          "y": 2850.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2680.0,
+          "y": 2910.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2690.0,
+          "y": 2840.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Crazed Nurse",
+          "displayName": "Crazed Nurse",
+          "x": 2726.0,
+          "y": 2576.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Crazed Nurse",
+          "displayName": "Crazed Nurse",
+          "x": 2727.0,
+          "y": 2568.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Crazed Nurse",
+          "displayName": "Crazed Nurse",
+          "x": 2729.0,
+          "y": 2555.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Crazed Nurse",
+          "displayName": "Crazed Nurse",
+          "x": 2736.0,
+          "y": 2590.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Crazed Nurse",
+          "displayName": "Crazed Nurse",
+          "x": 2743.0,
+          "y": 2569.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Crazed Nurse",
+          "displayName": "Crazed Nurse",
+          "x": 2749.0,
+          "y": 2581.0,
+          "tier": "trash"
         },
         {
           "name": "Greater Drake",
           "displayName": "Grand Drake",
-          "x": 2000.0,
-          "y": 2300.0,
+          "x": 2650.0,
+          "y": 2880.0,
           "tier": "boss"
         },
         {
           "name": "Kraanian Dragonguard",
           "displayName": "Kraanian Dragonguard",
-          "x": 2170.0,
-          "y": 2470.0,
+          "x": 2820.0,
+          "y": 2750.0,
           "tier": "trash"
         },
         {
           "name": "Kraanian Dragonguard",
           "displayName": "Kraanian Dragonguard",
-          "x": 2230.0,
-          "y": 2530.0,
+          "x": 2880.0,
+          "y": 2810.0,
           "tier": "trash"
         },
         {
           "name": "Kraanian Dragonguard",
           "displayName": "Kraanian Dragonguard",
-          "x": 2160.0,
-          "y": 2540.0,
+          "x": 2810.0,
+          "y": 2820.0,
           "tier": "trash"
         },
         {
           "name": "Kraanian Dragonguard",
           "displayName": "Kraanian Dragonguard",
-          "x": 2240.0,
-          "y": 2460.0,
+          "x": 2890.0,
+          "y": 2740.0,
           "tier": "trash"
+        },
+        {
+          "name": "MADMADRIGAN",
+          "displayName": "Mad Madrigan",
+          "x": 2810.0,
+          "y": 2572.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Madman",
+          "displayName": "Mad Man",
+          "x": 2705.0,
+          "y": 2567.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Madman",
+          "displayName": "Mad Man",
+          "x": 2794.0,
+          "y": 2573.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Madman",
+          "displayName": "Mad Man",
+          "x": 2809.0,
+          "y": 2552.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Madman",
+          "displayName": "Mad Man",
+          "x": 2819.0,
+          "y": 2593.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Madman",
+          "displayName": "Mad Man",
+          "x": 2828.0,
+          "y": 2568.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Madman",
+          "displayName": "Mad Man",
+          "x": 2832.0,
+          "y": 2582.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Madman",
+          "displayName": "Mad Man",
+          "x": 2844.0,
+          "y": 2580.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Mad Patient",
+          "displayName": "Patient fou",
+          "x": 2728.0,
+          "y": 2590.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Mad Patient",
+          "displayName": "Patient fou",
+          "x": 2735.0,
+          "y": 2596.0,
+          "tier": "boss"
         }
       ],
       "namedLocations": [
         {
           "name": "Greater Drake's Bastion",
-          "x": 2000.0,
-          "y": 2300.0
+          "x": 2650.0,
+          "y": 2880.0
         },
         {
           "name": "Drake's Lair",
-          "x": 2200.0,
-          "y": 2500.0
+          "x": 2850.0,
+          "y": 2780.0
         }
       ]
     },

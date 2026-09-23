@@ -12,7 +12,7 @@ import com.perso.T4C.spawn.Spawn;
 // LesserDrake/GreaterDrake before the previous content pass activated them. See
 // docs/content-ideas/2026-09-canon-verified-additions.md for the "Drake's Lair" zone this
 // activation is part of.
-@Spawn(type = "Arch Drake", x = 2200, y = 2500, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Arch Drake", x = 2850, y = 2780, z = 0, stationary = false, aggressive = true)
 public final class ArchDrake extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";

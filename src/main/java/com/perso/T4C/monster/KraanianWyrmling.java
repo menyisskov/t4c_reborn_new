@@ -5,10 +5,10 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Kraanian Wyrmling", x = 1870, y = 1920, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Kraanian Wyrmling", x = 1930, y = 1980, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Kraanian Wyrmling", x = 1860, y = 1990, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Kraanian Wyrmling", x = 1940, y = 1910, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Wyrmling", x = 2320, y = 2870, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Wyrmling", x = 2380, y = 2930, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Wyrmling", x = 2310, y = 2940, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Wyrmling", x = 2390, y = 2860, z = 0, stationary = false, aggressive = true)
 public final class KraanianWyrmling extends DataMonster {
   // Reuses the "KraanianFlying" sprite/sound family already used by the low-level Kraanian
   // Flyer, but authored as a distinct, much higher-level monster guarding the Lesser Drake's

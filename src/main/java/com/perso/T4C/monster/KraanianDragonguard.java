@@ -5,10 +5,10 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Kraanian Dragonguard", x = 2170, y = 2470, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Kraanian Dragonguard", x = 2230, y = 2530, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Kraanian Dragonguard", x = 2160, y = 2540, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Kraanian Dragonguard", x = 2240, y = 2460, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Dragonguard", x = 2820, y = 2750, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Dragonguard", x = 2880, y = 2810, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Dragonguard", x = 2810, y = 2820, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Kraanian Dragonguard", x = 2890, y = 2740, z = 0, stationary = false, aggressive = true)
 public final class KraanianDragonguard extends DataMonster {
   // Reuses the "KraanianFlying" sprite/sound family already used by Kraanian Wyrmling — an
   // elite evolution of the same Kraanian stock, now guarding the true Drakes' lair.

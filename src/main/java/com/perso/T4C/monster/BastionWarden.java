@@ -5,10 +5,10 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Bastion Warden", x = 1970, y = 2270, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Bastion Warden", x = 2030, y = 2330, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Bastion Warden", x = 1960, y = 2340, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Bastion Warden", x = 2040, y = 2260, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Bastion Warden", x = 2620, y = 2850, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Bastion Warden", x = 2680, y = 2910, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Bastion Warden", x = 2610, y = 2920, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Bastion Warden", x = 2690, y = 2840, z = 0, stationary = false, aggressive = true)
 public final class BastionWarden extends DataMonster {
   // Reuses the "Green Troll" animation/sound family already used by Grott/Toll Troll — a
   // hulking guardian, distinct from the Agmorkian drake-kin sprite reserved for the Drakes.

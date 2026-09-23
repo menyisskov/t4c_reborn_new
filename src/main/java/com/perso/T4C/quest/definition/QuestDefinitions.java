@@ -14,6 +14,7 @@ public final class QuestDefinitions {
         EmberfangHillsBounty.definition(),
         SilverskyBorderwatch.definition(),
         WindhowlBorderwatch.definition(),
+        PassageToKraanhold.definition(),
         WindhowlMarchesCentaurs.definition(),
         HollowMarchWights.definition(),
         AerieWyrmlingCull.definition(),

@@ -6,10 +6,10 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Centaur Warrior", x = 1620, y = 1520, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Centaur Warrior", x = 1680, y = 1580, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Centaur Warrior", x = 1610, y = 1590, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Centaur Warrior", x = 1690, y = 1510, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Centaur Warrior", x = 2350, y = 2400, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Centaur Warrior", x = 2410, y = 2460, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Centaur Warrior", x = 2340, y = 2470, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Centaur Warrior", x = 2420, y = 2390, z = 0, stationary = false, aggressive = true)
 public final class CentaurWarrior extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
   public static final String SOUND_DEATH = "Taunting Hit.wav";

@@ -115,7 +115,8 @@ public final class CompendiumExporter {
           "GrandmasterVoss",
           "HarbormasterRangor",
           "SentinelCorwin",
-          "OutriderHalvard");
+          "OutriderHalvard",
+          "DockmasterThessaly");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
@@ -133,7 +134,8 @@ public final class CompendiumExporter {
           "fading_veil_reckoning",
           "passage_to_avalon",
           "silversky_borderwatch",
-          "windhowl_borderwatch");
+          "windhowl_borderwatch",
+          "passage_to_kraanhold");
 
   private static final Set<String> SHOP_EXCLUDED_NPC_IDS =
       Set.of("Boreas", "Yolak", "TtayhMark", "Kiadus", "RhodarHeatforge", "GulfridSteelhammer");

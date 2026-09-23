@@ -54,6 +54,57 @@
     }
   },
   {
+    "id": "DockmasterThessaly",
+    "origin": "new",
+    "displayName": "Dockmaster Thessaly",
+    "welcomeText": "The crossing to Kraanhold isn't a pleasant one. Clear the road trolls harassing the coast first, and I'll see you safely across.",
+    "topics": [
+      {
+        "keywords": [
+          "kraanhold",
+          "crossing"
+        ],
+        "response": "Trolls have been working the coast road east of here for longer than I've kept this dock. Thin their numbers and I'll take you across to Kraanhold myself - can't risk the boat with them still raiding the shore.",
+        "actions": [
+          "GIVE_QUEST:passage_to_kraanhold"
+        ]
+      },
+      {
+        "keywords": [
+          "kraanhold",
+          "continent"
+        ],
+        "response": "Kraanhold. A stretch of coast and mountain out past the shoals - centaurs hold the marches, and it only gets worse from there. Drakes, they say, further up in the peaks.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "trolls"
+        ],
+        "response": "Nothing clever about them, just big and mean. They've gotten bold enough to block the coast road entirely some days.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "boat"
+        ],
+        "response": "Watch the tide line. I've lost more than one boat to trolls wading out after it.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "ElderOphira",
     "origin": "new",
     "displayName": "Elder Ophira",
