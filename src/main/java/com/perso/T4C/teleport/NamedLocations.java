@@ -31,11 +31,14 @@ public final class NamedLocations {
         // is never lost on rebirth (quest flags are untouched by RebirthBehavior).
         new NamedLocation("The Sunken Chancel", 1750, 2300, 0, "sunken_chancel"),
         new NamedLocation("Cinderreach Hills", 1900, 1600, 0, "cinderreach_hills"),
-        new NamedLocation("Windhowl Marches", 1650, 1550, 0, "windhowl_marches"),
-        new NamedLocation("The Hollow March", 1600, 1800, 0, "hollow_march"),
-        new NamedLocation("Lesser Drake's Aerie", 1900, 1950, 0, "lesser_drakes_aerie"),
-        new NamedLocation("Greater Drake's Bastion", 2000, 2300, 0, "greater_drakes_bastion"),
-        new NamedLocation("Drake's Lair", 2200, 2500, 0, "drakes_lair"),
+        // T4C-0024: these five relocated onto Kraanhold, a new continent painted for this pass
+        // (real ground art + collision, not just spawns on existing terrain) - see
+        // docs/content-ideas for the placement rationale.
+        new NamedLocation("Windhowl Marches", 2380, 2430, 0, "windhowl_marches"),
+        new NamedLocation("The Hollow March", 2500, 2700, 0, "hollow_march"),
+        new NamedLocation("Lesser Drake's Aerie", 2350, 2900, 0, "lesser_drakes_aerie"),
+        new NamedLocation("Greater Drake's Bastion", 2650, 2880, 0, "greater_drakes_bastion"),
+        new NamedLocation("Drake's Lair", 2850, 2780, 0, "drakes_lair"),
         new NamedLocation("Deep Ones Cave", 330, 2246, 0, "deep_ones_cave"),
         new NamedLocation("Avalon Sanctuary", 1340, 1477, 0, "avalon_sanctuary"),
         new NamedLocation("The Avalon Wilds", 1265, 1400, 0, "avalon_wilds"),

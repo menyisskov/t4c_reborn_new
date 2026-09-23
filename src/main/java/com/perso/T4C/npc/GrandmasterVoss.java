@@ -9,7 +9,7 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "GrandmasterVoss", x = 1900, y = 2200, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "GrandmasterVoss", x = 2550, y = 2780, z = 0, stationary = false, aggressive = false)
 public final class GrandmasterVoss extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 2.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

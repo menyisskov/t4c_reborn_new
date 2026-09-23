@@ -9,7 +9,7 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "OutriderKaelis", x = 2150, y = 2450, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "OutriderKaelis", x = 2800, y = 2730, z = 0, stationary = false, aggressive = false)
 public final class OutriderKaelis extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

@@ -15,6 +15,25 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-23 — Kraanhold, a new high-level continent (T4C-0024)
+
+### Added
+- A new continent, Kraanhold, has risen across the sea from the mainland — a proper landmass
+  with five connected provinces, dirt roads linking them, and its own coastline, built to hold
+  the game's highest-level content in one place instead of scattered pockets.
+- Windhowl Marches, The Hollow March, Lesser Drake's Aerie, Greater Drake's Bastion, and Drake's
+  Lair have all relocated onto Kraanhold, now sitting together as neighboring provinces — open
+  centaur marchland at the entrance, a haunted barrow-field at the center, and the mountainous
+  Drake ladder (aerie, bastion, lair) rising toward the peaks in the west and east.
+- A new dockmaster on the mainland coast now offers passage to Kraanhold: clear out the toll
+  troll blocking the crossing and the way across opens up, giving every character a real,
+  discoverable path onto the new continent instead of only reaching it by chance.
+
+### Changed
+- The Maps page's zone images for Windhowl Marches, The Hollow March, Lesser Drake's Aerie,
+  Greater Drake's Bastion, and Drake's Lair now show their new Kraanhold surroundings and
+  neighbors instead of their old mainland locations.
+
 ## 2026-09-23 — Zone map images on the compendium site (T4C-0023)
 
 ### Added

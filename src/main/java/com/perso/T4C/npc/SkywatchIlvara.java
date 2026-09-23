@@ -9,7 +9,7 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "SkywatchIlvara", x = 1830, y = 1900, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "SkywatchIlvara", x = 2280, y = 2850, z = 0, stationary = false, aggressive = false)
 public final class SkywatchIlvara extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

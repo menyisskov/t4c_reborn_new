@@ -6,7 +6,7 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Lesser Drake", x = 1900, y = 1950, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Lesser Drake", x = 2350, y = 2900, z = 0, stationary = false, aggressive = true)
 public final class LesserDrake extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";

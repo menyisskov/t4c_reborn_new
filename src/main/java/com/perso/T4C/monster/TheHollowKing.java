@@ -5,7 +5,7 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "The Hollow King", x = 1600, y = 1800, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "The Hollow King", x = 2500, y = 2700, z = 0, stationary = false, aggressive = true)
 public final class TheHollowKing extends DataMonster {
   // Reuses the "Black Warrior" puppet family — a tall, armored fallen-knight silhouette,
   // distinct from the "Skeleton King" rig already used by Mordrenn.

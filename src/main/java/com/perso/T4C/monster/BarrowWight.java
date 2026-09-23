@@ -5,10 +5,10 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Barrow Wight", x = 1570, y = 1770, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Barrow Wight", x = 1630, y = 1830, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Barrow Wight", x = 1560, y = 1840, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Barrow Wight", x = 1640, y = 1760, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2470, y = 2670, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2530, y = 2730, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2460, y = 2740, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2540, y = 2660, z = 0, stationary = false, aggressive = true)
 public final class BarrowWight extends DataMonster {
   // Reuses the Mummy animation/sound family — a dry, land-bound undead, distinct from the
   // Zombie-family Drowned Acolytes of the Sunken Chancel.
