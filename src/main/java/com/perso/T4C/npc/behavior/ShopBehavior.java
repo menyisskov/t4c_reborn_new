@@ -15,6 +15,10 @@ public final class ShopBehavior implements NpcBehavior {
     this.items = List.copyOf(items);
   }
 
+  public List<String> items() {
+    return items;
+  }
+
   @Override
   public boolean onKeyword(NpcBehaviorContext c, String keyword) {
 

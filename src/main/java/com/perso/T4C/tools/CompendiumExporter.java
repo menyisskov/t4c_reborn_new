@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.perso.T4C.config.GameConstants;
+import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.mapping.definition.XpCurveDefinitions;
@@ -112,7 +113,9 @@ public final class CompendiumExporter {
           "MarshalTorrhen",
           "WardenCael",
           "GrandmasterVoss",
-          "HarbormasterRangor");
+          "HarbormasterRangor",
+          "SentinelCorwin",
+          "OutriderHalvard");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
@@ -128,7 +131,9 @@ public final class CompendiumExporter {
           "drakes_lair_vigil",
           "avalon_wilds_vigil",
           "fading_veil_reckoning",
-          "passage_to_avalon");
+          "passage_to_avalon",
+          "silversky_borderwatch",
+          "windhowl_borderwatch");
 
   private static final Set<String> SHOP_EXCLUDED_NPC_IDS =
       Set.of("Boreas", "Yolak", "TtayhMark", "Kiadus", "RhodarHeatforge", "GulfridSteelhammer");
@@ -140,13 +145,18 @@ public final class CompendiumExporter {
     MonsterJsonLoader.loadAndRegister();
 
     Map<String, Object> shops = exportShops();
+    List<Map<String, Object>> items = exportItems();
+    Set<String> itemKeys = new java.util.HashSet<>();
+    for (Map<String, Object> item : items) itemKeys.add((String) item.get("key"));
+    List<Map<String, Object>> lootSources = exportLootSources(itemKeys);
 
     writeJson(outDir.resolve("monsters.json"), exportMonsters());
     writeJson(outDir.resolve("spells.json"), exportSpells());
     writeJson(outDir.resolve("quests.json"), exportQuests());
     writeJson(outDir.resolve("npcs.json"), exportNpcs());
-    writeJson(outDir.resolve("items.json"), exportItems());
+    writeJson(outDir.resolve("items.json"), items);
     writeJson(outDir.resolve("shops.json"), shops);
+    writeJson(outDir.resolve("lootSources.json"), lootSources);
     writeJson(outDir.resolve("xpcurve.json"), exportXpCurve());
 
     // Bundle everything (generated + the hand-authored zones/statids/meta files, if present)
@@ -158,8 +168,9 @@ public final class CompendiumExporter {
     bundle.put("spells", exportSpells());
     bundle.put("quests", exportQuests());
     bundle.put("npcs", exportNpcs());
-    bundle.put("items", exportItems());
+    bundle.put("items", items);
     bundle.put("shops", shops);
+    bundle.put("lootSources", lootSources);
     bundle.put("xpCurve", exportXpCurve());
     bundle.put("zones", readHandAuthored(outDir.resolve("zones.json")));
     bundle.put("statIds", readHandAuthored(outDir.resolve("statids.json")));
@@ -342,6 +353,7 @@ public final class CompendiumExporter {
     s.put("lineOfSight", spell.isLineOfSight());
     s.put("minDamage", spell.getMinDamage());
     s.put("maxDamage", spell.getMaxDamage());
+    s.put("damageAtReference", damageAtReference(spell));
     s.put("cooldownSeconds", spell.getCooldownSeconds());
     s.put("duration", spell.getDuration());
     s.put("price", spell.getPrice());
@@ -371,6 +383,48 @@ public final class CompendiumExporter {
     }
     s.put("effects", effects);
     return s;
+  }
+
+  /** A concrete, reproducible damage figure for an attack spell's primary effect (effectType 1
+   * or 10 - both are treated as the "health delta" formula by SpellEffectManager#
+   * resolveHealthDelta, effectType 10 being the drain-life variant), since the raw min/maxDamage
+   * fields on SpellData are always 0 for every effect-driven spell (the real damage lives in the
+   * T4cEffect formula string, not those fields). Evaluated at a fixed, labeled reference: the
+   * caster at exactly this spell's own minInt/minWis/minLevel requirements, an untrained (100)
+   * elemental skill, and a neutral (100) target resistance - the same "self.element" default the
+   * engine itself falls back to. Real in-game damage scales up with the caster's trained
+   * elemental skill and down/up with the target's real resistance (see SpellEffectManager -
+   * self.fire/self.water/etc. are trained skills, not attributes), so this is a reference point
+   * for comparison, not a promise of what any given cast will deal. Returns null for non-attack
+   * spells or spells with no damage-effect formula (pure buffs/wards/heals). */
+  private static Map<String, Object> damageAtReference(SpellData spell) {
+    if (!spell.isAttack() || spell.getT4cEffects() == null) return null;
+    for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
+      if (effect == null || effect.getParameters() == null) continue;
+      int type = effect.getEffectType();
+      if (type != 1 && type != 10) continue;
+      String formula = effect.getParameters().isEmpty() ? null : effect.getParameters().get(0).getExpression();
+      if (formula == null || formula.isBlank()) continue;
+      // The formula is a "health delta" (negative = damage), sometimes wrapped in a leading
+      // "-(...)" and sometimes with the sign buried inside a conditional (e.g. Mana Burst's
+      // "if(cond?-(...):0)"). Rather than assume the sign sits at the start of the string,
+      // negate the whole expression - the parser supports a leading unary minus over any
+      // sub-expression, including if(...), so this reliably turns "damage" into a positive
+      // magnitude (and a 0-delta miss/resist branch stays 0) regardless of where the "-" is.
+      String magnitude = "-(" + formula + ")";
+      DiceFormula.Context ctx =
+          new DiceFormula.Context(
+              0, 0, 0, spell.getMinInt(), 0, spell.getMinWis(), 0, spell.getMinLevel(),
+              0, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100);
+      int a = DiceFormula.of(magnitude).min(ctx);
+      int b = DiceFormula.of(magnitude).max(ctx);
+      Map<String, Object> out = new LinkedHashMap<>();
+      out.put("formula", formula);
+      out.put("min", Math.min(a, b));
+      out.put("max", Math.max(a, b));
+      return out;
+    }
+    return null;
   }
 
   private static String classNameGuess(SpellData spell) {
@@ -491,14 +545,50 @@ public final class CompendiumExporter {
       Field mField = shopCatalog.getDeclaredField("M");
       mField.setAccessible(true);
       Map<String, List<String>> m = (Map<String, List<String>>) mField.get(null);
-      for (Map.Entry<String, List<String>> entry : new TreeMap<>(m).entrySet()) {
-        if (SHOP_EXCLUDED_NPC_IDS.contains(entry.getKey())) continue;
-        if (!NEW_NPC_IDS.contains(entry.getKey()) && !ACTIVATED_NPC_IDS.contains(entry.getKey()))
-          continue;
-        out.put(entry.getKey(), entry.getValue());
+      // T4C-0021: previously restricted to NEW_NPC_IDS/ACTIVATED_NPC_IDS, which hid a real
+      // acquisition path for any item sold by a pre-existing/legacy NPC (e.g. the +4/+5
+      // weapons sold by LordoftheShops) - exportItems() itself is unfiltered (every JSON item,
+      // new or legacy), so an item's sources shouldn't be filtered by the seller's newness
+      // either. SHOP_EXCLUDED_NPC_IDS still applies (entries that aren't real shop listings).
+      //
+      // Reading the private M map's own list is only correct for sellers with no runtime
+      // override: ShopCatalog#get() special-cases several ids (e.g. ChryseidaYolangda,
+      // WitchDoctorKwarlgloth, Fali) to a *different* inventory than their own M entry, and
+      // returns null (not a real shop) for others (Boreas, Yolak, ...) despite them having an
+      // M entry. get() is the single source of truth the game itself uses, so call it per id
+      // instead of trusting M's own value directly.
+      java.lang.reflect.Method getMethod = shopCatalog.getDeclaredMethod("get", String.class);
+      for (String npcId : new TreeMap<>(m).keySet()) {
+        if (SHOP_EXCLUDED_NPC_IDS.contains(npcId)) continue;
+        Object behavior = getMethod.invoke(null, npcId);
+        if (!(behavior instanceof com.perso.T4C.npc.behavior.ShopBehavior shop)) continue;
+        out.put(npcId, shop.items());
       }
     } catch (ReflectiveOperationException ex) {
       System.err.println("Could not read ShopCatalog: " + ex);
+    }
+    return out;
+  }
+
+  /** Every real monster-loot source for a tracked item, scanning the FULL monster registry
+   * (not just the new/activated ones exportMonsters() documents as their own pages) - the same
+   * blind spot exportShops() had: an item's drop source can be a pre-existing/legacy monster
+   * (e.g. Deep One / Deep One Boss) that doesn't get its own compendium page. monsterLink() in
+   * the site already falls back to plain text for a name with no page, so this is safe to
+   * surface even for monsters this compendium doesn't otherwise document. */
+  private static List<Map<String, Object>> exportLootSources(Set<String> trackedItemKeys) {
+    List<Map<String, Object>> out = new ArrayList<>();
+    for (MonsterDef def : MonsterRegistry.load()) {
+      if (def.getLoot() == null) continue;
+      for (MonsterDef.LootDrop drop : def.getLoot()) {
+        if (drop == null || !trackedItemKeys.contains(drop.getItem())) continue;
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("item", drop.getItem());
+        m.put("monster", def.getName());
+        m.put("monsterDisplayName", resolveOrFallback(def.getDisplayName(), def.getName()));
+        m.put("chance", drop.getChance());
+        out.add(m);
+      }
     }
     return out;
   }

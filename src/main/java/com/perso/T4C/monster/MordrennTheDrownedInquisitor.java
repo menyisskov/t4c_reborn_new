@@ -44,7 +44,22 @@ public final class MordrennTheDrownedInquisitor extends DataMonster {
         SOUND_HIT,
         90,
         275,
-        java.util.List.of(new MonsterDef.LootDrop("mordrenns_drowned_cowl", 0.01f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("mordrenns_drowned_cowl", 0.01f),
+            // T4C-0021: water-flavor source for the Ancient Celestial/Empyrean armor sets
+            // (ArmorSetGenerator) - previously generated with zero acquisition path.
+            new MonsterDef.LootDrop("ancient_celestial_water_armor", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_boots", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_gauntlets", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_helmet", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_leggings", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_protector", 0.025f),
+            new MonsterDef.LootDrop("empyrean_water_armor", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_boots", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_gauntlets", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_helmet", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_leggings", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_protector", 0.012f)),
         false,
         0.0f,
         60,

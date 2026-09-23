@@ -44,7 +44,22 @@ public final class GreaterDrake extends DataMonster {
         SOUND_HIT,
         899,
         2750,
-        java.util.List.of(new MonsterDef.LootDrop("heartfire_of_the_greater_drake", 0.01f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("heartfire_of_the_greater_drake", 0.01f),
+            // T4C-0021: physical/warrior-flavor source for the Ancient Celestial/Empyrean armor
+            // sets (ArmorSetGenerator) - previously generated with zero acquisition path.
+            new MonsterDef.LootDrop("ancient_celestial_warrior_armor", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_boots", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_gauntlets", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_helmet", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_leggings", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_protector", 0.025f),
+            new MonsterDef.LootDrop("empyrean_warrior_armor", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_boots", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_gauntlets", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_helmet", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_leggings", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_protector", 0.012f)),
         false,
         0.0f,
         515,

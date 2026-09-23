@@ -1,0 +1,716 @@
+[
+  {
+    "item": "dragonguards_scale_bracer",
+    "monster": "Kraanian Dragonguard",
+    "monsterDisplayName": "Kraanian Dragonguard",
+    "chance": 0.03
+  },
+  {
+    "item": "depths_wardens_talisman",
+    "monster": "DEEPONEBOSS",
+    "monsterDisplayName": "Deep One (Boss)",
+    "chance": 0.015
+  },
+  {
+    "item": "aeries_drakeheart_signet",
+    "monster": "Lesser Drake",
+    "monsterDisplayName": "Petit Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "ignaroks_emberfang_claw",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.008
+  },
+  {
+    "item": "ancient_celestial_fire_armor",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_fire_boots",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_fire_gauntlets",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_fire_helmet",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_fire_leggings",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_fire_protector",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.025
+  },
+  {
+    "item": "empyrean_fire_armor",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_fire_boots",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_fire_gauntlets",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_fire_helmet",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_fire_leggings",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_fire_protector",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.012
+  },
+  {
+    "item": "ancient_celestial_light_armor",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.006
+  },
+  {
+    "item": "ancient_celestial_light_boots",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.006
+  },
+  {
+    "item": "ancient_celestial_light_gauntlets",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.006
+  },
+  {
+    "item": "ancient_celestial_light_helmet",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.006
+  },
+  {
+    "item": "ancient_celestial_light_leggings",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.006
+  },
+  {
+    "item": "ancient_celestial_light_protector",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.006
+  },
+  {
+    "item": "empyrean_light_armor",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.003
+  },
+  {
+    "item": "empyrean_light_boots",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.003
+  },
+  {
+    "item": "empyrean_light_gauntlets",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.003
+  },
+  {
+    "item": "empyrean_light_helmet",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.003
+  },
+  {
+    "item": "empyrean_light_leggings",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.003
+  },
+  {
+    "item": "empyrean_light_protector",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.003
+  },
+  {
+    "item": "wyrmling_scale_bracer",
+    "monster": "Kraanian Wyrmling",
+    "monsterDisplayName": "Kraanian Wyrmling",
+    "chance": 0.03
+  },
+  {
+    "item": "barnacled_gauntlets",
+    "monster": "Deep One",
+    "monsterDisplayName": "Deep One",
+    "chance": 0.03
+  },
+  {
+    "item": "ysoldes_veiled_circlet",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.02
+  },
+  {
+    "item": "ancient_celestial_dark_armor",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_boots",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_gauntlets",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_helmet",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_leggings",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_protector",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "empyrean_dark_armor",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_boots",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_gauntlets",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_helmet",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_leggings",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_protector",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "tideclaw_band",
+    "monster": "Tideclaw Crab",
+    "monsterDisplayName": "Tideclaw Crab",
+    "chance": 0.02
+  },
+  {
+    "item": "tideworn_avalon_chart",
+    "monster": "Coastwarden Ithrak",
+    "monsterDisplayName": "Coastwarden Ithrak",
+    "chance": 0.02
+  },
+  {
+    "item": "archdrakes_molten_heart",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.008
+  },
+  {
+    "item": "ancient_celestial_air_armor",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_boots",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_gauntlets",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_helmet",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_leggings",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_protector",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "empyrean_air_armor",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_boots",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_gauntlets",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_helmet",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_leggings",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_protector",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "mordrenns_drowned_cowl",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.01
+  },
+  {
+    "item": "ancient_celestial_water_armor",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_water_boots",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_water_gauntlets",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_water_helmet",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_water_leggings",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_water_protector",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.025
+  },
+  {
+    "item": "empyrean_water_armor",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_water_boots",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_water_gauntlets",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_water_helmet",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_water_leggings",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_water_protector",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.012
+  },
+  {
+    "item": "heartfire_of_the_greater_drake",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.01
+  },
+  {
+    "item": "ancient_celestial_warrior_armor",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_boots",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_gauntlets",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_helmet",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_leggings",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_protector",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "empyrean_warrior_armor",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_boots",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_gauntlets",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_helmet",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_leggings",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_protector",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "wight_bound_amulet",
+    "monster": "Barrow Wight",
+    "monsterDisplayName": "Barrow Wight",
+    "chance": 0.03
+  },
+  {
+    "item": "centaur_warband_ring",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.03
+  },
+  {
+    "item": "bow_of_centaur_slaying",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.008
+  },
+  {
+    "item": "cinderwrought_sash",
+    "monster": "Ashfang Stalker",
+    "monsterDisplayName": "Ashfang Stalker",
+    "chance": 0.02
+  },
+  {
+    "item": "caradocs_sundered_blade",
+    "monster": "Sir Caradoc, the Sundered Knight",
+    "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.02
+  },
+  {
+    "item": "verdant_wardens_bulwark",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.015
+  },
+  {
+    "item": "ancient_celestial_earth_armor",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_boots",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_gauntlets",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_helmet",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_leggings",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_protector",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "empyrean_earth_armor",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_boots",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_gauntlets",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_helmet",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_leggings",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_protector",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "bastion_sentinels_mantle",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.03
+  },
+  {
+    "item": "crown_of_the_hollow_king",
+    "monster": "The Hollow King",
+    "monsterDisplayName": "The Hollow King",
+    "chance": 0.008
+  },
+  {
+    "item": "marchwardens_crown",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.01
+  },
+  {
+    "item": "bow_of_centaur_slaying",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.015
+  },
+  {
+    "item": "ring_of_the_archer",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.02
+  },
+  {
+    "item": "ancient_celestial_archer_armor",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_boots",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_gauntlets",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_helmet",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_leggings",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_protector",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.025
+  },
+  {
+    "item": "empyrean_archer_armor",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_boots",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_gauntlets",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_helmet",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_leggings",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_protector",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  }
+]

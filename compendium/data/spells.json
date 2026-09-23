@@ -141,6 +141,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d17+6+self.int/23)*self.fire/target.r_fire)",
+      "min": 7,
+      "max": 23
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 532,
@@ -182,6 +187,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d28+16+self.int/19)*self.fire/target.r_fire)",
+      "min": 19,
+      "max": 46
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 20372,
@@ -223,6 +233,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d45+31+self.int/16)*self.fire/target.r_fire)",
+      "min": 37,
+      "max": 81
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 24370,
@@ -264,6 +279,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d52+37+self.int/14)*self.fire/target.r_fire)",
+      "min": 44,
+      "max": 95
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 34726,
@@ -367,6 +387,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d21+13+self.int/20)*self.water/target.r_water)",
+      "min": 15,
+      "max": 35
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 17200,
@@ -408,6 +433,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d30+12+self.int/17)*self.water/target.r_water)",
+      "min": 16,
+      "max": 45
+    },
     "cooldownSeconds": 0,
     "duration": "501",
     "price": 15466,
@@ -466,6 +496,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d20+21+self.int/16)*self.water/target.r_water)",
+      "min": 25,
+      "max": 44
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 20625,
@@ -507,6 +542,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d39+31+self.int/15)*self.water/target.r_water)",
+      "min": 36,
+      "max": 74
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 30418,
@@ -548,6 +588,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d16+6+self.int/42+self.wis/42)*self.air/target.r_air)",
+      "min": 8,
+      "max": 23
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 2388,
@@ -589,6 +634,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d26+12+self.int/36+self.wis/36)*self.air/target.r_air)",
+      "min": 14,
+      "max": 39
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 12348,
@@ -724,6 +774,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d37+20+self.int/30+self.wis/30)*self.air/target.r_air)",
+      "min": 23,
+      "max": 59
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 32545,
@@ -888,6 +943,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d9+11+self.wis/22)*self.earth/target.r_earth)",
+      "min": 12,
+      "max": 20
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 1328,
@@ -929,6 +989,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d5+26+self.wis/17)*self.earth/target.r_earth)",
+      "min": 29,
+      "max": 33
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 14292,
@@ -1139,6 +1204,11 @@
     "lineOfSight": false,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "0",
+      "min": 0,
+      "max": 0
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 67637,
@@ -1181,6 +1251,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d61+53+self.int/11)*self.water/target.r_water)",
+      "min": 64,
+      "max": 124
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 82378,
@@ -1222,6 +1297,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d41+23+self.int/28+self.wis/28)*self.air/target.r_air)",
+      "min": 27,
+      "max": 67
+    },
     "cooldownSeconds": 0,
     "duration": "100",
     "price": 41584,
@@ -1264,6 +1344,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d52+30+self.int/24+self.wis/24)*self.air/target.r_air)",
+      "min": 35,
+      "max": 86
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 67637,
@@ -1350,6 +1435,11 @@
     "lineOfSight": false,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "0",
+      "min": 0,
+      "max": 0
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 88576,
@@ -1392,6 +1482,11 @@
     "lineOfSight": false,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1000*self.int/self.wis)*100/target.r_fire)",
+      "min": 0,
+      "max": 0
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 233,
@@ -1475,6 +1570,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-( ( 1d21 + 13 + self.int/18 ) * self.dark/target.r_dark )",
+      "min": 16,
+      "max": 36
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 7152,
@@ -1785,6 +1885,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d157+125+self.int/7)*self.fire/target.r_fire)",
+      "min": 170,
+      "max": 326
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 307129,
@@ -1827,6 +1932,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d89+68+self.int/10)*self.fire/target.r_fire)",
+      "min": 86,
+      "max": 174
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 103297,
@@ -1869,6 +1979,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d58+65+self.int/9)*self.fire/target.r_fire)",
+      "min": 87,
+      "max": 144
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 132824,
@@ -1910,6 +2025,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d122+96+self.int/8)*self.fire/target.r_fire)",
+      "min": 126,
+      "max": 247
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 196028,
@@ -1952,6 +2072,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d76+89+self.int/8)*self.fire/target.r_fire)",
+      "min": 122,
+      "max": 197
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 226492,
@@ -1993,6 +2118,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "if(target.r_air<4000?-(1d26+33+self.int/13):0)",
+      "min": 38,
+      "max": 63
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 46410,
@@ -2034,6 +2164,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d72+64+self.int/10)*self.water/target.r_water)",
+      "min": 78,
+      "max": 149
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 110825,
@@ -2075,6 +2210,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d83+75+self.int/9)*self.water/target.r_water)",
+      "min": 92,
+      "max": 174
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 151580,
@@ -2117,6 +2257,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d52+72+self.int/8)*self.water/target.r_water)",
+      "min": 94,
+      "max": 145
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 187630,
@@ -2159,6 +2304,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d101+94+self.int/8)*self.water/target.r_water)",
+      "min": 118,
+      "max": 218
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 222039,
@@ -2201,6 +2351,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d65+93+self.int/7)*self.water/target.r_water)",
+      "min": 125,
+      "max": 189
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 287334,
@@ -2488,6 +2643,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d144+67+self.int/16+self.wis/16)*self.air/target.r_air)",
+      "min": 79,
+      "max": 222
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 208881,
@@ -2530,6 +2690,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d159+75+self.int/14+self.wis/14)*self.air/target.r_air)",
+      "min": 90,
+      "max": 248
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 249249,
@@ -2661,6 +2826,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level))",
+      "min": 22,
+      "max": 26
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 18843,
@@ -2934,6 +3104,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "if(target.r_dark=5025?0:-((1d19+17+self.int/30)*self.dark/target.r_dark))",
+      "min": 20,
+      "max": 38
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 22057,
@@ -3062,6 +3237,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "if(target.r_dark=5025?0:-((1d28+30+self.int/24)*self.dark/target.r_dark))",
+      "min": 36,
+      "max": 63
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 70497,
@@ -4335,6 +4515,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d37+101+self.wis/9)*self.earth/target.r_earth)",
+      "min": 112,
+      "max": 148
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 159341,
@@ -4377,6 +4562,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "if(target.r_dark=5025?0:-((1d44+48+self.int/18)*self.dark/target.r_dark))",
+      "min": 60,
+      "max": 103
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 163275,
@@ -5136,6 +5326,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)",
+      "min": 401,
+      "max": 508
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 750000,
@@ -5341,6 +5536,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*12)",
+      "min": 531,
+      "max": 591
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 115000,
@@ -5356,7 +5556,7 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*6)"
+            "expression": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*12)"
           },
           {
             "paramId": 2
@@ -5382,6 +5582,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)",
+      "min": 3913,
+      "max": 4921
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 1500000,
@@ -5397,11 +5602,11 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*6)"
+            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)"
           },
           {
             "paramId": 2,
-            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*6)"
+            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)"
           },
           {
             "paramId": 3,
@@ -5424,6 +5629,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d42+112+self.int/10)*self.dark/target.r_dark)*7)",
+      "min": 973,
+      "max": 1260
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 1850000,
@@ -5465,6 +5675,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)",
+      "min": 1910,
+      "max": 2450
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 2400000,
@@ -5644,6 +5859,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)",
+      "min": 3198,
+      "max": 4095
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 3100000,
@@ -5686,6 +5906,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d44+48+self.int/13)*self.water/target.r_water)",
+      "min": 57,
+      "max": 100
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 68000,
@@ -5800,6 +6025,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-((1d111+86+self.int/10)*self.fire/target.r_fire)",
+      "min": 108,
+      "max": 218
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 190000,
@@ -6036,6 +6266,11 @@
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)",
+      "min": 5958,
+      "max": 7650
+    },
     "cooldownSeconds": 0,
     "duration": "0",
     "price": 4200000,

@@ -312,6 +312,57 @@
     }
   },
   {
+    "id": "OutriderHalvard",
+    "origin": "new",
+    "displayName": "Outrider Halvard",
+    "welcomeText": "Halvard. Windhowl's roads aren't as safe as they look - prove you can clear them before you go wandering the hills.",
+    "topics": [
+      {
+        "keywords": [
+          "quest",
+          "prove"
+        ],
+        "response": "Brigands have been working the roads north and east of town again, bolder than usual. Clear enough of them out and I'll know you can hold a line before you go looking for whatever's smoldering in those hills south of here.",
+        "actions": [
+          "GIVE_QUEST:windhowl_borderwatch"
+        ]
+      },
+      {
+        "keywords": [
+          "hills"
+        ],
+        "response": "South of here the hills catch fire on their own some nights - Cinderreach, we call it. A drake's made a den of it, or so the hunters who came back say.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "windhowl",
+          "town"
+        ],
+        "response": "Windhowl doesn't send its own out past the marches without knowing they can fight. The centaurs further out taught us that the hard way.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "brigands"
+        ],
+        "response": "Deserters and opportunists, mostly. Nothing organized, just enough of them to make the roads dangerous for anyone traveling alone.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "OutriderKaelis",
     "origin": "new",
     "displayName": "Outrider Kaelis",
@@ -596,6 +647,57 @@
           "bye"
         ],
         "response": "Watch the wind - it carries the smoke, and worse. Safe travels.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "SentinelCorwin",
+    "origin": "new",
+    "displayName": "Sentinel Corwin",
+    "welcomeText": "Corwin here. If you're heading east past the fields, best prove you can handle yourself first.",
+    "topics": [
+      {
+        "keywords": [
+          "quest",
+          "prove"
+        ],
+        "response": "The antelope herds past the fields have turned skittish and mean since the tide started acting up east of town - something's spooked them. Thin their numbers and I'll know you can hold your own before you go looking for whatever's actually wrong out there.",
+        "actions": [
+          "GIVE_QUEST:silversky_borderwatch"
+        ]
+      },
+      {
+        "keywords": [
+          "chancel"
+        ],
+        "response": "There's an old shrine out past the coast east of here - the Sunken Chancel, folk call it. Something's been dragging people under since the tide 'woke' it. Not my business until it comes ashore, but it will, eventually.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "silversky",
+          "town"
+        ],
+        "response": "Silversky's held the coast a long time. We don't send folk out past the fields without knowing they can handle themselves first - too many haven't come back.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "antelope"
+        ],
+        "response": "Nothing wrong with antelope, normally. Lately they're jumpier and meaner than they should be - had one take a chunk out of a fisherman's arm last week.",
         "actions": []
       }
     ],
