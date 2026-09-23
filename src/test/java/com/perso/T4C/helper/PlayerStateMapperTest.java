@@ -20,6 +20,21 @@ class PlayerStateMapperTest {
   }
 
   @Test
+  void clampsSavesFromBeforeTheLevelAndRebirthCaps() throws Exception {
+    PlayerStateDto state = PlayerStateMapper.fromPlayer(new Player());
+    state.level = 638;
+    state.currentXp = 12345;
+    state.xpToNextLevel = 99999;
+    state.rebirthCount = 105;
+    Player restored = new Player();
+    PlayerStateMapper.applyToPlayer(state, restored);
+    assertEquals(com.perso.T4C.config.GameConstants.MAX_PLAYER_LEVEL, restored.getLevel());
+    assertEquals(0, restored.getCurrentXp());
+    assertEquals(0, restored.getXpToNextLevel());
+    assertEquals(com.perso.T4C.config.GameConstants.REBIRTH_MAX_REMORTS, restored.getRebirthCount());
+  }
+
+  @Test
   void preservesQuestFlags() throws Exception {
     Player source = new Player();
     source.setQuestFlag("quest.lighthaven_samaritan_rats.status", 1);

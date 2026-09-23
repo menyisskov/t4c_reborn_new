@@ -92,7 +92,10 @@ public final class PlayerStateMapper {
     }
     player.setStatPoints(state.statPoints);
     player.setSkillPoints(state.skillPoints);
-    player.setRebirthCount(state.rebirthCount);
+    // Saves from before the rebirth limit can hold more; the Seraph aura scales with this count,
+    // so cap it. The __FLAG_NUMBER_OF_REMORTS quest flag is left as saved: RemortNPC2 derives the
+    // character's base attributes from it, and those were already granted.
+    player.setRebirthCount(Math.min(state.rebirthCount, GameConstants.REBIRTH_MAX_REMORTS));
     player.setSpells(state.spells);
     player.setQuickSlots(state.quickSlots);
     applyActiveBuffs(state, player);

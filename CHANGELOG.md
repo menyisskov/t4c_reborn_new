@@ -22,6 +22,7 @@ _Nothing pending._
   experience stops counting once you reach it.
 - A character can now be reborn at most 50 times. The Oracle will tell you when your soul can
   be purified no further. At 50 rebirths you start each life with 270 in every attribute.
+  Characters already past 50 rebirths keep their stats but count as 50 for the Seraph aura.
 - The high-level spells have been rebuilt into one even ladder. Every school (fire, water,
   earth, air, dark and light) now has exactly one attack spell at levels 150, 200, 250, 300,
   350 and 400. Spells at the same level ask for the same stats and hit equally hard.
