@@ -12,6 +12,8 @@ public final class QuestDefinitions {
         OrtanalasBridgeGoblins.definition(),
         SilverskyTideWarden.definition(),
         EmberfangHillsBounty.definition(),
+        SilverskyBorderwatch.definition(),
+        WindhowlBorderwatch.definition(),
         WindhowlMarchesCentaurs.definition(),
         HollowMarchWights.definition(),
         AerieWyrmlingCull.definition(),

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 class LighthavenSamaritanTest {
   @Test
   void registryCreatesTheNativeSamaritanWithoutReadingNpcDefinitions() throws Exception {
-    assertEquals(476, NpcFactoryRegistry.registrations().size());
+    assertEquals(478, NpcFactoryRegistry.registrations().size());
     assertInstanceOf(
         LighthavenSamaritan.class,
         NpcFactoryRegistry.create(LighthavenSamaritan.ID, new NpcContext(null)));

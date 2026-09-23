@@ -15,6 +15,16 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-23 — Town-side access quests for Sunken Chancel and Cinderreach Hills (T4C-0022)
+
+### Added
+- Two new NPCs, one stationed in Silversky and one in Windhowl, each offering a short new quest
+  (clearing troublesome wildlife or bandits on the town's own outskirts) before pointing you
+  toward the Sunken Chancel or Cinderreach Hills. Completing either quest unlocks that zone's
+  fast-travel entry, the same way the existing in-zone quests already did — so there's now a
+  deliberate, town-side way to be sent toward these zones instead of only ever finding them by
+  wandering the coast or the hills yourself.
+
 ## 2026-09-23 — Spell balance, lost armor recovered, and honest site data (T4C-0021)
 
 ### Changed

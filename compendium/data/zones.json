@@ -10,8 +10,8 @@
     "monsters": ["Drowned Acolyte", "Tideclaw Crab", "Mordrenn the Drowned Inquisitor"],
     "items": ["mordrenns_drowned_cowl", "tideclaw_band", "acolytes_tarnished_locket", "sunken_vestment"],
     "spells": ["spell.riptide_surge", "spell.drowned_ward"],
-    "quests": ["silversky_tide_warden"],
-    "npcs": ["TideWardenBryn"]
+    "quests": ["silversky_tide_warden", "silversky_borderwatch"],
+    "npcs": ["TideWardenBryn", "SentinelCorwin"]
   },
   {
     "id": "cinderreach_hills",
@@ -24,8 +24,8 @@
     "monsters": ["Cinder Whelp", "Ashfang Stalker", "Ignarok the Emberfang"],
     "items": ["cinderwrought_sash", "ignaroks_emberfang_claw"],
     "spells": ["spell.cinderburst", "spell.emberheart_resolve"],
-    "quests": ["emberfang_hills_bounty"],
-    "npcs": ["RurikCinderwatch"]
+    "quests": ["emberfang_hills_bounty", "windhowl_borderwatch"],
+    "npcs": ["RurikCinderwatch", "OutriderHalvard"]
   },
   {
     "id": "windhowl_marches",

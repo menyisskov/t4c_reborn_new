@@ -8912,6 +8912,42 @@ window.T4C_DATA = {
       "completedText": "The foothills are quiet again. Watch yourself if you go hunting Ignarok himself."
     },
     {
+      "id": "silversky_borderwatch",
+      "title": "Borderwatch: Silversky",
+      "giverNpc": "SentinelCorwin",
+      "targetMonster": "Antelope",
+      "requiredKills": 15,
+      "targetWorldZ": 0,
+      "areaCenterX": 1461,
+      "areaCenterY": 2407,
+      "areaRadiusTiles": 250,
+      "rewardGold": 800,
+      "rewardXp": 2000,
+      "requiredItemQty": 0,
+      "unlockZoneId": "sunken_chancel",
+      "offerText": "Something's spooked the antelope east of town, and I won't vouch for anyone heading further out until I've seen them handle themselves. Thin the herds until they settle, then we'll talk about what's really out there.",
+      "completionText": "The herds have settled and you didn't flinch doing it. Whatever's out past the coast, you're ready to see it for yourself.",
+      "completedText": "You've already proven yourself out there. The coast road's yours whenever you want it."
+    },
+    {
+      "id": "windhowl_borderwatch",
+      "title": "Borderwatch: Windhowl",
+      "giverNpc": "OutriderHalvard",
+      "targetMonster": "Brigand",
+      "requiredKills": 15,
+      "targetWorldZ": 0,
+      "areaCenterX": 1853,
+      "areaCenterY": 1168,
+      "areaRadiusTiles": 230,
+      "rewardGold": 1200,
+      "rewardXp": 3000,
+      "requiredItemQty": 0,
+      "unlockZoneId": "cinderreach_hills",
+      "offerText": "The roads north and east are lousy with brigands again, and I won't send anyone past the marches until they've proven they can clear a road first. Break up enough of their bands and we'll talk about what's smoldering in the hills.",
+      "completionText": "The roads are clear, for now, and you held your own doing it. The hills south of here are yours to find, if you're still fool enough to go looking.",
+      "completedText": "You've already cleared the roads once. Nothing's stopping you from the hills now."
+    },
+    {
       "id": "windhowl_marches_centaurs",
       "title": "The Windhowl Marches",
       "giverNpc": "MarshalTorrhen",
@@ -9397,6 +9433,57 @@ window.T4C_DATA = {
       }
     },
     {
+      "id": "OutriderHalvard",
+      "origin": "new",
+      "displayName": "Outrider Halvard",
+      "welcomeText": "Halvard. Windhowl's roads aren't as safe as they look - prove you can clear them before you go wandering the hills.",
+      "topics": [
+        {
+          "keywords": [
+            "quest",
+            "prove"
+          ],
+          "response": "Brigands have been working the roads north and east of town again, bolder than usual. Clear enough of them out and I'll know you can hold a line before you go looking for whatever's smoldering in those hills south of here.",
+          "actions": [
+            "GIVE_QUEST:windhowl_borderwatch"
+          ]
+        },
+        {
+          "keywords": [
+            "hills"
+          ],
+          "response": "South of here the hills catch fire on their own some nights - Cinderreach, we call it. A drake's made a den of it, or so the hunters who came back say.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "windhowl",
+            "town"
+          ],
+          "response": "Windhowl doesn't send its own out past the marches without knowing they can fight. The centaurs further out taught us that the hard way.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "brigands"
+          ],
+          "response": "Deserters and opportunists, mostly. Nothing organized, just enough of them to make the roads dangerous for anyone traveling alone.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
       "id": "OutriderKaelis",
       "origin": "new",
       "displayName": "Outrider Kaelis",
@@ -9681,6 +9768,57 @@ window.T4C_DATA = {
             "bye"
           ],
           "response": "Watch the wind - it carries the smoke, and worse. Safe travels.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "SentinelCorwin",
+      "origin": "new",
+      "displayName": "Sentinel Corwin",
+      "welcomeText": "Corwin here. If you're heading east past the fields, best prove you can handle yourself first.",
+      "topics": [
+        {
+          "keywords": [
+            "quest",
+            "prove"
+          ],
+          "response": "The antelope herds past the fields have turned skittish and mean since the tide started acting up east of town - something's spooked them. Thin their numbers and I'll know you can hold your own before you go looking for whatever's actually wrong out there.",
+          "actions": [
+            "GIVE_QUEST:silversky_borderwatch"
+          ]
+        },
+        {
+          "keywords": [
+            "chancel"
+          ],
+          "response": "There's an old shrine out past the coast east of here - the Sunken Chancel, folk call it. Something's been dragging people under since the tide 'woke' it. Not my business until it comes ashore, but it will, eventually.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "silversky",
+            "town"
+          ],
+          "response": "Silversky's held the coast a long time. We don't send folk out past the fields without knowing they can handle themselves first - too many haven't come back.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "antelope"
+          ],
+          "response": "Nothing wrong with antelope, normally. Lately they're jumpier and meaner than they should be - had one take a chunk out of a fisherman's arm last week.",
           "actions": []
         }
       ],
@@ -23995,10 +24133,12 @@ window.T4C_DATA = {
         "spell.drowned_ward"
       ],
       "quests": [
-        "silversky_tide_warden"
+        "silversky_tide_warden",
+        "silversky_borderwatch"
       ],
       "npcs": [
-        "TideWardenBryn"
+        "TideWardenBryn",
+        "SentinelCorwin"
       ]
     },
     {
@@ -24027,10 +24167,12 @@ window.T4C_DATA = {
         "spell.emberheart_resolve"
       ],
       "quests": [
-        "emberfang_hills_bounty"
+        "emberfang_hills_bounty",
+        "windhowl_borderwatch"
       ],
       "npcs": [
-        "RurikCinderwatch"
+        "RurikCinderwatch",
+        "OutriderHalvard"
       ]
     },
     {
