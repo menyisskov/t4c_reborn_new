@@ -1,5 +1,6 @@
 package com.perso.T4C.helper;
 
+import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.mapping.definition.XpCurveDefinitions;
 import com.perso.T4C.player.Player;
 import java.io.IOException;
@@ -55,15 +56,33 @@ public final class XpCurve {
       level = 1;
       player.setLevel(level);
     }
+    if (level > GameConstants.MAX_PLAYER_LEVEL) {
+      level = GameConstants.MAX_PLAYER_LEVEL;
+      player.setLevel(level);
+    }
     long xpToNext = getXpToNextLevel(level);
-    if (xpToNext > 0) {
+    if (xpToNext > 0 || level >= GameConstants.MAX_PLAYER_LEVEL) {
       player.setXpToNextLevel(xpToNext);
     }
   }
 
+  /**
+   * Builds the curve, truncated at {@link GameConstants#MAX_PLAYER_LEVEL}: levels above the cap
+   * are dropped and the cap level itself needs no more XP (xpToNextLevel 0), which is what stops
+   * leveling there. The source definitions still run to level 1000 so the cap can be raised later
+   * without regenerating them.
+   */
   private static XpCurve fromEntries(List<Entry> entries) {
     Map<Integer, Entry> map = new HashMap<>();
-    for (Entry entry : entries) if (entry != null && entry.level > 0) map.put(entry.level, entry);
+    for (Entry entry : entries) {
+      if (entry == null || entry.level <= 0 || entry.level > GameConstants.MAX_PLAYER_LEVEL)
+        continue;
+      map.put(
+          entry.level,
+          entry.level == GameConstants.MAX_PLAYER_LEVEL
+              ? new Entry(entry.level, 0L, entry.totalXp)
+              : entry);
+    }
     return new XpCurve(map);
   }
 

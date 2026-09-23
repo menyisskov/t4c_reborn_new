@@ -1,12 +1,14 @@
 package com.perso.T4C.spell.definition;
 
+import com.perso.T4C.spell.HighTierSpellCurve;
 import com.perso.T4C.spell.SpellData;
 import java.util.List;
 
 /**
  * New high-level tier, level 550 — the party-ward successor to {@code LeywardBastion} (200) and
  * {@code VeilstoneAegis} (40): same 6-way resist/AC shape, scaled up (250/150 instead of 100),
- * plus a max-hp buff so the extra tier is worth its much higher mana cost.
+ * plus a max-hp buff so the extra tier is worth its much higher mana cost. T4C-0025 moved it from
+ * level 550 to the level-400 cap, gated on the shared high-tier curve ({@link HighTierSpellCurve}).
  */
 public final class SanctumWard {
   private SanctumWard() {}
@@ -17,9 +19,9 @@ public final class SanctumWard {
         "${spell.description.sanctum_ward}",
         "2200",
         0,
-        50,
-        480,
-        550,
+        HighTierSpellCurve.secondaryRequirement(400),
+        HighTierSpellCurve.primaryRequirement(400),
+        400,
         false,
         false,
         "64kSpellIconLightDefense",

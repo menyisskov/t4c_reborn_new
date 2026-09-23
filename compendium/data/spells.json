@@ -5317,27 +5317,27 @@
     "key": "spell.land_slide",
     "isNew": false,
     "name": "Land Slide",
-    "description": "Buries the target beneath a collapsing hillside, dealing three times the damage of Boulders. This spell has a small area of effect.",
-    "manaCost": "48",
-    "minInt": 165,
-    "minWis": 285,
+    "description": "Buries the target beneath a collapsing hillside. This spell has a large area of effect.",
+    "manaCost": "60",
+    "minInt": 120,
+    "minWis": 500,
     "minLevel": 200,
     "isAttack": true,
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
     "damageAtReference": {
-      "formula": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)",
-      "min": 401,
-      "max": 508
+      "formula": "-(((1d40+100+self.wis/4)*self.earth/target.r_earth)*5)",
+      "min": 1130,
+      "max": 1325
     },
     "cooldownSeconds": 0,
     "duration": "0",
-    "price": 750000,
+    "price": 1000000,
     "spellId": 99901,
     "element": 2,
-    "targetType": 17,
-    "attackType": 1,
+    "targetType": 19,
+    "attackType": 2,
     "successRate": "100",
     "pvp": true,
     "effects": [
@@ -5346,11 +5346,11 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)"
+            "expression": "-(((1d40+100+self.wis/4)*self.earth/target.r_earth)*5)"
           },
           {
             "paramId": 2,
-            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)"
+            "expression": "-(((1d40+100+self.wis/4)*self.earth/target.r_earth)*5)"
           },
           {
             "paramId": 3,
@@ -5527,27 +5527,27 @@
     "key": "spell.sunscour",
     "isNew": true,
     "name": "Sunscour",
-    "description": "Obliterates an undead target with sacred words of banishment far more potent than Turn Undead.",
+    "description": "Sears the target with a scouring beam of sacred sunlight.",
     "manaCost": "30",
-    "minInt": 100,
-    "minWis": 260,
-    "minLevel": 120,
+    "minInt": 90,
+    "minWis": 375,
+    "minLevel": 150,
     "isAttack": true,
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
     "damageAtReference": {
-      "formula": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*12)",
-      "min": 531,
-      "max": 591
+      "formula": "-(((1d30+75+self.wis/4)*self.light/target.r_light)*6)",
+      "min": 1018,
+      "max": 1192
     },
     "cooldownSeconds": 0,
     "duration": "0",
-    "price": 115000,
+    "price": 450000,
     "spellId": 99904,
     "element": 5,
     "targetType": 11,
-    "attackType": 2,
+    "attackType": 1,
     "successRate": "100",
     "pvp": true,
     "effects": [
@@ -5556,7 +5556,7 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*12)"
+            "expression": "-(((1d30+75+self.wis/4)*self.light/target.r_light)*6)"
           },
           {
             "paramId": 2
@@ -5573,26 +5573,26 @@
     "key": "spell.gravebreaker",
     "isNew": true,
     "name": "Gravebreaker",
-    "description": "Rains massive planetoid fragments upon the target, dealing twice the damage of Land Slide. This spell has a small area of effect.",
-    "manaCost": "96",
-    "minInt": 200,
-    "minWis": 340,
-    "minLevel": 260,
+    "description": "Rains a massive fragment of fallen stone upon the target.",
+    "manaCost": "50",
+    "minInt": 150,
+    "minWis": 625,
+    "minLevel": 250,
     "isAttack": true,
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
     "damageAtReference": {
-      "formula": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)",
-      "min": 3913,
-      "max": 4921
+      "formula": "-(((1d50+125+self.wis/4)*self.earth/target.r_earth)*6)",
+      "min": 1693,
+      "max": 1987
     },
     "cooldownSeconds": 0,
     "duration": "0",
-    "price": 1500000,
+    "price": 1250000,
     "spellId": 99905,
     "element": 2,
-    "targetType": 17,
+    "targetType": 11,
     "attackType": 1,
     "successRate": "100",
     "pvp": true,
@@ -5602,11 +5602,10 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)"
+            "expression": "-(((1d50+125+self.wis/4)*self.earth/target.r_earth)*6)"
           },
           {
-            "paramId": 2,
-            "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)"
+            "paramId": 2
           },
           {
             "paramId": 3,
@@ -5621,22 +5620,22 @@
     "isNew": true,
     "name": "Voidreave Lance",
     "description": "Hurls a lance of raw void energy at the target, piercing armor and flesh alike.",
-    "manaCost": "18",
-    "minInt": 260,
-    "minWis": 90,
-    "minLevel": 320,
+    "manaCost": "60",
+    "minInt": 750,
+    "minWis": 180,
+    "minLevel": 300,
     "isAttack": true,
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
     "damageAtReference": {
-      "formula": "-(((1d42+112+self.int/10)*self.dark/target.r_dark)*7)",
-      "min": 973,
-      "max": 1260
+      "formula": "-(((1d60+150+self.int/4)*self.dark/target.r_dark)*6)",
+      "min": 2031,
+      "max": 2385
     },
     "cooldownSeconds": 0,
     "duration": "0",
-    "price": 1850000,
+    "price": 1800000,
     "spellId": 99906,
     "element": 6,
     "targetType": 11,
@@ -5649,7 +5648,7 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d42+112+self.int/10)*self.dark/target.r_dark)*7)"
+            "expression": "-(((1d60+150+self.int/4)*self.dark/target.r_dark)*6)"
           },
           {
             "paramId": 2
@@ -5666,23 +5665,23 @@
     "key": "spell.stormcallers_judgment",
     "isNew": true,
     "name": "Stormcaller's Judgment",
-    "description": "Calls down a violent lightning storm upon the target. This spell has a small area of effect.",
-    "manaCost": "26",
-    "minInt": 360,
-    "minWis": 140,
-    "minLevel": 480,
+    "description": "Calls down a violent lightning storm upon the target. This spell has a large area of effect.",
+    "manaCost": "105",
+    "minInt": 542,
+    "minWis": 542,
+    "minLevel": 350,
     "isAttack": true,
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
     "damageAtReference": {
-      "formula": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)",
-      "min": 1910,
-      "max": 2450
+      "formula": "-(((1d70+175+(self.int+self.wis)/5)*self.air/target.r_air)*5)",
+      "min": 1964,
+      "max": 2309
     },
     "cooldownSeconds": 0,
     "duration": "0",
-    "price": 2400000,
+    "price": 3062500,
     "spellId": 99907,
     "element": 3,
     "targetType": 19,
@@ -5695,11 +5694,11 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)"
+            "expression": "-(((1d70+175+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
           },
           {
             "paramId": 2,
-            "expression": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)"
+            "expression": "-(((1d70+175+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
           },
           {
             "paramId": 3,
@@ -5715,9 +5714,9 @@
     "name": "Sanctum Ward",
     "description": "Raises a greater standing ward around the caster's party, granting large bonuses to air, water, earth, fire and dark resistance, armor class, and maximum hit points.",
     "manaCost": "2200",
-    "minInt": 50,
-    "minWis": 480,
-    "minLevel": 550,
+    "minInt": 240,
+    "minWis": 1000,
+    "minLevel": 400,
     "isAttack": false,
     "lineOfSight": false,
     "minDamage": 0,
@@ -5850,27 +5849,27 @@
     "key": "spell.emberqueens_wrath",
     "isNew": true,
     "name": "Emberqueen's Wrath",
-    "description": "Engulfs the target in an inferno of royal fire. This spell has a small area of effect.",
-    "manaCost": "38",
-    "minInt": 440,
-    "minWis": 170,
-    "minLevel": 650,
+    "description": "Engulfs the target in an inferno of royal fire. This spell has a large area of effect.",
+    "manaCost": "105",
+    "minInt": 875,
+    "minWis": 210,
+    "minLevel": 350,
     "isAttack": true,
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
     "damageAtReference": {
-      "formula": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)",
-      "min": 3198,
-      "max": 4095
+      "formula": "-(((1d70+175+self.int/4)*self.fire/target.r_fire)*5)",
+      "min": 1973,
+      "max": 2318
     },
     "cooldownSeconds": 0,
     "duration": "0",
-    "price": 3100000,
+    "price": 3062500,
     "spellId": 99909,
     "element": 1,
     "targetType": 19,
-    "attackType": 1,
+    "attackType": 2,
     "successRate": "100",
     "pvp": true,
     "effects": [
@@ -5879,11 +5878,11 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)"
+            "expression": "-(((1d70+175+self.int/4)*self.fire/target.r_fire)*5)"
           },
           {
             "paramId": 2,
-            "expression": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)"
+            "expression": "-(((1d70+175+self.int/4)*self.fire/target.r_fire)*5)"
           },
           {
             "paramId": 3,
@@ -6138,8 +6137,8 @@
     "name": "Leyward Bastion",
     "description": "Raises a standing ward around the caster's party, granting bonuses to air, water, earth, fire and dark resistance as well as armor class.",
     "manaCost": "1600",
-    "minInt": 30,
-    "minWis": 90,
+    "minInt": 120,
+    "minWis": 500,
     "minLevel": 200,
     "isAttack": false,
     "lineOfSight": true,
@@ -6257,23 +6256,23 @@
     "key": "spell.cataclysms_herald",
     "isNew": true,
     "name": "Cataclysm's Herald",
-    "description": "Summons a crushing deluge upon the target, heralding the end of all who stand against it. This spell has a small area of effect.",
-    "manaCost": "58",
-    "minInt": 560,
+    "description": "Summons a crushing deluge upon the target, heralding the end of all who stand against it. This spell has a large area of effect.",
+    "manaCost": "120",
+    "minInt": 1000,
     "minWis": 240,
-    "minLevel": 900,
+    "minLevel": 400,
     "isAttack": true,
     "lineOfSight": true,
     "minDamage": 0,
     "maxDamage": 0,
     "damageAtReference": {
-      "formula": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)",
-      "min": 5958,
-      "max": 7650
+      "formula": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)",
+      "min": 2255,
+      "max": 2650
     },
     "cooldownSeconds": 0,
     "duration": "0",
-    "price": 4200000,
+    "price": 4000000,
     "spellId": 99916,
     "element": 4,
     "targetType": 19,
@@ -6286,11 +6285,1401 @@
         "parameters": [
           {
             "paramId": 1,
-            "expression": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)"
+            "expression": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)"
           },
           {
             "paramId": 2,
-            "expression": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)"
+            "expression": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.scorchbrand",
+    "isNew": true,
+    "name": "Scorchbrand",
+    "description": "Brands the target with a searing lance of white-hot flame.",
+    "manaCost": "30",
+    "minInt": 375,
+    "minWis": 90,
+    "minLevel": 150,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d30+75+self.int/4)*self.fire/target.r_fire)*6)",
+      "min": 1018,
+      "max": 1192
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 450000,
+    "spellId": 99917,
+    "element": 1,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d30+75+self.int/4)*self.fire/target.r_fire)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.pyreburst",
+    "isNew": true,
+    "name": "Pyreburst",
+    "description": "Ignites the ground beneath the target in a roaring funeral pyre. This spell has a large area of effect.",
+    "manaCost": "60",
+    "minInt": 500,
+    "minWis": 120,
+    "minLevel": 200,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d40+100+self.int/4)*self.fire/target.r_fire)*5)",
+      "min": 1130,
+      "max": 1325
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1000000,
+    "spellId": 99918,
+    "element": 1,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d40+100+self.int/4)*self.fire/target.r_fire)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d40+100+self.int/4)*self.fire/target.r_fire)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.magmaheart_lance",
+    "isNew": true,
+    "name": "Magmaheart Lance",
+    "description": "Drives a spear of molten rock straight through the target.",
+    "manaCost": "50",
+    "minInt": 625,
+    "minWis": 150,
+    "minLevel": 250,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d50+125+self.int/4)*self.fire/target.r_fire)*6)",
+      "min": 1693,
+      "max": 1987
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1250000,
+    "spellId": 99919,
+    "element": 1,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d50+125+self.int/4)*self.fire/target.r_fire)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.sunforge_brand",
+    "isNew": true,
+    "name": "Sunforge Brand",
+    "description": "Strikes the target with fire drawn from the heart of a forge that never cools.",
+    "manaCost": "60",
+    "minInt": 750,
+    "minWis": 180,
+    "minLevel": 300,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d60+150+self.int/4)*self.fire/target.r_fire)*6)",
+      "min": 2031,
+      "max": 2385
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1800000,
+    "spellId": 99920,
+    "element": 1,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d60+150+self.int/4)*self.fire/target.r_fire)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ashfall",
+    "isNew": true,
+    "name": "Ashfall",
+    "description": "Calls down a storm of burning ash and embers that buries everything around the target. This spell has a large area of effect.",
+    "manaCost": "120",
+    "minInt": 1000,
+    "minWis": 240,
+    "minLevel": 400,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)",
+      "min": 2255,
+      "max": 2650
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 4000000,
+    "spellId": 99921,
+    "element": 1,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.rime_lance",
+    "isNew": true,
+    "name": "Rime Lance",
+    "description": "Hurls a lance of ancient, never-melting ice at the target.",
+    "manaCost": "30",
+    "minInt": 375,
+    "minWis": 90,
+    "minLevel": 150,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d30+75+self.int/4)*self.water/target.r_water)*6)",
+      "min": 1018,
+      "max": 1192
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 450000,
+    "spellId": 99922,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d30+75+self.int/4)*self.water/target.r_water)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.frostgale",
+    "isNew": true,
+    "name": "Frostgale",
+    "description": "Whips a freezing gale of sleet and ice across the target and everything near it. This spell has a large area of effect.",
+    "manaCost": "60",
+    "minInt": 500,
+    "minWis": 120,
+    "minLevel": 200,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d40+100+self.int/4)*self.water/target.r_water)*5)",
+      "min": 1130,
+      "max": 1325
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1000000,
+    "spellId": 99923,
+    "element": 4,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d40+100+self.int/4)*self.water/target.r_water)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d40+100+self.int/4)*self.water/target.r_water)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.abyssal_spear",
+    "isNew": true,
+    "name": "Abyssal Spear",
+    "description": "Summons a spear of crushing black water from the ocean deep and drives it into the target.",
+    "manaCost": "50",
+    "minInt": 625,
+    "minWis": 150,
+    "minLevel": 250,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d50+125+self.int/4)*self.water/target.r_water)*6)",
+      "min": 1693,
+      "max": 1987
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1250000,
+    "spellId": 99924,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d50+125+self.int/4)*self.water/target.r_water)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.tidebreaker",
+    "isNew": true,
+    "name": "Tidebreaker",
+    "description": "Slams the target with the full weight of a breaking tide.",
+    "manaCost": "60",
+    "minInt": 750,
+    "minWis": 180,
+    "minLevel": 300,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d60+150+self.int/4)*self.water/target.r_water)*6)",
+      "min": 2031,
+      "max": 2385
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1800000,
+    "spellId": 99925,
+    "element": 4,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d60+150+self.int/4)*self.water/target.r_water)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.drowning_deep",
+    "isNew": true,
+    "name": "Drowning Deep",
+    "description": "Opens a churning whirlpool that drags the target and everything near it under. This spell has a large area of effect.",
+    "manaCost": "105",
+    "minInt": 875,
+    "minWis": 210,
+    "minLevel": 350,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d70+175+self.int/4)*self.water/target.r_water)*5)",
+      "min": 1973,
+      "max": 2318
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 3062500,
+    "spellId": 99926,
+    "element": 4,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d70+175+self.int/4)*self.water/target.r_water)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d70+175+self.int/4)*self.water/target.r_water)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.stonefang",
+    "isNew": true,
+    "name": "Stonefang",
+    "description": "Tears a jagged fang of stone from the earth and drives it into the target.",
+    "manaCost": "30",
+    "minInt": 90,
+    "minWis": 375,
+    "minLevel": 150,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d30+75+self.wis/4)*self.earth/target.r_earth)*6)",
+      "min": 1018,
+      "max": 1192
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 450000,
+    "spellId": 99927,
+    "element": 2,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d30+75+self.wis/4)*self.earth/target.r_earth)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.mountains_fist",
+    "isNew": true,
+    "name": "Mountain's Fist",
+    "description": "Raises a fist of living granite that crashes down on the target.",
+    "manaCost": "60",
+    "minInt": 180,
+    "minWis": 750,
+    "minLevel": 300,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d60+150+self.wis/4)*self.earth/target.r_earth)*6)",
+      "min": 2031,
+      "max": 2385
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1800000,
+    "spellId": 99928,
+    "element": 2,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d60+150+self.wis/4)*self.earth/target.r_earth)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.worldroot_upheaval",
+    "isNew": true,
+    "name": "Worldroot Upheaval",
+    "description": "The roots of the world heave upward, splitting the ground beneath the target. This spell has a large area of effect.",
+    "manaCost": "105",
+    "minInt": 210,
+    "minWis": 875,
+    "minLevel": 350,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d70+175+self.wis/4)*self.earth/target.r_earth)*5)",
+      "min": 1973,
+      "max": 2318
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 3062500,
+    "spellId": 99929,
+    "element": 2,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d70+175+self.wis/4)*self.earth/target.r_earth)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d70+175+self.wis/4)*self.earth/target.r_earth)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.tectonic_ruin",
+    "isNew": true,
+    "name": "Tectonic Ruin",
+    "description": "Shatters the very bedrock beneath the target, collapsing the land around it. This spell has a large area of effect.",
+    "manaCost": "120",
+    "minInt": 240,
+    "minWis": 1000,
+    "minLevel": 400,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)",
+      "min": 2255,
+      "max": 2650
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 4000000,
+    "spellId": 99930,
+    "element": 2,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.galespike",
+    "isNew": true,
+    "name": "Galespike",
+    "description": "Compresses a howling wind into a spike of lightning and hurls it at the target.",
+    "manaCost": "30",
+    "minInt": 232,
+    "minWis": 232,
+    "minLevel": 150,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d30+75+(self.int+self.wis)/5)*self.air/target.r_air)*6)",
+      "min": 1012,
+      "max": 1186
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 450000,
+    "spellId": 99931,
+    "element": 3,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d30+75+(self.int+self.wis)/5)*self.air/target.r_air)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.thunderhead",
+    "isNew": true,
+    "name": "Thunderhead",
+    "description": "Gathers a thunderhead over the target that bursts with a crash of lightning. This spell has a large area of effect.",
+    "manaCost": "60",
+    "minInt": 310,
+    "minWis": 310,
+    "minLevel": 200,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d40+100+(self.int+self.wis)/5)*self.air/target.r_air)*5)",
+      "min": 1125,
+      "max": 1320
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1000000,
+    "spellId": 99932,
+    "element": 3,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d40+100+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d40+100+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.skysplitter",
+    "isNew": true,
+    "name": "Skysplitter",
+    "description": "Splits the sky with a single blinding bolt aimed straight at the target.",
+    "manaCost": "50",
+    "minInt": 387,
+    "minWis": 387,
+    "minLevel": 250,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d50+125+(self.int+self.wis)/5)*self.air/target.r_air)*6)",
+      "min": 1684,
+      "max": 1978
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1250000,
+    "spellId": 99933,
+    "element": 3,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d50+125+(self.int+self.wis)/5)*self.air/target.r_air)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.tempest_lance",
+    "isNew": true,
+    "name": "Tempest Lance",
+    "description": "Hurls a lance of pure storm at the target.",
+    "manaCost": "60",
+    "minInt": 465,
+    "minWis": 465,
+    "minLevel": 300,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d60+150+(self.int+self.wis)/5)*self.air/target.r_air)*6)",
+      "min": 2022,
+      "max": 2376
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1800000,
+    "spellId": 99934,
+    "element": 3,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d60+150+(self.int+self.wis)/5)*self.air/target.r_air)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.heavenfall",
+    "isNew": true,
+    "name": "Heavenfall",
+    "description": "Tears open the heavens, bringing a storm of lightning crashing down around the target. This spell has a large area of effect.",
+    "manaCost": "120",
+    "minInt": 620,
+    "minWis": 620,
+    "minLevel": 400,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)",
+      "min": 2245,
+      "max": 2640
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 4000000,
+    "spellId": 99935,
+    "element": 3,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.nightfang",
+    "isNew": true,
+    "name": "Nightfang",
+    "description": "Sinks fangs of living shadow into the target's very soul.",
+    "manaCost": "30",
+    "minInt": 375,
+    "minWis": 90,
+    "minLevel": 150,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d30+75+self.int/4)*self.dark/target.r_dark)*6)",
+      "min": 1018,
+      "max": 1192
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 450000,
+    "spellId": 99936,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d30+75+self.int/4)*self.dark/target.r_dark)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.shadowblight",
+    "isNew": true,
+    "name": "Shadowblight",
+    "description": "Spreads a creeping blight of shadow over the target and everything near it. This spell has a large area of effect.",
+    "manaCost": "60",
+    "minInt": 500,
+    "minWis": 120,
+    "minLevel": 200,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d40+100+self.int/4)*self.dark/target.r_dark)*5)",
+      "min": 1130,
+      "max": 1325
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1000000,
+    "spellId": 99937,
+    "element": 6,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d40+100+self.int/4)*self.dark/target.r_dark)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d40+100+self.int/4)*self.dark/target.r_dark)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.soulrend",
+    "isNew": true,
+    "name": "Soulrend",
+    "description": "Tears at the target's soul with claws of pure darkness.",
+    "manaCost": "50",
+    "minInt": 625,
+    "minWis": 150,
+    "minLevel": 250,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d50+125+self.int/4)*self.dark/target.r_dark)*6)",
+      "min": 1693,
+      "max": 1987
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1250000,
+    "spellId": 99938,
+    "element": 6,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d50+125+self.int/4)*self.dark/target.r_dark)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.umbral_tide",
+    "isNew": true,
+    "name": "Umbral Tide",
+    "description": "Floods the area around the target with a tide of choking darkness. This spell has a large area of effect.",
+    "manaCost": "105",
+    "minInt": 875,
+    "minWis": 210,
+    "minLevel": 350,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d70+175+self.int/4)*self.dark/target.r_dark)*5)",
+      "min": 1973,
+      "max": 2318
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 3062500,
+    "spellId": 99939,
+    "element": 6,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d70+175+self.int/4)*self.dark/target.r_dark)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d70+175+self.int/4)*self.dark/target.r_dark)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.eclipse_of_ruin",
+    "isNew": true,
+    "name": "Eclipse of Ruin",
+    "description": "Blots out the sun above the target, and everything beneath the eclipse withers. This spell has a large area of effect.",
+    "manaCost": "120",
+    "minInt": 1000,
+    "minWis": 240,
+    "minLevel": 400,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)",
+      "min": 2255,
+      "max": 2650
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 4000000,
+    "spellId": 99940,
+    "element": 6,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.dawnflare",
+    "isNew": true,
+    "name": "Dawnflare",
+    "description": "Bursts with the blinding light of dawn around the target. This spell has a large area of effect.",
+    "manaCost": "60",
+    "minInt": 120,
+    "minWis": 500,
+    "minLevel": 200,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d40+100+self.wis/4)*self.light/target.r_light)*5)",
+      "min": 1130,
+      "max": 1325
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1000000,
+    "spellId": 99941,
+    "element": 5,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d40+100+self.wis/4)*self.light/target.r_light)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d40+100+self.wis/4)*self.light/target.r_light)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.radiant_spear",
+    "isNew": true,
+    "name": "Radiant Spear",
+    "description": "Hurls a spear of hardened light at the target.",
+    "manaCost": "50",
+    "minInt": 150,
+    "minWis": 625,
+    "minLevel": 250,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d50+125+self.wis/4)*self.light/target.r_light)*6)",
+      "min": 1693,
+      "max": 1987
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1250000,
+    "spellId": 99942,
+    "element": 5,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d50+125+self.wis/4)*self.light/target.r_light)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.seraphs_verdict",
+    "isNew": true,
+    "name": "Seraph's Verdict",
+    "description": "Passes a seraph's judgment upon the target in a column of holy light.",
+    "manaCost": "60",
+    "minInt": 180,
+    "minWis": 750,
+    "minLevel": 300,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d60+150+self.wis/4)*self.light/target.r_light)*6)",
+      "min": 2031,
+      "max": 2385
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 1800000,
+    "spellId": 99943,
+    "element": 5,
+    "targetType": 11,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d60+150+self.wis/4)*self.light/target.r_light)*6)"
+          },
+          {
+            "paramId": 2
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.hallowed_nova",
+    "isNew": true,
+    "name": "Hallowed Nova",
+    "description": "Detonates a nova of hallowed light around the target. This spell has a large area of effect.",
+    "manaCost": "105",
+    "minInt": 210,
+    "minWis": 875,
+    "minLevel": 350,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d70+175+self.wis/4)*self.light/target.r_light)*5)",
+      "min": 1973,
+      "max": 2318
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 3062500,
+    "spellId": 99944,
+    "element": 5,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d70+175+self.wis/4)*self.light/target.r_light)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d70+175+self.wis/4)*self.light/target.r_light)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.solar_apotheosis",
+    "isNew": true,
+    "name": "Solar Apotheosis",
+    "description": "Calls down the full fury of the sun upon the target and everything around it. This spell has a large area of effect.",
+    "manaCost": "120",
+    "minInt": 240,
+    "minWis": 1000,
+    "minLevel": 400,
+    "isAttack": true,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "damageAtReference": {
+      "formula": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)",
+      "min": 2255,
+      "max": 2650
+    },
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 4000000,
+    "spellId": 99945,
+    "element": 5,
+    "targetType": 19,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": true,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)"
+          },
+          {
+            "paramId": 2,
+            "expression": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)"
+          },
+          {
+            "paramId": 3,
+            "expression": "100"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.dawnwell_renewal",
+    "isNew": true,
+    "name": "Dawnwell Renewal",
+    "description": "Calls up a wellspring of dawnlight, greatly restoring health to the caster and any nearby grouped allies.",
+    "manaCost": "600",
+    "minInt": 180,
+    "minWis": 750,
+    "minLevel": 300,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 5,
+    "duration": "0",
+    "price": 1800000,
+    "spellId": 99946,
+    "element": 5,
+    "targetType": 15,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 1,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "(1d60+300+self.wis/2)*self.light/100"
+          },
+          {
+            "paramId": 2,
+            "expression": "(1d60+300+self.wis/2)*self.light/100"
           },
           {
             "paramId": 3,

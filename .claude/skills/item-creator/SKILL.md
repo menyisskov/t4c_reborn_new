@@ -74,8 +74,14 @@ string, as every current JSON item does.
 ## Picking `bodyPart`
 
 Use the `BodyPart` enum (full list in `references/stat-ids.md`). A few non-obvious ones:
-`BELT` and `CAPE` are real armor slots with meaningful AC in this codebase (not pure jewelry —
-see the empyrean "protector" belts, AC 38.1 each); gloves/gauntlets occupy **both**
+`BELT` and capes are real armor slots with meaningful AC in this codebase (not pure jewelry —
+see the empyrean "protector" belts, AC 38.1 each). **Capes/mantles go in `BACK`, not `CAPE`**:
+`BACK` is the paperdoll's cape slot (every legacy cape uses it); the `CAPE` enum value has no
+inventory slot, so an item there can't be seen or taken off. Recolored cape art exists as
+`NMS_NewCape01` (red) plus `__pal2` blue, `__pal3` purple, `__pal4` pink, `__pal5` orange,
+`__pal6` gold, `__pal7` green, `__pal8` black, `__pal9` white (inventory icon: the same name
+prefixed `Inv_`) — see the elemental archmage mantles, e.g. `geomancers_mantle.json`.
+Gloves/gauntlets occupy **both**
 `LEFT_HAND` and `RIGHT_HAND` via `bodyPart` + `secondaryBodyPart`, each with its own sprite.
 
 ## Picking `armorClass` and `requirements` (level-appropriate gating)
@@ -226,7 +232,7 @@ boost-focused with little or no `armorClass` — `armorClass: 0` is the norm. Un
 armor set where a stat budget is spread thin across pieces, a jewelry item is the *whole*
 budget on one slot, so its individual boosts run noticeably higher than any single armor piece's
 share (compare `ring_of_the_archer`'s `+150`/`+250` single-item boosts to the `+9`/`+14`
-per-element values on a 1-of-6 armor piece). `BELT` and `CAPE`, despite sounding like jewelry,
+per-element values on a 1-of-6 armor piece). Belts and capes (`BACK`), despite sounding like jewelry,
 are treated as real armor slots in this codebase (see the empyrean "protector" belts, which
 carry AC 38.1) — don't zero out their AC by default just because they're accessory-shaped.
 

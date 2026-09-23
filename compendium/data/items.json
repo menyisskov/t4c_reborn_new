@@ -3566,7 +3566,7 @@
   {
     "key": "bastion_sentinels_mantle",
     "name": "Bastion Sentinel's Mantle",
-    "bodyPart": "CAPE",
+    "bodyPart": "BACK",
     "appearanceEquippedPrimary": "PupBlackCape",
     "appearanceInventory": "64kIconCape",
     "price": 0.0,
@@ -7198,6 +7198,50 @@
     ]
   },
   {
+    "key": "geomancers_mantle",
+    "name": "Geomancer's Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal7",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal7",
+    "price": 1500000.0,
+    "weight": 2.0,
+    "armorClass": 40.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 250.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 150.0,
+      "wisdom": 600.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36206.0,
+        "statId": 19.0,
+        "expression": "60"
+      },
+      {
+        "boostId": 36207.0,
+        "statId": 15.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36208.0,
+        "statId": 4.0,
+        "expression": "50"
+      }
+    ]
+  },
+  {
     "key": "goblin_slayer",
     "name": "Goblin Slayer",
     "bodyPart": "WEAPON",
@@ -7339,6 +7383,50 @@
         "boostId": 31016.0,
         "statId": 10.0,
         "expression": "30"
+      }
+    ]
+  },
+  {
+    "key": "lightbringers_mantle",
+    "name": "Lightbringer's Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal9",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal9",
+    "price": 1500000.0,
+    "weight": 2.0,
+    "armorClass": 40.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 250.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 150.0,
+      "wisdom": 600.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36213.0,
+        "statId": 23.0,
+        "expression": "60"
+      },
+      {
+        "boostId": 36214.0,
+        "statId": 21.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36215.0,
+        "statId": 4.0,
+        "expression": "50"
       }
     ]
   },
@@ -7513,6 +7601,50 @@
     ]
   },
   {
+    "key": "pyromancers_mantle",
+    "name": "Pyromancer's Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01",
+    "appearanceInventory": "Inv_NMS_NewCape01",
+    "price": 1500000.0,
+    "weight": 2.0,
+    "armorClass": 40.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 250.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 600.0,
+      "wisdom": 150.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36200.0,
+        "statId": 17.0,
+        "expression": "60"
+      },
+      {
+        "boostId": 36201.0,
+        "statId": 13.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36202.0,
+        "statId": 1.0,
+        "expression": "50"
+      }
+    ]
+  },
+  {
     "key": "ring_of_the_archer",
     "name": "Ring of the Archer",
     "bodyPart": "RING1",
@@ -7537,9 +7669,53 @@
     ]
   },
   {
+    "key": "shadowmancers_mantle",
+    "name": "Shadowmancer's Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal8",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal8",
+    "price": 1500000.0,
+    "weight": 2.0,
+    "armorClass": 40.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 250.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 600.0,
+      "wisdom": 150.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36216.0,
+        "statId": 24.0,
+        "expression": "60"
+      },
+      {
+        "boostId": 36217.0,
+        "statId": 22.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36218.0,
+        "statId": 1.0,
+        "expression": "50"
+      }
+    ]
+  },
+  {
     "key": "sunken_vestment",
     "name": "Sunken Vestment",
-    "bodyPart": "CAPE",
+    "bodyPart": "BACK",
     "appearanceEquippedPrimary": "PupBlackCape",
     "appearanceInventory": "64kIconCape",
     "price": 15000.0,
@@ -7572,6 +7748,50 @@
         "boostId": 31013.0,
         "statId": 1.0,
         "expression": "10"
+      }
+    ]
+  },
+  {
+    "key": "tidecallers_mantle",
+    "name": "Tidecaller's Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal2",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal2",
+    "price": 1500000.0,
+    "weight": 2.0,
+    "armorClass": 40.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 250.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 600.0,
+      "wisdom": 150.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36203.0,
+        "statId": 18.0,
+        "expression": "60"
+      },
+      {
+        "boostId": 36204.0,
+        "statId": 14.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36205.0,
+        "statId": 1.0,
+        "expression": "50"
       }
     ]
   },
@@ -7740,6 +7960,55 @@
         "boostId": 32102.0,
         "statId": 21.0,
         "expression": "-10"
+      }
+    ]
+  },
+  {
+    "key": "windweavers_mantle",
+    "name": "Windweaver's Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal6",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal6",
+    "price": 1500000.0,
+    "weight": 2.0,
+    "armorClass": 40.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 250.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 375.0,
+      "wisdom": 375.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36209.0,
+        "statId": 16.0,
+        "expression": "60"
+      },
+      {
+        "boostId": 36210.0,
+        "statId": 12.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36211.0,
+        "statId": 1.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 36212.0,
+        "statId": 4.0,
+        "expression": "25"
       }
     ]
   },

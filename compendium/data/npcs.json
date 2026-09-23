@@ -3,7 +3,7 @@
     "id": "ArchmageThalindra",
     "origin": "new",
     "displayName": "Archmage Thalindra",
-    "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the Elder tier here and nowhere else on this coast.",
+    "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the high arts here and nowhere else on this coast. Name a school - fire, water, earth, air, dark or light - and I'll show you what it holds.",
     "topics": [
       {
         "keywords": [
@@ -12,9 +12,9 @@
           "teach",
           "spell"
         ],
-        "response": "Leyward Bastion, Veilstone Aegis, Wellspring Mercy, Sunscour, Gravebreaker - the Elder tier. Study hard, and the ley lines beneath this isle will lend you their strength.",
+        "response": "Veilstone Aegis, Wellspring Mercy, Leyward Bastion, Dawnwell Renewal, Sanctum Ward - the ley-line wards and mercies. For the killing arts, name a school: fire, water, earth, air, dark or light.",
         "actions": [
-          "OPEN_SPELL_LEARNING:leyward_bastion,veilstone_aegis,wellspring_mercy,sunscour,gravebreaker"
+          "OPEN_SPELL_LEARNING:veilstone_aegis,wellspring_mercy,leyward_bastion,dawnwell_renewal,sanctum_ward"
         ]
       },
       {
@@ -28,16 +28,78 @@
         "keywords": [
           "elder"
         ],
-        "response": "The Elder tier was never meant to be taught lightly - it demands a caster already tempered by two hundred levels of hard-won craft. Come back when you're ready.",
+        "response": "The high arts were never meant to be taught lightly. Every school offers the same six rungs - at the hundred-and-fiftieth level, then every fifty levels after, up to the four hundredth - and each rung demands a mind to match it. Come back when you're ready.",
         "actions": []
       },
       {
         "keywords": [
           "apex"
         ],
-        "response": "Beyond the Elder tier lies the Apex: Voidreave Lance, Stormcaller's Judgment, Sanctum Ward, Emberqueen's Wrath, and Cataclysm's Herald. Only a caster who has already mastered the Elder tier and tempered themselves against the world's very worst has any hope of surviving the toll they take.",
+        "response": "The apex of every school is the same distance up the ladder: the four hundredth level, and a mind of a thousand in its governing art. Name a school and I'll show you the whole climb.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "fire"
+        ],
+        "response": "Scorchbrand, Pyreburst, Magmaheart Lance, Sunforge Brand, Emberqueen's Wrath, Ashfall - the pyromancer's ladder. Fire answers to Intelligence.",
         "actions": [
-          "OPEN_SPELL_LEARNING:voidreave_lance,stormcallers_judgment,sanctum_ward,emberqueens_wrath,cataclysms_herald"
+          "OPEN_SPELL_LEARNING:scorchbrand,pyreburst,magmaheart_lance,sunforge_brand,emberqueens_wrath,ashfall"
+        ]
+      },
+      {
+        "keywords": [
+          "water"
+        ],
+        "response": "Rime Lance, Frostgale, Abyssal Spear, Tidebreaker, Drowning Deep, Cataclysm's Herald - the tidecaller's ladder. Water answers to Intelligence.",
+        "actions": [
+          "OPEN_SPELL_LEARNING:rime_lance,frostgale,abyssal_spear,tidebreaker,drowning_deep,cataclysms_herald"
+        ]
+      },
+      {
+        "keywords": [
+          "earth"
+        ],
+        "response": "Stonefang, Land Slide, Gravebreaker, Mountain's Fist, Worldroot Upheaval, Tectonic Ruin - the geomancer's ladder. Earth answers to Wisdom.",
+        "actions": [
+          "OPEN_SPELL_LEARNING:stonefang,land_slide,gravebreaker,mountains_fist,worldroot_upheaval,tectonic_ruin"
+        ]
+      },
+      {
+        "keywords": [
+          "air"
+        ],
+        "response": "Galespike, Thunderhead, Skysplitter, Tempest Lance, Stormcaller's Judgment, Heavenfall - the windweaver's ladder. The storm asks for Intelligence and Wisdom in equal measure.",
+        "actions": [
+          "OPEN_SPELL_LEARNING:galespike,thunderhead,skysplitter,tempest_lance,stormcallers_judgment,heavenfall"
+        ]
+      },
+      {
+        "keywords": [
+          "dark"
+        ],
+        "response": "Nightfang, Shadowblight, Soulrend, Voidreave Lance, Umbral Tide, Eclipse of Ruin - the shadowmancer's ladder. Darkness answers to Intelligence.",
+        "actions": [
+          "OPEN_SPELL_LEARNING:nightfang,shadowblight,soulrend,voidreave_lance,umbral_tide,eclipse_of_ruin"
+        ]
+      },
+      {
+        "keywords": [
+          "light"
+        ],
+        "response": "Sunscour, Dawnflare, Radiant Spear, Seraph's Verdict, Hallowed Nova, Solar Apotheosis - the lightbringer's ladder. Light answers to Wisdom.",
+        "actions": [
+          "OPEN_SPELL_LEARNING:sunscour,dawnflare,radiant_spear,seraphs_verdict,hallowed_nova,solar_apotheosis"
+        ]
+      },
+      {
+        "keywords": [
+          "mantle",
+          "mantles"
+        ],
+        "response": "Every master of a school should wear its colors. Ember red, tide blue, verdant green, storm gold, shadow black, dawn white - woven on the ley lines themselves, and they will only settle on the shoulders of a caster of real standing.",
+        "actions": [
+          "OPEN_SHOP:pyromancers_mantle,tidecallers_mantle,geomancers_mantle,windweavers_mantle,lightbringers_mantle,shadowmancers_mantle"
         ]
       }
     ],

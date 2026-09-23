@@ -118,6 +118,8 @@ writing new ids — another item may have been added since you last checked.
 `RIGHT_ARM`, `LEFT_HAND`, `RIGHT_HAND`, `SHIELD`, `WEAPON`, `WEAPON2`, `BOOT`, `ROBELEGS`,
 `HAIR`, `HAT`, `MASK`, `CAPE`.
 
+Use `BACK` for capes and mantles — `CAPE` has no inventory slot (see `SKILL.md`).
+
 Two-slot pieces (e.g. gauntlets/gloves) use `bodyPart` for one hand and `secondaryBodyPart` for
 the other (`LEFT_HAND` + `RIGHT_HAND`), each with its own
 `appearanceEquippedPrimary`/`appearanceEquippedSecondary` sprite — see

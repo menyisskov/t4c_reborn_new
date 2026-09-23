@@ -1,7 +1,7 @@
 {
   "key": "sunken_vestment",
   "name": "Sunken Vestment",
-  "bodyPart": "CAPE",
+  "bodyPart": "BACK",
   "appearanceEquippedPrimary": "PupBlackCape",
   "appearanceInventory": "64kIconCape",
   "price": 15000,

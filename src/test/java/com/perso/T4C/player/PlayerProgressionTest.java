@@ -73,4 +73,23 @@ class PlayerProgressionTest {
     assertTrue(player.getMaxHp() > 100);
     assertTrue(player.getMaxMana() > 100);
   }
+
+  @Test
+  void levelingStopsAtTheLevelCap() {
+    int cap = com.perso.T4C.config.GameConstants.MAX_PLAYER_LEVEL;
+    XpCurve curve = XpCurve.loadDefault();
+    assertEquals(0, curve.getXpToNextLevel(cap));
+    assertEquals(0, curve.getXpToNextLevel(cap + 1));
+    assertTrue(curve.getXpToNextLevel(cap - 1) > 0);
+
+    Player player = new Player();
+    player.setLevel(cap - 1);
+    player.setXpToNextLevel(curve.getXpToNextLevel(cap - 1));
+    new PlayerProgression(new Random(7)).addXp(player, Integer.MAX_VALUE, curve, false);
+    assertEquals(cap, player.getLevel());
+    assertEquals(0, player.getXpToNextLevel());
+
+    new PlayerProgression(new Random(7)).addXp(player, Integer.MAX_VALUE, curve, false);
+    assertEquals(cap, player.getLevel());
+  }
 }

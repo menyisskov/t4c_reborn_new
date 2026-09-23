@@ -813,7 +813,7 @@
   }
 
   // Precomputes the scales shared by the static render and the hover layer, so the two never
-  // drift apart. Level 1000 (xpToNextLevel 0, the level cap) is excluded from the curve itself
+  // drift apart. The level cap (xpToNextLevel 0, currently 400) is excluded from the curve itself
   // and called out in the caption instead - log(0) is undefined and it would otherwise plot as
   // a cliff to the axis floor.
   function xpChartScales() {

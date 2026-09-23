@@ -15,6 +15,57 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-23 — Level cap 400, rebirth limit, and an even spell ladder (T4C-0025)
+
+### Changed
+- The maximum character level is now 400. Characters above it are brought down to 400, and
+  experience stops counting once you reach it.
+- A character can now be reborn at most 50 times. The Oracle will tell you when your soul can
+  be purified no further. At 50 rebirths you start each life with 270 in every attribute.
+- The high-level spells have been rebuilt into one even ladder. Every school (fire, water,
+  earth, air, dark and light) now has exactly one attack spell at levels 150, 200, 250, 300,
+  350 and 400. Spells at the same level ask for the same stats and hit equally hard.
+- Spell stat requirements now fit the stats you actually have at that level. A level-L spell
+  asks for 2.5×L of its school's main stat (Intelligence for fire, water and dark; Wisdom for
+  earth and light) plus a little of the other. Air asks for Intelligence and Wisdom equally.
+  The level-400 spells need 1000 in the main stat. Spells no longer ask for levels (650, 900)
+  or stats you could never reach.
+- Nine existing high-level spells moved onto the new ladder. They keep their names, and anyone
+  who already knows them keeps them:
+  - Sunscour moved to level 150.
+  - Land Slide and Leyward Bastion stay at level 200.
+  - Gravebreaker moved to level 250 and now hits a single target.
+  - Voidreave Lance moved to level 300.
+  - Stormcaller's Judgment and Emberqueen's Wrath moved to level 350.
+  - Cataclysm's Herald and Sanctum Ward moved to level 400.
+- Archmage Thalindra in the Avalon Sanctuary now teaches by school. Say "fire", "water",
+  "earth", "air", "dark" or "light" to see that school's six spells. "train" still shows the
+  wards and healing spells.
+
+### Added
+- 29 new attack spells complete the ladder:
+  - Fire: Scorchbrand, Pyreburst, Magmaheart Lance, Sunforge Brand, Ashfall.
+  - Water: Rime Lance, Frostgale, Abyssal Spear, Tidebreaker, Drowning Deep.
+  - Earth: Stonefang, Mountain's Fist, Worldroot Upheaval, Tectonic Ruin.
+  - Air: Galespike, Thunderhead, Skysplitter, Tempest Lance, Heavenfall.
+  - Dark: Nightfang, Shadowblight, Soulrend, Umbral Tide, Eclipse of Ruin.
+  - Light: Dawnflare, Radiant Spear, Seraph's Verdict, Hallowed Nova, Solar Apotheosis.
+- Dawnwell Renewal, a level-300 light spell that heals you and your nearby group.
+- Six elemental archmage mantles, one per school, in the school's color. Say "mantle" to
+  Archmage Thalindra to buy them. Each boosts its school's spell power and resistance and adds
+  to your main casting stat. Each needs 600 of that school's main stat; the air mantle needs
+  375 Intelligence and 375 Wisdom instead.
+  - Pyromancer's Mantle (red, fire)
+  - Tidecaller's Mantle (blue, water)
+  - Geomancer's Mantle (green, earth)
+  - Windweaver's Mantle (gold, air)
+  - Shadowmancer's Mantle (black, dark)
+  - Lightbringer's Mantle (white, light)
+
+### Fixed
+- The Bastion Sentinel's Mantle and the Sunken Vestment couldn't be seen or taken off once
+  worn, because the character screen had no slot for them. They now go in the normal cape slot.
+
 ## 2026-09-23 — Kraanhold, a new high-level continent (T4C-0024)
 
 ### Added
