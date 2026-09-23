@@ -479,3 +479,9 @@ footer#pagefoot p { max-width: 640px; margin: 0 auto; font-size: 12px; color: va
 .pin-legend .pin-dot.pin-boss { background: var(--accent); }
 .pin-legend .pin-dot.pin-npc { background: #6fb3e0; }
 .pin-legend .pin-dot.pin-trash { background: var(--text-faint); }
+
+/* Rebirths page (T4C-0026) */
+.rebirth-steps { margin: 0 0 12px; padding-left: 20px; line-height: 1.6; }
+.rebirth-steps li { margin-bottom: 4px; }
+.rebirth-vendor { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+.rebirth-vendor p { margin: 4px 0 0; color: var(--text-dim); }

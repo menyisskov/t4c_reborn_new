@@ -58,6 +58,21 @@ public final class SeraphAuraService {
     return changed;
   }
 
+  /** Percent chance, per hit taken, that the aura heals the Seraph and nearby allies. */
+  public static int healingChance(int rebirthCount) {
+    return rebirthCount <= 0 ? 0 : Math.min(100, rebirthCount + 4);
+  }
+
+  /** Percent chance, per hit taken, that the aura burns the attacker. */
+  public static int retaliationChance(int rebirthCount) {
+    return rebirthCount <= 0 ? 0 : Math.min(100, rebirthCount * 5);
+  }
+
+  /** Percent chance, per hit landed, of a fire burst around the Seraph. */
+  public static int areaBurstChance(int rebirthCount) {
+    return rebirthCount <= 0 ? 0 : Math.min(100, rebirthCount);
+  }
+
   public static boolean hasSeraphWings(Player player) {
     if (player == null || player.getEquippedItems() == null) {
       return false;
@@ -119,7 +134,7 @@ public final class SeraphAuraService {
     if (rebirthCount <= 0) {
       return new OnHitResult(false, 0, 0, false, 0);
     }
-    boolean healingTriggered = succeeds(rebirthCount + 4, random);
+    boolean healingTriggered = succeeds(healingChance(rebirthCount), random);
     int centralHealing = 0;
     int radialHealing = 0;
     if (healingTriggered) {
@@ -127,7 +142,7 @@ public final class SeraphAuraService {
       centralHealing = baseHealing + d5(random);
       radialHealing = baseHealing + d5(random);
     }
-    boolean retaliationTriggered = succeeds(rebirthCount * 5, random);
+    boolean retaliationTriggered = succeeds(retaliationChance(rebirthCount), random);
     int retaliationDamage = 0;
     if (retaliationTriggered && attackerFireResistance < FIRE_RESIST_IMMUNITY) {
       int rolledDamage = stats.sum() / 10 + d5(random);
@@ -150,7 +165,7 @@ public final class SeraphAuraService {
 
   public static OnAttackHitResult onAttackHit(int rebirthCount, RandomGenerator random) {
     Objects.requireNonNull(random, "random");
-    return new OnAttackHitResult(succeeds(rebirthCount, random), AREA_RADIUS);
+    return new OnAttackHitResult(succeeds(areaBurstChance(rebirthCount), random), AREA_RADIUS);
   }
 
   public static int rollAreaDamage(Player player, int targetFireResistance) {
@@ -186,6 +201,18 @@ public final class SeraphAuraService {
     }
     int rolledDamage = stats.sum() / 5 - d5(random);
     return targetArmorClass > MAX_DAMAGEABLE_ARMOR_CLASS ? 0 : rolledDamage;
+  }
+
+  /**
+   * The real percent probability that {@link #succeeds} passes for a given chance value: it rolls
+   * 0-100 inclusive (101 outcomes) and passes on {@code <= chance}, so a chance of {@code c}
+   * (0 &lt; c &lt; 100) fires on {@code (c + 1) / 101} of rolls, e.g. 1 -> ~1.98%. Rounded to one
+   * decimal place.
+   */
+  public static double effectivePercent(int chance) {
+    if (chance <= 0) return 0d;
+    if (chance >= 100) return 100d;
+    return Math.round((chance + 1) * 1000d / 101d) / 10d;
   }
 
   private static boolean succeeds(int chance, RandomGenerator random) {

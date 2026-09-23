@@ -15,6 +15,14 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-23 — Rebirths page on the reference website (T4C-0026)
+
+### Added
+- The reference website has a new "Rebirths" page listing all 50 rebirths. For each one it
+  shows the level you need, the attributes you start with, the energy points you get to spend,
+  and how strong your Seraph aura becomes. It also explains how to be reborn and what each of
+  Alphan's associates sells for energy points.
+
 ## 2026-09-23 — Level cap 400, rebirth limit, and an even spell ladder (T4C-0025)
 
 ### Changed

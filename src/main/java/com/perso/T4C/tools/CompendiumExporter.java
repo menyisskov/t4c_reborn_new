@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.perso.T4C.combat.SeraphAuraService;
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.XpCurve;
@@ -13,6 +14,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.monster.json.MonsterJsonLoader;
 import com.perso.T4C.npc.ActionType;
+import com.perso.T4C.npc.behavior.RebirthBehavior;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.quest.QuestDef;
@@ -191,6 +193,7 @@ public final class CompendiumExporter {
     writeJson(outDir.resolve("shops.json"), shops);
     writeJson(outDir.resolve("lootSources.json"), lootSources);
     writeJson(outDir.resolve("xpcurve.json"), exportXpCurve());
+    writeJson(outDir.resolve("rebirths.json"), exportRebirths());
 
     // Bundle everything (generated + the hand-authored zones/statids/meta files, if present)
     // into a single data.js so the site works by opening index.html directly, no local server
@@ -205,6 +208,7 @@ public final class CompendiumExporter {
     bundle.put("shops", shops);
     bundle.put("lootSources", lootSources);
     bundle.put("xpCurve", exportXpCurve());
+    bundle.put("rebirths", exportRebirths());
     bundle.put("zones", readHandAuthored(outDir.resolve("zones.json")));
     bundle.put("statIds", readHandAuthored(outDir.resolve("statids.json")));
     bundle.put("meta", readHandAuthored(outDir.resolve("meta.json")));
@@ -706,6 +710,60 @@ public final class CompendiumExporter {
     out.put("serverXpRate", GameConstants.SERVER_XP_RATE);
     out.put("entries", entries);
     return out;
+  }
+
+  // -------------------------------------------------------------- rebirths
+
+  /**
+   * One row per rebirth (1 to {@link GameConstants#REBIRTH_MAX_REMORTS}) for the Rebirths page,
+   * computed from the same helpers the Oracle, RebirthBehavior and SeraphAuraService use (aura
+   * chances are the real per-roll probability, see SeraphAuraService#effectivePercent), plus a
+   * plain-language summary of what the rebirth energy points buy. The energy shop costs mirror
+   * RemortNPC2-5 (Betran, Caplan, Del Aan, Epilan); keep them in sync if those NPCs change.
+   */
+  private static Map<String, Object> exportRebirths() {
+    List<Map<String, Object>> rows = new ArrayList<>();
+    for (int n = 1; n <= GameConstants.REBIRTH_MAX_REMORTS; n++) {
+      Map<String, Object> row = new LinkedHashMap<>();
+      row.put("rebirth", n);
+      row.put("requiredLevel", RebirthBehavior.requiredLevelFor(n));
+      row.put("startingAttributes", RebirthBehavior.startingAttributeFor(n));
+      row.put("energyPoints", RebirthBehavior.energyPointsFor(n));
+      row.put("auraHealChance", SeraphAuraService.effectivePercent(SeraphAuraService.healingChance(n)));
+      row.put("auraRetaliationChance", SeraphAuraService.effectivePercent(SeraphAuraService.retaliationChance(n)));
+      row.put("auraBurstChance", SeraphAuraService.effectivePercent(SeraphAuraService.areaBurstChance(n)));
+      rows.add(row);
+    }
+    List<Map<String, Object>> energyShop = new ArrayList<>();
+    energyShop.add(energyVendor("Betran", "Attributes",
+        "Raises strength, endurance, agility, intelligence or wisdom by 1, up to 10 above your"
+            + " new starting value. Each attribute costs more the higher you push it: the 1st"
+            + " point costs 1, the 2nd-4th cost 2, the 5th-7th cost 3, the 8th costs 4 and the"
+            + " 9th-10th cost 5 (30 points to max one attribute)."));
+    energyShop.add(energyVendor("Caplan", "Elemental power",
+        "Raises your power in fire, water, air, earth, light or dark by 5. Costs 1 point at"
+            + " first, rising as that element's power grows."));
+    energyShop.add(energyVendor("Del Aan", "Elemental resistance",
+        "Raises your resistance to fire, water, air, earth or dark by 10 for 2 points."));
+    energyShop.add(energyVendor("Epilan", "Health and mana",
+        "Adds 10 maximum health or 5 maximum mana for 1 point each, with no limit - use it to"
+            + " spend whatever is left over."));
+    Map<String, Object> out = new LinkedHashMap<>();
+    out.put("maxRebirths", GameConstants.REBIRTH_MAX_REMORTS);
+    out.put("maxLevel", GameConstants.MAX_PLAYER_LEVEL);
+    out.put("firstRebirthLevel", RebirthBehavior.FIRST_REBIRTH_LEVEL);
+    out.put("levelPerPreviousRebirth", RebirthBehavior.LEVEL_PER_PREVIOUS_REBIRTH);
+    out.put("energyShop", energyShop);
+    out.put("rows", rows);
+    return out;
+  }
+
+  private static Map<String, Object> energyVendor(String npc, String buys, String details) {
+    Map<String, Object> m = new LinkedHashMap<>();
+    m.put("npc", npc);
+    m.put("buys", buys);
+    m.put("details", details);
+    return m;
   }
 
   // ------------------------------------------------------------------- write
