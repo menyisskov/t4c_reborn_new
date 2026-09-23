@@ -32,8 +32,12 @@ import java.util.List;
  *
  * <p>Ground layer only - collision is set to {@code CollisionType.NONE} (ordinary walkable
  * ground, the same type the vast majority of existing outdoor terrain already uses) for every
- * painted tile; decor (trees/rocks) is intentionally left untouched, a deliberate simplification
- * matching {@code MinimapExporter}'s same "ground layer only" scope note.
+ * painted tile that has no decor sprite on it; decor (trees/rocks, but also pre-existing
+ * structures like dungeon walls this footprint happens to overlap) is intentionally left
+ * untouched - both its sprite *and* its collision - since decor keeps rendering regardless of the
+ * ground layer underneath, and zeroing collision under a still-rendered wall would let players
+ * walk straight through it. Deliberate simplification matching {@code MinimapExporter}'s same
+ * "ground layer only" scope note.
  */
 public final class ContinentPainter {
   private ContinentPainter() {}
@@ -87,7 +91,10 @@ public final class ContinentPainter {
           String spriteName = catalog.tileName(terrainBase, x, y);
           if (spriteName == null) continue;
           map.setGroundSpriteName(x, y, spriteName);
-          colData[y * colWidth + x] = (byte) NONE_COLLISION;
+          String decorHere = map.getDecorSpriteName(x, y);
+          if (decorHere == null || decorHere.isBlank()) {
+            colData[y * colWidth + x] = (byte) NONE_COLLISION;
+          }
           painted++;
         }
       }
