@@ -15,6 +15,13 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-23 — Changelog writing policy: player-facing, not technical (T4C-0020)
+
+### Notes
+- `CLAUDE.md` now spells out that this changelog is patch notes for players, not an engineering
+  log: entries describe what was added, changed, fixed, or removed in plain language, with no
+  code names, file paths, or other implementation detail. No player-visible effect.
+
 ## 2026-09-22 — Zone access quests, Avalon dead-end fix, dynamic fast travel (T4C-0019)
 
 _T4C-0018 is reserved by a separate, still-open pass (spell renames/gear); this one branched
