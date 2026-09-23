@@ -203,6 +203,18 @@ public final class SeraphAuraService {
     return targetArmorClass > MAX_DAMAGEABLE_ARMOR_CLASS ? 0 : rolledDamage;
   }
 
+  /**
+   * The real percent probability that {@link #succeeds} passes for a given chance value: it rolls
+   * 0-100 inclusive (101 outcomes) and passes on {@code <= chance}, so a chance of {@code c}
+   * (0 &lt; c &lt; 100) fires on {@code (c + 1) / 101} of rolls, e.g. 1 -> ~1.98%. Rounded to one
+   * decimal place.
+   */
+  public static double effectivePercent(int chance) {
+    if (chance <= 0) return 0d;
+    if (chance >= 100) return 100d;
+    return Math.round((chance + 1) * 1000d / 101d) / 10d;
+  }
+
   private static boolean succeeds(int chance, RandomGenerator random) {
     return chance > 0 && random.nextInt(101) <= chance;
   }

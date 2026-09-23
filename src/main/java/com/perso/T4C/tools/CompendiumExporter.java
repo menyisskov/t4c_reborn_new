@@ -716,7 +716,8 @@ public final class CompendiumExporter {
 
   /**
    * One row per rebirth (1 to {@link GameConstants#REBIRTH_MAX_REMORTS}) for the Rebirths page,
-   * computed from the same helpers the Oracle, RebirthBehavior and SeraphAuraService use, plus a
+   * computed from the same helpers the Oracle, RebirthBehavior and SeraphAuraService use (aura
+   * chances are the real per-roll probability, see SeraphAuraService#effectivePercent), plus a
    * plain-language summary of what the rebirth energy points buy. The energy shop costs mirror
    * RemortNPC2-5 (Betran, Caplan, Del Aan, Epilan); keep them in sync if those NPCs change.
    */
@@ -728,9 +729,9 @@ public final class CompendiumExporter {
       row.put("requiredLevel", RebirthBehavior.requiredLevelFor(n));
       row.put("startingAttributes", RebirthBehavior.startingAttributeFor(n));
       row.put("energyPoints", RebirthBehavior.energyPointsFor(n));
-      row.put("auraHealChance", SeraphAuraService.healingChance(n));
-      row.put("auraRetaliationChance", SeraphAuraService.retaliationChance(n));
-      row.put("auraBurstChance", SeraphAuraService.areaBurstChance(n));
+      row.put("auraHealChance", SeraphAuraService.effectivePercent(SeraphAuraService.healingChance(n)));
+      row.put("auraRetaliationChance", SeraphAuraService.effectivePercent(SeraphAuraService.retaliationChance(n)));
+      row.put("auraBurstChance", SeraphAuraService.effectivePercent(SeraphAuraService.areaBurstChance(n)));
       rows.add(row);
     }
     List<Map<String, Object>> energyShop = new ArrayList<>();

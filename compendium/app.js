@@ -1044,7 +1044,8 @@
       "</tr></thead><tbody>" + rows + "</tbody></table></div>" +
       '<p class="lead">Starting attributes apply to all five (strength, endurance, agility, intelligence, wisdom). ' +
       "Aura chances: heal is rolled when you are hit and heals you and nearby allies; burn is rolled when you are hit and damages the attacker; " +
-      "fire burst is rolled when you land a hit and damages enemies around you.</p>"
+      "fire burst is rolled when you land a hit and damages enemies around you. " +
+      "These are the real odds per roll (the game rolls 0-100 inclusive), rounded to one decimal.</p>"
     );
   });
 

@@ -37,4 +37,14 @@ class RebirthBehaviorTableTest {
     assertEquals(100, SeraphAuraService.retaliationChance(50));
     assertEquals(50, SeraphAuraService.areaBurstChance(50));
   }
+
+  @Test
+  void effectivePercentMatchesTheInclusiveHundredRoll() {
+    assertEquals(0d, SeraphAuraService.effectivePercent(0));
+    assertEquals(2.0d, SeraphAuraService.effectivePercent(1)); // 2/101
+    assertEquals(5.9d, SeraphAuraService.effectivePercent(5)); // 6/101
+    assertEquals(50.5d, SeraphAuraService.effectivePercent(50)); // 51/101
+    assertEquals(100d, SeraphAuraService.effectivePercent(100));
+    assertEquals(100d, SeraphAuraService.effectivePercent(120));
+  }
 }
