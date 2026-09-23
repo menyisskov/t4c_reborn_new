@@ -55,7 +55,21 @@ public final class YsoldeTheVeiledMatriarch extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("ysoldes_veiled_circlet", 0.02f),
             new MonsterDef.LootDrop("mana_elixir", 0.3f),
-            new MonsterDef.LootDrop("potion_of_mana", 0.3f)),
+            new MonsterDef.LootDrop("potion_of_mana", 0.3f),
+            // T4C-0021: dark-flavor source for the Ancient Celestial/Empyrean armor sets
+            // (ArmorSetGenerator) - previously generated with zero acquisition path.
+            new MonsterDef.LootDrop("ancient_celestial_dark_armor", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_boots", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_gauntlets", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_helmet", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_leggings", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_protector", 0.025f),
+            new MonsterDef.LootDrop("empyrean_dark_armor", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_boots", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_gauntlets", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_helmet", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_leggings", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_protector", 0.012f)),
         false,
         0.0f,
         300,

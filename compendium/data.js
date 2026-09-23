@@ -215,6 +215,54 @@ window.T4C_DATA = {
         {
           "item": "mordrenns_drowned_cowl",
           "chance": 0.01
+        },
+        {
+          "item": "ancient_celestial_water_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_water_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -386,6 +434,54 @@ window.T4C_DATA = {
         {
           "item": "ignaroks_emberfang_claw",
           "chance": 0.008
+        },
+        {
+          "item": "ancient_celestial_fire_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_fire_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -508,6 +604,58 @@ window.T4C_DATA = {
         {
           "item": "bow_of_centaur_slaying",
           "chance": 0.015
+        },
+        {
+          "item": "ring_of_the_archer",
+          "chance": 0.02
+        },
+        {
+          "item": "ancient_celestial_archer_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_archer_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -941,6 +1089,54 @@ window.T4C_DATA = {
         {
           "item": "torch",
           "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_light_armor",
+          "chance": 0.006
+        },
+        {
+          "item": "ancient_celestial_light_boots",
+          "chance": 0.006
+        },
+        {
+          "item": "ancient_celestial_light_gauntlets",
+          "chance": 0.006
+        },
+        {
+          "item": "ancient_celestial_light_helmet",
+          "chance": 0.006
+        },
+        {
+          "item": "ancient_celestial_light_leggings",
+          "chance": 0.006
+        },
+        {
+          "item": "ancient_celestial_light_protector",
+          "chance": 0.006
+        },
+        {
+          "item": "empyrean_light_armor",
+          "chance": 0.003
+        },
+        {
+          "item": "empyrean_light_boots",
+          "chance": 0.003
+        },
+        {
+          "item": "empyrean_light_gauntlets",
+          "chance": 0.003
+        },
+        {
+          "item": "empyrean_light_helmet",
+          "chance": 0.003
+        },
+        {
+          "item": "empyrean_light_leggings",
+          "chance": 0.003
+        },
+        {
+          "item": "empyrean_light_protector",
+          "chance": 0.003
         }
       ],
       "attacks": [
@@ -1185,6 +1381,54 @@ window.T4C_DATA = {
         {
           "item": "heartfire_of_the_greater_drake",
           "chance": 0.01
+        },
+        {
+          "item": "ancient_celestial_warrior_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -1606,6 +1850,54 @@ window.T4C_DATA = {
         {
           "item": "potion_of_mana",
           "chance": 0.3
+        },
+        {
+          "item": "ancient_celestial_dark_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -1793,6 +2085,54 @@ window.T4C_DATA = {
         {
           "item": "healing_potion",
           "chance": 0.3
+        },
+        {
+          "item": "ancient_celestial_earth_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_earth_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_earth_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_earth_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_earth_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_earth_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_earth_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_earth_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_earth_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_earth_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_earth_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_earth_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -2115,6 +2455,54 @@ window.T4C_DATA = {
         {
           "item": "archdrakes_molten_heart",
           "chance": 0.008
+        },
+        {
+          "item": "ancient_celestial_air_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_air_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -2282,6 +2670,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d17+6+self.int/23)*self.fire/target.r_fire)",
+        "min": 7,
+        "max": 23
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 532,
@@ -2323,6 +2716,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d28+16+self.int/19)*self.fire/target.r_fire)",
+        "min": 19,
+        "max": 46
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 20372,
@@ -2364,6 +2762,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d45+31+self.int/16)*self.fire/target.r_fire)",
+        "min": 37,
+        "max": 81
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 24370,
@@ -2405,6 +2808,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d52+37+self.int/14)*self.fire/target.r_fire)",
+        "min": 44,
+        "max": 95
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 34726,
@@ -2508,6 +2916,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d21+13+self.int/20)*self.water/target.r_water)",
+        "min": 15,
+        "max": 35
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 17200,
@@ -2549,6 +2962,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d30+12+self.int/17)*self.water/target.r_water)",
+        "min": 16,
+        "max": 45
+      },
       "cooldownSeconds": 0,
       "duration": "501",
       "price": 15466,
@@ -2607,6 +3025,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d20+21+self.int/16)*self.water/target.r_water)",
+        "min": 25,
+        "max": 44
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 20625,
@@ -2648,6 +3071,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d39+31+self.int/15)*self.water/target.r_water)",
+        "min": 36,
+        "max": 74
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 30418,
@@ -2689,6 +3117,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d16+6+self.int/42+self.wis/42)*self.air/target.r_air)",
+        "min": 8,
+        "max": 23
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 2388,
@@ -2730,6 +3163,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d26+12+self.int/36+self.wis/36)*self.air/target.r_air)",
+        "min": 14,
+        "max": 39
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 12348,
@@ -2865,6 +3303,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d37+20+self.int/30+self.wis/30)*self.air/target.r_air)",
+        "min": 23,
+        "max": 59
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 32545,
@@ -3029,6 +3472,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d9+11+self.wis/22)*self.earth/target.r_earth)",
+        "min": 12,
+        "max": 20
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 1328,
@@ -3070,6 +3518,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d5+26+self.wis/17)*self.earth/target.r_earth)",
+        "min": 29,
+        "max": 33
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 14292,
@@ -3280,6 +3733,11 @@ window.T4C_DATA = {
       "lineOfSight": false,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "0",
+        "min": 0,
+        "max": 0
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 67637,
@@ -3322,6 +3780,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d61+53+self.int/11)*self.water/target.r_water)",
+        "min": 64,
+        "max": 124
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 82378,
@@ -3363,6 +3826,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d41+23+self.int/28+self.wis/28)*self.air/target.r_air)",
+        "min": 27,
+        "max": 67
+      },
       "cooldownSeconds": 0,
       "duration": "100",
       "price": 41584,
@@ -3405,6 +3873,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d52+30+self.int/24+self.wis/24)*self.air/target.r_air)",
+        "min": 35,
+        "max": 86
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 67637,
@@ -3491,6 +3964,11 @@ window.T4C_DATA = {
       "lineOfSight": false,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "0",
+        "min": 0,
+        "max": 0
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 88576,
@@ -3533,6 +4011,11 @@ window.T4C_DATA = {
       "lineOfSight": false,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1000*self.int/self.wis)*100/target.r_fire)",
+        "min": 0,
+        "max": 0
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 233,
@@ -3926,6 +4409,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d157+125+self.int/7)*self.fire/target.r_fire)",
+        "min": 170,
+        "max": 326
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 307129,
@@ -3968,6 +4456,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d89+68+self.int/10)*self.fire/target.r_fire)",
+        "min": 86,
+        "max": 174
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 103297,
@@ -4010,6 +4503,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d58+65+self.int/9)*self.fire/target.r_fire)",
+        "min": 87,
+        "max": 144
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 132824,
@@ -4051,6 +4549,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d122+96+self.int/8)*self.fire/target.r_fire)",
+        "min": 126,
+        "max": 247
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 196028,
@@ -4093,6 +4596,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d76+89+self.int/8)*self.fire/target.r_fire)",
+        "min": 122,
+        "max": 197
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 226492,
@@ -4134,6 +4642,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "if(target.r_air<4000?-(1d26+33+self.int/13):0)",
+        "min": 0,
+        "max": 0
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 46410,
@@ -4175,6 +4688,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d72+64+self.int/10)*self.water/target.r_water)",
+        "min": 78,
+        "max": 149
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 110825,
@@ -4216,6 +4734,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d83+75+self.int/9)*self.water/target.r_water)",
+        "min": 92,
+        "max": 174
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 151580,
@@ -4258,6 +4781,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d52+72+self.int/8)*self.water/target.r_water)",
+        "min": 94,
+        "max": 145
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 187630,
@@ -4300,6 +4828,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d101+94+self.int/8)*self.water/target.r_water)",
+        "min": 118,
+        "max": 218
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 222039,
@@ -4342,6 +4875,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d65+93+self.int/7)*self.water/target.r_water)",
+        "min": 125,
+        "max": 189
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 287334,
@@ -4629,6 +5167,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d144+67+self.int/16+self.wis/16)*self.air/target.r_air)",
+        "min": 79,
+        "max": 222
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 208881,
@@ -4671,6 +5214,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d159+75+self.int/14+self.wis/14)*self.air/target.r_air)",
+        "min": 90,
+        "max": 248
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 249249,
@@ -4802,6 +5350,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level))",
+        "min": 22,
+        "max": 26
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 18843,
@@ -6476,6 +7029,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d37+101+self.wis/9)*self.earth/target.r_earth)",
+        "min": 112,
+        "max": 148
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 159341,
@@ -7277,6 +7835,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*3)",
+        "min": 401,
+        "max": 508
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 750000,
@@ -7482,6 +8045,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*12)",
+        "min": 531,
+        "max": 591
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 115000,
@@ -7497,7 +8065,7 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*6)"
+              "expression": "-(((1d6+27+self.wis/16)*self.light/target.r_light)*self.wis/(20+2*self.level)*12)"
             },
             {
               "paramId": 2
@@ -7523,6 +8091,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)",
+        "min": 3913,
+        "max": 4921
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 1500000,
@@ -7538,11 +8111,11 @@ window.T4C_DATA = {
           "parameters": [
             {
               "paramId": 1,
-              "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*6)"
+              "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)"
             },
             {
               "paramId": 2,
-              "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*6)"
+              "expression": "-(((1d37+101+self.wis/9)*self.earth/target.r_earth)*28)"
             },
             {
               "paramId": 3,
@@ -7565,6 +8138,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d42+112+self.int/10)*self.dark/target.r_dark)*7)",
+        "min": 973,
+        "max": 1260
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 1850000,
@@ -7606,6 +8184,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d55+150+self.int/9)*self.air/target.r_air)*10)",
+        "min": 1910,
+        "max": 2450
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 2400000,
@@ -7785,6 +8368,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d70+190+self.int/8)*self.fire/target.r_fire)*13)",
+        "min": 3198,
+        "max": 4095
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 3100000,
@@ -7827,6 +8415,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d44+48+self.int/13)*self.water/target.r_water)",
+        "min": 57,
+        "max": 100
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 68000,
@@ -7941,6 +8534,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-((1d111+86+self.int/10)*self.fire/target.r_fire)",
+        "min": 108,
+        "max": 218
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 190000,
@@ -8177,6 +8775,11 @@ window.T4C_DATA = {
       "lineOfSight": true,
       "minDamage": 0,
       "maxDamage": 0,
+      "damageAtReference": {
+        "formula": "-(((1d95+250+self.int/7)*self.water/target.r_water)*18)",
+        "min": 5958,
+        "max": 7650
+      },
       "cooldownSeconds": 0,
       "duration": "0",
       "price": 4200000,
@@ -17193,6 +17796,240 @@ window.T4C_DATA = {
     }
   ],
   "shops": {
+    "ChryseidaYolangda": [
+      "torch",
+      "light_healing_potion",
+      "healing_potion",
+      "serious_healing_potion",
+      "potion_of_mana"
+    ],
+    "Fali": [
+      "torch",
+      "light_healing_potion",
+      "potion_of_mana",
+      "healing_potion",
+      "serious_healing_potion",
+      "mana_elixir"
+    ],
+    "Gwen": [
+      "cloth_pants",
+      "cloth_vest",
+      "leather_belt",
+      "leather_gloves",
+      "leather_helmet",
+      "leather_pants",
+      "leather_boots",
+      "leather_armor",
+      "red_cape",
+      "studded_leather_belt",
+      "studded_leather_gloves",
+      "studded_leather_helmet",
+      "studded_leather_pants",
+      "studded_leather_boots",
+      "studded_leather_armor",
+      "wooden_shield",
+      "round_shield"
+    ],
+    "HerewaldIronbender": [
+      "chainmail",
+      "chainmail_gloves",
+      "chainmail_coif",
+      "chainmail_girdle",
+      "chainmail_leggings",
+      "chainmail_boots",
+      "scale_mail",
+      "scalemail_gauntlets",
+      "scalemail_helmet",
+      "scalemail_protector",
+      "scalemail_leggings",
+      "scalemail_boots",
+      "large_shield",
+      "tower_shield"
+    ],
+    "Karahn": [
+      "rusted_short_sword_1",
+      "rusted_long_sword_1",
+      "polished_short_sword_1",
+      "polished_long_sword_1",
+      "polished_broadsword_1",
+      "rusted_hand_axe_1",
+      "polished_hand_axe_1",
+      "rusted_dirk_1",
+      "rusted_dagger_1",
+      "polished_dirk_1",
+      "polished_dagger_1",
+      "wooden_club_1",
+      "steel_reinforced_club_1",
+      "steel_reinforced_warhammer_1",
+      "fine_steel_warhammer_1",
+      "wooden_staff_1",
+      "iron_staff_1",
+      "quarterstaff_1",
+      "staff_of_thorns_1",
+      "ashwood_flatbow_1",
+      "ashwood_longbow_1",
+      "ashwood_reflex_bow_1",
+      "elm_flatbow_1",
+      "elm_longbow_1",
+      "elm_reflex_bow_1",
+      "elm_recurve_bow_1"
+    ],
+    "LordoftheShops": [
+      "cedar_longbow_1",
+      "cedar_longbow_2",
+      "cedar_reflex_bow",
+      "cedar_reflex_bow_1",
+      "cedar_reflex_bow_2",
+      "cedar_recurve_bow",
+      "cedar_recurve_bow_1",
+      "cedar_recurve_bow_2",
+      "cedar_compound_bow",
+      "cedar_compound_bow_1",
+      "cedar_compound_bow_2",
+      "cedar_composite_bow",
+      "cedar_composite_bow_1",
+      "cedar_composite_bow_2",
+      "cedar_composite_bow_3",
+      "lancewood_reflex_bow",
+      "lancewood_reflex_bow_1",
+      "lancewood_reflex_bow_2",
+      "lancewood_recurve_bow",
+      "lancewood_recurve_bow_1",
+      "lancewood_recurve_bow_2",
+      "lancewood_compound_bow",
+      "lancewood_compound_bow_1",
+      "lancewood_compound_bow_2",
+      "lancewood_composite_bow",
+      "lancewood_composite_bow_1",
+      "lancewood_composite_bow_2",
+      "lancewood_composite_bow_3",
+      "black_locust_recurve_bow",
+      "black_locust_recurve_bow_1",
+      "black_locust_recurve_bow_2",
+      "black_locust_compound_bow",
+      "black_locust_compound_bow_1",
+      "black_locust_compound_bow_2",
+      "black_locust_composite_bow",
+      "black_locust_composite_bow_1",
+      "black_locust_composite_bow_2",
+      "black_locust_composite_bow_4",
+      "black_locust_composite_bow_5",
+      "mithril_morningstar_1",
+      "mithril_morningstar_2",
+      "mithril_morningstar_3",
+      "ancient_morningstar",
+      "ancient_morningstar_1",
+      "ancient_morningstar_2",
+      "high_metal_broad_axe",
+      "high_metal_broad_axe_1",
+      "high_metal_broad_axe_2",
+      "high_metal_broad_axe_3",
+      "mithril_battle_axe",
+      "mithril_battle_axe_1",
+      "mithril_battle_axe_2",
+      "mithril_broad_axe",
+      "mithril_broad_axe_1",
+      "mithril_broad_axe_2",
+      "mithril_broad_axe_3",
+      "ancient_broad_axe",
+      "ancient_broad_axe_1",
+      "ancient_broad_axe_2",
+      "mithril_long_sword",
+      "mithril_long_sword_1",
+      "mithril_long_sword_2",
+      "mithril_broadsword",
+      "mithril_broadsword_1",
+      "mithril_broadsword_2",
+      "mithril_scimitar",
+      "mithril_scimitar_1",
+      "mithril_scimitar_2",
+      "mithril_bastard_sword",
+      "mithril_bastard_sword_1",
+      "mithril_bastard_sword_2",
+      "mithril_two_handed_sword",
+      "mithril_two_handed_sword_1",
+      "mithril_two_handed_sword_2",
+      "mithril_two_handed_sword_3",
+      "mithril_two_handed_sword_4",
+      "mithril_two_handed_sword_5",
+      "adamantite_broadsword",
+      "adamantite_broadsword_1",
+      "adamantite_broadsword_2",
+      "adamantite_scimitar",
+      "adamantite_scimitar_1",
+      "adamantite_scimitar_2",
+      "adamantite_bastard_sword",
+      "adamantite_bastard_sword_1",
+      "adamantite_bastard_sword_2",
+      "adamantite_two_handed_sword",
+      "adamantite_two_handed_sword_1",
+      "adamantite_two_handed_sword_2",
+      "adamantite_two_handed_sword_3",
+      "adamantite_two_handed_sword_4",
+      "adamantite_two_handed_sword_5",
+      "ancient_scimitar",
+      "ancient_scimitar_1",
+      "ancient_scimitar_2",
+      "ancient_bastard_sword",
+      "ancient_bastard_sword_1",
+      "ancient_bastard_sword_2",
+      "ancient_two_handed_sword",
+      "ancient_two_handed_sword_1",
+      "ancient_two_handed_sword_2",
+      "adamantite_blade",
+      "adamantite_blade_1",
+      "adamantite_blade_2",
+      "adamantite_blade_3",
+      "ancient_blade",
+      "ancient_blade_dual",
+      "ancient_blade_1",
+      "ancient_blade1_dual",
+      "ancient_blade_2",
+      "ancient_blade2_dual",
+      "ancient_blade_3",
+      "ancient_blade3_dual",
+      "mithril_shield",
+      "gothic_shield",
+      "adamantite_shield",
+      "adamantite_shield_3",
+      "adamantite_shield_4",
+      "adamantite_shield_5",
+      "adamantite_platemail_armor",
+      "adamantite_plate_protector",
+      "adamantite_platemail_gauntlets",
+      "adamantite_platemail_helmet",
+      "adamantite_platemail_leggings",
+      "adamantite_platemail_boots"
+    ],
+    "NafuhrBloodhammer": [
+      "red_cape",
+      "studded_leather_belt",
+      "studded_leather_gloves",
+      "studded_leather_helmet",
+      "studded_leather_pants",
+      "studded_leather_boots",
+      "studded_leather_armor",
+      "ringmail_girdle",
+      "ringmail_armor",
+      "ringmail_gauntlets",
+      "ringmail_helmet",
+      "ringmail_leggings",
+      "ringmail_boots",
+      "chainmail_girdle",
+      "chainmail",
+      "chainmail_gloves",
+      "chainmail_coif",
+      "chainmail_leggings",
+      "chainmail_boots",
+      "round_shield",
+      "large_shield"
+    ],
+    "OmarHald": [
+      "ring_of_the_adept",
+      "ring_of_the_healer",
+      "ring_of_the_priest",
+      "templar_ring"
+    ],
     "QuartermasterElenna": [
       "mithril_long_sword",
       "mithril_blade",
@@ -17209,6 +18046,155 @@ window.T4C_DATA = {
       "large_shield",
       "tower_shield"
     ],
+    "Rawlin": [
+      "fine_steel_short_sword_1",
+      "fine_steel_long_sword_1",
+      "fine_steel_broadsword_1",
+      "fine_steel_scimitar_1",
+      "fine_steel_scimitar1_dual",
+      "high_metal_short_sword_1",
+      "fine_steel_hand_axe_1",
+      "fine_steel_hand_axe1_dual",
+      "fine_steel_battle_axe_1",
+      "fine_steel_dagger_1",
+      "fine_steel_dagger1_dual",
+      "high_metal_dagger_1",
+      "fine_steel_mace_1",
+      "fine_steel_mace1_dual",
+      "high_metal_mace_1",
+      "high_metal_flail_1",
+      "bo_1",
+      "rang_kwan_1",
+      "tetsubo_1",
+      "hickory_flatbow_1",
+      "hickory_longbow_1",
+      "hickory_reflex_bow_1",
+      "hickory_recurve_bow_1",
+      "hickory_compound_bow_1"
+    ],
+    "Rolph": [
+      "cloth_pants",
+      "cloth_vest",
+      "leather_belt",
+      "leather_gloves",
+      "leather_helmet",
+      "leather_pants",
+      "leather_boots",
+      "leather_armor",
+      "red_cape",
+      "studded_leather_belt",
+      "studded_leather_gloves",
+      "studded_leather_helmet",
+      "studded_leather_pants",
+      "studded_leather_boots",
+      "studded_leather_armor",
+      "wooden_shield"
+    ],
+    "RylethCth": [
+      "plain_blank_scroll"
+    ],
+    "SebanForgelot": [
+      "rusted_short_sword_2",
+      "rusted_long_sword_2",
+      "polished_short_sword_2",
+      "polished_long_sword_2",
+      "polished_broadsword_2",
+      "rusted_hand_axe_2",
+      "polished_hand_axe_2",
+      "rusted_dirk_2",
+      "rusted_dagger_2",
+      "polished_dirk_2",
+      "polished_dagger_2",
+      "wooden_club_2",
+      "steel_reinforced_club_2",
+      "steel_reinforced_warhammer_2",
+      "fine_steel_warhammer_2",
+      "wooden_staff_2",
+      "iron_staff_2",
+      "quarterstaff_2",
+      "staff_of_thorns_2",
+      "ashwood_flatbow_2",
+      "ashwood_longbow_2",
+      "ashwood_reflex_bow_2",
+      "elm_flatbow_2",
+      "elm_longbow_2",
+      "elm_reflex_bow_2",
+      "elm_recurve_bow_2"
+    ],
+    "Sigfried": [
+      "rusted_short_sword",
+      "rusted_long_sword",
+      "rusted_hand_axe",
+      "rusted_dirk",
+      "rusted_dagger",
+      "wooden_club",
+      "steel_reinforced_club",
+      "wooden_staff",
+      "iron_staff",
+      "ashwood_flatbow",
+      "ashwood_longbow",
+      "ashwood_reflex_bow",
+      "wooden_arrow"
+    ],
+    "Taliron": [
+      "red_cape",
+      "studded_leather_belt",
+      "studded_leather_gloves",
+      "studded_leather_helmet",
+      "studded_leather_pants",
+      "studded_leather_boots",
+      "studded_leather_armor",
+      "ringmail_girdle",
+      "ringmail_armor",
+      "ringmail_gauntlets",
+      "ringmail_helmet",
+      "ringmail_leggings",
+      "ringmail_boots",
+      "chainmail_girdle",
+      "chainmail",
+      "chainmail_gloves",
+      "chainmail_coif",
+      "chainmail_leggings",
+      "chainmail_boots",
+      "round_shield",
+      "large_shield"
+    ],
+    "ThorGlarefire": [
+      "high_metal_long_sword_1",
+      "high_metal_broadsword_1",
+      "high_metal_scimitar_1",
+      "high_metal_bastard_sword_1",
+      "high_metal_bastard_sword1_dual",
+      "high_metal_hand_axe_1",
+      "high_metal_battle_axe_1",
+      "mithril_dagger_1",
+      "mithril_blade_1",
+      "mithril_blade1_dual",
+      "mithril_flail_1",
+      "high_metal_long_sword_2",
+      "high_metal_broadsword_2",
+      "high_metal_scimitar_2",
+      "high_metal_bastard_sword_2",
+      "high_metal_bastard_sword2_dual",
+      "high_metal_hand_axe_2",
+      "high_metal_battle_axe_2",
+      "mithril_dagger_2",
+      "mithril_blade_2",
+      "mithril_blade2_dual",
+      "mithril_flail_2",
+      "oak_flatbow_1",
+      "oak_longbow_1",
+      "oak_reflex_bow_1",
+      "oak_recurve_bow_1",
+      "oak_compound_bow_1",
+      "oak_composite_bow_1",
+      "oak_flatbow_2",
+      "oak_longbow_2",
+      "oak_reflex_bow_2",
+      "oak_recurve_bow_2",
+      "oak_compound_bow_2",
+      "oak_composite_bow_2"
+    ],
     "WayfarerBryndis": [
       "torch",
       "light_healing_potion",
@@ -17218,8 +18204,731 @@ window.T4C_DATA = {
       "scroll_of_avalon",
       "scroll_of_lighthaven",
       "symbol_of_hope"
+    ],
+    "WitchDoctorKwarlgloth": [
+      "torch",
+      "light_healing_potion",
+      "healing_potion",
+      "serious_healing_potion",
+      "potion_of_mana"
     ]
   },
+  "lootSources": [
+    {
+      "item": "dragonguards_scale_bracer",
+      "monster": "Kraanian Dragonguard",
+      "monsterDisplayName": "Kraanian Dragonguard",
+      "chance": 0.03
+    },
+    {
+      "item": "depths_wardens_talisman",
+      "monster": "DEEPONEBOSS",
+      "monsterDisplayName": "Deep One (Boss)",
+      "chance": 0.015
+    },
+    {
+      "item": "aeries_drakeheart_signet",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "ignaroks_emberfang_claw",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.008
+    },
+    {
+      "item": "ancient_celestial_fire_armor",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_boots",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_gauntlets",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_helmet",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_leggings",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_protector",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "empyrean_fire_armor",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_boots",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_gauntlets",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_helmet",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_leggings",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_protector",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "ancient_celestial_light_armor",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_boots",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_gauntlets",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_helmet",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_leggings",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_protector",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "empyrean_light_armor",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_boots",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_gauntlets",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_helmet",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_leggings",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_protector",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "wyrmling_scale_bracer",
+      "monster": "Kraanian Wyrmling",
+      "monsterDisplayName": "Kraanian Wyrmling",
+      "chance": 0.03
+    },
+    {
+      "item": "barnacled_gauntlets",
+      "monster": "Deep One",
+      "monsterDisplayName": "Deep One",
+      "chance": 0.03
+    },
+    {
+      "item": "ysoldes_veiled_circlet",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.02
+    },
+    {
+      "item": "ancient_celestial_dark_armor",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_boots",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_gauntlets",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_helmet",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_leggings",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_protector",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "empyrean_dark_armor",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_boots",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_gauntlets",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_helmet",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_leggings",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_protector",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "tideclaw_band",
+      "monster": "Tideclaw Crab",
+      "monsterDisplayName": "Tideclaw Crab",
+      "chance": 0.02
+    },
+    {
+      "item": "tideworn_avalon_chart",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.02
+    },
+    {
+      "item": "archdrakes_molten_heart",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.008
+    },
+    {
+      "item": "ancient_celestial_air_armor",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_boots",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_gauntlets",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_helmet",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_leggings",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_protector",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "empyrean_air_armor",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_boots",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_gauntlets",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_helmet",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_leggings",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_protector",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "mordrenns_drowned_cowl",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.01
+    },
+    {
+      "item": "ancient_celestial_water_armor",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_boots",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_gauntlets",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_helmet",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_leggings",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_protector",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "empyrean_water_armor",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_boots",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_gauntlets",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_helmet",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_leggings",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_protector",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "heartfire_of_the_greater_drake",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.01
+    },
+    {
+      "item": "ancient_celestial_warrior_armor",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_boots",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_gauntlets",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_helmet",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_leggings",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_protector",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "empyrean_warrior_armor",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_boots",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_gauntlets",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_helmet",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_leggings",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_protector",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "wight_bound_amulet",
+      "monster": "Barrow Wight",
+      "monsterDisplayName": "Barrow Wight",
+      "chance": 0.03
+    },
+    {
+      "item": "centaur_warband_ring",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.03
+    },
+    {
+      "item": "bow_of_centaur_slaying",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.008
+    },
+    {
+      "item": "cinderwrought_sash",
+      "monster": "Ashfang Stalker",
+      "monsterDisplayName": "Ashfang Stalker",
+      "chance": 0.02
+    },
+    {
+      "item": "caradocs_sundered_blade",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.02
+    },
+    {
+      "item": "verdant_wardens_bulwark",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.015
+    },
+    {
+      "item": "ancient_celestial_earth_armor",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_boots",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_gauntlets",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_helmet",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_leggings",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_protector",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "empyrean_earth_armor",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_boots",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_gauntlets",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_helmet",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_leggings",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_protector",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "bastion_sentinels_mantle",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.03
+    },
+    {
+      "item": "crown_of_the_hollow_king",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
+      "chance": 0.008
+    },
+    {
+      "item": "marchwardens_crown",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "bow_of_centaur_slaying",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.015
+    },
+    {
+      "item": "ring_of_the_archer",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.02
+    },
+    {
+      "item": "ancient_celestial_archer_armor",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_boots",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_gauntlets",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_helmet",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_leggings",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_protector",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "empyrean_archer_armor",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_boots",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_gauntlets",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_helmet",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_leggings",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_protector",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    }
+  ],
   "xpCurve": {
     "serverXpRate": 5.0,
     "entries": [

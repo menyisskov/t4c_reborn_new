@@ -46,7 +46,24 @@ public final class CentaurKing extends DataMonster {
         900,
         java.util.List.of(
             new MonsterDef.LootDrop("marchwardens_crown", 0.01f),
-            new MonsterDef.LootDrop("bow_of_centaur_slaying", 0.015f)),
+            new MonsterDef.LootDrop("bow_of_centaur_slaying", 0.015f),
+            // T4C-0021: pre-existing item from the original content pipeline (T4C-0001) that
+            // never got a source - fits this boss's existing archer theme.
+            new MonsterDef.LootDrop("ring_of_the_archer", 0.02f),
+            // T4C-0021: physical/archer-flavor source for the Ancient Celestial/Empyrean armor
+            // sets (ArmorSetGenerator) - previously generated with zero acquisition path.
+            new MonsterDef.LootDrop("ancient_celestial_archer_armor", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_archer_boots", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_archer_gauntlets", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_archer_helmet", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_archer_leggings", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_archer_protector", 0.025f),
+            new MonsterDef.LootDrop("empyrean_archer_armor", 0.012f),
+            new MonsterDef.LootDrop("empyrean_archer_boots", 0.012f),
+            new MonsterDef.LootDrop("empyrean_archer_gauntlets", 0.012f),
+            new MonsterDef.LootDrop("empyrean_archer_helmet", 0.012f),
+            new MonsterDef.LootDrop("empyrean_archer_leggings", 0.012f),
+            new MonsterDef.LootDrop("empyrean_archer_protector", 0.012f)),
         false,
         0.0f,
         180,

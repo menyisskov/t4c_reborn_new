@@ -15,6 +15,27 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-23 — Spell balance, lost armor recovered, and honest site data (T4C-0021)
+
+### Changed
+- The two highest-tier Wisdom-fueled nukes (favored by priest/druid-style builds) were doing far
+  less damage for their mana than an Intelligence-fueled mage nuke of a similar level — the
+  weaker of the two barely out-hit a nuke over three tiers below it. Both now scale up smoothly
+  alongside the mage nukes, with mage spells keeping a slight edge as intended, not a lopsided
+  one.
+
+### Fixed
+- Ninety-six pieces of high-tier armor (two full sets, across every elemental and warrior/archer
+  flavor) had no way to be obtained at all — nothing sold them, nothing dropped them. They now
+  drop from eight fitting monsters and bosses across the world.
+- The reference website's spell pages always showed "0–0" for damage. They now show a real
+  damage figure and the underlying formula, so a spell's power is visible before you spend the
+  gold to learn it.
+- The reference website's "where to find it" listings for items were missing several real
+  sources (some enchanted weapons, a couple of pieces of jewelry) that were sold in-game all
+  along — the site just wasn't checking that seller. Fixed, and made more resilient to the same
+  kind of miss for future items.
+
 ## 2026-09-23 — Changelog writing policy: player-facing, not technical (T4C-0020)
 
 ### Changed

@@ -8,6 +8,7 @@
   var NPCS = DATA.npcs || [];
   var ITEMS = DATA.items || [];
   var SHOPS = DATA.shops || {};
+  var LOOT_SOURCES = DATA.lootSources || [];
   var ZONES = DATA.zones || [];
   var STAT_IDS = DATA.statIds || {};
   var META = DATA.meta || {};
@@ -27,13 +28,14 @@
   byKey.item = indexBy(ITEMS, "key");
   byKey.zone = indexBy(ZONES, "id");
 
-  // loot: item key -> [{monster, chance}]
+  // loot: item key -> [{monster, chance}]. Sourced from lootSources (every real drop, scanning
+  // the full monster registry) rather than MONSTERS (only the ones with their own compendium
+  // page) - a pre-existing/legacy monster can still be a real acquisition path for a tracked
+  // item even without a documented page of its own.
   var itemDroppedBy = {};
-  MONSTERS.forEach(function (m) {
-    (m.loot || []).forEach(function (l) {
-      itemDroppedBy[l.item] = itemDroppedBy[l.item] || [];
-      itemDroppedBy[l.item].push({ monster: m.name, chance: l.chance });
-    });
+  LOOT_SOURCES.forEach(function (l) {
+    itemDroppedBy[l.item] = itemDroppedBy[l.item] || [];
+    itemDroppedBy[l.item].push({ monster: l.monster, monsterDisplayName: l.monsterDisplayName, chance: l.chance });
   });
 
   // item key -> [npcId] selling it
@@ -115,9 +117,9 @@
   function link(route, label, extraClass) {
     return '<a class="' + (extraClass || "") + '" href="#/' + route + '">' + label + "</a>";
   }
-  function monsterLink(name) {
-    if (!byKey.monster[name]) return esc(name);
-    return link("monsters/" + slug(name), esc(name));
+  function monsterLink(name, displayName) {
+    if (!byKey.monster[name]) return esc(displayName || name);
+    return link("monsters/" + slug(name), esc(displayName || name));
   }
   function itemLink(key) {
     var it = byKey.item[key];
@@ -472,12 +474,12 @@
       : '<p class="lead">No stat boosts.</p>';
 
     var dropSources = (itemDroppedBy[it.key] || []).map(function (d) {
-      return '<div class="loot-row"><span>' + monsterLink(d.monster) + "</span><span>" + fmtPct(d.chance) + " chance</span></div>";
+      return '<div class="loot-row"><span>' + monsterLink(d.monster, d.monsterDisplayName) + "</span><span>" + fmtPct(d.chance) + " chance</span></div>";
     }).join("");
     var shopSources = (itemSoldBy[it.key] || []).map(function (id) { return "<li>" + npcLink(id) + "</li>"; }).join("");
     var sourcesHtml = (dropSources || shopSources)
       ? dropSources + (shopSources ? '<ul class="list-plain">' + shopSources + "</ul>" : "")
-      : '<p class="lead">' + (Number(it.price) === 0 ? "Not yet wired to a shop or monster drop table in this build." : "Sold in shops (see NPC shop list) or otherwise obtained.") + "</p>";
+      : '<p class="lead">No shop listing or monster drop found in this data. It may be a quest or dialogue reward instead of a drop/purchase.</p>';
 
     return (
       breadcrumb([["Items", "items"], [it.name, null]]) +
@@ -554,8 +556,16 @@
         kv("Line of sight", s.lineOfSight ? "Required" : "Not required") +
         kv("Learn price", s.price ? fmtNum(s.price) + " gold" : "—") +
         "</div>") +
-      (s.isAttack ? panel("Damage", '<div class="kv-grid">' + kv("Damage range", fmtNum(s.minDamage) + "–" + fmtNum(s.maxDamage)) +
-        kv("Attack type", s.attackType === 1 ? "Physical" : "Mental") + kv("Success rate", s.successRate) + "</div>") : "") +
+      (s.isAttack ? panel("Damage", (s.damageAtReference ?
+        '<div class="kv-grid">' +
+          kv("Damage at reference stats", fmtNum(s.damageAtReference.min) + "–" + fmtNum(s.damageAtReference.max)) +
+          kv("Attack type", s.attackType === 1 ? "Physical (reduced by target AC)" : "Mental (ignores target AC)") +
+          kv("Success rate", s.successRate) +
+        "</div>" +
+        '<p class="lead">Reference: a caster at exactly this spell\'s own Min Int/Min Wis/Min level, an untrained (100) elemental skill, against a target with neutral (100) resistance. Real damage scales up with the caster\'s trained elemental skill and with/against the target\'s real resistance - this number is for comparing spells, not a promise.</p>' +
+        '<div class="loot-row"><span>Formula</span><span><code>' + esc(s.damageAtReference.formula) + '</code></span></div>'
+        : '<div class="kv-grid">' + kv("Attack type", s.attackType === 1 ? "Physical (reduced by target AC)" : "Mental (ignores target AC)") + kv("Success rate", s.successRate) + "</div>")
+      ) : "") +
       panel("Effects", effectsHtml)
     );
   });

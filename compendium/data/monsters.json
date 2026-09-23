@@ -213,6 +213,54 @@
       {
         "item": "mordrenns_drowned_cowl",
         "chance": 0.01
+      },
+      {
+        "item": "ancient_celestial_water_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_water_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -384,6 +432,54 @@
       {
         "item": "ignaroks_emberfang_claw",
         "chance": 0.008
+      },
+      {
+        "item": "ancient_celestial_fire_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_fire_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -506,6 +602,58 @@
       {
         "item": "bow_of_centaur_slaying",
         "chance": 0.015
+      },
+      {
+        "item": "ring_of_the_archer",
+        "chance": 0.02
+      },
+      {
+        "item": "ancient_celestial_archer_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_archer_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -939,6 +1087,54 @@
       {
         "item": "torch",
         "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_light_armor",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_boots",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_gauntlets",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_helmet",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_leggings",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_protector",
+        "chance": 0.006
+      },
+      {
+        "item": "empyrean_light_armor",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_boots",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_gauntlets",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_helmet",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_leggings",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_protector",
+        "chance": 0.003
       }
     ],
     "attacks": [
@@ -1183,6 +1379,54 @@
       {
         "item": "heartfire_of_the_greater_drake",
         "chance": 0.01
+      },
+      {
+        "item": "ancient_celestial_warrior_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -1604,6 +1848,54 @@
       {
         "item": "potion_of_mana",
         "chance": 0.3
+      },
+      {
+        "item": "ancient_celestial_dark_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -1791,6 +2083,54 @@
       {
         "item": "healing_potion",
         "chance": 0.3
+      },
+      {
+        "item": "ancient_celestial_earth_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_earth_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -2113,6 +2453,54 @@
       {
         "item": "archdrakes_molten_heart",
         "chance": 0.008
+      },
+      {
+        "item": "ancient_celestial_air_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_air_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [

@@ -67,7 +67,23 @@ public final class FeyWarden extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("light_healing_potion", 0.15f),
             new MonsterDef.LootDrop("healing_potion", 0.08f),
-            new MonsterDef.LootDrop("torch", 0.2f)),
+            new MonsterDef.LootDrop("torch", 0.2f),
+            // T4C-0021: light-flavor source for the Ancient Celestial/Empyrean armor sets
+            // (ArmorSetGenerator) - previously generated with zero acquisition path. Rates are
+            // well under the boss-tier sources' (0.025f/0.012f) since Fey Warden is a common,
+            // 20-point spawn rather than a unique boss.
+            new MonsterDef.LootDrop("ancient_celestial_light_armor", 0.006f),
+            new MonsterDef.LootDrop("ancient_celestial_light_boots", 0.006f),
+            new MonsterDef.LootDrop("ancient_celestial_light_gauntlets", 0.006f),
+            new MonsterDef.LootDrop("ancient_celestial_light_helmet", 0.006f),
+            new MonsterDef.LootDrop("ancient_celestial_light_leggings", 0.006f),
+            new MonsterDef.LootDrop("ancient_celestial_light_protector", 0.006f),
+            new MonsterDef.LootDrop("empyrean_light_armor", 0.003f),
+            new MonsterDef.LootDrop("empyrean_light_boots", 0.003f),
+            new MonsterDef.LootDrop("empyrean_light_gauntlets", 0.003f),
+            new MonsterDef.LootDrop("empyrean_light_helmet", 0.003f),
+            new MonsterDef.LootDrop("empyrean_light_leggings", 0.003f),
+            new MonsterDef.LootDrop("empyrean_light_protector", 0.003f)),
         false,
         0.0f,
         300,
