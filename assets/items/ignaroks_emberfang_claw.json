@@ -6,7 +6,7 @@
   "appearanceInventory": "64kInvBattleDagger",
   "price": 0,
   "weight": 2,
-  "armorClass": 0,
+  "armorClass": 0.0,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 0,
@@ -27,8 +27,20 @@
   "dmgFormula": "1d180+140",
   "atkDelay": "900",
   "boosts": [
-    { "boostId": 31014, "statId": 17, "expression": "35" },
-    { "boostId": 31015, "statId": 8, "expression": "40" },
-    { "boostId": 31016, "statId": 10, "expression": "30" }
+    {
+      "boostId": 31014,
+      "statId": 3,
+      "expression": "40"
+    },
+    {
+      "boostId": 31015,
+      "statId": 8,
+      "expression": "40"
+    },
+    {
+      "boostId": 31016,
+      "statId": 10,
+      "expression": "30"
+    }
   ]
 }

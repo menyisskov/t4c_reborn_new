@@ -6,11 +6,11 @@
   "appearanceInventory": "64kInvSkavenShield3",
   "price": 0,
   "weight": 14,
-  "armorClass": 94.0,
+  "armorClass": 105.6,
   "dodgeLost": 0,
   "requirements": {
-    "endurance": 2200,
-    "strength": 1400,
+    "endurance": 600,
+    "strength": 1000,
     "agility": 0,
     "intelligence": 0,
     "wisdom": 0,
@@ -25,8 +25,50 @@
   "appearanceId": 0,
   "undroppable": false,
   "boosts": [
-    { "boostId": 34008, "statId": 15, "expression": "95" },
-    { "boostId": 34009, "statId": 2, "expression": "80" },
-    { "boostId": 34010, "statId": 10008, "expression": "40" }
+    {
+      "boostId": 34008,
+      "statId": 3,
+      "expression": "83"
+    },
+    {
+      "boostId": 34009,
+      "statId": 8,
+      "expression": "200"
+    },
+    {
+      "boostId": 34010,
+      "statId": 12,
+      "expression": "25"
+    },
+    {
+      "boostId": 36321,
+      "statId": 13,
+      "expression": "25"
+    },
+    {
+      "boostId": 36322,
+      "statId": 14,
+      "expression": "25"
+    },
+    {
+      "boostId": 36323,
+      "statId": 15,
+      "expression": "50"
+    },
+    {
+      "boostId": 36324,
+      "statId": 21,
+      "expression": "25"
+    },
+    {
+      "boostId": 36325,
+      "statId": 22,
+      "expression": "25"
+    },
+    {
+      "boostId": 36326,
+      "statId": 10008,
+      "expression": "40"
+    }
   ]
 }

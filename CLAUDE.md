@@ -68,6 +68,13 @@ X changed" reads fine; naming the specific doc/file does not).
   subsections as needed, written in player-facing language (see above). See
   the file's own entries for the expected level of detail.
 
+## Design guidelines — read before any content or balance work
+
+`DESIGN_GUIDELINES.md` holds the owner's balance rules: the level cap, rebirths, the spell
+ladder, item classes/AC/bonus budgets, element colors, and how the reference website must
+present numbers. Follow it when adding or changing spells, items, monsters or progression. When
+the owner states a new rule in chat, add it to that file in the same pass.
+
 ## Other project docs worth knowing about
 
 - `AGENT.md` — engineering charter (rendering/camera constraints,

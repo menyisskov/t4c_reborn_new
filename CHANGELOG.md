@@ -15,6 +15,38 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-23 — Item rebalance: every item matches its class (T4C-0027)
+
+### Changed
+- Every piece of new gear has been rebalanced around one rule: what an item asks for decides
+  what it gives.
+  - Warrior gear (strength): armor class, resistance to every element, strength and a lot of
+    attack.
+  - Archer gear (agility): armor class, resistance to every element, agility and archery.
+  - Intelligence gear (fire, water, dark): that school's power and resistance, plus extra
+    intelligence, but a little less armor class.
+  - Wisdom gear (earth, light): that school's power and resistance, plus wisdom and more armor
+    class.
+  - Gear that asks for intelligence and wisdom equally: air power and resistance, plus both
+    stats.
+- Armor class now follows an item's endurance requirement: the more endurance it asks for, the
+  more armor it gives. This includes rings and amulets.
+- No item asks for more than 600 endurance anymore. Several drake, boss and Bastion items used to
+  ask for 900–2600 endurance and stat totals no character could reach. They are now wearable
+  at the level cap and hit hard in their class instead.
+- Aerie's Drakeheart Signet is now a true warrior ring: it asks for 600 strength and 600
+  endurance, and gives +50 strength, +120 attack, 33 armor class, resistance to every element
+  (doubled for fire) and +40 damage.
+- The Ancient Celestial and Empyrean armor sets now ask for each element's own casting stat:
+  intelligence for fire, water and dark; wisdom for earth and light; both for air. Each set
+  gives that stat back. Warrior sets carry the most armor class of any set.
+- Some boss items changed stat to match their theme. The Crown of the Hollow King, Ysolde's
+  Veiled Circlet, the Wight-Bound Amulet and the water-themed cowl, talisman, chart and vestment
+  now ask for intelligence. Their dark or water power stays.
+- Ring of the Archer's very large bonuses (+150 agility, +250 archery) have been brought down
+  to match its requirement (+62 agility, +150 archery). It now also gives armor class and
+  resistances.
+
 ## 2026-09-23 — Rebirths page on the reference website (T4C-0026)
 
 ### Added

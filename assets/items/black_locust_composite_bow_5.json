@@ -6,7 +6,7 @@
   "appearanceInventory": "64kInvLongBow2",
   "price": 0,
   "weight": 11,
-  "armorClass": 0,
+  "armorClass": 0.0,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 138,
@@ -27,6 +27,15 @@
   "dmgFormula": "1d178+345+3*arrow_dmg",
   "atkDelay": "750",
   "boosts": [
-    { "boostId": 35005, "statId": 10035, "expression": "true_skill(35)*80/100" }
+    {
+      "boostId": 35005,
+      "statId": 10035,
+      "expression": "true_skill(35)*80/100"
+    },
+    {
+      "boostId": 36396,
+      "statId": 6,
+      "expression": "49"
+    }
   ]
 }

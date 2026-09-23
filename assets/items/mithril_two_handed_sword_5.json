@@ -6,7 +6,7 @@
   "appearanceInventory": "64kInvGlinting Sword",
   "price": 0,
   "weight": 12,
-  "armorClass": 0,
+  "armorClass": 0.0,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 0,
@@ -27,6 +27,15 @@
   "dmgFormula": "1d165+310",
   "atkDelay": "if(1125-self.agi/250*1125/2<600?600:1125-self.agi/250*1125/2)+1d563",
   "boosts": [
-    { "boostId": 35003, "statId": 8, "expression": "self.true_attack*80/100" }
+    {
+      "boostId": 35003,
+      "statId": 8,
+      "expression": "self.true_attack*80/100"
+    },
+    {
+      "boostId": 36394,
+      "statId": 3,
+      "expression": "27"
+    }
   ]
 }

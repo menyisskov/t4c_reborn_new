@@ -6,11 +6,11 @@
   "appearanceInventory": "64kInvCentaurShield1",
   "price": 0,
   "weight": 12,
-  "armorClass": 37,
+  "armorClass": 45.8,
   "dodgeLost": 38,
   "requirements": {
-    "endurance": 230,
-    "strength": 0,
+    "endurance": 260,
+    "strength": 230,
     "agility": 0,
     "intelligence": 0,
     "wisdom": 0,
@@ -25,7 +25,50 @@
   "appearanceId": 460,
   "undroppable": false,
   "boosts": [
-    { "boostId": 35008, "statId": 10008, "expression": "260" },
-    { "boostId": 35009, "statId": 2, "expression": "120" }
+    {
+      "boostId": 35008,
+      "statId": 3,
+      "expression": "19"
+    },
+    {
+      "boostId": 35009,
+      "statId": 8,
+      "expression": "46"
+    },
+    {
+      "boostId": 36354,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 36355,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 36356,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 36357,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 36358,
+      "statId": 21,
+      "expression": "6"
+    },
+    {
+      "boostId": 36359,
+      "statId": 22,
+      "expression": "6"
+    },
+    {
+      "boostId": 36360,
+      "statId": 10008,
+      "expression": "260"
+    }
   ]
 }

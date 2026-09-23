@@ -6,14 +6,14 @@
   "appearanceInventory": "64kInvPlateArmorSleeves",
   "price": 0,
   "weight": 8,
-  "armorClass": 171.75,
+  "armorClass": 136.4,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 550,
     "strength": 0,
     "agility": 0,
-    "intelligence": 200,
-    "wisdom": 200,
+    "intelligence": 450,
+    "wisdom": 110,
     "attack": 0
   },
   "attackSpeed": 0.0,
@@ -26,39 +26,44 @@
   "undroppable": false,
   "boosts": [
     {
-      "boostId": 20360,
+      "boostId": 20402,
       "statId": 12,
       "expression": "71"
     },
     {
-      "boostId": 20361,
+      "boostId": 20403,
       "statId": 13,
       "expression": "71"
     },
     {
-      "boostId": 20362,
+      "boostId": 20404,
       "statId": 14,
       "expression": "71"
     },
     {
-      "boostId": 20363,
+      "boostId": 20405,
       "statId": 15,
       "expression": "71"
     },
     {
-      "boostId": 20364,
+      "boostId": 20406,
       "statId": 21,
       "expression": "41"
     },
     {
-      "boostId": 20365,
+      "boostId": 20407,
       "statId": 22,
       "expression": "71"
     },
     {
-      "boostId": 20366,
+      "boostId": 20408,
       "statId": 17,
       "expression": "61"
+    },
+    {
+      "boostId": 20409,
+      "statId": 1,
+      "expression": "55"
     }
   ]
 }

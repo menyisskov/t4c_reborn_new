@@ -6,11 +6,11 @@
   "appearanceInventory": "64kInvBattleSword",
   "price": 0,
   "weight": 10,
-  "armorClass": 0,
+  "armorClass": 0.0,
   "dodgeLost": 0,
   "requirements": {
-    "endurance": 1900,
-    "strength": 1250,
+    "endurance": 600,
+    "strength": 1000,
     "agility": 0,
     "intelligence": 0,
     "wisdom": 0,
@@ -27,9 +27,20 @@
   "dmgFormula": "1d420+390",
   "atkDelay": "1500",
   "boosts": [
-    { "boostId": 34000, "statId": 8, "expression": "70" },
-    { "boostId": 34001, "statId": 10, "expression": "95" },
-    { "boostId": 34002, "statId": 3, "expression": "65" },
-    { "boostId": 34003, "statId": 24, "expression": "55" }
+    {
+      "boostId": 34000,
+      "statId": 3,
+      "expression": "83"
+    },
+    {
+      "boostId": 34001,
+      "statId": 8,
+      "expression": "70"
+    },
+    {
+      "boostId": 34002,
+      "statId": 10,
+      "expression": "95"
+    }
   ]
 }
