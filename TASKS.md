@@ -38,7 +38,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0023 | Zone map images on the compendium site (real tile-art coloring, NPC/boss pins) | Content/Tooling | Done | `04fc7bc` | [2026-09-23](CHANGELOG.md#2026-09-23--zone-map-images-on-the-compendium-site-t4c-0023) |
 | T4C-0024 | Kraanhold: new high-level continent (Windhowl Marches through Drake's Lair relocated there) | Content | Done | `bab83af` | [2026-09-23](CHANGELOG.md#2026-09-23--kraanhold-a-new-high-level-continent-t4c-0024) |
 | T4C-0025 | Level cap 400, 50-rebirth limit, even high-tier spell ladder (150-400, every school), elemental archmage mantles | Content/Systems | Done | `557ebd2` | [2026-09-23](CHANGELOG.md#2026-09-23--level-cap-400-rebirth-limit-and-an-even-spell-ladder-t4c-0025) |
-| T4C-0026 | Rebirths page on the compendium site (per-rebirth requirements and rewards) | Content/Tooling | Done | _this branch_ | [2026-09-23](CHANGELOG.md#2026-09-23--rebirths-page-on-the-reference-website-t4c-0026) |
+| T4C-0026 | Rebirths page on the compendium site (per-rebirth requirements and rewards) | Content/Tooling | Done | `e53a781c` | [2026-09-23](CHANGELOG.md#2026-09-23--rebirths-page-on-the-reference-website-t4c-0026) |
 
 ## Type legend
 
