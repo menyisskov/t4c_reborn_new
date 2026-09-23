@@ -160,6 +160,11 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Weapons carry their class stat (P / 12) and their skill (attack or archery). The damage
   formula and any legacy enchant-line percentage boost are kept.
 
+### Boost IDs
+- Every boost needs a unique `boostId`. A shared ID silently drops one item's bonus.
+- `20000`–`29999` is reserved for the armor-set generator; hand-made items use `30000`+.
+- The test enforces both.
+
 ### Slots, colors and sprites
 - Capes and mantles use the **BACK** slot. The `CAPE` enum value has no inventory slot, so an
   item there can't be seen or taken off.

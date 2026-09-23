@@ -64,6 +64,27 @@ class ItemBalanceGuidelinesTest {
     }
   }
 
+  /** EquipmentBonusRules keys active boosts by boostId, so a shared id silently drops one
+   * item's bonus. Generated armor-set pieces own 20000-29999; hand-made items use 30000+. */
+  @Test
+  void boostIdsAreUniqueAndInTheirReservedRange() {
+    Map<Integer, String> owner = new HashMap<>();
+    for (ItemDefinition d : items) {
+      String bare = d.getKey().startsWith("item.") ? d.getKey().substring(5) : d.getKey();
+      boolean generated = bare.startsWith("ancient_celestial_") || bare.startsWith("empyrean_");
+      for (ItemDefinition.ItemBoost boost : d.getBoosts()) {
+        String previous = owner.putIfAbsent(boost.getBoostId(), d.getKey());
+        assertTrue(
+            previous == null,
+            "boostId " + boost.getBoostId() + " is used by both " + previous + " and " + d.getKey());
+        int id = boost.getBoostId();
+        assertTrue(
+            generated ? id >= 20000 && id < 30000 : id >= 30000,
+            d.getKey() + " boostId " + id + " is outside its reserved range");
+      }
+    }
+  }
+
   @Test
   void armorClassFollowsTheEnduranceRequirement() {
     for (ItemDefinition d : items) {
