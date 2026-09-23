@@ -6,10 +6,10 @@
   "appearanceInventory": "Inv_NMS_NewCape01__pal2",
   "price": 1500000,
   "weight": 2,
-  "armorClass": 40.0,
+  "armorClass": 28.8,
   "dodgeLost": 0,
   "requirements": {
-    "endurance": 250,
+    "endurance": 400,
     "strength": 0,
     "agility": 0,
     "intelligence": 600,
@@ -27,18 +27,18 @@
   "boosts": [
     {
       "boostId": 36203,
-      "statId": 18,
+      "statId": 1,
       "expression": "60"
     },
     {
       "boostId": 36204,
-      "statId": 14,
-      "expression": "40"
+      "statId": 18,
+      "expression": "60"
     },
     {
       "boostId": 36205,
-      "statId": 1,
-      "expression": "50"
+      "statId": 14,
+      "expression": "40"
     }
   ]
 }

@@ -2,6 +2,8 @@ package com.perso.T4C.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.perso.T4C.item.ItemBalance;
+import com.perso.T4C.player.BodyPart;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -20,12 +22,10 @@ import java.util.Map;
  * weighting Ancient Platemail's own AC distribution implies), using largest-remainder rounding so
  * each stat's declared total is hit exactly once the full set is worn.
  *
- * <p>Warrior/archer flavors are genuinely physical-class gear (T4C-0018): lower AC than the
- * mage/elemental flavors of the same tier ({@code classAcMultiplier} vs {@code acMultiplier}), no
- * intelligence/wisdom requirement (mage armor keeps that gate, class armor drops it entirely
- * rather than stacking str/agi on top of it), and a flat endurance boost the elemental flavors
- * don't get, on top of the strength/agility + attack/archery skill split every class-flavored
- * piece already carried.
+ * <p>T4C-0027: every flavor follows {@link ItemBalance}. AC comes from the piece's slot, the
+ * tier's endurance requirement and the flavor's class; fire/water/dark flavors require and grant
+ * intelligence, earth/light wisdom, air both; warrior/archer flavors require strength/agility and
+ * grant it plus attack/archery and an endurance bonus. Every flavor also resists all six elements.
  */
 public final class ArmorSetGenerator {
   private ArmorSetGenerator() {}
@@ -72,29 +72,33 @@ public final class ArmorSetGenerator {
           new Element("light", "Light", 21, 23, false),
           new Element("dark", "Dark", 22, 24, true));
 
+  /**
+   * {@code magePrimary}/{@code mageSecondary}: an intelligence (fire/water/dark) or wisdom
+   * (earth/light) flavor's main and other casting-stat requirement; {@code hybridEach} is air's
+   * intelligence and wisdom requirement; {@code classPrimary} is warrior strength / archer agility.
+   * Every other bonus total is a full set's worth (three single items' budget from
+   * {@link ItemBalance}); flatResistTotal/powerTotal/classEnduranceTotal are the set's own
+   * elemental-resistance, themed-power and warrior/archer endurance totals.
+   */
   private record Tier(
       String namePrefix,
       String keyPrefix,
-      int acMultiplier,
-      double classAcMultiplier,
       long minEnd,
-      long minInt,
-      long minWis,
+      long magePrimary,
+      long mageSecondary,
+      long hybridEach,
+      long classPrimary,
+      int legacyResistPerPiece,
       int flatResistTotal,
       int powerTotal,
-      int statTotal,
-      int comboTotal,
       int classEnduranceTotal) {}
 
-  // classAcMultiplier and classEnduranceTotal are warrior/archer-only: their armor carries
-  // noticeably less AC than the same tier's mage/elemental flavors (~65% of the mage AC), traded
-  // for a flat endurance boost mage armor doesn't get, on top of the strength/agility +
-  // attack/archery skill split every class-flavored piece already carried. Mage flavors are
-  // unaffected - they keep using acMultiplier and never read classAcMultiplier/classEnduranceTotal.
+  private static final int SET_BUDGET_ITEMS = 3;
+
   private static final Tier TIER1 =
-      new Tier("Ancient Celestial", "ancient_celestial", 2, 1.3, 400, 150, 150, 70, 100, 100, 750, 60);
+      new Tier("Ancient Celestial", "ancient_celestial", 400, 300, 75, 190, 350, 20, 70, 100, 60);
   private static final Tier TIER2 =
-      new Tier("Empyrean", "empyrean", 3, 2.0, 550, 200, 200, 100, 150, 150, 1000, 90);
+      new Tier("Empyrean", "empyrean", 550, 450, 110, 280, 500, 30, 100, 150, 90);
 
   private static final List<String> ELEMENTAL_FLAVORS =
       List.of("fire", "dark", "water", "air", "earth", "light");
@@ -118,20 +122,39 @@ public final class ArmorSetGenerator {
   private static int writeSet(
       String outputDir, Gson gson, Tier tier, String flavor, String classStat) throws IOException {
     double totalAc = PIECES.stream().mapToDouble(Piece::platemailAc).sum();
-    Map<Element, int[]> resistSplitByElement = new LinkedHashMap<>();
-    for (Element element : ELEMENTS) {
-      resistSplitByElement.put(element, splitByWeight(tier.flatResistTotal(), totalAc));
-    }
-    int[] powerSplit = splitByWeight(tier.powerTotal(), totalAc);
-    int[] statSplit = splitByWeight(tier.statTotal(), totalAc);
-    int[] comboSplit = splitByWeight(tier.comboTotal(), totalAc);
-    int[] classEnduranceSplit = splitByWeight(tier.classEnduranceTotal(), totalAc);
-
     boolean isElemental = classStat == null;
     Element themedElement =
         isElemental
             ? ELEMENTS.stream().filter(e -> e.key().equals(flavor)).findFirst().orElseThrow()
             : null;
+
+    long str = 0, agi = 0, intel = 0, wis = 0;
+    if (!isElemental) {
+      if (classStat.equals("strength")) str = tier.classPrimary();
+      else agi = tier.classPrimary();
+    } else if (flavor.equals("air")) {
+      intel = tier.hybridEach();
+      wis = tier.hybridEach();
+    } else if (flavor.equals("earth") || flavor.equals("light")) {
+      intel = tier.mageSecondary();
+      wis = tier.magePrimary();
+    } else {
+      intel = tier.magePrimary();
+      wis = tier.mageSecondary();
+    }
+    ItemBalance.Archetype archetype = ItemBalance.archetype(str, agi, intel, wis, false);
+    double p = ItemBalance.primaryRequirement(archetype, str, agi, intel, wis);
+    int mainStatTotal = SET_BUDGET_ITEMS * ItemBalance.mainStatBonus(archetype, p);
+    int skillTotal = SET_BUDGET_ITEMS * ItemBalance.combatSkillBonus(p);
+
+    Map<Element, int[]> resistSplitByElement = new LinkedHashMap<>();
+    for (Element element : ELEMENTS) {
+      resistSplitByElement.put(element, splitByWeight(tier.flatResistTotal(), totalAc));
+    }
+    int[] powerSplit = splitByWeight(tier.powerTotal(), totalAc);
+    int[] mainStatSplit = splitByWeight(mainStatTotal, totalAc);
+    int[] skillSplit = splitByWeight(skillTotal, totalAc);
+    int[] classEnduranceSplit = splitByWeight(tier.classEnduranceTotal(), totalAc);
 
     int written = 0;
     for (int i = 0; i < PIECES.size(); i++) {
@@ -148,54 +171,42 @@ public final class ArmorSetGenerator {
       json.price = 0L;
       json.weight = piece.weight();
       json.armorClass =
-          round(piece.platemailAc() * (isElemental ? tier.acMultiplier() : tier.classAcMultiplier()));
+          ItemBalance.expectedArmorClass(
+              BodyPart.valueOf(piece.bodyPart()), tier.minEnd(), archetype);
       json.dodgeLost = 0L;
       json.requirements.endurance = tier.minEnd();
-      // Warrior/archer gear is physical-class armor, not a mage robe with a strength sticker on
-      // it - it drops the int/wis gate entirely rather than stacking it on top of str/agi.
-      json.requirements.intelligence = isElemental ? tier.minInt() : 0L;
-      json.requirements.wisdom = isElemental ? tier.minWis() : 0L;
+      json.requirements.strength = str;
+      json.requirements.agility = agi;
+      json.requirements.intelligence = intel;
+      json.requirements.wisdom = wis;
       json.appearanceId = piece.appearanceId();
       json.undroppable = false;
-
-      if (!isElemental) {
-        if (classStat.equals("strength")) {
-          json.requirements.strength = 500L;
-        } else {
-          json.requirements.agility = 500L;
-        }
-      }
 
       List<com.perso.T4C.item.json.ItemJsonDef.BoostJson> boosts = new ArrayList<>();
       for (Element element : ELEMENTS) {
         int legacyBase =
-            element.legacy() && !piece.bodyPart().equals("BELT")
-                ? 10 * tier.acMultiplier()
-                : 0;
-        int extra = resistSplitByElement.get(element)[i];
-        int total = legacyBase + extra;
+            element.legacy() && !piece.bodyPart().equals("BELT") ? tier.legacyResistPerPiece() : 0;
+        int total = legacyBase + resistSplitByElement.get(element)[i];
         if (total > 0) {
           boosts.add(boost(nextBoostId++, element.resistStatId(), total));
         }
       }
+      int mainStat = mainStatSplit[i];
       if (isElemental) {
-        int power = powerSplit[i];
-        if (power > 0) {
-          boosts.add(boost(nextBoostId++, themedElement.powerStatId(), power));
+        if (powerSplit[i] > 0) {
+          boosts.add(boost(nextBoostId++, themedElement.powerStatId(), powerSplit[i]));
+        }
+        if (mainStat > 0) {
+          if (intel > 0 && archetype != ItemBalance.Archetype.WIS_MAGE)
+            boosts.add(boost(nextBoostId++, 1, mainStat));
+          if (wis > 0 && archetype != ItemBalance.Archetype.INT_MAGE)
+            boosts.add(boost(nextBoostId++, 4, mainStat));
         }
       } else {
-        int stat = statSplit[i];
-        int combo = comboSplit[i];
-        int classEndurance = classEnduranceSplit[i];
-        if (stat > 0) {
-          boosts.add(boost(nextBoostId++, classStat.equals("strength") ? 3 : 6, stat));
-        }
-        if (combo > 0) {
-          boosts.add(boost(nextBoostId++, classStat.equals("strength") ? 8 : 10035, combo));
-        }
-        if (classEndurance > 0) {
-          boosts.add(boost(nextBoostId++, 2, classEndurance));
-        }
+        boolean warrior = classStat.equals("strength");
+        if (mainStat > 0) boosts.add(boost(nextBoostId++, warrior ? 3 : 6, mainStat));
+        if (skillSplit[i] > 0) boosts.add(boost(nextBoostId++, warrior ? 8 : 10035, skillSplit[i]));
+        if (classEnduranceSplit[i] > 0) boosts.add(boost(nextBoostId++, 2, classEnduranceSplit[i]));
       }
       json.boosts = boosts;
 

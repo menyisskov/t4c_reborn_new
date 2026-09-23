@@ -6,10 +6,10 @@
   "appearanceInventory": "64kIconCape",
   "price": 0,
   "weight": 2,
-  "armorClass": 88.0,
+  "armorClass": 59.4,
   "dodgeLost": 0,
   "requirements": {
-    "endurance": 1400,
+    "endurance": 600,
     "strength": 900,
     "agility": 0,
     "intelligence": 0,
@@ -25,8 +25,45 @@
   "appearanceId": 0,
   "undroppable": false,
   "boosts": [
-    { "boostId": 32300, "statId": 15, "expression": "60" },
-    { "boostId": 32301, "statId": 13, "expression": "50" },
-    { "boostId": 32302, "statId": 2, "expression": "60" }
+    {
+      "boostId": 32300,
+      "statId": 3,
+      "expression": "75"
+    },
+    {
+      "boostId": 32301,
+      "statId": 8,
+      "expression": "180"
+    },
+    {
+      "boostId": 32302,
+      "statId": 12,
+      "expression": "22"
+    },
+    {
+      "boostId": 36313,
+      "statId": 13,
+      "expression": "22"
+    },
+    {
+      "boostId": 36314,
+      "statId": 14,
+      "expression": "22"
+    },
+    {
+      "boostId": 36315,
+      "statId": 15,
+      "expression": "44"
+    },
+    {
+      "boostId": 36316,
+      "statId": 21,
+      "expression": "22"
+    },
+    {
+      "boostId": 36317,
+      "statId": 22,
+      "expression": "22"
+    }
   ]
 }

@@ -120,6 +120,8 @@ per-spell flavor choice inherited from the legacy game data, not something to co
 1. Find the 1-2 closest existing spells by role+element (see `references/spell-examples.md`) and copy their `attackType`.
 2. If nothing is close, default: single-target elemental bolts → PHYSICAL(1); wide-effect nukes, group heals, and pure buffs/utility → MENTAL(2). This matches the majority of read examples but is a convention, not a rule — say so if asked and let the user override it.
 
+**Read `DESIGN_GUIDELINES.md` section 2 (Spells) first.**
+
 ## Step 2 — Set level / int / wis / mana requirements
 
 **Level 150 and above: don't hand-pick numbers — use `spell/HighTierSpellCurve.java`.** The

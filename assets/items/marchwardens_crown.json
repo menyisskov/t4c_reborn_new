@@ -6,14 +6,14 @@
   "appearanceInventory": "64kInvPlateArmorHelm",
   "price": 0,
   "weight": 3,
-  "armorClass": 52.0,
+  "armorClass": 54.1,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 550,
     "strength": 350,
     "agility": 0,
     "intelligence": 0,
-    "wisdom": 250,
+    "wisdom": 0,
     "attack": 0
   },
   "attackSpeed": 0.0,
@@ -25,9 +25,45 @@
   "appearanceId": 0,
   "undroppable": false,
   "boosts": [
-    { "boostId": 32003, "statId": 15, "expression": "24" },
-    { "boostId": 32004, "statId": 3, "expression": "20" },
-    { "boostId": 32005, "statId": 4, "expression": "18" },
-    { "boostId": 32006, "statId": 8, "expression": "30" }
+    {
+      "boostId": 32003,
+      "statId": 3,
+      "expression": "29"
+    },
+    {
+      "boostId": 32004,
+      "statId": 8,
+      "expression": "70"
+    },
+    {
+      "boostId": 32005,
+      "statId": 12,
+      "expression": "9"
+    },
+    {
+      "boostId": 32006,
+      "statId": 13,
+      "expression": "9"
+    },
+    {
+      "boostId": 36327,
+      "statId": 14,
+      "expression": "9"
+    },
+    {
+      "boostId": 36328,
+      "statId": 15,
+      "expression": "18"
+    },
+    {
+      "boostId": 36329,
+      "statId": 21,
+      "expression": "9"
+    },
+    {
+      "boostId": 36330,
+      "statId": 22,
+      "expression": "9"
+    }
   ]
 }

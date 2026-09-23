@@ -5,14 +5,14 @@
   "appearanceInventory": "64kInvBelt",
   "price": 0,
   "weight": 2,
-  "armorClass": 25.4,
+  "armorClass": 22.0,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 400,
     "strength": 0,
     "agility": 0,
-    "intelligence": 150,
-    "wisdom": 150,
+    "intelligence": 300,
+    "wisdom": 75,
     "attack": 0
   },
   "attackSpeed": 0.0,
@@ -25,39 +25,44 @@
   "undroppable": false,
   "boosts": [
     {
-      "boostId": 20035,
+      "boostId": 20040,
       "statId": 12,
       "expression": "6"
     },
     {
-      "boostId": 20036,
+      "boostId": 20041,
       "statId": 13,
       "expression": "6"
     },
     {
-      "boostId": 20037,
+      "boostId": 20042,
       "statId": 14,
       "expression": "6"
     },
     {
-      "boostId": 20038,
+      "boostId": 20043,
       "statId": 15,
       "expression": "6"
     },
     {
-      "boostId": 20039,
+      "boostId": 20044,
       "statId": 21,
       "expression": "6"
     },
     {
-      "boostId": 20040,
+      "boostId": 20045,
       "statId": 22,
       "expression": "6"
     },
     {
-      "boostId": 20041,
+      "boostId": 20046,
       "statId": 17,
       "expression": "9"
+    },
+    {
+      "boostId": 20047,
+      "statId": 1,
+      "expression": "8"
     }
   ]
 }

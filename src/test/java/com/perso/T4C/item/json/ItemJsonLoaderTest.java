@@ -22,10 +22,12 @@ class ItemJsonLoaderTest {
 
     ItemDefinition def = ItemRegistry.findByKey("ancient_celestial_fire_armor");
     assertNotNull(def, "Ancient Celestial Fire Armor should be registered from JSON");
-    assertEquals(114.5, def.getArmorClass(), 0.001);
+    // Fire is an intelligence school (T4C-0027): intelligence-led requirements, and AC from the
+    // body slot, the 400 endurance requirement and the intelligence-mage multiplier.
+    assertEquals(99.2, def.getArmorClass(), 0.001);
     assertEquals(400L, def.getMinEnd());
-    assertEquals(150L, def.getMinInt());
-    assertEquals(150L, def.getMinWis());
+    assertEquals(300L, def.getMinInt());
+    assertEquals(75L, def.getMinWis());
 
     long firePowerBoost =
         def.getBoosts().stream()
@@ -41,10 +43,9 @@ class ItemJsonLoaderTest {
 
     ItemDefinition def = ItemRegistry.findByKey("empyrean_warrior_armor");
     assertNotNull(def, "Empyrean Warrior Armor should be registered from JSON");
-    // Warrior armor is physical-class gear: noticeably less AC than the same tier's mage/
-    // elemental flavor (114.5 here vs. 171.75 for empyrean_fire_armor's own BODY piece), and no
-    // intelligence/wisdom gate at all (T4C-0018) - see ArmorSetGenerator's classAcMultiplier.
-    assertEquals(114.5, def.getArmorClass(), 0.001);
+    // Warrior armor is the tank gear (T4C-0027): the most AC per point of endurance
+    // requirement of any class, and no intelligence/wisdom gate at all.
+    assertEquals(187.6, def.getArmorClass(), 0.001);
     assertEquals(550L, def.getMinEnd());
     assertEquals(500L, def.getReqStr());
     assertEquals(0L, def.getMinInt());
@@ -55,6 +56,6 @@ class ItemJsonLoaderTest {
     boolean hasEnduranceBoost = def.getBoosts().stream().anyMatch(b -> b.getStatId() == 2);
     assertTrue(hasStrBoost, "Warrior armor should grant a strength boost");
     assertTrue(hasAttackBoost, "Warrior armor should grant an attack boost");
-    assertTrue(hasEnduranceBoost, "Warrior armor should grant an endurance boost in place of AC");
+    assertTrue(hasEnduranceBoost, "Warrior armor should grant an endurance boost");
   }
 }

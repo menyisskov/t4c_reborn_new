@@ -5,12 +5,55 @@
   "appearanceInventory": "64kInvRings 3",
   "price": 0,
   "weight": 1,
-  "armorClass": 0,
+  "armorClass": 12.8,
   "requirements": {
-    "agility": 750
+    "endurance": 300,
+    "strength": 0,
+    "agility": 750,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
   },
   "boosts": [
-    { "boostId": 30000, "statId": 6, "expression": "150" },
-    { "boostId": 30001, "statId": 10035, "expression": "250" }
+    {
+      "boostId": 30000,
+      "statId": 6,
+      "expression": "62"
+    },
+    {
+      "boostId": 30001,
+      "statId": 10035,
+      "expression": "150"
+    },
+    {
+      "boostId": 36374,
+      "statId": 12,
+      "expression": "19"
+    },
+    {
+      "boostId": 36375,
+      "statId": 13,
+      "expression": "19"
+    },
+    {
+      "boostId": 36376,
+      "statId": 14,
+      "expression": "19"
+    },
+    {
+      "boostId": 36377,
+      "statId": 15,
+      "expression": "19"
+    },
+    {
+      "boostId": 36378,
+      "statId": 21,
+      "expression": "19"
+    },
+    {
+      "boostId": 36379,
+      "statId": 22,
+      "expression": "19"
+    }
   ]
 }

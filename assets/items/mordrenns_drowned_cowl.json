@@ -6,14 +6,14 @@
   "appearanceInventory": "64kInvPlateArmorHelm",
   "price": 0,
   "weight": 3,
-  "armorClass": 45.0,
+  "armorClass": 34.3,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 480,
     "strength": 0,
     "agility": 0,
-    "intelligence": 0,
-    "wisdom": 230,
+    "intelligence": 230,
+    "wisdom": 60,
     "attack": 0
   },
   "attackSpeed": 0.0,
@@ -25,9 +25,20 @@
   "appearanceId": 0,
   "undroppable": false,
   "boosts": [
-    { "boostId": 31000, "statId": 14, "expression": "22" },
-    { "boostId": 31001, "statId": 22, "expression": "18" },
-    { "boostId": 31002, "statId": 18, "expression": "24" },
-    { "boostId": 31003, "statId": 4, "expression": "15" }
+    {
+      "boostId": 31000,
+      "statId": 1,
+      "expression": "23"
+    },
+    {
+      "boostId": 31001,
+      "statId": 18,
+      "expression": "23"
+    },
+    {
+      "boostId": 31002,
+      "statId": 14,
+      "expression": "15"
+    }
   ]
 }

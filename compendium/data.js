@@ -11643,13 +11643,13 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvNecklace 2",
       "price": 8500.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 5.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 100.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 0.0,
+        "intelligence": 30.0,
         "wisdom": 120.0,
         "attack": 0.0
       },
@@ -11664,13 +11664,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 31007.0,
-          "statId": 14.0,
-          "expression": "8"
+          "statId": 4.0,
+          "expression": "10"
         },
         {
           "boostId": 31008.0,
-          "statId": 22.0,
-          "expression": "6"
+          "statId": 23.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36303.0,
+          "statId": 21.0,
+          "expression": "8"
         }
       ]
     },
@@ -11682,11 +11687,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvCentaurShield1",
       "price": 0.0,
       "weight": 12.0,
-      "armorClass": 32.0,
+      "armorClass": 40.5,
       "dodgeLost": 38.0,
       "requirements": {
         "endurance": 230.0,
-        "strength": 0.0,
+        "strength": 230.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -11703,13 +11708,48 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 35006.0,
-          "statId": 10008.0,
-          "expression": "180"
+          "statId": 3.0,
+          "expression": "19"
         },
         {
           "boostId": 35007.0,
-          "statId": 2.0,
-          "expression": "80"
+          "statId": 8.0,
+          "expression": "46"
+        },
+        {
+          "boostId": 36347.0,
+          "statId": 12.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36348.0,
+          "statId": 13.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36349.0,
+          "statId": 14.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36350.0,
+          "statId": 15.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36351.0,
+          "statId": 21.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36352.0,
+          "statId": 22.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36353.0,
+          "statId": 10008.0,
+          "expression": "180"
         }
       ]
     },
@@ -11721,11 +11761,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvCentaurShield1",
       "price": 0.0,
       "weight": 12.0,
-      "armorClass": 37.0,
+      "armorClass": 45.8,
       "dodgeLost": 38.0,
       "requirements": {
-        "endurance": 230.0,
-        "strength": 0.0,
+        "endurance": 260.0,
+        "strength": 230.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -11742,13 +11782,48 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 35008.0,
-          "statId": 10008.0,
-          "expression": "260"
+          "statId": 3.0,
+          "expression": "19"
         },
         {
           "boostId": 35009.0,
-          "statId": 2.0,
-          "expression": "120"
+          "statId": 8.0,
+          "expression": "46"
+        },
+        {
+          "boostId": 36354.0,
+          "statId": 12.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36355.0,
+          "statId": 13.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36356.0,
+          "statId": 14.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36357.0,
+          "statId": 15.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36358.0,
+          "statId": 21.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36359.0,
+          "statId": 22.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36360.0,
+          "statId": 10008.0,
+          "expression": "260"
         }
       ]
     },
@@ -11760,11 +11835,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvCentaurShield1",
       "price": 0.0,
       "weight": 12.0,
-      "armorClass": 43.0,
+      "armorClass": 51.0,
       "dodgeLost": 38.0,
       "requirements": {
-        "endurance": 230.0,
-        "strength": 0.0,
+        "endurance": 290.0,
+        "strength": 230.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -11781,13 +11856,48 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 35010.0,
-          "statId": 10008.0,
-          "expression": "350"
+          "statId": 3.0,
+          "expression": "19"
         },
         {
           "boostId": 35011.0,
-          "statId": 2.0,
-          "expression": "170"
+          "statId": 8.0,
+          "expression": "46"
+        },
+        {
+          "boostId": 36361.0,
+          "statId": 12.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36362.0,
+          "statId": 13.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36363.0,
+          "statId": 14.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36364.0,
+          "statId": 15.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36365.0,
+          "statId": 21.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36366.0,
+          "statId": 22.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 36367.0,
+          "statId": 10008.0,
+          "expression": "350"
         }
       ]
     },
@@ -11824,6 +11934,11 @@ window.T4C_DATA = {
           "boostId": 35000.0,
           "statId": 8.0,
           "expression": "self.true_attack*65/100"
+        },
+        {
+          "boostId": 36391.0,
+          "statId": 3.0,
+          "expression": "33"
         }
       ]
     },
@@ -11860,6 +11975,11 @@ window.T4C_DATA = {
           "boostId": 35001.0,
           "statId": 8.0,
           "expression": "self.true_attack*80/100"
+        },
+        {
+          "boostId": 36392.0,
+          "statId": 3.0,
+          "expression": "33"
         }
       ]
     },
@@ -11870,10 +11990,10 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvRings 5",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 33.0,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 900.0,
+        "endurance": 600.0,
         "strength": 600.0,
         "agility": 0.0,
         "intelligence": 0.0,
@@ -11891,21 +12011,46 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 32203.0,
-          "statId": 17.0,
-          "expression": "55"
+          "statId": 3.0,
+          "expression": "50"
         },
         {
           "boostId": 32204.0,
-          "statId": 13.0,
-          "expression": "45"
+          "statId": 8.0,
+          "expression": "120"
         },
         {
           "boostId": 32205.0,
-          "statId": 3.0,
-          "expression": "35"
+          "statId": 12.0,
+          "expression": "15"
         },
         {
           "boostId": 32206.0,
+          "statId": 13.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36304.0,
+          "statId": 14.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 36305.0,
+          "statId": 15.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 36306.0,
+          "statId": 21.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 36307.0,
+          "statId": 22.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 36308.0,
           "statId": 10.0,
           "expression": "40"
         }
@@ -11919,14 +12064,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 111.6,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 190.0,
+        "wisdom": 190.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -11939,39 +12084,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20126.0,
+          "boostId": 20144.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20127.0,
+          "boostId": 20145.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20128.0,
+          "boostId": 20146.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20129.0,
+          "boostId": 20147.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20130.0,
+          "boostId": 20148.0,
           "statId": 21.0,
           "expression": "29"
         },
         {
-          "boostId": 20131.0,
+          "boostId": 20149.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20132.0,
+          "boostId": 20150.0,
           "statId": 16.0,
           "expression": "41"
+        },
+        {
+          "boostId": 20151.0,
+          "statId": 1.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 20152.0,
+          "statId": 4.0,
+          "expression": "16"
         }
       ]
     },
@@ -11983,14 +12138,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 33.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 190.0,
+        "wisdom": 190.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12003,39 +12158,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20133.0,
+          "boostId": 20153.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20134.0,
+          "boostId": 20154.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20135.0,
+          "boostId": 20155.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20136.0,
+          "boostId": 20156.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20137.0,
+          "boostId": 20157.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20138.0,
+          "boostId": 20158.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20139.0,
+          "boostId": 20159.0,
           "statId": 16.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20160.0,
+          "statId": 1.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20161.0,
+          "statId": 4.0,
+          "expression": "5"
         }
       ]
     },
@@ -12049,14 +12214,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 33.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 190.0,
+        "wisdom": 190.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12069,39 +12234,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20140.0,
+          "boostId": 20162.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20141.0,
+          "boostId": 20163.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20142.0,
+          "boostId": 20164.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20143.0,
+          "boostId": 20165.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20144.0,
+          "boostId": 20166.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20145.0,
+          "boostId": 20167.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20146.0,
+          "boostId": 20168.0,
           "statId": 16.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20169.0,
+          "statId": 1.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20170.0,
+          "statId": 4.0,
+          "expression": "5"
         }
       ]
     },
@@ -12113,14 +12288,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 32.2,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 190.0,
+        "wisdom": 190.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12133,39 +12308,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20147.0,
+          "boostId": 20171.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20148.0,
+          "boostId": 20172.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20149.0,
+          "boostId": 20173.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20150.0,
+          "boostId": 20174.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20151.0,
+          "boostId": 20175.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20152.0,
+          "boostId": 20176.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20153.0,
+          "boostId": 20177.0,
           "statId": 16.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20178.0,
+          "statId": 1.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20179.0,
+          "statId": 4.0,
+          "expression": "5"
         }
       ]
     },
@@ -12177,14 +12362,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 37.2,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 190.0,
+        "wisdom": 190.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12197,39 +12382,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20154.0,
+          "boostId": 20180.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20155.0,
+          "boostId": 20181.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20156.0,
+          "boostId": 20182.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20157.0,
+          "boostId": 20183.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20158.0,
+          "boostId": 20184.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20159.0,
+          "boostId": 20185.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20160.0,
+          "boostId": 20186.0,
           "statId": 16.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20187.0,
+          "statId": 1.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20188.0,
+          "statId": 4.0,
+          "expression": "5"
         }
       ]
     },
@@ -12240,14 +12435,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 24.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 190.0,
+        "wisdom": 190.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12260,39 +12455,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20161.0,
+          "boostId": 20189.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20162.0,
+          "boostId": 20190.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20163.0,
+          "boostId": 20191.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20164.0,
+          "boostId": 20192.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20165.0,
+          "boostId": 20193.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20166.0,
+          "boostId": 20194.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20167.0,
+          "boostId": 20195.0,
           "statId": 16.0,
           "expression": "9"
+        },
+        {
+          "boostId": 20196.0,
+          "statId": 1.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 20197.0,
+          "statId": 4.0,
+          "expression": "3"
         }
       ]
     },
@@ -12304,12 +12509,12 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 74.425,
+      "armorClass": 105.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
-        "agility": 500.0,
+        "agility": 350.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 0.0
@@ -12324,47 +12529,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20306.0,
+          "boostId": 20348.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20307.0,
+          "boostId": 20349.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20308.0,
+          "boostId": 20350.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20309.0,
+          "boostId": 20351.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20310.0,
+          "boostId": 20352.0,
           "statId": 21.0,
           "expression": "29"
         },
         {
-          "boostId": 20311.0,
+          "boostId": 20353.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20312.0,
+          "boostId": 20354.0,
           "statId": 6.0,
-          "expression": "41"
+          "expression": "35"
         },
         {
-          "boostId": 20313.0,
+          "boostId": 20355.0,
           "statId": 10035.0,
-          "expression": "307"
+          "expression": "86"
         },
         {
-          "boostId": 20314.0,
+          "boostId": 20356.0,
           "statId": 2.0,
           "expression": "25"
         }
@@ -12378,12 +12583,12 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 22.289,
+      "armorClass": 31.6,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
-        "agility": 500.0,
+        "agility": 350.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 0.0
@@ -12398,47 +12603,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20315.0,
+          "boostId": 20357.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20316.0,
+          "boostId": 20358.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20317.0,
+          "boostId": 20359.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20318.0,
+          "boostId": 20360.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20319.0,
+          "boostId": 20361.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20320.0,
+          "boostId": 20362.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20321.0,
+          "boostId": 20363.0,
           "statId": 6.0,
-          "expression": "12"
+          "expression": "11"
         },
         {
-          "boostId": 20322.0,
+          "boostId": 20364.0,
           "statId": 10035.0,
-          "expression": "92"
+          "expression": "26"
         },
         {
-          "boostId": 20323.0,
+          "boostId": 20365.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -12454,12 +12659,12 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 22.289,
+      "armorClass": 31.6,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
-        "agility": 500.0,
+        "agility": 350.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 0.0
@@ -12474,47 +12679,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20324.0,
+          "boostId": 20366.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20325.0,
+          "boostId": 20367.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20326.0,
+          "boostId": 20368.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20327.0,
+          "boostId": 20369.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20328.0,
+          "boostId": 20370.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20329.0,
+          "boostId": 20371.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20330.0,
+          "boostId": 20372.0,
           "statId": 6.0,
-          "expression": "12"
+          "expression": "11"
         },
         {
-          "boostId": 20331.0,
+          "boostId": 20373.0,
           "statId": 10035.0,
-          "expression": "92"
+          "expression": "26"
         },
         {
-          "boostId": 20332.0,
+          "boostId": 20374.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -12528,12 +12733,12 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 21.463,
+      "armorClass": 30.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
-        "agility": 500.0,
+        "agility": 350.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 0.0
@@ -12548,47 +12753,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20333.0,
+          "boostId": 20375.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20334.0,
+          "boostId": 20376.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20335.0,
+          "boostId": 20377.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20336.0,
+          "boostId": 20378.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20337.0,
+          "boostId": 20379.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20338.0,
+          "boostId": 20380.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20339.0,
+          "boostId": 20381.0,
           "statId": 6.0,
-          "expression": "12"
+          "expression": "10"
         },
         {
-          "boostId": 20340.0,
+          "boostId": 20382.0,
           "statId": 10035.0,
-          "expression": "89"
+          "expression": "25"
         },
         {
-          "boostId": 20341.0,
+          "boostId": 20383.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -12602,12 +12807,12 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 24.765,
+      "armorClass": 35.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
-        "agility": 500.0,
+        "agility": 350.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 0.0
@@ -12622,47 +12827,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20342.0,
+          "boostId": 20384.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20343.0,
+          "boostId": 20385.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20344.0,
+          "boostId": 20386.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20345.0,
+          "boostId": 20387.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20346.0,
+          "boostId": 20388.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20347.0,
+          "boostId": 20389.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20348.0,
+          "boostId": 20390.0,
           "statId": 6.0,
-          "expression": "14"
+          "expression": "12"
         },
         {
-          "boostId": 20349.0,
+          "boostId": 20391.0,
           "statId": 10035.0,
-          "expression": "102"
+          "expression": "28"
         },
         {
-          "boostId": 20350.0,
+          "boostId": 20392.0,
           "statId": 2.0,
           "expression": "8"
         }
@@ -12675,12 +12880,12 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 16.51,
+      "armorClass": 23.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
-        "agility": 500.0,
+        "agility": 350.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 0.0
@@ -12695,47 +12900,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20351.0,
+          "boostId": 20393.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20352.0,
+          "boostId": 20394.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20353.0,
+          "boostId": 20395.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20354.0,
+          "boostId": 20396.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20355.0,
+          "boostId": 20397.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20356.0,
+          "boostId": 20398.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20357.0,
+          "boostId": 20399.0,
           "statId": 6.0,
-          "expression": "9"
+          "expression": "8"
         },
         {
-          "boostId": 20358.0,
+          "boostId": 20400.0,
           "statId": 10035.0,
-          "expression": "68"
+          "expression": "19"
         },
         {
-          "boostId": 20359.0,
+          "boostId": 20401.0,
           "statId": 2.0,
           "expression": "6"
         }
@@ -12749,14 +12954,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 99.2,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12769,39 +12974,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20042.0,
+          "boostId": 20048.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20043.0,
+          "boostId": 20049.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20044.0,
+          "boostId": 20050.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20045.0,
+          "boostId": 20051.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20046.0,
+          "boostId": 20052.0,
           "statId": 21.0,
           "expression": "29"
         },
         {
-          "boostId": 20047.0,
+          "boostId": 20053.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20048.0,
+          "boostId": 20054.0,
           "statId": 24.0,
           "expression": "41"
+        },
+        {
+          "boostId": 20055.0,
+          "statId": 1.0,
+          "expression": "37"
         }
       ]
     },
@@ -12813,14 +13023,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 29.7,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12830,72 +13040,6 @@ window.T4C_DATA = {
       "numId": 0.0,
       "structure": 2.0,
       "appearanceId": 265.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20049.0,
-          "statId": 12.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20050.0,
-          "statId": 13.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20051.0,
-          "statId": 14.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20052.0,
-          "statId": 15.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20053.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20054.0,
-          "statId": 22.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20055.0,
-          "statId": 24.0,
-          "expression": "12"
-        }
-      ]
-    },
-    {
-      "key": "ancient_celestial_dark_gauntlets",
-      "name": "Ancient Celestial Dark Gauntlets",
-      "bodyPart": "LEFT_HAND",
-      "secondaryBodyPart": "RIGHT_HAND",
-      "appearanceEquippedPrimary": "PupPlateGloveL",
-      "appearanceEquippedSecondary": "PupPlateGloveR",
-      "appearanceInventory": "64kInvPlateGlove",
-      "price": 0.0,
-      "weight": 3.0,
-      "armorClass": 34.29,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 400.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 263.0,
       "undroppable": false,
       "boosts": [
         {
@@ -12932,6 +13076,82 @@ window.T4C_DATA = {
           "boostId": 20062.0,
           "statId": 24.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20063.0,
+          "statId": 1.0,
+          "expression": "11"
+        }
+      ]
+    },
+    {
+      "key": "ancient_celestial_dark_gauntlets",
+      "name": "Ancient Celestial Dark Gauntlets",
+      "bodyPart": "LEFT_HAND",
+      "secondaryBodyPart": "RIGHT_HAND",
+      "appearanceEquippedPrimary": "PupPlateGloveL",
+      "appearanceEquippedSecondary": "PupPlateGloveR",
+      "appearanceInventory": "64kInvPlateGlove",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 29.7,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 400.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 263.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20064.0,
+          "statId": 12.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20065.0,
+          "statId": 13.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20066.0,
+          "statId": 14.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20067.0,
+          "statId": 15.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20068.0,
+          "statId": 21.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20069.0,
+          "statId": 22.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20070.0,
+          "statId": 24.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20071.0,
+          "statId": 1.0,
+          "expression": "11"
         }
       ]
     },
@@ -12943,14 +13163,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 28.6,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -12963,39 +13183,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20063.0,
+          "boostId": 20072.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20064.0,
+          "boostId": 20073.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20065.0,
+          "boostId": 20074.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20066.0,
+          "boostId": 20075.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20067.0,
+          "boostId": 20076.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20068.0,
+          "boostId": 20077.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20069.0,
+          "boostId": 20078.0,
           "statId": 24.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20079.0,
+          "statId": 1.0,
+          "expression": "11"
         }
       ]
     },
@@ -13007,14 +13232,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 33.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13027,39 +13252,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20070.0,
+          "boostId": 20080.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20071.0,
+          "boostId": 20081.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20072.0,
+          "boostId": 20082.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20073.0,
+          "boostId": 20083.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20074.0,
+          "boostId": 20084.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20075.0,
+          "boostId": 20085.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20076.0,
+          "boostId": 20086.0,
           "statId": 24.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20087.0,
+          "statId": 1.0,
+          "expression": "12"
         }
       ]
     },
@@ -13070,14 +13300,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 22.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13090,39 +13320,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20077.0,
+          "boostId": 20088.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20078.0,
+          "boostId": 20089.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20079.0,
+          "boostId": 20090.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20080.0,
+          "boostId": 20091.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20081.0,
+          "boostId": 20092.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20082.0,
+          "boostId": 20093.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20083.0,
+          "boostId": 20094.0,
           "statId": 24.0,
           "expression": "9"
+        },
+        {
+          "boostId": 20095.0,
+          "statId": 1.0,
+          "expression": "8"
         }
       ]
     },
@@ -13134,14 +13369,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 124.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13154,39 +13389,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20168.0,
+          "boostId": 20198.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20169.0,
+          "boostId": 20199.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20170.0,
+          "boostId": 20200.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20171.0,
+          "boostId": 20201.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20172.0,
+          "boostId": 20202.0,
           "statId": 21.0,
           "expression": "29"
         },
         {
-          "boostId": 20173.0,
+          "boostId": 20203.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20174.0,
+          "boostId": 20204.0,
           "statId": 19.0,
           "expression": "41"
+        },
+        {
+          "boostId": 20205.0,
+          "statId": 4.0,
+          "expression": "31"
         }
       ]
     },
@@ -13198,14 +13438,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 37.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13218,39 +13458,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20175.0,
+          "boostId": 20206.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20176.0,
+          "boostId": 20207.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20177.0,
+          "boostId": 20208.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20178.0,
+          "boostId": 20209.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20179.0,
+          "boostId": 20210.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20180.0,
+          "boostId": 20211.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20181.0,
+          "boostId": 20212.0,
           "statId": 19.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20213.0,
+          "statId": 4.0,
+          "expression": "9"
         }
       ]
     },
@@ -13264,14 +13509,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 37.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13284,39 +13529,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20182.0,
+          "boostId": 20214.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20183.0,
+          "boostId": 20215.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20184.0,
+          "boostId": 20216.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20185.0,
+          "boostId": 20217.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20186.0,
+          "boostId": 20218.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20187.0,
+          "boostId": 20219.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20188.0,
+          "boostId": 20220.0,
           "statId": 19.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20221.0,
+          "statId": 4.0,
+          "expression": "9"
         }
       ]
     },
@@ -13328,14 +13578,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 35.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13348,39 +13598,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20189.0,
+          "boostId": 20222.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20190.0,
+          "boostId": 20223.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20191.0,
+          "boostId": 20224.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20192.0,
+          "boostId": 20225.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20193.0,
+          "boostId": 20226.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20194.0,
+          "boostId": 20227.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20195.0,
+          "boostId": 20228.0,
           "statId": 19.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20229.0,
+          "statId": 4.0,
+          "expression": "9"
         }
       ]
     },
@@ -13392,14 +13647,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 41.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13412,39 +13667,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20196.0,
+          "boostId": 20230.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20197.0,
+          "boostId": 20231.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20198.0,
+          "boostId": 20232.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20199.0,
+          "boostId": 20233.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20200.0,
+          "boostId": 20234.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20201.0,
+          "boostId": 20235.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20202.0,
+          "boostId": 20236.0,
           "statId": 19.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20237.0,
+          "statId": 4.0,
+          "expression": "10"
         }
       ]
     },
@@ -13455,14 +13715,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 27.5,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13475,39 +13735,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20203.0,
+          "boostId": 20238.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20204.0,
+          "boostId": 20239.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20205.0,
+          "boostId": 20240.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20206.0,
+          "boostId": 20241.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20207.0,
+          "boostId": 20242.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20208.0,
+          "boostId": 20243.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20209.0,
+          "boostId": 20244.0,
           "statId": 19.0,
           "expression": "9"
+        },
+        {
+          "boostId": 20245.0,
+          "statId": 4.0,
+          "expression": "7"
         }
       ]
     },
@@ -13519,14 +13784,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 99.2,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13572,6 +13837,11 @@ window.T4C_DATA = {
           "boostId": 20006.0,
           "statId": 17.0,
           "expression": "41"
+        },
+        {
+          "boostId": 20007.0,
+          "statId": 1.0,
+          "expression": "37"
         }
       ]
     },
@@ -13583,14 +13853,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 29.7,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13603,39 +13873,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20007.0,
+          "boostId": 20008.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20008.0,
+          "boostId": 20009.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20009.0,
+          "boostId": 20010.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20010.0,
+          "boostId": 20011.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20011.0,
+          "boostId": 20012.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20012.0,
+          "boostId": 20013.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20013.0,
+          "boostId": 20014.0,
           "statId": 17.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20015.0,
+          "statId": 1.0,
+          "expression": "11"
         }
       ]
     },
@@ -13649,14 +13924,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 29.7,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13669,39 +13944,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20014.0,
+          "boostId": 20016.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20015.0,
+          "boostId": 20017.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20016.0,
+          "boostId": 20018.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20017.0,
+          "boostId": 20019.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20018.0,
+          "boostId": 20020.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20019.0,
+          "boostId": 20021.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20020.0,
+          "boostId": 20022.0,
           "statId": 17.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20023.0,
+          "statId": 1.0,
+          "expression": "11"
         }
       ]
     },
@@ -13713,14 +13993,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 28.6,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13733,39 +14013,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20021.0,
+          "boostId": 20024.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20022.0,
+          "boostId": 20025.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20023.0,
+          "boostId": 20026.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20024.0,
+          "boostId": 20027.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20025.0,
+          "boostId": 20028.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20026.0,
+          "boostId": 20029.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20027.0,
+          "boostId": 20030.0,
           "statId": 17.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20031.0,
+          "statId": 1.0,
+          "expression": "11"
         }
       ]
     },
@@ -13777,14 +14062,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 33.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13797,39 +14082,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20028.0,
+          "boostId": 20032.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20029.0,
+          "boostId": 20033.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20030.0,
+          "boostId": 20034.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20031.0,
+          "boostId": 20035.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20032.0,
+          "boostId": 20036.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20033.0,
+          "boostId": 20037.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20034.0,
+          "boostId": 20038.0,
           "statId": 17.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20039.0,
+          "statId": 1.0,
+          "expression": "12"
         }
       ]
     },
@@ -13840,14 +14130,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 22.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13860,39 +14150,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20035.0,
+          "boostId": 20040.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20036.0,
+          "boostId": 20041.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20037.0,
+          "boostId": 20042.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20038.0,
+          "boostId": 20043.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20039.0,
+          "boostId": 20044.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20040.0,
+          "boostId": 20045.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20041.0,
+          "boostId": 20046.0,
           "statId": 17.0,
           "expression": "9"
+        },
+        {
+          "boostId": 20047.0,
+          "statId": 1.0,
+          "expression": "8"
         }
       ]
     },
@@ -13904,14 +14199,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 124.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13924,39 +14219,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20210.0,
+          "boostId": 20246.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20211.0,
+          "boostId": 20247.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20212.0,
+          "boostId": 20248.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20213.0,
+          "boostId": 20249.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20214.0,
+          "boostId": 20250.0,
           "statId": 21.0,
           "expression": "29"
         },
         {
-          "boostId": 20215.0,
+          "boostId": 20251.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20216.0,
+          "boostId": 20252.0,
           "statId": 23.0,
           "expression": "41"
+        },
+        {
+          "boostId": 20253.0,
+          "statId": 4.0,
+          "expression": "31"
         }
       ]
     },
@@ -13968,14 +14268,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 37.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -13988,39 +14288,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20217.0,
+          "boostId": 20254.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20218.0,
+          "boostId": 20255.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20219.0,
+          "boostId": 20256.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20220.0,
+          "boostId": 20257.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20221.0,
+          "boostId": 20258.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20222.0,
+          "boostId": 20259.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20223.0,
+          "boostId": 20260.0,
           "statId": 23.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20261.0,
+          "statId": 4.0,
+          "expression": "9"
         }
       ]
     },
@@ -14034,14 +14339,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 37.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14054,39 +14359,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20224.0,
+          "boostId": 20262.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20225.0,
+          "boostId": 20263.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20226.0,
+          "boostId": 20264.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20227.0,
+          "boostId": 20265.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20228.0,
+          "boostId": 20266.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20229.0,
+          "boostId": 20267.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20230.0,
+          "boostId": 20268.0,
           "statId": 23.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20269.0,
+          "statId": 4.0,
+          "expression": "9"
         }
       ]
     },
@@ -14098,14 +14408,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 35.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14118,39 +14428,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20231.0,
+          "boostId": 20270.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20232.0,
+          "boostId": 20271.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20233.0,
+          "boostId": 20272.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20234.0,
+          "boostId": 20273.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20235.0,
+          "boostId": 20274.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20236.0,
+          "boostId": 20275.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20237.0,
+          "boostId": 20276.0,
           "statId": 23.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20277.0,
+          "statId": 4.0,
+          "expression": "9"
         }
       ]
     },
@@ -14162,14 +14477,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 41.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14182,39 +14497,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20238.0,
+          "boostId": 20278.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20239.0,
+          "boostId": 20279.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20240.0,
+          "boostId": 20280.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20241.0,
+          "boostId": 20281.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20242.0,
+          "boostId": 20282.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20243.0,
+          "boostId": 20283.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20244.0,
+          "boostId": 20284.0,
           "statId": 23.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20285.0,
+          "statId": 4.0,
+          "expression": "10"
         }
       ]
     },
@@ -14225,14 +14545,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 27.5,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 75.0,
+        "wisdom": 300.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14245,39 +14565,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20245.0,
+          "boostId": 20286.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20246.0,
+          "boostId": 20287.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20247.0,
+          "boostId": 20288.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20248.0,
+          "boostId": 20289.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20249.0,
+          "boostId": 20290.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20250.0,
+          "boostId": 20291.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20251.0,
+          "boostId": 20292.0,
           "statId": 23.0,
           "expression": "9"
+        },
+        {
+          "boostId": 20293.0,
+          "statId": 4.0,
+          "expression": "7"
         }
       ]
     },
@@ -14289,11 +14614,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 74.425,
+      "armorClass": 136.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
-        "strength": 500.0,
+        "strength": 350.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -14309,47 +14634,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20252.0,
+          "boostId": 20294.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20253.0,
+          "boostId": 20295.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20254.0,
+          "boostId": 20296.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20255.0,
+          "boostId": 20297.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20256.0,
+          "boostId": 20298.0,
           "statId": 21.0,
           "expression": "29"
         },
         {
-          "boostId": 20257.0,
+          "boostId": 20299.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20258.0,
+          "boostId": 20300.0,
           "statId": 3.0,
-          "expression": "41"
+          "expression": "35"
         },
         {
-          "boostId": 20259.0,
+          "boostId": 20301.0,
           "statId": 8.0,
-          "expression": "307"
+          "expression": "86"
         },
         {
-          "boostId": 20260.0,
+          "boostId": 20302.0,
           "statId": 2.0,
           "expression": "25"
         }
@@ -14363,11 +14688,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 22.289,
+      "armorClass": 40.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
-        "strength": 500.0,
+        "strength": 350.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -14383,47 +14708,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20261.0,
+          "boostId": 20303.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20262.0,
+          "boostId": 20304.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20263.0,
+          "boostId": 20305.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20264.0,
+          "boostId": 20306.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20265.0,
+          "boostId": 20307.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20266.0,
+          "boostId": 20308.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20267.0,
+          "boostId": 20309.0,
           "statId": 3.0,
-          "expression": "12"
+          "expression": "11"
         },
         {
-          "boostId": 20268.0,
+          "boostId": 20310.0,
           "statId": 8.0,
-          "expression": "92"
+          "expression": "26"
         },
         {
-          "boostId": 20269.0,
+          "boostId": 20311.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -14439,11 +14764,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 22.289,
+      "armorClass": 40.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
-        "strength": 500.0,
+        "strength": 350.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -14459,47 +14784,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20270.0,
+          "boostId": 20312.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20271.0,
+          "boostId": 20313.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20272.0,
+          "boostId": 20314.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20273.0,
+          "boostId": 20315.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20274.0,
+          "boostId": 20316.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20275.0,
+          "boostId": 20317.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20276.0,
+          "boostId": 20318.0,
           "statId": 3.0,
-          "expression": "12"
+          "expression": "11"
         },
         {
-          "boostId": 20277.0,
+          "boostId": 20319.0,
           "statId": 8.0,
-          "expression": "92"
+          "expression": "26"
         },
         {
-          "boostId": 20278.0,
+          "boostId": 20320.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -14513,11 +14838,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 21.463,
+      "armorClass": 39.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
-        "strength": 500.0,
+        "strength": 350.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -14533,47 +14858,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20279.0,
+          "boostId": 20321.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20280.0,
+          "boostId": 20322.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20281.0,
+          "boostId": 20323.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20282.0,
+          "boostId": 20324.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20283.0,
+          "boostId": 20325.0,
           "statId": 21.0,
           "expression": "8"
         },
         {
-          "boostId": 20284.0,
+          "boostId": 20326.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20285.0,
+          "boostId": 20327.0,
           "statId": 3.0,
-          "expression": "12"
+          "expression": "10"
         },
         {
-          "boostId": 20286.0,
+          "boostId": 20328.0,
           "statId": 8.0,
-          "expression": "89"
+          "expression": "25"
         },
         {
-          "boostId": 20287.0,
+          "boostId": 20329.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -14587,11 +14912,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 24.765,
+      "armorClass": 45.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
-        "strength": 500.0,
+        "strength": 350.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -14607,47 +14932,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20288.0,
+          "boostId": 20330.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20289.0,
+          "boostId": 20331.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20290.0,
+          "boostId": 20332.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20291.0,
+          "boostId": 20333.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20292.0,
+          "boostId": 20334.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20293.0,
+          "boostId": 20335.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20294.0,
+          "boostId": 20336.0,
           "statId": 3.0,
-          "expression": "14"
+          "expression": "12"
         },
         {
-          "boostId": 20295.0,
+          "boostId": 20337.0,
           "statId": 8.0,
-          "expression": "102"
+          "expression": "28"
         },
         {
-          "boostId": 20296.0,
+          "boostId": 20338.0,
           "statId": 2.0,
           "expression": "8"
         }
@@ -14660,11 +14985,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 16.51,
+      "armorClass": 30.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
-        "strength": 500.0,
+        "strength": 350.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -14680,47 +15005,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20297.0,
+          "boostId": 20339.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20298.0,
+          "boostId": 20340.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20299.0,
+          "boostId": 20341.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20300.0,
+          "boostId": 20342.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20301.0,
+          "boostId": 20343.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20302.0,
+          "boostId": 20344.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20303.0,
+          "boostId": 20345.0,
           "statId": 3.0,
-          "expression": "9"
+          "expression": "8"
         },
         {
-          "boostId": 20304.0,
+          "boostId": 20346.0,
           "statId": 8.0,
-          "expression": "68"
+          "expression": "19"
         },
         {
-          "boostId": 20305.0,
+          "boostId": 20347.0,
           "statId": 2.0,
           "expression": "6"
         }
@@ -14734,14 +15059,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 99.2,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14754,39 +15079,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20084.0,
+          "boostId": 20096.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20085.0,
+          "boostId": 20097.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20086.0,
+          "boostId": 20098.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20087.0,
+          "boostId": 20099.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20088.0,
+          "boostId": 20100.0,
           "statId": 21.0,
           "expression": "29"
         },
         {
-          "boostId": 20089.0,
+          "boostId": 20101.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20090.0,
+          "boostId": 20102.0,
           "statId": 18.0,
           "expression": "41"
+        },
+        {
+          "boostId": 20103.0,
+          "statId": 1.0,
+          "expression": "37"
         }
       ]
     },
@@ -14798,14 +15128,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 29.7,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14818,39 +15148,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20091.0,
+          "boostId": 20104.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20092.0,
+          "boostId": 20105.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20093.0,
+          "boostId": 20106.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20094.0,
+          "boostId": 20107.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20095.0,
+          "boostId": 20108.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20096.0,
+          "boostId": 20109.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20097.0,
+          "boostId": 20110.0,
           "statId": 18.0,
           "expression": "12"
+        },
+        {
+          "boostId": 20111.0,
+          "statId": 1.0,
+          "expression": "11"
         }
       ]
     },
@@ -14864,14 +15199,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 29.7,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -14881,134 +15216,6 @@ window.T4C_DATA = {
       "numId": 0.0,
       "structure": 2.0,
       "appearanceId": 263.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20098.0,
-          "statId": 12.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20099.0,
-          "statId": 13.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20100.0,
-          "statId": 14.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20101.0,
-          "statId": 15.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20102.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20103.0,
-          "statId": 22.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20104.0,
-          "statId": 18.0,
-          "expression": "12"
-        }
-      ]
-    },
-    {
-      "key": "ancient_celestial_water_helmet",
-      "name": "Ancient Celestial Water Helmet",
-      "bodyPart": "HEAD",
-      "appearanceEquippedPrimary": "PupPlateHelm",
-      "appearanceInventory": "64kInvPlateArmorHelm",
-      "price": 0.0,
-      "weight": 3.0,
-      "armorClass": 33.02,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 400.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 267.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20105.0,
-          "statId": 12.0,
-          "expression": "28"
-        },
-        {
-          "boostId": 20106.0,
-          "statId": 13.0,
-          "expression": "28"
-        },
-        {
-          "boostId": 20107.0,
-          "statId": 14.0,
-          "expression": "28"
-        },
-        {
-          "boostId": 20108.0,
-          "statId": 15.0,
-          "expression": "28"
-        },
-        {
-          "boostId": 20109.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20110.0,
-          "statId": 22.0,
-          "expression": "28"
-        },
-        {
-          "boostId": 20111.0,
-          "statId": 18.0,
-          "expression": "12"
-        }
-      ]
-    },
-    {
-      "key": "ancient_celestial_water_leggings",
-      "name": "Ancient Celestial Water Leggings",
-      "bodyPart": "LEGS",
-      "appearanceEquippedPrimary": "PupPlateLegs",
-      "appearanceInventory": "64kInvPlateArmorLegs",
-      "price": 0.0,
-      "weight": 5.0,
-      "armorClass": 38.1,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 400.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 266.0,
       "undroppable": false,
       "boosts": [
         {
@@ -15044,7 +15251,150 @@ window.T4C_DATA = {
         {
           "boostId": 20118.0,
           "statId": 18.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20119.0,
+          "statId": 1.0,
+          "expression": "11"
+        }
+      ]
+    },
+    {
+      "key": "ancient_celestial_water_helmet",
+      "name": "Ancient Celestial Water Helmet",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 28.6,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 400.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 267.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20120.0,
+          "statId": 12.0,
+          "expression": "28"
+        },
+        {
+          "boostId": 20121.0,
+          "statId": 13.0,
+          "expression": "28"
+        },
+        {
+          "boostId": 20122.0,
+          "statId": 14.0,
+          "expression": "28"
+        },
+        {
+          "boostId": 20123.0,
+          "statId": 15.0,
+          "expression": "28"
+        },
+        {
+          "boostId": 20124.0,
+          "statId": 21.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 20125.0,
+          "statId": 22.0,
+          "expression": "28"
+        },
+        {
+          "boostId": 20126.0,
+          "statId": 18.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20127.0,
+          "statId": 1.0,
+          "expression": "11"
+        }
+      ]
+    },
+    {
+      "key": "ancient_celestial_water_leggings",
+      "name": "Ancient Celestial Water Leggings",
+      "bodyPart": "LEGS",
+      "appearanceEquippedPrimary": "PupPlateLegs",
+      "appearanceInventory": "64kInvPlateArmorLegs",
+      "price": 0.0,
+      "weight": 5.0,
+      "armorClass": 33.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 400.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 266.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20128.0,
+          "statId": 12.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20129.0,
+          "statId": 13.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20130.0,
+          "statId": 14.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20131.0,
+          "statId": 15.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20132.0,
+          "statId": 21.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20133.0,
+          "statId": 22.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20134.0,
+          "statId": 18.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20135.0,
+          "statId": 1.0,
+          "expression": "12"
         }
       ]
     },
@@ -15055,14 +15405,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 22.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 300.0,
+        "wisdom": 75.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15075,39 +15425,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20119.0,
+          "boostId": 20136.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20120.0,
+          "boostId": 20137.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20121.0,
+          "boostId": 20138.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20122.0,
+          "boostId": 20139.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20123.0,
+          "boostId": 20140.0,
           "statId": 21.0,
           "expression": "6"
         },
         {
-          "boostId": 20124.0,
+          "boostId": 20141.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20125.0,
+          "boostId": 20142.0,
           "statId": 18.0,
           "expression": "9"
+        },
+        {
+          "boostId": 20143.0,
+          "statId": 1.0,
+          "expression": "8"
         }
       ]
     },
@@ -15118,13 +15473,13 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 95.0,
+      "armorClass": 45.4,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 2600.0,
-        "strength": 1800.0,
+        "endurance": 600.0,
+        "strength": 1000.0,
         "agility": 0.0,
-        "intelligence": 1000.0,
+        "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 130.0
       },
@@ -15139,23 +15494,43 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 33011.0,
-          "statId": 17.0,
-          "expression": "180"
+          "statId": 3.0,
+          "expression": "83"
         },
         {
           "boostId": 33012.0,
-          "statId": 13.0,
-          "expression": "140"
+          "statId": 8.0,
+          "expression": "200"
         },
         {
           "boostId": 33013.0,
-          "statId": 3.0,
-          "expression": "60"
+          "statId": 12.0,
+          "expression": "25"
         },
         {
           "boostId": 33014.0,
-          "statId": 2.0,
-          "expression": "70"
+          "statId": 13.0,
+          "expression": "50"
+        },
+        {
+          "boostId": 36309.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36310.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36311.0,
+          "statId": 21.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36312.0,
+          "statId": 22.0,
+          "expression": "25"
         }
       ]
     },
@@ -15169,11 +15544,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 8.0,
+      "armorClass": 20.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 200.0,
-        "strength": 0.0,
+        "strength": 150.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -15190,13 +15565,43 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 33009.0,
-          "statId": 2.0,
-          "expression": "14"
+          "statId": 3.0,
+          "expression": "12"
         },
         {
           "boostId": 33010.0,
+          "statId": 8.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36341.0,
+          "statId": 12.0,
+          "expression": "4"
+        },
+        {
+          "boostId": 36342.0,
+          "statId": 13.0,
+          "expression": "4"
+        },
+        {
+          "boostId": 36343.0,
           "statId": 14.0,
-          "expression": "10"
+          "expression": "8"
+        },
+        {
+          "boostId": 36344.0,
+          "statId": 15.0,
+          "expression": "4"
+        },
+        {
+          "boostId": 36345.0,
+          "statId": 21.0,
+          "expression": "4"
+        },
+        {
+          "boostId": 36346.0,
+          "statId": 22.0,
+          "expression": "4"
         }
       ]
     },
@@ -15208,10 +15613,10 @@ window.T4C_DATA = {
       "appearanceInventory": "64kIconCape",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 88.0,
+      "armorClass": 59.4,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 1400.0,
+        "endurance": 600.0,
         "strength": 900.0,
         "agility": 0.0,
         "intelligence": 0.0,
@@ -15229,18 +15634,43 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 32300.0,
-          "statId": 15.0,
-          "expression": "60"
+          "statId": 3.0,
+          "expression": "75"
         },
         {
           "boostId": 32301.0,
-          "statId": 13.0,
-          "expression": "50"
+          "statId": 8.0,
+          "expression": "180"
         },
         {
           "boostId": 32302.0,
-          "statId": 2.0,
-          "expression": "60"
+          "statId": 12.0,
+          "expression": "22"
+        },
+        {
+          "boostId": 36313.0,
+          "statId": 13.0,
+          "expression": "22"
+        },
+        {
+          "boostId": 36314.0,
+          "statId": 14.0,
+          "expression": "22"
+        },
+        {
+          "boostId": 36315.0,
+          "statId": 15.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 36316.0,
+          "statId": 21.0,
+          "expression": "22"
+        },
+        {
+          "boostId": 36317.0,
+          "statId": 22.0,
+          "expression": "22"
         }
       ]
     },
@@ -15277,6 +15707,11 @@ window.T4C_DATA = {
           "boostId": 35004.0,
           "statId": 10035.0,
           "expression": "true_skill(35)*65/100"
+        },
+        {
+          "boostId": 36395.0,
+          "statId": 6.0,
+          "expression": "49"
         }
       ]
     },
@@ -15313,6 +15748,11 @@ window.T4C_DATA = {
           "boostId": 35005.0,
           "statId": 10035.0,
           "expression": "true_skill(35)*80/100"
+        },
+        {
+          "boostId": 36396.0,
+          "statId": 6.0,
+          "expression": "49"
         }
       ]
     },
@@ -15347,13 +15787,13 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 33000.0,
-          "statId": 10035.0,
-          "expression": "50"
+          "statId": 6.0,
+          "expression": "58"
         },
         {
           "boostId": 33001.0,
-          "statId": 8.0,
-          "expression": "20"
+          "statId": 10035.0,
+          "expression": "50"
         },
         {
           "boostId": 33002.0,
@@ -15373,8 +15813,8 @@ window.T4C_DATA = {
       "armorClass": 0.0,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 1900.0,
-        "strength": 1250.0,
+        "endurance": 600.0,
+        "strength": 1000.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -15393,23 +15833,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 34000.0,
+          "statId": 3.0,
+          "expression": "83"
+        },
+        {
+          "boostId": 34001.0,
           "statId": 8.0,
           "expression": "70"
         },
         {
-          "boostId": 34001.0,
+          "boostId": 34002.0,
           "statId": 10.0,
           "expression": "95"
-        },
-        {
-          "boostId": 34002.0,
-          "statId": 3.0,
-          "expression": "65"
-        },
-        {
-          "boostId": 34003.0,
-          "statId": 24.0,
-          "expression": "55"
         }
       ]
     },
@@ -15420,7 +15855,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvRings 1",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 14.9,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 350.0,
@@ -15442,17 +15877,47 @@ window.T4C_DATA = {
         {
           "boostId": 32000.0,
           "statId": 6.0,
-          "expression": "18"
-        },
-        {
-          "boostId": 32001.0,
-          "statId": 9.0,
           "expression": "40"
         },
         {
-          "boostId": 32002.0,
+          "boostId": 32001.0,
           "statId": 10035.0,
-          "expression": "45"
+          "expression": "96"
+        },
+        {
+          "boostId": 32002.0,
+          "statId": 12.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36368.0,
+          "statId": 13.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36369.0,
+          "statId": 14.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36370.0,
+          "statId": 15.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36371.0,
+          "statId": 21.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36372.0,
+          "statId": 22.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36373.0,
+          "statId": 9.0,
+          "expression": "40"
         }
       ]
     },
@@ -15463,7 +15928,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 30.0,
+      "armorClass": 28.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 380.0,
@@ -15484,18 +15949,43 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 31009.0,
-          "statId": 13.0,
-          "expression": "20"
+          "statId": 3.0,
+          "expression": "17"
         },
         {
           "boostId": 31010.0,
-          "statId": 17.0,
-          "expression": "22"
+          "statId": 8.0,
+          "expression": "40"
         },
         {
           "boostId": 31011.0,
-          "statId": 3.0,
-          "expression": "18"
+          "statId": 12.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 36331.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36332.0,
+          "statId": 14.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 36333.0,
+          "statId": 15.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 36334.0,
+          "statId": 21.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 36335.0,
+          "statId": 22.0,
+          "expression": "5"
         }
       ]
     },
@@ -15507,14 +15997,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 68.0,
+      "armorClass": 35.8,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 700.0,
+        "endurance": 500.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 0.0,
-        "wisdom": 400.0,
+        "intelligence": 400.0,
+        "wisdom": 100.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15528,23 +16018,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 32103.0,
-          "statId": 22.0,
+          "statId": 1.0,
           "expression": "40"
         },
         {
           "boostId": 32104.0,
           "statId": 24.0,
-          "expression": "45"
+          "expression": "40"
         },
         {
           "boostId": 32105.0,
-          "statId": 4.0,
-          "expression": "25"
-        },
-        {
-          "boostId": 32106.0,
-          "statId": 8.0,
-          "expression": "35"
+          "statId": 22.0,
+          "expression": "27"
         }
       ]
     },
@@ -15555,14 +16040,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvNecklace 2",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 10.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 250.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 0.0,
-        "wisdom": 380.0,
+        "intelligence": 380.0,
+        "wisdom": 95.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15576,18 +16061,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 33006.0,
-          "statId": 18.0,
-          "expression": "22"
+          "statId": 1.0,
+          "expression": "38"
         },
         {
           "boostId": 33007.0,
-          "statId": 14.0,
-          "expression": "18"
+          "statId": 18.0,
+          "expression": "38"
         },
         {
           "boostId": 33008.0,
-          "statId": 4.0,
-          "expression": "15"
+          "statId": 14.0,
+          "expression": "25"
         }
       ]
     },
@@ -15598,11 +16083,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 33.0,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 900.0,
-        "strength": 0.0,
+        "endurance": 600.0,
+        "strength": 500.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -15619,18 +16104,43 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 33015.0,
-          "statId": 13.0,
-          "expression": "55"
+          "statId": 3.0,
+          "expression": "42"
         },
         {
           "boostId": 33016.0,
-          "statId": 2.0,
-          "expression": "45"
+          "statId": 8.0,
+          "expression": "100"
         },
         {
           "boostId": 33017.0,
-          "statId": 9.0,
-          "expression": "30"
+          "statId": 12.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36336.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36337.0,
+          "statId": 14.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36338.0,
+          "statId": 15.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36339.0,
+          "statId": 21.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 36340.0,
+          "statId": 22.0,
+          "expression": "12"
         }
       ]
     },
@@ -15642,14 +16152,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 171.75,
+      "armorClass": 153.5,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 280.0,
+        "wisdom": 280.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15662,39 +16172,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20486.0,
+          "boostId": 20546.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20487.0,
+          "boostId": 20547.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20488.0,
+          "boostId": 20548.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20489.0,
+          "boostId": 20549.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20490.0,
+          "boostId": 20550.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20491.0,
+          "boostId": 20551.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20492.0,
+          "boostId": 20552.0,
           "statId": 16.0,
           "expression": "61"
+        },
+        {
+          "boostId": 20553.0,
+          "statId": 1.0,
+          "expression": "23"
+        },
+        {
+          "boostId": 20554.0,
+          "statId": 4.0,
+          "expression": "23"
         }
       ]
     },
@@ -15706,14 +16226,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 45.9,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 280.0,
+        "wisdom": 280.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15726,39 +16246,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20493.0,
+          "boostId": 20555.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20494.0,
+          "boostId": 20556.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20495.0,
+          "boostId": 20557.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20496.0,
+          "boostId": 20558.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20497.0,
+          "boostId": 20559.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20498.0,
+          "boostId": 20560.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20499.0,
+          "boostId": 20561.0,
           "statId": 16.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20562.0,
+          "statId": 1.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20563.0,
+          "statId": 4.0,
+          "expression": "7"
         }
       ]
     },
@@ -15772,14 +16302,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 45.9,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 280.0,
+        "wisdom": 280.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15792,39 +16322,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20500.0,
+          "boostId": 20564.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20501.0,
+          "boostId": 20565.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20502.0,
+          "boostId": 20566.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20503.0,
+          "boostId": 20567.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20504.0,
+          "boostId": 20568.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20505.0,
+          "boostId": 20569.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20506.0,
+          "boostId": 20570.0,
           "statId": 16.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20571.0,
+          "statId": 1.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20572.0,
+          "statId": 4.0,
+          "expression": "7"
         }
       ]
     },
@@ -15836,14 +16376,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 49.53,
+      "armorClass": 44.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 280.0,
+        "wisdom": 280.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15856,39 +16396,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20507.0,
+          "boostId": 20573.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20508.0,
+          "boostId": 20574.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20509.0,
+          "boostId": 20575.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20510.0,
+          "boostId": 20576.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20511.0,
+          "boostId": 20577.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20512.0,
+          "boostId": 20578.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20513.0,
+          "boostId": 20579.0,
           "statId": 16.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20580.0,
+          "statId": 1.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20581.0,
+          "statId": 4.0,
+          "expression": "7"
         }
       ]
     },
@@ -15900,14 +16450,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 57.15,
+      "armorClass": 51.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 280.0,
+        "wisdom": 280.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15920,39 +16470,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20514.0,
+          "boostId": 20582.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20515.0,
+          "boostId": 20583.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20516.0,
+          "boostId": 20584.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20517.0,
+          "boostId": 20585.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20518.0,
+          "boostId": 20586.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20519.0,
+          "boostId": 20587.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20520.0,
+          "boostId": 20588.0,
           "statId": 16.0,
           "expression": "21"
+        },
+        {
+          "boostId": 20589.0,
+          "statId": 1.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 20590.0,
+          "statId": 4.0,
+          "expression": "8"
         }
       ]
     },
@@ -15963,14 +16523,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 38.1,
+      "armorClass": 34.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 280.0,
+        "wisdom": 280.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -15983,39 +16543,49 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20521.0,
+          "boostId": 20591.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20522.0,
+          "boostId": 20592.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20523.0,
+          "boostId": 20593.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20524.0,
+          "boostId": 20594.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20525.0,
+          "boostId": 20595.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20526.0,
+          "boostId": 20596.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20527.0,
+          "boostId": 20597.0,
           "statId": 16.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20598.0,
+          "statId": 1.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20599.0,
+          "statId": 4.0,
+          "expression": "5"
         }
       ]
     },
@@ -16027,7 +16597,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 144.9,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -16047,47 +16617,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20666.0,
+          "boostId": 20750.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20667.0,
+          "boostId": 20751.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20668.0,
+          "boostId": 20752.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20669.0,
+          "boostId": 20753.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20670.0,
+          "boostId": 20754.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20671.0,
+          "boostId": 20755.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20672.0,
+          "boostId": 20756.0,
           "statId": 6.0,
-          "expression": "61"
+          "expression": "52"
         },
         {
-          "boostId": 20673.0,
+          "boostId": 20757.0,
           "statId": 10035.0,
-          "expression": "409"
+          "expression": "123"
         },
         {
-          "boostId": 20674.0,
+          "boostId": 20758.0,
           "statId": 2.0,
           "expression": "37"
         }
@@ -16101,7 +16671,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 43.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -16121,47 +16691,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20675.0,
+          "boostId": 20759.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20676.0,
+          "boostId": 20760.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20677.0,
+          "boostId": 20761.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20678.0,
+          "boostId": 20762.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20679.0,
+          "boostId": 20763.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20680.0,
+          "boostId": 20764.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20681.0,
+          "boostId": 20765.0,
           "statId": 6.0,
-          "expression": "18"
+          "expression": "16"
         },
         {
-          "boostId": 20682.0,
+          "boostId": 20766.0,
           "statId": 10035.0,
-          "expression": "123"
+          "expression": "37"
         },
         {
-          "boostId": 20683.0,
+          "boostId": 20767.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -16177,7 +16747,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 43.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -16197,47 +16767,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20684.0,
+          "boostId": 20768.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20685.0,
+          "boostId": 20769.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20686.0,
+          "boostId": 20770.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20687.0,
+          "boostId": 20771.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20688.0,
+          "boostId": 20772.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20689.0,
+          "boostId": 20773.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20690.0,
+          "boostId": 20774.0,
           "statId": 6.0,
-          "expression": "18"
+          "expression": "15"
         },
         {
-          "boostId": 20691.0,
+          "boostId": 20775.0,
           "statId": 10035.0,
-          "expression": "123"
+          "expression": "37"
         },
         {
-          "boostId": 20692.0,
+          "boostId": 20776.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -16251,7 +16821,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 41.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -16271,47 +16841,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20693.0,
+          "boostId": 20777.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20694.0,
+          "boostId": 20778.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20695.0,
+          "boostId": 20779.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20696.0,
+          "boostId": 20780.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20697.0,
+          "boostId": 20781.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20698.0,
+          "boostId": 20782.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20699.0,
+          "boostId": 20783.0,
           "statId": 6.0,
-          "expression": "18"
+          "expression": "15"
         },
         {
-          "boostId": 20700.0,
+          "boostId": 20784.0,
           "statId": 10035.0,
-          "expression": "118"
+          "expression": "35"
         },
         {
-          "boostId": 20701.0,
+          "boostId": 20785.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -16325,7 +16895,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 48.2,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -16345,47 +16915,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20702.0,
+          "boostId": 20786.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20703.0,
+          "boostId": 20787.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20704.0,
+          "boostId": 20788.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20705.0,
+          "boostId": 20789.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20706.0,
+          "boostId": 20790.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20707.0,
+          "boostId": 20791.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20708.0,
+          "boostId": 20792.0,
           "statId": 6.0,
-          "expression": "21"
+          "expression": "17"
         },
         {
-          "boostId": 20709.0,
+          "boostId": 20793.0,
           "statId": 10035.0,
-          "expression": "136"
+          "expression": "41"
         },
         {
-          "boostId": 20710.0,
+          "boostId": 20794.0,
           "statId": 2.0,
           "expression": "12"
         }
@@ -16398,7 +16968,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 32.2,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -16418,47 +16988,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20711.0,
+          "boostId": 20795.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20712.0,
+          "boostId": 20796.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20713.0,
+          "boostId": 20797.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20714.0,
+          "boostId": 20798.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20715.0,
+          "boostId": 20799.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20716.0,
+          "boostId": 20800.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20717.0,
+          "boostId": 20801.0,
           "statId": 6.0,
-          "expression": "14"
+          "expression": "11"
         },
         {
-          "boostId": 20718.0,
+          "boostId": 20802.0,
           "statId": 10035.0,
-          "expression": "91"
+          "expression": "27"
         },
         {
-          "boostId": 20719.0,
+          "boostId": 20803.0,
           "statId": 2.0,
           "expression": "8"
         }
@@ -16472,14 +17042,844 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 171.75,
+      "armorClass": 136.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 264.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20450.0,
+          "statId": 12.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20451.0,
+          "statId": 13.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20452.0,
+          "statId": 14.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20453.0,
+          "statId": 15.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20454.0,
+          "statId": 21.0,
+          "expression": "41"
+        },
+        {
+          "boostId": 20455.0,
+          "statId": 22.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20456.0,
+          "statId": 24.0,
+          "expression": "61"
+        },
+        {
+          "boostId": 20457.0,
+          "statId": 1.0,
+          "expression": "55"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_dark_boots",
+      "name": "Empyrean Dark Boots",
+      "bodyPart": "FEET",
+      "appearanceEquippedPrimary": "PupPlateFoot",
+      "appearanceInventory": "64kInvPlateArmorFeet",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 40.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 265.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20458.0,
+          "statId": 12.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20459.0,
+          "statId": 13.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20460.0,
+          "statId": 14.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20461.0,
+          "statId": 15.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20462.0,
+          "statId": 21.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20463.0,
+          "statId": 22.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20464.0,
+          "statId": 24.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 20465.0,
+          "statId": 1.0,
+          "expression": "17"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_dark_gauntlets",
+      "name": "Empyrean Dark Gauntlets",
+      "bodyPart": "LEFT_HAND",
+      "secondaryBodyPart": "RIGHT_HAND",
+      "appearanceEquippedPrimary": "PupPlateGloveL",
+      "appearanceEquippedSecondary": "PupPlateGloveR",
+      "appearanceInventory": "64kInvPlateGlove",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 40.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 263.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20466.0,
+          "statId": 12.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20467.0,
+          "statId": 13.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20468.0,
+          "statId": 14.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20469.0,
+          "statId": 15.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20470.0,
+          "statId": 21.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20471.0,
+          "statId": 22.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20472.0,
+          "statId": 24.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 20473.0,
+          "statId": 1.0,
+          "expression": "17"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_dark_helmet",
+      "name": "Empyrean Dark Helmet",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 39.3,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 267.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20474.0,
+          "statId": 12.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20475.0,
+          "statId": 13.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20476.0,
+          "statId": 14.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20477.0,
+          "statId": 15.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20478.0,
+          "statId": 21.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20479.0,
+          "statId": 22.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20480.0,
+          "statId": 24.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 20481.0,
+          "statId": 1.0,
+          "expression": "16"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_dark_leggings",
+      "name": "Empyrean Dark Leggings",
+      "bodyPart": "LEGS",
+      "appearanceEquippedPrimary": "PupPlateLegs",
+      "appearanceInventory": "64kInvPlateArmorLegs",
+      "price": 0.0,
+      "weight": 5.0,
+      "armorClass": 45.4,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 266.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20482.0,
+          "statId": 12.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20483.0,
+          "statId": 13.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20484.0,
+          "statId": 14.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20485.0,
+          "statId": 15.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20486.0,
+          "statId": 21.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20487.0,
+          "statId": 22.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20488.0,
+          "statId": 24.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 20489.0,
+          "statId": 1.0,
+          "expression": "18"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_dark_protector",
+      "name": "Empyrean Dark Protector",
+      "bodyPart": "BELT",
+      "appearanceInventory": "64kInvBelt",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 30.3,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 235.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20490.0,
+          "statId": 12.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20491.0,
+          "statId": 13.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20492.0,
+          "statId": 14.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20493.0,
+          "statId": 15.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20494.0,
+          "statId": 21.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20495.0,
+          "statId": 22.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20496.0,
+          "statId": 24.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20497.0,
+          "statId": 1.0,
+          "expression": "12"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_earth_armor",
+      "name": "Empyrean Earth Armor",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "price": 0.0,
+      "weight": 8.0,
+      "armorClass": 170.5,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 264.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20600.0,
+          "statId": 12.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20601.0,
+          "statId": 13.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20602.0,
+          "statId": 14.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20603.0,
+          "statId": 15.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20604.0,
+          "statId": 21.0,
+          "expression": "41"
+        },
+        {
+          "boostId": 20605.0,
+          "statId": 22.0,
+          "expression": "71"
+        },
+        {
+          "boostId": 20606.0,
+          "statId": 19.0,
+          "expression": "61"
+        },
+        {
+          "boostId": 20607.0,
+          "statId": 4.0,
+          "expression": "47"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_earth_boots",
+      "name": "Empyrean Earth Boots",
+      "bodyPart": "FEET",
+      "appearanceEquippedPrimary": "PupPlateFoot",
+      "appearanceInventory": "64kInvPlateArmorFeet",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 51.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 265.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20608.0,
+          "statId": 12.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20609.0,
+          "statId": 13.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20610.0,
+          "statId": 14.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20611.0,
+          "statId": 15.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20612.0,
+          "statId": 21.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20613.0,
+          "statId": 22.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20614.0,
+          "statId": 19.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 20615.0,
+          "statId": 4.0,
+          "expression": "14"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_earth_gauntlets",
+      "name": "Empyrean Earth Gauntlets",
+      "bodyPart": "LEFT_HAND",
+      "secondaryBodyPart": "RIGHT_HAND",
+      "appearanceEquippedPrimary": "PupPlateGloveL",
+      "appearanceEquippedSecondary": "PupPlateGloveR",
+      "appearanceInventory": "64kInvPlateGlove",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 51.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 263.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20616.0,
+          "statId": 12.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20617.0,
+          "statId": 13.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20618.0,
+          "statId": 14.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20619.0,
+          "statId": 15.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20620.0,
+          "statId": 21.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20621.0,
+          "statId": 22.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20622.0,
+          "statId": 19.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 20623.0,
+          "statId": 4.0,
+          "expression": "14"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_earth_helmet",
+      "name": "Empyrean Earth Helmet",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 49.2,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 267.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20624.0,
+          "statId": 12.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20625.0,
+          "statId": 13.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20626.0,
+          "statId": 14.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20627.0,
+          "statId": 15.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20628.0,
+          "statId": 21.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20629.0,
+          "statId": 22.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 20630.0,
+          "statId": 19.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 20631.0,
+          "statId": 4.0,
+          "expression": "13"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_earth_leggings",
+      "name": "Empyrean Earth Leggings",
+      "bodyPart": "LEGS",
+      "appearanceEquippedPrimary": "PupPlateLegs",
+      "appearanceInventory": "64kInvPlateArmorLegs",
+      "price": 0.0,
+      "weight": 5.0,
+      "armorClass": 56.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 266.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20632.0,
+          "statId": 12.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20633.0,
+          "statId": 13.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20634.0,
+          "statId": 14.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20635.0,
+          "statId": 15.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20636.0,
+          "statId": 21.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20637.0,
+          "statId": 22.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 20638.0,
+          "statId": 19.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 20639.0,
+          "statId": 4.0,
+          "expression": "16"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_earth_protector",
+      "name": "Empyrean Earth Protector",
+      "bodyPart": "BELT",
+      "appearanceInventory": "64kInvBelt",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 37.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 235.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20640.0,
+          "statId": 12.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20641.0,
+          "statId": 13.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20642.0,
+          "statId": 14.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20643.0,
+          "statId": 15.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20644.0,
+          "statId": 21.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20645.0,
+          "statId": 22.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20646.0,
+          "statId": 19.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20647.0,
+          "statId": 4.0,
+          "expression": "10"
+        }
+      ]
+    },
+    {
+      "key": "empyrean_fire_armor",
+      "name": "Empyrean Fire Armor",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "price": 0.0,
+      "weight": 8.0,
+      "armorClass": 136.4,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 550.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -16523,778 +17923,13 @@ window.T4C_DATA = {
         },
         {
           "boostId": 20408.0,
-          "statId": 24.0,
-          "expression": "61"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_dark_boots",
-      "name": "Empyrean Dark Boots",
-      "bodyPart": "FEET",
-      "appearanceEquippedPrimary": "PupPlateFoot",
-      "appearanceInventory": "64kInvPlateArmorFeet",
-      "price": 0.0,
-      "weight": 3.0,
-      "armorClass": 51.435,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 265.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20409.0,
-          "statId": 12.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20410.0,
-          "statId": 13.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20411.0,
-          "statId": 14.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20412.0,
-          "statId": 15.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20413.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20414.0,
-          "statId": 22.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20415.0,
-          "statId": 24.0,
-          "expression": "18"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_dark_gauntlets",
-      "name": "Empyrean Dark Gauntlets",
-      "bodyPart": "LEFT_HAND",
-      "secondaryBodyPart": "RIGHT_HAND",
-      "appearanceEquippedPrimary": "PupPlateGloveL",
-      "appearanceEquippedSecondary": "PupPlateGloveR",
-      "appearanceInventory": "64kInvPlateGlove",
-      "price": 0.0,
-      "weight": 3.0,
-      "armorClass": 51.435,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 263.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20416.0,
-          "statId": 12.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20417.0,
-          "statId": 13.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20418.0,
-          "statId": 14.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20419.0,
-          "statId": 15.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20420.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20421.0,
-          "statId": 22.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20422.0,
-          "statId": 24.0,
-          "expression": "18"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_dark_helmet",
-      "name": "Empyrean Dark Helmet",
-      "bodyPart": "HEAD",
-      "appearanceEquippedPrimary": "PupPlateHelm",
-      "appearanceInventory": "64kInvPlateArmorHelm",
-      "price": 0.0,
-      "weight": 3.0,
-      "armorClass": 49.53,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 267.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20423.0,
-          "statId": 12.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20424.0,
-          "statId": 13.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20425.0,
-          "statId": 14.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20426.0,
-          "statId": 15.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20427.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20428.0,
-          "statId": 22.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20429.0,
-          "statId": 24.0,
-          "expression": "18"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_dark_leggings",
-      "name": "Empyrean Dark Leggings",
-      "bodyPart": "LEGS",
-      "appearanceEquippedPrimary": "PupPlateLegs",
-      "appearanceInventory": "64kInvPlateArmorLegs",
-      "price": 0.0,
-      "weight": 5.0,
-      "armorClass": 57.15,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 266.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20430.0,
-          "statId": 12.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20431.0,
-          "statId": 13.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20432.0,
-          "statId": 14.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20433.0,
-          "statId": 15.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20434.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20435.0,
-          "statId": 22.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20436.0,
-          "statId": 24.0,
-          "expression": "21"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_dark_protector",
-      "name": "Empyrean Dark Protector",
-      "bodyPart": "BELT",
-      "appearanceInventory": "64kInvBelt",
-      "price": 0.0,
-      "weight": 2.0,
-      "armorClass": 38.1,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 235.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20437.0,
-          "statId": 12.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20438.0,
-          "statId": 13.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20439.0,
-          "statId": 14.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20440.0,
-          "statId": 15.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20441.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20442.0,
-          "statId": 22.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20443.0,
-          "statId": 24.0,
-          "expression": "14"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_earth_armor",
-      "name": "Empyrean Earth Armor",
-      "bodyPart": "BODY",
-      "appearanceEquippedPrimary": "PupPlateBody",
-      "appearanceInventory": "64kInvPlateArmorSleeves",
-      "price": 0.0,
-      "weight": 8.0,
-      "armorClass": 171.75,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 264.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20528.0,
-          "statId": 12.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20529.0,
-          "statId": 13.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20530.0,
-          "statId": 14.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20531.0,
-          "statId": 15.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20532.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20533.0,
-          "statId": 22.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20534.0,
-          "statId": 19.0,
-          "expression": "61"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_earth_boots",
-      "name": "Empyrean Earth Boots",
-      "bodyPart": "FEET",
-      "appearanceEquippedPrimary": "PupPlateFoot",
-      "appearanceInventory": "64kInvPlateArmorFeet",
-      "price": 0.0,
-      "weight": 3.0,
-      "armorClass": 51.435,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 265.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20535.0,
-          "statId": 12.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20536.0,
-          "statId": 13.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20537.0,
-          "statId": 14.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20538.0,
-          "statId": 15.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20539.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20540.0,
-          "statId": 22.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20541.0,
-          "statId": 19.0,
-          "expression": "18"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_earth_gauntlets",
-      "name": "Empyrean Earth Gauntlets",
-      "bodyPart": "LEFT_HAND",
-      "secondaryBodyPart": "RIGHT_HAND",
-      "appearanceEquippedPrimary": "PupPlateGloveL",
-      "appearanceEquippedSecondary": "PupPlateGloveR",
-      "appearanceInventory": "64kInvPlateGlove",
-      "price": 0.0,
-      "weight": 3.0,
-      "armorClass": 51.435,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 263.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20542.0,
-          "statId": 12.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20543.0,
-          "statId": 13.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20544.0,
-          "statId": 14.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20545.0,
-          "statId": 15.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20546.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20547.0,
-          "statId": 22.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20548.0,
-          "statId": 19.0,
-          "expression": "18"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_earth_helmet",
-      "name": "Empyrean Earth Helmet",
-      "bodyPart": "HEAD",
-      "appearanceEquippedPrimary": "PupPlateHelm",
-      "appearanceInventory": "64kInvPlateArmorHelm",
-      "price": 0.0,
-      "weight": 3.0,
-      "armorClass": 49.53,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 267.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20549.0,
-          "statId": 12.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20550.0,
-          "statId": 13.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20551.0,
-          "statId": 14.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20552.0,
-          "statId": 15.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20553.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20554.0,
-          "statId": 22.0,
-          "expression": "42"
-        },
-        {
-          "boostId": 20555.0,
-          "statId": 19.0,
-          "expression": "18"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_earth_leggings",
-      "name": "Empyrean Earth Leggings",
-      "bodyPart": "LEGS",
-      "appearanceEquippedPrimary": "PupPlateLegs",
-      "appearanceInventory": "64kInvPlateArmorLegs",
-      "price": 0.0,
-      "weight": 5.0,
-      "armorClass": 57.15,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 266.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20556.0,
-          "statId": 12.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20557.0,
-          "statId": 13.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20558.0,
-          "statId": 14.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20559.0,
-          "statId": 15.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20560.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20561.0,
-          "statId": 22.0,
-          "expression": "44"
-        },
-        {
-          "boostId": 20562.0,
-          "statId": 19.0,
-          "expression": "21"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_earth_protector",
-      "name": "Empyrean Earth Protector",
-      "bodyPart": "BELT",
-      "appearanceInventory": "64kInvBelt",
-      "price": 0.0,
-      "weight": 2.0,
-      "armorClass": 38.1,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 235.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20563.0,
-          "statId": 12.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20564.0,
-          "statId": 13.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20565.0,
-          "statId": 14.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20566.0,
-          "statId": 15.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20567.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20568.0,
-          "statId": 22.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20569.0,
-          "statId": 19.0,
-          "expression": "14"
-        }
-      ]
-    },
-    {
-      "key": "empyrean_fire_armor",
-      "name": "Empyrean Fire Armor",
-      "bodyPart": "BODY",
-      "appearanceEquippedPrimary": "PupPlateBody",
-      "appearanceInventory": "64kInvPlateArmorSleeves",
-      "price": 0.0,
-      "weight": 8.0,
-      "armorClass": 171.75,
-      "dodgeLost": 0.0,
-      "requirements": {
-        "endurance": 550.0,
-        "strength": 0.0,
-        "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
-        "attack": 0.0
-      },
-      "attackSpeed": 0.0,
-      "unique": false,
-      "isBow": false,
-      "unlimitedUse": true,
-      "numId": 0.0,
-      "structure": 2.0,
-      "appearanceId": 264.0,
-      "undroppable": false,
-      "boosts": [
-        {
-          "boostId": 20360.0,
-          "statId": 12.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20361.0,
-          "statId": 13.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20362.0,
-          "statId": 14.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20363.0,
-          "statId": 15.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20364.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20365.0,
-          "statId": 22.0,
-          "expression": "71"
-        },
-        {
-          "boostId": 20366.0,
           "statId": 17.0,
           "expression": "61"
+        },
+        {
+          "boostId": 20409.0,
+          "statId": 1.0,
+          "expression": "55"
         }
       ]
     },
@@ -17306,14 +17941,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 40.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17326,39 +17961,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20367.0,
+          "boostId": 20410.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20368.0,
+          "boostId": 20411.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20369.0,
+          "boostId": 20412.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20370.0,
+          "boostId": 20413.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20371.0,
+          "boostId": 20414.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20372.0,
+          "boostId": 20415.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20373.0,
+          "boostId": 20416.0,
           "statId": 17.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20417.0,
+          "statId": 1.0,
+          "expression": "17"
         }
       ]
     },
@@ -17372,14 +18012,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 40.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17392,39 +18032,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20374.0,
+          "boostId": 20418.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20375.0,
+          "boostId": 20419.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20376.0,
+          "boostId": 20420.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20377.0,
+          "boostId": 20421.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20378.0,
+          "boostId": 20422.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20379.0,
+          "boostId": 20423.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20380.0,
+          "boostId": 20424.0,
           "statId": 17.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20425.0,
+          "statId": 1.0,
+          "expression": "17"
         }
       ]
     },
@@ -17436,14 +18081,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 49.53,
+      "armorClass": 39.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17456,39 +18101,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20381.0,
+          "boostId": 20426.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20382.0,
+          "boostId": 20427.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20383.0,
+          "boostId": 20428.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20384.0,
+          "boostId": 20429.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20385.0,
+          "boostId": 20430.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20386.0,
+          "boostId": 20431.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20387.0,
+          "boostId": 20432.0,
           "statId": 17.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20433.0,
+          "statId": 1.0,
+          "expression": "16"
         }
       ]
     },
@@ -17500,14 +18150,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 57.15,
+      "armorClass": 45.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17520,39 +18170,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20388.0,
+          "boostId": 20434.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20389.0,
+          "boostId": 20435.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20390.0,
+          "boostId": 20436.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20391.0,
+          "boostId": 20437.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20392.0,
+          "boostId": 20438.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20393.0,
+          "boostId": 20439.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20394.0,
+          "boostId": 20440.0,
           "statId": 17.0,
           "expression": "21"
+        },
+        {
+          "boostId": 20441.0,
+          "statId": 1.0,
+          "expression": "18"
         }
       ]
     },
@@ -17563,14 +18218,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 38.1,
+      "armorClass": 30.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17583,39 +18238,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20395.0,
+          "boostId": 20442.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20396.0,
+          "boostId": 20443.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20397.0,
+          "boostId": 20444.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20398.0,
+          "boostId": 20445.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20399.0,
+          "boostId": 20446.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20400.0,
+          "boostId": 20447.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20401.0,
+          "boostId": 20448.0,
           "statId": 17.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20449.0,
+          "statId": 1.0,
+          "expression": "12"
         }
       ]
     },
@@ -17627,14 +18287,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 171.75,
+      "armorClass": 170.5,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17647,39 +18307,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20570.0,
+          "boostId": 20648.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20571.0,
+          "boostId": 20649.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20572.0,
+          "boostId": 20650.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20573.0,
+          "boostId": 20651.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20574.0,
+          "boostId": 20652.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20575.0,
+          "boostId": 20653.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20576.0,
+          "boostId": 20654.0,
           "statId": 23.0,
           "expression": "61"
+        },
+        {
+          "boostId": 20655.0,
+          "statId": 4.0,
+          "expression": "47"
         }
       ]
     },
@@ -17691,14 +18356,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 51.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17711,39 +18376,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20577.0,
+          "boostId": 20656.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20578.0,
+          "boostId": 20657.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20579.0,
+          "boostId": 20658.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20580.0,
+          "boostId": 20659.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20581.0,
+          "boostId": 20660.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20582.0,
+          "boostId": 20661.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20583.0,
+          "boostId": 20662.0,
           "statId": 23.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20663.0,
+          "statId": 4.0,
+          "expression": "14"
         }
       ]
     },
@@ -17757,14 +18427,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 51.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17777,39 +18447,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20584.0,
+          "boostId": 20664.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20585.0,
+          "boostId": 20665.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20586.0,
+          "boostId": 20666.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20587.0,
+          "boostId": 20667.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20588.0,
+          "boostId": 20668.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20589.0,
+          "boostId": 20669.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20590.0,
+          "boostId": 20670.0,
           "statId": 23.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20671.0,
+          "statId": 4.0,
+          "expression": "14"
         }
       ]
     },
@@ -17821,14 +18496,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 49.53,
+      "armorClass": 49.2,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17841,39 +18516,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20591.0,
+          "boostId": 20672.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20592.0,
+          "boostId": 20673.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20593.0,
+          "boostId": 20674.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20594.0,
+          "boostId": 20675.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20595.0,
+          "boostId": 20676.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20596.0,
+          "boostId": 20677.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20597.0,
+          "boostId": 20678.0,
           "statId": 23.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20679.0,
+          "statId": 4.0,
+          "expression": "13"
         }
       ]
     },
@@ -17885,14 +18565,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 57.15,
+      "armorClass": 56.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17905,39 +18585,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20598.0,
+          "boostId": 20680.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20599.0,
+          "boostId": 20681.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20600.0,
+          "boostId": 20682.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20601.0,
+          "boostId": 20683.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20602.0,
+          "boostId": 20684.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20603.0,
+          "boostId": 20685.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20604.0,
+          "boostId": 20686.0,
           "statId": 23.0,
           "expression": "21"
+        },
+        {
+          "boostId": 20687.0,
+          "statId": 4.0,
+          "expression": "16"
         }
       ]
     },
@@ -17948,14 +18633,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 38.1,
+      "armorClass": 37.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 110.0,
+        "wisdom": 450.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -17968,39 +18653,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20605.0,
+          "boostId": 20688.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20606.0,
+          "boostId": 20689.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20607.0,
+          "boostId": 20690.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20608.0,
+          "boostId": 20691.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20609.0,
+          "boostId": 20692.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20610.0,
+          "boostId": 20693.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20611.0,
+          "boostId": 20694.0,
           "statId": 23.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20695.0,
+          "statId": 4.0,
+          "expression": "10"
         }
       ]
     },
@@ -18012,7 +18702,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 114.5,
+      "armorClass": 187.6,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -18032,47 +18722,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20612.0,
+          "boostId": 20696.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20613.0,
+          "boostId": 20697.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20614.0,
+          "boostId": 20698.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20615.0,
+          "boostId": 20699.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20616.0,
+          "boostId": 20700.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20617.0,
+          "boostId": 20701.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20618.0,
+          "boostId": 20702.0,
           "statId": 3.0,
-          "expression": "61"
+          "expression": "52"
         },
         {
-          "boostId": 20619.0,
+          "boostId": 20703.0,
           "statId": 8.0,
-          "expression": "409"
+          "expression": "123"
         },
         {
-          "boostId": 20620.0,
+          "boostId": 20704.0,
           "statId": 2.0,
           "expression": "37"
         }
@@ -18086,7 +18776,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 56.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -18106,47 +18796,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20621.0,
+          "boostId": 20705.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20622.0,
+          "boostId": 20706.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20623.0,
+          "boostId": 20707.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20624.0,
+          "boostId": 20708.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20625.0,
+          "boostId": 20709.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20626.0,
+          "boostId": 20710.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20627.0,
+          "boostId": 20711.0,
           "statId": 3.0,
-          "expression": "18"
+          "expression": "16"
         },
         {
-          "boostId": 20628.0,
+          "boostId": 20712.0,
           "statId": 8.0,
-          "expression": "123"
+          "expression": "37"
         },
         {
-          "boostId": 20629.0,
+          "boostId": 20713.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -18162,7 +18852,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 34.29,
+      "armorClass": 56.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -18182,47 +18872,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20630.0,
+          "boostId": 20714.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20631.0,
+          "boostId": 20715.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20632.0,
+          "boostId": 20716.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20633.0,
+          "boostId": 20717.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20634.0,
+          "boostId": 20718.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20635.0,
+          "boostId": 20719.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20636.0,
+          "boostId": 20720.0,
           "statId": 3.0,
-          "expression": "18"
+          "expression": "15"
         },
         {
-          "boostId": 20637.0,
+          "boostId": 20721.0,
           "statId": 8.0,
-          "expression": "123"
+          "expression": "37"
         },
         {
-          "boostId": 20638.0,
+          "boostId": 20722.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -18236,7 +18926,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 33.02,
+      "armorClass": 54.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -18256,47 +18946,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20639.0,
+          "boostId": 20723.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20640.0,
+          "boostId": 20724.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20641.0,
+          "boostId": 20725.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20642.0,
+          "boostId": 20726.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20643.0,
+          "boostId": 20727.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20644.0,
+          "boostId": 20728.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20645.0,
+          "boostId": 20729.0,
           "statId": 3.0,
-          "expression": "18"
+          "expression": "15"
         },
         {
-          "boostId": 20646.0,
+          "boostId": 20730.0,
           "statId": 8.0,
-          "expression": "118"
+          "expression": "35"
         },
         {
-          "boostId": 20647.0,
+          "boostId": 20731.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -18310,7 +19000,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 38.1,
+      "armorClass": 62.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -18330,47 +19020,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20648.0,
+          "boostId": 20732.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20649.0,
+          "boostId": 20733.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20650.0,
+          "boostId": 20734.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20651.0,
+          "boostId": 20735.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20652.0,
+          "boostId": 20736.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20653.0,
+          "boostId": 20737.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20654.0,
+          "boostId": 20738.0,
           "statId": 3.0,
-          "expression": "21"
+          "expression": "17"
         },
         {
-          "boostId": 20655.0,
+          "boostId": 20739.0,
           "statId": 8.0,
-          "expression": "136"
+          "expression": "41"
         },
         {
-          "boostId": 20656.0,
+          "boostId": 20740.0,
           "statId": 2.0,
           "expression": "12"
         }
@@ -18383,7 +19073,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 25.4,
+      "armorClass": 41.6,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
@@ -18403,47 +19093,47 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20657.0,
+          "boostId": 20741.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20658.0,
+          "boostId": 20742.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20659.0,
+          "boostId": 20743.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20660.0,
+          "boostId": 20744.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20661.0,
+          "boostId": 20745.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20662.0,
+          "boostId": 20746.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20663.0,
+          "boostId": 20747.0,
           "statId": 3.0,
-          "expression": "14"
+          "expression": "11"
         },
         {
-          "boostId": 20664.0,
+          "boostId": 20748.0,
           "statId": 8.0,
-          "expression": "91"
+          "expression": "27"
         },
         {
-          "boostId": 20665.0,
+          "boostId": 20749.0,
           "statId": 2.0,
           "expression": "8"
         }
@@ -18457,14 +19147,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorSleeves",
       "price": 0.0,
       "weight": 8.0,
-      "armorClass": 171.75,
+      "armorClass": 136.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -18477,39 +19167,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20444.0,
+          "boostId": 20498.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20445.0,
+          "boostId": 20499.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20446.0,
+          "boostId": 20500.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20447.0,
+          "boostId": 20501.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20448.0,
+          "boostId": 20502.0,
           "statId": 21.0,
           "expression": "41"
         },
         {
-          "boostId": 20449.0,
+          "boostId": 20503.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20450.0,
+          "boostId": 20504.0,
           "statId": 18.0,
           "expression": "61"
+        },
+        {
+          "boostId": 20505.0,
+          "statId": 1.0,
+          "expression": "55"
         }
       ]
     },
@@ -18521,14 +19216,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorFeet",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 40.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -18541,39 +19236,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20451.0,
+          "boostId": 20506.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20452.0,
+          "boostId": 20507.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20453.0,
+          "boostId": 20508.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20454.0,
+          "boostId": 20509.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20455.0,
+          "boostId": 20510.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20456.0,
+          "boostId": 20511.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20457.0,
+          "boostId": 20512.0,
           "statId": 18.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20513.0,
+          "statId": 1.0,
+          "expression": "17"
         }
       ]
     },
@@ -18587,14 +19287,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateGlove",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 51.435,
+      "armorClass": 40.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -18607,39 +19307,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20458.0,
+          "boostId": 20514.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20459.0,
+          "boostId": 20515.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20460.0,
+          "boostId": 20516.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20461.0,
+          "boostId": 20517.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20462.0,
+          "boostId": 20518.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20463.0,
+          "boostId": 20519.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20464.0,
+          "boostId": 20520.0,
           "statId": 18.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20521.0,
+          "statId": 1.0,
+          "expression": "17"
         }
       ]
     },
@@ -18651,14 +19356,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 49.53,
+      "armorClass": 39.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -18671,39 +19376,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20465.0,
+          "boostId": 20522.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20466.0,
+          "boostId": 20523.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20467.0,
+          "boostId": 20524.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20468.0,
+          "boostId": 20525.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20469.0,
+          "boostId": 20526.0,
           "statId": 21.0,
           "expression": "12"
         },
         {
-          "boostId": 20470.0,
+          "boostId": 20527.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20471.0,
+          "boostId": 20528.0,
           "statId": 18.0,
           "expression": "18"
+        },
+        {
+          "boostId": 20529.0,
+          "statId": 1.0,
+          "expression": "16"
         }
       ]
     },
@@ -18715,14 +19425,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorLegs",
       "price": 0.0,
       "weight": 5.0,
-      "armorClass": 57.15,
+      "armorClass": 45.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -18735,39 +19445,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20472.0,
+          "boostId": 20530.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20473.0,
+          "boostId": 20531.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20474.0,
+          "boostId": 20532.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20475.0,
+          "boostId": 20533.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20476.0,
+          "boostId": 20534.0,
           "statId": 21.0,
           "expression": "14"
         },
         {
-          "boostId": 20477.0,
+          "boostId": 20535.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20478.0,
+          "boostId": 20536.0,
           "statId": 18.0,
           "expression": "21"
+        },
+        {
+          "boostId": 20537.0,
+          "statId": 1.0,
+          "expression": "18"
         }
       ]
     },
@@ -18778,14 +19493,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 38.1,
+      "armorClass": 30.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 200.0,
-        "wisdom": 200.0,
+        "intelligence": 450.0,
+        "wisdom": 110.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -18798,39 +19513,44 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20479.0,
+          "boostId": 20538.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20480.0,
+          "boostId": 20539.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20481.0,
+          "boostId": 20540.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20482.0,
+          "boostId": 20541.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20483.0,
+          "boostId": 20542.0,
           "statId": 21.0,
           "expression": "9"
         },
         {
-          "boostId": 20484.0,
+          "boostId": 20543.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20485.0,
+          "boostId": 20544.0,
           "statId": 18.0,
           "expression": "14"
+        },
+        {
+          "boostId": 20545.0,
+          "statId": 1.0,
+          "expression": "12"
         }
       ]
     },
@@ -18842,10 +19562,10 @@ window.T4C_DATA = {
       "appearanceInventory": "Inv_NMS_NewCape01__pal7",
       "price": 1500000.0,
       "weight": 2.0,
-      "armorClass": 40.0,
+      "armorClass": 36.0,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 250.0,
+        "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
         "intelligence": 150.0,
@@ -18863,18 +19583,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 36206.0,
+          "statId": 4.0,
+          "expression": "50"
+        },
+        {
+          "boostId": 36207.0,
           "statId": 19.0,
           "expression": "60"
         },
         {
-          "boostId": 36207.0,
+          "boostId": 36208.0,
           "statId": 15.0,
           "expression": "40"
-        },
-        {
-          "boostId": 36208.0,
-          "statId": 4.0,
-          "expression": "50"
         }
       ]
     },
@@ -18892,8 +19612,8 @@ window.T4C_DATA = {
         "endurance": 0.0,
         "strength": 600.0,
         "agility": 0.0,
-        "intelligence": 150.0,
-        "wisdom": 150.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
         "attack": 70.0
       },
       "attackSpeed": 1450.0,
@@ -18909,18 +19629,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 33003.0,
+          "statId": 3.0,
+          "expression": "50"
+        },
+        {
+          "boostId": 33004.0,
           "statId": 8.0,
           "expression": "45"
         },
         {
-          "boostId": 33004.0,
+          "boostId": 33005.0,
           "statId": 10.0,
           "expression": "55"
-        },
-        {
-          "boostId": 33005.0,
-          "statId": 3.0,
-          "expression": "40"
         }
       ]
     },
@@ -18931,13 +19651,13 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvNecklace 1",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 33.0,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 1800.0,
-        "strength": 1200.0,
+        "endurance": 600.0,
+        "strength": 1000.0,
         "agility": 0.0,
-        "intelligence": 700.0,
+        "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 90.0
       },
@@ -18952,28 +19672,43 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 32303.0,
-          "statId": 17.0,
-          "expression": "120"
+          "statId": 3.0,
+          "expression": "83"
         },
         {
           "boostId": 32304.0,
-          "statId": 13.0,
-          "expression": "90"
+          "statId": 8.0,
+          "expression": "200"
         },
         {
           "boostId": 32305.0,
-          "statId": 20.0,
-          "expression": "60"
+          "statId": 12.0,
+          "expression": "25"
         },
         {
           "boostId": 32306.0,
-          "statId": 10.0,
-          "expression": "70"
+          "statId": 13.0,
+          "expression": "50"
         },
         {
           "boostId": 32307.0,
-          "statId": 2.0,
-          "expression": "80"
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36318.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36319.0,
+          "statId": 21.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36320.0,
+          "statId": 22.0,
+          "expression": "25"
         }
       ]
     },
@@ -19008,8 +19743,8 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 31014.0,
-          "statId": 17.0,
-          "expression": "35"
+          "statId": 3.0,
+          "expression": "40"
         },
         {
           "boostId": 31015.0,
@@ -19031,10 +19766,10 @@ window.T4C_DATA = {
       "appearanceInventory": "Inv_NMS_NewCape01__pal9",
       "price": 1500000.0,
       "weight": 2.0,
-      "armorClass": 40.0,
+      "armorClass": 36.0,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 250.0,
+        "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
         "intelligence": 150.0,
@@ -19052,18 +19787,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 36213.0,
+          "statId": 4.0,
+          "expression": "50"
+        },
+        {
+          "boostId": 36214.0,
           "statId": 23.0,
           "expression": "60"
         },
         {
-          "boostId": 36214.0,
+          "boostId": 36215.0,
           "statId": 21.0,
           "expression": "40"
-        },
-        {
-          "boostId": 36215.0,
-          "statId": 4.0,
-          "expression": "50"
         }
       ]
     },
@@ -19075,14 +19810,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 52.0,
+      "armorClass": 54.1,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 550.0,
         "strength": 350.0,
         "agility": 0.0,
         "intelligence": 0.0,
-        "wisdom": 250.0,
+        "wisdom": 0.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -19096,23 +19831,43 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 32003.0,
-          "statId": 15.0,
-          "expression": "24"
+          "statId": 3.0,
+          "expression": "29"
         },
         {
           "boostId": 32004.0,
-          "statId": 3.0,
-          "expression": "20"
+          "statId": 8.0,
+          "expression": "70"
         },
         {
           "boostId": 32005.0,
-          "statId": 4.0,
-          "expression": "18"
+          "statId": 12.0,
+          "expression": "9"
         },
         {
           "boostId": 32006.0,
-          "statId": 8.0,
-          "expression": "30"
+          "statId": 13.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36327.0,
+          "statId": 14.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36328.0,
+          "statId": 15.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 36329.0,
+          "statId": 21.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36330.0,
+          "statId": 22.0,
+          "expression": "9"
         }
       ]
     },
@@ -19149,6 +19904,11 @@ window.T4C_DATA = {
           "boostId": 35002.0,
           "statId": 8.0,
           "expression": "self.true_attack*65/100"
+        },
+        {
+          "boostId": 36393.0,
+          "statId": 3.0,
+          "expression": "27"
         }
       ]
     },
@@ -19185,6 +19945,11 @@ window.T4C_DATA = {
           "boostId": 35003.0,
           "statId": 8.0,
           "expression": "self.true_attack*80/100"
+        },
+        {
+          "boostId": 36394.0,
+          "statId": 3.0,
+          "expression": "27"
         }
       ]
     },
@@ -19196,14 +19961,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 3.0,
-      "armorClass": 45.0,
+      "armorClass": 34.3,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 480.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 0.0,
-        "wisdom": 230.0,
+        "intelligence": 230.0,
+        "wisdom": 60.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -19217,22 +19982,17 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 31000.0,
-          "statId": 14.0,
-          "expression": "22"
+          "statId": 1.0,
+          "expression": "23"
         },
         {
           "boostId": 31001.0,
-          "statId": 22.0,
-          "expression": "18"
+          "statId": 18.0,
+          "expression": "23"
         },
         {
           "boostId": 31002.0,
-          "statId": 18.0,
-          "expression": "24"
-        },
-        {
-          "boostId": 31003.0,
-          "statId": 4.0,
+          "statId": 14.0,
           "expression": "15"
         }
       ]
@@ -19245,10 +20005,10 @@ window.T4C_DATA = {
       "appearanceInventory": "Inv_NMS_NewCape01",
       "price": 1500000.0,
       "weight": 2.0,
-      "armorClass": 40.0,
+      "armorClass": 28.8,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 250.0,
+        "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
         "intelligence": 600.0,
@@ -19266,18 +20026,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 36200.0,
-          "statId": 17.0,
+          "statId": 1.0,
           "expression": "60"
         },
         {
           "boostId": 36201.0,
-          "statId": 13.0,
-          "expression": "40"
+          "statId": 17.0,
+          "expression": "60"
         },
         {
           "boostId": 36202.0,
-          "statId": 1.0,
-          "expression": "50"
+          "statId": 13.0,
+          "expression": "40"
         }
       ]
     },
@@ -19288,20 +20048,55 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvRings 3",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 12.8,
       "requirements": {
-        "agility": 750.0
+        "endurance": 300.0,
+        "strength": 0.0,
+        "agility": 750.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
       },
       "boosts": [
         {
           "boostId": 30000.0,
           "statId": 6.0,
-          "expression": "150"
+          "expression": "62"
         },
         {
           "boostId": 30001.0,
           "statId": 10035.0,
-          "expression": "250"
+          "expression": "150"
+        },
+        {
+          "boostId": 36374.0,
+          "statId": 12.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 36375.0,
+          "statId": 13.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 36376.0,
+          "statId": 14.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 36377.0,
+          "statId": 15.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 36378.0,
+          "statId": 21.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 36379.0,
+          "statId": 22.0,
+          "expression": "19"
         }
       ]
     },
@@ -19313,10 +20108,10 @@ window.T4C_DATA = {
       "appearanceInventory": "Inv_NMS_NewCape01__pal8",
       "price": 1500000.0,
       "weight": 2.0,
-      "armorClass": 40.0,
+      "armorClass": 28.8,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 250.0,
+        "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
         "intelligence": 600.0,
@@ -19334,18 +20129,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 36216.0,
-          "statId": 24.0,
+          "statId": 1.0,
           "expression": "60"
         },
         {
           "boostId": 36217.0,
-          "statId": 22.0,
-          "expression": "40"
+          "statId": 24.0,
+          "expression": "60"
         },
         {
           "boostId": 36218.0,
-          "statId": 1.0,
-          "expression": "50"
+          "statId": 22.0,
+          "expression": "40"
         }
       ]
     },
@@ -19357,14 +20152,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kIconCape",
       "price": 15000.0,
       "weight": 2.0,
-      "armorClass": 26.0,
+      "armorClass": 10.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 150.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 0.0,
-        "wisdom": 180.0,
+        "intelligence": 180.0,
+        "wisdom": 45.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -19378,13 +20173,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 31012.0,
-          "statId": 14.0,
-          "expression": "12"
+          "statId": 1.0,
+          "expression": "18"
         },
         {
           "boostId": 31013.0,
-          "statId": 1.0,
-          "expression": "10"
+          "statId": 18.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 36302.0,
+          "statId": 14.0,
+          "expression": "12"
         }
       ]
     },
@@ -19396,10 +20196,10 @@ window.T4C_DATA = {
       "appearanceInventory": "Inv_NMS_NewCape01__pal2",
       "price": 1500000.0,
       "weight": 2.0,
-      "armorClass": 40.0,
+      "armorClass": 28.8,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 250.0,
+        "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
         "intelligence": 600.0,
@@ -19417,18 +20217,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 36203.0,
-          "statId": 18.0,
+          "statId": 1.0,
           "expression": "60"
         },
         {
           "boostId": 36204.0,
-          "statId": 14.0,
-          "expression": "40"
+          "statId": 18.0,
+          "expression": "60"
         },
         {
           "boostId": 36205.0,
-          "statId": 1.0,
-          "expression": "50"
+          "statId": 14.0,
+          "expression": "40"
         }
       ]
     },
@@ -19439,7 +20239,7 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvRings 4",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 12.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 300.0,
@@ -19460,16 +20260,46 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 31004.0,
-          "statId": 14.0,
-          "expression": "16"
+          "statId": 6.0,
+          "expression": "35"
         },
         {
           "boostId": 31005.0,
-          "statId": 18.0,
-          "expression": "20"
+          "statId": 10035.0,
+          "expression": "84"
         },
         {
           "boostId": 31006.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36380.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36381.0,
+          "statId": 14.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 36382.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36383.0,
+          "statId": 21.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36384.0,
+          "statId": 22.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36385.0,
           "statId": 9.0,
           "expression": "35"
         }
@@ -19482,14 +20312,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvNecklace 4",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 8.8,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 220.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 0.0,
-        "wisdom": 260.0,
+        "intelligence": 260.0,
+        "wisdom": 65.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -19503,13 +20333,18 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 36100.0,
-          "statId": 18.0,
-          "expression": "16"
+          "statId": 1.0,
+          "expression": "26"
         },
         {
           "boostId": 36101.0,
-          "statId": 4.0,
-          "expression": "14"
+          "statId": 18.0,
+          "expression": "26"
+        },
+        {
+          "boostId": 36300.0,
+          "statId": 14.0,
+          "expression": "17"
         }
       ]
     },
@@ -19521,11 +20356,11 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvSkavenShield3",
       "price": 0.0,
       "weight": 14.0,
-      "armorClass": 94.0,
+      "armorClass": 105.6,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 2200.0,
-        "strength": 1400.0,
+        "endurance": 600.0,
+        "strength": 1000.0,
         "agility": 0.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
@@ -19542,16 +20377,46 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 34008.0,
-          "statId": 15.0,
-          "expression": "95"
+          "statId": 3.0,
+          "expression": "83"
         },
         {
           "boostId": 34009.0,
-          "statId": 2.0,
-          "expression": "80"
+          "statId": 8.0,
+          "expression": "200"
         },
         {
           "boostId": 34010.0,
+          "statId": 12.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36321.0,
+          "statId": 13.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36322.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36323.0,
+          "statId": 15.0,
+          "expression": "50"
+        },
+        {
+          "boostId": 36324.0,
+          "statId": 21.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36325.0,
+          "statId": 22.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36326.0,
           "statId": 10008.0,
           "expression": "40"
         }
@@ -19564,14 +20429,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvNecklace 3",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 12.0,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 300.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 0.0,
-        "wisdom": 350.0,
+        "intelligence": 350.0,
+        "wisdom": 90.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -19585,16 +20450,21 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 32100.0,
-          "statId": 22.0,
-          "expression": "26"
+          "statId": 1.0,
+          "expression": "35"
         },
         {
           "boostId": 32101.0,
           "statId": 24.0,
-          "expression": "30"
+          "expression": "35"
         },
         {
           "boostId": 32102.0,
+          "statId": 22.0,
+          "expression": "23"
+        },
+        {
+          "boostId": 36301.0,
           "statId": 21.0,
           "expression": "-10"
         }
@@ -19608,10 +20478,10 @@ window.T4C_DATA = {
       "appearanceInventory": "Inv_NMS_NewCape01__pal6",
       "price": 1500000.0,
       "weight": 2.0,
-      "armorClass": 40.0,
+      "armorClass": 32.4,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 250.0,
+        "endurance": 400.0,
         "strength": 0.0,
         "agility": 0.0,
         "intelligence": 375.0,
@@ -19629,23 +20499,23 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 36209.0,
-          "statId": 16.0,
-          "expression": "60"
-        },
-        {
-          "boostId": 36210.0,
-          "statId": 12.0,
-          "expression": "40"
-        },
-        {
-          "boostId": 36211.0,
           "statId": 1.0,
           "expression": "25"
         },
         {
-          "boostId": 36212.0,
+          "boostId": 36210.0,
           "statId": 4.0,
           "expression": "25"
+        },
+        {
+          "boostId": 36211.0,
+          "statId": 16.0,
+          "expression": "60"
+        },
+        {
+          "boostId": 36212.0,
+          "statId": 12.0,
+          "expression": "40"
         }
       ]
     },
@@ -19656,12 +20526,12 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvBelt",
       "price": 0.0,
       "weight": 1.0,
-      "armorClass": 0.0,
+      "armorClass": 20.4,
       "dodgeLost": 0.0,
       "requirements": {
         "endurance": 480.0,
         "strength": 0.0,
-        "agility": 0.0,
+        "agility": 400.0,
         "intelligence": 0.0,
         "wisdom": 0.0,
         "attack": 0.0
@@ -19677,18 +20547,43 @@ window.T4C_DATA = {
       "boosts": [
         {
           "boostId": 32200.0,
-          "statId": 13.0,
-          "expression": "34"
+          "statId": 6.0,
+          "expression": "33"
         },
         {
           "boostId": 32201.0,
-          "statId": 12.0,
-          "expression": "22"
+          "statId": 10035.0,
+          "expression": "80"
         },
         {
           "boostId": 32202.0,
-          "statId": 2.0,
-          "expression": "28"
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36386.0,
+          "statId": 13.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 36387.0,
+          "statId": 14.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36388.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36389.0,
+          "statId": 21.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36390.0,
+          "statId": 22.0,
+          "expression": "10"
         }
       ]
     },
@@ -19700,14 +20595,14 @@ window.T4C_DATA = {
       "appearanceInventory": "64kInvPlateArmorHelm",
       "price": 0.0,
       "weight": 2.0,
-      "armorClass": 76.0,
+      "armorClass": 42.9,
       "dodgeLost": 0.0,
       "requirements": {
-        "endurance": 2050.0,
+        "endurance": 600.0,
         "strength": 0.0,
         "agility": 0.0,
-        "intelligence": 950.0,
-        "wisdom": 950.0,
+        "intelligence": 900.0,
+        "wisdom": 225.0,
         "attack": 0.0
       },
       "attackSpeed": 0.0,
@@ -19726,18 +20621,13 @@ window.T4C_DATA = {
         },
         {
           "boostId": 34005.0,
-          "statId": 4.0,
+          "statId": 24.0,
           "expression": "90"
         },
         {
           "boostId": 34006.0,
-          "statId": 24.0,
-          "expression": "60"
-        },
-        {
-          "boostId": 34007.0,
           "statId": 22.0,
-          "expression": "45"
+          "expression": "60"
         }
       ]
     }

@@ -8,7 +8,7 @@
   "appearanceInventory": "64kInvPlateGlove",
   "price": 0,
   "weight": 3,
-  "armorClass": 34.29,
+  "armorClass": 43.4,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 550,
@@ -28,47 +28,47 @@
   "undroppable": false,
   "boosts": [
     {
-      "boostId": 20684,
+      "boostId": 20768,
       "statId": 12,
       "expression": "42"
     },
     {
-      "boostId": 20685,
+      "boostId": 20769,
       "statId": 13,
       "expression": "42"
     },
     {
-      "boostId": 20686,
+      "boostId": 20770,
       "statId": 14,
       "expression": "42"
     },
     {
-      "boostId": 20687,
+      "boostId": 20771,
       "statId": 15,
       "expression": "42"
     },
     {
-      "boostId": 20688,
+      "boostId": 20772,
       "statId": 21,
       "expression": "12"
     },
     {
-      "boostId": 20689,
+      "boostId": 20773,
       "statId": 22,
       "expression": "42"
     },
     {
-      "boostId": 20690,
+      "boostId": 20774,
       "statId": 6,
-      "expression": "18"
+      "expression": "15"
     },
     {
-      "boostId": 20691,
+      "boostId": 20775,
       "statId": 10035,
-      "expression": "123"
+      "expression": "37"
     },
     {
-      "boostId": 20692,
+      "boostId": 20776,
       "statId": 2,
       "expression": "11"
     }

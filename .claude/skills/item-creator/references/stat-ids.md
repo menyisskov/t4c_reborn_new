@@ -96,10 +96,15 @@ just a lint issue.
 grep -rhoE '"boostId": [0-9]+' assets/items/*.json | awk '{print $2}' | sort -n | tail -1
 ```
 
-As of this skill being written, JSON-authored items use two ranges:
-- `20000`–`20701`: sequentially assigned by `tools/ArmorSetGenerator.java` for the Ancient
-  Celestial / Empyrean sets (one counter, incremented per boost across all 96 files).
-- `30000`–`30001`: `ring_of_the_archer.json`.
+JSON-authored items use two reserved ranges:
+- `20000`–`29999`: **reserved for `tools/ArmorSetGenerator.java`** (Ancient Celestial / Empyrean
+  sets; one counter, incremented per boost across all 96 files). It currently uses up to about
+  `20803`, and every regeneration can move that end, so never hand-assign an id in this block.
+- `30000`+: hand-authored items (currently up to about `36396`). Take the next free id above
+  the current max.
+
+`ItemBalanceGuidelinesTest` fails the build if two items share a boostId, or if a generated
+set piece falls outside `20000`–`29999`.
 
 Legacy Java items (`item/definition/*.java`) use small, low integers (e.g. `708`, `982`-`988`,
 `304`) assigned ad hoc per file — these are numerous (thousands of legacy files) and not worth

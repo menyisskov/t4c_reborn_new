@@ -6,14 +6,14 @@
   "appearanceInventory": "64kInvPlateArmorFeet",
   "price": 0,
   "weight": 3,
-  "armorClass": 34.29,
+  "armorClass": 29.7,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 400,
     "strength": 0,
     "agility": 0,
-    "intelligence": 150,
-    "wisdom": 150,
+    "intelligence": 300,
+    "wisdom": 75,
     "attack": 0
   },
   "attackSpeed": 0.0,
@@ -26,39 +26,44 @@
   "undroppable": false,
   "boosts": [
     {
-      "boostId": 20091,
+      "boostId": 20104,
       "statId": 12,
       "expression": "29"
     },
     {
-      "boostId": 20092,
+      "boostId": 20105,
       "statId": 13,
       "expression": "29"
     },
     {
-      "boostId": 20093,
+      "boostId": 20106,
       "statId": 14,
       "expression": "29"
     },
     {
-      "boostId": 20094,
+      "boostId": 20107,
       "statId": 15,
       "expression": "29"
     },
     {
-      "boostId": 20095,
+      "boostId": 20108,
       "statId": 21,
       "expression": "9"
     },
     {
-      "boostId": 20096,
+      "boostId": 20109,
       "statId": 22,
       "expression": "29"
     },
     {
-      "boostId": 20097,
+      "boostId": 20110,
       "statId": 18,
       "expression": "12"
+    },
+    {
+      "boostId": 20111,
+      "statId": 1,
+      "expression": "11"
     }
   ]
 }

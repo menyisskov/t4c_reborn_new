@@ -5,13 +5,13 @@
   "appearanceInventory": "64kInvNecklace 2",
   "price": 8500,
   "weight": 1,
-  "armorClass": 0,
+  "armorClass": 5.0,
   "dodgeLost": 0,
   "requirements": {
     "endurance": 100,
     "strength": 0,
     "agility": 0,
-    "intelligence": 0,
+    "intelligence": 30,
     "wisdom": 120,
     "attack": 0
   },
@@ -24,7 +24,20 @@
   "appearanceId": 0,
   "undroppable": false,
   "boosts": [
-    { "boostId": 31007, "statId": 14, "expression": "8" },
-    { "boostId": 31008, "statId": 22, "expression": "6" }
+    {
+      "boostId": 31007,
+      "statId": 4,
+      "expression": "10"
+    },
+    {
+      "boostId": 31008,
+      "statId": 23,
+      "expression": "12"
+    },
+    {
+      "boostId": 36303,
+      "statId": 21,
+      "expression": "8"
+    }
   ]
 }
