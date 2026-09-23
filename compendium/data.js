@@ -18385,646 +18385,10 @@ window.T4C_DATA = {
   },
   "lootSources": [
     {
-      "item": "marchwardens_crown",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.01
-    },
-    {
-      "item": "bow_of_centaur_slaying",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.015
-    },
-    {
-      "item": "ring_of_the_archer",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.02
-    },
-    {
-      "item": "ancient_celestial_archer_armor",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_archer_boots",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_archer_gauntlets",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_archer_helmet",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_archer_leggings",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_archer_protector",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.025
-    },
-    {
-      "item": "empyrean_archer_armor",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_archer_boots",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_archer_gauntlets",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_archer_helmet",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_archer_leggings",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_archer_protector",
-      "monster": "Centaur King",
-      "monsterDisplayName": "Centaur King",
-      "chance": 0.012
-    },
-    {
-      "item": "ysoldes_veiled_circlet",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.02
-    },
-    {
-      "item": "ancient_celestial_dark_armor",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_dark_boots",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_dark_gauntlets",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_dark_helmet",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_dark_leggings",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_dark_protector",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.025
-    },
-    {
-      "item": "empyrean_dark_armor",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_dark_boots",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_dark_gauntlets",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_dark_helmet",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_dark_leggings",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_dark_protector",
-      "monster": "Ysolde, the Veiled Matriarch",
-      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-      "chance": 0.012
-    },
-    {
-      "item": "depths_wardens_talisman",
-      "monster": "DEEPONEBOSS",
-      "monsterDisplayName": "Deep One (Boss)",
-      "chance": 0.015
-    },
-    {
-      "item": "mordrenns_drowned_cowl",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.01
-    },
-    {
-      "item": "ancient_celestial_water_armor",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_water_boots",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_water_gauntlets",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_water_helmet",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_water_leggings",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_water_protector",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.025
-    },
-    {
-      "item": "empyrean_water_armor",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_water_boots",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_water_gauntlets",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_water_helmet",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_water_leggings",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_water_protector",
-      "monster": "Mordrenn the Drowned Inquisitor",
-      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-      "chance": 0.012
-    },
-    {
-      "item": "crown_of_the_hollow_king",
-      "monster": "The Hollow King",
-      "monsterDisplayName": "The Hollow King",
-      "chance": 0.008
-    },
-    {
-      "item": "heartfire_of_the_greater_drake",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.01
-    },
-    {
-      "item": "ancient_celestial_warrior_armor",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_warrior_boots",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_warrior_gauntlets",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_warrior_helmet",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_warrior_leggings",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_warrior_protector",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.025
-    },
-    {
-      "item": "empyrean_warrior_armor",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_warrior_boots",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_warrior_gauntlets",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_warrior_helmet",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_warrior_leggings",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_warrior_protector",
-      "monster": "Greater Drake",
-      "monsterDisplayName": "Grand Drake",
-      "chance": 0.012
-    },
-    {
-      "item": "tideworn_avalon_chart",
-      "monster": "Coastwarden Ithrak",
-      "monsterDisplayName": "Coastwarden Ithrak",
-      "chance": 0.02
-    },
-    {
-      "item": "barnacled_gauntlets",
-      "monster": "Deep One",
-      "monsterDisplayName": "Deep One",
-      "chance": 0.03
-    },
-    {
       "item": "aeries_drakeheart_signet",
       "monster": "Lesser Drake",
       "monsterDisplayName": "Petit Drake",
       "chance": 0.012
-    },
-    {
-      "item": "tideclaw_band",
-      "monster": "Tideclaw Crab",
-      "monsterDisplayName": "Tideclaw Crab",
-      "chance": 0.02
-    },
-    {
-      "item": "ignaroks_emberfang_claw",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.008
-    },
-    {
-      "item": "ancient_celestial_fire_armor",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_fire_boots",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_fire_gauntlets",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_fire_helmet",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_fire_leggings",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_fire_protector",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.025
-    },
-    {
-      "item": "empyrean_fire_armor",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_fire_boots",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_fire_gauntlets",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_fire_helmet",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_fire_leggings",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_fire_protector",
-      "monster": "Ignarok the Emberfang",
-      "monsterDisplayName": "Ignarok the Emberfang",
-      "chance": 0.012
-    },
-    {
-      "item": "bastion_sentinels_mantle",
-      "monster": "Bastion Warden",
-      "monsterDisplayName": "Bastion Warden",
-      "chance": 0.03
-    },
-    {
-      "item": "wyrmling_scale_bracer",
-      "monster": "Kraanian Wyrmling",
-      "monsterDisplayName": "Kraanian Wyrmling",
-      "chance": 0.03
-    },
-    {
-      "item": "verdant_wardens_bulwark",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.015
-    },
-    {
-      "item": "ancient_celestial_earth_armor",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_earth_boots",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_earth_gauntlets",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_earth_helmet",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_earth_leggings",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.025
-    },
-    {
-      "item": "ancient_celestial_earth_protector",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.025
-    },
-    {
-      "item": "empyrean_earth_armor",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_earth_boots",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_earth_gauntlets",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_earth_helmet",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_earth_leggings",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.012
-    },
-    {
-      "item": "empyrean_earth_protector",
-      "monster": "The Verdant Warden",
-      "monsterDisplayName": "The Verdant Warden",
-      "chance": 0.012
-    },
-    {
-      "item": "wight_bound_amulet",
-      "monster": "Barrow Wight",
-      "monsterDisplayName": "Barrow Wight",
-      "chance": 0.03
-    },
-    {
-      "item": "ancient_celestial_light_armor",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.006
-    },
-    {
-      "item": "ancient_celestial_light_boots",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.006
-    },
-    {
-      "item": "ancient_celestial_light_gauntlets",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.006
-    },
-    {
-      "item": "ancient_celestial_light_helmet",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.006
-    },
-    {
-      "item": "ancient_celestial_light_leggings",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.006
-    },
-    {
-      "item": "ancient_celestial_light_protector",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.006
-    },
-    {
-      "item": "empyrean_light_armor",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.003
-    },
-    {
-      "item": "empyrean_light_boots",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.003
-    },
-    {
-      "item": "empyrean_light_gauntlets",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.003
-    },
-    {
-      "item": "empyrean_light_helmet",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.003
-    },
-    {
-      "item": "empyrean_light_leggings",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.003
-    },
-    {
-      "item": "empyrean_light_protector",
-      "monster": "Fey Warden",
-      "monsterDisplayName": "Fey Warden",
-      "chance": 0.003
-    },
-    {
-      "item": "dragonguards_scale_bracer",
-      "monster": "Kraanian Dragonguard",
-      "monsterDisplayName": "Kraanian Dragonguard",
-      "chance": 0.03
-    },
-    {
-      "item": "cinderwrought_sash",
-      "monster": "Ashfang Stalker",
-      "monsterDisplayName": "Ashfang Stalker",
-      "chance": 0.02
-    },
-    {
-      "item": "centaur_warband_ring",
-      "monster": "Centaur Warrior",
-      "monsterDisplayName": "Centaur Warrior",
-      "chance": 0.03
-    },
-    {
-      "item": "bow_of_centaur_slaying",
-      "monster": "Centaur Warrior",
-      "monsterDisplayName": "Centaur Warrior",
-      "chance": 0.008
-    },
-    {
-      "item": "caradocs_sundered_blade",
-      "monster": "Sir Caradoc, the Sundered Knight",
-      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
-      "chance": 0.02
-    },
-    {
-      "item": "archdrakes_molten_heart",
-      "monster": "Arch Drake",
-      "monsterDisplayName": "Arch Drake",
-      "chance": 0.008
     },
     {
       "item": "ancient_celestial_air_armor",
@@ -19063,6 +18427,324 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_archer_armor",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_boots",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_gauntlets",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_helmet",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_leggings",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_protector",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_armor",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_boots",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_gauntlets",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_helmet",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_leggings",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_protector",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_armor",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_boots",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_gauntlets",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_helmet",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_leggings",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_protector",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_armor",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_boots",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_gauntlets",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_helmet",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_leggings",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_protector",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_light_armor",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_boots",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_gauntlets",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_helmet",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_leggings",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_protector",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_warrior_armor",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_boots",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_gauntlets",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_helmet",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_leggings",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_protector",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_armor",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_boots",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_gauntlets",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_helmet",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_leggings",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_protector",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "archdrakes_molten_heart",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.008
+    },
+    {
+      "item": "barnacled_gauntlets",
+      "monster": "Deep One",
+      "monsterDisplayName": "Deep One",
+      "chance": 0.03
+    },
+    {
+      "item": "bastion_sentinels_mantle",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.03
+    },
+    {
+      "item": "bow_of_centaur_slaying",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.015
+    },
+    {
+      "item": "bow_of_centaur_slaying",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.008
+    },
+    {
+      "item": "caradocs_sundered_blade",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.02
+    },
+    {
+      "item": "centaur_warband_ring",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.03
+    },
+    {
+      "item": "cinderwrought_sash",
+      "monster": "Ashfang Stalker",
+      "monsterDisplayName": "Ashfang Stalker",
+      "chance": 0.02
+    },
+    {
+      "item": "crown_of_the_hollow_king",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
+      "chance": 0.008
+    },
+    {
+      "item": "depths_wardens_talisman",
+      "monster": "DEEPONEBOSS",
+      "monsterDisplayName": "Deep One (Boss)",
+      "chance": 0.015
+    },
+    {
+      "item": "dragonguards_scale_bracer",
+      "monster": "Kraanian Dragonguard",
+      "monsterDisplayName": "Kraanian Dragonguard",
+      "chance": 0.03
+    },
+    {
       "item": "empyrean_air_armor",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
@@ -19097,6 +18779,324 @@ window.T4C_DATA = {
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
       "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_armor",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_boots",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_gauntlets",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_helmet",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_leggings",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_protector",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_armor",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_boots",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_gauntlets",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_helmet",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_leggings",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_protector",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_armor",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_boots",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_gauntlets",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_helmet",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_leggings",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_protector",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_armor",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_boots",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_gauntlets",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_helmet",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_leggings",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_protector",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_light_armor",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_boots",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_gauntlets",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_helmet",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_leggings",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_protector",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.003
+    },
+    {
+      "item": "empyrean_warrior_armor",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_boots",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_gauntlets",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_helmet",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_leggings",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_protector",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_armor",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_boots",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_gauntlets",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_helmet",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_leggings",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_protector",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "heartfire_of_the_greater_drake",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.01
+    },
+    {
+      "item": "ignaroks_emberfang_claw",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.008
+    },
+    {
+      "item": "marchwardens_crown",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "mordrenns_drowned_cowl",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.01
+    },
+    {
+      "item": "ring_of_the_archer",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.02
+    },
+    {
+      "item": "tideclaw_band",
+      "monster": "Tideclaw Crab",
+      "monsterDisplayName": "Tideclaw Crab",
+      "chance": 0.02
+    },
+    {
+      "item": "tideworn_avalon_chart",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.02
+    },
+    {
+      "item": "verdant_wardens_bulwark",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.015
+    },
+    {
+      "item": "wight_bound_amulet",
+      "monster": "Barrow Wight",
+      "monsterDisplayName": "Barrow Wight",
+      "chance": 0.03
+    },
+    {
+      "item": "wyrmling_scale_bracer",
+      "monster": "Kraanian Wyrmling",
+      "monsterDisplayName": "Kraanian Wyrmling",
+      "chance": 0.03
+    },
+    {
+      "item": "ysoldes_veiled_circlet",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.02
     }
   ],
   "xpCurve": {
@@ -24679,5 +24679,2477 @@ window.T4C_DATA = {
         ]
       }
     ]
-  }
+  },
+  "maps": [
+    {
+      "zoneId": "sunken_chancel",
+      "image": "maps/sunken_chancel.png",
+      "imageWidth": 1520.0,
+      "imageHeight": 1520.0,
+      "originX": 1560.0,
+      "originY": 2110.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "BrotherThorkas",
+          "displayName": "Brother Thorkas",
+          "x": 1565.0,
+          "y": 2398.0
+        },
+        {
+          "id": "ElysanaBlackrose",
+          "displayName": "Elysana Blackrose",
+          "x": 1561.0,
+          "y": 2471.0
+        },
+        {
+          "id": "GrandmasterVoss",
+          "displayName": "Grandmaster Voss",
+          "x": 1900.0,
+          "y": 2200.0
+        },
+        {
+          "id": "Rawlin",
+          "displayName": "A traveling merchant",
+          "x": 1589.0,
+          "y": 2315.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Antelope",
+          "displayName": "Antelope",
+          "x": 1584.0,
+          "y": 2310.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Antelope",
+          "displayName": "Antelope",
+          "x": 1585.0,
+          "y": 2320.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Antelope",
+          "displayName": "Antelope",
+          "x": 1589.0,
+          "y": 2326.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Drowned Acolyte",
+          "displayName": "Drowned Acolyte",
+          "x": 1710.0,
+          "y": 2270.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Drowned Acolyte",
+          "displayName": "Drowned Acolyte",
+          "x": 1760.0,
+          "y": 2330.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Drowned Acolyte",
+          "displayName": "Drowned Acolyte",
+          "x": 1790.0,
+          "y": 2280.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Drowned Acolyte",
+          "displayName": "Drowned Acolyte",
+          "x": 1700.0,
+          "y": 2340.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Mordrenn the Drowned Inquisitor",
+          "displayName": "Mordrenn the Drowned Inquisitor",
+          "x": 1750.0,
+          "y": 2300.0,
+          "tier": "boss"
+        },
+        {
+          "name": "PIG",
+          "displayName": "A Pig",
+          "x": 1576.0,
+          "y": 2440.0,
+          "tier": "trash"
+        },
+        {
+          "name": "PIG",
+          "displayName": "A Pig",
+          "x": 1578.0,
+          "y": 2443.0,
+          "tier": "trash"
+        },
+        {
+          "name": "PIG",
+          "displayName": "A Pig",
+          "x": 1582.0,
+          "y": 2450.0,
+          "tier": "trash"
+        },
+        {
+          "name": "PIG",
+          "displayName": "A Pig",
+          "x": 1582.0,
+          "y": 2453.0,
+          "tier": "trash"
+        },
+        {
+          "name": "PIG",
+          "displayName": "A Pig",
+          "x": 1588.0,
+          "y": 2448.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideclaw Crab",
+          "displayName": "Tideclaw Crab",
+          "x": 1780.0,
+          "y": 2350.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideclaw Crab",
+          "displayName": "Tideclaw Crab",
+          "x": 1820.0,
+          "y": 2310.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideclaw Crab",
+          "displayName": "Tideclaw Crab",
+          "x": 1730.0,
+          "y": 2360.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Wild Horse",
+          "displayName": "Wild Horse",
+          "x": 1649.0,
+          "y": 2479.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Wild Horse",
+          "displayName": "Wild Horse",
+          "x": 1656.0,
+          "y": 2486.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "The Sunken Chancel",
+          "x": 1750.0,
+          "y": 2300.0
+        }
+      ]
+    },
+    {
+      "zoneId": "cinderreach_hills",
+      "image": "maps/cinderreach_hills.png",
+      "imageWidth": 1520.0,
+      "imageHeight": 1520.0,
+      "originX": 1710.0,
+      "originY": 1410.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "RurikCinderwatch",
+          "displayName": "Rurik Cinderwatch",
+          "x": 1980.0,
+          "y": 1490.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Ashfang Stalker",
+          "displayName": "Ashfang Stalker",
+          "x": 1930.0,
+          "y": 1560.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashfang Stalker",
+          "displayName": "Ashfang Stalker",
+          "x": 1970.0,
+          "y": 1610.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashfang Stalker",
+          "displayName": "Ashfang Stalker",
+          "x": 1880.0,
+          "y": 1660.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Cinder Whelp",
+          "displayName": "Cinder Whelp",
+          "x": 1870.0,
+          "y": 1570.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Cinder Whelp",
+          "displayName": "Cinder Whelp",
+          "x": 1920.0,
+          "y": 1630.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Cinder Whelp",
+          "displayName": "Cinder Whelp",
+          "x": 1950.0,
+          "y": 1580.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Cinder Whelp",
+          "displayName": "Cinder Whelp",
+          "x": 1860.0,
+          "y": 1640.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Ignarok the Emberfang",
+          "displayName": "Ignarok the Emberfang",
+          "x": 1900.0,
+          "y": 1600.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Cinderreach Hills",
+          "x": 1900.0,
+          "y": 1600.0
+        }
+      ]
+    },
+    {
+      "zoneId": "windhowl_marches",
+      "image": "maps/windhowl_marches.png",
+      "imageWidth": 1360.0,
+      "imageHeight": 1360.0,
+      "originX": 1480.0,
+      "originY": 1380.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "MarshalTorrhen",
+          "displayName": "Marshal Torrhen",
+          "x": 1700.0,
+          "y": 1560.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Antelope",
+          "displayName": "Antelope",
+          "x": 1743.0,
+          "y": 1397.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Antelope",
+          "displayName": "Antelope",
+          "x": 1803.0,
+          "y": 1389.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Centaur King",
+          "displayName": "Centaur King",
+          "x": 1650.0,
+          "y": 1550.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Centaur Warrior",
+          "displayName": "Centaur Warrior",
+          "x": 1620.0,
+          "y": 1520.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Centaur Warrior",
+          "displayName": "Centaur Warrior",
+          "x": 1680.0,
+          "y": 1580.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Centaur Warrior",
+          "displayName": "Centaur Warrior",
+          "x": 1610.0,
+          "y": 1590.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Centaur Warrior",
+          "displayName": "Centaur Warrior",
+          "x": 1690.0,
+          "y": 1510.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Goblin Scout",
+          "displayName": "Goblin Scout",
+          "x": 1766.0,
+          "y": 1381.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1510.0,
+          "y": 1630.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1545.0,
+          "y": 1540.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1485.0,
+          "y": 1451.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1521.0,
+          "y": 1549.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1511.0,
+          "y": 1572.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1520.0,
+          "y": 1520.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1535.0,
+          "y": 1610.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1490.0,
+          "y": 1650.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1522.0,
+          "y": 1485.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1490.0,
+          "y": 1558.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1481.0,
+          "y": 1612.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Raider",
+          "displayName": "Raider",
+          "x": 1755.0,
+          "y": 1404.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Raider",
+          "displayName": "Raider",
+          "x": 1791.0,
+          "y": 1386.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Windhowl Marches",
+          "x": 1650.0,
+          "y": 1550.0
+        }
+      ]
+    },
+    {
+      "zoneId": "hollow_march",
+      "image": "maps/hollow_march.png",
+      "imageWidth": 1360.0,
+      "imageHeight": 1360.0,
+      "originX": 1430.0,
+      "originY": 1630.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "ColosseumClerk",
+          "displayName": "A busy-looking clerk",
+          "x": 1730.0,
+          "y": 1830.0
+        },
+        {
+          "id": "NexusStone6",
+          "displayName": "Nexus Index",
+          "x": 1430.0,
+          "y": 1747.0
+        },
+        {
+          "id": "WardenCael",
+          "displayName": "Warden Cael",
+          "x": 1520.0,
+          "y": 1800.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 1570.0,
+          "y": 1770.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 1630.0,
+          "y": 1830.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 1560.0,
+          "y": 1840.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Barrow Wight",
+          "displayName": "Barrow Wight",
+          "x": 1640.0,
+          "y": 1760.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Death Stinger",
+          "displayName": "Death Stinger",
+          "x": 1432.0,
+          "y": 1758.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Death Stinger",
+          "displayName": "Death Stinger",
+          "x": 1433.0,
+          "y": 1744.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1510.0,
+          "y": 1630.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1470.0,
+          "y": 1675.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1440.0,
+          "y": 1672.0,
+          "tier": "trash"
+        },
+        {
+          "name": "The Hollow King",
+          "displayName": "The Hollow King",
+          "x": 1600.0,
+          "y": 1800.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1490.0,
+          "y": 1650.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1447.0,
+          "y": 1648.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Colosseum",
+          "x": 1725.0,
+          "y": 1825.0
+        },
+        {
+          "name": "The Hollow March",
+          "x": 1600.0,
+          "y": 1800.0
+        }
+      ]
+    },
+    {
+      "zoneId": "lesser_drakes_aerie",
+      "image": "maps/lesser_drakes_aerie.png",
+      "imageWidth": 1520.0,
+      "imageHeight": 1520.0,
+      "originX": 1710.0,
+      "originY": 1760.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "ColosseumClerk",
+          "displayName": "A busy-looking clerk",
+          "x": 1730.0,
+          "y": 1830.0
+        },
+        {
+          "id": "SkywatchIlvara",
+          "displayName": "Skywatch Ilvara",
+          "x": 1830.0,
+          "y": 1900.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Kraanian Wyrmling",
+          "displayName": "Kraanian Wyrmling",
+          "x": 1870.0,
+          "y": 1920.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Kraanian Wyrmling",
+          "displayName": "Kraanian Wyrmling",
+          "x": 1930.0,
+          "y": 1980.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Kraanian Wyrmling",
+          "displayName": "Kraanian Wyrmling",
+          "x": 1860.0,
+          "y": 1990.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Kraanian Wyrmling",
+          "displayName": "Kraanian Wyrmling",
+          "x": 1940.0,
+          "y": 1910.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Lesser Drake",
+          "displayName": "Petit Drake",
+          "x": 1900.0,
+          "y": 1950.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Colosseum",
+          "x": 1725.0,
+          "y": 1825.0
+        },
+        {
+          "name": "Lesser Drake's Aerie",
+          "x": 1900.0,
+          "y": 1950.0
+        }
+      ]
+    },
+    {
+      "zoneId": "greater_drakes_bastion",
+      "image": "maps/greater_drakes_bastion.png",
+      "imageWidth": 1600.0,
+      "imageHeight": 1600.0,
+      "originX": 1800.0,
+      "originY": 2100.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "GrandmasterVoss",
+          "displayName": "Grandmaster Voss",
+          "x": 1900.0,
+          "y": 2200.0
+        },
+        {
+          "id": "OutriderKaelis",
+          "displayName": "Outrider Kaelis",
+          "x": 2150.0,
+          "y": 2450.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 1970.0,
+          "y": 2270.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2030.0,
+          "y": 2330.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 1960.0,
+          "y": 2340.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2040.0,
+          "y": 2260.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Greater Drake",
+          "displayName": "Grand Drake",
+          "x": 2000.0,
+          "y": 2300.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Kraanian Dragonguard",
+          "displayName": "Kraanian Dragonguard",
+          "x": 2170.0,
+          "y": 2470.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Tideclaw Crab",
+          "displayName": "Tideclaw Crab",
+          "x": 1820.0,
+          "y": 2310.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Greater Drake's Bastion",
+          "x": 2000.0,
+          "y": 2300.0
+        }
+      ]
+    },
+    {
+      "zoneId": "drakes_lair",
+      "image": "maps/drakes_lair.png",
+      "imageWidth": 1600.0,
+      "imageHeight": 1600.0,
+      "originX": 2000.0,
+      "originY": 2300.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "OutriderKaelis",
+          "displayName": "Outrider Kaelis",
+          "x": 2150.0,
+          "y": 2450.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Arch Drake",
+          "displayName": "Arch Drake",
+          "x": 2200.0,
+          "y": 2500.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Bastion Warden",
+          "displayName": "Bastion Warden",
+          "x": 2030.0,
+          "y": 2330.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Greater Drake",
+          "displayName": "Grand Drake",
+          "x": 2000.0,
+          "y": 2300.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Kraanian Dragonguard",
+          "displayName": "Kraanian Dragonguard",
+          "x": 2170.0,
+          "y": 2470.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Kraanian Dragonguard",
+          "displayName": "Kraanian Dragonguard",
+          "x": 2230.0,
+          "y": 2530.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Kraanian Dragonguard",
+          "displayName": "Kraanian Dragonguard",
+          "x": 2160.0,
+          "y": 2540.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Kraanian Dragonguard",
+          "displayName": "Kraanian Dragonguard",
+          "x": 2240.0,
+          "y": 2460.0,
+          "tier": "trash"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Greater Drake's Bastion",
+          "x": 2000.0,
+          "y": 2300.0
+        },
+        {
+          "name": "Drake's Lair",
+          "x": 2200.0,
+          "y": 2500.0
+        }
+      ]
+    },
+    {
+      "zoneId": "deep_ones_cave",
+      "image": "maps/deep_ones_cave.png",
+      "imageWidth": 1120.0,
+      "imageHeight": 1120.0,
+      "originX": 190.0,
+      "originY": 2106.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "Dafyd",
+          "displayName": "A peaceful traveler",
+          "x": 440.0,
+          "y": 2285.0
+        },
+        {
+          "id": "KeeperTamsin",
+          "displayName": "Keeper Tamsin",
+          "x": 300.0,
+          "y": 2320.0
+        },
+        {
+          "id": "NexusStone14",
+          "displayName": "Nexus Index",
+          "x": 236.0,
+          "y": 2212.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 278.0,
+          "y": 2293.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 280.0,
+          "y": 2283.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 286.0,
+          "y": 2260.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 288.0,
+          "y": 2245.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 303.0,
+          "y": 2298.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 323.0,
+          "y": 2198.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 327.0,
+          "y": 2288.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 334.0,
+          "y": 2267.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 337.0,
+          "y": 2192.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 349.0,
+          "y": 2201.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 349.0,
+          "y": 2226.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 350.0,
+          "y": 2270.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 351.0,
+          "y": 2208.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 352.0,
+          "y": 2237.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 355.0,
+          "y": 2187.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 360.0,
+          "y": 2223.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 360.0,
+          "y": 2272.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Deep One",
+          "displayName": "Deep One",
+          "x": 363.0,
+          "y": 2285.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Giant Scorpion",
+          "displayName": "Giant Scorpion",
+          "x": 302.0,
+          "y": 2383.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Giant Scorpion",
+          "displayName": "Giant Scorpion",
+          "x": 357.0,
+          "y": 2365.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Giant Scorpion",
+          "displayName": "Giant Scorpion",
+          "x": 370.0,
+          "y": 2369.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sand Worm",
+          "displayName": "Sand Worm",
+          "x": 255.0,
+          "y": 2385.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 206.0,
+          "y": 2111.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 214.0,
+          "y": 2156.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 215.0,
+          "y": 2131.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 220.0,
+          "y": 2233.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 225.0,
+          "y": 2169.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 226.0,
+          "y": 2236.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 228.0,
+          "y": 2121.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 229.0,
+          "y": 2191.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 229.0,
+          "y": 2212.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 233.0,
+          "y": 2263.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 240.0,
+          "y": 2110.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 242.0,
+          "y": 2174.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 246.0,
+          "y": 2222.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 346.0,
+          "y": 2186.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 367.0,
+          "y": 2195.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 388.0,
+          "y": 2247.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 389.0,
+          "y": 2132.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 389.0,
+          "y": 2186.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 389.0,
+          "y": 2297.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 398.0,
+          "y": 2117.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 409.0,
+          "y": 2202.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 414.0,
+          "y": 2144.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 414.0,
+          "y": 2323.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 418.0,
+          "y": 2195.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 422.0,
+          "y": 2211.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 431.0,
+          "y": 2261.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 439.0,
+          "y": 2292.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 443.0,
+          "y": 2321.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 457.0,
+          "y": 2163.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Taunting Horror",
+          "displayName": "Taunting Horror",
+          "x": 468.0,
+          "y": 2317.0,
+          "tier": "trash"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Deep Ones Cave",
+          "x": 330.0,
+          "y": 2246.0
+        }
+      ]
+    },
+    {
+      "zoneId": "avalon_sanctuary",
+      "image": "maps/avalon_sanctuary.png",
+      "imageWidth": 1280.0,
+      "imageHeight": 1280.0,
+      "originX": 1390.0,
+      "originY": 1140.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "ArganorIargh",
+          "displayName": "Arganor Iargh",
+          "x": 1689.0,
+          "y": 1232.0
+        },
+        {
+          "id": "AssystAnter",
+          "displayName": "Assyst Anter",
+          "x": 1639.0,
+          "y": 1191.0
+        },
+        {
+          "id": "BrotherHarforr",
+          "displayName": "Brother Harforr",
+          "x": 1653.0,
+          "y": 1171.0
+        },
+        {
+          "id": "BrotherNiuss",
+          "displayName": "Brother Niuss",
+          "x": 1693.0,
+          "y": 1176.0
+        },
+        {
+          "id": "CaptainHarockHarr",
+          "displayName": "Captain Harock Harr",
+          "x": 1583.0,
+          "y": 1215.0
+        },
+        {
+          "id": "DoorNomad1",
+          "displayName": "Wooden Door",
+          "x": 1672.0,
+          "y": 1330.0
+        },
+        {
+          "id": "Garnir",
+          "displayName": "Garnir",
+          "x": 1692.0,
+          "y": 1224.0
+        },
+        {
+          "id": "GreyarEedy",
+          "displayName": "Greyard Eedy",
+          "x": 1620.0,
+          "y": 1209.0
+        },
+        {
+          "id": "Gwen",
+          "displayName": "Gwen",
+          "x": 1667.0,
+          "y": 1271.0
+        },
+        {
+          "id": "HarbormasterRangor",
+          "displayName": "Harbormaster Rangor",
+          "x": 1500.0,
+          "y": 1200.0
+        },
+        {
+          "id": "JurnistakrKira",
+          "displayName": "Jurnistakr Kira",
+          "x": 1698.0,
+          "y": 1152.0
+        },
+        {
+          "id": "Karl",
+          "displayName": "Karl",
+          "x": 1701.0,
+          "y": 1238.0
+        },
+        {
+          "id": "LaonianRikarr",
+          "displayName": "Laonian Rikarr",
+          "x": 1705.0,
+          "y": 1158.0
+        },
+        {
+          "id": "LiurnClar",
+          "displayName": "Liurn Clar",
+          "x": 1599.0,
+          "y": 1250.0
+        },
+        {
+          "id": "LordSunrock",
+          "displayName": "Lord Sunrock",
+          "x": 1609.0,
+          "y": 1181.0
+        },
+        {
+          "id": "Malaar",
+          "displayName": "Malaar",
+          "x": 1690.0,
+          "y": 1165.0
+        },
+        {
+          "id": "MarsacCred",
+          "displayName": "Marsac Cred",
+          "x": 1608.0,
+          "y": 1253.0
+        },
+        {
+          "id": "MirakNira",
+          "displayName": "Mirak Nira",
+          "x": 1641.0,
+          "y": 1181.0
+        },
+        {
+          "id": "NisalmMalorik",
+          "displayName": "Nisalm Malorik",
+          "x": 1621.0,
+          "y": 1175.0
+        },
+        {
+          "id": "RylethCth",
+          "displayName": "R'yleth Cth",
+          "x": 1604.0,
+          "y": 1244.0
+        },
+        {
+          "id": "SamilAlgder",
+          "displayName": "Samil Algder",
+          "x": 1704.0,
+          "y": 1158.0
+        },
+        {
+          "id": "SkipperRedBeard",
+          "displayName": "Skipper Red Beard",
+          "x": 1570.0,
+          "y": 1226.0
+        },
+        {
+          "id": "StorageChest",
+          "displayName": "Storage Chest",
+          "x": 1606.0,
+          "y": 1178.0
+        },
+        {
+          "id": "Yolak",
+          "displayName": "Yolak",
+          "x": 1649.0,
+          "y": 1243.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Coastwarden Ithrak",
+          "displayName": "Coastwarden Ithrak",
+          "x": 1560.0,
+          "y": 1290.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1435.0,
+          "y": 1435.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1485.0,
+          "y": 1451.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1500.0,
+          "y": 1260.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1540.0,
+          "y": 1240.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1580.0,
+          "y": 1255.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1610.0,
+          "y": 1280.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1590.0,
+          "y": 1320.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1550.0,
+          "y": 1340.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1510.0,
+          "y": 1330.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1480.0,
+          "y": 1300.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1620.0,
+          "y": 1330.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Tideworn Reaver",
+          "displayName": "Tideworn Reaver",
+          "x": 1470.0,
+          "y": 1270.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1460.0,
+          "y": 1450.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1390.0,
+          "y": 1445.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1415.0,
+          "y": 1450.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Raider",
+          "displayName": "Raider",
+          "x": 1591.0,
+          "y": 1154.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Raider",
+          "displayName": "Raider",
+          "x": 1597.0,
+          "y": 1140.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Wild Horse",
+          "displayName": "Wild Horse",
+          "x": 1555.0,
+          "y": 1148.0,
+          "tier": "boss"
+        },
+        {
+          "name": "SUNDIAL",
+          "displayName": "SUNDIAL",
+          "x": 1667.0,
+          "y": 1242.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": []
+    },
+    {
+      "zoneId": "avalon_wilds",
+      "image": "maps/avalon_wilds.png",
+      "imageWidth": 1280.0,
+      "imageHeight": 1280.0,
+      "originX": 1105.0,
+      "originY": 1240.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "ArchmageThalindra",
+          "displayName": "Archmage Thalindra",
+          "x": 1362.0,
+          "y": 1512.0
+        },
+        {
+          "id": "ElderOphira",
+          "displayName": "Elder Ophira",
+          "x": 1316.0,
+          "y": 1493.0
+        },
+        {
+          "id": "QuartermasterElenna",
+          "displayName": "Quartermaster Elenna",
+          "x": 1364.0,
+          "y": 1494.0
+        },
+        {
+          "id": "Scholar1",
+          "displayName": "Scholar",
+          "x": 1143.0,
+          "y": 1447.0
+        },
+        {
+          "id": "Scholar2",
+          "displayName": "Scholar",
+          "x": 1165.0,
+          "y": 1469.0
+        },
+        {
+          "id": "Scholar3",
+          "displayName": "Scholar",
+          "x": 1175.0,
+          "y": 1435.0
+        },
+        {
+          "id": "Scholar4",
+          "displayName": "Scholar",
+          "x": 1190.0,
+          "y": 1460.0
+        },
+        {
+          "id": "SisterIlyndra",
+          "displayName": "Sister Ilyndra",
+          "x": 1340.0,
+          "y": 1479.0
+        },
+        {
+          "id": "WayfarerBryndis",
+          "displayName": "Wayfarer Bryndis",
+          "x": 1318.0,
+          "y": 1512.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "CENTAURCHAMPION",
+          "displayName": "Centaur Champion",
+          "x": 1136.0,
+          "y": 1269.0,
+          "tier": "boss"
+        },
+        {
+          "name": "CENTAURTRACKER",
+          "displayName": "Centaur Tracker",
+          "x": 1163.0,
+          "y": 1261.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1345.0,
+          "y": 1420.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1195.0,
+          "y": 1450.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1295.0,
+          "y": 1310.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1175.0,
+          "y": 1370.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1325.0,
+          "y": 1470.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1225.0,
+          "y": 1485.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1360.0,
+          "y": 1385.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1170.0,
+          "y": 1415.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1195.0,
+          "y": 1319.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1253.0,
+          "y": 1293.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1315.0,
+          "y": 1306.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1222.0,
+          "y": 1379.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1266.0,
+          "y": 1366.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1321.0,
+          "y": 1364.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1222.0,
+          "y": 1433.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1261.0,
+          "y": 1424.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1325.0,
+          "y": 1423.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1249.0,
+          "y": 1461.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1291.0,
+          "y": 1480.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1236.0,
+          "y": 1502.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1315.0,
+          "y": 1460.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1205.0,
+          "y": 1440.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1335.0,
+          "y": 1360.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1235.0,
+          "y": 1325.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1285.0,
+          "y": 1495.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1180.0,
+          "y": 1375.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1355.0,
+          "y": 1435.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1250.0,
+          "y": 1300.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1229.0,
+          "y": 1299.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1273.0,
+          "y": 1293.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1332.0,
+          "y": 1317.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1195.0,
+          "y": 1349.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1280.0,
+          "y": 1381.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1333.0,
+          "y": 1380.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1222.0,
+          "y": 1409.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1245.0,
+          "y": 1412.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1301.0,
+          "y": 1430.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1260.0,
+          "y": 1444.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1231.0,
+          "y": 1451.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1264.0,
+          "y": 1475.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1330.0,
+          "y": 1500.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1370.0,
+          "y": 1445.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1380.0,
+          "y": 1520.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1346.0,
+          "y": 1558.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1305.0,
+          "y": 1530.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1390.0,
+          "y": 1445.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1415.0,
+          "y": 1450.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1360.0,
+          "y": 1536.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1329.0,
+          "y": 1539.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Wild Horse",
+          "displayName": "Wild Horse",
+          "x": 1109.0,
+          "y": 1263.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Avalon Sanctuary",
+          "x": 1340.0,
+          "y": 1477.0
+        },
+        {
+          "name": "The Avalon Wilds",
+          "x": 1265.0,
+          "y": 1400.0
+        }
+      ]
+    },
+    {
+      "zoneId": "fading_veil",
+      "image": "maps/fading_veil.png",
+      "imageWidth": 1440.0,
+      "imageHeight": 1440.0,
+      "originX": 1240.0,
+      "originY": 1380.0,
+      "pxPerTile": 4.0,
+      "npcs": [
+        {
+          "id": "AnrakBrownbark",
+          "displayName": "Anrak",
+          "x": 1270.0,
+          "y": 1621.0
+        },
+        {
+          "id": "ArchmageThalindra",
+          "displayName": "Archmage Thalindra",
+          "x": 1362.0,
+          "y": 1512.0
+        },
+        {
+          "id": "ElderOphira",
+          "displayName": "Elder Ophira",
+          "x": 1316.0,
+          "y": 1493.0
+        },
+        {
+          "id": "QuartermasterElenna",
+          "displayName": "Quartermaster Elenna",
+          "x": 1364.0,
+          "y": 1494.0
+        },
+        {
+          "id": "SisterIlyndra",
+          "displayName": "Sister Ilyndra",
+          "x": 1340.0,
+          "y": 1479.0
+        },
+        {
+          "id": "WayfarerBryndis",
+          "displayName": "Wayfarer Bryndis",
+          "x": 1318.0,
+          "y": 1512.0
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1345.0,
+          "y": 1420.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1325.0,
+          "y": 1470.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1360.0,
+          "y": 1385.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1261.0,
+          "y": 1424.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1325.0,
+          "y": 1423.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1249.0,
+          "y": 1461.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Fey Warden",
+          "displayName": "Fey Warden",
+          "x": 1291.0,
+          "y": 1480.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1315.0,
+          "y": 1460.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1285.0,
+          "y": 1495.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1355.0,
+          "y": 1435.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1280.0,
+          "y": 1381.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1333.0,
+          "y": 1380.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1245.0,
+          "y": 1412.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1301.0,
+          "y": 1430.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1260.0,
+          "y": 1444.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1264.0,
+          "y": 1475.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1450.0,
+          "y": 1595.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1470.0,
+          "y": 1595.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1460.0,
+          "y": 1613.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sir Caradoc, the Sundered Knight",
+          "displayName": "Sir Caradoc, the Sundered Knight",
+          "x": 1440.0,
+          "y": 1540.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1510.0,
+          "y": 1630.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1330.0,
+          "y": 1500.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1470.0,
+          "y": 1675.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1370.0,
+          "y": 1445.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1545.0,
+          "y": 1540.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1295.0,
+          "y": 1575.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1435.0,
+          "y": 1435.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1405.0,
+          "y": 1685.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1485.0,
+          "y": 1451.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1447.0,
+          "y": 1485.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1380.0,
+          "y": 1520.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1521.0,
+          "y": 1549.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1346.0,
+          "y": 1558.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1511.0,
+          "y": 1572.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1345.0,
+          "y": 1590.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1460.0,
+          "y": 1598.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1339.0,
+          "y": 1636.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1400.0,
+          "y": 1641.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1418.0,
+          "y": 1659.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1440.0,
+          "y": 1672.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1430.0,
+          "y": 1535.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1450.0,
+          "y": 1535.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1440.0,
+          "y": 1552.0,
+          "tier": "trash"
+        },
+        {
+          "name": "The Verdant Warden",
+          "displayName": "The Verdant Warden",
+          "x": 1460.0,
+          "y": 1600.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1520.0,
+          "y": 1520.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1320.0,
+          "y": 1590.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1460.0,
+          "y": 1450.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1360.0,
+          "y": 1660.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1535.0,
+          "y": 1610.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1305.0,
+          "y": 1530.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1490.0,
+          "y": 1650.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1390.0,
+          "y": 1445.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1415.0,
+          "y": 1450.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1522.0,
+          "y": 1485.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1360.0,
+          "y": 1536.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1490.0,
+          "y": 1558.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1329.0,
+          "y": 1539.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1465.0,
+          "y": 1555.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1375.0,
+          "y": 1598.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1481.0,
+          "y": 1612.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1310.0,
+          "y": 1624.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1425.0,
+          "y": 1635.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1447.0,
+          "y": 1648.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1385.0,
+          "y": 1661.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1390.0,
+          "y": 1575.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1410.0,
+          "y": 1575.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 1400.0,
+          "y": 1592.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Ysolde, the Veiled Matriarch",
+          "displayName": "Ysolde, the Veiled Matriarch",
+          "x": 1400.0,
+          "y": 1580.0,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Avalon Sanctuary",
+          "x": 1340.0,
+          "y": 1477.0
+        },
+        {
+          "name": "The Avalon Wilds",
+          "x": 1265.0,
+          "y": 1400.0
+        },
+        {
+          "name": "The Fading Veil",
+          "x": 1420.0,
+          "y": 1560.0
+        }
+      ]
+    }
+  ]
 };

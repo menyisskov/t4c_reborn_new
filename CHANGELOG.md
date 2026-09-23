@@ -15,6 +15,19 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-23 — Zone map images on the compendium site (T4C-0023)
+
+### Added
+- The reference website now has a "Maps" page: a colored top-down map for every new zone,
+  drawn straight from the game's own terrain art, with every NPC and notable monster (bosses
+  shown bigger and always labeled, common spawns labeled on hover) pinned at its real
+  location, plus nearby landmark names for orientation. Each zone's own page also shows a
+  small preview of its map with a link to the full view.
+
+### Fixed
+- The "where to find it" listing on item pages could reorder itself on every site refresh with
+  no actual data change, since one of the lists it's built from wasn't sorted. Now stable.
+
 ## 2026-09-23 — Town-side access quests for Sunken Chancel and Cinderreach Hills (T4C-0022)
 
 ### Added

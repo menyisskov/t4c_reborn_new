@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0023`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0024`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -34,7 +34,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0019 | Zone access quests, Avalon dead-end fix, dynamic fast travel | Content/Systems | Done | `43e9890` | [2026-09-22](CHANGELOG.md#2026-09-22--zone-access-quests-avalon-dead-end-fix-dynamic-fast-travel-t4c-0019) |
 | T4C-0020 | CLAUDE.md: CHANGELOG.md must be written for players, not engineers | Process/Tooling | Done | `ce722be` | [2026-09-23](CHANGELOG.md#2026-09-23--changelog-writing-policy-player-facing-not-technical-t4c-0020) |
 | T4C-0021 | Spell class balance pass, armor set loot wiring, compendium data/display fixes | Content/Fix | Done | `148c76f`, `97151ea` | [2026-09-23](CHANGELOG.md#2026-09-23--spell-balance-lost-armor-recovered-and-honest-site-data-t4c-0021) |
-| T4C-0022 | Standalone town-side access quests for Sunken Chancel and Cinderreach Hills | Content | Done | (pending) | [2026-09-23](CHANGELOG.md#2026-09-23--town-side-access-quests-for-sunken-chancel-and-cinderreach-hills-t4c-0022) |
+| T4C-0022 | Standalone town-side access quests for Sunken Chancel and Cinderreach Hills | Content | Done | `960509f` | [2026-09-23](CHANGELOG.md#2026-09-23--town-side-access-quests-for-sunken-chancel-and-cinderreach-hills-t4c-0022) |
+| T4C-0023 | Zone map images on the compendium site (real tile-art coloring, NPC/boss pins) | Content/Tooling | Done | (pending) | [2026-09-23](CHANGELOG.md#2026-09-23--zone-map-images-on-the-compendium-site-t4c-0023) |
 
 ## Type legend
 

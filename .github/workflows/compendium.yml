@@ -40,6 +40,9 @@ jobs:
       - name: Build runtime classpath
         run: mvn -B -q dependency:build-classpath -Dmdep.outputFile=/tmp/cp.txt
 
+      - name: Regenerate zone map images
+        run: java -cp "target/classes:$(cat /tmp/cp.txt)" com.perso.T4C.tools.MinimapExporter compendium/data
+
       - name: Regenerate compendium data
         run: java -cp "target/classes:$(cat /tmp/cp.txt)" com.perso.T4C.tools.CompendiumExporter compendium/data
 
