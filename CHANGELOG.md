@@ -47,6 +47,11 @@ _Nothing pending._
   to match its requirement (+62 agility, +150 archery). It now also gives armor class and
   resistances.
 
+### Added
+- The project's design rules are now written down in one place, covering levels, rebirths,
+  spells, items, colors and the reference website. The file is kept up to date as new decisions
+  are made. No in-game effect.
+
 ## 2026-09-23 — Rebirths page on the reference website (T4C-0026)
 
 ### Added

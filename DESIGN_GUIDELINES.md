@@ -9,6 +9,29 @@ pass, so the rules live here instead of only in a chat log.
 Where a rule is enforced in code, the enforcing class and test are named next to it. Change the
 code and this file together.
 
+## 0. Keeping this file current (standing instruction)
+
+The owner does not need to ask for an entry here. **Keep this file current yourself:** after
+every conversation or task, work out which decisions should outlive the chat and write them
+down in the same pass (and the same PR) as the work. Add something when it is any of these:
+
+- **A rule or number the owner states or approves.** Caps, formulas, ratios, thresholds,
+  naming or color schemes, "X should always/never Y".
+- **A correction.** When the owner says something "doesn't make sense" and explains what they
+  expected, the expectation is the rule. Record the general rule, not just the one fixed item.
+- **A design choice you had to make** to carry out an instruction, and would otherwise make
+  differently next time: the formula you picked, a tie-breaker, what counts as "balanced". Say
+  it was your call so the owner can overrule it.
+- **A workflow preference.** How to deliver work, when to merge, what to double-check, what the
+  owner wants reported.
+- **An accepted trade-off or known gap** that the owner saw and didn't reject (for example,
+  "monsters above the level cap stay for now"). Mark it as open, not decided.
+
+Don't add one-off task details, anything already obvious from the code, or anything the owner
+rejected. When a new instruction contradicts an entry, replace the entry; don't keep both. If
+you can't tell whether something is a lasting rule, add it and say so in your summary, so the
+owner can strike it.
+
 ## 1. Character progression
 
 | Rule | Value | Where |
@@ -155,6 +178,8 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Show numbers the way the game really uses them. Publish computed values from the game's own
   helpers, not hand-typed copies. For example, the Seraph aura rolls 0–100 inclusive, so the
   Rebirths page shows (c + 1)/101, not c%.
+- "Is the website up to date?" means the live Vercel production deployment is the current `main`
+  commit, and re-running the exporter on `main` changes nothing. Check both before answering.
 - Pages that exist for rules: Systems (XP curve), Rebirths (per-rebirth requirements and
   rewards), Spells, Items.
 
@@ -165,3 +190,9 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   Fix real findings, reply on each thread, and resolve it. Merge only after all of that.
   Never merge while Codex is still running.
 - Once a PR is merged, start follow-up work on the same branch name, freshly from `main`.
+- When asked to "double check and merge", re-audit your own diff first (anything that could
+  still break the rules above or old saves). Then follow the merge rule above; you may merge
+  yourself once it holds.
+- Tell the owner about pre-existing problems you notice along the way (unwearable items,
+  soft-locks, misleading displays). Fix them when they're small and in scope; otherwise list
+  them as follow-ups.
