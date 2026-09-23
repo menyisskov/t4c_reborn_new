@@ -10,6 +10,7 @@
   var SHOPS = DATA.shops || {};
   var LOOT_SOURCES = DATA.lootSources || [];
   var ZONES = DATA.zones || [];
+  var MAPS = DATA.maps || [];
   var STAT_IDS = DATA.statIds || {};
   var META = DATA.meta || {};
 
@@ -27,6 +28,7 @@
   byKey.npc = indexBy(NPCS, "id");
   byKey.item = indexBy(ITEMS, "key");
   byKey.zone = indexBy(ZONES, "id");
+  byKey.map = indexBy(MAPS, "zoneId");
 
   // loot: item key -> [{monster, chance}]. Sourced from lootSources (every real drop, scanning
   // the full monster registry) rather than MONSTERS (only the ones with their own compendium
@@ -325,6 +327,17 @@
   function zoneMap(z) {
     if (!z.worldmapCenter) return "";
     var c = z.worldmapCenter;
+    var m = byKey.map[z.id];
+    if (m) {
+      return (
+        '<div class="zone-map-strip">' +
+        '<a class="map-thumb-link" href="#/maps/' + slug(z.id) + '">' +
+        '<div class="map-thumb" style="background-image:url(data/' + m.image + ')"></div></a>' +
+        '<div><p class="lead">Worldmap center (' + c.x + ", " + c.y + "), radius " + c.radius +
+        ' tiles — this is the geofence quest kills must land inside.</p>' +
+        '<p>' + link("maps/" + slug(z.id), "Open the full map →") + "</p></div></div>"
+      );
+    }
     var worldSize = 3200; // approximate worldmap extent used purely for a schematic dot placement
     var left = Math.min(94, Math.max(6, (c.x / worldSize) * 100));
     var top = Math.min(94, Math.max(6, (c.y / worldSize) * 100));
@@ -338,6 +351,86 @@
       " tiles — this is the geofence quest kills must land inside.</p></div></div>"
     );
   }
+
+  // --------------------------------------------------------------------- maps
+
+  route("maps", function () {
+    var cards = MAPS.map(function (m) {
+      var z = byKey.zone[m.zoneId];
+      if (!z) return "";
+      return (
+        '<a class="card map-card" href="#/maps/' + slug(m.zoneId) + '">' +
+        '<div class="map-thumb" style="background-image:url(data/' + m.image + ')"></div>' +
+        "<h3>" + esc(z.name) + "</h3>" +
+        "<p>" + esc(z.levelRange) + " · " + esc(z.biome) + "</p>" +
+        "</a>"
+      );
+    }).join("");
+    return (
+      '<div class="page-header"><p class="eyebrow">Maps</p><h1>Zone maps</h1>' +
+      '<p class="lead">Stylized top-down renders of each new zone, colored from the game’s own ' +
+      "ground-tile art (one averaged color per real sprite, not invented), with every NPC and " +
+      "monster spawn pinned at its true position. Not a literal in-game screenshot — see each " +
+      "map's own note for what's simplified.</p></div>" +
+      '<div class="card-grid">' + cards + "</div>"
+    );
+  });
+
+  route("maps/:id", function (params) {
+    var m = byKey.map[params.id];
+    var z = byKey.zone[params.id];
+    if (!m || !z) return notFound("Map");
+
+    var tilesWide = m.imageWidth / m.pxPerTile;
+    var tilesHigh = m.imageHeight / m.pxPerTile;
+    function pct(worldX, worldY) {
+      return {
+        left: Math.min(100, Math.max(0, ((worldX - m.originX) / tilesWide) * 100)),
+        top: Math.min(100, Math.max(0, ((worldY - m.originY) / tilesHigh) * 100))
+      };
+    }
+    function pin(kind, x, y, linkHtml, title) {
+      var p = pct(x, y);
+      return (
+        '<div class="map-pin pin-' + kind + '" style="left:' + p.left + "%;top:" + p.top + '%">' +
+        '<span class="pin-dot" title="' + esc(title) + '"></span>' +
+        '<span class="pin-label">' + linkHtml + "</span></div>"
+      );
+    }
+
+    var pins = "";
+    (m.namedLocations || []).forEach(function (loc) {
+      var p = pct(loc.x, loc.y);
+      pins += '<div class="map-area-label" style="left:' + p.left + "%;top:" + p.top + '%">' + esc(loc.name) + "</div>";
+    });
+    (m.monsters || []).filter(function (mo) { return mo.tier === "trash"; }).forEach(function (mo) {
+      pins += pin("trash", mo.x, mo.y, monsterLink(mo.name, mo.displayName), mo.displayName);
+    });
+    (m.monsters || []).filter(function (mo) { return mo.tier === "boss"; }).forEach(function (mo) {
+      pins += pin("boss", mo.x, mo.y, monsterLink(mo.name, mo.displayName), mo.displayName);
+    });
+    (m.npcs || []).forEach(function (n) {
+      pins += pin("npc", n.x, n.y, npcLink(n.id), n.displayName);
+    });
+
+    return (
+      breadcrumb([["Maps", "maps"], [z.name, null]]) +
+      '<div class="detail-head"><div><p class="eyebrow">' + esc(z.pass) + " · " + esc(z.biome) + '</p><h1>' + esc(z.name) + "</h1>" +
+      '<div class="tags"><span class="tag plain">Levels ' + esc(z.levelRange) + "</span></div></div></div>" +
+      panel(
+        "World map",
+        '<p class="lead">Stylized from the game’s own tile art (ground layer, one averaged ' +
+          "color per real sprite — no decor/buildings layer, so treat exact edges loosely). " +
+          '<span class="pin-legend"><span class="pin-dot pin-boss"></span> unique/boss</span> ' +
+          '<span class="pin-legend"><span class="pin-dot pin-npc"></span> NPC</span> ' +
+          '<span class="pin-legend"><span class="pin-dot pin-trash"></span> common spawn (hover for name)</span></p>' +
+          '<div class="map-frame" style="aspect-ratio:' + m.imageWidth + "/" + m.imageHeight + '">' +
+          '<img class="map-image" src="data/' + m.image + '" alt="' + esc(z.name) + ' map" loading="lazy">' +
+          pins +
+          "</div>"
+      )
+    );
+  });
 
   // --------------------------------------------------------------- monsters
 
