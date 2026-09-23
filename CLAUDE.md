@@ -55,6 +55,10 @@ the code:
   message** and PR description — put it there instead, not in the
   changelog.
 
+This applies to every entry, `Process/Tooling` ones included — even a
+repo-process change has a plain-language version ("the project's rules for
+X changed" reads fine; naming the specific doc/file does not).
+
 ## Format reference
 
 - `TASKS.md`: one markdown table, one row per ID, with a short type/status/
