@@ -36,7 +36,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0021 | Spell class balance pass, armor set loot wiring, compendium data/display fixes | Content/Fix | Done | `148c76f`, `97151ea` | [2026-09-23](CHANGELOG.md#2026-09-23--spell-balance-lost-armor-recovered-and-honest-site-data-t4c-0021) |
 | T4C-0022 | Standalone town-side access quests for Sunken Chancel and Cinderreach Hills | Content | Done | `960509f` | [2026-09-23](CHANGELOG.md#2026-09-23--town-side-access-quests-for-sunken-chancel-and-cinderreach-hills-t4c-0022) |
 | T4C-0023 | Zone map images on the compendium site (real tile-art coloring, NPC/boss pins) | Content/Tooling | Done | `04fc7bc` | [2026-09-23](CHANGELOG.md#2026-09-23--zone-map-images-on-the-compendium-site-t4c-0023) |
-| T4C-0024 | Kraanhold: new high-level continent (Windhowl Marches through Drake's Lair relocated there) | Content | Done | (pending) | [2026-09-23](CHANGELOG.md#2026-09-23--kraanhold-a-new-high-level-continent-t4c-0024) |
+| T4C-0024 | Kraanhold: new high-level continent (Windhowl Marches through Drake's Lair relocated there) | Content | Done | `bab83af` | [2026-09-23](CHANGELOG.md#2026-09-23--kraanhold-a-new-high-level-continent-t4c-0024) |
 
 ## Type legend
 
