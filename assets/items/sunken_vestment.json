@@ -37,8 +37,28 @@
     },
     {
       "boostId": 36302,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 36468,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 36469,
       "statId": 14,
-      "expression": "12"
+      "expression": "7"
+    },
+    {
+      "boostId": 36470,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 36471,
+      "statId": 22,
+      "expression": "7"
     }
   ]
 }
