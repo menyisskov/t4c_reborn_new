@@ -408,3 +408,32 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   spawn-group wiring anywhere) - a separate, pre-existing bug, not something this pass touched or
   depends on. Use `minLevel` the same way for any future "quality-of-life unlock" quest that
   should only be reachable once a character is already well past the early game.
+
+## 7. Economy
+
+- **Endgame quest gold should have a ceiling well under "instantly buys everything."** T4C-0036
+  (owner's call) trimmed the five `forge_godsforged_*` final-craft quests and the
+  `forge_the_godcore`/`bind_the_godsigil` component quests from 10,000,000/2,000,000 gold down to
+  1,500,000/800,000, and `drakes_lair_vigil`/`fading_veil_reckoning` from 5,000,000/4,000,000 down
+  to 1,200,000/1,000,000 - these were an isolated top-tier cluster 5-12x above the next tier down
+  (`avalon_wilds_vigil` at 800,000), which made every gold sink in the game trivial to a character
+  who'd done even one of them. Any future endgame quest's `rewardGold` should land at or below this
+  new ~1,500,000 ceiling unless the owner explicitly asks for a new high-water mark; don't silently
+  reintroduce a 10x outlier. (`rewardXp` on these quests was left untouched - a separate, known
+  `PlayerProgression.addXp` overflow risk for very large XP rewards, not this pass's concern.)
+- **Vendor prices are the other half of the gold sink, not a substitute for the cap above.** Every
+  town's general-goods vendor (`Fali`/Lighthaven, `Boreas`/Silversky, `Yolak`/Windhowl,
+  `ChryseidaYolangda`/Stonecrest, `WayfarerBryndis`/Avalon Sanctuary) now also stocks
+  `item.mana_prism` (10,000 gold) and `item.critical_healing_potion` (25,000 gold) - both
+  pre-existing items that had sat unsold at trivial legacy prices (0 and 333) until this pass. When
+  adding a new consumable meant as a real gold sink (as opposed to an early-game convenience item),
+  price it in the thousands-to-tens-of-thousands range, not the legacy 0-500 range those two items
+  had, and add it to all five town vendors' lists so it's a sink everywhere, not just one town.
+- **Two Java classes can silently define the same item key.** `ItemItemManaPrism.java` and
+  `ItemItemCriticalHealingPotion.java` are the ones actually registered in `ItemDefinitions.java`
+  and read by `ItemRegistry`; `ManaPrism.java` and `CriticalHealingPotion.java` are dead duplicate
+  classes with the identical item key that are never referenced anywhere and were left as
+  pre-existing dead code (out of scope to remove here). Found while trying to price-bump these two
+  items - the first edit silently had no effect because it landed on the dead class. Before editing
+  any legacy item's fields, grep `ItemDefinitions.java` for which class is actually registered
+  under that key; don't assume the class with the "obvious" name is the live one.

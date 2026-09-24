@@ -15,7 +15,7 @@ public final class ItemItemCriticalHealingPotion {
         null,
         null,
         "64kInvPotion 2",
-        333L,
+        25000L,
         2L,
         0.0d,
         0L,

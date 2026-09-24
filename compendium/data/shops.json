@@ -6,6 +6,8 @@
     "serious_healing_potion",
     "potion_of_mana",
     "mana_elixir",
+    "mana_prism",
+    "critical_healing_potion",
     "potion_of_cure_rabies",
     "scroll_of_lighthaven",
     "scroll_of_windhowl",
@@ -22,7 +24,9 @@
     "light_healing_potion",
     "potion_of_mana",
     "healing_potion",
-    "iron_ring"
+    "iron_ring",
+    "mana_prism",
+    "critical_healing_potion"
   ],
   "Gwen": [
     "cloth_pants",
@@ -414,6 +418,8 @@
     "healing_potion",
     "serious_healing_potion",
     "potion_of_mana",
+    "mana_prism",
+    "critical_healing_potion",
     "scroll_of_avalon",
     "scroll_of_lighthaven",
     "symbol_of_hope"
@@ -434,5 +440,26 @@
     "windweavers_mantle",
     "lightbringers_mantle",
     "shadowmancers_mantle"
+  ],
+  "Boreas": [
+    "torch",
+    "light_healing_potion",
+    "potion_of_mana",
+    "healing_potion",
+    "mana_elixir",
+    "mana_prism",
+    "critical_healing_potion",
+    "scroll_of_lighthaven",
+    "scroll_of_windhowl"
+  ],
+  "Yolak": [
+    "torch",
+    "light_healing_potion",
+    "potion_of_mana",
+    "healing_potion",
+    "mana_prism",
+    "critical_healing_potion",
+    "scroll_of_lighthaven",
+    "scroll_of_windhowl"
   ]
 }

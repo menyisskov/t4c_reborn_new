@@ -10846,7 +10846,7 @@ window.T4C_DATA = {
       "areaCenterX": 2850,
       "areaCenterY": 2780,
       "areaRadiusTiles": 180,
-      "rewardGold": 5000000,
+      "rewardGold": 1200000,
       "rewardXp": 2000000000,
       "requiredItemKey": "archdrakes_molten_heart",
       "requiredItemQty": 1,
@@ -10924,7 +10924,7 @@ window.T4C_DATA = {
       "areaCenterX": 1420,
       "areaCenterY": 1560,
       "areaRadiusTiles": 130,
-      "rewardGold": 4000000,
+      "rewardGold": 1000000,
       "rewardXp": 1700000000,
       "requiredItemKey": "ysoldes_veiled_circlet",
       "requiredItemQty": 1,
@@ -10944,7 +10944,7 @@ window.T4C_DATA = {
       "areaCenterX": 1300,
       "areaCenterY": 1460,
       "areaRadiusTiles": 1,
-      "rewardGold": 2000000,
+      "rewardGold": 800000,
       "rewardXp": 150000000,
       "requiredItemKey": "item.wyrmforged_ember",
       "requiredItemQty": 5,
@@ -10963,7 +10963,7 @@ window.T4C_DATA = {
       "areaCenterX": 1355,
       "areaCenterY": 1465,
       "areaRadiusTiles": 1,
-      "rewardGold": 2000000,
+      "rewardGold": 800000,
       "rewardXp": 150000000,
       "requiredItemKey": "item.veiled_aether_shard",
       "requiredItemQty": 5,
@@ -10982,7 +10982,7 @@ window.T4C_DATA = {
       "areaCenterX": 1330,
       "areaCenterY": 1440,
       "areaRadiusTiles": 1,
-      "rewardGold": 10000000,
+      "rewardGold": 1500000,
       "rewardXp": 350000000,
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
@@ -11002,7 +11002,7 @@ window.T4C_DATA = {
       "areaCenterX": 1330,
       "areaCenterY": 1440,
       "areaRadiusTiles": 1,
-      "rewardGold": 10000000,
+      "rewardGold": 1500000,
       "rewardXp": 350000000,
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
@@ -11022,7 +11022,7 @@ window.T4C_DATA = {
       "areaCenterX": 1330,
       "areaCenterY": 1440,
       "areaRadiusTiles": 1,
-      "rewardGold": 10000000,
+      "rewardGold": 1500000,
       "rewardXp": 350000000,
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
@@ -11042,7 +11042,7 @@ window.T4C_DATA = {
       "areaCenterX": 1330,
       "areaCenterY": 1440,
       "areaRadiusTiles": 1,
-      "rewardGold": 10000000,
+      "rewardGold": 1500000,
       "rewardXp": 350000000,
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
@@ -11062,7 +11062,7 @@ window.T4C_DATA = {
       "areaCenterX": 1330,
       "areaCenterY": 1440,
       "areaRadiusTiles": 1,
-      "rewardGold": 10000000,
+      "rewardGold": 1500000,
       "rewardXp": 350000000,
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
@@ -21824,6 +21824,42 @@ window.T4C_DATA = {
       "unique": false,
       "isBow": false,
       "boosts": []
+    },
+    {
+      "key": "item.mana_prism",
+      "name": "Mana Prism",
+      "price": 10000,
+      "weight": 5,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": []
+    },
+    {
+      "key": "item.critical_healing_potion",
+      "name": "Critical Healing Potion",
+      "price": 25000,
+      "weight": 2,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": []
     }
   ],
   "shops": {
@@ -21834,6 +21870,8 @@ window.T4C_DATA = {
       "serious_healing_potion",
       "potion_of_mana",
       "mana_elixir",
+      "mana_prism",
+      "critical_healing_potion",
       "potion_of_cure_rabies",
       "scroll_of_lighthaven",
       "scroll_of_windhowl",
@@ -21850,7 +21888,9 @@ window.T4C_DATA = {
       "light_healing_potion",
       "potion_of_mana",
       "healing_potion",
-      "iron_ring"
+      "iron_ring",
+      "mana_prism",
+      "critical_healing_potion"
     ],
     "Gwen": [
       "cloth_pants",
@@ -22242,6 +22282,8 @@ window.T4C_DATA = {
       "healing_potion",
       "serious_healing_potion",
       "potion_of_mana",
+      "mana_prism",
+      "critical_healing_potion",
       "scroll_of_avalon",
       "scroll_of_lighthaven",
       "symbol_of_hope"
@@ -22262,6 +22304,27 @@ window.T4C_DATA = {
       "windweavers_mantle",
       "lightbringers_mantle",
       "shadowmancers_mantle"
+    ],
+    "Boreas": [
+      "torch",
+      "light_healing_potion",
+      "potion_of_mana",
+      "healing_potion",
+      "mana_elixir",
+      "mana_prism",
+      "critical_healing_potion",
+      "scroll_of_lighthaven",
+      "scroll_of_windhowl"
+    ],
+    "Yolak": [
+      "torch",
+      "light_healing_potion",
+      "potion_of_mana",
+      "healing_potion",
+      "mana_prism",
+      "critical_healing_potion",
+      "scroll_of_lighthaven",
+      "scroll_of_windhowl"
     ]
   },
   "lootSources": [

@@ -9418,5 +9418,41 @@
     "unique": false,
     "isBow": false,
     "boosts": []
+  },
+  {
+    "key": "item.mana_prism",
+    "name": "Mana Prism",
+    "price": 10000,
+    "weight": 5,
+    "armorClass": 0.0,
+    "requirements": {
+      "endurance": 0,
+      "strength": 0,
+      "agility": 0,
+      "intelligence": 0,
+      "wisdom": 0,
+      "attack": 0
+    },
+    "unique": false,
+    "isBow": false,
+    "boosts": []
+  },
+  {
+    "key": "item.critical_healing_potion",
+    "name": "Critical Healing Potion",
+    "price": 25000,
+    "weight": 2,
+    "armorClass": 0.0,
+    "requirements": {
+      "endurance": 0,
+      "strength": 0,
+      "agility": 0,
+      "intelligence": 0,
+      "wisdom": 0,
+      "attack": 0
+    },
+    "unique": false,
+    "isBow": false,
+    "boosts": []
   }
 ]

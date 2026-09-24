@@ -20,7 +20,7 @@ public final class FadingVeilReckoning {
         1420,
         1560,
         130,
-        4000000,
+        1000000,
         1700000000,
         "${quest.fading_veil_reckoning.offer}",
         "${quest.fading_veil_reckoning.completion}",

@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0036`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0037`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -48,6 +48,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0033 | Godsforged: a crafting-quest tier above Legendary, one item per class archetype, via a 3-NPC crafting chain | Content/Systems | Done | `af7aa265` | [2026-09-24](CHANGELOG.md#2026-09-24--godsforged-a-new-tier-of-crafted-relics-t4c-0033) |
 | T4C-0034 | Boss loot pass: no more one-item/rare-or-nothing drop tables | Content/Fix | Done | `43a77280` | [2026-09-24](CHANGELOG.md#2026-09-24--every-boss-drops-something-t4c-0034) |
 | T4C-0035 | The Waking Rite: a short Avalon quest that permanently unlocks a rebirth shortcut (level 125+) | Content/Systems | Done | `82f646bb` | [2026-09-24](CHANGELOG.md#2026-09-24--a-shortcut-for-repeat-rebirths-t4c-0035) |
+| T4C-0036 | Gold economy pass: trimmed the endgame quest gold spike, new town-vendor gold sinks (mana prisms, critical healing potions) | Content/Systems | In Progress | _pending_ | [2026-09-24](CHANGELOG.md#2026-09-24--a-gold-economy-pass-t4c-0036) |
 
 ## Type legend
 

@@ -20,7 +20,7 @@ public final class DrakesLairVigil {
         2850,
         2780,
         180,
-        5000000,
+        1200000,
         2000000000,
         "${quest.drakes_lair_vigil.offer}",
         "${quest.drakes_lair_vigil.completion}",
