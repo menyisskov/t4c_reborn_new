@@ -22,7 +22,7 @@ public final class ForgeTheGodcore {
         1460,
         1,
         2000000,
-        800000000,
+        150000000,
         "${quest.forge_the_godcore.offer}",
         "${quest.forge_the_godcore.completion}",
         "${quest.forge_the_godcore.completed}",

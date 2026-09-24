@@ -19,7 +19,7 @@ public final class ForgeGodsforgedZephyrWand {
         1440,
         1,
         10000000,
-        2000000000,
+        350000000,
         "${quest.forge_godsforged_zephyr_wand.offer}",
         "${quest.forge_godsforged_zephyr_wand.completion}",
         "${quest.forge_godsforged_zephyr_wand.completed}",

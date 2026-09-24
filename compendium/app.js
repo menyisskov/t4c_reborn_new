@@ -866,6 +866,9 @@
             (q.requiredKills > 0 ? " (a rare drop) — it's consumed on turn-in." : " — it's consumed on turn-in.") +
             "</p>"
           : "") +
+        (q.alsoRequiresItemKey
+          ? '<p class="lead">Also bring ' + itemLink(q.alsoRequiresItemKey) + " — it's consumed on turn-in too.</p>"
+          : "") +
         "</div></div>" +
         '<div class="quest-step"><span class="num">3</span><div>' +
         "<strong>Return to " + npcLink(q.giverNpc) + "</strong>" +
@@ -884,6 +887,7 @@
           (q.requiredItemKey
             ? kv("Required item", q.requiredItemQty + "× " + itemLink(q.requiredItemKey))
             : "") +
+          (q.alsoRequiresItemKey ? kv("Also required", itemLink(q.alsoRequiresItemKey)) : "") +
           (q.unlockZoneId ? kv("Unlocks zone", zoneLink(q.unlockZoneId)) : "") +
           (q.requiredKills > 0
             ? kv("Center", "(" + q.areaCenterX + ", " + q.areaCenterY + ")") +

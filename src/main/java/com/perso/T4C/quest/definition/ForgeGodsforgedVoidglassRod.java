@@ -19,7 +19,7 @@ public final class ForgeGodsforgedVoidglassRod {
         1440,
         1,
         10000000,
-        2000000000,
+        350000000,
         "${quest.forge_godsforged_voidglass_rod.offer}",
         "${quest.forge_godsforged_voidglass_rod.completion}",
         "${quest.forge_godsforged_voidglass_rod.completed}",

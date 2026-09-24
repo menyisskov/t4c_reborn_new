@@ -21,7 +21,7 @@ public final class BindTheGodsigil {
         1465,
         1,
         2000000,
-        800000000,
+        150000000,
         "${quest.bind_the_godsigil.offer}",
         "${quest.bind_the_godsigil.completion}",
         "${quest.bind_the_godsigil.completed}",

@@ -196,6 +196,19 @@ public final class CompendiumExporter {
           "item.tempered_godcore",
           "item.bound_godsigil");
 
+  // T4C-0033: the five final Godsforged forge quests each also require a Tempered Godcore, which
+  // GrandmasterTholvenn.java's custom javaBehavior() checks/consumes itself since a single
+  // QuestDef can only natively track one required item (requiredItemKey below tracks the Bound
+  // Godsigil). Documented here purely so the reference site's structured walkthrough shows both
+  // required items instead of just the one QuestDef itself knows about.
+  private static final Map<String, String> EXTRA_REQUIRED_ITEM_KEYS =
+      Map.of(
+          "forge_godsforged_warblade", "item.tempered_godcore",
+          "forge_godsforged_stormbow", "item.tempered_godcore",
+          "forge_godsforged_voidglass_rod", "item.tempered_godcore",
+          "forge_godsforged_zephyr_wand", "item.tempered_godcore",
+          "forge_godsforged_torc", "item.tempered_godcore");
+
   private static final Set<String> SHOP_EXCLUDED_NPC_IDS =
       Set.of("Boreas", "Yolak", "TtayhMark", "Kiadus", "RhodarHeatforge", "GulfridSteelhammer");
 
@@ -528,6 +541,7 @@ public final class CompendiumExporter {
       m.put("rewardXp", q.getRewardXp());
       m.put("requiredItemKey", q.getRequiredItemKey());
       m.put("requiredItemQty", q.getRequiredItemQty());
+      m.put("alsoRequiresItemKey", EXTRA_REQUIRED_ITEM_KEYS.get(q.getId()));
       m.put("unlockZoneId", q.getUnlockZoneId());
       m.put("offerText", I18n.resolve(q.getOfferText()));
       m.put("completionText", I18n.resolve(q.getCompletionText()));

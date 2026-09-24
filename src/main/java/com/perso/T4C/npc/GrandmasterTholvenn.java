@@ -3,6 +3,8 @@ package com.perso.T4C.npc;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
+import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
@@ -163,6 +165,16 @@ public final class GrandmasterTholvenn extends ScriptedNpc {
           context.say(I18n.resolve("${npc.grandmastertholvenn.missing_sigil}"));
           return true;
         }
+        // Checked before the core is consumed below: completeCraftingQuest() itself refuses to
+        // consume the sigil/mark the quest done if the reward item can't be granted, but it has
+        // no way to know the core was already spent here - so that same check must happen first,
+        // or a doomed forge would cost the player their core for nothing.
+        String rewardItemKey = QuestRegistry.findById(questId).getRewardItemKey();
+        if (!InventoryService.canAdd(player, rewardItemKey)) {
+          context.say(
+              I18n.message("message.quest_reward_item_blocked", itemDisplayName(rewardItemKey)));
+          return true;
+        }
         InventoryService.remove(player, -1, CORE_KEY);
         String response = quests.completeCraftingQuest(questId, ID, player);
         if (response != null && !response.isBlank()) {
@@ -171,5 +183,13 @@ public final class GrandmasterTholvenn extends ScriptedNpc {
         return true;
       }
     };
+  }
+
+  /** Player-facing name for an item key, mirroring QuestService's own private helper of the same
+   * shape - falls back to the raw key if the item isn't registered. */
+  private static String itemDisplayName(String itemKey) {
+    if (itemKey == null || itemKey.isBlank()) return itemKey;
+    ItemDefinition item = ItemRegistry.findByKey(itemKey);
+    return item == null ? itemKey : I18n.resolve(item.getName());
   }
 }

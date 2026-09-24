@@ -154,6 +154,15 @@ public final class QuestService {
     if (statusFor(player, definition) == STATUS_COMPLETED) {
       return I18n.resolve(definition.getCompletedText());
     }
+    String rewardItemKey = definition.getRewardItemKey();
+    boolean grantsItem = rewardItemKey != null && !rewardItemKey.isBlank();
+    // Checked *before* anything below is touched: consuming required items and marking the quest
+    // COMPLETED are irreversible (no re-turn-in), so if the item reward couldn't actually be
+    // granted (full on carry weight, or already owns this unique), the whole completion must be
+    // refused instead of silently dropping the reward the player just paid rare materials for.
+    if (grantsItem && !InventoryService.canAdd(player, rewardItemKey)) {
+      return I18n.message("message.quest_reward_item_blocked", itemDisplayName(rewardItemKey));
+    }
     consumeRequiredItem(player, definition);
     player.setQuestFlag(statusFlag(definition), STATUS_COMPLETED);
     player.setQuestFlag(killsFlag(definition), definition.getRequiredKills());
@@ -163,12 +172,14 @@ public final class QuestService {
     if (zoneId != null && !zoneId.isBlank()) {
       player.setQuestFlag(zoneUnlockFlag(zoneId), 1);
     }
-    String rewardItemKey = definition.getRewardItemKey();
-    if (rewardItemKey != null && !rewardItemKey.isBlank()) {
+    if (grantsItem) {
       InventoryService.Result granted = InventoryService.add(player, rewardItemKey);
       if (!granted.success()) {
+        // canAdd() just confirmed this above; only reachable via a state change made by the
+        // consume/reward steps in between (none currently touch weight/uniqueness), so this is
+        // defensive, not an expected path.
         log.warn(
-            "Quest '{}' reward item '{}' could not be granted ({})",
+            "Quest '{}' reward item '{}' could not be granted after passing canAdd() ({})",
             definition.getId(),
             rewardItemKey,
             granted.failure());

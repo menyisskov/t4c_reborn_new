@@ -4200,6 +4200,7 @@
   "message.quest_progress_dialog": "Progress: %d/%d. You have %d remaining.",
   "message.quest_ready": "%s completed. Return to see %s.",
   "message.quest_reward": "Reward received: %d gold coins and %d XP.",
+  "message.quest_reward_item_blocked": "You can't complete this right now - make room in your inventory for %s (or you may already own it).",
   "message.redeyedcentaur.freed": "You remove the talisman from the centaur's neck, freeing him of Zion Thunderheart's hypnotic influence!",
   "message.redeyedcentaur.talisman": "Upon inspection of the unconscious centaur's body, you notice a mind-control talisman tied around his neck.",
   "message.spell_already_known": "You already know %s.",
