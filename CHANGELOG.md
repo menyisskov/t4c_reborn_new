@@ -15,6 +15,16 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — Passage to Avalon gets a personal story (T4C-0031)
+
+### Changed
+- Harbormaster Rangor, who sends you on the quest to reach Avalon, now has more to say if you ask
+  him about it. He'll tell you why he really cares about getting you across safely, and share a
+  dockside rumor about the old pact that's supposed to protect Avalon — and whether it's still
+  holding. His send-off once you complete the quest reflects that too.
+- Nothing about the quest itself changed — the same fight, the same reward, the same unlock.
+  This is just Rangor having more of a voice.
+
 ## 2026-09-24 — Broader elemental resistance, and no more light resistance (T4C-0030)
 
 ### Changed

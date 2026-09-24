@@ -10748,9 +10748,9 @@ window.T4C_DATA = {
       "requiredItemKey": "tideworn_avalon_chart",
       "requiredItemQty": 1,
       "unlockZoneId": "avalon_sanctuary",
-      "offerText": "Something about the tide beyond that ruined dock isn't right - a lord of them, the smugglers say, and only he keeps what map they know of the crossing. Clear his reavers from the shore, then take his chart before it goes down with him.",
-      "completionText": "The reavers are scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive.",
-      "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross."
+      "offerText": "Something about the tide beyond that ruined dock isn't right - a lord of them, the smugglers say, and only he keeps what map they know of the crossing. My boy went out there once without one. Clear the reavers from the shore, then take Ithrak's chart before it goes down with him - I won't watch another one go in blind.",
+      "completionText": "The reavers are scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive. It's more than my boy ever had.",
+      "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross. Whatever's waiting on the other side, it's more than this dock's seen in years."
     },
     {
       "id": "avalon_wilds_vigil",
@@ -11106,6 +11106,22 @@ window.T4C_DATA = {
             "reavers"
           ],
           "response": "Watch the tideline past the dock. The reavers don't wait for you to see them first.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "why",
+            "son"
+          ],
+          "response": "My boy tried the crossing years back, chart or no chart. The tide took him before the reavers ever did. I don't sail anymore. I just make sure nobody else goes in as blind as he did.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "fey",
+            "pact"
+          ],
+          "response": "The fey pact's older than this dock, older than Ithrak's smuggling. Sailors used to say it was fraying even before the reavers came. I don't know what's true and what's dockside talk - only that fewer of us who cross ever come back to say.",
           "actions": []
         }
       ],

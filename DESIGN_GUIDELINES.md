@@ -288,3 +288,24 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Tell the owner about pre-existing problems you notice along the way (unwearable items,
   soft-locks, misleading displays). Fix them when they're small and in scope; otherwise list
   them as follow-ups.
+
+## 6. Quests
+- Every zone-unlock quest added by the T4C-0019 pass follows the same mechanical shape: kill N
+  of a monster in one area, turn in one boss-drop item, unlock fast travel to a zone. That's
+  fine as a mechanic, but the quest-giver's dialogue doesn't have to read as generic as the
+  shape - see `passage_to_avalon`/`HarbormasterRangor` (T4C-0031) for the pattern to reuse.
+- **To give a zone-gate quest more narrative weight, add flavor - don't touch the mechanics.**
+  Give the giver NPC a personal stake (why do *they* care?) and a hook forward (what's rumored
+  to be waiting past the gate?) as new, purely-informational `DialogueTopic` entries (no
+  `actions`, so they can't affect quest state) and richer offer/completion/completed text on the
+  existing `QuestDef`. Never change `requiredKills`/`rewardGold`/`rewardXp`/the item objective to
+  do this - those are what's actually saved per character, and a values change there is a
+  balance/compat decision, not a narrative one.
+- Ground new dialogue in what the zone's own `zones.json` summary and existing NPCs already
+  establish (e.g. Avalon's "fey pact" and its fraying, from the Fading Veil/Avalon Wilds
+  summaries) rather than inventing new factions or events - see `quest-creator`'s own lore
+  guidance section for why, and its noted inability to verify against `t4cfantasy.com/Addon`
+  from this sandbox.
+- This is a repeatable pattern, not a one-off: the other zone-gate quests (Kraanhold's
+  provinces, Deep Ones Cave, Sunken Chancel, Cinderreach Hills) are equally generic today and are
+  reasonable candidates for the same kind of pass if the owner asks for it.

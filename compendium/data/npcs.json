@@ -314,6 +314,22 @@
         ],
         "response": "Watch the tideline past the dock. The reavers don't wait for you to see them first.",
         "actions": []
+      },
+      {
+        "keywords": [
+          "why",
+          "son"
+        ],
+        "response": "My boy tried the crossing years back, chart or no chart. The tide took him before the reavers ever did. I don't sail anymore. I just make sure nobody else goes in as blind as he did.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "fey",
+          "pact"
+        ],
+        "response": "The fey pact's older than this dock, older than Ithrak's smuggling. Sailors used to say it was fraying even before the reavers came. I don't know what's true and what's dockside talk - only that fewer of us who cross ever come back to say.",
+        "actions": []
       }
     ],
     "combatProfile": {

@@ -57,6 +57,18 @@ public final class HarbormasterRangor extends ScriptedNpc {
               new NpcSpec.DialogueTopic(
                   List.of("${npc.topic_keyword.harbormasterrangor.3.0}"),
                   "${npc.topic.harbormasterrangor.3}",
+                  List.of()),
+              new NpcSpec.DialogueTopic(
+                  List.of(
+                      "${npc.topic_keyword.harbormasterrangor.4.0}",
+                      "${npc.topic_keyword.harbormasterrangor.4.1}"),
+                  "${npc.topic.harbormasterrangor.4}",
+                  List.of()),
+              new NpcSpec.DialogueTopic(
+                  List.of(
+                      "${npc.topic_keyword.harbormasterrangor.5.0}",
+                      "${npc.topic_keyword.harbormasterrangor.5.1}"),
+                  "${npc.topic.harbormasterrangor.5}",
                   List.of())),
           "HarbormasterRangorNPC",
           new NpcSpec.CombatProfile(100, 1000000, 65, 67, 63, 1000000, 250, 65535, "1d23+16"));
