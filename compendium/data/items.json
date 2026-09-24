@@ -9363,7 +9363,9 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": true,
+    "useEffects": []
   },
   {
     "key": "item.veiled_aether_shard",
@@ -9381,7 +9383,9 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": true,
+    "useEffects": []
   },
   {
     "key": "item.tempered_godcore",
@@ -9399,7 +9403,9 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": true,
+    "useEffects": []
   },
   {
     "key": "item.bound_godsigil",
@@ -9417,6 +9423,52 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": true,
+    "useEffects": []
+  },
+  {
+    "key": "item.mana_prism",
+    "name": "Mana Prism",
+    "price": 10000,
+    "weight": 5,
+    "armorClass": 0.0,
+    "requirements": {
+      "endurance": 0,
+      "strength": 0,
+      "agility": 0,
+      "intelligence": 0,
+      "wisdom": 0,
+      "attack": 0
+    },
+    "unique": false,
+    "isBow": false,
+    "boosts": [],
+    "unlimitedUse": false,
+    "useEffects": [
+      "Greatly increases the wearer's mana regeneration rate for a short period of time."
+    ]
+  },
+  {
+    "key": "item.critical_healing_potion",
+    "name": "Critical Healing Potion",
+    "price": 25000,
+    "weight": 2,
+    "armorClass": 0.0,
+    "requirements": {
+      "endurance": 0,
+      "strength": 0,
+      "agility": 0,
+      "intelligence": 0,
+      "wisdom": 0,
+      "attack": 0
+    },
+    "unique": false,
+    "isBow": false,
+    "boosts": [],
+    "unlimitedUse": false,
+    "useEffects": [
+      "Restores hit points to the target."
+    ]
   }
 ]

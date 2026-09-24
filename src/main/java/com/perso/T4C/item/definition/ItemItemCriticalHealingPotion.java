@@ -15,7 +15,7 @@ public final class ItemItemCriticalHealingPotion {
         null,
         null,
         "64kInvPotion 2",
-        333L,
+        25000L,
         2L,
         0.0d,
         0L,
@@ -43,7 +43,13 @@ public final class ItemItemCriticalHealingPotion {
         0,
         0,
         0,
-        List.of(new ItemDefinition.ItemSpell(10208, 0, 100)),
+        // T4C-0036: was 10208, a spell id nothing in SpellRegistry actually registers (dead
+        // legacy macro id, see OriginalNpcScriptMacros.__SPELL_ITEM_POTION_OF_CRITICAL_HEALING) -
+        // ItemUseService.useOnSelf silently no-ops (Failure.NO_EFFECT) when findById() misses, so
+        // this potion did nothing when drunk. 10034 is spell/definition/HealCritical.java's real
+        // registered id ("Critical Heal"), which is what this item's name and price were always
+        // meant to trigger.
+        List.of(new ItemDefinition.ItemSpell(10034, 0, 100)),
         List.of(),
         List.of(),
         false);

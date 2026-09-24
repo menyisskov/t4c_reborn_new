@@ -199,7 +199,12 @@ public final class CompendiumExporter {
           "item.wyrmforged_ember",
           "item.veiled_aether_shard",
           "item.tempered_godcore",
-          "item.bound_godsigil");
+          "item.bound_godsigil",
+          // T4C-0036: both pre-existing but previously unsold at any vendor (price 0/333,
+          // absent from every ShopCatalog list) - now stocked by every town's general-goods
+          // vendor as a gold sink, so they need to show up here with their real price.
+          "item.mana_prism",
+          "item.critical_healing_potion");
 
   // T4C-0033: the five final Godsforged forge quests each also require a Tempered Godcore, which
   // GrandmasterTholvenn.java's custom javaBehavior() checks/consumes itself since a single
@@ -216,6 +221,37 @@ public final class CompendiumExporter {
 
   private static final Set<String> SHOP_EXCLUDED_NPC_IDS =
       Set.of("Boreas", "Yolak", "TtayhMark", "Kiadus", "RhodarHeatforge", "GulfridSteelhammer");
+
+  // T4C-0036: Boreas.java and Yolak.java build their BUY item list inline in a custom
+  // javaBehavior() rather than through ShopCatalog or a declarative OPEN_SHOP action, so
+  // neither loop in exportShops() can see it - the reflective ShopCatalog.get() call above
+  // returns null for both (see SHOP_EXCLUDED_NPC_IDS's comment: their M entry is stale/unused).
+  // Kept in sync by hand whenever those two files' base item lists change; omits the
+  // __QUEST_ISLAND_ACCESS-gated scroll additions since those are conditional, not a fixed
+  // shop listing.
+  private static final Map<String, List<String>> HAND_MAINTAINED_SHOP_ITEMS =
+      Map.of(
+          "Boreas",
+              List.of(
+                  "torch",
+                  "light_healing_potion",
+                  "potion_of_mana",
+                  "healing_potion",
+                  "mana_elixir",
+                  "item.mana_prism",
+                  "item.critical_healing_potion",
+                  "scroll_of_lighthaven",
+                  "scroll_of_windhowl"),
+          "Yolak",
+              List.of(
+                  "torch",
+                  "light_healing_potion",
+                  "potion_of_mana",
+                  "healing_potion",
+                  "item.mana_prism",
+                  "item.critical_healing_potion",
+                  "scroll_of_lighthaven",
+                  "scroll_of_windhowl"));
 
   public static void main(String[] args) throws Exception {
     Path outDir = Path.of(args.length > 0 ? args[0] : "compendium/data");
@@ -674,6 +710,7 @@ public final class CompendiumExporter {
       for (String item : sold) if (!merged.contains(item)) merged.add(item);
       out.put(reg.id(), merged);
     }
+    out.putAll(HAND_MAINTAINED_SHOP_ITEMS);
     return out;
   }
 
@@ -753,6 +790,18 @@ public final class CompendiumExporter {
       item.put("isBow", d.isBow());
       item.put("dmgFormula", d.getDmgFormula());
       item.put("boosts", List.of());
+      // T4C-0036: this loop previously left every utility item looking effectless (no
+      // unlimitedUse, no use-effect text) - harmless for the four crafting materials this list
+      // originally covered (no ItemSpell entries to show), but item.mana_prism and
+      // item.critical_healing_potion are real consumables whose whole point is the spell they
+      // trigger on use, so the reference site needs to say so.
+      item.put("unlimitedUse", d.isUnlimitedUse());
+      List<String> useEffects = new ArrayList<>();
+      for (ItemDefinition.ItemSpell spell : d.getSpells()) {
+        SpellData effect = SpellRegistry.findById(spell.getSpellId());
+        if (effect != null) useEffects.add(I18n.resolve(effect.getDescription()));
+      }
+      item.put("useEffects", useEffects);
       out.add(item);
     }
     return out;

@@ -15,6 +15,24 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — A gold economy pass (T4C-0036)
+
+### Changed
+- The biggest quest payouts in the game have come back down to earth. The five quests that forge
+  a Godsforged relic, the two quests that craft its components, and the rewards for clearing
+  Drake's Lair and reckoning with the Fading Veil all paid out gold far beyond anything else in
+  the game - enough that finishing even one of them made every other gold reward, and everything
+  there was to spend gold on, feel pointless. Their gold payouts are now a fraction of what they
+  were; the items, XP, and everything else about these quests are unchanged.
+- Every town's general goods vendor now also carries two consumables that were previously
+  impossible to buy anywhere: **Mana Prisms** (10,000 gold) and **Critical Healing Potions**
+  (25,000 gold). Look for them alongside the regular potions and scrolls in Lighthaven, Silversky,
+  Windhowl, Stonecrest, and Avalon Sanctuary - a real place to put gold to work at any stage of the
+  game, not just at the very top of it.
+
+### Fixed
+- Critical Healing Potions actually heal you now. They used to do nothing at all when drunk.
+
 ## 2026-09-24 — A shortcut for repeat rebirths (T4C-0035)
 
 ### Added

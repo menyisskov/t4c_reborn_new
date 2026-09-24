@@ -680,6 +680,7 @@
         kv("Armor class", it.armorClass ? fmtNum(it.armorClass) : "—") +
         (it.dmgFormula ? kv("Damage", it.dmgFormula) : "") +
         (it.atkDelay ? kv("Attack delay", it.atkDelay + " ms") : "") +
+        ((it.useEffects || []).length ? kv("Effect on use", esc(it.useEffects.join("; "))) : "") +
         "</div>") +
       panel("Requirements to equip", '<div class="kv-grid">' + reqHtml + "</div>") +
       panel("Boosts", boostHtml) +

@@ -19,7 +19,7 @@ public final class ForgeGodsforgedStormbow {
         1330,
         1440,
         1,
-        10000000,
+        1500000,
         350000000,
         "${quest.forge_godsforged_stormbow.offer}",
         "${quest.forge_godsforged_stormbow.completion}",

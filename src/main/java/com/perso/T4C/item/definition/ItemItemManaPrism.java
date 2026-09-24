@@ -15,7 +15,7 @@ public final class ItemItemManaPrism {
         null,
         null,
         "64kInvGems 3",
-        0L,
+        10000L,
         5L,
         0.0d,
         0L,
