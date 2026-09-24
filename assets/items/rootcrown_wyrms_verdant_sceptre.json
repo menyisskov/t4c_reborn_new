@@ -1,0 +1,46 @@
+{
+  "key": "rootcrown_wyrms_verdant_sceptre",
+  "name": "Rootcrown Wyrm's Verdant Sceptre",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupWoodenStaff",
+  "appearanceInventory": "64kInvWoodenStaff",
+  "price": 0,
+  "weight": 4,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 950,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d40+60",
+  "atkDelay": "1300",
+  "boosts": [
+    {
+      "boostId": 36406,
+      "statId": 4,
+      "expression": "79"
+    },
+    {
+      "boostId": 36407,
+      "statId": 19,
+      "expression": "95"
+    },
+    {
+      "boostId": 36408,
+      "statId": 15,
+      "expression": "63"
+    }
+  ]
+}

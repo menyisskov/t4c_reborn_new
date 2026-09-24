@@ -866,6 +866,13 @@
         "x": 2735,
         "y": 2596,
         "tier": "boss"
+      },
+      {
+        "name": "The Rootcrown Wyrm",
+        "displayName": "The Rootcrown Wyrm",
+        "x": 2950,
+        "y": 2650,
+        "tier": "boss"
       }
     ],
     "namedLocations": [

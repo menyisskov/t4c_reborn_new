@@ -47,7 +47,22 @@ public final class CoastwardenIthrak extends DataMonster {
         1800,
         java.util.List.of(
             new MonsterDef.LootDrop("tideworn_avalon_chart", 0.02f),
-            new MonsterDef.LootDrop("healing_potion", 0.2f)),
+            new MonsterDef.LootDrop("healing_potion", 0.2f),
+            // T4C-0028: the coastal guardian of the crossing to Avalon drops a water-flavor
+            // armor set alongside his chart and potions, matching the multi-drop pattern used
+            // by the other boss-tier monsters.
+            new MonsterDef.LootDrop("ancient_celestial_water_armor", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_boots", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_gauntlets", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_helmet", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_leggings", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_water_protector", 0.025f),
+            new MonsterDef.LootDrop("empyrean_water_armor", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_boots", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_gauntlets", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_helmet", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_leggings", 0.012f),
+            new MonsterDef.LootDrop("empyrean_water_protector", 0.012f)),
         false,
         0.0f,
         360,

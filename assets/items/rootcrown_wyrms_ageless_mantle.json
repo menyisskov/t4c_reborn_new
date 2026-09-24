@@ -1,0 +1,44 @@
+{
+  "key": "rootcrown_wyrms_ageless_mantle",
+  "name": "Rootcrown Wyrm's Ageless Mantle",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "NMS_NewCape01__pal7",
+  "appearanceInventory": "Inv_NMS_NewCape01__pal7",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 54.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 950,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36409,
+      "statId": 4,
+      "expression": "79"
+    },
+    {
+      "boostId": 36410,
+      "statId": 19,
+      "expression": "95"
+    },
+    {
+      "boostId": 36411,
+      "statId": 15,
+      "expression": "63"
+    }
+  ]
+}

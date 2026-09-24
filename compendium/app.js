@@ -116,6 +116,83 @@
     return '<span class="tag tier-' + r.tier + '">' + r.label + "</span>";
   }
 
+  // Mirrors item/ItemBalance.java's archetype(): the item's class comes from its requirements
+  // (a bow is always archer gear regardless of its stat requirements).
+  function archetypeOf(item) {
+    var r = item.requirements || {};
+    var str = Number(r.strength || 0), agi = Number(r.agility || 0);
+    var intel = Number(r.intelligence || 0), wis = Number(r.wisdom || 0);
+    if (item.isBow) return "Archer";
+    var physical = Math.max(str, agi), mental = Math.max(intel, wis);
+    if (physical === 0 && mental === 0) return "—";
+    if (physical >= mental) return str >= agi ? "Warrior" : "Archer";
+    if (intel > 0 && wis > 0 && Math.min(intel, wis) >= 0.8 * Math.max(intel, wis)) return "Hybrid mage";
+    return intel > wis ? "Intelligence mage" : "Wisdom mage";
+  }
+
+  // Groups the BodyPart slots into the three broad shopping categories the Items page tabs by.
+  var ARMOR_SLOTS = { HEAD: 1, BELT: 1, LEFT_HAND: 1, RIGHT_HAND: 1, LEGS: 1, FEET: 1, BODY: 1, BACK: 1, SHIELD: 1 };
+  var ACCESSORY_SLOTS = { NECK: 1, RING1: 1, RING2: 1, BRACER: 1 };
+  function categoryOf(item) {
+    if (item.bodyPart === "WEAPON" || item.bodyPart === "WEAPON2") return "Weapons";
+    if (ACCESSORY_SLOTS[item.bodyPart]) return "Accessories";
+    if (ARMOR_SLOTS[item.bodyPart]) return "Armor";
+    return "Other";
+  }
+
+  var REQ_ABBR = { endurance: "END", strength: "STR", agility: "AGI", intelligence: "INT", wisdom: "WIS", attack: "ATK" };
+  function reqSummary(item) {
+    var r = item.requirements || {};
+    var parts = Object.keys(r).filter(function (k) { return r[k] > 0; })
+      .map(function (k) { return (REQ_ABBR[k] || k) + " " + fmtNum(r[k]); });
+    return esc(parts.join(" · ")) || "—";
+  }
+
+  function boostSummary(item) {
+    var boosts = item.boosts || [];
+    if (!boosts.length) return "—";
+    return boosts.map(function (b) {
+      var meta = STAT_IDS[String(b.statId)] || { label: "Stat #" + b.statId };
+      return esc(meta.label) + " +" + esc(b.expression);
+    }).join(", ");
+  }
+
+  function dmgSummary(item) {
+    if (!item.dmgFormula) return "—";
+    return esc(item.dmgFormula) + (item.atkDelay ? " (" + esc(item.atkDelay) + "ms)" : "");
+  }
+
+  function flagsSummary(item) {
+    var flags = [];
+    if (item.unlimitedUse === false) flags.push("Limited use");
+    if (item.undroppable) flags.push("Undroppable");
+    return flags.join(", ") || "—";
+  }
+
+  // Where an item actually comes from - named monster(s)/boss(es) it drops from, not a generic
+  // "monster drop" label, so the flat items table answers "who drops this" without a click-through.
+  // Drop data names the exact monster/boss and is always more specific than a zone tag, so it
+  // takes precedence - an item can be both zone-tracked content and a real boss drop, and the
+  // whole point of this column is naming who actually drops it (T4C-0028 Codex review).
+  function sourceSummary(item) {
+    var drops = itemDroppedBy[item.key];
+    if (drops && drops.length) {
+      return drops.map(function (d) {
+        return monsterLink(d.monster, d.monsterDisplayName) + " (" + fmtPct(d.chance) + ")";
+      }).join(", ");
+    }
+    if (itemZone[item.key]) return zoneLink(itemZone[item.key]);
+    if (itemSoldBy[item.key]) return itemSoldBy[item.key].map(npcLink).join(", ");
+    return "—";
+  }
+  function sourceSortValue(item) {
+    var drops = itemDroppedBy[item.key];
+    if (drops && drops.length) return drops.map(function (d) { return d.monsterDisplayName || d.monster; }).sort().join(",");
+    if (itemZone[item.key]) return "zone:" + itemZone[item.key];
+    if (itemSoldBy[item.key]) return "shop:" + itemSoldBy[item.key].slice().sort().join(",");
+    return "";
+  }
+
   function link(route, label, extraClass) {
     return '<a class="' + (extraClass || "") + '" href="#/' + route + '">' + label + "</a>";
   }
@@ -526,18 +603,31 @@
     return listPage({
       title: "Items",
       eyebrow: "Items",
-      lead: "Every JSON-authored item added by the new content pipeline — weapons, armor sets, jewelry. Colored by rarity tier.",
+      lead: "Every JSON-authored item added by the new content pipeline — weapons, armor sets, jewelry. Every stat is in the table below; click a row for its full page.",
       rows: ITEMS,
+      tabs: [
+        { key: "all", label: "All" },
+        { key: "weapons", label: "Weapons", filter: function (it) { return categoryOf(it) === "Weapons"; } },
+        { key: "armor", label: "Armor", filter: function (it) { return categoryOf(it) === "Armor"; } },
+        { key: "accessories", label: "Accessories", filter: function (it) { return categoryOf(it) === "Accessories"; } },
+      ],
       columns: [
         { key: "name", label: "Name", render: function (it) { return itemLink(it.key); } },
         { key: "bodyPart", label: "Slot" },
+        { key: "class", label: "Class", render: function (it) { return esc(archetypeOf(it)); }, sortValue: archetypeOf },
+        { key: "requirements", label: "Requirements", render: reqSummary, sortValue: reqSummary },
+        { key: "armorClass", label: "AC", numeric: true, render: function (it) { return it.armorClass ? fmtNum(it.armorClass) : "—"; } },
+        { key: "damage", label: "Damage", render: dmgSummary, sortValue: dmgSummary },
+        { key: "boosts", label: "Boosts", render: boostSummary, sortValue: boostSummary },
+        { key: "flags", label: "Flags", render: flagsSummary, sortValue: flagsSummary },
         { key: "price", label: "Price", numeric: true, render: function (it) { return it.price ? fmtNum(it.price) : "—"; } },
         { key: "rarity", label: "Rarity", render: function (it) { return rarityTag(it); }, sortValue: function (it) { return RARITY_RANK[rarityOf(it).tier] || 0; } },
-        { key: "zone", label: "Source", render: function (it) { return itemZone[it.key] ? zoneLink(itemZone[it.key]) : (itemDroppedBy[it.key] ? "monster drop" : (itemSoldBy[it.key] ? "shop" : "—")); }, sortValue: function (it) { return itemZone[it.key] || (itemDroppedBy[it.key] ? "monster drop" : (itemSoldBy[it.key] ? "shop" : "")); } },
+        { key: "zone", label: "Source", render: sourceSummary, sortValue: sourceSortValue },
       ],
       searchFields: ["name", "key"],
       filters: [
         { label: "Slot", field: "bodyPart", options: uniq(ITEMS.map(function (i) { return i.bodyPart; })) },
+        { label: "Class", field: "__class", options: uniq(ITEMS.map(archetypeOf)), computed: archetypeOf },
         { label: "Rarity", field: "__rarity", options: ["legendary", "set", "rare", "common"], computed: function (it) { return rarityOf(it).tier; } },
       ],
       defaultSort: "name",
@@ -1075,8 +1165,16 @@
 
   function listPage(cfg) {
     var stateKey = cfg.title;
-    listPageState[stateKey] = listPageState[stateKey] || { search: "", sort: cfg.defaultSort, dir: 1, filters: {} };
+    listPageState[stateKey] = listPageState[stateKey] ||
+      { search: "", sort: cfg.defaultSort, dir: 1, filters: {}, tab: cfg.tabs ? cfg.tabs[0].key : null };
     var st = listPageState[stateKey];
+
+    var tabControls = cfg.tabs
+      ? '<div class="category-tabs">' + cfg.tabs.map(function (t) {
+          return '<button type="button" data-tab-key="' + esc(t.key) + '"' +
+            (t.key === st.tab ? ' class="active"' : "") + ">" + esc(t.label) + "</button>";
+        }).join("") + "</div>"
+      : "";
 
     var filterControls = (cfg.filters || []).map(function (f, fi) {
       var opts = f.options.map(function (o) {
@@ -1094,6 +1192,7 @@
     var html =
       '<div class="page-header"><p class="eyebrow">' + esc(cfg.eyebrow) + "</p><h1>" + esc(cfg.title) + "</h1>" +
       '<p class="lead">' + esc(cfg.lead) + "</p></div>" +
+      tabControls +
       '<div class="toolbar"><input type="search" id="listSearch" placeholder="Search ' + esc(cfg.title.toLowerCase()) + '…" value="' + esc(st.search) + '">' +
       filterControls +
       '<span class="result-count" id="listCount"></span></div>' +
@@ -1109,9 +1208,14 @@
     var countEl = document.getElementById("listCount");
     var selects = document.querySelectorAll('[data-filter-idx]');
     var ths = document.querySelectorAll("th[data-sort-key]");
+    var tabButtons = document.querySelectorAll("[data-tab-key]");
 
     function apply() {
       var rows = cfg.rows.slice();
+      if (cfg.tabs && st.tab) {
+        var activeTab = cfg.tabs.filter(function (t) { return t.key === st.tab; })[0];
+        if (activeTab && activeTab.filter) rows = rows.filter(activeTab.filter);
+      }
       if (st.search) {
         var q = st.search.toLowerCase();
         rows = rows.filter(function (r) {
@@ -1156,6 +1260,13 @@
     searchEl.addEventListener("input", function () { st.search = searchEl.value; apply(); });
     selects.forEach(function (sel, fi) {
       sel.addEventListener("change", function () { st.filters[fi] = sel.value; apply(); });
+    });
+    tabButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        st.tab = btn.getAttribute("data-tab-key");
+        tabButtons.forEach(function (b) { b.classList.toggle("active", b === btn); });
+        apply();
+      });
     });
     ths.forEach(function (th) {
       th.addEventListener("click", function () {

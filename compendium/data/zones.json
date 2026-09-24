@@ -90,9 +90,9 @@
     "levelRange": "750–1000",
     "biome": "Mountain lair",
     "worldmapCenter": { "x": 2850, "y": 2780, "radius": 180 },
-    "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one.",
-    "monsters": ["Kraanian Dragonguard", "Arch Drake"],
-    "items": ["dragonguards_scale_bracer", "archdrakes_molten_heart"],
+    "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one. The Rootcrown Wyrm (T4C-0029), an Elder Wyrm predating the named Drake line, was added to the same lair.",
+    "monsters": ["Kraanian Dragonguard", "Arch Drake", "The Rootcrown Wyrm"],
+    "items": ["dragonguards_scale_bracer", "archdrakes_molten_heart", "rootcrown_wyrms_verdant_sceptre", "rootcrown_wyrms_ageless_mantle", "rootcrown_wyrms_timeless_circlet"],
     "spells": [],
     "quests": ["drakes_lair_vigil"],
     "npcs": ["OutriderKaelis"]

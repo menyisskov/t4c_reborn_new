@@ -768,6 +768,54 @@
       {
         "item": "crown_of_the_hollow_king",
         "chance": 0.008
+      },
+      {
+        "item": "ancient_celestial_dark_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -881,6 +929,54 @@
     "loot": [
       {
         "item": "aeries_drakeheart_signet",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_fire_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_fire_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_fire_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_fire_protector",
         "chance": 0.012
       }
     ],
@@ -1022,6 +1118,54 @@
       {
         "item": "healing_potion",
         "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_water_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_water_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_water_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_water_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -1614,6 +1758,54 @@
       {
         "item": "mana_elixir",
         "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_warrior_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -2242,6 +2434,79 @@
         "formula": "1d 1201 + 946 ",
         "combatAttack": 8410,
         "selectionWeight": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Rootcrown Wyrm",
+    "displayName": "The Rootcrown Wyrm",
+    "origin": "new",
+    "level": 700,
+    "health": 95000,
+    "mana": 0,
+    "xpPerHit": 12,
+    "xpOnDeath": 125000000,
+    "hitDamageMin": 900,
+    "hitDamageMax": 1900,
+    "respawnTimeMs": 30000,
+    "goldMin": 1350,
+    "goldMax": 3400,
+    "dodge": 2100,
+    "acMin": 0,
+    "acMax": 700,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 700,
+      "end": 800,
+      "agi": 250,
+      "intel": 200,
+      "will": 0,
+      "wis": 950,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 170,
+      "water": 100,
+      "fire": 90,
+      "dark": 60,
+      "light": 150
+    },
+    "loot": [
+      {
+        "item": "rootcrown_wyrms_verdant_sceptre",
+        "chance": 0.01
+      },
+      {
+        "item": "rootcrown_wyrms_ageless_mantle",
+        "chance": 0.015
+      },
+      {
+        "item": "rootcrown_wyrms_timeless_circlet",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1000+900",
+        "combatAttack": 1900,
+        "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
         "rangeMinTiles": 0,

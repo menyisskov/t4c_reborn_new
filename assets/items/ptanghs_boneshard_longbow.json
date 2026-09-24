@@ -1,0 +1,46 @@
+{
+  "key": "ptanghs_boneshard_longbow",
+  "name": "P'Tangh's Boneshard Longbow",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 0,
+  "weight": 7,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 950,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d220+420+4*arrow_dmg",
+  "atkDelay": "900",
+  "boosts": [
+    {
+      "boostId": 36400,
+      "statId": 6,
+      "expression": "79"
+    },
+    {
+      "boostId": 36401,
+      "statId": 10035,
+      "expression": "95"
+    },
+    {
+      "boostId": 36402,
+      "statId": 10,
+      "expression": "70"
+    }
+  ]
+}

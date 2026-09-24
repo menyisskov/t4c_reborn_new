@@ -77,7 +77,8 @@ public final class CompendiumExporter {
           "Ysolde, the Veiled Matriarch",
           "The Verdant Warden",
           "Tideworn Reaver",
-          "Coastwarden Ithrak");
+          "Coastwarden Ithrak",
+          "The Rootcrown Wyrm");
 
   /** Pre-existing legacy monsters that a content pass placed/activated rather than authored. */
   private static final Set<String> ACTIVATED_MONSTER_NAMES = Set.of("Arch Drake");

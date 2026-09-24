@@ -44,7 +44,22 @@ public final class LesserDrake extends DataMonster {
         SOUND_HIT,
         449,
         1375,
-        java.util.List.of(new MonsterDef.LootDrop("aeries_drakeheart_signet", 0.012f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("aeries_drakeheart_signet", 0.012f),
+            // T4C-0028: bring loot variety in line with the other Drake-line bosses (a full
+            // themed armor-set alongside the signature drop, not the signet alone).
+            new MonsterDef.LootDrop("ancient_celestial_fire_armor", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_fire_boots", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_fire_gauntlets", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_fire_helmet", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_fire_leggings", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_fire_protector", 0.025f),
+            new MonsterDef.LootDrop("empyrean_fire_armor", 0.012f),
+            new MonsterDef.LootDrop("empyrean_fire_boots", 0.012f),
+            new MonsterDef.LootDrop("empyrean_fire_gauntlets", 0.012f),
+            new MonsterDef.LootDrop("empyrean_fire_helmet", 0.012f),
+            new MonsterDef.LootDrop("empyrean_fire_leggings", 0.012f),
+            new MonsterDef.LootDrop("empyrean_fire_protector", 0.012f)),
         false,
         0.0f,
         265,

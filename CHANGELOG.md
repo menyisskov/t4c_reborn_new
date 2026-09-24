@@ -15,6 +15,37 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — The Rootcrown Wyrm, first of the Elder Wyrms (T4C-0029)
+
+### Added
+- A new boss, **The Rootcrown Wyrm**, now lairs alongside Arch Drake in Drake's Lair. It's the
+  first of the **Elder Wyrms** — ancient dragons said to predate Ignarok, Mordrenn, and the rest
+  of the known Drake line, each one tied to a different calling instead of a different element.
+  The Rootcrown Wyrm is the wisdom-mage of the line, wreathed in root and stone.
+- Defeating it can drop three new legendary items for wisdom-focused spellcasters: the
+  **Verdant Sceptre**, an **Ageless Mantle**, and a **Timeless Circlet** — all themed around
+  earth magic and unlike anything else currently in the game.
+
+## 2026-09-24 — Endgame legendary weapons, richer boss loot, and a flatter items page (T4C-0028)
+
+### Added
+- Two new legendary weapons for endgame players: **P'Tangh's Boneshard Longbow**, a legendary
+  bow, and **P'Tangh's Lichbone Staff**, a legendary staff for spellcasters — both dropped by
+  Makrsh P'Tangh. Every earlier legendary weapon was a melee weapon for warriors, so archers and
+  casters now have their own signature endgame option too.
+
+### Changed
+- Several bosses that used to drop only their signature item now also drop a full matching
+  armor set, the same way Makrsh P'Tangh already does: Sir Caradoc, the Sundered Knight; The
+  Hollow King; Coastwarden Ithrak; and the Lesser Drake.
+- The Items page on the reference website now shows every item's requirements, armor class,
+  damage, bonuses and other stats directly in the table, so you no longer need to open an item
+  to see what it does.
+- The Items page now names the exact monster or boss that drops an item, instead of just saying
+  "monster drop".
+- The Items page now has Weapons/Armor/Accessories tabs above the table, so you can narrow the
+  list to one category instead of scrolling through everything at once.
+
 ## 2026-09-23 — Item rebalance: every item matches its class (T4C-0027)
 
 ### Changed

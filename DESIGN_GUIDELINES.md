@@ -175,6 +175,61 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   The six archmage mantles (sold by Archmage Thalindra with "mantle") use them. High-level
   mage gear should require about **600** in its main casting stat.
 
+### Legendary weapon coverage
+- "Legendary" has no separate tier field — an item becomes legendary purely by setting
+  `"unique": true` (see `compendium/app.js`'s `rarityOf()`). There's no cap on how many
+  legendary items may exist, and no fixed ratio between weapon types.
+- Every weapon archetype should have at least one legendary/unique option for endgame players:
+  a strength-classed melee weapon, an archer weapon (bow), and an intelligence- or
+  wisdom/hybrid-classed caster weapon. Before T4C-0028 there were three unique melee weapons and
+  zero unique bows or caster weapons. Check this coverage whenever "not enough legendary
+  weapons" comes up again — add the missing weapon type, don't just add another melee option.
+- A caster weapon (`bodyPart: WEAPON`, intelligence/wisdom/hybrid archetype) follows the same
+  class rules as armor (own-school power plus matching resistance, main stat via the P/10 or
+  P/12 budget), but like every weapon it is exempt from the AC and skill/power/resistance
+  *budget* checks in `ItemBalanceGuidelinesTest` — only its main-stat bonus is checked exactly.
+  Keep the power/resistance amounts in line with the budget anyway (as if they were checked) for
+  internal consistency with the rest of the item's numbers.
+
+### The Elder Wyrms (a new legendary content line)
+- The owner wants legendary/endgame content to keep expanding beyond one-off drops, and
+  specifically asked for it to draw on a "pantheon" structure (as the community `t4cfantasy.com`
+  Addon reference does — different named figures gating gear for different classes/levels) —
+  but reflavored into this game's own fiction, not real-world deity names.
+- **The Elder Wyrms**: proto-drakes that predate the named Drake line (Ignarok, Mordrenn, Greater
+  Drake, Arch Drake, Lesser Drake). Where the named Drakes each embody one *element*, the Elder
+  Wyrms each embody one *class archetype* instead — a deliberately different axis from the
+  Ancient Celestial/Empyrean sets (which already cover all 8 element/class flavors) and from the
+  named Drakes (which already cover the 6 elements). This keeps the two mythologies distinct
+  instead of overlapping.
+- **Pilot shipped (T4C-0029): The Rootcrown Wyrm**, the wisdom-mage exemplar — a new boss in
+  Drake's Lair dropping its own unique weapon (a staff/sceptre) and 1-2 unique earth/light-themed
+  armor pieces, all balanced per the rules above and *not* reusing the existing
+  `ancient_celestial_earth_*`/`empyrean_earth_*`/`*_light_*` generated sets — the Elder Wyrms need
+  their own distinct item identity, separate from the armor-set generator's output.
+- **Not yet built**: the other four class archetypes (warrior, archer, intelligence mage, hybrid
+  air mage), each as its own Elder Wyrm with its own weapon (+ 1-2 armor pieces), following the
+  Rootcrown Wyrm's pattern. This is an accepted open gap, not a decision to stop at one — expand
+  it the same way if asked for "more Elder Wyrms" or "finish the pantheon."
+- Naming convention: `"<Elder Wyrm name>'s <Adjective> <Item Type>"`, keys lowercase-underscore
+  with no apostrophes (e.g. `rootcrown_wyrms_verdant_sceptre`), matching the Makrsh P'Tangh
+  legendary-weapon pair from the same content initiative.
+
+### Boss loot tables
+- A boss should drop **multiple different items**, not one signature item plus a couple of
+  potions. The established pattern (Ignarok, Mordrenn, Arch Drake, Greater Drake, Centaur King,
+  The Verdant Warden, Ysolde the Veiled Matriarch) is: the boss's own unique/legendary item at a
+  low chance (0.008–0.02), plus a full themed 6-piece Ancient Celestial set (~0.025 each) and its
+  matching 6-piece Empyrean set (~0.012 each) — 13 drop entries in total.
+- All eight `ArmorSetGenerator` flavors (fire, water, air, earth, light, dark, warrior, archer)
+  are already claimed by a boss. Reusing a flavor for another thematically-fitting boss is fine
+  — there's no rule against two bosses sharing a set flavor.
+- When adding a new boss, or noticing an existing one with a thin (1–3 entry) loot table, bring
+  it in line with this pattern instead of leaving it as a near-single-item drop (T4C-0028).
+- A single named/event boss can drop more than one unique/legendary item of its own (e.g. Makrsh
+  P'Tangh drops both a legendary bow and a legendary staff) when its established loot theme
+  plausibly supports more than one signature weapon type.
+
 ## 4. Reference website (compendium)
 - Generated from the live game data by `tools/CompendiumExporter`. CI regenerates it on every
   push to `main`, and Vercel deploys `main`.
@@ -187,6 +242,17 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   commit, and re-running the exporter on `main` changes nothing. Check both before answering.
 - Pages that exist for rules: Systems (XP curve), Rebirths (per-rebirth requirements and
   rewards), Spells, Items.
+- List pages show every important stat as its own column in a flat table — for Items that's
+  slot, class, requirements, AC, damage, boosts, price, rarity and source — so a player can
+  compare items without clicking through. A row can still open the detail page for anything not
+  worth a column (full element-colored boost breakdown, lore text, etc.), but the table itself
+  must answer the basic "what does this do" questions on its own (T4C-0028).
+- The Items page has Weapons/Armor/Accessories category tabs above the table (generic `tabs`
+  support in `listPage`/`wireListPage`, keyed by `bodyPart`), on top of the existing search/slot/
+  class/rarity filters, so a large item catalog stays browsable as it grows (T4C-0028).
+- Never show a generic "monster drop" label for where an item comes from. Name the actual
+  monster/boss (every one of them, if more than one drops it) via `lootSources.json`'s
+  `monsterDisplayName`, the same way an item's own detail page already does.
 
 ## 5. Process
 - Every player-visible change gets a `T4C-XXXX` ID in `TASKS.md` and a player-facing
