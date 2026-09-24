@@ -171,21 +171,24 @@
 
   // Where an item actually comes from - named monster(s)/boss(es) it drops from, not a generic
   // "monster drop" label, so the flat items table answers "who drops this" without a click-through.
+  // Drop data names the exact monster/boss and is always more specific than a zone tag, so it
+  // takes precedence - an item can be both zone-tracked content and a real boss drop, and the
+  // whole point of this column is naming who actually drops it (T4C-0028 Codex review).
   function sourceSummary(item) {
-    if (itemZone[item.key]) return zoneLink(itemZone[item.key]);
     var drops = itemDroppedBy[item.key];
     if (drops && drops.length) {
       return drops.map(function (d) {
         return monsterLink(d.monster, d.monsterDisplayName) + " (" + fmtPct(d.chance) + ")";
       }).join(", ");
     }
+    if (itemZone[item.key]) return zoneLink(itemZone[item.key]);
     if (itemSoldBy[item.key]) return itemSoldBy[item.key].map(npcLink).join(", ");
     return "—";
   }
   function sourceSortValue(item) {
-    if (itemZone[item.key]) return "zone:" + itemZone[item.key];
     var drops = itemDroppedBy[item.key];
     if (drops && drops.length) return drops.map(function (d) { return d.monsterDisplayName || d.monster; }).sort().join(",");
+    if (itemZone[item.key]) return "zone:" + itemZone[item.key];
     if (itemSoldBy[item.key]) return "shop:" + itemSoldBy[item.key].slice().sort().join(",");
     return "";
   }
