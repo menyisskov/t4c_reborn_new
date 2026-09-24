@@ -31,6 +31,7 @@ public final class QuestDefinitions {
         ForgeGodsforgedStormbow.definition(),
         ForgeGodsforgedVoidglassRod.definition(),
         ForgeGodsforgedZephyrWand.definition(),
-        ForgeGodsforgedTorc.definition());
+        ForgeGodsforgedTorc.definition(),
+        TheWakingRite.definition());
   }
 }

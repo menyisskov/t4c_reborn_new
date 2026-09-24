@@ -68,6 +68,11 @@ public final class QuestService {
       return I18n.resolve(definition.getCompletedText());
     }
     int kills = kills(player, definition);
+    if (kills >= definition.getRequiredKills()
+        && hasRequiredItem(player, definition)
+        && !meetsMinLevel(player, definition)) {
+      return I18n.message("message.quest_progress_dialog_needs_level", definition.getMinLevel());
+    }
     String itemKey = definition.getRequiredItemKey();
     if (itemKey != null && !itemKey.isBlank() && definition.getRequiredItemQty() > 0) {
       int have = Math.min(
@@ -97,7 +102,8 @@ public final class QuestService {
       if (same(definition.getGiverNpc(), npcName)
           && statusFor(player, definition) == STATUS_ACTIVE
           && kills(player, definition) >= definition.getRequiredKills()
-          && hasRequiredItem(player, definition)) {
+          && hasRequiredItem(player, definition)
+          && meetsMinLevel(player, definition)) {
         completionLines.add(complete(definition, player));
       }
     }
@@ -124,14 +130,20 @@ public final class QuestService {
       player.setQuestFlag(killsFlag(definition), next);
       changed = true;
       String title = I18n.resolve(definition.getTitle());
-      if (next >= definition.getRequiredKills() && hasRequiredItem(player, definition)) {
+      boolean killsComplete = next >= definition.getRequiredKills();
+      if (killsComplete
+          && hasRequiredItem(player, definition)
+          && meetsMinLevel(player, definition)) {
         notifications.add(I18n.message("message.quest_ready", title, giverDisplayName(definition)));
-      } else if (next >= definition.getRequiredKills()) {
+      } else if (killsComplete && !hasRequiredItem(player, definition)) {
         notifications.add(
             I18n.message(
                 "message.quest_ready_needs_item",
                 title,
                 itemDisplayName(definition.getRequiredItemKey())));
+      } else if (killsComplete) {
+        notifications.add(
+            I18n.message("message.quest_ready_needs_level", title, definition.getMinLevel()));
       } else {
         notifications.add(
             I18n.message("message.quest_progress", title, next, definition.getRequiredKills()));
@@ -218,7 +230,8 @@ public final class QuestService {
       return I18n.resolve(definition.getCompletedText());
     }
     if (kills(player, definition) < definition.getRequiredKills()
-        || !hasRequiredItem(player, definition)) {
+        || !hasRequiredItem(player, definition)
+        || !meetsMinLevel(player, definition)) {
       return null;
     }
     return complete(definition, player);
@@ -240,6 +253,15 @@ public final class QuestService {
     for (int i = 0; i < qty; i++) {
       InventoryService.remove(player, -1, key);
     }
+  }
+
+  /** True unless the quest also requires a minimum character level to turn in
+   * ({@code minLevel > 0}) and the player hasn't reached it yet. Kills/items can still be
+   * gathered below the floor - this only blocks the final completion, never the accept/progress
+   * flow. Quests with no level gate (the original shape, and most quests) always pass this
+   * check. */
+  private static boolean meetsMinLevel(Player player, QuestDef definition) {
+    return definition.getMinLevel() <= 0 || player.getLevel() >= definition.getMinLevel();
   }
 
   /** Player-facing name for an item objective key, so quest messaging can name the item instead

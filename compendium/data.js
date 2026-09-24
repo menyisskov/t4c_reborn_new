@@ -10653,6 +10653,7 @@ window.T4C_DATA = {
       "rewardXp": 4000,
       "requiredItemKey": "mordrenns_drowned_cowl",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "sunken_chancel",
       "offerText": "Thin the Drowned Acolytes crawling out of the chancel east of Silversky before they drag anyone else under.",
       "completionText": "You've bled the chancel dry of its acolytes, at least for now. Silversky's coast breathes easier.",
@@ -10672,6 +10673,7 @@ window.T4C_DATA = {
       "rewardXp": 7000,
       "requiredItemKey": "ignaroks_emberfang_claw",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "cinderreach_hills",
       "offerText": "Cull the Ashfang Stalkers raiding the Cinderreach foothills south of Windhowl before their numbers swell further.",
       "completionText": "The Stalker packs are broken up, for now. Ignarok still smolders somewhere up in those hills.",
@@ -10690,6 +10692,7 @@ window.T4C_DATA = {
       "rewardGold": 800,
       "rewardXp": 2000,
       "requiredItemQty": 0,
+      "minLevel": 0,
       "unlockZoneId": "sunken_chancel",
       "offerText": "Something's spooked the antelope east of town, and I won't vouch for anyone heading further out until I've seen them handle themselves. Thin the herds until they settle, then we'll talk about what's really out there.",
       "completionText": "The herds have settled and you didn't flinch doing it. Whatever's out past the coast, you're ready to see it for yourself.",
@@ -10708,6 +10711,7 @@ window.T4C_DATA = {
       "rewardGold": 1200,
       "rewardXp": 3000,
       "requiredItemQty": 0,
+      "minLevel": 0,
       "unlockZoneId": "cinderreach_hills",
       "offerText": "The roads north and east are lousy with brigands again, and I won't send anyone past the marches until they've proven they can clear a road first. Break up enough of their bands and we'll talk about what's smoldering in the hills.",
       "completionText": "The roads are clear, for now, and you held your own doing it. The hills south of here are yours to find, if you're still fool enough to go looking.",
@@ -10726,6 +10730,7 @@ window.T4C_DATA = {
       "rewardGold": 4000,
       "rewardXp": 250000,
       "requiredItemQty": 0,
+      "minLevel": 0,
       "unlockZoneId": "windhowl_marches",
       "offerText": "The coast road east of here is thick with trolls, and I won't risk the crossing until it's clear. Thin their numbers and I'll take you to Kraanhold myself.",
       "completionText": "The road's clear and the trolls scattered. Kraanhold's yours to reach now - Windhowl Marches is the first stretch of it, past the shoals.",
@@ -10745,6 +10750,7 @@ window.T4C_DATA = {
       "rewardXp": 400000,
       "requiredItemKey": "marchwardens_crown",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "windhowl_marches",
       "offerText": "Drive back the Centaur Warriors raiding the marches west of Windhowl before their king leads a full warband to the walls.",
       "completionText": "The marches are quiet again, for now. Windhowl's watch owes you its thanks.",
@@ -10764,6 +10770,7 @@ window.T4C_DATA = {
       "rewardXp": 900000,
       "requiredItemKey": "crown_of_the_hollow_king",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "hollow_march",
       "offerText": "Put down the Barrow Wights crawling out of the old barrows south of the Windhowl Marches.",
       "completionText": "The barrows have gone quiet again. The March Watch won't forget this.",
@@ -10783,6 +10790,7 @@ window.T4C_DATA = {
       "rewardXp": 2000000,
       "requiredItemKey": "aeries_drakeheart_signet",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "lesser_drakes_aerie",
       "offerText": "Cull the Kraanian Wyrmlings nesting in the aerie east of the Hollow March before their numbers swell further.",
       "completionText": "The nest is thinned, for now. Ilvara's old maps are looking more credible by the day.",
@@ -10802,6 +10810,7 @@ window.T4C_DATA = {
       "rewardXp": 150000000,
       "requiredItemKey": "heartfire_of_the_greater_drake",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "greater_drakes_bastion",
       "offerText": "Break the Bastion Wardens guarding the ruin east of the Aerie before the old wards protecting the Greater Drake can be renewed.",
       "completionText": "The wardens are broken. Whatever wards they were keeping strong won't hold much longer.",
@@ -10821,6 +10830,7 @@ window.T4C_DATA = {
       "rewardXp": 4200,
       "requiredItemKey": "depths_wardens_talisman",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "deep_ones_cave",
       "offerText": "Deep Ones have been dragging travelers under all along this stretch of the Raven's Dust coast. Thin their numbers before it gets worse.",
       "completionText": "It's quieter here already. Raven's Dust owes you more than it'll ever admit.",
@@ -10840,6 +10850,7 @@ window.T4C_DATA = {
       "rewardXp": 2000000000,
       "requiredItemKey": "archdrakes_molten_heart",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "drakes_lair",
       "offerText": "Kraanian Dragonguard hold the approach to the old drakes' lair, further out than the Vigil has ever mapped. Break their line before whatever sleeps past it wakes on its own.",
       "completionText": "The guard line is broken. Whatever the Dragonguard were protecting, it's exposed now - for better or worse.",
@@ -10858,6 +10869,7 @@ window.T4C_DATA = {
       "rewardGold": 40000,
       "rewardXp": 20000000,
       "requiredItemQty": 0,
+      "minLevel": 0,
       "offerText": "The reavers thin out fast if you know where to hit them, but I need to see you can actually do it before I put you anywhere near Ithrak himself. Clear enough of them off the tideline and come back - then we'll talk about the chart.",
       "completionText": "You've got the stomach for this after all. Ithrak's warband won't fold as easy, but you've earned the right to try. Ask me about the crossing again when you're ready for the rest of them - and for him.",
       "completedText": "You already proved yourself against the scouts. It's Ithrak's turn now, if you haven't finished that already."
@@ -10876,6 +10888,7 @@ window.T4C_DATA = {
       "rewardXp": 200000000,
       "requiredItemKey": "tideworn_avalon_chart",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "avalon_sanctuary",
       "offerText": "The scouts were the easy part. Ithrak keeps the rest of his warband close, and he's the only one left who knows the safe line through the shoal. My boy went out there once without a chart of his own. Clear the warband, then take Ithrak's chart before it goes down with him - I won't watch another one go in blind.",
       "completionText": "The warband's scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive. It's more than my boy ever had.",
@@ -10895,6 +10908,7 @@ window.T4C_DATA = {
       "rewardXp": 400000000,
       "requiredItemKey": "caradocs_sundered_blade",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "avalon_wilds",
       "offerText": "The Fey Wardens of the Wilds still hold to the old pact, but even loyal groves need a blade at their border while the Veil keeps pressing north. Stand vigil with them - thin whatever presses too close.",
       "completionText": "The Wilds breathe easier. The pact holds a little longer because of you.",
@@ -10914,6 +10928,7 @@ window.T4C_DATA = {
       "rewardXp": 1700000000,
       "requiredItemKey": "ysoldes_veiled_circlet",
       "requiredItemQty": 1,
+      "minLevel": 0,
       "unlockZoneId": "fading_veil",
       "offerText": "Veilbound Wraiths spread Ysolde's corruption outward with every season that passes. Push back into the Veil and cut their numbers down before the blight claims ground we can't take back.",
       "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
@@ -10933,6 +10948,7 @@ window.T4C_DATA = {
       "rewardXp": 150000000,
       "requiredItemKey": "item.wyrmforged_ember",
       "requiredItemQty": 5,
+      "minLevel": 0,
       "offerText": "Everyone thinks the old pact was words and nothing more. It wasn't - it was bound in metal too, once, and I still remember how. Bring me five embers torn from something that's already brushed against that kind of power, and I'll temper you a core worth building on.",
       "completionText": "Five embers, tempered into one. This core remembers what it was pulled from - handle it carefully, and bring it to Seressa or Tholvenn when you're ready for the rest.",
       "completedText": "Your core's already tempered. Go on - Seressa's waiting on her half, or Tholvenn's waiting on both."
@@ -10951,6 +10967,7 @@ window.T4C_DATA = {
       "rewardXp": 150000000,
       "requiredItemKey": "item.veiled_aether_shard",
       "requiredItemQty": 5,
+      "minLevel": 0,
       "offerText": "A core is only half of anything. Bring me five shards of aether - the kind that only forms where the veil between us and whatever's beyond it wears thin - and I'll bind you a sigil to match Corvain's work.",
       "completionText": "Bound, and holding - for now. Everything I bind holds for now. Take it to Tholvenn once you have both halves; he's the only one of us who still remembers how to finish the working.",
       "completedText": "Your sigil's already bound. Tholvenn has what he needs from me - the rest is between you and him."
@@ -10970,6 +10987,7 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "minLevel": 0,
       "offerText": "Bring me a tempered core and a bound sigil, and name the warblade - the rest is mine to finish.",
       "completionText": "There. A blade with the old pact's strength bound into the steel - Godsforged, the last of us would call it. Wield it like it remembers what it cost.",
       "completedText": "You already carry the Godsforged Warblade. I've nothing left to give you there."
@@ -10989,6 +11007,7 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "minLevel": 0,
       "offerText": "A core, a sigil, and the will to loose something the old pact would have called a small storm. Bring the first two; I'll handle the rest.",
       "completionText": "Drawn true, this one will find whatever you aim it at - and a little of what's beyond it too. Call it Godsforged, and don't waste the name on a poor shot.",
       "completedText": "The Godsforged Stormbow already answers to your hand. There's nothing more I can add to it."
@@ -11008,6 +11027,7 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "minLevel": 0,
       "offerText": "Bring me a tempered core and a bound sigil, and I'll pour what's left of the old power into glass dark enough to hold it.",
       "completionText": "Voidglass doesn't reflect light so much as swallow it - fitting, for what's bound inside. It's Godsforged now. Use it with more care than most of your kind manage.",
       "completedText": "The Godsforged Voidglass Rod is already yours. I won't forge you a second."
@@ -11027,6 +11047,7 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "minLevel": 0,
       "offerText": "A core, a sigil, and a hand steady enough for both mind and heart to guide it. Bring me the first two.",
       "completionText": "Air remembers everything that's ever moved through it, if you know how to ask - this wand asks better than most now. Godsforged, and yours.",
       "completedText": "You've already got the Godsforged Zephyr Wand in hand. That working's finished."
@@ -11046,12 +11067,75 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "minLevel": 0,
       "offerText": "This one's closer to my own heart than the rest. Bring me a core and a sigil, and I'll set what's left of the pact itself into a torc worth wearing.",
       "completionText": "There. Something of the old pact, worn instead of buried in the ground it was meant to protect. Wear it well - it's the closest thing to the original working any of us have managed in a very long time.",
       "completedText": "You're already wearing the Godsforged Torc of the First Pact. There's no more of that particular working left to give."
+    },
+    {
+      "id": "the_waking_rite",
+      "title": "The Waking Rite",
+      "giverNpc": "AnchoriteRowan",
+      "targetMonster": "Fey Warden",
+      "requiredKills": 8,
+      "targetWorldZ": 0,
+      "areaCenterX": 1265,
+      "areaCenterY": 1400,
+      "areaRadiusTiles": 110,
+      "rewardGold": 100000,
+      "rewardXp": 5000000,
+      "requiredItemQty": 0,
+      "minLevel": 125,
+      "offerText": "Avalon's pact is stirring again - I can feel it. It doesn't forgive the reckless, only the proven. Clear enough of the Fey Wardens still testing themselves against it, and come back once you've held your own at full strength - then we'll talk about what waking rite Avalon still remembers.",
+      "completionText": "You've held your ground, and Avalon's noticed. That's not nothing - it's the same proof the old trials used to demand, just asked a different way. Come find me whenever you're ready to be reborn; you won't need to go looking for the Oracle again.",
+      "completedText": "Avalon already knows what you're capable of. Just say the word when you're ready to be reborn."
     }
   ],
   "npcs": [
+    {
+      "id": "AnchoriteRowan",
+      "origin": "new",
+      "displayName": "Anchorite Rowan",
+      "welcomeText": "Avalon doesn't forget who's proven themselves to it. Neither do I.",
+      "topics": [
+        {
+          "keywords": [
+            "rite",
+            "waking"
+          ],
+          "response": "Avalon's pact is stirring again - I can feel it. It doesn't forgive the reckless, only the proven. Stand against enough of the Fey Wardens still testing themselves against it, and come back once you've held your own at full strength - then we'll talk about what waking rite Avalon still remembers.",
+          "actions": [
+            "GIVE_QUEST:the_waking_rite"
+          ]
+        },
+        {
+          "keywords": [
+            "ready",
+            "reborn"
+          ],
+          "response": "Once Avalon's satisfied you're proven, ask me when you're ready to be reborn - you won't need to go looking for the Oracle again.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "rowan"
+          ],
+          "response": "I used to think the Oracle's trial was the only door left standing. Turns out Avalon kept one of its own, quieter than the Oracle's ever was.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
     {
       "id": "ArchmageThalindra",
       "origin": "new",

@@ -155,7 +155,8 @@ public final class CompendiumExporter {
           "DockmasterThessaly",
           "EmberSmithCorvain",
           "WardenSeressa",
-          "GrandmasterTholvenn");
+          "GrandmasterTholvenn",
+          "AnchoriteRowan");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
@@ -182,7 +183,8 @@ public final class CompendiumExporter {
           "forge_godsforged_stormbow",
           "forge_godsforged_voidglass_rod",
           "forge_godsforged_zephyr_wand",
-          "forge_godsforged_torc");
+          "forge_godsforged_torc",
+          "the_waking_rite");
 
   // T4C-0033: the Godsforged crafting chain's raw materials/components are legacy Java items (not
   // assets/items/*.json), specifically so they're exempt from ItemBalanceGuidelinesTest's gear
@@ -542,6 +544,7 @@ public final class CompendiumExporter {
       m.put("requiredItemKey", q.getRequiredItemKey());
       m.put("requiredItemQty", q.getRequiredItemQty());
       m.put("alsoRequiresItemKey", EXTRA_REQUIRED_ITEM_KEYS.get(q.getId()));
+      m.put("minLevel", q.getMinLevel());
       m.put("unlockZoneId", q.getUnlockZoneId());
       m.put("offerText", I18n.resolve(q.getOfferText()));
       m.put("completionText", I18n.resolve(q.getCompletionText()));

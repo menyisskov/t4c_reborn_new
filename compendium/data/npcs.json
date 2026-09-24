@@ -1,5 +1,49 @@
 [
   {
+    "id": "AnchoriteRowan",
+    "origin": "new",
+    "displayName": "Anchorite Rowan",
+    "welcomeText": "Avalon doesn't forget who's proven themselves to it. Neither do I.",
+    "topics": [
+      {
+        "keywords": [
+          "rite",
+          "waking"
+        ],
+        "response": "Avalon's pact is stirring again - I can feel it. It doesn't forgive the reckless, only the proven. Stand against enough of the Fey Wardens still testing themselves against it, and come back once you've held your own at full strength - then we'll talk about what waking rite Avalon still remembers.",
+        "actions": [
+          "GIVE_QUEST:the_waking_rite"
+        ]
+      },
+      {
+        "keywords": [
+          "ready",
+          "reborn"
+        ],
+        "response": "Once Avalon's satisfied you're proven, ask me when you're ready to be reborn - you won't need to go looking for the Oracle again.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "rowan"
+        ],
+        "response": "I used to think the Oracle's trial was the only door left standing. Turns out Avalon kept one of its own, quieter than the Oracle's ever was.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "ArchmageThalindra",
     "origin": "new",
     "displayName": "Archmage Thalindra",
