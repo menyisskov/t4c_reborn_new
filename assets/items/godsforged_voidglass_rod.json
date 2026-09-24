@@ -1,0 +1,38 @@
+{
+  "key": "godsforged_voidglass_rod",
+  "name": "Godsforged Voidglass Rod",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLichStaff",
+  "appearanceInventory": "64kInvLichStaff",
+  "price": 0,
+  "weight": 4,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 1000,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d45+65",
+  "atkDelay": "1250",
+  "boosts": [
+    { "boostId": 36514, "statId": 1, "expression": "120" },
+    { "boostId": 36515, "statId": 24, "expression": "120" },
+    { "boostId": 36516, "statId": 12, "expression": "48" },
+    { "boostId": 36517, "statId": 13, "expression": "48" },
+    { "boostId": 36518, "statId": 14, "expression": "48" },
+    { "boostId": 36519, "statId": 15, "expression": "48" },
+    { "boostId": 36520, "statId": 22, "expression": "48" }
+  ]
+}

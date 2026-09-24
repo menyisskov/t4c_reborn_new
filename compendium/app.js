@@ -102,6 +102,7 @@
   }
 
   function rarityOf(item) {
+    if (item.key && item.key.indexOf("godsforged_") === 0) return { tier: "godsforged", label: "Godsforged" };
     if (item.unique === true) return { tier: "legendary", label: "Legendary" };
     if (item.key && (item.key.indexOf("ancient_celestial_") === 0 || item.key.indexOf("empyrean_") === 0)) {
       return { tier: "set", label: "Set piece" };
@@ -109,7 +110,7 @@
     if (Number(item.price) === 0) return { tier: "rare", label: "Rare (drop only)" };
     return { tier: "common", label: "Common (shop)" };
   }
-  var RARITY_RANK = { legendary: 4, set: 3, rare: 2, common: 1 };
+  var RARITY_RANK = { godsforged: 5, legendary: 4, set: 3, rare: 2, common: 1 };
 
   function rarityTag(item) {
     var r = rarityOf(item);
@@ -628,7 +629,7 @@
       filters: [
         { label: "Slot", field: "bodyPart", options: uniq(ITEMS.map(function (i) { return i.bodyPart; })) },
         { label: "Class", field: "__class", options: uniq(ITEMS.map(archetypeOf)), computed: archetypeOf },
-        { label: "Rarity", field: "__rarity", options: ["legendary", "set", "rare", "common"], computed: function (it) { return rarityOf(it).tier; } },
+        { label: "Rarity", field: "__rarity", options: ["godsforged", "legendary", "set", "rare", "common"], computed: function (it) { return rarityOf(it).tier; } },
       ],
       defaultSort: "name",
     });
@@ -817,7 +818,9 @@
       return (
         '<a class="card" href="#/quests/' + slug(q.id) + '">' +
         "<h3>" + esc(q.title) + "</h3>" +
-        "<p>Kill " + q.requiredKills + "× " + esc(q.targetMonster) + " for " + npcPlain(q.giverNpc) + "</p>" +
+        "<p>" + (q.requiredKills > 0
+          ? "Kill " + q.requiredKills + "× " + esc(q.targetMonster) + " for " + npcPlain(q.giverNpc)
+          : "Turn in items to " + npcPlain(q.giverNpc)) + "</p>" +
         '<div class="tags"><span class="tag tier-legendary">' + fmtNum(q.rewardGold) + " gold</span>" +
         '<span class="tag tier-uncommon">' + fmtNum(q.rewardXp) + " XP</span>" +
         (zone ? '<span class="tag plain">' + esc((byKey.zone[zone] || {}).name || zone) + "</span>" : "") +
@@ -853,11 +856,15 @@
         '<div class="quest-text-block"><span class="label">Quest offer</span>“' + esc(q.offerText) + "”</div>" +
         "</div></div>" +
         '<div class="quest-step"><span class="num">2</span><div>' +
-        "<strong>Kill " + q.requiredKills + "× " + monsterLink(q.targetMonster) + "</strong>" +
-        '<p class="lead">Kills only count inside the objective area shown below (world Z ' + q.targetWorldZ + ").</p>" +
+        (q.requiredKills > 0
+          ? "<strong>Kill " + q.requiredKills + "× " + monsterLink(q.targetMonster) + "</strong>" +
+            '<p class="lead">Kills only count inside the objective area shown below (world Z ' +
+            q.targetWorldZ + ").</p>"
+          : "<strong>Gather the required items</strong>") +
         (q.requiredItemKey
-          ? '<p class="lead">Also collect ' + q.requiredItemQty + "× " + itemLink(q.requiredItemKey) +
-            " (a rare drop) — it's consumed on turn-in.</p>"
+          ? '<p class="lead">Collect ' + q.requiredItemQty + "× " + itemLink(q.requiredItemKey) +
+            (q.requiredKills > 0 ? " (a rare drop) — it's consumed on turn-in." : " — it's consumed on turn-in.") +
+            "</p>"
           : "") +
         "</div></div>" +
         '<div class="quest-step"><span class="num">3</span><div>' +
@@ -870,14 +877,20 @@
           ? '<p class="lead">Unlocks fast travel to ' + zoneLink(q.unlockZoneId) + ".</p>"
           : "") +
         "</div></div>") +
-      panel("Objective area", '<div class="kv-grid">' +
-        kv("Target", monsterLink(q.targetMonster)) + kv("Required kills", q.requiredKills) +
-        (q.requiredItemKey
-          ? kv("Required item", q.requiredItemQty + "× " + itemLink(q.requiredItemKey))
-          : "") +
-        (q.unlockZoneId ? kv("Unlocks zone", zoneLink(q.unlockZoneId)) : "") +
-        kv("Center", "(" + q.areaCenterX + ", " + q.areaCenterY + ")") + kv("Radius", q.areaRadiusTiles + " tiles") +
-        "</div>" + mapHtml)
+      panel(
+        q.requiredKills > 0 ? "Objective area" : "Turn-in",
+        '<div class="kv-grid">' +
+          (q.requiredKills > 0 ? kv("Target", monsterLink(q.targetMonster)) + kv("Required kills", q.requiredKills) : "") +
+          (q.requiredItemKey
+            ? kv("Required item", q.requiredItemQty + "× " + itemLink(q.requiredItemKey))
+            : "") +
+          (q.unlockZoneId ? kv("Unlocks zone", zoneLink(q.unlockZoneId)) : "") +
+          (q.requiredKills > 0
+            ? kv("Center", "(" + q.areaCenterX + ", " + q.areaCenterY + ")") +
+              kv("Radius", q.areaRadiusTiles + " tiles")
+            : "") +
+          "</div>" +
+          (q.requiredKills > 0 ? mapHtml : ""))
     );
   });
 

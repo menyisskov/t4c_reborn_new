@@ -91,7 +91,8 @@ class ItemBalanceGuidelinesTest {
     for (ItemDefinition d : items) {
       if (d.getBodyPart() == BodyPart.WEAPON) continue;
       double expected =
-          ItemBalance.expectedArmorClass(d.getBodyPart(), d.getMinEnd(), ItemBalance.archetype(d));
+          ItemBalance.expectedArmorClass(
+              d.getBodyPart(), d.getMinEnd(), ItemBalance.archetype(d), tierMultiplierOf(d));
       assertEquals(expected, d.getArmorClass(), 0.15, d.getKey() + " armor class");
     }
   }
@@ -148,8 +149,9 @@ class ItemBalanceGuidelinesTest {
       Archetype a = ItemBalance.archetype(d);
       double p =
           ItemBalance.primaryRequirement(a, d.getReqStr(), d.getReqAgi(), d.getMinInt(), d.getMinWis());
+      double tier = tierMultiplierOf(d);
       Map<Integer, Double> b = boosts(d);
-      int main = ItemBalance.mainStatBonus(a, p);
+      int main = ItemBalance.mainStatBonus(a, p, tier);
       switch (a) {
         case WARRIOR -> assertEquals(main, b.get(STR), 1, k + " strength");
         case ARCHER -> assertEquals(main, b.get(AGI), 1, k + " agility");
@@ -164,21 +166,31 @@ class ItemBalanceGuidelinesTest {
       if (a.isMage()) {
         for (int stat : POWER_TO_RESIST.keySet()) {
           if (!b.containsKey(stat)) continue;
-          assertEquals(ItemBalance.magicPowerBonus(p), b.get(stat), 1, k + " power");
+          assertEquals(ItemBalance.magicPowerBonus(p, tier), b.get(stat), 1, k + " power");
         }
         // Resistance is the same across all five non-light schools, not tied to which power
         // the item happens to have (a light-power item still resists air/fire/water/earth/dark,
         // just never light itself).
         for (int r : RESISTS)
-          assertEquals(ItemBalance.magicResistBonus(p), b.getOrDefault(r, 0d), 1, k + " resistance " + r);
+          assertEquals(
+              ItemBalance.magicResistBonus(p, tier), b.getOrDefault(r, 0d), 1, k + " resistance " + r);
       } else {
         int skill = a == Archetype.WARRIOR ? ATK : ARCHERY;
-        assertEquals(ItemBalance.combatSkillBonus(p), b.get(skill), 1, k + " attack/archery");
+        assertEquals(ItemBalance.combatSkillBonus(p, tier), b.get(skill), 1, k + " attack/archery");
         for (int r : RESISTS)
           assertTrue(
-              b.get(r) >= ItemBalance.physicalResistBonus(p) - 1, k + " resistance " + r);
+              b.get(r) >= ItemBalance.physicalResistBonus(p, tier) - 1, k + " resistance " + r);
       }
     }
+  }
+
+  /** "Godsforged" tier items (T4C-0033, key-prefixed the same way "ancient_celestial_"/
+   * "empyrean_" mark generated set pieces) use a higher bonus-formula multiplier than every other
+   * item - see {@link ItemBalance#GODSFORGED_TIER_MULTIPLIER}. */
+  private static double tierMultiplierOf(ItemDefinition d) {
+    String k = d.getKey();
+    String bare = k.startsWith("item.") ? k.substring("item.".length()) : k;
+    return bare.startsWith("godsforged_") ? ItemBalance.GODSFORGED_TIER_MULTIPLIER : 1.0;
   }
 
   /** No item, of any class, ever grants light resistance - positive or negative. Scans the

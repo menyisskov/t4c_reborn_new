@@ -163,10 +163,54 @@ public final class QuestService {
     if (zoneId != null && !zoneId.isBlank()) {
       player.setQuestFlag(zoneUnlockFlag(zoneId), 1);
     }
+    String rewardItemKey = definition.getRewardItemKey();
+    if (rewardItemKey != null && !rewardItemKey.isBlank()) {
+      InventoryService.Result granted = InventoryService.add(player, rewardItemKey);
+      if (!granted.success()) {
+        log.warn(
+            "Quest '{}' reward item '{}' could not be granted ({})",
+            definition.getId(),
+            rewardItemKey,
+            granted.failure());
+      }
+    }
     persist.run();
     systemMessage.accept(
         I18n.message("message.quest_reward", definition.getRewardGold(), definition.getRewardXp()));
     return I18n.resolve(definition.getCompletionText());
+  }
+
+  /** Lets an NpcBehavior that has already verified/consumed an EXTRA required item the standard
+   * single-item {@code QuestDef} shape can't express (e.g. a second component needed alongside
+   * this quest's own {@code requiredItemKey}) grant this quest's completion directly, without
+   * going through the normal STATUS_ACTIVE accept-then-return-later flow. Still honors this
+   * quest's own {@code requiredKills}/{@code requiredItemKey} objective (if any) - this is a way
+   * to ADD an extra check on top of a quest, never to bypass the quest's own native one. Used by
+   * the Godsforged crafting chain's final "combine two components" turn-ins (see
+   * {@code npc/GrandmasterTholvenn.java}), where a single QuestDef can only natively track one
+   * required item but the forge needs two. */
+  public String completeCraftingQuest(String questId, String npcName, Player player) {
+    QuestDef definition = findById(questId);
+    if (definition == null || player == null) {
+      log.warn("Unknown quest '{}' referenced by NPC '{}'", questId, npcName);
+      return null;
+    }
+    if (!same(definition.getGiverNpc(), npcName)) {
+      log.warn(
+          "NPC '{}' attempted to complete quest '{}' owned by '{}'",
+          npcName,
+          definition.getId(),
+          definition.getGiverNpc());
+      return null;
+    }
+    if (statusFor(player, definition) == STATUS_COMPLETED) {
+      return I18n.resolve(definition.getCompletedText());
+    }
+    if (kills(player, definition) < definition.getRequiredKills()
+        || !hasRequiredItem(player, definition)) {
+      return null;
+    }
+    return complete(definition, player);
   }
 
   /** True unless the quest also requires turning in {@code requiredItemQty} copies of

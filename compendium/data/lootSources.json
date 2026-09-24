@@ -948,6 +948,30 @@
     "chance": 0.008
   },
   {
+    "item": "item.veiled_aether_shard",
+    "monster": "The Rootcrown Wyrm",
+    "monsterDisplayName": "The Rootcrown Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.veiled_aether_shard",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.05
+  },
+  {
+    "item": "item.wyrmforged_ember",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.05
+  },
+  {
+    "item": "item.wyrmforged_ember",
+    "monster": "MakrshPtangh2",
+    "monsterDisplayName": "Makrsh P'Tangh",
+    "chance": 0.05
+  },
+  {
     "item": "marchwardens_crown",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",

@@ -1,0 +1,39 @@
+{
+  "key": "godsforged_zephyr_wand",
+  "name": "Godsforged Zephyr Wand",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupWoodenStaff",
+  "appearanceInventory": "64kInvWoodenStaff",
+  "price": 0,
+  "weight": 4,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 625,
+    "wisdom": 625,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d42+62",
+  "atkDelay": "1250",
+  "boosts": [
+    { "boostId": 36521, "statId": 1, "expression": "50" },
+    { "boostId": 36522, "statId": 4, "expression": "50" },
+    { "boostId": 36523, "statId": 16, "expression": "120" },
+    { "boostId": 36524, "statId": 12, "expression": "48" },
+    { "boostId": 36525, "statId": 13, "expression": "48" },
+    { "boostId": 36526, "statId": 14, "expression": "48" },
+    { "boostId": 36527, "statId": 15, "expression": "48" },
+    { "boostId": 36528, "statId": 22, "expression": "48" }
+  ]
+}

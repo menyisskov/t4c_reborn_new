@@ -434,6 +434,10 @@
         "chance": 0.008
       },
       {
+        "item": "item.wyrmforged_ember",
+        "chance": 0.05
+      },
+      {
         "item": "ancient_celestial_fire_armor",
         "chance": 0.025
       },
@@ -2034,6 +2038,10 @@
         "chance": 0.02
       },
       {
+        "item": "item.veiled_aether_shard",
+        "chance": 0.05
+      },
+      {
         "item": "mana_elixir",
         "chance": 0.3
       },
@@ -2484,6 +2492,10 @@
       {
         "item": "rootcrown_wyrms_verdant_sceptre",
         "chance": 0.01
+      },
+      {
+        "item": "item.veiled_aether_shard",
+        "chance": 0.05
       },
       {
         "item": "rootcrown_wyrms_ageless_mantle",

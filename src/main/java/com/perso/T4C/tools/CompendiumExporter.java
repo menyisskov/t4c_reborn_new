@@ -10,6 +10,8 @@ import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.monster.json.MonsterJsonLoader;
@@ -150,7 +152,10 @@ public final class CompendiumExporter {
           "HarbormasterRangor",
           "SentinelCorwin",
           "OutriderHalvard",
-          "DockmasterThessaly");
+          "DockmasterThessaly",
+          "EmberSmithCorvain",
+          "WardenSeressa",
+          "GrandmasterTholvenn");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
@@ -170,7 +175,26 @@ public final class CompendiumExporter {
           "silversky_borderwatch",
           "windhowl_borderwatch",
           "passage_to_kraanhold",
-          "tideworn_shore_scouts");
+          "tideworn_shore_scouts",
+          "forge_the_godcore",
+          "bind_the_godsigil",
+          "forge_godsforged_warblade",
+          "forge_godsforged_stormbow",
+          "forge_godsforged_voidglass_rod",
+          "forge_godsforged_zephyr_wand",
+          "forge_godsforged_torc");
+
+  // T4C-0033: the Godsforged crafting chain's raw materials/components are legacy Java items (not
+  // assets/items/*.json), specifically so they're exempt from ItemBalanceGuidelinesTest's gear
+  // rules - see item/definition/WyrmforgedEmber.java. exportItems() only scans assets/items/, so
+  // without this they'd resolve to nothing on the reference site (itemLink() would fall back to
+  // showing the raw key). Listed explicitly and merged in from ItemRegistry.load() instead.
+  private static final Set<String> NEW_UTILITY_ITEM_KEYS =
+      Set.of(
+          "item.wyrmforged_ember",
+          "item.veiled_aether_shard",
+          "item.tempered_godcore",
+          "item.bound_godsigil");
 
   private static final Set<String> SHOP_EXCLUDED_NPC_IDS =
       Set.of("Boreas", "Yolak", "TtayhMark", "Kiadus", "RhodarHeatforge", "GulfridSteelhammer");
@@ -686,6 +710,30 @@ public final class CompendiumExporter {
       } catch (IOException | RuntimeException ex) {
         System.err.println("Skipping item file " + f + ": " + ex);
       }
+    }
+    for (String key : NEW_UTILITY_ITEM_KEYS) {
+      ItemDefinition d = ItemRegistry.findByKey(key);
+      if (d == null) continue;
+      Map<String, Object> item = new LinkedHashMap<>();
+      item.put("key", d.getKey());
+      item.put("name", I18n.resolve(d.getName()));
+      item.put("bodyPart", d.getBodyPart());
+      item.put("price", d.getPrice());
+      item.put("weight", d.getWeight());
+      item.put("armorClass", d.getArmorClass());
+      Map<String, Object> requirements = new LinkedHashMap<>();
+      requirements.put("endurance", d.getMinEnd());
+      requirements.put("strength", d.getReqStr());
+      requirements.put("agility", d.getReqAgi());
+      requirements.put("intelligence", d.getMinInt());
+      requirements.put("wisdom", d.getMinWis());
+      requirements.put("attack", d.getReqAttack());
+      item.put("requirements", requirements);
+      item.put("unique", d.isUnique());
+      item.put("isBow", d.isBow());
+      item.put("dmgFormula", d.getDmgFormula());
+      item.put("boosts", List.of());
+      out.add(item);
     }
     return out;
   }

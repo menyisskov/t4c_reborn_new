@@ -236,6 +236,49 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   with no apostrophes (e.g. `rootcrown_wyrms_verdant_sceptre`), matching the Makrsh P'Tangh
   legendary-weapon pair from the same content initiative.
 
+### Godsforged: a tier above Legendary
+- **A new tier above Legendary** (T4C-0033), earned only through a multi-NPC crafting chain, not
+  a boss drop. Reflavored into this session's own lore rather than invented from nothing: the
+  **Forgewrights of the First Pact** are the last three survivors of the order that helped bind
+  Avalon's original fey pact (see "Passage to Avalon" in `## 6. Quests` below) — now working
+  within the Avalon Wilds, trying to reinforce what's fraying by forging relics from materials
+  torn from the world's other apex threats.
+- **Mechanically it's a bonus-formula multiplier, not a higher requirement.** Legendary items
+  already sit at `MAX_SINGLE_REQUIREMENT` (1000) — the level-cap main stat — so there's no
+  requirement headroom left to express "stronger than Legendary." `ItemBalance.
+  GODSFORGED_TIER_MULTIPLIER` (1.2) is applied on top of every bonus formula (main stat, combat
+  skill, magic power, magic resistance, AC) via a tier-aware overload of each — every formula's
+  no-tier overload still defaults to 1.0, so no existing item's expected value changes.
+  `ItemBalanceGuidelinesTest` detects the tier by key prefix (`godsforged_`, the same convention
+  `ancient_celestial_`/`empyrean_` already use) and applies the multiplier when checking that
+  item's numbers.
+- **The crafting chain** (see `quest/definition/ForgeTheGodcore.java`,
+  `BindTheGodsigil.java`, `ForgeGodsforgedWarblade.java` and its four siblings,
+  `npc/EmberSmithCorvain.java`, `npc/WardenSeressa.java`, `npc/GrandmasterTholvenn.java`):
+  1. Two gathering NPCs each turn a rare material (a boss drop from existing endgame bosses, not
+     a new one) into an intermediate component — an ordinary single-item `QuestDef` turn-in, using
+     the new `rewardItemKey` field (T4C-0033) to hand back the component instead of just gold/XP.
+  2. A third NPC combines both components into the finished item. A single `QuestDef` can only
+     natively track one required item, so this final step's "extra" component is checked and
+     consumed by the NPC's own `javaBehavior()` *before* it calls the new
+     `QuestService.completeCraftingQuest()` — which then checks/consumes the quest's own natively-
+     tracked item and grants the reward in the same step. This skips the normal accept-then-
+     return-later flow entirely: once a player has both components, naming the item finishes the
+     forge in one conversation.
+- **Raw materials are legacy Java items, not `assets/items/*.json`.** A pure crafting
+  material/component has no stat requirements and isn't meant to be worn, but every file in
+  `assets/items/` is assumed to be real gear and gets the full `ItemBalanceGuidelinesTest`
+  treatment (a valid class, a matching AC, etc.) — a zero-requirement item fails
+  `requirementsStayReachable`'s "has no class requirement" check. Author non-equippable
+  materials/components the same way `item/definition/AbyssOrb.java` does (a legacy
+  `ItemDefinition` with `bodyPart: null`), and remember they're invisible to the compendium unless
+  explicitly added to `CompendiumExporter`'s `NEW_UTILITY_ITEM_KEYS` (its own allowlist, separate
+  from `NEW_QUEST_IDS`/`NEW_NPC_IDS`) — `exportItems()` otherwise only scans `assets/items/`.
+- **One item per class archetype**, following the same "one per archetype" shape as the Elder
+  Wyrms line (warrior, archer, intelligence mage, wisdom mage, hybrid mage) - see the five
+  `ForgeGodsforged*.java` quests for the pattern to extend if the owner asks for more Godsforged
+  items later.
+
 ### Boss loot tables
 - A boss should drop **multiple different items**, not one signature item plus a couple of
   potions. The established pattern (Ignarok, Mordrenn, Arch Drake, Greater Drake, Centaur King,

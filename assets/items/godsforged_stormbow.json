@@ -1,0 +1,38 @@
+{
+  "key": "godsforged_stormbow",
+  "name": "Godsforged Stormbow",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "appearanceInventory": "64kInvLongBow",
+  "price": 0,
+  "weight": 7,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 1000,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d240+460+4*arrow_dmg",
+  "atkDelay": "850",
+  "boosts": [
+    { "boostId": 36507, "statId": 6, "expression": "100" },
+    { "boostId": 36508, "statId": 10035, "expression": "240" },
+    { "boostId": 36509, "statId": 12, "expression": "30" },
+    { "boostId": 36510, "statId": 13, "expression": "30" },
+    { "boostId": 36511, "statId": 14, "expression": "30" },
+    { "boostId": 36512, "statId": 15, "expression": "30" },
+    { "boostId": 36513, "statId": 22, "expression": "30" }
+  ]
+}

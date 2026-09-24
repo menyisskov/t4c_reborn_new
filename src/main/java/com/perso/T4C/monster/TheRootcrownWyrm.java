@@ -56,6 +56,7 @@ public final class TheRootcrownWyrm extends DataMonster {
         3400,
         java.util.List.of(
             new MonsterDef.LootDrop("rootcrown_wyrms_verdant_sceptre", 0.01f),
+            new MonsterDef.LootDrop("item.veiled_aether_shard", 0.05f),
             new MonsterDef.LootDrop("rootcrown_wyrms_ageless_mantle", 0.015f),
             new MonsterDef.LootDrop("rootcrown_wyrms_timeless_circlet", 0.015f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
