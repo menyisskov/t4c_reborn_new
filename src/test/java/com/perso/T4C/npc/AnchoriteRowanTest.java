@@ -67,7 +67,8 @@ class AnchoriteRowanTest {
   }
 
   @Test
-  void confirmingRebirthIncrementsTheCounterWithoutForcingATeleport() throws Exception {
+  void confirmingRebirthIncrementsTheCounterAndSendsThePlayerToTheAllocationRoom()
+      throws Exception {
     AnchoriteRowan npc = new AnchoriteRowan(new NpcContext(null));
     Player player = eligiblePlayer();
     NpcBehavior behavior = npc.javaBehavior();
@@ -77,6 +78,13 @@ class AnchoriteRowanTest {
 
     assertEquals(1, player.getRebirthCount());
     assertEquals(1, player.getLevel());
+    // Same allocation room Oracle sends a player to (see OracleRebirthTest) - the remort energy
+    // points RebirthBehavior.perform() just granted can only be spent there.
+    assertEquals(
+        1315 * com.perso.T4C.config.GameConstants.GRID_W, player.getCoordinates().getX());
+    assertEquals(
+        920 * com.perso.T4C.config.GameConstants.GRID_H, player.getCoordinates().getY());
+    assertEquals(1, player.getCoordinates().getZ());
   }
 
   @Test

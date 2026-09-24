@@ -137,8 +137,8 @@
     "monsters": ["Fey Warden", "Moonlit Stalker", "Sir Caradoc, the Sundered Knight"],
     "items": ["caradocs_sundered_blade"],
     "spells": ["spell.avalon_gateway"],
-    "quests": ["avalon_wilds_vigil"],
-    "npcs": ["ElderOphira", "QuartermasterElenna", "WayfarerBryndis", "ArchmageThalindra", "SisterIlyndra"],
+    "quests": ["avalon_wilds_vigil", "forge_the_godcore", "bind_the_godsigil", "forge_godsforged_warblade", "forge_godsforged_stormbow", "forge_godsforged_voidglass_rod", "forge_godsforged_zephyr_wand", "forge_godsforged_torc", "the_waking_rite"],
+    "npcs": ["ElderOphira", "QuartermasterElenna", "WayfarerBryndis", "ArchmageThalindra", "SisterIlyndra", "EmberSmithCorvain", "WardenSeressa", "GrandmasterTholvenn", "AnchoriteRowan"],
     "settlement": "Avalon Sanctuary"
   },
   {

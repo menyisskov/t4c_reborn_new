@@ -21754,24 +21754,6 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "item.bound_godsigil",
-      "name": "Bound Godsigil",
-      "price": 0,
-      "weight": 1,
-      "armorClass": 0.0,
-      "requirements": {
-        "endurance": 0,
-        "strength": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "wisdom": 0,
-        "attack": 0
-      },
-      "unique": false,
-      "isBow": false,
-      "boosts": []
-    },
-    {
       "key": "item.wyrmforged_ember",
       "name": "Wyrmforged Ember",
       "price": 0,
@@ -21810,6 +21792,24 @@ window.T4C_DATA = {
     {
       "key": "item.tempered_godcore",
       "name": "Tempered Godcore",
+      "price": 0,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": []
+    },
+    {
+      "key": "item.bound_godsigil",
+      "name": "Bound Godsigil",
       "price": 0,
       "weight": 1,
       "armorClass": 0.0,
@@ -26179,14 +26179,26 @@ window.T4C_DATA = {
         "spell.avalon_gateway"
       ],
       "quests": [
-        "avalon_wilds_vigil"
+        "avalon_wilds_vigil",
+        "forge_the_godcore",
+        "bind_the_godsigil",
+        "forge_godsforged_warblade",
+        "forge_godsforged_stormbow",
+        "forge_godsforged_voidglass_rod",
+        "forge_godsforged_zephyr_wand",
+        "forge_godsforged_torc",
+        "the_waking_rite"
       ],
       "npcs": [
         "ElderOphira",
         "QuartermasterElenna",
         "WayfarerBryndis",
         "ArchmageThalindra",
-        "SisterIlyndra"
+        "SisterIlyndra",
+        "EmberSmithCorvain",
+        "WardenSeressa",
+        "GrandmasterTholvenn",
+        "AnchoriteRowan"
       ],
       "settlement": "Avalon Sanctuary"
     },

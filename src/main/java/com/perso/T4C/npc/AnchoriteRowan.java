@@ -110,6 +110,12 @@ public final class AnchoriteRowan extends ScriptedNpc {
         }
         RebirthBehavior.perform(player);
         context.say(I18n.resolve("${npc.anchoriterowan.done}"));
+        // The remort energy points RebirthBehavior.perform() just granted can only be spent with
+        // Alphan and the associates in their isolated allocation room - the same place Oracle
+        // sends a player after every rebirth (Oracle.java's own onYesNo). Without this, a player
+        // rebirthing via Rowan would be stranded in Avalon with unspent points that the next
+        // rebirth silently overwrites.
+        context.teleport(1315, 920, 1);
         return true;
       }
     };

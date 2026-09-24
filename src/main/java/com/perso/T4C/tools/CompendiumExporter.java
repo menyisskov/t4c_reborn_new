@@ -191,8 +191,11 @@ public final class CompendiumExporter {
   // rules - see item/definition/WyrmforgedEmber.java. exportItems() only scans assets/items/, so
   // without this they'd resolve to nothing on the reference site (itemLink() would fall back to
   // showing the raw key). Listed explicitly and merged in from ItemRegistry.load() instead.
-  private static final Set<String> NEW_UTILITY_ITEM_KEYS =
-      Set.of(
+  // A List, not a Set: iterated directly into the exported file, so its order must be stable
+  // across regenerations (a Set.of() here reorders randomly run to run, producing a pure-noise
+  // diff on every regenerate-compendium CI run).
+  private static final List<String> NEW_UTILITY_ITEM_KEYS =
+      List.of(
           "item.wyrmforged_ember",
           "item.veiled_aether_shard",
           "item.tempered_godcore",
