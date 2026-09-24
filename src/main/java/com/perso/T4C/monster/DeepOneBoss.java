@@ -36,7 +36,10 @@ public final class DeepOneBoss extends NamedEventMonster {
         SOUND_HIT,
         150,
         462,
-        java.util.List.of(new MonsterDef.LootDrop("depths_wardens_talisman", 0.015f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("depths_wardens_talisman", 0.015f),
+            new MonsterDef.LootDrop("healing_potion", 0.3f),
+            new MonsterDef.LootDrop("mana_elixir", 0.2f)),
         false,
         0.0f,
         57,

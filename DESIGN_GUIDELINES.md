@@ -293,6 +293,25 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - A single named/event boss can drop more than one unique/legendary item of its own (e.g. Makrsh
   P'Tangh drops both a legendary bow and a legendary staff) when its established loot theme
   plausibly supports more than one signature weapon type.
+- **Every boss also needs a "medium-rarity" tier, not just rare-or-nothing (T4C-0034).** The
+  13-entry pattern above packs everything into the 0.008–0.025 band — a kill that whiffs all 13
+  rolls gets nothing at all, which doesn't feel like a reward. Every boss should also drop 1-2
+  items in the 0.2–0.3 range (a potion pair - `serious_healing_potion`/`mana_elixir` or
+  `healing_potion`/`mana_elixir` is the established default, see Ignarok/Arch Drake/Greater
+  Drake/Mordrenn/Centaur King/The Hollow King/Coastwarden Ithrak/Makrsh P'Tangh) so a kill is
+  never a total whiff. A boss whose own drop theme calls for something more specific (a quest
+  item, a crafting material like `item.wyrmforged_ember`/`item.veiled_aether_shard`, or another
+  not-quite-rare item) can use that instead of generic potions - the point is a meaningfully
+  higher-odds tier existing at all, not the specific item.
+- **Scale the treatment to the boss's actual tier, don't paste max-level loot onto a low-level
+  one.** A "boss" whose XP/HP puts it well below the endgame roster (e.g. Deep Ones Cave's
+  `DeepOneBoss`, XP in the tens of thousands vs. tens of millions for real endgame bosses) should
+  get the medium-rarity tier above, not a full 1000-requirement Ancient Celestial/Empyrean set -
+  that would be wildly overpowered gear for the level range it drops at.
+- A boss that spawns as multiple simultaneous instances (e.g. `BastionWarden`, 4 concurrent
+  spawns) still gets the full pattern if its own tier (XP/HP) otherwise warrants it - just be
+  aware the multi-spawn count effectively multiplies the farm rate versus a solo unique boss, and
+  weigh that when picking drop chances for a new multi-spawn boss.
 
 ## 4. Reference website (compendium)
 - Generated from the live game data by `tools/CompendiumExporter`. CI regenerates it on every

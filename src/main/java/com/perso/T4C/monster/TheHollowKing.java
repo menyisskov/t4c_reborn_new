@@ -45,6 +45,8 @@ public final class TheHollowKing extends DataMonster {
         1400,
         java.util.List.of(
             new MonsterDef.LootDrop("crown_of_the_hollow_king", 0.008f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
+            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0028: an undead king guarding a hollow, deathly barrow drops a dark-flavor
             // armor set alongside his signature crown, matching the multi-drop pattern used by
             // the other boss-tier monsters.

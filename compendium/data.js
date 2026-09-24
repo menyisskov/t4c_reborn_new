@@ -217,6 +217,14 @@ window.T4C_DATA = {
           "chance": 0.01
         },
         {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
           "item": "ancient_celestial_water_armor",
           "chance": 0.025
         },
@@ -440,6 +448,14 @@ window.T4C_DATA = {
           "chance": 0.05
         },
         {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
           "item": "ancient_celestial_fire_armor",
           "chance": 0.025
         },
@@ -614,6 +630,14 @@ window.T4C_DATA = {
           "chance": 0.02
         },
         {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
           "item": "ancient_celestial_archer_armor",
           "chance": 0.025
         },
@@ -774,6 +798,14 @@ window.T4C_DATA = {
         {
           "item": "crown_of_the_hollow_king",
           "chance": 0.008
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
         },
         {
           "item": "ancient_celestial_dark_armor",
@@ -1123,6 +1155,10 @@ window.T4C_DATA = {
         },
         {
           "item": "healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
           "chance": 0.2
         },
         {
@@ -1407,6 +1443,62 @@ window.T4C_DATA = {
         {
           "item": "bastion_sentinels_mantle",
           "chance": 0.03
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_warrior_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -2732,6 +2824,14 @@ window.T4C_DATA = {
         {
           "item": "archdrakes_molten_heart",
           "chance": 0.008
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
         },
         {
           "item": "ancient_celestial_air_armor",
@@ -22372,6 +22472,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_armor",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_armor",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -22384,6 +22490,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_boots",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_boots",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -22396,6 +22508,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_gauntlets",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_gauntlets",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -22408,6 +22526,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_helmet",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_helmet",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -22420,6 +22544,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_leggings",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_leggings",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -22428,6 +22558,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_leggings",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_protector",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
       "chance": 0.025
     },
     {
@@ -22870,6 +23006,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_armor",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_armor",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22882,6 +23024,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_boots",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_boots",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22894,6 +23042,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_gauntlets",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_gauntlets",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22906,6 +23060,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_helmet",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_helmet",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22918,6 +23078,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_leggings",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_leggings",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22926,6 +23092,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_leggings",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_protector",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
       "chance": 0.012
     },
     {

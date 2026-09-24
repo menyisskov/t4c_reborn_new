@@ -215,6 +215,14 @@
         "chance": 0.01
       },
       {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
         "item": "ancient_celestial_water_armor",
         "chance": 0.025
       },
@@ -438,6 +446,14 @@
         "chance": 0.05
       },
       {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
         "item": "ancient_celestial_fire_armor",
         "chance": 0.025
       },
@@ -612,6 +628,14 @@
         "chance": 0.02
       },
       {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
         "item": "ancient_celestial_archer_armor",
         "chance": 0.025
       },
@@ -772,6 +796,14 @@
       {
         "item": "crown_of_the_hollow_king",
         "chance": 0.008
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
       },
       {
         "item": "ancient_celestial_dark_armor",
@@ -1121,6 +1153,10 @@
       },
       {
         "item": "healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
         "chance": 0.2
       },
       {
@@ -1405,6 +1441,62 @@
       {
         "item": "bastion_sentinels_mantle",
         "chance": 0.03
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_warrior_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_protector",
+        "chance": 0.012
       }
     ],
     "attacks": [
@@ -2730,6 +2822,14 @@
       {
         "item": "archdrakes_molten_heart",
         "chance": 0.008
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
       },
       {
         "item": "ancient_celestial_air_armor",

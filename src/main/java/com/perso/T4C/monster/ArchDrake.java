@@ -58,6 +58,8 @@ public final class ArchDrake extends DataMonster {
         5500,
         java.util.List.of(
             new MonsterDef.LootDrop("archdrakes_molten_heart", 0.008f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
+            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0021: air-flavor source for the Ancient Celestial/Empyrean armor sets
             // (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_air_armor", 0.025f),

@@ -295,6 +295,12 @@
   },
   {
     "item": "ancient_celestial_warrior_armor",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_armor",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.025
@@ -307,6 +313,12 @@
   },
   {
     "item": "ancient_celestial_warrior_boots",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_boots",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.025
@@ -319,6 +331,12 @@
   },
   {
     "item": "ancient_celestial_warrior_gauntlets",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_gauntlets",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.025
@@ -331,6 +349,12 @@
   },
   {
     "item": "ancient_celestial_warrior_helmet",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_helmet",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.025
@@ -343,6 +367,12 @@
   },
   {
     "item": "ancient_celestial_warrior_leggings",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_leggings",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.025
@@ -351,6 +381,12 @@
     "item": "ancient_celestial_warrior_leggings",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_protector",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
     "chance": 0.025
   },
   {
@@ -793,6 +829,12 @@
   },
   {
     "item": "empyrean_warrior_armor",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_armor",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.012
@@ -805,6 +847,12 @@
   },
   {
     "item": "empyrean_warrior_boots",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_boots",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.012
@@ -817,6 +865,12 @@
   },
   {
     "item": "empyrean_warrior_gauntlets",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_gauntlets",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.012
@@ -829,6 +883,12 @@
   },
   {
     "item": "empyrean_warrior_helmet",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_helmet",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.012
@@ -841,6 +901,12 @@
   },
   {
     "item": "empyrean_warrior_leggings",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_leggings",
     "monster": "Greater Drake",
     "monsterDisplayName": "Grand Drake",
     "chance": 0.012
@@ -849,6 +915,12 @@
     "item": "empyrean_warrior_leggings",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_protector",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
     "chance": 0.012
   },
   {

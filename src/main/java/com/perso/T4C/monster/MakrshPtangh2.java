@@ -37,6 +37,8 @@ public final class MakrshPtangh2 extends NamedEventMonster {
             new MonsterDef.LootDrop("ptanghs_boneshard_longbow", 0.01f),
             new MonsterDef.LootDrop("ptanghs_lichbone_staff", 0.01f),
             new MonsterDef.LootDrop("item.wyrmforged_ember", 0.05f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
+            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             new MonsterDef.LootDrop("item.black_locust_composite_bow_3", 0.03f),
             new MonsterDef.LootDrop("item.ancient_two_handed_sword_3", 0.01f),
             new MonsterDef.LootDrop("item.ancient_broad_axe_3", 0.01f),

@@ -15,6 +15,17 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — Every boss drops something (T4C-0034)
+
+### Changed
+- Every boss now has a real chance of dropping something useful even without landing its rarest
+  item. Bastion Warden and the Deep Ones Cave boss used to drop only a single item each - they
+  now also drop potions (and Bastion Warden a full matching gear set, in line with other bosses
+  its size). Several other bosses (Ignarok the Emberfang, Arch Drake, Greater Drake, Mordrenn the
+  Drowned Inquisitor, the Centaur King, the Hollow King, Coastwarden Ithrak, and Makrsh P'Tangh)
+  now also drop healing and mana potions alongside their existing rare loot, so a kill that misses
+  every rare roll still isn't a total loss.
+
 ## 2026-09-24 — Godsforged: a new tier of crafted relics (T4C-0033)
 
 ### Added
