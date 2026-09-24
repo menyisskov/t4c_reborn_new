@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0031`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0033`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -43,6 +43,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0028 | Legendary bow + staff, multi-drop boss loot tables, flat items table on the compendium | Content/Tooling | Done | `11f30883` | [2026-09-24](CHANGELOG.md#2026-09-24--endgame-legendary-weapons-richer-boss-loot-and-a-flatter-items-page-t4c-0028) |
 | T4C-0029 | The Rootcrown Wyrm (Elder Wyrms pilot): new boss + 3 legendary wisdom-mage items | Content | Done | `a3b0b80d` | [2026-09-24](CHANGELOG.md#2026-09-24--the-rootcrown-wyrm-first-of-the-elder-wyrms-t4c-0029) |
 | T4C-0030 | Resistance rebalance: five non-light schools instead of one, light resist banned everywhere | Content/Balance | Done | `0c08e9e7` | [2026-09-24](CHANGELOG.md#2026-09-24--broader-elemental-resistance-and-no-more-light-resistance-t4c-0030) |
+| T4C-0031 | Narrative depth for Passage to Avalon (Harbormaster Rangor personal stake + Avalon foreshadowing) | Content | Done | `534618ae` | [2026-09-24](CHANGELOG.md#2026-09-24--passage-to-avalon-gets-a-personal-story-t4c-0031) |
+| T4C-0032 | Passage to Avalon becomes a two-stage quest chain (prove yourself against the scouts, then take on Ithrak's warband) | Content | Done | `1dd47507` | [2026-09-24](CHANGELOG.md#2026-09-24--passage-to-avalon-becomes-a-two-stage-quest-t4c-0032) |
 
 ## Type legend
 

@@ -21,6 +21,7 @@ public final class QuestDefinitions {
         BastionWardenSiege.definition(),
         DeepOnesCavePurge.definition(),
         DrakesLairVigil.definition(),
+        TidewornShoreScouts.definition(),
         PassageToAvalon.definition(),
         AvalonWildsVigil.definition(),
         FadingVeilReckoning.definition());

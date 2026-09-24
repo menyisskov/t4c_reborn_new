@@ -97,6 +97,16 @@ public abstract class ScriptedNpc extends BaseNPC {
     return spec;
   }
 
+  /** Exposed so a subclass's custom {@link com.perso.T4C.npc.behavior.NpcBehavior} can call
+   * {@link QuestService#giveOrReport}/{@link QuestService#statusFor} directly - needed when a
+   * single keyword must dispatch to different quest ids depending on prerequisite quest state
+   * (a multi-stage chain), which the declarative {@code GIVE_QUEST} action can't express on its
+   * own. See {@code npc/HarbormasterRangor.java} for the pattern. */
+  public final QuestService questService() {
+
+    return questService;
+  }
+
   private NpcBehavior resolvedBehavior() {
 
     NpcBehavior b = javaBehavior();

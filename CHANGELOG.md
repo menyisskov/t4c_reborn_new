@@ -15,6 +15,27 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — Passage to Avalon becomes a two-stage quest (T4C-0032)
+
+### Changed
+- Reaching Avalon is no longer a single fight. Harbormaster Rangor now sends you after Coastwarden
+  Ithrak's scouting party first, to prove you can actually handle yourself out on the tideline.
+  Only once they're cleared out will he trust you with the real job: breaking Ithrak's whole
+  warband and taking the chart that opens the crossing to Avalon.
+- Both stages have their own reward, and Rangor's dialogue changes to match wherever you are in
+  the chain. Anyone who already fought their way to Avalon before this change won't be sent back
+  to face the scouts — that fight already happened for them.
+
+## 2026-09-24 — Passage to Avalon gets a personal story (T4C-0031)
+
+### Changed
+- Harbormaster Rangor, who sends you on the quest to reach Avalon, now has more to say if you ask
+  him about it. He'll tell you why he really cares about getting you across safely, and share a
+  dockside rumor about the old pact that's supposed to protect Avalon — and whether it's still
+  holding. His send-off once you complete the quest reflects that too.
+- Nothing about the quest itself changed — the same fight, the same reward, the same unlock.
+  This is just Rangor having more of a voice.
+
 ## 2026-09-24 — Broader elemental resistance, and no more light resistance (T4C-0030)
 
 ### Changed

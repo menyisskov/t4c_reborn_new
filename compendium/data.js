@@ -10734,6 +10734,23 @@ window.T4C_DATA = {
       "completedText": "The lair's approach is still quiet since you cleared it. Don't get comfortable - something out there is still watching."
     },
     {
+      "id": "tideworn_shore_scouts",
+      "title": "Tideworn Shore Scouts",
+      "giverNpc": "HarbormasterRangor",
+      "targetMonster": "Tideworn Reaver",
+      "requiredKills": 8,
+      "targetWorldZ": 0,
+      "areaCenterX": 1550,
+      "areaCenterY": 1300,
+      "areaRadiusTiles": 110,
+      "rewardGold": 40000,
+      "rewardXp": 20000000,
+      "requiredItemQty": 0,
+      "offerText": "The reavers thin out fast if you know where to hit them, but I need to see you can actually do it before I put you anywhere near Ithrak himself. Clear enough of them off the tideline and come back - then we'll talk about the chart.",
+      "completionText": "You've got the stomach for this after all. Ithrak's warband won't fold as easy, but you've earned the right to try. Ask me about the crossing again when you're ready for the rest of them - and for him.",
+      "completedText": "You already proved yourself against the scouts. It's Ithrak's turn now, if you haven't finished that already."
+    },
+    {
       "id": "passage_to_avalon",
       "title": "Passage to Avalon",
       "giverNpc": "HarbormasterRangor",
@@ -10748,9 +10765,9 @@ window.T4C_DATA = {
       "requiredItemKey": "tideworn_avalon_chart",
       "requiredItemQty": 1,
       "unlockZoneId": "avalon_sanctuary",
-      "offerText": "Something about the tide beyond that ruined dock isn't right - a lord of them, the smugglers say, and only he keeps what map they know of the crossing. Clear his reavers from the shore, then take his chart before it goes down with him.",
-      "completionText": "The reavers are scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive.",
-      "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross."
+      "offerText": "The scouts were the easy part. Ithrak keeps the rest of his warband close, and he's the only one left who knows the safe line through the shoal. My boy went out there once without a chart of his own. Clear the warband, then take Ithrak's chart before it goes down with him - I won't watch another one go in blind.",
+      "completionText": "The warband's scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive. It's more than my boy ever had.",
+      "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross. Whatever's waiting on the other side, it's more than this dock's seen in years."
     },
     {
       "id": "avalon_wilds_vigil",
@@ -11082,9 +11099,9 @@ window.T4C_DATA = {
             "avalon",
             "passage"
           ],
-          "response": "Coastwarden Ithrak runs the reavers squatting on the shore south of here, and he's the only one left who knows the safe line through the shoal to Avalon. Clear his warband, take his chart off his corpse, and bring it to me - I'll see you're recognized as someone Avalon can trust.",
+          "response": "Coastwarden Ithrak runs the reavers squatting on the shore south of here, and he's the only one left who knows the safe line through the shoal to Avalon. Prove you can handle his scouts first, and then we'll talk about taking his chart off his corpse - I'll see you're recognized as someone Avalon can trust.",
           "actions": [
-            "GIVE_QUEST:passage_to_avalon"
+            "GIVE_QUEST:tideworn_shore_scouts"
           ]
         },
         {
@@ -11106,6 +11123,22 @@ window.T4C_DATA = {
             "reavers"
           ],
           "response": "Watch the tideline past the dock. The reavers don't wait for you to see them first.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "why",
+            "son"
+          ],
+          "response": "My boy tried the crossing years back, chart or no chart. The tide took him before the reavers ever did. I don't sail anymore. I just make sure nobody else goes in as blind as he did.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "fey",
+            "pact"
+          ],
+          "response": "The fey pact's older than this dock, older than Ithrak's smuggling. Sailors used to say it was fraying even before the reavers came. I don't know what's true and what's dockside talk - only that fewer of us who cross ever come back to say.",
           "actions": []
         }
       ],

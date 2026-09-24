@@ -288,3 +288,45 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Tell the owner about pre-existing problems you notice along the way (unwearable items,
   soft-locks, misleading displays). Fix them when they're small and in scope; otherwise list
   them as follow-ups.
+
+## 6. Quests
+- Every zone-unlock quest added by the T4C-0019 pass follows the same mechanical shape: kill N
+  of a monster in one area, turn in one boss-drop item, unlock fast travel to a zone. That's a
+  fine default for a minor zone gate, but it undersells a **major** new location - see below for
+  when to go beyond it.
+- **Ordinary zone-gate quest: add flavor, don't touch the mechanics.** Give the giver NPC a
+  personal stake (why do *they* care?) and a hook forward (what's rumored to be waiting past the
+  gate?) as new, purely-informational `DialogueTopic` entries (no `actions`, so they can't affect
+  quest state) and richer offer/completion/completed text on the existing `QuestDef`. Never
+  change `requiredKills`/`rewardGold`/`rewardXp`/the item objective to do this - those are what's
+  actually saved per character, and a values change there is a balance/compat decision, not a
+  narrative one. This remains the right level of effort for a secondary gate (Kraanhold's
+  provinces, Deep Ones Cave, Sunken Chancel, Cinderreach Hills, etc.).
+- **Major zone gate: give it real multi-stage structure, not just text.** A quest that's the
+  sole gate to a flagship new location (e.g. Avalon Sanctuary) should feel like the story beat it
+  is, mechanically as well as narratively. `QuestDef` supports only one target-monster/one-area/
+  one-item objective, so a genuine multi-stage feel means a **chain of `QuestDef`s**: split the
+  story into sequential quests (e.g. `tideworn_shore_scouts` proving stage, then
+  `passage_to_avalon` as the real assault and the actual zone unlock), each with its own id,
+  reward tier, and offer/completion/completed text, gated on the prior stage's completion. See
+  `TidewornShoreScouts`/`PassageToAvalon`/`HarbormasterRangor` (T4C-0032) for the pattern:
+  - The giver NPC needs a `javaBehavior()` override (not a plain declarative `GIVE_QUEST`
+    action) to dispatch the shared keyword to whichever stage the player is actually on, via
+    `QuestService.statusFor()` checks against each stage's `QuestDef` - the declarative system
+    has no conditional/prerequisite dialogue support.
+  - **Always check the final stage's status first.** A player who already completed the
+    original single-stage version of the quest (pre-chain) must never be re-offered an earlier
+    stage - route straight to (or past) the last stage if it's anything but `STATUS_NOT_STARTED`.
+    This is a save-compatibility requirement, not a nice-to-have.
+  - Keep the original declarative `DialogueTopic` for the entry keyword too (retargeted to the
+    new first stage), even though `javaBehavior()` intercepts it before it ever fires - it's
+    otherwise unreachable, but it's what the compendium's static NPC-topic export reads, so
+    removing it would make the quest chain's entry point disappear from the reference site.
+- Ground new dialogue in what the zone's own `zones.json` summary and existing NPCs already
+  establish (e.g. Avalon's "fey pact" and its fraying, from the Fading Veil/Avalon Wilds
+  summaries) rather than inventing new factions or events - see `quest-creator`'s own lore
+  guidance section for why, and its noted inability to verify against `t4cfantasy.com/Addon`
+  from this sandbox.
+- A new quest stage must be added to `CompendiumExporter`'s `NEW_QUEST_IDS` allowlist (and a new
+  NPC, if any, to `NEW_NPC_IDS`) or it silently never appears on the reference website - the
+  exporter only emits quests/NPCs it's been told are new-since-fork.
