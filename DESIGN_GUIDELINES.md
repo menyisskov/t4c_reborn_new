@@ -411,6 +411,19 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 
 ## 7. Economy
 
+- **A named boss's gold drop should out-earn nearby regular monsters per unit of difficulty, not
+  match or trail them.** Gold-per-1000-HP (a proxy for gold-per-time-to-kill, since HP is the
+  dominant factor in how long a fight takes) should land at roughly 1.5-2x the ratio of regular,
+  repeatable-spawn monsters within about 15 levels of the boss. This isn't just flavor: nearly
+  every monster in the game (boss or trash) shares the same 30-second respawn timer, but trash
+  mobs typically have 15-250+ concurrent spawn points on the map versus a boss's 1 (occasionally a
+  handful) - so even a 2x boss premium only partly offsets that a boss is one contested world spot
+  competing with everyone else, versus dozens of open trash spawns. T4C-0037 (owner's call) found
+  and fixed two bosses that violated this - Mordrenn the Drowned Inquisitor (was ~26% *below* the
+  ratio of level-50 trash) and the Centaur King (was *half* the ratio of level-140 trash, the
+  worst-proportioned boss found) - raising Mordrenn to 200-600 gold and the Centaur King to
+  1,100-2,900 gold. When authoring or auditing a boss's `goldMin`/`goldMax`, sanity-check this
+  ratio against a couple of regular monsters near its level before shipping.
 - **Endgame quest gold should have a ceiling well under "instantly buys everything."** T4C-0036
   (owner's call) trimmed the five `forge_godsforged_*` final-craft quests and the
   `forge_the_godcore`/`bind_the_godsigil` component quests from 10,000,000/2,000,000 gold down to

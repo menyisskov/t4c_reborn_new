@@ -42,8 +42,8 @@ public final class CentaurKing extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        350,
-        900,
+        1100,
+        2900,
         java.util.List.of(
             new MonsterDef.LootDrop("marchwardens_crown", 0.01f),
             new MonsterDef.LootDrop("bow_of_centaur_slaying", 0.015f),

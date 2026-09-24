@@ -15,6 +15,14 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — Mordrenn and the Centaur King pay out more gold (T4C-0037)
+
+### Changed
+- **Mordrenn the Drowned Inquisitor** and the **Centaur King** now drop noticeably more gold on
+  death - their old payouts were low enough that regular monsters near their level paid out
+  better gold for less effort. Mordrenn now drops 200-600 gold (up from 90-275), and the Centaur
+  King now drops 1,100-2,900 gold (up from 350-900). Nothing else about either fight changes.
+
 ## 2026-09-24 — A gold economy pass (T4C-0036)
 
 ### Changed
