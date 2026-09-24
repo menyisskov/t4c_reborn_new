@@ -49,7 +49,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0034 | Boss loot pass: no more one-item/rare-or-nothing drop tables | Content/Fix | Done | `43a77280` | [2026-09-24](CHANGELOG.md#2026-09-24--every-boss-drops-something-t4c-0034) |
 | T4C-0035 | The Waking Rite: a short Avalon quest that permanently unlocks a rebirth shortcut (level 125+) | Content/Systems | Done | `82f646bb` | [2026-09-24](CHANGELOG.md#2026-09-24--a-shortcut-for-repeat-rebirths-t4c-0035) |
 | T4C-0036 | Gold economy pass: trimmed the endgame quest gold spike, new town-vendor gold sinks (mana prisms, critical healing potions) | Content/Systems | Done | `90919592` | [2026-09-24](CHANGELOG.md#2026-09-24--a-gold-economy-pass-t4c-0036) |
-| T4C-0037 | Boss gold rebalance: Mordrenn and the Centaur King paid noticeably less gold than nearby regular monsters for their difficulty | Content/Balance | Done | *pending* | [2026-09-24](CHANGELOG.md#2026-09-24--mordrenn-and-the-centaur-king-pay-out-more-gold-t4c-0037) |
+| T4C-0037 | Boss gold rebalance: Mordrenn and the Centaur King paid noticeably less gold than nearby regular monsters for their difficulty | Content/Balance | Done | `8795f7c3` | [2026-09-24](CHANGELOG.md#2026-09-24--mordrenn-and-the-centaur-king-pay-out-more-gold-t4c-0037) |
 
 ## Type legend
 
