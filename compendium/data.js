@@ -21670,24 +21670,6 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "item.tempered_godcore",
-      "name": "Tempered Godcore",
-      "price": 0,
-      "weight": 1,
-      "armorClass": 0.0,
-      "requirements": {
-        "endurance": 0,
-        "strength": 0,
-        "agility": 0,
-        "intelligence": 0,
-        "wisdom": 0,
-        "attack": 0
-      },
-      "unique": false,
-      "isBow": false,
-      "boosts": []
-    },
-    {
       "key": "item.bound_godsigil",
       "name": "Bound Godsigil",
       "price": 0,
@@ -21726,6 +21708,24 @@ window.T4C_DATA = {
     {
       "key": "item.veiled_aether_shard",
       "name": "Veiled Aether Shard",
+      "price": 0,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": []
+    },
+    {
+      "key": "item.tempered_godcore",
+      "name": "Tempered Godcore",
       "price": 0,
       "weight": 1,
       "armorClass": 0.0,
@@ -27989,6 +27989,18 @@ window.T4C_DATA = {
           "y": 1493.0
         },
         {
+          "id": "EmberSmithCorvain",
+          "displayName": "Ember-Smith Corvain",
+          "x": 1300.0,
+          "y": 1460.0
+        },
+        {
+          "id": "GrandmasterTholvenn",
+          "displayName": "Grandmaster Tholvenn",
+          "x": 1330.0,
+          "y": 1440.0
+        },
+        {
           "id": "QuartermasterElenna",
           "displayName": "Quartermaster Elenna",
           "x": 1364.0,
@@ -28023,6 +28035,12 @@ window.T4C_DATA = {
           "displayName": "Sister Ilyndra",
           "x": 1340.0,
           "y": 1479.0
+        },
+        {
+          "id": "WardenSeressa",
+          "displayName": "Warden Seressa",
+          "x": 1355.0,
+          "y": 1465.0
         },
         {
           "id": "WayfarerBryndis",
@@ -28438,6 +28456,18 @@ window.T4C_DATA = {
           "y": 1493.0
         },
         {
+          "id": "EmberSmithCorvain",
+          "displayName": "Ember-Smith Corvain",
+          "x": 1300.0,
+          "y": 1460.0
+        },
+        {
+          "id": "GrandmasterTholvenn",
+          "displayName": "Grandmaster Tholvenn",
+          "x": 1330.0,
+          "y": 1440.0
+        },
+        {
           "id": "QuartermasterElenna",
           "displayName": "Quartermaster Elenna",
           "x": 1364.0,
@@ -28448,6 +28478,12 @@ window.T4C_DATA = {
           "displayName": "Sister Ilyndra",
           "x": 1340.0,
           "y": 1479.0
+        },
+        {
+          "id": "WardenSeressa",
+          "displayName": "Warden Seressa",
+          "x": 1355.0,
+          "y": 1465.0
         },
         {
           "id": "WayfarerBryndis",
