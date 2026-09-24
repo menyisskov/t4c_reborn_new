@@ -55,7 +55,22 @@ public final class SirCaradocTheSunderedKnight extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("caradocs_sundered_blade", 0.02f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f)),
+            new MonsterDef.LootDrop("mana_elixir", 0.2f),
+            // T4C-0028: a fallen knight in full plate drops a warrior-flavor armor set
+            // alongside his signature blade, matching the multi-drop pattern used by the
+            // other boss-tier monsters.
+            new MonsterDef.LootDrop("ancient_celestial_warrior_armor", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_boots", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_gauntlets", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_helmet", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_leggings", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_warrior_protector", 0.025f),
+            new MonsterDef.LootDrop("empyrean_warrior_armor", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_boots", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_gauntlets", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_helmet", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_leggings", 0.012f),
+            new MonsterDef.LootDrop("empyrean_warrior_protector", 0.012f)),
         false,
         0.0f,
         605,

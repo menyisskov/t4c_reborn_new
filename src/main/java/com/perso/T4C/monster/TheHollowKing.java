@@ -43,7 +43,23 @@ public final class TheHollowKing extends DataMonster {
         SOUND_HIT,
         500,
         1400,
-        java.util.List.of(new MonsterDef.LootDrop("crown_of_the_hollow_king", 0.008f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("crown_of_the_hollow_king", 0.008f),
+            // T4C-0028: an undead king guarding a hollow, deathly barrow drops a dark-flavor
+            // armor set alongside his signature crown, matching the multi-drop pattern used by
+            // the other boss-tier monsters.
+            new MonsterDef.LootDrop("ancient_celestial_dark_armor", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_boots", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_gauntlets", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_helmet", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_leggings", 0.025f),
+            new MonsterDef.LootDrop("ancient_celestial_dark_protector", 0.025f),
+            new MonsterDef.LootDrop("empyrean_dark_armor", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_boots", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_gauntlets", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_helmet", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_leggings", 0.012f),
+            new MonsterDef.LootDrop("empyrean_dark_protector", 0.012f)),
         false,
         0.0f,
         240,

@@ -116,6 +116,70 @@
     return '<span class="tag tier-' + r.tier + '">' + r.label + "</span>";
   }
 
+  // Mirrors item/ItemBalance.java's archetype(): the item's class comes from its requirements
+  // (a bow is always archer gear regardless of its stat requirements).
+  function archetypeOf(item) {
+    var r = item.requirements || {};
+    var str = Number(r.strength || 0), agi = Number(r.agility || 0);
+    var intel = Number(r.intelligence || 0), wis = Number(r.wisdom || 0);
+    if (item.isBow) return "Archer";
+    var physical = Math.max(str, agi), mental = Math.max(intel, wis);
+    if (physical === 0 && mental === 0) return "—";
+    if (physical >= mental) return str >= agi ? "Warrior" : "Archer";
+    if (intel > 0 && wis > 0 && Math.min(intel, wis) >= 0.8 * Math.max(intel, wis)) return "Hybrid mage";
+    return intel > wis ? "Intelligence mage" : "Wisdom mage";
+  }
+
+  var REQ_ABBR = { endurance: "END", strength: "STR", agility: "AGI", intelligence: "INT", wisdom: "WIS", attack: "ATK" };
+  function reqSummary(item) {
+    var r = item.requirements || {};
+    var parts = Object.keys(r).filter(function (k) { return r[k] > 0; })
+      .map(function (k) { return (REQ_ABBR[k] || k) + " " + fmtNum(r[k]); });
+    return esc(parts.join(" · ")) || "—";
+  }
+
+  function boostSummary(item) {
+    var boosts = item.boosts || [];
+    if (!boosts.length) return "—";
+    return boosts.map(function (b) {
+      var meta = STAT_IDS[String(b.statId)] || { label: "Stat #" + b.statId };
+      return esc(meta.label) + " +" + esc(b.expression);
+    }).join(", ");
+  }
+
+  function dmgSummary(item) {
+    if (!item.dmgFormula) return "—";
+    return esc(item.dmgFormula) + (item.atkDelay ? " (" + esc(item.atkDelay) + "ms)" : "");
+  }
+
+  function flagsSummary(item) {
+    var flags = [];
+    if (item.unlimitedUse === false) flags.push("Limited use");
+    if (item.undroppable) flags.push("Undroppable");
+    return flags.join(", ") || "—";
+  }
+
+  // Where an item actually comes from - named monster(s)/boss(es) it drops from, not a generic
+  // "monster drop" label, so the flat items table answers "who drops this" without a click-through.
+  function sourceSummary(item) {
+    if (itemZone[item.key]) return zoneLink(itemZone[item.key]);
+    var drops = itemDroppedBy[item.key];
+    if (drops && drops.length) {
+      return drops.map(function (d) {
+        return monsterLink(d.monster, d.monsterDisplayName) + " (" + fmtPct(d.chance) + ")";
+      }).join(", ");
+    }
+    if (itemSoldBy[item.key]) return itemSoldBy[item.key].map(npcLink).join(", ");
+    return "—";
+  }
+  function sourceSortValue(item) {
+    if (itemZone[item.key]) return "zone:" + itemZone[item.key];
+    var drops = itemDroppedBy[item.key];
+    if (drops && drops.length) return drops.map(function (d) { return d.monsterDisplayName || d.monster; }).sort().join(",");
+    if (itemSoldBy[item.key]) return "shop:" + itemSoldBy[item.key].slice().sort().join(",");
+    return "";
+  }
+
   function link(route, label, extraClass) {
     return '<a class="' + (extraClass || "") + '" href="#/' + route + '">' + label + "</a>";
   }
@@ -526,18 +590,25 @@
     return listPage({
       title: "Items",
       eyebrow: "Items",
-      lead: "Every JSON-authored item added by the new content pipeline — weapons, armor sets, jewelry. Colored by rarity tier.",
+      lead: "Every JSON-authored item added by the new content pipeline — weapons, armor sets, jewelry. Every stat is in the table below; click a row for its full page.",
       rows: ITEMS,
       columns: [
         { key: "name", label: "Name", render: function (it) { return itemLink(it.key); } },
         { key: "bodyPart", label: "Slot" },
+        { key: "class", label: "Class", render: function (it) { return esc(archetypeOf(it)); }, sortValue: archetypeOf },
+        { key: "requirements", label: "Requirements", render: reqSummary, sortValue: reqSummary },
+        { key: "armorClass", label: "AC", numeric: true, render: function (it) { return it.armorClass ? fmtNum(it.armorClass) : "—"; } },
+        { key: "damage", label: "Damage", render: dmgSummary, sortValue: dmgSummary },
+        { key: "boosts", label: "Boosts", render: boostSummary, sortValue: boostSummary },
+        { key: "flags", label: "Flags", render: flagsSummary, sortValue: flagsSummary },
         { key: "price", label: "Price", numeric: true, render: function (it) { return it.price ? fmtNum(it.price) : "—"; } },
         { key: "rarity", label: "Rarity", render: function (it) { return rarityTag(it); }, sortValue: function (it) { return RARITY_RANK[rarityOf(it).tier] || 0; } },
-        { key: "zone", label: "Source", render: function (it) { return itemZone[it.key] ? zoneLink(itemZone[it.key]) : (itemDroppedBy[it.key] ? "monster drop" : (itemSoldBy[it.key] ? "shop" : "—")); }, sortValue: function (it) { return itemZone[it.key] || (itemDroppedBy[it.key] ? "monster drop" : (itemSoldBy[it.key] ? "shop" : "")); } },
+        { key: "zone", label: "Source", render: sourceSummary, sortValue: sourceSortValue },
       ],
       searchFields: ["name", "key"],
       filters: [
         { label: "Slot", field: "bodyPart", options: uniq(ITEMS.map(function (i) { return i.bodyPart; })) },
+        { label: "Class", field: "__class", options: uniq(ITEMS.map(archetypeOf)), computed: archetypeOf },
         { label: "Rarity", field: "__rarity", options: ["legendary", "set", "rare", "common"], computed: function (it) { return rarityOf(it).tier; } },
       ],
       defaultSort: "name",

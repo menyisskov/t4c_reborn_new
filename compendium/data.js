@@ -770,6 +770,54 @@ window.T4C_DATA = {
         {
           "item": "crown_of_the_hollow_king",
           "chance": 0.008
+        },
+        {
+          "item": "ancient_celestial_dark_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -883,6 +931,54 @@ window.T4C_DATA = {
       "loot": [
         {
           "item": "aeries_drakeheart_signet",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_fire_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_fire_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_fire_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_fire_protector",
           "chance": 0.012
         }
       ],
@@ -1024,6 +1120,54 @@ window.T4C_DATA = {
         {
           "item": "healing_potion",
           "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_water_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_water_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_water_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_water_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -1616,6 +1760,54 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_warrior_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -19998,6 +20190,98 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "ptanghs_boneshard_longbow",
+      "name": "P'Tangh's Boneshard Longbow",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLongBow",
+      "appearanceInventory": "64kInvLongBow2",
+      "price": 0.0,
+      "weight": 7.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 950.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": true,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d220+420+4*arrow_dmg",
+      "atkDelay": "900",
+      "boosts": [
+        {
+          "boostId": 36400.0,
+          "statId": 6.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36401.0,
+          "statId": 10035.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36402.0,
+          "statId": 10.0,
+          "expression": "70"
+        }
+      ]
+    },
+    {
+      "key": "ptanghs_lichbone_staff",
+      "name": "P'Tangh's Lichbone Staff",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLichStaff",
+      "appearanceInventory": "64kInvLichStaff",
+      "price": 0.0,
+      "weight": 4.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 950.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d40+60",
+      "atkDelay": "1300",
+      "boosts": [
+        {
+          "boostId": 36403.0,
+          "statId": 1.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36404.0,
+          "statId": 24.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36405.0,
+          "statId": 22.0,
+          "expression": "63"
+        }
+      ]
+    },
+    {
       "key": "pyromancers_mantle",
       "name": "Pyromancer's Mantle",
       "bodyPart": "BACK",
@@ -21151,8 +21435,20 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_armor",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_armor",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_boots",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
       "chance": 0.025
     },
     {
@@ -21163,8 +21459,20 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_gauntlets",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_gauntlets",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_helmet",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
       "chance": 0.025
     },
     {
@@ -21175,8 +21483,20 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_leggings",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_leggings",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_protector",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
       "chance": 0.025
     },
     {
@@ -21228,9 +21548,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_fire_armor",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_fire_boots",
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_boots",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
       "chance": 0.025
     },
     {
@@ -21240,9 +21572,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_fire_gauntlets",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_fire_helmet",
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_helmet",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
       "chance": 0.025
     },
     {
@@ -21252,9 +21596,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_fire_leggings",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_fire_protector",
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_fire_protector",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
       "chance": 0.025
     },
     {
@@ -21300,9 +21656,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_warrior_armor",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_warrior_boots",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_boots",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
       "chance": 0.025
     },
     {
@@ -21312,9 +21680,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_warrior_gauntlets",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_warrior_helmet",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_helmet",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
       "chance": 0.025
     },
     {
@@ -21324,9 +21704,27 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_warrior_leggings",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_warrior_protector",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_protector",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_armor",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
       "chance": 0.025
     },
     {
@@ -21337,8 +21735,20 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_water_boots",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_boots",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_gauntlets",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
       "chance": 0.025
     },
     {
@@ -21349,14 +21759,32 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_water_helmet",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_helmet",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
       "chance": 0.025
     },
     {
       "item": "ancient_celestial_water_leggings",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_leggings",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_water_protector",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
       "chance": 0.025
     },
     {
@@ -21505,8 +21933,20 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_armor",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_armor",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_boots",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
       "chance": 0.012
     },
     {
@@ -21517,8 +21957,20 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_gauntlets",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_gauntlets",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_helmet",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
       "chance": 0.012
     },
     {
@@ -21529,8 +21981,20 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_leggings",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_leggings",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_protector",
+      "monster": "The Hollow King",
+      "monsterDisplayName": "The Hollow King",
       "chance": 0.012
     },
     {
@@ -21582,9 +22046,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_fire_armor",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_fire_boots",
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_boots",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
       "chance": 0.012
     },
     {
@@ -21594,9 +22070,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_fire_gauntlets",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_fire_helmet",
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_helmet",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
       "chance": 0.012
     },
     {
@@ -21606,9 +22094,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_fire_leggings",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_fire_protector",
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_fire_protector",
+      "monster": "Lesser Drake",
+      "monsterDisplayName": "Petit Drake",
       "chance": 0.012
     },
     {
@@ -21654,9 +22154,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_warrior_armor",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_warrior_boots",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_boots",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
       "chance": 0.012
     },
     {
@@ -21666,9 +22178,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_warrior_gauntlets",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_warrior_helmet",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_helmet",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
       "chance": 0.012
     },
     {
@@ -21678,9 +22202,27 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_warrior_leggings",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_warrior_protector",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_protector",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_armor",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
       "chance": 0.012
     },
     {
@@ -21691,8 +22233,20 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_water_boots",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_boots",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_gauntlets",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
       "chance": 0.012
     },
     {
@@ -21703,14 +22257,32 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_water_helmet",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_helmet",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
       "chance": 0.012
     },
     {
       "item": "empyrean_water_leggings",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_leggings",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_water_protector",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
       "chance": 0.012
     },
     {
@@ -21741,6 +22313,18 @@ window.T4C_DATA = {
       "item": "mordrenns_drowned_cowl",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.01
+    },
+    {
+      "item": "ptanghs_boneshard_longbow",
+      "monster": "MakrshPtangh2",
+      "monsterDisplayName": "Makrsh P'Tangh",
+      "chance": 0.01
+    },
+    {
+      "item": "ptanghs_lichbone_staff",
+      "monster": "MakrshPtangh2",
+      "monsterDisplayName": "Makrsh P'Tangh",
       "chance": 0.01
     },
     {

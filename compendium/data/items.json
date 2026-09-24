@@ -8361,6 +8361,98 @@
     ]
   },
   {
+    "key": "ptanghs_boneshard_longbow",
+    "name": "P'Tangh's Boneshard Longbow",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLongBow",
+    "appearanceInventory": "64kInvLongBow2",
+    "price": 0.0,
+    "weight": 7.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 950.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": true,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d220+420+4*arrow_dmg",
+    "atkDelay": "900",
+    "boosts": [
+      {
+        "boostId": 36400.0,
+        "statId": 6.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36401.0,
+        "statId": 10035.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36402.0,
+        "statId": 10.0,
+        "expression": "70"
+      }
+    ]
+  },
+  {
+    "key": "ptanghs_lichbone_staff",
+    "name": "P'Tangh's Lichbone Staff",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLichStaff",
+    "appearanceInventory": "64kInvLichStaff",
+    "price": 0.0,
+    "weight": 4.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 950.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d40+60",
+    "atkDelay": "1300",
+    "boosts": [
+      {
+        "boostId": 36403.0,
+        "statId": 1.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36404.0,
+        "statId": 24.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36405.0,
+        "statId": 22.0,
+        "expression": "63"
+      }
+    ]
+  },
+  {
     "key": "pyromancers_mantle",
     "name": "Pyromancer's Mantle",
     "bodyPart": "BACK",

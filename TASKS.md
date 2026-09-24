@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0028`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0029`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -40,6 +40,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0025 | Level cap 400, 50-rebirth limit, even high-tier spell ladder (150-400, every school), elemental archmage mantles | Content/Systems | Done | `557ebd2` | [2026-09-23](CHANGELOG.md#2026-09-23--level-cap-400-rebirth-limit-and-an-even-spell-ladder-t4c-0025) |
 | T4C-0026 | Rebirths page on the compendium site (per-rebirth requirements and rewards) | Content/Tooling | Done | `e53a781c` | [2026-09-23](CHANGELOG.md#2026-09-23--rebirths-page-on-the-reference-website-t4c-0026) |
 | T4C-0027 | Item rebalance: class-based bonuses, AC tied to endurance (max 600), design guidelines file | Content/Balance | Done | `b7f20b4d` | [2026-09-23](CHANGELOG.md#2026-09-23--item-rebalance-every-item-matches-its-class-t4c-0027) |
+| T4C-0028 | Legendary bow + staff, multi-drop boss loot tables, flat items table on the compendium | Content/Tooling | Done | _this branch_ | [2026-09-24](CHANGELOG.md#2026-09-24--endgame-legendary-weapons-richer-boss-loot-and-a-flatter-items-page-t4c-0028) |
 
 ## Type legend
 
