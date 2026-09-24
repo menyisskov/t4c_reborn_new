@@ -32,6 +32,8 @@ _Nothing pending._
   to see what it does.
 - The Items page now names the exact monster or boss that drops an item, instead of just saying
   "monster drop".
+- The Items page now has Weapons/Armor/Accessories tabs above the table, so you can narrow the
+  list to one category instead of scrolling through everything at once.
 
 ## 2026-09-23 — Item rebalance: every item matches its class (T4C-0027)
 

@@ -130,6 +130,16 @@
     return intel > wis ? "Intelligence mage" : "Wisdom mage";
   }
 
+  // Groups the BodyPart slots into the three broad shopping categories the Items page tabs by.
+  var ARMOR_SLOTS = { HEAD: 1, BELT: 1, LEFT_HAND: 1, RIGHT_HAND: 1, LEGS: 1, FEET: 1, BODY: 1, BACK: 1, SHIELD: 1 };
+  var ACCESSORY_SLOTS = { NECK: 1, RING1: 1, RING2: 1, BRACER: 1 };
+  function categoryOf(item) {
+    if (item.bodyPart === "WEAPON" || item.bodyPart === "WEAPON2") return "Weapons";
+    if (ACCESSORY_SLOTS[item.bodyPart]) return "Accessories";
+    if (ARMOR_SLOTS[item.bodyPart]) return "Armor";
+    return "Other";
+  }
+
   var REQ_ABBR = { endurance: "END", strength: "STR", agility: "AGI", intelligence: "INT", wisdom: "WIS", attack: "ATK" };
   function reqSummary(item) {
     var r = item.requirements || {};
@@ -592,6 +602,12 @@
       eyebrow: "Items",
       lead: "Every JSON-authored item added by the new content pipeline — weapons, armor sets, jewelry. Every stat is in the table below; click a row for its full page.",
       rows: ITEMS,
+      tabs: [
+        { key: "all", label: "All" },
+        { key: "weapons", label: "Weapons", filter: function (it) { return categoryOf(it) === "Weapons"; } },
+        { key: "armor", label: "Armor", filter: function (it) { return categoryOf(it) === "Armor"; } },
+        { key: "accessories", label: "Accessories", filter: function (it) { return categoryOf(it) === "Accessories"; } },
+      ],
       columns: [
         { key: "name", label: "Name", render: function (it) { return itemLink(it.key); } },
         { key: "bodyPart", label: "Slot" },
@@ -1146,8 +1162,16 @@
 
   function listPage(cfg) {
     var stateKey = cfg.title;
-    listPageState[stateKey] = listPageState[stateKey] || { search: "", sort: cfg.defaultSort, dir: 1, filters: {} };
+    listPageState[stateKey] = listPageState[stateKey] ||
+      { search: "", sort: cfg.defaultSort, dir: 1, filters: {}, tab: cfg.tabs ? cfg.tabs[0].key : null };
     var st = listPageState[stateKey];
+
+    var tabControls = cfg.tabs
+      ? '<div class="category-tabs">' + cfg.tabs.map(function (t) {
+          return '<button type="button" data-tab-key="' + esc(t.key) + '"' +
+            (t.key === st.tab ? ' class="active"' : "") + ">" + esc(t.label) + "</button>";
+        }).join("") + "</div>"
+      : "";
 
     var filterControls = (cfg.filters || []).map(function (f, fi) {
       var opts = f.options.map(function (o) {
@@ -1165,6 +1189,7 @@
     var html =
       '<div class="page-header"><p class="eyebrow">' + esc(cfg.eyebrow) + "</p><h1>" + esc(cfg.title) + "</h1>" +
       '<p class="lead">' + esc(cfg.lead) + "</p></div>" +
+      tabControls +
       '<div class="toolbar"><input type="search" id="listSearch" placeholder="Search ' + esc(cfg.title.toLowerCase()) + '…" value="' + esc(st.search) + '">' +
       filterControls +
       '<span class="result-count" id="listCount"></span></div>' +
@@ -1180,9 +1205,14 @@
     var countEl = document.getElementById("listCount");
     var selects = document.querySelectorAll('[data-filter-idx]');
     var ths = document.querySelectorAll("th[data-sort-key]");
+    var tabButtons = document.querySelectorAll("[data-tab-key]");
 
     function apply() {
       var rows = cfg.rows.slice();
+      if (cfg.tabs && st.tab) {
+        var activeTab = cfg.tabs.filter(function (t) { return t.key === st.tab; })[0];
+        if (activeTab && activeTab.filter) rows = rows.filter(activeTab.filter);
+      }
       if (st.search) {
         var q = st.search.toLowerCase();
         rows = rows.filter(function (r) {
@@ -1227,6 +1257,13 @@
     searchEl.addEventListener("input", function () { st.search = searchEl.value; apply(); });
     selects.forEach(function (sel, fi) {
       sel.addEventListener("change", function () { st.filters[fi] = sel.value; apply(); });
+    });
+    tabButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        st.tab = btn.getAttribute("data-tab-key");
+        tabButtons.forEach(function (b) { b.classList.toggle("active", b === btn); });
+        apply();
+      });
     });
     ths.forEach(function (th) {
       th.addEventListener("click", function () {

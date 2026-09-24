@@ -250,6 +250,23 @@ code {
 .el-light { color: var(--el-light); }
 .el-dark { color: var(--el-dark); }
 
+/* ------------------------------------------------------------ category tabs */
+
+.category-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+.category-tabs button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 7px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.category-tabs button:hover { color: var(--text); background: var(--panel-hover); }
+.category-tabs button.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+
 /* ----------------------------------------------------------------- toolbar */
 
 .toolbar {

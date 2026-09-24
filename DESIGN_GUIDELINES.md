@@ -223,6 +223,9 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   compare items without clicking through. A row can still open the detail page for anything not
   worth a column (full element-colored boost breakdown, lore text, etc.), but the table itself
   must answer the basic "what does this do" questions on its own (T4C-0028).
+- The Items page has Weapons/Armor/Accessories category tabs above the table (generic `tabs`
+  support in `listPage`/`wireListPage`, keyed by `bodyPart`), on top of the existing search/slot/
+  class/rarity filters, so a large item catalog stays browsable as it grows (T4C-0028).
 - Never show a generic "monster drop" label for where an item comes from. Name the actual
   monster/boss (every one of them, if more than one drops it) via `lootSources.json`'s
   `monsterDisplayName`, the same way an item's own detail page already does.
