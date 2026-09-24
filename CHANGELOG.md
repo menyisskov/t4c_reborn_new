@@ -30,6 +30,9 @@ _Nothing pending._
   Windhowl, Stonecrest, and Avalon Sanctuary - a real place to put gold to work at any stage of the
   game, not just at the very top of it.
 
+### Fixed
+- Critical Healing Potions actually heal you now. They used to do nothing at all when drunk.
+
 ## 2026-09-24 — A shortcut for repeat rebirths (T4C-0035)
 
 ### Added

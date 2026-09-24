@@ -93,8 +93,8 @@ public final class Boreas extends ScriptedNpc {
                       "potion_of_mana",
                       "healing_potion",
                       "mana_elixir",
-                      "mana_prism",
-                      "critical_healing_potion",
+                      "item.mana_prism",
+                      "item.critical_healing_potion",
                       "scroll_of_lighthaven",
                       "scroll_of_windhowl"));
 

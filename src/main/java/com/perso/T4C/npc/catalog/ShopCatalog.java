@@ -27,8 +27,8 @@ public final class ShopCatalog {
           "potion_of_mana",
           "healing_potion",
           "iron_ring",
-          "mana_prism",
-          "critical_healing_potion");
+          "item.mana_prism",
+          "item.critical_healing_potion");
 
   private static final List<String> CHRYSEIDA =
       List.of(
@@ -38,8 +38,8 @@ public final class ShopCatalog {
           "serious_healing_potion",
           "potion_of_mana",
           "mana_elixir",
-          "mana_prism",
-          "critical_healing_potion",
+          "item.mana_prism",
+          "item.critical_healing_potion",
           "potion_of_cure_rabies",
           "scroll_of_lighthaven",
           "scroll_of_windhowl",
@@ -519,8 +519,8 @@ public final class ShopCatalog {
                   "healing_potion",
                   "serious_healing_potion",
                   "potion_of_mana",
-                  "mana_prism",
-                  "critical_healing_potion",
+                  "item.mana_prism",
+                  "item.critical_healing_potion",
                   "scroll_of_avalon",
                   "scroll_of_lighthaven",
                   "symbol_of_hope")));

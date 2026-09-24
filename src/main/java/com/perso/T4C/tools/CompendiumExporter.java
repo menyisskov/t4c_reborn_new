@@ -238,8 +238,8 @@ public final class CompendiumExporter {
                   "potion_of_mana",
                   "healing_potion",
                   "mana_elixir",
-                  "mana_prism",
-                  "critical_healing_potion",
+                  "item.mana_prism",
+                  "item.critical_healing_potion",
                   "scroll_of_lighthaven",
                   "scroll_of_windhowl"),
           "Yolak",
@@ -248,8 +248,8 @@ public final class CompendiumExporter {
                   "light_healing_potion",
                   "potion_of_mana",
                   "healing_potion",
-                  "mana_prism",
-                  "critical_healing_potion",
+                  "item.mana_prism",
+                  "item.critical_healing_potion",
                   "scroll_of_lighthaven",
                   "scroll_of_windhowl"));
 
@@ -790,6 +790,18 @@ public final class CompendiumExporter {
       item.put("isBow", d.isBow());
       item.put("dmgFormula", d.getDmgFormula());
       item.put("boosts", List.of());
+      // T4C-0036: this loop previously left every utility item looking effectless (no
+      // unlimitedUse, no use-effect text) - harmless for the four crafting materials this list
+      // originally covered (no ItemSpell entries to show), but item.mana_prism and
+      // item.critical_healing_potion are real consumables whose whole point is the spell they
+      // trigger on use, so the reference site needs to say so.
+      item.put("unlimitedUse", d.isUnlimitedUse());
+      List<String> useEffects = new ArrayList<>();
+      for (ItemDefinition.ItemSpell spell : d.getSpells()) {
+        SpellData effect = SpellRegistry.findById(spell.getSpellId());
+        if (effect != null) useEffects.add(I18n.resolve(effect.getDescription()));
+      }
+      item.put("useEffects", useEffects);
       out.add(item);
     }
     return out;

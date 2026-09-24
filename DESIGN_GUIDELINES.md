@@ -429,6 +429,13 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   adding a new consumable meant as a real gold sink (as opposed to an early-game convenience item),
   price it in the thousands-to-tens-of-thousands range, not the legacy 0-500 range those two items
   had, and add it to all five town vendors' lists so it's a sink everywhere, not just one town.
+  When the item is also in `CompendiumExporter`'s `NEW_UTILITY_ITEM_KEYS` (see below), reference it
+  in `ShopCatalog`/the NPC's own item list with its `item.`-prefixed key (e.g. `item.mana_prism`),
+  not the bare key other JSON-authored shop items use - `ItemRegistry.findByKey` normalizes either
+  form at runtime so this doesn't change what the game does, but the compendium's static JSON/JS
+  layer does an exact-string match with no such normalization, so a bare key here silently breaks
+  that item's "sold by" listing on both the item page and the vendor's own page (Codex caught this
+  on the T4C-0036 PR).
 - **Two Java classes can silently define the same item key.** `ItemItemManaPrism.java` and
   `ItemItemCriticalHealingPotion.java` are the ones actually registered in `ItemDefinitions.java`
   and read by `ItemRegistry`; `ManaPrism.java` and `CriticalHealingPotion.java` are dead duplicate
@@ -437,3 +444,17 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   items - the first edit silently had no effect because it landed on the dead class. Before editing
   any legacy item's fields, grep `ItemDefinitions.java` for which class is actually registered
   under that key; don't assume the class with the "obvious" name is the live one.
+- **A dangling `ItemDefinition.ItemSpell` id makes an item silently do nothing.**
+  `ItemUseService.useOnSelf` resolves an item's use-effect via `SpellRegistry.findById(spellId)`
+  and quietly returns `Failure.NO_EFFECT` on a miss - no error, no log, the player just sees
+  nothing happen. `item.critical_healing_potion` had exactly this bug (pointed at 10208, a legacy
+  macro id from the original game's script system that nothing in `SpellRegistry` registers,
+  instead of `HealCritical`'s real id 10034) until T4C-0036 fixed it and added
+  `ItemSpellIntegrityTest` to lock that one item down. **Known gap, not fixed here:** the same
+  pattern turned out to affect roughly 80 other pre-existing legacy items when checked
+  registry-wide (`mana_elixir`, `serious_healing_potion`, `scroll_of_recall`, several rings and
+  weapons, etc.) - each would need someone to work out what spell it was actually meant to trigger
+  before it could be corrected, which is real research work per item, not a mechanical fix. Treat
+  this as an open backlog item, not something to silently batch-fix; if you're touching one of
+  these items anyway for an unrelated reason, it's reasonable to fix its id too and note it, but
+  don't scope-creep a content pass into fixing the whole list.

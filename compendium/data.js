@@ -21769,7 +21769,9 @@ window.T4C_DATA = {
       },
       "unique": false,
       "isBow": false,
-      "boosts": []
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
     },
     {
       "key": "item.veiled_aether_shard",
@@ -21787,7 +21789,9 @@ window.T4C_DATA = {
       },
       "unique": false,
       "isBow": false,
-      "boosts": []
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
     },
     {
       "key": "item.tempered_godcore",
@@ -21805,7 +21809,9 @@ window.T4C_DATA = {
       },
       "unique": false,
       "isBow": false,
-      "boosts": []
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
     },
     {
       "key": "item.bound_godsigil",
@@ -21823,7 +21829,9 @@ window.T4C_DATA = {
       },
       "unique": false,
       "isBow": false,
-      "boosts": []
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
     },
     {
       "key": "item.mana_prism",
@@ -21841,7 +21849,11 @@ window.T4C_DATA = {
       },
       "unique": false,
       "isBow": false,
-      "boosts": []
+      "boosts": [],
+      "unlimitedUse": false,
+      "useEffects": [
+        "Greatly increases the wearer's mana regeneration rate for a short period of time."
+      ]
     },
     {
       "key": "item.critical_healing_potion",
@@ -21859,7 +21871,11 @@ window.T4C_DATA = {
       },
       "unique": false,
       "isBow": false,
-      "boosts": []
+      "boosts": [],
+      "unlimitedUse": false,
+      "useEffects": [
+        "Restores hit points to the target."
+      ]
     }
   ],
   "shops": {
@@ -21870,8 +21886,8 @@ window.T4C_DATA = {
       "serious_healing_potion",
       "potion_of_mana",
       "mana_elixir",
-      "mana_prism",
-      "critical_healing_potion",
+      "item.mana_prism",
+      "item.critical_healing_potion",
       "potion_of_cure_rabies",
       "scroll_of_lighthaven",
       "scroll_of_windhowl",
@@ -21889,8 +21905,8 @@ window.T4C_DATA = {
       "potion_of_mana",
       "healing_potion",
       "iron_ring",
-      "mana_prism",
-      "critical_healing_potion"
+      "item.mana_prism",
+      "item.critical_healing_potion"
     ],
     "Gwen": [
       "cloth_pants",
@@ -22282,8 +22298,8 @@ window.T4C_DATA = {
       "healing_potion",
       "serious_healing_potion",
       "potion_of_mana",
-      "mana_prism",
-      "critical_healing_potion",
+      "item.mana_prism",
+      "item.critical_healing_potion",
       "scroll_of_avalon",
       "scroll_of_lighthaven",
       "symbol_of_hope"
@@ -22305,24 +22321,24 @@ window.T4C_DATA = {
       "lightbringers_mantle",
       "shadowmancers_mantle"
     ],
+    "Yolak": [
+      "torch",
+      "light_healing_potion",
+      "potion_of_mana",
+      "healing_potion",
+      "item.mana_prism",
+      "item.critical_healing_potion",
+      "scroll_of_lighthaven",
+      "scroll_of_windhowl"
+    ],
     "Boreas": [
       "torch",
       "light_healing_potion",
       "potion_of_mana",
       "healing_potion",
       "mana_elixir",
-      "mana_prism",
-      "critical_healing_potion",
-      "scroll_of_lighthaven",
-      "scroll_of_windhowl"
-    ],
-    "Yolak": [
-      "torch",
-      "light_healing_potion",
-      "potion_of_mana",
-      "healing_potion",
-      "mana_prism",
-      "critical_healing_potion",
+      "item.mana_prism",
+      "item.critical_healing_potion",
       "scroll_of_lighthaven",
       "scroll_of_windhowl"
     ]

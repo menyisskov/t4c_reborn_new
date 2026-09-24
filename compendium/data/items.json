@@ -9363,7 +9363,9 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": true,
+    "useEffects": []
   },
   {
     "key": "item.veiled_aether_shard",
@@ -9381,7 +9383,9 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": true,
+    "useEffects": []
   },
   {
     "key": "item.tempered_godcore",
@@ -9399,7 +9403,9 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": true,
+    "useEffects": []
   },
   {
     "key": "item.bound_godsigil",
@@ -9417,7 +9423,9 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": true,
+    "useEffects": []
   },
   {
     "key": "item.mana_prism",
@@ -9435,7 +9443,11 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": false,
+    "useEffects": [
+      "Greatly increases the wearer's mana regeneration rate for a short period of time."
+    ]
   },
   {
     "key": "item.critical_healing_potion",
@@ -9453,6 +9465,10 @@
     },
     "unique": false,
     "isBow": false,
-    "boosts": []
+    "boosts": [],
+    "unlimitedUse": false,
+    "useEffects": [
+      "Restores hit points to the target."
+    ]
   }
 ]
