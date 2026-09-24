@@ -11,6 +11,7 @@
   --accent-soft: #f0c878;
   --link: #7fb2e5;
 
+  --tier-godsforged: #ff4d8f;
   --tier-legendary: #ff9d2e;
   --tier-rare: #b371f2;
   --tier-uncommon: #4fb8e0;
@@ -235,6 +236,7 @@ code {
 }
 .tag.origin-new { color: var(--origin-new); }
 .tag.origin-activated { color: var(--origin-activated); }
+.tag.tier-godsforged { color: var(--tier-godsforged); }
 .tag.tier-legendary { color: var(--tier-legendary); }
 .tag.tier-rare { color: var(--tier-rare); }
 .tag.tier-uncommon { color: var(--tier-uncommon); }

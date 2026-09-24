@@ -235,6 +235,114 @@
     }
   },
   {
+    "id": "EmberSmithCorvain",
+    "origin": "new",
+    "displayName": "Ember-Smith Corvain",
+    "welcomeText": "The forge hasn't gone cold in longer than you'd believe. Neither have I, if it comes to that.",
+    "topics": [
+      {
+        "keywords": [
+          "forge",
+          "ember"
+        ],
+        "response": "Everyone thinks the old pact was words and nothing more. It wasn't - it was bound in metal too, once, and I still remember how. Bring me five embers torn from something that's already brushed against that kind of power, and I'll temper you a core worth building on.",
+        "actions": [
+          "GIVE_QUEST:forge_the_godcore"
+        ]
+      },
+      {
+        "keywords": [
+          "corvain"
+        ],
+        "response": "I was young when the pact was still whole. I watched us bind it, and I watched us fail to keep it whole. Forging one more relic won't undo that - but it might buy the Wilds a little more time.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "GrandmasterTholvenn",
+    "origin": "new",
+    "displayName": "Grandmaster Tholvenn",
+    "welcomeText": "You've found the last of us. Say what you've come to forge, and I'll tell you if you've earned it yet.",
+    "topics": [
+      {
+        "keywords": [
+          "warblade"
+        ],
+        "response": "Bring me a tempered core and a bound sigil, and name the warblade - the rest is mine to finish.",
+        "actions": [
+          "GIVE_QUEST:forge_godsforged_warblade"
+        ]
+      },
+      {
+        "keywords": [
+          "stormbow"
+        ],
+        "response": "A core, a sigil, and the will to loose something the old pact would have called a small storm. Bring the first two; I'll handle the rest.",
+        "actions": [
+          "GIVE_QUEST:forge_godsforged_stormbow"
+        ]
+      },
+      {
+        "keywords": [
+          "voidglass"
+        ],
+        "response": "Bring me a tempered core and a bound sigil, and I'll pour what's left of the old power into glass dark enough to hold it.",
+        "actions": [
+          "GIVE_QUEST:forge_godsforged_voidglass_rod"
+        ]
+      },
+      {
+        "keywords": [
+          "zephyr"
+        ],
+        "response": "A core, a sigil, and a hand steady enough for both mind and heart to guide it. Bring me the first two.",
+        "actions": [
+          "GIVE_QUEST:forge_godsforged_zephyr_wand"
+        ]
+      },
+      {
+        "keywords": [
+          "torc"
+        ],
+        "response": "This one's closer to my own heart than the rest. Bring me a core and a sigil, and I'll set what's left of the pact itself into a torc worth wearing.",
+        "actions": [
+          "GIVE_QUEST:forge_godsforged_torc"
+        ]
+      },
+      {
+        "keywords": [
+          "tholvenn",
+          "first pact"
+        ],
+        "response": "Three of us are left who remember binding it whole. I don't know if forging pieces of it back into the world helps the original working or just delays the inevitable - but I'd rather try than watch it fray in silence.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "GrandmasterVoss",
     "origin": "new",
     "displayName": "Grandmaster Voss",
@@ -1066,6 +1174,42 @@
           "bye"
         ],
         "response": "Keep your torch lit. It's the only mercy the barrows understand.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "WardenSeressa",
+    "origin": "new",
+    "displayName": "Warden Seressa",
+    "welcomeText": "Careful where you stand. Whatever I'm binding doesn't always stay bound the first time.",
+    "topics": [
+      {
+        "keywords": [
+          "bind",
+          "aether"
+        ],
+        "response": "A core is only half of anything. Bring me five shards of aether - the kind that only forms where the veil between us and whatever's beyond it wears thin - and I'll bind you a sigil to match Corvain's work.",
+        "actions": [
+          "GIVE_QUEST:bind_the_godsigil"
+        ]
+      },
+      {
+        "keywords": [
+          "seressa"
+        ],
+        "response": "I've spent longer holding this pact together than I ever spent studying to help build it. Some nights I can't tell anymore whether I'm binding the shard or the shard's binding me.",
         "actions": []
       }
     ],

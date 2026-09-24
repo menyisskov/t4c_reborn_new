@@ -7558,6 +7558,338 @@
     ]
   },
   {
+    "key": "godsforged_stormbow",
+    "name": "Godsforged Stormbow",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLongBow",
+    "appearanceInventory": "64kInvLongBow",
+    "price": 0.0,
+    "weight": 7.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 0.0,
+      "agility": 1000.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": true,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d240+460+4*arrow_dmg",
+    "atkDelay": "850",
+    "boosts": [
+      {
+        "boostId": 36507.0,
+        "statId": 6.0,
+        "expression": "100"
+      },
+      {
+        "boostId": 36508.0,
+        "statId": 10035.0,
+        "expression": "240"
+      },
+      {
+        "boostId": 36509.0,
+        "statId": 12.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 36510.0,
+        "statId": 13.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 36511.0,
+        "statId": 14.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 36512.0,
+        "statId": 15.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 36513.0,
+        "statId": 22.0,
+        "expression": "30"
+      }
+    ]
+  },
+  {
+    "key": "godsforged_torc_of_the_first_pact",
+    "name": "Godsforged Torc of the First Pact",
+    "bodyPart": "NECK",
+    "appearanceInventory": "64kInvNecklace 4",
+    "price": 0.0,
+    "weight": 1.0,
+    "armorClass": 36.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 1000.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36529.0,
+        "statId": 4.0,
+        "expression": "100"
+      },
+      {
+        "boostId": 36530.0,
+        "statId": 19.0,
+        "expression": "120"
+      },
+      {
+        "boostId": 36531.0,
+        "statId": 12.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36532.0,
+        "statId": 13.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36533.0,
+        "statId": 14.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36534.0,
+        "statId": 15.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36535.0,
+        "statId": 22.0,
+        "expression": "48"
+      }
+    ]
+  },
+  {
+    "key": "godsforged_voidglass_rod",
+    "name": "Godsforged Voidglass Rod",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLichStaff",
+    "appearanceInventory": "64kInvLichStaff",
+    "price": 0.0,
+    "weight": 4.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 1000.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d45+65",
+    "atkDelay": "1250",
+    "boosts": [
+      {
+        "boostId": 36514.0,
+        "statId": 1.0,
+        "expression": "120"
+      },
+      {
+        "boostId": 36515.0,
+        "statId": 24.0,
+        "expression": "120"
+      },
+      {
+        "boostId": 36516.0,
+        "statId": 12.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36517.0,
+        "statId": 13.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36518.0,
+        "statId": 14.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36519.0,
+        "statId": 15.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36520.0,
+        "statId": 22.0,
+        "expression": "48"
+      }
+    ]
+  },
+  {
+    "key": "godsforged_warblade",
+    "name": "Godsforged Warblade",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupBattleSword",
+    "appearanceInventory": "64kInvBattleSword",
+    "price": 0.0,
+    "weight": 6.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 1000.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "2d55+95",
+    "atkDelay": "1200",
+    "boosts": [
+      {
+        "boostId": 36500.0,
+        "statId": 3.0,
+        "expression": "100"
+      },
+      {
+        "boostId": 36501.0,
+        "statId": 8.0,
+        "expression": "240"
+      },
+      {
+        "boostId": 36502.0,
+        "statId": 12.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 36503.0,
+        "statId": 13.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 36504.0,
+        "statId": 14.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 36505.0,
+        "statId": 15.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 36506.0,
+        "statId": 22.0,
+        "expression": "30"
+      }
+    ]
+  },
+  {
+    "key": "godsforged_zephyr_wand",
+    "name": "Godsforged Zephyr Wand",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupWoodenStaff",
+    "appearanceInventory": "64kInvWoodenStaff",
+    "price": 0.0,
+    "weight": 4.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 625.0,
+      "wisdom": 625.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d42+62",
+    "atkDelay": "1250",
+    "boosts": [
+      {
+        "boostId": 36521.0,
+        "statId": 1.0,
+        "expression": "50"
+      },
+      {
+        "boostId": 36522.0,
+        "statId": 4.0,
+        "expression": "50"
+      },
+      {
+        "boostId": 36523.0,
+        "statId": 16.0,
+        "expression": "120"
+      },
+      {
+        "boostId": 36524.0,
+        "statId": 12.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36525.0,
+        "statId": 13.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36526.0,
+        "statId": 14.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36527.0,
+        "statId": 15.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36528.0,
+        "statId": 22.0,
+        "expression": "48"
+      }
+    ]
+  },
+  {
     "key": "heartfire_of_the_greater_drake",
     "name": "Heartfire of the Greater Drake",
     "bodyPart": "NECK",
@@ -9014,5 +9346,77 @@
         "expression": "36"
       }
     ]
+  },
+  {
+    "key": "item.tempered_godcore",
+    "name": "Tempered Godcore",
+    "price": 0,
+    "weight": 1,
+    "armorClass": 0.0,
+    "requirements": {
+      "endurance": 0,
+      "strength": 0,
+      "agility": 0,
+      "intelligence": 0,
+      "wisdom": 0,
+      "attack": 0
+    },
+    "unique": false,
+    "isBow": false,
+    "boosts": []
+  },
+  {
+    "key": "item.bound_godsigil",
+    "name": "Bound Godsigil",
+    "price": 0,
+    "weight": 1,
+    "armorClass": 0.0,
+    "requirements": {
+      "endurance": 0,
+      "strength": 0,
+      "agility": 0,
+      "intelligence": 0,
+      "wisdom": 0,
+      "attack": 0
+    },
+    "unique": false,
+    "isBow": false,
+    "boosts": []
+  },
+  {
+    "key": "item.wyrmforged_ember",
+    "name": "Wyrmforged Ember",
+    "price": 0,
+    "weight": 1,
+    "armorClass": 0.0,
+    "requirements": {
+      "endurance": 0,
+      "strength": 0,
+      "agility": 0,
+      "intelligence": 0,
+      "wisdom": 0,
+      "attack": 0
+    },
+    "unique": false,
+    "isBow": false,
+    "boosts": []
+  },
+  {
+    "key": "item.veiled_aether_shard",
+    "name": "Veiled Aether Shard",
+    "price": 0,
+    "weight": 1,
+    "armorClass": 0.0,
+    "requirements": {
+      "endurance": 0,
+      "strength": 0,
+      "agility": 0,
+      "intelligence": 0,
+      "wisdom": 0,
+      "attack": 0
+    },
+    "unique": false,
+    "isBow": false,
+    "boosts": []
   }
 ]

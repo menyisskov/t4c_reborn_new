@@ -236,6 +236,49 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   with no apostrophes (e.g. `rootcrown_wyrms_verdant_sceptre`), matching the Makrsh P'Tangh
   legendary-weapon pair from the same content initiative.
 
+### Godsforged: a tier above Legendary
+- **A new tier above Legendary** (T4C-0033), earned only through a multi-NPC crafting chain, not
+  a boss drop. Reflavored into this session's own lore rather than invented from nothing: the
+  **Forgewrights of the First Pact** are the last three survivors of the order that helped bind
+  Avalon's original fey pact (see "Passage to Avalon" in `## 6. Quests` below) — now working
+  within the Avalon Wilds, trying to reinforce what's fraying by forging relics from materials
+  torn from the world's other apex threats.
+- **Mechanically it's a bonus-formula multiplier, not a higher requirement.** Legendary items
+  already sit at `MAX_SINGLE_REQUIREMENT` (1000) — the level-cap main stat — so there's no
+  requirement headroom left to express "stronger than Legendary." `ItemBalance.
+  GODSFORGED_TIER_MULTIPLIER` (1.2) is applied on top of every bonus formula (main stat, combat
+  skill, magic power, magic resistance, AC) via a tier-aware overload of each — every formula's
+  no-tier overload still defaults to 1.0, so no existing item's expected value changes.
+  `ItemBalanceGuidelinesTest` detects the tier by key prefix (`godsforged_`, the same convention
+  `ancient_celestial_`/`empyrean_` already use) and applies the multiplier when checking that
+  item's numbers.
+- **The crafting chain** (see `quest/definition/ForgeTheGodcore.java`,
+  `BindTheGodsigil.java`, `ForgeGodsforgedWarblade.java` and its four siblings,
+  `npc/EmberSmithCorvain.java`, `npc/WardenSeressa.java`, `npc/GrandmasterTholvenn.java`):
+  1. Two gathering NPCs each turn a rare material (a boss drop from existing endgame bosses, not
+     a new one) into an intermediate component — an ordinary single-item `QuestDef` turn-in, using
+     the new `rewardItemKey` field (T4C-0033) to hand back the component instead of just gold/XP.
+  2. A third NPC combines both components into the finished item. A single `QuestDef` can only
+     natively track one required item, so this final step's "extra" component is checked and
+     consumed by the NPC's own `javaBehavior()` *before* it calls the new
+     `QuestService.completeCraftingQuest()` — which then checks/consumes the quest's own natively-
+     tracked item and grants the reward in the same step. This skips the normal accept-then-
+     return-later flow entirely: once a player has both components, naming the item finishes the
+     forge in one conversation.
+- **Raw materials are legacy Java items, not `assets/items/*.json`.** A pure crafting
+  material/component has no stat requirements and isn't meant to be worn, but every file in
+  `assets/items/` is assumed to be real gear and gets the full `ItemBalanceGuidelinesTest`
+  treatment (a valid class, a matching AC, etc.) — a zero-requirement item fails
+  `requirementsStayReachable`'s "has no class requirement" check. Author non-equippable
+  materials/components the same way `item/definition/AbyssOrb.java` does (a legacy
+  `ItemDefinition` with `bodyPart: null`), and remember they're invisible to the compendium unless
+  explicitly added to `CompendiumExporter`'s `NEW_UTILITY_ITEM_KEYS` (its own allowlist, separate
+  from `NEW_QUEST_IDS`/`NEW_NPC_IDS`) — `exportItems()` otherwise only scans `assets/items/`.
+- **One item per class archetype**, following the same "one per archetype" shape as the Elder
+  Wyrms line (warrior, archer, intelligence mage, wisdom mage, hybrid mage) - see the five
+  `ForgeGodsforged*.java` quests for the pattern to extend if the owner asks for more Godsforged
+  items later.
+
 ### Boss loot tables
 - A boss should drop **multiple different items**, not one signature item plus a couple of
   potions. The established pattern (Ignarok, Mordrenn, Arch Drake, Greater Drake, Centaur King,
@@ -250,6 +293,25 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - A single named/event boss can drop more than one unique/legendary item of its own (e.g. Makrsh
   P'Tangh drops both a legendary bow and a legendary staff) when its established loot theme
   plausibly supports more than one signature weapon type.
+- **Every boss also needs a "medium-rarity" tier, not just rare-or-nothing (T4C-0034).** The
+  13-entry pattern above packs everything into the 0.008–0.025 band — a kill that whiffs all 13
+  rolls gets nothing at all, which doesn't feel like a reward. Every boss should also drop 1-2
+  items in the 0.2–0.3 range (a potion pair - `serious_healing_potion`/`mana_elixir` or
+  `healing_potion`/`mana_elixir` is the established default, see Ignarok/Arch Drake/Greater
+  Drake/Mordrenn/Centaur King/The Hollow King/Coastwarden Ithrak/Makrsh P'Tangh) so a kill is
+  never a total whiff. A boss whose own drop theme calls for something more specific (a quest
+  item, a crafting material like `item.wyrmforged_ember`/`item.veiled_aether_shard`, or another
+  not-quite-rare item) can use that instead of generic potions - the point is a meaningfully
+  higher-odds tier existing at all, not the specific item.
+- **Scale the treatment to the boss's actual tier, don't paste max-level loot onto a low-level
+  one.** A "boss" whose XP/HP puts it well below the endgame roster (e.g. Deep Ones Cave's
+  `DeepOneBoss`, XP in the tens of thousands vs. tens of millions for real endgame bosses) should
+  get the medium-rarity tier above, not a full 1000-requirement Ancient Celestial/Empyrean set -
+  that would be wildly overpowered gear for the level range it drops at.
+- A boss that spawns as multiple simultaneous instances (e.g. `BastionWarden`, 4 concurrent
+  spawns) still gets the full pattern if its own tier (XP/HP) otherwise warrants it - just be
+  aware the multi-spawn count effectively multiplies the farm rate versus a solo unique boss, and
+  weigh that when picking drop chances for a new multi-spawn boss.
 
 ## 4. Reference website (compendium)
 - Generated from the live game data by `tools/CompendiumExporter`. CI regenerates it on every

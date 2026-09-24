@@ -1,0 +1,38 @@
+{
+  "key": "godsforged_warblade",
+  "name": "Godsforged Warblade",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupBattleSword",
+  "appearanceInventory": "64kInvBattleSword",
+  "price": 0,
+  "weight": 6,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 1000,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "2d55+95",
+  "atkDelay": "1200",
+  "boosts": [
+    { "boostId": 36500, "statId": 3, "expression": "100" },
+    { "boostId": 36501, "statId": 8, "expression": "240" },
+    { "boostId": 36502, "statId": 12, "expression": "30" },
+    { "boostId": 36503, "statId": 13, "expression": "30" },
+    { "boostId": 36504, "statId": 14, "expression": "30" },
+    { "boostId": 36505, "statId": 15, "expression": "30" },
+    { "boostId": 36506, "statId": 22, "expression": "30" }
+  ]
+}

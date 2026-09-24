@@ -24,6 +24,13 @@ public final class QuestDefinitions {
         TidewornShoreScouts.definition(),
         PassageToAvalon.definition(),
         AvalonWildsVigil.definition(),
-        FadingVeilReckoning.definition());
+        FadingVeilReckoning.definition(),
+        ForgeTheGodcore.definition(),
+        BindTheGodsigil.definition(),
+        ForgeGodsforgedWarblade.definition(),
+        ForgeGodsforgedStormbow.definition(),
+        ForgeGodsforgedVoidglassRod.definition(),
+        ForgeGodsforgedZephyrWand.definition(),
+        ForgeGodsforgedTorc.definition());
   }
 }

@@ -69,6 +69,18 @@ public final class InventoryService {
     return add(player, itemKey, -1);
   }
 
+  /** True if {@link #add(Player, String)} would succeed for this item right now - the same
+   * unique-already-owned and carry-weight checks {@code add} itself makes, without mutating
+   * anything. Lets a caller that's about to consume other items/state as part of granting this
+   * one (e.g. a quest completion) verify the grant will succeed *first*, so a doomed grant never
+   * leaves the caller having already paid an irreversible cost for nothing. */
+  public static boolean canAdd(Player player, String itemKey) {
+    ItemDefinition definition = ItemRegistry.findByKey(itemKey);
+    if (player == null || definition == null) return false;
+    if (definition.isUnique() && count(player, definition.getKey()) > 0) return false;
+    return currentWeight(player) + Math.max(0L, definition.getWeight()) <= maximumWeight(player);
+  }
+
   public static Result add(Player player, String itemKey, int remainingCharges) {
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
     if (player == null || definition == null) return Result.failure(Failure.UNKNOWN_ITEM, itemKey);

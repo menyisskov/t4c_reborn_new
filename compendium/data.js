@@ -217,6 +217,14 @@ window.T4C_DATA = {
           "chance": 0.01
         },
         {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
           "item": "ancient_celestial_water_armor",
           "chance": 0.025
         },
@@ -436,6 +444,18 @@ window.T4C_DATA = {
           "chance": 0.008
         },
         {
+          "item": "item.wyrmforged_ember",
+          "chance": 0.05
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
           "item": "ancient_celestial_fire_armor",
           "chance": 0.025
         },
@@ -610,6 +630,14 @@ window.T4C_DATA = {
           "chance": 0.02
         },
         {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
           "item": "ancient_celestial_archer_armor",
           "chance": 0.025
         },
@@ -770,6 +798,14 @@ window.T4C_DATA = {
         {
           "item": "crown_of_the_hollow_king",
           "chance": 0.008
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
         },
         {
           "item": "ancient_celestial_dark_armor",
@@ -1119,6 +1155,10 @@ window.T4C_DATA = {
         },
         {
           "item": "healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
           "chance": 0.2
         },
         {
@@ -1403,6 +1443,62 @@ window.T4C_DATA = {
         {
           "item": "bastion_sentinels_mantle",
           "chance": 0.03
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_warrior_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_protector",
+          "chance": 0.012
         }
       ],
       "attacks": [
@@ -2036,6 +2132,10 @@ window.T4C_DATA = {
           "chance": 0.02
         },
         {
+          "item": "item.veiled_aether_shard",
+          "chance": 0.05
+        },
+        {
           "item": "mana_elixir",
           "chance": 0.3
         },
@@ -2488,6 +2588,10 @@ window.T4C_DATA = {
           "chance": 0.01
         },
         {
+          "item": "item.veiled_aether_shard",
+          "chance": 0.05
+        },
+        {
           "item": "rootcrown_wyrms_ageless_mantle",
           "chance": 0.015
         },
@@ -2720,6 +2824,14 @@ window.T4C_DATA = {
         {
           "item": "archdrakes_molten_heart",
           "chance": 0.008
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
         },
         {
           "item": "ancient_celestial_air_armor",
@@ -10806,6 +10918,137 @@ window.T4C_DATA = {
       "offerText": "Veilbound Wraiths spread Ysolde's corruption outward with every season that passes. Push back into the Veil and cut their numbers down before the blight claims ground we can't take back.",
       "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
       "completedText": "The blight hasn't forgotten what you did to it out there. Ysolde surely hasn't either."
+    },
+    {
+      "id": "forge_the_godcore",
+      "title": "Forge the Godcore",
+      "giverNpc": "EmberSmithCorvain",
+      "targetMonster": "",
+      "requiredKills": 0,
+      "targetWorldZ": 0,
+      "areaCenterX": 1300,
+      "areaCenterY": 1460,
+      "areaRadiusTiles": 1,
+      "rewardGold": 2000000,
+      "rewardXp": 150000000,
+      "requiredItemKey": "item.wyrmforged_ember",
+      "requiredItemQty": 5,
+      "offerText": "Everyone thinks the old pact was words and nothing more. It wasn't - it was bound in metal too, once, and I still remember how. Bring me five embers torn from something that's already brushed against that kind of power, and I'll temper you a core worth building on.",
+      "completionText": "Five embers, tempered into one. This core remembers what it was pulled from - handle it carefully, and bring it to Seressa or Tholvenn when you're ready for the rest.",
+      "completedText": "Your core's already tempered. Go on - Seressa's waiting on her half, or Tholvenn's waiting on both."
+    },
+    {
+      "id": "bind_the_godsigil",
+      "title": "Bind the Godsigil",
+      "giverNpc": "WardenSeressa",
+      "targetMonster": "",
+      "requiredKills": 0,
+      "targetWorldZ": 0,
+      "areaCenterX": 1355,
+      "areaCenterY": 1465,
+      "areaRadiusTiles": 1,
+      "rewardGold": 2000000,
+      "rewardXp": 150000000,
+      "requiredItemKey": "item.veiled_aether_shard",
+      "requiredItemQty": 5,
+      "offerText": "A core is only half of anything. Bring me five shards of aether - the kind that only forms where the veil between us and whatever's beyond it wears thin - and I'll bind you a sigil to match Corvain's work.",
+      "completionText": "Bound, and holding - for now. Everything I bind holds for now. Take it to Tholvenn once you have both halves; he's the only one of us who still remembers how to finish the working.",
+      "completedText": "Your sigil's already bound. Tholvenn has what he needs from me - the rest is between you and him."
+    },
+    {
+      "id": "forge_godsforged_warblade",
+      "title": "The Godsforged Warblade",
+      "giverNpc": "GrandmasterTholvenn",
+      "targetMonster": "",
+      "requiredKills": 0,
+      "targetWorldZ": 0,
+      "areaCenterX": 1330,
+      "areaCenterY": 1440,
+      "areaRadiusTiles": 1,
+      "rewardGold": 10000000,
+      "rewardXp": 350000000,
+      "requiredItemKey": "item.bound_godsigil",
+      "requiredItemQty": 1,
+      "alsoRequiresItemKey": "item.tempered_godcore",
+      "offerText": "Bring me a tempered core and a bound sigil, and name the warblade - the rest is mine to finish.",
+      "completionText": "There. A blade with the old pact's strength bound into the steel - Godsforged, the last of us would call it. Wield it like it remembers what it cost.",
+      "completedText": "You already carry the Godsforged Warblade. I've nothing left to give you there."
+    },
+    {
+      "id": "forge_godsforged_stormbow",
+      "title": "The Godsforged Stormbow",
+      "giverNpc": "GrandmasterTholvenn",
+      "targetMonster": "",
+      "requiredKills": 0,
+      "targetWorldZ": 0,
+      "areaCenterX": 1330,
+      "areaCenterY": 1440,
+      "areaRadiusTiles": 1,
+      "rewardGold": 10000000,
+      "rewardXp": 350000000,
+      "requiredItemKey": "item.bound_godsigil",
+      "requiredItemQty": 1,
+      "alsoRequiresItemKey": "item.tempered_godcore",
+      "offerText": "A core, a sigil, and the will to loose something the old pact would have called a small storm. Bring the first two; I'll handle the rest.",
+      "completionText": "Drawn true, this one will find whatever you aim it at - and a little of what's beyond it too. Call it Godsforged, and don't waste the name on a poor shot.",
+      "completedText": "The Godsforged Stormbow already answers to your hand. There's nothing more I can add to it."
+    },
+    {
+      "id": "forge_godsforged_voidglass_rod",
+      "title": "The Godsforged Voidglass Rod",
+      "giverNpc": "GrandmasterTholvenn",
+      "targetMonster": "",
+      "requiredKills": 0,
+      "targetWorldZ": 0,
+      "areaCenterX": 1330,
+      "areaCenterY": 1440,
+      "areaRadiusTiles": 1,
+      "rewardGold": 10000000,
+      "rewardXp": 350000000,
+      "requiredItemKey": "item.bound_godsigil",
+      "requiredItemQty": 1,
+      "alsoRequiresItemKey": "item.tempered_godcore",
+      "offerText": "Bring me a tempered core and a bound sigil, and I'll pour what's left of the old power into glass dark enough to hold it.",
+      "completionText": "Voidglass doesn't reflect light so much as swallow it - fitting, for what's bound inside. It's Godsforged now. Use it with more care than most of your kind manage.",
+      "completedText": "The Godsforged Voidglass Rod is already yours. I won't forge you a second."
+    },
+    {
+      "id": "forge_godsforged_zephyr_wand",
+      "title": "The Godsforged Zephyr Wand",
+      "giverNpc": "GrandmasterTholvenn",
+      "targetMonster": "",
+      "requiredKills": 0,
+      "targetWorldZ": 0,
+      "areaCenterX": 1330,
+      "areaCenterY": 1440,
+      "areaRadiusTiles": 1,
+      "rewardGold": 10000000,
+      "rewardXp": 350000000,
+      "requiredItemKey": "item.bound_godsigil",
+      "requiredItemQty": 1,
+      "alsoRequiresItemKey": "item.tempered_godcore",
+      "offerText": "A core, a sigil, and a hand steady enough for both mind and heart to guide it. Bring me the first two.",
+      "completionText": "Air remembers everything that's ever moved through it, if you know how to ask - this wand asks better than most now. Godsforged, and yours.",
+      "completedText": "You've already got the Godsforged Zephyr Wand in hand. That working's finished."
+    },
+    {
+      "id": "forge_godsforged_torc",
+      "title": "The Godsforged Torc of the First Pact",
+      "giverNpc": "GrandmasterTholvenn",
+      "targetMonster": "",
+      "requiredKills": 0,
+      "targetWorldZ": 0,
+      "areaCenterX": 1330,
+      "areaCenterY": 1440,
+      "areaRadiusTiles": 1,
+      "rewardGold": 10000000,
+      "rewardXp": 350000000,
+      "requiredItemKey": "item.bound_godsigil",
+      "requiredItemQty": 1,
+      "alsoRequiresItemKey": "item.tempered_godcore",
+      "offerText": "This one's closer to my own heart than the rest. Bring me a core and a sigil, and I'll set what's left of the pact itself into a torc worth wearing.",
+      "completionText": "There. Something of the old pact, worn instead of buried in the ground it was meant to protect. Wear it well - it's the closest thing to the original working any of us have managed in a very long time.",
+      "completedText": "You're already wearing the Godsforged Torc of the First Pact. There's no more of that particular working left to give."
     }
   ],
   "npcs": [
@@ -11029,6 +11272,114 @@ window.T4C_DATA = {
             "quest"
           ],
           "response": "I have work for capable hands - ask me of the Wilds if you'd stand vigil with our loyal fey, or of the Veil if you'd push back its corruption.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "EmberSmithCorvain",
+      "origin": "new",
+      "displayName": "Ember-Smith Corvain",
+      "welcomeText": "The forge hasn't gone cold in longer than you'd believe. Neither have I, if it comes to that.",
+      "topics": [
+        {
+          "keywords": [
+            "forge",
+            "ember"
+          ],
+          "response": "Everyone thinks the old pact was words and nothing more. It wasn't - it was bound in metal too, once, and I still remember how. Bring me five embers torn from something that's already brushed against that kind of power, and I'll temper you a core worth building on.",
+          "actions": [
+            "GIVE_QUEST:forge_the_godcore"
+          ]
+        },
+        {
+          "keywords": [
+            "corvain"
+          ],
+          "response": "I was young when the pact was still whole. I watched us bind it, and I watched us fail to keep it whole. Forging one more relic won't undo that - but it might buy the Wilds a little more time.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "GrandmasterTholvenn",
+      "origin": "new",
+      "displayName": "Grandmaster Tholvenn",
+      "welcomeText": "You've found the last of us. Say what you've come to forge, and I'll tell you if you've earned it yet.",
+      "topics": [
+        {
+          "keywords": [
+            "warblade"
+          ],
+          "response": "Bring me a tempered core and a bound sigil, and name the warblade - the rest is mine to finish.",
+          "actions": [
+            "GIVE_QUEST:forge_godsforged_warblade"
+          ]
+        },
+        {
+          "keywords": [
+            "stormbow"
+          ],
+          "response": "A core, a sigil, and the will to loose something the old pact would have called a small storm. Bring the first two; I'll handle the rest.",
+          "actions": [
+            "GIVE_QUEST:forge_godsforged_stormbow"
+          ]
+        },
+        {
+          "keywords": [
+            "voidglass"
+          ],
+          "response": "Bring me a tempered core and a bound sigil, and I'll pour what's left of the old power into glass dark enough to hold it.",
+          "actions": [
+            "GIVE_QUEST:forge_godsforged_voidglass_rod"
+          ]
+        },
+        {
+          "keywords": [
+            "zephyr"
+          ],
+          "response": "A core, a sigil, and a hand steady enough for both mind and heart to guide it. Bring me the first two.",
+          "actions": [
+            "GIVE_QUEST:forge_godsforged_zephyr_wand"
+          ]
+        },
+        {
+          "keywords": [
+            "torc"
+          ],
+          "response": "This one's closer to my own heart than the rest. Bring me a core and a sigil, and I'll set what's left of the pact itself into a torc worth wearing.",
+          "actions": [
+            "GIVE_QUEST:forge_godsforged_torc"
+          ]
+        },
+        {
+          "keywords": [
+            "tholvenn",
+            "first pact"
+          ],
+          "response": "Three of us are left who remember binding it whole. I don't know if forging pieces of it back into the world helps the original working or just delays the inevitable - but I'd rather try than watch it fray in silence.",
           "actions": []
         }
       ],
@@ -11876,6 +12227,42 @@ window.T4C_DATA = {
             "bye"
           ],
           "response": "Keep your torch lit. It's the only mercy the barrows understand.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "WardenSeressa",
+      "origin": "new",
+      "displayName": "Warden Seressa",
+      "welcomeText": "Careful where you stand. Whatever I'm binding doesn't always stay bound the first time.",
+      "topics": [
+        {
+          "keywords": [
+            "bind",
+            "aether"
+          ],
+          "response": "A core is only half of anything. Bring me five shards of aether - the kind that only forms where the veil between us and whatever's beyond it wears thin - and I'll bind you a sigil to match Corvain's work.",
+          "actions": [
+            "GIVE_QUEST:bind_the_godsigil"
+          ]
+        },
+        {
+          "keywords": [
+            "seressa"
+          ],
+          "response": "I've spent longer holding this pact together than I ever spent studying to help build it. Some nights I can't tell anymore whether I'm binding the shard or the shard's binding me.",
           "actions": []
         }
       ],
@@ -19493,6 +19880,338 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "godsforged_stormbow",
+      "name": "Godsforged Stormbow",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLongBow",
+      "appearanceInventory": "64kInvLongBow",
+      "price": 0.0,
+      "weight": 7.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 1000.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": true,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d240+460+4*arrow_dmg",
+      "atkDelay": "850",
+      "boosts": [
+        {
+          "boostId": 36507.0,
+          "statId": 6.0,
+          "expression": "100"
+        },
+        {
+          "boostId": 36508.0,
+          "statId": 10035.0,
+          "expression": "240"
+        },
+        {
+          "boostId": 36509.0,
+          "statId": 12.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36510.0,
+          "statId": 13.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36511.0,
+          "statId": 14.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36512.0,
+          "statId": 15.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36513.0,
+          "statId": 22.0,
+          "expression": "30"
+        }
+      ]
+    },
+    {
+      "key": "godsforged_torc_of_the_first_pact",
+      "name": "Godsforged Torc of the First Pact",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 4",
+      "price": 0.0,
+      "weight": 1.0,
+      "armorClass": 36.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 1000.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36529.0,
+          "statId": 4.0,
+          "expression": "100"
+        },
+        {
+          "boostId": 36530.0,
+          "statId": 19.0,
+          "expression": "120"
+        },
+        {
+          "boostId": 36531.0,
+          "statId": 12.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36532.0,
+          "statId": 13.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36533.0,
+          "statId": 14.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36534.0,
+          "statId": 15.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36535.0,
+          "statId": 22.0,
+          "expression": "48"
+        }
+      ]
+    },
+    {
+      "key": "godsforged_voidglass_rod",
+      "name": "Godsforged Voidglass Rod",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLichStaff",
+      "appearanceInventory": "64kInvLichStaff",
+      "price": 0.0,
+      "weight": 4.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 1000.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d45+65",
+      "atkDelay": "1250",
+      "boosts": [
+        {
+          "boostId": 36514.0,
+          "statId": 1.0,
+          "expression": "120"
+        },
+        {
+          "boostId": 36515.0,
+          "statId": 24.0,
+          "expression": "120"
+        },
+        {
+          "boostId": 36516.0,
+          "statId": 12.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36517.0,
+          "statId": 13.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36518.0,
+          "statId": 14.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36519.0,
+          "statId": 15.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36520.0,
+          "statId": 22.0,
+          "expression": "48"
+        }
+      ]
+    },
+    {
+      "key": "godsforged_warblade",
+      "name": "Godsforged Warblade",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupBattleSword",
+      "appearanceInventory": "64kInvBattleSword",
+      "price": 0.0,
+      "weight": 6.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 1000.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "2d55+95",
+      "atkDelay": "1200",
+      "boosts": [
+        {
+          "boostId": 36500.0,
+          "statId": 3.0,
+          "expression": "100"
+        },
+        {
+          "boostId": 36501.0,
+          "statId": 8.0,
+          "expression": "240"
+        },
+        {
+          "boostId": 36502.0,
+          "statId": 12.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36503.0,
+          "statId": 13.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36504.0,
+          "statId": 14.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36505.0,
+          "statId": 15.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 36506.0,
+          "statId": 22.0,
+          "expression": "30"
+        }
+      ]
+    },
+    {
+      "key": "godsforged_zephyr_wand",
+      "name": "Godsforged Zephyr Wand",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "price": 0.0,
+      "weight": 4.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 625.0,
+        "wisdom": 625.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d42+62",
+      "atkDelay": "1250",
+      "boosts": [
+        {
+          "boostId": 36521.0,
+          "statId": 1.0,
+          "expression": "50"
+        },
+        {
+          "boostId": 36522.0,
+          "statId": 4.0,
+          "expression": "50"
+        },
+        {
+          "boostId": 36523.0,
+          "statId": 16.0,
+          "expression": "120"
+        },
+        {
+          "boostId": 36524.0,
+          "statId": 12.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36525.0,
+          "statId": 13.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36526.0,
+          "statId": 14.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36527.0,
+          "statId": 15.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36528.0,
+          "statId": 22.0,
+          "expression": "48"
+        }
+      ]
+    },
+    {
       "key": "heartfire_of_the_greater_drake",
       "name": "Heartfire of the Greater Drake",
       "bodyPart": "NECK",
@@ -20949,6 +21668,78 @@ window.T4C_DATA = {
           "expression": "36"
         }
       ]
+    },
+    {
+      "key": "item.tempered_godcore",
+      "name": "Tempered Godcore",
+      "price": 0,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": []
+    },
+    {
+      "key": "item.bound_godsigil",
+      "name": "Bound Godsigil",
+      "price": 0,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": []
+    },
+    {
+      "key": "item.wyrmforged_ember",
+      "name": "Wyrmforged Ember",
+      "price": 0,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": []
+    },
+    {
+      "key": "item.veiled_aether_shard",
+      "name": "Veiled Aether Shard",
+      "price": 0,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": []
     }
   ],
   "shops": {
@@ -21686,6 +22477,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_armor",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_armor",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -21698,6 +22495,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_boots",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_boots",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -21710,6 +22513,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_gauntlets",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_gauntlets",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -21722,6 +22531,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_helmet",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_helmet",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -21734,6 +22549,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_leggings",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_leggings",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.025
@@ -21742,6 +22563,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_leggings",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_protector",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
       "chance": 0.025
     },
     {
@@ -22184,6 +23011,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_armor",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_armor",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22196,6 +23029,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_boots",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_boots",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22208,6 +23047,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_gauntlets",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_gauntlets",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22220,6 +23065,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_helmet",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_helmet",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22232,6 +23083,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_leggings",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_leggings",
       "monster": "Greater Drake",
       "monsterDisplayName": "Grand Drake",
       "chance": 0.012
@@ -22240,6 +23097,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_leggings",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_protector",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
       "chance": 0.012
     },
     {
@@ -22337,6 +23200,30 @@ window.T4C_DATA = {
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
       "chance": 0.008
+    },
+    {
+      "item": "item.veiled_aether_shard",
+      "monster": "The Rootcrown Wyrm",
+      "monsterDisplayName": "The Rootcrown Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.veiled_aether_shard",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.05
+    },
+    {
+      "item": "item.wyrmforged_ember",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.05
+    },
+    {
+      "item": "item.wyrmforged_ember",
+      "monster": "MakrshPtangh2",
+      "monsterDisplayName": "Makrsh P'Tangh",
+      "chance": 0.05
     },
     {
       "item": "marchwardens_crown",

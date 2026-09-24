@@ -15,6 +15,32 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — Every boss drops something (T4C-0034)
+
+### Changed
+- Every boss now has a real chance of dropping something useful even without landing its rarest
+  item. Bastion Warden and the Deep Ones Cave boss used to drop only a single item each - they
+  now also drop potions (and Bastion Warden a full matching gear set, in line with other bosses
+  its size). Several other bosses (Ignarok the Emberfang, Arch Drake, Greater Drake, Mordrenn the
+  Drowned Inquisitor, the Centaur King, the Hollow King, Coastwarden Ithrak, and Makrsh P'Tangh)
+  now also drop healing and mana potions alongside their existing rare loot, so a kill that misses
+  every rare roll still isn't a total loss.
+
+## 2026-09-24 — Godsforged: a new tier of crafted relics (T4C-0033)
+
+### Added
+- A new tier of gear above Legendary: **Godsforged** relics, one for each class - the
+  **Godsforged Warblade** (warrior), **Godsforged Stormbow** (archer), **Godsforged Voidglass
+  Rod** (intelligence mage), **Godsforged Zephyr Wand** (hybrid mage), and the **Godsforged Torc
+  of the First Pact** (wisdom mage).
+- These aren't dropped by any monster - they're crafted. Three survivors of an ancient order, the
+  **Forgewrights of the First Pact**, can now be found within the Avalon Wilds: **Ember-Smith
+  Corvain** tempers a core from Wyrmforged Embers (a rare drop from Makrsh P'Tangh and Ignarok the
+  Emberfang), **Warden Seressa** binds a sigil from Veiled Aether Shards (a rare drop from The
+  Rootcrown Wyrm and Ysolde the Veiled Matriarch), and **Grandmaster Tholvenn** combines both into
+  whichever Godsforged item you name, once you bring him one of each.
+- The reference website's item list now shows a distinct "Godsforged" rarity above Legendary.
+
 ## 2026-09-24 — Passage to Avalon becomes a two-stage quest (T4C-0032)
 
 ### Changed

@@ -39,6 +39,16 @@ public final class ItemBalance {
   /** No item may ever grant this - see the class doc's "never light resistance" rule. */
   public static final int LIGHT_RESIST_STAT_ID = 21;
 
+  /** Bonus-formula multiplier for "Godsforged" tier items (T4C-0033, see DESIGN_GUIDELINES.md
+   * "Godsforged: a tier above Legendary") - a step above Legendary, earned only by completing the
+   * multi-NPC crafting chain in {@code quest/definition/Godsforged*}. Legendary items already sit
+   * at {@link #MAX_SINGLE_REQUIREMENT}, so there's no headroom left to raise P further; instead
+   * every bonus formula below takes an optional tier multiplier, applied on top of its normal P-
+   * based output. Every formula overload without a multiplier argument defaults to 1.0 (ordinary
+   * items and Legendary items alike), so this is purely additive - no existing item's expected
+   * value changes. */
+  public static final double GODSFORGED_TIER_MULTIPLIER = 1.2;
+
   /** The five schools every class resists (all elemental resist stat ids except light). */
   public static final java.util.Set<Integer> RESISTIBLE_ELEMENTS =
       java.util.Set.of(12, 13, 14, 15, 22);
@@ -91,7 +101,16 @@ public final class ItemBalance {
 
   /** The Armor Class an item in {@code slot} with this endurance requirement should carry. */
   public static double expectedArmorClass(BodyPart slot, long endurance, Archetype archetype) {
-    return Math.round(slotAc(slot) * endurance / 100d * archetype.acMultiplier() * 10d) / 10d;
+    return expectedArmorClass(slot, endurance, archetype, 1.0);
+  }
+
+  /** As {@link #expectedArmorClass(BodyPart, long, Archetype)}, with a tier multiplier applied on
+   * top (see {@link #GODSFORGED_TIER_MULTIPLIER}). */
+  public static double expectedArmorClass(
+      BodyPart slot, long endurance, Archetype archetype, double tierMultiplier) {
+    return Math.round(
+            slotAc(slot) * endurance / 100d * archetype.acMultiplier() * tierMultiplier * 10d)
+        / 10d;
   }
 
   /** The item's class, from its requirements (bows are always archer gear). */
@@ -126,23 +145,40 @@ public final class ItemBalance {
   // Single-item (non-set) bonus budget, as a fraction of the primary requirement P.
   /** Main stat: strength/agility P/12, intelligence P/10 (extra), wisdom P/12, hybrid P/24 each. */
   public static int mainStatBonus(Archetype a, double p) {
+    return mainStatBonus(a, p, 1.0);
+  }
+
+  /** As {@link #mainStatBonus(Archetype, double)}, with a tier multiplier applied on top (see
+   * {@link #GODSFORGED_TIER_MULTIPLIER}). */
+  public static int mainStatBonus(Archetype a, double p, double tierMultiplier) {
     return (int)
         Math.round(
-            switch (a) {
-              case INT_MAGE -> p / 10;
-              case HYBRID_MAGE -> p / 24;
-              default -> p / 12;
-            });
+            tierMultiplier
+                * switch (a) {
+                  case INT_MAGE -> p / 10;
+                  case HYBRID_MAGE -> p / 24;
+                  default -> p / 12;
+                });
   }
 
   /** Attack (warrior) or archery (archer): P/5. */
   public static int combatSkillBonus(double p) {
-    return (int) Math.round(p / 5);
+    return combatSkillBonus(p, 1.0);
+  }
+
+  /** As {@link #combatSkillBonus(double)}, with a tier multiplier applied on top. */
+  public static int combatSkillBonus(double p, double tierMultiplier) {
+    return (int) Math.round(tierMultiplier * p / 5);
   }
 
   /** Mage elemental power: P/10. */
   public static int magicPowerBonus(double p) {
-    return (int) Math.round(p / 10);
+    return magicPowerBonus(p, 1.0);
+  }
+
+  /** As {@link #magicPowerBonus(double)}, with a tier multiplier applied on top. */
+  public static int magicPowerBonus(double p, double tierMultiplier) {
+    return (int) Math.round(tierMultiplier * p / 10);
   }
 
   /** Mage resistance to each of the five non-light elements (never light - see
@@ -150,11 +186,21 @@ public final class ItemBalance {
    * instead of concentrated in the item's own one, since a caster takes damage of every type,
    * not just their own. */
   public static int magicResistBonus(double p) {
-    return (int) Math.round(p / 25);
+    return magicResistBonus(p, 1.0);
+  }
+
+  /** As {@link #magicResistBonus(double)}, with a tier multiplier applied on top. */
+  public static int magicResistBonus(double p, double tierMultiplier) {
+    return (int) Math.round(tierMultiplier * p / 25);
   }
 
   /** Warrior/archer resistance to each of the five non-light elements: P/40. */
   public static int physicalResistBonus(double p) {
-    return (int) Math.round(p / 40);
+    return physicalResistBonus(p, 1.0);
+  }
+
+  /** As {@link #physicalResistBonus(double)}, with a tier multiplier applied on top. */
+  public static int physicalResistBonus(double p, double tierMultiplier) {
+    return (int) Math.round(tierMultiplier * p / 40);
   }
 }

@@ -2723,6 +2723,10 @@ public final class ItemDefinitions {
         ItemItemMithrilPlateHelmet.definition(),
         ItemItemMithrilPlateLeggings.definition(),
         ItemItemEmpyreanEarthSceptre.definition(),
-        ItemItemFocusOfTheEarthEmpyrean.definition());
+        ItemItemFocusOfTheEarthEmpyrean.definition(),
+        WyrmforgedEmber.definition(),
+        VeiledAetherShard.definition(),
+        TemperedGodcore.definition(),
+        BoundGodsigil.definition());
   }
 }

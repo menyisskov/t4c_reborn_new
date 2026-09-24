@@ -45,6 +45,9 @@ public final class IgnarokTheEmberfang extends DataMonster {
         385,
         java.util.List.of(
             new MonsterDef.LootDrop("ignaroks_emberfang_claw", 0.008f),
+            new MonsterDef.LootDrop("item.wyrmforged_ember", 0.05f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
+            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0021: Ignarok as the fire-flavor source for the Ancient Celestial/Empyrean
             // armor sets (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_fire_armor", 0.025f),

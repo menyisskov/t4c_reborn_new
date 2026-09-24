@@ -28,8 +28,13 @@ public final class QuestDef {
   private final String requiredItemKey;
   private final int requiredItemQty;
   private final String unlockZoneId;
+  // T4C-0033: an optional item granted on completion, in addition to rewardGold/rewardXp - see
+  // QuestService.complete(). Used by the Godsforged crafting chain (quest/definition/Godsforged*)
+  // so a crafting NPC's turn-in quest can hand back the crafted item itself, not just currency.
+  // null preserves every quest shape predating this pass (gold/XP only).
+  private final String rewardItemKey;
 
-  /** Original 14-arg shape (no activationFlag, no item/unlock objective). */
+  /** Original 14-arg shape (no activationFlag, no item/unlock objective, no item reward). */
   public QuestDef(
       String id,
       String title,
@@ -63,11 +68,12 @@ public final class QuestDef {
         null,
         null,
         0,
+        null,
         null);
   }
 
-  /** Pre-T4C-0019 15-arg shape (activationFlag, no item/unlock objective) - every quest added
-   * before this pass uses this constructor unchanged. */
+  /** Pre-T4C-0019 15-arg shape (activationFlag, no item/unlock objective, no item reward) - every
+   * quest added before T4C-0019 uses this constructor unchanged. */
   public QuestDef(
       String id,
       String title,
@@ -102,6 +108,50 @@ public final class QuestDef {
         activationFlag,
         null,
         0,
+        null,
+        null);
+  }
+
+  /** Pre-T4C-0033 18-arg shape (item/unlock objective, no item reward) - every quest added by
+   * T4C-0019 through T4C-0032 uses this constructor unchanged. */
+  public QuestDef(
+      String id,
+      String title,
+      String giverNpc,
+      String targetMonster,
+      int requiredKills,
+      int targetWorldZ,
+      int areaCenterX,
+      int areaCenterY,
+      int areaRadiusTiles,
+      int rewardGold,
+      int rewardXp,
+      String offerText,
+      String completionText,
+      String completedText,
+      String activationFlag,
+      String requiredItemKey,
+      int requiredItemQty,
+      String unlockZoneId) {
+    this(
+        id,
+        title,
+        giverNpc,
+        targetMonster,
+        requiredKills,
+        targetWorldZ,
+        areaCenterX,
+        areaCenterY,
+        areaRadiusTiles,
+        rewardGold,
+        rewardXp,
+        offerText,
+        completionText,
+        completedText,
+        activationFlag,
+        requiredItemKey,
+        requiredItemQty,
+        unlockZoneId,
         null);
   }
 }

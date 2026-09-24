@@ -154,6 +154,15 @@ public final class QuestService {
     if (statusFor(player, definition) == STATUS_COMPLETED) {
       return I18n.resolve(definition.getCompletedText());
     }
+    String rewardItemKey = definition.getRewardItemKey();
+    boolean grantsItem = rewardItemKey != null && !rewardItemKey.isBlank();
+    // Checked *before* anything below is touched: consuming required items and marking the quest
+    // COMPLETED are irreversible (no re-turn-in), so if the item reward couldn't actually be
+    // granted (full on carry weight, or already owns this unique), the whole completion must be
+    // refused instead of silently dropping the reward the player just paid rare materials for.
+    if (grantsItem && !InventoryService.canAdd(player, rewardItemKey)) {
+      return I18n.message("message.quest_reward_item_blocked", itemDisplayName(rewardItemKey));
+    }
     consumeRequiredItem(player, definition);
     player.setQuestFlag(statusFlag(definition), STATUS_COMPLETED);
     player.setQuestFlag(killsFlag(definition), definition.getRequiredKills());
@@ -163,10 +172,56 @@ public final class QuestService {
     if (zoneId != null && !zoneId.isBlank()) {
       player.setQuestFlag(zoneUnlockFlag(zoneId), 1);
     }
+    if (grantsItem) {
+      InventoryService.Result granted = InventoryService.add(player, rewardItemKey);
+      if (!granted.success()) {
+        // canAdd() just confirmed this above; only reachable via a state change made by the
+        // consume/reward steps in between (none currently touch weight/uniqueness), so this is
+        // defensive, not an expected path.
+        log.warn(
+            "Quest '{}' reward item '{}' could not be granted after passing canAdd() ({})",
+            definition.getId(),
+            rewardItemKey,
+            granted.failure());
+      }
+    }
     persist.run();
     systemMessage.accept(
         I18n.message("message.quest_reward", definition.getRewardGold(), definition.getRewardXp()));
     return I18n.resolve(definition.getCompletionText());
+  }
+
+  /** Lets an NpcBehavior that has already verified/consumed an EXTRA required item the standard
+   * single-item {@code QuestDef} shape can't express (e.g. a second component needed alongside
+   * this quest's own {@code requiredItemKey}) grant this quest's completion directly, without
+   * going through the normal STATUS_ACTIVE accept-then-return-later flow. Still honors this
+   * quest's own {@code requiredKills}/{@code requiredItemKey} objective (if any) - this is a way
+   * to ADD an extra check on top of a quest, never to bypass the quest's own native one. Used by
+   * the Godsforged crafting chain's final "combine two components" turn-ins (see
+   * {@code npc/GrandmasterTholvenn.java}), where a single QuestDef can only natively track one
+   * required item but the forge needs two. */
+  public String completeCraftingQuest(String questId, String npcName, Player player) {
+    QuestDef definition = findById(questId);
+    if (definition == null || player == null) {
+      log.warn("Unknown quest '{}' referenced by NPC '{}'", questId, npcName);
+      return null;
+    }
+    if (!same(definition.getGiverNpc(), npcName)) {
+      log.warn(
+          "NPC '{}' attempted to complete quest '{}' owned by '{}'",
+          npcName,
+          definition.getId(),
+          definition.getGiverNpc());
+      return null;
+    }
+    if (statusFor(player, definition) == STATUS_COMPLETED) {
+      return I18n.resolve(definition.getCompletedText());
+    }
+    if (kills(player, definition) < definition.getRequiredKills()
+        || !hasRequiredItem(player, definition)) {
+      return null;
+    }
+    return complete(definition, player);
   }
 
   /** True unless the quest also requires turning in {@code requiredItemQty} copies of
