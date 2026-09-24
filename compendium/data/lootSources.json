@@ -978,6 +978,24 @@
     "chance": 0.02
   },
   {
+    "item": "rootcrown_wyrms_ageless_mantle",
+    "monster": "The Rootcrown Wyrm",
+    "monsterDisplayName": "The Rootcrown Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "rootcrown_wyrms_timeless_circlet",
+    "monster": "The Rootcrown Wyrm",
+    "monsterDisplayName": "The Rootcrown Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "rootcrown_wyrms_verdant_sceptre",
+    "monster": "The Rootcrown Wyrm",
+    "monsterDisplayName": "The Rootcrown Wyrm",
+    "chance": 0.01
+  },
+  {
     "item": "tideclaw_band",
     "monster": "Tideclaw Crab",
     "monsterDisplayName": "Tideclaw Crab",

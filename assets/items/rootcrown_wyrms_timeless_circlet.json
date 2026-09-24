@@ -1,0 +1,44 @@
+{
+  "key": "rootcrown_wyrms_timeless_circlet",
+  "name": "Rootcrown Wyrm's Timeless Circlet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 53.6,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 950,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36412,
+      "statId": 4,
+      "expression": "79"
+    },
+    {
+      "boostId": 36413,
+      "statId": 19,
+      "expression": "95"
+    },
+    {
+      "boostId": 36414,
+      "statId": 15,
+      "expression": "63"
+    }
+  ]
+}

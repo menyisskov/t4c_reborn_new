@@ -15,6 +15,17 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — The Rootcrown Wyrm, first of the Elder Wyrms (T4C-0029)
+
+### Added
+- A new boss, **The Rootcrown Wyrm**, now lairs alongside Arch Drake in Drake's Lair. It's the
+  first of the **Elder Wyrms** — ancient dragons said to predate Ignarok, Mordrenn, and the rest
+  of the known Drake line, each one tied to a different calling instead of a different element.
+  The Rootcrown Wyrm is the wisdom-mage of the line, wreathed in root and stone.
+- Defeating it can drop three new legendary items for wisdom-focused spellcasters: the
+  **Verdant Sceptre**, an **Ageless Mantle**, and a **Timeless Circlet** — all themed around
+  earth magic and unlike anything else currently in the game.
+
 ## 2026-09-24 — Endgame legendary weapons, richer boss loot, and a flatter items page (T4C-0028)
 
 ### Added

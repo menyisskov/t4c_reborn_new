@@ -8556,6 +8556,140 @@
     ]
   },
   {
+    "key": "rootcrown_wyrms_ageless_mantle",
+    "name": "Rootcrown Wyrm's Ageless Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal7",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal7",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 54.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 950.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36409.0,
+        "statId": 4.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36410.0,
+        "statId": 19.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36411.0,
+        "statId": 15.0,
+        "expression": "63"
+      }
+    ]
+  },
+  {
+    "key": "rootcrown_wyrms_timeless_circlet",
+    "name": "Rootcrown Wyrm's Timeless Circlet",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 53.6,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 950.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36412.0,
+        "statId": 4.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36413.0,
+        "statId": 19.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36414.0,
+        "statId": 15.0,
+        "expression": "63"
+      }
+    ]
+  },
+  {
+    "key": "rootcrown_wyrms_verdant_sceptre",
+    "name": "Rootcrown Wyrm's Verdant Sceptre",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupWoodenStaff",
+    "appearanceInventory": "64kInvWoodenStaff",
+    "price": 0.0,
+    "weight": 4.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 950.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d40+60",
+    "atkDelay": "1300",
+    "boosts": [
+      {
+        "boostId": 36406.0,
+        "statId": 4.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36407.0,
+        "statId": 19.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36408.0,
+        "statId": 15.0,
+        "expression": "63"
+      }
+    ]
+  },
+  {
     "key": "shadowmancers_mantle",
     "name": "Shadowmancer's Mantle",
     "bodyPart": "BACK",

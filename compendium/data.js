@@ -2444,6 +2444,79 @@ window.T4C_DATA = {
       ]
     },
     {
+      "name": "The Rootcrown Wyrm",
+      "displayName": "The Rootcrown Wyrm",
+      "origin": "new",
+      "level": 700,
+      "health": 95000,
+      "mana": 0,
+      "xpPerHit": 12,
+      "xpOnDeath": 125000000,
+      "hitDamageMin": 900,
+      "hitDamageMax": 1900,
+      "respawnTimeMs": 30000,
+      "goldMin": 1350,
+      "goldMax": 3400,
+      "dodge": 2100,
+      "acMin": 0,
+      "acMax": 700,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 700,
+        "end": 800,
+        "agi": 250,
+        "intel": 200,
+        "will": 0,
+        "wis": 950,
+        "luck": 0
+      },
+      "resists": {
+        "air": 100,
+        "earth": 170,
+        "water": 100,
+        "fire": 90,
+        "dark": 60,
+        "light": 150
+      },
+      "loot": [
+        {
+          "item": "rootcrown_wyrms_verdant_sceptre",
+          "chance": 0.01
+        },
+        {
+          "item": "rootcrown_wyrms_ageless_mantle",
+          "chance": 0.015
+        },
+        {
+          "item": "rootcrown_wyrms_timeless_circlet",
+          "chance": 0.015
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d1000+900",
+          "combatAttack": 1900,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
       "name": "ArenaMobXP725",
       "displayName": "ArenaMobXP725",
       "origin": "new",
@@ -20385,6 +20458,140 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "rootcrown_wyrms_ageless_mantle",
+      "name": "Rootcrown Wyrm's Ageless Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal7",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal7",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 54.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 950.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36409.0,
+          "statId": 4.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36410.0,
+          "statId": 19.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36411.0,
+          "statId": 15.0,
+          "expression": "63"
+        }
+      ]
+    },
+    {
+      "key": "rootcrown_wyrms_timeless_circlet",
+      "name": "Rootcrown Wyrm's Timeless Circlet",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 53.6,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 950.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36412.0,
+          "statId": 4.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36413.0,
+          "statId": 19.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36414.0,
+          "statId": 15.0,
+          "expression": "63"
+        }
+      ]
+    },
+    {
+      "key": "rootcrown_wyrms_verdant_sceptre",
+      "name": "Rootcrown Wyrm's Verdant Sceptre",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "price": 0.0,
+      "weight": 4.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 950.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d40+60",
+      "atkDelay": "1300",
+      "boosts": [
+        {
+          "boostId": 36406.0,
+          "statId": 4.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36407.0,
+          "statId": 19.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36408.0,
+          "statId": 15.0,
+          "expression": "63"
+        }
+      ]
+    },
+    {
       "key": "shadowmancers_mantle",
       "name": "Shadowmancer's Mantle",
       "bodyPart": "BACK",
@@ -22332,6 +22539,24 @@ window.T4C_DATA = {
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.02
+    },
+    {
+      "item": "rootcrown_wyrms_ageless_mantle",
+      "monster": "The Rootcrown Wyrm",
+      "monsterDisplayName": "The Rootcrown Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "rootcrown_wyrms_timeless_circlet",
+      "monster": "The Rootcrown Wyrm",
+      "monsterDisplayName": "The Rootcrown Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "rootcrown_wyrms_verdant_sceptre",
+      "monster": "The Rootcrown Wyrm",
+      "monsterDisplayName": "The Rootcrown Wyrm",
+      "chance": 0.01
     },
     {
       "item": "tideclaw_band",
@@ -25054,14 +25279,18 @@ window.T4C_DATA = {
         "y": 2780.0,
         "radius": 180.0
       },
-      "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one.",
+      "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one. The Rootcrown Wyrm (T4C-0029), an Elder Wyrm predating the named Drake line, was added to the same lair.",
       "monsters": [
         "Kraanian Dragonguard",
-        "Arch Drake"
+        "Arch Drake",
+        "The Rootcrown Wyrm"
       ],
       "items": [
         "dragonguards_scale_bracer",
-        "archdrakes_molten_heart"
+        "archdrakes_molten_heart",
+        "rootcrown_wyrms_verdant_sceptre",
+        "rootcrown_wyrms_ageless_mantle",
+        "rootcrown_wyrms_timeless_circlet"
       ],
       "spells": [],
       "quests": [
@@ -26300,6 +26529,13 @@ window.T4C_DATA = {
           "displayName": "Patient fou",
           "x": 2735.0,
           "y": 2596.0,
+          "tier": "boss"
+        },
+        {
+          "name": "The Rootcrown Wyrm",
+          "displayName": "The Rootcrown Wyrm",
+          "x": 2950.0,
+          "y": 2650.0,
           "tier": "boss"
         }
       ],

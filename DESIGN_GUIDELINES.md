@@ -191,6 +191,30 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   Keep the power/resistance amounts in line with the budget anyway (as if they were checked) for
   internal consistency with the rest of the item's numbers.
 
+### The Elder Wyrms (a new legendary content line)
+- The owner wants legendary/endgame content to keep expanding beyond one-off drops, and
+  specifically asked for it to draw on a "pantheon" structure (as the community `t4cfantasy.com`
+  Addon reference does — different named figures gating gear for different classes/levels) —
+  but reflavored into this game's own fiction, not real-world deity names.
+- **The Elder Wyrms**: proto-drakes that predate the named Drake line (Ignarok, Mordrenn, Greater
+  Drake, Arch Drake, Lesser Drake). Where the named Drakes each embody one *element*, the Elder
+  Wyrms each embody one *class archetype* instead — a deliberately different axis from the
+  Ancient Celestial/Empyrean sets (which already cover all 8 element/class flavors) and from the
+  named Drakes (which already cover the 6 elements). This keeps the two mythologies distinct
+  instead of overlapping.
+- **Pilot shipped (T4C-0029): The Rootcrown Wyrm**, the wisdom-mage exemplar — a new boss in
+  Drake's Lair dropping its own unique weapon (a staff/sceptre) and 1-2 unique earth/light-themed
+  armor pieces, all balanced per the rules above and *not* reusing the existing
+  `ancient_celestial_earth_*`/`empyrean_earth_*`/`*_light_*` generated sets — the Elder Wyrms need
+  their own distinct item identity, separate from the armor-set generator's output.
+- **Not yet built**: the other four class archetypes (warrior, archer, intelligence mage, hybrid
+  air mage), each as its own Elder Wyrm with its own weapon (+ 1-2 armor pieces), following the
+  Rootcrown Wyrm's pattern. This is an accepted open gap, not a decision to stop at one — expand
+  it the same way if asked for "more Elder Wyrms" or "finish the pantheon."
+- Naming convention: `"<Elder Wyrm name>'s <Adjective> <Item Type>"`, keys lowercase-underscore
+  with no apostrophes (e.g. `rootcrown_wyrms_verdant_sceptre`), matching the Makrsh P'Tangh
+  legendary-weapon pair from the same content initiative.
+
 ### Boss loot tables
 - A boss should drop **multiple different items**, not one signature item plus a couple of
   potions. The established pattern (Ignarok, Mordrenn, Arch Drake, Greater Drake, Centaur King,
