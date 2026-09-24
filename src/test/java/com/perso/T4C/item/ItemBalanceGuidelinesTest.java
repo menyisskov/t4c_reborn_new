@@ -181,10 +181,12 @@ class ItemBalanceGuidelinesTest {
     }
   }
 
-  /** No item, of any class, ever grants light resistance - positive or negative. */
+  /** No item, of any class, ever grants light resistance - positive or negative. Scans the
+   * *whole* registry (legacy Java catalog included via {@link ItemRegistry#load()}), not just
+   * the JSON-authored {@link #items}, so a pre-existing legacy item can't quietly keep it. */
   @Test
   void neverGrantsLightResist() {
-    for (ItemDefinition d : items) {
+    for (ItemDefinition d : ItemRegistry.load()) {
       boolean hasLightResist =
           d.getBoosts().stream().anyMatch(boost -> boost.getStatId() == LIGHT_RESIST);
       assertTrue(!hasLightResist, d.getKey() + " grants light resist, which is never allowed");
