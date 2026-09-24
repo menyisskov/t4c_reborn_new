@@ -289,9 +289,9 @@
           "avalon",
           "passage"
         ],
-        "response": "Coastwarden Ithrak runs the reavers squatting on the shore south of here, and he's the only one left who knows the safe line through the shoal to Avalon. Clear his warband, take his chart off his corpse, and bring it to me - I'll see you're recognized as someone Avalon can trust.",
+        "response": "Coastwarden Ithrak runs the reavers squatting on the shore south of here, and he's the only one left who knows the safe line through the shoal to Avalon. Prove you can handle his scouts first, and then we'll talk about taking his chart off his corpse - I'll see you're recognized as someone Avalon can trust.",
         "actions": [
-          "GIVE_QUEST:passage_to_avalon"
+          "GIVE_QUEST:tideworn_shore_scouts"
         ]
       },
       {

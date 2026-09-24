@@ -169,7 +169,8 @@ public final class CompendiumExporter {
           "passage_to_avalon",
           "silversky_borderwatch",
           "windhowl_borderwatch",
-          "passage_to_kraanhold");
+          "passage_to_kraanhold",
+          "tideworn_shore_scouts");
 
   private static final Set<String> SHOP_EXCLUDED_NPC_IDS =
       Set.of("Boreas", "Yolak", "TtayhMark", "Kiadus", "RhodarHeatforge", "GulfridSteelhammer");
