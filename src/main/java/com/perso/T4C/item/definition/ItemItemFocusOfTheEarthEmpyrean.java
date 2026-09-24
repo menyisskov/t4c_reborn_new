@@ -53,7 +53,6 @@ public final class ItemItemFocusOfTheEarthEmpyrean {
             new ItemDefinition.ItemBoost(90115, 13, "50", 0, 0),
             new ItemDefinition.ItemBoost(90116, 14, "50", 0, 0),
             new ItemDefinition.ItemBoost(90117, 15, "50", 0, 0),
-            new ItemDefinition.ItemBoost(90118, 21, "50", 0, 0),
             new ItemDefinition.ItemBoost(90119, 22, "50", 0, 0),
             new ItemDefinition.ItemBoost(90120, 20, "50", 0, 0)),
         List.of(),

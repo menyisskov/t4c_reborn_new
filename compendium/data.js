@@ -11939,8 +11939,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36303.0,
-          "statId": 21.0,
-          "expression": "8"
+          "statId": 12.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 36420.0,
+          "statId": 13.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 36421.0,
+          "statId": 14.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 36422.0,
+          "statId": 15.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 36423.0,
+          "statId": 22.0,
+          "expression": "5"
         }
       ]
     },
@@ -11999,11 +12019,6 @@ window.T4C_DATA = {
         {
           "boostId": 36350.0,
           "statId": 15.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 36351.0,
-          "statId": 21.0,
           "expression": "6"
         },
         {
@@ -12076,11 +12091,6 @@ window.T4C_DATA = {
           "expression": "6"
         },
         {
-          "boostId": 36358.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
           "boostId": 36359.0,
           "statId": 22.0,
           "expression": "6"
@@ -12147,11 +12157,6 @@ window.T4C_DATA = {
         {
           "boostId": 36364.0,
           "statId": 15.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 36365.0,
-          "statId": 21.0,
           "expression": "6"
         },
         {
@@ -12305,11 +12310,6 @@ window.T4C_DATA = {
           "expression": "15"
         },
         {
-          "boostId": 36306.0,
-          "statId": 21.0,
-          "expression": "15"
-        },
-        {
           "boostId": 36307.0,
           "statId": 22.0,
           "expression": "15"
@@ -12349,47 +12349,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20144.0,
+          "boostId": 20126.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20145.0,
+          "boostId": 20127.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20146.0,
+          "boostId": 20128.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20147.0,
+          "boostId": 20129.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20148.0,
-          "statId": 21.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20149.0,
+          "boostId": 20130.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20150.0,
+          "boostId": 20131.0,
           "statId": 16.0,
           "expression": "41"
         },
         {
-          "boostId": 20151.0,
+          "boostId": 20132.0,
           "statId": 1.0,
           "expression": "16"
         },
         {
-          "boostId": 20152.0,
+          "boostId": 20133.0,
           "statId": 4.0,
           "expression": "16"
         }
@@ -12423,47 +12418,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20153.0,
+          "boostId": 20134.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20154.0,
+          "boostId": 20135.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20155.0,
+          "boostId": 20136.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20156.0,
+          "boostId": 20137.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20157.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20158.0,
+          "boostId": 20138.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20159.0,
+          "boostId": 20139.0,
           "statId": 16.0,
           "expression": "12"
         },
         {
-          "boostId": 20160.0,
+          "boostId": 20140.0,
           "statId": 1.0,
           "expression": "5"
         },
         {
-          "boostId": 20161.0,
+          "boostId": 20141.0,
           "statId": 4.0,
           "expression": "5"
         }
@@ -12499,47 +12489,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20162.0,
+          "boostId": 20142.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20163.0,
+          "boostId": 20143.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20164.0,
+          "boostId": 20144.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20165.0,
+          "boostId": 20145.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20166.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20167.0,
+          "boostId": 20146.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20168.0,
+          "boostId": 20147.0,
           "statId": 16.0,
           "expression": "12"
         },
         {
-          "boostId": 20169.0,
+          "boostId": 20148.0,
           "statId": 1.0,
           "expression": "5"
         },
         {
-          "boostId": 20170.0,
+          "boostId": 20149.0,
           "statId": 4.0,
           "expression": "5"
         }
@@ -12573,47 +12558,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20171.0,
+          "boostId": 20150.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20172.0,
+          "boostId": 20151.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20173.0,
+          "boostId": 20152.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20174.0,
+          "boostId": 20153.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20175.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20176.0,
+          "boostId": 20154.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20177.0,
+          "boostId": 20155.0,
           "statId": 16.0,
           "expression": "12"
         },
         {
-          "boostId": 20178.0,
+          "boostId": 20156.0,
           "statId": 1.0,
           "expression": "5"
         },
         {
-          "boostId": 20179.0,
+          "boostId": 20157.0,
           "statId": 4.0,
           "expression": "5"
         }
@@ -12647,47 +12627,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20180.0,
+          "boostId": 20158.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20181.0,
+          "boostId": 20159.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20182.0,
+          "boostId": 20160.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20183.0,
+          "boostId": 20161.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20184.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20185.0,
+          "boostId": 20162.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20186.0,
+          "boostId": 20163.0,
           "statId": 16.0,
           "expression": "14"
         },
         {
-          "boostId": 20187.0,
+          "boostId": 20164.0,
           "statId": 1.0,
           "expression": "5"
         },
         {
-          "boostId": 20188.0,
+          "boostId": 20165.0,
           "statId": 4.0,
           "expression": "5"
         }
@@ -12720,47 +12695,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20189.0,
+          "boostId": 20166.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20190.0,
+          "boostId": 20167.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20191.0,
+          "boostId": 20168.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20192.0,
+          "boostId": 20169.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20193.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 20194.0,
+          "boostId": 20170.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20195.0,
+          "boostId": 20171.0,
           "statId": 16.0,
           "expression": "9"
         },
         {
-          "boostId": 20196.0,
+          "boostId": 20172.0,
           "statId": 1.0,
           "expression": "3"
         },
         {
-          "boostId": 20197.0,
+          "boostId": 20173.0,
           "statId": 4.0,
           "expression": "3"
         }
@@ -12794,47 +12764,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20348.0,
+          "boostId": 20306.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20349.0,
+          "boostId": 20307.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20350.0,
+          "boostId": 20308.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20351.0,
+          "boostId": 20309.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20352.0,
-          "statId": 21.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20353.0,
+          "boostId": 20310.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20354.0,
+          "boostId": 20311.0,
           "statId": 6.0,
           "expression": "35"
         },
         {
-          "boostId": 20355.0,
+          "boostId": 20312.0,
           "statId": 10035.0,
           "expression": "86"
         },
         {
-          "boostId": 20356.0,
+          "boostId": 20313.0,
           "statId": 2.0,
           "expression": "25"
         }
@@ -12868,47 +12833,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20357.0,
+          "boostId": 20314.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20358.0,
+          "boostId": 20315.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20359.0,
+          "boostId": 20316.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20360.0,
+          "boostId": 20317.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20361.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20362.0,
+          "boostId": 20318.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20363.0,
+          "boostId": 20319.0,
           "statId": 6.0,
           "expression": "11"
         },
         {
-          "boostId": 20364.0,
+          "boostId": 20320.0,
           "statId": 10035.0,
           "expression": "26"
         },
         {
-          "boostId": 20365.0,
+          "boostId": 20321.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -12944,47 +12904,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20366.0,
+          "boostId": 20322.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20367.0,
+          "boostId": 20323.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20368.0,
+          "boostId": 20324.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20369.0,
+          "boostId": 20325.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20370.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20371.0,
+          "boostId": 20326.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20372.0,
+          "boostId": 20327.0,
           "statId": 6.0,
           "expression": "11"
         },
         {
-          "boostId": 20373.0,
+          "boostId": 20328.0,
           "statId": 10035.0,
           "expression": "26"
         },
         {
-          "boostId": 20374.0,
+          "boostId": 20329.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -13018,47 +12973,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20375.0,
+          "boostId": 20330.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20376.0,
+          "boostId": 20331.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20377.0,
+          "boostId": 20332.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20378.0,
+          "boostId": 20333.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20379.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20380.0,
+          "boostId": 20334.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20381.0,
+          "boostId": 20335.0,
           "statId": 6.0,
           "expression": "10"
         },
         {
-          "boostId": 20382.0,
+          "boostId": 20336.0,
           "statId": 10035.0,
           "expression": "25"
         },
         {
-          "boostId": 20383.0,
+          "boostId": 20337.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -13092,47 +13042,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20384.0,
+          "boostId": 20338.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20385.0,
+          "boostId": 20339.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20386.0,
+          "boostId": 20340.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20387.0,
+          "boostId": 20341.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20388.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20389.0,
+          "boostId": 20342.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20390.0,
+          "boostId": 20343.0,
           "statId": 6.0,
           "expression": "12"
         },
         {
-          "boostId": 20391.0,
+          "boostId": 20344.0,
           "statId": 10035.0,
           "expression": "28"
         },
         {
-          "boostId": 20392.0,
+          "boostId": 20345.0,
           "statId": 2.0,
           "expression": "8"
         }
@@ -13165,47 +13110,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20393.0,
+          "boostId": 20346.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20394.0,
+          "boostId": 20347.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20395.0,
+          "boostId": 20348.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20396.0,
+          "boostId": 20349.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20397.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 20398.0,
+          "boostId": 20350.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20399.0,
+          "boostId": 20351.0,
           "statId": 6.0,
           "expression": "8"
         },
         {
-          "boostId": 20400.0,
+          "boostId": 20352.0,
           "statId": 10035.0,
           "expression": "19"
         },
         {
-          "boostId": 20401.0,
+          "boostId": 20353.0,
           "statId": 2.0,
           "expression": "6"
         }
@@ -13239,42 +13179,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20048.0,
+          "boostId": 20042.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20049.0,
+          "boostId": 20043.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20050.0,
+          "boostId": 20044.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20051.0,
+          "boostId": 20045.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20052.0,
-          "statId": 21.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20053.0,
+          "boostId": 20046.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20054.0,
+          "boostId": 20047.0,
           "statId": 24.0,
           "expression": "41"
         },
         {
-          "boostId": 20055.0,
+          "boostId": 20048.0,
           "statId": 1.0,
           "expression": "37"
         }
@@ -13308,42 +13243,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20056.0,
+          "boostId": 20049.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20057.0,
+          "boostId": 20050.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20058.0,
+          "boostId": 20051.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20059.0,
+          "boostId": 20052.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20060.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20061.0,
+          "boostId": 20053.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20062.0,
+          "boostId": 20054.0,
           "statId": 24.0,
           "expression": "12"
         },
         {
-          "boostId": 20063.0,
+          "boostId": 20055.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -13379,42 +13309,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20064.0,
+          "boostId": 20056.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20065.0,
+          "boostId": 20057.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20066.0,
+          "boostId": 20058.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20067.0,
+          "boostId": 20059.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20068.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20069.0,
+          "boostId": 20060.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20070.0,
+          "boostId": 20061.0,
           "statId": 24.0,
           "expression": "12"
         },
         {
-          "boostId": 20071.0,
+          "boostId": 20062.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -13448,42 +13373,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20072.0,
+          "boostId": 20063.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20073.0,
+          "boostId": 20064.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20074.0,
+          "boostId": 20065.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20075.0,
+          "boostId": 20066.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20076.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20077.0,
+          "boostId": 20067.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20078.0,
+          "boostId": 20068.0,
           "statId": 24.0,
           "expression": "12"
         },
         {
-          "boostId": 20079.0,
+          "boostId": 20069.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -13517,42 +13437,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20080.0,
+          "boostId": 20070.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20081.0,
+          "boostId": 20071.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20082.0,
+          "boostId": 20072.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20083.0,
+          "boostId": 20073.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20084.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20085.0,
+          "boostId": 20074.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20086.0,
+          "boostId": 20075.0,
           "statId": 24.0,
           "expression": "14"
         },
         {
-          "boostId": 20087.0,
+          "boostId": 20076.0,
           "statId": 1.0,
           "expression": "12"
         }
@@ -13585,42 +13500,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20088.0,
+          "boostId": 20077.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20089.0,
+          "boostId": 20078.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20090.0,
+          "boostId": 20079.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20091.0,
+          "boostId": 20080.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20092.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 20093.0,
+          "boostId": 20081.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20094.0,
+          "boostId": 20082.0,
           "statId": 24.0,
           "expression": "9"
         },
         {
-          "boostId": 20095.0,
+          "boostId": 20083.0,
           "statId": 1.0,
           "expression": "8"
         }
@@ -13654,42 +13564,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20198.0,
+          "boostId": 20174.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20199.0,
+          "boostId": 20175.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20200.0,
+          "boostId": 20176.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20201.0,
+          "boostId": 20177.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20202.0,
-          "statId": 21.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20203.0,
+          "boostId": 20178.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20204.0,
+          "boostId": 20179.0,
           "statId": 19.0,
           "expression": "41"
         },
         {
-          "boostId": 20205.0,
+          "boostId": 20180.0,
           "statId": 4.0,
           "expression": "31"
         }
@@ -13723,42 +13628,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20206.0,
+          "boostId": 20181.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20207.0,
+          "boostId": 20182.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20208.0,
+          "boostId": 20183.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20209.0,
+          "boostId": 20184.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20210.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20211.0,
+          "boostId": 20185.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20212.0,
+          "boostId": 20186.0,
           "statId": 19.0,
           "expression": "12"
         },
         {
-          "boostId": 20213.0,
+          "boostId": 20187.0,
           "statId": 4.0,
           "expression": "9"
         }
@@ -13794,42 +13694,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20214.0,
+          "boostId": 20188.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20215.0,
+          "boostId": 20189.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20216.0,
+          "boostId": 20190.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20217.0,
+          "boostId": 20191.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20218.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20219.0,
+          "boostId": 20192.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20220.0,
+          "boostId": 20193.0,
           "statId": 19.0,
           "expression": "12"
         },
         {
-          "boostId": 20221.0,
+          "boostId": 20194.0,
           "statId": 4.0,
           "expression": "9"
         }
@@ -13863,42 +13758,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20222.0,
+          "boostId": 20195.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20223.0,
+          "boostId": 20196.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20224.0,
+          "boostId": 20197.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20225.0,
+          "boostId": 20198.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20226.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20227.0,
+          "boostId": 20199.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20228.0,
+          "boostId": 20200.0,
           "statId": 19.0,
           "expression": "12"
         },
         {
-          "boostId": 20229.0,
+          "boostId": 20201.0,
           "statId": 4.0,
           "expression": "9"
         }
@@ -13932,42 +13822,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20230.0,
+          "boostId": 20202.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20231.0,
+          "boostId": 20203.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20232.0,
+          "boostId": 20204.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20233.0,
+          "boostId": 20205.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20234.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20235.0,
+          "boostId": 20206.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20236.0,
+          "boostId": 20207.0,
           "statId": 19.0,
           "expression": "14"
         },
         {
-          "boostId": 20237.0,
+          "boostId": 20208.0,
           "statId": 4.0,
           "expression": "10"
         }
@@ -14000,42 +13885,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20238.0,
+          "boostId": 20209.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20239.0,
+          "boostId": 20210.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20240.0,
+          "boostId": 20211.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20241.0,
+          "boostId": 20212.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20242.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 20243.0,
+          "boostId": 20213.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20244.0,
+          "boostId": 20214.0,
           "statId": 19.0,
           "expression": "9"
         },
         {
-          "boostId": 20245.0,
+          "boostId": 20215.0,
           "statId": 4.0,
           "expression": "7"
         }
@@ -14090,21 +13970,16 @@ window.T4C_DATA = {
         },
         {
           "boostId": 20004.0,
-          "statId": 21.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20005.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20006.0,
+          "boostId": 20005.0,
           "statId": 17.0,
           "expression": "41"
         },
         {
-          "boostId": 20007.0,
+          "boostId": 20006.0,
           "statId": 1.0,
           "expression": "37"
         }
@@ -14138,42 +14013,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20008.0,
+          "boostId": 20007.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20009.0,
+          "boostId": 20008.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20010.0,
+          "boostId": 20009.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20011.0,
+          "boostId": 20010.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20012.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20013.0,
+          "boostId": 20011.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20014.0,
+          "boostId": 20012.0,
           "statId": 17.0,
           "expression": "12"
         },
         {
-          "boostId": 20015.0,
+          "boostId": 20013.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -14209,42 +14079,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20016.0,
+          "boostId": 20014.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20017.0,
+          "boostId": 20015.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20018.0,
+          "boostId": 20016.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20019.0,
+          "boostId": 20017.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20020.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20021.0,
+          "boostId": 20018.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20022.0,
+          "boostId": 20019.0,
           "statId": 17.0,
           "expression": "12"
         },
         {
-          "boostId": 20023.0,
+          "boostId": 20020.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -14278,42 +14143,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20024.0,
+          "boostId": 20021.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20025.0,
+          "boostId": 20022.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20026.0,
+          "boostId": 20023.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20027.0,
+          "boostId": 20024.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20028.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20029.0,
+          "boostId": 20025.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20030.0,
+          "boostId": 20026.0,
           "statId": 17.0,
           "expression": "12"
         },
         {
-          "boostId": 20031.0,
+          "boostId": 20027.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -14347,42 +14207,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20032.0,
+          "boostId": 20028.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20033.0,
+          "boostId": 20029.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20034.0,
+          "boostId": 20030.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20035.0,
+          "boostId": 20031.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20036.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20037.0,
+          "boostId": 20032.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20038.0,
+          "boostId": 20033.0,
           "statId": 17.0,
           "expression": "14"
         },
         {
-          "boostId": 20039.0,
+          "boostId": 20034.0,
           "statId": 1.0,
           "expression": "12"
         }
@@ -14415,42 +14270,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20040.0,
+          "boostId": 20035.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20041.0,
+          "boostId": 20036.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20042.0,
+          "boostId": 20037.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20043.0,
+          "boostId": 20038.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20044.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 20045.0,
+          "boostId": 20039.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20046.0,
+          "boostId": 20040.0,
           "statId": 17.0,
           "expression": "9"
         },
         {
-          "boostId": 20047.0,
+          "boostId": 20041.0,
           "statId": 1.0,
           "expression": "8"
         }
@@ -14484,42 +14334,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20246.0,
+          "boostId": 20216.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20247.0,
+          "boostId": 20217.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20248.0,
+          "boostId": 20218.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20249.0,
+          "boostId": 20219.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20250.0,
-          "statId": 21.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20251.0,
+          "boostId": 20220.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20252.0,
+          "boostId": 20221.0,
           "statId": 23.0,
           "expression": "41"
         },
         {
-          "boostId": 20253.0,
+          "boostId": 20222.0,
           "statId": 4.0,
           "expression": "31"
         }
@@ -14553,42 +14398,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20254.0,
+          "boostId": 20223.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20255.0,
+          "boostId": 20224.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20256.0,
+          "boostId": 20225.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20257.0,
+          "boostId": 20226.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20258.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20259.0,
+          "boostId": 20227.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20260.0,
+          "boostId": 20228.0,
           "statId": 23.0,
           "expression": "12"
         },
         {
-          "boostId": 20261.0,
+          "boostId": 20229.0,
           "statId": 4.0,
           "expression": "9"
         }
@@ -14624,42 +14464,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20262.0,
+          "boostId": 20230.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20263.0,
+          "boostId": 20231.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20264.0,
+          "boostId": 20232.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20265.0,
+          "boostId": 20233.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20266.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20267.0,
+          "boostId": 20234.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20268.0,
+          "boostId": 20235.0,
           "statId": 23.0,
           "expression": "12"
         },
         {
-          "boostId": 20269.0,
+          "boostId": 20236.0,
           "statId": 4.0,
           "expression": "9"
         }
@@ -14693,42 +14528,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20270.0,
+          "boostId": 20237.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20271.0,
+          "boostId": 20238.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20272.0,
+          "boostId": 20239.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20273.0,
+          "boostId": 20240.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20274.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20275.0,
+          "boostId": 20241.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20276.0,
+          "boostId": 20242.0,
           "statId": 23.0,
           "expression": "12"
         },
         {
-          "boostId": 20277.0,
+          "boostId": 20243.0,
           "statId": 4.0,
           "expression": "9"
         }
@@ -14762,42 +14592,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20278.0,
+          "boostId": 20244.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20279.0,
+          "boostId": 20245.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20280.0,
+          "boostId": 20246.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20281.0,
+          "boostId": 20247.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20282.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20283.0,
+          "boostId": 20248.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20284.0,
+          "boostId": 20249.0,
           "statId": 23.0,
           "expression": "14"
         },
         {
-          "boostId": 20285.0,
+          "boostId": 20250.0,
           "statId": 4.0,
           "expression": "10"
         }
@@ -14830,42 +14655,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20286.0,
+          "boostId": 20251.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20287.0,
+          "boostId": 20252.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20288.0,
+          "boostId": 20253.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20289.0,
+          "boostId": 20254.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20290.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 20291.0,
+          "boostId": 20255.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20292.0,
+          "boostId": 20256.0,
           "statId": 23.0,
           "expression": "9"
         },
         {
-          "boostId": 20293.0,
+          "boostId": 20257.0,
           "statId": 4.0,
           "expression": "7"
         }
@@ -14899,47 +14719,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20294.0,
+          "boostId": 20258.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20295.0,
+          "boostId": 20259.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20296.0,
+          "boostId": 20260.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20297.0,
+          "boostId": 20261.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20298.0,
-          "statId": 21.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20299.0,
+          "boostId": 20262.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20300.0,
+          "boostId": 20263.0,
           "statId": 3.0,
           "expression": "35"
         },
         {
-          "boostId": 20301.0,
+          "boostId": 20264.0,
           "statId": 8.0,
           "expression": "86"
         },
         {
-          "boostId": 20302.0,
+          "boostId": 20265.0,
           "statId": 2.0,
           "expression": "25"
         }
@@ -14973,47 +14788,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20303.0,
+          "boostId": 20266.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20304.0,
+          "boostId": 20267.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20305.0,
+          "boostId": 20268.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20306.0,
+          "boostId": 20269.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20307.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20308.0,
+          "boostId": 20270.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20309.0,
+          "boostId": 20271.0,
           "statId": 3.0,
           "expression": "11"
         },
         {
-          "boostId": 20310.0,
+          "boostId": 20272.0,
           "statId": 8.0,
           "expression": "26"
         },
         {
-          "boostId": 20311.0,
+          "boostId": 20273.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -15049,47 +14859,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20312.0,
+          "boostId": 20274.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20313.0,
+          "boostId": 20275.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20314.0,
+          "boostId": 20276.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20315.0,
+          "boostId": 20277.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20316.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20317.0,
+          "boostId": 20278.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20318.0,
+          "boostId": 20279.0,
           "statId": 3.0,
           "expression": "11"
         },
         {
-          "boostId": 20319.0,
+          "boostId": 20280.0,
           "statId": 8.0,
           "expression": "26"
         },
         {
-          "boostId": 20320.0,
+          "boostId": 20281.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -15123,47 +14928,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20321.0,
+          "boostId": 20282.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20322.0,
+          "boostId": 20283.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20323.0,
+          "boostId": 20284.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20324.0,
+          "boostId": 20285.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20325.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20326.0,
+          "boostId": 20286.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20327.0,
+          "boostId": 20287.0,
           "statId": 3.0,
           "expression": "10"
         },
         {
-          "boostId": 20328.0,
+          "boostId": 20288.0,
           "statId": 8.0,
           "expression": "25"
         },
         {
-          "boostId": 20329.0,
+          "boostId": 20289.0,
           "statId": 2.0,
           "expression": "7"
         }
@@ -15197,47 +14997,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20330.0,
+          "boostId": 20290.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20331.0,
+          "boostId": 20291.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20332.0,
+          "boostId": 20292.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20333.0,
+          "boostId": 20293.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20334.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20335.0,
+          "boostId": 20294.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20336.0,
+          "boostId": 20295.0,
           "statId": 3.0,
           "expression": "12"
         },
         {
-          "boostId": 20337.0,
+          "boostId": 20296.0,
           "statId": 8.0,
           "expression": "28"
         },
         {
-          "boostId": 20338.0,
+          "boostId": 20297.0,
           "statId": 2.0,
           "expression": "8"
         }
@@ -15270,47 +15065,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20339.0,
+          "boostId": 20298.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20340.0,
+          "boostId": 20299.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20341.0,
+          "boostId": 20300.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20342.0,
+          "boostId": 20301.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20343.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 20344.0,
+          "boostId": 20302.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20345.0,
+          "boostId": 20303.0,
           "statId": 3.0,
           "expression": "8"
         },
         {
-          "boostId": 20346.0,
+          "boostId": 20304.0,
           "statId": 8.0,
           "expression": "19"
         },
         {
-          "boostId": 20347.0,
+          "boostId": 20305.0,
           "statId": 2.0,
           "expression": "6"
         }
@@ -15344,42 +15134,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20096.0,
+          "boostId": 20084.0,
           "statId": 12.0,
           "expression": "49"
         },
         {
-          "boostId": 20097.0,
+          "boostId": 20085.0,
           "statId": 13.0,
           "expression": "49"
         },
         {
-          "boostId": 20098.0,
+          "boostId": 20086.0,
           "statId": 14.0,
           "expression": "49"
         },
         {
-          "boostId": 20099.0,
+          "boostId": 20087.0,
           "statId": 15.0,
           "expression": "49"
         },
         {
-          "boostId": 20100.0,
-          "statId": 21.0,
-          "expression": "29"
-        },
-        {
-          "boostId": 20101.0,
+          "boostId": 20088.0,
           "statId": 22.0,
           "expression": "49"
         },
         {
-          "boostId": 20102.0,
+          "boostId": 20089.0,
           "statId": 18.0,
           "expression": "41"
         },
         {
-          "boostId": 20103.0,
+          "boostId": 20090.0,
           "statId": 1.0,
           "expression": "37"
         }
@@ -15413,42 +15198,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20104.0,
+          "boostId": 20091.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20105.0,
+          "boostId": 20092.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20106.0,
+          "boostId": 20093.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20107.0,
+          "boostId": 20094.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20108.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20109.0,
+          "boostId": 20095.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20110.0,
+          "boostId": 20096.0,
           "statId": 18.0,
           "expression": "12"
         },
         {
-          "boostId": 20111.0,
+          "boostId": 20097.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -15484,42 +15264,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20112.0,
+          "boostId": 20098.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20113.0,
+          "boostId": 20099.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20114.0,
+          "boostId": 20100.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20115.0,
+          "boostId": 20101.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20116.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20117.0,
+          "boostId": 20102.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20118.0,
+          "boostId": 20103.0,
           "statId": 18.0,
           "expression": "12"
         },
         {
-          "boostId": 20119.0,
+          "boostId": 20104.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -15553,42 +15328,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20120.0,
+          "boostId": 20105.0,
           "statId": 12.0,
           "expression": "28"
         },
         {
-          "boostId": 20121.0,
+          "boostId": 20106.0,
           "statId": 13.0,
           "expression": "28"
         },
         {
-          "boostId": 20122.0,
+          "boostId": 20107.0,
           "statId": 14.0,
           "expression": "28"
         },
         {
-          "boostId": 20123.0,
+          "boostId": 20108.0,
           "statId": 15.0,
           "expression": "28"
         },
         {
-          "boostId": 20124.0,
-          "statId": 21.0,
-          "expression": "8"
-        },
-        {
-          "boostId": 20125.0,
+          "boostId": 20109.0,
           "statId": 22.0,
           "expression": "28"
         },
         {
-          "boostId": 20126.0,
+          "boostId": 20110.0,
           "statId": 18.0,
           "expression": "12"
         },
         {
-          "boostId": 20127.0,
+          "boostId": 20111.0,
           "statId": 1.0,
           "expression": "11"
         }
@@ -15622,42 +15392,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20128.0,
+          "boostId": 20112.0,
           "statId": 12.0,
           "expression": "29"
         },
         {
-          "boostId": 20129.0,
+          "boostId": 20113.0,
           "statId": 13.0,
           "expression": "29"
         },
         {
-          "boostId": 20130.0,
+          "boostId": 20114.0,
           "statId": 14.0,
           "expression": "29"
         },
         {
-          "boostId": 20131.0,
+          "boostId": 20115.0,
           "statId": 15.0,
           "expression": "29"
         },
         {
-          "boostId": 20132.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20133.0,
+          "boostId": 20116.0,
           "statId": 22.0,
           "expression": "29"
         },
         {
-          "boostId": 20134.0,
+          "boostId": 20117.0,
           "statId": 18.0,
           "expression": "14"
         },
         {
-          "boostId": 20135.0,
+          "boostId": 20118.0,
           "statId": 1.0,
           "expression": "12"
         }
@@ -15690,42 +15455,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20136.0,
+          "boostId": 20119.0,
           "statId": 12.0,
           "expression": "6"
         },
         {
-          "boostId": 20137.0,
+          "boostId": 20120.0,
           "statId": 13.0,
           "expression": "6"
         },
         {
-          "boostId": 20138.0,
+          "boostId": 20121.0,
           "statId": 14.0,
           "expression": "6"
         },
         {
-          "boostId": 20139.0,
+          "boostId": 20122.0,
           "statId": 15.0,
           "expression": "6"
         },
         {
-          "boostId": 20140.0,
-          "statId": 21.0,
-          "expression": "6"
-        },
-        {
-          "boostId": 20141.0,
+          "boostId": 20123.0,
           "statId": 22.0,
           "expression": "6"
         },
         {
-          "boostId": 20142.0,
+          "boostId": 20124.0,
           "statId": 18.0,
           "expression": "9"
         },
         {
-          "boostId": 20143.0,
+          "boostId": 20125.0,
           "statId": 1.0,
           "expression": "8"
         }
@@ -15785,11 +15545,6 @@ window.T4C_DATA = {
         {
           "boostId": 36310.0,
           "statId": 15.0,
-          "expression": "25"
-        },
-        {
-          "boostId": 36311.0,
-          "statId": 21.0,
           "expression": "25"
         },
         {
@@ -15859,11 +15614,6 @@ window.T4C_DATA = {
           "expression": "4"
         },
         {
-          "boostId": 36345.0,
-          "statId": 21.0,
-          "expression": "4"
-        },
-        {
           "boostId": 36346.0,
           "statId": 22.0,
           "expression": "4"
@@ -15926,11 +15676,6 @@ window.T4C_DATA = {
           "boostId": 36315.0,
           "statId": 15.0,
           "expression": "44"
-        },
-        {
-          "boostId": 36316.0,
-          "statId": 21.0,
-          "expression": "22"
         },
         {
           "boostId": 36317.0,
@@ -16170,11 +15915,6 @@ window.T4C_DATA = {
           "expression": "12"
         },
         {
-          "boostId": 36371.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
           "boostId": 36372.0,
           "statId": 22.0,
           "expression": "12"
@@ -16243,11 +15983,6 @@ window.T4C_DATA = {
           "expression": "5"
         },
         {
-          "boostId": 36334.0,
-          "statId": 21.0,
-          "expression": "5"
-        },
-        {
           "boostId": 36335.0,
           "statId": 22.0,
           "expression": "5"
@@ -16293,8 +16028,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 32105.0,
+          "statId": 12.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 36424.0,
+          "statId": 13.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 36425.0,
+          "statId": 14.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 36426.0,
+          "statId": 15.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 36427.0,
           "statId": 22.0,
-          "expression": "27"
+          "expression": "16"
         }
       ]
     },
@@ -16336,8 +16091,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 33008.0,
+          "statId": 12.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 36428.0,
+          "statId": 13.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 36429.0,
           "statId": 14.0,
-          "expression": "25"
+          "expression": "15"
+        },
+        {
+          "boostId": 36430.0,
+          "statId": 15.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 36431.0,
+          "statId": 22.0,
+          "expression": "15"
         }
       ]
     },
@@ -16398,11 +16173,6 @@ window.T4C_DATA = {
           "expression": "12"
         },
         {
-          "boostId": 36339.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
           "boostId": 36340.0,
           "statId": 22.0,
           "expression": "12"
@@ -16437,47 +16207,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20546.0,
+          "boostId": 20480.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20547.0,
+          "boostId": 20481.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20548.0,
+          "boostId": 20482.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20549.0,
+          "boostId": 20483.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20550.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20551.0,
+          "boostId": 20484.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20552.0,
+          "boostId": 20485.0,
           "statId": 16.0,
           "expression": "61"
         },
         {
-          "boostId": 20553.0,
+          "boostId": 20486.0,
           "statId": 1.0,
           "expression": "23"
         },
         {
-          "boostId": 20554.0,
+          "boostId": 20487.0,
           "statId": 4.0,
           "expression": "23"
         }
@@ -16511,47 +16276,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20555.0,
+          "boostId": 20488.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20556.0,
+          "boostId": 20489.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20557.0,
+          "boostId": 20490.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20558.0,
+          "boostId": 20491.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20559.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20560.0,
+          "boostId": 20492.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20561.0,
+          "boostId": 20493.0,
           "statId": 16.0,
           "expression": "18"
         },
         {
-          "boostId": 20562.0,
+          "boostId": 20494.0,
           "statId": 1.0,
           "expression": "7"
         },
         {
-          "boostId": 20563.0,
+          "boostId": 20495.0,
           "statId": 4.0,
           "expression": "7"
         }
@@ -16587,47 +16347,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20564.0,
+          "boostId": 20496.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20565.0,
+          "boostId": 20497.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20566.0,
+          "boostId": 20498.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20567.0,
+          "boostId": 20499.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20568.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20569.0,
+          "boostId": 20500.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20570.0,
+          "boostId": 20501.0,
           "statId": 16.0,
           "expression": "18"
         },
         {
-          "boostId": 20571.0,
+          "boostId": 20502.0,
           "statId": 1.0,
           "expression": "7"
         },
         {
-          "boostId": 20572.0,
+          "boostId": 20503.0,
           "statId": 4.0,
           "expression": "7"
         }
@@ -16661,47 +16416,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20573.0,
+          "boostId": 20504.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20574.0,
+          "boostId": 20505.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20575.0,
+          "boostId": 20506.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20576.0,
+          "boostId": 20507.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20577.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20578.0,
+          "boostId": 20508.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20579.0,
+          "boostId": 20509.0,
           "statId": 16.0,
           "expression": "18"
         },
         {
-          "boostId": 20580.0,
+          "boostId": 20510.0,
           "statId": 1.0,
           "expression": "7"
         },
         {
-          "boostId": 20581.0,
+          "boostId": 20511.0,
           "statId": 4.0,
           "expression": "7"
         }
@@ -16735,47 +16485,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20582.0,
+          "boostId": 20512.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20583.0,
+          "boostId": 20513.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20584.0,
+          "boostId": 20514.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20585.0,
+          "boostId": 20515.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20586.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20587.0,
+          "boostId": 20516.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20588.0,
+          "boostId": 20517.0,
           "statId": 16.0,
           "expression": "21"
         },
         {
-          "boostId": 20589.0,
+          "boostId": 20518.0,
           "statId": 1.0,
           "expression": "8"
         },
         {
-          "boostId": 20590.0,
+          "boostId": 20519.0,
           "statId": 4.0,
           "expression": "8"
         }
@@ -16808,47 +16553,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20591.0,
+          "boostId": 20520.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20592.0,
+          "boostId": 20521.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20593.0,
+          "boostId": 20522.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20594.0,
+          "boostId": 20523.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20595.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20596.0,
+          "boostId": 20524.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20597.0,
+          "boostId": 20525.0,
           "statId": 16.0,
           "expression": "14"
         },
         {
-          "boostId": 20598.0,
+          "boostId": 20526.0,
           "statId": 1.0,
           "expression": "5"
         },
         {
-          "boostId": 20599.0,
+          "boostId": 20527.0,
           "statId": 4.0,
           "expression": "5"
         }
@@ -16882,47 +16622,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20750.0,
+          "boostId": 20660.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20751.0,
+          "boostId": 20661.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20752.0,
+          "boostId": 20662.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20753.0,
+          "boostId": 20663.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20754.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20755.0,
+          "boostId": 20664.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20756.0,
+          "boostId": 20665.0,
           "statId": 6.0,
           "expression": "52"
         },
         {
-          "boostId": 20757.0,
+          "boostId": 20666.0,
           "statId": 10035.0,
           "expression": "123"
         },
         {
-          "boostId": 20758.0,
+          "boostId": 20667.0,
           "statId": 2.0,
           "expression": "37"
         }
@@ -16956,47 +16691,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20759.0,
+          "boostId": 20668.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20760.0,
+          "boostId": 20669.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20761.0,
+          "boostId": 20670.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20762.0,
+          "boostId": 20671.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20763.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20764.0,
+          "boostId": 20672.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20765.0,
+          "boostId": 20673.0,
           "statId": 6.0,
           "expression": "16"
         },
         {
-          "boostId": 20766.0,
+          "boostId": 20674.0,
           "statId": 10035.0,
           "expression": "37"
         },
         {
-          "boostId": 20767.0,
+          "boostId": 20675.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -17032,47 +16762,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20768.0,
+          "boostId": 20676.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20769.0,
+          "boostId": 20677.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20770.0,
+          "boostId": 20678.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20771.0,
+          "boostId": 20679.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20772.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20773.0,
+          "boostId": 20680.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20774.0,
+          "boostId": 20681.0,
           "statId": 6.0,
           "expression": "15"
         },
         {
-          "boostId": 20775.0,
+          "boostId": 20682.0,
           "statId": 10035.0,
           "expression": "37"
         },
         {
-          "boostId": 20776.0,
+          "boostId": 20683.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -17106,47 +16831,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20777.0,
+          "boostId": 20684.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20778.0,
+          "boostId": 20685.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20779.0,
+          "boostId": 20686.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20780.0,
+          "boostId": 20687.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20781.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20782.0,
+          "boostId": 20688.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20783.0,
+          "boostId": 20689.0,
           "statId": 6.0,
           "expression": "15"
         },
         {
-          "boostId": 20784.0,
+          "boostId": 20690.0,
           "statId": 10035.0,
           "expression": "35"
         },
         {
-          "boostId": 20785.0,
+          "boostId": 20691.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -17180,47 +16900,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20786.0,
+          "boostId": 20692.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20787.0,
+          "boostId": 20693.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20788.0,
+          "boostId": 20694.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20789.0,
+          "boostId": 20695.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20790.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20791.0,
+          "boostId": 20696.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20792.0,
+          "boostId": 20697.0,
           "statId": 6.0,
           "expression": "17"
         },
         {
-          "boostId": 20793.0,
+          "boostId": 20698.0,
           "statId": 10035.0,
           "expression": "41"
         },
         {
-          "boostId": 20794.0,
+          "boostId": 20699.0,
           "statId": 2.0,
           "expression": "12"
         }
@@ -17253,47 +16968,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20795.0,
+          "boostId": 20700.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20796.0,
+          "boostId": 20701.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20797.0,
+          "boostId": 20702.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20798.0,
+          "boostId": 20703.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20799.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20800.0,
+          "boostId": 20704.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20801.0,
+          "boostId": 20705.0,
           "statId": 6.0,
           "expression": "11"
         },
         {
-          "boostId": 20802.0,
+          "boostId": 20706.0,
           "statId": 10035.0,
           "expression": "27"
         },
         {
-          "boostId": 20803.0,
+          "boostId": 20707.0,
           "statId": 2.0,
           "expression": "8"
         }
@@ -17327,42 +17037,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20450.0,
+          "boostId": 20396.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20451.0,
+          "boostId": 20397.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20452.0,
+          "boostId": 20398.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20453.0,
+          "boostId": 20399.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20454.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20455.0,
+          "boostId": 20400.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20456.0,
+          "boostId": 20401.0,
           "statId": 24.0,
           "expression": "61"
         },
         {
-          "boostId": 20457.0,
+          "boostId": 20402.0,
           "statId": 1.0,
           "expression": "55"
         }
@@ -17396,42 +17101,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20458.0,
+          "boostId": 20403.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20459.0,
+          "boostId": 20404.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20460.0,
+          "boostId": 20405.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20461.0,
+          "boostId": 20406.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20462.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20463.0,
+          "boostId": 20407.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20464.0,
+          "boostId": 20408.0,
           "statId": 24.0,
           "expression": "18"
         },
         {
-          "boostId": 20465.0,
+          "boostId": 20409.0,
           "statId": 1.0,
           "expression": "17"
         }
@@ -17467,42 +17167,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20466.0,
+          "boostId": 20410.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20467.0,
+          "boostId": 20411.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20468.0,
+          "boostId": 20412.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20469.0,
+          "boostId": 20413.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20470.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20471.0,
+          "boostId": 20414.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20472.0,
+          "boostId": 20415.0,
           "statId": 24.0,
           "expression": "18"
         },
         {
-          "boostId": 20473.0,
+          "boostId": 20416.0,
           "statId": 1.0,
           "expression": "17"
         }
@@ -17536,42 +17231,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20474.0,
+          "boostId": 20417.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20475.0,
+          "boostId": 20418.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20476.0,
+          "boostId": 20419.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20477.0,
+          "boostId": 20420.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20478.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20479.0,
+          "boostId": 20421.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20480.0,
+          "boostId": 20422.0,
           "statId": 24.0,
           "expression": "18"
         },
         {
-          "boostId": 20481.0,
+          "boostId": 20423.0,
           "statId": 1.0,
           "expression": "16"
         }
@@ -17605,42 +17295,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20482.0,
+          "boostId": 20424.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20483.0,
+          "boostId": 20425.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20484.0,
+          "boostId": 20426.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20485.0,
+          "boostId": 20427.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20486.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20487.0,
+          "boostId": 20428.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20488.0,
+          "boostId": 20429.0,
           "statId": 24.0,
           "expression": "21"
         },
         {
-          "boostId": 20489.0,
+          "boostId": 20430.0,
           "statId": 1.0,
           "expression": "18"
         }
@@ -17673,42 +17358,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20490.0,
+          "boostId": 20431.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20491.0,
+          "boostId": 20432.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20492.0,
+          "boostId": 20433.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20493.0,
+          "boostId": 20434.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20494.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20495.0,
+          "boostId": 20435.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20496.0,
+          "boostId": 20436.0,
           "statId": 24.0,
           "expression": "14"
         },
         {
-          "boostId": 20497.0,
+          "boostId": 20437.0,
           "statId": 1.0,
           "expression": "12"
         }
@@ -17742,42 +17422,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20600.0,
+          "boostId": 20528.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20601.0,
+          "boostId": 20529.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20602.0,
+          "boostId": 20530.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20603.0,
+          "boostId": 20531.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20604.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20605.0,
+          "boostId": 20532.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20606.0,
+          "boostId": 20533.0,
           "statId": 19.0,
           "expression": "61"
         },
         {
-          "boostId": 20607.0,
+          "boostId": 20534.0,
           "statId": 4.0,
           "expression": "47"
         }
@@ -17811,42 +17486,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20608.0,
+          "boostId": 20535.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20609.0,
+          "boostId": 20536.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20610.0,
+          "boostId": 20537.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20611.0,
+          "boostId": 20538.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20612.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20613.0,
+          "boostId": 20539.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20614.0,
+          "boostId": 20540.0,
           "statId": 19.0,
           "expression": "18"
         },
         {
-          "boostId": 20615.0,
+          "boostId": 20541.0,
           "statId": 4.0,
           "expression": "14"
         }
@@ -17882,42 +17552,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20616.0,
+          "boostId": 20542.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20617.0,
+          "boostId": 20543.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20618.0,
+          "boostId": 20544.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20619.0,
+          "boostId": 20545.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20620.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20621.0,
+          "boostId": 20546.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20622.0,
+          "boostId": 20547.0,
           "statId": 19.0,
           "expression": "18"
         },
         {
-          "boostId": 20623.0,
+          "boostId": 20548.0,
           "statId": 4.0,
           "expression": "14"
         }
@@ -17951,42 +17616,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20624.0,
+          "boostId": 20549.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20625.0,
+          "boostId": 20550.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20626.0,
+          "boostId": 20551.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20627.0,
+          "boostId": 20552.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20628.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20629.0,
+          "boostId": 20553.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20630.0,
+          "boostId": 20554.0,
           "statId": 19.0,
           "expression": "18"
         },
         {
-          "boostId": 20631.0,
+          "boostId": 20555.0,
           "statId": 4.0,
           "expression": "13"
         }
@@ -18020,42 +17680,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20632.0,
+          "boostId": 20556.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20633.0,
+          "boostId": 20557.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20634.0,
+          "boostId": 20558.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20635.0,
+          "boostId": 20559.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20636.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20637.0,
+          "boostId": 20560.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20638.0,
+          "boostId": 20561.0,
           "statId": 19.0,
           "expression": "21"
         },
         {
-          "boostId": 20639.0,
+          "boostId": 20562.0,
           "statId": 4.0,
           "expression": "16"
         }
@@ -18088,42 +17743,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20640.0,
+          "boostId": 20563.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20641.0,
+          "boostId": 20564.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20642.0,
+          "boostId": 20565.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20643.0,
+          "boostId": 20566.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20644.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20645.0,
+          "boostId": 20567.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20646.0,
+          "boostId": 20568.0,
           "statId": 19.0,
           "expression": "14"
         },
         {
-          "boostId": 20647.0,
+          "boostId": 20569.0,
           "statId": 4.0,
           "expression": "10"
         }
@@ -18157,42 +17807,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20402.0,
+          "boostId": 20354.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20403.0,
+          "boostId": 20355.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20404.0,
+          "boostId": 20356.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20405.0,
+          "boostId": 20357.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20406.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20407.0,
+          "boostId": 20358.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20408.0,
+          "boostId": 20359.0,
           "statId": 17.0,
           "expression": "61"
         },
         {
-          "boostId": 20409.0,
+          "boostId": 20360.0,
           "statId": 1.0,
           "expression": "55"
         }
@@ -18226,42 +17871,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20410.0,
+          "boostId": 20361.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20411.0,
+          "boostId": 20362.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20412.0,
+          "boostId": 20363.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20413.0,
+          "boostId": 20364.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20414.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20415.0,
+          "boostId": 20365.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20416.0,
+          "boostId": 20366.0,
           "statId": 17.0,
           "expression": "18"
         },
         {
-          "boostId": 20417.0,
+          "boostId": 20367.0,
           "statId": 1.0,
           "expression": "17"
         }
@@ -18297,42 +17937,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20418.0,
+          "boostId": 20368.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20419.0,
+          "boostId": 20369.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20420.0,
+          "boostId": 20370.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20421.0,
+          "boostId": 20371.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20422.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20423.0,
+          "boostId": 20372.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20424.0,
+          "boostId": 20373.0,
           "statId": 17.0,
           "expression": "18"
         },
         {
-          "boostId": 20425.0,
+          "boostId": 20374.0,
           "statId": 1.0,
           "expression": "17"
         }
@@ -18366,42 +18001,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20426.0,
+          "boostId": 20375.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20427.0,
+          "boostId": 20376.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20428.0,
+          "boostId": 20377.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20429.0,
+          "boostId": 20378.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20430.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20431.0,
+          "boostId": 20379.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20432.0,
+          "boostId": 20380.0,
           "statId": 17.0,
           "expression": "18"
         },
         {
-          "boostId": 20433.0,
+          "boostId": 20381.0,
           "statId": 1.0,
           "expression": "16"
         }
@@ -18435,42 +18065,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20434.0,
+          "boostId": 20382.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20435.0,
+          "boostId": 20383.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20436.0,
+          "boostId": 20384.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20437.0,
+          "boostId": 20385.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20438.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20439.0,
+          "boostId": 20386.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20440.0,
+          "boostId": 20387.0,
           "statId": 17.0,
           "expression": "21"
         },
         {
-          "boostId": 20441.0,
+          "boostId": 20388.0,
           "statId": 1.0,
           "expression": "18"
         }
@@ -18503,42 +18128,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20442.0,
+          "boostId": 20389.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20443.0,
+          "boostId": 20390.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20444.0,
+          "boostId": 20391.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20445.0,
+          "boostId": 20392.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20446.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20447.0,
+          "boostId": 20393.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20448.0,
+          "boostId": 20394.0,
           "statId": 17.0,
           "expression": "14"
         },
         {
-          "boostId": 20449.0,
+          "boostId": 20395.0,
           "statId": 1.0,
           "expression": "12"
         }
@@ -18572,42 +18192,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20648.0,
+          "boostId": 20570.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20649.0,
+          "boostId": 20571.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20650.0,
+          "boostId": 20572.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20651.0,
+          "boostId": 20573.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20652.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20653.0,
+          "boostId": 20574.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20654.0,
+          "boostId": 20575.0,
           "statId": 23.0,
           "expression": "61"
         },
         {
-          "boostId": 20655.0,
+          "boostId": 20576.0,
           "statId": 4.0,
           "expression": "47"
         }
@@ -18641,42 +18256,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20656.0,
+          "boostId": 20577.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20657.0,
+          "boostId": 20578.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20658.0,
+          "boostId": 20579.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20659.0,
+          "boostId": 20580.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20660.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20661.0,
+          "boostId": 20581.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20662.0,
+          "boostId": 20582.0,
           "statId": 23.0,
           "expression": "18"
         },
         {
-          "boostId": 20663.0,
+          "boostId": 20583.0,
           "statId": 4.0,
           "expression": "14"
         }
@@ -18712,42 +18322,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20664.0,
+          "boostId": 20584.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20665.0,
+          "boostId": 20585.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20666.0,
+          "boostId": 20586.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20667.0,
+          "boostId": 20587.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20668.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20669.0,
+          "boostId": 20588.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20670.0,
+          "boostId": 20589.0,
           "statId": 23.0,
           "expression": "18"
         },
         {
-          "boostId": 20671.0,
+          "boostId": 20590.0,
           "statId": 4.0,
           "expression": "14"
         }
@@ -18781,42 +18386,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20672.0,
+          "boostId": 20591.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20673.0,
+          "boostId": 20592.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20674.0,
+          "boostId": 20593.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20675.0,
+          "boostId": 20594.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20676.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20677.0,
+          "boostId": 20595.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20678.0,
+          "boostId": 20596.0,
           "statId": 23.0,
           "expression": "18"
         },
         {
-          "boostId": 20679.0,
+          "boostId": 20597.0,
           "statId": 4.0,
           "expression": "13"
         }
@@ -18850,42 +18450,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20680.0,
+          "boostId": 20598.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20681.0,
+          "boostId": 20599.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20682.0,
+          "boostId": 20600.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20683.0,
+          "boostId": 20601.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20684.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20685.0,
+          "boostId": 20602.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20686.0,
+          "boostId": 20603.0,
           "statId": 23.0,
           "expression": "21"
         },
         {
-          "boostId": 20687.0,
+          "boostId": 20604.0,
           "statId": 4.0,
           "expression": "16"
         }
@@ -18918,42 +18513,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20688.0,
+          "boostId": 20605.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20689.0,
+          "boostId": 20606.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20690.0,
+          "boostId": 20607.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20691.0,
+          "boostId": 20608.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20692.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20693.0,
+          "boostId": 20609.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20694.0,
+          "boostId": 20610.0,
           "statId": 23.0,
           "expression": "14"
         },
         {
-          "boostId": 20695.0,
+          "boostId": 20611.0,
           "statId": 4.0,
           "expression": "10"
         }
@@ -18987,47 +18577,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20696.0,
+          "boostId": 20612.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20697.0,
+          "boostId": 20613.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20698.0,
+          "boostId": 20614.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20699.0,
+          "boostId": 20615.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20700.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20701.0,
+          "boostId": 20616.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20702.0,
+          "boostId": 20617.0,
           "statId": 3.0,
           "expression": "52"
         },
         {
-          "boostId": 20703.0,
+          "boostId": 20618.0,
           "statId": 8.0,
           "expression": "123"
         },
         {
-          "boostId": 20704.0,
+          "boostId": 20619.0,
           "statId": 2.0,
           "expression": "37"
         }
@@ -19061,47 +18646,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20705.0,
+          "boostId": 20620.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20706.0,
+          "boostId": 20621.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20707.0,
+          "boostId": 20622.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20708.0,
+          "boostId": 20623.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20709.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20710.0,
+          "boostId": 20624.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20711.0,
+          "boostId": 20625.0,
           "statId": 3.0,
           "expression": "16"
         },
         {
-          "boostId": 20712.0,
+          "boostId": 20626.0,
           "statId": 8.0,
           "expression": "37"
         },
         {
-          "boostId": 20713.0,
+          "boostId": 20627.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -19137,47 +18717,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20714.0,
+          "boostId": 20628.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20715.0,
+          "boostId": 20629.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20716.0,
+          "boostId": 20630.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20717.0,
+          "boostId": 20631.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20718.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20719.0,
+          "boostId": 20632.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20720.0,
+          "boostId": 20633.0,
           "statId": 3.0,
           "expression": "15"
         },
         {
-          "boostId": 20721.0,
+          "boostId": 20634.0,
           "statId": 8.0,
           "expression": "37"
         },
         {
-          "boostId": 20722.0,
+          "boostId": 20635.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -19211,47 +18786,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20723.0,
+          "boostId": 20636.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20724.0,
+          "boostId": 20637.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20725.0,
+          "boostId": 20638.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20726.0,
+          "boostId": 20639.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20727.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20728.0,
+          "boostId": 20640.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20729.0,
+          "boostId": 20641.0,
           "statId": 3.0,
           "expression": "15"
         },
         {
-          "boostId": 20730.0,
+          "boostId": 20642.0,
           "statId": 8.0,
           "expression": "35"
         },
         {
-          "boostId": 20731.0,
+          "boostId": 20643.0,
           "statId": 2.0,
           "expression": "11"
         }
@@ -19285,47 +18855,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20732.0,
+          "boostId": 20644.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20733.0,
+          "boostId": 20645.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20734.0,
+          "boostId": 20646.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20735.0,
+          "boostId": 20647.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20736.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20737.0,
+          "boostId": 20648.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20738.0,
+          "boostId": 20649.0,
           "statId": 3.0,
           "expression": "17"
         },
         {
-          "boostId": 20739.0,
+          "boostId": 20650.0,
           "statId": 8.0,
           "expression": "41"
         },
         {
-          "boostId": 20740.0,
+          "boostId": 20651.0,
           "statId": 2.0,
           "expression": "12"
         }
@@ -19358,47 +18923,42 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20741.0,
+          "boostId": 20652.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20742.0,
+          "boostId": 20653.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20743.0,
+          "boostId": 20654.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20744.0,
+          "boostId": 20655.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20745.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20746.0,
+          "boostId": 20656.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20747.0,
+          "boostId": 20657.0,
           "statId": 3.0,
           "expression": "11"
         },
         {
-          "boostId": 20748.0,
+          "boostId": 20658.0,
           "statId": 8.0,
           "expression": "27"
         },
         {
-          "boostId": 20749.0,
+          "boostId": 20659.0,
           "statId": 2.0,
           "expression": "8"
         }
@@ -19432,42 +18992,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20498.0,
+          "boostId": 20438.0,
           "statId": 12.0,
           "expression": "71"
         },
         {
-          "boostId": 20499.0,
+          "boostId": 20439.0,
           "statId": 13.0,
           "expression": "71"
         },
         {
-          "boostId": 20500.0,
+          "boostId": 20440.0,
           "statId": 14.0,
           "expression": "71"
         },
         {
-          "boostId": 20501.0,
+          "boostId": 20441.0,
           "statId": 15.0,
           "expression": "71"
         },
         {
-          "boostId": 20502.0,
-          "statId": 21.0,
-          "expression": "41"
-        },
-        {
-          "boostId": 20503.0,
+          "boostId": 20442.0,
           "statId": 22.0,
           "expression": "71"
         },
         {
-          "boostId": 20504.0,
+          "boostId": 20443.0,
           "statId": 18.0,
           "expression": "61"
         },
         {
-          "boostId": 20505.0,
+          "boostId": 20444.0,
           "statId": 1.0,
           "expression": "55"
         }
@@ -19501,42 +19056,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20506.0,
+          "boostId": 20445.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20507.0,
+          "boostId": 20446.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20508.0,
+          "boostId": 20447.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20509.0,
+          "boostId": 20448.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20510.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20511.0,
+          "boostId": 20449.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20512.0,
+          "boostId": 20450.0,
           "statId": 18.0,
           "expression": "18"
         },
         {
-          "boostId": 20513.0,
+          "boostId": 20451.0,
           "statId": 1.0,
           "expression": "17"
         }
@@ -19572,42 +19122,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20514.0,
+          "boostId": 20452.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20515.0,
+          "boostId": 20453.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20516.0,
+          "boostId": 20454.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20517.0,
+          "boostId": 20455.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20518.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20519.0,
+          "boostId": 20456.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20520.0,
+          "boostId": 20457.0,
           "statId": 18.0,
           "expression": "18"
         },
         {
-          "boostId": 20521.0,
+          "boostId": 20458.0,
           "statId": 1.0,
           "expression": "17"
         }
@@ -19641,42 +19186,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20522.0,
+          "boostId": 20459.0,
           "statId": 12.0,
           "expression": "42"
         },
         {
-          "boostId": 20523.0,
+          "boostId": 20460.0,
           "statId": 13.0,
           "expression": "42"
         },
         {
-          "boostId": 20524.0,
+          "boostId": 20461.0,
           "statId": 14.0,
           "expression": "42"
         },
         {
-          "boostId": 20525.0,
+          "boostId": 20462.0,
           "statId": 15.0,
           "expression": "42"
         },
         {
-          "boostId": 20526.0,
-          "statId": 21.0,
-          "expression": "12"
-        },
-        {
-          "boostId": 20527.0,
+          "boostId": 20463.0,
           "statId": 22.0,
           "expression": "42"
         },
         {
-          "boostId": 20528.0,
+          "boostId": 20464.0,
           "statId": 18.0,
           "expression": "18"
         },
         {
-          "boostId": 20529.0,
+          "boostId": 20465.0,
           "statId": 1.0,
           "expression": "16"
         }
@@ -19710,42 +19250,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20530.0,
+          "boostId": 20466.0,
           "statId": 12.0,
           "expression": "44"
         },
         {
-          "boostId": 20531.0,
+          "boostId": 20467.0,
           "statId": 13.0,
           "expression": "44"
         },
         {
-          "boostId": 20532.0,
+          "boostId": 20468.0,
           "statId": 14.0,
           "expression": "44"
         },
         {
-          "boostId": 20533.0,
+          "boostId": 20469.0,
           "statId": 15.0,
           "expression": "44"
         },
         {
-          "boostId": 20534.0,
-          "statId": 21.0,
-          "expression": "14"
-        },
-        {
-          "boostId": 20535.0,
+          "boostId": 20470.0,
           "statId": 22.0,
           "expression": "44"
         },
         {
-          "boostId": 20536.0,
+          "boostId": 20471.0,
           "statId": 18.0,
           "expression": "21"
         },
         {
-          "boostId": 20537.0,
+          "boostId": 20472.0,
           "statId": 1.0,
           "expression": "18"
         }
@@ -19778,42 +19313,37 @@ window.T4C_DATA = {
       "undroppable": false,
       "boosts": [
         {
-          "boostId": 20538.0,
+          "boostId": 20473.0,
           "statId": 12.0,
           "expression": "9"
         },
         {
-          "boostId": 20539.0,
+          "boostId": 20474.0,
           "statId": 13.0,
           "expression": "9"
         },
         {
-          "boostId": 20540.0,
+          "boostId": 20475.0,
           "statId": 14.0,
           "expression": "9"
         },
         {
-          "boostId": 20541.0,
+          "boostId": 20476.0,
           "statId": 15.0,
           "expression": "9"
         },
         {
-          "boostId": 20542.0,
-          "statId": 21.0,
-          "expression": "9"
-        },
-        {
-          "boostId": 20543.0,
+          "boostId": 20477.0,
           "statId": 22.0,
           "expression": "9"
         },
         {
-          "boostId": 20544.0,
+          "boostId": 20478.0,
           "statId": 18.0,
           "expression": "14"
         },
         {
-          "boostId": 20545.0,
+          "boostId": 20479.0,
           "statId": 1.0,
           "expression": "12"
         }
@@ -19858,8 +19388,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36208.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36432.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36433.0,
+          "statId": 14.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36434.0,
           "statId": 15.0,
-          "expression": "40"
+          "expression": "24"
+        },
+        {
+          "boostId": 36435.0,
+          "statId": 22.0,
+          "expression": "24"
         }
       ]
     },
@@ -19966,11 +19516,6 @@ window.T4C_DATA = {
           "expression": "25"
         },
         {
-          "boostId": 36319.0,
-          "statId": 21.0,
-          "expression": "25"
-        },
-        {
           "boostId": 36320.0,
           "statId": 22.0,
           "expression": "25"
@@ -20062,8 +19607,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36215.0,
-          "statId": 21.0,
-          "expression": "40"
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36436.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36437.0,
+          "statId": 14.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36438.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36439.0,
+          "statId": 22.0,
+          "expression": "24"
         }
       ]
     },
@@ -20123,11 +19688,6 @@ window.T4C_DATA = {
           "boostId": 36328.0,
           "statId": 15.0,
           "expression": "18"
-        },
-        {
-          "boostId": 36329.0,
-          "statId": 21.0,
-          "expression": "9"
         },
         {
           "boostId": 36330.0,
@@ -20257,8 +19817,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 31002.0,
+          "statId": 12.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36440.0,
+          "statId": 13.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36441.0,
           "statId": 14.0,
-          "expression": "15"
+          "expression": "9"
+        },
+        {
+          "boostId": 36442.0,
+          "statId": 15.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36443.0,
+          "statId": 22.0,
+          "expression": "9"
         }
       ]
     },
@@ -20349,8 +19929,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36405.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36444.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36445.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36446.0,
+          "statId": 15.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36447.0,
           "statId": 22.0,
-          "expression": "63"
+          "expression": "38"
         }
       ]
     },
@@ -20393,8 +19993,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36202.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36448.0,
           "statId": 13.0,
-          "expression": "40"
+          "expression": "24"
+        },
+        {
+          "boostId": 36449.0,
+          "statId": 14.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36450.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36451.0,
+          "statId": 22.0,
+          "expression": "24"
         }
       ]
     },
@@ -20446,11 +20066,6 @@ window.T4C_DATA = {
           "expression": "19"
         },
         {
-          "boostId": 36378.0,
-          "statId": 21.0,
-          "expression": "19"
-        },
-        {
           "boostId": 36379.0,
           "statId": 22.0,
           "expression": "19"
@@ -20496,8 +20111,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36411.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36452.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36453.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36454.0,
           "statId": 15.0,
-          "expression": "63"
+          "expression": "38"
+        },
+        {
+          "boostId": 36455.0,
+          "statId": 22.0,
+          "expression": "38"
         }
       ]
     },
@@ -20540,8 +20175,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36414.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36456.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36457.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36458.0,
           "statId": 15.0,
-          "expression": "63"
+          "expression": "38"
+        },
+        {
+          "boostId": 36459.0,
+          "statId": 22.0,
+          "expression": "38"
         }
       ]
     },
@@ -20586,8 +20241,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36408.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36460.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36461.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36462.0,
           "statId": 15.0,
-          "expression": "63"
+          "expression": "38"
+        },
+        {
+          "boostId": 36463.0,
+          "statId": 22.0,
+          "expression": "38"
         }
       ]
     },
@@ -20630,8 +20305,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36218.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36464.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36465.0,
+          "statId": 14.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36466.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36467.0,
           "statId": 22.0,
-          "expression": "40"
+          "expression": "24"
         }
       ]
     },
@@ -20674,8 +20369,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36302.0,
+          "statId": 12.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 36468.0,
+          "statId": 13.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 36469.0,
           "statId": 14.0,
-          "expression": "12"
+          "expression": "7"
+        },
+        {
+          "boostId": 36470.0,
+          "statId": 15.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 36471.0,
+          "statId": 22.0,
+          "expression": "7"
         }
       ]
     },
@@ -20718,8 +20433,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36205.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36472.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36473.0,
           "statId": 14.0,
-          "expression": "40"
+          "expression": "24"
+        },
+        {
+          "boostId": 36474.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36475.0,
+          "statId": 22.0,
+          "expression": "24"
         }
       ]
     },
@@ -20780,11 +20515,6 @@ window.T4C_DATA = {
           "expression": "10"
         },
         {
-          "boostId": 36383.0,
-          "statId": 21.0,
-          "expression": "10"
-        },
-        {
           "boostId": 36384.0,
           "statId": 22.0,
           "expression": "10"
@@ -20834,8 +20564,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 36300.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36476.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36477.0,
           "statId": 14.0,
-          "expression": "17"
+          "expression": "10"
+        },
+        {
+          "boostId": 36478.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36479.0,
+          "statId": 22.0,
+          "expression": "10"
         }
       ]
     },
@@ -20897,11 +20647,6 @@ window.T4C_DATA = {
           "expression": "50"
         },
         {
-          "boostId": 36324.0,
-          "statId": 21.0,
-          "expression": "25"
-        },
-        {
           "boostId": 36325.0,
           "statId": 22.0,
           "expression": "25"
@@ -20951,13 +20696,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 32102.0,
-          "statId": 22.0,
-          "expression": "23"
+          "statId": 12.0,
+          "expression": "14"
         },
         {
           "boostId": 36301.0,
-          "statId": 21.0,
-          "expression": "-10"
+          "statId": 13.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 36484.0,
+          "statId": 14.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 36485.0,
+          "statId": 15.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 36486.0,
+          "statId": 22.0,
+          "expression": "14"
         }
       ]
     },
@@ -21006,7 +20766,27 @@ window.T4C_DATA = {
         {
           "boostId": 36212.0,
           "statId": 12.0,
-          "expression": "40"
+          "expression": "24"
+        },
+        {
+          "boostId": 36480.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36481.0,
+          "statId": 14.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36482.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36483.0,
+          "statId": 22.0,
+          "expression": "24"
         }
       ]
     },
@@ -21067,11 +20847,6 @@ window.T4C_DATA = {
           "expression": "10"
         },
         {
-          "boostId": 36389.0,
-          "statId": 21.0,
-          "expression": "10"
-        },
-        {
           "boostId": 36390.0,
           "statId": 22.0,
           "expression": "10"
@@ -21117,8 +20892,28 @@ window.T4C_DATA = {
         },
         {
           "boostId": 34006.0,
+          "statId": 12.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 36487.0,
+          "statId": 13.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 36488.0,
+          "statId": 14.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 36489.0,
+          "statId": 15.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 36490.0,
           "statId": 22.0,
-          "expression": "60"
+          "expression": "36"
         }
       ]
     }

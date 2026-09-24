@@ -26,42 +26,37 @@
   "undroppable": false,
   "boosts": [
     {
-      "boostId": 20270,
+      "boostId": 20237,
       "statId": 12,
       "expression": "28"
     },
     {
-      "boostId": 20271,
+      "boostId": 20238,
       "statId": 13,
       "expression": "28"
     },
     {
-      "boostId": 20272,
+      "boostId": 20239,
       "statId": 14,
       "expression": "28"
     },
     {
-      "boostId": 20273,
+      "boostId": 20240,
       "statId": 15,
       "expression": "28"
     },
     {
-      "boostId": 20274,
-      "statId": 21,
-      "expression": "8"
-    },
-    {
-      "boostId": 20275,
+      "boostId": 20241,
       "statId": 22,
       "expression": "28"
     },
     {
-      "boostId": 20276,
+      "boostId": 20242,
       "statId": 23,
       "expression": "12"
     },
     {
-      "boostId": 20277,
+      "boostId": 20243,
       "statId": 4,
       "expression": "9"
     }

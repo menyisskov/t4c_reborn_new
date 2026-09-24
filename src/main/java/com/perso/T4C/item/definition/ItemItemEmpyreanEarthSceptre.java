@@ -53,7 +53,6 @@ public final class ItemItemEmpyreanEarthSceptre {
             new ItemDefinition.ItemBoost(90105, 13, "50", 0, 0),
             new ItemDefinition.ItemBoost(90106, 14, "50", 0, 0),
             new ItemDefinition.ItemBoost(90107, 15, "50", 0, 0),
-            new ItemDefinition.ItemBoost(90108, 21, "50", 0, 0),
             new ItemDefinition.ItemBoost(90109, 22, "50", 0, 0),
             new ItemDefinition.ItemBoost(90110, 20, "50", 0, 0)),
         List.of(),

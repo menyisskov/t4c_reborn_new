@@ -24,7 +24,8 @@ import org.junit.jupiter.api.Test;
  */
 class ItemBalanceGuidelinesTest {
   private static final int INT = 1, STR = 3, WIS = 4, AGI = 6, ATK = 8, ARCHERY = 10035;
-  private static final Set<Integer> RESISTS = Set.of(12, 13, 14, 15, 21, 22);
+  private static final int LIGHT_RESIST = ItemBalance.LIGHT_RESIST_STAT_ID;
+  private static final Set<Integer> RESISTS = ItemBalance.RESISTIBLE_ELEMENTS;
   private static final Map<Integer, Integer> POWER_TO_RESIST =
       Map.of(16, 12, 17, 13, 18, 14, 19, 15, 23, 21, 24, 22);
   private static final Set<Integer> INT_POWERS = Set.of(17, 18, 24); // fire, water, dark
@@ -113,14 +114,16 @@ class ItemBalanceGuidelinesTest {
         for (int stat : b.keySet()) {
           if (!POWER_TO_RESIST.containsKey(stat)) continue;
           assertTrue(allowedPowers.contains(stat), k + " (" + a + ") has off-school power " + stat);
-          assertTrue(
-              b.getOrDefault(POWER_TO_RESIST.get(stat), 0d) > 0,
-              k + " needs resistance in its own school");
           powers++;
         }
         assertTrue(powers > 0, k + " is mage gear without elemental power");
         if (a != Archetype.WIS_MAGE) assertTrue(b.getOrDefault(INT, 0d) > 0, k + " needs intelligence");
         if (a != Archetype.INT_MAGE) assertTrue(b.getOrDefault(WIS, 0d) > 0, k + " needs wisdom");
+        // Resistance is never confined to the item's own school (and never includes light,
+        // checked separately) - every mage item resists all five non-light schools alike.
+        if (!weapon)
+          for (int r : RESISTS)
+            assertTrue(b.getOrDefault(r, 0d) > 0, k + " needs resistance to all five non-light elements");
       } else {
         boolean warrior = a == Archetype.WARRIOR;
         for (int stat : b.keySet())
@@ -131,7 +134,7 @@ class ItemBalanceGuidelinesTest {
         assertTrue(b.containsKey(warrior ? ATK : ARCHERY), k + " needs " + (warrior ? "attack" : "archery"));
         if (!weapon)
           for (int r : RESISTS)
-            assertTrue(b.getOrDefault(r, 0d) > 0, k + " needs resistance to all six elements");
+            assertTrue(b.getOrDefault(r, 0d) > 0, k + " needs resistance to all five non-light elements");
       }
     }
   }
@@ -159,11 +162,15 @@ class ItemBalanceGuidelinesTest {
       }
       if (d.getBodyPart() == BodyPart.WEAPON) continue;
       if (a.isMage()) {
-        for (Map.Entry<Integer, Integer> e : POWER_TO_RESIST.entrySet()) {
-          if (!b.containsKey(e.getKey())) continue;
-          assertEquals(ItemBalance.magicPowerBonus(p), b.get(e.getKey()), 1, k + " power");
-          assertEquals(ItemBalance.magicResistBonus(p), b.get(e.getValue()), 1, k + " resistance");
+        for (int stat : POWER_TO_RESIST.keySet()) {
+          if (!b.containsKey(stat)) continue;
+          assertEquals(ItemBalance.magicPowerBonus(p), b.get(stat), 1, k + " power");
         }
+        // Resistance is the same across all five non-light schools, not tied to which power
+        // the item happens to have (a light-power item still resists air/fire/water/earth/dark,
+        // just never light itself).
+        for (int r : RESISTS)
+          assertEquals(ItemBalance.magicResistBonus(p), b.getOrDefault(r, 0d), 1, k + " resistance " + r);
       } else {
         int skill = a == Archetype.WARRIOR ? ATK : ARCHERY;
         assertEquals(ItemBalance.combatSkillBonus(p), b.get(skill), 1, k + " attack/archery");
@@ -171,6 +178,18 @@ class ItemBalanceGuidelinesTest {
           assertTrue(
               b.get(r) >= ItemBalance.physicalResistBonus(p) - 1, k + " resistance " + r);
       }
+    }
+  }
+
+  /** No item, of any class, ever grants light resistance - positive or negative. Scans the
+   * *whole* registry (legacy Java catalog included via {@link ItemRegistry#load()}), not just
+   * the JSON-authored {@link #items}, so a pre-existing legacy item can't quietly keep it. */
+  @Test
+  void neverGrantsLightResist() {
+    for (ItemDefinition d : ItemRegistry.load()) {
+      boolean hasLightResist =
+          d.getBoosts().stream().anyMatch(boost -> boost.getStatId() == LIGHT_RESIST);
+      assertTrue(!hasLightResist, d.getKey() + " grants light resist, which is never allowed");
     }
   }
 

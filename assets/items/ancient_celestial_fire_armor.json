@@ -47,21 +47,16 @@
     },
     {
       "boostId": 20004,
-      "statId": 21,
-      "expression": "29"
-    },
-    {
-      "boostId": 20005,
       "statId": 22,
       "expression": "49"
     },
     {
-      "boostId": 20006,
+      "boostId": 20005,
       "statId": 17,
       "expression": "41"
     },
     {
-      "boostId": 20007,
+      "boostId": 20006,
       "statId": 1,
       "expression": "37"
     }

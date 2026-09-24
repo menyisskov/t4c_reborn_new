@@ -25,7 +25,9 @@ import java.util.Map;
  * <p>T4C-0027: every flavor follows {@link ItemBalance}. AC comes from the piece's slot, the
  * tier's endurance requirement and the flavor's class; fire/water/dark flavors require and grant
  * intelligence, earth/light wisdom, air both; warrior/archer flavors require strength/agility and
- * grant it plus attack/archery and an endurance bonus. Every flavor also resists all six elements.
+ * grant it plus attack/archery and an endurance bonus. Every flavor also resists all five
+ * non-light elements (T4C-0030: no item ever grants light resistance, light-flavored gear
+ * included - see {@link ItemBalance}'s class doc).
  */
 public final class ArmorSetGenerator {
   private ArmorSetGenerator() {}
@@ -184,6 +186,9 @@ public final class ArmorSetGenerator {
 
       List<com.perso.T4C.item.json.ItemJsonDef.BoostJson> boosts = new ArrayList<>();
       for (Element element : ELEMENTS) {
+        // No item ever grants light resistance (ItemBalance's "never light" rule) - light power
+        // is still fine (see themedElement below), only light resist is off-limits.
+        if (element.resistStatId() == ItemBalance.LIGHT_RESIST_STAT_ID) continue;
         int legacyBase =
             element.legacy() && !piece.bodyPart().equals("BELT") ? tier.legacyResistPerPiece() : 0;
         int total = legacyBase + resistSplitByElement.get(element)[i];

@@ -15,6 +15,21 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — Broader elemental resistance, and no more light resistance (T4C-0030)
+
+### Changed
+- Rebalanced how armor and jewelry resist elemental damage. Gear used to give a large amount of
+  resistance to just one element (usually whichever one it was themed around) and nothing at
+  all against the other five. It now gives a smaller amount of resistance against several
+  different elements at once, so you're not left completely exposed to damage types your gear
+  doesn't happen to match.
+- No item anywhere in the game grants resistance to light damage anymore, including gear themed
+  around light magic. Everything else about light magic (dealing light damage, being taught
+  light spells, and so on) is unaffected — only resisting it is now off the table.
+- One item, the Wight-Bound Amulet, used to make you slightly more vulnerable to light damage as
+  a drawback for its otherwise strong bonuses. That drawback has been removed rather than moved
+  to a different element.
+
 ## 2026-09-24 — The Rootcrown Wyrm, first of the Elder Wyrms (T4C-0029)
 
 ### Added

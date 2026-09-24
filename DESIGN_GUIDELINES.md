@@ -104,16 +104,37 @@ from the same rules; re-run it after changing them.
   - **Hybrid (air) mage:** intelligence and wisdom are within 20% of each other.
 
 ### What each class gives
-- **Warrior:** AC, resistance to all six elements, **strength**, **attack**.
-- **Archer:** AC, resistance to all six elements, **agility**, **archery**.
-- **Intelligence mage:** fire/water/dark power, resistance in that school, **extra
-  intelligence**, and **less AC than a wisdom item**.
-- **Wisdom mage:** earth/light power, resistance in that school, **wisdom**, and **more AC**.
-- **Hybrid mage:** air power and resistance, **intelligence and wisdom** equally.
+- **Warrior:** AC, resistance to five elements (never light), **strength**, **attack**.
+- **Archer:** AC, resistance to five elements (never light), **agility**, **archery**.
+- **Intelligence mage:** fire/water/dark power, resistance to five elements (never light),
+  **extra intelligence**, and **less AC than a wisdom item**.
+- **Wisdom mage:** earth/light power, resistance to five elements (never light), **wisdom**, and
+  **more AC**.
+- **Hybrid mage:** air power, resistance to five elements (never light), **intelligence and
+  wisdom** equally.
 - Mage gear never gives strength, agility, attack or archery. Warrior and archer gear never gives
   elemental power, intelligence or wisdom.
-- A theme may add a flavor extra: weapon or ring damage, shield parry, dodge, a doubled
-  resistance in the theme element, or a small negative resistance as a drawback.
+- A theme may add a flavor extra: weapon or ring damage, shield parry, dodge, or a doubled
+  resistance in the theme element (never light).
+
+### Resistance never includes light
+- **No item, of any class, may ever grant light resistance (statId 21) - not even a small
+  negative one as a drawback, and not even a light-power item's own school.** This was an owner
+  rule change (T4C-0030): players need broad coverage against incoming damage of every type they
+  actually face, not a single deep resistance plus total exposure everywhere else.
+- Concretely: every class's resistance spreads across the other **five** schools
+  (air/fire/water/earth/dark) instead of concentrating in one. A mage item no longer resists only
+  its own power's school - it resists all five non-light schools at the same, lower rate. A
+  light-power wisdom item still deals light damage; it just never resists it, same as every
+  other item.
+- `ItemBalance.RESISTIBLE_ELEMENTS` is the enforced set (12/13/14/15/22 - deliberately excludes
+  21); `ItemBalanceGuidelinesTest.neverGrantsLightResist()` fails the build if any item's boosts
+  contain statId 21 at all, positive or negative.
+- One hand-made item (`wight_bound_amulet`) used to carry a small negative light resist as a
+  lore-flavored drawback (an undead-bound trinket, vulnerable to holy light). That drawback was
+  dropped rather than moved to a different school - a "vulnerability" flavor extra for a
+  different element is still allowed by the rule above if a future item wants one, this one
+  just didn't get a replacement.
 
 ### Armor Class follows the endurance requirement
 `AC = slot AC × endurance requirement / 100 × class multiplier`.
@@ -153,8 +174,8 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 | Hybrid intelligence and wisdom | P / 24 each |
 | Attack / archery | P / 5 |
 | Mage power (own school) | P / 10 |
-| Mage resistance (own school) | P / 15 |
-| Warrior/archer resistance (each of six) | P / 40 (a theme element may double it) |
+| Mage resistance (each of five non-light schools) | P / 25 |
+| Warrior/archer resistance (each of five non-light schools) | P / 40 (a theme element may double it) |
 
 - A full 6-piece armor set carries three single items' worth, split across pieces by AC share.
 - Weapons carry their class stat (P / 12) and their skill (attack or archery). The damage

@@ -11,16 +11,21 @@ import java.util.Map;
  * them, so a new item that ignores them fails the build.
  *
  * <ul>
- *   <li><b>Warrior</b> (strength is the main requirement): AC, resistance to all six elements,
- *       strength and attack.
- *   <li><b>Archer</b> (agility is the main requirement, or any bow): AC, resistance to all six
- *       elements, agility and archery.
- *   <li><b>Intelligence mage</b>: fire/water/dark power and resistance, extra intelligence, and
- *       less AC than a wisdom item.
- *   <li><b>Wisdom mage</b>: earth/light power and resistance, wisdom, and more AC.
- *   <li><b>Hybrid</b> (intelligence and wisdom within 20% of each other): air power and
- *       resistance, intelligence and wisdom.
+ *   <li><b>Warrior</b> (strength is the main requirement): AC, resistance to five elements
+ *       (never light), strength and attack.
+ *   <li><b>Archer</b> (agility is the main requirement, or any bow): AC, resistance to five
+ *       elements (never light), agility and archery.
+ *   <li><b>Intelligence mage</b>: fire/water/dark power, extra intelligence, less AC than a
+ *       wisdom item, and resistance to five elements (never light).
+ *   <li><b>Wisdom mage</b>: earth/light power, wisdom, more AC, and resistance to five elements
+ *       (never light - light power is fine, light resistance never is).
+ *   <li><b>Hybrid</b> (intelligence and wisdom within 20% of each other): air power,
+ *       intelligence and wisdom, and resistance to five elements (never light).
  * </ul>
+ *
+ * <p>No item, of any class, may ever grant light resistance (statId 21) - positive or negative.
+ * Every class instead resists the other five schools (air/fire/water/earth/dark) at a reduced,
+ * uniform rate, so gear defends broadly instead of leaving four of six schools uncovered.
  *
  * <p>AC follows the endurance requirement: {@code slotAc(slot) * endurance / 100 * classAc}.
  */
@@ -30,6 +35,13 @@ public final class ItemBalance {
 
   /** No item may ask for more than this in any single attribute (the level-cap main stat). */
   public static final int MAX_SINGLE_REQUIREMENT = 1000;
+
+  /** No item may ever grant this - see the class doc's "never light resistance" rule. */
+  public static final int LIGHT_RESIST_STAT_ID = 21;
+
+  /** The five schools every class resists (all elemental resist stat ids except light). */
+  public static final java.util.Set<Integer> RESISTIBLE_ELEMENTS =
+      java.util.Set.of(12, 13, 14, 15, 22);
 
   public enum Archetype {
     WARRIOR(1.10),
@@ -133,12 +145,15 @@ public final class ItemBalance {
     return (int) Math.round(p / 10);
   }
 
-  /** Mage resistance to its own element: P/15. */
+  /** Mage resistance to each of the five non-light elements (never light - see
+   * DESIGN_GUIDELINES.md "Resistance never includes light"): P/25. Spread across five schools
+   * instead of concentrated in the item's own one, since a caster takes damage of every type,
+   * not just their own. */
   public static int magicResistBonus(double p) {
-    return (int) Math.round(p / 15);
+    return (int) Math.round(p / 25);
   }
 
-  /** Warrior/archer resistance to each of the six elements: P/40. */
+  /** Warrior/archer resistance to each of the five non-light elements: P/40. */
   public static int physicalResistBonus(double p) {
     return (int) Math.round(p / 40);
   }
