@@ -155,7 +155,8 @@ public final class CompendiumExporter {
           "DockmasterThessaly",
           "EmberSmithCorvain",
           "WardenSeressa",
-          "GrandmasterTholvenn");
+          "GrandmasterTholvenn",
+          "AnchoriteRowan");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
@@ -182,15 +183,19 @@ public final class CompendiumExporter {
           "forge_godsforged_stormbow",
           "forge_godsforged_voidglass_rod",
           "forge_godsforged_zephyr_wand",
-          "forge_godsforged_torc");
+          "forge_godsforged_torc",
+          "the_waking_rite");
 
   // T4C-0033: the Godsforged crafting chain's raw materials/components are legacy Java items (not
   // assets/items/*.json), specifically so they're exempt from ItemBalanceGuidelinesTest's gear
   // rules - see item/definition/WyrmforgedEmber.java. exportItems() only scans assets/items/, so
   // without this they'd resolve to nothing on the reference site (itemLink() would fall back to
   // showing the raw key). Listed explicitly and merged in from ItemRegistry.load() instead.
-  private static final Set<String> NEW_UTILITY_ITEM_KEYS =
-      Set.of(
+  // A List, not a Set: iterated directly into the exported file, so its order must be stable
+  // across regenerations (a Set.of() here reorders randomly run to run, producing a pure-noise
+  // diff on every regenerate-compendium CI run).
+  private static final List<String> NEW_UTILITY_ITEM_KEYS =
+      List.of(
           "item.wyrmforged_ember",
           "item.veiled_aether_shard",
           "item.tempered_godcore",
@@ -542,6 +547,7 @@ public final class CompendiumExporter {
       m.put("requiredItemKey", q.getRequiredItemKey());
       m.put("requiredItemQty", q.getRequiredItemQty());
       m.put("alsoRequiresItemKey", EXTRA_REQUIRED_ITEM_KEYS.get(q.getId()));
+      m.put("minLevel", q.getMinLevel());
       m.put("unlockZoneId", q.getUnlockZoneId());
       m.put("offerText", I18n.resolve(q.getOfferText()));
       m.put("completionText", I18n.resolve(q.getCompletionText()));

@@ -392,3 +392,19 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - A new quest stage must be added to `CompendiumExporter`'s `NEW_QUEST_IDS` allowlist (and a new
   NPC, if any, to `NEW_NPC_IDS`) or it silently never appears on the reference website - the
   exporter only emits quests/NPCs it's been told are new-since-fork.
+
+### Quest-completion level gate (`minLevel`)
+- `QuestDef.minLevel` (T4C-0035, default 0/no gate) blocks a quest's **turn-in** on a character
+  level floor - `QuestService.meetsMinLevel()`, checked in `turnInReadyQuests()` and
+  `completeCraftingQuest()`. Kills/items can still be gathered below the floor; only the final
+  completion is blocked, and `giveOrReport`'s progress dialog and `recordKill`'s "ready"
+  notification both report the level requirement instead of falsely claiming the quest is ready.
+- Built for `quest/definition/TheWakingRite.java`: a short, one-time Avalon quest (owner's call:
+  locked to level 125) that permanently unlocks a rebirth shortcut at `npc/AnchoriteRowan.java` -
+  a proven character no longer has to re-trek to the Oracle's dungeon (and its guardian gauntlet)
+  for every subsequent rebirth. Deliberately independent of the Oracle's own
+  `__FLAG_USER_HAS_DEFEATED_ASSISTANT` gate, which currently has no reachable spawn point in the
+  live game (`GabrielArchonis`/`GaenenElthorn` both sit at their placeholder `(0,0,0)` with no
+  spawn-group wiring anywhere) - a separate, pre-existing bug, not something this pass touched or
+  depends on. Use `minLevel` the same way for any future "quality-of-life unlock" quest that
+  should only be reachable once a character is already well past the early game.

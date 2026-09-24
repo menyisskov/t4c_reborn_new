@@ -824,6 +824,7 @@
         '<div class="tags"><span class="tag tier-legendary">' + fmtNum(q.rewardGold) + " gold</span>" +
         '<span class="tag tier-uncommon">' + fmtNum(q.rewardXp) + " XP</span>" +
         (zone ? '<span class="tag plain">' + esc((byKey.zone[zone] || {}).name || zone) + "</span>" : "") +
+        (q.minLevel > 0 ? '<span class="tag plain">Level ' + q.minLevel + "+</span>" : "") +
         "</div></a>"
       );
     }).join("");
@@ -876,6 +877,9 @@
         '<div class="quest-text-block"><span class="label">If you return again</span>“' + esc(q.completedText) + "”</div>" +
         '<div class="rewards-row"><span class="reward gold">✦ ' + fmtNum(q.rewardGold) + " gold</span>" +
         '<span class="reward xp">✦ ' + fmtNum(q.rewardXp) + " XP</span></div>" +
+        (q.minLevel > 0
+          ? '<p class="lead">Requires character level ' + q.minLevel + " or higher to turn in - kills/items can still be gathered below that.</p>"
+          : "") +
         (q.unlockZoneId
           ? '<p class="lead">Unlocks fast travel to ' + zoneLink(q.unlockZoneId) + ".</p>"
           : "") +
@@ -888,6 +892,7 @@
             ? kv("Required item", q.requiredItemQty + "× " + itemLink(q.requiredItemKey))
             : "") +
           (q.alsoRequiresItemKey ? kv("Also required", itemLink(q.alsoRequiresItemKey)) : "") +
+          (q.minLevel > 0 ? kv("Minimum level", q.minLevel) : "") +
           (q.unlockZoneId ? kv("Unlocks zone", zoneLink(q.unlockZoneId)) : "") +
           (q.requiredKills > 0
             ? kv("Center", "(" + q.areaCenterX + ", " + q.areaCenterY + ")") +

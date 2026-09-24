@@ -15,6 +15,17 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-24 — A shortcut for repeat rebirths (T4C-0035)
+
+### Added
+- A new NPC, **Anchorite Rowan**, can be found within the Avalon Wilds. Complete a short quest for
+  them once - **The Waking Rite** - and Rowan can perform the same rebirth rite the Oracle does,
+  right there in Avalon, every time from then on. No need to make the long trip back to the
+  Oracle's dungeon for a second, third, or later rebirth.
+- The Waking Rite requires character level 125 or higher to complete (you can still work on it
+  below that level, you just can't turn it in yet), and once finished, the shortcut is unlocked
+  permanently for that character.
+
 ## 2026-09-24 — Every boss drops something (T4C-0034)
 
 ### Changed
