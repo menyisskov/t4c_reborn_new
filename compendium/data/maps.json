@@ -1598,6 +1598,12 @@
     "pxPerTile": 4,
     "npcs": [
       {
+        "id": "AnchoriteRowan",
+        "displayName": "Anchorite Rowan",
+        "x": 1290,
+        "y": 1500
+      },
+      {
         "id": "ArchmageThalindra",
         "displayName": "Archmage Thalindra",
         "x": 1362,
@@ -2058,6 +2064,12 @@
     "originY": 1380,
     "pxPerTile": 4,
     "npcs": [
+      {
+        "id": "AnchoriteRowan",
+        "displayName": "Anchorite Rowan",
+        "x": 1290,
+        "y": 1500
+      },
       {
         "id": "AnrakBrownbark",
         "displayName": "Anrak",

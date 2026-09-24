@@ -28073,6 +28073,12 @@ window.T4C_DATA = {
       "pxPerTile": 4.0,
       "npcs": [
         {
+          "id": "AnchoriteRowan",
+          "displayName": "Anchorite Rowan",
+          "x": 1290.0,
+          "y": 1500.0
+        },
+        {
           "id": "ArchmageThalindra",
           "displayName": "Archmage Thalindra",
           "x": 1362.0,
@@ -28533,6 +28539,12 @@ window.T4C_DATA = {
       "originY": 1380.0,
       "pxPerTile": 4.0,
       "npcs": [
+        {
+          "id": "AnchoriteRowan",
+          "displayName": "Anchorite Rowan",
+          "x": 1290.0,
+          "y": 1500.0
+        },
         {
           "id": "AnrakBrownbark",
           "displayName": "Anrak",
