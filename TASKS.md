@@ -46,7 +46,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0031 | Narrative depth for Passage to Avalon (Harbormaster Rangor personal stake + Avalon foreshadowing) | Content | Done | `534618ae` | [2026-09-24](CHANGELOG.md#2026-09-24--passage-to-avalon-gets-a-personal-story-t4c-0031) |
 | T4C-0032 | Passage to Avalon becomes a two-stage quest chain (prove yourself against the scouts, then take on Ithrak's warband) | Content | Done | `1dd47507` | [2026-09-24](CHANGELOG.md#2026-09-24--passage-to-avalon-becomes-a-two-stage-quest-t4c-0032) |
 | T4C-0033 | Godsforged: a crafting-quest tier above Legendary, one item per class archetype, via a 3-NPC crafting chain | Content/Systems | Done | `af7aa265` | [2026-09-24](CHANGELOG.md#2026-09-24--godsforged-a-new-tier-of-crafted-relics-t4c-0033) |
-| T4C-0034 | Boss loot pass: no more one-item/rare-or-nothing drop tables | Content/Fix | Done | _this branch_ | [2026-09-24](CHANGELOG.md#2026-09-24--every-boss-drops-something-t4c-0034) |
+| T4C-0034 | Boss loot pass: no more one-item/rare-or-nothing drop tables | Content/Fix | Done | `43a77280` | [2026-09-24](CHANGELOG.md#2026-09-24--every-boss-drops-something-t4c-0034) |
 
 ## Type legend
 
