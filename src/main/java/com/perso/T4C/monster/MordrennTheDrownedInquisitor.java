@@ -42,8 +42,8 @@ public final class MordrennTheDrownedInquisitor extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        90,
-        275,
+        200,
+        600,
         java.util.List.of(
             new MonsterDef.LootDrop("mordrenns_drowned_cowl", 0.01f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
