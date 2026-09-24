@@ -41,7 +41,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0026 | Rebirths page on the compendium site (per-rebirth requirements and rewards) | Content/Tooling | Done | `e53a781c` | [2026-09-23](CHANGELOG.md#2026-09-23--rebirths-page-on-the-reference-website-t4c-0026) |
 | T4C-0027 | Item rebalance: class-based bonuses, AC tied to endurance (max 600), design guidelines file | Content/Balance | Done | `b7f20b4d` | [2026-09-23](CHANGELOG.md#2026-09-23--item-rebalance-every-item-matches-its-class-t4c-0027) |
 | T4C-0028 | Legendary bow + staff, multi-drop boss loot tables, flat items table on the compendium | Content/Tooling | Done | `11f30883` | [2026-09-24](CHANGELOG.md#2026-09-24--endgame-legendary-weapons-richer-boss-loot-and-a-flatter-items-page-t4c-0028) |
-| T4C-0029 | The Rootcrown Wyrm (Elder Wyrms pilot): new boss + 3 legendary wisdom-mage items | Content | Done | _this branch_ | [2026-09-24](CHANGELOG.md#2026-09-24--the-rootcrown-wyrm-first-of-the-elder-wyrms-t4c-0029) |
+| T4C-0029 | The Rootcrown Wyrm (Elder Wyrms pilot): new boss + 3 legendary wisdom-mage items | Content | Done | `a3b0b80d` | [2026-09-24](CHANGELOG.md#2026-09-24--the-rootcrown-wyrm-first-of-the-elder-wyrms-t4c-0029) |
 
 ## Type legend
 
