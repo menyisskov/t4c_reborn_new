@@ -1,0 +1,38 @@
+{
+  "name": "Warband Warlord",
+  "displayName": "${monster.warband_warlord}",
+  "health": 18000,
+  "xpPerHit": 0,
+  "xpOnDeath": 90000,
+  "hitDamageMin": 190,
+  "hitDamageMax": 330,
+  "respawnTime": 30000,
+  "walkPattern": "64kCentaurKing#i",
+  "attackPattern": "64kCentaurKingA#i",
+  "deathPattern": "64kCentaurKingC!n",
+  "soundAttack": "Whooshm 7.wav",
+  "soundDeath": "Taunting Hit.wav",
+  "soundHit": "Centaur Hit.wav",
+  "gold": { "min": 1400, "max": 3700 },
+  "loot": [
+    { "item": "chieftains_warhorn", "chance": 0.08 },
+    { "item": "marchwardens_crown", "chance": 0.02 },
+    { "item": "bow_of_centaur_slaying", "chance": 0.02 },
+    { "item": "centaur_slaying_protector", "chance": 0.015 },
+    { "item": "serious_healing_potion", "chance": 0.3 },
+    { "item": "mana_elixir", "chance": 0.2 }
+  ],
+  "stats": { "str": 200, "end": 180, "agi": 150, "intel": 220, "will": 40, "wis": 180, "luck": 0 },
+  "resists": [100, 150, 100, 85, 115, 100, 100, 100, 100, 100, 100, 100],
+  "level": 150,
+  "dodge": 610,
+  "armorClass": { "min": 0, "max": 150 },
+  "aggro": 100,
+  "canAttack": true,
+  "attacks": [
+    { "formula": "1d260+205", "combatAttack": 2500, "percentage": 100 }
+  ],
+  "tameable": false,
+  "tameMaxLevel": 0,
+  "spawnAliases": ["WarbandWarlord"]
+}

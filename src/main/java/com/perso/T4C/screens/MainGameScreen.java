@@ -952,6 +952,7 @@ public class MainGameScreen implements Screen {
               && echo.getMaker() == player) {
             rewardMirrorTrial(echo);
           }
+          handleWarbandDeath(monster);
         });
     monsterManager.setScriptEffectsCallback(
         effects -> {
@@ -1135,6 +1136,29 @@ public class MainGameScreen implements Screen {
               monster.getTileY());
           trackGoblinTrustProgress(monster);
         });
+  }
+
+  /**
+   * The Windhowl War-Party (T4C-0045): felling the banner-bearer opens a scatter window, and
+   * clearing every raider inside that window summons the Warband Warlord where the last raider
+   * fell. See {@code monster/WarbandCampState.java} for the shared encounter tracking - the
+   * monster classes themselves only carry flavor text, this is where the actual reward fires.
+   */
+  private void handleWarbandDeath(com.perso.T4C.monster.core.BaseMonster monster) {
+    com.perso.T4C.monster.WarbandCampState.Camp camp =
+        com.perso.T4C.monster.WarbandCampState.Camp.WINDHOWL_WAR_PARTY;
+    if (monster instanceof com.perso.T4C.monster.WarbandBannerBearer) {
+      com.perso.T4C.monster.WarbandCampState.bannerFell(camp);
+      return;
+    }
+    if (monster instanceof com.perso.T4C.monster.WarbandRaider
+        && com.perso.T4C.monster.WarbandCampState.raiderFellAndCampJustCleared(camp)) {
+      Vector2 position = monster.getPosition();
+      if (monsterManager.spawnMonster(
+          com.perso.T4C.monster.WarbandCampState.WARLORD_NAME, position.x, position.y)) {
+        showSystemMessage(I18n.message("message.warband.warlord_appears"));
+      }
+    }
   }
 
   /**

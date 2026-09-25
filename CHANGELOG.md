@@ -22,6 +22,16 @@ on, every content/feature pass adds its own entry here as part of the work
   gold into the vault on one character, then pull it back out on another — no more mule runs.
   The vault has its own banked gold, tracked separately from any one character's stash.
 
+## 2026-09-25 — The Windhowl War-Party, a warband camp (T4C-0045)
+
+### Added
+- **The Windhowl War-Party.** A Centaur warband now camps in its own clearing near the
+  Windhowl Marches: five **Warband Raiders** around a **Warband Banner-Bearer**. Kill the
+  banner-bearer first — it visibly rallies the rest — and every raider you fell while its
+  banner is down chips away at the war-party. Clear the whole camp that way and the
+  **Warband Warlord** rides in on the spot where the last raider fell, a tougher fight with
+  its own loot table headlined by the new **Chieftain's Warhorn** neck piece.
+
 _Nothing pending._
 
 ## 2026-09-25 — Login, character selection and radar (T4C-0043)
