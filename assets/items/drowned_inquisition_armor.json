@@ -1,0 +1,64 @@
+{
+  "key": "drowned_inquisition_armor",
+  "name": "Drowned Inquisition Vestments",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 49.6,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 200,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 180,
+    "wisdom": 45,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20765,
+      "statId": 12,
+      "expression": "25"
+    },
+    {
+      "boostId": 20766,
+      "statId": 13,
+      "expression": "25"
+    },
+    {
+      "boostId": 20767,
+      "statId": 14,
+      "expression": "25"
+    },
+    {
+      "boostId": 20768,
+      "statId": 15,
+      "expression": "25"
+    },
+    {
+      "boostId": 20769,
+      "statId": 22,
+      "expression": "39"
+    },
+    {
+      "boostId": 20770,
+      "statId": 18,
+      "expression": "22"
+    },
+    {
+      "boostId": 20771,
+      "statId": 1,
+      "expression": "22"
+    }
+  ]
+}

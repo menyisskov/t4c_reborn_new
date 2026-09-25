@@ -61,7 +61,15 @@ public final class IgnarokTheEmberfang extends DataMonster {
             new MonsterDef.LootDrop("empyrean_fire_gauntlets", 0.012f),
             new MonsterDef.LootDrop("empyrean_fire_helmet", 0.012f),
             new MonsterDef.LootDrop("empyrean_fire_leggings", 0.012f),
-            new MonsterDef.LootDrop("empyrean_fire_protector", 0.012f)),
+            new MonsterDef.LootDrop("empyrean_fire_protector", 0.012f),
+            // Cinderreach Hills' own fire intelligence set (Cinderforged, ArmorSetGenerator) -
+            // its boss is the main source; Cinder Whelps drop it rarely.
+            new MonsterDef.LootDrop("cinderforged_armor", 0.04f),
+            new MonsterDef.LootDrop("cinderforged_boots", 0.04f),
+            new MonsterDef.LootDrop("cinderforged_gauntlets", 0.04f),
+            new MonsterDef.LootDrop("cinderforged_helmet", 0.04f),
+            new MonsterDef.LootDrop("cinderforged_leggings", 0.04f),
+            new MonsterDef.LootDrop("cinderforged_protector", 0.04f)),
         false,
         0.0f,
         78,

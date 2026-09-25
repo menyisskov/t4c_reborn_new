@@ -1,0 +1,66 @@
+{
+  "key": "drowned_inquisition_gauntlets",
+  "name": "Drowned Inquisition Gloves",
+  "bodyPart": "LEFT_HAND",
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL",
+  "appearanceEquippedSecondary": "PupPlateGloveR",
+  "appearanceInventory": "64kInvPlateGlove",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 14.8,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 200,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 180,
+    "wisdom": 45,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 263,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20779,
+      "statId": 12,
+      "expression": "14"
+    },
+    {
+      "boostId": 20780,
+      "statId": 13,
+      "expression": "14"
+    },
+    {
+      "boostId": 20781,
+      "statId": 14,
+      "expression": "14"
+    },
+    {
+      "boostId": 20782,
+      "statId": 15,
+      "expression": "14"
+    },
+    {
+      "boostId": 20783,
+      "statId": 22,
+      "expression": "19"
+    },
+    {
+      "boostId": 20784,
+      "statId": 18,
+      "expression": "7"
+    },
+    {
+      "boostId": 20785,
+      "statId": 1,
+      "expression": "7"
+    }
+  ]
+}

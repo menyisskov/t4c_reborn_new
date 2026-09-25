@@ -1,0 +1,64 @@
+{
+  "key": "duskmaw_wyrms_eclipsed_crown",
+  "name": "Duskmaw Wyrm's Eclipsed Crown",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 42.9,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 950,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36656,
+      "statId": 1,
+      "expression": "95"
+    },
+    {
+      "boostId": 36657,
+      "statId": 24,
+      "expression": "95"
+    },
+    {
+      "boostId": 36658,
+      "statId": 12,
+      "expression": "38"
+    },
+    {
+      "boostId": 36659,
+      "statId": 13,
+      "expression": "38"
+    },
+    {
+      "boostId": 36660,
+      "statId": 14,
+      "expression": "38"
+    },
+    {
+      "boostId": 36661,
+      "statId": 15,
+      "expression": "38"
+    },
+    {
+      "boostId": 36662,
+      "statId": 22,
+      "expression": "38"
+    }
+  ]
+}

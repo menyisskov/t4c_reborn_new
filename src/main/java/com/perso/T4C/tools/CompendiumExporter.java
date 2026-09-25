@@ -80,7 +80,11 @@ public final class CompendiumExporter {
           "The Verdant Warden",
           "Tideworn Reaver",
           "Coastwarden Ithrak",
-          "The Rootcrown Wyrm");
+          "The Rootcrown Wyrm",
+          "The Pyreclaw Wyrm",
+          "The Mistwing Wyrm",
+          "The Duskmaw Wyrm",
+          "The Galecrest Wyrm");
 
   /** Pre-existing legacy monsters that a content pass placed/activated rather than authored. */
   private static final Set<String> ACTIVATED_MONSTER_NAMES = Set.of("Arch Drake");

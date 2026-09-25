@@ -71,8 +71,7 @@ class ItemBalanceGuidelinesTest {
   void boostIdsAreUniqueAndInTheirReservedRange() {
     Map<Integer, String> owner = new HashMap<>();
     for (ItemDefinition d : items) {
-      String bare = d.getKey().startsWith("item.") ? d.getKey().substring(5) : d.getKey();
-      boolean generated = bare.startsWith("ancient_celestial_") || bare.startsWith("empyrean_");
+      boolean generated = ItemBalance.isGeneratedSetPiece(d.getKey());
       for (ItemDefinition.ItemBoost boost : d.getBoosts()) {
         String previous = owner.putIfAbsent(boost.getBoostId(), d.getKey());
         assertTrue(
@@ -144,8 +143,7 @@ class ItemBalanceGuidelinesTest {
   void singleItemsFollowTheBonusBudget() {
     for (ItemDefinition d : items) {
       String k = d.getKey();
-      String bare = k.startsWith("item.") ? k.substring("item.".length()) : k;
-      if (bare.startsWith("ancient_celestial_") || bare.startsWith("empyrean_")) continue;
+      if (ItemBalance.isGeneratedSetPiece(k)) continue;
       Archetype a = ItemBalance.archetype(d);
       double p =
           ItemBalance.primaryRequirement(a, d.getReqStr(), d.getReqAgi(), d.getMinInt(), d.getMinWis());

@@ -65,7 +65,16 @@ public final class CentaurKing extends DataMonster {
             new MonsterDef.LootDrop("empyrean_archer_gauntlets", 0.012f),
             new MonsterDef.LootDrop("empyrean_archer_helmet", 0.012f),
             new MonsterDef.LootDrop("empyrean_archer_leggings", 0.012f),
-            new MonsterDef.LootDrop("empyrean_archer_protector", 0.012f)),
+            new MonsterDef.LootDrop("empyrean_archer_protector", 0.012f),
+            // The Centaur Slaying set (ArmorSetGenerator), matching this boss's Bow of Centaur
+            // Slaying; Centaur Warriors drop it rarely, like the bow.
+            new MonsterDef.LootDrop("centaur_slaying_armor", 0.01f),
+            new MonsterDef.LootDrop("centaur_slaying_boots", 0.01f),
+            new MonsterDef.LootDrop("centaur_slaying_gauntlets", 0.01f),
+            new MonsterDef.LootDrop("centaur_slaying_helmet", 0.01f),
+            new MonsterDef.LootDrop("centaur_slaying_leggings", 0.01f),
+            new MonsterDef.LootDrop("centaur_slaying_protector", 0.01f),
+            new MonsterDef.LootDrop("centaur_slaying_quiver", 0.01f)),
         false,
         0.0f,
         180,

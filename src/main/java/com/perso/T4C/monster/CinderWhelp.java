@@ -46,7 +46,15 @@ public final class CinderWhelp extends DataMonster {
         SOUND_HIT,
         100,
         320,
-        java.util.List.of(new MonsterDef.LootDrop("torch", 0.02f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("torch", 0.02f),
+            // Rare trash-mob source for the zone's Cinderforged set (Ignarok is the main one).
+            new MonsterDef.LootDrop("cinderforged_armor", 0.004f),
+            new MonsterDef.LootDrop("cinderforged_boots", 0.004f),
+            new MonsterDef.LootDrop("cinderforged_gauntlets", 0.004f),
+            new MonsterDef.LootDrop("cinderforged_helmet", 0.004f),
+            new MonsterDef.LootDrop("cinderforged_leggings", 0.004f),
+            new MonsterDef.LootDrop("cinderforged_protector", 0.004f)),
         false,
         0.0f,
         69,

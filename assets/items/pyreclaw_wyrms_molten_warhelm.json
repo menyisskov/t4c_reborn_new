@@ -1,0 +1,64 @@
+{
+  "key": "pyreclaw_wyrms_molten_warhelm",
+  "name": "Pyreclaw Wyrm's Molten Warhelm",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 59.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 950,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36607,
+      "statId": 3,
+      "expression": "79"
+    },
+    {
+      "boostId": 36608,
+      "statId": 8,
+      "expression": "190"
+    },
+    {
+      "boostId": 36609,
+      "statId": 12,
+      "expression": "24"
+    },
+    {
+      "boostId": 36610,
+      "statId": 13,
+      "expression": "48"
+    },
+    {
+      "boostId": 36611,
+      "statId": 14,
+      "expression": "24"
+    },
+    {
+      "boostId": 36612,
+      "statId": 15,
+      "expression": "24"
+    },
+    {
+      "boostId": 36613,
+      "statId": 22,
+      "expression": "24"
+    }
+  ]
+}
