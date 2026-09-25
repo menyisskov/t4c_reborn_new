@@ -147,7 +147,8 @@ public class GameInputHandler {
         teleportOverlayToggle.run();
       }
     }
-    if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
+    // F12, not F2: F2 is left free so players can bind it to a macro (owner request, T4C-0041).
+    if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
       if (coordsHudToggle != null) {
         coordsHudToggle.run();
       }
