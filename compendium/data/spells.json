@@ -423,7 +423,7 @@
   {
     "key": "spell.poison_arrow",
     "isNew": false,
-    "name": "poison fleche",
+    "name": "Poison Arrow",
     "description": "Hurls a small poison-tipped projectile at the target.",
     "manaCost": "5",
     "minInt": 51,
@@ -486,7 +486,7 @@
   {
     "key": "spell.freeze",
     "isNew": false,
-    "name": "Gel",
+    "name": "Freeze",
     "description": "Sharply drops the temperature around the target.",
     "manaCost": "5",
     "minInt": 57,
