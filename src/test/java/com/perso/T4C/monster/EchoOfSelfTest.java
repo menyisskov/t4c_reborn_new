@@ -152,6 +152,9 @@ class EchoOfSelfTest {
     assertEquals(1, deaths.get());
     assertEquals(4, echo.getTier());
     assertEquals(0, player.getCurrentXp(), "the Echo itself grants no kill XP");
+    assertFalse(EchoOfSelf.isActive());
+    assertTrue(
+        EchoOfSelf.isTrialInProgress(), "a spell it cast before dying may still be in flight");
   }
 
   @Test

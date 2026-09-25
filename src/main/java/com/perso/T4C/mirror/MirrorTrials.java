@@ -128,10 +128,26 @@ public final class MirrorTrials {
   }
 
   /** XP paid the first time a trial is won: a share of the XP the current level still needs. */
-  public static int xpReward(long xpToNextLevel, int level, int tier) {
-    if (level >= GameConstants.MAX_PLAYER_LEVEL || xpToNextLevel <= 0) return 0;
+  public static int xpReward(long remainingXp, int level, int tier) {
+    if (level >= GameConstants.MAX_PLAYER_LEVEL || remainingXp <= 0) return 0;
     double share = 0.25 + 0.05 * (Math.max(1, Math.min(MAX_TIER, tier)) - 1);
-    return (int) Math.min(Integer.MAX_VALUE, Math.round(xpToNextLevel * share));
+    return (int) Math.min(Integer.MAX_VALUE, Math.round(remainingXp * share));
+  }
+
+  /**
+   * Progression multiplies every XP gain by {@link GameConstants#SERVER_XP_RATE}; the trial reward
+   * is already a share of the real remaining XP, so it is fed in pre-divided by that rate.
+   */
+  static int unscaledXp(int xp) {
+    if (xp <= 0) return 0;
+    return Math.max(1, Math.round(xp / GameConstants.SERVER_XP_RATE));
+  }
+
+  /** The XP a reward actually credits once progression re-applies the server rate. */
+  static int creditableXp(int xp) {
+    if (xp <= 0) return 0;
+    double credited = unscaledXp(xp) * (double) GameConstants.SERVER_XP_RATE;
+    return (int) Math.min(Integer.MAX_VALUE, Math.round(credited));
   }
 
   public static Archetype archetypeOf(Player player) {
@@ -268,9 +284,10 @@ public final class MirrorTrials {
       return new Reward(fought, false, 0, gold, false);
     }
     player.setQuestFlag(FLAG_TIER, fought);
-    int xp = xpReward(player.getXpToNextLevel(), player.getLevel(), fought);
+    long remaining = Math.max(0L, player.getXpToNextLevel() - player.getCurrentXp());
+    int xp = creditableXp(xpReward(remaining, player.getLevel(), fought));
     int gold = goldReward(player.getLevel(), fought);
-    if (xp > 0) player.addXpExact(xp, xpCurve);
+    if (xp > 0) player.addXpExact(unscaledXp(xp), xpCurve);
     player.addGold(gold);
     return new Reward(fought, true, xp, gold, fought >= MAX_TIER);
   }

@@ -50,7 +50,12 @@ public final class EchoOfSelf extends DataMonster {
   /** Casters and archers keep this distance; everyone else closes to melee. */
   private static final int RANGED_TILES = 6;
 
+  /** How long after an Echo dies its projectiles still count as the trial (spell flight time). */
+  private static final long IN_FLIGHT_GRACE_MILLIS = 3000L;
+
   private static volatile EchoOfSelf current;
+
+  private static volatile long lastDeathMs;
 
   private Player maker;
   private PlayerAnimations mirrorAnimations;
@@ -134,6 +139,14 @@ public final class EchoOfSelf extends DataMonster {
     return echo != null
         && !echo.isDead()
         && System.currentTimeMillis() - echo.lastUpdateMs <= LIVE_WINDOW_MILLIS;
+  }
+
+  /**
+   * True while a death would come from the trial: an Echo is alive, or one died moments ago and its
+   * last spell may still be in flight. Such deaths skip the normal death penalty.
+   */
+  public static boolean isTrialInProgress() {
+    return isActive() || System.currentTimeMillis() - lastDeathMs <= IN_FLIGHT_GRACE_MILLIS;
   }
 
   /** Called when the player dies: a living Echo claims the win and fades. */
@@ -271,6 +284,8 @@ public final class EchoOfSelf extends DataMonster {
   @Override
   protected void die() {
     if (current == this) current = null;
+    // A spell it cast just before dying may still be in flight; that hit is still the Echo's.
+    lastDeathMs = System.currentTimeMillis();
     say(tier >= MirrorTrials.MAX_TIER ? "mirror.echo.defeated.final" : "mirror.echo.defeated");
     super.die();
   }

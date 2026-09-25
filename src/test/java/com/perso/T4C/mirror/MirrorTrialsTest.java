@@ -96,7 +96,21 @@ class MirrorTrialsTest {
     assertEquals(1, MirrorTrials.clearedTier(player));
     assertEquals(MirrorTrials.goldReward(100, 1), player.getGold() - goldBefore);
     assertEquals(2_500, reward.xp());
+    assertEquals(2_500, player.getCurrentXp(), "the shown XP is exactly what is credited");
     assertEquals(1, player.getQuestFlag(MirrorTrials.FLAG_VICTORIES));
+  }
+
+  @Test
+  void xpIsAShareOfWhatTheLevelStillNeedsNotItsWholeThreshold() {
+    Player player = new Player();
+    player.setLevel(100);
+    player.setXpToNextLevel(10_000L);
+    player.setCurrentXp(9_000L);
+
+    MirrorTrials.Reward reward = MirrorTrials.recordVictory(player, 1, XpCurve.loadDefault());
+
+    assertEquals(250, reward.xp());
+    assertEquals(9_250, player.getCurrentXp());
   }
 
   @Test

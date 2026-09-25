@@ -584,12 +584,15 @@ the owner asked for an unprompted "surprise"; the owner can overrule any of them
   "fight yourself" content on this rule: difficulty must not depend on how extreme a character's
   numbers are.
 - **Rewards (first win of each trial only):** XP = `(0.25 + 0.05 × (trial − 1))` × the XP the
-  current level still needs (none at the cap); gold = `level × 250 × trial`, capped at the
+  current level still needs (threshold minus current XP; none at the cap). It is fed into
+  progression pre-divided by `SERVER_XP_RATE`, so the amount shown is the amount credited -
+  any reward that is already "a share of real XP" must do the same; gold = `level × 250 × trial`, capped at the
   1,500,000 endgame quest ceiling (section 7). Rematches after all ten pay `level × 100` gold.
   Winning trial 10 binds the Echo companion (id `mirror_echo`, rebuilt from the player's current
   look on every call and on load, since the companion save only stores the id).
 - **Falling to an Echo is free:** no XP/item loss or corpse; the player wakes in place at half
-  HP and the Echo fades. It also fades (paying nothing) past 22 tiles or after 8 minutes.
+  HP and the Echo fades. This also covers 3 seconds after the Echo dies, since a spell it cast
+  may still be in flight. It also fades (paying nothing) past 22 tiles or after 8 minutes.
   Instant-kill effects only wound it (at most 10% of its health). **Open gap:** the free fall
   applies to any non-PvP death while an Echo is alive, so another monster landing the killing
   blow during a trial is also free - at most once per summon, since the Echo fades on the fall.

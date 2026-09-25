@@ -3514,7 +3514,7 @@ public class MainGameScreen implements Screen {
     player.setWitnessCountSupplier(this::countSneakWitnesses);
     player.setDeathCallback(
         pvpDeath -> {
-          if (!pvpDeath && com.perso.T4C.monster.EchoOfSelf.isActive()) {
+          if (!pvpDeath && com.perso.T4C.monster.EchoOfSelf.isTrialInProgress()) {
             handleMirrorTrialDeath();
             return;
           }
