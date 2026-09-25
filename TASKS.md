@@ -51,7 +51,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0036 | Gold economy pass: trimmed the endgame quest gold spike, new town-vendor gold sinks (mana prisms, critical healing potions) | Content/Systems | Done | `90919592` | [2026-09-24](CHANGELOG.md#2026-09-24--a-gold-economy-pass-t4c-0036) |
 | T4C-0037 | Boss gold rebalance: Mordrenn and the Centaur King paid noticeably less gold than nearby regular monsters for their difficulty | Content/Balance | Done | `8795f7c3` | [2026-09-24](CHANGELOG.md#2026-09-24--mordrenn-and-the-centaur-king-pay-out-more-gold-t4c-0037) |
 | T4C-0038 | Finish what's started: the four remaining Elder Wyrms (Pyreclaw, Mistwing, Duskmaw, Galecrest), Centaur Slaying armor set, Drowned Inquisition and Cinderforged zone armor sets | Content | Done | `258adf1` | [2026-09-25](CHANGELOG.md#2026-09-25--the-elder-wyrms-are-complete-and-three-new-armor-sets-t4c-0038) |
-| T4C-0039 | Storage chest overhaul (new two-pane UI, storage now saved, keeps durability/charges) + player-control pass (Controls window, typing-safe hotkeys, Ctrl no longer walks, debug reload moved off bare R) | Systems/Fix | Done | `146b23f`, `CONTROLS_COMMIT` | [2026-09-25](CHANGELOG.md#2026-09-25--a-new-storage-chest-and-better-control-over-your-character-t4c-0039) |
+| T4C-0039 | Storage chest overhaul (new two-pane UI, storage now saved, keeps durability/charges) + player-control pass (Controls window, typing-safe hotkeys, Ctrl no longer walks, debug reload moved off bare R) | Systems/Fix | Done | `146b23f`, `d95c9d0` | [2026-09-25](CHANGELOG.md#2026-09-25--a-new-storage-chest-and-better-control-over-your-character-t4c-0039) |
 
 ## Type legend
 
