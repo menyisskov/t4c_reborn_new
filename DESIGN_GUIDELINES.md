@@ -440,6 +440,39 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   NPC, if any, to `NEW_NPC_IDS`) or it silently never appears on the reference website - the
   exporter only emits quests/NPCs it's been told are new-since-fork.
 
+### The "Two Masters" pattern (T4C-0046)
+- A reusable end-of-quest **choice**: two different NPCs can both complete the same already-ready
+  quest, but only one of them - whichever the player talks to first. One master ("the immediate
+  one") pays the quest's own `rewardGold`/`rewardXp`/`rewardItemKey` right now, through the normal
+  `giveOrReport`/`turnInReadyQuests` path, completely unchanged. The other ("the alternate one")
+  swaps that payout for something smaller but **permanent-until-rebirth** - a passive perk instead
+  of a lump sum. This is a reward-*shape* choice, not a new quest: it never adds a second
+  `QuestDef`, never changes the original's `requiredKills`/area/objective, and both paths still
+  apply the quest's own `unlockZoneId` if it has one.
+- Built on `QuestService.completeWithAlternateReward(questId, player, Runnable)`: same readiness
+  checks as `complete()` (`STATUS_ACTIVE`, kills, required item, `minLevel`), but takes a
+  caller-supplied `Runnable` instead of granting gold/XP/item, and - critically - it doesn't check
+  `giverNpc`, so any NPC can call it. Marking the quest `STATUS_COMPLETED` either way is what
+  makes the two masters mutually exclusive: whichever one fires first, the other one's own
+  readiness check (`statusFor(...) == STATUS_ACTIVE`) now fails.
+- The alternate master needs a `javaBehavior()` override (not a declarative `GIVE_QUEST` action,
+  which only knows how to call the normal path) - see `npc/OldCorrin.java` for the full pattern:
+  check `QuestService.statusFor`/`killsFlag` directly to word three distinct lines (not ready yet,
+  ready and offering the trade, already settled by either master), `askYesNo` to confirm giving up
+  the normal payout, then `completeWithAlternateReward` on yes.
+- **Proof of concept**: `passage_to_kraanhold` (T4C-0024). Dockmaster Thessaly is the immediate
+  master (unchanged). Old Corrin is the alternate: instead of the gold/XP, she grants a permanent,
+  per-life flag (`OldCorrin.FAVOR_FLAG`, cleared on rebirth like every quest flag) that a small
+  hook in `MainGameScreen.awardKraanholdFavorBonus` reads to pay a flat XP trickle on every
+  Kraanian-clan kill. **Design call (mine, flag for the owner to overrule):** a flat per-kill
+  bonus, checked where kills are already centrally handled, rather than a true "+X% XP in this
+  zone" multiplier threaded through the main combat XP path - that would touch code well outside
+  this quest's own scope for a cosmetically similar result. Use the same flat-bonus shape for the
+  next zone this pattern is applied to, unless the owner asks for the real multiplier.
+- Use this pattern when a quest's completion is a natural narrative fork ("who do you report to,
+  and what do you actually want from this") - not for every zone gate. Most zone gates should stay
+  single-master per the "ordinary zone-gate quest" rule above.
+
 ### Quest-completion level gate (`minLevel`)
 - `QuestDef.minLevel` (T4C-0035, default 0/no gate) blocks a quest's **turn-in** on a character
   level floor - `QuestService.meetsMinLevel()`, checked in `turnInReadyQuests()` and

@@ -32,6 +32,16 @@ on, every content/feature pass adds its own entry here as part of the work
   **Warband Warlord** rides in on the spot where the last raider fell, a tougher fight with
   its own loot table headlined by the new **Chieftain's Warhorn** neck piece.
 
+## 2026-09-25 — Two Masters: a choice at the Kraanhold dock (T4C-0046)
+
+### Added
+- **Old Corrin** now sits near Dockmaster Thessaly at the Kraanhold crossing. Once you've
+  cleared enough Toll Trolls for passage, you get a choice: report to Thessaly as before for
+  gold and experience on the spot, or talk to Corrin instead and trade that payout for her
+  standing invitation to the Kraanian trading houses — a small experience bonus on every
+  Kraanian kill, for as long as this life lasts. Whichever one you pick first is final; the
+  other closes the offer.
+
 _Nothing pending._
 
 ## 2026-09-25 — Login, character selection and radar (T4C-0043)

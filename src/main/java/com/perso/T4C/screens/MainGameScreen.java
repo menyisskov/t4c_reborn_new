@@ -1135,6 +1135,7 @@ public class MainGameScreen implements Screen {
               monster.getTileX(),
               monster.getTileY());
           trackGoblinTrustProgress(monster);
+          awardKraanholdFavorBonus(monster);
         });
   }
 
@@ -1173,6 +1174,25 @@ public class MainGameScreen implements Screen {
     if (clan == com.perso.T4C.monster.core.MonsterClan.GOBLIN) {
       player.setQuestFlag(
           "__GOBLINS_KILLED_BY_HERO", player.getQuestFlag("__GOBLINS_KILLED_BY_HERO") + 1);
+    }
+  }
+
+  /**
+   * The "Two Masters" pattern's permanent perk on {@code passage_to_kraanhold} (T4C-0046): Old
+   * Corrin's alternate reward, instead of Dockmaster Thessaly's immediate gold/XP, is a permanent
+   * (until-rebirth) trading favor with Kraanhold's own people — a flat XP trickle on every
+   * Kraanian-clan kill, for the rest of this life. See {@code npc/OldCorrin.java} for where the
+   * flag is granted and {@code quest/QuestService.completeWithAlternateReward} for the pattern.
+   */
+  private static final int KRAANHOLD_FAVOR_BONUS_XP = 75;
+
+  private void awardKraanholdFavorBonus(com.perso.T4C.monster.core.BaseMonster monster) {
+    if (player.getQuestFlag(com.perso.T4C.npc.OldCorrin.FAVOR_FLAG) == 0) return;
+    com.perso.T4C.monster.core.MonsterClan clan =
+        com.perso.T4C.monster.core.MonsterClanRelations.resolveClan(
+            monster.getClass().getSimpleName(), monster.getCanonicalName());
+    if (clan == com.perso.T4C.monster.core.MonsterClan.KRAANIAN) {
+      questService.awardScriptXp(player, KRAANHOLD_FAVOR_BONUS_XP);
     }
   }
 
