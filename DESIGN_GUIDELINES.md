@@ -556,4 +556,9 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - **Show numbers the way players say them.** Durations are converted to "45 s" or "5 min" for the
   current character (`SpellEffectManager.resolveDurationSeconds`), never shown as raw
   milliseconds or formulas.
+- **Keep F2 free for player macros** (owner, T4C-0041). Built-in shortcuts must not take F2; the
+  coordinates readout moved to F12. Before binding a new built-in function key, check it against
+  the Controls list. Currently taken: F1, F3, F8, F9 (debug tools), F11 (fullscreen) and F12
+  (coordinates). Prefer F12 or a modifier combination over another free F-key, because players
+  use those for macros.
 

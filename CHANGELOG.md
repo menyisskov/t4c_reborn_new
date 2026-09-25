@@ -15,6 +15,13 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-25 — F2 is free for your macros (T4C-0041)
+
+### Changed
+- The on-screen coordinates readout moved from **F2** to **F12**. F2 no longer does anything by
+  default, so you can bind it to a spell in the Macros window (Ctrl+M) without it also toggling
+  the coordinates.
+
 ## 2026-09-25 — Fast travel, spell book and macros windows redesigned (T4C-0040)
 
 ### Changed
