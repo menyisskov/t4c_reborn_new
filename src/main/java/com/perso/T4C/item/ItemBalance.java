@@ -53,6 +53,28 @@ public final class ItemBalance {
   public static final java.util.Set<Integer> RESISTIBLE_ELEMENTS =
       java.util.Set.of(12, 13, 14, 15, 22);
 
+  /**
+   * Key prefixes of every armor-set piece written by {@code tools/ArmorSetGenerator}: the two
+   * 8-flavor tiers plus the themed sets (Centaur Slaying, Drowned Inquisition, Cinderforged).
+   * A set piece carries only its AC share of a whole set's budget, so it is exempt from the
+   * single-item budget check, and its boost ids come from the generator's reserved 20000-29999
+   * block.
+   */
+  public static final java.util.List<String> GENERATED_SET_PREFIXES =
+      java.util.List.of(
+          "ancient_celestial_",
+          "empyrean_",
+          "centaur_slaying_",
+          "drowned_inquisition_",
+          "cinderforged_");
+
+  /** Whether {@code key} (with or without the {@code item.} prefix) is a generated set piece. */
+  public static boolean isGeneratedSetPiece(String key) {
+    if (key == null) return false;
+    String bare = key.startsWith("item.") ? key.substring("item.".length()) : key;
+    return GENERATED_SET_PREFIXES.stream().anyMatch(bare::startsWith);
+  }
+
   public enum Archetype {
     WARRIOR(1.10),
     ARCHER(0.85),

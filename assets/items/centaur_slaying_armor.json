@@ -1,0 +1,69 @@
+{
+  "key": "centaur_slaying_armor",
+  "name": "Armor of Centaur Slaying",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 131.8,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 500,
+    "strength": 0,
+    "agility": 600,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20708,
+      "statId": 12,
+      "expression": "59"
+    },
+    {
+      "boostId": 20709,
+      "statId": 13,
+      "expression": "59"
+    },
+    {
+      "boostId": 20710,
+      "statId": 14,
+      "expression": "59"
+    },
+    {
+      "boostId": 20711,
+      "statId": 15,
+      "expression": "59"
+    },
+    {
+      "boostId": 20712,
+      "statId": 22,
+      "expression": "59"
+    },
+    {
+      "boostId": 20713,
+      "statId": 6,
+      "expression": "56"
+    },
+    {
+      "boostId": 20714,
+      "statId": 10035,
+      "expression": "135"
+    },
+    {
+      "boostId": 20715,
+      "statId": 2,
+      "expression": "30"
+    }
+  ]
+}

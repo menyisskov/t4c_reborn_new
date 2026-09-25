@@ -1,0 +1,64 @@
+{
+  "key": "duskmaw_wyrms_nightshroud_mantle",
+  "name": "Duskmaw Wyrm's Nightshroud Mantle",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "NMS_NewCape01__pal8",
+  "appearanceInventory": "Inv_NMS_NewCape01__pal8",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 43.2,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 950,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36649,
+      "statId": 1,
+      "expression": "95"
+    },
+    {
+      "boostId": 36650,
+      "statId": 24,
+      "expression": "95"
+    },
+    {
+      "boostId": 36651,
+      "statId": 12,
+      "expression": "38"
+    },
+    {
+      "boostId": 36652,
+      "statId": 13,
+      "expression": "38"
+    },
+    {
+      "boostId": 36653,
+      "statId": 14,
+      "expression": "38"
+    },
+    {
+      "boostId": 36654,
+      "statId": 15,
+      "expression": "38"
+    },
+    {
+      "boostId": 36655,
+      "statId": 22,
+      "expression": "38"
+    }
+  ]
+}

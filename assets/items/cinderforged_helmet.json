@@ -1,0 +1,64 @@
+{
+  "key": "cinderforged_helmet",
+  "name": "Cinderforged Helm",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 20.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 280,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 240,
+    "wisdom": 60,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20828,
+      "statId": 12,
+      "expression": "20"
+    },
+    {
+      "boostId": 20829,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 20830,
+      "statId": 14,
+      "expression": "20"
+    },
+    {
+      "boostId": 20831,
+      "statId": 15,
+      "expression": "20"
+    },
+    {
+      "boostId": 20832,
+      "statId": 22,
+      "expression": "20"
+    },
+    {
+      "boostId": 20833,
+      "statId": 17,
+      "expression": "8"
+    },
+    {
+      "boostId": 20834,
+      "statId": 1,
+      "expression": "8"
+    }
+  ]
+}

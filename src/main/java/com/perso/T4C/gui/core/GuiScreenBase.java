@@ -296,4 +296,12 @@ public abstract class GuiScreenBase {
   public boolean onKeyTyped(char character) {
     return false;
   }
+
+  /**
+   * True while this screen owns the keyboard (a focused text box or number prompt), so movement
+   * keys and game hotkeys don't fire while the player types.
+   */
+  public boolean capturesKeyboard() {
+    return false;
+  }
 }

@@ -1,0 +1,64 @@
+{
+  "key": "cinderforged_armor",
+  "name": "Cinderforged Hauberk",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody",
+  "appearanceInventory": "64kInvPlateArmorSleeves",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 69.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 280,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 240,
+    "wisdom": 60,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 264,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20807,
+      "statId": 12,
+      "expression": "34"
+    },
+    {
+      "boostId": 20808,
+      "statId": 13,
+      "expression": "55"
+    },
+    {
+      "boostId": 20809,
+      "statId": 14,
+      "expression": "34"
+    },
+    {
+      "boostId": 20810,
+      "statId": 15,
+      "expression": "34"
+    },
+    {
+      "boostId": 20811,
+      "statId": 22,
+      "expression": "34"
+    },
+    {
+      "boostId": 20812,
+      "statId": 17,
+      "expression": "29"
+    },
+    {
+      "boostId": 20813,
+      "statId": 1,
+      "expression": "29"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "key": "centaur_slaying_protector",
+  "name": "Belt of Centaur Slaying",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 29.2,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 500,
+    "strength": 0,
+    "agility": 600,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20748,
+      "statId": 12,
+      "expression": "8"
+    },
+    {
+      "boostId": 20749,
+      "statId": 13,
+      "expression": "8"
+    },
+    {
+      "boostId": 20750,
+      "statId": 14,
+      "expression": "8"
+    },
+    {
+      "boostId": 20751,
+      "statId": 15,
+      "expression": "8"
+    },
+    {
+      "boostId": 20752,
+      "statId": 22,
+      "expression": "8"
+    },
+    {
+      "boostId": 20753,
+      "statId": 6,
+      "expression": "13"
+    },
+    {
+      "boostId": 20754,
+      "statId": 10035,
+      "expression": "30"
+    },
+    {
+      "boostId": 20755,
+      "statId": 2,
+      "expression": "7"
+    }
+  ]
+}

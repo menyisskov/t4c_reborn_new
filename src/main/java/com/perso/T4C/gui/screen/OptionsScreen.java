@@ -44,6 +44,7 @@ public class OptionsScreen extends GuiScreenBase {
     addOptionLists();
     addOriginalButtons();
     addSwitchCharacterButton();
+    addControlsButton();
   }
 
   private void addLabels() {
@@ -262,6 +263,19 @@ public class OptionsScreen extends GuiScreenBase {
             .setSize(130f, 32f)
             .withLabelVerticalOffset(-1f)
             .withLabel(font, () -> I18n.key("options.switch_character")));
+  }
+
+  private void addControlsButton() {
+    var normal = GuiSprites.load("GUI_ButtonTUp");
+    var hover = GuiSprites.load("GUI_ButtonTHUp");
+    var pressed = GuiSprites.load("GUI_ButtonTDown");
+    if (normal == null || hover == null || pressed == null) return;
+    var font = FontManager.getInstance().getT4CBeaulieuFont(15, Color.BLACK);
+    buttons.add(
+        new GuiButton(
+                normal, hover, pressed, x + 22f, y + 130f, () -> GuiManager.open(new ControlsScreen()))
+            .setSize(74f, 20f)
+            .withLabel(font, () -> I18n.key("options.controls")));
   }
 
   private void update(Consumer<GamePreferences> change) {

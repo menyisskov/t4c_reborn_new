@@ -28,6 +28,11 @@ import java.util.Map;
  * grant it plus attack/archery and an endurance bonus. Every flavor also resists all five
  * non-light elements (T4C-0030: no item ever grants light resistance, light-flavored gear
  * included - see {@link ItemBalance}'s class doc).
+ *
+ * <p>After the two tiers it also writes the single themed sets in {@link #THEMED_SETS} (Centaur
+ * Slaying, Drowned Inquisition, Cinderforged) with the same split and rules. Every key prefix
+ * this generator writes is listed in {@link ItemBalance#GENERATED_SET_PREFIXES}; add a new set's
+ * prefix there too.
  */
 public final class ArmorSetGenerator {
   private ArmorSetGenerator() {}
@@ -43,7 +48,31 @@ public final class ArmorSetGenerator {
       String appearanceInventory,
       long weight,
       int appearanceId,
-      double platemailAc) {}
+      double platemailAc,
+      int structure) {
+    Piece(
+        String slotWord,
+        String bodyPart,
+        String secondaryBodyPart,
+        String appearanceEquippedPrimary,
+        String appearanceEquippedSecondary,
+        String appearanceInventory,
+        long weight,
+        int appearanceId,
+        double platemailAc) {
+      this(
+          slotWord,
+          bodyPart,
+          secondaryBodyPart,
+          appearanceEquippedPrimary,
+          appearanceEquippedSecondary,
+          appearanceInventory,
+          weight,
+          appearanceId,
+          platemailAc,
+          2);
+    }
+  }
 
   private record Element(String key, String label, int resistStatId, int powerStatId, boolean legacy) {}
 
@@ -105,6 +134,105 @@ public final class ArmorSetGenerator {
   private static final List<String> ELEMENTAL_FLAVORS =
       List.of("fire", "dark", "water", "air", "earth", "light");
 
+  /**
+   * An archer set's seventh piece: a quiver (off-hand, quiver structure so a bow can fire with
+   * it). It has no Armor Class of its own (the off-hand slot carries none), but it takes a
+   * belt-sized share of the set's bonus split so it isn't an empty slot, plus a flat
+   * weapon-damage flavor bonus (see {@link ThemedSet#quiverDamageBonus}).
+   */
+  private static final Piece QUIVER =
+      new Piece(
+          "quiver",
+          "WEAPON2",
+          null,
+          null,
+          null,
+          "64kIconQuiver",
+          3,
+          0,
+          12.70,
+          com.perso.T4C.config.GameConstants.QUIVER_STRUCTURE_ID);
+
+  private static final List<Piece> PIECES_WITH_QUIVER;
+
+  static {
+    List<Piece> withQuiver = new ArrayList<>(PIECES);
+    withQuiver.add(QUIVER);
+    PIECES_WITH_QUIVER = List.copyOf(withQuiver);
+  }
+
+  /**
+   * A single named set outside the two 8-flavor tiers (T4C content pass after T4C-0037): one
+   * flavor, its own key prefix ({@code <tier.keyPrefix>_<slotWord>}) and hand-picked display
+   * names per piece. Same proportional split and {@link ItemBalance} rules as the tiers; on top,
+   * {@code doubledResistStatId} (0 for none) doubles the set's flat resistance total in its theme
+   * element - the "doubled theme resistance" flavor extra from DESIGN_GUIDELINES.md (never
+   * light) - and {@code quiverDamageBonus} is the quiver's flat weapon-damage extra.
+   */
+  private record ThemedSet(
+      Tier tier,
+      String flavor,
+      String classStat,
+      List<Piece> pieces,
+      Map<String, String> pieceNames,
+      int doubledResistStatId,
+      int quiverDamageBonus) {}
+
+  /** Resistance per element for the themed sets scales with the endurance requirement the same
+   * way the two tiers do: legacy per-piece base about endurance / 20 and flat total about
+   * endurance * 0.175 (tier 1: 400 -> 20/70, tier 2: 550 -> 30/100). Power is three single
+   * items' worth, P/10 x 3. */
+  private static final List<ThemedSet> THEMED_SETS =
+      List.of(
+          // Archer set matching the Bow of Centaur Slaying (Windhowl Marches, Centaur King).
+          // Trades Empyrean's endurance/resistance for more agility/archery.
+          new ThemedSet(
+              new Tier("Centaur Slaying", "centaur_slaying", 500, 0, 0, 0, 600, 25, 90, 0, 80),
+              "archer",
+              "agility",
+              PIECES_WITH_QUIVER,
+              Map.of(
+                  "armor", "Armor of Centaur Slaying",
+                  "boots", "Boots of Centaur Slaying",
+                  "gauntlets", "Gauntlets of Centaur Slaying",
+                  "helmet", "Helm of Centaur Slaying",
+                  "leggings", "Leggings of Centaur Slaying",
+                  "protector", "Belt of Centaur Slaying",
+                  "quiver", "Quiver of Centaur Slaying"),
+              0,
+              15),
+          // Water intelligence set for The Sunken Chancel (level 38-50), doubled dark resistance
+          // for the drowned priesthood's undead side.
+          new ThemedSet(
+              new Tier("Drowned Inquisition", "drowned_inquisition", 200, 180, 45, 0, 0, 10, 35, 54, 0),
+              "water",
+              null,
+              PIECES,
+              Map.of(
+                  "armor", "Drowned Inquisition Vestments",
+                  "boots", "Drowned Inquisition Boots",
+                  "gauntlets", "Drowned Inquisition Gloves",
+                  "helmet", "Drowned Inquisition Hood",
+                  "leggings", "Drowned Inquisition Leggings",
+                  "protector", "Drowned Inquisition Sash"),
+              22,
+              0),
+          // Fire intelligence set for Cinderreach Hills (level 58-70), doubled fire resistance.
+          new ThemedSet(
+              new Tier("Cinderforged", "cinderforged", 280, 240, 60, 0, 0, 14, 50, 72, 0),
+              "fire",
+              null,
+              PIECES,
+              Map.of(
+                  "armor", "Cinderforged Hauberk",
+                  "boots", "Cinderforged Boots",
+                  "gauntlets", "Cinderforged Gauntlets",
+                  "helmet", "Cinderforged Helm",
+                  "leggings", "Cinderforged Leggings",
+                  "protector", "Cinderforged Girdle"),
+              13,
+              0));
+
   public static void main(String[] args) throws IOException {
     String outputDir = args.length > 0 ? args[0] : "assets/items";
     new java.io.File(outputDir).mkdirs();
@@ -118,12 +246,27 @@ public final class ArmorSetGenerator {
       written += writeSet(outputDir, gson, tier, "warrior", "strength");
       written += writeSet(outputDir, gson, tier, "archer", "agility");
     }
+    // Themed sets come after the two tiers so their boost ids continue the same counter
+    // without renumbering (and so rewriting) any of the 96 tier pieces.
+    for (ThemedSet set : THEMED_SETS) {
+      written += writeSet(outputDir, gson, set);
+    }
     System.out.println("Wrote " + written + " item JSON files to " + outputDir);
   }
 
   private static int writeSet(
       String outputDir, Gson gson, Tier tier, String flavor, String classStat) throws IOException {
-    double totalAc = PIECES.stream().mapToDouble(Piece::platemailAc).sum();
+    return writeSet(
+        outputDir, gson, new ThemedSet(tier, flavor, classStat, PIECES, null, 0, 0));
+  }
+
+  private static int writeSet(String outputDir, Gson gson, ThemedSet set) throws IOException {
+    Tier tier = set.tier();
+    String flavor = set.flavor();
+    String classStat = set.classStat();
+    List<Piece> pieces = set.pieces();
+    boolean themed = set.pieceNames() != null;
+    double totalAc = pieces.stream().mapToDouble(Piece::platemailAc).sum();
     boolean isElemental = classStat == null;
     Element themedElement =
         isElemental
@@ -151,20 +294,31 @@ public final class ArmorSetGenerator {
 
     Map<Element, int[]> resistSplitByElement = new LinkedHashMap<>();
     for (Element element : ELEMENTS) {
-      resistSplitByElement.put(element, splitByWeight(tier.flatResistTotal(), totalAc));
+      int flatTotal =
+          element.resistStatId() == set.doubledResistStatId()
+              ? tier.flatResistTotal() * 2
+              : tier.flatResistTotal();
+      resistSplitByElement.put(element, splitByWeight(flatTotal, pieces, totalAc));
     }
-    int[] powerSplit = splitByWeight(tier.powerTotal(), totalAc);
-    int[] mainStatSplit = splitByWeight(mainStatTotal, totalAc);
-    int[] skillSplit = splitByWeight(skillTotal, totalAc);
-    int[] classEnduranceSplit = splitByWeight(tier.classEnduranceTotal(), totalAc);
+    int[] powerSplit = splitByWeight(tier.powerTotal(), pieces, totalAc);
+    int[] mainStatSplit = splitByWeight(mainStatTotal, pieces, totalAc);
+    int[] skillSplit = splitByWeight(skillTotal, pieces, totalAc);
+    int[] classEnduranceSplit = splitByWeight(tier.classEnduranceTotal(), pieces, totalAc);
 
     int written = 0;
-    for (int i = 0; i < PIECES.size(); i++) {
-      Piece piece = PIECES.get(i);
+    for (int i = 0; i < pieces.size(); i++) {
+      Piece piece = pieces.get(i);
       com.perso.T4C.item.json.ItemJsonDef json = new com.perso.T4C.item.json.ItemJsonDef();
       String flavorLabel = capitalize(flavor);
-      json.key = tier.keyPrefix() + "_" + flavor + "_" + piece.slotWord();
-      json.name = tier.namePrefix() + " " + flavorLabel + " " + capitalize(piece.slotWord());
+      json.key =
+          themed
+              ? tier.keyPrefix() + "_" + piece.slotWord()
+              : tier.keyPrefix() + "_" + flavor + "_" + piece.slotWord();
+      json.name =
+          themed
+              ? set.pieceNames().get(piece.slotWord())
+              : tier.namePrefix() + " " + flavorLabel + " " + capitalize(piece.slotWord());
+      json.structure = piece.structure();
       json.bodyPart = piece.bodyPart();
       json.secondaryBodyPart = piece.secondaryBodyPart();
       json.appearanceEquippedPrimary = piece.appearanceEquippedPrimary();
@@ -190,7 +344,11 @@ public final class ArmorSetGenerator {
         // is still fine (see themedElement below), only light resist is off-limits.
         if (element.resistStatId() == ItemBalance.LIGHT_RESIST_STAT_ID) continue;
         int legacyBase =
-            element.legacy() && !piece.bodyPart().equals("BELT") ? tier.legacyResistPerPiece() : 0;
+            element.legacy()
+                    && !piece.bodyPart().equals("BELT")
+                    && !piece.bodyPart().equals("WEAPON2")
+                ? tier.legacyResistPerPiece()
+                : 0;
         int total = legacyBase + resistSplitByElement.get(element)[i];
         if (total > 0) {
           boosts.add(boost(nextBoostId++, element.resistStatId(), total));
@@ -213,9 +371,12 @@ public final class ArmorSetGenerator {
         if (skillSplit[i] > 0) boosts.add(boost(nextBoostId++, warrior ? 8 : 10035, skillSplit[i]));
         if (classEnduranceSplit[i] > 0) boosts.add(boost(nextBoostId++, 2, classEnduranceSplit[i]));
       }
+      if (piece == QUIVER && set.quiverDamageBonus() > 0) {
+        boosts.add(boost(nextBoostId++, 10, set.quiverDamageBonus()));
+      }
       json.boosts = boosts;
 
-      String fileName = tier.keyPrefix() + "_" + flavor + "_" + piece.slotWord() + ".json";
+      String fileName = json.key + ".json";
       try (Writer writer =
           new OutputStreamWriter(
               new FileOutputStream(outputDir + "/" + fileName), StandardCharsets.UTF_8)) {
@@ -234,10 +395,10 @@ public final class ArmorSetGenerator {
     return b;
   }
 
-  private static int[] splitByWeight(int total, double totalAc) {
-    double[] raw = new double[PIECES.size()];
-    for (int i = 0; i < PIECES.size(); i++) {
-      raw[i] = total * (PIECES.get(i).platemailAc() / totalAc);
+  private static int[] splitByWeight(int total, List<Piece> pieces, double totalAc) {
+    double[] raw = new double[pieces.size()];
+    for (int i = 0; i < pieces.size(); i++) {
+      raw[i] = total * (pieces.get(i).platemailAc() / totalAc);
     }
     int[] floors = new int[raw.length];
     int sumFloors = 0;

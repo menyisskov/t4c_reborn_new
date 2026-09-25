@@ -1,0 +1,73 @@
+{
+  "key": "centaur_slaying_quiver",
+  "name": "Quiver of Centaur Slaying",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 500,
+    "strength": 0,
+    "agility": 600,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 8,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20756,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 20757,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 20758,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 20759,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 20760,
+      "statId": 22,
+      "expression": "7"
+    },
+    {
+      "boostId": 20761,
+      "statId": 6,
+      "expression": "12"
+    },
+    {
+      "boostId": 20762,
+      "statId": 10035,
+      "expression": "30"
+    },
+    {
+      "boostId": 20763,
+      "statId": 2,
+      "expression": "7"
+    },
+    {
+      "boostId": 20764,
+      "statId": 10,
+      "expression": "15"
+    }
+  ]
+}

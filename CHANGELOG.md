@@ -15,6 +15,66 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-25 — A new storage chest, and better control over your character (T4C-0039)
+
+### Changed
+- **The storage chest has been completely redesigned.** Your stored items and your backpack now
+  sit side by side as two item grids, in the same style as the game's other windows, instead of
+  a long text list that spilled out of the window. Identical items stack with a count, damaged
+  gear shows its durability, and hovering over anything shows its full details (stats,
+  requirements, durability).
+- The chest now has category tabs (Weapons, Armor, Legs, Boots, Gloves, Rings, Misc) and a
+  search box, so you can find one item among hundreds.
+- Moving items is faster: drag and drop between the two grids, right-click or double-click to
+  move one item, Shift+click to move a whole stack, or Ctrl+click to type exactly how many.
+  **Take All** empties whatever the current tab and search show into your bag. **Stash All Gear**
+  puts every weapon, armor piece and ring from your bag into the chest and leaves your potions
+  and scrolls with you.
+- Depositing or withdrawing gold opens a small window where you can type the amount or press
+  Max, and your banked and carried gold are shown with thousands separators.
+- A new **Controls** window lists every keyboard shortcut and mouse action in the game, grouped
+  by topic. Open it with **Ctrl+H** or from the new Controls button in the Options window.
+- Reloading the map graphics (a testing tool) moved from the R key to **Ctrl+Shift+R**, so you
+  can no longer trigger the stall by accident.
+
+### Fixed
+- **Items and gold in your storage chest are now actually saved.** They used to disappear
+  whenever you restarted the game.
+- Putting a damaged item into storage and taking it back out no longer repairs it for free, and
+  charged items (such as books) keep their remaining charges instead of refilling.
+- If you can't take something out of storage because it's too heavy, or because it's a unique
+  item you already carry, the game now tells you why instead of silently doing nothing.
+- Pressing Ctrl+W (world map) or Ctrl+Q (quest journal) no longer also walks your character.
+- Typing in the storage search box no longer walks your character or triggers other shortcuts.
+- The "32 FPS" video option in the Options window now has a proper name ("Smooth Animation")
+  instead of showing its internal label.
+
+## 2026-09-25 — The Elder Wyrms are complete, and three new armor sets (T4C-0038)
+
+### Added
+- **Four new Elder Wyrms** join the Rootcrown Wyrm in Drake's Lair, so every class now has its
+  own level-700 wyrm to hunt:
+  - **The Pyreclaw Wyrm** (warriors, fire) drops the Searing Greatsword, Molten Warhelm and
+    Forgeplate Gauntlets.
+  - **The Mistwing Wyrm** (archers, water) drops the Farsight Longbow, Rainveil Mantle and
+    Fogstride Boots.
+  - **The Duskmaw Wyrm** (intelligence mages, dark) drops the Umbral Rod, Nightshroud Mantle and
+    Eclipsed Crown.
+  - **The Galecrest Wyrm** (hybrid mages, air) drops the Tempest Wand, Windswept Mantle and
+    Thunderhead Circlet.
+
+  Each is a unique, legendary piece built for its class. Every wyrm can also drop pieces of its
+  class's Ancient Celestial and Empyrean armor, plus healing and mana potions, so no kill is
+  wasted.
+- **Centaur Slaying set:** a seven-piece archer set (armor, helmet, gauntlets, boots, leggings,
+  belt and a quiver) to go with the Bow of Centaur Slaying. It drops from the Centaur King and,
+  more rarely, from Centaur Warriors.
+- **Drowned Inquisition set:** a six-piece water set for intelligence mages, with extra
+  resistance to dark magic. It drops from Mordrenn the Drowned Inquisitor in the Sunken Chancel
+  and, more rarely, from Drowned Acolytes.
+- **Cinderforged set:** a six-piece fire set for intelligence mages, with extra fire resistance.
+  It drops from Ignarok the Emberfang in Cinderreach Hills and, more rarely, from Cinder Whelps.
+
 ## 2026-09-24 — Mordrenn and the Centaur King pay out more gold (T4C-0037)
 
 ### Changed

@@ -1,0 +1,64 @@
+{
+  "key": "mistwing_wyrms_rainveil_mantle",
+  "name": "Mistwing Wyrm's Rainveil Mantle",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "NMS_NewCape01__pal2",
+  "appearanceInventory": "Inv_NMS_NewCape01__pal2",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 45.9,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 0,
+    "agility": 950,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36628,
+      "statId": 6,
+      "expression": "79"
+    },
+    {
+      "boostId": 36629,
+      "statId": 10035,
+      "expression": "190"
+    },
+    {
+      "boostId": 36630,
+      "statId": 12,
+      "expression": "24"
+    },
+    {
+      "boostId": 36631,
+      "statId": 13,
+      "expression": "24"
+    },
+    {
+      "boostId": 36632,
+      "statId": 14,
+      "expression": "48"
+    },
+    {
+      "boostId": 36633,
+      "statId": 15,
+      "expression": "24"
+    },
+    {
+      "boostId": 36634,
+      "statId": 22,
+      "expression": "24"
+    }
+  ]
+}

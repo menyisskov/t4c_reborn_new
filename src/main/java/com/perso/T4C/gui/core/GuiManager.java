@@ -25,6 +25,10 @@ public final class GuiManager {
     return type != null && type.isInstance(current);
   }
 
+  public static boolean capturesKeyboard() {
+    return current != null && current.capturesKeyboard();
+  }
+
   public static boolean isPointerOver(float screenX, float screenY) {
     return current != null && current.isPointerOver(screenX, screenY);
   }

@@ -1,0 +1,64 @@
+{
+  "key": "drowned_inquisition_helmet",
+  "name": "Drowned Inquisition Hood",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 14.3,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 200,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 180,
+    "wisdom": 45,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 267,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20786,
+      "statId": 12,
+      "expression": "14"
+    },
+    {
+      "boostId": 20787,
+      "statId": 13,
+      "expression": "14"
+    },
+    {
+      "boostId": 20788,
+      "statId": 14,
+      "expression": "14"
+    },
+    {
+      "boostId": 20789,
+      "statId": 15,
+      "expression": "14"
+    },
+    {
+      "boostId": 20790,
+      "statId": 22,
+      "expression": "18"
+    },
+    {
+      "boostId": 20791,
+      "statId": 18,
+      "expression": "6"
+    },
+    {
+      "boostId": 20792,
+      "statId": 1,
+      "expression": "6"
+    }
+  ]
+}

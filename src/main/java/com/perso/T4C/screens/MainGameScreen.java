@@ -4214,8 +4214,10 @@ public class MainGameScreen implements Screen {
             return button == Input.Buttons.LEFT && tryCastPositionSpell(screenX, screenY);
           }
         };
-    inputHandler.setTextInputActiveSupplier(() -> gameChat != null && gameChat.isActive());
-    this.textInputActiveSupplier = () -> gameChat != null && gameChat.isActive();
+    java.util.function.BooleanSupplier typing =
+        () -> (gameChat != null && gameChat.isActive()) || GuiManager.capturesKeyboard();
+    inputHandler.setTextInputActiveSupplier(typing);
+    this.textInputActiveSupplier = typing;
     multiplexer.addProcessor(gameChat);
     multiplexer.addProcessor(guiAdapter);
     multiplexer.addProcessor(stage);

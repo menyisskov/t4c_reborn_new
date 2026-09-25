@@ -1,0 +1,66 @@
+{
+  "key": "duskmaw_wyrms_umbral_rod",
+  "name": "Duskmaw Wyrm's Umbral Rod",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLichStaff",
+  "appearanceInventory": "64kInvLichStaff",
+  "price": 0,
+  "weight": 4,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 950,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d40+60",
+  "atkDelay": "1300",
+  "boosts": [
+    {
+      "boostId": 36642,
+      "statId": 1,
+      "expression": "95"
+    },
+    {
+      "boostId": 36643,
+      "statId": 24,
+      "expression": "95"
+    },
+    {
+      "boostId": 36644,
+      "statId": 12,
+      "expression": "38"
+    },
+    {
+      "boostId": 36645,
+      "statId": 13,
+      "expression": "38"
+    },
+    {
+      "boostId": 36646,
+      "statId": 14,
+      "expression": "38"
+    },
+    {
+      "boostId": 36647,
+      "statId": 15,
+      "expression": "38"
+    },
+    {
+      "boostId": 36648,
+      "statId": 22,
+      "expression": "38"
+    }
+  ]
+}

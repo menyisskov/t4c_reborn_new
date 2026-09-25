@@ -1,0 +1,64 @@
+{
+  "key": "cinderforged_boots",
+  "name": "Cinderforged Boots",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot",
+  "appearanceInventory": "64kInvPlateArmorFeet",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 20.8,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 280,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 240,
+    "wisdom": 60,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 265,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20814,
+      "statId": 12,
+      "expression": "20"
+    },
+    {
+      "boostId": 20815,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 20816,
+      "statId": 14,
+      "expression": "20"
+    },
+    {
+      "boostId": 20817,
+      "statId": 15,
+      "expression": "20"
+    },
+    {
+      "boostId": 20818,
+      "statId": 22,
+      "expression": "20"
+    },
+    {
+      "boostId": 20819,
+      "statId": 17,
+      "expression": "9"
+    },
+    {
+      "boostId": 20820,
+      "statId": 1,
+      "expression": "9"
+    }
+  ]
+}
