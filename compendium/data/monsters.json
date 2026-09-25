@@ -700,6 +700,148 @@
     ]
   },
   {
+    "name": "Warband Raider",
+    "displayName": "Warband Raider",
+    "origin": "new",
+    "level": 118,
+    "health": 4200,
+    "mana": 0,
+    "xpPerHit": 7,
+    "xpOnDeath": 18000,
+    "hitDamageMin": 135,
+    "hitDamageMax": 240,
+    "respawnTimeMs": 30000,
+    "goldMin": 220,
+    "goldMax": 650,
+    "dodge": 470,
+    "acMin": 0,
+    "acMax": 95,
+    "aggro": 70,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 128,
+      "end": 118,
+      "agi": 122,
+      "intel": 150,
+      "will": 0,
+      "wis": 118,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 130,
+      "water": 100,
+      "fire": 90,
+      "dark": 100,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "item.raiders_notched_key",
+        "chance": 0.05
+      },
+      {
+        "item": "centaur_warband_ring",
+        "chance": 0.04
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.25
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.15
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d200+150",
+        "combatAttack": 1400,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Warband Banner-Bearer",
+    "displayName": "Warband Banner-Bearer",
+    "origin": "new",
+    "level": 130,
+    "health": 9200,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 42000,
+    "hitDamageMin": 170,
+    "hitDamageMax": 300,
+    "respawnTimeMs": 30000,
+    "goldMin": 700,
+    "goldMax": 1900,
+    "dodge": 520,
+    "acMin": 0,
+    "acMax": 115,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 155,
+      "end": 142,
+      "agi": 130,
+      "intel": 175,
+      "will": 30,
+      "wis": 142,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 135,
+      "water": 100,
+      "fire": 90,
+      "dark": 105,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "item.banner_bearers_key",
+        "chance": 0.05
+      },
+      {
+        "item": "centaur_warband_ring",
+        "chance": 0.08
+      },
+      {
+        "item": "ring_of_the_archer",
+        "chance": 0.02
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.35
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.25
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d220+170",
+        "combatAttack": 1800,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
     "name": "Centaur King",
     "displayName": "Centaur King",
     "origin": "new",
@@ -840,6 +982,148 @@
       {
         "formula": "1d242+187",
         "combatAttack": 2200,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Sandglass Sentinel I",
+    "displayName": "Sandglass Sentinel I",
+    "origin": "new",
+    "level": 150,
+    "health": 6334,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 0,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 50,
+    "goldMax": 150,
+    "dodge": 610,
+    "acMin": 0,
+    "acMax": 203,
+    "aggro": 0,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 165,
+      "end": 149,
+      "agi": 149,
+      "intel": 195,
+      "will": 0,
+      "wis": 149,
+      "luck": 0
+    },
+    "resists": {
+      "air": 94,
+      "earth": 46,
+      "water": 70,
+      "fire": 70,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.2
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.15
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d258+202",
+        "combatAttack": 1810,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Warband Warlord",
+    "displayName": "Warband Warlord",
+    "origin": "new",
+    "level": 150,
+    "health": 18000,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 90000,
+    "hitDamageMin": 190,
+    "hitDamageMax": 330,
+    "respawnTimeMs": 30000,
+    "goldMin": 1400,
+    "goldMax": 3700,
+    "dodge": 610,
+    "acMin": 0,
+    "acMax": 150,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 200,
+      "end": 180,
+      "agi": 150,
+      "intel": 220,
+      "will": 40,
+      "wis": 180,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 150,
+      "water": 100,
+      "fire": 85,
+      "dark": 115,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "item.warlords_signet_key",
+        "chance": 0.03
+      },
+      {
+        "item": "chieftains_warhorn",
+        "chance": 0.08
+      },
+      {
+        "item": "marchwardens_crown",
+        "chance": 0.02
+      },
+      {
+        "item": "bow_of_centaur_slaying",
+        "chance": 0.02
+      },
+      {
+        "item": "centaur_slaying_protector",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d260+205",
+        "combatAttack": 2500,
         "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
@@ -1061,6 +1345,10 @@
       {
         "item": "wyrmling_scale_bracer",
         "chance": 0.03
+      },
+      {
+        "item": "item.wyrmlings_tarnished_key",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -1373,6 +1661,67 @@
     ]
   },
   {
+    "name": "Sandglass Sentinel II",
+    "displayName": "Sandglass Sentinel II",
+    "origin": "new",
+    "level": 300,
+    "health": 21361,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 0,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 150,
+    "goldMax": 400,
+    "dodge": 1210,
+    "acMin": 0,
+    "acMax": 403,
+    "aggro": 0,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 315,
+      "end": 284,
+      "agi": 284,
+      "intel": 375,
+      "will": 0,
+      "wis": 284,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 70,
+      "water": 70,
+      "fire": 70,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.2
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.15
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d515+405",
+        "combatAttack": 3610,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
     "name": "Fey Warden",
     "displayName": "Fey Warden",
     "origin": "new",
@@ -1655,6 +2004,67 @@
       {
         "formula": "1d596+515",
         "combatAttack": 3462,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Sandglass Sentinel III",
+    "displayName": "Sandglass Sentinel III",
+    "origin": "new",
+    "level": 450,
+    "health": 45097,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 0,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 400,
+    "goldMax": 900,
+    "dodge": 1810,
+    "acMin": 0,
+    "acMax": 603,
+    "aggro": 0,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 465,
+      "end": 419,
+      "agi": 419,
+      "intel": 555,
+      "will": 0,
+      "wis": 419,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 70,
+      "water": 70,
+      "fire": 70,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.2
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.15
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d772+608",
+        "combatAttack": 5410,
         "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
@@ -2238,6 +2648,67 @@
     ]
   },
   {
+    "name": "Sandglass Sentinel IV",
+    "displayName": "Sandglass Sentinel IV",
+    "origin": "new",
+    "level": 600,
+    "health": 70607,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 0,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 900,
+    "goldMax": 1800,
+    "dodge": 2410,
+    "acMin": 0,
+    "acMax": 803,
+    "aggro": 0,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 615,
+      "end": 554,
+      "agi": 554,
+      "intel": 735,
+      "will": 0,
+      "wis": 554,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 70,
+      "water": 70,
+      "fire": 70,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.2
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.15
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1029+811",
+        "combatAttack": 7210,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
     "name": "Ysolde, the Veiled Matriarch",
     "displayName": "Ysolde, the Veiled Matriarch",
     "origin": "new",
@@ -2738,6 +3209,10 @@
         "chance": 0.01
       },
       {
+        "item": "item.duskmaw_wyrm_scale",
+        "chance": 0.12
+      },
+      {
         "item": "duskmaw_wyrms_nightshroud_mantle",
         "chance": 0.015
       },
@@ -2857,6 +3332,10 @@
       {
         "item": "galecrest_wyrms_tempest_wand",
         "chance": 0.01
+      },
+      {
+        "item": "item.galecrest_wyrm_scale",
+        "chance": 0.12
       },
       {
         "item": "galecrest_wyrms_windswept_mantle",
@@ -2980,6 +3459,10 @@
         "chance": 0.01
       },
       {
+        "item": "item.mistwing_wyrm_scale",
+        "chance": 0.12
+      },
+      {
         "item": "mistwing_wyrms_rainveil_mantle",
         "chance": 0.015
       },
@@ -3101,6 +3584,10 @@
         "chance": 0.01
       },
       {
+        "item": "item.pyreclaw_wyrm_scale",
+        "chance": 0.12
+      },
+      {
         "item": "pyreclaw_wyrms_molten_warhelm",
         "chance": 0.015
       },
@@ -3220,6 +3707,10 @@
       {
         "item": "rootcrown_wyrms_verdant_sceptre",
         "chance": 0.01
+      },
+      {
+        "item": "item.rootcrown_wyrm_scale",
+        "chance": 0.12
       },
       {
         "item": "item.veiled_aether_shard",
@@ -3401,12 +3892,174 @@
       {
         "item": "dragonguards_scale_bracer",
         "chance": 0.03
+      },
+      {
+        "item": "item.dragonguards_sealed_key",
+        "chance": 0.03
       }
     ],
     "attacks": [
       {
         "formula": "1d1450+1150",
         "combatAttack": 9500,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Sandglass Sentinel V",
+    "displayName": "Sandglass Sentinel V",
+    "origin": "new",
+    "level": 750,
+    "health": 95794,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 0,
+    "hitDamageMin": 1,
+    "hitDamageMax": 4,
+    "respawnTimeMs": 30000,
+    "goldMin": 1800,
+    "goldMax": 3200,
+    "dodge": 3010,
+    "acMin": 0,
+    "acMax": 1003,
+    "aggro": 0,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 765,
+      "end": 689,
+      "agi": 689,
+      "intel": 915,
+      "will": 0,
+      "wis": 689,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 70,
+      "water": 70,
+      "fire": 70,
+      "dark": 70,
+      "light": 5000
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.2
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.15
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1286+1014",
+        "combatAttack": 9010,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Convergent Wyrm",
+    "displayName": "The Convergent Wyrm",
+    "origin": "new",
+    "level": 750,
+    "health": 150000,
+    "mana": 0,
+    "xpPerHit": 0,
+    "xpOnDeath": 200000000,
+    "hitDamageMin": 1000,
+    "hitDamageMax": 2100,
+    "respawnTimeMs": 30000,
+    "goldMin": 2000,
+    "goldMax": 4500,
+    "dodge": 2300,
+    "acMin": 0,
+    "acMax": 800,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 800,
+      "end": 900,
+      "agi": 280,
+      "intel": 550,
+      "will": 80,
+      "wis": 550,
+      "luck": 0
+    },
+    "resists": {
+      "air": 130,
+      "earth": 130,
+      "water": 130,
+      "fire": 130,
+      "dark": 130,
+      "light": 130
+    },
+    "loot": [
+      {
+        "item": "convergent_wyrms_stormstaff",
+        "chance": 0.01
+      },
+      {
+        "item": "convergent_wyrms_prism_heart",
+        "chance": 0.015
+      },
+      {
+        "item": "convergent_wyrms_halo_crown",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_air_armor",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_dark_helmet",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_earth_boots",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_fire_gauntlets",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_light_leggings",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_water_protector",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.35
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.25
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1200+1050",
+        "combatAttack": 2100,
         "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,

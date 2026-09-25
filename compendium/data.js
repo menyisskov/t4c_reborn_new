@@ -702,6 +702,148 @@ window.T4C_DATA = {
       ]
     },
     {
+      "name": "Warband Raider",
+      "displayName": "Warband Raider",
+      "origin": "new",
+      "level": 118,
+      "health": 4200,
+      "mana": 0,
+      "xpPerHit": 7,
+      "xpOnDeath": 18000,
+      "hitDamageMin": 135,
+      "hitDamageMax": 240,
+      "respawnTimeMs": 30000,
+      "goldMin": 220,
+      "goldMax": 650,
+      "dodge": 470,
+      "acMin": 0,
+      "acMax": 95,
+      "aggro": 70,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 128,
+        "end": 118,
+        "agi": 122,
+        "intel": 150,
+        "will": 0,
+        "wis": 118,
+        "luck": 0
+      },
+      "resists": {
+        "air": 100,
+        "earth": 130,
+        "water": 100,
+        "fire": 90,
+        "dark": 100,
+        "light": 100
+      },
+      "loot": [
+        {
+          "item": "item.raiders_notched_key",
+          "chance": 0.05
+        },
+        {
+          "item": "centaur_warband_ring",
+          "chance": 0.04
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.25
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.15
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d200+150",
+          "combatAttack": 1400,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Warband Banner-Bearer",
+      "displayName": "Warband Banner-Bearer",
+      "origin": "new",
+      "level": 130,
+      "health": 9200,
+      "mana": 0,
+      "xpPerHit": 0,
+      "xpOnDeath": 42000,
+      "hitDamageMin": 170,
+      "hitDamageMax": 300,
+      "respawnTimeMs": 30000,
+      "goldMin": 700,
+      "goldMax": 1900,
+      "dodge": 520,
+      "acMin": 0,
+      "acMax": 115,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 155,
+        "end": 142,
+        "agi": 130,
+        "intel": 175,
+        "will": 30,
+        "wis": 142,
+        "luck": 0
+      },
+      "resists": {
+        "air": 100,
+        "earth": 135,
+        "water": 100,
+        "fire": 90,
+        "dark": 105,
+        "light": 100
+      },
+      "loot": [
+        {
+          "item": "item.banner_bearers_key",
+          "chance": 0.05
+        },
+        {
+          "item": "centaur_warband_ring",
+          "chance": 0.08
+        },
+        {
+          "item": "ring_of_the_archer",
+          "chance": 0.02
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.35
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.25
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d220+170",
+          "combatAttack": 1800,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
       "name": "Centaur King",
       "displayName": "Centaur King",
       "origin": "new",
@@ -842,6 +984,148 @@ window.T4C_DATA = {
         {
           "formula": "1d242+187",
           "combatAttack": 2200,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Sandglass Sentinel I",
+      "displayName": "Sandglass Sentinel I",
+      "origin": "new",
+      "level": 150,
+      "health": 6334,
+      "mana": 0,
+      "xpPerHit": 0,
+      "xpOnDeath": 0,
+      "hitDamageMin": 1,
+      "hitDamageMax": 4,
+      "respawnTimeMs": 30000,
+      "goldMin": 50,
+      "goldMax": 150,
+      "dodge": 610,
+      "acMin": 0,
+      "acMax": 203,
+      "aggro": 0,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 165,
+        "end": 149,
+        "agi": 149,
+        "intel": 195,
+        "will": 0,
+        "wis": 149,
+        "luck": 0
+      },
+      "resists": {
+        "air": 94,
+        "earth": 46,
+        "water": 70,
+        "fire": 70,
+        "dark": 70,
+        "light": 5000
+      },
+      "loot": [
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.2
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.15
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d258+202",
+          "combatAttack": 1810,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Warband Warlord",
+      "displayName": "Warband Warlord",
+      "origin": "new",
+      "level": 150,
+      "health": 18000,
+      "mana": 0,
+      "xpPerHit": 0,
+      "xpOnDeath": 90000,
+      "hitDamageMin": 190,
+      "hitDamageMax": 330,
+      "respawnTimeMs": 30000,
+      "goldMin": 1400,
+      "goldMax": 3700,
+      "dodge": 610,
+      "acMin": 0,
+      "acMax": 150,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 200,
+        "end": 180,
+        "agi": 150,
+        "intel": 220,
+        "will": 40,
+        "wis": 180,
+        "luck": 0
+      },
+      "resists": {
+        "air": 100,
+        "earth": 150,
+        "water": 100,
+        "fire": 85,
+        "dark": 115,
+        "light": 100
+      },
+      "loot": [
+        {
+          "item": "item.warlords_signet_key",
+          "chance": 0.03
+        },
+        {
+          "item": "chieftains_warhorn",
+          "chance": 0.08
+        },
+        {
+          "item": "marchwardens_crown",
+          "chance": 0.02
+        },
+        {
+          "item": "bow_of_centaur_slaying",
+          "chance": 0.02
+        },
+        {
+          "item": "centaur_slaying_protector",
+          "chance": 0.015
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d260+205",
+          "combatAttack": 2500,
           "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
@@ -1063,6 +1347,10 @@ window.T4C_DATA = {
         {
           "item": "wyrmling_scale_bracer",
           "chance": 0.03
+        },
+        {
+          "item": "item.wyrmlings_tarnished_key",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -1375,6 +1663,67 @@ window.T4C_DATA = {
       ]
     },
     {
+      "name": "Sandglass Sentinel II",
+      "displayName": "Sandglass Sentinel II",
+      "origin": "new",
+      "level": 300,
+      "health": 21361,
+      "mana": 0,
+      "xpPerHit": 0,
+      "xpOnDeath": 0,
+      "hitDamageMin": 1,
+      "hitDamageMax": 4,
+      "respawnTimeMs": 30000,
+      "goldMin": 150,
+      "goldMax": 400,
+      "dodge": 1210,
+      "acMin": 0,
+      "acMax": 403,
+      "aggro": 0,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 315,
+        "end": 284,
+        "agi": 284,
+        "intel": 375,
+        "will": 0,
+        "wis": 284,
+        "luck": 0
+      },
+      "resists": {
+        "air": 70,
+        "earth": 70,
+        "water": 70,
+        "fire": 70,
+        "dark": 70,
+        "light": 5000
+      },
+      "loot": [
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.2
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.15
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d515+405",
+          "combatAttack": 3610,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
       "name": "Fey Warden",
       "displayName": "Fey Warden",
       "origin": "new",
@@ -1657,6 +2006,67 @@ window.T4C_DATA = {
         {
           "formula": "1d596+515",
           "combatAttack": 3462,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Sandglass Sentinel III",
+      "displayName": "Sandglass Sentinel III",
+      "origin": "new",
+      "level": 450,
+      "health": 45097,
+      "mana": 0,
+      "xpPerHit": 0,
+      "xpOnDeath": 0,
+      "hitDamageMin": 1,
+      "hitDamageMax": 4,
+      "respawnTimeMs": 30000,
+      "goldMin": 400,
+      "goldMax": 900,
+      "dodge": 1810,
+      "acMin": 0,
+      "acMax": 603,
+      "aggro": 0,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 465,
+        "end": 419,
+        "agi": 419,
+        "intel": 555,
+        "will": 0,
+        "wis": 419,
+        "luck": 0
+      },
+      "resists": {
+        "air": 70,
+        "earth": 70,
+        "water": 70,
+        "fire": 70,
+        "dark": 70,
+        "light": 5000
+      },
+      "loot": [
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.2
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.15
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d772+608",
+          "combatAttack": 5410,
           "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
@@ -2240,6 +2650,67 @@ window.T4C_DATA = {
       ]
     },
     {
+      "name": "Sandglass Sentinel IV",
+      "displayName": "Sandglass Sentinel IV",
+      "origin": "new",
+      "level": 600,
+      "health": 70607,
+      "mana": 0,
+      "xpPerHit": 0,
+      "xpOnDeath": 0,
+      "hitDamageMin": 1,
+      "hitDamageMax": 4,
+      "respawnTimeMs": 30000,
+      "goldMin": 900,
+      "goldMax": 1800,
+      "dodge": 2410,
+      "acMin": 0,
+      "acMax": 803,
+      "aggro": 0,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 615,
+        "end": 554,
+        "agi": 554,
+        "intel": 735,
+        "will": 0,
+        "wis": 554,
+        "luck": 0
+      },
+      "resists": {
+        "air": 70,
+        "earth": 70,
+        "water": 70,
+        "fire": 70,
+        "dark": 70,
+        "light": 5000
+      },
+      "loot": [
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.2
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.15
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d1029+811",
+          "combatAttack": 7210,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
       "name": "Ysolde, the Veiled Matriarch",
       "displayName": "Ysolde, the Veiled Matriarch",
       "origin": "new",
@@ -2740,6 +3211,10 @@ window.T4C_DATA = {
           "chance": 0.01
         },
         {
+          "item": "item.duskmaw_wyrm_scale",
+          "chance": 0.12
+        },
+        {
           "item": "duskmaw_wyrms_nightshroud_mantle",
           "chance": 0.015
         },
@@ -2859,6 +3334,10 @@ window.T4C_DATA = {
         {
           "item": "galecrest_wyrms_tempest_wand",
           "chance": 0.01
+        },
+        {
+          "item": "item.galecrest_wyrm_scale",
+          "chance": 0.12
         },
         {
           "item": "galecrest_wyrms_windswept_mantle",
@@ -2982,6 +3461,10 @@ window.T4C_DATA = {
           "chance": 0.01
         },
         {
+          "item": "item.mistwing_wyrm_scale",
+          "chance": 0.12
+        },
+        {
           "item": "mistwing_wyrms_rainveil_mantle",
           "chance": 0.015
         },
@@ -3103,6 +3586,10 @@ window.T4C_DATA = {
           "chance": 0.01
         },
         {
+          "item": "item.pyreclaw_wyrm_scale",
+          "chance": 0.12
+        },
+        {
           "item": "pyreclaw_wyrms_molten_warhelm",
           "chance": 0.015
         },
@@ -3222,6 +3709,10 @@ window.T4C_DATA = {
         {
           "item": "rootcrown_wyrms_verdant_sceptre",
           "chance": 0.01
+        },
+        {
+          "item": "item.rootcrown_wyrm_scale",
+          "chance": 0.12
         },
         {
           "item": "item.veiled_aether_shard",
@@ -3403,12 +3894,174 @@ window.T4C_DATA = {
         {
           "item": "dragonguards_scale_bracer",
           "chance": 0.03
+        },
+        {
+          "item": "item.dragonguards_sealed_key",
+          "chance": 0.03
         }
       ],
       "attacks": [
         {
           "formula": "1d1450+1150",
           "combatAttack": 9500,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Sandglass Sentinel V",
+      "displayName": "Sandglass Sentinel V",
+      "origin": "new",
+      "level": 750,
+      "health": 95794,
+      "mana": 0,
+      "xpPerHit": 0,
+      "xpOnDeath": 0,
+      "hitDamageMin": 1,
+      "hitDamageMax": 4,
+      "respawnTimeMs": 30000,
+      "goldMin": 1800,
+      "goldMax": 3200,
+      "dodge": 3010,
+      "acMin": 0,
+      "acMax": 1003,
+      "aggro": 0,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 765,
+        "end": 689,
+        "agi": 689,
+        "intel": 915,
+        "will": 0,
+        "wis": 689,
+        "luck": 0
+      },
+      "resists": {
+        "air": 70,
+        "earth": 70,
+        "water": 70,
+        "fire": 70,
+        "dark": 70,
+        "light": 5000
+      },
+      "loot": [
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.2
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.15
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d1286+1014",
+          "combatAttack": 9010,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "The Convergent Wyrm",
+      "displayName": "The Convergent Wyrm",
+      "origin": "new",
+      "level": 750,
+      "health": 150000,
+      "mana": 0,
+      "xpPerHit": 0,
+      "xpOnDeath": 200000000,
+      "hitDamageMin": 1000,
+      "hitDamageMax": 2100,
+      "respawnTimeMs": 30000,
+      "goldMin": 2000,
+      "goldMax": 4500,
+      "dodge": 2300,
+      "acMin": 0,
+      "acMax": 800,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 800,
+        "end": 900,
+        "agi": 280,
+        "intel": 550,
+        "will": 80,
+        "wis": 550,
+        "luck": 0
+      },
+      "resists": {
+        "air": 130,
+        "earth": 130,
+        "water": 130,
+        "fire": 130,
+        "dark": 130,
+        "light": 130
+      },
+      "loot": [
+        {
+          "item": "convergent_wyrms_stormstaff",
+          "chance": 0.01
+        },
+        {
+          "item": "convergent_wyrms_prism_heart",
+          "chance": 0.015
+        },
+        {
+          "item": "convergent_wyrms_halo_crown",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_air_armor",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_dark_helmet",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_earth_boots",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_fire_gauntlets",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_light_leggings",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_water_protector",
+          "chance": 0.015
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.35
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.25
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d1200+1050",
+          "combatAttack": 2100,
           "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
@@ -12226,6 +12879,33 @@ window.T4C_DATA = {
       }
     },
     {
+      "id": "KeeperOfTheSixthSeal",
+      "origin": "new",
+      "displayName": "Keeper of the Sixth Seal",
+      "welcomeText": "Five wyrms. Five scales. One seal that isn't a wyrm at all.",
+      "topics": [
+        {
+          "keywords": [
+            "seal",
+            "scales"
+          ],
+          "response": "Five Elder Wyrms sleep in Drake's Lair, and each of them sheds a scale, rarely, to whoever proves strong enough to earn one. Bring me all five - Rootcrown, Pyreclaw, Mistwing, Duskmaw, Galecrest - and I'll open the seal behind me. What answers isn't a sixth exemplar. It's what all five of them converge into.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
       "id": "KeeperTamsin",
       "origin": "new",
       "displayName": "Keeper Tamsin",
@@ -12366,6 +13046,41 @@ window.T4C_DATA = {
           ],
           "response": "Me? I looked into the mirror once, a very long time ago, and I never quite stopped. Someone has to stay and make sure the echoes are seen.",
           "actions": []
+        },
+        {
+          "keywords": [
+            "letter",
+            "unsigned"
+          ],
+          "response": "Ask me about the letter, if one found its way to you.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "OldCorrin",
+      "origin": "new",
+      "displayName": "Old Corrin",
+      "welcomeText": "Thessaly gets the coin-counters. I get the ones who want something that lasts.",
+      "topics": [
+        {
+          "keywords": [
+            "favor",
+            "kraanhold"
+          ],
+          "response": "Thessaly will pay you well for clearing this coast, and she should - that's fair work. But gold spends once. I've still got friends on Kraanhold's own docks, from before this coast forgot the crossing existed. Clear enough tolltrolls and I'll put in a word for you with them myself - one master or the other, not both. Which one you choose is yours to make.",
+          "actions": []
         }
       ],
       "combatProfile": {
@@ -12473,6 +13188,25 @@ window.T4C_DATA = {
         "attackSkill": 250,
         "dodge": 65535,
         "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "PlagueWardensStrongbox",
+      "origin": "new",
+      "displayName": "Plague Warden's Strongbox",
+      "spriteBase": "@static:Chest",
+      "welcomeText": "",
+      "topics": [],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 10,
+        "endurance": 10,
+        "dexterity": 10,
+        "armorClass": 100000,
+        "attackSkill": 1,
+        "dodge": 65535,
+        "damageFormula": "1d3"
       }
     },
     {
@@ -12915,6 +13649,25 @@ window.T4C_DATA = {
       }
     },
     {
+      "id": "SunkenLedgerCoffer",
+      "origin": "new",
+      "displayName": "Sunken Ledger Coffer",
+      "spriteBase": "@static:Chest",
+      "welcomeText": "",
+      "topics": [],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 10,
+        "endurance": 10,
+        "dexterity": 10,
+        "armorClass": 100000,
+        "attackSkill": 1,
+        "dodge": 65535,
+        "damageFormula": "1d3"
+      }
+    },
+    {
       "id": "TideWardenBryn",
       "origin": "new",
       "displayName": "Tide Warden Bryn",
@@ -12975,6 +13728,59 @@ window.T4C_DATA = {
         "attackSkill": 250,
         "dodge": 65535,
         "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "TrialWardenOsric",
+      "origin": "new",
+      "displayName": "Trial Warden Osric",
+      "welcomeText": "The mirror asks who you were. I only ask how fast you are.",
+      "topics": [
+        {
+          "keywords": [
+            "trial",
+            "hourglass"
+          ],
+          "response": "Say trial and I'll set a Sandglass Sentinel against you - fixed strength, fixed health, no mirror tricks. Beat it, and the hourglass remembers your time. Beat your own best, and it's worth something. The tier rises the more times you've been remade, same as the mirror behind me.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "times"
+          ],
+          "response": "Ask me for your times and I'll read every tier you've ever cleared.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "WarbandsBuriedChest",
+      "origin": "new",
+      "displayName": "Warband's Buried Chest",
+      "spriteBase": "@static:Chest",
+      "welcomeText": "",
+      "topics": [],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 10,
+        "endurance": 10,
+        "dexterity": 10,
+        "armorClass": 100000,
+        "attackSkill": 1,
+        "dodge": 65535,
+        "damageFormula": "1d3"
       }
     },
     {
@@ -13096,6 +13902,25 @@ window.T4C_DATA = {
         "attackSkill": 250,
         "dodge": 65535,
         "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "WyrmlingsHoardCasket",
+      "origin": "new",
+      "displayName": "Wyrmling's Hoard Casket",
+      "spriteBase": "@static:Chest",
+      "welcomeText": "",
+      "topics": [],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 10,
+        "endurance": 10,
+        "dexterity": 10,
+        "armorClass": 100000,
+        "attackSkill": 1,
+        "dodge": 65535,
+        "damageFormula": "1d3"
       }
     }
   ],
@@ -17614,6 +18439,69 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "chieftains_warhorn",
+      "name": "Chieftain's Warhorn",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 2",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 33.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 380.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36700.0,
+          "statId": 3.0,
+          "expression": "32"
+        },
+        {
+          "boostId": 36701.0,
+          "statId": 8.0,
+          "expression": "76"
+        },
+        {
+          "boostId": 36702.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36703.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36704.0,
+          "statId": 14.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36705.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 36706.0,
+          "statId": 22.0,
+          "expression": "10"
+        }
+      ]
+    },
+    {
       "key": "cinderforged_armor",
       "name": "Cinderforged Hauberk",
       "bodyPart": "BODY",
@@ -18058,6 +18946,214 @@ window.T4C_DATA = {
           "boostId": 36335.0,
           "statId": 22.0,
           "expression": "5"
+        }
+      ]
+    },
+    {
+      "key": "convergent_wyrms_halo_crown",
+      "name": "Convergent Wyrm's Halo Crown",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 40.2,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 625.0,
+        "wisdom": 625.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36726.0,
+          "statId": 1.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 36727.0,
+          "statId": 4.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 36728.0,
+          "statId": 16.0,
+          "expression": "100"
+        },
+        {
+          "boostId": 36729.0,
+          "statId": 12.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36730.0,
+          "statId": 13.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36731.0,
+          "statId": 14.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36732.0,
+          "statId": 15.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36733.0,
+          "statId": 22.0,
+          "expression": "40"
+        }
+      ]
+    },
+    {
+      "key": "convergent_wyrms_prism_heart",
+      "name": "Convergent Wyrm's Prism Heart",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 2",
+      "price": 0.0,
+      "weight": 1.0,
+      "armorClass": 22.5,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 625.0,
+        "wisdom": 625.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36718.0,
+          "statId": 1.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 36719.0,
+          "statId": 4.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 36720.0,
+          "statId": 16.0,
+          "expression": "100"
+        },
+        {
+          "boostId": 36721.0,
+          "statId": 12.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36722.0,
+          "statId": 13.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36723.0,
+          "statId": 14.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36724.0,
+          "statId": 15.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36725.0,
+          "statId": 22.0,
+          "expression": "40"
+        }
+      ]
+    },
+    {
+      "key": "convergent_wyrms_stormstaff",
+      "name": "Convergent Wyrm's Stormstaff",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "price": 0.0,
+      "weight": 4.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 625.0,
+        "wisdom": 625.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d45+68",
+      "atkDelay": "1300",
+      "boosts": [
+        {
+          "boostId": 36710.0,
+          "statId": 1.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 36711.0,
+          "statId": 4.0,
+          "expression": "42"
+        },
+        {
+          "boostId": 36712.0,
+          "statId": 16.0,
+          "expression": "100"
+        },
+        {
+          "boostId": 36713.0,
+          "statId": 12.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36714.0,
+          "statId": 13.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36715.0,
+          "statId": 14.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36716.0,
+          "statId": 15.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36717.0,
+          "statId": 22.0,
+          "expression": "40"
         }
       ]
     },
@@ -23849,6 +24945,69 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "sealed_signet_of_the_dragonguard",
+      "name": "Sealed Signet of the Dragonguard",
+      "bodyPart": "RING1",
+      "appearanceInventory": "64kInvRings 5",
+      "price": 0.0,
+      "weight": 1.0,
+      "armorClass": 11.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 200.0,
+        "strength": 300.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36734.0,
+          "statId": 3.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 36735.0,
+          "statId": 8.0,
+          "expression": "60"
+        },
+        {
+          "boostId": 36736.0,
+          "statId": 12.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 36737.0,
+          "statId": 13.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 36738.0,
+          "statId": 14.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 36739.0,
+          "statId": 15.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 36740.0,
+          "statId": 22.0,
+          "expression": "8"
+        }
+      ]
+    },
+    {
       "key": "shadowmancers_mantle",
       "name": "Shadowmancer's Mantle",
       "bodyPart": "BACK",
@@ -24237,6 +25396,69 @@ window.T4C_DATA = {
           "boostId": 36326.0,
           "statId": 10008.0,
           "expression": "40"
+        }
+      ]
+    },
+    {
+      "key": "warlords_iron_signet",
+      "name": "Warlord's Iron Signet",
+      "bodyPart": "BELT",
+      "appearanceInventory": "64kInvBelt",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 18.9,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 250.0,
+        "strength": 350.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36741.0,
+          "statId": 3.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 36742.0,
+          "statId": 8.0,
+          "expression": "70"
+        },
+        {
+          "boostId": 36743.0,
+          "statId": 12.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36744.0,
+          "statId": 13.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36745.0,
+          "statId": 14.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36746.0,
+          "statId": 15.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 36747.0,
+          "statId": 22.0,
+          "expression": "9"
         }
       ]
     },
@@ -25104,6 +26326,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_air_armor",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "ancient_celestial_air_armor",
       "monster": "The Galecrest Wyrm",
       "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.025
@@ -25293,6 +26521,12 @@ window.T4C_DATA = {
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
       "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_helmet",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.015
     },
     {
       "item": "ancient_celestial_dark_helmet",
@@ -25353,6 +26587,12 @@ window.T4C_DATA = {
       "monster": "The Verdant Warden",
       "monsterDisplayName": "The Verdant Warden",
       "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_boots",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.015
     },
     {
       "item": "ancient_celestial_earth_boots",
@@ -25421,6 +26661,12 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_fire_gauntlets",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.015
+    },
+    {
       "item": "ancient_celestial_fire_helmet",
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
@@ -25485,6 +26731,12 @@ window.T4C_DATA = {
       "monster": "Fey Warden",
       "monsterDisplayName": "Fey Warden",
       "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_leggings",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.015
     },
     {
       "item": "ancient_celestial_light_protector",
@@ -25709,6 +26961,12 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_water_protector",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.015
+    },
+    {
       "item": "archdrakes_molten_heart",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
@@ -25737,6 +26995,12 @@ window.T4C_DATA = {
       "monster": "Centaur Warrior",
       "monsterDisplayName": "Centaur Warrior",
       "chance": 0.008
+    },
+    {
+      "item": "bow_of_centaur_slaying",
+      "monster": "Warband Warlord",
+      "monsterDisplayName": "Warband Warlord",
+      "chance": 0.02
     },
     {
       "item": "caradocs_sundered_blade",
@@ -25817,6 +27081,12 @@ window.T4C_DATA = {
       "chance": 0.002
     },
     {
+      "item": "centaur_slaying_protector",
+      "monster": "Warband Warlord",
+      "monsterDisplayName": "Warband Warlord",
+      "chance": 0.015
+    },
+    {
       "item": "centaur_slaying_quiver",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
@@ -25833,6 +27103,24 @@ window.T4C_DATA = {
       "monster": "Centaur Warrior",
       "monsterDisplayName": "Centaur Warrior",
       "chance": 0.03
+    },
+    {
+      "item": "centaur_warband_ring",
+      "monster": "Warband Banner-Bearer",
+      "monsterDisplayName": "Warband Banner-Bearer",
+      "chance": 0.08
+    },
+    {
+      "item": "centaur_warband_ring",
+      "monster": "Warband Raider",
+      "monsterDisplayName": "Warband Raider",
+      "chance": 0.04
+    },
+    {
+      "item": "chieftains_warhorn",
+      "monster": "Warband Warlord",
+      "monsterDisplayName": "Warband Warlord",
+      "chance": 0.08
     },
     {
       "item": "cinderforged_armor",
@@ -25911,6 +27199,24 @@ window.T4C_DATA = {
       "monster": "Ashfang Stalker",
       "monsterDisplayName": "Ashfang Stalker",
       "chance": 0.02
+    },
+    {
+      "item": "convergent_wyrms_halo_crown",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "convergent_wyrms_prism_heart",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "convergent_wyrms_stormstaff",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.01
     },
     {
       "item": "crown_of_the_hollow_king",
@@ -26693,6 +27999,12 @@ window.T4C_DATA = {
       "chance": 0.01
     },
     {
+      "item": "marchwardens_crown",
+      "monster": "Warband Warlord",
+      "monsterDisplayName": "Warband Warlord",
+      "chance": 0.02
+    },
+    {
       "item": "mistwing_wyrms_farsight_longbow",
       "monster": "The Mistwing Wyrm",
       "monsterDisplayName": "The Mistwing Wyrm",
@@ -26750,6 +28062,12 @@ window.T4C_DATA = {
       "item": "ring_of_the_archer",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
+      "chance": 0.02
+    },
+    {
+      "item": "ring_of_the_archer",
+      "monster": "Warband Banner-Bearer",
+      "monsterDisplayName": "Warband Banner-Bearer",
       "chance": 0.02
     },
     {
@@ -30188,6 +31506,12 @@ window.T4C_DATA = {
           "displayName": "Profession Trainer",
           "x": 2500.0,
           "y": 2500.0
+        },
+        {
+          "id": "WarbandsBuriedChest",
+          "displayName": "Warband's Buried Chest",
+          "x": 2295.0,
+          "y": 2325.0
         }
       ],
       "monsters": [
@@ -30224,6 +31548,48 @@ window.T4C_DATA = {
           "displayName": "Centaur Warrior",
           "x": 2420.0,
           "y": 2390.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Warband Banner-Bearer",
+          "displayName": "Warband Banner-Bearer",
+          "x": 2280.0,
+          "y": 2340.0,
+          "tier": "boss"
+        },
+        {
+          "name": "Warband Raider",
+          "displayName": "Warband Raider",
+          "x": 2260.0,
+          "y": 2320.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Warband Raider",
+          "displayName": "Warband Raider",
+          "x": 2300.0,
+          "y": 2320.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Warband Raider",
+          "displayName": "Warband Raider",
+          "x": 2260.0,
+          "y": 2360.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Warband Raider",
+          "displayName": "Warband Raider",
+          "x": 2300.0,
+          "y": 2360.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Warband Raider",
+          "displayName": "Warband Raider",
+          "x": 2280.0,
+          "y": 2300.0,
           "tier": "trash"
         }
       ],
@@ -30374,6 +31740,12 @@ window.T4C_DATA = {
           "displayName": "Warden Cael",
           "x": 2420.0,
           "y": 2700.0
+        },
+        {
+          "id": "WyrmlingsHoardCasket",
+          "displayName": "Wyrmling's Hoard Casket",
+          "x": 2350.0,
+          "y": 2900.0
         }
       ],
       "monsters": [

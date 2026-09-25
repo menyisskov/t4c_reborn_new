@@ -497,6 +497,33 @@
     }
   },
   {
+    "id": "KeeperOfTheSixthSeal",
+    "origin": "new",
+    "displayName": "Keeper of the Sixth Seal",
+    "welcomeText": "Five wyrms. Five scales. One seal that isn't a wyrm at all.",
+    "topics": [
+      {
+        "keywords": [
+          "seal",
+          "scales"
+        ],
+        "response": "Five Elder Wyrms sleep in Drake's Lair, and each of them sheds a scale, rarely, to whoever proves strong enough to earn one. Bring me all five - Rootcrown, Pyreclaw, Mistwing, Duskmaw, Galecrest - and I'll open the seal behind me. What answers isn't a sixth exemplar. It's what all five of them converge into.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "KeeperTamsin",
     "origin": "new",
     "displayName": "Keeper Tamsin",
@@ -637,6 +664,41 @@
         ],
         "response": "Me? I looked into the mirror once, a very long time ago, and I never quite stopped. Someone has to stay and make sure the echoes are seen.",
         "actions": []
+      },
+      {
+        "keywords": [
+          "letter",
+          "unsigned"
+        ],
+        "response": "Ask me about the letter, if one found its way to you.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "OldCorrin",
+    "origin": "new",
+    "displayName": "Old Corrin",
+    "welcomeText": "Thessaly gets the coin-counters. I get the ones who want something that lasts.",
+    "topics": [
+      {
+        "keywords": [
+          "favor",
+          "kraanhold"
+        ],
+        "response": "Thessaly will pay you well for clearing this coast, and she should - that's fair work. But gold spends once. I've still got friends on Kraanhold's own docks, from before this coast forgot the crossing existed. Clear enough tolltrolls and I'll put in a word for you with them myself - one master or the other, not both. Which one you choose is yours to make.",
+        "actions": []
       }
     ],
     "combatProfile": {
@@ -744,6 +806,25 @@
       "attackSkill": 250,
       "dodge": 65535,
       "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "PlagueWardensStrongbox",
+    "origin": "new",
+    "displayName": "Plague Warden's Strongbox",
+    "spriteBase": "@static:Chest",
+    "welcomeText": "",
+    "topics": [],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 100000,
+      "attackSkill": 1,
+      "dodge": 65535,
+      "damageFormula": "1d3"
     }
   },
   {
@@ -1186,6 +1267,25 @@
     }
   },
   {
+    "id": "SunkenLedgerCoffer",
+    "origin": "new",
+    "displayName": "Sunken Ledger Coffer",
+    "spriteBase": "@static:Chest",
+    "welcomeText": "",
+    "topics": [],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 100000,
+      "attackSkill": 1,
+      "dodge": 65535,
+      "damageFormula": "1d3"
+    }
+  },
+  {
     "id": "TideWardenBryn",
     "origin": "new",
     "displayName": "Tide Warden Bryn",
@@ -1246,6 +1346,59 @@
       "attackSkill": 250,
       "dodge": 65535,
       "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "TrialWardenOsric",
+    "origin": "new",
+    "displayName": "Trial Warden Osric",
+    "welcomeText": "The mirror asks who you were. I only ask how fast you are.",
+    "topics": [
+      {
+        "keywords": [
+          "trial",
+          "hourglass"
+        ],
+        "response": "Say trial and I'll set a Sandglass Sentinel against you - fixed strength, fixed health, no mirror tricks. Beat it, and the hourglass remembers your time. Beat your own best, and it's worth something. The tier rises the more times you've been remade, same as the mirror behind me.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "times"
+        ],
+        "response": "Ask me for your times and I'll read every tier you've ever cleared.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "WarbandsBuriedChest",
+    "origin": "new",
+    "displayName": "Warband's Buried Chest",
+    "spriteBase": "@static:Chest",
+    "welcomeText": "",
+    "topics": [],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 100000,
+      "attackSkill": 1,
+      "dodge": 65535,
+      "damageFormula": "1d3"
     }
   },
   {
@@ -1367,6 +1520,25 @@
       "attackSkill": 250,
       "dodge": 65535,
       "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "WyrmlingsHoardCasket",
+    "origin": "new",
+    "displayName": "Wyrmling's Hoard Casket",
+    "spriteBase": "@static:Chest",
+    "welcomeText": "",
+    "topics": [],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 100000,
+      "attackSkill": 1,
+      "dodge": 65535,
+      "damageFormula": "1d3"
     }
   }
 ]

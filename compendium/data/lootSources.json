@@ -13,6 +13,12 @@
   },
   {
     "item": "ancient_celestial_air_armor",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "ancient_celestial_air_armor",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.025
@@ -202,6 +208,12 @@
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
     "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_helmet",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.015
   },
   {
     "item": "ancient_celestial_dark_helmet",
@@ -262,6 +274,12 @@
     "monster": "The Verdant Warden",
     "monsterDisplayName": "The Verdant Warden",
     "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_boots",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.015
   },
   {
     "item": "ancient_celestial_earth_boots",
@@ -330,6 +348,12 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_fire_gauntlets",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.015
+  },
+  {
     "item": "ancient_celestial_fire_helmet",
     "monster": "Ignarok the Emberfang",
     "monsterDisplayName": "Ignarok the Emberfang",
@@ -394,6 +418,12 @@
     "monster": "Fey Warden",
     "monsterDisplayName": "Fey Warden",
     "chance": 0.006
+  },
+  {
+    "item": "ancient_celestial_light_leggings",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.015
   },
   {
     "item": "ancient_celestial_light_protector",
@@ -618,6 +648,12 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_water_protector",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.015
+  },
+  {
     "item": "archdrakes_molten_heart",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
@@ -646,6 +682,12 @@
     "monster": "Centaur Warrior",
     "monsterDisplayName": "Centaur Warrior",
     "chance": 0.008
+  },
+  {
+    "item": "bow_of_centaur_slaying",
+    "monster": "Warband Warlord",
+    "monsterDisplayName": "Warband Warlord",
+    "chance": 0.02
   },
   {
     "item": "caradocs_sundered_blade",
@@ -726,6 +768,12 @@
     "chance": 0.002
   },
   {
+    "item": "centaur_slaying_protector",
+    "monster": "Warband Warlord",
+    "monsterDisplayName": "Warband Warlord",
+    "chance": 0.015
+  },
+  {
     "item": "centaur_slaying_quiver",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
@@ -742,6 +790,24 @@
     "monster": "Centaur Warrior",
     "monsterDisplayName": "Centaur Warrior",
     "chance": 0.03
+  },
+  {
+    "item": "centaur_warband_ring",
+    "monster": "Warband Banner-Bearer",
+    "monsterDisplayName": "Warband Banner-Bearer",
+    "chance": 0.08
+  },
+  {
+    "item": "centaur_warband_ring",
+    "monster": "Warband Raider",
+    "monsterDisplayName": "Warband Raider",
+    "chance": 0.04
+  },
+  {
+    "item": "chieftains_warhorn",
+    "monster": "Warband Warlord",
+    "monsterDisplayName": "Warband Warlord",
+    "chance": 0.08
   },
   {
     "item": "cinderforged_armor",
@@ -820,6 +886,24 @@
     "monster": "Ashfang Stalker",
     "monsterDisplayName": "Ashfang Stalker",
     "chance": 0.02
+  },
+  {
+    "item": "convergent_wyrms_halo_crown",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "convergent_wyrms_prism_heart",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "convergent_wyrms_stormstaff",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.01
   },
   {
     "item": "crown_of_the_hollow_king",
@@ -1602,6 +1686,12 @@
     "chance": 0.01
   },
   {
+    "item": "marchwardens_crown",
+    "monster": "Warband Warlord",
+    "monsterDisplayName": "Warband Warlord",
+    "chance": 0.02
+  },
+  {
     "item": "mistwing_wyrms_farsight_longbow",
     "monster": "The Mistwing Wyrm",
     "monsterDisplayName": "The Mistwing Wyrm",
@@ -1659,6 +1749,12 @@
     "item": "ring_of_the_archer",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
+    "chance": 0.02
+  },
+  {
+    "item": "ring_of_the_archer",
+    "monster": "Warband Banner-Bearer",
+    "monsterDisplayName": "Warband Banner-Bearer",
     "chance": 0.02
   },
   {

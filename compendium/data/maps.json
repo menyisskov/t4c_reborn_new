@@ -265,6 +265,12 @@
         "displayName": "Profession Trainer",
         "x": 2500,
         "y": 2500
+      },
+      {
+        "id": "WarbandsBuriedChest",
+        "displayName": "Warband\u0027s Buried Chest",
+        "x": 2295,
+        "y": 2325
       }
     ],
     "monsters": [
@@ -301,6 +307,48 @@
         "displayName": "Centaur Warrior",
         "x": 2420,
         "y": 2390,
+        "tier": "trash"
+      },
+      {
+        "name": "Warband Banner-Bearer",
+        "displayName": "Warband Banner-Bearer",
+        "x": 2280,
+        "y": 2340,
+        "tier": "boss"
+      },
+      {
+        "name": "Warband Raider",
+        "displayName": "Warband Raider",
+        "x": 2260,
+        "y": 2320,
+        "tier": "trash"
+      },
+      {
+        "name": "Warband Raider",
+        "displayName": "Warband Raider",
+        "x": 2300,
+        "y": 2320,
+        "tier": "trash"
+      },
+      {
+        "name": "Warband Raider",
+        "displayName": "Warband Raider",
+        "x": 2260,
+        "y": 2360,
+        "tier": "trash"
+      },
+      {
+        "name": "Warband Raider",
+        "displayName": "Warband Raider",
+        "x": 2300,
+        "y": 2360,
+        "tier": "trash"
+      },
+      {
+        "name": "Warband Raider",
+        "displayName": "Warband Raider",
+        "x": 2280,
+        "y": 2300,
         "tier": "trash"
       }
     ],
@@ -451,6 +499,12 @@
         "displayName": "Warden Cael",
         "x": 2420,
         "y": 2700
+      },
+      {
+        "id": "WyrmlingsHoardCasket",
+        "displayName": "Wyrmling\u0027s Hoard Casket",
+        "x": 2350,
+        "y": 2900
       }
     ],
     "monsters": [
