@@ -137,6 +137,9 @@ public class StorageScreen extends GuiScreenBase {
 
   private static final class QuantityPrompt {
     String itemKey;
+    // The exact stack clicked (item key + durability), so a damaged stack never pulls copies
+    // from a pristine stack of the same item.
+    Stack stack;
     boolean gold;
     boolean withdraw;
     int max;
@@ -550,8 +553,7 @@ public class StorageScreen extends GuiScreenBase {
       persist();
       return;
     }
-    Stack stack = findStack(p.withdraw ? Pane.STASH : Pane.PACK, p.itemKey);
-    if (stack != null) moveStack(p.withdraw ? Pane.STASH : Pane.PACK, stack, amount);
+    if (p.stack != null) moveStack(p.withdraw ? Pane.STASH : Pane.PACK, p.stack, amount);
   }
 
   private static int parse(String value) {
@@ -944,6 +946,7 @@ public class StorageScreen extends GuiScreenBase {
     boolean ctrl = isDown(Input.Keys.CONTROL_LEFT, Input.Keys.CONTROL_RIGHT);
     if (ctrl) {
       openPrompt(stack.itemKey, stack.count, false, pane == Pane.STASH);
+      prompt.stack = stack;
       return;
     }
     if (shift) {
