@@ -53,7 +53,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0038 | Finish what's started: the four remaining Elder Wyrms (Pyreclaw, Mistwing, Duskmaw, Galecrest), Centaur Slaying armor set, Drowned Inquisition and Cinderforged zone armor sets | Content | Done | `258adf1` | [2026-09-25](CHANGELOG.md#2026-09-25--the-elder-wyrms-are-complete-and-three-new-armor-sets-t4c-0038) |
 | T4C-0039 | Storage chest overhaul (new two-pane UI, storage now saved, keeps durability/charges) + player-control pass (Controls window, typing-safe hotkeys, Ctrl no longer walks, debug reload moved off bare R) | Systems/Fix | Done | `146b23f`, `d95c9d0` | [2026-09-25](CHANGELOG.md#2026-09-25--a-new-storage-chest-and-better-control-over-your-character-t4c-0039) |
 | T4C-0040 | Fast travel, spell book and macros windows redesign (+ Freeze / Poison Arrow spell names translated) | Systems/Fix | Done | `bc2f8f5` | [2026-09-25](CHANGELOG.md#2026-09-25--fast-travel-spell-book-and-macros-windows-redesigned-t4c-0040) |
-| T4C-0041 | Coordinates readout moved from F2 to F12, leaving F2 free for macros | Systems | Done | `KEY_COMMIT` | [2026-09-25](CHANGELOG.md#2026-09-25--f2-is-free-for-your-macros-t4c-0041) |
+| T4C-0041 | Coordinates readout moved from F2 to F12, leaving F2 free for macros | Systems | Done | `4530b8f` | [2026-09-25](CHANGELOG.md#2026-09-25--f2-is-free-for-your-macros-t4c-0041) |
 
 ## Type legend
 
