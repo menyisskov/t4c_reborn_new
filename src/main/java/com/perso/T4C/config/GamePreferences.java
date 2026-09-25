@@ -15,6 +15,8 @@ public class GamePreferences {
   private boolean vSync = true;
   private boolean enable32FPS = false;
   private boolean showHudValues = true;
+  private boolean showRadar = true;
+  private String lastCharacterId;
   private boolean transparentGui = true;
   private boolean seraphAnimation = true;
   private boolean xpBarText = true;

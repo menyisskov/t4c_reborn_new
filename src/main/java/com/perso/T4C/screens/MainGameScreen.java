@@ -105,6 +105,7 @@ import com.perso.T4C.ui.FloatingDamage;
 import com.perso.T4C.ui.GameChat;
 import com.perso.T4C.ui.PlayerCoordsHud;
 import com.perso.T4C.ui.PlayerHUD;
+import com.perso.T4C.ui.RadarHud;
 import com.perso.T4C.ui.SystemMessage;
 import java.io.File;
 import java.io.FileReader;
@@ -146,6 +147,7 @@ public class MainGameScreen implements Screen {
   private GameInputHandler inputHandler;
   private PlayerHUD hud;
   private PlayerCoordsHud coordsHud;
+  private RadarHud radarHud;
   private SystemMessage systemMessage;
   private GameChat gameChat;
   private GuiMapZoneDisplay mapZoneDisplay;
@@ -1444,6 +1446,7 @@ public class MainGameScreen implements Screen {
           if (gameChat != null) gameChat.render(batch, hudCamera);
           hud.render(batch, 20, 20);
           if (coordsHudVisible && coordsHud != null) coordsHud.render(batch, 10, 20);
+          renderRadar();
           if (mapZoneDisplay != null) {
             if (!mapZoneDisplay.render(batch, delta)) mapZoneDisplay = null;
           }
@@ -3728,6 +3731,18 @@ public class MainGameScreen implements Screen {
     stage.getViewport().update(w, h, true);
   }
 
+  private void renderRadar() {
+    if (radarHud == null || player == null || !GamePreferencesStore.get().isShowRadar()) return;
+    // Single-player for now: no other players to show yet, so the blue list is empty.
+    radarHud.render(
+        batch,
+        hudCamera.viewportWidth,
+        player.getPositionVector(),
+        monsterManager == null ? null : monsterManager.getMonsters(),
+        npcManager == null ? null : npcManager.getNPCs(),
+        List.of());
+  }
+
   private void updateHudCamera() {
     updateHudCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
   }
@@ -3842,6 +3857,7 @@ public class MainGameScreen implements Screen {
           }
         });
     coordsHud = new PlayerCoordsHud(player);
+    radarHud = new RadarHud();
     systemMessage = new SystemMessage();
     GmCommandProcessor gmCommands = new GmCommandProcessor(xpCurve, npcManager, monsterManager);
     gameChat =
@@ -4326,6 +4342,7 @@ public class MainGameScreen implements Screen {
     gameProfiler.stop();
     SoundManager.stopAmbient();
     if (mapRenderer != null) mapRenderer.dispose();
+    if (radarHud != null) radarHud.dispose();
     batchSol.dispose();
     batchDecor.dispose();
     debugShapeRenderer.dispose();

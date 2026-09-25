@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0043`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0044`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -55,6 +55,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0040 | Fast travel, spell book and macros windows redesign (+ Freeze / Poison Arrow spell names translated) | Systems/Fix | Done | `bc2f8f5` | [2026-09-25](CHANGELOG.md#2026-09-25--fast-travel-spell-book-and-macros-windows-redesigned-t4c-0040) |
 | T4C-0041 | Coordinates readout moved from F2 to F12, leaving F2 free for macros | Systems | Done | `4530b8f` | [2026-09-25](CHANGELOG.md#2026-09-25--f2-is-free-for-your-macros-t4c-0041) |
 | T4C-0042 | The Mirror of Echoes: Ysmera the Mirrorwarden (Colosseum), a boss built live from the player's own character (look, name, level, skills, signature spell), ten scaling trials, penalty-free falls, and the bound Echo companion | Content/Systems | Done | `365458f` | [2026-09-25](CHANGELOG.md#2026-09-25--the-mirror-of-echoes-t4c-0042) |
+| T4C-0043 | Login & character selection polish (startup loading bar, last-played character, details line, hover/double-click, key hints, level shown at the cap), clearer Switch Character button, and an in-game radar (players blue, NPCs green, monsters yellow, bosses red) with an Options toggle | UI/Systems | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--login-character-selection-and-radar-t4c-0043) |
 
 ## Type legend
 

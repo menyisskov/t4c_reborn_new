@@ -32,6 +32,8 @@ public class LoadingScreen implements Screen {
   private final SpriteBatch batch;
   private static final String SOUNDS_DIR = Paths.SOUNDS_DIR;
   private final TextureRegion loadingImage;
+  private final OrthographicCamera overlayCamera = new OrthographicCamera();
+  private final LoadingBar loadingBar;
   private final List<String> failedSounds = new ArrayList<>();
   private boolean retryingFailedAssets = false;
   private boolean cursorApplied = false;
@@ -46,6 +48,8 @@ public class LoadingScreen implements Screen {
     initGameCursor();
     this.loadingImage = SpriteLoader.getInstance().getRegionFromSpriteName("Loading");
     game.customFont = FontManager.getInstance().getT4CBeaulieuFont(22, Color.WHITE);
+    this.loadingBar = new LoadingBar();
+    overlayCamera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     loadAllAssetsRecursive(SOUNDS_DIR);
     SoundManager.init(game.assetManager);
     CompletableFuture.runAsync(
@@ -81,6 +85,16 @@ public class LoadingScreen implements Screen {
     if (loadingImage != null) {
       batch.draw(loadingImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
+    batch.end();
+    batch.setProjectionMatrix(overlayCamera.combined);
+    batch.begin();
+    // The splash art already says "LOADING" along its bottom edge: sit just above it, no title.
+    loadingBar.draw(
+        batch,
+        overlayCamera.viewportWidth / 2f,
+        overlayCamera.viewportHeight * 0.83f,
+        game.assetManager.getProgress(),
+        null);
     batch.end();
     boolean assetsLoaded = false;
     try {
@@ -196,6 +210,7 @@ public class LoadingScreen implements Screen {
   @Override
   public void resize(int width, int height) {
     viewport.update(width, height, true);
+    overlayCamera.setToOrtho(true, width, height);
   }
 
   @Override

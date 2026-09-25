@@ -561,6 +561,20 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   the Controls list. Currently taken: F1, F3, F8, F9 (debug tools), F11 (fullscreen) and F12
   (coordinates). Prefer F12 or a modifier combination over another free F-key, because players
   use those for macros.
+- **Radar colors (owner, T4C-0043):** other players **blue**, NPCs **green**, monsters
+  **yellow**, bosses **red**. The local player is the white dot in the centre. Keep these colors
+  if the radar or any other entity marker (world map, compendium pins) is extended.
+  - *My calls, open to overrule:* an NPC that has turned hostile shows as a monster (yellow); a
+    **boss** is any monster type with at most 2 spawn points in the whole world
+    (`MonsterRank`, the same rule the compendium zone maps use), because monster definitions have
+    no boss flag. Summoned or scripted monsters with no spawn point (the Mirror Echo) count as
+    ordinary monsters. Radar range is 40 tiles, with an inner ring at 20 tiles (about the screen
+    edge). There are no other players yet, so the blue category is wired but empty until
+    multiplayer lands.
+- **The character selection screen remembers the last character played** (`lastCharacterId`
+  in the game preferences) and preselects it on startup and after Switch Character. Double-click
+  enters, following the list-window rule above. Levels shown there are clamped to the level cap,
+  like the game does on load.
 
 
 ## 9. The Mirror of Echoes (T4C-0042)

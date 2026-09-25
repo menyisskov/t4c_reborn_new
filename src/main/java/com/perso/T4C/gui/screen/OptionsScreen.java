@@ -180,7 +180,8 @@ public class OptionsScreen extends GuiScreenBase {
         displayEntry("options.fullscreen", preferences::isFullscreen, preferences::setFullscreen),
         displayEntry("options.vsync", preferences::isVSync, preferences::setVSync),
         entry("options.enable_32fps", preferences::isEnable32FPS, preferences::setEnable32FPS),
-        entry("options.hud_values", preferences::isShowHudValues, preferences::setShowHudValues));
+        entry("options.hud_values", preferences::isShowHudValues, preferences::setShowHudValues),
+        entry("options.radar", preferences::isShowRadar, preferences::setShowRadar));
   }
 
   private GuiOptionList.Entry displayEntry(
@@ -251,7 +252,7 @@ public class OptionsScreen extends GuiScreenBase {
     var hover = GuiSprites.load("GUI_ButtonHUp");
     var pressed = GuiSprites.load("GUI_ButtonDown");
     if (normal == null || hover == null || pressed == null) return;
-    var font = FontManager.getInstance().getT4CBeaulieuFont(17, Color.BLACK);
+    var font = FontManager.getInstance().getT4CBeaulieuFont(15, Color.BLACK);
     buttons.add(
         new GuiButton(
                 normal,

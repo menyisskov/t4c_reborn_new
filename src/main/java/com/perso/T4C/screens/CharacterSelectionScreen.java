@@ -7,6 +7,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +18,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.perso.T4C.MyGame;
 import com.perso.T4C.audio.SoundManager;
+import com.perso.T4C.config.GameConstants;
+import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.helper.CharacterCreationRules;
 import com.perso.T4C.helper.LocalCharacterStore;
@@ -32,6 +36,9 @@ import java.util.Random;
 public final class CharacterSelectionScreen extends InputAdapter implements Screen {
   private static final float PANEL_ALPHA = 180f / 255f;
   private static final int VISIBLE_ROWS = 4;
+  private static final long DOUBLE_CLICK_MS = 400L;
+  private static final float CARET_BLINK_SECONDS = 0.5f;
+  private static final float HOVER_ALPHA = 0.45f;
   private final MyGame game;
   private final SpriteBatch batch;
   private final OrthographicCamera camera = new OrthographicCamera();
@@ -64,8 +71,13 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private final BitmapFont redFont;
   private final BitmapFont grayFont;
   private final BitmapFont questionFont;
+  private final BitmapFont hintFont;
+  private final Texture hintBand;
   private List<LocalCharacterStore.CharacterSlot> characters = List.of();
-  private List<Integer> levels = List.of();
+  private List<Summary> summaries = List.of();
+  private int lastClickedIndex = -1;
+  private long lastClickAtMs;
+  private float elapsed;
   private int selected;
   private int firstVisible;
   private Mode mode = Mode.SELECT;
@@ -109,7 +121,10 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     redFont = fonts.getT4CBeaulieuFont(17, new Color(0.63f, 0.08f, 0.08f, 1f));
     grayFont = fonts.getT4CBeaulieuFont(17, Color.GRAY);
     questionFont = fonts.getT4CBeaulieuFont(19, new Color(222 / 255f, 158 / 255f, 0f, 1f));
+    hintFont = fonts.getT4CBeaulieuFont(15, Color.LIGHT_GRAY);
+    hintBand = createHintBand();
     refreshCharacters();
+    selectLastPlayed();
     if (characters.isEmpty() && errorMessage == null) {
       startCreation();
     }
@@ -129,6 +144,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
 
   @Override
   public void render(float delta) {
+    elapsed += delta;
     updatePointer(Gdx.input.getX(), Gdx.input.getY());
     Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -144,6 +160,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       case QUESTIONS -> drawQuestionnaire(titleY + title.getRegionHeight() + 20f);
       case REROLL -> drawRerollPanel();
     }
+    drawKeyHints();
     batch.end();
   }
 
@@ -151,29 +168,44 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     float x = panelX();
     float y = panelY();
     drawTranslucent(panel, x, y);
-    if (mode == Mode.NAME || mode == Mode.SEX || mode == Mode.DELETE_CONFIRM) {
+    boolean hasDetails = mode == Mode.SELECT && !characters.isEmpty();
+    boolean selectError = mode == Mode.SELECT && errorMessage != null;
+    if (mode == Mode.NAME
+        || mode == Mode.SEX
+        || mode == Mode.DELETE_CONFIRM
+        || hasDetails
+        || selectError) {
       drawTranslucent(panelExtension, x, y + panel.getRegionHeight());
     }
-    if (mode == Mode.NAME && errorMessage != null) {
+    if ((mode == Mode.NAME || (selectError && hasDetails)) && errorMessage != null) {
       drawTranslucent(
           panelExtension, x, y + panel.getRegionHeight() + panelExtension.getRegionHeight());
     }
     drawCentered(goldFont, I18n.key("character.column.name"), x + 16f, y + 44f, 191f);
     drawCentered(goldFont, I18n.key("character.column.level"), x + 215f, y + 44f, 55f);
     float rowY = y + 76f;
+    int hovered = mode == Mode.SELECT ? rowAtPointer(x, y) : -1;
     for (int row = 0; row < VISIBLE_ROWS; row++) {
       int index = firstVisible + row;
       if (index >= characters.size()) break;
       if (index == selected) {
         GuiDraw.drawRegionFlipped(batch, rowHighlight, x + 16f, rowY);
+      } else if (index == hovered) {
+        drawWithAlpha(rowHighlight, x + 16f, rowY, HOVER_ALPHA);
       }
       LocalCharacterStore.CharacterSlot slot = characters.get(index);
       listFont.draw(batch, (index + 1) + ". " + slot.name(), x + 26f, rowY + 3f);
-      listFont.draw(batch, Integer.toString(levels.get(index)), x + 221f, rowY + 3f);
+      listFont.draw(batch, Integer.toString(summaries.get(index).level()), x + 221f, rowY + 3f);
       rowY += 30f;
     }
     if (mode == Mode.SELECT) {
       drawSelectionControls(x, y);
+      if (hasDetails) {
+        drawCentered(goldFont, detailsLine(summaries.get(selected)), x + 6f, y + 244f, 441f);
+      }
+      if (selectError) {
+        drawCentered(redFont, errorMessage, x + 6f, y + (hasDetails ? 309f : 244f), 441f);
+      }
     } else if (mode == Mode.DELETE_CONFIRM) {
       goldFont.draw(
           batch,
@@ -184,14 +216,25 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       drawSmallButton(x + 367f, y + 243f, I18n.key("character.no"), true);
     } else if (mode == Mode.NAME) {
       goldFont.draw(batch, I18n.key("character.name.prompt"), x + 16f, y + 244f);
-      whiteFont.draw(batch, pendingName + "_", x + 301f, y + 244f);
+      boolean caretOn = (int) (elapsed / CARET_BLINK_SECONDS) % 2 == 0;
+      whiteFont.draw(batch, pendingName + (caretOn ? "_" : ""), x + 301f, y + 244f);
       if (errorMessage != null) {
         drawCentered(redFont, errorMessage, x + 6f, y + 309f, 441f);
       }
     } else if (mode == Mode.SEX) {
       goldFont.draw(batch, I18n.message("character.gender.prompt", pendingName), x + 16f, y + 244f);
-      drawSmallButton(x + 289f, y + 243f, I18n.key("character.gender.male"), true);
-      drawSmallButton(x + 367f, y + 243f, I18n.key("character.gender.female"), true);
+      drawSmallButton(
+          x + 289f,
+          y + 243f,
+          I18n.key("character.gender.male"),
+          true,
+          LocalCharacterStore.MALE.equals(pendingGender));
+      drawSmallButton(
+          x + 367f,
+          y + 243f,
+          I18n.key("character.gender.female"),
+          true,
+          LocalCharacterStore.FEMALE.equals(pendingGender));
     }
   }
 
@@ -202,7 +245,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       drawLargeButton(x + 318f, y + 99f, I18n.key("character.create"), true);
     }
     drawLargeButton(x + 318f, y + 131f, I18n.key("character.delete"), hasCharacter);
-    drawLargeButton(x + 318f, y + 177f, I18n.key("character.back"), true);
+    drawLargeButton(x + 318f, y + 177f, I18n.key("character.quit"), true);
     float upX = x + 278f;
     float upY = y + 76f;
     GuiDraw.drawRegionFlipped(batch, contains(upX, upY, 20f, 21f) ? upHover : upNormal, upX, upY);
@@ -281,8 +324,14 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   }
 
   private void drawSmallButton(float x, float y, String text, boolean enabled) {
+    drawSmallButton(x, y, text, enabled, false);
+  }
+
+  private void drawSmallButton(float x, float y, String text, boolean enabled, boolean selected) {
     TextureRegion region =
-        enabled && contains(x, y, smallNormal.getRegionWidth(), smallNormal.getRegionHeight())
+        enabled
+                && (selected
+                    || contains(x, y, smallNormal.getRegionWidth(), smallNormal.getRegionHeight()))
             ? smallHover
             : smallNormal;
     GuiDraw.drawRegionFlipped(batch, region, x, y);
@@ -303,10 +352,53 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   }
 
   private void drawTranslucent(TextureRegion region, float x, float y) {
+    drawWithAlpha(region, x, y, PANEL_ALPHA);
+  }
+
+  private void drawWithAlpha(TextureRegion region, float x, float y, float alpha) {
     Color previous = new Color(batch.getColor());
-    batch.setColor(previous.r, previous.g, previous.b, previous.a * PANEL_ALPHA);
+    batch.setColor(previous.r, previous.g, previous.b, previous.a * alpha);
     GuiDraw.drawRegionFlipped(batch, region, x, y);
     batch.setColor(previous);
+  }
+
+  private void drawKeyHints() {
+    String key =
+        switch (mode) {
+          case SELECT -> characters.isEmpty() ? null : "character.hints.select";
+          case NAME -> "character.hints.name";
+          case SEX -> "character.hints.gender";
+          case DELETE_CONFIRM -> "character.hints.delete";
+          case QUESTIONS -> "character.hints.questions";
+          case REROLL -> "character.hints.reroll";
+        };
+    if (key == null) return;
+    float bandY = camera.viewportHeight - 44f;
+    batch.draw(hintBand, 0f, bandY, camera.viewportWidth, 32f);
+    drawCentered(hintFont, I18n.key(key), 0f, bandY + 8f, camera.viewportWidth);
+  }
+
+  private static Texture createHintBand() {
+    Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+    pixmap.setColor(0f, 0f, 0f, 0.6f);
+    pixmap.fill();
+    Texture texture = new Texture(pixmap);
+    pixmap.dispose();
+    return texture;
+  }
+
+  private String detailsLine(Summary summary) {
+    String gender =
+        I18n.key(
+            LocalCharacterStore.FEMALE.equals(summary.gender())
+                ? "character.gender.female"
+                : "character.gender.male");
+    return gender
+        + "     "
+        + I18n.message("character.details.rebirths", summary.rebirths())
+        + "     "
+        + I18n.message(
+            "character.details.gold", String.format(java.util.Locale.ROOT, "%,d", summary.gold()));
   }
 
   @Override
@@ -331,13 +423,18 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private void clickSelection() {
     float x = panelX();
     float y = panelY();
-    for (int row = 0; row < VISIBLE_ROWS; row++) {
-      int index = firstVisible + row;
-      if (index < characters.size() && contains(x + 16f, y + 76f + row * 30f, 256f, 23f)) {
-        selected = index;
-        playButtonSound();
-        return;
-      }
+    int clickedRow = rowAtPointer(x, y);
+    if (clickedRow >= 0) {
+      long now = System.currentTimeMillis();
+      boolean doubleClick =
+          clickedRow == lastClickedIndex && now - lastClickAtMs <= DOUBLE_CLICK_MS;
+      lastClickedIndex = clickedRow;
+      lastClickAtMs = now;
+      selected = clickedRow;
+      errorMessage = null;
+      playButtonSound();
+      if (doubleClick) enterSelectedCharacter();
+      return;
     }
     if (contains(x + 278f, y + 76f, 20f, 21f)) {
       moveSelection(-1);
@@ -356,6 +453,23 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     } else if (contains(x + 318f, y + 177f, 116f, 27f)) {
       Gdx.app.exit();
     }
+  }
+
+  private int rowAtPointer(float x, float y) {
+    for (int row = 0; row < VISIBLE_ROWS; row++) {
+      int index = firstVisible + row;
+      if (index < characters.size() && contains(x + 16f, y + 76f + row * 30f, 256f, 23f)) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  @Override
+  public boolean scrolled(float amountX, float amountY) {
+    if (mode != Mode.SELECT || amountY == 0f) return false;
+    moveSelection(amountY > 0f ? 1 : -1);
+    return true;
   }
 
   private void clickDeleteConfirmation() {
@@ -600,6 +714,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private void enterCharacter(LocalCharacterStore.CharacterSlot slot) {
     try {
       LocalCharacterStore.activate(slot);
+      rememberLastPlayed(slot);
       game.setScreen(new CharacterLoadingScreen(game, this));
     } catch (Exception e) {
       showLoadError(e);
@@ -614,6 +729,25 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     mode = Mode.SELECT;
   }
 
+  private static void rememberLastPlayed(LocalCharacterStore.CharacterSlot slot) {
+    var preferences = GamePreferencesStore.get();
+    if (slot.id().equals(preferences.getLastCharacterId())) return;
+    preferences.setLastCharacterId(slot.id());
+    GamePreferencesStore.save();
+  }
+
+  private void selectLastPlayed() {
+    String lastId = GamePreferencesStore.get().getLastCharacterId();
+    if (lastId == null) return;
+    for (int i = 0; i < characters.size(); i++) {
+      if (lastId.equals(characters.get(i).id())) {
+        selected = i;
+        firstVisible = Math.max(0, Math.min(i, characters.size() - VISIBLE_ROWS));
+        return;
+      }
+    }
+  }
+
   private void moveSelection(int direction) {
     if (characters.isEmpty()) return;
     selected = Math.max(0, Math.min(characters.size() - 1, selected + direction));
@@ -625,17 +759,16 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private void refreshCharacters() {
     try {
       characters = LocalCharacterStore.list();
-      List<Integer> loadedLevels = new ArrayList<>(characters.size());
+      List<Summary> loaded = new ArrayList<>(characters.size());
       for (LocalCharacterStore.CharacterSlot slot : characters) {
-        PlayerStateDto state = LocalCharacterStore.loadState(slot);
-        loadedLevels.add(state == null ? 1 : Math.max(1, state.level));
+        loaded.add(Summary.of(slot, LocalCharacterStore.loadState(slot)));
       }
-      levels = List.copyOf(loadedLevels);
+      summaries = List.copyOf(loaded);
       selected = Math.min(selected, Math.max(0, characters.size() - 1));
       errorMessage = null;
     } catch (IOException e) {
       characters = List.of();
-      levels = List.of();
+      summaries = List.of();
       errorMessage = I18n.key("character.roster.failed") + ": " + e.getMessage();
     }
   }
@@ -691,7 +824,9 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   public void resume() {}
 
   @Override
-  public void dispose() {}
+  public void dispose() {
+    hintBand.dispose();
+  }
 
   private enum Mode {
     SELECT,
@@ -703,4 +838,16 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   }
 
   private record QuestionRun(int sourceIndex, List<Integer> answerOrder) {}
+
+  /** What the roster shows for a character, read once from its save file. */
+  record Summary(int level, int rebirths, int gold, String gender) {
+    static Summary of(LocalCharacterStore.CharacterSlot slot, PlayerStateDto state) {
+      if (state == null) return new Summary(1, 0, 0, slot.gender());
+      // Saves above the level cap are clamped when loaded into the game; show what you'll get.
+      int level = Math.max(1, Math.min(GameConstants.MAX_PLAYER_LEVEL, state.level));
+      String gender = state.gender != null ? state.gender : slot.gender();
+      int rebirths = Math.max(0, Math.min(GameConstants.REBIRTH_MAX_REMORTS, state.rebirthCount));
+      return new Summary(level, rebirths, Math.max(0, state.gold), gender);
+    }
+  }
 }
