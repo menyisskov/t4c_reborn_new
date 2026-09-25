@@ -26289,22 +26289,22 @@ window.T4C_DATA = {
       "lightbringers_mantle",
       "shadowmancers_mantle"
     ],
+    "Yolak": [
+      "torch",
+      "light_healing_potion",
+      "potion_of_mana",
+      "healing_potion",
+      "item.mana_prism",
+      "item.critical_healing_potion",
+      "scroll_of_lighthaven",
+      "scroll_of_windhowl"
+    ],
     "Boreas": [
       "torch",
       "light_healing_potion",
       "potion_of_mana",
       "healing_potion",
       "mana_elixir",
-      "item.mana_prism",
-      "item.critical_healing_potion",
-      "scroll_of_lighthaven",
-      "scroll_of_windhowl"
-    ],
-    "Yolak": [
-      "torch",
-      "light_healing_potion",
-      "potion_of_mana",
-      "healing_potion",
       "item.mana_prism",
       "item.critical_healing_potion",
       "scroll_of_lighthaven",
