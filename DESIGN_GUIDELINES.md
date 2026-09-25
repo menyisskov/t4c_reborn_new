@@ -228,13 +228,54 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   armor pieces, all balanced per the rules above and *not* reusing the existing
   `ancient_celestial_earth_*`/`empyrean_earth_*`/`*_light_*` generated sets — the Elder Wyrms need
   their own distinct item identity, separate from the armor-set generator's output.
-- **Not yet built**: the other four class archetypes (warrior, archer, intelligence mage, hybrid
-  air mage), each as its own Elder Wyrm with its own weapon (+ 1-2 armor pieces), following the
-  Rootcrown Wyrm's pattern. This is an accepted open gap, not a decision to stop at one — expand
-  it the same way if asked for "more Elder Wyrms" or "finish the pantheon."
+- **All five shipped (T4C-0038)** — the pantheon is complete, one Elder Wyrm per class archetype,
+  all level 700 in Drake's Lair (inside its 180-radius around 2850,2780, clear of Arch Drake, the
+  Dragonguards and each other):
+
+  | Wyrm | Class | Element / cape color | Own items |
+  |---|---|---|---|
+  | Rootcrown | wisdom mage | earth | sceptre + 2 armor (T4C-0029) |
+  | Pyreclaw | warrior | fire | greatsword, warhelm, gauntlets |
+  | Mistwing | archer | water / blue cape | longbow, mantle, boots |
+  | Duskmaw | intelligence mage | dark / black cape | rod, mantle, crown |
+  | Galecrest | hybrid mage | air / gold cape | wand, mantle, circlet |
+
+  The element/color picks were Claude's call (T4C-0038), following the element-color rule above.
+- **Wyrm tier numbers** (Claude's call, matching the Rootcrown pilot): level 700, 125M XP, gold
+  about **25 per 1,000 HP**; gear requires **950** in the class's main stat (595 int / 595 wis for
+  the hybrid) and 600 endurance on armor. Weapons carry the full armor-style bonus budget, as
+  Rootcrown's sceptre does.
+- **Warrior/archer wyrm gear doubles resistance in its own element; mage wyrm gear does not**
+  (the balance test requires equal resists on single mage items).
+- **Wyrm loot** (the four new ones): own weapon 1%, each own armor piece 1.5%, the class-matching
+  Ancient Celestial set 2.5% per piece and Empyrean set 1.2% per piece, serious healing potion
+  30%, mana elixir 20%. Rootcrown's older six-entry table was left as it was — **open:** it could
+  be aligned by adding the earth sets. The new wyrms deliberately don't drop quest crafting
+  materials (Rootcrown drops a veiled aether shard for the Godsforged chain) so no quest economy
+  shifts.
 - Naming convention: `"<Elder Wyrm name>'s <Adjective> <Item Type>"`, keys lowercase-underscore
   with no apostrophes (e.g. `rootcrown_wyrms_verdant_sceptre`), matching the Makrsh P'Tangh
   legendary-weapon pair from the same content initiative.
+
+### Themed armor sets (zone and weapon-matched sets)
+- Beyond the two generated tiers (Ancient Celestial, Empyrean), `tools/ArmorSetGenerator` has a
+  `THEMED_SETS` list for sets tied to one zone or one weapon (T4C-0038). They are appended after
+  the tiers, so re-running the generator reproduces every older set file byte for byte.
+- Shipped: **Centaur Slaying** (archer, 600 agi / 500 end, 7 pieces with a quiver) to match the
+  Bow of Centaur Slaying; **Drowned Inquisition** (water int mage, 180 int / 45 wis / 200 end,
+  dark resist doubled) for the Sunken Chancel; **Cinderforged** (fire int mage, 240 int / 60 wis /
+  280 end, fire resist doubled) for Cinderreach Hills. Zone sets sit below Ancient Celestial
+  (300/75/400); Centaur Slaying is a sidegrade to Empyrean archer (more agility/archery, less
+  endurance/resistance).
+- Formula (Claude's call): resistance per piece is about endurance / 20, plus a flat set total of
+  about endurance x 0.175 split by AC share; power = 3 x P/10; main stat and combat skill = three
+  single items' worth. Archer sets also give bonus endurance, like the generated archer sets.
+- A set's **quiver** has 0 AC but takes a belt-sized share of the set's bonuses, plus flat weapon
+  damage as its own extra. It must use the quiver item structure so bows can fire with it.
+- Drop rates: **4% per piece from the zone boss, 0.4% from the zone's regular monsters**; the
+  Centaur Slaying set is 1% per piece from the Centaur King and 0.2% from Centaur Warriors.
+- **Every new generated set's key prefix must be added to `ItemBalance.GENERATED_SET_PREFIXES`**,
+  or the balance and loot-coverage tests treat its pieces as hand-made items.
 
 ### Godsforged: a tier above Legendary
 - **A new tier above Legendary** (T4C-0033), earned only through a multi-NPC crafting chain, not
@@ -352,6 +393,12 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   them as follow-ups.
 
 ## 6. Quests
+- **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest
+  hooks carried over from the original T4C (NPC dialogue that mentions or promises a quest, such
+  as the Dragon's Crypt tomb raider, Mirak's goblin bounty, Tristan's caravan or Rhodar's hammer),
+  as well as their rewards. Only quests this project authored itself may be extended.
+  Content-pass backlog ideas that would "finish" an original quest hook are off the table unless
+  the owner asks for one by name.
 - Every zone-unlock quest added by the T4C-0019 pass follows the same mechanical shape: kill N
   of a monster in one area, turn in one boss-drop item, unlock fast travel to a zone. That's a
   fine default for a minor zone gate, but it undersells a **major** new location - see below for
@@ -471,3 +518,30 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   this as an open backlog item, not something to silently batch-fix; if you're touching one of
   these items anyway for an unrelated reason, it's reasonable to fix its id too and note it, but
   don't scope-creep a content pass into fixing the whole list.
+
+## 8. Interface and controls
+- **Windows should look like the original game's windows.** The owner called the old storage
+  screen "gruesome": text spilling outside the window, the same items listed twice, and art that
+  didn't match what was drawn on it. Build screens from the original GUI art (`GUI_BackTrade`,
+  `GUI_BackQuest`, `GUI_PopupBack`, `GUI_Button*`) and **tile** textured pieces (stone, parchment,
+  grid cells) rather than stretching them. Keep all text inside its panel. The storage screen
+  (T4C-0039) is the reference: see its `tile`/`drawThreeSlice` helpers.
+- **Check a UI change by looking at it.** Render the screen off-screen (under Xvfb with an
+  LWJGL3 harness) and look at the screenshot before calling it done; a compiling screen can
+  still be unreadable.
+- **Moving an item must never repair or recharge it.** Anything that moves items (storage,
+  trade, a future bank or mail) carries each item's durability and remaining charges along with
+  it (`StorageService` keeps per-item lists parallel to the storage list).
+- **Everything a player owns must be saved.** Storage items and banked gold were never written
+  to the save file until T4C-0039. When you add player-owned state, add it to `PlayerStateDto`
+  and `PlayerStateMapper` in the same change, with a round-trip test. Old saves without the new
+  field must still load.
+- **A window with a text box or number prompt must override `capturesKeyboard()`**, so movement
+  keys, macros and game hotkeys don't fire while the player types.
+- **Every shortcut is listed in the Controls window** (Ctrl+H, or the Controls button in
+  Options). When you add or change a key binding, add or update its `controls.<topic>.<n>`
+  lines in `lang.json`. `ControlsScreenTest` checks that each line is complete.
+- **Debug keys need a modifier.** A bare letter key must never trigger a developer action; the
+  old bare-R "reload map graphics" is now Ctrl+Shift+R. Holding Ctrl suppresses walking, so
+  Ctrl+letter window shortcuts never also move the character.
+

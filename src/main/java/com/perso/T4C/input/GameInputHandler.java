@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.gui.core.GuiManager;
+import com.perso.T4C.gui.screen.ControlsScreen;
 import com.perso.T4C.gui.screen.Inventory;
 import com.perso.T4C.gui.screen.LocationsScreen;
 import com.perso.T4C.gui.screen.QuestScreen;
@@ -46,7 +47,8 @@ public class GameInputHandler {
 
   public void handleInput(float delta, Player player) {
     int gridDx = 0, gridDy = 0;
-    if (!isTextInputActive()) {
+    // Ctrl+W / Ctrl+Q etc. are window shortcuts; they must not also walk the character.
+    if (!isTextInputActive() && !isCtrlDown()) {
       boolean left =
           Gdx.input.isKeyPressed(Input.Keys.A)
               || Gdx.input.isKeyPressed(Input.Keys.Q)
@@ -150,9 +152,26 @@ public class GameInputHandler {
         coordsHudToggle.run();
       }
     }
-    if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+    if (Gdx.input.isKeyJustPressed(Input.Keys.H) && isCtrlDown()) {
+      if (GuiManager.isCurrent(ControlsScreen.class)) {
+        GuiManager.close();
+      } else {
+        GuiManager.open(new ControlsScreen());
+      }
+    }
+    // Developer shortcut; was a bare R, which players hit by accident (it stalls the game while
+    // every map texture reloads).
+    if (Gdx.input.isKeyJustPressed(Input.Keys.R)
+        && isCtrlDown()
+        && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+            || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))) {
       reloadResources();
     }
+  }
+
+  private static boolean isCtrlDown() {
+    return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+        || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
   }
 
   private void reloadResources() {

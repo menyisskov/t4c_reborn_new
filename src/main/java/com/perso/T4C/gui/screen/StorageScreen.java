@@ -1085,6 +1085,11 @@ public class StorageScreen extends GuiScreenBase {
   }
 
   @Override
+  public boolean capturesKeyboard() {
+    return searchFocused || prompt != null;
+  }
+
+  @Override
   public void dispose() {
     tooltip.dispose();
   }
