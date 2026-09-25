@@ -114,6 +114,9 @@ that now guards against it.
   them on purpose, with the reason in the commit.
 - JSON items register as `item.<key>`. Comparing against the bare key silently matches
   nothing.
+- A skill's example script hard-coded this container's checkout path (`/home/user/...`), which
+  breaks in any other checkout. Docs and skills derive paths
+  (`git rev-parse --show-toplevel`) instead of copying them.
 
 ## Other project docs worth knowing about
 

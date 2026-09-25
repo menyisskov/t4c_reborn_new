@@ -42,7 +42,8 @@ const { chromium } = require('playwright');
   for (const [w, h] of [[1280, 1800], [390, 1600]]) {
     const p = await b.newPage({ viewport: { width: w, height: h } });
     const errs = []; p.on('pageerror', e => errs.push(e.message));
-    await p.goto('file:///home/user/t4c_reborn_new/compendium/index.html#/<route>');
+    // REPO is the checkout root, passed in by the run command below - never hard-code a path.
+    await p.goto(`file://${process.env.REPO}/compendium/index.html#/<route>`);
     await p.waitForTimeout(800);
     await p.screenshot({ path: `<scratchpad>/<route>-${w}.png` });
     console.log(w, errs, await p.evaluate(() => document.documentElement.scrollWidth));
@@ -51,7 +52,9 @@ const { chromium } = require('playwright');
 })();
 ```
 
-Run it with `NODE_PATH=$(npm root -g) node shot.js` from the scratchpad. Then look at the
+Run it from the scratchpad with
+`REPO=$(git -C <checkout> rev-parse --show-toplevel) NODE_PATH=$(npm root -g) node shot.js`, so
+it renders whichever checkout you're in. Then look at the
 screenshots: text alignment, readable tables, and nothing cut off on the phone view.
 
 ## 3. The live site is current (answering "is it up to date?")
