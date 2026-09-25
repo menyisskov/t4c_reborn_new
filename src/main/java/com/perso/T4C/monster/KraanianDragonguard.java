@@ -46,7 +46,9 @@ public final class KraanianDragonguard extends DataMonster {
         SOUND_HIT,
         900,
         2700,
-        java.util.List.of(new MonsterDef.LootDrop("dragonguards_scale_bracer", 0.03f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("dragonguards_scale_bracer", 0.03f),
+            new MonsterDef.LootDrop("item.dragonguards_sealed_key", 0.03f)),
         false,
         0.0f,
         900,

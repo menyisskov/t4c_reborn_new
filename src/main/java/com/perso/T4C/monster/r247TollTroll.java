@@ -51,6 +51,7 @@ public final class r247TollTroll extends DataMonster {
         152,
         467,
         java.util.List.of(
+            new MonsterDef.LootDrop("item.toll_trolls_rusted_key", 0.02f),
             new MonsterDef.LootDrop("Rough amethyst", 0.02f),
             new MonsterDef.LootDrop("Rough sapphire", 0.004f),
             new MonsterDef.LootDrop("Rough aquamarine", 0.001f),

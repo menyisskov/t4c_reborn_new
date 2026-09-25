@@ -63,6 +63,7 @@ public final class WarbandRaider extends NamedEventMonster {
         220,
         650,
         java.util.List.of(
+            new MonsterDef.LootDrop("item.raiders_notched_key", 0.05f),
             new MonsterDef.LootDrop("centaur_warband_ring", 0.04f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.25f),
             new MonsterDef.LootDrop("mana_elixir", 0.15f)),

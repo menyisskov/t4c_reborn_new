@@ -173,7 +173,11 @@ public final class CompendiumExporter {
           "MirrorwardenYsmera",
           "OldCorrin",
           "KeeperOfTheSixthSeal",
-          "TrialWardenOsric");
+          "TrialWardenOsric",
+          "SunkenLedgerCoffer",
+          "PlagueWardensStrongbox",
+          "WyrmlingsHoardCasket",
+          "WarbandsBuriedChest");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 

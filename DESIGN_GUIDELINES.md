@@ -705,3 +705,38 @@ best time actually measures something, not how strong the character happened to 
   fight), never an absolute timestamp.
 - **Reference website:** both Osric and all five Sandglass Sentinels are listed - unlike the
   Echo, a Sentinel's stats are real and fixed, so a static monster-page row is accurate.
+
+## 11. Lost Keys of Kraanhold (T4C-0049)
+
+A treasure hunt with no quest log: twelve named keys, each a rare drop from one specific
+Kraanhold-native monster (or, for three of them, the Windhowl War-Party, T4C-0045). A key's own
+flavor text (`item.<key>` in lang.json) is the only hint where its lock waits - there is no quest
+flag, no journal entry, no map marker. `item/definition/LostKeysOfKraanhold.java` holds all
+twelve as non-equippable tokens, same shape as `BoundGodsigil`/`WyrmScales`.
+
+- **My call, flag for the owner to overrule: four chest NPCs, not twelve.** A strict reading of
+  "each opening one chest" would want a dozen physical chests. Consolidating to four - each
+  accepting three of the twelve keys, gated on whichever `c.hasItem(...)` matches
+  (`npc/SunkenLedgerCoffer.java`, `PlagueWardensStrongbox`, `WyrmlingsHoardCasket`,
+  `WarbandsBuriedChest`) - keeps every key's own flavor and reward fully distinct while avoiding
+  twelve near-identical NPC files for twelve locations that would mostly differ only in
+  coordinates. Each chest sits near where its three keys' source monsters actually spawn, so the
+  location still feels earned. If the owner wants the literal dozen, splitting one 3-key chest
+  class into three 1-key ones is mechanical, not a redesign.
+  - `WarbandsBuriedChest` is placed at the Windhowl War-Party's camp (T4C-0045) on purpose -
+    it's the one deliberate cross-reference between this pass's two monster-camp features.
+- **Ten keys pay gold + potions; two pay a real item.** Every chest's opening line is real,
+  written flavor (the "lore note" the brief asked for is the chest's own response, not a
+  separate readable item) - **not** `ItemDefinition.signText`, which the client never actually
+  renders to the player (only `content/ItemJavaExporter`/the content-studio tooling read it
+  today). Relying on a field nothing displays would have been exactly the kind of invented
+  behavior `AGENT.md` rules out. The two marquee keys (Dragonguard's Sealed Key, Warlord's
+  Signet Key) instead grant a small unique item each (`sealed_signet_of_the_dragonguard`,
+  `warlords_iron_signet` - both `WARRIOR` archetype, `ItemBalance`-formula-compliant, well below
+  the legendary tier the Wyrms/Convergent Wyrm occupy).
+- **Test note:** `NpcReferenceIntegrityTest` scans every `npc/*.java` file for literal
+  `giveItem("...")`/etc. keys and checks they resolve in `ItemRegistry` - but didn't load JSON
+  items itself, only relying on some other test class in the same JVM fork having already done
+  so first. This pass's two `giveItem` calls for JSON-authored rewards were the first real
+  exercise of that path and exposed the gap; the test now loads JSON items in its own
+  `@BeforeEach`, same as every other test that touches JSON items.

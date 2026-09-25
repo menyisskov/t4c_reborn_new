@@ -62,6 +62,7 @@ public final class WarbandBannerBearer extends NamedEventMonster {
         700,
         1900,
         java.util.List.of(
+            new MonsterDef.LootDrop("item.banner_bearers_key", 0.05f),
             new MonsterDef.LootDrop("centaur_warband_ring", 0.08f),
             new MonsterDef.LootDrop("ring_of_the_archer", 0.02f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.35f),

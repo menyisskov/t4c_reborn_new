@@ -63,6 +63,18 @@ on, every content/feature pass adds its own entry here as part of the work
   own time and it's practice, not profit. The tier you're offered rises the more times you've
   been reborn. Ask "times" to hear every tier you've ever cleared.
 
+## 2026-09-25 — Lost Keys of Kraanhold (T4C-0049)
+
+### Added
+- **Twelve named keys** are now rare drops across Kraanhold's own creatures — Kraanian Flyers,
+  Workers, Milipedes, Plagues, Reapers, Stompers, Wyrmlings and Dragonguards, the Toll Trolls on
+  the coast road, and the Windhowl War-Party's own raiders — each a hint at a specific lock, with
+  nothing pointing you there but the key's own story. Bring one to the matching chest — the
+  Sunken Ledger Coffer in the caverns, the Plague Warden's Strongbox in the depths, the
+  Wyrmling's Hoard Casket near Drake's Lair, or the Warband's Buried Chest outside the war-party's
+  camp — and it opens on gold, potions, and for two of the rarest keys, a piece of gear worth
+  keeping.
+
 _Nothing pending._
 
 ## 2026-09-25 — Login, character selection and radar (T4C-0043)

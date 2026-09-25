@@ -47,7 +47,9 @@ public final class KraanianWyrmling extends DataMonster {
         SOUND_HIT,
         330,
         1000,
-        java.util.List.of(new MonsterDef.LootDrop("wyrmling_scale_bracer", 0.03f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("wyrmling_scale_bracer", 0.03f),
+            new MonsterDef.LootDrop("item.wyrmlings_tarnished_key", 0.05f)),
         false,
         0.0f,
         190,

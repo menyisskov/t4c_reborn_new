@@ -7,7 +7,7 @@ public final class ItemDefinitions {
   private ItemDefinitions() {}
 
   public static List<ItemDefinition> all() {
-    return List.of(
+    List<ItemDefinition> all = new java.util.ArrayList<>(List.of(
         ItemItem100.definition(),
         ItemItem101.definition(),
         ItemItem102.definition(),
@@ -2732,6 +2732,8 @@ public final class ItemDefinitions {
         WyrmScales.pyreclaw(),
         WyrmScales.mistwing(),
         WyrmScales.duskmaw(),
-        WyrmScales.galecrest());
+        WyrmScales.galecrest()));
+    all.addAll(LostKeysOfKraanhold.all());
+    return all;
   }
 }

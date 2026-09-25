@@ -15,6 +15,7 @@
   "soundHit": "Centaur Hit.wav",
   "gold": { "min": 1400, "max": 3700 },
   "loot": [
+    { "item": "item.warlords_signet_key", "chance": 0.03 },
     { "item": "chieftains_warhorn", "chance": 0.08 },
     { "item": "marchwardens_crown", "chance": 0.02 },
     { "item": "bow_of_centaur_slaying", "chance": 0.02 },

@@ -170,7 +170,7 @@ public final class KraanianWorker extends DataMonster {
         SOUND_HIT,
         25,
         77,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("item.workers_calloused_key", 0.05f)),
         false,
         0.0f,
         28,

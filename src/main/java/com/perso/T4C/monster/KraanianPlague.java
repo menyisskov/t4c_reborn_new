@@ -56,7 +56,7 @@ public final class KraanianPlague extends DataMonster {
         SOUND_HIT,
         116,
         357,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("item.plague_eaten_key", 0.05f)),
         false,
         0.0f,
         80,
