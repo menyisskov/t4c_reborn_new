@@ -54,7 +54,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0039 | Storage chest overhaul (new two-pane UI, storage now saved, keeps durability/charges) + player-control pass (Controls window, typing-safe hotkeys, Ctrl no longer walks, debug reload moved off bare R) | Systems/Fix | Done | `146b23f`, `d95c9d0` | [2026-09-25](CHANGELOG.md#2026-09-25--a-new-storage-chest-and-better-control-over-your-character-t4c-0039) |
 | T4C-0040 | Fast travel, spell book and macros windows redesign (+ Freeze / Poison Arrow spell names translated) | Systems/Fix | Done | `bc2f8f5` | [2026-09-25](CHANGELOG.md#2026-09-25--fast-travel-spell-book-and-macros-windows-redesigned-t4c-0040) |
 | T4C-0041 | Coordinates readout moved from F2 to F12, leaving F2 free for macros | Systems | Done | `4530b8f` | [2026-09-25](CHANGELOG.md#2026-09-25--f2-is-free-for-your-macros-t4c-0041) |
-| T4C-0042 | The Mirror of Echoes: Ysmera the Mirrorwarden (Colosseum), a boss built live from the player's own character (look, name, level, skills, signature spell), ten scaling trials, penalty-free falls, and the bound Echo companion | Content/Systems | Done | _pending_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-mirror-of-echoes-t4c-0042) |
+| T4C-0042 | The Mirror of Echoes: Ysmera the Mirrorwarden (Colosseum), a boss built live from the player's own character (look, name, level, skills, signature spell), ten scaling trials, penalty-free falls, and the bound Echo companion | Content/Systems | Done | `365458f` | [2026-09-25](CHANGELOG.md#2026-09-25--the-mirror-of-echoes-t4c-0042) |
 
 ## Type legend
 
