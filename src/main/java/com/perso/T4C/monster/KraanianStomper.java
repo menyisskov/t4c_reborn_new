@@ -49,7 +49,9 @@ public final class KraanianStomper extends DataMonster {
         SOUND_HIT,
         120,
         368,
-        java.util.List.of(new MonsterDef.LootDrop("Yellow crystal shard", 0.1f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("Yellow crystal shard", 0.1f),
+            new MonsterDef.LootDrop("item.stompers_cracked_key", 0.05f)),
         false,
         0.0f,
         82,

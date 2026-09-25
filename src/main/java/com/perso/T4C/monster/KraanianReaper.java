@@ -46,7 +46,7 @@ public final class KraanianReaper extends DataMonster {
         SOUND_HIT,
         122,
         374,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("item.reapers_iron_key", 0.05f)),
         false,
         0.0f,
         83,

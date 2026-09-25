@@ -1,0 +1,39 @@
+{
+  "key": "convergent_wyrms_stormstaff",
+  "name": "Convergent Wyrm's Stormstaff",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupWoodenStaff",
+  "appearanceInventory": "64kInvWoodenStaff",
+  "price": 0,
+  "weight": 4,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 625,
+    "wisdom": 625,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d45+68",
+  "atkDelay": "1300",
+  "boosts": [
+    { "boostId": 36710, "statId": 1, "expression": "42" },
+    { "boostId": 36711, "statId": 4, "expression": "42" },
+    { "boostId": 36712, "statId": 16, "expression": "100" },
+    { "boostId": 36713, "statId": 12, "expression": "40" },
+    { "boostId": 36714, "statId": 13, "expression": "40" },
+    { "boostId": 36715, "statId": 14, "expression": "40" },
+    { "boostId": 36716, "statId": 15, "expression": "40" },
+    { "boostId": 36717, "statId": 22, "expression": "40" }
+  ]
+}

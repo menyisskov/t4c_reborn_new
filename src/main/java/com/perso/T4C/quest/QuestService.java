@@ -237,6 +237,42 @@ public final class QuestService {
     return complete(definition, player);
   }
 
+  /**
+   * The "Two Masters" pattern (T4C-0046, see DESIGN_GUIDELINES.md "Quest patterns"): lets a
+   * SECOND NPC — not the quest's own {@code giverNpc} — complete an already-ready quest with a
+   * caller-supplied alternate reward instead of the quest's normal gold/XP/item payout. Still
+   * enforces the quest's own {@code STATUS_ACTIVE} + {@code requiredKills} + item + level gates,
+   * still applies its {@code unlockZoneId}, and still marks it {@code STATUS_COMPLETED} — so
+   * whichever master the player picks first locks the other one out, since {@link #statusFor}
+   * then reads {@code STATUS_COMPLETED} for both. Returns {@code null} (offer nothing) when the
+   * quest isn't ready yet or was already claimed through either master; only calls {@code
+   * grantAlternateReward} on an actual, successful completion.
+   */
+  public String completeWithAlternateReward(
+      String questId, Player player, Runnable grantAlternateReward) {
+    QuestDef definition = findById(questId);
+    if (definition == null || player == null) {
+      log.warn("Unknown quest '{}' referenced for an alternate-reward completion", questId);
+      return null;
+    }
+    if (statusFor(player, definition) != STATUS_ACTIVE
+        || kills(player, definition) < definition.getRequiredKills()
+        || !hasRequiredItem(player, definition)
+        || !meetsMinLevel(player, definition)) {
+      return null;
+    }
+    consumeRequiredItem(player, definition);
+    player.setQuestFlag(statusFlag(definition), STATUS_COMPLETED);
+    player.setQuestFlag(killsFlag(definition), definition.getRequiredKills());
+    String zoneId = definition.getUnlockZoneId();
+    if (zoneId != null && !zoneId.isBlank()) {
+      player.setQuestFlag(zoneUnlockFlag(zoneId), 1);
+    }
+    if (grantAlternateReward != null) grantAlternateReward.run();
+    persist.run();
+    return I18n.resolve(definition.getCompletionText());
+  }
+
   /** True unless the quest also requires turning in {@code requiredItemQty} copies of
    * {@code requiredItemKey} and the player doesn't have enough. Quests with no item objective
    * (the original shape, and most quests) always pass this check. */

@@ -13,6 +13,76 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-25 — The Bloodline Vault (T4C-0044)
+
+### Added
+- **Bloodline Vault.** Your storage chest now has a second stash: click the title of the Storage
+  window to switch between **Personal Storage** (this character only) and the new **Bloodline
+  Vault**, which is shared by every character on your account. Move a rare drop or a pile of
+  gold into the vault on one character, then pull it back out on another — no more mule runs.
+  The vault has its own banked gold, tracked separately from any one character's stash.
+
+## 2026-09-25 — The Windhowl War-Party, a warband camp (T4C-0045)
+
+### Added
+- **The Windhowl War-Party.** A Centaur warband now camps in its own clearing near the
+  Windhowl Marches: five **Warband Raiders** around a **Warband Banner-Bearer**. Kill the
+  banner-bearer first — it visibly rallies the rest — and every raider you fell while its
+  banner is down chips away at the war-party. Clear the whole camp that way and the
+  **Warband Warlord** rides in on the spot where the last raider fell, a tougher fight with
+  its own loot table headlined by the new **Chieftain's Warhorn** neck piece.
+
+## 2026-09-25 — Two Masters: a choice at the Kraanhold dock (T4C-0046)
+
+### Added
+- **Old Corrin** now sits near Dockmaster Thessaly at the Kraanhold crossing. Once you've
+  cleared enough Toll Trolls for passage, you get a choice: report to Thessaly as before for
+  gold and experience on the spot, or talk to Corrin instead and trade that payout for her
+  standing invitation to the Kraanian trading houses — a small experience bonus on every
+  Kraanian kill, for as long as this life lasts. Whichever one you pick first is final; the
+  other closes the offer.
+
+## 2026-09-25 — The Wyrm Scales and the Convergent Wyrm (T4C-0047)
+
+### Added
+- Each of the five Elder Wyrms can now drop its own named **scale**. Bring one of each -
+  Rootcrown, Pyreclaw, Mistwing, Duskmaw, Galecrest - to the new **Keeper of the Sixth Seal** in
+  the Colosseum, and she'll open the seal behind her. What answers isn't a sixth wyrm like the
+  others: it's **The Convergent Wyrm**, a boss above all five that draws on every element at
+  once, with its own legendary staff, neck piece and crown, plus a piece from every elemental
+  armor set. You can do this again on a later life - the seal only asks for the scales, not a
+  one-time favor.
+
+## 2026-09-25 — The Hourglass Trials (T4C-0048)
+
+### Added
+- **Trial Warden Osric** now stands near the Mirror of Echoes in the Colosseum. Where the mirror
+  asks who you were, Osric only asks how fast you are: say "trial" and he'll summon a Sandglass
+  Sentinel — a fixed opponent, the same strength every time, so a fast clear actually means
+  something. Beat your own record and you're paid for it; clear it again without beating your
+  own time and it's practice, not profit. The tier you're offered rises the more times you've
+  been reborn. Ask "times" to hear every tier you've ever cleared.
+
+## 2026-09-25 — Lost Keys of Kraanhold (T4C-0049)
+
+### Added
+- **Twelve named keys** are now rare drops across Kraanhold's own creatures — Kraanian Flyers,
+  Workers, Milipedes, Plagues, Reapers, Stompers, Wyrmlings and Dragonguards, the Toll Trolls on
+  the coast road, and the Windhowl War-Party's own raiders — each a hint at a specific lock, with
+  nothing pointing you there but the key's own story. Bring one to the matching chest — the
+  Sunken Ledger Coffer in the caverns, the Plague Warden's Strongbox in the depths, the
+  Wyrmling's Hoard Casket near Drake's Lair, or the Warband's Buried Chest outside the war-party's
+  camp — and it opens on gold, potions, and for two of the rarest keys, a piece of gear worth
+  keeping.
+
+## 2026-09-25 — The Unsigned Letter (T4C-0050)
+
+### Added
+- The first time you're reborn, a letter turns up in your pack that wasn't there before — no
+  seal, no name, just three words: "I remember you." Someone already knows. Bring it to
+  Mirrorwarden Ysmera in the Colosseum and ask her about it — she's been watching every echo a
+  rebirth leaves in her mirror, and yours was no exception.
+
 _Nothing pending._
 
 ## 2026-09-25 — Login, character selection and radar (T4C-0043)

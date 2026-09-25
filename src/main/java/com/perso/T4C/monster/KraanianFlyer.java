@@ -127,7 +127,7 @@ public final class KraanianFlyer extends DataMonster {
         SOUND_HIT,
         30,
         93,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("item.flyers_barbed_key", 0.05f)),
         false,
         0.0f,
         32,

@@ -140,7 +140,9 @@ public final class KraanianMilipede extends DataMonster {
         SOUND_HIT,
         32,
         99,
-        java.util.List.of(new MonsterDef.LootDrop("Kraanian egg", 0.02f)),
+        java.util.List.of(
+            new MonsterDef.LootDrop("Kraanian egg", 0.02f),
+            new MonsterDef.LootDrop("item.milipedes_chitin_key", 0.05f)),
         false,
         0.0f,
         33,

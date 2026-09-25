@@ -257,6 +257,28 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   with no apostrophes (e.g. `rootcrown_wyrms_verdant_sceptre`), matching the Makrsh P'Tangh
   legendary-weapon pair from the same content initiative.
 
+### The Wyrm Scales and The Convergent Wyrm (T4C-0047, a capstone above the five)
+- Each of the five Elder Wyrms now also has a small chance (12%) to drop its own named **Wyrm
+  Scale** (`item/definition/WyrmScales.java`) - a non-equippable, unique-flagged turn-in token,
+  same shape as `BoundGodsigil`. Bring one of each to the **Keeper of the Sixth Seal**
+  (`npc/KeeperOfTheSixthSeal.java`), standing in the Colosseum near the Mirror of Echoes and
+  ColosseumClerk, and she consumes all five and summons **The Convergent Wyrm** on the spot -
+  level 750 (above the five's level 700), hybrid-mage class, all-element resistance (a flat 130
+  on every one of the six schools, including light - a *monster*'s resists have no "never light"
+  rule, that's an item-only rule), 3 signature legendary items (a weapon, a neck piece and a
+  head piece, all `HYBRID_MAGE` per the item balance formulas) plus one piece from each of the
+  six Ancient Celestial elemental sets, so its own loot literally "converges" every element.
+- **Repeatable, not a one-time unlock.** The seal isn't a quest flag - the Keeper just checks
+  `context.hasItem()` for all five scale keys every time she's asked, so a player can farm scales
+  and summon the Convergent Wyrm again on a later life. This matches how the five Elder Wyrms
+  themselves are ordinary respawning world bosses, not a single-completion set piece.
+- Mechanically this is an on-demand summon via `NpcBehaviorContext.summon()` (wired to
+  `MonsterManager.spawnMonster` through `NpcScriptRuntime`'s summon callback in
+  `MainGameScreen`), the same plumbing declarative NPC "summon" scripts already use - no new
+  spawn/quest infrastructure needed. The Convergent Wyrm has no `@Spawn` of its own (pure JSON,
+  `assets/monsters/convergent_wyrm.json`), same reasoning as the `arenamobxp*` family: it only
+  ever needs to exist when summoned.
+
 ### Themed armor sets (zone and weapon-matched sets)
 - Beyond the two generated tiers (Ancient Celestial, Empyrean), `tools/ArmorSetGenerator` has a
   `THEMED_SETS` list for sets tied to one zone or one weapon (T4C-0038). They are appended after
@@ -440,6 +462,39 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   NPC, if any, to `NEW_NPC_IDS`) or it silently never appears on the reference website - the
   exporter only emits quests/NPCs it's been told are new-since-fork.
 
+### The "Two Masters" pattern (T4C-0046)
+- A reusable end-of-quest **choice**: two different NPCs can both complete the same already-ready
+  quest, but only one of them - whichever the player talks to first. One master ("the immediate
+  one") pays the quest's own `rewardGold`/`rewardXp`/`rewardItemKey` right now, through the normal
+  `giveOrReport`/`turnInReadyQuests` path, completely unchanged. The other ("the alternate one")
+  swaps that payout for something smaller but **permanent-until-rebirth** - a passive perk instead
+  of a lump sum. This is a reward-*shape* choice, not a new quest: it never adds a second
+  `QuestDef`, never changes the original's `requiredKills`/area/objective, and both paths still
+  apply the quest's own `unlockZoneId` if it has one.
+- Built on `QuestService.completeWithAlternateReward(questId, player, Runnable)`: same readiness
+  checks as `complete()` (`STATUS_ACTIVE`, kills, required item, `minLevel`), but takes a
+  caller-supplied `Runnable` instead of granting gold/XP/item, and - critically - it doesn't check
+  `giverNpc`, so any NPC can call it. Marking the quest `STATUS_COMPLETED` either way is what
+  makes the two masters mutually exclusive: whichever one fires first, the other one's own
+  readiness check (`statusFor(...) == STATUS_ACTIVE`) now fails.
+- The alternate master needs a `javaBehavior()` override (not a declarative `GIVE_QUEST` action,
+  which only knows how to call the normal path) - see `npc/OldCorrin.java` for the full pattern:
+  check `QuestService.statusFor`/`killsFlag` directly to word three distinct lines (not ready yet,
+  ready and offering the trade, already settled by either master), `askYesNo` to confirm giving up
+  the normal payout, then `completeWithAlternateReward` on yes.
+- **Proof of concept**: `passage_to_kraanhold` (T4C-0024). Dockmaster Thessaly is the immediate
+  master (unchanged). Old Corrin is the alternate: instead of the gold/XP, she grants a permanent,
+  per-life flag (`OldCorrin.FAVOR_FLAG`, cleared on rebirth like every quest flag) that a small
+  hook in `MainGameScreen.awardKraanholdFavorBonus` reads to pay a flat XP trickle on every
+  Kraanian-clan kill. **Design call (mine, flag for the owner to overrule):** a flat per-kill
+  bonus, checked where kills are already centrally handled, rather than a true "+X% XP in this
+  zone" multiplier threaded through the main combat XP path - that would touch code well outside
+  this quest's own scope for a cosmetically similar result. Use the same flat-bonus shape for the
+  next zone this pattern is applied to, unless the owner asks for the real multiplier.
+- Use this pattern when a quest's completion is a natural narrative fork ("who do you report to,
+  and what do you actually want from this") - not for every zone gate. Most zone gates should stay
+  single-master per the "ordinary zone-gate quest" rule above.
+
 ### Quest-completion level gate (`minLevel`)
 - `QuestDef.minLevel` (T4C-0035, default 0/no gate) blocks a quest's **turn-in** on a character
   level floor - `QuestService.meetsMinLevel()`, checked in `turnInReadyQuests()` and
@@ -616,3 +671,96 @@ the owner asked for an unprompted "surprise"; the owner can overrule any of them
 - **Reference website:** Ysmera is listed with the new NPCs. The Echo is deliberately *not*
   added to the monster list: its stats only exist relative to a player, so any static row would
   be misleading.
+
+## 10. The Hourglass Trials (T4C-0048)
+
+A deliberate opposite of the Mirror of Echoes, a few steps from it: where the Echo scales to the
+player so difficulty is always fair, the Hourglass is a **fixed-HP, fixed-stat opponent** so a
+best time actually measures something, not how strong the character happened to be that life.
+
+- **Where:** Trial Warden Osric (`npc/TrialWardenOsric`) stands in the Colosseum (1740, 1836,
+  worldZ 0), a few steps from Ysmera. "trial" summons a Sandglass Sentinel; "times" reports every
+  tier's best. Numbers live in `mirror/HourglassTrials`; the monsters are
+  `assets/monsters/sandglass_sentinel_1.json` through `_5.json`.
+- **Five tiers, each a genuinely static monster definition** - not a scaled instance of one
+  monster, five actually-separate JSON files (levels 150/300/450/600/750, stats interpolated
+  from the existing `arenamobxp*`/`ARENAMOBXPnn` family so they're not invented from scratch).
+  This is deliberate: a "best time" is only meaningful if the opponent never changes.
+- **Tier rises with rebirths**, one step every 10 rebirths, capped at tier 5
+  (`HourglassTrials.tierFor`) - the same "further along, harder challenge" shape the Mirror's
+  ten trials use, just on a coarser axis since there's no player-scaling to lean on here.
+- **Repeatable by design, but not a farm spot.** Every Sandglass Sentinel's own `xpOnDeath` is 0
+  and its gold is small - the reward for winning isn't the kill, it's the clock. A **new best**
+  at a tier pays a one-time bonus (`tier × 5,000` gold, `MainGameScreen.hourglassNewBestReward`);
+  clearing a tier again without beating your own record pays nothing from the trial itself
+  (only whatever the Sentinel's own small loot table drops). **My call, flag for the owner to
+  overrule:** this trades "risk of becoming an efficient repeatable grind spot" for "the record
+  matters" - if the owner would rather it pay a real reward every clear, drop the "only on a new
+  best" gate and size the payout down accordingly.
+- **Timing is not persisted state.** The in-flight clock (`HourglassTrials.ACTIVE_TRIAL_STARTS`)
+  is a plain in-memory map, the same non-persistent shape `WarbandCampState` uses - a fight
+  abandoned mid-way (relog, walk away) is just abandoned, nothing to clean up on load. Only the
+  **best time per tier** (`hourglass.best_ms.tier<N>`) is a persisted quest flag, storing an
+  elapsed *duration* in milliseconds (always small - well under the int range for any real
+  fight), never an absolute timestamp.
+- **Reference website:** both Osric and all five Sandglass Sentinels are listed - unlike the
+  Echo, a Sentinel's stats are real and fixed, so a static monster-page row is accurate.
+
+## 11. Lost Keys of Kraanhold (T4C-0049)
+
+A treasure hunt with no quest log: twelve named keys, each a rare drop from one specific
+Kraanhold-native monster (or, for three of them, the Windhowl War-Party, T4C-0045). A key's own
+flavor text (`item.<key>` in lang.json) is the only hint where its lock waits - there is no quest
+flag, no journal entry, no map marker. `item/definition/LostKeysOfKraanhold.java` holds all
+twelve as non-equippable tokens, same shape as `BoundGodsigil`/`WyrmScales`.
+
+- **My call, flag for the owner to overrule: four chest NPCs, not twelve.** A strict reading of
+  "each opening one chest" would want a dozen physical chests. Consolidating to four - each
+  accepting three of the twelve keys, gated on whichever `c.hasItem(...)` matches
+  (`npc/SunkenLedgerCoffer.java`, `PlagueWardensStrongbox`, `WyrmlingsHoardCasket`,
+  `WarbandsBuriedChest`) - keeps every key's own flavor and reward fully distinct while avoiding
+  twelve near-identical NPC files for twelve locations that would mostly differ only in
+  coordinates. Each chest sits near where its three keys' source monsters actually spawn, so the
+  location still feels earned. If the owner wants the literal dozen, splitting one 3-key chest
+  class into three 1-key ones is mechanical, not a redesign.
+  - `WarbandsBuriedChest` is placed at the Windhowl War-Party's camp (T4C-0045) on purpose -
+    it's the one deliberate cross-reference between this pass's two monster-camp features.
+- **Ten keys pay gold + potions; two pay a real item.** Every chest's opening line is real,
+  written flavor (the "lore note" the brief asked for is the chest's own response, not a
+  separate readable item) - **not** `ItemDefinition.signText`, which the client never actually
+  renders to the player (only `content/ItemJavaExporter`/the content-studio tooling read it
+  today). Relying on a field nothing displays would have been exactly the kind of invented
+  behavior `AGENT.md` rules out. The two marquee keys (Dragonguard's Sealed Key, Warlord's
+  Signet Key) instead grant a small unique item each (`sealed_signet_of_the_dragonguard`,
+  `warlords_iron_signet` - both `WARRIOR` archetype, `ItemBalance`-formula-compliant, well below
+  the legendary tier the Wyrms/Convergent Wyrm occupy).
+- **Test note:** `NpcReferenceIntegrityTest` scans every `npc/*.java` file for literal
+  `giveItem("...")`/etc. keys and checks they resolve in `ItemRegistry` - but didn't load JSON
+  items itself, only relying on some other test class in the same JVM fork having already done
+  so first. This pass's two `giveItem` calls for JSON-authored rewards were the first real
+  exercise of that path and exposed the gap; the test now loads JSON items in its own
+  `@BeforeEach`, same as every other test that touches JSON items.
+
+## 12. The Unsigned Letter (T4C-0050)
+
+A one-time story beat, not a `QuestDef` (there's no kill-count objective - just an item and a
+conversation). State lives in `quest/UnsignedLetterQuest.java`, plain quest flags as usual.
+
+- **Trigger:** the moment `RebirthBehavior.perform()` succeeds for a character's *first* rebirth
+  (`player.getRebirthCount() == 1`), called from both places that call `perform()` - `npc/Oracle`
+  and `npc/AnchoriteRowan`. Grants "An Unsigned Letter" (non-equippable, `item/definition/
+  UnsignedLetter.java`, same shape as `BoundGodsigil`) and shows its first line as an immediate
+  system message - the same "surface it right when it happens" shape `MirrorTrials`'s
+  login-whisper uses, just fired from the rebirth flow instead of login.
+- **Resolution is Ysmera's, not a new NPC's.** She already watches every echo a rebirth leaves in
+  the Mirror (T4C-0042) - the one character who plausibly already knows a player was just
+  reborn, before they've told anyone. A new "letter" topic on `npc/MirrorwardenYsmera.java`
+  checks `UnsignedLetterQuest.stage()`/`resolve()`: wrong stage or no letter in hand gets a
+  in-character deflection, the right stage consumes the letter and reveals her involvement.
+  **My call, flag for the owner to overrule:** the letter carries no further reward beyond the
+  reveal itself - the payoff is narrative closure, not gear/gold, since this is meant as a small
+  connective story beat between two features (rebirth, the Mirror) rather than new progression.
+  If the owner wants it to lead somewhere further (a real questline, a reward), that's future
+  work, not a retrofit of this pass.
+- Not added to `CompendiumExporter`'s NPC allowlist - Ysmera's own entry already covers her; only
+  a genuinely new NPC needs a new allowlist row.

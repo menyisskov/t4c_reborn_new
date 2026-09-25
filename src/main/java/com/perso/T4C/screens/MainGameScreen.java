@@ -952,6 +952,8 @@ public class MainGameScreen implements Screen {
               && echo.getMaker() == player) {
             rewardMirrorTrial(echo);
           }
+          handleWarbandDeath(monster);
+          handleHourglassTrialDeath(monster);
         });
     monsterManager.setScriptEffectsCallback(
         effects -> {
@@ -1134,7 +1136,62 @@ public class MainGameScreen implements Screen {
               monster.getTileX(),
               monster.getTileY());
           trackGoblinTrustProgress(monster);
+          awardKraanholdFavorBonus(monster);
         });
+  }
+
+  /**
+   * The Windhowl War-Party (T4C-0045): felling the banner-bearer opens a scatter window, and
+   * clearing every raider inside that window summons the Warband Warlord where the last raider
+   * fell. See {@code monster/WarbandCampState.java} for the shared encounter tracking - the
+   * monster classes themselves only carry flavor text, this is where the actual reward fires.
+   */
+  private void handleWarbandDeath(com.perso.T4C.monster.core.BaseMonster monster) {
+    com.perso.T4C.monster.WarbandCampState.Camp camp =
+        com.perso.T4C.monster.WarbandCampState.Camp.WINDHOWL_WAR_PARTY;
+    if (monster instanceof com.perso.T4C.monster.WarbandBannerBearer) {
+      com.perso.T4C.monster.WarbandCampState.bannerFell(camp);
+      return;
+    }
+    if (monster instanceof com.perso.T4C.monster.WarbandRaider
+        && com.perso.T4C.monster.WarbandCampState.raiderFellAndCampJustCleared(camp)) {
+      Vector2 position = monster.getPosition();
+      // respawn=false: this is a one-off encounter, summoned fresh every time the camp is
+      // cleared again - a respawning instance would let its rare loot be farmed on its own
+      // 30s timer without re-clearing the camp.
+      if (monsterManager.spawnMonster(
+          com.perso.T4C.monster.WarbandCampState.WARLORD_NAME, position.x, position.y, false)) {
+        showSystemMessage(I18n.message("message.warband.warlord_appears"));
+      }
+    }
+  }
+
+  /** Gold paid once, only the first time a character posts a new best at a given tier (T4C-0048).
+   * Repeat clears of an already-beaten tier pay nothing - the Hourglass is a speed record, not a
+   * farm spot, which is also why every Sandglass Sentinel's own {@code xpOnDeath}/gold are 0/low
+   * (see assets/monsters/sandglass_sentinel_*.json). */
+  private static int hourglassNewBestReward(int tier) {
+    return Math.max(1, tier) * 5000;
+  }
+
+  private void handleHourglassTrialDeath(com.perso.T4C.monster.core.BaseMonster monster) {
+    if (com.perso.T4C.mirror.HourglassTrials.tierOfMonsterName(monster.getCanonicalName()) <= 0
+        || !com.perso.T4C.mirror.HourglassTrials.hasActiveTrial(player)) {
+      return;
+    }
+    com.perso.T4C.mirror.HourglassTrials.Result result =
+        com.perso.T4C.mirror.HourglassTrials.finish(player);
+    if (result == null) return;
+    String time = com.perso.T4C.mirror.HourglassTrials.formatMillis(result.elapsedMillis());
+    if (result.newBest()) {
+      int reward = hourglassNewBestReward(result.tier());
+      player.addGold(reward);
+      showSystemMessage(
+          I18n.message("message.hourglass_trial_new_best", result.tier(), time, reward));
+    } else {
+      showSystemMessage(I18n.message("message.hourglass_trial_finished", result.tier(), time));
+    }
+    savePlayerState();
   }
 
   /**
@@ -1149,6 +1206,25 @@ public class MainGameScreen implements Screen {
     if (clan == com.perso.T4C.monster.core.MonsterClan.GOBLIN) {
       player.setQuestFlag(
           "__GOBLINS_KILLED_BY_HERO", player.getQuestFlag("__GOBLINS_KILLED_BY_HERO") + 1);
+    }
+  }
+
+  /**
+   * The "Two Masters" pattern's permanent perk on {@code passage_to_kraanhold} (T4C-0046): Old
+   * Corrin's alternate reward, instead of Dockmaster Thessaly's immediate gold/XP, is a permanent
+   * (until-rebirth) trading favor with Kraanhold's own people — a flat XP trickle on every
+   * Kraanian-clan kill, for the rest of this life. See {@code npc/OldCorrin.java} for where the
+   * flag is granted and {@code quest/QuestService.completeWithAlternateReward} for the pattern.
+   */
+  private static final int KRAANHOLD_FAVOR_BONUS_XP = 75;
+
+  private void awardKraanholdFavorBonus(com.perso.T4C.monster.core.BaseMonster monster) {
+    if (player.getQuestFlag(com.perso.T4C.npc.OldCorrin.FAVOR_FLAG) == 0) return;
+    com.perso.T4C.monster.core.MonsterClan clan =
+        com.perso.T4C.monster.core.MonsterClanRelations.resolveClan(
+            monster.getClass().getSimpleName(), monster.getCanonicalName());
+    if (clan == com.perso.T4C.monster.core.MonsterClan.KRAANIAN) {
+      questService.awardScriptXp(player, KRAANHOLD_FAVOR_BONUS_XP);
     }
   }
 

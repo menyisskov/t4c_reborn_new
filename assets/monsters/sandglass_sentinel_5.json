@@ -1,0 +1,73 @@
+{
+  "name": "Sandglass Sentinel V",
+  "displayName": "${monster.sandglass_sentinel_5}",
+  "health": 95794,
+  "xpPerHit": 0,
+  "xpOnDeath": 0,
+  "hitDamageMin": 1,
+  "hitDamageMax": 4,
+  "respawnTime": 30000,
+  "walkPattern": "Tank#h",
+  "attackPattern": "TankA#h",
+  "deathPattern": "TankC!n",
+  "soundAttack": "Whooshh 1.wav",
+  "soundDeath": "Male Dying 1.wav",
+  "soundHit": "Male Hit 1.wav",
+  "gold": {
+    "min": 1800,
+    "max": 3200
+  },
+  "loot": [
+    {
+      "item": "serious_healing_potion",
+      "chance": 0.2
+    },
+    {
+      "item": "mana_elixir",
+      "chance": 0.15
+    }
+  ],
+  "stats": {
+    "str": 765,
+    "end": 689,
+    "agi": 689,
+    "intel": 915,
+    "will": 0,
+    "wis": 689,
+    "luck": 0
+  },
+  "resists": [
+    70,
+    70,
+    70,
+    70,
+    70,
+    5000,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100
+  ],
+  "level": 750,
+  "dodge": 3010,
+  "armorClass": {
+    "min": 0,
+    "max": 1003
+  },
+  "aggro": 0,
+  "canAttack": true,
+  "attacks": [
+    {
+      "formula": "1d1286+1014",
+      "combatAttack": 9010,
+      "percentage": 100
+    }
+  ],
+  "tameable": false,
+  "tameMaxLevel": 0,
+  "spawnAliases": [
+    "SandglassSentinelV"
+  ]
+}

@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0044`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0051`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -56,6 +56,13 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0041 | Coordinates readout moved from F2 to F12, leaving F2 free for macros | Systems | Done | `4530b8f` | [2026-09-25](CHANGELOG.md#2026-09-25--f2-is-free-for-your-macros-t4c-0041) |
 | T4C-0042 | The Mirror of Echoes: Ysmera the Mirrorwarden (Colosseum), a boss built live from the player's own character (look, name, level, skills, signature spell), ten scaling trials, penalty-free falls, and the bound Echo companion | Content/Systems | Done | `365458f` | [2026-09-25](CHANGELOG.md#2026-09-25--the-mirror-of-echoes-t4c-0042) |
 | T4C-0043 | Login & character selection polish (startup loading bar, last-played character, details line, hover/double-click, key hints, level shown at the cap), clearer Switch Character button, and an in-game radar (players blue, NPCs green, monsters yellow, bosses red) with an Options toggle | UI/Systems | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--login-character-selection-and-radar-t4c-0043) |
+| T4C-0044 | The Bloodline Vault: a second, shared storage stash (items + gold) reachable from every character on the account, toggled from the Storage window title | Systems | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-bloodline-vault-t4c-0044) |
+| T4C-0045 | The Windhowl War-Party: a 5-raider Centaur warband + banner-bearer mini-boss near Windhowl Marches; felling the bearer opens a window where clearing the rest summons the Warband Warlord (new item: Chieftain's Warhorn) | Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-windhowl-war-party-a-warband-camp-t4c-0045) |
+| T4C-0046 | The "Two Masters" quest-completion pattern (`QuestService.completeWithAlternateReward`, DESIGN_GUIDELINES.md), proved on `passage_to_kraanhold`: Old Corrin offers a permanent per-life XP-trickle perk as an alternative to Dockmaster Thessaly's immediate gold/XP | Systems/Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--two-masters-a-choice-at-the-kraanhold-dock-t4c-0046) |
+| T4C-0047 | The Wyrm Scales: each Elder Wyrm can drop its own scale; all five turned in at the Colosseum's new Keeper of the Sixth Seal summons The Convergent Wyrm (level 750, all-element, 3 new legendary items + a piece from every elemental armor set) | Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-wyrm-scales-and-the-convergent-wyrm-t4c-0047) |
+| T4C-0048 | The Hourglass Trials: Trial Warden Osric (Colosseum) summons a fixed-HP Sandglass Sentinel (5 tiers, rising with rebirths); best time per tier is a persisted quest flag, a new best pays a one-time gold bonus | Content/Systems | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-hourglass-trials-t4c-0048) |
+| T4C-0049 | Lost Keys of Kraanhold: 12 named keys, rare drops across Kraanhold's monsters + the Windhowl War-Party, open one of 4 chest NPCs (3 keys each) for gold/potions or, for 2 marquee keys, a new unique item | Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--lost-keys-of-kraanhold-t4c-0049) |
+| T4C-0050 | The Unsigned Letter: a first rebirth grants a mysterious letter (RebirthBehavior hook), resolved by asking MirrorwardenYsmera about it - she's been watching every echo a rebirth leaves | Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-unsigned-letter-t4c-0050) |
 
 ## Type legend
 

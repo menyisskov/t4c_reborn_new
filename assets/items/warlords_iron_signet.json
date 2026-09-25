@@ -1,0 +1,35 @@
+{
+  "key": "warlords_iron_signet",
+  "name": "Warlord's Iron Signet",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 18.9,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 250,
+    "strength": 350,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 36741, "statId": 3, "expression": "29" },
+    { "boostId": 36742, "statId": 8, "expression": "70" },
+    { "boostId": 36743, "statId": 12, "expression": "9" },
+    { "boostId": 36744, "statId": 13, "expression": "9" },
+    { "boostId": 36745, "statId": 14, "expression": "9" },
+    { "boostId": 36746, "statId": 15, "expression": "9" },
+    { "boostId": 36747, "statId": 22, "expression": "9" }
+  ]
+}

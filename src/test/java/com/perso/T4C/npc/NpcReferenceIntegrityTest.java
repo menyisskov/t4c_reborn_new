@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.json.ItemJsonLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class NpcReferenceIntegrityTest {
@@ -22,6 +24,14 @@ class NpcReferenceIntegrityTest {
   private static final Pattern MESSAGE_REFERENCE =
       Pattern.compile("\\b(?:sayKey|shoutKey|systemMessageKey)\\(\\s*\"([^\"+]+)\"");
 
+  // JSON-authored items (e.g. Wyrm Scales, the Lost Keys of Kraanhold) only resolve through
+  // ItemRegistry once loaded - real gameplay does this once at startup (MyGame), but a test class
+  // run in isolation (or before any test that happens to load them) must not depend on another
+  // test class having already done so first. Idempotent: repeat calls are harmless.
+  @BeforeEach
+  void loadJsonItems() {
+    ItemJsonLoader.loadAndRegister("assets/items");
+  }
 
   @Test
   void literalItemReferencesResolve() throws Exception {

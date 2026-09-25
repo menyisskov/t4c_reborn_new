@@ -1,0 +1,43 @@
+{
+  "name": "The Convergent Wyrm",
+  "displayName": "${monster.the_convergent_wyrm}",
+  "health": 150000,
+  "xpPerHit": 0,
+  "xpOnDeath": 200000000,
+  "hitDamageMin": 1000,
+  "hitDamageMax": 2100,
+  "respawnTime": 30000,
+  "walkPattern": "Agmorkian#h",
+  "attackPattern": "AgmorkianA#h",
+  "deathPattern": "AgmorkianC!p",
+  "soundAttack": "Kraanian Attack.wav",
+  "soundDeath": "Kraanian Dying.wav",
+  "soundHit": "Kraanian Hit.wav",
+  "gold": { "min": 2000, "max": 4500 },
+  "loot": [
+    { "item": "convergent_wyrms_stormstaff", "chance": 0.01 },
+    { "item": "convergent_wyrms_prism_heart", "chance": 0.015 },
+    { "item": "convergent_wyrms_halo_crown", "chance": 0.015 },
+    { "item": "ancient_celestial_air_armor", "chance": 0.015 },
+    { "item": "ancient_celestial_dark_helmet", "chance": 0.015 },
+    { "item": "ancient_celestial_earth_boots", "chance": 0.015 },
+    { "item": "ancient_celestial_fire_gauntlets", "chance": 0.015 },
+    { "item": "ancient_celestial_light_leggings", "chance": 0.015 },
+    { "item": "ancient_celestial_water_protector", "chance": 0.015 },
+    { "item": "serious_healing_potion", "chance": 0.35 },
+    { "item": "mana_elixir", "chance": 0.25 }
+  ],
+  "stats": { "str": 800, "end": 900, "agi": 280, "intel": 550, "will": 80, "wis": 550, "luck": 0 },
+  "resists": [130, 130, 130, 130, 130, 130, 100, 100, 100, 100, 100, 100],
+  "level": 750,
+  "dodge": 2300,
+  "armorClass": { "min": 0, "max": 800 },
+  "aggro": 100,
+  "canAttack": true,
+  "attacks": [
+    { "formula": "1d1200+1050", "combatAttack": 2100, "percentage": 100 }
+  ],
+  "tameable": false,
+  "tameMaxLevel": 0,
+  "spawnAliases": ["TheConvergentWyrm", "ConvergentWyrm"]
+}

@@ -1,0 +1,35 @@
+{
+  "key": "chieftains_warhorn",
+  "name": "Chieftain's Warhorn",
+  "bodyPart": "NECK",
+  "appearanceInventory": "64kInvNecklace 2",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 33.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 380,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 36700, "statId": 3, "expression": "32" },
+    { "boostId": 36701, "statId": 8, "expression": "76" },
+    { "boostId": 36702, "statId": 12, "expression": "10" },
+    { "boostId": 36703, "statId": 13, "expression": "10" },
+    { "boostId": 36704, "statId": 14, "expression": "10" },
+    { "boostId": 36705, "statId": 15, "expression": "10" },
+    { "boostId": 36706, "statId": 22, "expression": "10" }
+  ]
+}

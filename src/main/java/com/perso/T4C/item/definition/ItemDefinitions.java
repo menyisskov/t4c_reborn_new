@@ -7,7 +7,7 @@ public final class ItemDefinitions {
   private ItemDefinitions() {}
 
   public static List<ItemDefinition> all() {
-    return List.of(
+    List<ItemDefinition> all = new java.util.ArrayList<>(List.of(
         ItemItem100.definition(),
         ItemItem101.definition(),
         ItemItem102.definition(),
@@ -2727,6 +2727,14 @@ public final class ItemDefinitions {
         WyrmforgedEmber.definition(),
         VeiledAetherShard.definition(),
         TemperedGodcore.definition(),
-        BoundGodsigil.definition());
+        BoundGodsigil.definition(),
+        WyrmScales.rootcrown(),
+        WyrmScales.pyreclaw(),
+        WyrmScales.mistwing(),
+        WyrmScales.duskmaw(),
+        WyrmScales.galecrest()));
+    all.addAll(LostKeysOfKraanhold.all());
+    all.add(UnsignedLetter.definition());
+    return all;
   }
 }

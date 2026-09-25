@@ -84,7 +84,16 @@ public final class CompendiumExporter {
           "The Pyreclaw Wyrm",
           "The Mistwing Wyrm",
           "The Duskmaw Wyrm",
-          "The Galecrest Wyrm");
+          "The Galecrest Wyrm",
+          "Warband Raider",
+          "Warband Banner-Bearer",
+          "Warband Warlord",
+          "The Convergent Wyrm",
+          "Sandglass Sentinel I",
+          "Sandglass Sentinel II",
+          "Sandglass Sentinel III",
+          "Sandglass Sentinel IV",
+          "Sandglass Sentinel V");
 
   /** Pre-existing legacy monsters that a content pass placed/activated rather than authored. */
   private static final Set<String> ACTIVATED_MONSTER_NAMES = Set.of("Arch Drake");
@@ -161,7 +170,14 @@ public final class CompendiumExporter {
           "WardenSeressa",
           "GrandmasterTholvenn",
           "AnchoriteRowan",
-          "MirrorwardenYsmera");
+          "MirrorwardenYsmera",
+          "OldCorrin",
+          "KeeperOfTheSixthSeal",
+          "TrialWardenOsric",
+          "SunkenLedgerCoffer",
+          "PlagueWardensStrongbox",
+          "WyrmlingsHoardCasket",
+          "WarbandsBuriedChest");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
