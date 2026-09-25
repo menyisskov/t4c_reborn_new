@@ -1156,8 +1156,11 @@ public class MainGameScreen implements Screen {
     if (monster instanceof com.perso.T4C.monster.WarbandRaider
         && com.perso.T4C.monster.WarbandCampState.raiderFellAndCampJustCleared(camp)) {
       Vector2 position = monster.getPosition();
+      // respawn=false: this is a one-off encounter, summoned fresh every time the camp is
+      // cleared again - a respawning instance would let its rare loot be farmed on its own
+      // 30s timer without re-clearing the camp.
       if (monsterManager.spawnMonster(
-          com.perso.T4C.monster.WarbandCampState.WARLORD_NAME, position.x, position.y)) {
+          com.perso.T4C.monster.WarbandCampState.WARLORD_NAME, position.x, position.y, false)) {
         showSystemMessage(I18n.message("message.warband.warlord_appears"));
       }
     }

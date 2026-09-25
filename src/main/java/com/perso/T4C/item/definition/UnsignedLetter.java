@@ -21,7 +21,9 @@ public final class UnsignedLetter {
         null,
         "64kInvDestinyGem",
         0L,
-        1L,
+        0L, // weightless (it's a folded letter) - see UnsignedLetterQuest.onRebirth: a freshly
+            // reborn character's carry capacity just dropped with their reset stats, so this
+            // can't be allowed to fail a canAdd() check the way a real 1-weight item could.
         0.0d,
         0L,
         0L,

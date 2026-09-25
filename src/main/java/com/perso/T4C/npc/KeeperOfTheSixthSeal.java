@@ -98,11 +98,16 @@ public final class KeeperOfTheSixthSeal extends ScriptedNpc {
         return;
       }
     }
-    for (String scaleKey : SCALE_KEYS) {
-      context.takeItem(scaleKey);
-    }
+    // Summon first: the scales are only spent once the Convergent Wyrm actually exists, so a
+    // failed summon (monster missing from the registry, or whatever else could make this fail)
+    // never destroys five rare keys for nothing.
     boolean summoned =
         context.summon(CONVERGENT_WYRM_NAME, context.npcTileX(), context.npcTileY(), 0);
+    if (summoned) {
+      for (String scaleKey : SCALE_KEYS) {
+        context.takeItem(scaleKey);
+      }
+    }
     context.say(
         I18n.resolve(
             summoned

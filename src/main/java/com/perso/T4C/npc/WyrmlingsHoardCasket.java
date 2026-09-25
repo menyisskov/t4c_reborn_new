@@ -1,12 +1,14 @@
 package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.definition.LostKeysOfKraanhold;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
@@ -48,6 +50,10 @@ public final class WyrmlingsHoardCasket extends ScriptedNpc {
       @Override
       public void onConversationStart(NpcBehaviorContext c) {
         if (c.hasItem(LostKeysOfKraanhold.WYRMLINGS_TARNISHED_KEY)) {
+          if (!canGrantAll(c.player(), "serious_healing_potion", "mana_elixir")) {
+            c.systemMessageKey("message.chest_reward_blocked");
+            return;
+          }
           c.takeItem(LostKeysOfKraanhold.WYRMLINGS_TARNISHED_KEY);
           c.giveGold(1500);
           c.giveItem("serious_healing_potion");
@@ -56,13 +62,21 @@ public final class WyrmlingsHoardCasket extends ScriptedNpc {
           return;
         }
         if (c.hasItem(LostKeysOfKraanhold.DRAGONGUARDS_SEALED_KEY)) {
+          if (!canGrantAll(c.player(), "sealed_signet_of_the_dragonguard")) {
+            c.systemMessageKey("message.chest_reward_blocked");
+            return;
+          }
           c.takeItem(LostKeysOfKraanhold.DRAGONGUARDS_SEALED_KEY);
-          c.giveItem("sealed_signet_of_the_dragonguard");
           c.giveGold(3000);
+          c.giveItem("sealed_signet_of_the_dragonguard");
           c.systemMessageKey("npc.wyrmlingshoardcasket.dragonguards_sealed_key.found");
           return;
         }
         if (c.hasItem(LostKeysOfKraanhold.TOLL_TROLLS_RUSTED_KEY)) {
+          if (!canGrantAll(c.player(), "serious_healing_potion", "mana_elixir")) {
+            c.systemMessageKey("message.chest_reward_blocked");
+            return;
+          }
           c.takeItem(LostKeysOfKraanhold.TOLL_TROLLS_RUSTED_KEY);
           c.giveGold(1500);
           c.giveItem("serious_healing_potion");
@@ -73,5 +87,15 @@ public final class WyrmlingsHoardCasket extends ScriptedNpc {
         c.systemMessageKey("npc.wyrmlingshoardcasket.locked");
       }
     };
+  }
+
+  /** True only if every one of these item keys could actually be added right now - checked
+   * before the matching key is consumed, so a chest opened with a full backpack (or one that
+   * already owns a unique reward) never destroys the key for nothing. */
+  private static boolean canGrantAll(Player player, String... itemKeys) {
+    for (String key : itemKeys) {
+      if (!InventoryService.canAdd(player, key)) return false;
+    }
+    return true;
   }
 }

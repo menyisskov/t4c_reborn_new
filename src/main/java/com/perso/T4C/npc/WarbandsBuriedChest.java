@@ -1,12 +1,14 @@
 package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.definition.LostKeysOfKraanhold;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
@@ -48,6 +50,10 @@ public final class WarbandsBuriedChest extends ScriptedNpc {
       @Override
       public void onConversationStart(NpcBehaviorContext c) {
         if (c.hasItem(LostKeysOfKraanhold.RAIDERS_NOTCHED_KEY)) {
+          if (!canGrantAll(c.player(), "serious_healing_potion", "mana_elixir")) {
+            c.systemMessageKey("message.chest_reward_blocked");
+            return;
+          }
           c.takeItem(LostKeysOfKraanhold.RAIDERS_NOTCHED_KEY);
           c.giveGold(1500);
           c.giveItem("serious_healing_potion");
@@ -56,6 +62,10 @@ public final class WarbandsBuriedChest extends ScriptedNpc {
           return;
         }
         if (c.hasItem(LostKeysOfKraanhold.BANNER_BEARERS_KEY)) {
+          if (!canGrantAll(c.player(), "serious_healing_potion", "mana_elixir")) {
+            c.systemMessageKey("message.chest_reward_blocked");
+            return;
+          }
           c.takeItem(LostKeysOfKraanhold.BANNER_BEARERS_KEY);
           c.giveGold(1500);
           c.giveItem("serious_healing_potion");
@@ -64,14 +74,28 @@ public final class WarbandsBuriedChest extends ScriptedNpc {
           return;
         }
         if (c.hasItem(LostKeysOfKraanhold.WARLORDS_SIGNET_KEY)) {
+          if (!canGrantAll(c.player(), "warlords_iron_signet")) {
+            c.systemMessageKey("message.chest_reward_blocked");
+            return;
+          }
           c.takeItem(LostKeysOfKraanhold.WARLORDS_SIGNET_KEY);
-          c.giveItem("warlords_iron_signet");
           c.giveGold(3000);
+          c.giveItem("warlords_iron_signet");
           c.systemMessageKey("npc.warbandsburiedchest.warlords_signet_key.found");
           return;
         }
         c.systemMessageKey("npc.warbandsburiedchest.locked");
       }
     };
+  }
+
+  /** True only if every one of these item keys could actually be added right now - checked
+   * before the matching key is consumed, so a chest opened with a full backpack (or one that
+   * already owns a unique reward) never destroys the key for nothing. */
+  private static boolean canGrantAll(Player player, String... itemKeys) {
+    for (String key : itemKeys) {
+      if (!InventoryService.canAdd(player, key)) return false;
+    }
+    return true;
   }
 }

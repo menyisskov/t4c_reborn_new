@@ -97,6 +97,11 @@ public final class RebirthBehavior {
       player.setQuestFlag("legacy:power:" + element, 0);
     }
 
+    // T4C-0046: Old Corrin's "Two Masters" favor is advertised as lasting "for the rest of this
+    // life" - it's a plain quest flag like everything else here, so without this it would
+    // silently outlive every future rebirth instead of resetting with the character.
+    player.setQuestFlag(com.perso.T4C.npc.OldCorrin.FAVOR_FLAG, 0);
+
     player.setLevel(1);
 
     player.setCurrentXp(0);

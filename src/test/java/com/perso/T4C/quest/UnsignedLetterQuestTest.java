@@ -41,6 +41,19 @@ class UnsignedLetterQuestTest {
   }
 
   @Test
+  void aFailedGrantNeverAdvancesTheStage() throws Exception {
+    // The letter is unique, so if the player somehow already holds one (any means), canAdd()
+    // refuses a second copy - onRebirth must leave the stage at NONE in that case rather than
+    // advancing it anyway, since this trigger only ever fires once per character.
+    Player player = playerAbleToCarryTheLetter();
+    player.getInventory().add(UnsignedLetterQuest.LETTER_ITEM_KEY);
+    player.setRebirthCount(1);
+
+    assertNull(UnsignedLetterQuest.onRebirth(player));
+    assertEquals(UnsignedLetterQuest.STAGE_NONE, UnsignedLetterQuest.stage(player));
+  }
+
+  @Test
   void laterRebirthsGrantNothing() throws Exception {
     Player player = new Player();
     player.setRebirthCount(2);

@@ -21,15 +21,32 @@ public final class WarbandCampState {
   /** {@code MonsterRegistry} name of the on-demand boss summoned when a camp is cleared. */
   public static final String WARLORD_NAME = "Warband Warlord";
 
+  /**
+   * Every {@code @Spawn} monster in this camp respawns on {@code MonsterManager}'s shared
+   * 18-30s floor (see {@code MonsterManager.RESPAWN_MIN_MILLIS}/{@code RESPAWN_MAX_MILLIS} -
+   * the monster JSON/Java definition's own {@code respawnTime} isn't actually used for the
+   * timing). A scatter window must stay under that floor: otherwise the banner-bearer (or a
+   * raider) can respawn *during* the window, and kills keep counting as "scattered" even though
+   * the banner is visibly standing again - a review finding on the first cut of this feature,
+   * which used a 120s window. 15s guarantees the window always closes before the earliest
+   * possible respawn, so every counted kill genuinely happened while the current banner-bearer
+   * was down.
+   */
+  private static final long RESPAWN_FLOOR_MILLIS = 18_000L;
+
   public enum Camp {
     /** Windhowl Marches, level ~120 Centaur war party (see WindhowlMarches zone, T4C-0005). */
-    WINDHOWL_WAR_PARTY(5, 120_000L, 600_000L);
+    WINDHOWL_WAR_PARTY(5, RESPAWN_FLOOR_MILLIS - 3_000L, 600_000L);
 
     final int raiderCount;
     final long scatterWindowMillis;
     final long warlordCooldownMillis;
 
     Camp(int raiderCount, long scatterWindowMillis, long warlordCooldownMillis) {
+      if (scatterWindowMillis >= RESPAWN_FLOOR_MILLIS) {
+        throw new IllegalArgumentException(
+            "scatter window must stay under the " + RESPAWN_FLOOR_MILLIS + "ms respawn floor");
+      }
       this.raiderCount = raiderCount;
       this.scatterWindowMillis = scatterWindowMillis;
       this.warlordCooldownMillis = warlordCooldownMillis;

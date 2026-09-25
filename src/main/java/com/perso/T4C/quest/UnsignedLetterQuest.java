@@ -36,17 +36,21 @@ public final class UnsignedLetterQuest {
   /**
    * Call right after a successful {@code RebirthBehavior.perform(player)}. Grants the letter and
    * returns the reveal message to show the player, or {@code null} if this isn't their first
-   * rebirth, or they've somehow already been through this (a save from before this feature
-   * shipped, replaying a rebirth flow twice in one session, etc).
+   * rebirth, they've somehow already been through this (a save from before this feature shipped,
+   * replaying a rebirth flow twice in one session, etc), or - in principle only, since the
+   * letter is weightless - the item couldn't be granted. The stage only advances once the item
+   * is actually in hand: this trigger fires exactly once per character (first rebirth only), so
+   * advancing the flag on a failed grant would strand the story with no way to retry it.
    */
   public static String onRebirth(Player player) {
     if (player == null || player.getRebirthCount() != 1 || stage(player) != STAGE_NONE) {
       return null;
     }
-    player.setQuestFlag(FLAG_STAGE, STAGE_RECEIVED);
-    if (InventoryService.canAdd(player, LETTER_ITEM_KEY)) {
-      InventoryService.add(player, LETTER_ITEM_KEY);
+    if (!InventoryService.canAdd(player, LETTER_ITEM_KEY)
+        || !InventoryService.add(player, LETTER_ITEM_KEY).success()) {
+      return null;
     }
+    player.setQuestFlag(FLAG_STAGE, STAGE_RECEIVED);
     return I18n.resolve("${message.unsigned_letter.received}");
   }
 
