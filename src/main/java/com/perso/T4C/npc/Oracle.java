@@ -288,6 +288,9 @@ public final class Oracle extends ScriptedNpc {
 
           com.perso.T4C.npc.behavior.RebirthBehavior.perform(c.player());
 
+          String letterReveal = com.perso.T4C.quest.UnsignedLetterQuest.onRebirth(c.player());
+          if (letterReveal != null) c.systemMessage(letterReveal);
+
           c.teleport(1315, 920, 1);
 
           return true;

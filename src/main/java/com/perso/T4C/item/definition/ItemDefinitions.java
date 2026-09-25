@@ -2734,6 +2734,7 @@ public final class ItemDefinitions {
         WyrmScales.duskmaw(),
         WyrmScales.galecrest()));
     all.addAll(LostKeysOfKraanhold.all());
+    all.add(UnsignedLetter.definition());
     return all;
   }
 }

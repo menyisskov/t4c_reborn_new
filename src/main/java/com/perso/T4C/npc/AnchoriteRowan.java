@@ -110,6 +110,8 @@ public final class AnchoriteRowan extends ScriptedNpc {
         }
         RebirthBehavior.perform(player);
         context.say(I18n.resolve("${npc.anchoriterowan.done}"));
+        String letterReveal = com.perso.T4C.quest.UnsignedLetterQuest.onRebirth(player);
+        if (letterReveal != null) context.systemMessage(letterReveal);
         // The remort energy points RebirthBehavior.perform() just granted can only be spent with
         // Alphan and the associates in their isolated allocation room - the same place Oracle
         // sends a player after every rebirth (Oracle.java's own onYesNo). Without this, a player

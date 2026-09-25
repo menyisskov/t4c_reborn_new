@@ -49,6 +49,7 @@ public final class MirrorwardenYsmera extends ScriptedNpc {
   private static final NpcSpec.DialogueTopic TRIALS_TOPIC = topic(2, 2);
   private static final NpcSpec.DialogueTopic CALL_TOPIC = topic(3, 2);
   private static final NpcSpec.DialogueTopic YSMERA_TOPIC = topic(4, 2);
+  private static final NpcSpec.DialogueTopic LETTER_TOPIC = topic(5, 2);
 
   private static final NpcSpec SPEC =
       new NpcSpec(
@@ -64,7 +65,7 @@ public final class MirrorwardenYsmera extends ScriptedNpc {
           0,
           List.of(),
           "${npc.welcome.mirrorwardenysmera}",
-          List.of(MIRROR_TOPIC, ECHO_TOPIC, TRIALS_TOPIC, CALL_TOPIC, YSMERA_TOPIC),
+          List.of(MIRROR_TOPIC, ECHO_TOPIC, TRIALS_TOPIC, CALL_TOPIC, YSMERA_TOPIC, LETTER_TOPIC),
           "MirrorwardenYsmeraNPC",
           new NpcSpec.CombatProfile(100, 1000000, 65, 67, 63, 1000000, 250, 65535, "1d23+16"));
 
@@ -118,9 +119,37 @@ public final class MirrorwardenYsmera extends ScriptedNpc {
           callBoundEcho(context);
           return true;
         }
+        if (ScriptedNpc.matches(LETTER_TOPIC, keyword)) {
+          resolveLetter(context);
+          return true;
+        }
         return false;
       }
     };
+  }
+
+  /**
+   * T4C-0050, "The Unsigned Letter": she's the one who sent it. A character's first rebirth
+   * grants the letter (quest/UnsignedLetterQuest.onRebirth, called from the Oracle/Rowan rebirth
+   * flows) with no sender named; bringing it here and asking about it resolves the mystery -
+   * fits her established role as the one who already watches every echo a rebirth leaves behind.
+   */
+  private void resolveLetter(NpcBehaviorContext context) {
+    Player player = context.player();
+    int stage = com.perso.T4C.quest.UnsignedLetterQuest.stage(player);
+    if (stage == com.perso.T4C.quest.UnsignedLetterQuest.STAGE_NONE) {
+      context.say(I18n.resolve("${npc.mirrorwardenysmera.letter.unknown}"));
+      return;
+    }
+    if (stage == com.perso.T4C.quest.UnsignedLetterQuest.STAGE_RESOLVED) {
+      context.say(I18n.resolve("${npc.mirrorwardenysmera.letter.already_resolved}"));
+      return;
+    }
+    if (!com.perso.T4C.quest.UnsignedLetterQuest.resolve(player)) {
+      context.say(I18n.resolve("${npc.mirrorwardenysmera.letter.lost}"));
+      return;
+    }
+    context.say(I18n.resolve("${npc.mirrorwardenysmera.letter.reveal}"));
   }
 
   private void offerEcho(NpcBehaviorContext context) {

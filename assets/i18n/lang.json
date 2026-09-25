@@ -25690,6 +25690,13 @@
   "npc.topic.mirrorwardenysmera.4": "Me? I looked into the mirror once, a very long time ago, and I never quite stopped. Someone has to stay and make sure the echoes are seen.",
   "npc.topic_keyword.mirrorwardenysmera.4.0": "ysmera",
   "npc.topic_keyword.mirrorwardenysmera.4.1": "mirrorwarden",
+  "npc.topic.mirrorwardenysmera.5": "Ask me about the letter, if one found its way to you.",
+  "npc.topic_keyword.mirrorwardenysmera.5.0": "letter",
+  "npc.topic_keyword.mirrorwardenysmera.5.1": "unsigned",
+  "npc.mirrorwardenysmera.letter.unknown": "A letter? I've sent nothing to someone who hasn't yet shed a life. Come back once you have.",
+  "npc.mirrorwardenysmera.letter.lost": "You don't have it with you. Whatever you did with it, I can't answer for a letter I can't see.",
+  "npc.mirrorwardenysmera.letter.already_resolved": "We've already spoken of this. You know it was me, and you know why.",
+  "npc.mirrorwardenysmera.letter.reveal": "Yes - it was mine. Every echo that settles in this glass, I watch settle. The moment yours joined it, I knew you'd been remade, before you ever set foot in this Colosseum. I sent the letter unsigned because a name means nothing to someone who's just lost their own - only the fact mattered: someone already knew. Now you know who. That's all it ever was.",
   "npc.keeperofthesixthseal": "Keeper of the Sixth Seal",
   "npc.welcome.keeperofthesixthseal": "Five wyrms. Five scales. One seal that isn't a wyrm at all.",
   "npc.topic.keeperofthesixthseal.0": "Five Elder Wyrms sleep in Drake's Lair, and each of them sheds a scale, rarely, to whoever proves strong enough to earn one. Bring me all five - Rootcrown, Pyreclaw, Mistwing, Duskmaw, Galecrest - and I'll open the seal behind me. What answers isn't a sixth exemplar. It's what all five of them converge into.",
@@ -25760,5 +25767,7 @@
   "npc.warbandsburiedchest.locked": "The buried chest is locked tight. The warband trusted no one with it - you'll need the right key.",
   "npc.warbandsburiedchest.raiders_notched_key.found": "The notched key turns rough but true. A raider's own cut of the warband's take, buried and forgotten - until now.",
   "npc.warbandsburiedchest.banner_bearers_key.found": "The banner-bearer's key still smells of the standard they carried. Whatever they were trusted to guard, it's yours.",
-  "npc.warbandsburiedchest.warlords_signet_key.found": "The warlord's own signet turns the lock like it was always meant to. This was never the raiders' hoard - it was his, alone."
+  "npc.warbandsburiedchest.warlords_signet_key.found": "The warlord's own signet turns the lock like it was always meant to. This was never the raiders' hoard - it was his, alone.",
+  "item.unsigned_letter": "An Unsigned Letter",
+  "message.unsigned_letter.received": "As the world settles back into place around your new life, you find a letter in your pack that wasn't there before. No seal, no name - just three words: \"I remember you.\" Someone in this world already knows you've lived before this one. Perhaps the Colosseum has an answer."
 }

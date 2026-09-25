@@ -75,6 +75,14 @@ on, every content/feature pass adds its own entry here as part of the work
   camp — and it opens on gold, potions, and for two of the rarest keys, a piece of gear worth
   keeping.
 
+## 2026-09-25 — The Unsigned Letter (T4C-0050)
+
+### Added
+- The first time you're reborn, a letter turns up in your pack that wasn't there before — no
+  seal, no name, just three words: "I remember you." Someone already knows. Bring it to
+  Mirrorwarden Ysmera in the Colosseum and ask her about it — she's been watching every echo a
+  rebirth leaves in her mirror, and yours was no exception.
+
 _Nothing pending._
 
 ## 2026-09-25 — Login, character selection and radar (T4C-0043)

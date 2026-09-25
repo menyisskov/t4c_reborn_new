@@ -740,3 +740,27 @@ twelve as non-equippable tokens, same shape as `BoundGodsigil`/`WyrmScales`.
   so first. This pass's two `giveItem` calls for JSON-authored rewards were the first real
   exercise of that path and exposed the gap; the test now loads JSON items in its own
   `@BeforeEach`, same as every other test that touches JSON items.
+
+## 12. The Unsigned Letter (T4C-0050)
+
+A one-time story beat, not a `QuestDef` (there's no kill-count objective - just an item and a
+conversation). State lives in `quest/UnsignedLetterQuest.java`, plain quest flags as usual.
+
+- **Trigger:** the moment `RebirthBehavior.perform()` succeeds for a character's *first* rebirth
+  (`player.getRebirthCount() == 1`), called from both places that call `perform()` - `npc/Oracle`
+  and `npc/AnchoriteRowan`. Grants "An Unsigned Letter" (non-equippable, `item/definition/
+  UnsignedLetter.java`, same shape as `BoundGodsigil`) and shows its first line as an immediate
+  system message - the same "surface it right when it happens" shape `MirrorTrials`'s
+  login-whisper uses, just fired from the rebirth flow instead of login.
+- **Resolution is Ysmera's, not a new NPC's.** She already watches every echo a rebirth leaves in
+  the Mirror (T4C-0042) - the one character who plausibly already knows a player was just
+  reborn, before they've told anyone. A new "letter" topic on `npc/MirrorwardenYsmera.java`
+  checks `UnsignedLetterQuest.stage()`/`resolve()`: wrong stage or no letter in hand gets a
+  in-character deflection, the right stage consumes the letter and reveals her involvement.
+  **My call, flag for the owner to overrule:** the letter carries no further reward beyond the
+  reveal itself - the payoff is narrative closure, not gear/gold, since this is meant as a small
+  connective story beat between two features (rebirth, the Mirror) rather than new progression.
+  If the owner wants it to lead somewhere further (a real questline, a reward), that's future
+  work, not a retrofit of this pass.
+- Not added to `CompendiumExporter`'s NPC allowlist - Ysmera's own entry already covers her; only
+  a genuinely new NPC needs a new allowlist row.
