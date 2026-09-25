@@ -42,6 +42,8 @@ _Nothing pending._
   that key's normal shortcut.
 - The spell book no longer plays its page-turn sound when you're already on the first or last
   page.
+- Pressing Enter in the storage chest's search box now finishes the search instead of opening
+  chat.
 
 ## 2026-09-25 — A new storage chest, and better control over your character (T4C-0039)
 

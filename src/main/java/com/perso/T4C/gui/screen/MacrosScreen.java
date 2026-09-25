@@ -22,6 +22,7 @@ import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.ui.FontManager;
+import com.perso.T4C.ui.PlayerHUD;
 import java.util.Collections;
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class MacrosScreen extends GuiScreenBase {
   private static final Color DIM = Color.valueOf("A89E86");
 
   private final Player player;
+  private final PlayerHUD hud;
   private final GlyphLayout layout = new GlyphLayout();
   private final TextureRegion[] button = new TextureRegion[3];
   private final TextureRegion scrollTick;
@@ -70,7 +72,12 @@ public class MacrosScreen extends GuiScreenBase {
   }
 
   public MacrosScreen(Player player) {
+    this(player, null);
+  }
+
+  public MacrosScreen(Player player, PlayerHUD hud) {
     this.player = player;
+    this.hud = hud;
     background = GuiSprites.load("GUI_BackMacro");
     scrollTick = GuiSprites.load("GUI_ScrollTick");
     button[0] = GuiSprites.load("GUI_ButtonUp");
@@ -372,7 +379,7 @@ public class MacrosScreen extends GuiScreenBase {
     } else if (abs(MOVE_DOWN).contains(screenX, screenY)) {
       move(1);
     } else if (abs(BOOK_ICON).contains(screenX, screenY)) {
-      if (player != null) GuiManager.open(new SpellBook(player));
+      if (player != null) GuiManager.open(new SpellBook(player, hud));
     } else if (abs(HELP_ICON).contains(screenX, screenY)) {
       GuiManager.open(new ControlsScreen());
     } else if (abs(SCROLL).contains(screenX, screenY)) {
