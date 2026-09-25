@@ -18,7 +18,7 @@ public final class AccountStorageBackend implements StorageBackend {
 
   @Override
   public String label() {
-    return I18n.key("ui.account_vault", "ACCOUNT VAULT");
+    return I18n.key("ui.bloodline_vault", "BLOODLINE VAULT");
   }
 
   @Override

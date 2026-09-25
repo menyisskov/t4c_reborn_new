@@ -636,7 +636,7 @@ public class StorageScreen extends GuiScreenBase {
         toggleFont,
         account
             ? I18n.key("ui.storage_switch_to_character", "◂ Switch to Character Storage")
-            : I18n.key("ui.storage_switch_to_account", "Switch to Account Vault ▸"),
+            : I18n.key("ui.storage_switch_to_bloodline_vault", "Switch to Bloodline Vault ▸"),
         sourceToggleBounds.x,
         sourceToggleBounds.y + 6f,
         sourceToggleBounds.width);
