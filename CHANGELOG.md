@@ -15,6 +15,41 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-25 — Login, character selection and radar (T4C-0043)
+
+### Added
+- **Radar.** A round radar now sits in the top-right corner of the game view, under your gold.
+  You are the white dot in the middle; everything around you shows in the direction it is on
+  screen: **other players blue, NPCs green, monsters yellow, bosses red**. Bosses are drawn a
+  little bigger and on top, so a crowd never hides them. An NPC you have turned hostile shows
+  as a monster. The inner ring is roughly the edge of your screen; the outer ring reaches about
+  twice as far. You can turn it off with the new **Radar** box in Options (Video).
+- The startup screen now has a **loading bar** with a percentage, so you can see the game is
+  making progress.
+- The character selection screen shows a **details line** for the chosen character: gender,
+  rebirths and gold.
+- **Key hints** along the bottom of the character selection and creation screens list every
+  shortcut for the current step.
+
+### Changed
+- The game **remembers the last character you played** and selects it when you start the game
+  or switch characters.
+- **Double-click** a character to enter the world. Rows light up when you point at them, and
+  the mouse wheel moves through the list.
+- The loading screen after you pick a character now says **who you are entering the world as**,
+  over the dimmed selection artwork instead of a black screen.
+- The character selection **Back** button is now labeled **Quit**, because that's what it does.
+- The Options button for switching characters now reads **Switch Character** instead of just
+  "Character".
+- The name you type for a new character now has a blinking cursor. When you choose a gender with
+  the arrow keys or M/F, the chosen button now lights up.
+
+### Fixed
+- Characters saved above the level cap were listed with their old level (for example 638). The
+  list now shows the level you'll actually have in game (400 at most).
+- If a character failed to load, or deleting one failed, the error was never shown on the
+  selection screen. It now appears under the character list.
+
 ## 2026-09-25 — The Mirror of Echoes (T4C-0042)
 
 ### Added

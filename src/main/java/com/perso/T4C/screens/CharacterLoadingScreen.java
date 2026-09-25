@@ -5,33 +5,26 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.perso.T4C.MyGame;
 import com.perso.T4C.gui.core.GuiDraw;
+import com.perso.T4C.helper.LocalCharacterStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.ui.FontManager;
 
 final class CharacterLoadingScreen implements Screen {
-  private static final float BAR_WIDTH = 314f;
-  private static final float BAR_HEIGHT = 12f;
-  private static final float FRAME_WIDTH = 360f;
-  private static final float FRAME_HEIGHT = 26f;
+  private static final float BACKGROUND_DIM = 0.35f;
   private final MyGame game;
   private final CharacterSelectionScreen selectionScreen;
   private final MainGameScreen mainScreen;
   private final SpriteBatch batch;
   private final OrthographicCamera camera = new OrthographicCamera();
   private final ScreenViewport viewport = new ScreenViewport(camera);
-  private final BitmapFont font;
-  private final GlyphLayout layout = new GlyphLayout();
-  private final TextureRegion emptyBar;
-  private final TextureRegion progressBar;
-  private final TextureRegion progressFrame;
+  private final LoadingBar loadingBar = new LoadingBar();
+  private final TextureRegion background;
+  private final String title;
   private boolean finished;
   private boolean readyToEnter;
 
@@ -40,20 +33,20 @@ final class CharacterLoadingScreen implements Screen {
     this.selectionScreen = selectionScreen;
     this.mainScreen = MainGameScreen.createProgressive(game);
     this.batch = game.batch;
-    this.font = FontManager.getInstance().getT4CBeaulieuFont(22, Color.WHITE);
-    this.emptyBar = loadSprite("GUI_BackChStat_Empty");
-    this.progressBar = loadSprite("GUI_BackChStat_XP");
-    this.progressFrame = loadSprite("64kTameProgressFrame");
+    this.background = loadBackground();
+    LocalCharacterStore.CharacterSlot slot = LocalCharacterStore.getActiveCharacter();
+    this.title =
+        slot == null
+            ? I18n.key("character.loading")
+            : I18n.message("character.loading.named", slot.name());
     camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
   }
 
-  private static TextureRegion loadSprite(String name) {
+  private static TextureRegion loadBackground() {
     try {
-      TextureRegion region = SpriteLoader.getInstance().getRegionFromSpriteName(name);
-      if (region == null) throw new IllegalStateException("Missing loading-bar sprite: " + name);
-      return region;
-    } catch (Exception error) {
-      throw new IllegalStateException("Unable to load loading-bar sprite: " + name, error);
+      return SpriteLoader.getInstance().getRegionFromSpriteName("Back01_1280");
+    } catch (Exception ignored) {
+      return null;
     }
   }
 
@@ -87,29 +80,15 @@ final class CharacterLoadingScreen implements Screen {
   }
 
   private void drawProgress(float progress) {
-    float centerX = camera.viewportWidth / 2f;
-    float centerY = camera.viewportHeight / 2f;
-    float barX = centerX - BAR_WIDTH / 2f;
-    float barY = centerY;
-    String title = I18n.key("character.loading");
-    String percent = Math.round(progress * 100f) + " %";
     batch.setProjectionMatrix(camera.combined);
     batch.begin();
-    GuiDraw.drawRegionFlipped(
-        batch,
-        progressFrame,
-        centerX - FRAME_WIDTH / 2f,
-        barY - (FRAME_HEIGHT - BAR_HEIGHT) / 2f,
-        FRAME_WIDTH,
-        FRAME_HEIGHT);
-    GuiDraw.drawRegionFlipped(batch, emptyBar, barX, barY, BAR_WIDTH, BAR_HEIGHT);
-    if (progress > 0f) {
-      GuiDraw.drawRegionFlipped(batch, progressBar, barX, barY, BAR_WIDTH * progress, BAR_HEIGHT);
+    if (background != null) {
+      batch.setColor(BACKGROUND_DIM, BACKGROUND_DIM, BACKGROUND_DIM, 1f);
+      GuiDraw.drawRegionFlipped(
+          batch, background, 0f, 0f, camera.viewportWidth, camera.viewportHeight);
+      batch.setColor(Color.WHITE);
     }
-    layout.setText(font, title);
-    font.draw(batch, title, centerX - layout.width / 2f, barY - 38f);
-    layout.setText(font, percent);
-    font.draw(batch, percent, centerX - layout.width / 2f, barY + BAR_HEIGHT + 14f);
+    loadingBar.draw(batch, camera.viewportWidth / 2f, camera.viewportHeight / 2f, progress, title);
     batch.end();
   }
 
