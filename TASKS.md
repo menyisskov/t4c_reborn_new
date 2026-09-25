@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0048`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0049`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -60,6 +60,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0045 | The Windhowl War-Party: a 5-raider Centaur warband + banner-bearer mini-boss near Windhowl Marches; felling the bearer opens a window where clearing the rest summons the Warband Warlord (new item: Chieftain's Warhorn) | Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-windhowl-war-party-a-warband-camp-t4c-0045) |
 | T4C-0046 | The "Two Masters" quest-completion pattern (`QuestService.completeWithAlternateReward`, DESIGN_GUIDELINES.md), proved on `passage_to_kraanhold`: Old Corrin offers a permanent per-life XP-trickle perk as an alternative to Dockmaster Thessaly's immediate gold/XP | Systems/Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--two-masters-a-choice-at-the-kraanhold-dock-t4c-0046) |
 | T4C-0047 | The Wyrm Scales: each Elder Wyrm can drop its own scale; all five turned in at the Colosseum's new Keeper of the Sixth Seal summons The Convergent Wyrm (level 750, all-element, 3 new legendary items + a piece from every elemental armor set) | Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-wyrm-scales-and-the-convergent-wyrm-t4c-0047) |
+| T4C-0048 | The Hourglass Trials: Trial Warden Osric (Colosseum) summons a fixed-HP Sandglass Sentinel (5 tiers, rising with rebirths); best time per tier is a persisted quest flag, a new best pays a one-time gold bonus | Content/Systems | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-hourglass-trials-t4c-0048) |
 
 ## Type legend
 

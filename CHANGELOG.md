@@ -53,6 +53,16 @@ on, every content/feature pass adds its own entry here as part of the work
   armor set. You can do this again on a later life - the seal only asks for the scales, not a
   one-time favor.
 
+## 2026-09-25 — The Hourglass Trials (T4C-0048)
+
+### Added
+- **Trial Warden Osric** now stands near the Mirror of Echoes in the Colosseum. Where the mirror
+  asks who you were, Osric only asks how fast you are: say "trial" and he'll summon a Sandglass
+  Sentinel — a fixed opponent, the same strength every time, so a fast clear actually means
+  something. Beat your own record and you're paid for it; clear it again without beating your
+  own time and it's practice, not profit. The tier you're offered rises the more times you've
+  been reborn. Ask "times" to hear every tier you've ever cleared.
+
 _Nothing pending._
 
 ## 2026-09-25 — Login, character selection and radar (T4C-0043)

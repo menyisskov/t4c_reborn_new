@@ -953,6 +953,7 @@ public class MainGameScreen implements Screen {
             rewardMirrorTrial(echo);
           }
           handleWarbandDeath(monster);
+          handleHourglassTrialDeath(monster);
         });
     monsterManager.setScriptEffectsCallback(
         effects -> {
@@ -1160,6 +1161,34 @@ public class MainGameScreen implements Screen {
         showSystemMessage(I18n.message("message.warband.warlord_appears"));
       }
     }
+  }
+
+  /** Gold paid once, only the first time a character posts a new best at a given tier (T4C-0048).
+   * Repeat clears of an already-beaten tier pay nothing - the Hourglass is a speed record, not a
+   * farm spot, which is also why every Sandglass Sentinel's own {@code xpOnDeath}/gold are 0/low
+   * (see assets/monsters/sandglass_sentinel_*.json). */
+  private static int hourglassNewBestReward(int tier) {
+    return Math.max(1, tier) * 5000;
+  }
+
+  private void handleHourglassTrialDeath(com.perso.T4C.monster.core.BaseMonster monster) {
+    if (com.perso.T4C.mirror.HourglassTrials.tierOfMonsterName(monster.getCanonicalName()) <= 0
+        || !com.perso.T4C.mirror.HourglassTrials.hasActiveTrial(player)) {
+      return;
+    }
+    com.perso.T4C.mirror.HourglassTrials.Result result =
+        com.perso.T4C.mirror.HourglassTrials.finish(player);
+    if (result == null) return;
+    String time = com.perso.T4C.mirror.HourglassTrials.formatMillis(result.elapsedMillis());
+    if (result.newBest()) {
+      int reward = hourglassNewBestReward(result.tier());
+      player.addGold(reward);
+      showSystemMessage(
+          I18n.message("message.hourglass_trial_new_best", result.tier(), time, reward));
+    } else {
+      showSystemMessage(I18n.message("message.hourglass_trial_finished", result.tier(), time));
+    }
+    savePlayerState();
   }
 
   /**

@@ -671,3 +671,37 @@ the owner asked for an unprompted "surprise"; the owner can overrule any of them
 - **Reference website:** Ysmera is listed with the new NPCs. The Echo is deliberately *not*
   added to the monster list: its stats only exist relative to a player, so any static row would
   be misleading.
+
+## 10. The Hourglass Trials (T4C-0048)
+
+A deliberate opposite of the Mirror of Echoes, a few steps from it: where the Echo scales to the
+player so difficulty is always fair, the Hourglass is a **fixed-HP, fixed-stat opponent** so a
+best time actually measures something, not how strong the character happened to be that life.
+
+- **Where:** Trial Warden Osric (`npc/TrialWardenOsric`) stands in the Colosseum (1740, 1836,
+  worldZ 0), a few steps from Ysmera. "trial" summons a Sandglass Sentinel; "times" reports every
+  tier's best. Numbers live in `mirror/HourglassTrials`; the monsters are
+  `assets/monsters/sandglass_sentinel_1.json` through `_5.json`.
+- **Five tiers, each a genuinely static monster definition** - not a scaled instance of one
+  monster, five actually-separate JSON files (levels 150/300/450/600/750, stats interpolated
+  from the existing `arenamobxp*`/`ARENAMOBXPnn` family so they're not invented from scratch).
+  This is deliberate: a "best time" is only meaningful if the opponent never changes.
+- **Tier rises with rebirths**, one step every 10 rebirths, capped at tier 5
+  (`HourglassTrials.tierFor`) - the same "further along, harder challenge" shape the Mirror's
+  ten trials use, just on a coarser axis since there's no player-scaling to lean on here.
+- **Repeatable by design, but not a farm spot.** Every Sandglass Sentinel's own `xpOnDeath` is 0
+  and its gold is small - the reward for winning isn't the kill, it's the clock. A **new best**
+  at a tier pays a one-time bonus (`tier × 5,000` gold, `MainGameScreen.hourglassNewBestReward`);
+  clearing a tier again without beating your own record pays nothing from the trial itself
+  (only whatever the Sentinel's own small loot table drops). **My call, flag for the owner to
+  overrule:** this trades "risk of becoming an efficient repeatable grind spot" for "the record
+  matters" - if the owner would rather it pay a real reward every clear, drop the "only on a new
+  best" gate and size the payout down accordingly.
+- **Timing is not persisted state.** The in-flight clock (`HourglassTrials.ACTIVE_TRIAL_STARTS`)
+  is a plain in-memory map, the same non-persistent shape `WarbandCampState` uses - a fight
+  abandoned mid-way (relog, walk away) is just abandoned, nothing to clean up on load. Only the
+  **best time per tier** (`hourglass.best_ms.tier<N>`) is a persisted quest flag, storing an
+  elapsed *duration* in milliseconds (always small - well under the int range for any real
+  fight), never an absolute timestamp.
+- **Reference website:** both Osric and all five Sandglass Sentinels are listed - unlike the
+  Echo, a Sentinel's stats are real and fixed, so a static monster-page row is accurate.

@@ -88,7 +88,12 @@ public final class CompendiumExporter {
           "Warband Raider",
           "Warband Banner-Bearer",
           "Warband Warlord",
-          "The Convergent Wyrm");
+          "The Convergent Wyrm",
+          "Sandglass Sentinel I",
+          "Sandglass Sentinel II",
+          "Sandglass Sentinel III",
+          "Sandglass Sentinel IV",
+          "Sandglass Sentinel V");
 
   /** Pre-existing legacy monsters that a content pass placed/activated rather than authored. */
   private static final Set<String> ACTIVATED_MONSTER_NAMES = Set.of("Arch Drake");
@@ -167,7 +172,8 @@ public final class CompendiumExporter {
           "AnchoriteRowan",
           "MirrorwardenYsmera",
           "OldCorrin",
-          "KeeperOfTheSixthSeal");
+          "KeeperOfTheSixthSeal",
+          "TrialWardenOsric");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
