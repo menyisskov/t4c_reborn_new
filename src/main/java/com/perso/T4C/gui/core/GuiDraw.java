@@ -59,4 +59,62 @@ public final class GuiDraw {
       batch.setColor(previous);
     }
   }
+
+  /**
+   * Draws a window background with one rectangle of its art replaced by another (tiled) piece of
+   * the same art, all at the window's overlay transparency. Used to hide decorations a screen
+   * doesn't use (e.g. empty icon circles) without an opaque patch that stands out when the
+   * interface is transparent. Coordinates are relative to the background.
+   */
+  public static void drawOverlayWithPatch(
+      SpriteBatch batch,
+      TextureRegion background,
+      float x,
+      float y,
+      int holeX,
+      int holeY,
+      int holeW,
+      int holeH,
+      int srcX,
+      int srcY,
+      int srcW,
+      int srcH) {
+    int w = background.getRegionWidth();
+    int h = background.getRegionHeight();
+    TextureRegion piece = new TextureRegion();
+    withOverlayAlpha(
+        batch,
+        () -> {
+          // Top, bottom, left and right of the hole.
+          drawPiece(batch, piece, background, 0, 0, w, holeY, x, y);
+          drawPiece(batch, piece, background, 0, holeY + holeH, w, h - holeY - holeH, x, y);
+          drawPiece(batch, piece, background, 0, holeY, holeX, holeH, x, y);
+          drawPiece(
+              batch, piece, background, holeX + holeW, holeY, w - holeX - holeW, holeH, x, y);
+          // Fill the hole by tiling the source piece at native size.
+          for (int ty = 0; ty < holeH; ty += srcH) {
+            int th = Math.min(srcH, holeH - ty);
+            for (int tx = 0; tx < holeW; tx += srcW) {
+              int tw = Math.min(srcW, holeW - tx);
+              piece.setRegion(background, srcX, srcY, tw, th);
+              drawRegionFlipped(batch, piece, x + holeX + tx, y + holeY + ty, tw, th);
+            }
+          }
+        });
+  }
+
+  private static void drawPiece(
+      SpriteBatch batch,
+      TextureRegion piece,
+      TextureRegion background,
+      int sx,
+      int sy,
+      int sw,
+      int sh,
+      float x,
+      float y) {
+    if (sw <= 0 || sh <= 0) return;
+    piece.setRegion(background, sx, sy, sw, sh);
+    drawRegionFlipped(batch, piece, x + sx, y + sy, sw, sh);
+  }
 }

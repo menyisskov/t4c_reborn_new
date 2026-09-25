@@ -15,6 +15,36 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-25 — Fast travel, spell book and macros windows redesigned (T4C-0040)
+
+### Changed
+- **Fast travel (Ctrl+L)** has been redesigned. Destinations now sit neatly in the list's slots
+  instead of floating between them. Clicking one shows what it is, and unlocked zones also show
+  a suggested level range and a short description. A Travel button, a double-click or Enter
+  takes you there, so a stray click no longer teleports you by accident. The scroll bar shows
+  where you are in the list, and its arrows and the mouse wheel scroll it.
+- **The spell book** shows which page you're on and how many pages there are. The mouse wheel
+  and Page Up / Page Down now turn pages as well as the book's corners. Spell durations read as
+  real times ("45 s", "5 min") worked out for your character, instead of raw numbers.
+  Hovering the small + / - button next to a spell explains that it adds or removes the spell
+  from your macros.
+- **The macros window (Ctrl+M)** has been rebuilt on the original game's macro window art. Each
+  macro shows its spell icon, name and key in tidy rows. Select one, then click Bind (or its key
+  box) and press the key you want. Clear unbinds it, Remove deletes it, and the green and red
+  arrows move it down or up the list. The book icon opens your spell book to add more macros,
+  and the scroll icon opens the Controls list.
+- The Controls list now calls Ctrl+L "Fast travel" and mentions the new spell book page keys.
+
+### Fixed
+- The spells "Gel" and "poison fleche" now have their English names: **Freeze** and **Poison
+  Arrow**.
+- Pressing the key you're binding to a macro no longer also walks your character or triggers
+  that key's normal shortcut.
+- The spell book no longer plays its page-turn sound when you're already on the first or last
+  page.
+- Pressing Enter in the storage chest's search box now finishes the search instead of opening
+  chat.
+
 ## 2026-09-25 — A new storage chest, and better control over your character (T4C-0039)
 
 ### Changed

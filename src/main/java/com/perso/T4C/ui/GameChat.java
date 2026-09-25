@@ -499,6 +499,13 @@ public final class GameChat extends InputAdapter {
   @Override
   public boolean keyDown(int keycode) {
     if (!active) {
+      // Chat sits ahead of the GUI in the input chain; an open window that uses Enter or
+      // Page Up/Down itself (fast travel, spell book, storage search) gets those keys first.
+      if ((isEnter(keycode) || keycode == Input.Keys.PAGE_UP || keycode == Input.Keys.PAGE_DOWN)
+          && com.perso.T4C.gui.core.GuiManager.isOpen()
+          && com.perso.T4C.gui.core.GuiManager.onKeyDown(keycode)) {
+        return true;
+      }
       if (isEnter(keycode)) {
         active = true;
         visible = true;

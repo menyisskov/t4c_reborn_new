@@ -38,7 +38,6 @@ public class ControlsScreen extends GuiScreenBase {
   private static final float TIP_Y = 202f;
   private static final float TIP_W = 306f;
   private final GlyphLayout layout = new GlyphLayout();
-  private final TextureRegion scratch = new TextureRegion();
   private final List<Rectangle> topicBounds = new ArrayList<>();
   private int selected;
 
@@ -64,12 +63,15 @@ public class ControlsScreen extends GuiScreenBase {
 
   @Override
   public void render(SpriteBatch batch) {
+    if (background == null) {
+      super.render(batch);
+      return;
+    }
+    TextureRegion art = background;
+    background = null;
+    GuiDraw.drawOverlayWithPatch(batch, art, x, y, 239, 287, 318, 37, 240, 120, 150, 37);
     super.render(batch);
-    if (background == null) return;
-    // The quest journal art has three reward-icon squares in its bottom panel; cover them with a
-    // strip of the plain stone from the panel above so this screen doesn't show empty slots.
-    scratch.setRegion(background, 240, 200, 316, 36);
-    GuiDraw.drawRegionFlipped(batch, scratch, x + 239f, y + 288f, 318f, 36f);
+    background = art;
     BitmapFont title = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
     layout.setText(title, I18n.key("controls.title"));
     title.draw(batch, layout, x + 288f - layout.width / 2f, y + 3f);
