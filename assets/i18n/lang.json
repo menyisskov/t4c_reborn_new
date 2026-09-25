@@ -25689,5 +25689,19 @@
   "npc.topic_keyword.mirrorwardenysmera.3.1": "companion",
   "npc.topic.mirrorwardenysmera.4": "Me? I looked into the mirror once, a very long time ago, and I never quite stopped. Someone has to stay and make sure the echoes are seen.",
   "npc.topic_keyword.mirrorwardenysmera.4.0": "ysmera",
-  "npc.topic_keyword.mirrorwardenysmera.4.1": "mirrorwarden"
+  "npc.topic_keyword.mirrorwardenysmera.4.1": "mirrorwarden",
+  "npc.keeperofthesixthseal": "Keeper of the Sixth Seal",
+  "npc.welcome.keeperofthesixthseal": "Five wyrms. Five scales. One seal that isn't a wyrm at all.",
+  "npc.topic.keeperofthesixthseal.0": "Five Elder Wyrms sleep in Drake's Lair, and each of them sheds a scale, rarely, to whoever proves strong enough to earn one. Bring me all five - Rootcrown, Pyreclaw, Mistwing, Duskmaw, Galecrest - and I'll open the seal behind me. What answers isn't a sixth exemplar. It's what all five of them converge into.",
+  "npc.topic_keyword.keeperofthesixthseal.0.0": "seal",
+  "npc.topic_keyword.keeperofthesixthseal.0.1": "scales",
+  "npc.keeperofthesixthseal.missing_scales": "You don't have all five yet. Rootcrown, Pyreclaw, Mistwing, Duskmaw, Galecrest - one scale from each, no more, no fewer.",
+  "npc.keeperofthesixthseal.seal_opens": "The seal opens. Stand ready - it converges on you now.",
+  "npc.keeperofthesixthseal.seal_fails": "The seal trembles but doesn't open. Something's already answering its call - try again once the ground is clear.",
+  "monster.the_convergent_wyrm": "The Convergent Wyrm",
+  "item.rootcrown_wyrm_scale": "Rootcrown Wyrm Scale",
+  "item.pyreclaw_wyrm_scale": "Pyreclaw Wyrm Scale",
+  "item.mistwing_wyrm_scale": "Mistwing Wyrm Scale",
+  "item.duskmaw_wyrm_scale": "Duskmaw Wyrm Scale",
+  "item.galecrest_wyrm_scale": "Galecrest Wyrm Scale"
 }

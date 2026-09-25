@@ -58,6 +58,7 @@ public final class ThePyreclawWyrm extends DataMonster {
         3750,
         java.util.List.of(
             new MonsterDef.LootDrop("pyreclaw_wyrms_searing_greatsword", 0.01f),
+            new MonsterDef.LootDrop("item.pyreclaw_wyrm_scale", 0.12f),
             new MonsterDef.LootDrop("pyreclaw_wyrms_molten_warhelm", 0.015f),
             new MonsterDef.LootDrop("pyreclaw_wyrms_forgeplate_gauntlets", 0.015f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.3f),

@@ -87,7 +87,8 @@ public final class CompendiumExporter {
           "The Galecrest Wyrm",
           "Warband Raider",
           "Warband Banner-Bearer",
-          "Warband Warlord");
+          "Warband Warlord",
+          "The Convergent Wyrm");
 
   /** Pre-existing legacy monsters that a content pass placed/activated rather than authored. */
   private static final Set<String> ACTIVATED_MONSTER_NAMES = Set.of("Arch Drake");
@@ -165,7 +166,8 @@ public final class CompendiumExporter {
           "GrandmasterTholvenn",
           "AnchoriteRowan",
           "MirrorwardenYsmera",
-          "OldCorrin");
+          "OldCorrin",
+          "KeeperOfTheSixthSeal");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 

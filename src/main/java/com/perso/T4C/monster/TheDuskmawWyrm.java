@@ -58,6 +58,7 @@ public final class TheDuskmawWyrm extends DataMonster {
         3300,
         java.util.List.of(
             new MonsterDef.LootDrop("duskmaw_wyrms_umbral_rod", 0.01f),
+            new MonsterDef.LootDrop("item.duskmaw_wyrm_scale", 0.12f),
             new MonsterDef.LootDrop("duskmaw_wyrms_nightshroud_mantle", 0.015f),
             new MonsterDef.LootDrop("duskmaw_wyrms_eclipsed_crown", 0.015f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.3f),

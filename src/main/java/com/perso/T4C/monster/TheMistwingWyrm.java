@@ -59,6 +59,7 @@ public final class TheMistwingWyrm extends DataMonster {
         3200,
         java.util.List.of(
             new MonsterDef.LootDrop("mistwing_wyrms_farsight_longbow", 0.01f),
+            new MonsterDef.LootDrop("item.mistwing_wyrm_scale", 0.12f),
             new MonsterDef.LootDrop("mistwing_wyrms_rainveil_mantle", 0.015f),
             new MonsterDef.LootDrop("mistwing_wyrms_fogstride_boots", 0.015f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.3f),

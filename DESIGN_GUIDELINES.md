@@ -257,6 +257,28 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   with no apostrophes (e.g. `rootcrown_wyrms_verdant_sceptre`), matching the Makrsh P'Tangh
   legendary-weapon pair from the same content initiative.
 
+### The Wyrm Scales and The Convergent Wyrm (T4C-0047, a capstone above the five)
+- Each of the five Elder Wyrms now also has a small chance (12%) to drop its own named **Wyrm
+  Scale** (`item/definition/WyrmScales.java`) - a non-equippable, unique-flagged turn-in token,
+  same shape as `BoundGodsigil`. Bring one of each to the **Keeper of the Sixth Seal**
+  (`npc/KeeperOfTheSixthSeal.java`), standing in the Colosseum near the Mirror of Echoes and
+  ColosseumClerk, and she consumes all five and summons **The Convergent Wyrm** on the spot -
+  level 750 (above the five's level 700), hybrid-mage class, all-element resistance (a flat 130
+  on every one of the six schools, including light - a *monster*'s resists have no "never light"
+  rule, that's an item-only rule), 3 signature legendary items (a weapon, a neck piece and a
+  head piece, all `HYBRID_MAGE` per the item balance formulas) plus one piece from each of the
+  six Ancient Celestial elemental sets, so its own loot literally "converges" every element.
+- **Repeatable, not a one-time unlock.** The seal isn't a quest flag - the Keeper just checks
+  `context.hasItem()` for all five scale keys every time she's asked, so a player can farm scales
+  and summon the Convergent Wyrm again on a later life. This matches how the five Elder Wyrms
+  themselves are ordinary respawning world bosses, not a single-completion set piece.
+- Mechanically this is an on-demand summon via `NpcBehaviorContext.summon()` (wired to
+  `MonsterManager.spawnMonster` through `NpcScriptRuntime`'s summon callback in
+  `MainGameScreen`), the same plumbing declarative NPC "summon" scripts already use - no new
+  spawn/quest infrastructure needed. The Convergent Wyrm has no `@Spawn` of its own (pure JSON,
+  `assets/monsters/convergent_wyrm.json`), same reasoning as the `arenamobxp*` family: it only
+  ever needs to exist when summoned.
+
 ### Themed armor sets (zone and weapon-matched sets)
 - Beyond the two generated tiers (Ancient Celestial, Empyrean), `tools/ArmorSetGenerator` has a
   `THEMED_SETS` list for sets tied to one zone or one weapon (T4C-0038). They are appended after

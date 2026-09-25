@@ -1,0 +1,37 @@
+{
+  "key": "convergent_wyrms_halo_crown",
+  "name": "Convergent Wyrm's Halo Crown",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 40.2,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 500,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 625,
+    "wisdom": 625,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    { "boostId": 36726, "statId": 1, "expression": "42" },
+    { "boostId": 36727, "statId": 4, "expression": "42" },
+    { "boostId": 36728, "statId": 16, "expression": "100" },
+    { "boostId": 36729, "statId": 12, "expression": "40" },
+    { "boostId": 36730, "statId": 13, "expression": "40" },
+    { "boostId": 36731, "statId": 14, "expression": "40" },
+    { "boostId": 36732, "statId": 15, "expression": "40" },
+    { "boostId": 36733, "statId": 22, "expression": "40" }
+  ]
+}

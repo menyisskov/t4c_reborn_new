@@ -2727,6 +2727,11 @@ public final class ItemDefinitions {
         WyrmforgedEmber.definition(),
         VeiledAetherShard.definition(),
         TemperedGodcore.definition(),
-        BoundGodsigil.definition());
+        BoundGodsigil.definition(),
+        WyrmScales.rootcrown(),
+        WyrmScales.pyreclaw(),
+        WyrmScales.mistwing(),
+        WyrmScales.duskmaw(),
+        WyrmScales.galecrest());
   }
 }

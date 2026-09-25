@@ -42,6 +42,17 @@ on, every content/feature pass adds its own entry here as part of the work
   Kraanian kill, for as long as this life lasts. Whichever one you pick first is final; the
   other closes the offer.
 
+## 2026-09-25 — The Wyrm Scales and the Convergent Wyrm (T4C-0047)
+
+### Added
+- Each of the five Elder Wyrms can now drop its own named **scale**. Bring one of each -
+  Rootcrown, Pyreclaw, Mistwing, Duskmaw, Galecrest - to the new **Keeper of the Sixth Seal** in
+  the Colosseum, and she'll open the seal behind her. What answers isn't a sixth wyrm like the
+  others: it's **The Convergent Wyrm**, a boss above all five that draws on every element at
+  once, with its own legendary staff, neck piece and crown, plus a piece from every elemental
+  armor set. You can do this again on a later life - the seal only asks for the scales, not a
+  one-time favor.
+
 _Nothing pending._
 
 ## 2026-09-25 — Login, character selection and radar (T4C-0043)
