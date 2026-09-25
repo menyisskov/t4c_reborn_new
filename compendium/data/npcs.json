@@ -593,6 +593,65 @@
     }
   },
   {
+    "id": "MirrorwardenYsmera",
+    "origin": "new",
+    "displayName": "Ysmera the Mirrorwarden",
+    "welcomeText": "Look into the mirror, %s. It has been looking at you for a long time.",
+    "topics": [
+      {
+        "keywords": [
+          "mirror",
+          "glass"
+        ],
+        "response": "This mirror has hung in the Colosseum longer than the Colosseum has had a name. When the Oracle - or Avalon - remakes you, the life you shed doesn't simply vanish. Its echo settles here. Say echo, and yours will step out of the glass: your face, your gear, your spells, your strength. Win, and the mirror rewards you. Fall, and it takes nothing - it only wants to be seen.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "echo",
+          "face"
+        ],
+        "response": "Say echo and your reflection will step out to face you.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "trials",
+          "trial"
+        ],
+        "response": "There are ten trials. Each echo is stronger than the last, and the first win of each trial pays well.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "call",
+          "companion"
+        ],
+        "response": "Once you've won all ten trials, your echo will walk beside you whenever you call it.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "ysmera",
+          "mirrorwarden"
+        ],
+        "response": "Me? I looked into the mirror once, a very long time ago, and I never quite stopped. Someone has to stay and make sure the echoes are seen.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "OutriderHalvard",
     "origin": "new",
     "displayName": "Outrider Halvard",
