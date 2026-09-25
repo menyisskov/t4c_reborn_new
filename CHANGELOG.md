@@ -13,6 +13,15 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-25 — Safer changes and fewer review round-trips (T4C-0051, Process/Tooling)
+
+### Changed
+- The project's working rules now include a self-check before any change is proposed. It
+  covers existing characters' saves when a limit changes, numbers on the reference website
+  matching the game exactly, and notes that could go out of date. It also adds step-by-step
+  guides for balance changes, for shipping a change, and for confirming the website is live.
+  No in-game effect.
+
 ## 2026-09-25 — The Bloodline Vault (T4C-0044)
 
 ### Added

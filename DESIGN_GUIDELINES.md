@@ -413,6 +413,13 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Tell the owner about pre-existing problems you notice along the way (unwearable items,
   soft-locks, misleading displays). Fix them when they're small and in scope; otherwise list
   them as follow-ups.
+- Every rule in this file that can be checked automatically should have an invariant test,
+  named next to the rule. A rule that exists only as prose will drift. (Recommended after the
+  T4C-0025–0027 review findings; the owner may revise.)
+- A new or tightened limit always comes with a decision about saves already past it: clamp what
+  the game derives, keep what the player chose or spent, and cover it with a load test.
+- Use the workflow skills: `balance-change` for any rule or number change, `ship-pr` to land
+  it, and `verify-website` whenever website-visible data or pages change.
 
 ## 6. Quests
 - **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest

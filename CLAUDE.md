@@ -81,15 +81,55 @@ corrections ("this doesn't make sense, I'd expect…"), design calls you made to
 instruction, workflow preferences, accepted open gaps. Record them in `DESIGN_GUIDELINES.md` in
 the same PR as the work. That file's section 0 has the full criteria.
 
+## Before opening a PR — self-review first
+
+Codex reviews every PR, but it shouldn't be the first to find these. Use the `ship-pr` skill.
+Its step 1 is the full checklist; at minimum:
+
+- **Build and test with Maven** (`mvn -q test`, the full suite). CI only runs a scoped subset,
+  so a green CI alone doesn't prove the rest still passes.
+- **Old saves:** any new or lowered cap or limit needs a load-time clamp and a test that loads an
+  over-the-limit save. Clamp derived values; never claw back what the player chose or spent.
+  See the `balance-change` skill.
+- **Numbers players see** (website, dialogue, docs) are computed by the game's own helpers,
+  never re-typed. Check probability edges: `nextInt(101) <= c` is (c+1)/101, not c%.
+- **Docs that quote code go stale.** Grep for the old value in `DESIGN_GUIDELINES.md`, the
+  skills and `compendium/app.js`, and prefer a test-backed rule over a copied number.
+- **Plan PR boundaries up front.** When a request bundles several goals, say which goals land
+  in which PR before starting. Finish, merge and re-branch from `main` between them, so one
+  PR's churn doesn't leave another's docs stale.
+
+## Mistakes past reviews caught (don't repeat them)
+
+Add a line here whenever a review finds a new *class* of mistake, along with the test or rule
+that now guards against it.
+
+- A new rebirth cap didn't clamp saves already above it. Now guarded by
+  `PlayerStateMapperTest`, and the "old saves" rule above.
+- The website showed aura odds as c% while the game rolls (c+1)/101. Now guarded by
+  `SeraphAuraService.effectivePercent` and `RebirthBehaviorTableTest`.
+- A skill doc still reserved an old boost-ID range after a generator re-run. Now guarded by
+  `ItemBalanceGuidelinesTest.boostIdsAreUniqueAndInTheirReservedRange`.
+- Hard-coded counts in tests (`SpellRegistryParityTest`) break when content is added. Update
+  them on purpose, with the reason in the commit.
+- JSON items register as `item.<key>`. Comparing against the bare key silently matches
+  nothing.
+- A skill's example script hard-coded this container's checkout path (`/home/user/...`), which
+  breaks in any other checkout. Docs and skills derive paths
+  (`git rev-parse --show-toplevel`) instead of copying them.
+
 ## Other project docs worth knowing about
 
 - `AGENT.md` — engineering charter (rendering/camera constraints,
   English-only rule, general coding standards).
 - `AGENTS.md` — automated PR review protocol.
-- `.claude/skills/` — `game-director`, `item-creator`, `spell-creator`,
-  `npc-monster-creator`, `quest-creator`, `graphic-designer`: use these for
-  actually building new content; this file only covers tracking it
-  afterward.
+- `.claude/skills/` — content skills (`game-director`, `item-creator`,
+  `spell-creator`, `npc-monster-creator`, `quest-creator`,
+  `graphic-designer`) for building new content, and workflow skills:
+  `balance-change` (changing caps/formulas/displayed numbers safely),
+  `ship-pr` (self-review → PR → Codex → merge → cleanup), `verify-website`
+  (regenerate, render-check and confirm the live compendium), and
+  `steward` (the merge policy `ship-pr` defers to).
 - `docs/content-ideas/` — write-ups from past content passes (research
   notes, what shipped, backlog ideas). Worth reading before starting a new
   content pass — several already-identified, canon-grounded ideas are
