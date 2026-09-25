@@ -99,6 +99,30 @@
       {
         "item": "healing_potion",
         "chance": 0.04
+      },
+      {
+        "item": "drowned_inquisition_armor",
+        "chance": 0.004
+      },
+      {
+        "item": "drowned_inquisition_boots",
+        "chance": 0.004
+      },
+      {
+        "item": "drowned_inquisition_gauntlets",
+        "chance": 0.004
+      },
+      {
+        "item": "drowned_inquisition_helmet",
+        "chance": 0.004
+      },
+      {
+        "item": "drowned_inquisition_leggings",
+        "chance": 0.004
+      },
+      {
+        "item": "drowned_inquisition_protector",
+        "chance": 0.004
       }
     ],
     "attacks": [
@@ -269,6 +293,30 @@
       {
         "item": "empyrean_water_protector",
         "chance": 0.012
+      },
+      {
+        "item": "drowned_inquisition_armor",
+        "chance": 0.04
+      },
+      {
+        "item": "drowned_inquisition_boots",
+        "chance": 0.04
+      },
+      {
+        "item": "drowned_inquisition_gauntlets",
+        "chance": 0.04
+      },
+      {
+        "item": "drowned_inquisition_helmet",
+        "chance": 0.04
+      },
+      {
+        "item": "drowned_inquisition_leggings",
+        "chance": 0.04
+      },
+      {
+        "item": "drowned_inquisition_protector",
+        "chance": 0.04
       }
     ],
     "attacks": [
@@ -326,6 +374,30 @@
       {
         "item": "torch",
         "chance": 0.02
+      },
+      {
+        "item": "cinderforged_armor",
+        "chance": 0.004
+      },
+      {
+        "item": "cinderforged_boots",
+        "chance": 0.004
+      },
+      {
+        "item": "cinderforged_gauntlets",
+        "chance": 0.004
+      },
+      {
+        "item": "cinderforged_helmet",
+        "chance": 0.004
+      },
+      {
+        "item": "cinderforged_leggings",
+        "chance": 0.004
+      },
+      {
+        "item": "cinderforged_protector",
+        "chance": 0.004
       }
     ],
     "attacks": [
@@ -500,6 +572,30 @@
       {
         "item": "empyrean_fire_protector",
         "chance": 0.012
+      },
+      {
+        "item": "cinderforged_armor",
+        "chance": 0.04
+      },
+      {
+        "item": "cinderforged_boots",
+        "chance": 0.04
+      },
+      {
+        "item": "cinderforged_gauntlets",
+        "chance": 0.04
+      },
+      {
+        "item": "cinderforged_helmet",
+        "chance": 0.04
+      },
+      {
+        "item": "cinderforged_leggings",
+        "chance": 0.04
+      },
+      {
+        "item": "cinderforged_protector",
+        "chance": 0.04
       }
     ],
     "attacks": [
@@ -561,6 +657,34 @@
       {
         "item": "bow_of_centaur_slaying",
         "chance": 0.008
+      },
+      {
+        "item": "centaur_slaying_armor",
+        "chance": 0.002
+      },
+      {
+        "item": "centaur_slaying_boots",
+        "chance": 0.002
+      },
+      {
+        "item": "centaur_slaying_gauntlets",
+        "chance": 0.002
+      },
+      {
+        "item": "centaur_slaying_helmet",
+        "chance": 0.002
+      },
+      {
+        "item": "centaur_slaying_leggings",
+        "chance": 0.002
+      },
+      {
+        "item": "centaur_slaying_protector",
+        "chance": 0.002
+      },
+      {
+        "item": "centaur_slaying_quiver",
+        "chance": 0.002
       }
     ],
     "attacks": [
@@ -682,6 +806,34 @@
       {
         "item": "empyrean_archer_protector",
         "chance": 0.012
+      },
+      {
+        "item": "centaur_slaying_armor",
+        "chance": 0.01
+      },
+      {
+        "item": "centaur_slaying_boots",
+        "chance": 0.01
+      },
+      {
+        "item": "centaur_slaying_gauntlets",
+        "chance": 0.01
+      },
+      {
+        "item": "centaur_slaying_helmet",
+        "chance": 0.01
+      },
+      {
+        "item": "centaur_slaying_leggings",
+        "chance": 0.01
+      },
+      {
+        "item": "centaur_slaying_protector",
+        "chance": 0.01
+      },
+      {
+        "item": "centaur_slaying_quiver",
+        "chance": 0.01
       }
     ],
     "attacks": [
@@ -2534,6 +2686,490 @@
         "formula": "1d 1201 + 946 ",
         "combatAttack": 8410,
         "selectionWeight": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Duskmaw Wyrm",
+    "displayName": "The Duskmaw Wyrm",
+    "origin": "new",
+    "level": 700,
+    "health": 92000,
+    "mana": 0,
+    "xpPerHit": 12,
+    "xpOnDeath": 125000000,
+    "hitDamageMin": 850,
+    "hitDamageMax": 1800,
+    "respawnTimeMs": 30000,
+    "goldMin": 1300,
+    "goldMax": 3300,
+    "dodge": 2100,
+    "acMin": 0,
+    "acMax": 700,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 600,
+      "end": 750,
+      "agi": 250,
+      "intel": 950,
+      "will": 0,
+      "wis": 300,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 100,
+      "water": 100,
+      "fire": 100,
+      "dark": 170,
+      "light": 60
+    },
+    "loot": [
+      {
+        "item": "duskmaw_wyrms_umbral_rod",
+        "chance": 0.01
+      },
+      {
+        "item": "duskmaw_wyrms_nightshroud_mantle",
+        "chance": 0.015
+      },
+      {
+        "item": "duskmaw_wyrms_eclipsed_crown",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_dark_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d950+850",
+        "combatAttack": 1800,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Galecrest Wyrm",
+    "displayName": "The Galecrest Wyrm",
+    "origin": "new",
+    "level": 700,
+    "health": 92000,
+    "mana": 0,
+    "xpPerHit": 12,
+    "xpOnDeath": 125000000,
+    "hitDamageMin": 850,
+    "hitDamageMax": 1800,
+    "respawnTimeMs": 30000,
+    "goldMin": 1300,
+    "goldMax": 3300,
+    "dodge": 2200,
+    "acMin": 0,
+    "acMax": 700,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 600,
+      "end": 750,
+      "agi": 300,
+      "intel": 700,
+      "will": 0,
+      "wis": 700,
+      "luck": 0
+    },
+    "resists": {
+      "air": 170,
+      "earth": 60,
+      "water": 100,
+      "fire": 100,
+      "dark": 100,
+      "light": 110
+    },
+    "loot": [
+      {
+        "item": "galecrest_wyrms_tempest_wand",
+        "chance": 0.01
+      },
+      {
+        "item": "galecrest_wyrms_windswept_mantle",
+        "chance": 0.015
+      },
+      {
+        "item": "galecrest_wyrms_thunderhead_circlet",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_air_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_air_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_air_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_air_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d950+850",
+        "combatAttack": 1700,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Mistwing Wyrm",
+    "displayName": "The Mistwing Wyrm",
+    "origin": "new",
+    "level": 700,
+    "health": 90000,
+    "mana": 0,
+    "xpPerHit": 12,
+    "xpOnDeath": 125000000,
+    "hitDamageMin": 800,
+    "hitDamageMax": 1700,
+    "respawnTimeMs": 30000,
+    "goldMin": 1300,
+    "goldMax": 3200,
+    "dodge": 2400,
+    "acMin": 0,
+    "acMax": 700,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 500,
+      "end": 750,
+      "agi": 950,
+      "intel": 200,
+      "will": 0,
+      "wis": 250,
+      "luck": 0
+    },
+    "resists": {
+      "air": 120,
+      "earth": 60,
+      "water": 170,
+      "fire": 100,
+      "dark": 100,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "mistwing_wyrms_farsight_longbow",
+        "chance": 0.01
+      },
+      {
+        "item": "mistwing_wyrms_rainveil_mantle",
+        "chance": 0.015
+      },
+      {
+        "item": "mistwing_wyrms_fogstride_boots",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_archer_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_archer_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_archer_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_archer_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d900+800",
+        "combatAttack": 1600,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Pyreclaw Wyrm",
+    "displayName": "The Pyreclaw Wyrm",
+    "origin": "new",
+    "level": 700,
+    "health": 105000,
+    "mana": 0,
+    "xpPerHit": 12,
+    "xpOnDeath": 125000000,
+    "hitDamageMin": 1000,
+    "hitDamageMax": 2100,
+    "respawnTimeMs": 30000,
+    "goldMin": 1500,
+    "goldMax": 3750,
+    "dodge": 2000,
+    "acMin": 0,
+    "acMax": 700,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 950,
+      "end": 900,
+      "agi": 300,
+      "intel": 150,
+      "will": 0,
+      "wis": 200,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 100,
+      "water": 60,
+      "fire": 170,
+      "dark": 110,
+      "light": 100
+    },
+    "loot": [
+      {
+        "item": "pyreclaw_wyrms_searing_greatsword",
+        "chance": 0.01
+      },
+      {
+        "item": "pyreclaw_wyrms_molten_warhelm",
+        "chance": 0.015
+      },
+      {
+        "item": "pyreclaw_wyrms_forgeplate_gauntlets",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_warrior_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1100+1000",
+        "combatAttack": 2000,
+        "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
         "rangeMinTiles": 0,

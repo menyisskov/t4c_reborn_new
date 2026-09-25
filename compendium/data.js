@@ -101,6 +101,30 @@ window.T4C_DATA = {
         {
           "item": "healing_potion",
           "chance": 0.04
+        },
+        {
+          "item": "drowned_inquisition_armor",
+          "chance": 0.004
+        },
+        {
+          "item": "drowned_inquisition_boots",
+          "chance": 0.004
+        },
+        {
+          "item": "drowned_inquisition_gauntlets",
+          "chance": 0.004
+        },
+        {
+          "item": "drowned_inquisition_helmet",
+          "chance": 0.004
+        },
+        {
+          "item": "drowned_inquisition_leggings",
+          "chance": 0.004
+        },
+        {
+          "item": "drowned_inquisition_protector",
+          "chance": 0.004
         }
       ],
       "attacks": [
@@ -271,6 +295,30 @@ window.T4C_DATA = {
         {
           "item": "empyrean_water_protector",
           "chance": 0.012
+        },
+        {
+          "item": "drowned_inquisition_armor",
+          "chance": 0.04
+        },
+        {
+          "item": "drowned_inquisition_boots",
+          "chance": 0.04
+        },
+        {
+          "item": "drowned_inquisition_gauntlets",
+          "chance": 0.04
+        },
+        {
+          "item": "drowned_inquisition_helmet",
+          "chance": 0.04
+        },
+        {
+          "item": "drowned_inquisition_leggings",
+          "chance": 0.04
+        },
+        {
+          "item": "drowned_inquisition_protector",
+          "chance": 0.04
         }
       ],
       "attacks": [
@@ -328,6 +376,30 @@ window.T4C_DATA = {
         {
           "item": "torch",
           "chance": 0.02
+        },
+        {
+          "item": "cinderforged_armor",
+          "chance": 0.004
+        },
+        {
+          "item": "cinderforged_boots",
+          "chance": 0.004
+        },
+        {
+          "item": "cinderforged_gauntlets",
+          "chance": 0.004
+        },
+        {
+          "item": "cinderforged_helmet",
+          "chance": 0.004
+        },
+        {
+          "item": "cinderforged_leggings",
+          "chance": 0.004
+        },
+        {
+          "item": "cinderforged_protector",
+          "chance": 0.004
         }
       ],
       "attacks": [
@@ -502,6 +574,30 @@ window.T4C_DATA = {
         {
           "item": "empyrean_fire_protector",
           "chance": 0.012
+        },
+        {
+          "item": "cinderforged_armor",
+          "chance": 0.04
+        },
+        {
+          "item": "cinderforged_boots",
+          "chance": 0.04
+        },
+        {
+          "item": "cinderforged_gauntlets",
+          "chance": 0.04
+        },
+        {
+          "item": "cinderforged_helmet",
+          "chance": 0.04
+        },
+        {
+          "item": "cinderforged_leggings",
+          "chance": 0.04
+        },
+        {
+          "item": "cinderforged_protector",
+          "chance": 0.04
         }
       ],
       "attacks": [
@@ -563,6 +659,34 @@ window.T4C_DATA = {
         {
           "item": "bow_of_centaur_slaying",
           "chance": 0.008
+        },
+        {
+          "item": "centaur_slaying_armor",
+          "chance": 0.002
+        },
+        {
+          "item": "centaur_slaying_boots",
+          "chance": 0.002
+        },
+        {
+          "item": "centaur_slaying_gauntlets",
+          "chance": 0.002
+        },
+        {
+          "item": "centaur_slaying_helmet",
+          "chance": 0.002
+        },
+        {
+          "item": "centaur_slaying_leggings",
+          "chance": 0.002
+        },
+        {
+          "item": "centaur_slaying_protector",
+          "chance": 0.002
+        },
+        {
+          "item": "centaur_slaying_quiver",
+          "chance": 0.002
         }
       ],
       "attacks": [
@@ -684,6 +808,34 @@ window.T4C_DATA = {
         {
           "item": "empyrean_archer_protector",
           "chance": 0.012
+        },
+        {
+          "item": "centaur_slaying_armor",
+          "chance": 0.01
+        },
+        {
+          "item": "centaur_slaying_boots",
+          "chance": 0.01
+        },
+        {
+          "item": "centaur_slaying_gauntlets",
+          "chance": 0.01
+        },
+        {
+          "item": "centaur_slaying_helmet",
+          "chance": 0.01
+        },
+        {
+          "item": "centaur_slaying_leggings",
+          "chance": 0.01
+        },
+        {
+          "item": "centaur_slaying_protector",
+          "chance": 0.01
+        },
+        {
+          "item": "centaur_slaying_quiver",
+          "chance": 0.01
         }
       ],
       "attacks": [
@@ -2536,6 +2688,490 @@ window.T4C_DATA = {
           "formula": "1d 1201 + 946 ",
           "combatAttack": 8410,
           "selectionWeight": 20,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "The Duskmaw Wyrm",
+      "displayName": "The Duskmaw Wyrm",
+      "origin": "new",
+      "level": 700,
+      "health": 92000,
+      "mana": 0,
+      "xpPerHit": 12,
+      "xpOnDeath": 125000000,
+      "hitDamageMin": 850,
+      "hitDamageMax": 1800,
+      "respawnTimeMs": 30000,
+      "goldMin": 1300,
+      "goldMax": 3300,
+      "dodge": 2100,
+      "acMin": 0,
+      "acMax": 700,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 600,
+        "end": 750,
+        "agi": 250,
+        "intel": 950,
+        "will": 0,
+        "wis": 300,
+        "luck": 0
+      },
+      "resists": {
+        "air": 100,
+        "earth": 100,
+        "water": 100,
+        "fire": 100,
+        "dark": 170,
+        "light": 60
+      },
+      "loot": [
+        {
+          "item": "duskmaw_wyrms_umbral_rod",
+          "chance": 0.01
+        },
+        {
+          "item": "duskmaw_wyrms_nightshroud_mantle",
+          "chance": 0.015
+        },
+        {
+          "item": "duskmaw_wyrms_eclipsed_crown",
+          "chance": 0.015
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_dark_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_dark_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_dark_protector",
+          "chance": 0.012
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d950+850",
+          "combatAttack": 1800,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "The Galecrest Wyrm",
+      "displayName": "The Galecrest Wyrm",
+      "origin": "new",
+      "level": 700,
+      "health": 92000,
+      "mana": 0,
+      "xpPerHit": 12,
+      "xpOnDeath": 125000000,
+      "hitDamageMin": 850,
+      "hitDamageMax": 1800,
+      "respawnTimeMs": 30000,
+      "goldMin": 1300,
+      "goldMax": 3300,
+      "dodge": 2200,
+      "acMin": 0,
+      "acMax": 700,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 600,
+        "end": 750,
+        "agi": 300,
+        "intel": 700,
+        "will": 0,
+        "wis": 700,
+        "luck": 0
+      },
+      "resists": {
+        "air": 170,
+        "earth": 60,
+        "water": 100,
+        "fire": 100,
+        "dark": 100,
+        "light": 110
+      },
+      "loot": [
+        {
+          "item": "galecrest_wyrms_tempest_wand",
+          "chance": 0.01
+        },
+        {
+          "item": "galecrest_wyrms_windswept_mantle",
+          "chance": 0.015
+        },
+        {
+          "item": "galecrest_wyrms_thunderhead_circlet",
+          "chance": 0.015
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_air_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_air_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_air_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_air_protector",
+          "chance": 0.012
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d950+850",
+          "combatAttack": 1700,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "The Mistwing Wyrm",
+      "displayName": "The Mistwing Wyrm",
+      "origin": "new",
+      "level": 700,
+      "health": 90000,
+      "mana": 0,
+      "xpPerHit": 12,
+      "xpOnDeath": 125000000,
+      "hitDamageMin": 800,
+      "hitDamageMax": 1700,
+      "respawnTimeMs": 30000,
+      "goldMin": 1300,
+      "goldMax": 3200,
+      "dodge": 2400,
+      "acMin": 0,
+      "acMax": 700,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 500,
+        "end": 750,
+        "agi": 950,
+        "intel": 200,
+        "will": 0,
+        "wis": 250,
+        "luck": 0
+      },
+      "resists": {
+        "air": 120,
+        "earth": 60,
+        "water": 170,
+        "fire": 100,
+        "dark": 100,
+        "light": 100
+      },
+      "loot": [
+        {
+          "item": "mistwing_wyrms_farsight_longbow",
+          "chance": 0.01
+        },
+        {
+          "item": "mistwing_wyrms_rainveil_mantle",
+          "chance": 0.015
+        },
+        {
+          "item": "mistwing_wyrms_fogstride_boots",
+          "chance": 0.015
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_archer_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_archer_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_archer_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_archer_protector",
+          "chance": 0.012
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d900+800",
+          "combatAttack": 1600,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "The Pyreclaw Wyrm",
+      "displayName": "The Pyreclaw Wyrm",
+      "origin": "new",
+      "level": 700,
+      "health": 105000,
+      "mana": 0,
+      "xpPerHit": 12,
+      "xpOnDeath": 125000000,
+      "hitDamageMin": 1000,
+      "hitDamageMax": 2100,
+      "respawnTimeMs": 30000,
+      "goldMin": 1500,
+      "goldMax": 3750,
+      "dodge": 2000,
+      "acMin": 0,
+      "acMax": 700,
+      "aggro": 100,
+      "speed": 0,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 950,
+        "end": 900,
+        "agi": 300,
+        "intel": 150,
+        "will": 0,
+        "wis": 200,
+        "luck": 0
+      },
+      "resists": {
+        "air": 100,
+        "earth": 100,
+        "water": 60,
+        "fire": 170,
+        "dark": 110,
+        "light": 100
+      },
+      "loot": [
+        {
+          "item": "pyreclaw_wyrms_searing_greatsword",
+          "chance": 0.01
+        },
+        {
+          "item": "pyreclaw_wyrms_molten_warhelm",
+          "chance": 0.015
+        },
+        {
+          "item": "pyreclaw_wyrms_forgeplate_gauntlets",
+          "chance": 0.015
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.3
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.2
+        },
+        {
+          "item": "ancient_celestial_warrior_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "ancient_celestial_warrior_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "empyrean_warrior_protector",
+          "chance": 0.012
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d1100+1000",
+          "combatAttack": 2000,
+          "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
           "rangeMinTiles": 0,
@@ -16363,6 +16999,494 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "centaur_slaying_armor",
+      "name": "Armor of Centaur Slaying",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "price": 0.0,
+      "weight": 8.0,
+      "armorClass": 131.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 600.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 264.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20708.0,
+          "statId": 12.0,
+          "expression": "59"
+        },
+        {
+          "boostId": 20709.0,
+          "statId": 13.0,
+          "expression": "59"
+        },
+        {
+          "boostId": 20710.0,
+          "statId": 14.0,
+          "expression": "59"
+        },
+        {
+          "boostId": 20711.0,
+          "statId": 15.0,
+          "expression": "59"
+        },
+        {
+          "boostId": 20712.0,
+          "statId": 22.0,
+          "expression": "59"
+        },
+        {
+          "boostId": 20713.0,
+          "statId": 6.0,
+          "expression": "56"
+        },
+        {
+          "boostId": 20714.0,
+          "statId": 10035.0,
+          "expression": "135"
+        },
+        {
+          "boostId": 20715.0,
+          "statId": 2.0,
+          "expression": "30"
+        }
+      ]
+    },
+    {
+      "key": "centaur_slaying_boots",
+      "name": "Boots of Centaur Slaying",
+      "bodyPart": "FEET",
+      "appearanceEquippedPrimary": "PupPlateFoot",
+      "appearanceInventory": "64kInvPlateArmorFeet",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 39.4,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 600.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 265.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20716.0,
+          "statId": 12.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20717.0,
+          "statId": 13.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20718.0,
+          "statId": 14.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20719.0,
+          "statId": 15.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20720.0,
+          "statId": 22.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20721.0,
+          "statId": 6.0,
+          "expression": "17"
+        },
+        {
+          "boostId": 20722.0,
+          "statId": 10035.0,
+          "expression": "41"
+        },
+        {
+          "boostId": 20723.0,
+          "statId": 2.0,
+          "expression": "9"
+        }
+      ]
+    },
+    {
+      "key": "centaur_slaying_gauntlets",
+      "name": "Gauntlets of Centaur Slaying",
+      "bodyPart": "LEFT_HAND",
+      "secondaryBodyPart": "RIGHT_HAND",
+      "appearanceEquippedPrimary": "PupPlateGloveL",
+      "appearanceEquippedSecondary": "PupPlateGloveR",
+      "appearanceInventory": "64kInvPlateGlove",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 39.4,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 600.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 263.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20724.0,
+          "statId": 12.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20725.0,
+          "statId": 13.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20726.0,
+          "statId": 14.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20727.0,
+          "statId": 15.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20728.0,
+          "statId": 22.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20729.0,
+          "statId": 6.0,
+          "expression": "17"
+        },
+        {
+          "boostId": 20730.0,
+          "statId": 10035.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 20731.0,
+          "statId": 2.0,
+          "expression": "9"
+        }
+      ]
+    },
+    {
+      "key": "centaur_slaying_helmet",
+      "name": "Helm of Centaur Slaying",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 38.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 600.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 267.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20732.0,
+          "statId": 12.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20733.0,
+          "statId": 13.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20734.0,
+          "statId": 14.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20735.0,
+          "statId": 15.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20736.0,
+          "statId": 22.0,
+          "expression": "35"
+        },
+        {
+          "boostId": 20737.0,
+          "statId": 6.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 20738.0,
+          "statId": 10035.0,
+          "expression": "39"
+        },
+        {
+          "boostId": 20739.0,
+          "statId": 2.0,
+          "expression": "8"
+        }
+      ]
+    },
+    {
+      "key": "centaur_slaying_leggings",
+      "name": "Leggings of Centaur Slaying",
+      "bodyPart": "LEGS",
+      "appearanceEquippedPrimary": "PupPlateLegs",
+      "appearanceInventory": "64kInvPlateArmorLegs",
+      "price": 0.0,
+      "weight": 5.0,
+      "armorClass": 43.9,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 600.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 266.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20740.0,
+          "statId": 12.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 20741.0,
+          "statId": 13.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 20742.0,
+          "statId": 14.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 20743.0,
+          "statId": 15.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 20744.0,
+          "statId": 22.0,
+          "expression": "36"
+        },
+        {
+          "boostId": 20745.0,
+          "statId": 6.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 20746.0,
+          "statId": 10035.0,
+          "expression": "45"
+        },
+        {
+          "boostId": 20747.0,
+          "statId": 2.0,
+          "expression": "10"
+        }
+      ]
+    },
+    {
+      "key": "centaur_slaying_protector",
+      "name": "Belt of Centaur Slaying",
+      "bodyPart": "BELT",
+      "appearanceInventory": "64kInvBelt",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 29.2,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 600.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 235.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20748.0,
+          "statId": 12.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 20749.0,
+          "statId": 13.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 20750.0,
+          "statId": 14.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 20751.0,
+          "statId": 15.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 20752.0,
+          "statId": 22.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 20753.0,
+          "statId": 6.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 20754.0,
+          "statId": 10035.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 20755.0,
+          "statId": 2.0,
+          "expression": "7"
+        }
+      ]
+    },
+    {
+      "key": "centaur_slaying_quiver",
+      "name": "Quiver of Centaur Slaying",
+      "bodyPart": "WEAPON2",
+      "appearanceInventory": "64kIconQuiver",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 500.0,
+        "strength": 0.0,
+        "agility": 600.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 8.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20756.0,
+          "statId": 12.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20757.0,
+          "statId": 13.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20758.0,
+          "statId": 14.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20759.0,
+          "statId": 15.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20760.0,
+          "statId": 22.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20761.0,
+          "statId": 6.0,
+          "expression": "12"
+        },
+        {
+          "boostId": 20762.0,
+          "statId": 10035.0,
+          "expression": "30"
+        },
+        {
+          "boostId": 20763.0,
+          "statId": 2.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20764.0,
+          "statId": 10.0,
+          "expression": "15"
+        }
+      ]
+    },
+    {
       "key": "centaur_warband_ring",
       "name": "Centaur Warband Ring",
       "bodyPart": "RING1",
@@ -16427,6 +17551,391 @@ window.T4C_DATA = {
           "boostId": 36373.0,
           "statId": 9.0,
           "expression": "40"
+        }
+      ]
+    },
+    {
+      "key": "cinderforged_armor",
+      "name": "Cinderforged Hauberk",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "price": 0.0,
+      "weight": 8.0,
+      "armorClass": 69.4,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 280.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 240.0,
+        "wisdom": 60.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 264.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20807.0,
+          "statId": 12.0,
+          "expression": "34"
+        },
+        {
+          "boostId": 20808.0,
+          "statId": 13.0,
+          "expression": "55"
+        },
+        {
+          "boostId": 20809.0,
+          "statId": 14.0,
+          "expression": "34"
+        },
+        {
+          "boostId": 20810.0,
+          "statId": 15.0,
+          "expression": "34"
+        },
+        {
+          "boostId": 20811.0,
+          "statId": 22.0,
+          "expression": "34"
+        },
+        {
+          "boostId": 20812.0,
+          "statId": 17.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 20813.0,
+          "statId": 1.0,
+          "expression": "29"
+        }
+      ]
+    },
+    {
+      "key": "cinderforged_boots",
+      "name": "Cinderforged Boots",
+      "bodyPart": "FEET",
+      "appearanceEquippedPrimary": "PupPlateFoot",
+      "appearanceInventory": "64kInvPlateArmorFeet",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 20.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 280.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 240.0,
+        "wisdom": 60.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 265.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20814.0,
+          "statId": 12.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20815.0,
+          "statId": 13.0,
+          "expression": "26"
+        },
+        {
+          "boostId": 20816.0,
+          "statId": 14.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20817.0,
+          "statId": 15.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20818.0,
+          "statId": 22.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20819.0,
+          "statId": 17.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20820.0,
+          "statId": 1.0,
+          "expression": "9"
+        }
+      ]
+    },
+    {
+      "key": "cinderforged_gauntlets",
+      "name": "Cinderforged Gauntlets",
+      "bodyPart": "LEFT_HAND",
+      "secondaryBodyPart": "RIGHT_HAND",
+      "appearanceEquippedPrimary": "PupPlateGloveL",
+      "appearanceEquippedSecondary": "PupPlateGloveR",
+      "appearanceInventory": "64kInvPlateGlove",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 20.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 280.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 240.0,
+        "wisdom": 60.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 263.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20821.0,
+          "statId": 12.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20822.0,
+          "statId": 13.0,
+          "expression": "26"
+        },
+        {
+          "boostId": 20823.0,
+          "statId": 14.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20824.0,
+          "statId": 15.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20825.0,
+          "statId": 22.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20826.0,
+          "statId": 17.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20827.0,
+          "statId": 1.0,
+          "expression": "9"
+        }
+      ]
+    },
+    {
+      "key": "cinderforged_helmet",
+      "name": "Cinderforged Helm",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 20.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 280.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 240.0,
+        "wisdom": 60.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 267.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20828.0,
+          "statId": 12.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20829.0,
+          "statId": 13.0,
+          "expression": "26"
+        },
+        {
+          "boostId": 20830.0,
+          "statId": 14.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20831.0,
+          "statId": 15.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20832.0,
+          "statId": 22.0,
+          "expression": "20"
+        },
+        {
+          "boostId": 20833.0,
+          "statId": 17.0,
+          "expression": "8"
+        },
+        {
+          "boostId": 20834.0,
+          "statId": 1.0,
+          "expression": "8"
+        }
+      ]
+    },
+    {
+      "key": "cinderforged_leggings",
+      "name": "Cinderforged Leggings",
+      "bodyPart": "LEGS",
+      "appearanceEquippedPrimary": "PupPlateLegs",
+      "appearanceInventory": "64kInvPlateArmorLegs",
+      "price": 0.0,
+      "weight": 5.0,
+      "armorClass": 23.1,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 280.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 240.0,
+        "wisdom": 60.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 266.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20835.0,
+          "statId": 12.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 20836.0,
+          "statId": 13.0,
+          "expression": "28"
+        },
+        {
+          "boostId": 20837.0,
+          "statId": 14.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 20838.0,
+          "statId": 15.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 20839.0,
+          "statId": 22.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 20840.0,
+          "statId": 17.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 20841.0,
+          "statId": 1.0,
+          "expression": "10"
+        }
+      ]
+    },
+    {
+      "key": "cinderforged_protector",
+      "name": "Cinderforged Girdle",
+      "bodyPart": "BELT",
+      "appearanceInventory": "64kInvBelt",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 15.4,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 280.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 240.0,
+        "wisdom": 60.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 235.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20842.0,
+          "statId": 12.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20843.0,
+          "statId": 13.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 20844.0,
+          "statId": 14.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20845.0,
+          "statId": 15.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20846.0,
+          "statId": 22.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20847.0,
+          "statId": 17.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20848.0,
+          "statId": 1.0,
+          "expression": "7"
         }
       ]
     },
@@ -16680,6 +18189,585 @@ window.T4C_DATA = {
           "boostId": 36340.0,
           "statId": 22.0,
           "expression": "12"
+        }
+      ]
+    },
+    {
+      "key": "drowned_inquisition_armor",
+      "name": "Drowned Inquisition Vestments",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "price": 0.0,
+      "weight": 8.0,
+      "armorClass": 49.6,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 200.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 180.0,
+        "wisdom": 45.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 264.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20765.0,
+          "statId": 12.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 20766.0,
+          "statId": 13.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 20767.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 20768.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 20769.0,
+          "statId": 22.0,
+          "expression": "39"
+        },
+        {
+          "boostId": 20770.0,
+          "statId": 18.0,
+          "expression": "22"
+        },
+        {
+          "boostId": 20771.0,
+          "statId": 1.0,
+          "expression": "22"
+        }
+      ]
+    },
+    {
+      "key": "drowned_inquisition_boots",
+      "name": "Drowned Inquisition Boots",
+      "bodyPart": "FEET",
+      "appearanceEquippedPrimary": "PupPlateFoot",
+      "appearanceInventory": "64kInvPlateArmorFeet",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 14.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 200.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 180.0,
+        "wisdom": 45.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 265.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20772.0,
+          "statId": 12.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20773.0,
+          "statId": 13.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20774.0,
+          "statId": 14.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20775.0,
+          "statId": 15.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20776.0,
+          "statId": 22.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 20777.0,
+          "statId": 18.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20778.0,
+          "statId": 1.0,
+          "expression": "7"
+        }
+      ]
+    },
+    {
+      "key": "drowned_inquisition_gauntlets",
+      "name": "Drowned Inquisition Gloves",
+      "bodyPart": "LEFT_HAND",
+      "secondaryBodyPart": "RIGHT_HAND",
+      "appearanceEquippedPrimary": "PupPlateGloveL",
+      "appearanceEquippedSecondary": "PupPlateGloveR",
+      "appearanceInventory": "64kInvPlateGlove",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 14.8,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 200.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 180.0,
+        "wisdom": 45.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 263.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20779.0,
+          "statId": 12.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20780.0,
+          "statId": 13.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20781.0,
+          "statId": 14.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20782.0,
+          "statId": 15.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20783.0,
+          "statId": 22.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 20784.0,
+          "statId": 18.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20785.0,
+          "statId": 1.0,
+          "expression": "7"
+        }
+      ]
+    },
+    {
+      "key": "drowned_inquisition_helmet",
+      "name": "Drowned Inquisition Hood",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 14.3,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 200.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 180.0,
+        "wisdom": 45.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 267.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20786.0,
+          "statId": 12.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20787.0,
+          "statId": 13.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20788.0,
+          "statId": 14.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20789.0,
+          "statId": 15.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 20790.0,
+          "statId": 22.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 20791.0,
+          "statId": 18.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 20792.0,
+          "statId": 1.0,
+          "expression": "6"
+        }
+      ]
+    },
+    {
+      "key": "drowned_inquisition_leggings",
+      "name": "Drowned Inquisition Leggings",
+      "bodyPart": "LEGS",
+      "appearanceEquippedPrimary": "PupPlateLegs",
+      "appearanceInventory": "64kInvPlateArmorLegs",
+      "price": 0.0,
+      "weight": 5.0,
+      "armorClass": 16.5,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 200.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 180.0,
+        "wisdom": 45.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 266.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20793.0,
+          "statId": 12.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 20794.0,
+          "statId": 13.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 20795.0,
+          "statId": 14.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 20796.0,
+          "statId": 15.0,
+          "expression": "15"
+        },
+        {
+          "boostId": 20797.0,
+          "statId": 22.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 20798.0,
+          "statId": 18.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 20799.0,
+          "statId": 1.0,
+          "expression": "7"
+        }
+      ]
+    },
+    {
+      "key": "drowned_inquisition_protector",
+      "name": "Drowned Inquisition Sash",
+      "bodyPart": "BELT",
+      "appearanceInventory": "64kInvBelt",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 11.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 200.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 180.0,
+        "wisdom": 45.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 235.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 20800.0,
+          "statId": 12.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 20801.0,
+          "statId": 13.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 20802.0,
+          "statId": 14.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 20803.0,
+          "statId": 15.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 20804.0,
+          "statId": 22.0,
+          "expression": "6"
+        },
+        {
+          "boostId": 20805.0,
+          "statId": 18.0,
+          "expression": "5"
+        },
+        {
+          "boostId": 20806.0,
+          "statId": 1.0,
+          "expression": "5"
+        }
+      ]
+    },
+    {
+      "key": "duskmaw_wyrms_eclipsed_crown",
+      "name": "Duskmaw Wyrm's Eclipsed Crown",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 42.9,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 950.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36656.0,
+          "statId": 1.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36657.0,
+          "statId": 24.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36658.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36659.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36660.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36661.0,
+          "statId": 15.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36662.0,
+          "statId": 22.0,
+          "expression": "38"
+        }
+      ]
+    },
+    {
+      "key": "duskmaw_wyrms_nightshroud_mantle",
+      "name": "Duskmaw Wyrm's Nightshroud Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal8",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal8",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 43.2,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 950.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36649.0,
+          "statId": 1.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36650.0,
+          "statId": 24.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36651.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36652.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36653.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36654.0,
+          "statId": 15.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36655.0,
+          "statId": 22.0,
+          "expression": "38"
+        }
+      ]
+    },
+    {
+      "key": "duskmaw_wyrms_umbral_rod",
+      "name": "Duskmaw Wyrm's Umbral Rod",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLichStaff",
+      "appearanceInventory": "64kInvLichStaff",
+      "price": 0.0,
+      "weight": 4.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 950.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d40+60",
+      "atkDelay": "1300",
+      "boosts": [
+        {
+          "boostId": 36642.0,
+          "statId": 1.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36643.0,
+          "statId": 24.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36644.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36645.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36646.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36647.0,
+          "statId": 15.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36648.0,
+          "statId": 22.0,
+          "expression": "38"
         }
       ]
     },
@@ -19854,6 +21942,215 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "galecrest_wyrms_tempest_wand",
+      "name": "Galecrest Wyrm's Tempest Wand",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "price": 0.0,
+      "weight": 4.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 595.0,
+        "wisdom": 595.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d40+60",
+      "atkDelay": "1300",
+      "boosts": [
+        {
+          "boostId": 36663.0,
+          "statId": 1.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36664.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36665.0,
+          "statId": 16.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36666.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36667.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36668.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36669.0,
+          "statId": 15.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36670.0,
+          "statId": 22.0,
+          "expression": "38"
+        }
+      ]
+    },
+    {
+      "key": "galecrest_wyrms_thunderhead_circlet",
+      "name": "Galecrest Wyrm's Thunderhead Circlet",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 48.3,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 595.0,
+        "wisdom": 595.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36679.0,
+          "statId": 1.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36680.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36681.0,
+          "statId": 16.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36682.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36683.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36684.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36685.0,
+          "statId": 15.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36686.0,
+          "statId": 22.0,
+          "expression": "38"
+        }
+      ]
+    },
+    {
+      "key": "galecrest_wyrms_windswept_mantle",
+      "name": "Galecrest Wyrm's Windswept Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal6",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal6",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 48.6,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 595.0,
+        "wisdom": 595.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36671.0,
+          "statId": 1.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36672.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 36673.0,
+          "statId": 16.0,
+          "expression": "95"
+        },
+        {
+          "boostId": 36674.0,
+          "statId": 12.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36675.0,
+          "statId": 13.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36676.0,
+          "statId": 14.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36677.0,
+          "statId": 15.0,
+          "expression": "38"
+        },
+        {
+          "boostId": 36678.0,
+          "statId": 22.0,
+          "expression": "38"
+        }
+      ]
+    },
+    {
       "key": "geomancers_mantle",
       "name": "Geomancer's Mantle",
       "bodyPart": "BACK",
@@ -20533,6 +22830,200 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "mistwing_wyrms_farsight_longbow",
+      "name": "Mistwing Wyrm's Farsight Longbow",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLongBow",
+      "appearanceInventory": "64kInvLongBow2",
+      "price": 0.0,
+      "weight": 6.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 0.0,
+        "agility": 950.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 900.0,
+      "unique": true,
+      "isBow": true,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d220+420+4*arrow_dmg",
+      "atkDelay": "900",
+      "boosts": [
+        {
+          "boostId": 36621.0,
+          "statId": 6.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36622.0,
+          "statId": 10035.0,
+          "expression": "190"
+        },
+        {
+          "boostId": 36623.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36624.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36625.0,
+          "statId": 14.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36626.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36627.0,
+          "statId": 22.0,
+          "expression": "24"
+        }
+      ]
+    },
+    {
+      "key": "mistwing_wyrms_fogstride_boots",
+      "name": "Mistwing Wyrm's Fogstride Boots",
+      "bodyPart": "FEET",
+      "appearanceEquippedPrimary": "PupPlateFoot",
+      "appearanceInventory": "64kInvPlateArmorFeet",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 47.3,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 950.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36635.0,
+          "statId": 6.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36636.0,
+          "statId": 10035.0,
+          "expression": "190"
+        },
+        {
+          "boostId": 36637.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36638.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36639.0,
+          "statId": 14.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36640.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36641.0,
+          "statId": 22.0,
+          "expression": "24"
+        }
+      ]
+    },
+    {
+      "key": "mistwing_wyrms_rainveil_mantle",
+      "name": "Mistwing Wyrm's Rainveil Mantle",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "NMS_NewCape01__pal2",
+      "appearanceInventory": "Inv_NMS_NewCape01__pal2",
+      "price": 0.0,
+      "weight": 2.0,
+      "armorClass": 45.9,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 0.0,
+        "agility": 950.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36628.0,
+          "statId": 6.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36629.0,
+          "statId": 10035.0,
+          "expression": "190"
+        },
+        {
+          "boostId": 36630.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36631.0,
+          "statId": 13.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36632.0,
+          "statId": 14.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36633.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36634.0,
+          "statId": 22.0,
+          "expression": "24"
+        }
+      ]
+    },
+    {
       "key": "mithril_two_handed_sword_4",
       "name": "Mithril Two-Handed Sword +4",
       "bodyPart": "WEAPON",
@@ -20787,6 +23278,202 @@ window.T4C_DATA = {
           "boostId": 36447.0,
           "statId": 22.0,
           "expression": "38"
+        }
+      ]
+    },
+    {
+      "key": "pyreclaw_wyrms_forgeplate_gauntlets",
+      "name": "Pyreclaw Wyrm's Forgeplate Gauntlets",
+      "bodyPart": "LEFT_HAND",
+      "secondaryBodyPart": "RIGHT_HAND",
+      "appearanceEquippedPrimary": "PupPlateGloveL",
+      "appearanceEquippedSecondary": "PupPlateGloveR",
+      "appearanceInventory": "64kInvPlateGlove",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 61.2,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 950.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36614.0,
+          "statId": 3.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36615.0,
+          "statId": 8.0,
+          "expression": "190"
+        },
+        {
+          "boostId": 36616.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36617.0,
+          "statId": 13.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36618.0,
+          "statId": 14.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36619.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36620.0,
+          "statId": 22.0,
+          "expression": "24"
+        }
+      ]
+    },
+    {
+      "key": "pyreclaw_wyrms_molten_warhelm",
+      "name": "Pyreclaw Wyrm's Molten Warhelm",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "price": 0.0,
+      "weight": 3.0,
+      "armorClass": 59.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 600.0,
+        "strength": 950.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36607.0,
+          "statId": 3.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36608.0,
+          "statId": 8.0,
+          "expression": "190"
+        },
+        {
+          "boostId": 36609.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36610.0,
+          "statId": 13.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36611.0,
+          "statId": 14.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36612.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36613.0,
+          "statId": 22.0,
+          "expression": "24"
+        }
+      ]
+    },
+    {
+      "key": "pyreclaw_wyrms_searing_greatsword",
+      "name": "Pyreclaw Wyrm's Searing Greatsword",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupBattleSword",
+      "appearanceInventory": "64kInvBattleSword",
+      "price": 0.0,
+      "weight": 8.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 950.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 1500.0,
+      "unique": true,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d400+370",
+      "atkDelay": "1500",
+      "boosts": [
+        {
+          "boostId": 36600.0,
+          "statId": 3.0,
+          "expression": "79"
+        },
+        {
+          "boostId": 36601.0,
+          "statId": 8.0,
+          "expression": "190"
+        },
+        {
+          "boostId": 36602.0,
+          "statId": 12.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36603.0,
+          "statId": 13.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 36604.0,
+          "statId": 14.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36605.0,
+          "statId": 15.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 36606.0,
+          "statId": 22.0,
+          "expression": "24"
         }
       ]
     },
@@ -22357,9 +25044,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_air_armor",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_air_boots",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_boots",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.025
     },
     {
@@ -22369,9 +25068,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_air_gauntlets",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_air_helmet",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_helmet",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.025
     },
     {
@@ -22381,9 +25092,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_air_leggings",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_air_protector",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_protector",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.025
     },
     {
@@ -22393,9 +25116,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_archer_armor",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_archer_boots",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_boots",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
       "chance": 0.025
     },
     {
@@ -22405,9 +25140,21 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_archer_gauntlets",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_archer_helmet",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_helmet",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
       "chance": 0.025
     },
     {
@@ -22417,12 +25164,30 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_archer_leggings",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_archer_protector",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_archer_protector",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_armor",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_dark_armor",
       "monster": "The Hollow King",
       "monsterDisplayName": "The Hollow King",
@@ -22432,6 +25197,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_dark_armor",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_boots",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.025
     },
     {
@@ -22448,6 +25219,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_gauntlets",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_gauntlets",
       "monster": "The Hollow King",
       "monsterDisplayName": "The Hollow King",
       "chance": 0.025
@@ -22460,6 +25237,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_helmet",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_helmet",
       "monster": "The Hollow King",
       "monsterDisplayName": "The Hollow King",
       "chance": 0.025
@@ -22472,6 +25255,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_leggings",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_leggings",
       "monster": "The Hollow King",
       "monsterDisplayName": "The Hollow King",
       "chance": 0.025
@@ -22480,6 +25269,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_dark_leggings",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_protector",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.025
     },
     {
@@ -22657,6 +25452,12 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_warrior_armor",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_warrior_boots",
       "monster": "Bastion Warden",
       "monsterDisplayName": "Bastion Warden",
@@ -22672,6 +25473,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_boots",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_boots",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
       "chance": 0.025
     },
     {
@@ -22693,6 +25500,12 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_warrior_gauntlets",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_warrior_helmet",
       "monster": "Bastion Warden",
       "monsterDisplayName": "Bastion Warden",
@@ -22708,6 +25521,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_helmet",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_helmet",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
       "chance": 0.025
     },
     {
@@ -22729,6 +25548,12 @@ window.T4C_DATA = {
       "chance": 0.025
     },
     {
+      "item": "ancient_celestial_warrior_leggings",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_warrior_protector",
       "monster": "Bastion Warden",
       "monsterDisplayName": "Bastion Warden",
@@ -22744,6 +25569,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_protector",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_protector",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
       "chance": 0.025
     },
     {
@@ -22855,10 +25686,166 @@ window.T4C_DATA = {
       "chance": 0.02
     },
     {
+      "item": "centaur_slaying_armor",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "centaur_slaying_armor",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.002
+    },
+    {
+      "item": "centaur_slaying_boots",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "centaur_slaying_boots",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.002
+    },
+    {
+      "item": "centaur_slaying_gauntlets",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "centaur_slaying_gauntlets",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.002
+    },
+    {
+      "item": "centaur_slaying_helmet",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "centaur_slaying_helmet",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.002
+    },
+    {
+      "item": "centaur_slaying_leggings",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "centaur_slaying_leggings",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.002
+    },
+    {
+      "item": "centaur_slaying_protector",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "centaur_slaying_protector",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.002
+    },
+    {
+      "item": "centaur_slaying_quiver",
+      "monster": "Centaur King",
+      "monsterDisplayName": "Centaur King",
+      "chance": 0.01
+    },
+    {
+      "item": "centaur_slaying_quiver",
+      "monster": "Centaur Warrior",
+      "monsterDisplayName": "Centaur Warrior",
+      "chance": 0.002
+    },
+    {
       "item": "centaur_warband_ring",
       "monster": "Centaur Warrior",
       "monsterDisplayName": "Centaur Warrior",
       "chance": 0.03
+    },
+    {
+      "item": "cinderforged_armor",
+      "monster": "Cinder Whelp",
+      "monsterDisplayName": "Cinder Whelp",
+      "chance": 0.004
+    },
+    {
+      "item": "cinderforged_armor",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.04
+    },
+    {
+      "item": "cinderforged_boots",
+      "monster": "Cinder Whelp",
+      "monsterDisplayName": "Cinder Whelp",
+      "chance": 0.004
+    },
+    {
+      "item": "cinderforged_boots",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.04
+    },
+    {
+      "item": "cinderforged_gauntlets",
+      "monster": "Cinder Whelp",
+      "monsterDisplayName": "Cinder Whelp",
+      "chance": 0.004
+    },
+    {
+      "item": "cinderforged_gauntlets",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.04
+    },
+    {
+      "item": "cinderforged_helmet",
+      "monster": "Cinder Whelp",
+      "monsterDisplayName": "Cinder Whelp",
+      "chance": 0.004
+    },
+    {
+      "item": "cinderforged_helmet",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.04
+    },
+    {
+      "item": "cinderforged_leggings",
+      "monster": "Cinder Whelp",
+      "monsterDisplayName": "Cinder Whelp",
+      "chance": 0.004
+    },
+    {
+      "item": "cinderforged_leggings",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.04
+    },
+    {
+      "item": "cinderforged_protector",
+      "monster": "Cinder Whelp",
+      "monsterDisplayName": "Cinder Whelp",
+      "chance": 0.004
+    },
+    {
+      "item": "cinderforged_protector",
+      "monster": "Ignarok the Emberfang",
+      "monsterDisplayName": "Ignarok the Emberfang",
+      "chance": 0.04
     },
     {
       "item": "cinderwrought_sash",
@@ -22885,9 +25872,105 @@ window.T4C_DATA = {
       "chance": 0.03
     },
     {
+      "item": "drowned_inquisition_armor",
+      "monster": "Drowned Acolyte",
+      "monsterDisplayName": "Drowned Acolyte",
+      "chance": 0.004
+    },
+    {
+      "item": "drowned_inquisition_armor",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.04
+    },
+    {
+      "item": "drowned_inquisition_boots",
+      "monster": "Drowned Acolyte",
+      "monsterDisplayName": "Drowned Acolyte",
+      "chance": 0.004
+    },
+    {
+      "item": "drowned_inquisition_boots",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.04
+    },
+    {
+      "item": "drowned_inquisition_gauntlets",
+      "monster": "Drowned Acolyte",
+      "monsterDisplayName": "Drowned Acolyte",
+      "chance": 0.004
+    },
+    {
+      "item": "drowned_inquisition_gauntlets",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.04
+    },
+    {
+      "item": "drowned_inquisition_helmet",
+      "monster": "Drowned Acolyte",
+      "monsterDisplayName": "Drowned Acolyte",
+      "chance": 0.004
+    },
+    {
+      "item": "drowned_inquisition_helmet",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.04
+    },
+    {
+      "item": "drowned_inquisition_leggings",
+      "monster": "Drowned Acolyte",
+      "monsterDisplayName": "Drowned Acolyte",
+      "chance": 0.004
+    },
+    {
+      "item": "drowned_inquisition_leggings",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.04
+    },
+    {
+      "item": "drowned_inquisition_protector",
+      "monster": "Drowned Acolyte",
+      "monsterDisplayName": "Drowned Acolyte",
+      "chance": 0.004
+    },
+    {
+      "item": "drowned_inquisition_protector",
+      "monster": "Mordrenn the Drowned Inquisitor",
+      "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+      "chance": 0.04
+    },
+    {
+      "item": "duskmaw_wyrms_eclipsed_crown",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "duskmaw_wyrms_nightshroud_mantle",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "duskmaw_wyrms_umbral_rod",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.01
+    },
+    {
       "item": "empyrean_air_armor",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_armor",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.012
     },
     {
@@ -22897,9 +25980,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_air_boots",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_air_gauntlets",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_gauntlets",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.012
     },
     {
@@ -22909,9 +26004,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_air_helmet",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_air_leggings",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_leggings",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.012
     },
     {
@@ -22921,9 +26028,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_air_protector",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_archer_armor",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_armor",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
       "chance": 0.012
     },
     {
@@ -22933,9 +26052,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_archer_boots",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_archer_gauntlets",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_gauntlets",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
       "chance": 0.012
     },
     {
@@ -22945,9 +26076,21 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_archer_helmet",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_archer_leggings",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_leggings",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
       "chance": 0.012
     },
     {
@@ -22957,6 +26100,18 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_archer_protector",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_armor",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_dark_armor",
       "monster": "The Hollow King",
       "monsterDisplayName": "The Hollow King",
@@ -22966,6 +26121,12 @@ window.T4C_DATA = {
       "item": "empyrean_dark_armor",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_boots",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.012
     },
     {
@@ -22982,6 +26143,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_gauntlets",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_gauntlets",
       "monster": "The Hollow King",
       "monsterDisplayName": "The Hollow King",
       "chance": 0.012
@@ -22994,6 +26161,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_helmet",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_helmet",
       "monster": "The Hollow King",
       "monsterDisplayName": "The Hollow King",
       "chance": 0.012
@@ -23006,6 +26179,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_leggings",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_leggings",
       "monster": "The Hollow King",
       "monsterDisplayName": "The Hollow King",
       "chance": 0.012
@@ -23014,6 +26193,12 @@ window.T4C_DATA = {
       "item": "empyrean_dark_leggings",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_protector",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.012
     },
     {
@@ -23191,6 +26376,12 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_warrior_armor",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_warrior_boots",
       "monster": "Bastion Warden",
       "monsterDisplayName": "Bastion Warden",
@@ -23206,6 +26397,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_boots",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_boots",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
       "chance": 0.012
     },
     {
@@ -23227,6 +26424,12 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_warrior_gauntlets",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_warrior_helmet",
       "monster": "Bastion Warden",
       "monsterDisplayName": "Bastion Warden",
@@ -23242,6 +26445,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_helmet",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_helmet",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
       "chance": 0.012
     },
     {
@@ -23263,6 +26472,12 @@ window.T4C_DATA = {
       "chance": 0.012
     },
     {
+      "item": "empyrean_warrior_leggings",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_warrior_protector",
       "monster": "Bastion Warden",
       "monsterDisplayName": "Bastion Warden",
@@ -23278,6 +26493,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_protector",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_protector",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
       "chance": 0.012
     },
     {
@@ -23351,6 +26572,24 @@ window.T4C_DATA = {
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
       "chance": 0.012
+    },
+    {
+      "item": "galecrest_wyrms_tempest_wand",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.01
+    },
+    {
+      "item": "galecrest_wyrms_thunderhead_circlet",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "galecrest_wyrms_windswept_mantle",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.015
     },
     {
       "item": "heartfire_of_the_greater_drake",
@@ -23395,6 +26634,24 @@ window.T4C_DATA = {
       "chance": 0.01
     },
     {
+      "item": "mistwing_wyrms_farsight_longbow",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.01
+    },
+    {
+      "item": "mistwing_wyrms_fogstride_boots",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "mistwing_wyrms_rainveil_mantle",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.015
+    },
+    {
       "item": "mordrenns_drowned_cowl",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
@@ -23410,6 +26667,24 @@ window.T4C_DATA = {
       "item": "ptanghs_lichbone_staff",
       "monster": "MakrshPtangh2",
       "monsterDisplayName": "Makrsh P'Tangh",
+      "chance": 0.01
+    },
+    {
+      "item": "pyreclaw_wyrms_forgeplate_gauntlets",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "pyreclaw_wyrms_molten_warhelm",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.015
+    },
+    {
+      "item": "pyreclaw_wyrms_searing_greatsword",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
       "chance": 0.01
     },
     {
@@ -25980,7 +29255,13 @@ window.T4C_DATA = {
         "mordrenns_drowned_cowl",
         "tideclaw_band",
         "acolytes_tarnished_locket",
-        "sunken_vestment"
+        "sunken_vestment",
+        "drowned_inquisition_armor",
+        "drowned_inquisition_boots",
+        "drowned_inquisition_gauntlets",
+        "drowned_inquisition_helmet",
+        "drowned_inquisition_leggings",
+        "drowned_inquisition_protector"
       ],
       "spells": [
         "spell.riptide_surge",
@@ -26014,7 +29295,13 @@ window.T4C_DATA = {
       ],
       "items": [
         "cinderwrought_sash",
-        "ignaroks_emberfang_claw"
+        "ignaroks_emberfang_claw",
+        "cinderforged_armor",
+        "cinderforged_boots",
+        "cinderforged_gauntlets",
+        "cinderforged_helmet",
+        "cinderforged_leggings",
+        "cinderforged_protector"
       ],
       "spells": [
         "spell.cinderburst",
@@ -26048,7 +29335,14 @@ window.T4C_DATA = {
       "items": [
         "centaur_warband_ring",
         "marchwardens_crown",
-        "bow_of_centaur_slaying"
+        "bow_of_centaur_slaying",
+        "centaur_slaying_armor",
+        "centaur_slaying_boots",
+        "centaur_slaying_gauntlets",
+        "centaur_slaying_helmet",
+        "centaur_slaying_leggings",
+        "centaur_slaying_protector",
+        "centaur_slaying_quiver"
       ],
       "spells": [],
       "quests": [
@@ -26157,18 +29451,34 @@ window.T4C_DATA = {
         "y": 2780.0,
         "radius": 180.0
       },
-      "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one. The Rootcrown Wyrm (T4C-0029), an Elder Wyrm predating the named Drake line, was added to the same lair.",
+      "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one. The Rootcrown Wyrm (T4C-0029), an Elder Wyrm predating the named Drake line, was added to the same lair, later joined by the other four Elder Wyrms (the Pyreclaw, Mistwing, Duskmaw and Galecrest Wyrms), one per class.",
       "monsters": [
         "Kraanian Dragonguard",
         "Arch Drake",
-        "The Rootcrown Wyrm"
+        "The Rootcrown Wyrm",
+        "The Pyreclaw Wyrm",
+        "The Mistwing Wyrm",
+        "The Duskmaw Wyrm",
+        "The Galecrest Wyrm"
       ],
       "items": [
         "dragonguards_scale_bracer",
         "archdrakes_molten_heart",
         "rootcrown_wyrms_verdant_sceptre",
         "rootcrown_wyrms_ageless_mantle",
-        "rootcrown_wyrms_timeless_circlet"
+        "rootcrown_wyrms_timeless_circlet",
+        "pyreclaw_wyrms_searing_greatsword",
+        "pyreclaw_wyrms_molten_warhelm",
+        "pyreclaw_wyrms_forgeplate_gauntlets",
+        "mistwing_wyrms_farsight_longbow",
+        "mistwing_wyrms_rainveil_mantle",
+        "mistwing_wyrms_fogstride_boots",
+        "duskmaw_wyrms_umbral_rod",
+        "duskmaw_wyrms_nightshroud_mantle",
+        "duskmaw_wyrms_eclipsed_crown",
+        "galecrest_wyrms_tempest_wand",
+        "galecrest_wyrms_windswept_mantle",
+        "galecrest_wyrms_thunderhead_circlet"
       ],
       "spells": [],
       "quests": [
@@ -27186,6 +30496,20 @@ window.T4C_DATA = {
           "tier": "boss"
         },
         {
+          "name": "The Duskmaw Wyrm",
+          "displayName": "The Duskmaw Wyrm",
+          "x": 2770.0,
+          "y": 2930.0,
+          "tier": "boss"
+        },
+        {
+          "name": "The Galecrest Wyrm",
+          "displayName": "The Galecrest Wyrm",
+          "x": 2740.0,
+          "y": 2690.0,
+          "tier": "boss"
+        },
+        {
           "name": "The Hollow King",
           "displayName": "The Hollow King",
           "x": 2500.0,
@@ -27419,6 +30743,34 @@ window.T4C_DATA = {
           "displayName": "Patient fou",
           "x": 2735.0,
           "y": 2596.0,
+          "tier": "boss"
+        },
+        {
+          "name": "The Duskmaw Wyrm",
+          "displayName": "The Duskmaw Wyrm",
+          "x": 2770.0,
+          "y": 2930.0,
+          "tier": "boss"
+        },
+        {
+          "name": "The Galecrest Wyrm",
+          "displayName": "The Galecrest Wyrm",
+          "x": 2740.0,
+          "y": 2690.0,
+          "tier": "boss"
+        },
+        {
+          "name": "The Mistwing Wyrm",
+          "displayName": "The Mistwing Wyrm",
+          "x": 3000.0,
+          "y": 2760.0,
+          "tier": "boss"
+        },
+        {
+          "name": "The Pyreclaw Wyrm",
+          "displayName": "The Pyreclaw Wyrm",
+          "x": 2950.0,
+          "y": 2890.0,
           "tier": "boss"
         },
         {

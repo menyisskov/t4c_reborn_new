@@ -3957,6 +3957,494 @@
     ]
   },
   {
+    "key": "centaur_slaying_armor",
+    "name": "Armor of Centaur Slaying",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "price": 0.0,
+    "weight": 8.0,
+    "armorClass": 131.8,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 500.0,
+      "strength": 0.0,
+      "agility": 600.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 264.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20708.0,
+        "statId": 12.0,
+        "expression": "59"
+      },
+      {
+        "boostId": 20709.0,
+        "statId": 13.0,
+        "expression": "59"
+      },
+      {
+        "boostId": 20710.0,
+        "statId": 14.0,
+        "expression": "59"
+      },
+      {
+        "boostId": 20711.0,
+        "statId": 15.0,
+        "expression": "59"
+      },
+      {
+        "boostId": 20712.0,
+        "statId": 22.0,
+        "expression": "59"
+      },
+      {
+        "boostId": 20713.0,
+        "statId": 6.0,
+        "expression": "56"
+      },
+      {
+        "boostId": 20714.0,
+        "statId": 10035.0,
+        "expression": "135"
+      },
+      {
+        "boostId": 20715.0,
+        "statId": 2.0,
+        "expression": "30"
+      }
+    ]
+  },
+  {
+    "key": "centaur_slaying_boots",
+    "name": "Boots of Centaur Slaying",
+    "bodyPart": "FEET",
+    "appearanceEquippedPrimary": "PupPlateFoot",
+    "appearanceInventory": "64kInvPlateArmorFeet",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 39.4,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 500.0,
+      "strength": 0.0,
+      "agility": 600.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 265.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20716.0,
+        "statId": 12.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20717.0,
+        "statId": 13.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20718.0,
+        "statId": 14.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20719.0,
+        "statId": 15.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20720.0,
+        "statId": 22.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20721.0,
+        "statId": 6.0,
+        "expression": "17"
+      },
+      {
+        "boostId": 20722.0,
+        "statId": 10035.0,
+        "expression": "41"
+      },
+      {
+        "boostId": 20723.0,
+        "statId": 2.0,
+        "expression": "9"
+      }
+    ]
+  },
+  {
+    "key": "centaur_slaying_gauntlets",
+    "name": "Gauntlets of Centaur Slaying",
+    "bodyPart": "LEFT_HAND",
+    "secondaryBodyPart": "RIGHT_HAND",
+    "appearanceEquippedPrimary": "PupPlateGloveL",
+    "appearanceEquippedSecondary": "PupPlateGloveR",
+    "appearanceInventory": "64kInvPlateGlove",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 39.4,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 500.0,
+      "strength": 0.0,
+      "agility": 600.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 263.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20724.0,
+        "statId": 12.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20725.0,
+        "statId": 13.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20726.0,
+        "statId": 14.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20727.0,
+        "statId": 15.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20728.0,
+        "statId": 22.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20729.0,
+        "statId": 6.0,
+        "expression": "17"
+      },
+      {
+        "boostId": 20730.0,
+        "statId": 10035.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 20731.0,
+        "statId": 2.0,
+        "expression": "9"
+      }
+    ]
+  },
+  {
+    "key": "centaur_slaying_helmet",
+    "name": "Helm of Centaur Slaying",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 38.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 500.0,
+      "strength": 0.0,
+      "agility": 600.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 267.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20732.0,
+        "statId": 12.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20733.0,
+        "statId": 13.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20734.0,
+        "statId": 14.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20735.0,
+        "statId": 15.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20736.0,
+        "statId": 22.0,
+        "expression": "35"
+      },
+      {
+        "boostId": 20737.0,
+        "statId": 6.0,
+        "expression": "16"
+      },
+      {
+        "boostId": 20738.0,
+        "statId": 10035.0,
+        "expression": "39"
+      },
+      {
+        "boostId": 20739.0,
+        "statId": 2.0,
+        "expression": "8"
+      }
+    ]
+  },
+  {
+    "key": "centaur_slaying_leggings",
+    "name": "Leggings of Centaur Slaying",
+    "bodyPart": "LEGS",
+    "appearanceEquippedPrimary": "PupPlateLegs",
+    "appearanceInventory": "64kInvPlateArmorLegs",
+    "price": 0.0,
+    "weight": 5.0,
+    "armorClass": 43.9,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 500.0,
+      "strength": 0.0,
+      "agility": 600.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 266.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20740.0,
+        "statId": 12.0,
+        "expression": "36"
+      },
+      {
+        "boostId": 20741.0,
+        "statId": 13.0,
+        "expression": "36"
+      },
+      {
+        "boostId": 20742.0,
+        "statId": 14.0,
+        "expression": "36"
+      },
+      {
+        "boostId": 20743.0,
+        "statId": 15.0,
+        "expression": "36"
+      },
+      {
+        "boostId": 20744.0,
+        "statId": 22.0,
+        "expression": "36"
+      },
+      {
+        "boostId": 20745.0,
+        "statId": 6.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 20746.0,
+        "statId": 10035.0,
+        "expression": "45"
+      },
+      {
+        "boostId": 20747.0,
+        "statId": 2.0,
+        "expression": "10"
+      }
+    ]
+  },
+  {
+    "key": "centaur_slaying_protector",
+    "name": "Belt of Centaur Slaying",
+    "bodyPart": "BELT",
+    "appearanceInventory": "64kInvBelt",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 29.2,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 500.0,
+      "strength": 0.0,
+      "agility": 600.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 235.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20748.0,
+        "statId": 12.0,
+        "expression": "8"
+      },
+      {
+        "boostId": 20749.0,
+        "statId": 13.0,
+        "expression": "8"
+      },
+      {
+        "boostId": 20750.0,
+        "statId": 14.0,
+        "expression": "8"
+      },
+      {
+        "boostId": 20751.0,
+        "statId": 15.0,
+        "expression": "8"
+      },
+      {
+        "boostId": 20752.0,
+        "statId": 22.0,
+        "expression": "8"
+      },
+      {
+        "boostId": 20753.0,
+        "statId": 6.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 20754.0,
+        "statId": 10035.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 20755.0,
+        "statId": 2.0,
+        "expression": "7"
+      }
+    ]
+  },
+  {
+    "key": "centaur_slaying_quiver",
+    "name": "Quiver of Centaur Slaying",
+    "bodyPart": "WEAPON2",
+    "appearanceInventory": "64kIconQuiver",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 500.0,
+      "strength": 0.0,
+      "agility": 600.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 8.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20756.0,
+        "statId": 12.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20757.0,
+        "statId": 13.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20758.0,
+        "statId": 14.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20759.0,
+        "statId": 15.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20760.0,
+        "statId": 22.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20761.0,
+        "statId": 6.0,
+        "expression": "12"
+      },
+      {
+        "boostId": 20762.0,
+        "statId": 10035.0,
+        "expression": "30"
+      },
+      {
+        "boostId": 20763.0,
+        "statId": 2.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20764.0,
+        "statId": 10.0,
+        "expression": "15"
+      }
+    ]
+  },
+  {
     "key": "centaur_warband_ring",
     "name": "Centaur Warband Ring",
     "bodyPart": "RING1",
@@ -4021,6 +4509,391 @@
         "boostId": 36373.0,
         "statId": 9.0,
         "expression": "40"
+      }
+    ]
+  },
+  {
+    "key": "cinderforged_armor",
+    "name": "Cinderforged Hauberk",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "price": 0.0,
+    "weight": 8.0,
+    "armorClass": 69.4,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 280.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 240.0,
+      "wisdom": 60.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 264.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20807.0,
+        "statId": 12.0,
+        "expression": "34"
+      },
+      {
+        "boostId": 20808.0,
+        "statId": 13.0,
+        "expression": "55"
+      },
+      {
+        "boostId": 20809.0,
+        "statId": 14.0,
+        "expression": "34"
+      },
+      {
+        "boostId": 20810.0,
+        "statId": 15.0,
+        "expression": "34"
+      },
+      {
+        "boostId": 20811.0,
+        "statId": 22.0,
+        "expression": "34"
+      },
+      {
+        "boostId": 20812.0,
+        "statId": 17.0,
+        "expression": "29"
+      },
+      {
+        "boostId": 20813.0,
+        "statId": 1.0,
+        "expression": "29"
+      }
+    ]
+  },
+  {
+    "key": "cinderforged_boots",
+    "name": "Cinderforged Boots",
+    "bodyPart": "FEET",
+    "appearanceEquippedPrimary": "PupPlateFoot",
+    "appearanceInventory": "64kInvPlateArmorFeet",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 20.8,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 280.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 240.0,
+      "wisdom": 60.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 265.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20814.0,
+        "statId": 12.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20815.0,
+        "statId": 13.0,
+        "expression": "26"
+      },
+      {
+        "boostId": 20816.0,
+        "statId": 14.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20817.0,
+        "statId": 15.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20818.0,
+        "statId": 22.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20819.0,
+        "statId": 17.0,
+        "expression": "9"
+      },
+      {
+        "boostId": 20820.0,
+        "statId": 1.0,
+        "expression": "9"
+      }
+    ]
+  },
+  {
+    "key": "cinderforged_gauntlets",
+    "name": "Cinderforged Gauntlets",
+    "bodyPart": "LEFT_HAND",
+    "secondaryBodyPart": "RIGHT_HAND",
+    "appearanceEquippedPrimary": "PupPlateGloveL",
+    "appearanceEquippedSecondary": "PupPlateGloveR",
+    "appearanceInventory": "64kInvPlateGlove",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 20.8,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 280.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 240.0,
+      "wisdom": 60.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 263.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20821.0,
+        "statId": 12.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20822.0,
+        "statId": 13.0,
+        "expression": "26"
+      },
+      {
+        "boostId": 20823.0,
+        "statId": 14.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20824.0,
+        "statId": 15.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20825.0,
+        "statId": 22.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20826.0,
+        "statId": 17.0,
+        "expression": "9"
+      },
+      {
+        "boostId": 20827.0,
+        "statId": 1.0,
+        "expression": "9"
+      }
+    ]
+  },
+  {
+    "key": "cinderforged_helmet",
+    "name": "Cinderforged Helm",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 20.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 280.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 240.0,
+      "wisdom": 60.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 267.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20828.0,
+        "statId": 12.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20829.0,
+        "statId": 13.0,
+        "expression": "26"
+      },
+      {
+        "boostId": 20830.0,
+        "statId": 14.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20831.0,
+        "statId": 15.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20832.0,
+        "statId": 22.0,
+        "expression": "20"
+      },
+      {
+        "boostId": 20833.0,
+        "statId": 17.0,
+        "expression": "8"
+      },
+      {
+        "boostId": 20834.0,
+        "statId": 1.0,
+        "expression": "8"
+      }
+    ]
+  },
+  {
+    "key": "cinderforged_leggings",
+    "name": "Cinderforged Leggings",
+    "bodyPart": "LEGS",
+    "appearanceEquippedPrimary": "PupPlateLegs",
+    "appearanceInventory": "64kInvPlateArmorLegs",
+    "price": 0.0,
+    "weight": 5.0,
+    "armorClass": 23.1,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 280.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 240.0,
+      "wisdom": 60.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 266.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20835.0,
+        "statId": 12.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 20836.0,
+        "statId": 13.0,
+        "expression": "28"
+      },
+      {
+        "boostId": 20837.0,
+        "statId": 14.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 20838.0,
+        "statId": 15.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 20839.0,
+        "statId": 22.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 20840.0,
+        "statId": 17.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 20841.0,
+        "statId": 1.0,
+        "expression": "10"
+      }
+    ]
+  },
+  {
+    "key": "cinderforged_protector",
+    "name": "Cinderforged Girdle",
+    "bodyPart": "BELT",
+    "appearanceInventory": "64kInvBelt",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 15.4,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 280.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 240.0,
+      "wisdom": 60.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 235.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20842.0,
+        "statId": 12.0,
+        "expression": "5"
+      },
+      {
+        "boostId": 20843.0,
+        "statId": 13.0,
+        "expression": "9"
+      },
+      {
+        "boostId": 20844.0,
+        "statId": 14.0,
+        "expression": "5"
+      },
+      {
+        "boostId": 20845.0,
+        "statId": 15.0,
+        "expression": "5"
+      },
+      {
+        "boostId": 20846.0,
+        "statId": 22.0,
+        "expression": "5"
+      },
+      {
+        "boostId": 20847.0,
+        "statId": 17.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20848.0,
+        "statId": 1.0,
+        "expression": "7"
       }
     ]
   },
@@ -4274,6 +5147,585 @@
         "boostId": 36340.0,
         "statId": 22.0,
         "expression": "12"
+      }
+    ]
+  },
+  {
+    "key": "drowned_inquisition_armor",
+    "name": "Drowned Inquisition Vestments",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "price": 0.0,
+    "weight": 8.0,
+    "armorClass": 49.6,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 200.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 180.0,
+      "wisdom": 45.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 264.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20765.0,
+        "statId": 12.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 20766.0,
+        "statId": 13.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 20767.0,
+        "statId": 14.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 20768.0,
+        "statId": 15.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 20769.0,
+        "statId": 22.0,
+        "expression": "39"
+      },
+      {
+        "boostId": 20770.0,
+        "statId": 18.0,
+        "expression": "22"
+      },
+      {
+        "boostId": 20771.0,
+        "statId": 1.0,
+        "expression": "22"
+      }
+    ]
+  },
+  {
+    "key": "drowned_inquisition_boots",
+    "name": "Drowned Inquisition Boots",
+    "bodyPart": "FEET",
+    "appearanceEquippedPrimary": "PupPlateFoot",
+    "appearanceInventory": "64kInvPlateArmorFeet",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 14.8,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 200.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 180.0,
+      "wisdom": 45.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 265.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20772.0,
+        "statId": 12.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20773.0,
+        "statId": 13.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20774.0,
+        "statId": 14.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20775.0,
+        "statId": 15.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20776.0,
+        "statId": 22.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 20777.0,
+        "statId": 18.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20778.0,
+        "statId": 1.0,
+        "expression": "7"
+      }
+    ]
+  },
+  {
+    "key": "drowned_inquisition_gauntlets",
+    "name": "Drowned Inquisition Gloves",
+    "bodyPart": "LEFT_HAND",
+    "secondaryBodyPart": "RIGHT_HAND",
+    "appearanceEquippedPrimary": "PupPlateGloveL",
+    "appearanceEquippedSecondary": "PupPlateGloveR",
+    "appearanceInventory": "64kInvPlateGlove",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 14.8,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 200.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 180.0,
+      "wisdom": 45.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 263.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20779.0,
+        "statId": 12.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20780.0,
+        "statId": 13.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20781.0,
+        "statId": 14.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20782.0,
+        "statId": 15.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20783.0,
+        "statId": 22.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 20784.0,
+        "statId": 18.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20785.0,
+        "statId": 1.0,
+        "expression": "7"
+      }
+    ]
+  },
+  {
+    "key": "drowned_inquisition_helmet",
+    "name": "Drowned Inquisition Hood",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 14.3,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 200.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 180.0,
+      "wisdom": 45.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 267.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20786.0,
+        "statId": 12.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20787.0,
+        "statId": 13.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20788.0,
+        "statId": 14.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20789.0,
+        "statId": 15.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 20790.0,
+        "statId": 22.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 20791.0,
+        "statId": 18.0,
+        "expression": "6"
+      },
+      {
+        "boostId": 20792.0,
+        "statId": 1.0,
+        "expression": "6"
+      }
+    ]
+  },
+  {
+    "key": "drowned_inquisition_leggings",
+    "name": "Drowned Inquisition Leggings",
+    "bodyPart": "LEGS",
+    "appearanceEquippedPrimary": "PupPlateLegs",
+    "appearanceInventory": "64kInvPlateArmorLegs",
+    "price": 0.0,
+    "weight": 5.0,
+    "armorClass": 16.5,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 200.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 180.0,
+      "wisdom": 45.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 266.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20793.0,
+        "statId": 12.0,
+        "expression": "15"
+      },
+      {
+        "boostId": 20794.0,
+        "statId": 13.0,
+        "expression": "15"
+      },
+      {
+        "boostId": 20795.0,
+        "statId": 14.0,
+        "expression": "15"
+      },
+      {
+        "boostId": 20796.0,
+        "statId": 15.0,
+        "expression": "15"
+      },
+      {
+        "boostId": 20797.0,
+        "statId": 22.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 20798.0,
+        "statId": 18.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 20799.0,
+        "statId": 1.0,
+        "expression": "7"
+      }
+    ]
+  },
+  {
+    "key": "drowned_inquisition_protector",
+    "name": "Drowned Inquisition Sash",
+    "bodyPart": "BELT",
+    "appearanceInventory": "64kInvBelt",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 11.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 200.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 180.0,
+      "wisdom": 45.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": false,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 235.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 20800.0,
+        "statId": 12.0,
+        "expression": "3"
+      },
+      {
+        "boostId": 20801.0,
+        "statId": 13.0,
+        "expression": "3"
+      },
+      {
+        "boostId": 20802.0,
+        "statId": 14.0,
+        "expression": "3"
+      },
+      {
+        "boostId": 20803.0,
+        "statId": 15.0,
+        "expression": "3"
+      },
+      {
+        "boostId": 20804.0,
+        "statId": 22.0,
+        "expression": "6"
+      },
+      {
+        "boostId": 20805.0,
+        "statId": 18.0,
+        "expression": "5"
+      },
+      {
+        "boostId": 20806.0,
+        "statId": 1.0,
+        "expression": "5"
+      }
+    ]
+  },
+  {
+    "key": "duskmaw_wyrms_eclipsed_crown",
+    "name": "Duskmaw Wyrm's Eclipsed Crown",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 42.9,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 950.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36656.0,
+        "statId": 1.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36657.0,
+        "statId": 24.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36658.0,
+        "statId": 12.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36659.0,
+        "statId": 13.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36660.0,
+        "statId": 14.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36661.0,
+        "statId": 15.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36662.0,
+        "statId": 22.0,
+        "expression": "38"
+      }
+    ]
+  },
+  {
+    "key": "duskmaw_wyrms_nightshroud_mantle",
+    "name": "Duskmaw Wyrm's Nightshroud Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal8",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal8",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 43.2,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 950.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36649.0,
+        "statId": 1.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36650.0,
+        "statId": 24.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36651.0,
+        "statId": 12.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36652.0,
+        "statId": 13.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36653.0,
+        "statId": 14.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36654.0,
+        "statId": 15.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36655.0,
+        "statId": 22.0,
+        "expression": "38"
+      }
+    ]
+  },
+  {
+    "key": "duskmaw_wyrms_umbral_rod",
+    "name": "Duskmaw Wyrm's Umbral Rod",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLichStaff",
+    "appearanceInventory": "64kInvLichStaff",
+    "price": 0.0,
+    "weight": 4.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 950.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d40+60",
+    "atkDelay": "1300",
+    "boosts": [
+      {
+        "boostId": 36642.0,
+        "statId": 1.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36643.0,
+        "statId": 24.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36644.0,
+        "statId": 12.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36645.0,
+        "statId": 13.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36646.0,
+        "statId": 14.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36647.0,
+        "statId": 15.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36648.0,
+        "statId": 22.0,
+        "expression": "38"
       }
     ]
   },
@@ -7448,6 +8900,215 @@
     ]
   },
   {
+    "key": "galecrest_wyrms_tempest_wand",
+    "name": "Galecrest Wyrm's Tempest Wand",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupWoodenStaff",
+    "appearanceInventory": "64kInvWoodenStaff",
+    "price": 0.0,
+    "weight": 4.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 595.0,
+      "wisdom": 595.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d40+60",
+    "atkDelay": "1300",
+    "boosts": [
+      {
+        "boostId": 36663.0,
+        "statId": 1.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36664.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36665.0,
+        "statId": 16.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36666.0,
+        "statId": 12.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36667.0,
+        "statId": 13.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36668.0,
+        "statId": 14.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36669.0,
+        "statId": 15.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36670.0,
+        "statId": 22.0,
+        "expression": "38"
+      }
+    ]
+  },
+  {
+    "key": "galecrest_wyrms_thunderhead_circlet",
+    "name": "Galecrest Wyrm's Thunderhead Circlet",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 48.3,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 595.0,
+      "wisdom": 595.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36679.0,
+        "statId": 1.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36680.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36681.0,
+        "statId": 16.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36682.0,
+        "statId": 12.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36683.0,
+        "statId": 13.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36684.0,
+        "statId": 14.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36685.0,
+        "statId": 15.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36686.0,
+        "statId": 22.0,
+        "expression": "38"
+      }
+    ]
+  },
+  {
+    "key": "galecrest_wyrms_windswept_mantle",
+    "name": "Galecrest Wyrm's Windswept Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal6",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal6",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 48.6,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 0.0,
+      "intelligence": 595.0,
+      "wisdom": 595.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36671.0,
+        "statId": 1.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36672.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 36673.0,
+        "statId": 16.0,
+        "expression": "95"
+      },
+      {
+        "boostId": 36674.0,
+        "statId": 12.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36675.0,
+        "statId": 13.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36676.0,
+        "statId": 14.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36677.0,
+        "statId": 15.0,
+        "expression": "38"
+      },
+      {
+        "boostId": 36678.0,
+        "statId": 22.0,
+        "expression": "38"
+      }
+    ]
+  },
+  {
     "key": "geomancers_mantle",
     "name": "Geomancer's Mantle",
     "bodyPart": "BACK",
@@ -8127,6 +9788,200 @@
     ]
   },
   {
+    "key": "mistwing_wyrms_farsight_longbow",
+    "name": "Mistwing Wyrm's Farsight Longbow",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLongBow",
+    "appearanceInventory": "64kInvLongBow2",
+    "price": 0.0,
+    "weight": 6.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 0.0,
+      "agility": 950.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 900.0,
+    "unique": true,
+    "isBow": true,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d220+420+4*arrow_dmg",
+    "atkDelay": "900",
+    "boosts": [
+      {
+        "boostId": 36621.0,
+        "statId": 6.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36622.0,
+        "statId": 10035.0,
+        "expression": "190"
+      },
+      {
+        "boostId": 36623.0,
+        "statId": 12.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36624.0,
+        "statId": 13.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36625.0,
+        "statId": 14.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36626.0,
+        "statId": 15.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36627.0,
+        "statId": 22.0,
+        "expression": "24"
+      }
+    ]
+  },
+  {
+    "key": "mistwing_wyrms_fogstride_boots",
+    "name": "Mistwing Wyrm's Fogstride Boots",
+    "bodyPart": "FEET",
+    "appearanceEquippedPrimary": "PupPlateFoot",
+    "appearanceInventory": "64kInvPlateArmorFeet",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 47.3,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 950.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36635.0,
+        "statId": 6.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36636.0,
+        "statId": 10035.0,
+        "expression": "190"
+      },
+      {
+        "boostId": 36637.0,
+        "statId": 12.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36638.0,
+        "statId": 13.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36639.0,
+        "statId": 14.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36640.0,
+        "statId": 15.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36641.0,
+        "statId": 22.0,
+        "expression": "24"
+      }
+    ]
+  },
+  {
+    "key": "mistwing_wyrms_rainveil_mantle",
+    "name": "Mistwing Wyrm's Rainveil Mantle",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "NMS_NewCape01__pal2",
+    "appearanceInventory": "Inv_NMS_NewCape01__pal2",
+    "price": 0.0,
+    "weight": 2.0,
+    "armorClass": 45.9,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 0.0,
+      "agility": 950.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36628.0,
+        "statId": 6.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36629.0,
+        "statId": 10035.0,
+        "expression": "190"
+      },
+      {
+        "boostId": 36630.0,
+        "statId": 12.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36631.0,
+        "statId": 13.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36632.0,
+        "statId": 14.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36633.0,
+        "statId": 15.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36634.0,
+        "statId": 22.0,
+        "expression": "24"
+      }
+    ]
+  },
+  {
     "key": "mithril_two_handed_sword_4",
     "name": "Mithril Two-Handed Sword +4",
     "bodyPart": "WEAPON",
@@ -8381,6 +10236,202 @@
         "boostId": 36447.0,
         "statId": 22.0,
         "expression": "38"
+      }
+    ]
+  },
+  {
+    "key": "pyreclaw_wyrms_forgeplate_gauntlets",
+    "name": "Pyreclaw Wyrm's Forgeplate Gauntlets",
+    "bodyPart": "LEFT_HAND",
+    "secondaryBodyPart": "RIGHT_HAND",
+    "appearanceEquippedPrimary": "PupPlateGloveL",
+    "appearanceEquippedSecondary": "PupPlateGloveR",
+    "appearanceInventory": "64kInvPlateGlove",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 61.2,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 950.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36614.0,
+        "statId": 3.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36615.0,
+        "statId": 8.0,
+        "expression": "190"
+      },
+      {
+        "boostId": 36616.0,
+        "statId": 12.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36617.0,
+        "statId": 13.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36618.0,
+        "statId": 14.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36619.0,
+        "statId": 15.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36620.0,
+        "statId": 22.0,
+        "expression": "24"
+      }
+    ]
+  },
+  {
+    "key": "pyreclaw_wyrms_molten_warhelm",
+    "name": "Pyreclaw Wyrm's Molten Warhelm",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "price": 0.0,
+    "weight": 3.0,
+    "armorClass": 59.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 600.0,
+      "strength": 950.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 0.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "boosts": [
+      {
+        "boostId": 36607.0,
+        "statId": 3.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36608.0,
+        "statId": 8.0,
+        "expression": "190"
+      },
+      {
+        "boostId": 36609.0,
+        "statId": 12.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36610.0,
+        "statId": 13.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36611.0,
+        "statId": 14.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36612.0,
+        "statId": 15.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36613.0,
+        "statId": 22.0,
+        "expression": "24"
+      }
+    ]
+  },
+  {
+    "key": "pyreclaw_wyrms_searing_greatsword",
+    "name": "Pyreclaw Wyrm's Searing Greatsword",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupBattleSword",
+    "appearanceInventory": "64kInvBattleSword",
+    "price": 0.0,
+    "weight": 8.0,
+    "armorClass": 0.0,
+    "dodgeLost": 0.0,
+    "requirements": {
+      "endurance": 0.0,
+      "strength": 950.0,
+      "agility": 0.0,
+      "intelligence": 0.0,
+      "wisdom": 0.0,
+      "attack": 0.0
+    },
+    "attackSpeed": 1500.0,
+    "unique": true,
+    "isBow": false,
+    "unlimitedUse": true,
+    "numId": 0.0,
+    "structure": 2.0,
+    "appearanceId": 0.0,
+    "undroppable": false,
+    "dmgFormula": "1d400+370",
+    "atkDelay": "1500",
+    "boosts": [
+      {
+        "boostId": 36600.0,
+        "statId": 3.0,
+        "expression": "79"
+      },
+      {
+        "boostId": 36601.0,
+        "statId": 8.0,
+        "expression": "190"
+      },
+      {
+        "boostId": 36602.0,
+        "statId": 12.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36603.0,
+        "statId": 13.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 36604.0,
+        "statId": 14.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36605.0,
+        "statId": 15.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 36606.0,
+        "statId": 22.0,
+        "expression": "24"
       }
     ]
   },

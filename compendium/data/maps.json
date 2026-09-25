@@ -632,6 +632,20 @@
         "tier": "boss"
       },
       {
+        "name": "The Duskmaw Wyrm",
+        "displayName": "The Duskmaw Wyrm",
+        "x": 2770,
+        "y": 2930,
+        "tier": "boss"
+      },
+      {
+        "name": "The Galecrest Wyrm",
+        "displayName": "The Galecrest Wyrm",
+        "x": 2740,
+        "y": 2690,
+        "tier": "boss"
+      },
+      {
         "name": "The Hollow King",
         "displayName": "The Hollow King",
         "x": 2500,
@@ -865,6 +879,34 @@
         "displayName": "Patient fou",
         "x": 2735,
         "y": 2596,
+        "tier": "boss"
+      },
+      {
+        "name": "The Duskmaw Wyrm",
+        "displayName": "The Duskmaw Wyrm",
+        "x": 2770,
+        "y": 2930,
+        "tier": "boss"
+      },
+      {
+        "name": "The Galecrest Wyrm",
+        "displayName": "The Galecrest Wyrm",
+        "x": 2740,
+        "y": 2690,
+        "tier": "boss"
+      },
+      {
+        "name": "The Mistwing Wyrm",
+        "displayName": "The Mistwing Wyrm",
+        "x": 3000,
+        "y": 2760,
+        "tier": "boss"
+      },
+      {
+        "name": "The Pyreclaw Wyrm",
+        "displayName": "The Pyreclaw Wyrm",
+        "x": 2950,
+        "y": 2890,
         "tier": "boss"
       },
       {

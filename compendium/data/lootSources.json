@@ -12,9 +12,21 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_air_armor",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_air_boots",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_boots",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.025
   },
   {
@@ -24,9 +36,21 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_air_gauntlets",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_air_helmet",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_helmet",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.025
   },
   {
@@ -36,9 +60,21 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_air_leggings",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_air_protector",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_protector",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.025
   },
   {
@@ -48,9 +84,21 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_archer_armor",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_archer_boots",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_boots",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
     "chance": 0.025
   },
   {
@@ -60,9 +108,21 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_archer_gauntlets",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_archer_helmet",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_helmet",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
     "chance": 0.025
   },
   {
@@ -72,12 +132,30 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_archer_leggings",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_archer_protector",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_archer_protector",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_armor",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_dark_armor",
     "monster": "The Hollow King",
     "monsterDisplayName": "The Hollow King",
@@ -87,6 +165,12 @@
     "item": "ancient_celestial_dark_armor",
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_boots",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.025
   },
   {
@@ -103,6 +187,12 @@
   },
   {
     "item": "ancient_celestial_dark_gauntlets",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_gauntlets",
     "monster": "The Hollow King",
     "monsterDisplayName": "The Hollow King",
     "chance": 0.025
@@ -115,6 +205,12 @@
   },
   {
     "item": "ancient_celestial_dark_helmet",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_helmet",
     "monster": "The Hollow King",
     "monsterDisplayName": "The Hollow King",
     "chance": 0.025
@@ -127,6 +223,12 @@
   },
   {
     "item": "ancient_celestial_dark_leggings",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_leggings",
     "monster": "The Hollow King",
     "monsterDisplayName": "The Hollow King",
     "chance": 0.025
@@ -135,6 +237,12 @@
     "item": "ancient_celestial_dark_leggings",
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_protector",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.025
   },
   {
@@ -312,6 +420,12 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_warrior_armor",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_warrior_boots",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
@@ -327,6 +441,12 @@
     "item": "ancient_celestial_warrior_boots",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_boots",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
     "chance": 0.025
   },
   {
@@ -348,6 +468,12 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_warrior_gauntlets",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_warrior_helmet",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
@@ -363,6 +489,12 @@
     "item": "ancient_celestial_warrior_helmet",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_helmet",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
     "chance": 0.025
   },
   {
@@ -384,6 +516,12 @@
     "chance": 0.025
   },
   {
+    "item": "ancient_celestial_warrior_leggings",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_warrior_protector",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
@@ -399,6 +537,12 @@
     "item": "ancient_celestial_warrior_protector",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_protector",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
     "chance": 0.025
   },
   {
@@ -510,10 +654,166 @@
     "chance": 0.02
   },
   {
+    "item": "centaur_slaying_armor",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.01
+  },
+  {
+    "item": "centaur_slaying_armor",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.002
+  },
+  {
+    "item": "centaur_slaying_boots",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.01
+  },
+  {
+    "item": "centaur_slaying_boots",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.002
+  },
+  {
+    "item": "centaur_slaying_gauntlets",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.01
+  },
+  {
+    "item": "centaur_slaying_gauntlets",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.002
+  },
+  {
+    "item": "centaur_slaying_helmet",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.01
+  },
+  {
+    "item": "centaur_slaying_helmet",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.002
+  },
+  {
+    "item": "centaur_slaying_leggings",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.01
+  },
+  {
+    "item": "centaur_slaying_leggings",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.002
+  },
+  {
+    "item": "centaur_slaying_protector",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.01
+  },
+  {
+    "item": "centaur_slaying_protector",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.002
+  },
+  {
+    "item": "centaur_slaying_quiver",
+    "monster": "Centaur King",
+    "monsterDisplayName": "Centaur King",
+    "chance": 0.01
+  },
+  {
+    "item": "centaur_slaying_quiver",
+    "monster": "Centaur Warrior",
+    "monsterDisplayName": "Centaur Warrior",
+    "chance": 0.002
+  },
+  {
     "item": "centaur_warband_ring",
     "monster": "Centaur Warrior",
     "monsterDisplayName": "Centaur Warrior",
     "chance": 0.03
+  },
+  {
+    "item": "cinderforged_armor",
+    "monster": "Cinder Whelp",
+    "monsterDisplayName": "Cinder Whelp",
+    "chance": 0.004
+  },
+  {
+    "item": "cinderforged_armor",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.04
+  },
+  {
+    "item": "cinderforged_boots",
+    "monster": "Cinder Whelp",
+    "monsterDisplayName": "Cinder Whelp",
+    "chance": 0.004
+  },
+  {
+    "item": "cinderforged_boots",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.04
+  },
+  {
+    "item": "cinderforged_gauntlets",
+    "monster": "Cinder Whelp",
+    "monsterDisplayName": "Cinder Whelp",
+    "chance": 0.004
+  },
+  {
+    "item": "cinderforged_gauntlets",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.04
+  },
+  {
+    "item": "cinderforged_helmet",
+    "monster": "Cinder Whelp",
+    "monsterDisplayName": "Cinder Whelp",
+    "chance": 0.004
+  },
+  {
+    "item": "cinderforged_helmet",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.04
+  },
+  {
+    "item": "cinderforged_leggings",
+    "monster": "Cinder Whelp",
+    "monsterDisplayName": "Cinder Whelp",
+    "chance": 0.004
+  },
+  {
+    "item": "cinderforged_leggings",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.04
+  },
+  {
+    "item": "cinderforged_protector",
+    "monster": "Cinder Whelp",
+    "monsterDisplayName": "Cinder Whelp",
+    "chance": 0.004
+  },
+  {
+    "item": "cinderforged_protector",
+    "monster": "Ignarok the Emberfang",
+    "monsterDisplayName": "Ignarok the Emberfang",
+    "chance": 0.04
   },
   {
     "item": "cinderwrought_sash",
@@ -540,9 +840,105 @@
     "chance": 0.03
   },
   {
+    "item": "drowned_inquisition_armor",
+    "monster": "Drowned Acolyte",
+    "monsterDisplayName": "Drowned Acolyte",
+    "chance": 0.004
+  },
+  {
+    "item": "drowned_inquisition_armor",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.04
+  },
+  {
+    "item": "drowned_inquisition_boots",
+    "monster": "Drowned Acolyte",
+    "monsterDisplayName": "Drowned Acolyte",
+    "chance": 0.004
+  },
+  {
+    "item": "drowned_inquisition_boots",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.04
+  },
+  {
+    "item": "drowned_inquisition_gauntlets",
+    "monster": "Drowned Acolyte",
+    "monsterDisplayName": "Drowned Acolyte",
+    "chance": 0.004
+  },
+  {
+    "item": "drowned_inquisition_gauntlets",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.04
+  },
+  {
+    "item": "drowned_inquisition_helmet",
+    "monster": "Drowned Acolyte",
+    "monsterDisplayName": "Drowned Acolyte",
+    "chance": 0.004
+  },
+  {
+    "item": "drowned_inquisition_helmet",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.04
+  },
+  {
+    "item": "drowned_inquisition_leggings",
+    "monster": "Drowned Acolyte",
+    "monsterDisplayName": "Drowned Acolyte",
+    "chance": 0.004
+  },
+  {
+    "item": "drowned_inquisition_leggings",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.04
+  },
+  {
+    "item": "drowned_inquisition_protector",
+    "monster": "Drowned Acolyte",
+    "monsterDisplayName": "Drowned Acolyte",
+    "chance": 0.004
+  },
+  {
+    "item": "drowned_inquisition_protector",
+    "monster": "Mordrenn the Drowned Inquisitor",
+    "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
+    "chance": 0.04
+  },
+  {
+    "item": "duskmaw_wyrms_eclipsed_crown",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "duskmaw_wyrms_nightshroud_mantle",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "duskmaw_wyrms_umbral_rod",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.01
+  },
+  {
     "item": "empyrean_air_armor",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_armor",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.012
   },
   {
@@ -552,9 +948,21 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_air_boots",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_air_gauntlets",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_gauntlets",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.012
   },
   {
@@ -564,9 +972,21 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_air_helmet",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_air_leggings",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_leggings",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.012
   },
   {
@@ -576,9 +996,21 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_air_protector",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_archer_armor",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_armor",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
     "chance": 0.012
   },
   {
@@ -588,9 +1020,21 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_archer_boots",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_archer_gauntlets",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_gauntlets",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
     "chance": 0.012
   },
   {
@@ -600,9 +1044,21 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_archer_helmet",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_archer_leggings",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_leggings",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
     "chance": 0.012
   },
   {
@@ -612,6 +1068,18 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_archer_protector",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_armor",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_dark_armor",
     "monster": "The Hollow King",
     "monsterDisplayName": "The Hollow King",
@@ -621,6 +1089,12 @@
     "item": "empyrean_dark_armor",
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_boots",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.012
   },
   {
@@ -637,6 +1111,12 @@
   },
   {
     "item": "empyrean_dark_gauntlets",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_gauntlets",
     "monster": "The Hollow King",
     "monsterDisplayName": "The Hollow King",
     "chance": 0.012
@@ -649,6 +1129,12 @@
   },
   {
     "item": "empyrean_dark_helmet",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_helmet",
     "monster": "The Hollow King",
     "monsterDisplayName": "The Hollow King",
     "chance": 0.012
@@ -661,6 +1147,12 @@
   },
   {
     "item": "empyrean_dark_leggings",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_leggings",
     "monster": "The Hollow King",
     "monsterDisplayName": "The Hollow King",
     "chance": 0.012
@@ -669,6 +1161,12 @@
     "item": "empyrean_dark_leggings",
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_protector",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.012
   },
   {
@@ -846,6 +1344,12 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_warrior_armor",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_warrior_boots",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
@@ -861,6 +1365,12 @@
     "item": "empyrean_warrior_boots",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_boots",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
     "chance": 0.012
   },
   {
@@ -882,6 +1392,12 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_warrior_gauntlets",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_warrior_helmet",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
@@ -897,6 +1413,12 @@
     "item": "empyrean_warrior_helmet",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_helmet",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
     "chance": 0.012
   },
   {
@@ -918,6 +1440,12 @@
     "chance": 0.012
   },
   {
+    "item": "empyrean_warrior_leggings",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_warrior_protector",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
@@ -933,6 +1461,12 @@
     "item": "empyrean_warrior_protector",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_protector",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
     "chance": 0.012
   },
   {
@@ -1006,6 +1540,24 @@
     "monster": "Mordrenn the Drowned Inquisitor",
     "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
     "chance": 0.012
+  },
+  {
+    "item": "galecrest_wyrms_tempest_wand",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.01
+  },
+  {
+    "item": "galecrest_wyrms_thunderhead_circlet",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "galecrest_wyrms_windswept_mantle",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.015
   },
   {
     "item": "heartfire_of_the_greater_drake",
@@ -1050,6 +1602,24 @@
     "chance": 0.01
   },
   {
+    "item": "mistwing_wyrms_farsight_longbow",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.01
+  },
+  {
+    "item": "mistwing_wyrms_fogstride_boots",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "mistwing_wyrms_rainveil_mantle",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.015
+  },
+  {
     "item": "mordrenns_drowned_cowl",
     "monster": "Mordrenn the Drowned Inquisitor",
     "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
@@ -1065,6 +1635,24 @@
     "item": "ptanghs_lichbone_staff",
     "monster": "MakrshPtangh2",
     "monsterDisplayName": "Makrsh P'Tangh",
+    "chance": 0.01
+  },
+  {
+    "item": "pyreclaw_wyrms_forgeplate_gauntlets",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "pyreclaw_wyrms_molten_warhelm",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.015
+  },
+  {
+    "item": "pyreclaw_wyrms_searing_greatsword",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
     "chance": 0.01
   },
   {
