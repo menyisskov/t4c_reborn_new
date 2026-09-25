@@ -13,6 +13,15 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-25 — An account-wide vault (T4C-0044)
+
+### Added
+- **Account Vault.** Your storage chest now has a second stash: click the title of the Storage
+  window to switch between **Personal Storage** (this character only) and the new **Account
+  Vault**, which is shared by every character on your account. Move a rare drop or a pile of
+  gold into the vault on one character, then pull it back out on another — no more mule runs.
+  The vault has its own banked gold, tracked separately from any one character's stash.
+
 _Nothing pending._
 
 ## 2026-09-25 — Login, character selection and radar (T4C-0043)

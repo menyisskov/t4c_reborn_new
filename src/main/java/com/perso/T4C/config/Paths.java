@@ -37,4 +37,5 @@ public final class Paths {
   public static final String CHARACTER_ROSTER_FILE = "characters.json";
   public static final String CHARACTER_STATES_DIR = "characters";
   public static final String GAME_PREFERENCES_FILE = "game_preferences.json";
+  public static final String ACCOUNT_STORAGE_FILE = "account_storage.json";
 }

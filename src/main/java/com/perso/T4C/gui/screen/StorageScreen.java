@@ -18,9 +18,12 @@ import com.perso.T4C.gui.widget.ItemTooltipText;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.item.AccountStorageBackend;
+import com.perso.T4C.item.CharacterStorageBackend;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemDurabilityService;
+import com.perso.T4C.item.StorageBackend;
 import com.perso.T4C.item.StorageService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.FontManager;
@@ -44,7 +47,7 @@ public class StorageScreen extends GuiScreenBase {
   private static final Color DAMAGED = Color.valueOf("FF9A3C");
 
   static final float WIDTH = 600f;
-  static final float HEIGHT = 432f;
+  static final float HEIGHT = 456f;
   static final float CELL = 29f;
   static final int STASH_COLS = 10;
   static final int PACK_COLS = 6;
@@ -74,12 +77,13 @@ public class StorageScreen extends GuiScreenBase {
 
   private static final float MARGIN = 12f;
   private static final float TITLE_H = 24f;
-  private static final float PILL_Y = 32f;
-  private static final float TABS_Y = 60f;
-  private static final float GRID_Y = 86f;
-  private static final float CONTROLS_Y = 324f;
-  private static final float GOLD_Y = 362f;
-  private static final float HINT_Y = 406f;
+  private static final float SOURCE_Y = 30f;
+  private static final float PILL_Y = 56f;
+  private static final float TABS_Y = 84f;
+  private static final float GRID_Y = 110f;
+  private static final float CONTROLS_Y = 348f;
+  private static final float GOLD_Y = 386f;
+  private static final float HINT_Y = 430f;
   private static final float BUTTON_H = 26f;
   private static final long DOUBLE_CLICK_MS = 300L;
 
@@ -149,6 +153,8 @@ public class StorageScreen extends GuiScreenBase {
   }
 
   private final Player player;
+  private StorageBackend backend;
+  private final Rectangle sourceToggleBounds = new Rectangle();
   private final TextureRegion trade;
   private final TextureRegion popup;
   private final TextureRegion cellHighlight;
@@ -184,6 +190,7 @@ public class StorageScreen extends GuiScreenBase {
 
   public StorageScreen(Player player) {
     this.player = player;
+    this.backend = new CharacterStorageBackend(player);
     this.trade = load("GUI_BackTrade");
     this.popup = GuiSprites.load("GUI_PopupBack");
     this.cellHighlight = load("GUI_BackInvGridSelect");
@@ -221,6 +228,18 @@ public class StorageScreen extends GuiScreenBase {
     packCells.set(packX + GRID_LEFT, y + GRID_Y + GRID_TOP, PACK_COLS * CELL, ROWS * CELL);
     stashScroll.set(stashCells.x + stashCells.width, stashCells.y, GRID_RIGHT, stashCells.height);
     packScroll.set(packCells.x + packCells.width, packCells.y, GRID_RIGHT, packCells.height);
+    sourceToggleBounds.set(x + MARGIN, y + SOURCE_Y, gridBoxWidth(STASH_COLS), 22f);
+  }
+
+  /** Swaps the stash pane between the character's own storage and the shared account vault. */
+  private void toggleSource() {
+    backend = backend instanceof AccountStorageBackend
+        ? new CharacterStorageBackend(player)
+        : new AccountStorageBackend(player);
+    selectedCategory = null;
+    selectedKey = null;
+    stashScrollRow = 0;
+    rebuild();
   }
 
   private static float gridBoxWidth(int cols) {
@@ -297,8 +316,8 @@ public class StorageScreen extends GuiScreenBase {
             112f,
             BUTTON_H,
             () -> I18n.key("ui.withdraw", "Withdraw"),
-            () -> player != null && player.getStorageGold() > 0,
-            () -> openPrompt(null, player.getStorageGold(), true, true)));
+            () -> player != null && backend.gold() > 0,
+            () -> openPrompt(null, backend.gold(), true, true)));
     controls.add(
         new Button(
             packX + packW - 100f,
@@ -314,7 +333,7 @@ public class StorageScreen extends GuiScreenBase {
 
   private void rebuild() {
     if (player == null) return;
-    StorageService.synchronize(player);
+    backend.synchronize();
     stashStacks = buildStashStacks();
     packStacks = buildPackStacks();
     stashScrollRow = clampScroll(stashScrollRow, stashStacks.size(), STASH_COLS);
@@ -323,7 +342,7 @@ public class StorageScreen extends GuiScreenBase {
   }
 
   private List<Stack> buildStashStacks() {
-    List<String> storage = player.getStorage();
+    List<String> storage = backend.items();
     Map<String, int[]> grouped = new LinkedHashMap<>();
     Map<String, Double> durabilityOf = new LinkedHashMap<>();
     String query = searchQuery.trim().toLowerCase(Locale.ROOT);
@@ -332,7 +351,7 @@ public class StorageScreen extends GuiScreenBase {
       if (key == null) continue;
       if (selectedCategory != null && StorageService.categoryOf(key) != selectedCategory) continue;
       if (!query.isEmpty() && !displayName(key).toLowerCase(Locale.ROOT).contains(query)) continue;
-      double durability = StorageService.durability(player, i);
+      double durability = backend.durability(i);
       String group = groupKey(key, durability);
       grouped.computeIfAbsent(group, g -> new int[] {-1, 0});
       int[] v = grouped.get(group);
@@ -411,7 +430,7 @@ public class StorageScreen extends GuiScreenBase {
     for (int i = 0; i < amount; i++) {
       int index = indexOf(player.getInventory(), stack.itemKey, stack.durability, false);
       if (index < 0) break;
-      if (!StorageService.deposit(player, index, stack.itemKey).success()) break;
+      if (!backend.deposit(index, stack.itemKey).success()) break;
       moved++;
     }
     if (moved > 0) persist();
@@ -422,9 +441,9 @@ public class StorageScreen extends GuiScreenBase {
     int moved = 0;
     InventoryService.Result last = null;
     for (int i = 0; i < amount; i++) {
-      int index = indexOf(player.getStorage(), stack.itemKey, stack.durability, true);
+      int index = indexOf(backend.items(), stack.itemKey, stack.durability, true);
       if (index < 0) break;
-      last = StorageService.withdraw(player, index, stack.itemKey);
+      last = backend.withdraw(index, stack.itemKey);
       if (!last.success()) break;
       moved++;
     }
@@ -441,7 +460,7 @@ public class StorageScreen extends GuiScreenBase {
       if (fallback < 0) fallback = i;
       if (!repairable) return i;
       double d =
-          stash ? StorageService.durability(player, i) : ItemDurabilityService.inventory(player, i);
+          stash ? backend.durability(i) : ItemDurabilityService.inventory(player, i);
       if (d == durability) return i;
     }
     return fallback;
@@ -454,9 +473,9 @@ public class StorageScreen extends GuiScreenBase {
     int moved = 0;
     for (Stack stack : new ArrayList<>(stashStacks)) {
       for (int i = 0; i < stack.count; i++) {
-        int index = indexOf(player.getStorage(), stack.itemKey, stack.durability, true);
+        int index = indexOf(backend.items(), stack.itemKey, stack.durability, true);
         if (index < 0) break;
-        InventoryService.Result result = StorageService.withdraw(player, index, stack.itemKey);
+        InventoryService.Result result = backend.withdraw(index, stack.itemKey);
         if (!result.success()) {
           if (failure == null) {
             failure = result;
@@ -475,7 +494,7 @@ public class StorageScreen extends GuiScreenBase {
     if (player == null) return;
     int moved = 0;
     for (StorageService.Category category : StorageService.Category.values()) {
-      if (category != StorageService.Category.MISC) moved += StorageService.depositAll(player, category);
+      if (category != StorageService.Category.MISC) moved += backend.depositAll(category);
     }
     if (moved > 0) persist();
   }
@@ -548,8 +567,8 @@ public class StorageScreen extends GuiScreenBase {
     int amount = Math.max(0, Math.min(p.max, parse(p.value)));
     if (amount <= 0) return;
     if (p.gold) {
-      if (p.withdraw) StorageService.withdrawGold(player, amount);
-      else StorageService.depositGold(player, amount);
+      if (p.withdraw) backend.withdrawGold(amount);
+      else backend.depositGold(amount);
       persist();
       return;
     }
@@ -598,7 +617,29 @@ public class StorageScreen extends GuiScreenBase {
 
   private void drawHeaders(SpriteBatch batch) {
     BitmapFont title = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
-    centered(batch, title, I18n.key("ui.personal_storage", "PERSONAL STORAGE"), x, y + 4f, WIDTH);
+    centered(batch, title, backend.label(), x, y + 4f, WIDTH);
+    boolean account = backend instanceof AccountStorageBackend;
+    GuiDraw.withOverlayAlpha(
+        batch,
+        () ->
+            drawThreeSlice(
+                batch,
+                SRC_PILL,
+                12,
+                sourceToggleBounds.x,
+                sourceToggleBounds.y,
+                sourceToggleBounds.width,
+                sourceToggleBounds.height));
+    BitmapFont toggleFont = FontManager.getInstance().getJetBrainsMonoFont(10, account ? DIM : GOLD);
+    centered(
+        batch,
+        toggleFont,
+        account
+            ? I18n.key("ui.storage_switch_to_character", "◂ Switch to Character Storage")
+            : I18n.key("ui.storage_switch_to_account", "Switch to Account Vault ▸"),
+        sourceToggleBounds.x,
+        sourceToggleBounds.y + 6f,
+        sourceToggleBounds.width);
     BitmapFont font = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
     float stashW = gridBoxWidth(STASH_COLS);
     float packW = gridBoxWidth(PACK_COLS);
@@ -608,7 +649,7 @@ public class StorageScreen extends GuiScreenBase {
           drawThreeSlice(batch, SRC_PILL, 12, x + MARGIN, y + PILL_Y, stashW, 23f);
           drawThreeSlice(batch, SRC_PILL, 12, packBoxX(), y + PILL_Y, packW, 23f);
         });
-    int stored = player == null ? 0 : player.getStorage().size();
+    int stored = player == null ? 0 : backend.items().size();
     centered(
         batch,
         font,
@@ -729,7 +770,7 @@ public class StorageScreen extends GuiScreenBase {
     float stashX = x + MARGIN;
     gold.draw(
         batch,
-        I18n.key("ui.storage_banked_gold", "Banked gold") + ": " + formatGold(player == null ? 0 : player.getStorageGold()),
+        I18n.key("ui.storage_banked_gold", "Banked gold") + ": " + formatGold(player == null ? 0 : backend.gold()),
         stashX + 4f,
         y + GOLD_Y + 7f);
     gold.draw(
@@ -911,6 +952,10 @@ public class StorageScreen extends GuiScreenBase {
         b.onTouchDown(screenX, screenY);
         return;
       }
+    }
+    if (sourceToggleBounds.contains(screenX, screenY)) {
+      toggleSource();
+      return;
     }
     searchFocused = searchBounds.contains(screenX, screenY);
     if (searchFocused) return;
