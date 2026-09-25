@@ -160,7 +160,8 @@ public final class CompendiumExporter {
           "EmberSmithCorvain",
           "WardenSeressa",
           "GrandmasterTholvenn",
-          "AnchoriteRowan");
+          "AnchoriteRowan",
+          "MirrorwardenYsmera");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 

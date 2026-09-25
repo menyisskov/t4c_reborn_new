@@ -347,6 +347,11 @@ public class MainGameScreen implements Screen {
         INITIAL_WARMUP_DECOR_BUDGET);
     game.startMapPreloadAsync();
     displayInitialized = true;
+    String mirrorWhisper = com.perso.T4C.mirror.MirrorTrials.takeLoginWhisper(player);
+    if (mirrorWhisper != null) {
+      showSystemMessage(mirrorWhisper);
+      savePlayerState();
+    }
   }
 
   private void initializeTameProgressGui() throws GameException {
@@ -863,6 +868,34 @@ public class MainGameScreen implements Screen {
     configureInputHandlerCallbacks();
   }
 
+  /** T4C-0042: pays out a defeated Echo and reports the trial result in chat. */
+  private void rewardMirrorTrial(com.perso.T4C.monster.EchoOfSelf echo) {
+    com.perso.T4C.mirror.MirrorTrials.Reward reward =
+        com.perso.T4C.mirror.MirrorTrials.recordVictory(player, echo.getTier(), xpCurve);
+    if (!reward.firstClear()) {
+      showSystemMessage(I18n.message("mirror.reward.rematch", reward.gold()));
+    } else if (reward.xp() > 0) {
+      showSystemMessage(
+          I18n.message(
+              "mirror.reward.trial",
+              reward.tier(),
+              com.perso.T4C.mirror.MirrorTrials.MAX_TIER,
+              reward.xp(),
+              reward.gold()));
+    } else {
+      showSystemMessage(
+          I18n.message(
+              "mirror.reward.trial_gold",
+              reward.tier(),
+              com.perso.T4C.mirror.MirrorTrials.MAX_TIER,
+              reward.gold()));
+    }
+    if (reward.boundEcho()) {
+      showSystemMessage(I18n.message("mirror.reward.bound"));
+    }
+    savePlayerState();
+  }
+
   private void configureInputHandlerCallbacks() {
     if (inputHandler == null) {
       return;
@@ -912,6 +945,10 @@ public class MainGameScreen implements Screen {
               && dataMonster.usesHumanoidAnimations()) {
             Vector2 position = monster.getPosition();
             spellRenderer.triggerImpactSpell("GreatExplosion", position.x, position.y);
+          }
+          if (monster instanceof com.perso.T4C.monster.EchoOfSelf echo
+              && echo.getMaker() == player) {
+            rewardMirrorTrial(echo);
           }
         });
     monsterManager.setScriptEffectsCallback(
@@ -2011,7 +2048,10 @@ public class MainGameScreen implements Screen {
     CompanionDef def =
         saved.tamed
             ? TamedCompanionFactory.fromSpeciesName(saved.speciesName)
-            : CompanionRegistry.findById(saved.speciesName);
+            : com.perso.T4C.mirror.MirrorTrials.ECHO_COMPANION_ID.equals(saved.speciesName)
+                    && com.perso.T4C.mirror.MirrorTrials.hasBoundEcho(player)
+                ? com.perso.T4C.mirror.MirrorTrials.echoCompanion(player)
+                : CompanionRegistry.findById(saved.speciesName);
     if (def == null) {
       log.warn("Persisted companion {} no longer exists", saved.speciesName);
       return;
@@ -3474,6 +3514,10 @@ public class MainGameScreen implements Screen {
     player.setWitnessCountSupplier(this::countSneakWitnesses);
     player.setDeathCallback(
         pvpDeath -> {
+          if (!pvpDeath && com.perso.T4C.monster.EchoOfSelf.isActive()) {
+            handleMirrorTrialDeath();
+            return;
+          }
           Vector2 deathPosition = player.getPositionVector().cpy();
           DeathPenaltyService.Result penalties =
               deathPenaltyService.apply(player, pvpDeath, xpCurve, ThreadLocalRandom.current());
@@ -3499,6 +3543,19 @@ public class MainGameScreen implements Screen {
                   "message.player_died", penalties.xpLost(), penalties.droppedItems().size()));
           savePlayerState();
         });
+  }
+
+  /**
+   * T4C-0042: falling to your own Echo is a lesson, not a death. No XP or item loss and no corpse;
+   * the player wakes where they stand with half their life, and the Echo fades.
+   */
+  private void handleMirrorTrialDeath() {
+    com.perso.T4C.monster.EchoOfSelf.onMakerFell();
+    clearCurrentAttackTarget();
+    player.respawnAfterDeath();
+    showSystemMessage(
+        com.perso.T4C.mirror.MirrorTrials.line("mirror.player_fell", player, 0));
+    savePlayerState();
   }
 
   private ObjectRenderer.RenderItem addEntityRenderItem(

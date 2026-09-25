@@ -15,6 +15,31 @@ on, every content/feature pass adds its own entry here as part of the work
 
 _Nothing pending._
 
+## 2026-09-25 — The Mirror of Echoes (T4C-0042)
+
+### Added
+- **Ysmera the Mirrorwarden** now stands in the Colosseum beside a very old mirror. Every life
+  you shed when you're reborn leaves an echo in its glass, and she will let you face yours.
+- **Your Echo** steps out of the mirror looking exactly like you: your face, your armor, your
+  weapon, your wings, your name. It fights at your level with your own combat skill and dodge.
+  Warriors face their own blade, archers their own bow, and mages watch their own strongest
+  attack spell come flying back at them.
+- The Echo talks to you while you fight, and it knows you: your level, how many times you've
+  been reborn, how much gold you're carrying, and the kind of fighter you are.
+- **Ten trials.** Each Echo is stronger than the last (up to twice as dangerous by the tenth).
+  The first win of each trial pays experience (a share of your current level) and gold, growing
+  with every trial. Say "trials" to Ysmera to see how far you've come.
+- The fight is fair for everyone: the Echo's blows are measured against your own health, and it
+  sizes its own health to how hard you hit, so a level-20 archer and a level-400 archmage face
+  the same kind of battle.
+- **Falling to your Echo costs nothing.** You wake on the spot with half your health, no lost
+  experience, no dropped items. The Echo fades. Walking away or stalling for too long also makes
+  it fade.
+- **Win all ten trials and your Echo is bound to you.** Say "call" to Ysmera and it joins you as
+  a companion, dressed in whatever you're wearing at the time, healing you and casting your own
+  signature spell.
+- The first time you log in after this update, listen carefully.
+
 ## 2026-09-25 — F2 is free for your macros (T4C-0041)
 
 ### Changed

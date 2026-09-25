@@ -562,3 +562,40 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   (coordinates). Prefer F12 or a modifier combination over another free F-key, because players
   use those for macros.
 
+
+## 9. The Mirror of Echoes (T4C-0042)
+
+A boss built from the player instead of a stat table. Every number below was Claude's call when
+the owner asked for an unprompted "surprise"; the owner can overrule any of them.
+
+- **Where:** Ysmera the Mirrorwarden (`npc/MirrorwardenYsmera`) stands in the Colosseum
+  (1736, 1840, worldZ 0; fast travel "Colosseum"). "echo" summons the Echo, "trials" reports
+  progress, "call" brings the bound Echo as a companion. Rules live in `mirror/MirrorTrials`;
+  the monster is `monster/EchoOfSelf`.
+- **The Echo copies its maker when it first updates:** paperdoll (the player's own part map,
+  tinted pale blue), name ("Echo of <name>"), level, attack or archery skill, agility, dodge.
+  Casters (by dominant stat) throw their highest-level known attack spell at range; bow users
+  shoot at range; everyone else melees. It has no AC and no kill XP.
+- **Scale to the player, not to a tier table.** A hit lands for 6–10% of the maker's max HP
+  times the trial multiplier `1 + 0.12 × (trial − 1)` (2.08 at trial 10). Physical hits add the
+  maker's AC to the raw roll so armor can't erase them; light spells are pre-scaled by the
+  5000 light-resist baseline. Its health is the strongest of the maker's first five blows times
+  `14 + 2 × trial` (provisional 4 × maker max HP before the first blow). Keep any future
+  "fight yourself" content on this rule: difficulty must not depend on how extreme a character's
+  numbers are.
+- **Rewards (first win of each trial only):** XP = `(0.25 + 0.05 × (trial − 1))` × the XP the
+  current level still needs (none at the cap); gold = `level × 250 × trial`, capped at the
+  1,500,000 endgame quest ceiling (section 7). Rematches after all ten pay `level × 100` gold.
+  Winning trial 10 binds the Echo companion (id `mirror_echo`, rebuilt from the player's current
+  look on every call and on load, since the companion save only stores the id).
+- **Falling to an Echo is free:** no XP/item loss or corpse; the player wakes in place at half
+  HP and the Echo fades. It also fades (paying nothing) past 22 tiles or after 8 minutes.
+  Instant-kill effects only wound it (at most 10% of its health). **Open gap:** the free fall
+  applies to any non-PvP death while an Echo is alive, so another monster landing the killing
+  blow during a trial is also free - at most once per summon, since the Echo fades on the fall.
+- **Progress is plain quest flags** (`mirror.tier`, `mirror.challenge`, `mirror.victories`,
+  `mirror.falls`, `mirror.whisper`), so no save-format change. `mirror.whisper` gates a one-time
+  login message pointing new and returning players to the Colosseum.
+- **Reference website:** Ysmera is listed with the new NPCs. The Echo is deliberately *not*
+  added to the monster list: its stats only exist relative to a player, so any static row would
+  be misleading.
