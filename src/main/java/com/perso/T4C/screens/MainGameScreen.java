@@ -4049,7 +4049,7 @@ public class MainGameScreen implements Screen {
                     || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
                 && !GuiManager.isOpen()
                 && !isTextInputActive()) {
-              GuiManager.open(new com.perso.T4C.gui.screen.MacrosScreen());
+              GuiManager.open(new com.perso.T4C.gui.screen.MacrosScreen(player));
               return true;
             }
             if (!GuiManager.isOpen() && !isTextInputActive() && tryFireMacro(keycode)) {

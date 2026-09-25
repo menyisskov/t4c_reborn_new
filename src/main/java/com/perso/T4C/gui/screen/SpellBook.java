@@ -21,6 +21,7 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.model.QuickSlotEntry;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.spell.SpellEffectManager;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.PlayerHUD;
@@ -73,6 +74,8 @@ public class SpellBook extends GuiScreenBase {
   private static final float MACRO_BTN_W = 20f;
   private static final float MACRO_BTN_H = 16f;
   private final List<SpellBookEntry> spells = new ArrayList<>();
+  private final com.badlogic.gdx.graphics.g2d.GlyphLayout hintLayout =
+      new com.badlogic.gdx.graphics.g2d.GlyphLayout();
   private int currentPage = 0;
   private SpellBookEntry draggedSpell;
   private TextureRegion draggedIcon;
@@ -218,8 +221,7 @@ public class SpellBook extends GuiScreenBase {
         spell.getAttackType() == SpellData.ATTACK_MENTAL
             ? I18n.key("ui.spell_type.mental")
             : I18n.key("ui.spell_type.physical");
-    String durationValue = spell.getDuration();
-    String duration = durationValue == null || durationValue.isEmpty() ? "instant" : durationValue;
+    String duration = formatDuration(spell);
     String level = String.valueOf(spell.getMinLevel());
     float topY = slotIndex < 2 ? TEXT_TOP_Y_UPPER : TEXT_TOP_Y_LOWER;
     addPageBox(
@@ -357,17 +359,75 @@ public class SpellBook extends GuiScreenBase {
   private void turnPage(int delta) {
     int maxPage = spells.isEmpty() ? 0 : (spells.size() - 1) / 4;
     int next = Math.max(0, Math.min(maxPage, currentPage + delta));
-    SoundManager.animateSound("Page turning sound.wav");
     if (next == currentPage) {
       return;
     }
+    SoundManager.animateSound("Page turning sound.wav");
     currentPage = next;
     rebuildPage();
+  }
+
+  /** The spell's duration for this character, as a player would say it ("45 s", "5 min"). */
+  private String formatDuration(SpellData spell) {
+    int seconds = player == null ? 0 : new SpellEffectManager().resolveDurationSeconds(spell, player);
+    return formatSeconds(seconds);
+  }
+
+  static String formatSeconds(int seconds) {
+    if (seconds <= 0) return I18n.key("ui.spell_duration.instant");
+    if (seconds < 60) return seconds + " s";
+    if (seconds < 3600) {
+      int minutes = seconds / 60;
+      int rest = seconds % 60;
+      return rest == 0 ? minutes + " min" : minutes + " min " + rest + " s";
+    }
+    int hours = seconds / 3600;
+    int minutes = (seconds % 3600) / 60;
+    return minutes == 0 ? hours + " h" : hours + " h " + minutes + " min";
+  }
+
+  private int pageCount() {
+    return Math.max(1, (spells.size() + 3) / 4);
+  }
+
+  /** The spell whose "+"/"-" macro button is under the mouse, for the hint line. */
+  private String hoveredMacroSpell() {
+    float mx = Gdx.input.getX();
+    float my = Gdx.input.getY();
+    int start = currentPage * 4;
+    for (int i = 0; i < 4 && start + i < spells.size(); i++) {
+      float topY = y + SLOT_POSITIONS[i][1] + (i < 2 ? TEXT_TOP_Y_UPPER : TEXT_TOP_Y_LOWER);
+      float bx = x + SLOT_POSITIONS[i][0] + MACRO_BTN_DX;
+      float by = topY + NAME_DY + MACRO_BTN_DY;
+      if (mx >= bx && mx <= bx + MACRO_BTN_W && my >= by && my <= by + MACRO_BTN_H) {
+        return spells.get(start + i).quickSlotSpellName;
+      }
+    }
+    return null;
   }
 
   @Override
   public void render(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
     super.render(batch);
+    if (background != null) {
+      // Status line in the dark band above the pages: page number and what the controls do.
+      String macroSpell = hoveredMacroSpell();
+      String hint;
+      if (spells.isEmpty()) {
+        hint = I18n.key("ui.spellbook.empty");
+      } else if (macroSpell != null) {
+        hint = I18n.key(isMacro(macroSpell) ? "ui.spellbook.remove_macro" : "ui.spellbook.add_macro");
+      } else {
+        hint =
+            I18n.message(
+                "ui.spellbook.status",
+                String.valueOf(currentPage + 1),
+                String.valueOf(pageCount()));
+      }
+      var font = FontManager.getInstance().getJetBrainsMonoFont(11, Color.valueOf("E6D8BC"));
+      hintLayout.setText(font, hint);
+      font.draw(batch, hintLayout, x + 288f - hintLayout.width / 2f, y + 31f);
+    }
     if (draggedSpell != null && draggedIcon != null) {
       float w = draggedIcon.getRegionWidth();
       float h = draggedIcon.getRegionHeight();
@@ -428,9 +488,18 @@ public class SpellBook extends GuiScreenBase {
   }
 
   @Override
+  public void onScroll(float amountY, float screenX, float screenY) {
+    turnPage(amountY > 0 ? 1 : -1);
+  }
+
+  @Override
   public boolean onKeyDown(int keycode) {
     if (keycode == com.badlogic.gdx.Input.Keys.ESCAPE) {
       GuiManager.close();
+      return true;
+    }
+    if (keycode == Input.Keys.PAGE_DOWN || keycode == Input.Keys.PAGE_UP) {
+      turnPage(keycode == Input.Keys.PAGE_DOWN ? 1 : -1);
       return true;
     }
     return super.onKeyDown(keycode);

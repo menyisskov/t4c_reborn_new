@@ -544,4 +544,16 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - **Debug keys need a modifier.** A bare letter key must never trigger a developer action; the
   old bare-R "reload map graphics" is now Ctrl+Shift+R. Holding Ctrl suppresses walking, so
   Ctrl+letter window shortcuts never also move the character.
+- **Hide unused decorations in the original art at the window's own transparency.** A screen
+  that doesn't use some part of the original art (the quest journal's three reward squares, the
+  macro window's six circles) must hide it with `GuiDraw.drawOverlayWithPatch`. That helper draws
+  the background with that rectangle filled from plain stone elsewhere in the same art, all at
+  the overlay alpha. An opaque patch drawn on top stands out whenever "Transparent Interface" is
+  on, which it is by default (75%).
+- **Selecting and acting are separate steps in list windows** (T4C-0040). A single click selects
+  and shows details. The action (Travel, Bind) happens on a button, a double-click or Enter, so a
+  stray click never teleports the player or rebinds a key.
+- **Show numbers the way players say them.** Durations are converted to "45 s" or "5 min" for the
+  current character (`SpellEffectManager.resolveDurationSeconds`), never shown as raw
+  milliseconds or formulas.
 
