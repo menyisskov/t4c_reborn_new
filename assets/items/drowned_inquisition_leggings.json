@@ -1,0 +1,64 @@
+{
+  "key": "drowned_inquisition_leggings",
+  "name": "Drowned Inquisition Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 16.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 200,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 180,
+    "wisdom": 45,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20793,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 20794,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 20795,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 20796,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 20797,
+      "statId": 22,
+      "expression": "19"
+    },
+    {
+      "boostId": 20798,
+      "statId": 18,
+      "expression": "7"
+    },
+    {
+      "boostId": 20799,
+      "statId": 1,
+      "expression": "7"
+    }
+  ]
+}

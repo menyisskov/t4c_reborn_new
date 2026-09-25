@@ -222,6 +222,13 @@ ad hoc numbers:
   the numbers internally consistent and the `boostId` counter contiguous), or replicate this
   same proportional-split math by hand for a one-off set if running the generator isn't
   practical.
+- A single named set (one flavor, its own key prefix and piece names, optional doubled theme
+  resistance and an archer quiver piece) goes in the generator's `THEMED_SETS` list - see the
+  Centaur Slaying, Drowned Inquisition and Cinderforged sets. Append new entries at the end so
+  existing pieces keep their boost ids (re-running must leave every existing file unchanged), and
+  add the new key prefix to `ItemBalance.GENERATED_SET_PREFIXES`: that is what exempts set pieces
+  from the single-item budget check, reserves them the 20000-29999 boost ids, and makes
+  `ArmorSetLootCoverageTest` demand a monster drop for every piece.
 
 **Be honest about set bonuses:** there is **no runtime "wear N of 6 pieces → bonus" mechanic**.
 `EquipmentBonusRules.java` sums boosts strictly per equipped item; the generator only pre-splits

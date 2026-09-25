@@ -1,0 +1,71 @@
+{
+  "key": "centaur_slaying_gauntlets",
+  "name": "Gauntlets of Centaur Slaying",
+  "bodyPart": "LEFT_HAND",
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL",
+  "appearanceEquippedSecondary": "PupPlateGloveR",
+  "appearanceInventory": "64kInvPlateGlove",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 39.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 500,
+    "strength": 0,
+    "agility": 600,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 263,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20724,
+      "statId": 12,
+      "expression": "35"
+    },
+    {
+      "boostId": 20725,
+      "statId": 13,
+      "expression": "35"
+    },
+    {
+      "boostId": 20726,
+      "statId": 14,
+      "expression": "35"
+    },
+    {
+      "boostId": 20727,
+      "statId": 15,
+      "expression": "35"
+    },
+    {
+      "boostId": 20728,
+      "statId": 22,
+      "expression": "35"
+    },
+    {
+      "boostId": 20729,
+      "statId": 6,
+      "expression": "17"
+    },
+    {
+      "boostId": 20730,
+      "statId": 10035,
+      "expression": "40"
+    },
+    {
+      "boostId": 20731,
+      "statId": 2,
+      "expression": "9"
+    }
+  ]
+}

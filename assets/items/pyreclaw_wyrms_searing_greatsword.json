@@ -1,0 +1,66 @@
+{
+  "key": "pyreclaw_wyrms_searing_greatsword",
+  "name": "Pyreclaw Wyrm's Searing Greatsword",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupBattleSword",
+  "appearanceInventory": "64kInvBattleSword",
+  "price": 0,
+  "weight": 8,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 950,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 1500.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d400+370",
+  "atkDelay": "1500",
+  "boosts": [
+    {
+      "boostId": 36600,
+      "statId": 3,
+      "expression": "79"
+    },
+    {
+      "boostId": 36601,
+      "statId": 8,
+      "expression": "190"
+    },
+    {
+      "boostId": 36602,
+      "statId": 12,
+      "expression": "24"
+    },
+    {
+      "boostId": 36603,
+      "statId": 13,
+      "expression": "48"
+    },
+    {
+      "boostId": 36604,
+      "statId": 14,
+      "expression": "24"
+    },
+    {
+      "boostId": 36605,
+      "statId": 15,
+      "expression": "24"
+    },
+    {
+      "boostId": 36606,
+      "statId": 22,
+      "expression": "24"
+    }
+  ]
+}

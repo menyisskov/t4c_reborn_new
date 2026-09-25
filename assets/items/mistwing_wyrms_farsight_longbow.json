@@ -1,0 +1,66 @@
+{
+  "key": "mistwing_wyrms_farsight_longbow",
+  "name": "Mistwing Wyrm's Farsight Longbow",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 0,
+  "weight": 6,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 950,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 900.0,
+  "unique": true,
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d220+420+4*arrow_dmg",
+  "atkDelay": "900",
+  "boosts": [
+    {
+      "boostId": 36621,
+      "statId": 6,
+      "expression": "79"
+    },
+    {
+      "boostId": 36622,
+      "statId": 10035,
+      "expression": "190"
+    },
+    {
+      "boostId": 36623,
+      "statId": 12,
+      "expression": "24"
+    },
+    {
+      "boostId": 36624,
+      "statId": 13,
+      "expression": "24"
+    },
+    {
+      "boostId": 36625,
+      "statId": 14,
+      "expression": "48"
+    },
+    {
+      "boostId": 36626,
+      "statId": 15,
+      "expression": "24"
+    },
+    {
+      "boostId": 36627,
+      "statId": 22,
+      "expression": "24"
+    }
+  ]
+}

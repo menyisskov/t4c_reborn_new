@@ -1,0 +1,64 @@
+{
+  "key": "cinderforged_leggings",
+  "name": "Cinderforged Leggings",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs",
+  "appearanceInventory": "64kInvPlateArmorLegs",
+  "price": 0,
+  "weight": 5,
+  "armorClass": 23.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 280,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 240,
+    "wisdom": 60,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 266,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20835,
+      "statId": 12,
+      "expression": "21"
+    },
+    {
+      "boostId": 20836,
+      "statId": 13,
+      "expression": "28"
+    },
+    {
+      "boostId": 20837,
+      "statId": 14,
+      "expression": "21"
+    },
+    {
+      "boostId": 20838,
+      "statId": 15,
+      "expression": "21"
+    },
+    {
+      "boostId": 20839,
+      "statId": 22,
+      "expression": "21"
+    },
+    {
+      "boostId": 20840,
+      "statId": 17,
+      "expression": "10"
+    },
+    {
+      "boostId": 20841,
+      "statId": 1,
+      "expression": "10"
+    }
+  ]
+}

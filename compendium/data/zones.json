@@ -8,7 +8,7 @@
     "worldmapCenter": { "x": 1750, "y": 2300, "radius": 140 },
     "summary": "A flooded cult shrine on the coast east of Silversky. A drowned priesthood has been dragging locals under since the tide \"woke\" their chancel.",
     "monsters": ["Drowned Acolyte", "Tideclaw Crab", "Mordrenn the Drowned Inquisitor"],
-    "items": ["mordrenns_drowned_cowl", "tideclaw_band", "acolytes_tarnished_locket", "sunken_vestment"],
+    "items": ["mordrenns_drowned_cowl", "tideclaw_band", "acolytes_tarnished_locket", "sunken_vestment", "drowned_inquisition_armor", "drowned_inquisition_boots", "drowned_inquisition_gauntlets", "drowned_inquisition_helmet", "drowned_inquisition_leggings", "drowned_inquisition_protector"],
     "spells": ["spell.riptide_surge", "spell.drowned_ward"],
     "quests": ["silversky_tide_warden", "silversky_borderwatch"],
     "npcs": ["TideWardenBryn", "SentinelCorwin"]
@@ -22,7 +22,7 @@
     "worldmapCenter": { "x": 1900, "y": 1600, "radius": 140 },
     "summary": "Smoldering foothills southeast of Windhowl, home to a fire-wolf pack and the young drake they answer to.",
     "monsters": ["Cinder Whelp", "Ashfang Stalker", "Ignarok the Emberfang"],
-    "items": ["cinderwrought_sash", "ignaroks_emberfang_claw"],
+    "items": ["cinderwrought_sash", "ignaroks_emberfang_claw", "cinderforged_armor", "cinderforged_boots", "cinderforged_gauntlets", "cinderforged_helmet", "cinderforged_leggings", "cinderforged_protector"],
     "spells": ["spell.cinderburst", "spell.emberheart_resolve"],
     "quests": ["emberfang_hills_bounty", "windhowl_borderwatch"],
     "npcs": ["RurikCinderwatch", "OutriderHalvard"]
@@ -36,7 +36,7 @@
     "worldmapCenter": { "x": 2380, "y": 2430, "radius": 140 },
     "summary": "Open marchland held by a centaur warband, the entrance province of Kraanhold — a new continent painted for T4C-0024, reached by sea from the mainland. Centaur Warrior and Centaur King existed as barely-authored placeholder stubs before T4C-0005 gave them real stats.",
     "monsters": ["Centaur Warrior", "Centaur King"],
-    "items": ["centaur_warband_ring", "marchwardens_crown", "bow_of_centaur_slaying"],
+    "items": ["centaur_warband_ring", "marchwardens_crown", "bow_of_centaur_slaying", "centaur_slaying_armor", "centaur_slaying_boots", "centaur_slaying_gauntlets", "centaur_slaying_helmet", "centaur_slaying_leggings", "centaur_slaying_protector", "centaur_slaying_quiver"],
     "spells": [],
     "quests": ["windhowl_marches_centaurs", "passage_to_kraanhold"],
     "npcs": ["MarshalTorrhen", "DockmasterThessaly"]
@@ -90,9 +90,9 @@
     "levelRange": "750–1000",
     "biome": "Mountain lair",
     "worldmapCenter": { "x": 2850, "y": 2780, "radius": 180 },
-    "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one. The Rootcrown Wyrm (T4C-0029), an Elder Wyrm predating the named Drake line, was added to the same lair.",
-    "monsters": ["Kraanian Dragonguard", "Arch Drake", "The Rootcrown Wyrm"],
-    "items": ["dragonguards_scale_bracer", "archdrakes_molten_heart", "rootcrown_wyrms_verdant_sceptre", "rootcrown_wyrms_ageless_mantle", "rootcrown_wyrms_timeless_circlet"],
+    "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one. The Rootcrown Wyrm (T4C-0029), an Elder Wyrm predating the named Drake line, was added to the same lair, later joined by the other four Elder Wyrms (the Pyreclaw, Mistwing, Duskmaw and Galecrest Wyrms), one per class.",
+    "monsters": ["Kraanian Dragonguard", "Arch Drake", "The Rootcrown Wyrm", "The Pyreclaw Wyrm", "The Mistwing Wyrm", "The Duskmaw Wyrm", "The Galecrest Wyrm"],
+    "items": ["dragonguards_scale_bracer", "archdrakes_molten_heart", "rootcrown_wyrms_verdant_sceptre", "rootcrown_wyrms_ageless_mantle", "rootcrown_wyrms_timeless_circlet", "pyreclaw_wyrms_searing_greatsword", "pyreclaw_wyrms_molten_warhelm", "pyreclaw_wyrms_forgeplate_gauntlets", "mistwing_wyrms_farsight_longbow", "mistwing_wyrms_rainveil_mantle", "mistwing_wyrms_fogstride_boots", "duskmaw_wyrms_umbral_rod", "duskmaw_wyrms_nightshroud_mantle", "duskmaw_wyrms_eclipsed_crown", "galecrest_wyrms_tempest_wand", "galecrest_wyrms_windswept_mantle", "galecrest_wyrms_thunderhead_circlet"],
     "spells": [],
     "quests": ["drakes_lair_vigil"],
     "npcs": ["OutriderKaelis"]

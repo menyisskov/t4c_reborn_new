@@ -1,0 +1,69 @@
+{
+  "key": "galecrest_wyrms_windswept_mantle",
+  "name": "Galecrest Wyrm's Windswept Mantle",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "NMS_NewCape01__pal6",
+  "appearanceInventory": "Inv_NMS_NewCape01__pal6",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 48.6,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 595,
+    "wisdom": 595,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36671,
+      "statId": 1,
+      "expression": "40"
+    },
+    {
+      "boostId": 36672,
+      "statId": 4,
+      "expression": "40"
+    },
+    {
+      "boostId": 36673,
+      "statId": 16,
+      "expression": "95"
+    },
+    {
+      "boostId": 36674,
+      "statId": 12,
+      "expression": "38"
+    },
+    {
+      "boostId": 36675,
+      "statId": 13,
+      "expression": "38"
+    },
+    {
+      "boostId": 36676,
+      "statId": 14,
+      "expression": "38"
+    },
+    {
+      "boostId": 36677,
+      "statId": 15,
+      "expression": "38"
+    },
+    {
+      "boostId": 36678,
+      "statId": 22,
+      "expression": "38"
+    }
+  ]
+}

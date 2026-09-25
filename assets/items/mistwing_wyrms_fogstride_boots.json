@@ -1,0 +1,64 @@
+{
+  "key": "mistwing_wyrms_fogstride_boots",
+  "name": "Mistwing Wyrm's Fogstride Boots",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot",
+  "appearanceInventory": "64kInvPlateArmorFeet",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 47.3,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 0,
+    "agility": 950,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36635,
+      "statId": 6,
+      "expression": "79"
+    },
+    {
+      "boostId": 36636,
+      "statId": 10035,
+      "expression": "190"
+    },
+    {
+      "boostId": 36637,
+      "statId": 12,
+      "expression": "24"
+    },
+    {
+      "boostId": 36638,
+      "statId": 13,
+      "expression": "24"
+    },
+    {
+      "boostId": 36639,
+      "statId": 14,
+      "expression": "48"
+    },
+    {
+      "boostId": 36640,
+      "statId": 15,
+      "expression": "24"
+    },
+    {
+      "boostId": 36641,
+      "statId": 22,
+      "expression": "24"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "key": "pyreclaw_wyrms_forgeplate_gauntlets",
+  "name": "Pyreclaw Wyrm's Forgeplate Gauntlets",
+  "bodyPart": "LEFT_HAND",
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL",
+  "appearanceEquippedSecondary": "PupPlateGloveR",
+  "appearanceInventory": "64kInvPlateGlove",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 61.2,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 950,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36614,
+      "statId": 3,
+      "expression": "79"
+    },
+    {
+      "boostId": 36615,
+      "statId": 8,
+      "expression": "190"
+    },
+    {
+      "boostId": 36616,
+      "statId": 12,
+      "expression": "24"
+    },
+    {
+      "boostId": 36617,
+      "statId": 13,
+      "expression": "48"
+    },
+    {
+      "boostId": 36618,
+      "statId": 14,
+      "expression": "24"
+    },
+    {
+      "boostId": 36619,
+      "statId": 15,
+      "expression": "24"
+    },
+    {
+      "boostId": 36620,
+      "statId": 22,
+      "expression": "24"
+    }
+  ]
+}

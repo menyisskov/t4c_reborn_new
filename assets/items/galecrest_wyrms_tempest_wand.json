@@ -1,0 +1,71 @@
+{
+  "key": "galecrest_wyrms_tempest_wand",
+  "name": "Galecrest Wyrm's Tempest Wand",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupWoodenStaff",
+  "appearanceInventory": "64kInvWoodenStaff",
+  "price": 0,
+  "weight": 4,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 595,
+    "wisdom": 595,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d40+60",
+  "atkDelay": "1300",
+  "boosts": [
+    {
+      "boostId": 36663,
+      "statId": 1,
+      "expression": "40"
+    },
+    {
+      "boostId": 36664,
+      "statId": 4,
+      "expression": "40"
+    },
+    {
+      "boostId": 36665,
+      "statId": 16,
+      "expression": "95"
+    },
+    {
+      "boostId": 36666,
+      "statId": 12,
+      "expression": "38"
+    },
+    {
+      "boostId": 36667,
+      "statId": 13,
+      "expression": "38"
+    },
+    {
+      "boostId": 36668,
+      "statId": 14,
+      "expression": "38"
+    },
+    {
+      "boostId": 36669,
+      "statId": 15,
+      "expression": "38"
+    },
+    {
+      "boostId": 36670,
+      "statId": 22,
+      "expression": "38"
+    }
+  ]
+}

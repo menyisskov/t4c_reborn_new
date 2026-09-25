@@ -1,0 +1,66 @@
+{
+  "key": "cinderforged_gauntlets",
+  "name": "Cinderforged Gauntlets",
+  "bodyPart": "LEFT_HAND",
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL",
+  "appearanceEquippedSecondary": "PupPlateGloveR",
+  "appearanceInventory": "64kInvPlateGlove",
+  "price": 0,
+  "weight": 3,
+  "armorClass": 20.8,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 280,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 240,
+    "wisdom": 60,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 263,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20821,
+      "statId": 12,
+      "expression": "20"
+    },
+    {
+      "boostId": 20822,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 20823,
+      "statId": 14,
+      "expression": "20"
+    },
+    {
+      "boostId": 20824,
+      "statId": 15,
+      "expression": "20"
+    },
+    {
+      "boostId": 20825,
+      "statId": 22,
+      "expression": "20"
+    },
+    {
+      "boostId": 20826,
+      "statId": 17,
+      "expression": "9"
+    },
+    {
+      "boostId": 20827,
+      "statId": 1,
+      "expression": "9"
+    }
+  ]
+}

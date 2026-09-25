@@ -1,0 +1,63 @@
+{
+  "key": "cinderforged_protector",
+  "name": "Cinderforged Girdle",
+  "bodyPart": "BELT",
+  "appearanceInventory": "64kInvBelt",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 15.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 280,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 240,
+    "wisdom": 60,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 235,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 20842,
+      "statId": 12,
+      "expression": "5"
+    },
+    {
+      "boostId": 20843,
+      "statId": 13,
+      "expression": "9"
+    },
+    {
+      "boostId": 20844,
+      "statId": 14,
+      "expression": "5"
+    },
+    {
+      "boostId": 20845,
+      "statId": 15,
+      "expression": "5"
+    },
+    {
+      "boostId": 20846,
+      "statId": 22,
+      "expression": "5"
+    },
+    {
+      "boostId": 20847,
+      "statId": 17,
+      "expression": "7"
+    },
+    {
+      "boostId": 20848,
+      "statId": 1,
+      "expression": "7"
+    }
+  ]
+}

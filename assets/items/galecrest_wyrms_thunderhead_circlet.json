@@ -1,0 +1,69 @@
+{
+  "key": "galecrest_wyrms_thunderhead_circlet",
+  "name": "Galecrest Wyrm's Thunderhead Circlet",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm",
+  "appearanceInventory": "64kInvPlateArmorHelm",
+  "price": 0,
+  "weight": 2,
+  "armorClass": 48.3,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 600,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 595,
+    "wisdom": 595,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36679,
+      "statId": 1,
+      "expression": "40"
+    },
+    {
+      "boostId": 36680,
+      "statId": 4,
+      "expression": "40"
+    },
+    {
+      "boostId": 36681,
+      "statId": 16,
+      "expression": "95"
+    },
+    {
+      "boostId": 36682,
+      "statId": 12,
+      "expression": "38"
+    },
+    {
+      "boostId": 36683,
+      "statId": 13,
+      "expression": "38"
+    },
+    {
+      "boostId": 36684,
+      "statId": 14,
+      "expression": "38"
+    },
+    {
+      "boostId": 36685,
+      "statId": 15,
+      "expression": "38"
+    },
+    {
+      "boostId": 36686,
+      "statId": 22,
+      "expression": "38"
+    }
+  ]
+}
