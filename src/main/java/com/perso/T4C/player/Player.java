@@ -129,6 +129,8 @@ public class Player extends Stats {
   @Getter private List<Double> inventoryDurability = new ArrayList<>();
   @Getter private Map<BodyPart, Double> equippedDurability = new HashMap<>();
   @Getter private List<String> storage = new ArrayList<>();
+  @Getter private List<Double> storageDurability = new ArrayList<>();
+  @Getter private List<Integer> storageCharges = new ArrayList<>();
   @Getter private int storageGold = 0;
 
   public Player(Object... parts) throws GameException {
@@ -208,6 +210,16 @@ public class Player extends Stats {
 
   public void setStorage(List<String> storage) {
     this.storage = storage == null ? new ArrayList<>() : new ArrayList<>(storage);
+    this.storageDurability = new ArrayList<>();
+    this.storageCharges = new ArrayList<>();
+  }
+
+  public void setStorageDurability(List<Double> durability) {
+    this.storageDurability = durability == null ? new ArrayList<>() : new ArrayList<>(durability);
+  }
+
+  public void setStorageCharges(List<Integer> charges) {
+    this.storageCharges = charges == null ? new ArrayList<>() : new ArrayList<>(charges);
   }
 
   public void setStorageGold(int storageGold) {

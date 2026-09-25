@@ -38,6 +38,10 @@ public class PlayerStateDto {
   public Map<String, Integer> itemCharges;
   public List<Double> inventoryDurability;
   public Map<String, Double> equipmentDurability;
+  public List<String> storage;
+  public List<Double> storageDurability;
+  public List<Integer> storageCharges;
+  public int storageGold;
   public Map<String, Integer> questFlags;
   public boolean respawnPointDefined;
   public float respawnWorldX;

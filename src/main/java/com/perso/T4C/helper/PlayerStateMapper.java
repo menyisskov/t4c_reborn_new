@@ -54,6 +54,11 @@ public final class PlayerStateMapper {
     com.perso.T4C.item.ItemDurabilityService.synchronize(player);
     state.inventoryDurability = new ArrayList<>(player.getInventoryDurability());
     state.equipmentDurability = toEquipmentDurabilityMap(player);
+    com.perso.T4C.item.StorageService.synchronize(player);
+    state.storage = new ArrayList<>(player.getStorage());
+    state.storageDurability = new ArrayList<>(player.getStorageDurability());
+    state.storageCharges = new ArrayList<>(player.getStorageCharges());
+    state.storageGold = player.getStorageGold();
     state.questFlags = new HashMap<>(player.getQuestFlags());
     state.respawnPointDefined = player.isRespawnPointDefined();
     state.respawnWorldX = player.getRespawnWorldX();
@@ -107,6 +112,11 @@ public final class PlayerStateMapper {
     player.setItemCharges(state.itemCharges);
     player.setInventoryDurability(state.inventoryDurability);
     player.setEquippedDurability(toEquippedDurability(state));
+    player.setStorage(state.storage);
+    player.setStorageDurability(state.storageDurability);
+    player.setStorageCharges(state.storageCharges);
+    com.perso.T4C.item.StorageService.synchronize(player);
+    player.setStorageGold(state.storageGold);
     player.setQuestFlags(state.questFlags);
     if (state.respawnPointDefined) {
       player.setRespawnPoint(state.respawnWorldX, state.respawnWorldY, state.respawnWorldZ);
