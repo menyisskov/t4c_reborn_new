@@ -29,6 +29,8 @@ public final class BindTheGodsigil {
         "item.veiled_aether_shard",
         5,
         null,
-        "item.bound_godsigil");
+        "item.bound_godsigil",
+        0,
+        "${quest.bind_the_godsigil.walkthrough}");
   }
 }

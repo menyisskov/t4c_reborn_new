@@ -123,7 +123,7 @@
     "monsters": ["Tideworn Reaver", "Coastwarden Ithrak"],
     "items": ["tideworn_avalon_chart"],
     "spells": [],
-    "quests": ["passage_to_avalon"],
+    "quests": ["tideworn_shore_scouts", "passage_to_avalon"],
     "npcs": ["HarbormasterRangor"]
   },
   {

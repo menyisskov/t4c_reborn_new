@@ -609,6 +609,7 @@ public final class CompendiumExporter {
       m.put("offerText", I18n.resolve(q.getOfferText()));
       m.put("completionText", I18n.resolve(q.getCompletionText()));
       m.put("completedText", I18n.resolve(q.getCompletedText()));
+      m.put("walkthroughText", q.getWalkthroughText() == null ? null : I18n.resolve(q.getWalkthroughText()));
       out.add(m);
     }
     return out;
