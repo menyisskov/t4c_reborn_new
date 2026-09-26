@@ -117,6 +117,13 @@ that now guards against it.
 - A skill's example script hard-coded this container's checkout path (`/home/user/...`), which
   breaks in any other checkout. Docs and skills derive paths
   (`git rev-parse --show-toplevel`) instead of copying them.
+- Player-facing prose drifted from the code it described: ten quest walkthroughs called a
+  *required* item (consumed on turn-in) a reward, and named the boss carrying it as optional.
+  Prose is now fact-checked against the definition, not against neighbouring prose — see the
+  `technical-writer` skill's fact-check pass.
+- A field existing on a definition but never exported means the site cannot show it, and the
+  prose starts compensating with something untrue (`rewardItemKey`). When a page can't state a
+  fact, fix the exporter rather than writing around it.
 
 ## Other project docs worth knowing about
 
@@ -128,8 +135,9 @@ that now guards against it.
   `graphic-designer`) for building new content, and workflow skills:
   `balance-change` (changing caps/formulas/displayed numbers safely),
   `ship-pr` (self-review → PR → Codex → merge → cleanup), `verify-website`
-  (regenerate, render-check and confirm the live compendium), and
-  `steward` (the merge policy `ship-pr` defers to).
+  (regenerate, render-check and confirm the live compendium),
+  `technical-writer` (the editorial standard and review gate for every word
+  a player reads), and `steward` (the merge policy `ship-pr` defers to).
 - `docs/content-ideas/` — write-ups from past content passes (research
   notes, what shipped, backlog ideas). Worth reading before starting a new
   content pass — several already-identified, canon-grounded ideas are

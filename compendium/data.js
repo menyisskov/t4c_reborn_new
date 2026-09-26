@@ -11947,7 +11947,7 @@ window.T4C_DATA = {
       "offerText": "Thin the Drowned Acolytes crawling out of the chancel east of Silversky before they drag anyone else under.",
       "completionText": "You've bled the chancel dry of its acolytes, at least for now. Silversky's coast breathes easier.",
       "completedText": "The tide's calm again, thanks to you. Mordrenn still holds the deep chancel, if you're fool enough to go looking.",
-      "walkthroughText": "Talk to Tide Warden Bryn on Silversky's coast to accept the plea. Head east to the drowned chancel around (1750, 2300) and kill 20 Drowned Acolytes - kills only count within about 140 tiles of that spot, so stay near the ruin rather than chasing stragglers back toward town. You'll also need Mordrenn's Drowned Cowl to turn in, which only drops from Mordrenn himself, holding the deeper chancel - so despite the acolyte count, he is a required kill too. Return to Bryn for 1,500 gold and 4,000 XP; the cowl is consumed on turn-in."
+      "walkthroughText": "Tide Warden Bryn has watched the drowned chancel east of Silversky empty his stretch of coast one traveller at a time, and he wants its acolytes thinned before it takes anyone else. Kill Drowned Acolytes inside the marked area - kills only count there, so work the ruin itself rather than chasing stragglers back up the road. Bryn also wants proof you got as far as the inner chancel, and that means Mordrenn the Drowned Inquisitor: his cowl is a rare drop, and you hand it over with the rest, so the Inquisitor is very much part of this job. Finishing it opens the fast road back to the Chancel whenever you want it."
     },
     {
       "id": "emberfang_hills_bounty",
@@ -11968,7 +11968,7 @@ window.T4C_DATA = {
       "offerText": "Cull the Ashfang Stalkers raiding the Cinderreach foothills south of Windhowl before their numbers swell further.",
       "completionText": "The Stalker packs are broken up, for now. Ignarok still smolders somewhere up in those hills.",
       "completedText": "The foothills are quiet again. Watch yourself if you go hunting Ignarok himself.",
-      "walkthroughText": "Rurik Cinderwatch offers this bounty from his post near Windhowl. Ride south into the Cinderreach foothills around (1900, 1600) and kill 20 Ashfang Stalkers - the 140-tile objective circle is centered on the foothills, not the road leading there. You'll also need Ignarok's Emberfang Claw to turn in, which only drops from Ignarok the Emberfang himself, prowling the same hills - so the stalker count alone isn't enough, he's a required kill too. Turn in to Rurik for 2,500 gold and 7,000 XP; the claw is consumed on turn-in."
+      "walkthroughText": "Rurik Cinderwatch posts this bounty from his camp outside Windhowl, on the reasoning that the Ashfang Stalkers coming down out of the Cinderreach foothills are somebody's problem and it may as well be yours. Ride south into the hills and kill Stalkers inside the marked circle - it sits on the foothills, not the road leading up to them. You also need Ignarok the Emberfang's claw to turn this in, and Ignarok only rarely leaves it behind, so plan on facing the drake rather than working around him. Bring everything back to Rurik and the fast road into Cinderreach opens up."
     },
     {
       "id": "silversky_borderwatch",
@@ -11988,7 +11988,7 @@ window.T4C_DATA = {
       "offerText": "Something's spooked the antelope east of town, and I won't vouch for anyone heading further out until I've seen them handle themselves. Thin the herds until they settle, then we'll talk about what's really out there.",
       "completionText": "The herds have settled and you didn't flinch doing it. Whatever's out past the coast, you're ready to see it for yourself.",
       "completedText": "You've already proven yourself out there. The coast road's yours whenever you want it.",
-      "walkthroughText": "Sentinel Corwin, at Silversky's edge, wants the antelope herds east of town thinned before he'll vouch for you further out. Kill 15 Antelope within the wide 250-tile area centered around (1461, 2407) - plenty of open ground, so you won't need to hunt far. It pays 800 gold and 2,000 XP, and - like Tide Warden Bryn's own questline - completing it also counts toward unlocking fast travel to the Sunken Chancel, so it's worth doing even if you've already fought your way there once."
+      "walkthroughText": "Sentinel Corwin will not vouch for a stranger heading further out until he has seen them work, so he starts you on the antelope herds east of Silversky. The objective area is wide and open, so you will not have to hunt far. It is a short errand with a real payoff: finishing it also opens the fast road to the Sunken Chancel, the same road Tide Warden Bryn's quest opens - worth doing even if you have already fought your way out there once."
     },
     {
       "id": "windhowl_borderwatch",
@@ -12008,7 +12008,7 @@ window.T4C_DATA = {
       "offerText": "The roads north and east are lousy with brigands again, and I won't send anyone past the marches until they've proven they can clear a road first. Break up enough of their bands and we'll talk about what's smoldering in the hills.",
       "completionText": "The roads are clear, for now, and you held your own doing it. The hills south of here are yours to find, if you're still fool enough to go looking.",
       "completedText": "You've already cleared the roads once. Nothing's stopping you from the hills now.",
-      "walkthroughText": "Outrider Halvard, watching the roads north of Windhowl, won't send you past the marches until you've proven you can clear a road. Kill 15 Brigands in the 230-tile area around (1853, 1168) - the road itself, not the hills further south. Report back for 1,200 gold and 3,000 XP; completing it also counts toward unlocking fast travel to Cinderreach Hills, a useful alternate route in if you'd rather clear brigands than stalkers."
+      "walkthroughText": "Outrider Halvard watches the roads north of Windhowl and will not send anyone past the marches who has not cleared a road first. Kill Brigands in the marked stretch - the road itself, not the hills further south. Reporting back also opens the fast road to Cinderreach Hills, so it doubles as a second way in there if you would rather fight brigands than fire-wolves."
     },
     {
       "id": "passage_to_kraanhold",
@@ -12028,7 +12028,7 @@ window.T4C_DATA = {
       "offerText": "The coast road east of here is thick with trolls, and I won't risk the crossing until it's clear. Thin their numbers and I'll take you to Kraanhold myself.",
       "completionText": "The road's clear and the trolls scattered. Kraanhold's yours to reach now - Windhowl Marches is the first stretch of it, past the shoals.",
       "completedText": "You've already cleared the road once. The crossing to Kraanhold is yours whenever you want it.",
-      "walkthroughText": "Dockmaster Thessaly, on the coast, refuses to risk the crossing to Kraanhold until the coast road is clear. Kill 12 Toll Trolls (a familiar monster, spawned in numerous spots along the coast) within 170 tiles of (1975, 2750). Completing it hands you 4,000 gold and 250,000 XP, and is the only way to unlock fast travel to the Windhowl Marches and, through it, the entire Kraanhold continent - without this quest there's no route in at all."
+      "walkthroughText": "Dockmaster Thessaly will not risk the crossing to Kraanhold while Toll Trolls are working the coast road, and she is not negotiable about it. Clear the trolls out of the marked stretch and she will make the run. This is the only way to reach Kraanhold at all - the Windhowl Marches, the Hollow March, the whole drake ladder beyond them. Without this quest there is no route onto the continent."
     },
     {
       "id": "windhowl_marches_centaurs",
@@ -12049,7 +12049,7 @@ window.T4C_DATA = {
       "offerText": "Drive back the Centaur Warriors raiding the marches west of Windhowl before their king leads a full warband to the walls.",
       "completionText": "The marches are quiet again, for now. Windhowl's watch owes you its thanks.",
       "completedText": "The marches held because of you. The Centaur King still broods somewhere out there, if you're bold enough to find him.",
-      "walkthroughText": "Marshal Torrhen holds the line in the Windhowl Marches and needs help driving back a Centaur incursion before their king marshals a full warband. Kill 20 Centaur Warriors within 140 tiles of (2380, 2430). You'll also need the Marchwarden's Crown to turn in, which only drops from the Centaur King himself - so despite the flavor text, he is a required kill, not just a tease of tougher fights ahead. Turn in for 6,000 gold and 400,000 XP; the crown is consumed on turn-in."
+      "walkthroughText": "Marshal Torrhen is holding the Windhowl Marches against a centaur warband that pushes further out every season, and he wants their numbers broken before their king brings the rest of them down. Kill Centaur Warriors in the marked plain. Turning it in also needs the Marchwarden's Crown, which the Centaur King wears - so the king is not the distant threat Torrhen's briefing makes him sound like, he is the last step. Completing it opens the fast road into the Marches."
     },
     {
       "id": "hollow_march_wights",
@@ -12070,7 +12070,7 @@ window.T4C_DATA = {
       "offerText": "Put down the Barrow Wights crawling out of the old barrows south of the Windhowl Marches.",
       "completionText": "The barrows have gone quiet again. The March Watch won't forget this.",
       "completedText": "The wights are settled, but the Hollow King still walks. Watch yourself if you go looking for him.",
-      "walkthroughText": "Warden Cael needs the Barrow Wights crawling out of the old barrows south of the Marches put down. Kill 20 Barrow Wights within 150 tiles of (2500, 2700). You'll also need the Crown of the Hollow King to turn in, which only drops from the Hollow King himself - so he isn't the separate, unfought threat he first appears to be. The reward is 12,000 gold and 900,000 XP; the crown is consumed on turn-in."
+      "walkthroughText": "Warden Cael wants the Barrow Wights climbing out of the old barrows south of the Marches put back down. Kill Wights inside the marked barrow-field. You also need the Crown of the Hollow King to finish, and the Hollow King is not giving it up quietly - expect to fight him, and expect it to take more than one attempt, because the crown is a rare drop. A real step up from the Marches quest before it, and it opens the fast road into the Hollow March."
     },
     {
       "id": "aerie_wyrmling_cull",
@@ -12091,7 +12091,7 @@ window.T4C_DATA = {
       "offerText": "Cull the Kraanian Wyrmlings nesting in the aerie east of the Hollow March before their numbers swell further.",
       "completionText": "The nest is thinned, for now. Ilvara's old maps are looking more credible by the day.",
       "completedText": "The wyrmlings are culled. The Lesser Drake above them, however, is very much awake.",
-      "walkthroughText": "Skywatch Ilvara, whose old maps of the aerie are finally paying off, wants the Kraanian Wyrmling nest thinned before it grows further. Kill 20 Wyrmlings in the 160-tile area around (2350, 2900), east of the Hollow March. You'll also need the Aerie's Drakeheart Signet to turn in, which only drops from the Lesser Drake roosting above the nest - a much tougher fight than the wyrmlings, and a required one despite appearances. Completing it pays 25,000 gold and 2,000,000 XP; the signet is consumed on turn-in."
+      "walkthroughText": "Skywatch Ilvara's old maps of the aerie are finally good for something: she wants the Kraanian Wyrmling nest thinned before it outgrows the peaks. Kill Wyrmlings in the marked area east of the Hollow March. The turn-in also calls for the Aerie's Drakeheart Signet, which comes off the drake roosting above the nest - a much harder fight than the wyrmlings, and an unavoidable one. Finishing it opens the fast road to the Aerie."
     },
     {
       "id": "bastion_warden_siege",
@@ -12112,7 +12112,7 @@ window.T4C_DATA = {
       "offerText": "Break the Bastion Wardens guarding the ruin east of the Aerie before the old wards protecting the Greater Drake can be renewed.",
       "completionText": "The wardens are broken. Whatever wards they were keeping strong won't hold much longer.",
       "completedText": "The bastion's outer guard is gone. The Greater Drake itself is another matter entirely.",
-      "walkthroughText": "Grandmaster Voss needs the Bastion Wardens broken before the wards guarding the Greater Drake's ruin can renew themselves. Kill 20 Bastion Wardens within 170 tiles of (2650, 2880), east of the Aerie. You'll also need the Heartfire of the Greater Drake to turn in, which only drops from the Greater Drake itself - so this isn't just clearing the outer guard, the Drake is a required kill too. Turn in for 500,000 gold and 150,000,000 XP; the heartfire is consumed on turn-in."
+      "walkthroughText": "Grandmaster Voss needs the Bastion Wardens broken before the wards around the Greater Drake's ruin finish renewing themselves. Kill Wardens inside the marked bastion grounds, east of the Aerie. Handing it in also takes the Heartfire of the Greater Drake, which means the drake behind the wards is part of the job whether Voss says so or not. It opens the fast road to the Bastion."
     },
     {
       "id": "deep_ones_cave_purge",
@@ -12133,7 +12133,7 @@ window.T4C_DATA = {
       "offerText": "Deep Ones have been dragging travelers under all along this stretch of the Raven's Dust coast. Thin their numbers before it gets worse.",
       "completionText": "It's quieter here already. Raven's Dust owes you more than it'll ever admit.",
       "completedText": "The Deep Ones haven't forgotten what you did to them. Neither have I - my thanks again.",
-      "walkthroughText": "Keeper Tamsin, on the Raven's Dust coast, has been watching Deep Ones drag travelers under for too long. Kill 18 Deep Ones - a long-standing monster spawned in numbers along this stretch - within 90 tiles of (330, 2246). You'll also need the Depth Warden's Talisman to turn in, which only drops from the tougher Deep One (Boss) lurking in the same area - a rare drop, so expect to work through several before it appears. The reward is modest (1,600 gold, 4,200 XP); the talisman is consumed on turn-in. Completing it unlocks fast travel straight to the Deep Ones' Cave for future visits."
+      "walkthroughText": "Keeper Tamsin has spent years watching Deep Ones drag travellers off the Raven's Dust coast and has run out of patience. Kill Deep Ones in the marked stretch of shore - there are a great many of them along here, so the count comes quickly. The turn-in also needs the Depth Warden's Talisman, carried by the Deep One Boss deeper in the cave. The pay is modest, but it opens the fast road straight to the cave for every visit after this one."
     },
     {
       "id": "drakes_lair_vigil",
@@ -12154,7 +12154,7 @@ window.T4C_DATA = {
       "offerText": "Kraanian Dragonguard hold the approach to the old drakes' lair, further out than the Vigil has ever mapped. Break their line before whatever sleeps past it wakes on its own.",
       "completionText": "The guard line is broken. Whatever the Dragonguard were protecting, it's exposed now - for better or worse.",
       "completedText": "The lair's approach is still quiet since you cleared it. Don't get comfortable - something out there is still watching.",
-      "walkthroughText": "Outrider Kaelis stands at the very edge of the Vigil's mapped territory, holding the approach to the drakes' lair. Kill 15 Kraanian Dragonguard within 180 tiles of (2850, 2780). You'll also need the Archdrake's Molten Heart to turn in, which only drops from the Arch Drake itself - breaking the guard line isn't enough on its own, you'll need to reach and defeat the Drake too. This is the single biggest reward in the game - 1,200,000 gold and 2,000,000,000 XP; the heart is consumed on turn-in. Completing it unlocks fast travel to the Drake's Lair itself. Expect the Dragonguard, and the Drake, to hit hard; this is late-game content, not something to attempt underleveled."
+      "walkthroughText": "Outrider Kaelis stands at the last mapped point before the drakes' lair and does not expect most people who pass him to come back. Kill Kraanian Dragonguard inside the marked approach. To turn it in you also need the Archdrake's Molten Heart, which means killing Arch Drake himself - the hardest fight in the world, and the real content of this quest. The reward is the largest anywhere, and it opens the fast road to the Lair. Do not come here underlevelled; the Dragonguard alone will end an unprepared character."
     },
     {
       "id": "tideworn_shore_scouts",
@@ -12173,7 +12173,7 @@ window.T4C_DATA = {
       "offerText": "The reavers thin out fast if you know where to hit them, but I need to see you can actually do it before I put you anywhere near Ithrak himself. Clear enough of them off the tideline and come back - then we'll talk about the chart.",
       "completionText": "You've got the stomach for this after all. Ithrak's warband won't fold as easy, but you've earned the right to try. Ask me about the crossing again when you're ready for the rest of them - and for him.",
       "completedText": "You already proved yourself against the scouts. It's Ithrak's turn now, if you haven't finished that already.",
-      "walkthroughText": "Harbormaster Rangor won't send a stranger at Coastwarden Ithrak's whole warband without proof first. Kill 8 Tideworn Reavers within 110 tiles of (1550, 1300) - the same stretch of coast used by the full Passage to Avalon quest that follows. There's no item reward here, just 40,000 gold and 20,000,000 XP, but finishing it is required before Rangor will offer Passage to Avalon at all - ask him about the crossing again once you're done."
+      "walkthroughText": "Harbormaster Rangor is not sending a stranger at Coastwarden Ithrak's entire warband on trust. Kill a handful of Tideworn Reavers on the marked stretch of beach - the same stretch the full crossing quest uses - and he will take you seriously. There is no item at the end of this one, just pay and Rangor's attention: finishing it is what makes him offer Passage to Avalon at all. Ask him about the crossing again once you are done."
     },
     {
       "id": "passage_to_avalon",
@@ -12194,7 +12194,7 @@ window.T4C_DATA = {
       "offerText": "The scouts were the easy part. Ithrak keeps the rest of his warband close, and he's the only one left who knows the safe line through the shoal. My boy went out there once without a chart of his own. Clear the warband, then take Ithrak's chart before it goes down with him - I won't watch another one go in blind.",
       "completionText": "The warband's scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive. It's more than my boy ever had.",
       "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross. Whatever's waiting on the other side, it's more than this dock's seen in years.",
-      "walkthroughText": "Once Tideworn Shore Scouts is complete, ask Rangor about the crossing again to receive Avalon's real access quest. Kill 25 Tideworn Reavers in the same 110-tile area around (1550, 1300). You'll also need Ithrak's Chart to turn in, which only drops from Coastwarden Ithrak himself - so clearing his warband isn't enough, you'll need to finish him too. Turn in for 400,000 gold and 200,000,000 XP; the chart is consumed on turn-in and is what actually unlocks fast travel to Avalon Sanctuary - without it there's no way in."
+      "walkthroughText": "Once you have proved yourself on the shore scouts, ask Rangor about the crossing again and he offers the real thing. Kill Tideworn Reavers on the same beach, a great many more of them this time, and take Ithrak's Chart off Coastwarden Ithrak - the chart is what actually gets you onto the island, so Ithrak has to fall. Hand both to Rangor and the crossing to Avalon Sanctuary opens. There is no other way in."
     },
     {
       "id": "avalon_wilds_vigil",
@@ -12215,7 +12215,7 @@ window.T4C_DATA = {
       "offerText": "The Fey Wardens of the Wilds still hold to the old pact, but even loyal groves need a blade at their border while the Veil keeps pressing north. Stand vigil with them - thin whatever presses too close.",
       "completionText": "The Wilds breathe easier. The pact holds a little longer because of you.",
       "completedText": "The Wardens still speak well of you. The Wilds remain ours - for now.",
-      "walkthroughText": "Elder Ophira, guarding the old pact at Avalon's border, asks you to stand vigil with the Fey Wardens. Kill 20 Fey Wardens within 110 tiles of (1265, 1400). You'll also need Caradoc's Sundered Blade to turn in, which only drops from Sir Caradoc, the Sundered Knight - a tougher fight than the wardens, and a required one even though the offer doesn't name him. The reward is 800,000 gold and 400,000,000 XP; the blade is consumed on turn-in, and completing it unlocks fast travel to Avalon Wilds."
+      "walkthroughText": "Elder Ophira has been holding the old fey pact at Avalon's border with fewer and fewer people, and asks you to stand the vigil alongside her Fey Wardens. Kill Fey Wardens in the marked stretch of the Wilds. Turning it in also takes Caradoc's Sundered Blade, carried by the thing wearing Sir Caradoc's armour deeper in - not an optional detour. Completing it opens the fast road to the Avalon Wilds."
     },
     {
       "id": "fading_veil_reckoning",
@@ -12236,7 +12236,7 @@ window.T4C_DATA = {
       "offerText": "Veilbound Wraiths spread Ysolde's corruption outward with every season that passes. Push back into the Veil and cut their numbers down before the blight claims ground we can't take back.",
       "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
       "completedText": "The blight hasn't forgotten what you did to it out there. Ysolde surely hasn't either.",
-      "walkthroughText": "Elder Ophira also sends you after the Veilbound Wraiths spreading Ysolde's corruption. Kill 15 Wraiths within 130 tiles of (1420, 1560), deeper into the Veil than the Wilds vigil. You'll also need Ysolde's Veiled Circlet to turn in, which only drops from Ysolde herself - so despite being named only as the corruption's source, she's a required kill too. It pays 1,000,000 gold and 1,700,000,000 XP; the circlet is consumed on turn-in, and completing it unlocks fast travel to the Fading Veil - the tougher of Ophira's two quests, so tackle the Wilds vigil first if you haven't."
+      "walkthroughText": "Ophira's harder request: the Veilbound Wraiths carrying Ysolde's blight outward have to be cut back. Kill Wraiths in the marked area, further into the Veil than the Wilds vigil goes. You also need Ysolde's Veiled Circlet to finish, so the Veiled Matriarch herself is the end of this quest, not a rumour at the edge of it. Stand the Wilds vigil first if you have not - this is the tougher of the two by a wide margin. It opens the fast road to the Fading Veil."
     },
     {
       "id": "forge_the_godcore",
@@ -12252,11 +12252,12 @@ window.T4C_DATA = {
       "rewardXp": 150000000,
       "requiredItemKey": "item.wyrmforged_ember",
       "requiredItemQty": 5,
+      "rewardItemKey": "item.tempered_godcore",
       "minLevel": 0,
       "offerText": "Everyone thinks the old pact was words and nothing more. It wasn't - it was bound in metal too, once, and I still remember how. Bring me five embers torn from something that's already brushed against that kind of power, and I'll temper you a core worth building on.",
       "completionText": "Five embers, tempered into one. This core remembers what it was pulled from - handle it carefully, and bring it to Seressa or Tholvenn when you're ready for the rest.",
       "completedText": "Your core's already tempered. Go on - Seressa's waiting on her half, or Tholvenn's waiting on both.",
-      "walkthroughText": "Ember-Smith Corvain doesn't need any kills - bring him 5 Wyrmforged Embers, a rare drop from Makrsh P'Tangh and Ignarok the Emberfang, and he tempers them into a single Tempered Godcore. This is the first of two parallel components (the other is Warden Seressa's Bound Godsigil) needed before any Grandmaster Tholvenn crafting quest. Turn-in pays 800,000 gold and 150,000,000 XP on top of the core itself."
+      "walkthroughText": "Ember-Smith Corvain asks for no killing in particular: bring him five Wyrmforged Embers and he tempers them into a single Tempered Godcore, which is yours to keep. Embers are a rare drop from Makrsh P'Tangh and from Ignarok the Emberfang, so expect to farm for them. The Godcore is one of two components every Godsforged weapon needs - Warden Seressa's Bound Godsigil is the other, and you can chase both at the same time."
     },
     {
       "id": "bind_the_godsigil",
@@ -12272,11 +12273,12 @@ window.T4C_DATA = {
       "rewardXp": 150000000,
       "requiredItemKey": "item.veiled_aether_shard",
       "requiredItemQty": 5,
+      "rewardItemKey": "item.bound_godsigil",
       "minLevel": 0,
       "offerText": "A core is only half of anything. Bring me five shards of aether - the kind that only forms where the veil between us and whatever's beyond it wears thin - and I'll bind you a sigil to match Corvain's work.",
       "completionText": "Bound, and holding - for now. Everything I bind holds for now. Take it to Tholvenn once you have both halves; he's the only one of us who still remembers how to finish the working.",
       "completedText": "Your sigil's already bound. Tholvenn has what he needs from me - the rest is between you and him.",
-      "walkthroughText": "Warden Seressa's half of the Godcore chain: bring her 5 Veiled Aether Shards, dropped by The Rootcrown Wyrm and Ysolde the Veiled Matriarch, and she binds them into a Bound Godsigil. Run this alongside Forge the Godcore - you need both finished items before Grandmaster Tholvenn can craft anything. Pays 800,000 gold and 150,000,000 XP."
+      "walkthroughText": "The other half of the Godsforged chain. Bring Warden Seressa five Veiled Aether Shards and she binds them into a Bound Godsigil, which she hands to you. Shards drop rarely from The Rootcrown Wyrm and from Ysolde the Veiled Matriarch. Run this alongside Ember-Smith Corvain's Godcore - Grandmaster Tholvenn cannot forge anything until you hold both."
     },
     {
       "id": "forge_godsforged_warblade",
@@ -12293,11 +12295,12 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "rewardItemKey": "godsforged_warblade",
       "minLevel": 0,
       "offerText": "Bring me a tempered core and a bound sigil, and name the warblade - the rest is mine to finish.",
       "completionText": "There. A blade with the old pact's strength bound into the steel - Godsforged, the last of us would call it. Wield it like it remembers what it cost.",
       "completedText": "You already carry the Godsforged Warblade. I've nothing left to give you there.",
-      "walkthroughText": "With a Tempered Godcore and a Bound Godsigil in hand, bring both to Grandmaster Tholvenn and he crafts the Godsforged Warblade on the spot - no kills, no waiting, both items are consumed. Pays 1,500,000 gold and 350,000,000 XP alongside the weapon. Tholvenn offers a different Godsforged item per archetype (Stormbow, Voidglass Rod, Zephyr Wand, Torc of the First Pact) from the same two components, but Forge the Godcore and Bind the Godsigil are each one-time quests - you'll only ever have one core and one sigil, so this is a single, permanent choice among the five, not one you can repeat by farming more embers or shards."
+      "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Warblade on the spot. No fighting, no waiting: both components are consumed and the blade is yours. Tholvenn makes a different Godsforged piece for each kind of character out of the same two components - the Warblade for close fighters, and a bow, rod, wand or torc for everyone else. Pick the one that suits you now; gathering another set of embers and shards lets you come back for a second."
     },
     {
       "id": "forge_godsforged_stormbow",
@@ -12314,11 +12317,12 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "rewardItemKey": "godsforged_stormbow",
       "minLevel": 0,
       "offerText": "A core, a sigil, and the will to loose something the old pact would have called a small storm. Bring the first two; I'll handle the rest.",
       "completionText": "Drawn true, this one will find whatever you aim it at - and a little of what's beyond it too. Call it Godsforged, and don't waste the name on a poor shot.",
       "completedText": "The Godsforged Stormbow already answers to your hand. There's nothing more I can add to it.",
-      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Stormbow for the archer archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the bow. It shares its two components with the other four Godsforged weapons, but Forge the Godcore and Bind the Godsigil only ever complete once - you'll only have one core and one sigil in total, so this is a single, permanent choice among the five."
+      "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Stormbow, the archer's piece, on the spot. Both components are consumed and the bow is yours. It shares its components with the other four Godsforged pieces, so forge whichever suits your character first and come back for another once you have gathered a second set."
     },
     {
       "id": "forge_godsforged_voidglass_rod",
@@ -12335,11 +12339,12 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "rewardItemKey": "godsforged_voidglass_rod",
       "minLevel": 0,
       "offerText": "Bring me a tempered core and a bound sigil, and I'll pour what's left of the old power into glass dark enough to hold it.",
       "completionText": "Voidglass doesn't reflect light so much as swallow it - fitting, for what's bound inside. It's Godsforged now. Use it with more care than most of your kind manage.",
       "completedText": "The Godsforged Voidglass Rod is already yours. I won't forge you a second.",
-      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Voidglass Rod for the intelligence-mage archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the rod. It shares its two components with the other four Godsforged weapons, but Forge the Godcore and Bind the Godsigil only ever complete once - you'll only have one core and one sigil in total, so this is a single, permanent choice among the five."
+      "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Voidglass Rod, made for casters who lean on raw intelligence. Both components are consumed and the rod is yours. It shares its components with the other four Godsforged pieces, so forge the one that suits your character first."
     },
     {
       "id": "forge_godsforged_zephyr_wand",
@@ -12356,11 +12361,12 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "rewardItemKey": "godsforged_zephyr_wand",
       "minLevel": 0,
       "offerText": "A core, a sigil, and a hand steady enough for both mind and heart to guide it. Bring me the first two.",
       "completionText": "Air remembers everything that's ever moved through it, if you know how to ask - this wand asks better than most now. Godsforged, and yours.",
       "completedText": "You've already got the Godsforged Zephyr Wand in hand. That working's finished.",
-      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Zephyr Wand for the hybrid-mage archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the wand. It shares its two components with the other four Godsforged weapons, but Forge the Godcore and Bind the Godsigil only ever complete once - you'll only have one core and one sigil in total, so this is a single, permanent choice among the five."
+      "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Zephyr Wand, the piece for casters who split their strength between intelligence and wisdom. Both components are consumed and the wand is yours. It shares its components with the other four Godsforged pieces, so forge the one that suits your character first."
     },
     {
       "id": "forge_godsforged_torc",
@@ -12377,11 +12383,12 @@ window.T4C_DATA = {
       "requiredItemKey": "item.bound_godsigil",
       "requiredItemQty": 1,
       "alsoRequiresItemKey": "item.tempered_godcore",
+      "rewardItemKey": "godsforged_torc_of_the_first_pact",
       "minLevel": 0,
       "offerText": "This one's closer to my own heart than the rest. Bring me a core and a sigil, and I'll set what's left of the pact itself into a torc worth wearing.",
       "completionText": "There. Something of the old pact, worn instead of buried in the ground it was meant to protect. Wear it well - it's the closest thing to the original working any of us have managed in a very long time.",
       "completedText": "You're already wearing the Godsforged Torc of the First Pact. There's no more of that particular working left to give.",
-      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Torc of the First Pact for the wisdom-mage archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the torc, which ties directly into Avalon's own fraying fey pact - the closest the Forgewrights have come to restoring the original working rather than just borrowing its power."
+      "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Torc of the First Pact, the wisdom caster's piece. Both components are consumed and the torc is yours. Of everything the Forgewrights make, the Torc comes closest to repairing Avalon's fraying fey pact rather than simply borrowing its strength - which is either reassuring or alarming, depending on who you ask."
     },
     {
       "id": "the_waking_rite",
@@ -12400,7 +12407,7 @@ window.T4C_DATA = {
       "offerText": "Avalon's pact is stirring again - I can feel it. It doesn't forgive the reckless, only the proven. Clear enough of the Fey Wardens still testing themselves against it, and come back once you've held your own at full strength - then we'll talk about what waking rite Avalon still remembers.",
       "completionText": "You've held your ground, and Avalon's noticed. That's not nothing - it's the same proof the old trials used to demand, just asked a different way. Come find me whenever you're ready to be reborn; you won't need to go looking for the Oracle again.",
       "completedText": "Avalon already knows what you're capable of. Just say the word when you're ready to be reborn.",
-      "walkthroughText": "Anchorite Rowan offers proven characters a shortcut: kill 8 Fey Wardens in the same Avalon Wilds area as Avalon Wilds Vigil, within 110 tiles of (1265, 1400), but you must be character level 125 or higher to turn it in - kills can still be gathered below that level, just not the final completion. Finishing it permanently unlocks Rowan's own rebirth rite, letting you rebirth without re-trekking to the Oracle's dungeon and its guardian gauntlet every time. Pays 100,000 gold and 5,000,000 XP on top of the unlock."
+      "walkthroughText": "Anchorite Rowan offers experienced characters a shortcut. Kill a handful of Fey Wardens in the same stretch of the Avalon Wilds that Ophira's vigil uses, then come back - though Rowan will not complete the rite for anyone below the level he names, so gather the kills whenever you like but expect to wait for the turn-in. Finishing it unlocks Rowan's own rebirth rite for good, so every future rebirth happens here instead of another trek down to the Oracle and back through her guardians."
     }
   ],
   "npcs": [
@@ -30635,17 +30642,49 @@ window.T4C_DATA = {
   },
   "zones": [
     {
+      "id": "deep_ones_cave",
+      "name": "Deep Ones Cave",
+      "chapter": "coast_road",
+      "chapterOrder": 1.0,
+      "levelRange": "32–42",
+      "biome": "Coastal cave",
+      "summary": "A sea cave on the Raven's Dust shore where things that were never quite human come up out of the water. Deep Ones have been taking travellers off this stretch of coast for as long as anyone can remember, and Keeper Tamsin has finally stopped waiting for somebody else to deal with it. Cramped, crowded, and a good first real dungeon.",
+      "nextZoneId": "sunken_chancel",
+      "worldmapCenter": {
+        "x": 330.0,
+        "y": 2246.0,
+        "radius": 90.0
+      },
+      "monsters": [
+        "Deep One",
+        "Deep One Boss"
+      ],
+      "items": [
+        "barnacled_gauntlets",
+        "depths_wardens_talisman"
+      ],
+      "spells": [],
+      "quests": [
+        "deep_ones_cave_purge"
+      ],
+      "npcs": [
+        "KeeperTamsin"
+      ]
+    },
+    {
       "id": "sunken_chancel",
       "name": "The Sunken Chancel",
-      "pass": "T4C-0004",
+      "chapter": "coast_road",
+      "chapterOrder": 2.0,
       "levelRange": "38–50",
-      "biome": "Water / Undead",
+      "biome": "Drowned shrine",
+      "summary": "A cult shrine on the coast east of Silversky that the sea took and never gave back. Its priesthood drowned with it and came up again wrong, and they have been pulling people under ever since the tide woke the place. Bring something that hurts the drowned, and don't wade in any deeper than you need to — Mordrenn holds the inner chancel, and he is not a fight you want to stumble into.",
+      "nextZoneId": "cinderreach_hills",
       "worldmapCenter": {
         "x": 1750.0,
         "y": 2300.0,
         "radius": 140.0
       },
-      "summary": "A flooded cult shrine on the coast east of Silversky. A drowned priesthood has been dragging locals under since the tide \"woke\" their chancel.",
       "monsters": [
         "Drowned Acolyte",
         "Tideclaw Crab",
@@ -30679,15 +30718,17 @@ window.T4C_DATA = {
     {
       "id": "cinderreach_hills",
       "name": "Cinderreach Hills",
-      "pass": "T4C-0004",
+      "chapter": "coast_road",
+      "chapterOrder": 3.0,
       "levelRange": "58–70",
-      "biome": "Fire",
+      "biome": "Burning foothills",
+      "summary": "Foothills southeast of Windhowl that have been quietly alight for years. A pack of fire-wolves runs them now, and they answer to a young drake named Ignarok who is only getting bigger. Everything here burns you, so fire resistance will do more for you than armour. It is also the last place worth clearing before you take ship for Kraanhold.",
+      "nextZoneId": "windhowl_marches",
       "worldmapCenter": {
         "x": 1900.0,
         "y": 1600.0,
         "radius": 140.0
       },
-      "summary": "Smoldering foothills southeast of Windhowl, home to a fire-wolf pack and the young drake they answer to.",
       "monsters": [
         "Cinder Whelp",
         "Ashfang Stalker",
@@ -30719,15 +30760,17 @@ window.T4C_DATA = {
     {
       "id": "windhowl_marches",
       "name": "Windhowl Marches",
-      "pass": "T4C-0005",
+      "chapter": "kraanhold",
+      "chapterOrder": 1.0,
       "levelRange": "100–150",
-      "biome": "Plains / Centaur warband",
+      "biome": "Open plains",
+      "summary": "Marchland grass, and the front door to Kraanhold — the continent across the water. A centaur warband holds the plain and is pushing outward, which is exactly why Marshal Torrhen wants them broken before their king brings the rest. Wide, flat ground with nowhere to hide: fights start at a distance and tend to stay there.",
+      "nextZoneId": "hollow_march",
       "worldmapCenter": {
         "x": 2380.0,
         "y": 2430.0,
         "radius": 140.0
       },
-      "summary": "Open marchland held by a centaur warband, the entrance province of Kraanhold — a new continent painted for T4C-0024, reached by sea from the mainland. Centaur Warrior and Centaur King existed as barely-authored placeholder stubs before T4C-0005 gave them real stats.",
       "monsters": [
         "Centaur Warrior",
         "Centaur King"
@@ -30757,15 +30800,17 @@ window.T4C_DATA = {
     {
       "id": "hollow_march",
       "name": "The Hollow March",
-      "pass": "T4C-0005",
+      "chapter": "kraanhold",
+      "chapterOrder": 2.0,
       "levelRange": "150–200",
-      "biome": "Undead barrow-field",
+      "biome": "Barrow-field",
+      "summary": "The barrow-field at the heart of Kraanhold, where the dead were buried standing and have lately started standing up. A wight king still wears his crown down there and has never accepted that his reign ended. Every other province borders this one, so you will cross it more than once.",
+      "nextZoneId": "lesser_drakes_aerie",
       "worldmapCenter": {
         "x": 2500.0,
         "y": 2700.0,
         "radius": 150.0
       },
-      "summary": "A barrow-field of restless dead, ruled by a wight king who never let go of his crown — Kraanhold's central province, bordering all four of the continent's other provinces.",
       "monsters": [
         "Barrow Wight",
         "The Hollow King"
@@ -30785,15 +30830,17 @@ window.T4C_DATA = {
     {
       "id": "lesser_drakes_aerie",
       "name": "Lesser Drake's Aerie",
-      "pass": "T4C-0005",
+      "chapter": "kraanhold",
+      "chapterOrder": 3.0,
       "levelRange": "200–260",
       "biome": "Mountain aerie",
+      "summary": "The western peaks, and the first rung of the drake ladder. Wyrmlings nest across the whole rock face, and a Lesser Drake roosts above them keeping the nest fed. The wyrmlings are the fight Skywatch Ilvara asks for; the drake overhead is optional, and considerably less survivable.",
+      "nextZoneId": "avalon_sanctuary",
       "worldmapCenter": {
         "x": 2350.0,
         "y": 2900.0,
         "radius": 160.0
       },
-      "summary": "First rung of the Drake ladder, now Kraanhold's western peaks. Kraanian Wyrmlings roost around a Lesser Drake whose stats were already fully authored in the codebase but never placed — activated by T4C-0005.",
       "monsters": [
         "Kraanian Wyrmling",
         "Lesser Drake"
@@ -30813,17 +30860,98 @@ window.T4C_DATA = {
       ]
     },
     {
+      "id": "avalon_sanctuary",
+      "name": "The Avalon Crossing",
+      "chapter": "avalon",
+      "chapterOrder": 1.0,
+      "levelRange": "260–300",
+      "biome": "Mainland coast",
+      "summary": "The last stretch of mainland shore before Avalon, and the only way onto the island. Coastwarden Ithrak's reavers have the beach and are collecting a toll nobody agreed to. Harbormaster Rangor will vouch for you once you have thinned them out — and he is the only person who can, so there is no route around this one.",
+      "nextZoneId": "avalon_wilds",
+      "worldmapCenter": {
+        "x": 1550.0,
+        "y": 1300.0,
+        "radius": 110.0
+      },
+      "monsters": [
+        "Tideworn Reaver",
+        "Coastwarden Ithrak"
+      ],
+      "items": [
+        "tideworn_avalon_chart"
+      ],
+      "spells": [],
+      "quests": [
+        "tideworn_shore_scouts",
+        "passage_to_avalon"
+      ],
+      "npcs": [
+        "HarbormasterRangor"
+      ]
+    },
+    {
+      "id": "avalon_wilds",
+      "name": "The Avalon Wilds",
+      "chapter": "avalon",
+      "chapterOrder": 2.0,
+      "levelRange": "300–420",
+      "biome": "Fey woodland",
+      "settlement": "Avalon Sanctuary",
+      "summary": "The half of Avalon that still keeps the old fey pact — for now. Fey Wardens patrol a border they are steadily losing, and Elder Ophira is running out of people willing to stand it with them. Green, quiet, and far more dangerous than it looks.",
+      "nextZoneId": "greater_drakes_bastion",
+      "worldmapCenter": {
+        "x": 1265.0,
+        "y": 1400.0,
+        "radius": 110.0
+      },
+      "monsters": [
+        "Fey Warden",
+        "Moonlit Stalker",
+        "Sir Caradoc, the Sundered Knight"
+      ],
+      "items": [
+        "caradocs_sundered_blade"
+      ],
+      "spells": [
+        "spell.avalon_gateway"
+      ],
+      "quests": [
+        "avalon_wilds_vigil",
+        "forge_the_godcore",
+        "bind_the_godsigil",
+        "forge_godsforged_warblade",
+        "forge_godsforged_stormbow",
+        "forge_godsforged_voidglass_rod",
+        "forge_godsforged_zephyr_wand",
+        "forge_godsforged_torc",
+        "the_waking_rite"
+      ],
+      "npcs": [
+        "ElderOphira",
+        "QuartermasterElenna",
+        "WayfarerBryndis",
+        "ArchmageThalindra",
+        "SisterIlyndra",
+        "EmberSmithCorvain",
+        "WardenSeressa",
+        "GrandmasterTholvenn",
+        "AnchoriteRowan"
+      ]
+    },
+    {
       "id": "greater_drakes_bastion",
       "name": "Greater Drake's Bastion",
-      "pass": "T4C-0005",
+      "chapter": "unmaking",
+      "chapterOrder": 1.0,
       "levelRange": "400–500",
-      "biome": "Mountain bastion",
+      "biome": "Mountain fortress",
+      "summary": "A stone hold in Kraanhold's high country, and the second rung of the drake ladder. The Bastion Wardens here keep the wards around the Greater Drake's ruin renewing themselves, and Grandmaster Voss wants that stopped before they finish. Breaking the guard is the job; the Greater Drake waiting behind them is a separate decision entirely.",
+      "nextZoneId": "fading_veil",
       "worldmapCenter": {
         "x": 2650.0,
         "y": 2880.0,
         "radius": 170.0
       },
-      "summary": "Second rung of the Drake ladder, Kraanhold's high country. A stone bastion held by Bastion Wardens around a Greater Drake, another fully-stat'd legacy boss activated for the first time here.",
       "monsters": [
         "Bastion Warden",
         "Greater Drake"
@@ -30841,17 +30969,55 @@ window.T4C_DATA = {
       ]
     },
     {
+      "id": "fading_veil",
+      "name": "The Fading Veil",
+      "chapter": "unmaking",
+      "chapterOrder": 2.0,
+      "levelRange": "450–650",
+      "biome": "Blighted woodland",
+      "settlement": "Avalon Sanctuary",
+      "summary": "A blight spreading outward from Ysolde's lair, taking Avalon one season at a time. Sir Caradoc's armour still walks the Veil, worn by something that stopped being him a long time ago. The hardest ground on the island, and the only place the Veiled Aether Shards come from.",
+      "nextZoneId": "drakes_lair",
+      "worldmapCenter": {
+        "x": 1420.0,
+        "y": 1560.0,
+        "radius": 130.0
+      },
+      "monsters": [
+        "Veilbound Wraith",
+        "Sundered Sentinel",
+        "Ysolde, the Veiled Matriarch",
+        "The Verdant Warden"
+      ],
+      "items": [
+        "ysoldes_veiled_circlet",
+        "verdant_wardens_bulwark"
+      ],
+      "spells": [],
+      "quests": [
+        "fading_veil_reckoning"
+      ],
+      "npcs": [
+        "ElderOphira",
+        "QuartermasterElenna",
+        "WayfarerBryndis",
+        "ArchmageThalindra",
+        "SisterIlyndra"
+      ]
+    },
+    {
       "id": "drakes_lair",
       "name": "Drake's Lair",
-      "pass": "T4C-0008",
+      "chapter": "last_peak",
+      "chapterOrder": 1.0,
       "levelRange": "750–1000",
       "biome": "Mountain lair",
+      "summary": "Kraanhold's easternmost and highest peak, and the end of the road. Arch Drake has held this lair since long before anyone thought to map it, and the Kraanian Dragonguard on the approach exist to make sure nobody reaches him. The five Elder Wyrms den here too, one for each way of fighting. Come at the very top of your power or do not come at all — there is nothing past this.",
       "worldmapCenter": {
         "x": 2850.0,
         "y": 2780.0,
         "radius": 180.0
       },
-      "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one. The Rootcrown Wyrm (T4C-0029), an Elder Wyrm predating the named Drake line, was added to the same lair, later joined by the other four Elder Wyrms (the Pyreclaw, Mistwing, Duskmaw and Galecrest Wyrms), one per class.",
       "monsters": [
         "Kraanian Dragonguard",
         "Arch Drake",
@@ -30887,145 +31053,6 @@ window.T4C_DATA = {
       "npcs": [
         "OutriderKaelis"
       ]
-    },
-    {
-      "id": "deep_ones_cave",
-      "name": "Deep Ones Cave",
-      "pass": "T4C-0008",
-      "levelRange": "Raven's Dust coast",
-      "biome": "Coastal cave, pre-existing zone",
-      "worldmapCenter": {
-        "x": 330.0,
-        "y": 2246.0,
-        "radius": 90.0
-      },
-      "summary": "Not a new zone — Deep One / Deep One Boss already existed with 41 real spawn points imported from the original game, but no loot and no quest. This pass added both without touching their stats.",
-      "monsters": [
-        "Deep One",
-        "Deep One Boss"
-      ],
-      "items": [
-        "barnacled_gauntlets",
-        "depths_wardens_talisman"
-      ],
-      "spells": [],
-      "quests": [
-        "deep_ones_cave_purge"
-      ],
-      "npcs": [
-        "KeeperTamsin"
-      ],
-      "preExisting": true
-    },
-    {
-      "id": "avalon_sanctuary",
-      "name": "The Avalon Crossing",
-      "pass": "T4C-0019",
-      "levelRange": "260–300",
-      "biome": "Mainland coast",
-      "worldmapCenter": {
-        "x": 1550.0,
-        "y": 1300.0,
-        "radius": 110.0
-      },
-      "summary": "The last stretch of mainland shore before Avalon. Before this pass every NPC and shop that could grant access to Avalon (scroll_of_avalon, the AvalonGateway spell) was itself stationed inside Avalon, so no fresh character could ever reach it - this coastal gate and its access quest (passage_to_avalon) fix that dead end, the same role the Oracle plays for rebirth.",
-      "monsters": [
-        "Tideworn Reaver",
-        "Coastwarden Ithrak"
-      ],
-      "items": [
-        "tideworn_avalon_chart"
-      ],
-      "spells": [],
-      "quests": [
-        "tideworn_shore_scouts",
-        "passage_to_avalon"
-      ],
-      "npcs": [
-        "HarbormasterRangor"
-      ]
-    },
-    {
-      "id": "avalon_wilds",
-      "name": "The Avalon Wilds",
-      "pass": "T4C-0009",
-      "levelRange": "300–420",
-      "biome": "Lush isle, half of the new Avalon island",
-      "worldmapCenter": {
-        "x": 1265.0,
-        "y": 1400.0,
-        "radius": 110.0
-      },
-      "summary": "Reached via the AvalonGateway spell or a scroll_of_avalon consumable. The loyal half of Avalon, still holding to the old fey pact — for now.",
-      "monsters": [
-        "Fey Warden",
-        "Moonlit Stalker",
-        "Sir Caradoc, the Sundered Knight"
-      ],
-      "items": [
-        "caradocs_sundered_blade"
-      ],
-      "spells": [
-        "spell.avalon_gateway"
-      ],
-      "quests": [
-        "avalon_wilds_vigil",
-        "forge_the_godcore",
-        "bind_the_godsigil",
-        "forge_godsforged_warblade",
-        "forge_godsforged_stormbow",
-        "forge_godsforged_voidglass_rod",
-        "forge_godsforged_zephyr_wand",
-        "forge_godsforged_torc",
-        "the_waking_rite"
-      ],
-      "npcs": [
-        "ElderOphira",
-        "QuartermasterElenna",
-        "WayfarerBryndis",
-        "ArchmageThalindra",
-        "SisterIlyndra",
-        "EmberSmithCorvain",
-        "WardenSeressa",
-        "GrandmasterTholvenn",
-        "AnchoriteRowan"
-      ],
-      "settlement": "Avalon Sanctuary"
-    },
-    {
-      "id": "fading_veil",
-      "name": "The Fading Veil",
-      "pass": "T4C-0009",
-      "levelRange": "450–650",
-      "biome": "Corrupted isle, the other half of Avalon",
-      "worldmapCenter": {
-        "x": 1420.0,
-        "y": 1560.0,
-        "radius": 130.0
-      },
-      "summary": "A blight eating outward from Ysolde's lair, one season at a time. Sir Caradoc's own armor now walks here, worn by something that isn't him anymore.",
-      "monsters": [
-        "Veilbound Wraith",
-        "Sundered Sentinel",
-        "Ysolde, the Veiled Matriarch",
-        "The Verdant Warden"
-      ],
-      "items": [
-        "ysoldes_veiled_circlet",
-        "verdant_wardens_bulwark"
-      ],
-      "spells": [],
-      "quests": [
-        "fading_veil_reckoning"
-      ],
-      "npcs": [
-        "ElderOphira",
-        "QuartermasterElenna",
-        "WayfarerBryndis",
-        "ArchmageThalindra",
-        "SisterIlyndra"
-      ],
-      "settlement": "Avalon Sanctuary"
     }
   ],
   "statIds": {
@@ -31183,82 +31210,103 @@ window.T4C_DATA = {
     }
   },
   "meta": {
+    "chapters": [
+      {
+        "id": "coast_road",
+        "name": "The coast road",
+        "levels": "Levels 30-70",
+        "intro": "Everything here is within a day's ride of a town you already know. Three short, self-contained trips that teach you what the rest of the world intends to do to you: something in the water, something that drowned and came back, and something on fire."
+      },
+      {
+        "id": "kraanhold",
+        "name": "Crossing to Kraanhold",
+        "levels": "Levels 100-260",
+        "intro": "A whole continent opens up once Dockmaster Thessaly clears you for the crossing, and it is not gentle. Open plains, then a barrow-field, then the bottom of the drake ladder — the first stretch of the world that expects you to arrive prepared rather than curious."
+      },
+      {
+        "id": "avalon",
+        "name": "The road to Avalon",
+        "levels": "Levels 260-420",
+        "intro": "Avalon is an island, and the only way onto it runs through Coastwarden Ithrak's reavers on the mainland beach. What waits on the other side is a pact that has held for centuries and is now, visibly, failing."
+      },
+      {
+        "id": "unmaking",
+        "name": "The world coming apart",
+        "levels": "Levels 400-650",
+        "intro": "Two places where something old is being unmade: a drake's ruin whose wards are being kept up on purpose, and a blight eating Avalon outward from its centre. This is where the materials for the Godsforged weapons come from."
+      },
+      {
+        "id": "last_peak",
+        "name": "The last peak",
+        "levels": "Levels 700-1000",
+        "intro": "One mountain. One drake. Everything you have."
+      }
+    ],
     "collections": [
       {
         "id": "ancient_celestial",
         "name": "Ancient Celestial armor set",
-        "pass": "T4C-0001",
-        "summary": "6-piece, 8-flavor armor set (Air/Archer/Dark/Earth/Fire/Light/Warrior/Water), generated by tools/ArmorSetGenerator.java. Not yet wired to a shop or monster drop table in this build — price 0, no known in-game source; documented here as authored content pending a placement pass.",
+        "summary": "Six matching pieces in eight flavours — one for each element plus a warrior and an archer cut — so a whole character can be kitted out in the same look. Nothing sells or drops these yet: they are finished and in the game, waiting on somewhere to find them.",
         "itemKeyPrefix": "ancient_celestial_"
       },
       {
         "id": "empyrean",
         "name": "Empyrean armor set",
-        "pass": "T4C-0001",
-        "summary": "Second 6-piece, 8-flavor armor set from the same generator run as Ancient Celestial. Same caveat: not yet tied to a shop or drop source.",
+        "summary": "The second full set, built alongside Ancient Celestial and in the same eight flavours. Same situation: complete, but not yet placed anywhere you can get it.",
         "itemKeyPrefix": "empyrean_"
       }
     ],
     "standaloneItems": [
       {
         "key": "ring_of_the_archer",
-        "pass": "T4C-0001",
-        "note": "Standalone new ring, not part of a set or zone."
+        "note": "A ring for bow users, not tied to any set or region."
       },
       {
         "key": "goblin_slayer",
-        "pass": "T4C-0008",
-        "note": "Granted (not sold) by the pre-existing NPC Rhodar Heatforge once a hero's global goblin-kill counter reaches 500 — the same __GOBLINS_KILLED_BY_HERO flag Mirak Nira's \"100 goblins for Windhowl trust\" quest tracks."
+        "note": "Rhodar Heatforge hands this over — he will not sell it — once you have killed 500 goblins anywhere in the world. The same running tally Mirak Nira watches for her own goblin errand."
       }
     ],
     "colosseum": {
       "name": "Colosseum Arena Ladder",
-      "pass": "T4C-0001",
-      "summary": "Arena ladder extended from level 500 to 750, authored as 10 JSON-defined ArenaMobXP monsters (levels 525–750) via the new JSON content pipeline.",
+      "summary": "A ladder of arena opponents you fight one after another, purely for experience. The rungs now run well past where they used to stop, so the arena stays worth your time deep into the late game rather than running dry halfway up.",
       "monsterNamePrefix": "ArenaMobXP"
     },
-    "systemsPasses": [
+    "updates": [
       {
-        "pass": "T4C-0001",
-        "title": "JSON content pipeline, armor sets, level cap 500",
-        "date": "2026-09-16",
-        "bullets": [
-          "New JSON-driven authoring pipeline for monsters/items (MonsterJsonDef/MonsterJsonLoader, ItemJsonDef/ItemJsonLoader) merged into the existing registries.",
-          "Locations fast-travel panel (Ctrl+L), open to all players.",
-          "Colosseum arena ladder extended from level 500 to 750.",
-          "Player level cap extended from 200 to 500."
-        ]
-      },
-      {
-        "pass": "T4C-0002",
-        "title": "Rebirth economy, storage, spell vendor, macros",
-        "date": "2026-09-17",
-        "bullets": [
-          "SpellMerchant NPC sells every player-castable spell; StorageChest NPC at Lighthaven + Windhouse with a full deposit/withdraw UI.",
-          "New fast-travel destinations: Stonecrest, Tarantula Pond, Skraug Camp, Timeprotectors.",
-          "New GM commands .rebirth, .setpower.",
-          "New \"Elemental Stats\" character-sheet tab; Ctrl/Shift/Alt macro keybind modifiers.",
-          "Remort points now scale per rebirth (10 + 5/prior remort) instead of a flat 10.",
-          "Monster spawn density doubled; server XP rate raised 5x.",
-          "REBIRTH_MAX_REMORTS raised to 100, level cap to 700, base light resistance to 5000."
-        ]
-      },
-      {
-        "pass": "T4C-0005",
-        "title": "Leveling overhaul (XP overflow fix)",
-        "date": "2026-09-17",
-        "bullets": [
-          "Fixed a silent int overflow in the XP curve starting at level 541 by widening every XP-carrying field to long.",
-          "New XpCurveHardener curve (levels 100–1000) whose exponent itself grows with level, so it structurally outgrows monster XP awards at every band.",
-          "Fixed Mirak Nira's \"kill 100 goblins\" quest, which nothing had ever incremented."
-        ]
-      },
-      {
-        "pass": "T4C-0009",
-        "title": "Avalon spawn density tuning",
         "date": "2026-09-19",
+        "title": "More to fight on Avalon",
         "bullets": [
-          "Avalon trash monster spawn density increased ~2.5x (8→20 spawn points per type) after the initial pass felt sparse."
+          "Avalon felt empty the first time round. There are now roughly two and a half times as many creatures roaming the Wilds and the Veil, so you are not spending the trip walking."
+        ]
+      },
+      {
+        "date": "2026-09-17",
+        "title": "Levelling, fixed and reshaped",
+        "bullets": [
+          "Experience past the mid-500s no longer goes haywire — the curve now holds all the way to the cap.",
+          "The climb through the high levels was reshaped so it keeps getting steeper instead of flattening out: no single hunting ground carries you the rest of the way.",
+          "Mirak Nira's goblin errand now actually counts your goblins. It never did before."
+        ]
+      },
+      {
+        "date": "2026-09-17",
+        "title": "Rebirth, storage and somewhere to buy spells",
+        "bullets": [
+          "A spell merchant now stocks every spell a character can learn, in one place.",
+          "Storage chests at Lighthaven and Windhouse hold what you cannot carry, with a proper deposit and withdraw window.",
+          "Four more fast-travel destinations: Stonecrest, Tarantula Pond, Skraug Camp and Timeprotectors.",
+          "Rebirthing is worth more each time — every rebirth now grants more points to spend than the one before it, instead of the same flat handful.",
+          "Twice as many creatures spawn across the world, and they give considerably more experience.",
+          "A new Elemental Stats tab on the character sheet, and macros can now be bound with Ctrl, Shift or Alt."
+        ]
+      },
+      {
+        "date": "2026-09-16",
+        "title": "Armor sets, a longer arena and a higher ceiling",
+        "bullets": [
+          "Two complete armor sets — Ancient Celestial and Empyrean — six pieces each, in eight flavours.",
+          "The Colosseum arena ladder runs a good deal further before it runs out.",
+          "The level cap moved up, and a fast-travel panel (Ctrl+L) is now open to everyone rather than a privilege."
         ]
       }
     ]
