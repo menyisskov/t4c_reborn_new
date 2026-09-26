@@ -13,7 +13,7 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
-## 2026-09-26 — Offering chests at the temples, and spells that go off when you cast them (T4C-0060)
+## 2026-09-26 — Offering chests at the temples, and spells that go off when you cast them (T4C-0061)
 
 ### Added
 - **An offering chest stands outside the temple in every town** — Lighthaven, Silversky, Windhowl,
@@ -41,11 +41,21 @@ on, every content/feature pass adds its own entry here as part of the work
   Lighthaven Improved Gateway, Wrath of Marc and Avalon Gateway. Nothing ever sold or granted them.
   Light stays — it is a real spell, learnable from level 1. The Scroll of Avalon still works.
 
+## 2026-09-26 — Fixed self-buff spells that did nothing (T4C-0060)
+
 ### Fixed
-- **Tranquility and Clear Thought did nothing at all.** Both were supposed to raise a stat by a share
-  of your own wisdom or intelligence, and both were quietly granting exactly zero. They now give what
-  they always claimed to. Nimbleness had the same fault in its agility half, which is also fixed; the
-  dodge half of it, and Resist Fire and Resist Ice, are still inert and still to do.
+- **Resist Fire and Resist Ice now actually reduce elemental damage.** Both spells were meant to
+  boost your own fire or ice resistance for a minute, cutting incoming damage of that type
+  roughly in half — but they were quietly doing nothing at all. They now work as intended.
+- **Nimbleness's dodge bonus now applies.** Its agility bonus already worked; the dodge half was
+  silently rolling to zero and has been fixed alongside it.
+- **Tranquility and Clear Thought now grant their full wisdom/intelligence bonus.** Both were
+  landing with no effect at all; they now scale properly with your own stats.
+- A handful of potions and weapon procs that were supposed to scale off your own strength,
+  agility, endurance, elemental resistance or dodge (several resistance and stat potions, a
+  couple of enchanted weapon effects) were affected by the same bug and are fixed too.
+- Recasting one of these buffs before the old one wears off now correctly refreshes it to the
+  same strength instead of stacking indefinitely.
 
 ## 2026-09-26 — Pick a class instead of answering riddles (T4C-0059)
 

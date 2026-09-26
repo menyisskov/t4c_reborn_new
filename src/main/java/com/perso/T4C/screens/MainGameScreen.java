@@ -2204,7 +2204,7 @@ public class MainGameScreen implements Screen {
     Vector2 playerPos = player.getPositionVector();
     Vector2 monsterPos = monster.getPosition();
     player.getMovement().faceToward(playerPos.x, playerPos.y, monsterPos.x, monsterPos.y);
-    // T4C-0060: the spell leaves the caster's hands the moment the cast succeeds. The wait that
+    // T4C-0061: the spell leaves the caster's hands the moment the cast succeeds. The wait that
     // used to sit here (and drive a progress bar) charged the spell's exhaustion twice - once
     // before the spell went off and again after, via SpellCastingService.begin. The gap between
     // casts is unchanged; only the dead time before the first one is gone.
@@ -3147,7 +3147,7 @@ public class MainGameScreen implements Screen {
   }
 
   private void renderTameProgress() {
-    // T4C-0060: harvesting and taming still take time and still show the bar. Casting no longer
+    // T4C-0061: harvesting and taming still take time and still show the bar. Casting no longer
     // does, so a spell never puts a bar on screen.
     if ((harvestChannel == null && tameChannel == null)
         || tameProgressBar == null

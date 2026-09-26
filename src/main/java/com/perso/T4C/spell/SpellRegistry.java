@@ -123,7 +123,7 @@ public final class SpellRegistry {
         || identity.startsWith("${spell.npc_")) return false;
     if (identity.endsWith("_effect}")) return false;
     if (NOT_PLAYER_CASTABLE.contains(identity)) return false;
-    // T4C-0060: a spell with no level requirement is not a spell anybody can learn - no trainer
+    // T4C-0061: a spell with no level requirement is not a spell anybody can learn - no trainer
     // sells one and no reward grants one. They were leftovers (GM tools, item-triggered gateways,
     // cut content) that still filled pages of the spellbook, the spell seller and the website.
     // Light is the one real spell that had no requirement; it carries minLevel 1 now, so this rule

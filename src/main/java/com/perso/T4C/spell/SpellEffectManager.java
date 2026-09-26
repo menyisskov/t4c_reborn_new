@@ -76,27 +76,28 @@ public final class SpellEffectManager {
           DiceFormula.Context base = SpellCastingService.context(caster);
           DiceFormula.Context context =
               new DiceFormula.Context(
-                  base.str,
-                  base.end,
-                  base.agi,
-                  base.intel,
-                  base.wil,
-                  base.wis,
-                  base.luck,
-                  base.level,
-                  0,
-                  100,
-                  100,
-                  100,
-                  100,
-                  100,
-                  100,
-                  elementalPower(caster, "fire"),
-                  elementalPower(caster, "earth"),
-                  elementalPower(caster, "air"),
-                  elementalPower(caster, "water"),
-                  elementalPower(caster, "light"),
-                  elementalPower(caster, "dark"));
+                      base.str,
+                      base.end,
+                      base.agi,
+                      base.intel,
+                      base.wil,
+                      base.wis,
+                      base.luck,
+                      base.level,
+                      0,
+                      100,
+                      100,
+                      100,
+                      100,
+                      100,
+                      100,
+                      elementalPower(caster, "fire"),
+                      elementalPower(caster, "earth"),
+                      elementalPower(caster, "air"),
+                      elementalPower(caster, "water"),
+                      elementalPower(caster, "light"),
+                      elementalPower(caster, "dark"))
+                  .withSelfTrue(base.selfTrue);
           int delta = DiceFormula.of(formula).evaluate(context);
           if (delta != 0) return delta;
         }
@@ -387,27 +388,28 @@ public final class SpellEffectManager {
     int dark = resistance(target, 6);
     DiceFormula.Context context =
         new DiceFormula.Context(
-            caster.getEffectiveStrength(),
-            caster.getEffectiveEndurance(),
-            caster.getEffectiveDexterity(),
-            caster.getEffectiveIntelligence(),
-            0,
-            caster.getEffectiveWisdom(),
-            0,
-            caster.getLevel(),
-            0,
-            fire,
-            earth,
-            air,
-            water,
-            light,
-            dark,
-            elementalPower(caster, "fire"),
-            elementalPower(caster, "earth"),
-            elementalPower(caster, "air"),
-            elementalPower(caster, "water"),
-            elementalPower(caster, "light"),
-            elementalPower(caster, "dark"));
+                caster.getEffectiveStrength(),
+                caster.getEffectiveEndurance(),
+                caster.getEffectiveDexterity(),
+                caster.getEffectiveIntelligence(),
+                0,
+                caster.getEffectiveWisdom(),
+                0,
+                caster.getLevel(),
+                0,
+                fire,
+                earth,
+                air,
+                water,
+                light,
+                dark,
+                elementalPower(caster, "fire"),
+                elementalPower(caster, "earth"),
+                elementalPower(caster, "air"),
+                elementalPower(caster, "water"),
+                elementalPower(caster, "light"),
+                elementalPower(caster, "dark"))
+            .withSelfTrue(SpellCastingService.selfTrue(caster));
     String withRange =
         formula.replaceAll("(?<![A-Za-z_.])r(?![A-Za-z_])", Double.toString(Math.max(0d, range)));
     return DiceFormula.of(withRange).evaluate(context);
@@ -464,27 +466,28 @@ public final class SpellEffectManager {
   private static DiceFormula.Context casterContext(Player caster) {
     DiceFormula.Context base = SpellCastingService.context(caster);
     return new DiceFormula.Context(
-        base.str,
-        base.end,
-        base.agi,
-        base.intel,
-        base.wil,
-        base.wis,
-        base.luck,
-        base.level,
-        0,
-        100,
-        100,
-        100,
-        100,
-        100,
-        100,
-        elementalPower(caster, "fire"),
-        elementalPower(caster, "earth"),
-        elementalPower(caster, "air"),
-        elementalPower(caster, "water"),
-        elementalPower(caster, "light"),
-        elementalPower(caster, "dark"));
+            base.str,
+            base.end,
+            base.agi,
+            base.intel,
+            base.wil,
+            base.wis,
+            base.luck,
+            base.level,
+            0,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            elementalPower(caster, "fire"),
+            elementalPower(caster, "earth"),
+            elementalPower(caster, "air"),
+            elementalPower(caster, "water"),
+            elementalPower(caster, "light"),
+            elementalPower(caster, "dark"))
+        .withSelfTrue(base.selfTrue);
   }
 
   /**
@@ -501,27 +504,48 @@ public final class SpellEffectManager {
       Player blessed, int intelligence, int wisdom) {
     if (blessed == null) return DiceFormula.Context.ZERO;
     return new DiceFormula.Context(
-        0,
-        0,
-        0,
-        Math.max(0, intelligence),
-        0,
-        Math.max(0, wisdom),
-        0,
-        GameConstants.MAX_PLAYER_LEVEL,
-        0,
-        100,
-        100,
-        100,
-        100,
-        100,
-        100,
-        elementalPower(blessed, "fire"),
-        elementalPower(blessed, "earth"),
-        elementalPower(blessed, "air"),
-        elementalPower(blessed, "water"),
-        elementalPower(blessed, "light"),
-        elementalPower(blessed, "dark"));
+            0,
+            0,
+            0,
+            Math.max(0, intelligence),
+            0,
+            Math.max(0, wisdom),
+            0,
+            GameConstants.MAX_PLAYER_LEVEL,
+            0,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            elementalPower(blessed, "fire"),
+            elementalPower(blessed, "earth"),
+            elementalPower(blessed, "air"),
+            elementalPower(blessed, "water"),
+            elementalPower(blessed, "light"),
+            elementalPower(blessed, "dark"))
+        .withSelfTrue(externalSelfTrue(blessed, intelligence, wisdom));
+  }
+
+  /**
+   * The {@code self.true_*} readings for an external caster: the casting statistics are the caster's,
+   * because a formula like Tranquility's {@code self.true_wis/2} means whoever is casting, while the
+   * elemental readings stay with {@code blessed}, matching the positional fields above. Set
+   * explicitly rather than left to {@code DiceFormula}'s fallback, so the blessing's strength does
+   * not depend on what that fallback happens to do.
+   */
+  private static java.util.Map<String, Integer> externalSelfTrue(
+      Player blessed, int intelligence, int wisdom) {
+    java.util.Map<String, Integer> readings = new java.util.LinkedHashMap<>();
+    readings.put("int", Math.max(0, intelligence));
+    readings.put("wis", Math.max(0, wisdom));
+    readings.put("level", GameConstants.MAX_PLAYER_LEVEL);
+    for (String element : List.of("fire", "earth", "air", "water", "light", "dark")) {
+      readings.put(element, blessed.getTrueElementPower(element));
+      readings.put("r_" + element, blessed.getTrueElementResistance(element));
+    }
+    return readings;
   }
 
   private static String normalizeBoostAttribute(String attribute) {

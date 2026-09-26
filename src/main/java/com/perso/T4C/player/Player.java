@@ -746,6 +746,46 @@ public class Player extends Stats {
     return wisdom + buffStatBonuses.getOrDefault("wis", 0) + EquipmentBonusRules.bonus(this, 4);
   }
 
+  /*
+   * "True" readings: everything permanent (base stat, gear, quest bonuses) but not the temporary
+   * spell buffs currently running. Buffs whose size is a fraction of the stat they raise read
+   * these, so re-casting one before it expires refreshes it instead of compounding.
+   */
+
+  public int getTrueStrength() {
+    return getEffectiveStrength() - buffStatBonuses.getOrDefault("str", 0);
+  }
+
+  public int getTrueDexterity() {
+    return getEffectiveDexterity() - buffStatBonuses.getOrDefault("dex", 0);
+  }
+
+  public int getTrueEndurance() {
+    return getEffectiveEndurance() - buffStatBonuses.getOrDefault("end", 0);
+  }
+
+  public int getTrueIntelligence() {
+    return getEffectiveIntelligence() - buffStatBonuses.getOrDefault("int", 0);
+  }
+
+  public int getTrueWisdom() {
+    return getEffectiveWisdom() - buffStatBonuses.getOrDefault("wis", 0);
+  }
+
+  public int getTrueSkillLevel(String skillId) {
+    return getEffectiveSkillLevel(skillId) - buffStatBonuses.getOrDefault("skill:" + skillId, 0);
+  }
+
+  public int getTrueElementResistance(String element) {
+    String normalized = element == null ? "" : element.toLowerCase();
+    return getElementResistance(element) - buffStatBonuses.getOrDefault("resist:" + normalized, 0);
+  }
+
+  public int getTrueElementPower(String element) {
+    String normalized = element == null ? "" : element.toLowerCase();
+    return getElementPower(element) - buffStatBonuses.getOrDefault("power:" + normalized, 0);
+  }
+
   public int getArmorClassBoost() {
     return buffStatBonuses.getOrDefault("armorClass", 0) + EquipmentBonusRules.bonus(this, 20);
   }
@@ -926,7 +966,7 @@ public class Player extends Stats {
 
   /**
    * As above, but recording the intelligence and wisdom of a caster that is not this player, so the
-   * buff can be rebuilt at the same strength when the character is loaded again (T4C-0060). Pass 0
+   * buff can be rebuilt at the same strength when the character is loaded again (T4C-0061). Pass 0
    * for both when the player cast it themselves.
    */
   public void applyBuff(
@@ -1166,7 +1206,7 @@ public class Player extends Stats {
     private List<SpellData.SpellEffect> effects;
     private float regenAccHp = 0f;
     private float regenAccMana = 0f;
-    // T4C-0060: who cast this, when it wasn't the player. A saved buff keeps only its name and
+    // T4C-0061: who cast this, when it wasn't the player. A saved buff keeps only its name and
     // remaining time, and its effects are re-derived from the character on load - correct while
     // every buff was self-cast, but it silently rescales a temple blessing to the blessed
     // character's own stats. Zero means "the player cast it", which is every buff but a blessing.

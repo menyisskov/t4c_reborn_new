@@ -9,7 +9,7 @@ import com.perso.T4C.spell.SpellRegistry;
 import java.util.List;
 
 /**
- * The blessing chest that stands outside each town's temple (T4C-0060). Clicking it lays the town's
+ * The blessing chest that stands outside each town's temple (T4C-0061). Clicking it lays the town's
  * whole set of wards on the clicker at once, for free, cast by an unseen priest rather than by the
  * player - so a character too low to have learned any of these spells still benefits, and nobody
  * spends mana.

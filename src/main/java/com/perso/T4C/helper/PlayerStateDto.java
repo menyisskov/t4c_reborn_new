@@ -66,7 +66,7 @@ public class PlayerStateDto {
     public String spellName;
     public long remainingSeconds;
     public long totalDurationSeconds;
-    // T4C-0060: the stats of a non-player caster (a temple blessing's priest), so the buff can be
+    // T4C-0061: the stats of a non-player caster (a temple blessing's priest), so the buff can be
     // rebuilt at the strength it was granted rather than rescaled to the character's own stats.
     // Absent in saves written before this existed, which read back as 0 - "the player cast it".
     public int casterIntelligence;

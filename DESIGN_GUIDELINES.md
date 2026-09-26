@@ -68,6 +68,27 @@ Guarded by `InventoryServiceTest`.
 
 ## 2. Spells
 
+### `self.true_*` formula variables (T4C-0060)
+
+Formulas like `self.true_r_fire`, `self.true_dodge`, `self.true_str` read the caster's own
+**true** stat — base + gear + permanent quest bonuses, *excluding* any of the caster's own
+currently-active spell buffs — via `DiceFormula.Context.selfTrue` (populated in
+`SpellCastingService.selfTrue`). Reading the true value rather than the live/buffed one means
+re-casting a buff before it expires refreshes it to the same size instead of compounding forever.
+`DiceFormula` answers 0 for anything it can't parse rather than throwing, so a variable with no
+substitution rule silently becomes 0 — this is why Resist Fire, Resist Ice, Nimbleness's dodge
+half, Tranquility and Clear Thought did nothing for a while; check this file's mistakes log and
+`SelfReferentialBuffFormulaTest` before assuming a new formula variable "just works" the same way.
+
+- **Owner's ruling on Resist Fire / Resist Ice:** ship as written — `self.true_r_fire`/
+  `self.true_r_water` add 100% of your own resistance for 60 seconds. Elemental damage is
+  `raw * 100 / resistance`, so doubling a base-100 resistance is exactly a 50% damage cut,
+  regardless of how much gear has already raised that resistance — the formula is self-limiting,
+  not an uncapped multiplier. Light (base 5000) is never boosted by a spell, so it isn't a
+  consideration here. The existing "greater" resistance potions use the same `self.true_r_*`
+  formula and are intentionally left at parity with these spells; "lesser" (`/4`) and "partial"
+  (`/2`) potions are weaker versions of the same rule, not separate values to rebalance.
+
 ### Character creation
 
 Creation is a **class picker**, not a questionnaire (T4C-0059). The eight-question personality
@@ -164,7 +185,7 @@ quiz is gone; its i18n strings were deleted with it.
   of them follow the `item_`/`mob_`/`test_`/`npc_` naming convention the rest of that filter relies
   on. Any future non-player spell that also doesn't fit that naming convention needs the same
   treatment, or it will silently show up in the spellbook and at the spell seller.
-- **`minLevel` 0 means "not a player spell" (T4C-0060).** `SpellRegistry.isPlayerCastable` drops
+- **`minLevel` 0 means "not a player spell" (T4C-0061).** `SpellRegistry.isPlayerCastable` drops
   every spell with no level requirement, because nothing in the game sells or grants one - the nine
   that existed were GM tools, item-triggered gateways and cut content. A real spell that should be
   learnable from the very start gets `minLevel` **1**, not 0; `Light` was the one such spell and now
@@ -172,7 +193,7 @@ quiz is gone; its i18n strings were deleted with it.
   `NEW_SPELL_CLASSES` allow-list deliberately re-adds curated entries that fail this filter, so
   `avalon_gateway` still has a website page (the Scroll of Avalon casts it) while being absent from
   the spellbook and the seller.
-- **Casting is instant; the pacing lives entirely in exhaustion (T4C-0060).** A successful cast
+- **Casting is instant; the pacing lives entirely in exhaustion (T4C-0061).** A successful cast
   launches the spell in the same frame - there is no pre-cast wait and no cast bar. The gap before
   the next action comes only from `applyExhaustion` inside `SpellCastingService.begin`, i.e. the
   spell's own mental/physical/attack exhaustion formulas and the 1000/750/750ms floor above. The old
@@ -180,17 +201,7 @@ quiz is gone; its i18n strings were deleted with it.
   it roughly halved real cast cycle time without touching a single balance number. Don't reintroduce a
   pre-cast delay to "slow casting down" - change the exhaustion formulas instead. The progress bar is
   now only for harvesting and taming.
-- **Caster-stat formula variables must all be substituted (T4C-0060).** `DiceFormula` resolves an
-  unknown variable to nothing, and its parser answers **0** for unparseable input rather than
-  failing - so a formula naming a variable the evaluator doesn't know produces a spell that silently
-  does nothing. `self.true_<stat>` was unhandled, which made Tranquility, Clear Thought and half of
-  Nimbleness inert. When adding a formula, check the variable exists in `DiceFormula.substituteVars`.
-  **Still open:** `self.true_r_<element>` (Resist Fire, Resist Ice) and `self.true_dodge`
-  (Nimbleness) remain unsubstituted, because `DiceFormula.Context` carries no per-caster resistance
-  or dodge reading. Those three spells are still partly or wholly inert; fixing them needs the
-  Context extended, and a decision on what "double your own resistance" should be worth.
-
-### Temple blessing chests (T4C-0060)
+### Temple blessing chests (T4C-0061)
 
 - An **offering chest** stands outside each town's temple and lays nine wards on whoever clicks it:
   Bless, Barrier, Protection, Mana Shield, Mana Surge, Earthen Strength, Stone Skin, Tranquility,
@@ -222,7 +233,7 @@ quiz is gone; its i18n strings were deleted with it.
 - Caster stats live per `Shrine` rather than behind a town-rank multiplier, because the stats are the
   whole of what varies between chests, and a multiplier stopped fitting once intelligence differed
   too. Adding a middle tier means adding one more `Shrine` with its own pair of numbers.
-- **A buff cast by someone other than the player must carry that caster's stats (T4C-0060).** A save
+- **A buff cast by someone other than the player must carry that caster's stats (T4C-0061).** A save
   keeps only a buff's name and remaining time; `PlayerStateMapper.applyActiveBuffs` rebuilds its
   effects on load. That was right while every buff was self-cast, but it rescaled an Avalon blessing
   from +258 to +18 armour the first time a character reloaded. `ActiveBuff` and

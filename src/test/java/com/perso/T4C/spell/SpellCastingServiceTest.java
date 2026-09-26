@@ -22,7 +22,7 @@ class SpellCastingServiceTest {
     assertTrue(result.success(), () -> "Unexpected cast failure: " + result.failure());
   }
 
-  // T4C-0060: casting is instant, but the gap it leaves behind is not. A successful cast still
+  // T4C-0061: casting is instant, but the gap it leaves behind is not. A successful cast still
   // banks the spell's exhaustion, which is the only thing pacing one cast against the next now that
   // nothing waits before the spell goes off.
   @Test

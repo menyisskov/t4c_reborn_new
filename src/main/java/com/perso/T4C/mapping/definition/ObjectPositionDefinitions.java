@@ -1575,7 +1575,7 @@ public final class ObjectPositionDefinitions {
         new ObjectPos("WOODEN_ROUND_CHAIR_2_FLIP", 1457, 2891, 0, false),
         new ObjectPos("WOODEN_ROUND_CHAIR_2_I_REV", 1458, 2896, 0, false),
         new ObjectPos("Nether Chest 1", 1882, 2963, 0, false),
-        // T4C-0060: one blessing chest outside each town's temple. Kept together rather than sorted
+        // T4C-0061: one blessing chest outside each town's temple. Kept together rather than sorted
         // into the list above so the set stays reviewable as a set - the order of this list does
         // not
         // affect what is drawn or what is clickable. The tiles must match

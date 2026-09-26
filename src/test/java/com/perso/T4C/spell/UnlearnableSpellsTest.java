@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * T4C-0060: spells with no level requirement are not spells a player can ever learn - no trainer
+ * T4C-0061: spells with no level requirement are not spells a player can ever learn - no trainer
  * sells one, no reward grants one - so they have no business filling the spellbook, the spell
  * seller or the reference site.
  */

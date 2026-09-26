@@ -1,6 +1,11 @@
 package com.perso.T4C.helper;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class DiceFormula {
   public static final class Context {
@@ -9,6 +14,15 @@ public final class DiceFormula {
     public final int targetResistDark, targetResistLight;
     public final int targetResistFire, targetResistEarth, targetResistAir, targetResistWater;
     public final int selfFire, selfEarth, selfAir, selfWater, selfLight, selfDark;
+
+    /**
+     * The caster's own <em>true</em> readings, keyed by the canonical {@code self.true_*} suffix
+     * ("str", "dodge", "r_fire", ...). "True" means gear and permanent bonuses but not currently
+     * active spell buffs, so a buff that reads its own stat refreshes instead of compounding. Empty
+     * when the context was not built for a player; missing keys fall back to {@link
+     * #selfTrueFallback}.
+     */
+    public final Map<String, Integer> selfTrue;
 
     public Context(int str, int end, int agi, int intel, int wil, int wis, int luck, int level) {
       this(str, end, agi, intel, wil, wis, luck, level, 0, 0, 0, 100);
@@ -121,6 +135,40 @@ public final class DiceFormula {
       this.selfWater = selfWater;
       this.selfLight = selfLight;
       this.selfDark = selfDark;
+      this.selfTrue = Map.of();
+    }
+
+    private Context(Context base, Map<String, Integer> selfTrue) {
+      this.str = base.str;
+      this.end = base.end;
+      this.agi = base.agi;
+      this.intel = base.intel;
+      this.wil = base.wil;
+      this.wis = base.wis;
+      this.luck = base.luck;
+      this.level = base.level;
+      this.arrowDmg = base.arrowDmg;
+      this.targetResistDark = base.targetResistDark;
+      this.targetResistLight = base.targetResistLight;
+      this.targetResistFire = base.targetResistFire;
+      this.targetResistEarth = base.targetResistEarth;
+      this.targetResistAir = base.targetResistAir;
+      this.targetResistWater = base.targetResistWater;
+      this.selfFire = base.selfFire;
+      this.selfEarth = base.selfEarth;
+      this.selfAir = base.selfAir;
+      this.selfWater = base.selfWater;
+      this.selfLight = base.selfLight;
+      this.selfDark = base.selfDark;
+      this.selfTrue = selfTrue;
+    }
+
+    /** Returns a copy of this context carrying the given true readings. */
+    public Context withSelfTrue(Map<String, Integer> readings) {
+      if (readings == null || readings.isEmpty()) return this;
+      Map<String, Integer> canonical = new LinkedHashMap<>();
+      readings.forEach((key, value) -> canonical.put(canonicalSelfTrueKey(key), value));
+      return new Context(this, Collections.unmodifiableMap(canonical));
     }
 
     public static final Context ZERO = new Context(0, 0, 0, 0, 0, 0, 0, 0);
@@ -221,22 +269,7 @@ public final class DiceFormula {
     s = s.replace("target.r_earth", String.valueOf(ctx.targetResistEarth));
     s = s.replace("target.r_air", String.valueOf(ctx.targetResistAir));
     s = s.replace("target.r_water", String.valueOf(ctx.targetResistWater));
-    // T4C-0060: "self.true_<stat>" is the unbuffed reading of a caster stat. The Context only
-    // carries effective values, so these resolve to the same numbers as the plain "self.<stat>"
-    // forms below, and so must be substituted before them. They must be substituted at all: an
-    // unresolved name leaves a letter where the parser wants a digit, and the parser answers 0
-    // rather than failing - which silently turned Tranquility, Clear Thought and half of
-    // Nimbleness into no-ops. "self.true_r_<element>" and "self.true_dodge" are still unresolved:
-    // the Context carries no per-caster resistance or dodge reading to map them onto.
-    s = s.replace("self.true_level", String.valueOf(ctx.level));
-    s = s.replace("self.true_intel", String.valueOf(ctx.intel));
-    s = s.replace("self.true_int", String.valueOf(ctx.intel));
-    s = s.replace("self.true_luck", String.valueOf(ctx.luck));
-    s = s.replace("self.true_str", String.valueOf(ctx.str));
-    s = s.replace("self.true_end", String.valueOf(ctx.end));
-    s = s.replace("self.true_agi", String.valueOf(ctx.agi));
-    s = s.replace("self.true_wil", String.valueOf(ctx.wil));
-    s = s.replace("self.true_wis", String.valueOf(ctx.wis));
+    s = substituteSelfTrue(s, ctx);
     s = s.replace("self.level", String.valueOf(ctx.level));
     s = s.replace("self.intel", String.valueOf(ctx.intel));
     s = s.replace("self.int", String.valueOf(ctx.intel));
@@ -254,6 +287,61 @@ public final class DiceFormula {
     s = s.replace("self.dark", String.valueOf(ctx.selfDark));
     s = s.replace("arrow_dmg", String.valueOf(ctx.arrowDmg));
     return s;
+  }
+
+  private static final Pattern SELF_TRUE = Pattern.compile("self\\.true_([A-Za-z0-9_]+)");
+
+  private static String substituteSelfTrue(String s, Context ctx) {
+    Matcher matcher = SELF_TRUE.matcher(s);
+    StringBuilder out = new StringBuilder();
+    while (matcher.find()) {
+      String key = canonicalSelfTrueKey(matcher.group(1));
+      Integer reading = ctx.selfTrue.get(key);
+      matcher.appendReplacement(
+          out, Integer.toString(reading != null ? reading : selfTrueFallback(key, ctx)));
+    }
+    matcher.appendTail(out);
+    return out.toString();
+  }
+
+  static String canonicalSelfTrueKey(String key) {
+    String normalized = key == null ? "" : key.trim().toLowerCase();
+    return switch (normalized) {
+      case "dex", "agility" -> "agi";
+      case "intel", "intelligence" -> "int";
+      case "strength" -> "str";
+      case "endurance" -> "end";
+      case "wisdom" -> "wis";
+      default -> normalized;
+    };
+  }
+
+  /**
+   * What a {@code self.true_*} variable reads when the context carries no reading for it — used by
+   * monster casts and by the compendium exporter, which have no player to ask. Falls back to the
+   * context's effective values, and to the same resistance baselines {@code Player} uses, rather
+   * than to 0.
+   */
+  private static int selfTrueFallback(String key, Context ctx) {
+    return switch (key) {
+      case "str" -> ctx.str;
+      case "end" -> ctx.end;
+      case "agi" -> ctx.agi;
+      case "int" -> ctx.intel;
+      case "wis" -> ctx.wis;
+      case "wil" -> ctx.wil;
+      case "luck" -> ctx.luck;
+      case "level" -> ctx.level;
+      case "fire" -> ctx.selfFire;
+      case "earth" -> ctx.selfEarth;
+      case "air" -> ctx.selfAir;
+      case "water" -> ctx.selfWater;
+      case "light" -> ctx.selfLight;
+      case "dark" -> ctx.selfDark;
+      case "r_light" -> 5000;
+      case "r_fire", "r_earth", "r_air", "r_water", "r_dark" -> 100;
+      default -> 0;
+    };
   }
 
   private static String replaceDiceOp(String s) {

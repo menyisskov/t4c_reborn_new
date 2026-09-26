@@ -193,7 +193,7 @@ public final class PlayerStateMapper {
         runtimeSpellName = spell.getName();
         description = spell.getDescription();
         iconId = spell.getIconId();
-        // T4C-0060: a buff cast by somebody other than the player (a temple blessing) has to be
+        // T4C-0061: a buff cast by somebody other than the player (a temple blessing) has to be
         // rebuilt from that caster's stats. Re-deriving it from the character, as a self-cast buff
         // is, would quietly rescale an archmage's blessing down to the character's own wisdom.
         effects =

@@ -85,7 +85,7 @@ public class ObjectClickHandler extends InputAdapter {
               com.perso.T4C.config.GameConstants.OBJECT_MAX_INTERACTION_DISTANCE);
         } else {
           ObjectPos clicked = objectRenderer.getLastClickedObject();
-          // T4C-0060: a temple blessing chest holds wards, not loot, so it is answered before
+          // T4C-0061: a temple blessing chest holds wards, not loot, so it is answered before
           // ChestService - which would only report it as "not a chest" and say nothing.
           TempleBlessingService.Result blessing = templeBlessingService.bless(player, clicked);
           if (blessing.blessed()) {

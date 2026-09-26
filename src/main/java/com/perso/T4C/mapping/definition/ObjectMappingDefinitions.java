@@ -1191,7 +1191,7 @@ public final class ObjectMappingDefinitions {
             "TAMBOUR",
             new ObjectMapping(
                 0, "Misc 7 - All 10", false, false, "", "", false, "${object.tambour}", 0)),
-        // T4C-0060: the blessing chest outside each town's temple. Unlike every other chest here it
+        // T4C-0061: the blessing chest outside each town's temple. Unlike every other chest here it
         // is not backed by a container item, so it needs clickAnimate to be clickable at all -
         // ObjectRenderer only offers up an object that either animates on click or is a container.
         Map.entry(
