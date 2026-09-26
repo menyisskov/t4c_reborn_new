@@ -13,6 +13,34 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — Offering chests at the temples, and spells that go off when you cast them (T4C-0061)
+
+### Added
+- **An offering chest stands outside the temple in every town** — Lighthaven, Silversky, Windhowl,
+  Stonecrest, the Oracle and Avalon Sanctuary. Click it and a priest you never see lays nine wards
+  over you at once, free and regardless of your level or what you have learned: Bless, Barrier,
+  Protection, Mana Shield, Mana Surge, Earthen Strength, Stone Skin, Tranquility and Clear Thought.
+  Most last twenty minutes, Bless half an hour, Clear Thought three. Clicking again tops them all
+  back up.
+- Five of the six chests give the same blessing — a capable town priest's work, worth about 59
+  armour, +100 wisdom, +33 strength and a couple of hundred hit points. **Avalon Sanctuary's is in
+  another league**, because an archmage casts it: roughly 258 armour, +750 wisdom, +135 strength and
+  well over a thousand hit points. A town blessing is a convenience on your way out of the gate;
+  Avalon's is worth the journey.
+- A blessing keeps its full strength if you log out and back in while it is still running.
+
+### Changed
+- **Spells now leave your hands the instant you cast them.** There is no longer a bar to sit through
+  first, so you are not standing still being bitten by rats for a second and a half before your spell
+  even starts. The wait between one cast and the next has not changed — that still comes from the
+  spell's own exhaustion, exactly as before. In practice casting is about twice as quick, because the
+  old bar charged you that wait twice over.
+- Gathering herbs and taming beasts still take time and still show the bar.
+- Spells nobody could ever learn no longer clutter the spellbook, the spell seller's list or the
+  reference site: Chaos Shield, Essence of Drake, Tetrashock, Vaporize, Drake's Blades of Vengeance,
+  Lighthaven Improved Gateway, Wrath of Marc and Avalon Gateway. Nothing ever sold or granted them.
+  Light stays — it is a real spell, learnable from level 1. The Scroll of Avalon still works.
+
 ## 2026-09-26 — Fixed self-buff spells that did nothing (T4C-0060)
 
 ### Fixed

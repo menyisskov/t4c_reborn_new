@@ -1,5 +1,6 @@
 package com.perso.T4C.spell;
 
+import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.player.Player;
@@ -487,6 +488,64 @@ public final class SpellEffectManager {
             elementalPower(caster, "light"),
             elementalPower(caster, "dark"))
         .withSelfTrue(base.selfTrue);
+  }
+
+  /**
+   * The caster context for a buff laid on {@code blessed} by something that is not a character - a
+   * temple blessing, for example. The casting statistics are the ones given rather than any read
+   * off a player, while the elemental powers stay with {@code blessed}, because the formulas that
+   * read them ({@code target.true_earth} and its siblings) mean the buff's recipient, not its
+   * caster.
+   *
+   * <p>The caster's level is the level cap: none of the buff amounts read {@code self.level}, but a
+   * blessing comes from a master, so any duration that does read it should not be cut short.
+   */
+  public static DiceFormula.Context externalCasterContext(
+      Player blessed, int intelligence, int wisdom) {
+    if (blessed == null) return DiceFormula.Context.ZERO;
+    return new DiceFormula.Context(
+            0,
+            0,
+            0,
+            Math.max(0, intelligence),
+            0,
+            Math.max(0, wisdom),
+            0,
+            GameConstants.MAX_PLAYER_LEVEL,
+            0,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            elementalPower(blessed, "fire"),
+            elementalPower(blessed, "earth"),
+            elementalPower(blessed, "air"),
+            elementalPower(blessed, "water"),
+            elementalPower(blessed, "light"),
+            elementalPower(blessed, "dark"))
+        .withSelfTrue(externalSelfTrue(blessed, intelligence, wisdom));
+  }
+
+  /**
+   * The {@code self.true_*} readings for an external caster: the casting statistics are the caster's,
+   * because a formula like Tranquility's {@code self.true_wis/2} means whoever is casting, while the
+   * elemental readings stay with {@code blessed}, matching the positional fields above. Set
+   * explicitly rather than left to {@code DiceFormula}'s fallback, so the blessing's strength does
+   * not depend on what that fallback happens to do.
+   */
+  private static java.util.Map<String, Integer> externalSelfTrue(
+      Player blessed, int intelligence, int wisdom) {
+    java.util.Map<String, Integer> readings = new java.util.LinkedHashMap<>();
+    readings.put("int", Math.max(0, intelligence));
+    readings.put("wis", Math.max(0, wisdom));
+    readings.put("level", GameConstants.MAX_PLAYER_LEVEL);
+    for (String element : List.of("fire", "earth", "air", "water", "light", "dark")) {
+      readings.put(element, blessed.getTrueElementPower(element));
+      readings.put("r_" + element, blessed.getTrueElementResistance(element));
+    }
+    return readings;
   }
 
   private static String normalizeBoostAttribute(String attribute) {

@@ -185,6 +185,73 @@ quiz is gone; its i18n strings were deleted with it.
   of them follow the `item_`/`mob_`/`test_`/`npc_` naming convention the rest of that filter relies
   on. Any future non-player spell that also doesn't fit that naming convention needs the same
   treatment, or it will silently show up in the spellbook and at the spell seller.
+- **`minLevel` 0 means "not a player spell" (T4C-0061).** `SpellRegistry.isPlayerCastable` drops
+  every spell with no level requirement, because nothing in the game sells or grants one - the nine
+  that existed were GM tools, item-triggered gateways and cut content. A real spell that should be
+  learnable from the very start gets `minLevel` **1**, not 0; `Light` was the one such spell and now
+  carries 1. Guarded by `UnlearnableSpellsTest`. Note the compendium exporter's
+  `NEW_SPELL_CLASSES` allow-list deliberately re-adds curated entries that fail this filter, so
+  `avalon_gateway` still has a website page (the Scroll of Avalon casts it) while being absent from
+  the spellbook and the seller.
+- **Casting is instant; the pacing lives entirely in exhaustion (T4C-0061).** A successful cast
+  launches the spell in the same frame - there is no pre-cast wait and no cast bar. The gap before
+  the next action comes only from `applyExhaustion` inside `SpellCastingService.begin`, i.e. the
+  spell's own mental/physical/attack exhaustion formulas and the 1000/750/750ms floor above. The old
+  pre-cast wait re-used those same formulas, so it charged every spell its exhaustion twice; removing
+  it roughly halved real cast cycle time without touching a single balance number. Don't reintroduce a
+  pre-cast delay to "slow casting down" - change the exhaustion formulas instead. The progress bar is
+  now only for harvesting and taming.
+### Temple blessing chests (T4C-0061)
+
+- An **offering chest** stands outside each town's temple and lays nine wards on whoever clicks it:
+  Bless, Barrier, Protection, Mana Shield, Mana Surge, Earthen Strength, Stone Skin, Tranquility,
+  Clear Thought. Free, no mana, no level or learning requirement - the caster is an unseen priest,
+  not the player. Re-clicking refreshes rather than stacks; there's deliberately no cooldown, since a
+  second click buys nothing a first click plus a short wait wouldn't.
+- **Owner's call on strength: two levels, not a per-town ladder.** The five ordinary towns
+  (Lighthaven, Silversky, Windhowl, Stonecrest, the Oracle) are all served by a **200
+  intelligence / 200 wisdom** journeyman and give an identical blessing; **Avalon Sanctuary** alone
+  has an archmage at **500 intelligence / 1500 wisdom**. An earlier 3-tier version
+  (500 int, 500 × tier wis) was rejected as far too strong for the ordinary towns - it handed out
+  +121 and +189 AC for a free click. Current numbers, measured not estimated:
+
+  | | Ordinary town | Avalon Sanctuary |
+  |---|---:|---:|
+  | Armour class | +59 | +258 |
+  | Wisdom | +100 | +750 |
+  | Strength | +33 | +135 |
+  | Max HP | ~+230 | ~+1635 |
+  | Attack / archery | +100 | +750 |
+
+  Those figures are pinned by `TempleBlessingChestTest.theBlessingIsWorthWhatTheGuidelinesSay`, so
+  retuning the caster stats fails that test rather than quietly leaving this table wrong. Max HP is
+  approximate because Bless rolls `1d(wis/4)` into it.
+
+  The gap is the point: a town blessing is a convenience, Avalon's is worth the journey. Avalon's
+  numbers are still large against the level-cap main stat of 1000 and are deliberate - if monster
+  difficulty is ever tuned against "a buffed player", Avalon is the buffed baseline.
+- Caster stats live per `Shrine` rather than behind a town-rank multiplier, because the stats are the
+  whole of what varies between chests, and a multiplier stopped fitting once intelligence differed
+  too. Adding a middle tier means adding one more `Shrine` with its own pair of numbers.
+- **A buff cast by someone other than the player must carry that caster's stats (T4C-0061).** A save
+  keeps only a buff's name and remaining time; `PlayerStateMapper.applyActiveBuffs` rebuilds its
+  effects on load. That was right while every buff was self-cast, but it rescaled an Avalon blessing
+  from +258 to +18 armour the first time a character reloaded. `ActiveBuff` and
+  `PlayerStateDto.ActiveBuffState` now carry `casterIntelligence`/`casterWisdom`, and **0 means "the
+  player cast it"** - which is how saves written before this read back, so they behave exactly as
+  before. Any future buff applied by an NPC, item or world object needs the same treatment or it will
+  silently weaken on reload. Guarded by
+  `TempleBlessingChestTest.aBlessingSurvivesSavingAndLoadingAtFullStrength` and
+  `anOlderSaveWithNoRecordedCasterStillLoads`.
+- The two lists that define a chest - `TempleBlessingService.SHRINES` (tile + tier) and the
+  `TEMPLE BLESSING CHEST` entries in `ObjectPositionDefinitions` - must agree exactly, or a chest
+  either does nothing when clicked or is unreachable. `TempleBlessingChestTest` holds them in step.
+- Because the chest isn't backed by a container item, its `ObjectMapping` needs `clickAnimate = true`
+  to be clickable at all: `ObjectRenderer.handleClick` only considers objects that animate on click
+  or are containers.
+- **Accepted gap:** Windhowl, Stonecrest and the Oracle have no temple modelled in the world, so
+  their chests sit at the town's own gathering point (gate sentry, trade row, cavern arrival) rather
+  than outside a temple door. Move them when those temples exist.
 
 ## 3. Items
 

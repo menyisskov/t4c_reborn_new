@@ -136,16 +136,6 @@ public final class SpellCastingService {
     };
   }
 
-  public static long evaluateCastDurationMillis(SpellData spell, Player caster) {
-    if (spell == null || caster == null) return 0L;
-    DiceFormula.Context context = context(caster);
-    return Math.max(
-        evaluateMillis(spell.getMentalExhaustion(), context),
-        Math.max(
-            evaluateMillis(spell.getPhysicalExhaustion(), context),
-            evaluateMillis(spell.getAttackExhaustion(), context)));
-  }
-
   private static boolean targetAccepted(int type, TargetKind kind) {
     if (type <= 0) return true;
     return switch (kind) {

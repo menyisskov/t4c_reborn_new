@@ -961,6 +961,23 @@ public class Player extends Stats {
       Integer durationSeconds,
       boolean unlimited,
       List<SpellData.SpellEffect> effects) {
+    applyBuff(spellName, description, iconId, durationSeconds, unlimited, effects, 0, 0);
+  }
+
+  /**
+   * As above, but recording the intelligence and wisdom of a caster that is not this player, so the
+   * buff can be rebuilt at the same strength when the character is loaded again (T4C-0061). Pass 0
+   * for both when the player cast it themselves.
+   */
+  public void applyBuff(
+      String spellName,
+      String description,
+      String iconId,
+      Integer durationSeconds,
+      boolean unlimited,
+      List<SpellData.SpellEffect> effects,
+      int casterIntelligence,
+      int casterWisdom) {
     if (spellName == null || spellName.isEmpty()) {
       return;
     }
@@ -976,13 +993,28 @@ public class Player extends Stats {
     for (ActiveBuff buff : activeBuffs) {
       if (spellName.equals(buff.getSpellName())) {
         removeBuffContributions(buff);
-        buff.refresh(description, iconId, expiresAt, durationMillis, safeEffects);
+        buff.refresh(
+            description,
+            iconId,
+            expiresAt,
+            durationMillis,
+            safeEffects,
+            casterIntelligence,
+            casterWisdom);
         addBuffContributions(buff);
         return;
       }
     }
     ActiveBuff newBuff =
-        new ActiveBuff(spellName, description, iconId, expiresAt, durationMillis, safeEffects);
+        new ActiveBuff(
+            spellName,
+            description,
+            iconId,
+            expiresAt,
+            durationMillis,
+            safeEffects,
+            casterIntelligence,
+            casterWisdom);
     activeBuffs.add(newBuff);
     addBuffContributions(newBuff);
   }
@@ -1174,6 +1206,12 @@ public class Player extends Stats {
     private List<SpellData.SpellEffect> effects;
     private float regenAccHp = 0f;
     private float regenAccMana = 0f;
+    // T4C-0061: who cast this, when it wasn't the player. A saved buff keeps only its name and
+    // remaining time, and its effects are re-derived from the character on load - correct while
+    // every buff was self-cast, but it silently rescales a temple blessing to the blessed
+    // character's own stats. Zero means "the player cast it", which is every buff but a blessing.
+    private int casterIntelligence;
+    private int casterWisdom;
 
     private ActiveBuff(
         String spellName,
@@ -1181,13 +1219,17 @@ public class Player extends Stats {
         String iconId,
         long expiresAtMillis,
         long durationMillis,
-        List<SpellData.SpellEffect> effects) {
+        List<SpellData.SpellEffect> effects,
+        int casterIntelligence,
+        int casterWisdom) {
       this.spellName = spellName;
       this.description = description;
       this.iconId = iconId;
       this.expiresAtMillis = expiresAtMillis;
       this.durationMillis = durationMillis;
       this.effects = effects != null ? effects : Collections.emptyList();
+      this.casterIntelligence = casterIntelligence;
+      this.casterWisdom = casterWisdom;
     }
 
     private void refresh(
@@ -1195,14 +1237,28 @@ public class Player extends Stats {
         String iconId,
         long expiresAtMillis,
         long durationMillis,
-        List<SpellData.SpellEffect> effects) {
+        List<SpellData.SpellEffect> effects,
+        int casterIntelligence,
+        int casterWisdom) {
       this.description = description;
       this.iconId = iconId;
       this.expiresAtMillis = expiresAtMillis;
       this.durationMillis = durationMillis;
       this.effects = effects != null ? effects : Collections.emptyList();
+      this.casterIntelligence = casterIntelligence;
+      this.casterWisdom = casterWisdom;
       this.regenAccHp = 0f;
       this.regenAccMana = 0f;
+    }
+
+    /** Intelligence of the non-player caster that laid this buff, or 0 if the player cast it. */
+    public int getCasterIntelligence() {
+      return casterIntelligence;
+    }
+
+    /** Wisdom of the non-player caster that laid this buff, or 0 if the player cast it. */
+    public int getCasterWisdom() {
+      return casterWisdom;
     }
 
     int[] tickRegen(float delta) {

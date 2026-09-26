@@ -1,6 +1,6 @@
 package com.perso.T4C.spell;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.player.Player;
@@ -22,8 +22,11 @@ class SpellCastingServiceTest {
     assertTrue(result.success(), () -> "Unexpected cast failure: " + result.failure());
   }
 
+  // T4C-0061: casting is instant, but the gap it leaves behind is not. A successful cast still
+  // banks the spell's exhaustion, which is the only thing pacing one cast against the next now that
+  // nothing waits before the spell goes off.
   @Test
-  void evaluatesLongestCastExhaustionInMilliseconds() throws Exception {
+  void aSuccessfulCastStillBanksItsExhaustion() throws Exception {
     Player caster = new Player();
     caster.setLevel(12);
     SpellData spell =
@@ -61,6 +64,22 @@ class SpellCastingServiceTest {
             0,
             false,
             null);
-    assertEquals(4000L, SpellCastingService.evaluateCastDurationMillis(spell, caster));
+    assertFalse(caster.isMentallyExhausted(), "A rested caster should start unexhausted");
+    SpellCastingService.Result result =
+        SpellCastingService.begin(
+            new SpellCastingService.Request(
+                spell,
+                caster,
+                SpellCastingService.TargetKind.HOSTILE_UNIT,
+                1f,
+                true,
+                false,
+                false));
+    assertTrue(result.success(), () -> "Unexpected cast failure: " + result.failure());
+    // "1000 + 250 * self.level" at level 12 is 4 seconds of mental exhaustion, and the physical and
+    // attack readings are shorter, so the caster is held by the longest of the three.
+    assertTrue(caster.isMentallyExhausted(), "The cast should have banked its mental exhaustion");
+    assertTrue(
+        caster.isPhysicallyExhausted(), "The cast should have banked its physical exhaustion");
   }
 }
