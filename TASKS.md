@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0056`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0059`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -68,6 +68,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0053 | Quest pages always show a location (giver/target/turn-in spot) and a map, including turn-in-only quests and quests not previously linked to a zone | Content | Done | `cccfeb56` | [2026-09-26](CHANGELOG.md#2026-09-26--quest-locations-always-shown-t4c-0053) |
 | T4C-0054 | Spellbook/tooltip info, spell prerequisite chains + skill-point cost rebalance, hiding system-only "spells", level-scaled cast speed for high-tier spells, universal hover tooltips, hold-to-repeat skill point spending | Systems/Content/Fix | Done | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--spell-hierarchy-spellbook-info-and-a-few-quality-of-life-fixes-t4c-0054) |
 | T4C-0055 | Reference-site editorial pass: the world reorganised into an ordered journey, plain-language rewrite throughout, corrected quest reward/requirement wording, plus a technical-writer review skill | Content/Fix/Process/Tooling | Done | `3af64a1b` | [2026-09-26](CHANGELOG.md#2026-09-26--the-reference-website-rewritten-for-players-t4c-0055) |
+| T4C-0056 | Locations panel fast travel to 9 NPCs revisited across many quests or within one long questline (Lord Sunrock, Asarr, Araknor, Lance Silversmith, Zhakar, Elysana Blackrose, Dionysus Silverstream, Grant Hornkeep, Filandrius) | Content | Done | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--fast-travel-to-well-worn-npcs-t4c-0056) |
 
 ## Type legend
 

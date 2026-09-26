@@ -42,7 +42,20 @@ public final class NamedLocations {
         new NamedLocation("Deep Ones Cave", 330, 2246, 0, "deep_ones_cave"),
         new NamedLocation("Avalon Sanctuary", 1340, 1477, 0, "avalon_sanctuary"),
         new NamedLocation("The Avalon Wilds", 1265, 1400, 0, "avalon_wilds"),
-        new NamedLocation("The Fading Veil", 1420, 1560, 0, "fading_veil"));
+        new NamedLocation("The Fading Veil", 1420, 1560, 0, "fading_veil"),
+        // T4C-0056: quality-of-life stops at NPCs a player ends up walking back to repeatedly -
+        // either across several unrelated quests, or because a single quest bounces the player
+        // to and from them multiple times. Unconditional like the original landmarks above:
+        // nothing to unlock, these NPCs are already reachable, this just cuts the walk.
+        new NamedLocation("Lord Sunrock", 1609, 1181, 0),
+        new NamedLocation("Asarr", 2139, 1226, 0),
+        new NamedLocation("Araknor", 2981, 1035, 0),
+        new NamedLocation("Lance Silversmith", 2580, 690, 0),
+        new NamedLocation("Zhakar", 55, 1769, 0),
+        new NamedLocation("Elysana Blackrose", 1561, 2471, 0),
+        new NamedLocation("Dionysus Silverstream", 1025, 1000, 0),
+        new NamedLocation("Grant Hornkeep", 315, 740, 0),
+        new NamedLocation("Filandrius", 985, 1465, 0));
   }
 
   /** {@link #all()} filtered to the entries a given player currently has access to: every
