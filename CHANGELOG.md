@@ -23,6 +23,33 @@ on, every content/feature pass adds its own entry here as part of the work
   (Griroesh and Dune Raiders), and the Necklace and a matching Nightsword now drop too, so both
   blades can actually be forged.
 
+## 2026-09-26 — Spell hierarchy, spellbook info, and a few quality-of-life fixes (T4C-0054)
+
+### Added
+- Hovering a spell in your spellbook, or in a shop or trainer list, now shows what it actually
+  does: its description, element, whether it's a physical or mental attack, and its level,
+  Intelligence, Wisdom and mana requirements. Hovering a shop item shows the same kind of detail.
+- Holding down a "+1" button (spending stat points, skill points, or adding to a shop/spell
+  basket) now keeps adding for as long as you hold it, instead of one click per point.
+
+### Changed
+- Every element's offensive spells now form a proper progression at the Lighthaven spell
+  seller — you need to already know the previous spell in the line (for example Stone Shard →
+  Shatter → Earthquake → Boulders) before the next one becomes available.
+- Learning a spell now costs skill points based on how powerful it is, instead of a flat 5
+  points for everything. Low-level spells stay cheap; the strongest spells cost up to 100.
+  A few spells that used to teach you nothing when bought from certain trainers (their gold and
+  points were spent, but the spell never actually appeared in your spellbook) now work correctly.
+- Three internal effects that were never meant to be player spells (a boss aura, the rebirth
+  aura, and the automatic on-level-up stat boost) no longer show up in the spellbook or at the
+  spell seller. If your character already had one of these in their spell list from before this
+  fix, it's simply hidden from view now — nothing else changes.
+- Spell cast times now speed up the more your level outgrows a spell's own requirement, the same
+  way older spells already worked. The very strongest spells (right at the level cap) are already
+  as fast as they'll ever get the moment you learn them.
+- Strength keeps meaningfully increasing how much you can carry well past 1000 strength, instead
+  of the old formula flattening out almost entirely by that point.
+
 ## 2026-09-26 — The reference website, rewritten for players (T4C-0055)
 
 ### Changed

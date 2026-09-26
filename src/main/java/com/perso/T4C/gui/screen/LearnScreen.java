@@ -14,6 +14,7 @@ import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.spell.SpellPurchaseCost;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.SystemMessage;
@@ -28,7 +29,6 @@ public class LearnScreen extends GuiListScreen {
   private final Player player;
   private final List<LearnEntry> entries = new ArrayList<>();
   private LearnEntry selected = null;
-  private static final int SKILL_POINTS_PER_SPELL = 5;
   private static final Map<String, String> SKILL_ICONS =
       Map.ofEntries(
           Map.entry("attack", "64kIconSword"),
@@ -203,22 +203,23 @@ public class LearnScreen extends GuiListScreen {
       boolean blocked = !known && blockReason(entry) != null;
       BitmapFont font = known || blocked ? fontBl : fontWh;
       Color col = known || blocked ? BLOCKED : WHITE;
+      SpellData displaySpell = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
       final String name =
-          entry.isSkill()
-              ? skillName(entry)
-              : I18n.key(entry.spell.getKey(), I18n.resolve(entry.spell.getName()));
+          displaySpell != null
+              ? I18n.key(displaySpell.getKey(), I18n.resolve(displaySpell.getName()))
+              : skillName(entry);
       final String price = String.valueOf(priceOf(entry));
       final String pts =
-          entry.isSkill()
-              ? String.valueOf(currentSkillLevel(entry) + entry.count)
-              : String.valueOf(entry.count * SKILL_POINTS_PER_SPELL);
+          displaySpell != null
+              ? String.valueOf(entry.count * SpellPurchaseCost.skillPoints(displaySpell))
+              : String.valueOf(currentSkillLevel(entry) + entry.count);
       addDyn(font, CELL_NAME, rowY, () -> name, col);
       addDyn(font, CELL_PRICE, rowY, () -> price, col);
       addDyn(font, CELL_THIRD, rowY, () -> pts, col);
       TextureRegion socket =
-          entry.isSkill()
-              ? GuiSprites.load(SKILL_ICONS.get(entry.id))
-              : GuiSprites.load(entry.spell.getIconId());
+          displaySpell != null
+              ? GuiSprites.load(displaySpell.getIconId())
+              : GuiSprites.load(SKILL_ICONS.get(entry.id));
       if (socket != null) {
         animatedSprites.add(
             new GuiAnimatedSprite(List.of(socket), x + ICON_BOX[0], y + rowY + ICON_BOX[1], 1f)
@@ -276,8 +277,28 @@ public class LearnScreen extends GuiListScreen {
 
   private int basketSkillPoints() {
     return entries.stream()
-        .mapToInt(e -> e.count * (e.isSkill() ? e.skillPointCost : SKILL_POINTS_PER_SPELL))
+        .mapToInt(
+            e -> {
+              SpellData granted = e.isSkill() ? spellGrantedBy(e) : null;
+              if (granted != null) return e.count * SpellPurchaseCost.skillPoints(granted);
+              return e.count * (e.isSkill() ? e.skillPointCost : SpellPurchaseCost.skillPoints(e.spell));
+            })
         .sum();
+  }
+
+  // T4C-0054: a handful of trainers (Uranos, Giamas, ShamanWeethgwotha, ...) still offer real
+  // player spells through the legacy skill-training path (openSkillLearning/TrainingCatalog)
+  // instead of openSpellLearning. That path only ever calls player.setSkillLevel(), never
+  // player.getSpells().add() - so those spells were bought and paid for but never actually
+  // learnable/castable. Detect the overlap here (the offer's id resolves to a real,
+  // player-castable spell) and everywhere below, treat it exactly like a normal spell purchase
+  // instead of a numeric skill bump.
+  private SpellData spellGrantedBy(LearnEntry entry) {
+    if (entry == null || !entry.isSkill() || entry.formula) return null;
+    SpellData candidate = SpellRegistry.findByName(entry.id);
+    return candidate != null && SpellRegistry.playerCastableSpells().contains(candidate)
+        ? candidate
+        : null;
   }
 
   private long basketGoldCost() {
@@ -303,7 +324,11 @@ public class LearnScreen extends GuiListScreen {
       return;
     }
     for (LearnEntry entry : entries) {
-      if (entry.count == 0 || entry.isSkill()) {
+      if (entry.count == 0) {
+        continue;
+      }
+      SpellData granted = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
+      if (granted == null) {
         continue;
       }
       String reason = blockReason(entry);
@@ -311,7 +336,7 @@ public class LearnScreen extends GuiListScreen {
         SystemMessage.showShared(
             I18n.message(
                 "message.spell_cannot_learn",
-                I18n.key(entry.spell.getKey(), I18n.resolve(entry.spell.getName())),
+                I18n.key(granted.getKey(), I18n.resolve(granted.getName())),
                 reason.toLowerCase()));
         return;
       }
@@ -328,7 +353,11 @@ public class LearnScreen extends GuiListScreen {
       if (entry.count == 0) {
         continue;
       }
-      if (entry.isSkill()) {
+      SpellData granted = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
+      if (granted != null) {
+        spells.add(granted.getName());
+        learnedNames.add(I18n.key(granted.getKey(), I18n.resolve(granted.getName())));
+      } else if (entry.isSkill()) {
         int current = currentSkillLevel(entry);
         int newLevel =
             entry.formula
@@ -338,9 +367,6 @@ public class LearnScreen extends GuiListScreen {
         else player.setSkillLevel(entry.id, newLevel);
         SystemMessage.showShared(
             I18n.message("message.stat_increased", skillName(entry), newLevel));
-      } else {
-        spells.add(entry.id);
-        learnedNames.add(I18n.key(entry.spell.getKey(), I18n.resolve(entry.spell.getName())));
       }
       entry.count = 0;
     }
@@ -357,7 +383,7 @@ public class LearnScreen extends GuiListScreen {
   }
 
   private void basketAdd(LearnEntry entry) {
-    if (entry.isSkill()) {
+    if (entry.isSkill() && spellGrantedBy(entry) == null) {
       int current = currentSkillLevel(entry);
       if (entry.teaching && entry.count > 0 || current + entry.count >= entry.maxLevel) return;
       if (!entry.formula && player != null && basketSkillPoints() + 1 > player.getSkillPoints()) {
@@ -386,29 +412,47 @@ public class LearnScreen extends GuiListScreen {
     rebuildList();
   }
 
-  private boolean isKnown(String spellName) {
-    return player != null && player.getSpells() != null && player.getSpells().contains(spellName);
+  // Compares resolved spell keys, not raw saved strings, so a spell that was renamed since a
+  // character learned it (SpellRegistry's legacy-alias switch, e.g. saved "${spell.
+  // undead_annihilation}" now resolving to Sunscour) still counts as known - the same check
+  // SpellCastingService.hasLearnedSpell uses to decide whether a cast is allowed.
+  private boolean isKnown(SpellData spell) {
+    if (player == null || spell == null || player.getSpells() == null) {
+      return false;
+    }
+    String targetKey = spell.getKey();
+    for (String learned : player.getSpells()) {
+      if (learned == null) {
+        continue;
+      }
+      SpellData resolved = SpellRegistry.findByName(learned);
+      if (targetKey.equals(learned) || (resolved != null && targetKey.equals(resolved.getKey()))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private boolean isMaxed(LearnEntry entry) {
-    if (entry.isSkill()) {
-      return currentSkillLevel(entry) >= entry.maxLevel;
+    SpellData granted = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
+    if (granted != null) {
+      return isKnown(granted);
     }
-    return isKnown(entry.id);
+    return currentSkillLevel(entry) >= entry.maxLevel;
   }
 
   private String blockReason(LearnEntry entry) {
     if (player == null) {
       return I18n.message("message.learn_unavailable");
     }
-    if (entry.isSkill()) {
+    if (entry.isSkill() && spellGrantedBy(entry) == null) {
       if (currentSkillLevel(entry) >= entry.maxLevel)
         return I18n.message("message.learn_already_known");
       return player.getGold() < priceOf(entry)
           ? I18n.message("message.learn_not_enough_gold")
           : null;
     }
-    SpellData spell = entry.spell;
+    SpellData spell = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
     if (player.getLevel() < spell.getMinLevel()) {
       return I18n.message("message.learn_need_level", spell.getMinLevel());
     }
@@ -417,6 +461,12 @@ public class LearnScreen extends GuiListScreen {
     }
     if (player.getWisdom() < spell.getMinWis()) {
       return I18n.message("message.learn_need_wisdom", spell.getMinWis());
+    }
+    SpellData prerequisite = SpellRegistry.offensiveChainPredecessor(spell);
+    if (prerequisite != null && !isKnown(prerequisite)) {
+      return I18n.message(
+          "message.learn_need_prior_spell",
+          I18n.key(prerequisite.getKey(), I18n.resolve(prerequisite.getName())));
     }
     if (player.getGold() < priceOf(entry)) {
       return I18n.message("message.learn_not_enough_gold");
@@ -434,6 +484,20 @@ public class LearnScreen extends GuiListScreen {
   protected String rowTooltipReason(ListRow row) {
     LearnEntry entry = (LearnEntry) row;
     return isMaxed(entry) ? I18n.message("message.learn_already_known") : blockReason(entry);
+  }
+
+  @Override
+  protected String rowInfoText(ListRow row) {
+    LearnEntry entry = (LearnEntry) row;
+    SpellData spell = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
+    if (spell == null) {
+      return null;
+    }
+    // SpellTooltipText.build's first line is the spell's own name, which rowDisplayName already
+    // shows - drop it here the same way ShopScreen.rowInfoText does for items.
+    String text = com.perso.T4C.gui.widget.SpellTooltipText.build(spell);
+    int firstLine = text.indexOf('\n');
+    return firstLine < 0 ? null : text.substring(firstLine + 1);
   }
 
   private static String skillName(LearnEntry entry) {

@@ -330,20 +330,22 @@ public class Statistics extends GuiScreenBase {
       float rowY = STAT_ROW_Y[i];
       GuiButton up =
           new GuiButton(
-              upN,
-              upH != null ? upH : upN,
-              upH != null ? upH : upN,
-              x + STAT_SPIN_X,
-              y + rowY + STAT_SPIN_UP_DY,
-              () -> allocatePoint(statId));
+                  upN,
+                  upH != null ? upH : upN,
+                  upH != null ? upH : upN,
+                  x + STAT_SPIN_X,
+                  y + rowY + STAT_SPIN_UP_DY,
+                  () -> allocatePoint(statId))
+              .repeatable(true);
       GuiButton down =
           new GuiButton(
-              dnN,
-              dnH != null ? dnH : dnN,
-              dnH != null ? dnH : dnN,
-              x + STAT_SPIN_X,
-              y + rowY + STAT_SPIN_DN_DY,
-              () -> deallocatePoint(statId));
+                  dnN,
+                  dnH != null ? dnH : dnN,
+                  dnH != null ? dnH : dnN,
+                  x + STAT_SPIN_X,
+                  y + rowY + STAT_SPIN_DN_DY,
+                  () -> deallocatePoint(statId))
+              .repeatable(true);
       buttons.add(up);
       buttons.add(down);
       statUpButtons.put(statId, up);

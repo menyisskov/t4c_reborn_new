@@ -32,10 +32,14 @@ public final class InventoryService {
 
   private InventoryService() {}
 
+  // T4C-0054: raised the asymptote (was 500/100, saturating to ~90% of its ceiling by str 1000
+  // and leaving essentially no headroom above that) because gear alone hands out +600 strength
+  // per item (see DESIGN_GUIDELINES.md), so a heavily-equipped or rebirthed character routinely
+  // clears 1000+ and strength should still visibly matter for carry capacity that far out.
   public static long maximumWeight(Player player) {
     if (player == null) return 0L;
     long strength = Math.max(0, player.getEffectiveStrength());
-    return strength * 500L / (100L + strength);
+    return strength * 2000L / (550L + strength);
   }
 
   public static long currentWeight(Player player) {

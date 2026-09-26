@@ -14,11 +14,19 @@ import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiText;
 import com.perso.T4C.ui.HudTooltip;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public abstract class GuiListScreen extends GuiScreenBase {
   private final HudTooltip blockedTooltip = new HudTooltip();
+  // T4C-0054: rebuildList() recreates every row's spin buttons from scratch (to refresh
+  // prices/counts), which would otherwise reset a button's press-and-hold state mid-hold. Rows
+  // keep the same rowY across a rebuild (same index -> same slot), so this survives replacement
+  // by carrying hold state forward keyed on that row position.
+  private final Map<Float, GuiButton> spinUpByRowY = new HashMap<>();
+  private final Map<Float, GuiButton> spinDownByRowY = new HashMap<>();
 
   public interface ListRow {
     String nameText();
@@ -98,6 +106,11 @@ public abstract class GuiListScreen extends GuiScreenBase {
     return blockedReason(row);
   }
 
+  /** Extra info shown on hover below the row's name, e.g. a spell's description/requirements. */
+  protected String rowInfoText(ListRow row) {
+    return null;
+  }
+
   protected String rowDisplayName(ListRow row) {
     return row == null ? "" : row.nameText();
   }
@@ -121,12 +134,16 @@ public abstract class GuiListScreen extends GuiScreenBase {
           || mouseY < rowY - 4f
           || mouseY > rowY + ROW_H_PITCH - 8f) continue;
       ListRow row = rows().get(i);
+      StringBuilder text = new StringBuilder(rowDisplayName(row));
+      String info = rowInfoText(row);
+      if (info != null && !info.isBlank()) {
+        text.append('\n').append(info);
+      }
       String reason = rowTooltipReason(row);
       if (reason != null && !reason.isBlank()) {
-        blockedTooltip.show(rowDisplayName(row) + "\n" + reason, mouseX, mouseY);
-      } else {
-        blockedTooltip.clear();
+        text.append('\n').append(reason);
       }
+      blockedTooltip.show(text.toString(), mouseX, mouseY);
       return;
     }
     blockedTooltip.clear();
@@ -156,20 +173,26 @@ public abstract class GuiListScreen extends GuiScreenBase {
     }
     GuiButton up =
         new GuiButton(
-            upN,
-            upH != null ? upH : upN,
-            upH != null ? upH : upN,
-            x + SPIN_X,
-            y + rowY + SPIN_UP_DY,
-            () -> basketAdd(row));
+                upN,
+                upH != null ? upH : upN,
+                upH != null ? upH : upN,
+                x + SPIN_X,
+                y + rowY + SPIN_UP_DY,
+                () -> basketAdd(row))
+            .repeatable(true);
     GuiButton down =
         new GuiButton(
-            dnN,
-            dnH != null ? dnH : dnN,
-            dnH != null ? dnH : dnN,
-            x + SPIN_X,
-            y + rowY + SPIN_DN_DY,
-            () -> basketRemove(row));
+                dnN,
+                dnH != null ? dnH : dnN,
+                dnH != null ? dnH : dnN,
+                x + SPIN_X,
+                y + rowY + SPIN_DN_DY,
+                () -> basketRemove(row))
+            .repeatable(true);
+    up.adoptHoldStateFrom(spinUpByRowY.get(rowY));
+    down.adoptHoldStateFrom(spinDownByRowY.get(rowY));
+    spinUpByRowY.put(rowY, up);
+    spinDownByRowY.put(rowY, down);
     boolean enabled = blockedReason(row) == null;
     up.setEnabled(enabled);
     down.setEnabled(enabled);

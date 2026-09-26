@@ -1,6 +1,7 @@
 package com.perso.T4C.spell;
 
 import com.perso.T4C.i18n.I18n;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +98,19 @@ public final class SpellRegistry {
     return List.copyOf(result.values());
   }
 
+  // T4C-0054: wrath_of_the_ancients/remort_aura/level_up are cast internally (boss aura, rebirth
+  // aura, the automatic on-level-up stat tick) via direct name/spellId lookup, which bypasses
+  // this filter entirely; wrath_of_drake is dead GM-only content (pvp=false, minLevel=0, no code
+  // path casts it). All four leak into every player-facing spell list (spellbook, Lighthaven
+  // spell seller, the compendium website) despite not following the item_/mob_/test_/npc_
+  // naming convention the rest of this filter relies on, so they need an explicit denylist.
+  private static final java.util.Set<String> NOT_PLAYER_CASTABLE =
+      java.util.Set.of(
+          "${spell.wrath_of_the_ancients}",
+          "${spell.remort_aura}",
+          "${spell.level_up}",
+          "${spell.wrath_of_drake}");
+
   private static boolean isPlayerCastable(SpellData spell) {
     if (spell == null || spell.getName() == null || spell.getName().isBlank()) return false;
     if (spell.getIconId() == null || spell.getIconId().isBlank() || "0".equals(spell.getIconId()))
@@ -108,7 +122,26 @@ public final class SpellRegistry {
         || identity.startsWith("${spell.test_")
         || identity.startsWith("${spell.npc_")) return false;
     if (identity.endsWith("_effect}")) return false;
+    if (NOT_PLAYER_CASTABLE.contains(identity)) return false;
     return !spell.getT4cEffects().isEmpty() || identity.equals("${spell.tame_beast}");
+  }
+
+  // T4C-0054: every element's offensive spells form one hierarchy, ascending by minLevel (ties
+  // broken by spellId) - you must already know the previous rung to buy the next, "just like
+  // shatter, earthquake, boulders". Built dynamically from playerCastableSpells() rather than a
+  // hardcoded list, so a newly added attack spell slots into its element's chain automatically.
+  // Non-elemental attacks (element 0, e.g. tame_beast/mana_burst) aren't part of any chain.
+  public static synchronized SpellData offensiveChainPredecessor(SpellData spell) {
+    if (spell == null || spell.getElement() <= 0 || !spell.isAttack()) return null;
+    List<SpellData> chain =
+        playerCastableSpells().stream()
+            .filter(s -> s.getElement() == spell.getElement() && s.isAttack())
+            .sorted(
+                Comparator.comparingInt(SpellData::getMinLevel)
+                    .thenComparingInt(SpellData::getSpellId))
+            .toList();
+    int index = chain.indexOf(spell);
+    return index <= 0 ? null : chain.get(index - 1);
   }
 
   public static synchronized void invalidate() {
