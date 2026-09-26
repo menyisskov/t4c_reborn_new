@@ -22,6 +22,15 @@ on, every content/feature pass adds its own entry here as part of the work
   else in the world to aim it at yet, clicking with it armed currently just tells you there's no
   valid target; this is groundwork for the day another player can stand next to you.
 
+## 2026-09-26 — Fast travel to well-worn NPCs (T4C-0056)
+
+### Added
+- **Locations panel (Ctrl+L) now offers direct travel to nine frequently-revisited NPCs**: Lord
+  Sunrock, Asarr, Araknor and Lance Silversmith in Arakas; Zhakar and Elysana Blackrose in
+  Raven's Dust; Dionysus Silverstream and Grant Hornkeep in Stoneheim; and Filandrius. Each of
+  these is someone a long questline sends you back to again and again - this cuts the repeat
+  walk, it doesn't unlock anything new.
+
 ## 2026-09-26 — Spell hierarchy, spellbook info, and a few quality-of-life fixes (T4C-0054)
 
 ### Added

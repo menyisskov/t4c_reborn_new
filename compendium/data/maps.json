@@ -562,6 +562,11 @@
         "name": "The Sunken Chancel",
         "x": 1750,
         "y": 2300
+      },
+      {
+        "name": "Elysana Blackrose",
+        "x": 1561,
+        "y": 2471
       }
     ]
   },
@@ -1276,7 +1281,13 @@
         "tier": "boss"
       }
     ],
-    "namedLocations": []
+    "namedLocations": [
+      {
+        "name": "Lord Sunrock",
+        "x": 1609,
+        "y": 1181
+      }
+    ]
   },
   {
     "zoneId": "avalon_wilds",
