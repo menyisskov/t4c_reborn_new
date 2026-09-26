@@ -1574,6 +1574,17 @@ public final class ObjectPositionDefinitions {
         new ObjectPos("CLOSED_WOODEN_DOOR_FLIP", 1454, 2888, 0, false),
         new ObjectPos("WOODEN_ROUND_CHAIR_2_FLIP", 1457, 2891, 0, false),
         new ObjectPos("WOODEN_ROUND_CHAIR_2_I_REV", 1458, 2896, 0, false),
-        new ObjectPos("Nether Chest 1", 1882, 2963, 0, false));
+        new ObjectPos("Nether Chest 1", 1882, 2963, 0, false),
+        // T4C-0060: one blessing chest outside each town's temple. Kept together rather than sorted
+        // into the list above so the set stays reviewable as a set - the order of this list does
+        // not
+        // affect what is drawn or what is clickable. The tiles must match
+        // TempleBlessingService.SHRINES exactly; TempleBlessingChestTest holds the two in step.
+        new ObjectPos("TEMPLE BLESSING CHEST", 2954, 1050, 0, false),
+        new ObjectPos("TEMPLE BLESSING CHEST", 1556, 2407, 0, false),
+        new ObjectPos("TEMPLE BLESSING CHEST", 1815, 1299, 0, false),
+        new ObjectPos("TEMPLE BLESSING CHEST", 209, 737, 0, false),
+        new ObjectPos("TEMPLE BLESSING CHEST", 2970, 2143, 2, false),
+        new ObjectPos("TEMPLE BLESSING CHEST", 1339, 1481, 0, false));
   }
 }

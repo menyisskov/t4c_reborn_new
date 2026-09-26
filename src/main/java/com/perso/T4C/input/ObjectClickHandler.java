@@ -11,6 +11,7 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.objects.ChestService;
 import com.perso.T4C.objects.GroundItemManager;
 import com.perso.T4C.objects.ObjectPos;
+import com.perso.T4C.objects.TempleBlessingService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.render.ObjectRenderer;
 import com.perso.T4C.screens.MapRenderer;
@@ -28,6 +29,7 @@ public class ObjectClickHandler extends InputAdapter {
   private final Player player;
   private final SystemMessage systemMessage;
   private final ChestService chestService = new ChestService();
+  private final TempleBlessingService templeBlessingService = new TempleBlessingService();
   private final GroundItemManager groundItemManager;
 
   public ObjectClickHandler(
@@ -82,8 +84,23 @@ public class ObjectClickHandler extends InputAdapter {
               tileDistance,
               com.perso.T4C.config.GameConstants.OBJECT_MAX_INTERACTION_DISTANCE);
         } else {
-          ChestService.Result chest =
-              chestService.open(player, objectRenderer.getLastClickedObject(), groundItemManager);
+          ObjectPos clicked = objectRenderer.getLastClickedObject();
+          // T4C-0060: a temple blessing chest holds wards, not loot, so it is answered before
+          // ChestService - which would only report it as "not a chest" and say nothing.
+          TempleBlessingService.Result blessing = templeBlessingService.bless(player, clicked);
+          if (blessing.blessed()) {
+            PlayerStateStore.save(player);
+            systemMessage.show(templeBlessingService.message(blessing));
+            log.info(
+                "Temple blessing applied: casterWisdom={}, spells={}, at ({}, {}, {})",
+                blessing.casterWisdom(),
+                blessing.spellCount(),
+                clicked.x(),
+                clicked.y(),
+                clicked.z());
+            return true;
+          }
+          ChestService.Result chest = chestService.open(player, clicked, groundItemManager);
           if (chest.opened()) {
             PlayerStateStore.save(player);
             systemMessage.show(chestService.message(chest));

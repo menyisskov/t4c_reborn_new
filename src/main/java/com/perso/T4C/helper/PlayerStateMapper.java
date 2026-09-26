@@ -106,8 +106,7 @@ public final class PlayerStateMapper {
     player.setQuickSlots(state.quickSlots);
     // Saves predating T4C-0059 have no macros of their own; they start empty rather than
     // inheriting whatever game_preferences.json used to hold for every character at once.
-    player.setMacros(
-        state.macros != null ? new ArrayList<>(state.macros) : new ArrayList<>());
+    player.setMacros(state.macros != null ? new ArrayList<>(state.macros) : new ArrayList<>());
     applyActiveBuffs(state, player);
     player.setInventory(state.inventory);
     player.setEquippedItems(toEquippedItems(state));
@@ -150,6 +149,8 @@ public final class PlayerStateMapper {
           unlimited || buff.getDurationMillis() == Long.MAX_VALUE
               ? Long.MAX_VALUE
               : Math.max(1L, buff.getDurationMillis() / 1000L);
+      state.casterIntelligence = buff.getCasterIntelligence();
+      state.casterWisdom = buff.getCasterWisdom();
       if (unlimited || state.remainingSeconds > 0L) {
         states.add(state);
       }
@@ -192,7 +193,17 @@ public final class PlayerStateMapper {
         runtimeSpellName = spell.getName();
         description = spell.getDescription();
         iconId = spell.getIconId();
-        effects = new SpellEffectManager().resolvePlayerBuffEffects(spell, player);
+        // T4C-0060: a buff cast by somebody other than the player (a temple blessing) has to be
+        // rebuilt from that caster's stats. Re-deriving it from the character, as a self-cast buff
+        // is, would quietly rescale an archmage's blessing down to the character's own wisdom.
+        effects =
+            buff.casterWisdom > 0 || buff.casterIntelligence > 0
+                ? new SpellEffectManager()
+                    .resolvePlayerBuffEffects(
+                        spell,
+                        SpellEffectManager.externalCasterContext(
+                            player, buff.casterIntelligence, buff.casterWisdom))
+                : new SpellEffectManager().resolvePlayerBuffEffects(spell, player);
         if (effects.isEmpty() && spell.getBuff() != null && spell.getBuff().getEffects() != null) {
           effects = spell.getBuff().getEffects();
         }
@@ -204,7 +215,15 @@ public final class PlayerStateMapper {
       } else {
         continue;
       }
-      player.applyBuff(runtimeSpellName, description, iconId, durationSeconds, unlimited, effects);
+      player.applyBuff(
+          runtimeSpellName,
+          description,
+          iconId,
+          durationSeconds,
+          unlimited,
+          effects,
+          buff.casterIntelligence,
+          buff.casterWisdom);
       if (!unlimited && buff.remainingSeconds < restoredDuration) {
         player.adjustBuffRemaining(runtimeSpellName, buff.remainingSeconds);
       }

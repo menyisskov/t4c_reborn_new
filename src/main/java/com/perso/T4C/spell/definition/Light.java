@@ -14,7 +14,10 @@ public final class Light {
         0,
         0,
         0,
-        0,
+        // T4C-0060: minLevel 1 - a torch spell anyone can learn, but a real requirement all the
+        // same, so it is not swept up with the unlearnable no-requirement leftovers. Its own
+        // exhaustion formula already decays from "self.level - 1", which assumed this.
+        1,
         false,
         false,
         "64kSpellIconLightMain",

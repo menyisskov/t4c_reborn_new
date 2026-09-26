@@ -221,6 +221,22 @@ public final class DiceFormula {
     s = s.replace("target.r_earth", String.valueOf(ctx.targetResistEarth));
     s = s.replace("target.r_air", String.valueOf(ctx.targetResistAir));
     s = s.replace("target.r_water", String.valueOf(ctx.targetResistWater));
+    // T4C-0060: "self.true_<stat>" is the unbuffed reading of a caster stat. The Context only
+    // carries effective values, so these resolve to the same numbers as the plain "self.<stat>"
+    // forms below, and so must be substituted before them. They must be substituted at all: an
+    // unresolved name leaves a letter where the parser wants a digit, and the parser answers 0
+    // rather than failing - which silently turned Tranquility, Clear Thought and half of
+    // Nimbleness into no-ops. "self.true_r_<element>" and "self.true_dodge" are still unresolved:
+    // the Context carries no per-caster resistance or dodge reading to map them onto.
+    s = s.replace("self.true_level", String.valueOf(ctx.level));
+    s = s.replace("self.true_intel", String.valueOf(ctx.intel));
+    s = s.replace("self.true_int", String.valueOf(ctx.intel));
+    s = s.replace("self.true_luck", String.valueOf(ctx.luck));
+    s = s.replace("self.true_str", String.valueOf(ctx.str));
+    s = s.replace("self.true_end", String.valueOf(ctx.end));
+    s = s.replace("self.true_agi", String.valueOf(ctx.agi));
+    s = s.replace("self.true_wil", String.valueOf(ctx.wil));
+    s = s.replace("self.true_wis", String.valueOf(ctx.wis));
     s = s.replace("self.level", String.valueOf(ctx.level));
     s = s.replace("self.intel", String.valueOf(ctx.intel));
     s = s.replace("self.int", String.valueOf(ctx.intel));

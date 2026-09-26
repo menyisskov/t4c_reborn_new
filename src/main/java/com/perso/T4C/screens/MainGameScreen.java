@@ -196,9 +196,6 @@ public class MainGameScreen implements Screen {
   private SpellRenderer.ChannelHandle tameChannelVfx;
   private GuiBar tameProgressBar;
   private GuiImage tameProgressFrame;
-  private float offensiveSpellProgressElapsed;
-  private float offensiveSpellProgressDuration;
-  private Runnable pendingOffensiveSpellLaunch;
   private int selectedTargetedSlot;
   private static final long BUFF_DOUBLE_CLICK_MILLIS = 350L;
   private String lastClickedBuffSpellName;
@@ -2029,7 +2026,7 @@ public class MainGameScreen implements Screen {
 
   private boolean tryStartHarvest(HerbNode herb) {
     if (herb == null || player == null) return false;
-    if (harvestChannel != null || tameChannel != null || offensiveSpellProgressDuration > 0f) {
+    if (harvestChannel != null || tameChannel != null) {
       showSystemMessage(I18n.message("message.harvest_busy"));
       return true;
     }
@@ -2100,49 +2097,10 @@ public class MainGameScreen implements Screen {
     harvestTarget = null;
   }
 
-  private void startOffensiveSpellProgress(SpellData spell, Runnable launch) {
-    long durationMillis = SpellCastingService.evaluateCastDurationMillis(spell, player);
-    if (durationMillis <= 0L) {
-      offensiveSpellProgressElapsed = 0f;
-      offensiveSpellProgressDuration = 0f;
-      pendingOffensiveSpellLaunch = null;
-      launch.run();
-      return;
-    }
-    offensiveSpellProgressElapsed = 0f;
-    offensiveSpellProgressDuration = durationMillis / 1000f;
-    pendingOffensiveSpellLaunch = launch;
-  }
-
-  private void updateOffensiveSpellProgress(float delta) {
-    if (offensiveSpellProgressDuration <= 0f) return;
-    offensiveSpellProgressElapsed += Math.max(0f, delta);
-    if (offensiveSpellProgressElapsed >= offensiveSpellProgressDuration) {
-      Runnable launch = pendingOffensiveSpellLaunch;
-      offensiveSpellProgressElapsed = 0f;
-      offensiveSpellProgressDuration = 0f;
-      pendingOffensiveSpellLaunch = null;
-      if (launch != null) launch.run();
-    }
-  }
-
   private float getCastProgress() {
     if (harvestChannel != null) return harvestChannel.getProgress();
     if (tameChannel != null) return tameChannel.getProgress();
-    if (offensiveSpellProgressDuration <= 0f) return hasQueuedOffensiveCast() ? 1f : 0f;
-    return Math.min(1f, offensiveSpellProgressElapsed / offensiveSpellProgressDuration);
-  }
-
-  private boolean hasQueuedOffensiveCast() {
-    if (currentAttackSpell == null
-        || player == null
-        || SpellCastingService.evaluateCastDurationMillis(currentAttackSpell, player) <= 0L) {
-      return false;
-    }
-    if (currentAttackTarget != null) {
-      return !currentAttackTarget.isDead() && currentAttackTarget.canBeAttackedByPlayer();
-    }
-    return currentAttackNpcTarget != null;
+    return 0f;
   }
 
   private void completeTame() {
@@ -2246,7 +2204,11 @@ public class MainGameScreen implements Screen {
     Vector2 playerPos = player.getPositionVector();
     Vector2 monsterPos = monster.getPosition();
     player.getMovement().faceToward(playerPos.x, playerPos.y, monsterPos.x, monsterPos.y);
-    startOffensiveSpellProgress(spell, () -> launchAttackSpell(spell, monster));
+    // T4C-0060: the spell leaves the caster's hands the moment the cast succeeds. The wait that
+    // used to sit here (and drive a progress bar) charged the spell's exhaustion twice - once
+    // before the spell went off and again after, via SpellCastingService.begin. The gap between
+    // casts is unchanged; only the dead time before the first one is gone.
+    launchAttackSpell(spell, monster);
     return cast;
   }
 
@@ -2325,7 +2287,7 @@ public class MainGameScreen implements Screen {
     playerPos = player.getPositionVector();
     npcPos = npc.getPosition();
     player.getMovement().faceToward(playerPos.x, playerPos.y, npcPos.x, npcPos.y);
-    startOffensiveSpellProgress(spell, () -> launchAttackSpell(spell, npc));
+    launchAttackSpell(spell, npc);
     return cast;
   }
 
@@ -3021,7 +2983,7 @@ public class MainGameScreen implements Screen {
     }
     if (spell.isAttack()) {
       Vector2 castTarget = new Vector2(targetPosition);
-      startOffensiveSpellProgress(spell, () -> launchPositionSpell(spell, castTarget));
+      launchPositionSpell(spell, castTarget);
       return true;
     }
     launchPositionSpell(spell, targetPosition);
@@ -3185,10 +3147,9 @@ public class MainGameScreen implements Screen {
   }
 
   private void renderTameProgress() {
-    if ((harvestChannel == null
-            && tameChannel == null
-            && offensiveSpellProgressDuration <= 0f
-            && !hasQueuedOffensiveCast())
+    // T4C-0060: harvesting and taming still take time and still show the bar. Casting no longer
+    // does, so a spell never puts a bar on screen.
+    if ((harvestChannel == null && tameChannel == null)
         || tameProgressBar == null
         || tameProgressFrame == null) return;
     updateHudCamera();
@@ -3804,7 +3765,6 @@ public class MainGameScreen implements Screen {
       spellEffectManager.update(this::applyPeriodicSpellImpact);
       updateTameChannel(delta);
       updateHarvest(delta);
-      updateOffensiveSpellProgress(delta);
     }
   }
 
