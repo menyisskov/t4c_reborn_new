@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0063`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0065`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -75,6 +75,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0060 | Fix `self.true_*` formula variables (own resistance, dodge, and the rest of the family) so Resist Fire, Resist Ice, Nimbleness, Tranquility, Clear Thought and several potions/item procs stop silently rolling 0 | Fix | Done | `da00fa7f` | [2026-09-26](CHANGELOG.md#2026-09-26--fixed-self-buff-spells-that-did-nothing-t4c-0060) |
 | T4C-0061 | Temple blessing chests outside all six towns (nine wards at once, an ordinary town blessing and a stronger one at Avalon), spells now leave the caster's hands instantly with the between-cast pacing untouched, unlearnable no-requirement spells dropped from the spellbook and site, and buffs cast by someone other than the player keep their strength across a save | Content/Systems/Fix | Done | `fbdedc53`, `619a8bf4` | [2026-09-26](CHANGELOG.md#2026-09-26--offering-chests-at-the-temples-and-spells-that-go-off-when-you-cast-them-t4c-0061) |
 | T4C-0062 | Quest-giver and NPC locations on the reference site: fast-travel landmark, distance and bearing, and a map link, all derived from the game's own spawn and landmark data | Content/Fix | In Progress | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--the-site-now-tells-you-where-to-find-people-t4c-0062) |
+| T4C-0064 | Lighthaven rat quest can be turned in, and the game saves your character on a timer instead of only on shutdown | Fix | In Progress | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--lighthaven-errand-turn-in-and-autosave-t4c-0064) |
 
 ## Type legend
 

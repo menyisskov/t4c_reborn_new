@@ -830,6 +830,17 @@ should not consume it), that is a content change, not an editorial one, and need
   to the save file until T4C-0039. When you add player-owned state, add it to `PlayerStateDto`
   and `PlayerStateMapper` in the same change, with a round-trip test. Old saves without the new
   field must still load.
+- **Progress is saved on a timer, not only on the way out.** `MainGameScreen` autosaves every
+  `AUTOSAVE_INTERVAL_SECONDS` (**15 s**, owner's number), on level-up, and on `pause()` (window
+  minimise/close), on top of the event-driven `savePlayerState()` calls. Before T4C-0064 plain
+  play — XP, levels, kills, loot, walking — only reached disk if the client got to `dispose()`,
+  so a crash or a force-closed window threw the session away. Event-driven saves are still worth
+  adding for anything expensive or irreversible; the timer is the floor, not the plan.
+- **A quest-giver that isn't a `ScriptedNpc` needs its turn-in wired by hand.**
+  `ScriptedNpc.onInteractStart` calls `questService.turnInReadyQuests(id, player)` on every
+  greet; a `BaseNPC` that overrides `onInteractStart` (the Lighthaven Samaritan did) gets no such
+  call, so its quest can be accepted and finished but never completed. Any NPC that calls
+  `giveOrReport` must also have a path that calls `turnInReadyQuests`.
 - **A window with a text box or number prompt must override `capturesKeyboard()`**, so movement
   keys, macros and game hotkeys don't fire while the player types.
 - **Every shortcut is listed in the Controls window** (Ctrl+H, or the Controls button in

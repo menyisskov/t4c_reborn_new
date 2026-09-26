@@ -13,6 +13,17 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — Lighthaven errand turn-in and autosave (T4C-0064)
+
+### Fixed
+- The Samaritan in Lighthaven now pays out his rat errand. Once you had all fifteen kills he would
+  only ever repeat "Progress: 15/15", so the reward and the errand's ending were unreachable — now
+  he hands them over, whether you greet him or ask about the errand again.
+- Your character is saved every fifteen seconds while you play, and again whenever the window
+  loses focus or you gain a level. Previously most of a session only reached disk when the game
+  shut down cleanly, so a crash or a force-closed window could throw away everything you'd done
+  since the last shop visit or quest turn-in.
+
 ## 2026-09-26 — The site now tells you where to find people (T4C-0062)
 
 ### Added
