@@ -33,6 +33,8 @@ public final class ForgeGodsforgedWarblade {
         "item.bound_godsigil",
         1,
         null,
-        "godsforged_warblade");
+        "godsforged_warblade",
+        0,
+        "${quest.forge_godsforged_warblade.walkthrough}");
   }
 }

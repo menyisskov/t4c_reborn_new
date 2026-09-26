@@ -28,6 +28,9 @@ public final class DeepOnesCavePurge {
         null,
         "depths_wardens_talisman",
         1,
-        "deep_ones_cave");
+        "deep_ones_cave",
+        null,
+        0,
+        "${quest.deep_ones_cave_purge.walkthrough}");
   }
 }

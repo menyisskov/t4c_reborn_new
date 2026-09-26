@@ -24,6 +24,9 @@ public final class SilverskyTideWarden {
         null,
         "mordrenns_drowned_cowl",
         1,
-        "sunken_chancel");
+        "sunken_chancel",
+        null,
+        0,
+        "${quest.silversky_tide_warden.walkthrough}");
   }
 }

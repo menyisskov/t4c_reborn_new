@@ -399,6 +399,10 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Never show a generic "monster drop" label for where an item comes from. Name the actual
   monster/boss (every one of them, if more than one drops it) via `lootSources.json`'s
   `monsterDisplayName`, the same way an item's own detail page already does.
+- Every quest page must show a location — coordinates at minimum, a map wherever one exists —
+  even a turn-in-only quest with no kill objective, and even a quest not yet listed under any
+  zone's `quests` array (T4C-0053). A quest with no zone match still gets a schematic worldmap
+  dot from its own `areaCenterX/Y`/`areaRadiusTiles` rather than showing nothing.
 
 ## 5. Process
 - Every player-visible change gets a `T4C-XXXX` ID in `TASKS.md` and a player-facing

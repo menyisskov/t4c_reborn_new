@@ -35,6 +35,7 @@ public final class TheWakingRite {
         0,
         null,
         null,
-        125);
+        125,
+        "${quest.the_waking_rite.walkthrough}");
   }
 }

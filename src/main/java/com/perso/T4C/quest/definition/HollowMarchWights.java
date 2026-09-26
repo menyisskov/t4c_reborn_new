@@ -24,6 +24,9 @@ public final class HollowMarchWights {
         null,
         "crown_of_the_hollow_king",
         1,
-        "hollow_march");
+        "hollow_march",
+        null,
+        0,
+        "${quest.hollow_march_wights.walkthrough}");
   }
 }

@@ -24,6 +24,9 @@ public final class AerieWyrmlingCull {
         null,
         "aeries_drakeheart_signet",
         1,
-        "lesser_drakes_aerie");
+        "lesser_drakes_aerie",
+        null,
+        0,
+        "${quest.aerie_wyrmling_cull.walkthrough}");
   }
 }
