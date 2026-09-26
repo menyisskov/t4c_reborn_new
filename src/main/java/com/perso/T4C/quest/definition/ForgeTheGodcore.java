@@ -30,6 +30,8 @@ public final class ForgeTheGodcore {
         "item.wyrmforged_ember",
         5,
         null,
-        "item.tempered_godcore");
+        "item.tempered_godcore",
+        0,
+        "${quest.forge_the_godcore.walkthrough}");
   }
 }

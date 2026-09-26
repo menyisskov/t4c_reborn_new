@@ -26,6 +26,13 @@ public final class TidewornShoreScouts {
         20000000,
         "${quest.tideworn_shore_scouts.offer}",
         "${quest.tideworn_shore_scouts.completion}",
-        "${quest.tideworn_shore_scouts.completed}");
+        "${quest.tideworn_shore_scouts.completed}",
+        null,
+        null,
+        0,
+        null,
+        null,
+        0,
+        "${quest.tideworn_shore_scouts.walkthrough}");
   }
 }

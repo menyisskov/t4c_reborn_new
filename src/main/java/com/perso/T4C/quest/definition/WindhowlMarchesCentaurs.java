@@ -24,6 +24,9 @@ public final class WindhowlMarchesCentaurs {
         null,
         "marchwardens_crown",
         1,
-        "windhowl_marches");
+        "windhowl_marches",
+        null,
+        0,
+        "${quest.windhowl_marches_centaurs.walkthrough}");
   }
 }

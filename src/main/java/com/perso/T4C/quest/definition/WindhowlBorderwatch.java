@@ -31,6 +31,9 @@ public final class WindhowlBorderwatch {
         null,
         null,
         0,
-        "cinderreach_hills");
+        "cinderreach_hills",
+        null,
+        0,
+        "${quest.windhowl_borderwatch.walkthrough}");
   }
 }

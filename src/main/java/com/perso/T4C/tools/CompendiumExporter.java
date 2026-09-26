@@ -609,6 +609,7 @@ public final class CompendiumExporter {
       m.put("offerText", I18n.resolve(q.getOfferText()));
       m.put("completionText", I18n.resolve(q.getCompletionText()));
       m.put("completedText", I18n.resolve(q.getCompletedText()));
+      m.put("walkthroughText", q.getWalkthroughText() == null ? null : I18n.resolve(q.getWalkthroughText()));
       out.add(m);
     }
     return out;
@@ -731,7 +732,9 @@ public final class CompendiumExporter {
       for (String item : sold) if (!merged.contains(item)) merged.add(item);
       out.put(reg.id(), merged);
     }
-    out.putAll(HAND_MAINTAINED_SHOP_ITEMS);
+    // Map.of()'s iteration order is randomized per JVM run - merge through a TreeMap so this
+    // doesn't produce a pure key-reorder diff every time the exporter happens to run again.
+    new TreeMap<>(HAND_MAINTAINED_SHOP_ITEMS).forEach(out::put);
     return out;
   }
 
