@@ -1,159 +1,415 @@
 [
   {
+    "id": "deep_ones_cave",
+    "name": "Deep Ones Cave",
+    "chapter": "coast_road",
+    "chapterOrder": 1,
+    "levelRange": "32–42",
+    "biome": "Coastal cave",
+    "summary": "A sea cave on the Raven's Dust shore where things that were never quite human come up out of the water. Deep Ones have been taking travellers off this stretch of coast for as long as anyone can remember, and Keeper Tamsin has finally stopped waiting for somebody else to deal with it. Cramped, crowded, and a good first real dungeon.",
+    "nextZoneId": "sunken_chancel",
+    "worldmapCenter": {
+      "x": 330,
+      "y": 2246,
+      "radius": 90
+    },
+    "monsters": [
+      "Deep One",
+      "Deep One Boss"
+    ],
+    "items": [
+      "barnacled_gauntlets",
+      "depths_wardens_talisman"
+    ],
+    "spells": [],
+    "quests": [
+      "deep_ones_cave_purge"
+    ],
+    "npcs": [
+      "KeeperTamsin"
+    ]
+  },
+  {
     "id": "sunken_chancel",
     "name": "The Sunken Chancel",
-    "pass": "T4C-0004",
+    "chapter": "coast_road",
+    "chapterOrder": 2,
     "levelRange": "38–50",
-    "biome": "Water / Undead",
-    "worldmapCenter": { "x": 1750, "y": 2300, "radius": 140 },
-    "summary": "A flooded cult shrine on the coast east of Silversky. A drowned priesthood has been dragging locals under since the tide \"woke\" their chancel.",
-    "monsters": ["Drowned Acolyte", "Tideclaw Crab", "Mordrenn the Drowned Inquisitor"],
-    "items": ["mordrenns_drowned_cowl", "tideclaw_band", "acolytes_tarnished_locket", "sunken_vestment", "drowned_inquisition_armor", "drowned_inquisition_boots", "drowned_inquisition_gauntlets", "drowned_inquisition_helmet", "drowned_inquisition_leggings", "drowned_inquisition_protector"],
-    "spells": ["spell.riptide_surge", "spell.drowned_ward"],
-    "quests": ["silversky_tide_warden", "silversky_borderwatch"],
-    "npcs": ["TideWardenBryn", "SentinelCorwin"]
+    "biome": "Drowned shrine",
+    "summary": "A cult shrine on the coast east of Silversky that the sea took and never gave back. Its priesthood drowned with it and came up again wrong, and they have been pulling people under ever since the tide woke the place. Bring something that hurts the drowned, and be ready to go all the way in: Mordrenn holds the inner chancel, and Tide Warden Bryn's errand ends with him.",
+    "nextZoneId": "cinderreach_hills",
+    "worldmapCenter": {
+      "x": 1750,
+      "y": 2300,
+      "radius": 140
+    },
+    "monsters": [
+      "Drowned Acolyte",
+      "Tideclaw Crab",
+      "Mordrenn the Drowned Inquisitor"
+    ],
+    "items": [
+      "mordrenns_drowned_cowl",
+      "tideclaw_band",
+      "acolytes_tarnished_locket",
+      "sunken_vestment",
+      "drowned_inquisition_armor",
+      "drowned_inquisition_boots",
+      "drowned_inquisition_gauntlets",
+      "drowned_inquisition_helmet",
+      "drowned_inquisition_leggings",
+      "drowned_inquisition_protector"
+    ],
+    "spells": [
+      "spell.riptide_surge",
+      "spell.drowned_ward"
+    ],
+    "quests": [
+      "silversky_tide_warden",
+      "silversky_borderwatch"
+    ],
+    "npcs": [
+      "TideWardenBryn",
+      "SentinelCorwin"
+    ]
   },
   {
     "id": "cinderreach_hills",
     "name": "Cinderreach Hills",
-    "pass": "T4C-0004",
+    "chapter": "coast_road",
+    "chapterOrder": 3,
     "levelRange": "58–70",
-    "biome": "Fire",
-    "worldmapCenter": { "x": 1900, "y": 1600, "radius": 140 },
-    "summary": "Smoldering foothills southeast of Windhowl, home to a fire-wolf pack and the young drake they answer to.",
-    "monsters": ["Cinder Whelp", "Ashfang Stalker", "Ignarok the Emberfang"],
-    "items": ["cinderwrought_sash", "ignaroks_emberfang_claw", "cinderforged_armor", "cinderforged_boots", "cinderforged_gauntlets", "cinderforged_helmet", "cinderforged_leggings", "cinderforged_protector"],
-    "spells": ["spell.cinderburst", "spell.emberheart_resolve"],
-    "quests": ["emberfang_hills_bounty", "windhowl_borderwatch"],
-    "npcs": ["RurikCinderwatch", "OutriderHalvard"]
+    "biome": "Burning foothills",
+    "summary": "Foothills southeast of Windhowl that have been quietly alight for years. A pack of fire-wolves runs them now, and they answer to a young drake named Ignarok who is only getting bigger. Everything here burns you, so fire resistance will do more for you than armour. It is also the last place worth clearing before you take ship for Kraanhold.",
+    "nextZoneId": "windhowl_marches",
+    "worldmapCenter": {
+      "x": 1900,
+      "y": 1600,
+      "radius": 140
+    },
+    "monsters": [
+      "Cinder Whelp",
+      "Ashfang Stalker",
+      "Ignarok the Emberfang"
+    ],
+    "items": [
+      "cinderwrought_sash",
+      "ignaroks_emberfang_claw",
+      "cinderforged_armor",
+      "cinderforged_boots",
+      "cinderforged_gauntlets",
+      "cinderforged_helmet",
+      "cinderforged_leggings",
+      "cinderforged_protector"
+    ],
+    "spells": [
+      "spell.cinderburst",
+      "spell.emberheart_resolve"
+    ],
+    "quests": [
+      "emberfang_hills_bounty",
+      "windhowl_borderwatch"
+    ],
+    "npcs": [
+      "RurikCinderwatch",
+      "OutriderHalvard"
+    ]
   },
   {
     "id": "windhowl_marches",
     "name": "Windhowl Marches",
-    "pass": "T4C-0005",
+    "chapter": "kraanhold",
+    "chapterOrder": 1,
     "levelRange": "100–150",
-    "biome": "Plains / Centaur warband",
-    "worldmapCenter": { "x": 2380, "y": 2430, "radius": 140 },
-    "summary": "Open marchland held by a centaur warband, the entrance province of Kraanhold — a new continent painted for T4C-0024, reached by sea from the mainland. Centaur Warrior and Centaur King existed as barely-authored placeholder stubs before T4C-0005 gave them real stats.",
-    "monsters": ["Centaur Warrior", "Centaur King"],
-    "items": ["centaur_warband_ring", "marchwardens_crown", "bow_of_centaur_slaying", "centaur_slaying_armor", "centaur_slaying_boots", "centaur_slaying_gauntlets", "centaur_slaying_helmet", "centaur_slaying_leggings", "centaur_slaying_protector", "centaur_slaying_quiver"],
+    "biome": "Open plains",
+    "summary": "Marchland grass, and the front door to Kraanhold — the continent across the water. A centaur warband holds the plain and is pushing outward, which is exactly why Marshal Torrhen wants them broken before their king brings the rest. Wide, flat ground with nowhere to hide: fights start at a distance and tend to stay there.",
+    "nextZoneId": "hollow_march",
+    "worldmapCenter": {
+      "x": 2380,
+      "y": 2430,
+      "radius": 140
+    },
+    "monsters": [
+      "Centaur Warrior",
+      "Centaur King"
+    ],
+    "items": [
+      "centaur_warband_ring",
+      "marchwardens_crown",
+      "bow_of_centaur_slaying",
+      "centaur_slaying_armor",
+      "centaur_slaying_boots",
+      "centaur_slaying_gauntlets",
+      "centaur_slaying_helmet",
+      "centaur_slaying_leggings",
+      "centaur_slaying_protector",
+      "centaur_slaying_quiver"
+    ],
     "spells": [],
-    "quests": ["windhowl_marches_centaurs", "passage_to_kraanhold"],
-    "npcs": ["MarshalTorrhen", "DockmasterThessaly"]
+    "quests": [
+      "windhowl_marches_centaurs",
+      "passage_to_kraanhold"
+    ],
+    "npcs": [
+      "MarshalTorrhen",
+      "DockmasterThessaly"
+    ]
   },
   {
     "id": "hollow_march",
     "name": "The Hollow March",
-    "pass": "T4C-0005",
+    "chapter": "kraanhold",
+    "chapterOrder": 2,
     "levelRange": "150–200",
-    "biome": "Undead barrow-field",
-    "worldmapCenter": { "x": 2500, "y": 2700, "radius": 150 },
-    "summary": "A barrow-field of restless dead, ruled by a wight king who never let go of his crown — Kraanhold's central province, bordering all four of the continent's other provinces.",
-    "monsters": ["Barrow Wight", "The Hollow King"],
-    "items": ["wight_bound_amulet", "crown_of_the_hollow_king"],
+    "biome": "Barrow-field",
+    "summary": "The barrow-field at the heart of Kraanhold, where the dead were buried standing and have lately started standing up. A wight king still wears his crown down there and has never accepted that his reign ended. Every other province borders this one, so you will cross it more than once.",
+    "nextZoneId": "lesser_drakes_aerie",
+    "worldmapCenter": {
+      "x": 2500,
+      "y": 2700,
+      "radius": 150
+    },
+    "monsters": [
+      "Barrow Wight",
+      "The Hollow King"
+    ],
+    "items": [
+      "wight_bound_amulet",
+      "crown_of_the_hollow_king"
+    ],
     "spells": [],
-    "quests": ["hollow_march_wights"],
-    "npcs": ["WardenCael"]
+    "quests": [
+      "hollow_march_wights"
+    ],
+    "npcs": [
+      "WardenCael"
+    ]
   },
   {
     "id": "lesser_drakes_aerie",
     "name": "Lesser Drake's Aerie",
-    "pass": "T4C-0005",
+    "chapter": "kraanhold",
+    "chapterOrder": 3,
     "levelRange": "200–260",
     "biome": "Mountain aerie",
-    "worldmapCenter": { "x": 2350, "y": 2900, "radius": 160 },
-    "summary": "First rung of the Drake ladder, now Kraanhold's western peaks. Kraanian Wyrmlings roost around a Lesser Drake whose stats were already fully authored in the codebase but never placed — activated by T4C-0005.",
-    "monsters": ["Kraanian Wyrmling", "Lesser Drake"],
-    "items": ["wyrmling_scale_bracer", "aeries_drakeheart_signet"],
-    "spells": ["spell.sentinel"],
-    "quests": ["aerie_wyrmling_cull"],
-    "npcs": ["SkywatchIlvara"]
-  },
-  {
-    "id": "greater_drakes_bastion",
-    "name": "Greater Drake's Bastion",
-    "pass": "T4C-0005",
-    "levelRange": "400–500",
-    "biome": "Mountain bastion",
-    "worldmapCenter": { "x": 2650, "y": 2880, "radius": 170 },
-    "summary": "Second rung of the Drake ladder, Kraanhold's high country. A stone bastion held by Bastion Wardens around a Greater Drake, another fully-stat'd legacy boss activated for the first time here.",
-    "monsters": ["Bastion Warden", "Greater Drake"],
-    "items": ["bastion_sentinels_mantle", "heartfire_of_the_greater_drake"],
-    "spells": [],
-    "quests": ["bastion_warden_siege"],
-    "npcs": ["GrandmasterVoss"]
-  },
-  {
-    "id": "drakes_lair",
-    "name": "Drake's Lair",
-    "pass": "T4C-0008",
-    "levelRange": "750–1000",
-    "biome": "Mountain lair",
-    "worldmapCenter": { "x": 2850, "y": 2780, "radius": 180 },
-    "summary": "Capstone of the Drake ladder, Kraanhold's easternmost and highest peak. Kraanian Dragonguards (the one genuinely new monster in T4C-0008) hold the approach to Arch Drake — a fully-stat'd, canon-confirmed level-1000 legacy boss that sat completely unplaced (zero @Spawn points) until that pass gave it one. The Rootcrown Wyrm (T4C-0029), an Elder Wyrm predating the named Drake line, was added to the same lair, later joined by the other four Elder Wyrms (the Pyreclaw, Mistwing, Duskmaw and Galecrest Wyrms), one per class.",
-    "monsters": ["Kraanian Dragonguard", "Arch Drake", "The Rootcrown Wyrm", "The Pyreclaw Wyrm", "The Mistwing Wyrm", "The Duskmaw Wyrm", "The Galecrest Wyrm"],
-    "items": ["dragonguards_scale_bracer", "archdrakes_molten_heart", "rootcrown_wyrms_verdant_sceptre", "rootcrown_wyrms_ageless_mantle", "rootcrown_wyrms_timeless_circlet", "pyreclaw_wyrms_searing_greatsword", "pyreclaw_wyrms_molten_warhelm", "pyreclaw_wyrms_forgeplate_gauntlets", "mistwing_wyrms_farsight_longbow", "mistwing_wyrms_rainveil_mantle", "mistwing_wyrms_fogstride_boots", "duskmaw_wyrms_umbral_rod", "duskmaw_wyrms_nightshroud_mantle", "duskmaw_wyrms_eclipsed_crown", "galecrest_wyrms_tempest_wand", "galecrest_wyrms_windswept_mantle", "galecrest_wyrms_thunderhead_circlet"],
-    "spells": [],
-    "quests": ["drakes_lair_vigil"],
-    "npcs": ["OutriderKaelis"]
-  },
-  {
-    "id": "deep_ones_cave",
-    "name": "Deep Ones Cave",
-    "pass": "T4C-0008",
-    "levelRange": "Raven's Dust coast",
-    "biome": "Coastal cave, pre-existing zone",
-    "worldmapCenter": { "x": 330, "y": 2246, "radius": 90 },
-    "summary": "Not a new zone — Deep One / Deep One Boss already existed with 41 real spawn points imported from the original game, but no loot and no quest. This pass added both without touching their stats.",
-    "monsters": ["Deep One", "Deep One Boss"],
-    "items": ["barnacled_gauntlets", "depths_wardens_talisman"],
-    "spells": [],
-    "quests": ["deep_ones_cave_purge"],
-    "npcs": ["KeeperTamsin"],
-    "preExisting": true
+    "summary": "The western peaks, and the first rung of the drake ladder. Wyrmlings nest across the whole rock face, and a Lesser Drake roosts above them keeping the nest fed. Skywatch Ilvara's cull starts with the wyrmlings and finishes with the drake — the signet she wants back is carried by the drake itself, so there is no thinning the nest and walking away.",
+    "nextZoneId": "avalon_sanctuary",
+    "worldmapCenter": {
+      "x": 2350,
+      "y": 2900,
+      "radius": 160
+    },
+    "monsters": [
+      "Kraanian Wyrmling",
+      "Lesser Drake"
+    ],
+    "items": [
+      "wyrmling_scale_bracer",
+      "aeries_drakeheart_signet"
+    ],
+    "spells": [
+      "spell.sentinel"
+    ],
+    "quests": [
+      "aerie_wyrmling_cull"
+    ],
+    "npcs": [
+      "SkywatchIlvara"
+    ]
   },
   {
     "id": "avalon_sanctuary",
     "name": "The Avalon Crossing",
-    "pass": "T4C-0019",
+    "chapter": "avalon",
+    "chapterOrder": 1,
     "levelRange": "260–300",
     "biome": "Mainland coast",
-    "worldmapCenter": { "x": 1550, "y": 1300, "radius": 110 },
-    "summary": "The last stretch of mainland shore before Avalon. Before this pass every NPC and shop that could grant access to Avalon (scroll_of_avalon, the AvalonGateway spell) was itself stationed inside Avalon, so no fresh character could ever reach it - this coastal gate and its access quest (passage_to_avalon) fix that dead end, the same role the Oracle plays for rebirth.",
-    "monsters": ["Tideworn Reaver", "Coastwarden Ithrak"],
-    "items": ["tideworn_avalon_chart"],
+    "summary": "The last stretch of mainland shore before Avalon, and the only way onto the island. Coastwarden Ithrak's reavers have the beach and are collecting a toll nobody agreed to. Harbormaster Rangor will vouch for you once you have thinned them out — and he is the only person who can, so there is no route around this one.",
+    "nextZoneId": "avalon_wilds",
+    "worldmapCenter": {
+      "x": 1550,
+      "y": 1300,
+      "radius": 110
+    },
+    "monsters": [
+      "Tideworn Reaver",
+      "Coastwarden Ithrak"
+    ],
+    "items": [
+      "tideworn_avalon_chart"
+    ],
     "spells": [],
-    "quests": ["tideworn_shore_scouts", "passage_to_avalon"],
-    "npcs": ["HarbormasterRangor"]
+    "quests": [
+      "tideworn_shore_scouts",
+      "passage_to_avalon"
+    ],
+    "npcs": [
+      "HarbormasterRangor"
+    ]
   },
   {
     "id": "avalon_wilds",
     "name": "The Avalon Wilds",
-    "pass": "T4C-0009",
+    "chapter": "avalon",
+    "chapterOrder": 2,
     "levelRange": "300–420",
-    "biome": "Lush isle, half of the new Avalon island",
-    "worldmapCenter": { "x": 1265, "y": 1400, "radius": 110 },
-    "summary": "Reached via the AvalonGateway spell or a scroll_of_avalon consumable. The loyal half of Avalon, still holding to the old fey pact — for now.",
-    "monsters": ["Fey Warden", "Moonlit Stalker", "Sir Caradoc, the Sundered Knight"],
-    "items": ["caradocs_sundered_blade"],
-    "spells": ["spell.avalon_gateway"],
-    "quests": ["avalon_wilds_vigil", "forge_the_godcore", "bind_the_godsigil", "forge_godsforged_warblade", "forge_godsforged_stormbow", "forge_godsforged_voidglass_rod", "forge_godsforged_zephyr_wand", "forge_godsforged_torc", "the_waking_rite"],
-    "npcs": ["ElderOphira", "QuartermasterElenna", "WayfarerBryndis", "ArchmageThalindra", "SisterIlyndra", "EmberSmithCorvain", "WardenSeressa", "GrandmasterTholvenn", "AnchoriteRowan"],
-    "settlement": "Avalon Sanctuary"
+    "biome": "Fey woodland",
+    "settlement": "Avalon Sanctuary",
+    "summary": "The half of Avalon that still keeps the old fey pact — for now. Fey Wardens patrol a border they are steadily losing, and Elder Ophira is running out of people willing to stand it with them. Green, quiet, and far more dangerous than it looks.",
+    "nextZoneId": "greater_drakes_bastion",
+    "worldmapCenter": {
+      "x": 1265,
+      "y": 1400,
+      "radius": 110
+    },
+    "monsters": [
+      "Fey Warden",
+      "Moonlit Stalker",
+      "Sir Caradoc, the Sundered Knight"
+    ],
+    "items": [
+      "caradocs_sundered_blade"
+    ],
+    "spells": [
+      "spell.avalon_gateway"
+    ],
+    "quests": [
+      "avalon_wilds_vigil",
+      "forge_the_godcore",
+      "bind_the_godsigil",
+      "forge_godsforged_warblade",
+      "forge_godsforged_stormbow",
+      "forge_godsforged_voidglass_rod",
+      "forge_godsforged_zephyr_wand",
+      "forge_godsforged_torc",
+      "the_waking_rite"
+    ],
+    "npcs": [
+      "ElderOphira",
+      "QuartermasterElenna",
+      "WayfarerBryndis",
+      "ArchmageThalindra",
+      "SisterIlyndra",
+      "EmberSmithCorvain",
+      "WardenSeressa",
+      "GrandmasterTholvenn",
+      "AnchoriteRowan"
+    ]
+  },
+  {
+    "id": "greater_drakes_bastion",
+    "name": "Greater Drake's Bastion",
+    "chapter": "unmaking",
+    "chapterOrder": 1,
+    "levelRange": "400–500",
+    "biome": "Mountain fortress",
+    "summary": "A stone hold in Kraanhold's high country, and the second rung of the drake ladder. The Bastion Wardens here keep the wards around the Greater Drake's ruin renewing themselves, and Grandmaster Voss wants that stopped before they finish. Breaking the guard is only half of it: the heartfire Voss asks you to bring back comes off the Greater Drake behind them.",
+    "nextZoneId": "fading_veil",
+    "worldmapCenter": {
+      "x": 2650,
+      "y": 2880,
+      "radius": 170
+    },
+    "monsters": [
+      "Bastion Warden",
+      "Greater Drake"
+    ],
+    "items": [
+      "bastion_sentinels_mantle",
+      "heartfire_of_the_greater_drake"
+    ],
+    "spells": [],
+    "quests": [
+      "bastion_warden_siege"
+    ],
+    "npcs": [
+      "GrandmasterVoss"
+    ]
   },
   {
     "id": "fading_veil",
     "name": "The Fading Veil",
-    "pass": "T4C-0009",
+    "chapter": "unmaking",
+    "chapterOrder": 2,
     "levelRange": "450–650",
-    "biome": "Corrupted isle, the other half of Avalon",
-    "worldmapCenter": { "x": 1420, "y": 1560, "radius": 130 },
-    "summary": "A blight eating outward from Ysolde's lair, one season at a time. Sir Caradoc's own armor now walks here, worn by something that isn't him anymore.",
-    "monsters": ["Veilbound Wraith", "Sundered Sentinel", "Ysolde, the Veiled Matriarch", "The Verdant Warden"],
-    "items": ["ysoldes_veiled_circlet", "verdant_wardens_bulwark"],
+    "biome": "Blighted woodland",
+    "settlement": "Avalon Sanctuary",
+    "summary": "A blight spreading outward from Ysolde's lair, taking Avalon one season at a time. Sir Caradoc's armour still walks the Veil, worn by something that stopped being him a long time ago. The hardest ground on the island, and one of the two places Veiled Aether Shards drop — the Rootcrown Wyrm, away in Drake's Lair, is the other.",
+    "nextZoneId": "drakes_lair",
+    "worldmapCenter": {
+      "x": 1420,
+      "y": 1560,
+      "radius": 130
+    },
+    "monsters": [
+      "Veilbound Wraith",
+      "Sundered Sentinel",
+      "Ysolde, the Veiled Matriarch",
+      "The Verdant Warden"
+    ],
+    "items": [
+      "ysoldes_veiled_circlet",
+      "verdant_wardens_bulwark"
+    ],
     "spells": [],
-    "quests": ["fading_veil_reckoning"],
-    "npcs": ["ElderOphira", "QuartermasterElenna", "WayfarerBryndis", "ArchmageThalindra", "SisterIlyndra"],
-    "settlement": "Avalon Sanctuary"
+    "quests": [
+      "fading_veil_reckoning"
+    ],
+    "npcs": [
+      "ElderOphira",
+      "QuartermasterElenna",
+      "WayfarerBryndis",
+      "ArchmageThalindra",
+      "SisterIlyndra"
+    ]
+  },
+  {
+    "id": "drakes_lair",
+    "name": "Drake's Lair",
+    "chapter": "last_peak",
+    "chapterOrder": 1,
+    "levelRange": "750–1000",
+    "biome": "Mountain lair",
+    "summary": "Kraanhold's easternmost and highest peak, and the end of the road. Arch Drake has held this lair since long before anyone thought to map it, and the Kraanian Dragonguard on the approach exist to make sure nobody reaches him. The five Elder Wyrms den here too, one for each way of fighting. Come at the very top of your power or do not come at all — there is nothing past this.",
+    "worldmapCenter": {
+      "x": 2850,
+      "y": 2780,
+      "radius": 180
+    },
+    "monsters": [
+      "Kraanian Dragonguard",
+      "Arch Drake",
+      "The Rootcrown Wyrm",
+      "The Pyreclaw Wyrm",
+      "The Mistwing Wyrm",
+      "The Duskmaw Wyrm",
+      "The Galecrest Wyrm"
+    ],
+    "items": [
+      "dragonguards_scale_bracer",
+      "archdrakes_molten_heart",
+      "rootcrown_wyrms_verdant_sceptre",
+      "rootcrown_wyrms_ageless_mantle",
+      "rootcrown_wyrms_timeless_circlet",
+      "pyreclaw_wyrms_searing_greatsword",
+      "pyreclaw_wyrms_molten_warhelm",
+      "pyreclaw_wyrms_forgeplate_gauntlets",
+      "mistwing_wyrms_farsight_longbow",
+      "mistwing_wyrms_rainveil_mantle",
+      "mistwing_wyrms_fogstride_boots",
+      "duskmaw_wyrms_umbral_rod",
+      "duskmaw_wyrms_nightshroud_mantle",
+      "duskmaw_wyrms_eclipsed_crown",
+      "galecrest_wyrms_tempest_wand",
+      "galecrest_wyrms_windswept_mantle",
+      "galecrest_wyrms_thunderhead_circlet"
+    ],
+    "spells": [],
+    "quests": [
+      "drakes_lair_vigil"
+    ],
+    "npcs": [
+      "OutriderKaelis"
+    ]
   }
 ]
