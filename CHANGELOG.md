@@ -23,6 +23,22 @@ on, every content/feature pass adds its own entry here as part of the work
   (Griroesh and Dune Raiders), and the Necklace and a matching Nightsword now drop too, so both
   blades can actually be forged.
 
+## 2026-09-26 — Quest locations always shown (T4C-0053)
+
+### Changed
+- Every quest page on the reference website now shows where to go, even a crafting turn-in
+  quest that has no kill objective — previously only kill quests listed a location. A quest
+  page now also always shows a map when one exists for that area, including a couple of quests
+  that used to show coordinates but no map.
+
+## 2026-09-26 — Full quest walkthroughs (T4C-0052)
+
+### Added
+- **Full quest walkthroughs on the reference website.** Every quest page now opens with a
+  plain-language walkthrough explaining where to find the quest-giver, where to fight, any item
+  you need to bring, and what you get for finishing — on top of the existing step-by-step
+  breakdown and exact offer/completion dialogue. In-game dialogue is unchanged.
+
 ## 2026-09-25 — Safer changes and fewer review round-trips (T4C-0051, Process/Tooling)
 
 ### Changed

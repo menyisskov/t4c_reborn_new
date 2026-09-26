@@ -38,6 +38,12 @@ public final class QuestDef {
   // 0 preserves every quest shape predating this pass (no level gate at all). Kills/items can
   // still be gathered below the floor; only the final completion is blocked.
   private final int minLevel;
+  // T4C-0052: an optional longer-form prose walkthrough for the compendium website only (see
+  // CompendiumExporter.exportQuests(), compendium/app.js's quests/:id route) - the in-game
+  // offer/completion/completed text stays short by design (see quest-creator skill), so this is
+  // a separate field rather than lengthening those. null means the compendium falls back to its
+  // existing short-text-only rendering, which every quest predating this pass keeps doing.
+  private final String walkthroughText;
 
   /** Original 14-arg shape (no activationFlag, no item/unlock objective, no item reward). */
   public QuestDef(
@@ -206,5 +212,52 @@ public final class QuestDef {
         unlockZoneId,
         rewardItemKey,
         0);
+  }
+
+  /** Pre-T4C-0052 20-arg shape (no compendium walkthrough text) - every quest added by
+   * T4C-0035 through T4C-0051 uses this constructor unchanged. */
+  public QuestDef(
+      String id,
+      String title,
+      String giverNpc,
+      String targetMonster,
+      int requiredKills,
+      int targetWorldZ,
+      int areaCenterX,
+      int areaCenterY,
+      int areaRadiusTiles,
+      int rewardGold,
+      int rewardXp,
+      String offerText,
+      String completionText,
+      String completedText,
+      String activationFlag,
+      String requiredItemKey,
+      int requiredItemQty,
+      String unlockZoneId,
+      String rewardItemKey,
+      int minLevel) {
+    this(
+        id,
+        title,
+        giverNpc,
+        targetMonster,
+        requiredKills,
+        targetWorldZ,
+        areaCenterX,
+        areaCenterY,
+        areaRadiusTiles,
+        rewardGold,
+        rewardXp,
+        offerText,
+        completionText,
+        completedText,
+        activationFlag,
+        requiredItemKey,
+        requiredItemQty,
+        unlockZoneId,
+        rewardItemKey,
+        minLevel,
+        null);
   }
 }

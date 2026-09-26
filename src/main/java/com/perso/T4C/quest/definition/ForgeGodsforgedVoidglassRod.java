@@ -27,6 +27,8 @@ public final class ForgeGodsforgedVoidglassRod {
         "item.bound_godsigil",
         1,
         null,
-        "godsforged_voidglass_rod");
+        "godsforged_voidglass_rod",
+        0,
+        "${quest.forge_godsforged_voidglass_rod.walkthrough}");
   }
 }
