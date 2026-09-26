@@ -11947,7 +11947,7 @@ window.T4C_DATA = {
       "offerText": "Thin the Drowned Acolytes crawling out of the chancel east of Silversky before they drag anyone else under.",
       "completionText": "You've bled the chancel dry of its acolytes, at least for now. Silversky's coast breathes easier.",
       "completedText": "The tide's calm again, thanks to you. Mordrenn still holds the deep chancel, if you're fool enough to go looking.",
-      "walkthroughText": "Talk to Tide Warden Bryn on Silversky's coast to accept the plea. Head east to the drowned chancel around (1750, 2300) and kill 20 Drowned Acolytes - kills only count within about 140 tiles of that spot, so stay near the ruin rather than chasing stragglers back toward town. Mordrenn, holding the deeper chancel, is a separate threat you don't need to fight for this quest. Return to Bryn for 1,500 gold, 4,000 XP, and Mordrenn's Drowned Cowl."
+      "walkthroughText": "Talk to Tide Warden Bryn on Silversky's coast to accept the plea. Head east to the drowned chancel around (1750, 2300) and kill 20 Drowned Acolytes - kills only count within about 140 tiles of that spot, so stay near the ruin rather than chasing stragglers back toward town. You'll also need Mordrenn's Drowned Cowl to turn in, which only drops from Mordrenn himself, holding the deeper chancel - so despite the acolyte count, he is a required kill too. Return to Bryn for 1,500 gold and 4,000 XP; the cowl is consumed on turn-in."
     },
     {
       "id": "emberfang_hills_bounty",
@@ -11968,7 +11968,7 @@ window.T4C_DATA = {
       "offerText": "Cull the Ashfang Stalkers raiding the Cinderreach foothills south of Windhowl before their numbers swell further.",
       "completionText": "The Stalker packs are broken up, for now. Ignarok still smolders somewhere up in those hills.",
       "completedText": "The foothills are quiet again. Watch yourself if you go hunting Ignarok himself.",
-      "walkthroughText": "Rurik Cinderwatch offers this bounty from his post near Windhowl. Ride south into the Cinderreach foothills around (1900, 1600) and kill 20 Ashfang Stalkers - the 140-tile objective circle is centered on the foothills, not the road leading there. Ignarok the Emberfang himself prowls the same hills but isn't required for this quest. Turn in to Rurik for 2,500 gold, 7,000 XP, and Ignarok's Emberfang Claw."
+      "walkthroughText": "Rurik Cinderwatch offers this bounty from his post near Windhowl. Ride south into the Cinderreach foothills around (1900, 1600) and kill 20 Ashfang Stalkers - the 140-tile objective circle is centered on the foothills, not the road leading there. You'll also need Ignarok's Emberfang Claw to turn in, which only drops from Ignarok the Emberfang himself, prowling the same hills - so the stalker count alone isn't enough, he's a required kill too. Turn in to Rurik for 2,500 gold and 7,000 XP; the claw is consumed on turn-in."
     },
     {
       "id": "silversky_borderwatch",
@@ -12049,7 +12049,7 @@ window.T4C_DATA = {
       "offerText": "Drive back the Centaur Warriors raiding the marches west of Windhowl before their king leads a full warband to the walls.",
       "completionText": "The marches are quiet again, for now. Windhowl's watch owes you its thanks.",
       "completedText": "The marches held because of you. The Centaur King still broods somewhere out there, if you're bold enough to find him.",
-      "walkthroughText": "Marshal Torrhen holds the line in the Windhowl Marches and needs help driving back a Centaur incursion before their king marshals a full warband. Kill 20 Centaur Warriors within 140 tiles of (2380, 2430). Turn in for 6,000 gold, 400,000 XP, and the Marchwarden's Crown - the Centaur King mentioned in the flavor text isn't a required kill, just a tease of tougher fights ahead."
+      "walkthroughText": "Marshal Torrhen holds the line in the Windhowl Marches and needs help driving back a Centaur incursion before their king marshals a full warband. Kill 20 Centaur Warriors within 140 tiles of (2380, 2430). You'll also need the Marchwarden's Crown to turn in, which only drops from the Centaur King himself - so despite the flavor text, he is a required kill, not just a tease of tougher fights ahead. Turn in for 6,000 gold and 400,000 XP; the crown is consumed on turn-in."
     },
     {
       "id": "hollow_march_wights",
@@ -12070,7 +12070,7 @@ window.T4C_DATA = {
       "offerText": "Put down the Barrow Wights crawling out of the old barrows south of the Windhowl Marches.",
       "completionText": "The barrows have gone quiet again. The March Watch won't forget this.",
       "completedText": "The wights are settled, but the Hollow King still walks. Watch yourself if you go looking for him.",
-      "walkthroughText": "Warden Cael needs the Barrow Wights crawling out of the old barrows south of the Marches put down. Kill 20 Barrow Wights within 150 tiles of (2500, 2700). The reward - 12,000 gold, 900,000 XP, and the Crown of the Hollow King - is a solid step up from the Marches quest before it; the Hollow King himself remains a separate, unfought threat."
+      "walkthroughText": "Warden Cael needs the Barrow Wights crawling out of the old barrows south of the Marches put down. Kill 20 Barrow Wights within 150 tiles of (2500, 2700). You'll also need the Crown of the Hollow King to turn in, which only drops from the Hollow King himself - so he isn't the separate, unfought threat he first appears to be. The reward is 12,000 gold and 900,000 XP; the crown is consumed on turn-in."
     },
     {
       "id": "aerie_wyrmling_cull",
@@ -12091,7 +12091,7 @@ window.T4C_DATA = {
       "offerText": "Cull the Kraanian Wyrmlings nesting in the aerie east of the Hollow March before their numbers swell further.",
       "completionText": "The nest is thinned, for now. Ilvara's old maps are looking more credible by the day.",
       "completedText": "The wyrmlings are culled. The Lesser Drake above them, however, is very much awake.",
-      "walkthroughText": "Skywatch Ilvara, whose old maps of the aerie are finally paying off, wants the Kraanian Wyrmling nest thinned before it grows further. Kill 20 Wyrmlings in the 160-tile area around (2350, 2900), east of the Hollow March. Completing it pays 25,000 gold, 2,000,000 XP, and the Aerie's Drakeheart Signet - but the Lesser Drake roosting above the nest is a much tougher fight this quest doesn't require."
+      "walkthroughText": "Skywatch Ilvara, whose old maps of the aerie are finally paying off, wants the Kraanian Wyrmling nest thinned before it grows further. Kill 20 Wyrmlings in the 160-tile area around (2350, 2900), east of the Hollow March. You'll also need the Aerie's Drakeheart Signet to turn in, which only drops from the Lesser Drake roosting above the nest - a much tougher fight than the wyrmlings, and a required one despite appearances. Completing it pays 25,000 gold and 2,000,000 XP; the signet is consumed on turn-in."
     },
     {
       "id": "bastion_warden_siege",
@@ -12112,7 +12112,7 @@ window.T4C_DATA = {
       "offerText": "Break the Bastion Wardens guarding the ruin east of the Aerie before the old wards protecting the Greater Drake can be renewed.",
       "completionText": "The wardens are broken. Whatever wards they were keeping strong won't hold much longer.",
       "completedText": "The bastion's outer guard is gone. The Greater Drake itself is another matter entirely.",
-      "walkthroughText": "Grandmaster Voss needs the Bastion Wardens broken before the wards guarding the Greater Drake's ruin can renew themselves. Kill 20 Bastion Wardens within 170 tiles of (2650, 2880), east of the Aerie. Turn in for 500,000 gold, 150,000,000 XP, and the Heartfire of the Greater Drake - a serious reward for a quest that's really just clearing the Drake's outer guard, not fighting the Drake itself."
+      "walkthroughText": "Grandmaster Voss needs the Bastion Wardens broken before the wards guarding the Greater Drake's ruin can renew themselves. Kill 20 Bastion Wardens within 170 tiles of (2650, 2880), east of the Aerie. You'll also need the Heartfire of the Greater Drake to turn in, which only drops from the Greater Drake itself - so this isn't just clearing the outer guard, the Drake is a required kill too. Turn in for 500,000 gold and 150,000,000 XP; the heartfire is consumed on turn-in."
     },
     {
       "id": "deep_ones_cave_purge",
@@ -12133,7 +12133,7 @@ window.T4C_DATA = {
       "offerText": "Deep Ones have been dragging travelers under all along this stretch of the Raven's Dust coast. Thin their numbers before it gets worse.",
       "completionText": "It's quieter here already. Raven's Dust owes you more than it'll ever admit.",
       "completedText": "The Deep Ones haven't forgotten what you did to them. Neither have I - my thanks again.",
-      "walkthroughText": "Keeper Tamsin, on the Raven's Dust coast, has been watching Deep Ones drag travelers under for too long. Kill 18 Deep Ones - a long-standing monster spawned in numbers along this stretch - within 90 tiles of (330, 2246). The reward is modest (1,600 gold, 4,200 XP) but includes the Depth Warden's Talisman, and completing it unlocks fast travel straight to the Deep Ones' Cave for future visits."
+      "walkthroughText": "Keeper Tamsin, on the Raven's Dust coast, has been watching Deep Ones drag travelers under for too long. Kill 18 Deep Ones - a long-standing monster spawned in numbers along this stretch - within 90 tiles of (330, 2246). You'll also need the Depth Warden's Talisman to turn in, which only drops from the tougher Deep One (Boss) lurking in the same area - a rare drop, so expect to work through several before it appears. The reward is modest (1,600 gold, 4,200 XP), and completing it unlocks fast travel straight to the Deep Ones' Cave for future visits."
     },
     {
       "id": "drakes_lair_vigil",
@@ -12154,7 +12154,7 @@ window.T4C_DATA = {
       "offerText": "Kraanian Dragonguard hold the approach to the old drakes' lair, further out than the Vigil has ever mapped. Break their line before whatever sleeps past it wakes on its own.",
       "completionText": "The guard line is broken. Whatever the Dragonguard were protecting, it's exposed now - for better or worse.",
       "completedText": "The lair's approach is still quiet since you cleared it. Don't get comfortable - something out there is still watching.",
-      "walkthroughText": "Outrider Kaelis stands at the very edge of the Vigil's mapped territory, holding the approach to the drakes' lair. Kill 15 Kraanian Dragonguard within 180 tiles of (2850, 2780). This is the single biggest reward in the game - 1,200,000 gold and 2,000,000,000 XP - plus the Archdrake's Molten Heart, and it unlocks fast travel to the Drake's Lair itself. Expect the Dragonguard to hit hard; this is late-game content, not something to attempt underleveled."
+      "walkthroughText": "Outrider Kaelis stands at the very edge of the Vigil's mapped territory, holding the approach to the drakes' lair. Kill 15 Kraanian Dragonguard within 180 tiles of (2850, 2780). You'll also need the Archdrake's Molten Heart to turn in, which only drops from the Arch Drake itself - breaking the guard line isn't enough on its own, you'll need to reach and defeat the Drake too. This is the single biggest reward in the game - 1,200,000 gold and 2,000,000,000 XP - plus the heart, and it unlocks fast travel to the Drake's Lair itself. Expect the Dragonguard, and the Drake, to hit hard; this is late-game content, not something to attempt underleveled."
     },
     {
       "id": "tideworn_shore_scouts",
@@ -12194,7 +12194,7 @@ window.T4C_DATA = {
       "offerText": "The scouts were the easy part. Ithrak keeps the rest of his warband close, and he's the only one left who knows the safe line through the shoal. My boy went out there once without a chart of his own. Clear the warband, then take Ithrak's chart before it goes down with him - I won't watch another one go in blind.",
       "completionText": "The warband's scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive. It's more than my boy ever had.",
       "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross. Whatever's waiting on the other side, it's more than this dock's seen in years.",
-      "walkthroughText": "Once Tideworn Shore Scouts is complete, ask Rangor about the crossing again to receive Avalon's real access quest. Kill 25 Tideworn Reavers in the same 110-tile area around (1550, 1300) - Coastwarden Ithrak himself doesn't need to die, just his warband. Turn in for 400,000 gold, 200,000,000 XP, and Ithrak's Chart, which is what actually unlocks fast travel to Avalon Sanctuary - without it there's no way in."
+      "walkthroughText": "Once Tideworn Shore Scouts is complete, ask Rangor about the crossing again to receive Avalon's real access quest. Kill 25 Tideworn Reavers in the same 110-tile area around (1550, 1300). You'll also need Ithrak's Chart to turn in, which only drops from Coastwarden Ithrak himself - so clearing his warband isn't enough, you'll need to finish him too. Turn in for 400,000 gold and 200,000,000 XP; the chart is consumed on turn-in and is what actually unlocks fast travel to Avalon Sanctuary - without it there's no way in."
     },
     {
       "id": "avalon_wilds_vigil",
@@ -12215,7 +12215,7 @@ window.T4C_DATA = {
       "offerText": "The Fey Wardens of the Wilds still hold to the old pact, but even loyal groves need a blade at their border while the Veil keeps pressing north. Stand vigil with them - thin whatever presses too close.",
       "completionText": "The Wilds breathe easier. The pact holds a little longer because of you.",
       "completedText": "The Wardens still speak well of you. The Wilds remain ours - for now.",
-      "walkthroughText": "Elder Ophira, guarding the old pact at Avalon's border, asks you to stand vigil with the Fey Wardens. Kill 20 Fey Wardens within 110 tiles of (1265, 1400). The reward is 800,000 gold, 400,000,000 XP, and Caradoc's Sundered Blade, and completing it unlocks fast travel to Avalon Wilds."
+      "walkthroughText": "Elder Ophira, guarding the old pact at Avalon's border, asks you to stand vigil with the Fey Wardens. Kill 20 Fey Wardens within 110 tiles of (1265, 1400). You'll also need Caradoc's Sundered Blade to turn in, which only drops from Sir Caradoc, the Sundered Knight - a tougher fight than the wardens, and a required one even though the offer doesn't name him. The reward is 800,000 gold and 400,000,000 XP; the blade is consumed on turn-in, and completing it unlocks fast travel to Avalon Wilds."
     },
     {
       "id": "fading_veil_reckoning",
@@ -12236,7 +12236,7 @@ window.T4C_DATA = {
       "offerText": "Veilbound Wraiths spread Ysolde's corruption outward with every season that passes. Push back into the Veil and cut their numbers down before the blight claims ground we can't take back.",
       "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
       "completedText": "The blight hasn't forgotten what you did to it out there. Ysolde surely hasn't either.",
-      "walkthroughText": "Elder Ophira also sends you after the Veilbound Wraiths spreading Ysolde's corruption. Kill 15 Wraiths within 130 tiles of (1420, 1560), deeper into the Veil than the Wilds vigil. It pays 1,000,000 gold, 1,700,000,000 XP, and Ysolde's Veiled Circlet, and unlocks fast travel to the Fading Veil - the tougher of Ophira's two quests, so tackle the Wilds vigil first if you haven't."
+      "walkthroughText": "Elder Ophira also sends you after the Veilbound Wraiths spreading Ysolde's corruption. Kill 15 Wraiths within 130 tiles of (1420, 1560), deeper into the Veil than the Wilds vigil. You'll also need Ysolde's Veiled Circlet to turn in, which only drops from Ysolde herself - so despite being named only as the corruption's source, she's a required kill too. It pays 1,000,000 gold and 1,700,000,000 XP; the circlet is consumed on turn-in, and completing it unlocks fast travel to the Fading Veil - the tougher of Ophira's two quests, so tackle the Wilds vigil first if you haven't."
     },
     {
       "id": "forge_the_godcore",
@@ -12297,7 +12297,7 @@ window.T4C_DATA = {
       "offerText": "Bring me a tempered core and a bound sigil, and name the warblade - the rest is mine to finish.",
       "completionText": "There. A blade with the old pact's strength bound into the steel - Godsforged, the last of us would call it. Wield it like it remembers what it cost.",
       "completedText": "You already carry the Godsforged Warblade. I've nothing left to give you there.",
-      "walkthroughText": "With a Tempered Godcore and a Bound Godsigil in hand, bring both to Grandmaster Tholvenn and he crafts the Godsforged Warblade on the spot - no kills, no waiting, both items are consumed. Pays 1,500,000 gold and 350,000,000 XP alongside the weapon. Tholvenn offers a different Godsforged item per archetype (Stormbow, Voidglass Rod, Zephyr Wand, Torc of the First Pact) from the same two components - pick the one that matches your build; farming more embers/shards lets you craft another later."
+      "walkthroughText": "With a Tempered Godcore and a Bound Godsigil in hand, bring both to Grandmaster Tholvenn and he crafts the Godsforged Warblade on the spot - no kills, no waiting, both items are consumed. Pays 1,500,000 gold and 350,000,000 XP alongside the weapon. Tholvenn offers a different Godsforged item per archetype (Stormbow, Voidglass Rod, Zephyr Wand, Torc of the First Pact) from the same two components, but Forge the Godcore and Bind the Godsigil are each one-time quests - you'll only ever have one core and one sigil, so this is a single, permanent choice among the five, not one you can repeat by farming more embers or shards."
     },
     {
       "id": "forge_godsforged_stormbow",
@@ -12318,7 +12318,7 @@ window.T4C_DATA = {
       "offerText": "A core, a sigil, and the will to loose something the old pact would have called a small storm. Bring the first two; I'll handle the rest.",
       "completionText": "Drawn true, this one will find whatever you aim it at - and a little of what's beyond it too. Call it Godsforged, and don't waste the name on a poor shot.",
       "completedText": "The Godsforged Stormbow already answers to your hand. There's nothing more I can add to it.",
-      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Stormbow for the archer archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the bow. It shares its two components with the other four Godsforged weapons, so pick whichever matches your build first."
+      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Stormbow for the archer archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the bow. It shares its two components with the other four Godsforged weapons, but Forge the Godcore and Bind the Godsigil only ever complete once - you'll only have one core and one sigil in total, so this is a single, permanent choice among the five."
     },
     {
       "id": "forge_godsforged_voidglass_rod",
@@ -12339,7 +12339,7 @@ window.T4C_DATA = {
       "offerText": "Bring me a tempered core and a bound sigil, and I'll pour what's left of the old power into glass dark enough to hold it.",
       "completionText": "Voidglass doesn't reflect light so much as swallow it - fitting, for what's bound inside. It's Godsforged now. Use it with more care than most of your kind manage.",
       "completedText": "The Godsforged Voidglass Rod is already yours. I won't forge you a second.",
-      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Voidglass Rod for the intelligence-mage archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the rod. It shares its two components with the other four Godsforged weapons, so pick whichever matches your build first."
+      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Voidglass Rod for the intelligence-mage archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the rod. It shares its two components with the other four Godsforged weapons, but Forge the Godcore and Bind the Godsigil only ever complete once - you'll only have one core and one sigil in total, so this is a single, permanent choice among the five."
     },
     {
       "id": "forge_godsforged_zephyr_wand",
@@ -12360,7 +12360,7 @@ window.T4C_DATA = {
       "offerText": "A core, a sigil, and a hand steady enough for both mind and heart to guide it. Bring me the first two.",
       "completionText": "Air remembers everything that's ever moved through it, if you know how to ask - this wand asks better than most now. Godsforged, and yours.",
       "completedText": "You've already got the Godsforged Zephyr Wand in hand. That working's finished.",
-      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Zephyr Wand for the hybrid-mage archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the wand. It shares its two components with the other four Godsforged weapons, so pick whichever matches your build first."
+      "walkthroughText": "Bring a Tempered Godcore and a Bound Godsigil to Grandmaster Tholvenn and he crafts the Godsforged Zephyr Wand for the hybrid-mage archetype - no kills, both items consumed on the spot. Pays 1,500,000 gold and 350,000,000 XP alongside the wand. It shares its two components with the other four Godsforged weapons, but Forge the Godcore and Bind the Godsigil only ever complete once - you'll only have one core and one sigil in total, so this is a single, permanent choice among the five."
     },
     {
       "id": "forge_godsforged_torc",
