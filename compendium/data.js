@@ -11819,6 +11819,13 @@ window.T4C_DATA = {
       "id": "AnchoriteRowan",
       "origin": "new",
       "displayName": "Anchorite Rowan",
+      "spawns": [
+        {
+          "x": 1290,
+          "y": 1500,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Avalon doesn't forget who's proven themselves to it. Neither do I.",
       "topics": [
         {
@@ -11863,6 +11870,13 @@ window.T4C_DATA = {
       "id": "ArchmageThalindra",
       "origin": "new",
       "displayName": "Archmage Thalindra",
+      "spawns": [
+        {
+          "x": 1362,
+          "y": 1512,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the high arts here and nowhere else on this coast. Name a school - fire, water, earth, air, dark or light - and I'll show you what it holds.",
       "topics": [
         {
@@ -11979,6 +11993,13 @@ window.T4C_DATA = {
       "id": "DockmasterThessaly",
       "origin": "new",
       "displayName": "Dockmaster Thessaly",
+      "spawns": [
+        {
+          "x": 1620,
+          "y": 2628,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "The crossing to Kraanhold isn't a pleasant one. Clear the road trolls harassing the coast first, and I'll see you safely across.",
       "topics": [
         {
@@ -12030,6 +12051,13 @@ window.T4C_DATA = {
       "id": "ElderOphira",
       "origin": "new",
       "displayName": "Elder Ophira",
+      "spawns": [
+        {
+          "x": 1316,
+          "y": 1493,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Welcome, traveler. I am Elder Ophira of Avalon Sanctuary. You stand at the seam between two halves of one isle - ask, and I will tell you of our plight.",
       "topics": [
         {
@@ -12098,6 +12126,13 @@ window.T4C_DATA = {
       "id": "EmberSmithCorvain",
       "origin": "new",
       "displayName": "Ember-Smith Corvain",
+      "spawns": [
+        {
+          "x": 1300,
+          "y": 1460,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "The forge hasn't gone cold in longer than you'd believe. Neither have I, if it comes to that.",
       "topics": [
         {
@@ -12134,6 +12169,13 @@ window.T4C_DATA = {
       "id": "GrandmasterTholvenn",
       "origin": "new",
       "displayName": "Grandmaster Tholvenn",
+      "spawns": [
+        {
+          "x": 1330,
+          "y": 1440,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "You've found the last of us. Say what you've come to forge, and I'll tell you if you've earned it yet.",
       "topics": [
         {
@@ -12206,6 +12248,13 @@ window.T4C_DATA = {
       "id": "GrandmasterVoss",
       "origin": "new",
       "displayName": "Grandmaster Voss",
+      "spawns": [
+        {
+          "x": 2550,
+          "y": 2780,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Few make it this far and fewer still make it back. What do you need, champion?",
       "topics": [
         {
@@ -12250,6 +12299,13 @@ window.T4C_DATA = {
       "id": "HarbormasterRangor",
       "origin": "new",
       "displayName": "Harbormaster Rangor",
+      "spawns": [
+        {
+          "x": 1519,
+          "y": 1217,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Welcome to what's left of the dock. Nobody sails from here anymore - not since the reavers took the shore and Ithrak took their coin.",
       "topics": [
         {
@@ -12316,6 +12372,13 @@ window.T4C_DATA = {
       "id": "KeeperOfTheSixthSeal",
       "origin": "new",
       "displayName": "Keeper of the Sixth Seal",
+      "spawns": [
+        {
+          "x": 1724,
+          "y": 1836,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Five wyrms. Five scales. One seal that isn't a wyrm at all.",
       "topics": [
         {
@@ -12343,6 +12406,13 @@ window.T4C_DATA = {
       "id": "KeeperTamsin",
       "origin": "new",
       "displayName": "Keeper Tamsin",
+      "spawns": [
+        {
+          "x": 302,
+          "y": 2317,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Careful where you step. Something's been dragging people under since the tide turned.",
       "topics": [
         {
@@ -12387,6 +12457,13 @@ window.T4C_DATA = {
       "id": "MarshalTorrhen",
       "origin": "new",
       "displayName": "Marshal Torrhen",
+      "spawns": [
+        {
+          "x": 2430,
+          "y": 2440,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "The centaur warbands have been raiding out of the western marches again. Windhowl needs sellswords, not just soldiers.",
       "topics": [
         {
@@ -12439,6 +12516,13 @@ window.T4C_DATA = {
       "id": "MirrorwardenYsmera",
       "origin": "new",
       "displayName": "Ysmera the Mirrorwarden",
+      "spawns": [
+        {
+          "x": 1736,
+          "y": 1840,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Look into the mirror, %s. It has been looking at you for a long time.",
       "topics": [
         {
@@ -12506,6 +12590,13 @@ window.T4C_DATA = {
       "id": "OldCorrin",
       "origin": "new",
       "displayName": "Old Corrin",
+      "spawns": [
+        {
+          "x": 1626,
+          "y": 2631,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Thessaly gets the coin-counters. I get the ones who want something that lasts.",
       "topics": [
         {
@@ -12533,6 +12624,13 @@ window.T4C_DATA = {
       "id": "OutriderHalvard",
       "origin": "new",
       "displayName": "Outrider Halvard",
+      "spawns": [
+        {
+          "x": 1830,
+          "y": 1310,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Halvard. Windhowl's roads aren't as safe as they look - prove you can clear them before you go wandering the hills.",
       "topics": [
         {
@@ -12584,6 +12682,13 @@ window.T4C_DATA = {
       "id": "OutriderKaelis",
       "origin": "new",
       "displayName": "Outrider Kaelis",
+      "spawns": [
+        {
+          "x": 2800,
+          "y": 2730,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Turn back if you're not ready. What's past this ridge doesn't forgive.",
       "topics": [
         {
@@ -12629,6 +12734,13 @@ window.T4C_DATA = {
       "origin": "new",
       "displayName": "Plague Warden's Strongbox",
       "spriteBase": "@static:Chest",
+      "spawns": [
+        {
+          "x": 2080,
+          "y": 2220,
+          "worldZ": 1
+        }
+      ],
       "welcomeText": "",
       "topics": [],
       "combatProfile": {
@@ -12647,6 +12759,13 @@ window.T4C_DATA = {
       "id": "QuartermasterElenna",
       "origin": "new",
       "displayName": "Quartermaster Elenna",
+      "spawns": [
+        {
+          "x": 1364,
+          "y": 1494,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Quartermaster Elenna, at your service. If you mean to walk the Wilds or the Veil, you'll want better steel than you're carrying.",
       "topics": [
         {
@@ -12688,6 +12807,13 @@ window.T4C_DATA = {
       "id": "RhodarHeatforge",
       "origin": "activated",
       "displayName": "Rhodar Heatforge",
+      "spawns": [
+        {
+          "x": 1493,
+          "y": 2423,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Sorry, we're closed during the night and I'm off to bed.",
       "topics": [
         {
@@ -12840,6 +12966,13 @@ window.T4C_DATA = {
       "id": "RurikCinderwatch",
       "origin": "new",
       "displayName": "Rurik Cinderwatch",
+      "spawns": [
+        {
+          "x": 1980,
+          "y": 1490,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Careful past the ridge, friend. The Cinderreach Hills have been smoking worse than usual.",
       "topics": [
         {
@@ -12903,6 +13036,13 @@ window.T4C_DATA = {
       "id": "SentinelCorwin",
       "origin": "new",
       "displayName": "Sentinel Corwin",
+      "spawns": [
+        {
+          "x": 1550,
+          "y": 2450,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Corwin here. If you're heading east past the fields, best prove you can handle yourself first.",
       "topics": [
         {
@@ -12954,6 +13094,13 @@ window.T4C_DATA = {
       "id": "SisterIlyndra",
       "origin": "new",
       "displayName": "Sister Ilyndra",
+      "spawns": [
+        {
+          "x": 1340,
+          "y": 1479,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Peace to you, traveler. This temple stands open to anyone the Veil has bruised, whichever side of the seam you call home.",
       "topics": [
         {
@@ -12995,6 +13142,13 @@ window.T4C_DATA = {
       "id": "SkywatchIlvara",
       "origin": "activated",
       "displayName": "Skywatch Ilvara",
+      "spawns": [
+        {
+          "x": 2280,
+          "y": 2850,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "You hear the wyrmlings before you see them. If you can hear the Drake itself, you're already too close.",
       "topics": [
         {
@@ -13049,6 +13203,13 @@ window.T4C_DATA = {
       "id": "SpellMerchant",
       "origin": "new",
       "displayName": "Ilarion the Spell Merchant",
+      "spawns": [
+        {
+          "x": 2950,
+          "y": 1065,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Welcome. I have every spell known to this world for sale. Say \"spells\" to browse my wares.",
       "topics": [],
       "combatProfile": {
@@ -13068,6 +13229,18 @@ window.T4C_DATA = {
       "origin": "new",
       "displayName": "Storage Chest",
       "spriteBase": "@static:Vault",
+      "spawns": [
+        {
+          "x": 2945,
+          "y": 1070,
+          "worldZ": 0
+        },
+        {
+          "x": 1607,
+          "y": 1178,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "",
       "topics": [],
       "combatProfile": {
@@ -13087,6 +13260,13 @@ window.T4C_DATA = {
       "origin": "new",
       "displayName": "Sunken Ledger Coffer",
       "spriteBase": "@static:Chest",
+      "spawns": [
+        {
+          "x": 115,
+          "y": 1400,
+          "worldZ": 2
+        }
+      ],
       "welcomeText": "",
       "topics": [],
       "combatProfile": {
@@ -13105,6 +13285,13 @@ window.T4C_DATA = {
       "id": "TideWardenBryn",
       "origin": "new",
       "displayName": "Tide Warden Bryn",
+      "spawns": [
+        {
+          "x": 1520,
+          "y": 2440,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "The tide brought something foul ashore near Silversky. Stand with me, or move along.",
       "topics": [
         {
@@ -13168,6 +13355,13 @@ window.T4C_DATA = {
       "id": "TrialWardenOsric",
       "origin": "new",
       "displayName": "Trial Warden Osric",
+      "spawns": [
+        {
+          "x": 1740,
+          "y": 1837,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "The mirror asks who you were. I only ask how fast you are.",
       "topics": [
         {
@@ -13203,6 +13397,13 @@ window.T4C_DATA = {
       "origin": "new",
       "displayName": "Warband's Buried Chest",
       "spriteBase": "@static:Chest",
+      "spawns": [
+        {
+          "x": 2303,
+          "y": 2333,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "",
       "topics": [],
       "combatProfile": {
@@ -13221,6 +13422,13 @@ window.T4C_DATA = {
       "id": "WardenCael",
       "origin": "new",
       "displayName": "Warden Cael",
+      "spawns": [
+        {
+          "x": 2420,
+          "y": 2700,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Don't linger past dusk here. The barrows wake at dark, and something crowned still walks among them.",
       "topics": [
         {
@@ -13265,6 +13473,13 @@ window.T4C_DATA = {
       "id": "WardenSeressa",
       "origin": "new",
       "displayName": "Warden Seressa",
+      "spawns": [
+        {
+          "x": 1355,
+          "y": 1465,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Careful where you stand. Whatever I'm binding doesn't always stay bound the first time.",
       "topics": [
         {
@@ -13301,6 +13516,13 @@ window.T4C_DATA = {
       "id": "WayfarerBryndis",
       "origin": "new",
       "displayName": "Wayfarer Bryndis",
+      "spawns": [
+        {
+          "x": 1318,
+          "y": 1512,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of Avalon before you leave - you'll thank me the first time you need to get back here in a hurry.",
       "topics": [
         {
@@ -13343,6 +13565,13 @@ window.T4C_DATA = {
       "origin": "new",
       "displayName": "Wyrmling's Hoard Casket",
       "spriteBase": "@static:Chest",
+      "spawns": [
+        {
+          "x": 2350,
+          "y": 2900,
+          "worldZ": 0
+        }
+      ],
       "welcomeText": "",
       "topics": [],
       "combatProfile": {
@@ -13356,6 +13585,199 @@ window.T4C_DATA = {
         "dodge": 65535,
         "damageFormula": "1d3"
       }
+    }
+  ],
+  "landmarks": [
+    {
+      "name": "Lighthaven",
+      "x": 2941,
+      "y": 1062,
+      "worldZ": 0
+    },
+    {
+      "name": "Silversky",
+      "x": 1495,
+      "y": 2470,
+      "worldZ": 0
+    },
+    {
+      "name": "Windhowl",
+      "x": 1812,
+      "y": 1293,
+      "worldZ": 0
+    },
+    {
+      "name": "Colosseum",
+      "x": 1725,
+      "y": 1825,
+      "worldZ": 0
+    },
+    {
+      "name": "Home",
+      "x": 2951,
+      "y": 1038,
+      "worldZ": 0
+    },
+    {
+      "name": "Makrsh Ptangh",
+      "x": 2265,
+      "y": 295,
+      "worldZ": 1
+    },
+    {
+      "name": "Stonecrest",
+      "x": 144,
+      "y": 737,
+      "worldZ": 0
+    },
+    {
+      "name": "Tarantula Pond",
+      "x": 773,
+      "y": 1831,
+      "worldZ": 0
+    },
+    {
+      "name": "Skraug Camp",
+      "x": 601,
+      "y": 172,
+      "worldZ": 0
+    },
+    {
+      "name": "The Oracle",
+      "x": 2968,
+      "y": 2141,
+      "worldZ": 2
+    },
+    {
+      "name": "The Sunken Chancel",
+      "x": 1750,
+      "y": 2300,
+      "worldZ": 0,
+      "unlockZoneId": "sunken_chancel"
+    },
+    {
+      "name": "Cinderreach Hills",
+      "x": 1900,
+      "y": 1600,
+      "worldZ": 0,
+      "unlockZoneId": "cinderreach_hills"
+    },
+    {
+      "name": "Windhowl Marches",
+      "x": 2380,
+      "y": 2430,
+      "worldZ": 0,
+      "unlockZoneId": "windhowl_marches"
+    },
+    {
+      "name": "The Hollow March",
+      "x": 2500,
+      "y": 2700,
+      "worldZ": 0,
+      "unlockZoneId": "hollow_march"
+    },
+    {
+      "name": "Lesser Drake's Aerie",
+      "x": 2350,
+      "y": 2900,
+      "worldZ": 0,
+      "unlockZoneId": "lesser_drakes_aerie"
+    },
+    {
+      "name": "Greater Drake's Bastion",
+      "x": 2650,
+      "y": 2880,
+      "worldZ": 0,
+      "unlockZoneId": "greater_drakes_bastion"
+    },
+    {
+      "name": "Drake's Lair",
+      "x": 2850,
+      "y": 2780,
+      "worldZ": 0,
+      "unlockZoneId": "drakes_lair"
+    },
+    {
+      "name": "Deep Ones Cave",
+      "x": 330,
+      "y": 2246,
+      "worldZ": 0,
+      "unlockZoneId": "deep_ones_cave"
+    },
+    {
+      "name": "Avalon Sanctuary",
+      "x": 1340,
+      "y": 1477,
+      "worldZ": 0,
+      "unlockZoneId": "avalon_sanctuary"
+    },
+    {
+      "name": "The Avalon Wilds",
+      "x": 1265,
+      "y": 1400,
+      "worldZ": 0,
+      "unlockZoneId": "avalon_wilds"
+    },
+    {
+      "name": "The Fading Veil",
+      "x": 1420,
+      "y": 1560,
+      "worldZ": 0,
+      "unlockZoneId": "fading_veil"
+    },
+    {
+      "name": "Lord Sunrock",
+      "x": 1609,
+      "y": 1181,
+      "worldZ": 0
+    },
+    {
+      "name": "Asarr",
+      "x": 2139,
+      "y": 1226,
+      "worldZ": 0
+    },
+    {
+      "name": "Araknor",
+      "x": 2981,
+      "y": 1035,
+      "worldZ": 0
+    },
+    {
+      "name": "Lance Silversmith",
+      "x": 2580,
+      "y": 690,
+      "worldZ": 0
+    },
+    {
+      "name": "Zhakar",
+      "x": 55,
+      "y": 1769,
+      "worldZ": 0
+    },
+    {
+      "name": "Elysana Blackrose",
+      "x": 1561,
+      "y": 2471,
+      "worldZ": 0
+    },
+    {
+      "name": "Dionysus Silverstream",
+      "x": 1025,
+      "y": 1000,
+      "worldZ": 0
+    },
+    {
+      "name": "Grant Hornkeep",
+      "x": 315,
+      "y": 740,
+      "worldZ": 0
+    },
+    {
+      "name": "Filandrius",
+      "x": 985,
+      "y": 1465,
+      "worldZ": 0
     }
   ],
   "items": [
@@ -31055,8 +31477,8 @@ window.T4C_DATA = {
         {
           "id": "KeeperTamsin",
           "displayName": "Keeper Tamsin",
-          "x": 300.0,
-          "y": 2320.0
+          "x": 302.0,
+          "y": 2317.0
         },
         {
           "id": "NexusStone14",
@@ -31492,36 +31914,36 @@ window.T4C_DATA = {
         {
           "name": "Drowned Acolyte",
           "displayName": "Drowned Acolyte",
-          "x": 1710.0,
-          "y": 2270.0,
+          "x": 1691.0,
+          "y": 2251.0,
           "tier": "trash"
         },
         {
           "name": "Drowned Acolyte",
           "displayName": "Drowned Acolyte",
-          "x": 1760.0,
-          "y": 2330.0,
+          "x": 1685.0,
+          "y": 2255.0,
           "tier": "trash"
         },
         {
           "name": "Drowned Acolyte",
           "displayName": "Drowned Acolyte",
-          "x": 1790.0,
-          "y": 2280.0,
+          "x": 1866.0,
+          "y": 2357.0,
           "tier": "trash"
         },
         {
           "name": "Drowned Acolyte",
           "displayName": "Drowned Acolyte",
-          "x": 1700.0,
-          "y": 2340.0,
+          "x": 1635.0,
+          "y": 2274.0,
           "tier": "trash"
         },
         {
           "name": "Mordrenn the Drowned Inquisitor",
           "displayName": "Mordrenn the Drowned Inquisitor",
-          "x": 1750.0,
-          "y": 2300.0,
+          "x": 1697.0,
+          "y": 2247.0,
           "tier": "boss"
         },
         {
@@ -31562,22 +31984,22 @@ window.T4C_DATA = {
         {
           "name": "Tideclaw Crab",
           "displayName": "Tideclaw Crab",
-          "x": 1780.0,
-          "y": 2350.0,
+          "x": 1843.0,
+          "y": 2384.0,
           "tier": "trash"
         },
         {
           "name": "Tideclaw Crab",
           "displayName": "Tideclaw Crab",
-          "x": 1820.0,
-          "y": 2310.0,
+          "x": 1867.0,
+          "y": 2356.0,
           "tier": "trash"
         },
         {
           "name": "Tideclaw Crab",
           "displayName": "Tideclaw Crab",
-          "x": 1730.0,
-          "y": 2360.0,
+          "x": 1645.0,
+          "y": 2446.0,
           "tier": "trash"
         },
         {
@@ -31629,28 +32051,28 @@ window.T4C_DATA = {
           "name": "Ashfang Stalker",
           "displayName": "Ashfang Stalker",
           "x": 1930.0,
-          "y": 1560.0,
+          "y": 1556.0,
           "tier": "trash"
         },
         {
           "name": "Ashfang Stalker",
           "displayName": "Ashfang Stalker",
-          "x": 1970.0,
-          "y": 1610.0,
+          "x": 1949.0,
+          "y": 1624.0,
           "tier": "trash"
         },
         {
           "name": "Ashfang Stalker",
           "displayName": "Ashfang Stalker",
           "x": 1880.0,
-          "y": 1660.0,
+          "y": 1654.0,
           "tier": "trash"
         },
         {
           "name": "Cinder Whelp",
           "displayName": "Cinder Whelp",
-          "x": 1870.0,
-          "y": 1570.0,
+          "x": 1860.0,
+          "y": 1582.0,
           "tier": "trash"
         },
         {
@@ -31663,8 +32085,8 @@ window.T4C_DATA = {
         {
           "name": "Cinder Whelp",
           "displayName": "Cinder Whelp",
-          "x": 1950.0,
-          "y": 1580.0,
+          "x": 1932.0,
+          "y": 1599.0,
           "tier": "trash"
         },
         {
@@ -31714,8 +32136,8 @@ window.T4C_DATA = {
         {
           "id": "WarbandsBuriedChest",
           "displayName": "Warband's Buried Chest",
-          "x": 2295.0,
-          "y": 2325.0
+          "x": 2303.0,
+          "y": 2333.0
         }
       ],
       "monsters": [
@@ -31757,8 +32179,8 @@ window.T4C_DATA = {
         {
           "name": "Warband Banner-Bearer",
           "displayName": "Warband Banner-Bearer",
-          "x": 2280.0,
-          "y": 2340.0,
+          "x": 2285.0,
+          "y": 2345.0,
           "tier": "boss"
         },
         {
@@ -31771,15 +32193,15 @@ window.T4C_DATA = {
         {
           "name": "Warband Raider",
           "displayName": "Warband Raider",
-          "x": 2300.0,
-          "y": 2320.0,
+          "x": 2304.0,
+          "y": 2315.0,
           "tier": "trash"
         },
         {
           "name": "Warband Raider",
           "displayName": "Warband Raider",
-          "x": 2260.0,
-          "y": 2360.0,
+          "x": 2265.0,
+          "y": 2364.0,
           "tier": "trash"
         },
         {
@@ -32089,8 +32511,8 @@ window.T4C_DATA = {
         {
           "id": "HarbormasterRangor",
           "displayName": "Harbormaster Rangor",
-          "x": 1500.0,
-          "y": 1200.0
+          "x": 1519.0,
+          "y": 1217.0
         },
         {
           "id": "JurnistakrKira",
@@ -32167,7 +32589,7 @@ window.T4C_DATA = {
         {
           "id": "StorageChest",
           "displayName": "Storage Chest",
-          "x": 1606.0,
+          "x": 1607.0,
           "y": 1178.0
         },
         {
@@ -32181,8 +32603,8 @@ window.T4C_DATA = {
         {
           "name": "Coastwarden Ithrak",
           "displayName": "Coastwarden Ithrak",
-          "x": 1560.0,
-          "y": 1290.0,
+          "x": 1565.0,
+          "y": 1285.0,
           "tier": "boss"
         },
         {
@@ -32202,8 +32624,8 @@ window.T4C_DATA = {
         {
           "name": "Tideworn Reaver",
           "displayName": "Tideworn Reaver",
-          "x": 1500.0,
-          "y": 1260.0,
+          "x": 1519.0,
+          "y": 1241.0,
           "tier": "trash"
         },
         {
@@ -32230,29 +32652,29 @@ window.T4C_DATA = {
         {
           "name": "Tideworn Reaver",
           "displayName": "Tideworn Reaver",
-          "x": 1590.0,
-          "y": 1320.0,
+          "x": 1593.0,
+          "y": 1318.0,
           "tier": "trash"
         },
         {
           "name": "Tideworn Reaver",
           "displayName": "Tideworn Reaver",
-          "x": 1550.0,
-          "y": 1340.0,
+          "x": 1584.0,
+          "y": 1306.0,
           "tier": "trash"
         },
         {
           "name": "Tideworn Reaver",
           "displayName": "Tideworn Reaver",
-          "x": 1510.0,
-          "y": 1330.0,
+          "x": 1563.0,
+          "y": 1277.0,
           "tier": "trash"
         },
         {
           "name": "Tideworn Reaver",
           "displayName": "Tideworn Reaver",
-          "x": 1480.0,
-          "y": 1300.0,
+          "x": 1527.0,
+          "y": 1252.0,
           "tier": "trash"
         },
         {
@@ -32265,8 +32687,8 @@ window.T4C_DATA = {
         {
           "name": "Tideworn Reaver",
           "displayName": "Tideworn Reaver",
-          "x": 1470.0,
-          "y": 1270.0,
+          "x": 1514.0,
+          "y": 1232.0,
           "tier": "trash"
         },
         {
@@ -32440,8 +32862,8 @@ window.T4C_DATA = {
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1195.0,
-          "y": 1450.0,
+          "x": 1194.0,
+          "y": 1451.0,
           "tier": "trash"
         },
         {
@@ -32455,7 +32877,7 @@ window.T4C_DATA = {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
           "x": 1175.0,
-          "y": 1370.0,
+          "y": 1358.0,
           "tier": "trash"
         },
         {
@@ -32482,8 +32904,8 @@ window.T4C_DATA = {
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1170.0,
-          "y": 1415.0,
+          "x": 1165.0,
+          "y": 1422.0,
           "tier": "trash"
         },
         {
@@ -32580,8 +33002,8 @@ window.T4C_DATA = {
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1205.0,
-          "y": 1440.0,
+          "x": 1195.0,
+          "y": 1452.0,
           "tier": "trash"
         },
         {
@@ -32609,7 +33031,7 @@ window.T4C_DATA = {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
           "x": 1180.0,
-          "y": 1375.0,
+          "y": 1358.0,
           "tier": "trash"
         },
         {

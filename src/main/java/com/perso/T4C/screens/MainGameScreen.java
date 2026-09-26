@@ -142,6 +142,7 @@ public class MainGameScreen implements Screen {
   private boolean switchingCharacter;
   private boolean disposed;
   private boolean playerStateSaved;
+  private float secondsSinceAutosave;
   private boolean displayInitialized;
   private int loadingStep;
   private GameInputHandler inputHandler;
@@ -217,6 +218,15 @@ public class MainGameScreen implements Screen {
   private BaseMonster selectedMonster = null;
   private java.util.function.BooleanSupplier textInputActiveSupplier;
   private static final float TAB_TARGET_RANGE_TILES = 12f;
+
+  /**
+   * Seconds between background saves. Every other save in this screen hangs off a discrete event
+   * (shop, storage, trial, teleport, quest turn-in), so plain play - XP, levels, kills, loot,
+   * walking - only reached disk if the client got to {@link #dispose()}. A window closed hard, a
+   * crash or a killed process lost everything since the last event, which is what "my character
+   * didn't persist after shutdown" actually was.
+   */
+  private static final float AUTOSAVE_INTERVAL_SECONDS = 15f;
   private final com.perso.T4C.profiler.GameProfiler gameProfiler =
       new com.perso.T4C.profiler.GameProfiler();
   private long profilerFrameIndex = 0;
@@ -407,7 +417,17 @@ public class MainGameScreen implements Screen {
   }
 
   private void savePlayerState() {
+    secondsSinceAutosave = 0f;
     PlayerStateStore.save(player, dayNightCycle.getHour());
+  }
+
+  /** Flushes the character to disk every {@link #AUTOSAVE_INTERVAL_SECONDS}. Skipped until the
+   * world is up, and after the state has already been handed off (character switch/dispose), so a
+   * tick in flight can't rewrite a save the shutdown path just finished. */
+  private void updateAutosave(float delta) {
+    if (!displayInitialized || playerStateSaved || disposed || player == null) return;
+    secondsSinceAutosave += delta;
+    if (secondsSinceAutosave >= AUTOSAVE_INTERVAL_SECONDS) savePlayerState();
   }
 
   private static com.perso.T4C.world.DayNightCycle loadDayNightCycle() {
@@ -1310,6 +1330,8 @@ public class MainGameScreen implements Screen {
         newLevel -> {
           spellRenderer.playImpactSound(LEVEL_UP_SOUND);
           spellRenderer.playLevelUpAnimation(player);
+          // Rare and the single most painful thing to lose to a hard shutdown.
+          savePlayerState();
         });
   }
 
@@ -1438,6 +1460,7 @@ public class MainGameScreen implements Screen {
           }
           inputHandler.handleInput(delta, player);
         });
+    section("autosave", () -> updateAutosave(delta));
     section("teleport", this::updateTeleportForPlayer);
     section("entities", () -> updateEntities(delta));
     section(
@@ -4413,8 +4436,12 @@ public class MainGameScreen implements Screen {
   @Override
   public void hide() {}
 
+  /** LibGDX calls this when the window is minimised/loses focus and once more on the way out, so
+   * it is the last reliable hook before a shutdown that never reaches {@link #dispose()}. */
   @Override
-  public void pause() {}
+  public void pause() {
+    if (!playerStateSaved && !disposed && player != null && displayInitialized) savePlayerState();
+  }
 
   @Override
   public void resume() {

@@ -570,6 +570,30 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   zone match still gets a schematic worldmap dot from its own `areaCenterX/Y`/`areaRadiusTiles`
   rather than showing nothing. Since T4C-0055 the map carries the location and the prose does
   not: walkthroughs no longer recite coordinates or tile radii, they say "the marked area".
+- **Naming a person is not telling the reader where they are (T4C-0062).** Every quest step that
+  says "talk to X", and every NPC page, must also answer "and where is X?". The site answers it
+  from data, never from prose: each NPC exports its own `@Spawn` position and the fast-travel
+  landmarks export from `NamedLocations`, and the page derives a landmark, a bearing and a
+  distance from those two. Three rules keep that honest:
+  - **Only name a landmark the reader can actually have.** A landmark gated behind a zone unlock
+    is offered only when some quest *other than the one being read, and given by somebody else*,
+    opens it at or before this point on the road. Elder Ophira stands in the Avalon Wilds, but
+    the Wilds entry is her own quest's reward, so her page routes via Avalon Sanctuary instead.
+  - **Only name a landmark you could walk from.** Past ~800 tiles the claim stops being a
+    shortcut and becomes a lie — two dungeon-level containers sit that far from the only landmark
+    on their level, with no route between. Those get their coordinates and no directions.
+  - **Only link a map that really pins them.** Being listed under a zone is not the same as being
+    inside that zone map's cropped box; four quest-givers are stationed back in town, outside it.
+    Link the map that carries the pin, or no map at all.
+
+  **Known gap (T4C-0062):** Tide Warden Bryn, Sentinel Corwin, Outrider Halvard and Dockmaster
+  Thessaly are listed under a zone whose map does not reach them, so they show no map link. The
+  fix is on the map side (widen the crop, or pin the giver separately), not the prose side.
+
+  **Deferred (T4C-0062):** showing a picture of each NPC alongside the directions. NPCs are
+  paper-doll composites of body-part sprites, so this needs a new headless exporter compositing
+  them out of the sprite bins — nothing on the site renders sprite art today. Agreed with the
+  owner to land as its own pass.
 
 ### 4a. Editorial rules for the site (T4C-0055)
 
@@ -628,6 +652,23 @@ should not consume it), that is a content change, not an editorial one, and need
   it, `verify-website` whenever website-visible data or pages change, and `technical-writer`
   whenever any player-facing wording changes (they pair: one checks the data and the render,
   the other checks the words).
+- **A coordinate is not a placement (T4C-0063).** Anything given a `@Spawn` has to stand on
+  ground a player can walk to, and picking coordinates off a map picture does not establish
+  that: deep *and* shallow water both block movement, as does scenery. Thirty-three of this
+  fork's own spawns were unreachable before anyone noticed — Harbormaster Rangor in the sea
+  west of Windhowl, and every Sunken Chancel creature including its boss, which made that
+  zone's quest impossible to finish. Two rules, both enforced by
+  `spawn/SpawnPlacementTest`:
+  - Check against `worldmap.colbin`, not against the minimap PNGs. The minimaps are coloured
+    from ground art, so open sea looks like a perfectly good beach on them.
+  - Walkable is not the same as reachable. A spawn also needs a decent stretch of *connected*
+    walkable ground around it, or it is on a sandbar nobody can stand next to.
+
+  The fork's own content lists live in `content/ForkContent`, shared by the compendium
+  exporter and that test, so adding new content can never register with one and not the other.
+  **Known gap:** the inherited legacy content has roughly 200 spawns on blocking tiles. That is
+  its own much larger piece of work, and the test is deliberately scoped to this fork's content
+  so it stays green and meaningful rather than being switched off.
 
 ## 6. Quests
 - **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest
@@ -806,6 +847,17 @@ should not consume it), that is a content change, not an editorial one, and need
   to the save file until T4C-0039. When you add player-owned state, add it to `PlayerStateDto`
   and `PlayerStateMapper` in the same change, with a round-trip test. Old saves without the new
   field must still load.
+- **Progress is saved on a timer, not only on the way out.** `MainGameScreen` autosaves every
+  `AUTOSAVE_INTERVAL_SECONDS` (**15 s**, owner's number), on level-up, and on `pause()` (window
+  minimise/close), on top of the event-driven `savePlayerState()` calls. Before T4C-0064 plain
+  play — XP, levels, kills, loot, walking — only reached disk if the client got to `dispose()`,
+  so a crash or a force-closed window threw the session away. Event-driven saves are still worth
+  adding for anything expensive or irreversible; the timer is the floor, not the plan.
+- **A quest-giver that isn't a `ScriptedNpc` needs its turn-in wired by hand.**
+  `ScriptedNpc.onInteractStart` calls `questService.turnInReadyQuests(id, player)` on every
+  greet; a `BaseNPC` that overrides `onInteractStart` (the Lighthaven Samaritan did) gets no such
+  call, so its quest can be accepted and finished but never completed. Any NPC that calls
+  `giveOrReport` must also have a path that calls `turnInReadyQuests`.
 - **A window with a text box or number prompt must override `capturesKeyboard()`**, so movement
   keys, macros and game hotkeys don't fire while the player types.
 - **Every shortcut is listed in the Controls window** (Ctrl+H, or the Controls button in

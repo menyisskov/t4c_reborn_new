@@ -154,7 +154,27 @@ public final class LighthavenSamaritan extends BaseNPC {
 
     awaitingQuestionAnswer = false;
 
+    // ScriptedNpc does this for every scripted quest-giver; this NPC predates that base class and
+    // extends BaseNPC directly, so without this the rat quest could be accepted and finished but
+    // never turned in - greeting or saying "errand" at 15/15 just reprinted the progress line.
+    if (turnInReadyQuests(player)) return;
+
     onConversationStart(player);
+  }
+
+  /** Pays out any of this NPC's quests the player has already finished. True when one was turned
+   * in (its completion text is now on screen and no other dialogue should follow this greet). */
+  private boolean turnInReadyQuests(Player player) {
+
+    if (questService == null) return false;
+
+    String completion = questService.turnInReadyQuests(ID, player);
+
+    if (completion == null || completion.isBlank()) return false;
+
+    showDialog(completion, 0L);
+
+    return true;
   }
 
   protected boolean handleConversationState(String text, Player player) {
@@ -236,6 +256,10 @@ public final class LighthavenSamaritan extends BaseNPC {
 
       return;
     }
+
+    // Asking about the errand with the count already full is a turn-in, not a progress request -
+    // the player may have hit 15/15 without leaving the conversation.
+    if (turnInReadyQuests(player)) return;
 
     String response = questService.giveOrReport(RAT_QUEST_ID, ID, player);
 

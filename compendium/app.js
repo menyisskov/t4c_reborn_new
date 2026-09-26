@@ -11,6 +11,7 @@
   var LOOT_SOURCES = DATA.lootSources || [];
   var ZONES = DATA.zones || [];
   var MAPS = DATA.maps || [];
+  var LANDMARKS = DATA.landmarks || [];
   var STAT_IDS = DATA.statIds || {};
   var META = DATA.meta || {};
   // The world's narrative spine: an ordered list of chapters, each a stretch of the world a
@@ -134,6 +135,183 @@
       var y = zoneReadingOrder(zoneIdOf(b));
       return x[0] - y[0] || x[1] - y[1];
     };
+  }
+
+  // ------------------------------------------------- where to find a person
+  //
+  // Every quest used to say "talk to so-and-so" and stop there, leaving a reader with no way to
+  // work out where so-and-so stands. Each NPC now carries its own spawn position (exported from
+  // the game, not typed here), and the block below turns that into directions a player can act
+  // on: the closest fast-travel point they will already have, how far the person is from it, and
+  // which way to walk.
+
+  // zone id -> [quest ids that open its fast-travel entry]. Several zones have two ways in (the
+  // Sunken Chancel and Cinderreach Hills each have a pair of quests that open them), so this is
+  // a list, not a single id.
+  var zoneUnlockedBy = {};
+  QUESTS.forEach(function (q) {
+    if (!q.unlockZoneId) return;
+    zoneUnlockedBy[q.unlockZoneId] = zoneUnlockedBy[q.unlockZoneId] || [];
+    zoneUnlockedBy[q.unlockZoneId].push(q.id);
+  });
+
+  // "npc id at x,y" -> the zone map that actually carries that pin. Keyed by position, not by id
+  // alone, for two reasons: a zone listing an NPC does not mean the zone's map reaches them (a
+  // few quest-givers are stationed back in town, outside the cropped box the map is drawn from -
+  // Tide Warden Bryn and Sentinel Corwin sit in Silversky, not in the Sunken Chancel), and some
+  // NPCs stand in several places at once (a storage chest in every town), where only the pin at
+  // the position being described is the right one to link.
+  var npcPinnedOnMaps = {};
+  function pinKey(npcId, x, y) { return npcId + "@" + x + "," + y; }
+  MAPS.forEach(function (m) {
+    (m.npcs || []).forEach(function (p) {
+      var k = pinKey(p.id, p.x, p.y);
+      (npcPinnedOnMaps[k] = npcPinnedOnMaps[k] || []).push(m.zoneId);
+    });
+  });
+
+  // Zone crops overlap, so one position can land on several maps - Grandmaster Voss sits inside
+  // the Hollow March crop as well as his own Bastion's. Prefer the map of a zone the NPC is
+  // actually listed under, so the link matches the page the reader came from.
+  function pinnedMapFor(npcId, spawn) {
+    var candidates = npcPinnedOnMaps[pinKey(npcId, spawn.x, spawn.y)] || [];
+    var own = npcZone[npcId] || [];
+    var preferred = candidates.filter(function (z) { return own.indexOf(z) >= 0; });
+    return (preferred.length ? preferred : candidates)[0] || null;
+  }
+
+  var COMPASS = [
+    [0, "east"], [45, "north-east"], [90, "north"], [135, "north-west"],
+    [180, "west"], [-135, "south-west"], [-90, "south"], [-45, "south-east"]
+  ];
+
+  // Tile y grows southwards (the same convention the zone maps are drawn in, where originY is
+  // the northern edge), so the bearing is measured against -dy.
+  function compassOf(dx, dy) {
+    var deg = Math.atan2(-dy, dx) * 180 / Math.PI;
+    var best = COMPASS[0];
+    var bestGap = 361;
+    COMPASS.forEach(function (c) {
+      var gap = Math.abs(((deg - c[0] + 540) % 360) - 180);
+      if (gap < bestGap) { bestGap = gap; best = c; }
+    });
+    return best[1];
+  }
+
+  function npcSpawn(npcId) {
+    var n = byKey.npc[npcId];
+    return n && n.spawns && n.spawns.length ? n.spawns[0] : null;
+  }
+
+  // Is this landmark one the reader can already travel to by the time they reach
+  // `asFarAsZoneId`? Two things would make it useless to name:
+  //   - it is gated behind a quest this very NPC gives, so you cannot have it before meeting them
+  //     (Elder Ophira stands in the Avalon Wilds, but the Wilds entry is her own quest's reward);
+  //   - it is gated behind a quest further along the road than the one being described, so it is
+  //     not open yet either (Warden Cael's own Hollow March, read from the Marches before it).
+  // Anything gated by an earlier or same-stage quest given by somebody else is fair game - that
+  // is exactly how you got here (Marshal Torrhen's Marches entry comes from Dockmaster Thessaly's
+  // crossing, not from Torrhen).
+  function landmarkAvailableFor(landmark, npcId, asFarAsZoneId) {
+    if (!landmark.unlockZoneId) return true;
+    var here = zoneReadingOrder(asFarAsZoneId);
+    return (zoneUnlockedBy[landmark.unlockZoneId] || []).some(function (uq) {
+      var unlocker = byKey.quest[uq];
+      if (!unlocker || unlocker.giverNpc === npcId) return false;
+      var there = zoneReadingOrder(questZone[uq]);
+      return there[0] < here[0] || (there[0] === here[0] && there[1] <= here[1]);
+    });
+  }
+
+  // { landmark, distanceTiles, direction } for the nearest usable fast-travel point to one
+  // position, or null when nothing on that world level is both reachable and close enough to be
+  // worth naming.
+  function directionsFromLandmark(spawn, npcId, asFarAsZoneId) {
+    if (!spawn) return null;
+    var best = null;
+    LANDMARKS.forEach(function (l) {
+      if (l.worldZ !== spawn.worldZ) return;
+      if (!landmarkAvailableFor(l, npcId, asFarAsZoneId)) return;
+      var dx = spawn.x - l.x;
+      var dy = spawn.y - l.y;
+      var dist = Math.round(Math.sqrt(dx * dx + dy * dy));
+      if (best && best.distanceTiles <= dist) return;
+      best = { landmark: l, distanceTiles: dist, direction: compassOf(dx, dy) };
+    });
+    return best;
+  }
+
+  var LANDMARK_WALK_LIMIT_TILES = 800;
+
+  // Close enough that "head north-east about 12 tiles" is noise and "it is right there" is both
+  // shorter and truer.
+  var RIGHT_THERE_TILES = 20;
+
+  // Past this, "near" is the wrong word for a one-line summary, even though the full directions
+  // on the quest's own page are still worth giving.
+  var NEAR_ENOUGH_TO_CALL_NEAR_TILES = 150;
+
+  // The nearest fast-travel point that is genuinely walkable from where this NPC stands, or null.
+  // Past the walk limit, naming a landmark as the way in is a lie rather than a shortcut: the two
+  // spots that exceed it are a strongbox and a coffer on dungeon levels whose only landmark on
+  // the same level is somewhere else entirely, with no walkable line between them. The longest
+  // genuine walk on the list (Keeper Tamsin, 680 tiles down the western shore) stays well inside.
+  function directionsTo(spawn, npcId, asFarAsZoneId) {
+    var dirs = directionsFromLandmark(spawn, npcId, asFarAsZoneId);
+    return dirs && dirs.distanceTiles <= LANDMARK_WALK_LIMIT_TILES ? dirs : null;
+  }
+
+  // The short form for a quest card in a list: " · near Silversky", or nothing when the nearest
+  // fast-travel point is too far off for "near" to be honest.
+  function giverNear(q) {
+    var dirs = directionsTo(npcSpawn(q.giverNpc), q.giverNpc, questZone[q.id]);
+    if (!dirs || dirs.distanceTiles > NEAR_ENOUGH_TO_CALL_NEAR_TILES) return "";
+    return " · near " + esc(dirs.landmark.name);
+  }
+
+  // The prose the reader actually gets: a landmark, a bearing and a walk, which is something you
+  // can act on. The raw tile position is demoted to a for-the-curious line under it rather than
+  // put in the sentence - the same rule the rest of the site follows for numbers that are exact
+  // but not useful to read (T4C-0055). `asFarAsZoneId` is how far along the road the reader is
+  // assumed to have got: the quest's own zone on a quest page, the NPC's own zone on their page.
+  function whereToFind(npcId, asFarAsZoneId) {
+    var spawns = (byKey.npc[npcId] || {}).spawns || [];
+    if (!spawns.length) return "";
+    // Chests, strongboxes and coffers are NPCs to the game but things to a reader, so they get
+    // "it" rather than "them".
+    var isThing = ((byKey.npc[npcId] || {}).spriteBase || "").indexOf("@static:") === 0;
+    var name = npcPlain(npcId);
+    var subject = isThing ? "it" : name;
+
+    var sentences = spawns.map(function (spawn, i) {
+      var dirs = directionsTo(spawn, npcId, asFarAsZoneId);
+      var here = i === 0 ? subject : (isThing ? "another" : subject);
+      var out;
+      if (!dirs) {
+        out = "No fast-travel point will get you close to " + here + " — you have to walk in.";
+      } else if (dirs.distanceTiles <= RIGHT_THERE_TILES) {
+        out = "Travel to <strong>" + esc(dirs.landmark.name) + "</strong> and " + here +
+          " is right there.";
+      } else {
+        out = "Travel to <strong>" + esc(dirs.landmark.name) + "</strong>, then head " +
+          esc(dirs.direction) + " about " + fmtNum(dirs.distanceTiles) + " tiles" +
+          (i === 0 ? "." : " for " + here + ".");
+      }
+      var pinnedOn = pinnedMapFor(npcId, spawn);
+      if (pinnedOn) {
+        out += " " + link("maps/" + slug(pinnedOn), "See " + (isThing ? "it" : "them") +
+          " pinned on the map of " + esc((byKey.zone[pinnedOn] || {}).name || pinnedOn) + " →");
+      }
+      return out;
+    });
+
+    var exact = spawns.map(function (s) {
+      return "tile " + s.x + ", " + s.y + (s.worldZ !== 0 ? " on map level " + s.worldZ : "");
+    }).join("; ");
+
+    return '<p class="lead">' + sentences.join(" ") + "</p>" +
+      '<details class="curious"><summary>For the curious: the exact spot</summary>' +
+      "<p>" + name + (isThing ? " sits at " : " stands at ") + exact + ".</p></details>";
   }
 
   // Renders an ordered list of chapters, each with its intro paragraph and whatever cards belong
@@ -951,6 +1129,7 @@
 
     var shopItems = (SHOPS[n.id] || []).map(function (k) { return "<li>" + itemLink(k) + "</li>"; }).join("");
     var combat = n.combatProfile;
+    var whereHtml = whereToFind(n.id, zones[0]);
 
     return (
       breadcrumb([["NPCs", "npcs"], [n.displayName, null]]) +
@@ -958,6 +1137,9 @@
       '<div class="tags">' + originTag(n.origin) +
       zones.map(function (z) { return '<span class="tag plain">' + zoneLink(z) + "</span>"; }).join("") +
       "</div></div></div>" +
+      // Given on the NPC's own page too, not just on the quests they hand out - people look them
+      // up to buy from them or to train, and "where are they" is the first thing they want.
+      (whereHtml ? panel("Where to find them", whereHtml) : "") +
       (n.welcomeText ? panel("How they greet you", '<p class="lead">“' + esc(n.welcomeText) + '”</p>') : "") +
       panel("What you can ask them about",
         '<p class="lead">Say any of the words on the left and you get the answer beside it.</p>' +
@@ -983,7 +1165,7 @@
         return (
           '<a class="card" href="#/quests/' + slug(q.id) + '">' +
           "<h3>" + esc(q.title) + "</h3>" +
-          '<p class="card-meta">' + npcPlain(q.giverNpc) + "</p>" +
+          '<p class="card-meta">' + npcPlain(q.giverNpc) + giverNear(q) + "</p>" +
           "<p>" + (q.requiredKills > 0
             ? "Kill " + q.requiredKills + " " + esc(q.targetMonster) + (q.requiredKills > 1 ? "s" : "")
             : "Bring what they ask for") +
@@ -1050,6 +1232,7 @@
       panel("Step by step", "" +
         '<div class="quest-step"><span class="num">1</span><div>' +
         "<strong>Talk to " + npcLink(q.giverNpc) + "</strong>" +
+        whereToFind(q.giverNpc, zone) +
         '<div class="quest-text-block"><span class="label">What they ask</span>“' + esc(q.offerText) + "”</div>" +
         "</div></div>" +
         '<div class="quest-step"><span class="num">2</span><div>' +

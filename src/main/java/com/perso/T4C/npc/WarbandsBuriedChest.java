@@ -13,7 +13,7 @@ import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
 // T4C-0049, "Lost Keys of Kraanhold": buried just outside the Windhowl War-Party's camp (T4C-0045) - the raiders never trusted their own banner-bearer with the whole hoard. Accepts any of the three keys the warband (Raider/Banner-Bearer/Warlord) rarely drops. The Warlord's key is the one that pays a real reward instead of gold and potions.
-@Spawn(type = "WarbandsBuriedChest", x = 2295, y = 2325, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "WarbandsBuriedChest", x = 2303, y = 2333, z = 0, stationary = true, aggressive = false)
 public final class WarbandsBuriedChest extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

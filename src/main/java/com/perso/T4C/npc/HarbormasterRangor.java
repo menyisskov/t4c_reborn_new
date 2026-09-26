@@ -15,7 +15,7 @@ import com.perso.T4C.quest.definition.TidewornShoreScouts;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-// The last dock still standing on the mainland shore facing Avalon (1500,1200), worldZ 0 - gives
+// The last dock still standing on the mainland shore facing Avalon (1519,1217), worldZ 0 - gives
 // the two-stage "Passage to Avalon" chain: quest/definition/TidewornShoreScouts.java (prove
 // yourself against the scouts first) then quest/definition/PassageToAvalon.java (the real
 // assault on Ithrak's warband and the actual zone unlock). This is the same role the Oracle
@@ -28,7 +28,7 @@ import java.util.List;
 // actually on - see the dispatch logic there. A character who already completed the original
 // single-stage "passage_to_avalon" (pre-T4C-0032) is unaffected: QuestService.statusFor() still
 // reports that quest COMPLETED, so the dispatch never re-offers the scouting stage to them.
-@Spawn(type = "HarbormasterRangor", x = 1500, y = 1200, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "HarbormasterRangor", x = 1519, y = 1217, z = 0, stationary = false, aggressive = false)
 public final class HarbormasterRangor extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

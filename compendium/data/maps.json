@@ -17,8 +17,8 @@
       {
         "id": "KeeperTamsin",
         "displayName": "Keeper Tamsin",
-        "x": 300,
-        "y": 2320
+        "x": 302,
+        "y": 2317
       },
       {
         "id": "NexusStone14",
@@ -454,36 +454,36 @@
       {
         "name": "Drowned Acolyte",
         "displayName": "Drowned Acolyte",
-        "x": 1710,
-        "y": 2270,
+        "x": 1691,
+        "y": 2251,
         "tier": "trash"
       },
       {
         "name": "Drowned Acolyte",
         "displayName": "Drowned Acolyte",
-        "x": 1760,
-        "y": 2330,
+        "x": 1685,
+        "y": 2255,
         "tier": "trash"
       },
       {
         "name": "Drowned Acolyte",
         "displayName": "Drowned Acolyte",
-        "x": 1790,
-        "y": 2280,
+        "x": 1866,
+        "y": 2357,
         "tier": "trash"
       },
       {
         "name": "Drowned Acolyte",
         "displayName": "Drowned Acolyte",
-        "x": 1700,
-        "y": 2340,
+        "x": 1635,
+        "y": 2274,
         "tier": "trash"
       },
       {
         "name": "Mordrenn the Drowned Inquisitor",
         "displayName": "Mordrenn the Drowned Inquisitor",
-        "x": 1750,
-        "y": 2300,
+        "x": 1697,
+        "y": 2247,
         "tier": "boss"
       },
       {
@@ -524,22 +524,22 @@
       {
         "name": "Tideclaw Crab",
         "displayName": "Tideclaw Crab",
-        "x": 1780,
-        "y": 2350,
+        "x": 1843,
+        "y": 2384,
         "tier": "trash"
       },
       {
         "name": "Tideclaw Crab",
         "displayName": "Tideclaw Crab",
-        "x": 1820,
-        "y": 2310,
+        "x": 1867,
+        "y": 2356,
         "tier": "trash"
       },
       {
         "name": "Tideclaw Crab",
         "displayName": "Tideclaw Crab",
-        "x": 1730,
-        "y": 2360,
+        "x": 1645,
+        "y": 2446,
         "tier": "trash"
       },
       {
@@ -591,28 +591,28 @@
         "name": "Ashfang Stalker",
         "displayName": "Ashfang Stalker",
         "x": 1930,
-        "y": 1560,
+        "y": 1556,
         "tier": "trash"
       },
       {
         "name": "Ashfang Stalker",
         "displayName": "Ashfang Stalker",
-        "x": 1970,
-        "y": 1610,
+        "x": 1949,
+        "y": 1624,
         "tier": "trash"
       },
       {
         "name": "Ashfang Stalker",
         "displayName": "Ashfang Stalker",
         "x": 1880,
-        "y": 1660,
+        "y": 1654,
         "tier": "trash"
       },
       {
         "name": "Cinder Whelp",
         "displayName": "Cinder Whelp",
-        "x": 1870,
-        "y": 1570,
+        "x": 1860,
+        "y": 1582,
         "tier": "trash"
       },
       {
@@ -625,8 +625,8 @@
       {
         "name": "Cinder Whelp",
         "displayName": "Cinder Whelp",
-        "x": 1950,
-        "y": 1580,
+        "x": 1932,
+        "y": 1599,
         "tier": "trash"
       },
       {
@@ -676,8 +676,8 @@
       {
         "id": "WarbandsBuriedChest",
         "displayName": "Warband\u0027s Buried Chest",
-        "x": 2295,
-        "y": 2325
+        "x": 2303,
+        "y": 2333
       }
     ],
     "monsters": [
@@ -719,8 +719,8 @@
       {
         "name": "Warband Banner-Bearer",
         "displayName": "Warband Banner-Bearer",
-        "x": 2280,
-        "y": 2340,
+        "x": 2285,
+        "y": 2345,
         "tier": "boss"
       },
       {
@@ -733,15 +733,15 @@
       {
         "name": "Warband Raider",
         "displayName": "Warband Raider",
-        "x": 2300,
-        "y": 2320,
+        "x": 2304,
+        "y": 2315,
         "tier": "trash"
       },
       {
         "name": "Warband Raider",
         "displayName": "Warband Raider",
-        "x": 2260,
-        "y": 2360,
+        "x": 2265,
+        "y": 2364,
         "tier": "trash"
       },
       {
@@ -1051,8 +1051,8 @@
       {
         "id": "HarbormasterRangor",
         "displayName": "Harbormaster Rangor",
-        "x": 1500,
-        "y": 1200
+        "x": 1519,
+        "y": 1217
       },
       {
         "id": "JurnistakrKira",
@@ -1129,7 +1129,7 @@
       {
         "id": "StorageChest",
         "displayName": "Storage Chest",
-        "x": 1606,
+        "x": 1607,
         "y": 1178
       },
       {
@@ -1143,8 +1143,8 @@
       {
         "name": "Coastwarden Ithrak",
         "displayName": "Coastwarden Ithrak",
-        "x": 1560,
-        "y": 1290,
+        "x": 1565,
+        "y": 1285,
         "tier": "boss"
       },
       {
@@ -1164,8 +1164,8 @@
       {
         "name": "Tideworn Reaver",
         "displayName": "Tideworn Reaver",
-        "x": 1500,
-        "y": 1260,
+        "x": 1519,
+        "y": 1241,
         "tier": "trash"
       },
       {
@@ -1192,29 +1192,29 @@
       {
         "name": "Tideworn Reaver",
         "displayName": "Tideworn Reaver",
-        "x": 1590,
-        "y": 1320,
+        "x": 1593,
+        "y": 1318,
         "tier": "trash"
       },
       {
         "name": "Tideworn Reaver",
         "displayName": "Tideworn Reaver",
-        "x": 1550,
-        "y": 1340,
+        "x": 1584,
+        "y": 1306,
         "tier": "trash"
       },
       {
         "name": "Tideworn Reaver",
         "displayName": "Tideworn Reaver",
-        "x": 1510,
-        "y": 1330,
+        "x": 1563,
+        "y": 1277,
         "tier": "trash"
       },
       {
         "name": "Tideworn Reaver",
         "displayName": "Tideworn Reaver",
-        "x": 1480,
-        "y": 1300,
+        "x": 1527,
+        "y": 1252,
         "tier": "trash"
       },
       {
@@ -1227,8 +1227,8 @@
       {
         "name": "Tideworn Reaver",
         "displayName": "Tideworn Reaver",
-        "x": 1470,
-        "y": 1270,
+        "x": 1514,
+        "y": 1232,
         "tier": "trash"
       },
       {
@@ -1402,8 +1402,8 @@
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1195,
-        "y": 1450,
+        "x": 1194,
+        "y": 1451,
         "tier": "trash"
       },
       {
@@ -1417,7 +1417,7 @@
         "name": "Fey Warden",
         "displayName": "Fey Warden",
         "x": 1175,
-        "y": 1370,
+        "y": 1358,
         "tier": "trash"
       },
       {
@@ -1444,8 +1444,8 @@
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1170,
-        "y": 1415,
+        "x": 1165,
+        "y": 1422,
         "tier": "trash"
       },
       {
@@ -1542,8 +1542,8 @@
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1205,
-        "y": 1440,
+        "x": 1195,
+        "y": 1452,
         "tier": "trash"
       },
       {
@@ -1571,7 +1571,7 @@
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
         "x": 1180,
-        "y": 1375,
+        "y": 1358,
         "tier": "trash"
       },
       {

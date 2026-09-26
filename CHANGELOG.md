@@ -13,6 +13,52 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — People and creatures stranded in the sea (T4C-0063)
+
+### Fixed
+- Harbormaster Rangor was standing in the water west of Windhowl, where nobody could reach him.
+  He is on the shore now, so the road to Avalon can actually be started.
+- The whole Avalon crossing was unreachable: Coastwarden Ithrak and most of his Tideworn Reavers
+  were out at sea, which made both the scouting errand and the crossing itself impossible.
+  They now hold the beach.
+- Every creature in the Sunken Chancel — the Drowned Acolytes, the Tideclaw Crabs and Mordrenn
+  himself — was in open water, so the Tide Warden's errand could never be finished. They have
+  moved onto the drowned shore inside the same stretch of coast, which means the ruin is fought
+  from its northwestern side rather than out on the waves.
+- Fire-wolves and cinder whelps in the Cinderreach hills, wardens and stalkers in the Avalon
+  Wilds, the warband raiders on Kraanhold and their buried chest, Keeper Tamsin at the Deep Ones
+  Cave, Trial Warden Osric, and one of the two storage chests were all standing in water or
+  inside scenery. All of them are on solid ground now.
+- Clicking somebody you are too far away to talk to now tells you to move closer, instead of
+  doing nothing at all.
+
+## 2026-09-26 — Lighthaven errand turn-in and autosave (T4C-0064)
+
+### Fixed
+- The Samaritan in Lighthaven now pays out his rat errand. Once you had all fifteen kills he would
+  only ever repeat "Progress: 15/15", so the reward and the errand's ending were unreachable — now
+  he hands them over, whether you greet him or ask about the errand again.
+- Your character is saved every fifteen seconds while you play, and again whenever the window
+  loses focus or you gain a level. Previously most of a session only reached disk when the game
+  shut down cleanly, so a crash or a force-closed window could throw away everything you'd done
+  since the last shop visit or quest turn-in.
+
+## 2026-09-26 — The site now tells you where to find people (T4C-0062)
+
+### Added
+- Every quest on the reference site now says where its quest-giver actually stands, not just who
+  to talk to: the nearest fast-travel point you will already have, which way to walk from it and
+  roughly how far, and the exact spot on the map. Where a map of the area exists, there is a link
+  straight to it with the person pinned.
+- The same directions appear on each person's own page, so looking up a shopkeeper or a trainer
+  tells you how to reach them.
+- Quest listings now note which fast-travel point a quest-giver is near, so you can see at a
+  glance which errands are close together.
+
+### Fixed
+- A boss aura, the rebirth aura and the automatic on-level-up effect were still listed as spells
+  on the site after being hidden in the game. They are gone from the spell list now.
+
 ## 2026-09-26 — Offering chests at the temples, and spells that go off when you cast them (T4C-0061)
 
 ### Added
