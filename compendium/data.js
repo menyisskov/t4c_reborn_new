@@ -31401,6 +31401,11 @@ window.T4C_DATA = {
           "name": "The Sunken Chancel",
           "x": 1750.0,
           "y": 2300.0
+        },
+        {
+          "name": "Elysana Blackrose",
+          "x": 1561.0,
+          "y": 2471.0
         }
       ]
     },
@@ -32923,7 +32928,13 @@ window.T4C_DATA = {
           "tier": "boss"
         }
       ],
-      "namedLocations": []
+      "namedLocations": [
+        {
+          "name": "Lord Sunrock",
+          "x": 1609.0,
+          "y": 1181.0
+        }
+      ]
     },
     {
       "zoneId": "avalon_wilds",
