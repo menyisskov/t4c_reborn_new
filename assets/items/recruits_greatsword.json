@@ -1,0 +1,33 @@
+{
+  "key": "recruits_greatsword",
+  "name": "Recruit's Greatsword",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupNormalSword",
+  "appearanceInventory": "64kInvNormalSword",
+  "price": 900,
+  "weight": 12,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 35,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 1.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 1,
+  "appearanceId": 2,
+  "undroppable": false,
+  "dmgFormula": "1d12+16",
+  "atkDelay": "if(1000-self.agi/250*1000/2<600?600:1000-self.agi/250*1000/2)+1d500",
+  "boosts": [
+    { "boostId": 36748, "statId": 3, "expression": "3" },
+    { "boostId": 36749, "statId": 8, "expression": "7" }
+  ]
+}

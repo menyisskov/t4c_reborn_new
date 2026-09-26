@@ -21,6 +21,7 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.gui.core.GuiDraw;
+import com.perso.T4C.helper.CharacterClass;
 import com.perso.T4C.helper.CharacterCreationRules;
 import com.perso.T4C.helper.LocalCharacterStore;
 import com.perso.T4C.helper.PlayerStateDto;
@@ -29,7 +30,6 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.ui.FontManager;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -39,6 +39,32 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private static final long DOUBLE_CLICK_MS = 400L;
   private static final float CARET_BLINK_SECONDS = 0.5f;
   private static final float HOVER_ALPHA = 0.45f;
+
+  // Class-picker layout, in Q_Back's own 628x384 panel space (y grows downwards).
+  private static final float CLASS_TITLE_Y = 34f;
+  private static final float CLASS_LIST_X = 18f;
+  private static final float CLASS_LIST_Y = 60f;
+  private static final float CLASS_ROW_PITCH = 30f;
+  private static final float CLASS_ROW_WIDTH = 256f;
+  private static final float CLASS_ROW_HEIGHT = 23f;
+  private static final float PREVIEW_CENTER_X = 344f;
+  private static final float PREVIEW_FEET_Y = 262f;
+  private static final float STATS_X = 440f;
+  private static final float STATS_VALUE_RIGHT = 606f;
+  private static final float STATS_Y = 72f;
+  private static final float STATS_ROW_PITCH = 22f;
+  private static final float CLASS_DESCRIPTION_Y = 292f;
+  private static final float CLASS_DESCRIPTION_WIDTH = 460f;
+  private static final float CLASS_ERROR_Y = 348f;
+  private static final float CLASS_BUTTON_X = 494f;
+  private static final float CLASS_CREATE_Y = 270f;
+  private static final float CLASS_REROLL_Y = 302f;
+  private static final float CLASS_BACK_Y = 334f;
+  private static final float BUTTON_WIDTH = 116f;
+  private static final float BUTTON_HEIGHT = 27f;
+  private static final float PANEL_INSET = 14f;
+  /** hintBand is only 60% opaque; stacking it hides the panel art underneath. */
+  private static final int SCRIM_PASSES = 3;
   private final MyGame game;
   private final SpriteBatch batch;
   private final OrthographicCamera camera = new OrthographicCamera();
@@ -61,8 +87,6 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private final TextureRegion downNormal;
   private final TextureRegion downHover;
   private final TextureRegion questionPanel;
-  private final TextureRegion questionHighlight;
-  private final TextureRegion rerollPanel;
   private final BitmapFont buttonFont;
   private final BitmapFont smallButtonFont;
   private final BitmapFont listFont;
@@ -84,11 +108,9 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private String pendingName = "";
   private String pendingGender = LocalCharacterStore.MALE;
   private String errorMessage;
-  private List<QuestionRun> questionnaire = List.of();
-  private int questionIndex;
-  private int selectedAnswer;
-  private final int[] affinities = new int[CharacterCreationRules.AFFINITY_COUNT];
+  private int selectedClass;
   private CharacterCreationRules.Stats rolledStats;
+  private final CharacterPreview preview = new CharacterPreview();
 
   public CharacterSelectionScreen(MyGame game) {
     this.game = game;
@@ -110,8 +132,6 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     downNormal = loadSprite("PS_SBtnDNN");
     downHover = loadSprite("PS_SBtnDNH");
     questionPanel = loadSprite("Q_Back");
-    questionHighlight = loadSprite("Q_BackSelect");
-    rerollPanel = loadSprite("J_Back");
     FontManager fonts = FontManager.getInstance();
     buttonFont = fonts.getT4CBeaulieuFont(17, Color.BLACK);
     smallButtonFont = fonts.getT4CBeaulieuFont(15, Color.BLACK);
@@ -157,8 +177,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
         batch, title, (camera.viewportWidth - title.getRegionWidth()) / 2f, titleY);
     switch (mode) {
       case SELECT, NAME, SEX, DELETE_CONFIRM -> drawCharacterPanel();
-      case QUESTIONS -> drawQuestionnaire(titleY + title.getRegionHeight() + 20f);
-      case REROLL -> drawRerollPanel();
+      case CLASS -> drawClassPanel(titleY + title.getRegionHeight() + 20f);
     }
     drawKeyHints();
     batch.end();
@@ -254,41 +273,78 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
         batch, contains(upX, downY, 20f, 21f) ? downHover : downNormal, upX, downY);
   }
 
-  private void drawQuestionnaire(float preferredY) {
-    float x = (camera.viewportWidth - questionPanel.getRegionWidth()) / 2f;
-    float y = Math.min(preferredY, camera.viewportHeight - questionPanel.getRegionHeight());
-    y = Math.max(0f, y);
+  private void drawClassPanel(float preferredY) {
+    float x = classPanelX();
+    float y = classPanelY(preferredY);
     drawTranslucent(questionPanel, x, y);
-    GuiDraw.drawRegionFlipped(batch, questionHighlight, x + 17f, y + 106f + selectedAnswer * 48f);
-    QuestionRun run = questionnaire.get(questionIndex);
-    String prefix = "character.question." + (run.sourceIndex + 1);
-    questionFont.draw(
-        batch, I18n.key(prefix + ".prompt"), x + 18f, y + 34f, 500f, Align.left, true);
-    for (int row = 0; row < CharacterCreationRules.AFFINITY_COUNT; row++) {
-      int answer = run.answerOrder.get(row);
-      layout.setText(
-          whiteFont,
-          I18n.key(prefix + ".answer." + (answer + 1)),
-          Color.WHITE,
-          500f,
+    // Q_Back's art carries the old questionnaire's five answer-row dividers. They cut straight
+    // across this two-column layout, so black the panel's interior out and draw on a clean slate;
+    // the ornate frame around the edge is what we actually want from the sprite.
+    for (int pass = 0; pass < SCRIM_PASSES; pass++) {
+      batch.draw(
+          hintBand,
+          x + PANEL_INSET,
+          y + PANEL_INSET,
+          questionPanel.getRegionWidth() - PANEL_INSET * 2f,
+          questionPanel.getRegionHeight() - PANEL_INSET * 2f);
+    }
+    drawCentered(
+        questionFont,
+        I18n.key("character.class.title"),
+        x,
+        y + CLASS_TITLE_Y,
+        questionPanel.getRegionWidth());
+
+    CharacterClass[] classes = CharacterClass.values();
+    int hovered = classRowAtPointer(x, y);
+    for (int row = 0; row < classes.length; row++) {
+      float rowY = y + CLASS_LIST_Y + row * CLASS_ROW_PITCH;
+      if (row == selectedClass) {
+        GuiDraw.drawRegionFlipped(batch, rowHighlight, x + CLASS_LIST_X, rowY);
+      } else if (row == hovered) {
+        drawWithAlpha(rowHighlight, x + CLASS_LIST_X, rowY, HOVER_ALPHA);
+      }
+      BitmapFont font = row == selectedClass ? goldFont : listFont;
+      font.draw(batch, I18n.key(classes[row].nameKey()), x + CLASS_LIST_X + 10f, rowY + 3f);
+    }
+
+    preview.render(batch, x + PREVIEW_CENTER_X, y + PREVIEW_FEET_Y);
+    drawClassStats(x, y);
+
+    grayFont.draw(
+        batch,
+        I18n.key(classes[selectedClass].descriptionKey()),
+        x + CLASS_LIST_X,
+        y + CLASS_DESCRIPTION_Y,
+        CLASS_DESCRIPTION_WIDTH,
+        Align.left,
+        true);
+
+    drawLargeButton(x + CLASS_BUTTON_X, y + CLASS_CREATE_Y, I18n.key("character.create"), true);
+    drawLargeButton(
+        x + CLASS_BUTTON_X, y + CLASS_REROLL_Y, I18n.key("character.stats.reroll"), true);
+    drawLargeButton(x + CLASS_BUTTON_X, y + CLASS_BACK_Y, I18n.key("character.back"), true);
+    if (errorMessage != null) {
+      redFont.draw(
+          batch,
+          errorMessage,
+          x + CLASS_LIST_X,
+          y + CLASS_ERROR_Y,
+          CLASS_DESCRIPTION_WIDTH,
           Align.left,
           true);
-      float answerY = y + 106f + row * 48f;
-      whiteFont.draw(batch, layout, x + 18f, answerY + (40f - layout.height) / 2f);
     }
-    drawSmallButton(x + 537f, y + 265f, I18n.key("character.continue"), true);
-    drawSmallButton(x + 537f, y + 313f, I18n.key("character.back"), true);
   }
 
-  private void drawRerollPanel() {
-    float x = (camera.viewportWidth - rerollPanel.getRegionWidth()) / 2f;
-    float y = (camera.viewportHeight - rerollPanel.getRegionHeight()) / 2f + 30f;
-    drawTranslucent(rerollPanel, x, y);
-    drawCentered(goldFont, I18n.key("character.stats.title"), x, y + 44f, 254f);
+  private void drawClassStats(float x, float y) {
     String[] labels = {
-      I18n.key("character.stats.strength"), I18n.key("character.stats.endurance"),
-      I18n.key("character.stats.dexterity"), I18n.key("character.stats.wisdom"),
-      I18n.key("character.stats.intelligence"), I18n.key("character.stats.hp")
+      I18n.key("character.stats.strength"),
+      I18n.key("character.stats.endurance"),
+      I18n.key("character.stats.dexterity"),
+      I18n.key("character.stats.wisdom"),
+      I18n.key("character.stats.intelligence"),
+      I18n.key("character.stats.hp"),
+      I18n.key("character.stats.mana")
     };
     int[] values = {
       rolledStats.strength(),
@@ -296,17 +352,16 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       rolledStats.dexterity(),
       rolledStats.wisdom(),
       rolledStats.intelligence(),
-      rolledStats.maxHp()
+      rolledStats.maxHp(),
+      rolledStats.maxMana()
     };
     for (int i = 0; i < labels.length; i++) {
-      grayFont.draw(batch, labels[i], x + 22f, y + 78f + i * 20f);
-      whiteFont.draw(batch, Integer.toString(values[i]), x + 175f, y + 78f + i * 20f);
-    }
-    drawLargeButton(x + 306f, y + 74f, I18n.key("character.stats.accept"), true);
-    drawLargeButton(x + 306f, y + 106f, I18n.key("character.stats.reroll"), true);
-    drawLargeButton(x + 306f, y + 178f, I18n.key("character.back"), true);
-    if (errorMessage != null) {
-      redFont.draw(batch, errorMessage, x + 22f, y + 211f, 410f, Align.center, true);
+      float rowY = y + STATS_Y + i * STATS_ROW_PITCH;
+      // The last two rows are the only ones "Reroll" touches, so they get the gold treatment.
+      BitmapFont valueFont = i >= labels.length - 2 ? goldFont : whiteFont;
+      grayFont.draw(batch, labels[i], x + STATS_X, rowY);
+      layout.setText(valueFont, Integer.toString(values[i]));
+      valueFont.draw(batch, layout, x + STATS_VALUE_RIGHT - layout.width, rowY);
     }
   }
 
@@ -369,8 +424,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
           case NAME -> "character.hints.name";
           case SEX -> "character.hints.gender";
           case DELETE_CONFIRM -> "character.hints.delete";
-          case QUESTIONS -> "character.hints.questions";
-          case REROLL -> "character.hints.reroll";
+          case CLASS -> "character.hints.class";
         };
     if (key == null) return;
     float bandY = camera.viewportHeight - 44f;
@@ -393,7 +447,14 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
             LocalCharacterStore.FEMALE.equals(summary.gender())
                 ? "character.gender.female"
                 : "character.gender.male");
-    return gender
+    // Characters created before T4C-0059 have no class on file; they just show one field fewer.
+    String characterClass = selectedSlot().characterClass();
+    String classLabel =
+        characterClass == null
+            ? ""
+            : I18n.key(CharacterClass.byId(characterClass).nameKey()) + "     ";
+    return classLabel
+        + gender
         + "     "
         + I18n.message("character.details.rebirths", summary.rebirths())
         + "     "
@@ -414,8 +475,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       case SELECT -> clickSelection();
       case DELETE_CONFIRM -> clickDeleteConfirmation();
       case SEX -> clickGender();
-      case QUESTIONS -> clickQuestionnaire();
-      case REROLL -> clickReroll();
+      case CLASS -> clickClassPanel();
       case NAME -> {}
     }
   }
@@ -490,50 +550,64 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     if (contains(x + 289f, y + 243f, 72f, 27f)) {
       pendingGender = LocalCharacterStore.MALE;
       playButtonSound();
-      startQuestionnaire();
+      startClassSelection();
     } else if (contains(x + 367f, y + 243f, 72f, 27f)) {
       pendingGender = LocalCharacterStore.FEMALE;
       playButtonSound();
-      startQuestionnaire();
+      startClassSelection();
     }
   }
 
-  private void clickQuestionnaire() {
-    float x = (camera.viewportWidth - questionPanel.getRegionWidth()) / 2f;
-    float y =
-        Math.max(
-            0f,
-            Math.min(
-                titleOffset() + title.getRegionHeight() + 20f,
-                camera.viewportHeight - questionPanel.getRegionHeight()));
-    for (int row = 0; row < CharacterCreationRules.AFFINITY_COUNT; row++) {
-      if (contains(x + 17f, y + 106f + row * 48f, 500f, 40f)) {
-        selectedAnswer = row;
-        return;
-      }
+  private void clickClassPanel() {
+    float x = classPanelX();
+    float y = classPanelY(titleOffset() + title.getRegionHeight() + 20f);
+    int clickedRow = classRowAtPointer(x, y);
+    if (clickedRow >= 0) {
+      selectClass(clickedRow);
+      return;
     }
-    if (contains(x + 537f, y + 265f, 72f, 27f)) {
-      playButtonSound();
-      acceptQuestionAnswer();
-    } else if (contains(x + 537f, y + 313f, 72f, 27f)) {
-      playButtonSound();
-      cancelCreation();
-    }
-  }
-
-  private void clickReroll() {
-    float x = (camera.viewportWidth - rerollPanel.getRegionWidth()) / 2f;
-    float y = (camera.viewportHeight - rerollPanel.getRegionHeight()) / 2f + 30f;
-    if (contains(x + 306f, y + 74f, 116f, 27f)) {
+    if (contains(x + CLASS_BUTTON_X, y + CLASS_CREATE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
       playButtonSound();
       finishCreation();
-    } else if (contains(x + 306f, y + 106f, 116f, 27f)) {
+    } else if (contains(x + CLASS_BUTTON_X, y + CLASS_REROLL_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
       playButtonSound();
-      rolledStats = CharacterCreationRules.roll(affinities, random);
-    } else if (contains(x + 306f, y + 178f, 116f, 27f)) {
+      rolledStats = CharacterCreationRules.rerollVitals(rolledStats, random);
+    } else if (contains(x + CLASS_BUTTON_X, y + CLASS_BACK_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
       playButtonSound();
       cancelCreation();
     }
+  }
+
+  private int classRowAtPointer(float x, float y) {
+    for (int row = 0; row < CharacterClass.values().length; row++) {
+      float rowY = y + CLASS_LIST_Y + row * CLASS_ROW_PITCH;
+      if (contains(x + CLASS_LIST_X, rowY, CLASS_ROW_WIDTH, CLASS_ROW_HEIGHT)) return row;
+    }
+    return -1;
+  }
+
+  private void selectClass(int row) {
+    if (row == selectedClass) return;
+    selectedClass = row;
+    errorMessage = null;
+    playButtonSound();
+    rollSelectedClass();
+  }
+
+  /** Re-rolls stats for the selected class and re-dresses the preview figure. */
+  private void rollSelectedClass() {
+    CharacterClass chosen = CharacterClass.values()[selectedClass];
+    rolledStats = CharacterCreationRules.roll(chosen, random);
+    preview.dress(chosen, pendingGender);
+  }
+
+  private float classPanelX() {
+    return (camera.viewportWidth - questionPanel.getRegionWidth()) / 2f;
+  }
+
+  private float classPanelY(float preferredY) {
+    return Math.max(
+        0f, Math.min(preferredY, camera.viewportHeight - questionPanel.getRegionHeight()));
   }
 
   @Override
@@ -543,8 +617,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       case NAME -> handleNameKey(keycode);
       case SEX -> handleGenderKey(keycode);
       case DELETE_CONFIRM -> handleDeleteKey(keycode);
-      case QUESTIONS -> handleQuestionKey(keycode);
-      case REROLL -> handleRerollKey(keycode);
+      case CLASS -> handleClassKey(keycode);
     }
     return true;
   }
@@ -594,7 +667,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     } else if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.F) {
       pendingGender = LocalCharacterStore.FEMALE;
     } else if (keycode == Input.Keys.ENTER) {
-      startQuestionnaire();
+      startClassSelection();
     } else if (keycode == Input.Keys.ESCAPE) {
       mode = Mode.NAME;
     }
@@ -608,20 +681,21 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     }
   }
 
-  private void handleQuestionKey(int keycode) {
-    if (keycode == Input.Keys.UP) selectedAnswer = (selectedAnswer + 4) % 5;
-    else if (keycode == Input.Keys.DOWN) selectedAnswer = (selectedAnswer + 1) % 5;
-    else if (keycode == Input.Keys.ENTER) acceptQuestionAnswer();
-    else if (keycode == Input.Keys.ESCAPE) cancelCreation();
-    else if (keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_5) {
-      selectedAnswer = keycode - Input.Keys.NUM_1;
+  private void handleClassKey(int keycode) {
+    int classCount = CharacterClass.values().length;
+    if (keycode == Input.Keys.UP) {
+      selectClass((selectedClass + classCount - 1) % classCount);
+    } else if (keycode == Input.Keys.DOWN) {
+      selectClass((selectedClass + 1) % classCount);
+    } else if (keycode == Input.Keys.ENTER) {
+      finishCreation();
+    } else if (keycode == Input.Keys.R) {
+      rolledStats = CharacterCreationRules.rerollVitals(rolledStats, random);
+    } else if (keycode == Input.Keys.ESCAPE) {
+      cancelCreation();
+    } else if (keycode >= Input.Keys.NUM_1 && keycode < Input.Keys.NUM_1 + classCount) {
+      selectClass(keycode - Input.Keys.NUM_1);
     }
-  }
-
-  private void handleRerollKey(int keycode) {
-    if (keycode == Input.Keys.ENTER) finishCreation();
-    else if (keycode == Input.Keys.R) rolledStats = CharacterCreationRules.roll(affinities, random);
-    else if (keycode == Input.Keys.ESCAPE) cancelCreation();
   }
 
   private void startCreation() {
@@ -645,40 +719,18 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     mode = Mode.SEX;
   }
 
-  private void startQuestionnaire() {
-    List<Integer> questions = new ArrayList<>();
-    for (int i = 0; i < 8; i++) questions.add(i);
-    Collections.shuffle(questions, random);
-    List<QuestionRun> runs = new ArrayList<>();
-    for (int i = 0; i < 4; i++) {
-      List<Integer> answers = new ArrayList<>();
-      for (int answer = 0; answer < 5; answer++) answers.add(answer);
-      Collections.shuffle(answers, random);
-      runs.add(new QuestionRun(questions.get(i), List.copyOf(answers)));
-    }
-    questionnaire = List.copyOf(runs);
-    java.util.Arrays.fill(affinities, 0);
-    questionIndex = 0;
-    selectedAnswer = 0;
-    mode = Mode.QUESTIONS;
-  }
-
-  private void acceptQuestionAnswer() {
-    QuestionRun run = questionnaire.get(questionIndex);
-    affinities[run.answerOrder.get(selectedAnswer)]++;
-    questionIndex++;
-    selectedAnswer = 0;
-    if (questionIndex >= questionnaire.size()) {
-      rolledStats = CharacterCreationRules.roll(affinities, random);
-      errorMessage = null;
-      mode = Mode.REROLL;
-    }
+  private void startClassSelection() {
+    selectedClass = 0;
+    errorMessage = null;
+    rollSelectedClass();
+    mode = Mode.CLASS;
   }
 
   private void finishCreation() {
     try {
       LocalCharacterStore.CharacterSlot slot =
-          LocalCharacterStore.create(pendingName, pendingGender, rolledStats);
+          LocalCharacterStore.create(
+              pendingName, pendingGender, CharacterClass.values()[selectedClass], rolledStats);
       refreshCharacters();
       selected = Math.max(0, characters.indexOf(slot));
       enterCharacter(slot);
@@ -826,6 +878,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   @Override
   public void dispose() {
     hintBand.dispose();
+    preview.dispose();
   }
 
   private enum Mode {
@@ -833,11 +886,8 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     NAME,
     SEX,
     DELETE_CONFIRM,
-    QUESTIONS,
-    REROLL
+    CLASS
   }
-
-  private record QuestionRun(int sourceIndex, List<Integer> answerOrder) {}
 
   /** What the roster shows for a character, read once from its save file. */
   record Summary(int level, int rebirths, int gold, String gender) {

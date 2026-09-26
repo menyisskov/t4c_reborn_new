@@ -39,13 +39,14 @@ owner can strike it.
 | Level cap | **400**. XP stops counting at 400; saves above it are clamped to 400 when loaded. | `GameConstants.MAX_PLAYER_LEVEL`, `XpCurve`, `PlayerProgression`, `PlayerStateMapper` |
 | Points per level | 5 stat points, 15 skill points | `PlayerProgression` |
 | Max rebirths | **50**. The Oracle refuses after that; saves above 50 count as 50 for the Seraph aura. | `GameConstants.REBIRTH_MAX_REMORTS`, `RebirthBehavior.canRebirth` |
+| Starting attributes at creation | **20 in all five**, plus a fixed **30-point class spread** (130 total). No dice: every class spends the same 30 points, only in different places. | `CharacterCreationRules.BASE_ATTRIBUTE`, `CharacterCreationRules.CLASS_BONUS_POINTS`, `CharacterClass` |
 | Starting attributes after rebirth *n* | 20 + 5n in all five attributes (270 at 50) | `RebirthBehavior.startingAttributeFor` |
 | Level needed for rebirth *n* | 75 + 5(n − 1) (320 for the 50th) | `RebirthBehavior.requiredLevelFor` |
 | Energy points from rebirth *n* | 10 + 5(n − 1) (255 at 50) | `RebirthBehavior.energyPointsFor` |
 
 **Stat budget.** Size every requirement against what a character can actually have.
-- A never-reborn character at level L has 100 base attribute points (20 in each of the five)
-  plus 5(L − 1) more.
+- A never-reborn character at level L has 130 starting attribute points (20 in each of the five
+  plus their class's 30-point spread) plus 5(L − 1) more.
 - A 50-rebirth character has 1350 (270 in each) plus 5(L − 1).
 - At the level-400 cap, a well-built caster has about **1000** in their main casting stat.
 - Nothing may ask for more than a character at that level can reach. Tests enforce this for
@@ -66,6 +67,49 @@ still gives 166 (unchanged), str 100 gives 307 (was 250), str 1000 gives 1290, s
 Guarded by `InventoryServiceTest`.
 
 ## 2. Spells
+
+### Character creation
+
+Creation is a **class picker**, not a questionnaire (T4C-0059). The eight-question personality
+quiz is gone; its i18n strings were deleted with it.
+
+- **Seven classes:** Warrior, Archer, Paladin, Cleric, Healer, Mage, Battle Mage. Adding one
+  means adding a `CharacterClass` enum constant, its two i18n strings, its kit and its spells.
+- **Every class spends exactly `CLASS_BONUS_POINTS` (30).** `CharacterCreationRulesTest` fails if
+  one spends more or fewer, so no class can be quietly stronger than another. No class may drop
+  an attribute below the 20 base.
+- **Attributes are deterministic; only health and mana roll.** "Reroll" calls
+  `rerollVitals`, which never touches the five attributes - the player chose those by choosing a
+  class.
+- **A class's starting kit must be wearable by that class's own spread, and its starting spells
+  learnable by it.** `CharacterClassTest` checks every kit item's five stat requirements and every
+  spell's minInt/minWis against the class's rolled stats. Raising a kit item's requirements, or
+  lowering a class's stats, breaks that test rather than shipping gear a new character can't use.
+- **A class that leaves an attribute at the 20 base goes without gear gated on it.** The Healer
+  and the Mage spend everything on one stat, so the leather line (endurance 25) is out of reach
+  for both and their kits
+  simply omits boots and gloves rather than bending the requirements to fit. Caster weapons in the
+  legacy catalogue nearly all gate on intelligence, so wisdom classes get purpose-built
+  wisdom-gated ones (Acolyte's Earthen Mace, Acolyte's Dawnlit Staff).
+- **Every kit item still needs a shop or a drop.** Being granted at creation is not a source the
+  reference site can show, so starter-kit gear is also stocked by the starting town's weaponsmith
+  and armourer. In `ShopCatalog`, JSON-authored items must be listed with their `item.` prefix -
+  a bare key silently matches nothing.
+- **Macros belong to the character, not the install.** They bind spell names, and spells are
+  per-character, so they live in the save (`PlayerStateDto.macros`), not `game_preferences.json`.
+  Anything else that is per-character in the same way belongs there too.
+- **Kits are worn, not carried.** `LocalCharacterStore` writes them straight into the save's
+  equipment map. Only shared supplies (torches, potions) and stacked ammunition go in the bag.
+- **Starting spells are referenced by key and resolved through the registry**, because saves store
+  spell *names*. Never write a display name into a class definition.
+- Characters created before T4C-0059 have no class recorded; anything that reads it must tolerate
+  `null` rather than defaulting them into one.
+- **Classes must be distinguishable in the preview.** The picture is drawn from the kit's own
+  sprites, so two classes wearing the same body armor with no weapon, helm, cape or shield to tell
+  them apart look identical. Give each kit at least one distinct visible piece.
+- **The preview must call `PlayerAnimations.refresh()` after changing the part map.** Frames are
+  cached and only reload on a texture-generation change, so without it a newly dressed class keeps
+  the previous one's sprites - or draws nothing at all if its own were never loaded.
 
 **Schools and their casting stat:**
 

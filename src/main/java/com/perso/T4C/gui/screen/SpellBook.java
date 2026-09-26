@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.perso.T4C.audio.SoundManager;
-import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.config.MacroBinding;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiManager;
@@ -337,16 +336,16 @@ public class SpellBook extends GuiScreenBase {
   }
 
   private boolean isMacro(String spellName) {
-    return GamePreferencesStore.get().getMacros().stream()
+    return player.getMacros().stream()
         .anyMatch(m -> spellName.equals(m.getSpellName()));
   }
 
   private void toggleMacro(String spellName) {
-    List<MacroBinding> macros = GamePreferencesStore.get().getMacros();
+    List<MacroBinding> macros = player.getMacros();
     if (!macros.removeIf(m -> spellName.equals(m.getSpellName()))) {
       macros.add(new MacroBinding(spellName, MacroBinding.UNBOUND, 0));
     }
-    GamePreferencesStore.save();
+    PlayerStateStore.save(player);
   }
 
   private void addPageBox(

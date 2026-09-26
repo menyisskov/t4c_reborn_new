@@ -13,6 +13,56 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — Pick a class instead of answering riddles (T4C-0059)
+
+### Added
+- **Seven starting classes.** Creating a character now means choosing a path — Warrior, Archer,
+  Paladin, Cleric, Healer, Mage or Battle Mage — from a list that shows, side by side, what that path is
+  good at and a full-length picture of the character wearing the gear they will spawn in.
+- **A starting kit for every class.** New characters no longer walk out in a cloth vest with a
+  dagger in their bag. A Warrior begins in leather with a greatsword in hand, an Archer with a
+  reflex bow and a quiver of arrows, a Paladin with sword and shield, a Cleric in leather with a
+  blessed mace, a Healer in a dawnlit robe with a matching staff, a Mage in a flowing black robe
+  with a thorned staff, and a Battle Mage in an ember-woven robe with a quarterstaff. It is all
+  worn from the first step, not carried.
+- **A spell to start with, for those who cast.** A Mage and a Battle Mage already know Fire Dart, a Cleric
+  knows Stone Shard, a Healer knows both Stone Shard and Light Heal, and a Paladin knows Light
+  Heal. The other three paths start with steel only.
+- **Starter gear for the three casting paths**, so they no longer have to borrow a warrior's
+  leather: the **Apprentice's Emberweave Robe** (a little intelligence and fire power), the
+  **Acolyte's Dawnlit Robe** (wisdom and light power) and the **Templar's Earthen Vestment**
+  (wisdom and earth power), each also warding a touch against air, fire, water, earth and dark.
+  A Cleric also gets the **Acolyte's Earthen Mace** and a Healer the **Acolyte's Dawnlit Staff** —
+  both ask for wisdom rather than raw muscle or book-learning, so a devout character can actually
+  lift their own weapon. All of it is stocked by the weaponsmith and the armourer in the starting
+  town, so a character who sells or breaks the gear they spawned with can buy it back.
+- **Recruit's Greatsword**, a plain but real two-handed sword a new Warrior can swing from level
+  one.
+
+### Changed
+- **Every character now starts far stronger.** All five attributes begin at 20 — the same floor a
+  rebirth resets you to — and your class adds another 30 points on top, so a new character lands
+  on 130 total instead of the 74-88 the old quiz produced. Every path spends the same 30 points;
+  they differ only in where those points go. A Warrior opens on 40 strength, an Archer on 40
+  agility, a Healer on 50 wisdom and a Mage on 50 intelligence — and the two who pour everything
+  into one stat pay for it with no armour worth the name.
+- **Rerolling only rerolls health and mana.** Your attributes are set by the path you pick, so
+  there is nothing left to gamble on there. Hit the button as many times as you like for a better
+  roll on the other two.
+- The character list now shows each character's class alongside their gender, rebirths and gold.
+  Characters made before this update simply don't show one.
+
+### Fixed
+- **Spell macros are now yours per character, not shared across the whole install.** Setting a
+  macro on one character used to change it for all of them, so a warrior could end up with a
+  key bound to a spell they had never learned. Everyone starts with an empty macro list.
+
+### Removed
+- **The eight personality questions.** Choosing a heavenly messenger or a tarot card no longer
+  decides your strength.
+- **The Thief.** The path is gone; what it did is covered by the Archer's agility and the
+  Warrior's blade.
+
 ## 2026-09-26 — Fast travel to well-worn NPCs (T4C-0056)
 
 ### Added

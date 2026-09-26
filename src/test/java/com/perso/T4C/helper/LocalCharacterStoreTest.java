@@ -54,17 +54,17 @@ class LocalCharacterStoreTest {
     CharacterCreationRules.Stats stats =
         new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
     LocalCharacterStore.CharacterSlot first =
-        LocalCharacterStore.create("alice", LocalCharacterStore.FEMALE, stats);
+        LocalCharacterStore.create("alice", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats);
     LocalCharacterStore.CharacterSlot second =
-        LocalCharacterStore.create("Bob", LocalCharacterStore.MALE, stats);
+        LocalCharacterStore.create("Bob", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
     assertEquals("Alice", first.name());
     assertThrows(
         IllegalArgumentException.class,
-        () -> LocalCharacterStore.create("ALICE", LocalCharacterStore.MALE, stats));
-    LocalCharacterStore.create("Charlie", LocalCharacterStore.MALE, stats);
+        () -> LocalCharacterStore.create("ALICE", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats));
+    LocalCharacterStore.create("Charlie", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
     assertThrows(
         IllegalStateException.class,
-        () -> LocalCharacterStore.create("Denis", LocalCharacterStore.MALE, stats));
+        () -> LocalCharacterStore.create("Denis", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats));
     LocalCharacterStore.activate(first);
     assertEquals(first.stateFile(), PlayerStateStore.getActiveFilename());
     PlayerStateDto state = LocalCharacterStore.loadState(first);
@@ -77,13 +77,9 @@ class LocalCharacterStoreTest {
     assertTrue(state.spells.isEmpty(), "A new character must not start with LevelUp");
     assertTrue(state.gold >= LocalCharacterStore.MIN_STARTING_GOLD);
     assertTrue(state.gold <= LocalCharacterStore.MAX_STARTING_GOLD);
+    // A Warrior's gear is worn, not carried, so the backpack only holds the shared supplies.
     assertEquals(
         List.of(
-            "item.dagger",
-            "item.cloth_vest",
-            "item.cloth_pants",
-            "item.bow",
-            "item.wooden_arrow",
             "item.torch",
             "item.torch",
             "item.torch",
@@ -94,6 +90,10 @@ class LocalCharacterStoreTest {
             "item.potion_of_mana",
             "item.potion_of_mana"),
         state.inventory);
+    assertEquals(CharacterClass.WARRIOR.id(), first.characterClass());
+    CharacterClass.WARRIOR
+        .startingEquipment()
+        .forEach((slot, item) -> assertEquals(item, state.equipment.get(slot.name())));
     assertEquals(3, state.itemCharges.get("item.light_healing_potion"));
     assertEquals(3, state.itemCharges.get("item.potion_of_mana"));
     assertEquals(15, state.skills.get("attack"));
@@ -110,7 +110,7 @@ class LocalCharacterStoreTest {
     CharacterCreationRules.Stats stats =
         new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
     LocalCharacterStore.CharacterSlot slot =
-        LocalCharacterStore.create("Ancien", LocalCharacterStore.MALE, stats);
+        LocalCharacterStore.create("Ancien", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
     PlayerStateDto legacy = LocalCharacterStore.loadState(slot);
     legacy.gold = 0;
     legacy.inventory.clear();

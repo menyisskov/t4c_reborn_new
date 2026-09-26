@@ -305,7 +305,10 @@
     "studded_leather_pants",
     "studded_leather_boots",
     "studded_leather_armor",
-    "wooden_shield"
+    "wooden_shield",
+    "item.apprentices_emberweave_robe",
+    "item.acolytes_dawnlit_robe",
+    "item.templars_earthen_vestment"
   ],
   "RylethCth": [
     "plain_blank_scroll"
@@ -351,7 +354,10 @@
     "ashwood_flatbow",
     "ashwood_longbow",
     "ashwood_reflex_bow",
-    "wooden_arrow"
+    "wooden_arrow",
+    "item.recruits_greatsword",
+    "item.acolytes_earthen_mace",
+    "item.acolytes_dawnlit_staff"
   ],
   "Taliron": [
     "red_cape",
