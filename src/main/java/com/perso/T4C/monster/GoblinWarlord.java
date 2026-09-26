@@ -71,7 +71,12 @@ public final class GoblinWarlord extends DataMonster {
             new MonsterDef.LootDrop("Flask of Goblin Blood", 0.005f),
             new MonsterDef.LootDrop("Ringmail armor", 5.0E-4f),
             new MonsterDef.LootDrop("Ringmail leggings", 5.0E-4f),
-            new MonsterDef.LootDrop("Ringmail helmet", 5.0E-4f)),
+            new MonsterDef.LootDrop("Ringmail helmet", 5.0E-4f),
+            // Nightsword is one of the three ingredients LanceSilversmith's Gloomblade recipe
+            // requires and didn't drop from anything, making the recipe unfinishable. Goblin
+            // Warlord already drops the thematically related Sword of Fury, so it's the natural
+            // source; set generously at 10% so the recipe is actually completable.
+            new MonsterDef.LootDrop("Nightsword", 0.1f)),
         false,
         0.0f,
         35,
