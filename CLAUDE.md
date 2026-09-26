@@ -83,7 +83,8 @@ the same PR as the work. That file's section 0 has the full criteria.
 
 ## Before opening a PR — self-review first
 
-Codex reviews every PR, but it shouldn't be the first to find these. Use the `ship-pr` skill.
+Nothing reviews these PRs automatically (Codex review was switched off on 2026-09-26), so
+this self-review is the only one they get. Use the `ship-pr` skill.
 Its step 1 is the full checklist; at minimum:
 
 - **Build and test with Maven** (`mvn -q test`, the full suite). CI only runs a scoped subset,
@@ -138,7 +139,7 @@ that now guards against it.
   `spell-creator`, `npc-monster-creator`, `quest-creator`,
   `graphic-designer`) for building new content, and workflow skills:
   `balance-change` (changing caps/formulas/displayed numbers safely),
-  `ship-pr` (self-review → PR → Codex → merge → cleanup), `verify-website`
+  `ship-pr` (self-review → PR → CI → merge → cleanup), `verify-website`
   (regenerate, render-check and confirm the live compendium),
   `technical-writer` (the editorial standard and review gate for every word
   a player reads), and `steward` (the merge policy `ship-pr` defers to).

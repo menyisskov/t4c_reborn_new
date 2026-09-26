@@ -904,3 +904,25 @@ conversation). State lives in `quest/UnsignedLetterQuest.java`, plain quest flag
   work, not a retrofit of this pass.
 - Not added to `CompendiumExporter`'s NPC allowlist - Ysmera's own entry already covers her; only
   a genuinely new NPC needs a new allowlist row.
+
+## 13. Multiplayer status (T4C-0057)
+
+**This client is single-player.** Confirmed in code, not assumed: `MainGameScreen`'s own radar
+build has a "Single-player for now: no other players to show yet" comment, and there is no
+`OtherPlayer`/`RemotePlayer`-style entity, no network client, anywhere in `src/main/java`. The
+only real friendly-clickable entity today is the player's own companion
+(`npc/companion/CompanionNPC.java`), which has no AC/mana/resistance model - only HP.
+
+- **A spell that should be castable on "other players"** (T4C-0057: Barrier, Protection, Mana
+  Shield, Mana Surge, Bless, Healing) currently has nothing valid to target besides yourself.
+  **My call, flag for the owner to overrule:** rather than wire these onto the companion (a
+  stretch interpretation, and one it can't fully receive - no buff stats to apply Barrier/
+  Protection/etc to), T4C-0057 built only the target-selection half (Shift+quickbar arms a
+  friendly-target cursor; clicking anything today reports "no valid target") so a real
+  other-player entity slots into the existing click-resolution point later without redesigning
+  the casting UI. Self-cast (plain click, no Shift) is unchanged. If the owner wants companion
+  healing to work meaningfully before real multiplayer exists, that's new companion-stat work,
+  not a retrofit of this pass.
+- Any future networking/other-player work should extend `SpellCastingService.TargetKind.
+  FRIENDLY_UNIT` (already fully wired server-side) and `tryCastFriendlyTargetedSpell` in
+  `MainGameScreen` - the target-kind gating and mana/cooldown accounting already handle it.

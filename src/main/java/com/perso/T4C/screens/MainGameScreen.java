@@ -1616,6 +1616,18 @@ public class MainGameScreen implements Screen {
         spell.getMaxDamage(),
         spell.getBuff(),
         spell.getT4cEffects());
+    if (isFriendlyTargetableSpell(spell) && isFriendlyTargetModifierHeld()) {
+      if (selectedTargetedSpell != null && selectedTargetedSlot == slotNumber) {
+        clearSelectedTargetedSpell(false);
+        return;
+      }
+      selectedTargetedSpell = spell;
+      selectedTargetedSlot = slotNumber;
+      if (hud != null) {
+        hud.setSelectedQuickSlot(slotNumber);
+      }
+      return;
+    }
     if (targetedHeal) {
       castDefensiveSpell(spell);
       return;
@@ -1633,6 +1645,34 @@ public class MainGameScreen implements Screen {
       return;
     }
     castDefensiveSpell(spell);
+  }
+
+  /**
+   * T4C-0057: Shift+quickbar arms a friendly-unit target cursor for beneficial spells (Barrier,
+   * Protection, Mana Shield, Mana Surge, Bless, Healing) instead of the default instant self-cast
+   * - see tryCastAttackSpell(BaseNPC) for how an armed click is resolved. There is no other-player
+   * entity in this single-player build yet (see the "single-player for now" note where the radar's
+   * blue/player blips are built), so nothing can currently satisfy a friendly-unit click; this
+   * wires the target-selection half of the feature now so a real other-player entity only needs
+   * to be recognized at the click-resolution end later, not a rewrite of the arming/casting UI. A
+   * plain quickbar press (no Shift) is completely unaffected and keeps casting on yourself
+   * instantly, exactly as before.
+   */
+  private boolean isFriendlyTargetModifierHeld() {
+    return Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+        || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+  }
+
+  /**
+   * T4C-0057: Barrier, Protection, Mana Shield, Mana Surge, Bless and Healing all declare
+   * targetType 3 (see SpellCastingService#targetAccepted's FRIENDLY_UNIT case). isTargetedHealSpell
+   * only recognizes a type-1 (heal) T4cEffect, so it alone misses the five of these that are pure
+   * type-2 buffs (e.g. Barrier's AC boost) - they'd never arm the friendly-target cursor below and
+   * would always silently self-cast even with the modifier held. Checking targetType directly
+   * covers all six correctly regardless of which T4cEffect shape they use.
+   */
+  private boolean isFriendlyTargetableSpell(SpellData spell) {
+    return spell != null && spell.getTargetType() == 3;
   }
 
   private boolean tryFireMacro(int keycode) {
@@ -2146,10 +2186,13 @@ public class MainGameScreen implements Screen {
   }
 
   private boolean tryCastAttackSpell(BaseNPC npc) {
-    if (npc == null
-        || selectedTargetedSpell == null
-        || !isHostileUnitSpell(selectedTargetedSpell)
-        || player == null) {
+    if (npc == null || selectedTargetedSpell == null || player == null) {
+      return false;
+    }
+    if (isFriendlyTargetableSpell(selectedTargetedSpell)) {
+      return tryCastFriendlyTargetedSpell(npc);
+    }
+    if (!isHostileUnitSpell(selectedTargetedSpell)) {
       return false;
     }
     SpellData spell = selectedTargetedSpell;
@@ -2165,6 +2208,20 @@ public class MainGameScreen implements Screen {
     } else {
       clearCurrentAttackTarget();
     }
+    return true;
+  }
+
+  /**
+   * T4C-0057: resolves a friendly-target click (Shift+quickbar armed, see
+   * isFriendlyTargetModifierHeld()) against the clicked NPC. There is no other-player entity in
+   * this single-player build yet, so no NPC can currently satisfy TargetKind.FRIENDLY_UNIT - this
+   * always reports "wrong target" today, but the click-resolution shape is in place so recognizing
+   * a real other-player entity later is a small addition here, not a rewrite of the arming/casting
+   * UI in handleQuickbarSpell().
+   */
+  private boolean tryCastFriendlyTargetedSpell(BaseNPC npc) {
+    showSystemMessage(SpellCastingService.message(SpellCastingService.Failure.WRONG_TARGET));
+    clearSelectedTargetedSpell(true);
     return true;
   }
 
@@ -2855,7 +2912,7 @@ public class MainGameScreen implements Screen {
   }
 
   private boolean tryCastSelectedHealOnPlayer(int screenX, int screenY) {
-    if (!isTargetedHealSpell(selectedTargetedSpell) || player == null) {
+    if (!isFriendlyTargetableSpell(selectedTargetedSpell) || player == null) {
       return false;
     }
     if (hud != null && hud.isQuickBarHit(screenX, screenY)) {
@@ -2865,7 +2922,9 @@ public class MainGameScreen implements Screen {
     if (!player.isMouseOver(worldCoords.x, worldCoords.y)) {
       return false;
     }
-    castDefensiveSpell(selectedTargetedSpell);
+    SpellData spell = selectedTargetedSpell;
+    clearSelectedTargetedSpell(true);
+    castDefensiveSpell(spell);
     return true;
   }
 
@@ -4171,6 +4230,16 @@ public class MainGameScreen implements Screen {
     monsterInputHandler.setOnAttackTargetSelected(this::beginAttackTarget);
     monsterInputHandler.setOnClickedElsewhere(
         () -> {
+          // T4C-0057: MonsterInputHandler only knows "no monster is here" - it runs before
+          // NPCInputHandler in the multiplexer (see the addProcessor order below), which is the
+          // one that can actually resolve a friendly-target click (e.g. on the companion). Don't
+          // cancel the armed spell here when it's friendly-targetable; let NPCInputHandler get a
+          // chance first. It's the only other reader of selectedTargetedSpell for this case (see
+          // tryCastAttackSpell(BaseNPC)/tryCastFriendlyTargetedSpell), so this can't leave a
+          // hostile-armed spell uncleared by mistake.
+          if (isFriendlyTargetableSpell(selectedTargetedSpell)) {
+            return;
+          }
           clearCurrentAttackTarget();
           cancelActiveTargetedSpell();
         });

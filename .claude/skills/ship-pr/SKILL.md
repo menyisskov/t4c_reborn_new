@@ -1,14 +1,19 @@
 ---
 name: ship-pr
-description: End-to-end delivery of a change in this repo, from a finished working tree to a merged PR and a verified live site. Covers a self-review before opening the PR, task/changelog/guidelines bookkeeping, opening the PR, waiting on CI and the Codex review, answering findings, merging, and post-merge cleanup. Use whenever the user says "open a PR", "ship it", "merge it", "double check and merge", "push this", or a content/balance task is done and needs to land. For the merge policy itself (when self-merge is allowed), this defers to the `steward` skill.
+description: End-to-end delivery of a change in this repo, from a finished working tree to a merged PR and a verified live site. Covers a self-review before opening the PR, task/changelog/guidelines bookkeeping, opening the PR, waiting on CI, merging, and post-merge cleanup. Use whenever the user says "open a PR", "ship it", "merge it", "double check and merge", "push this", or a content/balance task is done and needs to land. For the merge policy itself (when self-merge is allowed), this defers to the `steward` skill.
 ---
 
 # Ship a PR (t4c_reborn_new)
 
+> **Codex review is currently disabled in this repo** (owner's call, 2026-09-26). Nothing
+> automated reviews PRs right now, so do not wait for a review before merging: green CI and a
+> clean self-review are the bar. The steps below still apply if it is turned back on.
+
 `steward` says **when** a PR may be merged. This skill is the **how**, start to finish, and it
 exists because the same avoidable review round-trips kept happening: old saves missed by a new
 cap, an off-by-one in odds shown on the website, a doc restating a number that had already
-changed. Do the self-review in step 1 *before* Codex does it for you.
+changed. Nothing reviews these PRs automatically any more, so step 1 is the only
+review they get - do it properly.
 
 The build is **Maven** (`mvn`), not Gradle.
 
@@ -67,29 +72,32 @@ Commit the regenerated `compendium/` data if it changed. If you touched `compend
    stash). A normal push is then a fast-forward. **Never force-push.**
 2. Open the PR (GitHub MCP), ready for review. The body carries the technical detail the
    changelog leaves out: rules as a table, what changed, how it was tested.
-3. `subscribe_pr_activity`, then `send_later` a check-in about 15 minutes out as a fallback,
-   because webhooks for CI success and Codex completion don't always arrive.
-4. End your turn. Don't sleep or poll in a loop; events and the check-in will wake you.
+3. Wait for **Build and test** only. Codex review is disabled in this repo, so there is no
+   review to wait for - don't block on one.
+4. End your turn or merge once CI is green. Don't sleep or poll in a loop.
 
-## 4. Handle Codex findings
+## 4. Handle review findings (only if a reviewer is enabled)
 
-For each finding: check it against the code, then decide.
+Codex review is disabled in this repo right now, so this step is usually a no-op. If a human
+or a re-enabled bot does leave findings, for each one: check it against the code, then decide.
 - **Real:** reproduce it as a failing test where practical, fix the root cause (not just the
   instance), run `mvn -q test`, and push. Reply on the thread naming the commit and what it
   changes, then resolve it. If the fix exposes a *class* of mistake, add a test that guards the
   whole class, as the boostId-uniqueness test did.
 - **Not worth fixing** (out of scope, pre-existing, a destructive guess): reply once with the
   reason and resolve. You don't need the owner's sign-off.
-- A pushed fix triggers a Codex re-review. Wait for it to finish before merging.
+- If an automated reviewer is enabled, a pushed fix triggers a re-review; wait for it. With
+  reviews disabled, just wait for CI to go green again.
 
 ## 5. Merge and clean up
 
 Merge only when `steward`'s conditions hold: **Build and test** is green on the current head, there
-is no conflict, Codex is not "Running", and every finding has had a decision. Merge with
+is no conflict, and any findings left by a reviewer have had a decision. With Codex disabled,
+green CI on the current head is the bar. Merge with
 `merge_pull_request` (`merge_method: merge`, `expectedHeadSha` = current head). Then:
 
 - [ ] Delete your pending `send_later` triggers for this PR (`delete_trigger`).
 - [ ] If the user asked whether the site is live, or the PR changed website-visible data, run
       `verify-website` step 3 after the compendium workflow and Vercel finish.
-- [ ] Report to the user in plain language: what's merged, what Codex caught and how it was
-      handled, and the open follow-ups.
+- [ ] Report to the user in plain language: what's merged, anything a reviewer caught and how it
+      was handled, and the open follow-ups.

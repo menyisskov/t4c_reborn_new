@@ -56,12 +56,23 @@ on, every content/feature pass adds its own entry here as part of the work
 - **Spell macros are now yours per character, not shared across the whole install.** Setting a
   macro on one character used to change it for all of them, so a warrior could end up with a
   key bound to a spell they had never learned. Everyone starts with an empty macro list.
+- The new starter gear now shows up on its sellers' pages on the reference website, instead of
+  appearing to come from nowhere.
 
 ### Removed
 - **The eight personality questions.** Choosing a heavenly messenger or a tarot card no longer
   decides your strength.
 - **The Thief.** The path is gone; what it did is covered by the Archer's agility and the
   Warrior's blade.
+## 2026-09-26 — Friendly-target casting groundwork (T4C-0057)
+
+### Changed
+- **Shift-clicking a quickbar slot** for Barrier, Protection, Mana Shield, Mana Surge, Bless or
+  Healing now arms a target cursor instead of casting on yourself immediately - a plain click on
+  the slot (no Shift) still casts on yourself instantly, exactly as before. Since there's no one
+  else in the world to aim it at yet, clicking with it armed currently just tells you there's no
+  valid target; this is groundwork for the day another player can stand next to you.
+
 ## 2026-09-26 — Gloomblade and Demonblade recipes actually finishable (T4C-0058)
 
 ### Changed

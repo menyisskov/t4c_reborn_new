@@ -26214,9 +26214,9 @@ window.T4C_DATA = {
       "studded_leather_boots",
       "studded_leather_armor",
       "wooden_shield",
-      "item.apprentices_emberweave_robe",
-      "item.acolytes_dawnlit_robe",
-      "item.templars_earthen_vestment"
+      "apprentices_emberweave_robe",
+      "acolytes_dawnlit_robe",
+      "templars_earthen_vestment"
     ],
     "RylethCth": [
       "plain_blank_scroll"
@@ -26263,9 +26263,9 @@ window.T4C_DATA = {
       "ashwood_longbow",
       "ashwood_reflex_bow",
       "wooden_arrow",
-      "item.recruits_greatsword",
-      "item.acolytes_earthen_mace",
-      "item.acolytes_dawnlit_staff"
+      "recruits_greatsword",
+      "acolytes_earthen_mace",
+      "acolytes_dawnlit_staff"
     ],
     "Taliron": [
       "red_cape",

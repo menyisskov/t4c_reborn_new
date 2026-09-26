@@ -89,7 +89,8 @@ without an automated reviewer moving the goalposts every push.
 There is no separate automated approval check in this repo. The PR's
 driving agent (a Claude Code session; see `.claude/skills/steward/SKILL.md`
 for its exact mechanics) merges directly, once:
-- Codex's review has finished (not still "🔄 Running"), and
+- any enabled automated review has finished (not still "🔄 Running") - Codex review is
+  currently disabled, so there is normally none to wait for, and
 - CI (`Build and test`) is green on the current head, with no merge
   conflict, and
 - every finding from the original review has an explicit fix-or-skip
