@@ -46,6 +46,21 @@ public final class HighTierSpellCurve {
   private static final int AREA_MULTIPLIER = 5;
   private static final int AREA_RADIUS = 4;
 
+  // T4C-0054: cast speed decays with level like every other spell (the idiom described in the
+  // spell-creator skill), converging on the same 1000/750/750ms floor everything else uses by
+  // GameConstants.MAX_PLAYER_LEVEL (400). Written as (400-self.level) rather than
+  // (self.level-tier) so it's one formula shared by every tier: at a tier's own minLevel it
+  // reproduces that tier's starting exhaustion, and a level-400 spell (minLevel==400, the level
+  // cap) is *already* at the floor the moment it's learned, with no decay window at all.
+  private static final String BOLT_MENTAL_EXHAUSTION =
+      "1000+if((400-self.level)>=0?(600*(400-self.level)/250):0)";
+  private static final String BOLT_PHYSICAL_EXHAUSTION =
+      "750+if((400-self.level)>=0?(450*(400-self.level)/250):0)";
+  private static final String AREA_MENTAL_EXHAUSTION =
+      "1000+if((400-self.level)>=0?(900*(400-self.level)/250):0)";
+  private static final String AREA_PHYSICAL_EXHAUSTION =
+      "750+if((400-self.level)>=0?(650*(400-self.level)/250):0)";
+
   private HighTierSpellCurve() {}
 
   /** Main casting stat requirement at a tier: Intelligence for fire/water/dark, Wisdom for
@@ -129,9 +144,9 @@ public final class HighTierSpellCurve {
         area ? 19 : 11,
         area ? SpellData.ATTACK_MENTAL : SpellData.ATTACK_PHYSICAL,
         "100",
-        area ? "1900" : "1600",
-        area ? "1400" : "1200",
-        area ? "1400" : "1200",
+        area ? AREA_MENTAL_EXHAUSTION : BOLT_MENTAL_EXHAUSTION,
+        area ? AREA_PHYSICAL_EXHAUSTION : BOLT_PHYSICAL_EXHAUSTION,
+        area ? AREA_PHYSICAL_EXHAUSTION : BOLT_PHYSICAL_EXHAUSTION,
         v.visualEffect,
         area ? v.visualEffectTarget : 0,
         true,

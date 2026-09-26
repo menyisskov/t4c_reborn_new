@@ -53,17 +53,21 @@ class PlayerSpellCoverageTest {
   }
 
   @Test
-  void levelUpSpellCarriesTheAnimationAndIsLearnable() {
+  void levelUpSpellCarriesTheAnimationAndIsNotPlayerLearnable() {
     SpellData spell = SpellRegistry.findByName("spell.level_up");
     assertNotNull(spell);
     assertEquals(SpellRenderer.LEVEL_UP_EFFECT, spell.getImpactSpell());
     assertEquals(0, Integer.parseInt(spell.getManaCost()), "LevelUp is free to cast");
     assertEquals(5, spell.getTargetType(), "LevelUp is cast on the caster itself");
     assertFalse(spell.isAttack());
-    assertTrue(
+    // T4C-0054: LevelUp is applied automatically on level-up (SpellRenderer.playLevelUpAnimation),
+    // never learned or cast by the player - it must NOT show up in the spellbook or at the
+    // Lighthaven spell seller (it used to, via the same generic isPlayerCastable check every real
+    // spell goes through, which had no denylist for internal-only spells).
+    assertFalse(
         SpellRegistry.playerCastableSpells().stream()
             .anyMatch(candidate -> "spell.level_up".equals(candidate.getKey())),
-        "LevelUp must be part of the learnable catalogue");
+        "LevelUp must not be part of the player-facing spell catalogue");
   }
 
   @Test
