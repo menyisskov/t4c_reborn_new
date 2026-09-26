@@ -439,11 +439,24 @@
   // back to a schematic worldmap dot from the quest's own coordinates so a location is always
   // shown, not just for quests a zone happens to list. The caption also differs from the zone
   // Overview page's generic one above, since a turn-in quest has no kill geofence to describe.
+  function mapContainsPoint(m, x, y) {
+    var tileW = m.imageWidth / m.pxPerTile;
+    var tileH = m.imageHeight / m.pxPerTile;
+    return x >= m.originX && x <= m.originX + tileW && y >= m.originY && y <= m.originY + tileH;
+  }
+
   function questMap(q, zone) {
     var caption = q.requiredKills > 0
       ? "Kills must land within " + q.areaRadiusTiles + " tiles of (" + q.areaCenterX + ", " + q.areaCenterY + ")."
       : "Approximate location of " + npcPlain(q.giverNpc) + ": (" + q.areaCenterX + ", " + q.areaCenterY + ").";
-    if (zone && byKey.zone[zone]) return zoneMap(byKey.zone[zone], caption);
+    var z = zone && byKey.zone[zone];
+    var m = z && byKey.map[z.id];
+    // A quest's zone can be the destination it unlocks rather than its objective area (e.g. a
+    // borderwatch/passage access quest fought on the road TO a zone, not inside it) - only use
+    // that zone's map image when the quest's own coordinates actually fall within its exported
+    // bounds, otherwise fall back to a schematic dot built from the quest's own coordinates so
+    // the map shown always matches the location described in the caption next to it.
+    if (z && (!m || mapContainsPoint(m, q.areaCenterX, q.areaCenterY))) return zoneMap(z, caption);
     return schematicDot(q.areaCenterX, q.areaCenterY, q.areaRadiusTiles, caption);
   }
 
