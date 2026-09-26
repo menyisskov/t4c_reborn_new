@@ -1616,19 +1616,19 @@ public class MainGameScreen implements Screen {
         spell.getMaxDamage(),
         spell.getBuff(),
         spell.getT4cEffects());
-    if (targetedHeal) {
-      if (isFriendlyTargetModifierHeld()) {
-        if (selectedTargetedSpell != null && selectedTargetedSlot == slotNumber) {
-          clearSelectedTargetedSpell(false);
-          return;
-        }
-        selectedTargetedSpell = spell;
-        selectedTargetedSlot = slotNumber;
-        if (hud != null) {
-          hud.setSelectedQuickSlot(slotNumber);
-        }
+    if (isFriendlyTargetableSpell(spell) && isFriendlyTargetModifierHeld()) {
+      if (selectedTargetedSpell != null && selectedTargetedSlot == slotNumber) {
+        clearSelectedTargetedSpell(false);
         return;
       }
+      selectedTargetedSpell = spell;
+      selectedTargetedSlot = slotNumber;
+      if (hud != null) {
+        hud.setSelectedQuickSlot(slotNumber);
+      }
+      return;
+    }
+    if (targetedHeal) {
       castDefensiveSpell(spell);
       return;
     }
@@ -1661,6 +1661,18 @@ public class MainGameScreen implements Screen {
   private boolean isFriendlyTargetModifierHeld() {
     return Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
         || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+  }
+
+  /**
+   * T4C-0057: Barrier, Protection, Mana Shield, Mana Surge, Bless and Healing all declare
+   * targetType 3 (see SpellCastingService#targetAccepted's FRIENDLY_UNIT case). isTargetedHealSpell
+   * only recognizes a type-1 (heal) T4cEffect, so it alone misses the five of these that are pure
+   * type-2 buffs (e.g. Barrier's AC boost) - they'd never arm the friendly-target cursor below and
+   * would always silently self-cast even with the modifier held. Checking targetType directly
+   * covers all six correctly regardless of which T4cEffect shape they use.
+   */
+  private boolean isFriendlyTargetableSpell(SpellData spell) {
+    return spell != null && spell.getTargetType() == 3;
   }
 
   private boolean tryFireMacro(int keycode) {
@@ -2177,7 +2189,7 @@ public class MainGameScreen implements Screen {
     if (npc == null || selectedTargetedSpell == null || player == null) {
       return false;
     }
-    if (isTargetedHealSpell(selectedTargetedSpell)) {
+    if (isFriendlyTargetableSpell(selectedTargetedSpell)) {
       return tryCastFriendlyTargetedSpell(npc);
     }
     if (!isHostileUnitSpell(selectedTargetedSpell)) {
@@ -2900,7 +2912,7 @@ public class MainGameScreen implements Screen {
   }
 
   private boolean tryCastSelectedHealOnPlayer(int screenX, int screenY) {
-    if (!isTargetedHealSpell(selectedTargetedSpell) || player == null) {
+    if (!isFriendlyTargetableSpell(selectedTargetedSpell) || player == null) {
       return false;
     }
     if (hud != null && hud.isQuickBarHit(screenX, screenY)) {
@@ -2910,7 +2922,9 @@ public class MainGameScreen implements Screen {
     if (!player.isMouseOver(worldCoords.x, worldCoords.y)) {
       return false;
     }
-    castDefensiveSpell(selectedTargetedSpell);
+    SpellData spell = selectedTargetedSpell;
+    clearSelectedTargetedSpell(true);
+    castDefensiveSpell(spell);
     return true;
   }
 
@@ -4216,6 +4230,16 @@ public class MainGameScreen implements Screen {
     monsterInputHandler.setOnAttackTargetSelected(this::beginAttackTarget);
     monsterInputHandler.setOnClickedElsewhere(
         () -> {
+          // T4C-0057: MonsterInputHandler only knows "no monster is here" - it runs before
+          // NPCInputHandler in the multiplexer (see the addProcessor order below), which is the
+          // one that can actually resolve a friendly-target click (e.g. on the companion). Don't
+          // cancel the armed spell here when it's friendly-targetable; let NPCInputHandler get a
+          // chance first. It's the only other reader of selectedTargetedSpell for this case (see
+          // tryCastAttackSpell(BaseNPC)/tryCastFriendlyTargetedSpell), so this can't leave a
+          // hostile-armed spell uncleared by mistake.
+          if (isFriendlyTargetableSpell(selectedTargetedSpell)) {
+            return;
+          }
           clearCurrentAttackTarget();
           cancelActiveTargetedSpell();
         });
