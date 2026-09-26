@@ -1,0 +1,64 @@
+{
+  "key": "templars_earthen_vestment",
+  "name": "Templar's Earthen Vestment",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupMageRobe",
+  "appearanceInventory": "64kInvMageRobe",
+  "price": 450,
+  "weight": 5,
+  "armorClass": 3.7,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 12,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 17,
+    "wisdom": 35,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36770,
+      "statId": 4,
+      "expression": "3"
+    },
+    {
+      "boostId": 36771,
+      "statId": 19,
+      "expression": "4"
+    },
+    {
+      "boostId": 36772,
+      "statId": 12,
+      "expression": "1"
+    },
+    {
+      "boostId": 36773,
+      "statId": 13,
+      "expression": "1"
+    },
+    {
+      "boostId": 36774,
+      "statId": 14,
+      "expression": "1"
+    },
+    {
+      "boostId": 36775,
+      "statId": 15,
+      "expression": "1"
+    },
+    {
+      "boostId": 36776,
+      "statId": 22,
+      "expression": "1"
+    }
+  ]
+}

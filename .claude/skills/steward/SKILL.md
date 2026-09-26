@@ -9,6 +9,10 @@ skipping/disabling tests, no rewriting someone else's history, etc.).
 
 ## Review engine
 
+**Automated PR review is currently disabled in this repo** (owner's call, 2026-09-26):
+there is no reviewer to wait for, and green CI on the current head is the merge bar.
+Everything below describes the protocol for when it is switched back on.
+
 This repo's automated PR reviewer is **Codex** (`chatgpt-codex-connector[bot]`),
 triggered automatically on PR open/sync/reopen. There is no Claude-based
 review workflow here — don't add one back unless the user asks for it again.
@@ -50,7 +54,7 @@ Once all of the following hold, merge the PR yourself — don't wait for a
 human to click merge:
 - CI (`Build and test`) is green on the current head.
 - There is no merge conflict.
-- Codex's review is not "🔄 Running."
+- No automated review is "🔄 Running" (with Codex disabled, there never is one).
 - You've made a judgment call on every Codex finding: fixed what mattered,
   consciously skipped the rest.
 
@@ -58,5 +62,5 @@ Use `merge_pull_request` directly. This repo does not have GitHub's native
 auto-merge toggle enabled, so don't rely on `enable_pr_auto_merge` — it will
 fail; merge directly instead.
 
-Never merge while Codex is still running, while CI is red, or while an
+Never merge while an enabled reviewer is still running, while CI is red, or while an
 important finding you judged worth fixing hasn't actually been pushed yet.

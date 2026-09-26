@@ -31,6 +31,7 @@ public class PlayerStateDto {
   public int rebirthCount;
   public List<String> spells;
   public List<QuickSlotEntry> quickSlots;
+  public List<com.perso.T4C.config.MacroBinding> macros;
   public List<ActiveBuffState> activeBuffs;
   public List<String> inventory;
   public Map<String, String> equipment;

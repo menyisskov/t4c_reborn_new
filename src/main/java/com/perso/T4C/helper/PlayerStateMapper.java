@@ -46,6 +46,7 @@ public final class PlayerStateMapper {
     state.rebirthCount = player.getRebirthCount();
     state.spells = player.getSpells();
     state.quickSlots = player.getQuickSlots();
+    state.macros = player.getMacros();
     state.activeBuffs = toActiveBuffStates(player);
     state.inventory = player.getInventory();
     state.equipment = toEquipmentMap(player);
@@ -103,6 +104,10 @@ public final class PlayerStateMapper {
     player.setRebirthCount(Math.min(state.rebirthCount, GameConstants.REBIRTH_MAX_REMORTS));
     player.setSpells(state.spells);
     player.setQuickSlots(state.quickSlots);
+    // Saves predating T4C-0059 have no macros of their own; they start empty rather than
+    // inheriting whatever game_preferences.json used to hold for every character at once.
+    player.setMacros(
+        state.macros != null ? new ArrayList<>(state.macros) : new ArrayList<>());
     applyActiveBuffs(state, player);
     player.setInventory(state.inventory);
     player.setEquippedItems(toEquippedItems(state));

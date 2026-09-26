@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Player extends Stats {
   private boolean meditating;
@@ -132,6 +133,10 @@ public class Player extends Stats {
   @Getter private List<Double> storageDurability = new ArrayList<>();
   @Getter private List<Integer> storageCharges = new ArrayList<>();
   @Getter private int storageGold = 0;
+  // T4C-0059: macros bind a spell name to a key, and spells are per-character - a Warrior has no
+  // business inheriting a Mage's Fire Dart binding - so they live in the character's save rather
+  // than in game_preferences.json alongside volume and brightness.
+  @Getter @Setter private List<com.perso.T4C.config.MacroBinding> macros = new ArrayList<>();
 
   public Player(Object... parts) throws GameException {
     this.animations = new PlayerAnimations(parts);

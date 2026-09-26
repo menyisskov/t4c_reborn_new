@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0059`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0060`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -71,6 +71,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0056 | Locations panel fast travel to 9 NPCs revisited across many quests or within one long questline (Lord Sunrock, Asarr, Araknor, Lance Silversmith, Zhakar, Elysana Blackrose, Dionysus Silverstream, Grant Hornkeep, Filandrius) | Content | Done | `ebb6dcf8` | [2026-09-26](CHANGELOG.md#2026-09-26--fast-travel-to-well-worn-npcs-t4c-0056) |
 | T4C-0057 | Shift+quickbar arms a friendly-unit target cursor for Barrier/Protection/Mana Shield/Mana Surge/Bless/Healing instead of instant self-cast; click-resolution groundwork for a future other-player entity, which doesn't exist in this single-player build yet | Systems | Done | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--friendly-target-casting-groundwork-t4c-0057) |
 | T4C-0058 | Gloomblade/Demonblade crafting ingredients (Ring of Darkness, Demon Skull, Necklace of the Black Heart, Nightsword, Chaos Sword) raised to a completable drop rate; the necklace and nightsword didn't drop from anything before | Fix | Done | `85e1c671` | [2026-09-26](CHANGELOG.md#2026-09-26--gloomblade-and-demonblade-recipes-actually-finishable-t4c-0058) |
+| T4C-0059 | Class-based character creation: the eight-question quiz is replaced by a seven-archetype picker (Warrior, Archer, Paladin, Cleric, Healer, Mage, Battle Mage) with a live dressed preview; every attribute now starts at 20 plus a fixed 30-point class spread, rerolling touches only health and mana, and each class starts wearing its own kit (including six new starter items for the casting and melee paths) and knowing its own spell | Systems/Content/Fix | Done | `fd6c6b77` | [2026-09-26](CHANGELOG.md#2026-09-26--pick-a-class-instead-of-answering-riddles-t4c-0059) |
 
 ## Type legend
 

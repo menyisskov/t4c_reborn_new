@@ -76,4 +76,25 @@ class PlayerStateMapperTest {
     assertEquals(1, restored.getActiveBuffs().size());
     assertEquals(SeraphAuraService.AURA_NAME, restored.getActiveBuffs().get(0).getSpellName());
   }
+
+  @Test
+  void macrosBelongToTheCharacterNotTheInstall() throws Exception {
+    Player caster = new Player();
+    caster.getMacros().add(new com.perso.T4C.config.MacroBinding("Fire Dart", 34, 0));
+    PlayerStateDto casterState = PlayerStateMapper.fromPlayer(caster);
+    assertEquals(1, casterState.macros.size());
+
+    Player restored = new Player();
+    PlayerStateMapper.applyToPlayer(casterState, restored);
+    assertEquals(1, restored.getMacros().size());
+    assertEquals("Fire Dart", restored.getMacros().get(0).getSpellName());
+
+    // A second character loaded from its own save must not see the first one's bindings, and a
+    // save written before T4C-0059 has no macros at all rather than inheriting the shared list.
+    PlayerStateDto legacyState = PlayerStateMapper.fromPlayer(new Player());
+    legacyState.macros = null;
+    Player other = new Player();
+    PlayerStateMapper.applyToPlayer(legacyState, other);
+    assertTrue(other.getMacros().isEmpty());
+  }
 }

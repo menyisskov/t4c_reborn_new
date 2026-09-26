@@ -466,7 +466,16 @@ public final class ShopCatalog {
                   "ashwood_flatbow",
                   "ashwood_longbow",
                   "ashwood_reflex_bow",
-                  "wooden_arrow")),
+                  "wooden_arrow",
+                  // T4C-0059 starter-kit weapons, stocked here so a character who sells or
+                  // breaks the one they spawned with can buy it back in the starting town.
+                  // Bare keys, like every other entry: ItemRegistry.findByKey normalizes them
+                  // for the game, and CompendiumExporter emits whatever is written here
+                  // verbatim - an "item."-prefixed key would never match the website's own
+                  // item records, leaving those pages with no shop listed.
+                  "recruits_greatsword",
+                  "acolytes_earthen_mace",
+                  "acolytes_dawnlit_staff")),
           Map.entry(
               "Rolph",
               List.of(
@@ -485,7 +494,11 @@ public final class ShopCatalog {
                   "studded_leather_pants",
                   "studded_leather_boots",
                   "studded_leather_armor",
-                  "wooden_shield")),
+                  "wooden_shield",
+                  // T4C-0059 starter-kit robes, for the same reason as Sigfried's weapons.
+                  "apprentices_emberweave_robe",
+                  "acolytes_dawnlit_robe",
+                  "templars_earthen_vestment")),
           Map.entry(
               "WitchDoctorKwarlgloth",
               List.of(

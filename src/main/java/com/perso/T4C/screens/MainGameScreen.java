@@ -1689,7 +1689,7 @@ public class MainGameScreen implements Screen {
         || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)) {
       heldModifiers |= com.perso.T4C.config.MacroBinding.MOD_ALT;
     }
-    for (com.perso.T4C.config.MacroBinding macro : GamePreferencesStore.get().getMacros()) {
+    for (com.perso.T4C.config.MacroBinding macro : player.getMacros()) {
       if (macro.getKeycode() != keycode || macro.getModifiers() != heldModifiers) {
         continue;
       }

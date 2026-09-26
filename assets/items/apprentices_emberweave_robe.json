@@ -1,0 +1,64 @@
+{
+  "key": "apprentices_emberweave_robe",
+  "name": "Apprentice's Emberweave Robe",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupRedRobe",
+  "appearanceInventory": "64kInvRedRobe",
+  "price": 450,
+  "weight": 5,
+  "armorClass": 3.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 12,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 30,
+    "wisdom": 15,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 36750,
+      "statId": 1,
+      "expression": "3"
+    },
+    {
+      "boostId": 36751,
+      "statId": 17,
+      "expression": "3"
+    },
+    {
+      "boostId": 36752,
+      "statId": 12,
+      "expression": "1"
+    },
+    {
+      "boostId": 36753,
+      "statId": 13,
+      "expression": "1"
+    },
+    {
+      "boostId": 36754,
+      "statId": 14,
+      "expression": "1"
+    },
+    {
+      "boostId": 36755,
+      "statId": 15,
+      "expression": "1"
+    },
+    {
+      "boostId": 36756,
+      "statId": 22,
+      "expression": "1"
+    }
+  ]
+}

@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
-import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.config.MacroBinding;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiDraw;
@@ -18,6 +17,7 @@ import com.perso.T4C.gui.core.GuiScreenBase;
 import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
@@ -88,8 +88,8 @@ public class MacrosScreen extends GuiScreenBase {
     addCloseButton(548f, 5f);
   }
 
-  private static List<MacroBinding> macros() {
-    return GamePreferencesStore.get().getMacros();
+  private List<MacroBinding> macros() {
+    return player.getMacros();
   }
 
   private Rectangle abs(Rectangle r) {
@@ -296,7 +296,7 @@ public class MacrosScreen extends GuiScreenBase {
     }
     macros.get(index).setKeycode(keycode);
     macros.get(index).setModifiers(modifiers);
-    GamePreferencesStore.save();
+    PlayerStateStore.save(player);
   }
 
   private void clearKey(int index) {
@@ -304,14 +304,14 @@ public class MacrosScreen extends GuiScreenBase {
     if (index < 0 || index >= macros.size()) return;
     macros.get(index).setKeycode(MacroBinding.UNBOUND);
     macros.get(index).setModifiers(0);
-    GamePreferencesStore.save();
+    PlayerStateStore.save(player);
   }
 
   private void removeEntry(int index) {
     List<MacroBinding> macros = macros();
     if (index < 0 || index >= macros.size()) return;
     macros.remove(index);
-    GamePreferencesStore.save();
+    PlayerStateStore.save(player);
     selected = Math.min(selected, macros.size() - 1);
     scroll(0);
   }
@@ -325,7 +325,7 @@ public class MacrosScreen extends GuiScreenBase {
     selected = target;
     if (selected < firstVisible) firstVisible = selected;
     if (selected >= firstVisible + ROWS_VISIBLE) firstVisible = selected - ROWS_VISIBLE + 1;
-    GamePreferencesStore.save();
+    PlayerStateStore.save(player);
   }
 
   private void scroll(int rows) {

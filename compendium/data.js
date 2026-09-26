@@ -13671,6 +13671,152 @@ window.T4C_DATA = {
   ],
   "items": [
     {
+      "key": "acolytes_dawnlit_robe",
+      "name": "Acolyte's Dawnlit Robe",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupWhiteRobe",
+      "appearanceInventory": "64kInvWhiteRobe",
+      "price": 450.0,
+      "weight": 5.0,
+      "armorClass": 3.7,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 12.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 20.0,
+        "wisdom": 35.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36760.0,
+          "statId": 4.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 36761.0,
+          "statId": 23.0,
+          "expression": "4"
+        },
+        {
+          "boostId": 36762.0,
+          "statId": 12.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36763.0,
+          "statId": 13.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36764.0,
+          "statId": 14.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36765.0,
+          "statId": 15.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36766.0,
+          "statId": 22.0,
+          "expression": "1"
+        }
+      ]
+    },
+    {
+      "key": "acolytes_dawnlit_staff",
+      "name": "Acolyte's Dawnlit Staff",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "price": 450.0,
+      "weight": 4.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 12.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 35.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 1.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d7+7",
+      "atkDelay": "if(850-self.agi/250*850/2<600?600:850-self.agi/250*850/2)+1d425",
+      "boosts": [
+        {
+          "boostId": 36790.0,
+          "statId": 4.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 36791.0,
+          "statId": 23.0,
+          "expression": "4"
+        }
+      ]
+    },
+    {
+      "key": "acolytes_earthen_mace",
+      "name": "Acolyte's Earthen Mace",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupOgreClub",
+      "appearanceInventory": "64kInvMace",
+      "price": 450.0,
+      "weight": 6.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 20.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 30.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 1.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "dmgFormula": "1d7+8",
+      "atkDelay": "if(900-self.agi/250*900/2<600?600:900-self.agi/250*900/2)+1d450",
+      "boosts": [
+        {
+          "boostId": 36780.0,
+          "statId": 4.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 36781.0,
+          "statId": 19.0,
+          "expression": "3"
+        }
+      ]
+    },
+    {
       "key": "acolytes_tarnished_locket",
       "name": "Acolyte's Tarnished Locket",
       "bodyPart": "NECK",
@@ -17257,6 +17403,70 @@ window.T4C_DATA = {
           "boostId": 20125.0,
           "statId": 1.0,
           "expression": "8"
+        }
+      ]
+    },
+    {
+      "key": "apprentices_emberweave_robe",
+      "name": "Apprentice's Emberweave Robe",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupRedRobe",
+      "appearanceInventory": "64kInvRedRobe",
+      "price": 450.0,
+      "weight": 5.0,
+      "armorClass": 3.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 12.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 30.0,
+        "wisdom": 15.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36750.0,
+          "statId": 1.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 36751.0,
+          "statId": 17.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 36752.0,
+          "statId": 12.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36753.0,
+          "statId": 13.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36754.0,
+          "statId": 14.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36755.0,
+          "statId": 15.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36756.0,
+          "statId": 22.0,
+          "expression": "1"
         }
       ]
     },
@@ -24442,6 +24652,47 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "recruits_greatsword",
+      "name": "Recruit's Greatsword",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupNormalSword",
+      "appearanceInventory": "64kInvNormalSword",
+      "price": 900.0,
+      "weight": 12.0,
+      "armorClass": 0.0,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 0.0,
+        "strength": 35.0,
+        "agility": 0.0,
+        "intelligence": 0.0,
+        "wisdom": 0.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 1.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 1.0,
+      "appearanceId": 2.0,
+      "undroppable": false,
+      "dmgFormula": "1d12+16",
+      "atkDelay": "if(1000-self.agi/250*1000/2<600?600:1000-self.agi/250*1000/2)+1d500",
+      "boosts": [
+        {
+          "boostId": 36748.0,
+          "statId": 3.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 36749.0,
+          "statId": 8.0,
+          "expression": "7"
+        }
+      ]
+    },
+    {
       "key": "ring_of_the_archer",
       "name": "Ring of the Archer",
       "bodyPart": "RING1",
@@ -24877,6 +25128,70 @@ window.T4C_DATA = {
           "boostId": 36471.0,
           "statId": 22.0,
           "expression": "7"
+        }
+      ]
+    },
+    {
+      "key": "templars_earthen_vestment",
+      "name": "Templar's Earthen Vestment",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupMageRobe",
+      "appearanceInventory": "64kInvMageRobe",
+      "price": 450.0,
+      "weight": 5.0,
+      "armorClass": 3.7,
+      "dodgeLost": 0.0,
+      "requirements": {
+        "endurance": 12.0,
+        "strength": 0.0,
+        "agility": 0.0,
+        "intelligence": 17.0,
+        "wisdom": 35.0,
+        "attack": 0.0
+      },
+      "attackSpeed": 0.0,
+      "unique": false,
+      "isBow": false,
+      "unlimitedUse": true,
+      "numId": 0.0,
+      "structure": 2.0,
+      "appearanceId": 0.0,
+      "undroppable": false,
+      "boosts": [
+        {
+          "boostId": 36770.0,
+          "statId": 4.0,
+          "expression": "3"
+        },
+        {
+          "boostId": 36771.0,
+          "statId": 19.0,
+          "expression": "4"
+        },
+        {
+          "boostId": 36772.0,
+          "statId": 12.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36773.0,
+          "statId": 13.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36774.0,
+          "statId": 14.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36775.0,
+          "statId": 15.0,
+          "expression": "1"
+        },
+        {
+          "boostId": 36776.0,
+          "statId": 22.0,
+          "expression": "1"
         }
       ]
     },
@@ -25898,7 +26213,10 @@ window.T4C_DATA = {
       "studded_leather_pants",
       "studded_leather_boots",
       "studded_leather_armor",
-      "wooden_shield"
+      "wooden_shield",
+      "apprentices_emberweave_robe",
+      "acolytes_dawnlit_robe",
+      "templars_earthen_vestment"
     ],
     "RylethCth": [
       "plain_blank_scroll"
@@ -25944,7 +26262,10 @@ window.T4C_DATA = {
       "ashwood_flatbow",
       "ashwood_longbow",
       "ashwood_reflex_bow",
-      "wooden_arrow"
+      "wooden_arrow",
+      "recruits_greatsword",
+      "acolytes_earthen_mace",
+      "acolytes_dawnlit_staff"
     ],
     "Taliron": [
       "red_cape",
