@@ -1,5 +1,407 @@
 [
   {
+    "zoneId": "deep_ones_cave",
+    "image": "maps/deep_ones_cave.png",
+    "imageWidth": 1120,
+    "imageHeight": 1120,
+    "originX": 190,
+    "originY": 2106,
+    "pxPerTile": 4,
+    "npcs": [
+      {
+        "id": "Dafyd",
+        "displayName": "A peaceful traveler",
+        "x": 440,
+        "y": 2285
+      },
+      {
+        "id": "KeeperTamsin",
+        "displayName": "Keeper Tamsin",
+        "x": 300,
+        "y": 2320
+      },
+      {
+        "id": "NexusStone14",
+        "displayName": "Nexus Index",
+        "x": 236,
+        "y": 2212
+      }
+    ],
+    "monsters": [
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 278,
+        "y": 2293,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 280,
+        "y": 2283,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 286,
+        "y": 2260,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 288,
+        "y": 2245,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 303,
+        "y": 2298,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 323,
+        "y": 2198,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 327,
+        "y": 2288,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 334,
+        "y": 2267,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 337,
+        "y": 2192,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 349,
+        "y": 2201,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 349,
+        "y": 2226,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 350,
+        "y": 2270,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 351,
+        "y": 2208,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 352,
+        "y": 2237,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 355,
+        "y": 2187,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 360,
+        "y": 2223,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 360,
+        "y": 2272,
+        "tier": "trash"
+      },
+      {
+        "name": "Deep One",
+        "displayName": "Deep One",
+        "x": 363,
+        "y": 2285,
+        "tier": "trash"
+      },
+      {
+        "name": "Giant Scorpion",
+        "displayName": "Giant Scorpion",
+        "x": 302,
+        "y": 2383,
+        "tier": "trash"
+      },
+      {
+        "name": "Giant Scorpion",
+        "displayName": "Giant Scorpion",
+        "x": 357,
+        "y": 2365,
+        "tier": "trash"
+      },
+      {
+        "name": "Giant Scorpion",
+        "displayName": "Giant Scorpion",
+        "x": 370,
+        "y": 2369,
+        "tier": "trash"
+      },
+      {
+        "name": "Sand Worm",
+        "displayName": "Sand Worm",
+        "x": 255,
+        "y": 2385,
+        "tier": "boss"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 206,
+        "y": 2111,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 214,
+        "y": 2156,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 215,
+        "y": 2131,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 220,
+        "y": 2233,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 225,
+        "y": 2169,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 226,
+        "y": 2236,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 228,
+        "y": 2121,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 229,
+        "y": 2191,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 229,
+        "y": 2212,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 233,
+        "y": 2263,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 240,
+        "y": 2110,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 242,
+        "y": 2174,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 246,
+        "y": 2222,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 346,
+        "y": 2186,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 367,
+        "y": 2195,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 388,
+        "y": 2247,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 389,
+        "y": 2132,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 389,
+        "y": 2186,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 389,
+        "y": 2297,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 398,
+        "y": 2117,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 409,
+        "y": 2202,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 414,
+        "y": 2144,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 414,
+        "y": 2323,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 418,
+        "y": 2195,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 422,
+        "y": 2211,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 431,
+        "y": 2261,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 439,
+        "y": 2292,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 443,
+        "y": 2321,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 457,
+        "y": 2163,
+        "tier": "trash"
+      },
+      {
+        "name": "Taunting Horror",
+        "displayName": "Taunting Horror",
+        "x": 468,
+        "y": 2317,
+        "tier": "trash"
+      }
+    ],
+    "namedLocations": [
+      {
+        "name": "Deep Ones Cave",
+        "x": 330,
+        "y": 2246
+      }
+    ]
+  },
+  {
     "zoneId": "sunken_chancel",
     "image": "maps/sunken_chancel.png",
     "imageWidth": 1520,
@@ -575,814 +977,6 @@
         "name": "Lesser Drake\u0027s Aerie",
         "x": 2350,
         "y": 2900
-      }
-    ]
-  },
-  {
-    "zoneId": "greater_drakes_bastion",
-    "image": "maps/greater_drakes_bastion.png",
-    "imageWidth": 1760,
-    "imageHeight": 1760,
-    "originX": 2430,
-    "originY": 2660,
-    "pxPerTile": 4,
-    "npcs": [
-      {
-        "id": "GrandmasterVoss",
-        "displayName": "Grandmaster Voss",
-        "x": 2550,
-        "y": 2780
-      },
-      {
-        "id": "OutriderKaelis",
-        "displayName": "Outrider Kaelis",
-        "x": 2800,
-        "y": 2730
-      }
-    ],
-    "monsters": [
-      {
-        "name": "Arch Drake",
-        "displayName": "Arch Drake",
-        "x": 2850,
-        "y": 2780,
-        "tier": "boss"
-      },
-      {
-        "name": "Barrow Wight",
-        "displayName": "Barrow Wight",
-        "x": 2470,
-        "y": 2670,
-        "tier": "trash"
-      },
-      {
-        "name": "Barrow Wight",
-        "displayName": "Barrow Wight",
-        "x": 2530,
-        "y": 2730,
-        "tier": "trash"
-      },
-      {
-        "name": "Barrow Wight",
-        "displayName": "Barrow Wight",
-        "x": 2460,
-        "y": 2740,
-        "tier": "trash"
-      },
-      {
-        "name": "Barrow Wight",
-        "displayName": "Barrow Wight",
-        "x": 2540,
-        "y": 2660,
-        "tier": "trash"
-      },
-      {
-        "name": "Bastion Warden",
-        "displayName": "Bastion Warden",
-        "x": 2620,
-        "y": 2850,
-        "tier": "trash"
-      },
-      {
-        "name": "Bastion Warden",
-        "displayName": "Bastion Warden",
-        "x": 2680,
-        "y": 2910,
-        "tier": "trash"
-      },
-      {
-        "name": "Bastion Warden",
-        "displayName": "Bastion Warden",
-        "x": 2610,
-        "y": 2920,
-        "tier": "trash"
-      },
-      {
-        "name": "Bastion Warden",
-        "displayName": "Bastion Warden",
-        "x": 2690,
-        "y": 2840,
-        "tier": "trash"
-      },
-      {
-        "name": "Greater Drake",
-        "displayName": "Grand Drake",
-        "x": 2650,
-        "y": 2880,
-        "tier": "boss"
-      },
-      {
-        "name": "Kraanian Dragonguard",
-        "displayName": "Kraanian Dragonguard",
-        "x": 2820,
-        "y": 2750,
-        "tier": "boss"
-      },
-      {
-        "name": "Kraanian Dragonguard",
-        "displayName": "Kraanian Dragonguard",
-        "x": 2810,
-        "y": 2820,
-        "tier": "boss"
-      },
-      {
-        "name": "The Duskmaw Wyrm",
-        "displayName": "The Duskmaw Wyrm",
-        "x": 2770,
-        "y": 2930,
-        "tier": "boss"
-      },
-      {
-        "name": "The Galecrest Wyrm",
-        "displayName": "The Galecrest Wyrm",
-        "x": 2740,
-        "y": 2690,
-        "tier": "boss"
-      },
-      {
-        "name": "The Hollow King",
-        "displayName": "The Hollow King",
-        "x": 2500,
-        "y": 2700,
-        "tier": "boss"
-      }
-    ],
-    "namedLocations": [
-      {
-        "name": "The Hollow March",
-        "x": 2500,
-        "y": 2700
-      },
-      {
-        "name": "Greater Drake\u0027s Bastion",
-        "x": 2650,
-        "y": 2880
-      },
-      {
-        "name": "Drake\u0027s Lair",
-        "x": 2850,
-        "y": 2780
-      }
-    ]
-  },
-  {
-    "zoneId": "drakes_lair",
-    "image": "maps/drakes_lair.png",
-    "imageWidth": 1840,
-    "imageHeight": 1840,
-    "originX": 2620,
-    "originY": 2550,
-    "pxPerTile": 4,
-    "npcs": [
-      {
-        "id": "OutriderKaelis",
-        "displayName": "Outrider Kaelis",
-        "x": 2800,
-        "y": 2730
-      },
-      {
-        "id": "PortalA2",
-        "displayName": "A shimmering portal",
-        "x": 2796,
-        "y": 2563
-      },
-      {
-        "id": "PortalB4",
-        "displayName": "A shimmering portal",
-        "x": 2809,
-        "y": 2550
-      },
-      {
-        "id": "PortalC1",
-        "displayName": "A shimmering portal",
-        "x": 2824,
-        "y": 2591
-      }
-    ],
-    "monsters": [
-      {
-        "name": "Arch Drake",
-        "displayName": "Arch Drake",
-        "x": 2850,
-        "y": 2780,
-        "tier": "boss"
-      },
-      {
-        "name": "Bastion Warden",
-        "displayName": "Bastion Warden",
-        "x": 2620,
-        "y": 2850,
-        "tier": "trash"
-      },
-      {
-        "name": "Bastion Warden",
-        "displayName": "Bastion Warden",
-        "x": 2680,
-        "y": 2910,
-        "tier": "trash"
-      },
-      {
-        "name": "Bastion Warden",
-        "displayName": "Bastion Warden",
-        "x": 2690,
-        "y": 2840,
-        "tier": "trash"
-      },
-      {
-        "name": "Crazed Nurse",
-        "displayName": "Crazed Nurse",
-        "x": 2726,
-        "y": 2576,
-        "tier": "trash"
-      },
-      {
-        "name": "Crazed Nurse",
-        "displayName": "Crazed Nurse",
-        "x": 2727,
-        "y": 2568,
-        "tier": "trash"
-      },
-      {
-        "name": "Crazed Nurse",
-        "displayName": "Crazed Nurse",
-        "x": 2729,
-        "y": 2555,
-        "tier": "trash"
-      },
-      {
-        "name": "Crazed Nurse",
-        "displayName": "Crazed Nurse",
-        "x": 2736,
-        "y": 2590,
-        "tier": "trash"
-      },
-      {
-        "name": "Crazed Nurse",
-        "displayName": "Crazed Nurse",
-        "x": 2743,
-        "y": 2569,
-        "tier": "trash"
-      },
-      {
-        "name": "Crazed Nurse",
-        "displayName": "Crazed Nurse",
-        "x": 2749,
-        "y": 2581,
-        "tier": "trash"
-      },
-      {
-        "name": "Greater Drake",
-        "displayName": "Grand Drake",
-        "x": 2650,
-        "y": 2880,
-        "tier": "boss"
-      },
-      {
-        "name": "Kraanian Dragonguard",
-        "displayName": "Kraanian Dragonguard",
-        "x": 2820,
-        "y": 2750,
-        "tier": "trash"
-      },
-      {
-        "name": "Kraanian Dragonguard",
-        "displayName": "Kraanian Dragonguard",
-        "x": 2880,
-        "y": 2810,
-        "tier": "trash"
-      },
-      {
-        "name": "Kraanian Dragonguard",
-        "displayName": "Kraanian Dragonguard",
-        "x": 2810,
-        "y": 2820,
-        "tier": "trash"
-      },
-      {
-        "name": "Kraanian Dragonguard",
-        "displayName": "Kraanian Dragonguard",
-        "x": 2890,
-        "y": 2740,
-        "tier": "trash"
-      },
-      {
-        "name": "MADMADRIGAN",
-        "displayName": "Mad Madrigan",
-        "x": 2810,
-        "y": 2572,
-        "tier": "boss"
-      },
-      {
-        "name": "Madman",
-        "displayName": "Mad Man",
-        "x": 2705,
-        "y": 2567,
-        "tier": "trash"
-      },
-      {
-        "name": "Madman",
-        "displayName": "Mad Man",
-        "x": 2794,
-        "y": 2573,
-        "tier": "trash"
-      },
-      {
-        "name": "Madman",
-        "displayName": "Mad Man",
-        "x": 2809,
-        "y": 2552,
-        "tier": "trash"
-      },
-      {
-        "name": "Madman",
-        "displayName": "Mad Man",
-        "x": 2819,
-        "y": 2593,
-        "tier": "trash"
-      },
-      {
-        "name": "Madman",
-        "displayName": "Mad Man",
-        "x": 2828,
-        "y": 2568,
-        "tier": "trash"
-      },
-      {
-        "name": "Madman",
-        "displayName": "Mad Man",
-        "x": 2832,
-        "y": 2582,
-        "tier": "trash"
-      },
-      {
-        "name": "Madman",
-        "displayName": "Mad Man",
-        "x": 2844,
-        "y": 2580,
-        "tier": "trash"
-      },
-      {
-        "name": "Mad Patient",
-        "displayName": "Patient fou",
-        "x": 2728,
-        "y": 2590,
-        "tier": "boss"
-      },
-      {
-        "name": "Mad Patient",
-        "displayName": "Patient fou",
-        "x": 2735,
-        "y": 2596,
-        "tier": "boss"
-      },
-      {
-        "name": "The Duskmaw Wyrm",
-        "displayName": "The Duskmaw Wyrm",
-        "x": 2770,
-        "y": 2930,
-        "tier": "boss"
-      },
-      {
-        "name": "The Galecrest Wyrm",
-        "displayName": "The Galecrest Wyrm",
-        "x": 2740,
-        "y": 2690,
-        "tier": "boss"
-      },
-      {
-        "name": "The Mistwing Wyrm",
-        "displayName": "The Mistwing Wyrm",
-        "x": 3000,
-        "y": 2760,
-        "tier": "boss"
-      },
-      {
-        "name": "The Pyreclaw Wyrm",
-        "displayName": "The Pyreclaw Wyrm",
-        "x": 2950,
-        "y": 2890,
-        "tier": "boss"
-      },
-      {
-        "name": "The Rootcrown Wyrm",
-        "displayName": "The Rootcrown Wyrm",
-        "x": 2950,
-        "y": 2650,
-        "tier": "boss"
-      }
-    ],
-    "namedLocations": [
-      {
-        "name": "Greater Drake\u0027s Bastion",
-        "x": 2650,
-        "y": 2880
-      },
-      {
-        "name": "Drake\u0027s Lair",
-        "x": 2850,
-        "y": 2780
-      }
-    ]
-  },
-  {
-    "zoneId": "deep_ones_cave",
-    "image": "maps/deep_ones_cave.png",
-    "imageWidth": 1120,
-    "imageHeight": 1120,
-    "originX": 190,
-    "originY": 2106,
-    "pxPerTile": 4,
-    "npcs": [
-      {
-        "id": "Dafyd",
-        "displayName": "A peaceful traveler",
-        "x": 440,
-        "y": 2285
-      },
-      {
-        "id": "KeeperTamsin",
-        "displayName": "Keeper Tamsin",
-        "x": 300,
-        "y": 2320
-      },
-      {
-        "id": "NexusStone14",
-        "displayName": "Nexus Index",
-        "x": 236,
-        "y": 2212
-      }
-    ],
-    "monsters": [
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 278,
-        "y": 2293,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 280,
-        "y": 2283,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 286,
-        "y": 2260,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 288,
-        "y": 2245,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 303,
-        "y": 2298,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 323,
-        "y": 2198,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 327,
-        "y": 2288,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 334,
-        "y": 2267,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 337,
-        "y": 2192,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 349,
-        "y": 2201,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 349,
-        "y": 2226,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 350,
-        "y": 2270,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 351,
-        "y": 2208,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 352,
-        "y": 2237,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 355,
-        "y": 2187,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 360,
-        "y": 2223,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 360,
-        "y": 2272,
-        "tier": "trash"
-      },
-      {
-        "name": "Deep One",
-        "displayName": "Deep One",
-        "x": 363,
-        "y": 2285,
-        "tier": "trash"
-      },
-      {
-        "name": "Giant Scorpion",
-        "displayName": "Giant Scorpion",
-        "x": 302,
-        "y": 2383,
-        "tier": "trash"
-      },
-      {
-        "name": "Giant Scorpion",
-        "displayName": "Giant Scorpion",
-        "x": 357,
-        "y": 2365,
-        "tier": "trash"
-      },
-      {
-        "name": "Giant Scorpion",
-        "displayName": "Giant Scorpion",
-        "x": 370,
-        "y": 2369,
-        "tier": "trash"
-      },
-      {
-        "name": "Sand Worm",
-        "displayName": "Sand Worm",
-        "x": 255,
-        "y": 2385,
-        "tier": "boss"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 206,
-        "y": 2111,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 214,
-        "y": 2156,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 215,
-        "y": 2131,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 220,
-        "y": 2233,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 225,
-        "y": 2169,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 226,
-        "y": 2236,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 228,
-        "y": 2121,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 229,
-        "y": 2191,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 229,
-        "y": 2212,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 233,
-        "y": 2263,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 240,
-        "y": 2110,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 242,
-        "y": 2174,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 246,
-        "y": 2222,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 346,
-        "y": 2186,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 367,
-        "y": 2195,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 388,
-        "y": 2247,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 389,
-        "y": 2132,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 389,
-        "y": 2186,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 389,
-        "y": 2297,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 398,
-        "y": 2117,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 409,
-        "y": 2202,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 414,
-        "y": 2144,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 414,
-        "y": 2323,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 418,
-        "y": 2195,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 422,
-        "y": 2211,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 431,
-        "y": 2261,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 439,
-        "y": 2292,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 443,
-        "y": 2321,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 457,
-        "y": 2163,
-        "tier": "trash"
-      },
-      {
-        "name": "Taunting Horror",
-        "displayName": "Taunting Horror",
-        "x": 468,
-        "y": 2317,
-        "tier": "trash"
-      }
-    ],
-    "namedLocations": [
-      {
-        "name": "Deep Ones Cave",
-        "x": 330,
-        "y": 2246
       }
     ]
   },
@@ -2152,6 +1746,153 @@
     ]
   },
   {
+    "zoneId": "greater_drakes_bastion",
+    "image": "maps/greater_drakes_bastion.png",
+    "imageWidth": 1760,
+    "imageHeight": 1760,
+    "originX": 2430,
+    "originY": 2660,
+    "pxPerTile": 4,
+    "npcs": [
+      {
+        "id": "GrandmasterVoss",
+        "displayName": "Grandmaster Voss",
+        "x": 2550,
+        "y": 2780
+      },
+      {
+        "id": "OutriderKaelis",
+        "displayName": "Outrider Kaelis",
+        "x": 2800,
+        "y": 2730
+      }
+    ],
+    "monsters": [
+      {
+        "name": "Arch Drake",
+        "displayName": "Arch Drake",
+        "x": 2850,
+        "y": 2780,
+        "tier": "boss"
+      },
+      {
+        "name": "Barrow Wight",
+        "displayName": "Barrow Wight",
+        "x": 2470,
+        "y": 2670,
+        "tier": "trash"
+      },
+      {
+        "name": "Barrow Wight",
+        "displayName": "Barrow Wight",
+        "x": 2530,
+        "y": 2730,
+        "tier": "trash"
+      },
+      {
+        "name": "Barrow Wight",
+        "displayName": "Barrow Wight",
+        "x": 2460,
+        "y": 2740,
+        "tier": "trash"
+      },
+      {
+        "name": "Barrow Wight",
+        "displayName": "Barrow Wight",
+        "x": 2540,
+        "y": 2660,
+        "tier": "trash"
+      },
+      {
+        "name": "Bastion Warden",
+        "displayName": "Bastion Warden",
+        "x": 2620,
+        "y": 2850,
+        "tier": "trash"
+      },
+      {
+        "name": "Bastion Warden",
+        "displayName": "Bastion Warden",
+        "x": 2680,
+        "y": 2910,
+        "tier": "trash"
+      },
+      {
+        "name": "Bastion Warden",
+        "displayName": "Bastion Warden",
+        "x": 2610,
+        "y": 2920,
+        "tier": "trash"
+      },
+      {
+        "name": "Bastion Warden",
+        "displayName": "Bastion Warden",
+        "x": 2690,
+        "y": 2840,
+        "tier": "trash"
+      },
+      {
+        "name": "Greater Drake",
+        "displayName": "Grand Drake",
+        "x": 2650,
+        "y": 2880,
+        "tier": "boss"
+      },
+      {
+        "name": "Kraanian Dragonguard",
+        "displayName": "Kraanian Dragonguard",
+        "x": 2820,
+        "y": 2750,
+        "tier": "boss"
+      },
+      {
+        "name": "Kraanian Dragonguard",
+        "displayName": "Kraanian Dragonguard",
+        "x": 2810,
+        "y": 2820,
+        "tier": "boss"
+      },
+      {
+        "name": "The Duskmaw Wyrm",
+        "displayName": "The Duskmaw Wyrm",
+        "x": 2770,
+        "y": 2930,
+        "tier": "boss"
+      },
+      {
+        "name": "The Galecrest Wyrm",
+        "displayName": "The Galecrest Wyrm",
+        "x": 2740,
+        "y": 2690,
+        "tier": "boss"
+      },
+      {
+        "name": "The Hollow King",
+        "displayName": "The Hollow King",
+        "x": 2500,
+        "y": 2700,
+        "tier": "boss"
+      }
+    ],
+    "namedLocations": [
+      {
+        "name": "The Hollow March",
+        "x": 2500,
+        "y": 2700
+      },
+      {
+        "name": "Greater Drake\u0027s Bastion",
+        "x": 2650,
+        "y": 2880
+      },
+      {
+        "name": "Drake\u0027s Lair",
+        "x": 2850,
+        "y": 2780
+      }
+    ]
+  },
+  {
     "zoneId": "fading_veil",
     "image": "maps/fading_veil.png",
     "imageWidth": 1440,
@@ -2714,6 +2455,265 @@
         "name": "The Fading Veil",
         "x": 1420,
         "y": 1560
+      }
+    ]
+  },
+  {
+    "zoneId": "drakes_lair",
+    "image": "maps/drakes_lair.png",
+    "imageWidth": 1840,
+    "imageHeight": 1840,
+    "originX": 2620,
+    "originY": 2550,
+    "pxPerTile": 4,
+    "npcs": [
+      {
+        "id": "OutriderKaelis",
+        "displayName": "Outrider Kaelis",
+        "x": 2800,
+        "y": 2730
+      },
+      {
+        "id": "PortalA2",
+        "displayName": "A shimmering portal",
+        "x": 2796,
+        "y": 2563
+      },
+      {
+        "id": "PortalB4",
+        "displayName": "A shimmering portal",
+        "x": 2809,
+        "y": 2550
+      },
+      {
+        "id": "PortalC1",
+        "displayName": "A shimmering portal",
+        "x": 2824,
+        "y": 2591
+      }
+    ],
+    "monsters": [
+      {
+        "name": "Arch Drake",
+        "displayName": "Arch Drake",
+        "x": 2850,
+        "y": 2780,
+        "tier": "boss"
+      },
+      {
+        "name": "Bastion Warden",
+        "displayName": "Bastion Warden",
+        "x": 2620,
+        "y": 2850,
+        "tier": "trash"
+      },
+      {
+        "name": "Bastion Warden",
+        "displayName": "Bastion Warden",
+        "x": 2680,
+        "y": 2910,
+        "tier": "trash"
+      },
+      {
+        "name": "Bastion Warden",
+        "displayName": "Bastion Warden",
+        "x": 2690,
+        "y": 2840,
+        "tier": "trash"
+      },
+      {
+        "name": "Crazed Nurse",
+        "displayName": "Crazed Nurse",
+        "x": 2726,
+        "y": 2576,
+        "tier": "trash"
+      },
+      {
+        "name": "Crazed Nurse",
+        "displayName": "Crazed Nurse",
+        "x": 2727,
+        "y": 2568,
+        "tier": "trash"
+      },
+      {
+        "name": "Crazed Nurse",
+        "displayName": "Crazed Nurse",
+        "x": 2729,
+        "y": 2555,
+        "tier": "trash"
+      },
+      {
+        "name": "Crazed Nurse",
+        "displayName": "Crazed Nurse",
+        "x": 2736,
+        "y": 2590,
+        "tier": "trash"
+      },
+      {
+        "name": "Crazed Nurse",
+        "displayName": "Crazed Nurse",
+        "x": 2743,
+        "y": 2569,
+        "tier": "trash"
+      },
+      {
+        "name": "Crazed Nurse",
+        "displayName": "Crazed Nurse",
+        "x": 2749,
+        "y": 2581,
+        "tier": "trash"
+      },
+      {
+        "name": "Greater Drake",
+        "displayName": "Grand Drake",
+        "x": 2650,
+        "y": 2880,
+        "tier": "boss"
+      },
+      {
+        "name": "Kraanian Dragonguard",
+        "displayName": "Kraanian Dragonguard",
+        "x": 2820,
+        "y": 2750,
+        "tier": "trash"
+      },
+      {
+        "name": "Kraanian Dragonguard",
+        "displayName": "Kraanian Dragonguard",
+        "x": 2880,
+        "y": 2810,
+        "tier": "trash"
+      },
+      {
+        "name": "Kraanian Dragonguard",
+        "displayName": "Kraanian Dragonguard",
+        "x": 2810,
+        "y": 2820,
+        "tier": "trash"
+      },
+      {
+        "name": "Kraanian Dragonguard",
+        "displayName": "Kraanian Dragonguard",
+        "x": 2890,
+        "y": 2740,
+        "tier": "trash"
+      },
+      {
+        "name": "MADMADRIGAN",
+        "displayName": "Mad Madrigan",
+        "x": 2810,
+        "y": 2572,
+        "tier": "boss"
+      },
+      {
+        "name": "Madman",
+        "displayName": "Mad Man",
+        "x": 2705,
+        "y": 2567,
+        "tier": "trash"
+      },
+      {
+        "name": "Madman",
+        "displayName": "Mad Man",
+        "x": 2794,
+        "y": 2573,
+        "tier": "trash"
+      },
+      {
+        "name": "Madman",
+        "displayName": "Mad Man",
+        "x": 2809,
+        "y": 2552,
+        "tier": "trash"
+      },
+      {
+        "name": "Madman",
+        "displayName": "Mad Man",
+        "x": 2819,
+        "y": 2593,
+        "tier": "trash"
+      },
+      {
+        "name": "Madman",
+        "displayName": "Mad Man",
+        "x": 2828,
+        "y": 2568,
+        "tier": "trash"
+      },
+      {
+        "name": "Madman",
+        "displayName": "Mad Man",
+        "x": 2832,
+        "y": 2582,
+        "tier": "trash"
+      },
+      {
+        "name": "Madman",
+        "displayName": "Mad Man",
+        "x": 2844,
+        "y": 2580,
+        "tier": "trash"
+      },
+      {
+        "name": "Mad Patient",
+        "displayName": "Patient fou",
+        "x": 2728,
+        "y": 2590,
+        "tier": "boss"
+      },
+      {
+        "name": "Mad Patient",
+        "displayName": "Patient fou",
+        "x": 2735,
+        "y": 2596,
+        "tier": "boss"
+      },
+      {
+        "name": "The Duskmaw Wyrm",
+        "displayName": "The Duskmaw Wyrm",
+        "x": 2770,
+        "y": 2930,
+        "tier": "boss"
+      },
+      {
+        "name": "The Galecrest Wyrm",
+        "displayName": "The Galecrest Wyrm",
+        "x": 2740,
+        "y": 2690,
+        "tier": "boss"
+      },
+      {
+        "name": "The Mistwing Wyrm",
+        "displayName": "The Mistwing Wyrm",
+        "x": 3000,
+        "y": 2760,
+        "tier": "boss"
+      },
+      {
+        "name": "The Pyreclaw Wyrm",
+        "displayName": "The Pyreclaw Wyrm",
+        "x": 2950,
+        "y": 2890,
+        "tier": "boss"
+      },
+      {
+        "name": "The Rootcrown Wyrm",
+        "displayName": "The Rootcrown Wyrm",
+        "x": 2950,
+        "y": 2650,
+        "tier": "boss"
+      }
+    ],
+    "namedLocations": [
+      {
+        "name": "Greater Drake\u0027s Bastion",
+        "x": 2650,
+        "y": 2880
+      },
+      {
+        "name": "Drake\u0027s Lair",
+        "x": 2850,
+        "y": 2780
       }
     ]
   }
