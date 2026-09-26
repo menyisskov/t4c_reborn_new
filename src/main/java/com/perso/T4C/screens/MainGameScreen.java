@@ -1617,6 +1617,18 @@ public class MainGameScreen implements Screen {
         spell.getBuff(),
         spell.getT4cEffects());
     if (targetedHeal) {
+      if (isFriendlyTargetModifierHeld()) {
+        if (selectedTargetedSpell != null && selectedTargetedSlot == slotNumber) {
+          clearSelectedTargetedSpell(false);
+          return;
+        }
+        selectedTargetedSpell = spell;
+        selectedTargetedSlot = slotNumber;
+        if (hud != null) {
+          hud.setSelectedQuickSlot(slotNumber);
+        }
+        return;
+      }
       castDefensiveSpell(spell);
       return;
     }
@@ -1633,6 +1645,22 @@ public class MainGameScreen implements Screen {
       return;
     }
     castDefensiveSpell(spell);
+  }
+
+  /**
+   * T4C-0057: Shift+quickbar arms a friendly-unit target cursor for beneficial spells (Barrier,
+   * Protection, Mana Shield, Mana Surge, Bless, Healing) instead of the default instant self-cast
+   * - see tryCastAttackSpell(BaseNPC) for how an armed click is resolved. There is no other-player
+   * entity in this single-player build yet (see the "single-player for now" note where the radar's
+   * blue/player blips are built), so nothing can currently satisfy a friendly-unit click; this
+   * wires the target-selection half of the feature now so a real other-player entity only needs
+   * to be recognized at the click-resolution end later, not a rewrite of the arming/casting UI. A
+   * plain quickbar press (no Shift) is completely unaffected and keeps casting on yourself
+   * instantly, exactly as before.
+   */
+  private boolean isFriendlyTargetModifierHeld() {
+    return Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+        || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
   }
 
   private boolean tryFireMacro(int keycode) {
@@ -2146,10 +2174,13 @@ public class MainGameScreen implements Screen {
   }
 
   private boolean tryCastAttackSpell(BaseNPC npc) {
-    if (npc == null
-        || selectedTargetedSpell == null
-        || !isHostileUnitSpell(selectedTargetedSpell)
-        || player == null) {
+    if (npc == null || selectedTargetedSpell == null || player == null) {
+      return false;
+    }
+    if (isTargetedHealSpell(selectedTargetedSpell)) {
+      return tryCastFriendlyTargetedSpell(npc);
+    }
+    if (!isHostileUnitSpell(selectedTargetedSpell)) {
       return false;
     }
     SpellData spell = selectedTargetedSpell;
@@ -2165,6 +2196,20 @@ public class MainGameScreen implements Screen {
     } else {
       clearCurrentAttackTarget();
     }
+    return true;
+  }
+
+  /**
+   * T4C-0057: resolves a friendly-target click (Shift+quickbar armed, see
+   * isFriendlyTargetModifierHeld()) against the clicked NPC. There is no other-player entity in
+   * this single-player build yet, so no NPC can currently satisfy TargetKind.FRIENDLY_UNIT - this
+   * always reports "wrong target" today, but the click-resolution shape is in place so recognizing
+   * a real other-player entity later is a small addition here, not a rewrite of the arming/casting
+   * UI in handleQuickbarSpell().
+   */
+  private boolean tryCastFriendlyTargetedSpell(BaseNPC npc) {
+    showSystemMessage(SpellCastingService.message(SpellCastingService.Failure.WRONG_TARGET));
+    clearSelectedTargetedSpell(true);
     return true;
   }
 
