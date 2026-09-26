@@ -767,6 +767,28 @@ should not consume it), that is a content change, not an editorial one, and need
   depends on. Use `minLevel` the same way for any future "quality-of-life unlock" quest that
   should only be reachable once a character is already well past the early game.
 
+### Quest Journal tabs, chain-stage display, and the Monster Kill Log (T4C-0062)
+- The Quest Journal (`gui/screen/QuestScreen.java`) splits into an In Progress tab and a
+  Completed tab, filtered from `QuestService.statusFor()`. This is display-only - it doesn't
+  change when a quest actually completes, only where it's shown afterward.
+- `QuestChainInfo` (`quest/QuestChainInfo.java`) is a small, hand-maintained, UI-only map from
+  quest id to "chain name / stage N of M / prerequisite quest ids", used only to print a stage
+  line in the Journal's detail panel. It enforces nothing QuestService doesn't already enforce
+  (the giver NPC's own dialogue still does the real gating) - it only affects what a player reads.
+  Only two real multi-stage chains exist today: Passage to Avalon
+  (`tideworn_shore_scouts` → `passage_to_avalon`) and the Godsforged crafting chain
+  (`forge_the_godcore` + `bind_the_godsigil` → one of the five `forge_godsforged_*` finales).
+  Every other quest here - including a zone's own "borderwatch" access quest and the two
+  independent post-unlock Avalon quests - is deliberately *not* a chain (see each quest's own file
+  comment); don't add an entry to `QuestChainInfo` unless a quest is genuinely gated on another
+  quest's completion the way these two are.
+- **The `killlog.<canonical monster name>` quest-flag namespace is reserved** for the global,
+  per-monster-type kill tally (`QuestService.killLogFlag()`/`killLog()`, backing the Monster Kill
+  Log screen, Ctrl+K). It's written on *every* recognized kill, independent of any quest, using
+  `MonsterRegistry.findByName()`'s canonical name so aliased spawns (e.g. `"Rat"` → `Brown Rat`)
+  share one counter. Don't reuse the `killlog.` prefix for a quest-specific flag - use `quest.<id>.*`
+  for those, as every quest already does.
+
 ## 7. Economy
 
 - **A named boss's gold drop should out-earn nearby regular monsters per unit of difficulty, not

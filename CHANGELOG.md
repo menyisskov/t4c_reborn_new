@@ -13,6 +13,22 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — Quest journal tabs, chain progress, and a monster kill log (T4C-0065)
+
+### Added
+- **The Quest Journal now has In Progress and Completed tabs**, instead of one long mixed list —
+  finishing a quest moves it out of your active list and into Completed, where it stays for
+  reference.
+- **Multi-part questlines now say so.** The Passage to Avalon (Tideworn Shore Scouts, then Passage
+  to Avalon itself) and the Godsforged crafting chain both show which stage you're on and, if an
+  earlier stage isn't finished yet, which one you're still waiting on.
+- **A new Monster Kill Log window** (Ctrl+K, or the "Monster Kills" link on the Quest Journal)
+  lists every kind of creature you've ever killed and how many, with a running total.
+
+### Fixed
+- The Temple Basement Rats quest said it paid "500 gold coins and 300 experience points" — it has
+  always actually paid 2,500 experience and no gold. The text now matches what you receive.
+
 ## 2026-09-26 — People and creatures stranded in the sea (T4C-0063)
 
 ### Fixed
