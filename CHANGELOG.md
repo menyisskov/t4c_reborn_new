@@ -13,6 +13,16 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — Gloomblade and Demonblade recipes actually finishable (T4C-0058)
+
+### Changed
+- **Gloomblade and Demonblade crafting.** Lance Silversmith's recipes for these two blades ask
+  for a Ring of Darkness, a Demon Skull, a Necklace of the Black Heart and a Chaos Sword. One of
+  those didn't drop from anything at all, and the rest were rare enough that the recipes were
+  practically unreachable. All four now drop far more often from the enemies that carried them
+  (Griroesh and Dune Raiders), and the Necklace and a matching Nightsword now drop too, so both
+  blades can actually be forged.
+
 ## 2026-09-26 — Fast travel to well-worn NPCs (T4C-0056)
 
 ### Added
