@@ -13,6 +13,22 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — The site now tells you where to find people (T4C-0062)
+
+### Added
+- Every quest on the reference site now says where its quest-giver actually stands, not just who
+  to talk to: the nearest fast-travel point you will already have, which way to walk from it and
+  roughly how far, and the exact spot on the map. Where a map of the area exists, there is a link
+  straight to it with the person pinned.
+- The same directions appear on each person's own page, so looking up a shopkeeper or a trainer
+  tells you how to reach them.
+- Quest listings now note which fast-travel point a quest-giver is near, so you can see at a
+  glance which errands are close together.
+
+### Fixed
+- A boss aura, the rebirth aura and the automatic on-level-up effect were still listed as spells
+  on the site after being hidden in the game. They are gone from the spell list now.
+
 ## 2026-09-26 — Offering chests at the temples, and spells that go off when you cast them (T4C-0061)
 
 ### Added

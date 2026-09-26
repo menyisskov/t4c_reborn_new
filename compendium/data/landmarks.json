@@ -1,0 +1,139 @@
+[
+  {
+    "name": "Lighthaven",
+    "x": 2941,
+    "y": 1062,
+    "worldZ": 0
+  },
+  {
+    "name": "Silversky",
+    "x": 1495,
+    "y": 2470,
+    "worldZ": 0
+  },
+  {
+    "name": "Windhowl",
+    "x": 1812,
+    "y": 1293,
+    "worldZ": 0
+  },
+  {
+    "name": "Colosseum",
+    "x": 1725,
+    "y": 1825,
+    "worldZ": 0
+  },
+  {
+    "name": "Home",
+    "x": 2951,
+    "y": 1038,
+    "worldZ": 0
+  },
+  {
+    "name": "Makrsh Ptangh",
+    "x": 2265,
+    "y": 295,
+    "worldZ": 1
+  },
+  {
+    "name": "Stonecrest",
+    "x": 144,
+    "y": 737,
+    "worldZ": 0
+  },
+  {
+    "name": "Tarantula Pond",
+    "x": 773,
+    "y": 1831,
+    "worldZ": 0
+  },
+  {
+    "name": "Skraug Camp",
+    "x": 601,
+    "y": 172,
+    "worldZ": 0
+  },
+  {
+    "name": "The Oracle",
+    "x": 2968,
+    "y": 2141,
+    "worldZ": 2
+  },
+  {
+    "name": "The Sunken Chancel",
+    "x": 1750,
+    "y": 2300,
+    "worldZ": 0,
+    "unlockZoneId": "sunken_chancel"
+  },
+  {
+    "name": "Cinderreach Hills",
+    "x": 1900,
+    "y": 1600,
+    "worldZ": 0,
+    "unlockZoneId": "cinderreach_hills"
+  },
+  {
+    "name": "Windhowl Marches",
+    "x": 2380,
+    "y": 2430,
+    "worldZ": 0,
+    "unlockZoneId": "windhowl_marches"
+  },
+  {
+    "name": "The Hollow March",
+    "x": 2500,
+    "y": 2700,
+    "worldZ": 0,
+    "unlockZoneId": "hollow_march"
+  },
+  {
+    "name": "Lesser Drake's Aerie",
+    "x": 2350,
+    "y": 2900,
+    "worldZ": 0,
+    "unlockZoneId": "lesser_drakes_aerie"
+  },
+  {
+    "name": "Greater Drake's Bastion",
+    "x": 2650,
+    "y": 2880,
+    "worldZ": 0,
+    "unlockZoneId": "greater_drakes_bastion"
+  },
+  {
+    "name": "Drake's Lair",
+    "x": 2850,
+    "y": 2780,
+    "worldZ": 0,
+    "unlockZoneId": "drakes_lair"
+  },
+  {
+    "name": "Deep Ones Cave",
+    "x": 330,
+    "y": 2246,
+    "worldZ": 0,
+    "unlockZoneId": "deep_ones_cave"
+  },
+  {
+    "name": "Avalon Sanctuary",
+    "x": 1340,
+    "y": 1477,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "The Avalon Wilds",
+    "x": 1265,
+    "y": 1400,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_wilds"
+  },
+  {
+    "name": "The Fading Veil",
+    "x": 1420,
+    "y": 1560,
+    "worldZ": 0,
+    "unlockZoneId": "fading_veil"
+  }
+]

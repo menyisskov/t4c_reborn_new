@@ -24,6 +24,10 @@ import com.perso.T4C.quest.definition.QuestDefinitions;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.spell.definition.SpellDefinitions;
+import com.perso.T4C.spawn.SpawnDefinition;
+import com.perso.T4C.spawn.SpawnRegistry;
+import com.perso.T4C.teleport.NamedLocation;
+import com.perso.T4C.teleport.NamedLocations;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -290,6 +294,7 @@ public final class CompendiumExporter {
     writeJson(outDir.resolve("spells.json"), exportSpells());
     writeJson(outDir.resolve("quests.json"), exportQuests());
     writeJson(outDir.resolve("npcs.json"), exportNpcs());
+    writeJson(outDir.resolve("landmarks.json"), exportLandmarks());
     writeJson(outDir.resolve("items.json"), items);
     writeJson(outDir.resolve("shops.json"), shops);
     writeJson(outDir.resolve("lootSources.json"), lootSources);
@@ -305,6 +310,7 @@ public final class CompendiumExporter {
     bundle.put("spells", exportSpells());
     bundle.put("quests", exportQuests());
     bundle.put("npcs", exportNpcs());
+    bundle.put("landmarks", exportLandmarks());
     bundle.put("items", items);
     bundle.put("shops", shops);
     bundle.put("lootSources", lootSources);
@@ -625,6 +631,7 @@ public final class CompendiumExporter {
 
   private static List<Map<String, Object>> exportNpcs() {
     List<Map<String, Object>> out = new ArrayList<>();
+    Map<String, List<Map<String, Object>>> spawnsById = spawnsByNpcId();
     // NpcFactoryRegistry.registrations() order follows classpath-scan/directory-listing order,
     // which is not guaranteed stable across machines/filesystems - sort by id so re-running this
     // exporter on a different machine (e.g. CI) doesn't produce a pure-reorder diff.
@@ -640,6 +647,13 @@ public final class CompendiumExporter {
       m.put("origin", isNew ? "new" : "activated");
       m.put("displayName", I18n.resolve(reg.displayName()));
       m.put("spriteBase", reg.spriteBase());
+      // T4C-0062: where in the world this person actually stands, straight from their @Spawn
+      // annotation. Without it every quest could only say "talk to so-and-so" with no way for a
+      // reader to work out where so-and-so is; the site turns these into a distance and bearing
+      // from the nearest fast-travel landmark (see exportLandmarks below) and a pin on the zone
+      // map. A handful of NPCs are spawned more than once, so this is a list, in the order
+      // SpawnRegistry reports them (already sorted, so it is stable across machines).
+      m.put("spawns", spawnsById.getOrDefault(reg.id(), List.of()));
       NpcSpec spec = reg.specification() == null ? null : safeSpec(reg);
       if (spec != null) {
         m.put("welcomeText", I18n.resolve(spec.welcomeText()));
@@ -673,6 +687,43 @@ public final class CompendiumExporter {
           m.put("combatProfile", combat);
         }
       }
+      out.add(m);
+    }
+    return out;
+  }
+
+  /** NPC id -&gt; every world position that id is spawned at, as plain exportable maps. */
+  private static Map<String, List<Map<String, Object>>> spawnsByNpcId() {
+    Map<String, List<Map<String, Object>>> byId = new LinkedHashMap<>();
+    for (SpawnDefinition s : SpawnRegistry.npcs()) {
+      Map<String, Object> pos = new LinkedHashMap<>();
+      pos.put("x", s.x());
+      pos.put("y", s.y());
+      pos.put("worldZ", s.z());
+      byId.computeIfAbsent(s.type(), k -> new ArrayList<>()).add(pos);
+    }
+    return byId;
+  }
+
+  // --------------------------------------------------------------- landmarks
+
+  /**
+   * T4C-0062: the fast-travel destinations from the in-game Locations panel, exactly as {@link
+   * NamedLocations} defines them - name, tile position, and the zone whose unlock quest gates the
+   * entry (null for the landmarks every character has from the start). The site pairs these with
+   * each NPC's own spawn position to answer "how do I get to this person?" with a landmark plus a
+   * distance and bearing, rather than a bare pair of coordinates. Exported rather than re-typed so
+   * moving a landmark in the game moves it on the site too.
+   */
+  private static List<Map<String, Object>> exportLandmarks() {
+    List<Map<String, Object>> out = new ArrayList<>();
+    for (NamedLocation loc : NamedLocations.all()) {
+      Map<String, Object> m = new LinkedHashMap<>();
+      m.put("name", loc.displayName());
+      m.put("x", loc.tileX());
+      m.put("y", loc.tileY());
+      m.put("worldZ", loc.worldZ());
+      m.put("unlockZoneId", loc.unlockZoneId());
       out.add(m);
     }
     return out;

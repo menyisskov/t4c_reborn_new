@@ -3,6 +3,13 @@
     "id": "AnchoriteRowan",
     "origin": "new",
     "displayName": "Anchorite Rowan",
+    "spawns": [
+      {
+        "x": 1290,
+        "y": 1500,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Avalon doesn't forget who's proven themselves to it. Neither do I.",
     "topics": [
       {
@@ -47,6 +54,13 @@
     "id": "ArchmageThalindra",
     "origin": "new",
     "displayName": "Archmage Thalindra",
+    "spawns": [
+      {
+        "x": 1362,
+        "y": 1512,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the high arts here and nowhere else on this coast. Name a school - fire, water, earth, air, dark or light - and I'll show you what it holds.",
     "topics": [
       {
@@ -163,6 +177,13 @@
     "id": "DockmasterThessaly",
     "origin": "new",
     "displayName": "Dockmaster Thessaly",
+    "spawns": [
+      {
+        "x": 1620,
+        "y": 2628,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "The crossing to Kraanhold isn't a pleasant one. Clear the road trolls harassing the coast first, and I'll see you safely across.",
     "topics": [
       {
@@ -214,6 +235,13 @@
     "id": "ElderOphira",
     "origin": "new",
     "displayName": "Elder Ophira",
+    "spawns": [
+      {
+        "x": 1316,
+        "y": 1493,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Welcome, traveler. I am Elder Ophira of Avalon Sanctuary. You stand at the seam between two halves of one isle - ask, and I will tell you of our plight.",
     "topics": [
       {
@@ -282,6 +310,13 @@
     "id": "EmberSmithCorvain",
     "origin": "new",
     "displayName": "Ember-Smith Corvain",
+    "spawns": [
+      {
+        "x": 1300,
+        "y": 1460,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "The forge hasn't gone cold in longer than you'd believe. Neither have I, if it comes to that.",
     "topics": [
       {
@@ -318,6 +353,13 @@
     "id": "GrandmasterTholvenn",
     "origin": "new",
     "displayName": "Grandmaster Tholvenn",
+    "spawns": [
+      {
+        "x": 1330,
+        "y": 1440,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "You've found the last of us. Say what you've come to forge, and I'll tell you if you've earned it yet.",
     "topics": [
       {
@@ -390,6 +432,13 @@
     "id": "GrandmasterVoss",
     "origin": "new",
     "displayName": "Grandmaster Voss",
+    "spawns": [
+      {
+        "x": 2550,
+        "y": 2780,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Few make it this far and fewer still make it back. What do you need, champion?",
     "topics": [
       {
@@ -434,6 +483,13 @@
     "id": "HarbormasterRangor",
     "origin": "new",
     "displayName": "Harbormaster Rangor",
+    "spawns": [
+      {
+        "x": 1500,
+        "y": 1200,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Welcome to what's left of the dock. Nobody sails from here anymore - not since the reavers took the shore and Ithrak took their coin.",
     "topics": [
       {
@@ -500,6 +556,13 @@
     "id": "KeeperOfTheSixthSeal",
     "origin": "new",
     "displayName": "Keeper of the Sixth Seal",
+    "spawns": [
+      {
+        "x": 1724,
+        "y": 1836,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Five wyrms. Five scales. One seal that isn't a wyrm at all.",
     "topics": [
       {
@@ -527,6 +590,13 @@
     "id": "KeeperTamsin",
     "origin": "new",
     "displayName": "Keeper Tamsin",
+    "spawns": [
+      {
+        "x": 300,
+        "y": 2320,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Careful where you step. Something's been dragging people under since the tide turned.",
     "topics": [
       {
@@ -571,6 +641,13 @@
     "id": "MarshalTorrhen",
     "origin": "new",
     "displayName": "Marshal Torrhen",
+    "spawns": [
+      {
+        "x": 2430,
+        "y": 2440,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "The centaur warbands have been raiding out of the western marches again. Windhowl needs sellswords, not just soldiers.",
     "topics": [
       {
@@ -623,6 +700,13 @@
     "id": "MirrorwardenYsmera",
     "origin": "new",
     "displayName": "Ysmera the Mirrorwarden",
+    "spawns": [
+      {
+        "x": 1736,
+        "y": 1840,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Look into the mirror, %s. It has been looking at you for a long time.",
     "topics": [
       {
@@ -690,6 +774,13 @@
     "id": "OldCorrin",
     "origin": "new",
     "displayName": "Old Corrin",
+    "spawns": [
+      {
+        "x": 1626,
+        "y": 2631,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Thessaly gets the coin-counters. I get the ones who want something that lasts.",
     "topics": [
       {
@@ -717,6 +808,13 @@
     "id": "OutriderHalvard",
     "origin": "new",
     "displayName": "Outrider Halvard",
+    "spawns": [
+      {
+        "x": 1830,
+        "y": 1310,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Halvard. Windhowl's roads aren't as safe as they look - prove you can clear them before you go wandering the hills.",
     "topics": [
       {
@@ -768,6 +866,13 @@
     "id": "OutriderKaelis",
     "origin": "new",
     "displayName": "Outrider Kaelis",
+    "spawns": [
+      {
+        "x": 2800,
+        "y": 2730,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Turn back if you're not ready. What's past this ridge doesn't forgive.",
     "topics": [
       {
@@ -813,6 +918,13 @@
     "origin": "new",
     "displayName": "Plague Warden's Strongbox",
     "spriteBase": "@static:Chest",
+    "spawns": [
+      {
+        "x": 2080,
+        "y": 2220,
+        "worldZ": 1
+      }
+    ],
     "welcomeText": "",
     "topics": [],
     "combatProfile": {
@@ -831,6 +943,13 @@
     "id": "QuartermasterElenna",
     "origin": "new",
     "displayName": "Quartermaster Elenna",
+    "spawns": [
+      {
+        "x": 1364,
+        "y": 1494,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Quartermaster Elenna, at your service. If you mean to walk the Wilds or the Veil, you'll want better steel than you're carrying.",
     "topics": [
       {
@@ -872,6 +991,13 @@
     "id": "RhodarHeatforge",
     "origin": "activated",
     "displayName": "Rhodar Heatforge",
+    "spawns": [
+      {
+        "x": 1493,
+        "y": 2423,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Sorry, we're closed during the night and I'm off to bed.",
     "topics": [
       {
@@ -1024,6 +1150,13 @@
     "id": "RurikCinderwatch",
     "origin": "new",
     "displayName": "Rurik Cinderwatch",
+    "spawns": [
+      {
+        "x": 1980,
+        "y": 1490,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Careful past the ridge, friend. The Cinderreach Hills have been smoking worse than usual.",
     "topics": [
       {
@@ -1087,6 +1220,13 @@
     "id": "SentinelCorwin",
     "origin": "new",
     "displayName": "Sentinel Corwin",
+    "spawns": [
+      {
+        "x": 1550,
+        "y": 2450,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Corwin here. If you're heading east past the fields, best prove you can handle yourself first.",
     "topics": [
       {
@@ -1138,6 +1278,13 @@
     "id": "SisterIlyndra",
     "origin": "new",
     "displayName": "Sister Ilyndra",
+    "spawns": [
+      {
+        "x": 1340,
+        "y": 1479,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Peace to you, traveler. This temple stands open to anyone the Veil has bruised, whichever side of the seam you call home.",
     "topics": [
       {
@@ -1179,6 +1326,13 @@
     "id": "SkywatchIlvara",
     "origin": "activated",
     "displayName": "Skywatch Ilvara",
+    "spawns": [
+      {
+        "x": 2280,
+        "y": 2850,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "You hear the wyrmlings before you see them. If you can hear the Drake itself, you're already too close.",
     "topics": [
       {
@@ -1233,6 +1387,13 @@
     "id": "SpellMerchant",
     "origin": "new",
     "displayName": "Ilarion the Spell Merchant",
+    "spawns": [
+      {
+        "x": 2950,
+        "y": 1065,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Welcome. I have every spell known to this world for sale. Say \"spells\" to browse my wares.",
     "topics": [],
     "combatProfile": {
@@ -1252,6 +1413,18 @@
     "origin": "new",
     "displayName": "Storage Chest",
     "spriteBase": "@static:Vault",
+    "spawns": [
+      {
+        "x": 2945,
+        "y": 1070,
+        "worldZ": 0
+      },
+      {
+        "x": 1606,
+        "y": 1178,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "",
     "topics": [],
     "combatProfile": {
@@ -1271,6 +1444,13 @@
     "origin": "new",
     "displayName": "Sunken Ledger Coffer",
     "spriteBase": "@static:Chest",
+    "spawns": [
+      {
+        "x": 115,
+        "y": 1400,
+        "worldZ": 2
+      }
+    ],
     "welcomeText": "",
     "topics": [],
     "combatProfile": {
@@ -1289,6 +1469,13 @@
     "id": "TideWardenBryn",
     "origin": "new",
     "displayName": "Tide Warden Bryn",
+    "spawns": [
+      {
+        "x": 1520,
+        "y": 2440,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "The tide brought something foul ashore near Silversky. Stand with me, or move along.",
     "topics": [
       {
@@ -1352,6 +1539,13 @@
     "id": "TrialWardenOsric",
     "origin": "new",
     "displayName": "Trial Warden Osric",
+    "spawns": [
+      {
+        "x": 1740,
+        "y": 1836,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "The mirror asks who you were. I only ask how fast you are.",
     "topics": [
       {
@@ -1387,6 +1581,13 @@
     "origin": "new",
     "displayName": "Warband's Buried Chest",
     "spriteBase": "@static:Chest",
+    "spawns": [
+      {
+        "x": 2295,
+        "y": 2325,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "",
     "topics": [],
     "combatProfile": {
@@ -1405,6 +1606,13 @@
     "id": "WardenCael",
     "origin": "new",
     "displayName": "Warden Cael",
+    "spawns": [
+      {
+        "x": 2420,
+        "y": 2700,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Don't linger past dusk here. The barrows wake at dark, and something crowned still walks among them.",
     "topics": [
       {
@@ -1449,6 +1657,13 @@
     "id": "WardenSeressa",
     "origin": "new",
     "displayName": "Warden Seressa",
+    "spawns": [
+      {
+        "x": 1355,
+        "y": 1465,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Careful where you stand. Whatever I'm binding doesn't always stay bound the first time.",
     "topics": [
       {
@@ -1485,6 +1700,13 @@
     "id": "WayfarerBryndis",
     "origin": "new",
     "displayName": "Wayfarer Bryndis",
+    "spawns": [
+      {
+        "x": 1318,
+        "y": 1512,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of Avalon before you leave - you'll thank me the first time you need to get back here in a hurry.",
     "topics": [
       {
@@ -1527,6 +1749,13 @@
     "origin": "new",
     "displayName": "Wyrmling's Hoard Casket",
     "spriteBase": "@static:Chest",
+    "spawns": [
+      {
+        "x": 2350,
+        "y": 2900,
+        "worldZ": 0
+      }
+    ],
     "welcomeText": "",
     "topics": [],
     "combatProfile": {

@@ -570,6 +570,30 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   zone match still gets a schematic worldmap dot from its own `areaCenterX/Y`/`areaRadiusTiles`
   rather than showing nothing. Since T4C-0055 the map carries the location and the prose does
   not: walkthroughs no longer recite coordinates or tile radii, they say "the marked area".
+- **Naming a person is not telling the reader where they are (T4C-0062).** Every quest step that
+  says "talk to X", and every NPC page, must also answer "and where is X?". The site answers it
+  from data, never from prose: each NPC exports its own `@Spawn` position and the fast-travel
+  landmarks export from `NamedLocations`, and the page derives a landmark, a bearing and a
+  distance from those two. Three rules keep that honest:
+  - **Only name a landmark the reader can actually have.** A landmark gated behind a zone unlock
+    is offered only when some quest *other than the one being read, and given by somebody else*,
+    opens it at or before this point on the road. Elder Ophira stands in the Avalon Wilds, but
+    the Wilds entry is her own quest's reward, so her page routes via Avalon Sanctuary instead.
+  - **Only name a landmark you could walk from.** Past ~800 tiles the claim stops being a
+    shortcut and becomes a lie — two dungeon-level containers sit that far from the only landmark
+    on their level, with no route between. Those get their coordinates and no directions.
+  - **Only link a map that really pins them.** Being listed under a zone is not the same as being
+    inside that zone map's cropped box; four quest-givers are stationed back in town, outside it.
+    Link the map that carries the pin, or no map at all.
+
+  **Known gap (T4C-0062):** Tide Warden Bryn, Sentinel Corwin, Outrider Halvard and Dockmaster
+  Thessaly are listed under a zone whose map does not reach them, so they show no map link. The
+  fix is on the map side (widen the crop, or pin the giver separately), not the prose side.
+
+  **Deferred (T4C-0062):** showing a picture of each NPC alongside the directions. NPCs are
+  paper-doll composites of body-part sprites, so this needs a new headless exporter compositing
+  them out of the sprite bins — nothing on the site renders sprite art today. Agreed with the
+  owner to land as its own pass.
 
 ### 4a. Editorial rules for the site (T4C-0055)
 
