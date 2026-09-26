@@ -29,6 +29,9 @@ public final class AvalonWildsVigil {
         null,
         "caradocs_sundered_blade",
         1,
-        "avalon_wilds");
+        "avalon_wilds",
+        null,
+        0,
+        "${quest.avalon_wilds_vigil.walkthrough}");
   }
 }

@@ -31,6 +31,9 @@ public final class SilverskyBorderwatch {
         null,
         null,
         0,
-        "sunken_chancel");
+        "sunken_chancel",
+        null,
+        0,
+        "${quest.silversky_borderwatch.walkthrough}");
   }
 }

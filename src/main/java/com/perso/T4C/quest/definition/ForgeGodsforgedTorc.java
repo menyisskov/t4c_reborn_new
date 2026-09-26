@@ -30,6 +30,8 @@ public final class ForgeGodsforgedTorc {
         "item.bound_godsigil",
         1,
         null,
-        "godsforged_torc_of_the_first_pact");
+        "godsforged_torc_of_the_first_pact",
+        0,
+        "${quest.forge_godsforged_torc.walkthrough}");
   }
 }

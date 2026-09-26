@@ -28,6 +28,8 @@ public final class ForgeGodsforgedStormbow {
         "item.bound_godsigil",
         1,
         null,
-        "godsforged_stormbow");
+        "godsforged_stormbow",
+        0,
+        "${quest.forge_godsforged_stormbow.walkthrough}");
   }
 }
