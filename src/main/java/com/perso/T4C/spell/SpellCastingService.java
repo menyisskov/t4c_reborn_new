@@ -3,6 +3,9 @@ package com.perso.T4C.spell;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class SpellCastingService {
@@ -182,14 +185,33 @@ public final class SpellCastingService {
 
   static DiceFormula.Context context(Player caster) {
     return new DiceFormula.Context(
-        caster.getEffectiveStrength(),
-        caster.getEffectiveEndurance(),
-        caster.getEffectiveDexterity(),
-        caster.getEffectiveIntelligence(),
-        0,
-        caster.getEffectiveWisdom(),
-        0,
-        caster.getLevel());
+            caster.getEffectiveStrength(),
+            caster.getEffectiveEndurance(),
+            caster.getEffectiveDexterity(),
+            caster.getEffectiveIntelligence(),
+            0,
+            caster.getEffectiveWisdom(),
+            0,
+            caster.getLevel())
+        .withSelfTrue(selfTrue(caster));
+  }
+
+  /** The caster's own true readings, for the {@code self.true_*} formula variables. */
+  static Map<String, Integer> selfTrue(Player caster) {
+    Map<String, Integer> readings = new LinkedHashMap<>();
+    readings.put("str", caster.getTrueStrength());
+    readings.put("end", caster.getTrueEndurance());
+    readings.put("agi", caster.getTrueDexterity());
+    readings.put("int", caster.getTrueIntelligence());
+    readings.put("wis", caster.getTrueWisdom());
+    readings.put("level", caster.getLevel());
+    readings.put("attack", caster.getTrueSkillLevel("attack"));
+    readings.put("dodge", caster.getTrueSkillLevel("dodge"));
+    for (String element : List.of("fire", "earth", "air", "water", "light", "dark")) {
+      readings.put(element, caster.getTrueElementPower(element));
+      readings.put("r_" + element, caster.getTrueElementResistance(element));
+    }
+    return readings;
   }
 
   private static long evaluateMillis(String formula, DiceFormula.Context context) {
