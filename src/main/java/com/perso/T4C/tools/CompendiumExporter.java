@@ -604,6 +604,12 @@ public final class CompendiumExporter {
       m.put("requiredItemKey", q.getRequiredItemKey());
       m.put("requiredItemQty", q.getRequiredItemQty());
       m.put("alsoRequiresItemKey", EXTRA_REQUIRED_ITEM_KEYS.get(q.getId()));
+      // T4C-0055: the item the player actually *receives* on turn-in (QuestService.complete), as
+      // opposed to requiredItemKey/alsoRequiresItemKey, which are consumed. Without this the site
+      // showed only gold+XP, so the Godsforged crafting chain looked like it rewarded nothing -
+      // which is what pushed the hand-written walkthroughs into naming the *required* item as the
+      // reward instead.
+      m.put("rewardItemKey", q.getRewardItemKey());
       m.put("minLevel", q.getMinLevel());
       m.put("unlockZoneId", q.getUnlockZoneId());
       m.put("offerText", I18n.resolve(q.getOfferText()));

@@ -13,6 +13,11 @@
   var MAPS = DATA.maps || [];
   var STAT_IDS = DATA.statIds || {};
   var META = DATA.meta || {};
+  // The world's narrative spine: an ordered list of chapters, each a stretch of the world a
+  // player moves through. Zones, maps and quests are all grouped and ordered by it so the site
+  // reads as "where do I go next", never as an alphabetical dump (see the technical-writer
+  // skill). A zone with no chapter still renders, in an "Elsewhere" group at the end.
+  var CHAPTERS = META.chapters || [];
 
   // ---------------------------------------------------------------- indexes
 
@@ -95,10 +100,102 @@
     return '<span class="el-pill el-' + el + '">' + el.charAt(0).toUpperCase() + el.slice(1) + "</span>";
   }
 
+  // "activated" means "already existed in the codebase, this fork finally placed it in the
+  // world" - repo history, meaningless to a player, so it renders as nothing. Only "New" is
+  // shown, because that one genuinely tells a returning player something.
   function originTag(origin) {
     if (origin === "new") return '<span class="tag origin-new">New</span>';
-    if (origin === "activated") return '<span class="tag origin-activated">Activated legacy</span>';
     return "";
+  }
+
+  // ------------------------------------------------------ chapters (the spine)
+
+  var chapterById = indexBy(CHAPTERS, "id");
+  var chapterRank = {};
+  CHAPTERS.forEach(function (c, i) { chapterRank[c.id] = i; });
+
+  function chapterOf(zoneId) {
+    var z = byKey.zone[zoneId];
+    return z && z.chapter ? chapterById[z.chapter] : null;
+  }
+
+  // Sorts anything that carries a zone id into reading order: chapter first, then the zone's own
+  // position inside that chapter. Zones with no chapter sort last rather than disappearing.
+  function zoneReadingOrder(zoneId) {
+    var z = byKey.zone[zoneId];
+    if (!z) return [999, 999];
+    var r = chapterRank[z.chapter];
+    return [r === undefined ? 998 : r, z.chapterOrder || 0];
+  }
+
+  function byZoneOrder(zoneIdOf) {
+    return function (a, b) {
+      var x = zoneReadingOrder(zoneIdOf(a));
+      var y = zoneReadingOrder(zoneIdOf(b));
+      return x[0] - y[0] || x[1] - y[1];
+    };
+  }
+
+  // Renders an ordered list of chapters, each with its intro paragraph and whatever cards belong
+  // to it. `cardsFor(chapterId)` returns the HTML for that chapter; a chapter with nothing in it
+  // is skipped. Anything whose chapter is missing lands in a trailing "Elsewhere" group, so a
+  // newly added zone can never silently vanish from the page just for lacking a chapter.
+  function chapterSections(cardsFor, wrapperClass) {
+    var out = CHAPTERS.map(function (c) {
+      var cards = cardsFor(c.id);
+      if (!cards) return "";
+      return (
+        '<section class="chapter">' +
+        '<div class="chapter-head"><p class="eyebrow">' + esc(c.levels) + "</p>" +
+        "<h2>" + esc(c.name) + "</h2>" +
+        '<p class="lead">' + esc(c.intro) + "</p></div>" +
+        '<div class="' + (wrapperClass || "card-grid") + '">' + cards + "</div></section>"
+      );
+    }).join("");
+    var orphans = cardsFor(null);
+    if (orphans) {
+      out +=
+        '<section class="chapter"><div class="chapter-head"><h2>Elsewhere</h2>' +
+        '<p class="lead">Places that don\'t sit on the main road through the world.</p></div>' +
+        '<div class="' + (wrapperClass || "card-grid") + '">' + orphans + "</div></section>";
+    }
+    return out;
+  }
+
+  // ------------------------------------------- humanising engine expressions
+
+  // Mana cost, damage and effect parameters are stored as expressions the combat code evaluates
+  // ("self.maxmana", "-((1d17+6+self.int/23)*self.fire/target.r_fire)"). They used to be printed
+  // raw, so a spell page literally read "Mana cost: self.maxmana". Anything we can state plainly,
+  // we state plainly; anything we can't, the caller words around rather than showing the reader
+  // an expression they have no way to interpret.
+  var PLAIN_EXPRESSIONS = {
+    "self.maxmana": "All your mana",
+    "self.mana": "All your mana",
+  };
+  function plainCost(expr) {
+    if (expr === null || expr === undefined || expr === "") return "—";
+    var s = String(expr).trim();
+    if (PLAIN_EXPRESSIONS[s]) return PLAIN_EXPRESSIONS[s];
+    if (/^\d+$/.test(s)) return fmtNum(s);
+    return null; // an expression we have no plain wording for
+  }
+
+  // Turns a dice formula the combat code rolls ("1d40+29", "2d6") into the range a reader can
+  // actually use. Returns null for anything more complicated than NdM(+K), so the caller can fall
+  // back rather than print a half-parsed lie.
+  function diceRange(formula) {
+    var m = /^\s*(\d+)d(\d+)\s*([+-]\s*\d+)?\s*$/.exec(String(formula || ""));
+    if (!m) return null;
+    var count = Number(m[1]);
+    var sides = Number(m[2]);
+    var offset = m[3] ? Number(m[3].replace(/\s+/g, "")) : 0;
+    return { min: count + offset, max: count * sides + offset };
+  }
+
+  function damageWording(formula) {
+    var r = diceRange(formula);
+    return r ? fmtNum(r.min) + "–" + fmtNum(r.max) + " damage a hit" : "Damage varies";
   }
 
   function rarityOf(item) {
@@ -283,50 +380,52 @@
 
   // ------------------------------------------------------------------- home
 
-  function passGroups() {
-    var groups = {};
-    ZONES.forEach(function (z) {
-      groups[z.pass] = groups[z.pass] || [];
-      groups[z.pass].push(z);
-    });
-    return groups;
+  function zoneCard(z, truncateAt) {
+    var summary = truncateAt && z.summary.length > truncateAt
+      ? z.summary.slice(0, truncateAt).replace(/\s+\S*$/, "") + "…"
+      : z.summary;
+    return (
+      '<a class="card" href="#/zones/' + slug(z.id) + '">' +
+      "<h3>" + esc(z.name) + "</h3>" +
+      '<p class="card-meta">Levels ' + esc(z.levelRange) + " · " + esc(z.biome) + "</p>" +
+      "<p>" + esc(summary) + "</p></a>"
+    );
+  }
+
+  function zoneCardsIn(chapterId, truncateAt) {
+    return ZONES.filter(function (z) {
+      return chapterId === null ? !chapterById[z.chapter] : z.chapter === chapterId;
+    }).sort(function (a, b) { return (a.chapterOrder || 0) - (b.chapterOrder || 0); })
+      .map(function (z) { return zoneCard(z, truncateAt); }).join("");
   }
 
   function renderHome() {
     var newMonsters = MONSTERS.filter(function (m) { return m.origin === "new"; }).length;
     var newSpells = SPELLS.filter(function (s) { return s.isNew; }).length;
-
-    var zoneCards = ZONES.map(function (z) {
-      return (
-        '<a class="card" href="#/zones/' + slug(z.id) + '">' +
-        "<h3>" + esc(z.name) + "</h3>" +
-        "<p>" + esc(z.levelRange) + " · " + esc(z.biome) + "</p>" +
-        "<p>" + esc(z.summary.slice(0, 110)) + (z.summary.length > 110 ? "…" : "") + "</p>" +
-        '<div class="tags"><span class="tag plain">' + esc(z.pass) + "</span></div>" +
-        "</a>"
-      );
-    }).join("");
+    var first = ZONES[0];
 
     return (
       '<div class="hero">' +
-      "<p class=\"eyebrow\">Local compendium · " + esc((META.systemsPasses || []).length) + "+ tracked passes</p>" +
-      "<h1>Everything T4C Reborn added on top of the original fork</h1>" +
-      "<p>A searchable, cross-linked stat sheet for every zone, monster, item, spell, NPC and quest this fork built — pulled straight from the live game registries, not hand-transcribed. Rarity and element colors, full monster characteristics, and full quest walkthroughs.</p>" +
+      '<p class="eyebrow">A player\'s guide to the world</p>' +
+      "<h1>Everywhere you can go, and what is waiting there</h1>" +
+      "<p>The world laid out in the order you'll travel it — from the coast road outside your " +
+      "first town to the peak at the end of everything. Every place, every creature in it, " +
+      "every piece of gear it drops and every quest that opens the next door, with the numbers " +
+      "taken straight from the game itself.</p>" +
       '<div class="hero-actions">' +
-      '<a class="btn primary" href="#/zones">Browse zones</a>' +
-      '<a class="btn" href="#/monsters">Monster roster</a>' +
-      '<a class="btn" href="#/quests">Quest walkthroughs</a>' +
+      (first ? '<a class="btn primary" href="#/zones/' + slug(first.id) + '">Start at the beginning</a>' : "") +
+      '<a class="btn" href="#/zones">The whole road</a>' +
+      '<a class="btn" href="#/quests">Quests</a>' +
       "</div></div>" +
       '<div class="stat-grid">' +
-      statTile(ZONES.length, "New zones") +
-      statTile(newMonsters, "New monsters") +
-      statTile(ITEMS.length, "New items") +
+      statTile(ZONES.length, "Places to go") +
+      statTile(newMonsters, "New creatures") +
+      statTile(ITEMS.length, "Pieces of gear") +
       statTile(newSpells, "New spells") +
-      statTile(NPCS.length, "NPCs") +
+      statTile(NPCS.length, "People to talk to") +
       statTile(QUESTS.length, "Quests") +
       "</div>" +
-      '<div class="section-title">Zones &amp; expansions <span class="count">' + ZONES.length + '</span></div>' +
-      '<div class="card-grid">' + zoneCards + "</div>"
+      chapterSections(function (id) { return zoneCardsIn(id, 150); })
     );
   }
 
@@ -339,21 +438,12 @@
   // ------------------------------------------------------------------ zones
 
   route("zones", function () {
-    var cards = ZONES.map(function (z) {
-      return (
-        '<a class="card" href="#/zones/' + slug(z.id) + '">' +
-        "<h3>" + esc(z.name) + "</h3>" +
-        "<p>" + esc(z.levelRange) + " · " + esc(z.biome) + "</p>" +
-        "<p>" + esc(z.summary) + "</p>" +
-        '<div class="tags"><span class="tag plain">' + esc(z.pass) + "</span>" +
-        (z.preExisting ? '<span class="tag origin-activated">Pre-existing, activated</span>' : "") +
-        "</div></a>"
-      );
-    }).join("");
     return (
-      '<div class="page-header"><p class="eyebrow">Zones</p><h1>New zones &amp; expansions</h1>' +
-      '<p class="lead">Every outdoor encounter area, dungeon activation, or island added since the original fork.</p></div>' +
-      '<div class="card-grid">' + cards + "</div>"
+      '<div class="page-header"><p class="eyebrow">Zones</p><h1>The road through the world</h1>' +
+      '<p class="lead">Read this top to bottom and you have the whole journey, in the order a ' +
+      "character grows into it. Each place says who holds it, why they turned, and where you go " +
+      "next.</p></div>" +
+      chapterSections(function (id) { return zoneCardsIn(id); })
     );
   });
 
@@ -363,42 +453,55 @@
     var monsters = (z.monsters || []).map(function (n) {
       var m = byKey.monster[n];
       return (
-        '<div class="loot-row"><span>' + monsterLink(n) + (m ? " · lvl " + m.level : "") + "</span>" +
-        (m ? originTag(m.origin) : '<span class="tag plain">pre-existing</span>') + "</div>"
+        '<div class="loot-row"><span>' + monsterLink(n) + (m ? " · level " + m.level : "") + "</span>" +
+        (m ? originTag(m.origin) : "") + "</div>"
       );
-    }).join("") || '<p class="lead">None tracked.</p>';
+    }).join("") || '<p class="lead">Nothing hostile that we have a page for.</p>';
 
     var items = (z.items || []).map(function (k) {
       var it = byKey.item[k];
       return '<div class="loot-row"><span>' + itemLink(k) + "</span>" + (it ? rarityTag(it) : "") + "</div>";
-    }).join("") || '<p class="lead">None tracked.</p>';
+    }).join("") || '<p class="lead">Nothing here drops gear of its own.</p>';
 
     var spells = (z.spells || []).map(function (k) { return "<li>" + spellLink(k) + "</li>"; }).join("") ||
-      "<li>None taught here.</li>";
+      "<li>Nobody teaches spells here.</li>";
 
     var npcs = (z.npcs || []).map(function (id) { return "<li>" + npcLink(id) + "</li>"; }).join("") ||
-      "<li>None.</li>";
+      "<li>Nobody friendly lives here.</li>";
 
     var quests = (z.quests || []).map(function (id) {
       var q = byKey.quest[id];
       return '<div class="loot-row"><span>' + questLink(id) + "</span><span>" + (q ? fmtNum(q.rewardXp) + " XP" : "") + "</span></div>";
-    }).join("") || '<p class="lead">None tracked.</p>';
+    }).join("") || '<p class="lead">Nobody is handing out work here.</p>';
 
     var mapHtml = zoneMap(z);
+    var ch = chapterOf(z.id);
+    var next = z.nextZoneId ? byKey.zone[z.nextZoneId] : null;
+    var prev = null;
+    ZONES.forEach(function (o) { if (o.nextZoneId === z.id) prev = o; });
+
+    // Where this place sits in the journey, spelled out rather than implied by ordering - it's
+    // the single question a reader lands on a zone page with.
+    var journey =
+      '<div class="journey">' +
+      (prev ? '<span class="journey-step"><span class="label">Coming from</span>' + zoneLink(prev.id) + "</span>" : "") +
+      (next ? '<span class="journey-step"><span class="label">Next</span>' + zoneLink(next.id) + "</span>"
+            : '<span class="journey-step"><span class="label">Next</span>Nothing. This is the end of the road.</span>') +
+      "</div>";
 
     return (
       breadcrumb([["Zones", "zones"], [z.name, null]]) +
-      '<div class="detail-head"><div><p class="eyebrow">' + esc(z.pass) + " · " + esc(z.biome) + '</p><h1>' + esc(z.name) + "</h1>" +
+      '<div class="detail-head"><div><p class="eyebrow">' +
+      (ch ? esc(ch.name) + " · " : "") + esc(z.biome) + '</p><h1>' + esc(z.name) + "</h1>" +
       '<div class="tags"><span class="tag plain">Levels ' + esc(z.levelRange) + "</span>" +
-      (z.settlement ? '<span class="tag origin-new">' + esc(z.settlement) + "</span>" : "") +
-      (z.preExisting ? '<span class="tag origin-activated">Pre-existing zone, newly activated</span>' : "") +
+      (z.settlement ? '<span class="tag origin-new">Fast travel: ' + esc(z.settlement) + "</span>" : "") +
       "</div></div></div>" +
-      panel("Overview", '<p class="lead">' + esc(z.summary) + "</p>" + mapHtml) +
-      panel("Monsters", monsters) +
-      panel("Items", items) +
-      panel("Quests", quests) +
+      panel("The place", '<p class="lead">' + esc(z.summary) + "</p>" + journey + mapHtml) +
+      panel("What lives here", monsters) +
+      panel("What it drops", items) +
+      panel("Who needs your help", quests) +
       panel("Spells taught here", '<ul class="list-plain">' + spells + "</ul>") +
-      panel("NPCs", '<ul class="list-plain">' + npcs + "</ul>")
+      panel("People", '<ul class="list-plain">' + npcs + "</ul>")
     );
   });
 
@@ -411,7 +514,7 @@
       '<div class="zone-map-strip"><div class="minimap">' +
       '<div class="radius" style="left:' + left + "%;top:" + top + "%;width:" + rpx * 2 + "%;height:" + rpx * 2 + '%"></div>' +
       '<div class="dot" style="left:' + left + "%;top:" + top + '%"></div>' +
-      '<span class="axis-label" style="left:6px;top:4px">worldmap (schematic)</span>' +
+      '<span class="axis-label" style="left:6px;top:4px">roughly here in the world</span>' +
       "</div><div><p class=\"lead\">" + caption + "</p></div></div>"
     );
   }
@@ -419,8 +522,8 @@
   function zoneMap(z, caption) {
     if (!z.worldmapCenter) return "";
     var c = z.worldmapCenter;
-    caption = caption || ("Worldmap center (" + c.x + ", " + c.y + "), radius " + c.radius +
-      " tiles — this is the geofence quest kills must land inside.");
+    caption = caption || "Where this place sits, and how far it reaches. Quest kills only count " +
+      "inside this circle, so this is the ground to work rather than wherever the creatures wander to.";
     var m = byKey.map[z.id];
     if (m) {
       return (
@@ -434,15 +537,15 @@
     return schematicDot(c.x, c.y, c.radius, caption);
   }
 
-  // Every quest carries its own center/radius even when it isn't tied to a hand-authored zone
+  // Every quest carries its own centre/radius even when it isn't tied to a hand-authored zone
   // (older pre-zone quests, or a turn-in with radius 1 marking just the giver NPC's spot) - fall
-  // back to a schematic worldmap dot from the quest's own coordinates so a location is always
-  // shown, not just for quests a zone happens to list. The caption also differs from the zone
-  // Overview page's generic one above, since a turn-in quest has no kill geofence to describe.
+  // back to a schematic dot from the quest's own coordinates so a location is always shown, not
+  // just for quests a zone happens to list. The caption differs from the zone page's generic one
+  // above, since a pure turn-in quest has no objective area to describe.
   function questMap(q, zone) {
     var caption = q.requiredKills > 0
-      ? "Kills must land within " + q.areaRadiusTiles + " tiles of (" + q.areaCenterX + ", " + q.areaCenterY + ")."
-      : "Approximate location of " + npcPlain(q.giverNpc) + ": (" + q.areaCenterX + ", " + q.areaCenterY + ").";
+      ? "Kills only count inside this circle. Work it rather than following anything that wanders out."
+      : "Roughly where to find " + npcPlain(q.giverNpc) + ".";
     if (zone && byKey.zone[zone]) return zoneMap(byKey.zone[zone], caption);
     return schematicDot(q.areaCenterX, q.areaCenterY, q.areaRadiusTiles, caption);
   }
@@ -450,24 +553,28 @@
   // --------------------------------------------------------------------- maps
 
   route("maps", function () {
-    var cards = MAPS.map(function (m) {
-      var z = byKey.zone[m.zoneId];
-      if (!z) return "";
-      return (
-        '<a class="card map-card" href="#/maps/' + slug(m.zoneId) + '">' +
-        '<div class="map-thumb" style="background-image:url(data/' + m.image + ')"></div>' +
-        "<h3>" + esc(z.name) + "</h3>" +
-        "<p>" + esc(z.levelRange) + " · " + esc(z.biome) + "</p>" +
-        "</a>"
-      );
-    }).join("");
+    function mapCardsIn(chapterId) {
+      return MAPS.filter(function (m) {
+        var z = byKey.zone[m.zoneId];
+        if (!z) return false;
+        return chapterId === null ? !chapterById[z.chapter] : z.chapter === chapterId;
+      }).sort(byZoneOrder(function (m) { return m.zoneId; })).map(function (m) {
+        var z = byKey.zone[m.zoneId];
+        return (
+          '<a class="card map-card" href="#/maps/' + slug(m.zoneId) + '">' +
+          '<div class="map-thumb" style="background-image:url(data/' + m.image + ')"></div>' +
+          "<h3>" + esc(z.name) + "</h3>" +
+          '<p class="card-meta">Levels ' + esc(z.levelRange) + " · " + esc(z.biome) + "</p></a>"
+        );
+      }).join("");
+    }
     return (
-      '<div class="page-header"><p class="eyebrow">Maps</p><h1>Zone maps</h1>' +
-      '<p class="lead">Stylized top-down renders of each new zone, colored from the game’s own ' +
-      "ground-tile art (one averaged color per real sprite, not invented), with every NPC and " +
-      "monster spawn pinned at its true position. Not a literal in-game screenshot — see each " +
-      "map's own note for what's simplified.</p></div>" +
-      '<div class="card-grid">' + cards + "</div>"
+      '<div class="page-header"><p class="eyebrow">Maps</p><h1>Maps, in travelling order</h1>' +
+      '<p class="lead">A map of every place on the road, drawn from the ground the game actually ' +
+      "puts under your feet, with every creature and every person pinned where you will really " +
+      "find them. Buildings and scenery are left off, so read the edges loosely — but the pins " +
+      "are exact.</p></div>" +
+      chapterSections(mapCardsIn)
     );
   });
 
@@ -510,15 +617,18 @@
 
     return (
       breadcrumb([["Maps", "maps"], [z.name, null]]) +
-      '<div class="detail-head"><div><p class="eyebrow">' + esc(z.pass) + " · " + esc(z.biome) + '</p><h1>' + esc(z.name) + "</h1>" +
-      '<div class="tags"><span class="tag plain">Levels ' + esc(z.levelRange) + "</span></div></div></div>" +
+      '<div class="detail-head"><div><p class="eyebrow">' +
+      (chapterOf(z.id) ? esc(chapterOf(z.id).name) + " · " : "") + esc(z.biome) + '</p><h1>' + esc(z.name) + "</h1>" +
+      '<div class="tags"><span class="tag plain">Levels ' + esc(z.levelRange) + "</span>" +
+      '<span class="tag plain">' + zoneLink(z.id) + "</span></div></div></div>" +
       panel(
-        "World map",
-        '<p class="lead">Stylized from the game’s own tile art (ground layer, one averaged ' +
-          "color per real sprite — no decor/buildings layer, so treat exact edges loosely). " +
-          '<span class="pin-legend"><span class="pin-dot pin-boss"></span> unique/boss</span> ' +
-          '<span class="pin-legend"><span class="pin-dot pin-npc"></span> NPC</span> ' +
-          '<span class="pin-legend"><span class="pin-dot pin-trash"></span> common spawn (hover for name)</span></p>' +
+        "The lay of the land",
+        '<p class="lead">Drawn from the ground the game really puts under your feet. Buildings ' +
+          "and scenery are left off, so the edges are approximate — but every pin is exactly " +
+          "where you will find it. " +
+          '<span class="pin-legend"><span class="pin-dot pin-boss"></span> named and dangerous</span> ' +
+          '<span class="pin-legend"><span class="pin-dot pin-npc"></span> someone to talk to</span> ' +
+          '<span class="pin-legend"><span class="pin-dot pin-trash"></span> common creature (hover for its name)</span></p>' +
           '<div class="map-frame" style="aspect-ratio:' + m.imageWidth + "/" + m.imageHeight + '">' +
           '<img class="map-image" src="data/' + m.image + '" alt="' + esc(z.name) + ' map" loading="lazy">' +
           pins +
@@ -533,25 +643,19 @@
     return listPage({
       title: "Monster roster",
       eyebrow: "Monsters",
-      lead: "New and newly-activated monsters, with full characteristics. Use the level/origin filters or search by name.",
+      lead: "Everything that will try to kill you, sorted by how hard it hits back. Search by name, or sort by level to find something your size.",
       rows: MONSTERS,
       columns: [
         { key: "displayName", label: "Name", render: function (m) { return monsterLink(m.name); } },
         { key: "level", label: "Level", numeric: true },
         { key: "health", label: "HP", numeric: true },
-        { key: "hitDamageMax", label: "Max hit", numeric: true },
+        { key: "hitDamageMax", label: "Hardest hit", numeric: true },
         { key: "xpOnDeath", label: "XP", numeric: true },
-        { key: "aggro", label: "Aggro", numeric: true },
-        { key: "origin", label: "Origin", render: function (m) { return originTag(m.origin); } },
-        { key: "zone", label: "Zone", render: function (m) { return monsterZone[m.name] ? zoneLink(monsterZone[m.name]) : "—"; }, sortValue: function (m) { return monsterZone[m.name] || ""; } },
+        { key: "aggro", label: "Aggression", numeric: true },
+        { key: "zone", label: "Found in", render: function (m) { return monsterZone[m.name] ? zoneLink(monsterZone[m.name]) : "—"; }, sortValue: function (m) { var o = zoneReadingOrder(monsterZone[m.name]); return o[0] * 100 + o[1]; } },
       ],
       searchFields: ["displayName", "name"],
-      filters: [
-        {
-          label: "Origin", field: "origin",
-          options: uniq(MONSTERS.map(function (m) { return m.origin; })),
-        },
-      ],
+      filters: [],
       defaultSort: "level",
     });
   });
@@ -574,17 +678,26 @@
             fmtPct(l.chance) + '<span class="chance-bar"><i style="width:' + Math.min(100, l.chance * 100 * 4) + '%"></i></span></span></div>'
           );
         }).join("")
-      : '<p class="lead">No tracked loot table.</p>';
+      : '<p class="lead">Drops nothing worth carrying home.</p>';
 
+    // The raw damage formula ("1d40+29") means nothing to most readers, so the row leads with
+    // what it does - in close or at range, and roughly how hard - and keeps the formula in the
+    // for-the-curious block at the bottom of the panel.
     var attackHtml = (m.attacks || []).length
       ? m.attacks.map(function (a) {
+          var range = a.isSpell
+            ? "Casts at you from " + a.rangeMinTiles + "–" + a.rangeMaxTiles + " paces away"
+            : "Fights you up close";
           return (
-            '<div class="attack-row"><span><code>' + esc(a.formula) + "</code>" +
-            (a.isSpell ? " · casts spell id " + a.spellId + " (range " + a.rangeMinTiles + "-" + a.rangeMaxTiles + " tiles)" : " · melee") +
-            "</span><span>attack " + a.combatAttack + (m.attacks.length > 1 ? " · weight " + a.selectionWeight : "") + "</span></div>"
+            '<div class="attack-row"><span>' + range + "</span><span>" +
+            esc(damageWording(a.formula)) + "</span></div>"
           );
-        }).join("")
-      : '<p class="lead">No tracked attack list.</p>';
+        }).join("") +
+        '<details class="curious"><summary>For the curious: the exact damage rolls</summary>' +
+        '<div class="kv-grid">' +
+        m.attacks.map(function (a) { return kv(a.isSpell ? "Spell" : "Melee", "<code>" + esc(a.formula) + "</code>"); }).join("") +
+        "</div></details>"
+      : '<p class="lead">Does not fight back.</p>';
 
     return (
       breadcrumb([["Monsters", "monsters"], [m.displayName, null]]) +
@@ -593,21 +706,24 @@
       "<h1>" + esc(m.displayName) + "</h1>" +
       '<div class="tags">' + originTag(m.origin) +
       (zone ? '<span class="tag plain">' + zoneLink(zone) + "</span>" : "") +
-      (m.tameable ? '<span class="tag origin-new">Tameable ≤ lvl ' + m.tameMaxLevel + "</span>" : "") +
+      (m.tameable ? '<span class="tag origin-new">Can be tamed up to level ' + m.tameMaxLevel + "</span>" : "") +
       "</div></div></div>" +
-      panel("Combat stats", '<div class="kv-grid">' +
+      panel("What you're up against", '<div class="kv-grid">' +
         kv("Health", fmtNum(m.health)) + kv("Mana", fmtNum(m.mana)) +
-        kv("Hit damage", fmtNum(m.hitDamageMin) + "–" + fmtNum(m.hitDamageMax)) +
-        kv("Dodge", fmtNum(m.dodge)) + kv("Armor class", fmtNum(m.acMin) + "–" + fmtNum(m.acMax)) +
-        kv("Aggro", fmtNum(m.aggro)) + kv("Speed", fmtNum(m.speed)) +
-        kv("XP / hit", fmtNum(m.xpPerHit)) + kv("XP on death", fmtNum(m.xpOnDeath)) +
-        kv("Gold drop", fmtNum(m.goldMin) + "–" + fmtNum(m.goldMax)) +
-        kv("Respawn", (m.respawnTimeMs / 1000).toFixed(0) + "s") +
+        kv("Damage a hit", fmtNum(m.hitDamageMin) + "–" + fmtNum(m.hitDamageMax)) +
+        kv("Dodge", fmtNum(m.dodge)) + kv("Armor", fmtNum(m.acMin) + "–" + fmtNum(m.acMax)) +
+        kv("How readily it attacks", fmtNum(m.aggro)) + kv("Speed", fmtNum(m.speed)) +
+        kv("XP per hit you land", fmtNum(m.xpPerHit)) + kv("XP for the kill", fmtNum(m.xpOnDeath)) +
+        kv("Gold it carries", fmtNum(m.goldMin) + "–" + fmtNum(m.goldMax)) +
+        kv("Comes back after", (m.respawnTimeMs / 1000).toFixed(0) + " seconds") +
         "</div>") +
       panel("Attributes", '<div class="stat-bars">' + statsHtml + "</div>") +
-      panel("Elemental resists", '<div class="kv-grid">' + resistHtml + "</div>") +
-      panel("Attacks", attackHtml) +
-      panel("Loot table", lootHtml)
+      panel("How well it shrugs off each element",
+        '<p class="lead">Higher means your spells of that element hurt it less. 100 is ordinary; ' +
+        "anything far above that is a wall, anything far below it is a weakness worth exploiting.</p>" +
+        '<div class="kv-grid">' + resistHtml + "</div>") +
+      panel("How it fights", attackHtml) +
+      panel("What it drops", lootHtml)
     );
   });
 
@@ -621,7 +737,7 @@
     return listPage({
       title: "Items",
       eyebrow: "Items",
-      lead: "Every JSON-authored item added by the new content pipeline — weapons, armor sets, jewelry. Every stat is in the table below; click a row for its full page.",
+      lead: "Every weapon, every piece of armor, every ring and amulet. The table has the numbers; click any row to see who drops it or sells it.",
       rows: ITEMS,
       tabs: [
         { key: "all", label: "All" },
@@ -632,20 +748,20 @@
       columns: [
         { key: "name", label: "Name", render: function (it) { return itemLink(it.key); } },
         { key: "bodyPart", label: "Slot" },
-        { key: "class", label: "Class", render: function (it) { return esc(archetypeOf(it)); }, sortValue: archetypeOf },
-        { key: "requirements", label: "Requirements", render: reqSummary, sortValue: reqSummary },
-        { key: "armorClass", label: "AC", numeric: true, render: function (it) { return it.armorClass ? fmtNum(it.armorClass) : "—"; } },
+        { key: "class", label: "Suits", render: function (it) { return esc(archetypeOf(it)); }, sortValue: archetypeOf },
+        { key: "requirements", label: "You'll need", render: reqSummary, sortValue: reqSummary },
+        { key: "armorClass", label: "Armor", numeric: true, render: function (it) { return it.armorClass ? fmtNum(it.armorClass) : "—"; } },
         { key: "damage", label: "Damage", render: dmgSummary, sortValue: dmgSummary },
-        { key: "boosts", label: "Boosts", render: boostSummary, sortValue: boostSummary },
-        { key: "flags", label: "Flags", render: flagsSummary, sortValue: flagsSummary },
+        { key: "boosts", label: "What it grants", render: boostSummary, sortValue: boostSummary },
+        { key: "flags", label: "Notes", render: flagsSummary, sortValue: flagsSummary },
         { key: "price", label: "Price", numeric: true, render: function (it) { return it.price ? fmtNum(it.price) : "—"; } },
         { key: "rarity", label: "Rarity", render: function (it) { return rarityTag(it); }, sortValue: function (it) { return RARITY_RANK[rarityOf(it).tier] || 0; } },
-        { key: "zone", label: "Source", render: sourceSummary, sortValue: sourceSortValue },
+        { key: "zone", label: "Where from", render: sourceSummary, sortValue: sourceSortValue },
       ],
       searchFields: ["name", "key"],
       filters: [
-        { label: "Slot", field: "bodyPart", options: uniq(ITEMS.map(function (i) { return i.bodyPart; })) },
-        { label: "Class", field: "__class", options: uniq(ITEMS.map(archetypeOf)), computed: archetypeOf },
+        { label: "Worn on", field: "bodyPart", options: uniq(ITEMS.map(function (i) { return i.bodyPart; })) },
+        { label: "Suits", field: "__class", options: uniq(ITEMS.map(archetypeOf)), computed: archetypeOf },
         { label: "Rarity", field: "__rarity", options: ["godsforged", "legendary", "set", "rare", "common"], computed: function (it) { return rarityOf(it).tier; } },
       ],
       defaultSort: "name",
@@ -661,26 +777,30 @@
     var reqs = it.requirements || {};
     var reqHtml = Object.keys(reqs).filter(function (k) { return reqs[k] > 0; }).map(function (k) {
       return kv(k.charAt(0).toUpperCase() + k.slice(1), fmtNum(reqs[k]));
-    }).join("") || '<p class="lead">No stat requirements.</p>';
+    }).join("") || '<p class="lead">Anyone can wear this.</p>';
 
     var boostHtml = (it.boosts || []).length
       ? it.boosts.map(function (b) {
-          var meta = STAT_IDS[String(b.statId)] || { label: "Stat #" + b.statId, group: "other" };
+          var meta = STAT_IDS[String(b.statId)] || { label: "An unnamed bonus", group: "other" };
           var elClass = meta.element ? " el-" + meta.element : "";
           return (
             '<div class="boost-row"><span class="' + elClass.trim() + '">' + esc(meta.label) + '</span><span class="value">+' +
             esc(b.expression) + "</span></div>"
           );
         }).join("")
-      : '<p class="lead">No stat boosts.</p>';
+      : '<p class="lead">Nothing beyond what it is: no bonuses attached.</p>';
 
     var dropSources = (itemDroppedBy[it.key] || []).map(function (d) {
-      return '<div class="loot-row"><span>' + monsterLink(d.monster, d.monsterDisplayName) + "</span><span>" + fmtPct(d.chance) + " chance</span></div>";
+      return '<div class="loot-row"><span>Dropped by ' + monsterLink(d.monster, d.monsterDisplayName) + "</span><span>" + fmtPct(d.chance) + " of the time</span></div>";
     }).join("");
-    var shopSources = (itemSoldBy[it.key] || []).map(function (id) { return "<li>" + npcLink(id) + "</li>"; }).join("");
-    var sourcesHtml = (dropSources || shopSources)
-      ? dropSources + (shopSources ? '<ul class="list-plain">' + shopSources + "</ul>" : "")
-      : '<p class="lead">No shop listing or monster drop found in this data. It may be a quest or dialogue reward instead of a drop/purchase.</p>';
+    // Quest rewards are a real acquisition path the page could never show before, because the
+    // exporter didn't emit rewardItemKey - for the Godsforged pieces it is the *only* path.
+    var questSources = QUESTS.filter(function (q) { return q.rewardItemKey === it.key; })
+      .map(function (q) { return '<div class="loot-row"><span>Given for ' + questLink(q.id) + "</span><span>on turn-in</span></div>"; }).join("");
+    var shopSources = (itemSoldBy[it.key] || []).map(function (id) { return "<li>Sold by " + npcLink(id) + "</li>"; }).join("");
+    var sourcesHtml = (dropSources || shopSources || questSources)
+      ? questSources + dropSources + (shopSources ? '<ul class="list-plain">' + shopSources + "</ul>" : "")
+      : '<p class="lead">Nothing sells this and nothing is known to drop it — it most likely comes from talking to the right person.</p>';
 
     return (
       breadcrumb([["Items", "items"], [it.name, null]]) +
@@ -688,19 +808,23 @@
       "<h1>" + esc(it.name) + "</h1>" +
       '<div class="tags">' + rarityTag(it) +
       (zone ? '<span class="tag plain">' + zoneLink(zone) + "</span>" : "") +
-      (it.unlimitedUse === false ? '<span class="tag plain">Limited use</span>' : "") +
-      (it.undroppable ? '<span class="tag plain">Undroppable</span>' : "") +
+      (it.unlimitedUse === false ? '<span class="tag plain">Wears out with use</span>' : "") +
+      (it.undroppable ? '<span class="tag plain">Can\'t be dropped or traded</span>' : "") +
       "</div></div></div>" +
-      panel("Overview", '<div class="kv-grid">' +
-        kv("Price", it.price ? fmtNum(it.price) + " gold" : "Not sold") +
+      panel("The piece itself", '<div class="kv-grid">' +
+        kv("Price", it.price ? fmtNum(it.price) + " gold" : "Not for sale") +
         kv("Weight", fmtNum(it.weight)) +
-        kv("Armor class", it.armorClass ? fmtNum(it.armorClass) : "—") +
-        (it.dmgFormula ? kv("Damage", it.dmgFormula) : "") +
-        (it.atkDelay ? kv("Attack delay", it.atkDelay + " ms") : "") +
-        ((it.useEffects || []).length ? kv("Effect on use", esc(it.useEffects.join("; "))) : "") +
-        "</div>") +
-      panel("Requirements to equip", '<div class="kv-grid">' + reqHtml + "</div>") +
-      panel("Boosts", boostHtml) +
+        kv("Armor", it.armorClass ? fmtNum(it.armorClass) : "—") +
+        (it.dmgFormula ? kv("Damage", esc(damageWording(it.dmgFormula))) : "") +
+        (it.atkDelay ? kv("Swing speed", (it.atkDelay / 1000).toFixed(1) + " seconds between blows") : "") +
+        ((it.useEffects || []).length ? kv("When you use it", esc(it.useEffects.join("; "))) : "") +
+        "</div>" +
+        (it.dmgFormula
+          ? '<details class="curious"><summary>For the curious: the exact damage roll</summary>' +
+            "<p><code>" + esc(it.dmgFormula) + "</code></p></details>"
+          : "")) +
+      panel("What you need to wear it", '<div class="kv-grid">' + reqHtml + "</div>") +
+      panel("What it grants you", boostHtml) +
       panel("Where to get it", sourcesHtml)
     );
   });
@@ -711,14 +835,17 @@
     return listPage({
       title: "Spells",
       eyebrow: "Spells",
-      lead: "Every player-castable spell, with the ten added by this fork flagged “New”. Filter by element or minimum level.",
+      lead: "Every spell a character can learn, in the order you grow into them. Sort by element to find your school, or by level to see what's next.",
       rows: SPELLS,
       columns: [
         { key: "name", label: "Name", render: function (s) { return spellLink(s.key); } },
         { key: "element", label: "Element", render: function (s) { return elPill(elementName(s.element)); } },
-        { key: "minLevel", label: "Min level", numeric: true },
-        { key: "manaCost", label: "Mana", numeric: true },
-        { key: "isNew", label: "Origin", render: function (s) { return s.isNew ? '<span class="tag origin-new">New</span>' : '<span class="tag plain">Existing</span>'; } },
+        { key: "minLevel", label: "Learn at level", numeric: true },
+        // Not `numeric`: a handful of spells cost an expression ("self.maxmana"), which must read
+        // as words, and would sort as NaN. Those sort to the end instead.
+        { key: "manaCost", label: "Mana", render: function (s) { var p = plainCost(s.manaCost); return p === null ? "Varies" : esc(p); },
+          sortValue: function (s) { return /^\d+$/.test(String(s.manaCost)) ? Number(s.manaCost) : 1e9; } },
+        { key: "isNew", label: "", render: function (s) { return s.isNew ? '<span class="tag origin-new">New</span>' : ""; } },
       ],
       searchFields: ["name", "description"],
       filters: [
@@ -735,40 +862,56 @@
     var zone = spellZone[s.key];
     var el = elementName(s.element);
 
+    // The effect rows are raw engine data - a numeric effect type and a list of unlabelled
+    // expressions ("Effect type 9 | 10239, OnTimer, 100, 10000"). There is nothing a reader can
+    // do with that, so it lives behind a disclosure instead of being the last thing on the page.
     var effectsHtml = (s.effects || []).length
-      ? s.effects.map(function (e) {
-          var params2 = (e.parameters || []).map(function (p) { return esc(p.expression); }).join(", ");
-          return '<div class="loot-row"><span>Effect type ' + e.effectType + "</span><span><code>" + params2 + "</code></span></div>";
-        }).join("")
-      : '<p class="lead">No structured effect data (visual/utility spell).</p>';
+      ? '<details class="curious"><summary>For the curious: the raw effect data behind this spell</summary>' +
+        s.effects.map(function (e) {
+          var params2 = (e.parameters || []).map(function (p) { return esc(p.expression); })
+            .filter(function (x) { return x; }).join(", ");
+          return '<div class="loot-row"><span>Effect ' + e.effectType + "</span><span><code>" + params2 + "</code></span></div>";
+        }).join("") + "</details>"
+      : "";
+
+    var mana = plainCost(s.manaCost);
+    var cost = mana === null ? "Varies with your character" : (mana === "—" ? "Free" : mana);
+    var landChance = esc(String(s.successRate).replace(/^(\d+)$/, "$1%"));
 
     return (
       breadcrumb([["Spells", "spells"], [s.name, null]]) +
-      '<div class="detail-head"><div><p class="eyebrow">Spell · ' + (el ? el.charAt(0).toUpperCase() + el.slice(1) : "Unaligned") + '</p>' +
+      '<div class="detail-head"><div><p class="eyebrow">' + (el ? el.charAt(0).toUpperCase() + el.slice(1) + " spell" : "Spell") + '</p>' +
       "<h1>" + esc(s.name) + "</h1>" +
-      '<div class="tags">' + (s.isNew ? '<span class="tag origin-new">New</span>' : '<span class="tag plain">Existing</span>') +
+      '<div class="tags">' + (s.isNew ? '<span class="tag origin-new">New</span>' : "") +
       (zone ? '<span class="tag plain">' + zoneLink(zone) + "</span>" : "") +
-      (s.isAttack ? '<span class="tag tier-legendary">Offensive</span>' : '<span class="tag tier-uncommon">Support / utility</span>') +
-      (s.pvp === false ? '<span class="tag plain">PvE only</span>' : "") +
+      (s.isAttack ? '<span class="tag tier-legendary">Does harm</span>' : '<span class="tag tier-uncommon">Helps you or your allies</span>') +
+      (s.pvp === false ? '<span class="tag plain">Won\'t work on other players</span>' : "") +
       "</div></div></div>" +
-      panel("Description", '<p class="lead">' + esc(s.description || "No description.") + "</p>") +
-      panel("Cast requirements", '<div class="kv-grid">' +
-        kv("Min level", s.minLevel) + kv("Min Int", s.minInt) + kv("Min Wis", s.minWis) +
-        kv("Mana cost", s.manaCost) + kv("Cooldown", s.cooldownSeconds + "s") +
-        kv("Line of sight", s.lineOfSight ? "Required" : "Not required") +
-        kv("Learn price", s.price ? fmtNum(s.price) + " gold" : "—") +
+      panel("What it does", '<p class="lead">' + esc(s.description || "No description written for this one yet.") + "</p>") +
+      panel("What it takes to cast", '<div class="kv-grid">' +
+        kv("Level", s.minLevel) + kv("Intelligence", s.minInt) + kv("Wisdom", s.minWis) +
+        kv("Mana each cast", esc(cost)) +
+        kv("Wait between casts", s.cooldownSeconds ? s.cooldownSeconds + " seconds" : "None") +
+        kv("Needs a clear line to the target", s.lineOfSight ? "Yes" : "No") +
+        kv("Costs to learn", s.price ? fmtNum(s.price) + " gold" : "Nothing") +
         "</div>") +
-      (s.isAttack ? panel("Damage", (s.damageAtReference ?
+      (s.isAttack ? panel("How hard it hits", (s.damageAtReference ?
         '<div class="kv-grid">' +
-          kv("Damage at reference stats", fmtNum(s.damageAtReference.min) + "–" + fmtNum(s.damageAtReference.max)) +
-          kv("Attack type", s.attackType === 1 ? "Physical" : "Mental") +
-          kv("Success rate", s.successRate) +
+          kv("Damage", fmtNum(s.damageAtReference.min) + "–" + fmtNum(s.damageAtReference.max)) +
+          kv("Resisted by", s.attackType === 1 ? "The target's body" : "The target's mind") +
+          kv("Chance to land", landChance) +
         "</div>" +
-        '<p class="lead">Reference: a caster at exactly this spell\'s own Min Int/Min Wis/Min level, an untrained (100) elemental skill, against a target with neutral (100) resistance. Real damage scales up with the caster\'s trained elemental skill and with/against the target\'s real resistance - this number is for comparing spells, not a promise.</p>' +
-        '<div class="loot-row"><span>Formula</span><span><code>' + esc(s.damageAtReference.formula) + '</code></span></div>'
-        : '<div class="kv-grid">' + kv("Attack type", s.attackType === 1 ? "Physical" : "Mental") + kv("Success rate", s.successRate) + "</div>")
+        '<p class="lead">That range is what a character who has only just met this spell\'s ' +
+        "requirements would do to an ordinary, unresisting target. A trained caster does more, " +
+        "and a target that resists this element takes less — treat it as a way to compare " +
+        "spells against each other, not a promise.</p>" +
+        '<details class="curious"><summary>For the curious: the exact damage roll</summary>' +
+        "<p><code>" + esc(s.damageAtReference.formula) + "</code></p></details>"
+        : '<div class="kv-grid">' +
+          kv("Resisted by", s.attackType === 1 ? "The target's body" : "The target's mind") +
+          kv("Chance to land", landChance) + "</div>")
       ) : "") +
-      panel("Effects", effectsHtml)
+      effectsHtml
     );
   });
 
@@ -778,17 +921,16 @@
     return listPage({
       title: "NPCs",
       eyebrow: "NPCs",
-      lead: "New quest-givers, trainers and merchants, plus pre-existing NPCs given a new role.",
+      lead: "The people worth stopping for: who hands out work, who teaches, who sells, and where to find each of them.",
       rows: NPCS,
       columns: [
         { key: "displayName", label: "Name", render: function (n) { return npcLink(n.id); } },
-        { key: "origin", label: "Origin", render: function (n) { return originTag(n.origin); } },
-        { key: "zone", label: "Zone", render: function (n) { return npcZone[n.id] ? npcZone[n.id].map(zoneLink).join(", ") : "—"; }, sortValue: function (n) { return (npcZone[n.id] || []).join(", "); } },
-        { key: "topics", label: "Dialogue topics", numeric: true, render: function (n) { return (n.topics || []).length; }, sortValue: function (n) { return (n.topics || []).length; } },
-        { key: "shop", label: "Sells", render: function (n) { return SHOPS[n.id] ? SHOPS[n.id].length + " items" : "—"; }, sortValue: function (n) { return (SHOPS[n.id] || []).length; } },
+        { key: "zone", label: "Where", render: function (n) { return npcZone[n.id] ? npcZone[n.id].map(zoneLink).join(", ") : "—"; }, sortValue: function (n) { var o = zoneReadingOrder((npcZone[n.id] || [])[0]); return o[0] * 100 + o[1]; } },
+        { key: "topics", label: "Things to ask about", numeric: true, render: function (n) { return (n.topics || []).length; }, sortValue: function (n) { return (n.topics || []).length; } },
+        { key: "shop", label: "Sells", render: function (n) { return SHOPS[n.id] ? SHOPS[n.id].length + " things" : "—"; }, sortValue: function (n) { return (SHOPS[n.id] || []).length; } },
       ],
       searchFields: ["displayName", "id"],
-      filters: [{ label: "Origin", field: "origin", options: uniq(NPCS.map(function (n) { return n.origin; })) }],
+      filters: [],
       defaultSort: "displayName",
     });
   });
@@ -805,7 +947,7 @@
         (t.actions.length ? t.actions.map(function (a) { return '<span class="action-tag">' + esc(a) + "</span>"; }).join(" ") : "") +
         "</div>"
       );
-    }).join("") || '<p class="lead">No recorded dialogue topics.</p>';
+    }).join("") || '<p class="lead">Nothing to say beyond a greeting.</p>';
 
     var shopItems = (SHOPS[n.id] || []).map(function (k) { return "<li>" + itemLink(k) + "</li>"; }).join("");
     var combat = n.combatProfile;
@@ -816,40 +958,50 @@
       '<div class="tags">' + originTag(n.origin) +
       zones.map(function (z) { return '<span class="tag plain">' + zoneLink(z) + "</span>"; }).join("") +
       "</div></div></div>" +
-      (n.welcomeText ? panel("Greeting", '<p class="lead">“' + esc(n.welcomeText) + '”</p>') : "") +
-      panel("Dialogue", topicsHtml) +
-      (shopItems ? panel("Shop inventory", '<ul class="list-plain">' + shopItems + "</ul>") : "") +
-      (combat ? panel("Combat profile", '<div class="kv-grid">' +
-        kv("Level", combat.level) + kv("Max HP", fmtNum(combat.maxHp)) +
+      (n.welcomeText ? panel("How they greet you", '<p class="lead">“' + esc(n.welcomeText) + '”</p>') : "") +
+      panel("What you can ask them about",
+        '<p class="lead">Say any of the words on the left and you get the answer beside it.</p>' +
+        topicsHtml) +
+      (shopItems ? panel("What they sell", '<ul class="list-plain">' + shopItems + "</ul>") : "") +
+      (combat ? panel("If it comes to a fight", '<div class="kv-grid">' +
+        kv("Level", combat.level) + kv("Health", fmtNum(combat.maxHp)) +
         kv("Strength", combat.strength) + kv("Endurance", combat.endurance) +
-        kv("Dexterity", combat.dexterity) + kv("Armor class", combat.armorClass) +
-        kv("Attack skill", combat.attackSkill) + kv("Dodge", combat.dodge) +
-        kv("Damage", combat.damageFormula) + "</div>") : "")
+        kv("Dexterity", combat.dexterity) + kv("Armor", combat.armorClass) +
+        kv("Accuracy", combat.attackSkill) + kv("Dodge", combat.dodge) +
+        kv("Damage", esc(damageWording(combat.damageFormula))) + "</div>") : "")
     );
   });
 
   // ----------------------------------------------------------------- quests
 
   route("quests", function () {
-    var cards = QUESTS.map(function (q) {
-      var zone = questZone[q.id];
-      return (
-        '<a class="card" href="#/quests/' + slug(q.id) + '">' +
-        "<h3>" + esc(q.title) + "</h3>" +
-        "<p>" + (q.requiredKills > 0
-          ? "Kill " + q.requiredKills + "× " + esc(q.targetMonster) + " for " + npcPlain(q.giverNpc)
-          : "Turn in items to " + npcPlain(q.giverNpc)) + "</p>" +
-        '<div class="tags"><span class="tag tier-legendary">' + fmtNum(q.rewardGold) + " gold</span>" +
-        '<span class="tag tier-uncommon">' + fmtNum(q.rewardXp) + " XP</span>" +
-        (zone ? '<span class="tag plain">' + esc((byKey.zone[zone] || {}).name || zone) + "</span>" : "") +
-        (q.minLevel > 0 ? '<span class="tag plain">Level ' + q.minLevel + "+</span>" : "") +
-        "</div></a>"
-      );
-    }).join("");
+    function questCardsIn(chapterId) {
+      return QUESTS.filter(function (q) {
+        var z = byKey.zone[questZone[q.id]];
+        return chapterId === null ? !(z && chapterById[z.chapter]) : (z && z.chapter === chapterId);
+      }).sort(byZoneOrder(function (q) { return questZone[q.id]; })).map(function (q) {
+        return (
+          '<a class="card" href="#/quests/' + slug(q.id) + '">' +
+          "<h3>" + esc(q.title) + "</h3>" +
+          '<p class="card-meta">' + npcPlain(q.giverNpc) + "</p>" +
+          "<p>" + (q.requiredKills > 0
+            ? "Kill " + q.requiredKills + " " + esc(q.targetMonster) + (q.requiredKills > 1 ? "s" : "")
+            : "Bring what they ask for") +
+          (q.requiredItemKey ? ", and bring " + itemPlain(q.requiredItemKey) : "") + ".</p>" +
+          '<div class="tags"><span class="tag tier-legendary">' + fmtNum(q.rewardGold) + " gold</span>" +
+          '<span class="tag tier-uncommon">' + fmtNum(q.rewardXp) + " XP</span>" +
+          (q.rewardItemKey ? '<span class="tag tier-godsforged">' + itemPlain(q.rewardItemKey) + "</span>" : "") +
+          (q.minLevel > 0 ? '<span class="tag plain">Level ' + q.minLevel + " and up</span>" : "") +
+          "</div></a>"
+        );
+      }).join("");
+    }
     return (
-      '<div class="page-header"><p class="eyebrow">Quests</p><h1>Quest walkthroughs</h1>' +
-      '<p class="lead">Every quest added since the fork, with full offer/completion text, objective location, and rewards.</p></div>' +
-      '<div class="card-grid">' + cards + "</div>"
+      '<div class="page-header"><p class="eyebrow">Quests</p><h1>Everyone who needs something doing</h1>' +
+      '<p class="lead">Laid out along the same road as everything else, so you can read down the ' +
+      "page and see what to take on next. Each one tells you who to talk to, exactly what they " +
+      "want, what you have to hand over, and what you walk away with.</p></div>" +
+      chapterSections(questCardsIn)
     );
   });
 
@@ -858,63 +1010,79 @@
     return n ? esc(n.displayName) : esc(id);
   }
 
+  function itemPlain(key) {
+    var it = byKey.item[key];
+    return it ? esc(it.name) : esc(key);
+  }
+
   route("quests/:id", function (params) {
     var q = byKey.quest[params.id];
     if (!q) return notFound("Quest");
     var zone = questZone[q.id];
     var mapHtml = questMap(q, zone);
 
+    // Two lists that are easy to confuse, and were confused for a long time: what you hand OVER
+    // (requiredItemKey / alsoRequiresItemKey, consumed by QuestService.consumeRequiredItem) and
+    // what you are GIVEN (rewardItemKey, granted by QuestService.complete). Keeping them in
+    // separate blocks, each labelled with its verb, is the whole point - the walkthrough text
+    // used to describe the first as the second.
+    var bring = [];
+    if (q.requiredItemKey) {
+      bring.push((q.requiredItemQty > 1 ? q.requiredItemQty + " × " : "") + itemLink(q.requiredItemKey));
+    }
+    if (q.alsoRequiresItemKey) bring.push(itemLink(q.alsoRequiresItemKey));
+
+    var bringHtml = bring.length
+      ? '<p class="lead"><strong>Bring with you:</strong> ' + bring.join(", ") + ". " +
+        (bring.length > 1 || q.requiredItemQty > 1
+          ? "These are handed over and gone — you do not keep them."
+          : "It is handed over and gone — you do not keep it.") + "</p>"
+      : "";
+
     return (
       breadcrumb([["Quests", "quests"], [q.title, null]]) +
       '<div class="detail-head"><div><p class="eyebrow">Quest' + (zone ? " · " + esc((byKey.zone[zone] || {}).name || "") : "") + '</p>' +
       "<h1>" + esc(q.title) + "</h1>" +
-      '<div class="tags"><span class="tag plain">Given by ' + npcLink(q.giverNpc) + "</span></div></div></div>" +
-      (q.walkthroughText ? panel("Walkthrough", '<p class="lead">' + esc(q.walkthroughText) + "</p>") : "") +
-      panel("Steps", "" +
+      '<div class="tags"><span class="tag plain">Given by ' + npcLink(q.giverNpc) + "</span>" +
+      (q.minLevel > 0 ? '<span class="tag plain">Level ' + q.minLevel + " and up</span>" : "") +
+      "</div></div></div>" +
+      (q.walkthroughText ? panel("How to do it", '<p class="lead">' + esc(q.walkthroughText) + "</p>") : "") +
+      panel("Step by step", "" +
         '<div class="quest-step"><span class="num">1</span><div>' +
         "<strong>Talk to " + npcLink(q.giverNpc) + "</strong>" +
-        '<div class="quest-text-block"><span class="label">Quest offer</span>“' + esc(q.offerText) + "”</div>" +
+        '<div class="quest-text-block"><span class="label">What they ask</span>“' + esc(q.offerText) + "”</div>" +
         "</div></div>" +
         '<div class="quest-step"><span class="num">2</span><div>' +
         (q.requiredKills > 0
-          ? "<strong>Kill " + q.requiredKills + "× " + monsterLink(q.targetMonster) + "</strong>" +
-            '<p class="lead">Kills only count inside the objective area shown below (world Z ' +
-            q.targetWorldZ + ").</p>"
-          : "<strong>Gather the required items</strong>") +
-        (q.requiredItemKey
-          ? '<p class="lead">Collect ' + q.requiredItemQty + "× " + itemLink(q.requiredItemKey) +
-            (q.requiredKills > 0 ? " (a rare drop) — it's consumed on turn-in." : " — it's consumed on turn-in.") +
-            "</p>"
-          : "") +
-        (q.alsoRequiresItemKey
-          ? '<p class="lead">Also bring ' + itemLink(q.alsoRequiresItemKey) + " — it's consumed on turn-in too.</p>"
-          : "") +
+          ? "<strong>Kill " + q.requiredKills + " " + monsterLink(q.targetMonster) + "</strong>" +
+            '<p class="lead">Only kills inside the area on the map below count, so work that ground.</p>'
+          : "<strong>Gather what they asked for</strong>") +
+        bringHtml +
         "</div></div>" +
         '<div class="quest-step"><span class="num">3</span><div>' +
-        "<strong>Return to " + npcLink(q.giverNpc) + "</strong>" +
-        '<div class="quest-text-block"><span class="label">On completion</span>“' + esc(q.completionText) + "”</div>" +
-        '<div class="quest-text-block"><span class="label">If you return again</span>“' + esc(q.completedText) + "”</div>" +
+        "<strong>Go back to " + npcLink(q.giverNpc) + "</strong>" +
+        '<div class="quest-text-block"><span class="label">What they say</span>“' + esc(q.completionText) + "”</div>" +
+        '<div class="quest-text-block"><span class="label">And if you call in again later</span>“' + esc(q.completedText) + "”</div>" +
         '<div class="rewards-row"><span class="reward gold">✦ ' + fmtNum(q.rewardGold) + " gold</span>" +
-        '<span class="reward xp">✦ ' + fmtNum(q.rewardXp) + " XP</span></div>" +
+        '<span class="reward xp">✦ ' + fmtNum(q.rewardXp) + " XP</span>" +
+        (q.rewardItemKey ? '<span class="reward item">✦ ' + itemLink(q.rewardItemKey) + "</span>" : "") +
+        "</div>" +
         (q.minLevel > 0
-          ? '<p class="lead">Requires character level ' + q.minLevel + " or higher to turn in - kills/items can still be gathered below that.</p>"
+          ? '<p class="lead">They will not settle up until you are level ' + q.minLevel +
+            ". You can do all the fighting and collecting before then; only the hand-over waits.</p>"
           : "") +
         (q.unlockZoneId
-          ? '<p class="lead">Unlocks fast travel to ' + zoneLink(q.unlockZoneId) + ".</p>"
+          ? '<p class="lead">Finishing it opens the fast road to ' + zoneLink(q.unlockZoneId) + ".</p>"
           : "") +
         "</div></div>") +
       panel(
-        q.requiredKills > 0 ? "Objective area" : "Turn-in",
+        q.requiredKills > 0 ? "Where to do it" : "Where to hand it in",
         '<div class="kv-grid">' +
-          (q.requiredKills > 0 ? kv("Target", monsterLink(q.targetMonster)) + kv("Required kills", q.requiredKills) : "") +
-          (q.requiredItemKey
-            ? kv("Required item", q.requiredItemQty + "× " + itemLink(q.requiredItemKey))
-            : "") +
-          (q.alsoRequiresItemKey ? kv("Also required", itemLink(q.alsoRequiresItemKey)) : "") +
-          (q.minLevel > 0 ? kv("Minimum level", q.minLevel) : "") +
-          (q.unlockZoneId ? kv("Unlocks zone", zoneLink(q.unlockZoneId)) : "") +
-          kv(q.requiredKills > 0 ? "Center" : "Location", "(" + q.areaCenterX + ", " + q.areaCenterY + ")") +
-          (q.requiredKills > 0 ? kv("Radius", q.areaRadiusTiles + " tiles") : "") +
+          (q.requiredKills > 0 ? kv("What to kill", monsterLink(q.targetMonster)) + kv("How many", q.requiredKills) : "") +
+          (bring.length ? kv("What to hand over", bring.join(", ")) : "") +
+          (q.rewardItemKey ? kv("What you're given", itemLink(q.rewardItemKey)) : "") +
+          (q.minLevel > 0 ? kv("Level needed to finish", q.minLevel) : "") +
+          (q.unlockZoneId ? kv("Opens the road to", zoneLink(q.unlockZoneId)) : "") +
           "</div>" +
           mapHtml)
     );
@@ -1002,11 +1170,13 @@
 
     return (
       '<section class="panel" id="xpCurvePanel">' +
-      "<h2>XP required per level</h2>" +
-      '<p class="lead">XP needed to advance from each level to the next — log scale, since the curve spans ' +
-      xpCompact(s.entries[0].xpToNextLevel) + " at level 1 to " + xpCompact(s.maxXp) + " at level " + s.maxLevel +
-      ". Monster kills are multiplied " + XP_CURVE.serverXpRate + "x by the server (<code>GameConstants.SERVER_XP_RATE</code>)" +
-      " before being applied against this curve. Level " + (s.maxLevel + 1) + " is the level cap (no further XP needed).</p>" +
+      "<h2>How long each level takes</h2>" +
+      '<p class="lead">Experience needed to go from one level to the next. The scale is squashed, ' +
+      "because the climb runs from " + xpCompact(s.entries[0].xpToNextLevel) + " at level 1 to " +
+      xpCompact(s.maxXp) + " at level " + s.maxLevel + " — a flat chart would be one long wall. " +
+      "Everything you kill is worth " + XP_CURVE.serverXpRate + " times its listed experience, so " +
+      "the climb is gentler than these numbers look. Level " + (s.maxLevel + 1) + " is as high as " +
+      "anyone goes. Hover anywhere on the line to read off a level.</p>" +
       '<div class="chart-wrap">' +
       '<svg id="xpCurveSvg" viewBox="0 0 ' + XP_CHART_W + " " + XP_CHART_H + '" role="img" aria-label="XP required to reach each level, log scale">' +
       gridlines + xTicks +
@@ -1093,9 +1263,9 @@
 
   route("systems", function () {
     setTimeout(wireXpCurveChart, 0);
-    var timeline = (META.systemsPasses || []).map(function (p) {
+    var timeline = (META.updates || []).map(function (p) {
       return (
-        '<div class="timeline-item"><h3>' + esc(p.title) + " <code>" + esc(p.pass) + '</code></h3>' +
+        '<div class="timeline-item"><h3>' + esc(p.title) + "</h3>" +
         '<div class="date">' + esc(p.date) + "</div>" +
         "<ul>" + p.bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + "</ul></div>"
       );
@@ -1119,14 +1289,19 @@
       : "";
 
     return (
-      '<div class="page-header"><p class="eyebrow">Systems &amp; economy</p><h1>Systems, economy and process passes</h1>' +
-      '<p class="lead">Non-zone changes: rebirth/economy tuning, engine fixes, and standalone content not tied to a single zone.</p></div>' +
-      '<div class="section-title">Leveling curve</div>' + xpCurveChartHtml() +
-      panel("Rebirths", '<p class="lead">Level requirements, starting attributes, energy points and Seraph aura strength for every rebirth: ' + link("rebirths", "see the Rebirths page") + ".</p>") +
-      '<div class="section-title">Pass timeline</div><div class="timeline">' + timeline + "</div>" +
+      '<div class="page-header"><p class="eyebrow">How the game works</p><h1>Levelling, gear and what has changed lately</h1>' +
+      '<p class="lead">The parts of the game that are not tied to any one place: how long the ' +
+      "climb takes, what starting over buys you, the armor sets, and what has changed recently." +
+      "</p></div>" +
+      '<div class="section-title">The climb</div>' + xpCurveChartHtml() +
+      panel("Starting over", '<p class="lead">When a character has gone as far as they can, they ' +
+        "can be reborn: back to level 1, but permanently stronger, with points to spend on what " +
+        "kind of character they become next. " + link("rebirths", "How rebirth works, step by step") + ".</p>") +
       '<div class="section-title">Armor sets</div>' + collections +
-      '<div class="section-title">Standalone items</div>' + panel("Not part of a zone or set", standalone) +
-      '<div class="section-title">Colosseum</div>' + colosseumHtml
+      '<div class="section-title">Gear that stands on its own</div>' +
+      panel("Not part of a set, not tied to a place", standalone) +
+      '<div class="section-title">The arena</div>' + colosseumHtml +
+      '<div class="section-title">What has changed lately</div><div class="timeline">' + timeline + "</div>"
     );
   });
 

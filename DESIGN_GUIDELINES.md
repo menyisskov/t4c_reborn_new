@@ -434,10 +434,45 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Never show a generic "monster drop" label for where an item comes from. Name the actual
   monster/boss (every one of them, if more than one drops it) via `lootSources.json`'s
   `monsterDisplayName`, the same way an item's own detail page already does.
-- Every quest page must show a location — coordinates at minimum, a map wherever one exists —
-  even a turn-in-only quest with no kill objective, and even a quest not yet listed under any
-  zone's `quests` array (T4C-0053). A quest with no zone match still gets a schematic worldmap
-  dot from its own `areaCenterX/Y`/`areaRadiusTiles` rather than showing nothing.
+- Every quest page must show a location — a map wherever one exists (T4C-0053). A quest with no
+  zone match still gets a schematic worldmap dot from its own `areaCenterX/Y`/`areaRadiusTiles`
+  rather than showing nothing. Since T4C-0055 the map carries the location and the prose does
+  not: walkthroughs no longer recite coordinates or tile radii, they say "the marked area".
+
+### 4a. Editorial rules for the site (T4C-0055)
+
+The compendium is read by **someone who plays the game and has never opened this repo**. The
+`technical-writer` skill is the full standard and the pre-PR review gate; it is required reading
+before changing any player-facing string, and its leak scan must be clean. The rules that bind:
+
+- **Nothing internal reaches the reader.** No `T4C-XXXX` task IDs, class or file names,
+  registry keys (`item.*`, `spell.*`), engine expressions (`self.maxmana`, dice formulas), raw
+  effect rows, `@Spawn`/"spawn points", "geofence"/"world Z"/"tile radius", or dev vocabulary
+  ("authored", "activated", "fully-stat'd", "placeholder stub"). Repo history is not player
+  history: drop "pre-existing", "since the fork", "this pass". Data-only fields may keep ids
+  the site resolves to display names; prose may not.
+- **Zones, maps and quests read as one progressing journey.** The chapters live in
+  `meta.json`; each zone carries `chapter`, `chapterOrder` and `nextZoneId`, and every list
+  page groups by chapter and orders by level, never alphabetically or by build date. A zone
+  page states what the place is, who holds it, why they turned, what it demands, and where you
+  go next. A new zone without a chapter still renders, in a trailing "Elsewhere" group.
+- **Technical detail is demoted, not deleted.** Formulas, raw effect parameters and similar go
+  inside a `<details class="curious">` block; the default view shows the plain version (a
+  damage range, a named mana cost, a percentage).
+- **Prose never retypes a number the page can render.** Gold, XP and kill counts come from the
+  quest data; a sentence that quotes one will drift. This is the same rule as "publish computed
+  values" above, applied to prose.
+- **What you hand over and what you receive are never conflated.** `requiredItemKey` and
+  `alsoRequiresItemKey` are consumed on turn-in; `rewardItemKey` is granted. They render in
+  separate, verb-labelled blocks. Ten walkthroughs got this backwards before T4C-0055 — several
+  also told the player a boss was optional when that boss was the only source of the item they
+  had to bring — so check new quest prose against the definition, not against the other
+  walkthroughs.
+
+**Open question for the owner (T4C-0055):** ten quests require a rare boss drop (0.8–2%) to
+turn in, while their text had long described that item as the reward. The text now matches the
+code — you bring it. If the intent was the opposite (the drop is the prize, and the turn-in
+should not consume it), that is a content change, not an editorial one, and needs its own pass.
 
 ## 5. Process
 - Every player-visible change gets a `T4C-XXXX` ID in `TASKS.md` and a player-facing
@@ -458,7 +493,9 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - A new or tightened limit always comes with a decision about saves already past it: clamp what
   the game derives, keep what the player chose or spent, and cover it with a load test.
 - Use the workflow skills: `balance-change` for any rule or number change, `ship-pr` to land
-  it, and `verify-website` whenever website-visible data or pages change.
+  it, `verify-website` whenever website-visible data or pages change, and `technical-writer`
+  whenever any player-facing wording changes (they pair: one checks the data and the render,
+  the other checks the words).
 
 ## 6. Quests
 - **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest
