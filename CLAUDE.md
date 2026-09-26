@@ -124,6 +124,10 @@ that now guards against it.
 - A field existing on a definition but never exported means the site cannot show it, and the
   prose starts compensating with something untrue (`rewardItemKey`). When a page can't state a
   fact, fix the exporter rather than writing around it.
+- Fixing a wrong fact on one surface and leaving it on the parallel one: all 23 quest
+  walkthroughs were corrected while four zone summaries kept the same "that boss is optional"
+  claim, and the review caught it. When a fact lives in two places, check both. Now guarded by
+  the zone-summary/forced-boss cross-check in the `technical-writer` skill.
 
 ## Other project docs worth knowing about
 

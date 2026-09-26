@@ -166,7 +166,35 @@ actually drives it. The traps that have already bitten:
 - **"Unlocks fast travel to X"** must match a non-null `unlockZoneId`.
 - **Prerequisites** ("once you've finished Y") must match a real gate, not a suggestion.
 
+**Fix it on every surface, not just the one you were looking at.** The first run of this pass
+corrected all 23 walkthroughs and left the identical "that boss is optional" claim sitting in
+four zone summaries, which the PR review then caught. A fact that appears in two places has to
+be checked in both.
+
 ```bash
+# Which bosses does a quest in this zone actually force you to kill? Read each listed zone
+# summary against that set - if the summary calls one of them optional, skippable, "a separate
+# decision" or "not required", it is wrong.
+python - <<'PY'
+import json, io, collections
+Z = json.load(io.open('compendium/data/zones.json', encoding='utf-8'))
+Q = {q['id']: q for q in json.load(io.open('compendium/data/quests.json', encoding='utf-8'))}
+src = collections.defaultdict(set)
+for l in json.load(io.open('compendium/data/lootSources.json', encoding='utf-8')):
+    src[l['item']].add(l.get('monsterDisplayName') or l['monster'])
+
+for z in Z:
+    forced = set()
+    for qid in z.get('quests', []):
+        q = Q.get(qid) or {}
+        for k in (q.get('requiredItemKey'), q.get('alsoRequiresItemKey')):
+            if k:
+                forced |= src.get(k, set())
+    if forced:
+        print(z['id'], '-> must kill:', ', '.join(sorted(forced)))
+        print('   ', z['summary'], '\n')
+PY
+
 # Cross-check every quest's prose against its own data
 python - <<'PY'
 import json, io
@@ -179,6 +207,9 @@ for x in q:
     if x.get('unlockZoneId') is None and 'unlock' in w.lower():
         print('CHECK phantom unlock:', x['id'])
 PY
+
+# Claims of exclusivity ("the only place X drops") are almost always wrong - check lootSources.
+grep -noiE '(the )?only (place|source|way)[^.]*' compendium/data/zones.json compendium/data/meta.json
 ```
 
 ### 3c. Read it as a player (the pass that matters)

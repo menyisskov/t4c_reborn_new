@@ -30678,7 +30678,7 @@ window.T4C_DATA = {
       "chapterOrder": 2.0,
       "levelRange": "38–50",
       "biome": "Drowned shrine",
-      "summary": "A cult shrine on the coast east of Silversky that the sea took and never gave back. Its priesthood drowned with it and came up again wrong, and they have been pulling people under ever since the tide woke the place. Bring something that hurts the drowned, and don't wade in any deeper than you need to — Mordrenn holds the inner chancel, and he is not a fight you want to stumble into.",
+      "summary": "A cult shrine on the coast east of Silversky that the sea took and never gave back. Its priesthood drowned with it and came up again wrong, and they have been pulling people under ever since the tide woke the place. Bring something that hurts the drowned, and be ready to go all the way in: Mordrenn holds the inner chancel, and Tide Warden Bryn's errand ends with him.",
       "nextZoneId": "cinderreach_hills",
       "worldmapCenter": {
         "x": 1750.0,
@@ -30834,7 +30834,7 @@ window.T4C_DATA = {
       "chapterOrder": 3.0,
       "levelRange": "200–260",
       "biome": "Mountain aerie",
-      "summary": "The western peaks, and the first rung of the drake ladder. Wyrmlings nest across the whole rock face, and a Lesser Drake roosts above them keeping the nest fed. The wyrmlings are the fight Skywatch Ilvara asks for; the drake overhead is optional, and considerably less survivable.",
+      "summary": "The western peaks, and the first rung of the drake ladder. Wyrmlings nest across the whole rock face, and a Lesser Drake roosts above them keeping the nest fed. Skywatch Ilvara's cull starts with the wyrmlings and finishes with the drake — the signet she wants back is carried by the drake itself, so there is no thinning the nest and walking away.",
       "nextZoneId": "avalon_sanctuary",
       "worldmapCenter": {
         "x": 2350.0,
@@ -30945,7 +30945,7 @@ window.T4C_DATA = {
       "chapterOrder": 1.0,
       "levelRange": "400–500",
       "biome": "Mountain fortress",
-      "summary": "A stone hold in Kraanhold's high country, and the second rung of the drake ladder. The Bastion Wardens here keep the wards around the Greater Drake's ruin renewing themselves, and Grandmaster Voss wants that stopped before they finish. Breaking the guard is the job; the Greater Drake waiting behind them is a separate decision entirely.",
+      "summary": "A stone hold in Kraanhold's high country, and the second rung of the drake ladder. The Bastion Wardens here keep the wards around the Greater Drake's ruin renewing themselves, and Grandmaster Voss wants that stopped before they finish. Breaking the guard is only half of it: the heartfire Voss asks you to bring back comes off the Greater Drake behind them.",
       "nextZoneId": "fading_veil",
       "worldmapCenter": {
         "x": 2650.0,
@@ -30976,7 +30976,7 @@ window.T4C_DATA = {
       "levelRange": "450–650",
       "biome": "Blighted woodland",
       "settlement": "Avalon Sanctuary",
-      "summary": "A blight spreading outward from Ysolde's lair, taking Avalon one season at a time. Sir Caradoc's armour still walks the Veil, worn by something that stopped being him a long time ago. The hardest ground on the island, and the only place the Veiled Aether Shards come from.",
+      "summary": "A blight spreading outward from Ysolde's lair, taking Avalon one season at a time. Sir Caradoc's armour still walks the Veil, worn by something that stopped being him a long time ago. The hardest ground on the island, and one of the two places Veiled Aether Shards drop — the Rootcrown Wyrm, away in Drake's Lair, is the other.",
       "nextZoneId": "drakes_lair",
       "worldmapCenter": {
         "x": 1420.0,
