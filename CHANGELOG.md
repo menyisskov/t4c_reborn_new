@@ -13,6 +13,15 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — Friendly-target casting groundwork (T4C-0057)
+
+### Changed
+- **Shift-clicking a quickbar slot** for Barrier, Protection, Mana Shield, Mana Surge, Bless or
+  Healing now arms a target cursor instead of casting on yourself immediately - a plain click on
+  the slot (no Shift) still casts on yourself instantly, exactly as before. Since there's no one
+  else in the world to aim it at yet, clicking with it armed currently just tells you there's no
+  valid target; this is groundwork for the day another player can stand next to you.
+
 ## 2026-09-26 — Gloomblade and Demonblade recipes actually finishable (T4C-0058)
 
 ### Changed

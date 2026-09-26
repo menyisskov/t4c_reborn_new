@@ -48,16 +48,26 @@ public class ClickToMoveHandler extends InputAdapter {
     if (button != Input.Buttons.LEFT) {
       return false;
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
-        || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
-      return false;
-    }
+    boolean shiftDown =
+        Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+            || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
     if (player == null) {
       return false;
     }
     if (hud != null) {
       int slot = hud.getQuickSlotAt(screenX, screenY);
       if (slot > 0) {
+        // T4C-0057: Shift+click on a quickbar slot arms a friendly-target cast (see
+        // MainGameScreen#handleQuickbarSpell / #isFriendlyTargetModifierHeld). Record the press
+        // directly here, skipping the Control-drag check below - a non-quickbar click still
+        // falls through to "return false" the same as before, Shift or not.
+        if (shiftDown) {
+          pressedQuickbarSlot = slot;
+          pressedQuickbarX = screenX;
+          pressedQuickbarY = screenY;
+          draggingQuickbarSlot = false;
+          return true;
+        }
         boolean controlDown =
             Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
                 || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
