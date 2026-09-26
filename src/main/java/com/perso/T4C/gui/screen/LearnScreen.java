@@ -412,14 +412,31 @@ public class LearnScreen extends GuiListScreen {
     rebuildList();
   }
 
-  private boolean isKnown(String spellName) {
-    return player != null && player.getSpells() != null && player.getSpells().contains(spellName);
+  // Compares resolved spell keys, not raw saved strings, so a spell that was renamed since a
+  // character learned it (SpellRegistry's legacy-alias switch, e.g. saved "${spell.
+  // undead_annihilation}" now resolving to Sunscour) still counts as known - the same check
+  // SpellCastingService.hasLearnedSpell uses to decide whether a cast is allowed.
+  private boolean isKnown(SpellData spell) {
+    if (player == null || spell == null || player.getSpells() == null) {
+      return false;
+    }
+    String targetKey = spell.getKey();
+    for (String learned : player.getSpells()) {
+      if (learned == null) {
+        continue;
+      }
+      SpellData resolved = SpellRegistry.findByName(learned);
+      if (targetKey.equals(learned) || (resolved != null && targetKey.equals(resolved.getKey()))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private boolean isMaxed(LearnEntry entry) {
     SpellData granted = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
     if (granted != null) {
-      return isKnown(granted.getName());
+      return isKnown(granted);
     }
     return currentSkillLevel(entry) >= entry.maxLevel;
   }
@@ -446,7 +463,7 @@ public class LearnScreen extends GuiListScreen {
       return I18n.message("message.learn_need_wisdom", spell.getMinWis());
     }
     SpellData prerequisite = SpellRegistry.offensiveChainPredecessor(spell);
-    if (prerequisite != null && !isKnown(prerequisite.getName())) {
+    if (prerequisite != null && !isKnown(prerequisite)) {
       return I18n.message(
           "message.learn_need_prior_spell",
           I18n.key(prerequisite.getKey(), I18n.resolve(prerequisite.getName())));
@@ -476,10 +493,11 @@ public class LearnScreen extends GuiListScreen {
     if (spell == null) {
       return null;
     }
-    String description = I18n.resolve(spell.getDescription());
-    return description == null || description.isBlank() || description.equals(spell.getDescription())
-        ? null
-        : description;
+    // SpellTooltipText.build's first line is the spell's own name, which rowDisplayName already
+    // shows - drop it here the same way ShopScreen.rowInfoText does for items.
+    String text = com.perso.T4C.gui.widget.SpellTooltipText.build(spell);
+    int firstLine = text.indexOf('\n');
+    return firstLine < 0 ? null : text.substring(firstLine + 1);
   }
 
   private static String skillName(LearnEntry entry) {

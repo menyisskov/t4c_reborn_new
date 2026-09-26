@@ -32,12 +32,38 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
   // T4C-0054: press-and-hold repeat-fires the callback (e.g. skill/stat "+1" spin buttons) so
   // allocating a large batch of points doesn't take one click per point. No held-input timer
   // existed anywhere in this hand-rolled GUI, so this piggybacks on render() (already called
-  // every frame) rather than adding a new update hook.
+  // every frame) rather than adding a new update hook. Opt-in via repeatable(true) - a plain
+  // toggle button (e.g. the spellbook's macro +/- button) must NOT repeat, since re-firing its
+  // callback every 60ms would flip its state back and forth instead of incrementing anything.
   private static final long HOLD_REPEAT_DELAY_MS = 350L;
   private static final long HOLD_REPEAT_INTERVAL_MS = 60L;
+  private boolean repeatable;
   private long pressStartMillis;
   private long lastRepeatMillis;
   private boolean repeatFired;
+
+  public GuiButton repeatable(boolean repeatable) {
+    this.repeatable = repeatable;
+    return this;
+  }
+
+  /**
+   * Carries an in-progress hold-and-repeat over from a button this one replaces at the same
+   * screen slot (e.g. a spin button recreated by rebuildList() while the mouse is still held) -
+   * otherwise the new instance's press/timing state starts blank and the hold silently stops
+   * after the first repeat, since the replaced button never received the touch-up that would
+   * normally end it.
+   */
+  public void adoptHoldStateFrom(GuiButton previous) {
+    if (previous == null || !repeatable) {
+      return;
+    }
+    this.isPressed = previous.isPressed;
+    this.isHovered = previous.isHovered;
+    this.pressStartMillis = previous.pressStartMillis;
+    this.lastRepeatMillis = previous.lastRepeatMillis;
+    this.repeatFired = previous.repeatFired;
+  }
 
   public GuiButton withLabel(
       com.badlogic.gdx.graphics.g2d.BitmapFont font, java.util.function.Supplier<String> text) {
@@ -156,7 +182,7 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
   }
 
   private void fireHeldRepeat() {
-    if (!isPressed || !enabled || !visible || callback == null) {
+    if (!repeatable || !isPressed || !enabled || !visible || callback == null) {
       return;
     }
     if (!contains(Gdx.input.getX(), Gdx.input.getY())) {
