@@ -22,6 +22,70 @@ on, every content/feature pass adds its own entry here as part of the work
   these is someone a long questline sends you back to again and again - this cuts the repeat
   walk, it doesn't unlock anything new.
 
+## 2026-09-26 — Spell hierarchy, spellbook info, and a few quality-of-life fixes (T4C-0054)
+
+### Added
+- Hovering a spell in your spellbook, or in a shop or trainer list, now shows what it actually
+  does: its description, element, whether it's a physical or mental attack, and its level,
+  Intelligence, Wisdom and mana requirements. Hovering a shop item shows the same kind of detail.
+- Holding down a "+1" button (spending stat points, skill points, or adding to a shop/spell
+  basket) now keeps adding for as long as you hold it, instead of one click per point.
+
+### Changed
+- Every element's offensive spells now form a proper progression at the Lighthaven spell
+  seller — you need to already know the previous spell in the line (for example Stone Shard →
+  Shatter → Earthquake → Boulders) before the next one becomes available.
+- Learning a spell now costs skill points based on how powerful it is, instead of a flat 5
+  points for everything. Low-level spells stay cheap; the strongest spells cost up to 100.
+  A few spells that used to teach you nothing when bought from certain trainers (their gold and
+  points were spent, but the spell never actually appeared in your spellbook) now work correctly.
+- Three internal effects that were never meant to be player spells (a boss aura, the rebirth
+  aura, and the automatic on-level-up stat boost) no longer show up in the spellbook or at the
+  spell seller. If your character already had one of these in their spell list from before this
+  fix, it's simply hidden from view now — nothing else changes.
+- Spell cast times now speed up the more your level outgrows a spell's own requirement, the same
+  way older spells already worked. The very strongest spells (right at the level cap) are already
+  as fast as they'll ever get the moment you learn them.
+- Strength keeps meaningfully increasing how much you can carry well past 1000 strength, instead
+  of the old formula flattening out almost entirely by that point.
+
+## 2026-09-26 — The reference website, rewritten for players (T4C-0055)
+
+### Changed
+- **The world now reads as a journey, not a list.** Zones, maps and quests are grouped into
+  five named stretches of the world — the coast road, the crossing to Kraanhold, the road to
+  Avalon, the world coming apart, and the last peak — each introduced in a short paragraph and
+  ordered by the level you would reach them at. You can read the Zones page from top to bottom
+  and come away knowing the whole route.
+- **Every zone says where you go next.** A zone page now names the place you came from and the
+  place that follows it, and describes who holds the ground, why they turned hostile and what
+  to bring, instead of listing when it was built.
+- **Plain language everywhere.** Page headings, captions, table columns and empty-state
+  messages across the site were rewritten for someone who plays the game and has never read a
+  line of its code. Panels now say "What lives here", "How it fights" and "Where to get it"
+  rather than naming internal systems.
+- **The harder numbers are explained or tucked away.** Damage rolls, spell effect data and
+  other raw figures now sit behind a "For the curious" link, with the plain version — a damage
+  range, a mana cost, a chance to land — shown by default.
+- **Patch notes on the site are written for players**, and no longer mention internal tooling.
+
+### Fixed
+- **Quest pages described required items as rewards.** Ten quests told you that you would
+  *receive* an item that you actually have to *bring* and hand over — and several said the boss
+  carrying it "isn't required" when that boss is the only place it drops. Every quest page now
+  separates what you hand over from what you are given, and the walkthroughs match.
+- **Quest item rewards were invisible.** The item you get for finishing a quest was never shown
+  at all, so the whole Godsforged crafting chain looked as though it paid only gold. Those
+  seven quests now show the weapon, core or sigil they hand you, and each of those items now
+  lists the quest as a way to get it.
+- **Spell pages showed gibberish where the mana cost should be.** Fourteen gateway and portal
+  spells displayed a fragment of the game's own scripting instead of a cost; they now read
+  "All your mana".
+- **Deep Ones Cave listed its level range as a place name**, and never said what level it is
+  for. It now reads 32–42, like every other zone.
+- **The site contradicted itself about the level cap**, quoting an old, higher number in one
+  place and the real one in another.
+
 ## 2026-09-26 — Quest locations always shown (T4C-0053)
 
 ### Changed

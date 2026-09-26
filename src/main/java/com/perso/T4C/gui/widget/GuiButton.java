@@ -1,7 +1,9 @@
 package com.perso.T4C.gui.widget;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.gui.core.AbstractGuiElement;
 import com.perso.T4C.gui.core.GuiBoxedItem;
@@ -27,6 +29,41 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
   private final com.badlogic.gdx.graphics.g2d.GlyphLayout layout =
       new com.badlogic.gdx.graphics.g2d.GlyphLayout();
   private static final float LABEL_PAD = 2f;
+  // T4C-0054: press-and-hold repeat-fires the callback (e.g. skill/stat "+1" spin buttons) so
+  // allocating a large batch of points doesn't take one click per point. No held-input timer
+  // existed anywhere in this hand-rolled GUI, so this piggybacks on render() (already called
+  // every frame) rather than adding a new update hook. Opt-in via repeatable(true) - a plain
+  // toggle button (e.g. the spellbook's macro +/- button) must NOT repeat, since re-firing its
+  // callback every 60ms would flip its state back and forth instead of incrementing anything.
+  private static final long HOLD_REPEAT_DELAY_MS = 350L;
+  private static final long HOLD_REPEAT_INTERVAL_MS = 60L;
+  private boolean repeatable;
+  private long pressStartMillis;
+  private long lastRepeatMillis;
+  private boolean repeatFired;
+
+  public GuiButton repeatable(boolean repeatable) {
+    this.repeatable = repeatable;
+    return this;
+  }
+
+  /**
+   * Carries an in-progress hold-and-repeat over from a button this one replaces at the same
+   * screen slot (e.g. a spin button recreated by rebuildList() while the mouse is still held) -
+   * otherwise the new instance's press/timing state starts blank and the hold silently stops
+   * after the first repeat, since the replaced button never received the touch-up that would
+   * normally end it.
+   */
+  public void adoptHoldStateFrom(GuiButton previous) {
+    if (previous == null || !repeatable) {
+      return;
+    }
+    this.isPressed = previous.isPressed;
+    this.isHovered = previous.isHovered;
+    this.pressStartMillis = previous.pressStartMillis;
+    this.lastRepeatMillis = previous.lastRepeatMillis;
+    this.repeatFired = previous.repeatFired;
+  }
 
   public GuiButton withLabel(
       com.badlogic.gdx.graphics.g2d.BitmapFont font, java.util.function.Supplier<String> text) {
@@ -80,6 +117,7 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
   }
 
   public void render(SpriteBatch batch) {
+    fireHeldRepeat();
     if (!visible) {
       return;
     }
@@ -124,15 +162,43 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
   public void onTouchDown(float screenX, float screenY) {
     isHovered = visible && enabled && contains(screenX, screenY);
     isPressed = isHovered;
+    pressStartMillis = isPressed ? TimeUtils.millis() : 0L;
+    lastRepeatMillis = 0L;
+    repeatFired = false;
   }
 
   public void onTouchUp(float screenX, float screenY) {
-    if (visible && enabled && isPressed && contains(screenX, screenY) && callback != null) {
+    if (visible
+        && enabled
+        && isPressed
+        && !repeatFired
+        && contains(screenX, screenY)
+        && callback != null) {
       SoundManager.interfaceSound("Generic pickup item.wav");
       callback.run();
     }
     isPressed = false;
     isHovered = visible && contains(screenX, screenY);
+  }
+
+  private void fireHeldRepeat() {
+    if (!repeatable || !isPressed || !enabled || !visible || callback == null) {
+      return;
+    }
+    if (!contains(Gdx.input.getX(), Gdx.input.getY())) {
+      return;
+    }
+    long now = TimeUtils.millis();
+    long elapsed = now - pressStartMillis;
+    if (elapsed < HOLD_REPEAT_DELAY_MS) {
+      return;
+    }
+    if (lastRepeatMillis != 0L && now - lastRepeatMillis < HOLD_REPEAT_INTERVAL_MS) {
+      return;
+    }
+    lastRepeatMillis = now;
+    repeatFired = true;
+    callback.run();
   }
 
   public void onMouseMove(float screenX, float screenY) {

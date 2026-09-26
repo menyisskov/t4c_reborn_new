@@ -55,6 +55,16 @@ The XP curve definitions still run to level 1000, so the cap can be raised later
 constant. Monsters above level 400 (up to Arch Drake at 1000) currently remain as above-cap
 challenge content. Rescaling them is an open follow-up, not a decision.
 
+**Carry capacity keeps scaling with strength well past 1000 (T4C-0054).**
+`InventoryService.maximumWeight` is `2000 × str / (550 + str)`, not a substitute for a real
+inventory-slot limit - just a soft weight gate. It was `500 × str / (100 + str)`, which had
+already reached ~91% of its 500 ceiling by str 1000 and was effectively flat above that; gear
+alone hands out up to +600 strength per item (section 3), so a heavily-equipped or high-rebirth
+character routinely clears 1000-3000+ strength and the old curve made that entirely invisible.
+The new asymptote (2000) is reached the same gradual way, just stretched much further out - str 50
+still gives 166 (unchanged), str 100 gives 307 (was 250), str 1000 gives 1290, str 3000 gives 1690.
+Guarded by `InventoryServiceTest`.
+
 ## 2. Spells
 
 **Schools and their casting stat:**
@@ -85,6 +95,31 @@ challenge content. Rescaling them is an open follow-up, not a decision.
   - Never reuse a low-level spell's dice scale for a high-level spell.
 - **Where it's taught:** Archmage Thalindra (Avalon). Naming a school opens that school's ladder;
   "train" opens the wards and heals.
+- **Cast speed decays with level, floor shared with every other spell (T4C-0054).** Ladder spells
+  used to have a flat, non-decaying exhaustion per shape (1600/1200/1200ms bolt, 1900/1400/1400ms
+  area) at every tier and every caster level. They now decay from that same starting value down to
+  the game's universal floor (1000/750/750ms) linearly between level 150 and the level cap (400),
+  via `(400-self.level)` rather than `(self.level-tier)` - one formula shared by every tier, so a
+  level-400 spell (whose `minLevel` is itself 400) is *already* at the floor the instant it's
+  learned, with no decay window at all. See `HighTierSpellCurve.attack`.
+- **Every element's offensive spells form one prerequisite chain (T4C-0054).** You must already
+  know the previous rung (by ascending `minLevel`, ties broken by `spellId`) to learn the next one
+  of the same element - e.g. Earth's `stone_shard → shatter → earthquake → boulders → ...`.
+  Built dynamically in `SpellRegistry.offensiveChainPredecessor` from `playerCastableSpells()`, so
+  a newly added attack spell slots into its element's chain automatically; don't hardcode a chain
+  list elsewhere. Non-elemental attacks (element 0, e.g. `tame_beast`/`mana_burst`) aren't chained.
+- **Skill-point cost to learn a spell scales with its `minLevel`, capped at 100 (T4C-0054).**
+  Previously every spell cost a flat 5 points. See `SpellPurchaseCost.skillPointsForLevel`
+  (roughly calibrated against t4cbible.com/Spells' skill-point column, stretched so the 100 cap is
+  reached only at the level cap) - this is the one place that number lives; the Lighthaven spell
+  seller (`SpellMerchant`) and any other trainer read it, never re-typed.
+- **Internal/system spells never reach players.** `wrath_of_the_ancients` (boss aura),
+  `remort_aura` (rebirth aura), `level_up` (automatic on-level-up stat tick) and `wrath_of_drake`
+  (dead GM-only content) are cast via direct name/spellId lookup or aren't cast at all - never
+  learned. They're explicitly denylisted in `SpellRegistry.isPlayerCastable` (T4C-0054) since none
+  of them follow the `item_`/`mob_`/`test_`/`npc_` naming convention the rest of that filter relies
+  on. Any future non-player spell that also doesn't fit that naming convention needs the same
+  treatment, or it will silently show up in the spellbook and at the spell seller.
 
 ## 3. Items
 
@@ -399,10 +434,45 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Never show a generic "monster drop" label for where an item comes from. Name the actual
   monster/boss (every one of them, if more than one drops it) via `lootSources.json`'s
   `monsterDisplayName`, the same way an item's own detail page already does.
-- Every quest page must show a location — coordinates at minimum, a map wherever one exists —
-  even a turn-in-only quest with no kill objective, and even a quest not yet listed under any
-  zone's `quests` array (T4C-0053). A quest with no zone match still gets a schematic worldmap
-  dot from its own `areaCenterX/Y`/`areaRadiusTiles` rather than showing nothing.
+- Every quest page must show a location — a map wherever one exists (T4C-0053). A quest with no
+  zone match still gets a schematic worldmap dot from its own `areaCenterX/Y`/`areaRadiusTiles`
+  rather than showing nothing. Since T4C-0055 the map carries the location and the prose does
+  not: walkthroughs no longer recite coordinates or tile radii, they say "the marked area".
+
+### 4a. Editorial rules for the site (T4C-0055)
+
+The compendium is read by **someone who plays the game and has never opened this repo**. The
+`technical-writer` skill is the full standard and the pre-PR review gate; it is required reading
+before changing any player-facing string, and its leak scan must be clean. The rules that bind:
+
+- **Nothing internal reaches the reader.** No `T4C-XXXX` task IDs, class or file names,
+  registry keys (`item.*`, `spell.*`), engine expressions (`self.maxmana`, dice formulas), raw
+  effect rows, `@Spawn`/"spawn points", "geofence"/"world Z"/"tile radius", or dev vocabulary
+  ("authored", "activated", "fully-stat'd", "placeholder stub"). Repo history is not player
+  history: drop "pre-existing", "since the fork", "this pass". Data-only fields may keep ids
+  the site resolves to display names; prose may not.
+- **Zones, maps and quests read as one progressing journey.** The chapters live in
+  `meta.json`; each zone carries `chapter`, `chapterOrder` and `nextZoneId`, and every list
+  page groups by chapter and orders by level, never alphabetically or by build date. A zone
+  page states what the place is, who holds it, why they turned, what it demands, and where you
+  go next. A new zone without a chapter still renders, in a trailing "Elsewhere" group.
+- **Technical detail is demoted, not deleted.** Formulas, raw effect parameters and similar go
+  inside a `<details class="curious">` block; the default view shows the plain version (a
+  damage range, a named mana cost, a percentage).
+- **Prose never retypes a number the page can render.** Gold, XP and kill counts come from the
+  quest data; a sentence that quotes one will drift. This is the same rule as "publish computed
+  values" above, applied to prose.
+- **What you hand over and what you receive are never conflated.** `requiredItemKey` and
+  `alsoRequiresItemKey` are consumed on turn-in; `rewardItemKey` is granted. They render in
+  separate, verb-labelled blocks. Ten walkthroughs got this backwards before T4C-0055 — several
+  also told the player a boss was optional when that boss was the only source of the item they
+  had to bring — so check new quest prose against the definition, not against the other
+  walkthroughs.
+
+**Open question for the owner (T4C-0055):** ten quests require a rare boss drop (0.8–2%) to
+turn in, while their text had long described that item as the reward. The text now matches the
+code — you bring it. If the intent was the opposite (the drop is the prize, and the turn-in
+should not consume it), that is a content change, not an editorial one, and needs its own pass.
 
 ## 5. Process
 - Every player-visible change gets a `T4C-XXXX` ID in `TASKS.md` and a player-facing
@@ -423,7 +493,9 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - A new or tightened limit always comes with a decision about saves already past it: clamp what
   the game derives, keep what the player chose or spent, and cover it with a load test.
 - Use the workflow skills: `balance-change` for any rule or number change, `ship-pr` to land
-  it, and `verify-website` whenever website-visible data or pages change.
+  it, `verify-website` whenever website-visible data or pages change, and `technical-writer`
+  whenever any player-facing wording changes (they pair: one checks the data and the render,
+  the other checks the words).
 
 ## 6. Quests
 - **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest
@@ -641,6 +713,19 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   in the game preferences) and preselects it on startup and after Switch Character. Double-click
   enters, following the list-window rule above. Levels shown there are clamped to the level cap,
   like the game does on load.
+- **Hovering a spell/skill/item row shows what it does (T4C-0054).** `HudTooltip` is the one
+  reusable hover-tooltip primitive (cursor-following, auto-clamped to screen edges); build its
+  text with a `*TooltipText.build(...)` static helper next to the data type it describes
+  (`ItemTooltipText`, `SpellTooltipText`) rather than inlining strings in the screen class.
+  `GuiListScreen` (shared by `LearnScreen`/`ShopScreen`) shows the row's name plus an overridable
+  `rowInfoText(row)` plus the blocked-reason on every hover, not just when blocked; a new list
+  screen gets this for free by overriding `rowInfoText`. `SpellBook` and `Statistics` wire
+  `HudTooltip` directly since they aren't row-list screens.
+- **Press-and-hold repeats a "+1" button instead of one click per point (T4C-0054).** `GuiButton`
+  itself fires its callback again every ~60ms after an initial ~350ms hold, checked from its own
+  `render()` (already called every frame) rather than a new update hook - every spin/plus button
+  in the game (stat points, skill points, spell/shop baskets) gets this for free with no per-screen
+  change needed.
 
 
 ## 9. The Mirror of Echoes (T4C-0042)
