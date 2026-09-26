@@ -652,6 +652,23 @@ should not consume it), that is a content change, not an editorial one, and need
   it, `verify-website` whenever website-visible data or pages change, and `technical-writer`
   whenever any player-facing wording changes (they pair: one checks the data and the render,
   the other checks the words).
+- **A coordinate is not a placement (T4C-0063).** Anything given a `@Spawn` has to stand on
+  ground a player can walk to, and picking coordinates off a map picture does not establish
+  that: deep *and* shallow water both block movement, as does scenery. Thirty-three of this
+  fork's own spawns were unreachable before anyone noticed — Harbormaster Rangor in the sea
+  west of Windhowl, and every Sunken Chancel creature including its boss, which made that
+  zone's quest impossible to finish. Two rules, both enforced by
+  `spawn/SpawnPlacementTest`:
+  - Check against `worldmap.colbin`, not against the minimap PNGs. The minimaps are coloured
+    from ground art, so open sea looks like a perfectly good beach on them.
+  - Walkable is not the same as reachable. A spawn also needs a decent stretch of *connected*
+    walkable ground around it, or it is on a sandbar nobody can stand next to.
+
+  The fork's own content lists live in `content/ForkContent`, shared by the compendium
+  exporter and that test, so adding new content can never register with one and not the other.
+  **Known gap:** the inherited legacy content has roughly 200 spawns on blocking tiles. That is
+  its own much larger piece of work, and the test is deliberately scoped to this fork's content
+  so it stays green and meaningful rather than being switched off.
 
 ## 6. Quests
 - **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest

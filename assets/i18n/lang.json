@@ -4148,6 +4148,7 @@
   "message.not_enough_gold": "You do not have enough gold.",
   "message.not_enough_mana": "You do not have enough mana.",
   "message.npc_cast": "%s casts %s on you!",
+  "message.npc_too_far": "You are too far away to talk to them. Move closer.",
   "message.object_too_far": "You are too far away to interact with this object",
   "message.olinhaad.guard.energy": "You rock back as a surge of energy rips through your body and consumes the guard.",
   "message.olinhaad.guard.enough": "As the guard's body hits the floor, you hear Olin Haad's voice from above, 'Enough!'.",

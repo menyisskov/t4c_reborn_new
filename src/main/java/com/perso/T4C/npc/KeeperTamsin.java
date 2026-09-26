@@ -9,7 +9,7 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "KeeperTamsin", x = 300, y = 2320, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "KeeperTamsin", x = 302, y = 2317, z = 0, stationary = false, aggressive = false)
 public final class KeeperTamsin extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

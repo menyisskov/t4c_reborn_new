@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.perso.T4C.combat.SeraphAuraService;
 import com.perso.T4C.config.GameConstants;
+import com.perso.T4C.content.ForkContent;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
@@ -58,49 +59,7 @@ import java.util.TreeMap;
 public final class CompendiumExporter {
   private CompendiumExporter() {}
 
-  private static final Set<String> NEW_MONSTER_NAMES =
-      Set.of(
-          "Drowned Acolyte",
-          "Tideclaw Crab",
-          "Mordrenn the Drowned Inquisitor",
-          "Cinder Whelp",
-          "Ashfang Stalker",
-          "Ignarok the Emberfang",
-          "Centaur Warrior",
-          "Centaur King",
-          "Barrow Wight",
-          "The Hollow King",
-          "Kraanian Wyrmling",
-          "Lesser Drake",
-          "Bastion Warden",
-          "Greater Drake",
-          "Kraanian Dragonguard",
-          "Fey Warden",
-          "Moonlit Stalker",
-          "Veilbound Wraith",
-          "Sundered Sentinel",
-          "Sir Caradoc, the Sundered Knight",
-          "Ysolde, the Veiled Matriarch",
-          "The Verdant Warden",
-          "Tideworn Reaver",
-          "Coastwarden Ithrak",
-          "The Rootcrown Wyrm",
-          "The Pyreclaw Wyrm",
-          "The Mistwing Wyrm",
-          "The Duskmaw Wyrm",
-          "The Galecrest Wyrm",
-          "Warband Raider",
-          "Warband Banner-Bearer",
-          "Warband Warlord",
-          "The Convergent Wyrm",
-          "Sandglass Sentinel I",
-          "Sandglass Sentinel II",
-          "Sandglass Sentinel III",
-          "Sandglass Sentinel IV",
-          "Sandglass Sentinel V");
 
-  /** Pre-existing legacy monsters that a content pass placed/activated rather than authored. */
-  private static final Set<String> ACTIVATED_MONSTER_NAMES = Set.of("Arch Drake");
 
   private static final Set<String> NEW_SPELL_CLASSES =
       Set.of(
@@ -150,40 +109,7 @@ public final class CompendiumExporter {
           "SolarApotheosis",
           "DawnwellRenewal");
 
-  private static final Set<String> NEW_NPC_IDS =
-      Set.of(
-          "TideWardenBryn",
-          "RurikCinderwatch",
-          "SpellMerchant",
-          "StorageChest",
-          "ElderOphira",
-          "QuartermasterElenna",
-          "WayfarerBryndis",
-          "ArchmageThalindra",
-          "SisterIlyndra",
-          "OutriderKaelis",
-          "KeeperTamsin",
-          "MarshalTorrhen",
-          "WardenCael",
-          "GrandmasterVoss",
-          "HarbormasterRangor",
-          "SentinelCorwin",
-          "OutriderHalvard",
-          "DockmasterThessaly",
-          "EmberSmithCorvain",
-          "WardenSeressa",
-          "GrandmasterTholvenn",
-          "AnchoriteRowan",
-          "MirrorwardenYsmera",
-          "OldCorrin",
-          "KeeperOfTheSixthSeal",
-          "TrialWardenOsric",
-          "SunkenLedgerCoffer",
-          "PlagueWardensStrongbox",
-          "WyrmlingsHoardCasket",
-          "WarbandsBuriedChest");
 
-  private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
   private static final Set<String> NEW_QUEST_IDS =
       Set.of(
@@ -343,9 +269,9 @@ public final class CompendiumExporter {
     List<Map<String, Object>> out = new ArrayList<>();
     for (MonsterDef def : defs) {
       String origin =
-          NEW_MONSTER_NAMES.contains(def.getName())
+          ForkContent.NEW_MONSTER_NAMES.contains(def.getName())
               ? "new"
-              : ACTIVATED_MONSTER_NAMES.contains(def.getName()) ? "activated" : null;
+              : ForkContent.ACTIVATED_MONSTER_NAMES.contains(def.getName()) ? "activated" : null;
       boolean jsonAuthored = JSON_MONSTER_NAMES.contains(def.getName());
       if (origin == null && !jsonAuthored) continue;
       if (origin == null) origin = "new";
@@ -639,8 +565,8 @@ public final class CompendiumExporter {
         new ArrayList<>(NpcFactoryRegistry.registrations());
     sortedRegs.sort(Comparator.comparing(NpcFactoryRegistry.Registration::id));
     for (NpcFactoryRegistry.Registration reg : sortedRegs) {
-      boolean isNew = NEW_NPC_IDS.contains(reg.id());
-      boolean activated = ACTIVATED_NPC_IDS.contains(reg.id());
+      boolean isNew = ForkContent.NEW_NPC_IDS.contains(reg.id());
+      boolean activated = ForkContent.ACTIVATED_NPC_IDS.contains(reg.id());
       if (!isNew && !activated) continue;
       Map<String, Object> m = new LinkedHashMap<>();
       m.put("id", reg.id());
@@ -747,7 +673,7 @@ public final class CompendiumExporter {
       Field mField = shopCatalog.getDeclaredField("M");
       mField.setAccessible(true);
       Map<String, List<String>> m = (Map<String, List<String>>) mField.get(null);
-      // T4C-0021: previously restricted to NEW_NPC_IDS/ACTIVATED_NPC_IDS, which hid a real
+      // T4C-0021: previously restricted to the fork's own new/activated NPC ids, which hid a real
       // acquisition path for any item sold by a pre-existing/legacy NPC (e.g. the +4/+5
       // weapons sold by LordoftheShops) - exportItems() itself is unfiltered (every JSON item,
       // new or legacy), so an item's sources shouldn't be filtered by the seller's newness

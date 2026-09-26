@@ -5,9 +5,9 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Ashfang Stalker", x = 1930, y = 1560, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Ashfang Stalker", x = 1970, y = 1610, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Ashfang Stalker", x = 1880, y = 1660, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Ashfang Stalker", x = 1930, y = 1556, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Ashfang Stalker", x = 1949, y = 1624, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Ashfang Stalker", x = 1880, y = 1654, z = 0, stationary = false, aggressive = true)
 public final class AshfangStalker extends DataMonster {
   public static final String SOUND_ATTACK = "Wolf Attack.wav";
   public static final String SOUND_DEATH = "Wolf Dying.wav";

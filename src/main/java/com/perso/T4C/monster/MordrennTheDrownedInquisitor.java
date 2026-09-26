@@ -5,7 +5,7 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Mordrenn", x = 1750, y = 2300, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Mordrenn", x = 1697, y = 2247, z = 0, stationary = false, aggressive = true)
 public final class MordrennTheDrownedInquisitor extends DataMonster {
   // Reuses the "Skeleton King" boss puppet/sound family (see VICARRAMIEL for the same
   // precedent) — the tallest, most ornate undead humanoid rig already in the sprite set.

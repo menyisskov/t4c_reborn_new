@@ -5,9 +5,9 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Tideclaw Crab", x = 1780, y = 2350, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Tideclaw Crab", x = 1820, y = 2310, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Tideclaw Crab", x = 1730, y = 2360, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Tideclaw Crab", x = 1843, y = 2384, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Tideclaw Crab", x = 1867, y = 2356, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Tideclaw Crab", x = 1645, y = 2446, z = 0, stationary = false, aggressive = true)
 public final class TideclawCrab extends DataMonster {
   // Reuses the Scorpion animation/sound family as the closest existing chitinous,
   // multi-legged creature — no dedicated crab sprite exists in this checkout.

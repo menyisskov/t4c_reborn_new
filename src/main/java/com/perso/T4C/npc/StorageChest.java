@@ -11,7 +11,7 @@ import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
 @Spawn(type = "StorageChest", x = 2945, y = 1070, z = 0, stationary = true, aggressive = false)
-@Spawn(type = "StorageChest", x = 1606, y = 1178, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "StorageChest", x = 1607, y = 1178, z = 0, stationary = true, aggressive = false)
 public final class StorageChest extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

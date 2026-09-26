@@ -135,5 +135,59 @@
     "y": 1560,
     "worldZ": 0,
     "unlockZoneId": "fading_veil"
+  },
+  {
+    "name": "Lord Sunrock",
+    "x": 1609,
+    "y": 1181,
+    "worldZ": 0
+  },
+  {
+    "name": "Asarr",
+    "x": 2139,
+    "y": 1226,
+    "worldZ": 0
+  },
+  {
+    "name": "Araknor",
+    "x": 2981,
+    "y": 1035,
+    "worldZ": 0
+  },
+  {
+    "name": "Lance Silversmith",
+    "x": 2580,
+    "y": 690,
+    "worldZ": 0
+  },
+  {
+    "name": "Zhakar",
+    "x": 55,
+    "y": 1769,
+    "worldZ": 0
+  },
+  {
+    "name": "Elysana Blackrose",
+    "x": 1561,
+    "y": 2471,
+    "worldZ": 0
+  },
+  {
+    "name": "Dionysus Silverstream",
+    "x": 1025,
+    "y": 1000,
+    "worldZ": 0
+  },
+  {
+    "name": "Grant Hornkeep",
+    "x": 315,
+    "y": 740,
+    "worldZ": 0
+  },
+  {
+    "name": "Filandrius",
+    "x": 985,
+    "y": 1465,
+    "worldZ": 0
   }
 ]

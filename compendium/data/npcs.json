@@ -485,8 +485,8 @@
     "displayName": "Harbormaster Rangor",
     "spawns": [
       {
-        "x": 1500,
-        "y": 1200,
+        "x": 1519,
+        "y": 1217,
         "worldZ": 0
       }
     ],
@@ -592,8 +592,8 @@
     "displayName": "Keeper Tamsin",
     "spawns": [
       {
-        "x": 300,
-        "y": 2320,
+        "x": 302,
+        "y": 2317,
         "worldZ": 0
       }
     ],
@@ -1420,7 +1420,7 @@
         "worldZ": 0
       },
       {
-        "x": 1606,
+        "x": 1607,
         "y": 1178,
         "worldZ": 0
       }
@@ -1542,7 +1542,7 @@
     "spawns": [
       {
         "x": 1740,
-        "y": 1836,
+        "y": 1837,
         "worldZ": 0
       }
     ],
@@ -1583,8 +1583,8 @@
     "spriteBase": "@static:Chest",
     "spawns": [
       {
-        "x": 2295,
-        "y": 2325,
+        "x": 2303,
+        "y": 2333,
         "worldZ": 0
       }
     ],

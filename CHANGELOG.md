@@ -13,6 +13,25 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — People and creatures stranded in the sea (T4C-0063)
+
+### Fixed
+- Harbormaster Rangor was standing in the water west of Windhowl, where nobody could reach him.
+  He is on the shore now, so the road to Avalon can actually be started.
+- The whole Avalon crossing was unreachable: Coastwarden Ithrak and most of his Tideworn Reavers
+  were out at sea, which made both the scouting errand and the crossing itself impossible.
+  They now hold the beach.
+- Every creature in the Sunken Chancel — the Drowned Acolytes, the Tideclaw Crabs and Mordrenn
+  himself — was in open water, so the Tide Warden's errand could never be finished. They have
+  moved onto the drowned shore inside the same stretch of coast, which means the ruin is fought
+  from its northwestern side rather than out on the waves.
+- Fire-wolves and cinder whelps in the Cinderreach hills, wardens and stalkers in the Avalon
+  Wilds, the warband raiders on Kraanhold and their buried chest, Keeper Tamsin at the Deep Ones
+  Cave, Trial Warden Osric, and one of the two storage chests were all standing in water or
+  inside scenery. All of them are on solid ground now.
+- Clicking somebody you are too far away to talk to now tells you to move closer, instead of
+  doing nothing at all.
+
 ## 2026-09-26 — Lighthaven errand turn-in and autosave (T4C-0064)
 
 ### Fixed

@@ -5,10 +5,10 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Drowned Acolyte", x = 1710, y = 2270, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Drowned Acolyte", x = 1760, y = 2330, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Drowned Acolyte", x = 1790, y = 2280, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Drowned Acolyte", x = 1700, y = 2340, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drowned Acolyte", x = 1691, y = 2251, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drowned Acolyte", x = 1685, y = 2255, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drowned Acolyte", x = 1866, y = 2357, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Drowned Acolyte", x = 1635, y = 2274, z = 0, stationary = false, aggressive = true)
 public final class DrownedAcolyte extends DataMonster {
   // Reuses the Zombie animation/sound family — no dedicated "drowned cultist" sprite
   // exists yet; the theme is carried by name/stats/resists instead (see item-creator

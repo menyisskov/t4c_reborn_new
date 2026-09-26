@@ -10,13 +10,13 @@ import com.perso.T4C.spawn.Spawn;
 // spirit, not the corrupted Veil horrors further south. Passive like Forest Guardian: it defends
 // the Wilds rather than hunting through them.
 @Spawn(type = "Fey Warden", x = 1345, y = 1420, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1195, y = 1450, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1194, y = 1451, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1295, y = 1310, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1175, y = 1370, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1175, y = 1358, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1325, y = 1470, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1225, y = 1485, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1360, y = 1385, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1170, y = 1415, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 1165, y = 1422, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1195, y = 1319, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1253, y = 1293, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "Fey Warden", x = 1315, y = 1306, z = 0, stationary = false, aggressive = false)
