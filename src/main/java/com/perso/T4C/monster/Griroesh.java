@@ -47,9 +47,15 @@ public final class Griroesh extends DataMonster {
         192,
         java.util.List.of(
             new MonsterDef.LootDrop("Ring of confidence", 0.01f),
-            new MonsterDef.LootDrop("Ring of darkness", 0.01f),
+            // Ring of darkness, Demon skull and Necklace of the Black Heart are the only source
+            // of three ingredients LanceSilversmith's Gloomblade/Demonblade recipes require -
+            // they sat at 1% (or, for the necklace, didn't drop anywhere at all), making both
+            // recipes effectively unfinishable. Raised to 10% so the recipes are actually
+            // completable without a multi-hour farm.
+            new MonsterDef.LootDrop("Ring of darkness", 0.1f),
             new MonsterDef.LootDrop("Iron ring", 0.01f),
-            new MonsterDef.LootDrop("Demon skull", 0.01f),
+            new MonsterDef.LootDrop("Demon skull", 0.1f),
+            new MonsterDef.LootDrop("Necklace of the Black Heart", 0.1f),
             new MonsterDef.LootDrop("Bracelet of power", 0.001f),
             new MonsterDef.LootDrop("Dark key", 0.02f),
             new MonsterDef.LootDrop("Healing potion", 0.05f)),

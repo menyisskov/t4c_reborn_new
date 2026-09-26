@@ -65,7 +65,9 @@ public final class DuneRaider extends DataMonster {
             new MonsterDef.LootDrop("Light healing potion", 0.02f),
             new MonsterDef.LootDrop("Flask of crystal water", 0.01f),
             new MonsterDef.LootDrop("Ring of the bear", 0.01f),
-            new MonsterDef.LootDrop("Chaos Sword", 0.01f)),
+            // Chaos Sword is one of the three ingredients LanceSilversmith's Demonblade recipe
+            // requires - at 1% the recipe was effectively unfinishable. Raised to 10%.
+            new MonsterDef.LootDrop("Chaos Sword", 0.1f)),
         false,
         0.0f,
         39,
