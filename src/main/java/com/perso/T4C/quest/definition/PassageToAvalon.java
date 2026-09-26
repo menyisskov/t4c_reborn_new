@@ -30,6 +30,9 @@ public final class PassageToAvalon {
         null,
         "tideworn_avalon_chart",
         1,
-        "avalon_sanctuary");
+        "avalon_sanctuary",
+        null,
+        0,
+        "${quest.passage_to_avalon.walkthrough}");
   }
 }

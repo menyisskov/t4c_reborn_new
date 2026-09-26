@@ -24,6 +24,9 @@ public final class BastionWardenSiege {
         null,
         "heartfire_of_the_greater_drake",
         1,
-        "greater_drakes_bastion");
+        "greater_drakes_bastion",
+        null,
+        0,
+        "${quest.bastion_warden_siege.walkthrough}");
   }
 }

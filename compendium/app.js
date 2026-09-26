@@ -402,32 +402,49 @@
     );
   });
 
-  function zoneMap(z) {
+  function schematicDot(cx, cy, radius, caption) {
+    var worldSize = 3200; // approximate worldmap extent used purely for a schematic dot placement
+    var left = Math.min(94, Math.max(6, (cx / worldSize) * 100));
+    var top = Math.min(94, Math.max(6, (cy / worldSize) * 100));
+    var rpx = Math.min(45, (radius / worldSize) * 100 * 3);
+    return (
+      '<div class="zone-map-strip"><div class="minimap">' +
+      '<div class="radius" style="left:' + left + "%;top:" + top + "%;width:" + rpx * 2 + "%;height:" + rpx * 2 + '%"></div>' +
+      '<div class="dot" style="left:' + left + "%;top:" + top + '%"></div>' +
+      '<span class="axis-label" style="left:6px;top:4px">worldmap (schematic)</span>' +
+      "</div><div><p class=\"lead\">" + caption + "</p></div></div>"
+    );
+  }
+
+  function zoneMap(z, caption) {
     if (!z.worldmapCenter) return "";
     var c = z.worldmapCenter;
+    caption = caption || ("Worldmap center (" + c.x + ", " + c.y + "), radius " + c.radius +
+      " tiles — this is the geofence quest kills must land inside.");
     var m = byKey.map[z.id];
     if (m) {
       return (
         '<div class="zone-map-strip">' +
         '<a class="map-thumb-link" href="#/maps/' + slug(z.id) + '">' +
         '<div class="map-thumb" style="background-image:url(data/' + m.image + ')"></div></a>' +
-        '<div><p class="lead">Worldmap center (' + c.x + ", " + c.y + "), radius " + c.radius +
-        ' tiles — this is the geofence quest kills must land inside.</p>' +
+        '<div><p class="lead">' + caption + '</p>' +
         '<p>' + link("maps/" + slug(z.id), "Open the full map →") + "</p></div></div>"
       );
     }
-    var worldSize = 3200; // approximate worldmap extent used purely for a schematic dot placement
-    var left = Math.min(94, Math.max(6, (c.x / worldSize) * 100));
-    var top = Math.min(94, Math.max(6, (c.y / worldSize) * 100));
-    var rpx = Math.min(45, (c.radius / worldSize) * 100 * 3);
-    return (
-      '<div class="zone-map-strip"><div class="minimap">' +
-      '<div class="radius" style="left:' + left + "%;top:" + top + "%;width:" + rpx * 2 + "%;height:" + rpx * 2 + '%"></div>' +
-      '<div class="dot" style="left:' + left + "%;top:" + top + '%"></div>' +
-      '<span class="axis-label" style="left:6px;top:4px">worldmap (schematic)</span>' +
-      "</div><div><p class=\"lead\">Worldmap center (" + c.x + ", " + c.y + "), radius " + c.radius +
-      " tiles — this is the geofence quest kills must land inside.</p></div></div>"
-    );
+    return schematicDot(c.x, c.y, c.radius, caption);
+  }
+
+  // Every quest carries its own center/radius even when it isn't tied to a hand-authored zone
+  // (older pre-zone quests, or a turn-in with radius 1 marking just the giver NPC's spot) - fall
+  // back to a schematic worldmap dot from the quest's own coordinates so a location is always
+  // shown, not just for quests a zone happens to list. The caption also differs from the zone
+  // Overview page's generic one above, since a turn-in quest has no kill geofence to describe.
+  function questMap(q, zone) {
+    var caption = q.requiredKills > 0
+      ? "Kills must land within " + q.areaRadiusTiles + " tiles of (" + q.areaCenterX + ", " + q.areaCenterY + ")."
+      : "Approximate location of " + npcPlain(q.giverNpc) + ": (" + q.areaCenterX + ", " + q.areaCenterY + ").";
+    if (zone && byKey.zone[zone]) return zoneMap(byKey.zone[zone], caption);
+    return schematicDot(q.areaCenterX, q.areaCenterY, q.areaRadiusTiles, caption);
   }
 
   // --------------------------------------------------------------------- maps
@@ -845,14 +862,15 @@
     var q = byKey.quest[params.id];
     if (!q) return notFound("Quest");
     var zone = questZone[q.id];
-    var mapHtml = zone && byKey.zone[zone] ? zoneMap(byKey.zone[zone]) : "";
+    var mapHtml = questMap(q, zone);
 
     return (
       breadcrumb([["Quests", "quests"], [q.title, null]]) +
       '<div class="detail-head"><div><p class="eyebrow">Quest' + (zone ? " · " + esc((byKey.zone[zone] || {}).name || "") : "") + '</p>' +
       "<h1>" + esc(q.title) + "</h1>" +
       '<div class="tags"><span class="tag plain">Given by ' + npcLink(q.giverNpc) + "</span></div></div></div>" +
-      panel("Walkthrough", "" +
+      (q.walkthroughText ? panel("Walkthrough", '<p class="lead">' + esc(q.walkthroughText) + "</p>") : "") +
+      panel("Steps", "" +
         '<div class="quest-step"><span class="num">1</span><div>' +
         "<strong>Talk to " + npcLink(q.giverNpc) + "</strong>" +
         '<div class="quest-text-block"><span class="label">Quest offer</span>“' + esc(q.offerText) + "”</div>" +
@@ -895,12 +913,10 @@
           (q.alsoRequiresItemKey ? kv("Also required", itemLink(q.alsoRequiresItemKey)) : "") +
           (q.minLevel > 0 ? kv("Minimum level", q.minLevel) : "") +
           (q.unlockZoneId ? kv("Unlocks zone", zoneLink(q.unlockZoneId)) : "") +
-          (q.requiredKills > 0
-            ? kv("Center", "(" + q.areaCenterX + ", " + q.areaCenterY + ")") +
-              kv("Radius", q.areaRadiusTiles + " tiles")
-            : "") +
+          kv(q.requiredKills > 0 ? "Center" : "Location", "(" + q.areaCenterX + ", " + q.areaCenterY + ")") +
+          (q.requiredKills > 0 ? kv("Radius", q.areaRadiusTiles + " tiles") : "") +
           "</div>" +
-          (q.requiredKills > 0 ? mapHtml : ""))
+          mapHtml)
     );
   });
 

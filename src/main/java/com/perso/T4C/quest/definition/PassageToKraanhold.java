@@ -32,6 +32,9 @@ public final class PassageToKraanhold {
         null,
         null,
         0,
-        "windhowl_marches");
+        "windhowl_marches",
+        null,
+        0,
+        "${quest.passage_to_kraanhold.walkthrough}");
   }
 }
