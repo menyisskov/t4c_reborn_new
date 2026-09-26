@@ -98,6 +98,11 @@ public abstract class GuiListScreen extends GuiScreenBase {
     return blockedReason(row);
   }
 
+  /** Extra info shown on hover below the row's name, e.g. a spell's description/requirements. */
+  protected String rowInfoText(ListRow row) {
+    return null;
+  }
+
   protected String rowDisplayName(ListRow row) {
     return row == null ? "" : row.nameText();
   }
@@ -121,12 +126,16 @@ public abstract class GuiListScreen extends GuiScreenBase {
           || mouseY < rowY - 4f
           || mouseY > rowY + ROW_H_PITCH - 8f) continue;
       ListRow row = rows().get(i);
+      StringBuilder text = new StringBuilder(rowDisplayName(row));
+      String info = rowInfoText(row);
+      if (info != null && !info.isBlank()) {
+        text.append('\n').append(info);
+      }
       String reason = rowTooltipReason(row);
       if (reason != null && !reason.isBlank()) {
-        blockedTooltip.show(rowDisplayName(row) + "\n" + reason, mouseX, mouseY);
-      } else {
-        blockedTooltip.clear();
+        text.append('\n').append(reason);
       }
+      blockedTooltip.show(text.toString(), mouseX, mouseY);
       return;
     }
     blockedTooltip.clear();

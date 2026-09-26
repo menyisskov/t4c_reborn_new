@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0052`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0055`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -64,6 +64,9 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0049 | Lost Keys of Kraanhold: 12 named keys, rare drops across Kraanhold's monsters + the Windhowl War-Party, open one of 4 chest NPCs (3 keys each) for gold/potions or, for 2 marquee keys, a new unique item | Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--lost-keys-of-kraanhold-t4c-0049) |
 | T4C-0050 | The Unsigned Letter: a first rebirth grants a mysterious letter (RebirthBehavior hook), resolved by asking MirrorwardenYsmera about it - she's been watching every echo a rebirth leaves | Content | Done | _this PR_ | [2026-09-25](CHANGELOG.md#2026-09-25--the-unsigned-letter-t4c-0050) |
 | T4C-0051 | Workflow skills (ship-pr, balance-change, verify-website) and pre-PR self-review rules from the usage-insights review | Process/Tooling | Done | `f48dfaa8` | [2026-09-25](CHANGELOG.md#2026-09-25--safer-changes-and-fewer-review-round-trips-t4c-0051-processtooling) |
+| T4C-0052 | Full-length compendium quest walkthroughs (23 quests): a new prose field alongside the existing offer/completion text, separate from in-game dialogue | Content | Done | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--full-quest-walkthroughs-t4c-0052) |
+| T4C-0053 | Quest pages always show a location (giver/target/turn-in spot) and a map, including turn-in-only quests and quests not previously linked to a zone | Content | Done | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--quest-locations-always-shown-t4c-0053) |
+| T4C-0054 | Spellbook/tooltip info, spell prerequisite chains + skill-point cost rebalance, hiding system-only "spells", level-scaled cast speed for high-tier spells, universal hover tooltips, hold-to-repeat skill point spending | Systems/Content/Fix | Done | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--spell-hierarchy-spellbook-info-and-a-few-quality-of-life-fixes-t4c-0054) |
 
 ## Type legend
 
