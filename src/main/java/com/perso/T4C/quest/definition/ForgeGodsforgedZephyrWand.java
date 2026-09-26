@@ -27,6 +27,8 @@ public final class ForgeGodsforgedZephyrWand {
         "item.bound_godsigil",
         1,
         null,
-        "godsforged_zephyr_wand");
+        "godsforged_zephyr_wand",
+        0,
+        "${quest.forge_godsforged_zephyr_wand.walkthrough}");
   }
 }
