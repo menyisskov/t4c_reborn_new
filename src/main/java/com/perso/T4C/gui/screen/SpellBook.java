@@ -15,6 +15,7 @@ import com.perso.T4C.gui.widget.GuiAnimatedSprite;
 import com.perso.T4C.gui.widget.GuiBoxedText;
 import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiText;
+import com.perso.T4C.gui.widget.SpellTooltipText;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
@@ -24,6 +25,7 @@ import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellEffectManager;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.ui.FontManager;
+import com.perso.T4C.ui.HudTooltip;
 import com.perso.T4C.ui.PlayerHUD;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +85,7 @@ public class SpellBook extends GuiScreenBase {
   private float draggedY;
   private static final Map<String, SpellData> spellByName = new HashMap<>();
   private static boolean registryReady = false;
+  private final HudTooltip tooltip = new HudTooltip();
 
   public SpellBook(Player player) {
     this(player, null);
@@ -154,7 +157,10 @@ public class SpellBook extends GuiScreenBase {
     }
     for (String spellName : player.getSpells()) {
       SpellData data = resolveSpellData(spellName);
-      if (data != null) {
+      // T4C-0054: some characters saved before the isPlayerCastable denylist existed still have
+      // internal-only spells (wrath_of_the_ancients, remort_aura, level_up) in their spell list;
+      // keep hiding them here too so those old saves don't keep showing them in the spellbook.
+      if (data != null && SpellRegistry.playerCastableSpells().contains(data)) {
         spells.add(new SpellBookEntry(spellName, data));
       }
     }
@@ -428,6 +434,8 @@ public class SpellBook extends GuiScreenBase {
       hintLayout.setText(font, hint);
       font.draw(batch, hintLayout, x + 288f - hintLayout.width / 2f, y + 31f);
     }
+    updateSpellTooltip();
+    tooltip.render(batch);
     if (draggedSpell != null && draggedIcon != null) {
       float w = draggedIcon.getRegionWidth();
       float h = draggedIcon.getRegionHeight();
@@ -503,6 +511,21 @@ public class SpellBook extends GuiScreenBase {
       return true;
     }
     return super.onKeyDown(keycode);
+  }
+
+  private void updateSpellTooltip() {
+    if (draggedSpell != null) {
+      tooltip.clear();
+      return;
+    }
+    float mx = Gdx.input.getX();
+    float my = Gdx.input.getY();
+    SpellBookEntry hovered = findSpellAt(mx, my);
+    if (hovered == null) {
+      tooltip.clear();
+      return;
+    }
+    tooltip.show(SpellTooltipText.build(hovered.spell), mx, my);
   }
 
   private SpellBookEntry findSpellAt(float screenX, float screenY) {
