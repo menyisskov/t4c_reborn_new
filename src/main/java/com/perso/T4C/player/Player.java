@@ -190,8 +190,7 @@ public class Player extends Stats {
     String sound =
         bow
             ? "Bow Attack.wav"
-            : new String[] {"Whooshh 1.wav", "Whooshh 2.wav", "Whooshh 3.wav"}
-                [random.nextInt(3)];
+            : new String[] {"Whooshh 1.wav", "Whooshh 2.wav", "Whooshh 3.wav"}[random.nextInt(3)];
     SoundManager.animateSound(sound);
   }
 
@@ -745,6 +744,46 @@ public class Player extends Stats {
 
   public int getEffectiveWisdom() {
     return wisdom + buffStatBonuses.getOrDefault("wis", 0) + EquipmentBonusRules.bonus(this, 4);
+  }
+
+  /*
+   * "True" readings: everything permanent (base stat, gear, quest bonuses) but not the temporary
+   * spell buffs currently running. Buffs whose size is a fraction of the stat they raise read
+   * these, so re-casting one before it expires refreshes it instead of compounding.
+   */
+
+  public int getTrueStrength() {
+    return getEffectiveStrength() - buffStatBonuses.getOrDefault("str", 0);
+  }
+
+  public int getTrueDexterity() {
+    return getEffectiveDexterity() - buffStatBonuses.getOrDefault("dex", 0);
+  }
+
+  public int getTrueEndurance() {
+    return getEffectiveEndurance() - buffStatBonuses.getOrDefault("end", 0);
+  }
+
+  public int getTrueIntelligence() {
+    return getEffectiveIntelligence() - buffStatBonuses.getOrDefault("int", 0);
+  }
+
+  public int getTrueWisdom() {
+    return getEffectiveWisdom() - buffStatBonuses.getOrDefault("wis", 0);
+  }
+
+  public int getTrueSkillLevel(String skillId) {
+    return getEffectiveSkillLevel(skillId) - buffStatBonuses.getOrDefault("skill:" + skillId, 0);
+  }
+
+  public int getTrueElementResistance(String element) {
+    String normalized = element == null ? "" : element.toLowerCase();
+    return getElementResistance(element) - buffStatBonuses.getOrDefault("resist:" + normalized, 0);
+  }
+
+  public int getTrueElementPower(String element) {
+    String normalized = element == null ? "" : element.toLowerCase();
+    return getElementPower(element) - buffStatBonuses.getOrDefault("power:" + normalized, 0);
   }
 
   public int getArmorClassBoost() {

@@ -68,6 +68,27 @@ Guarded by `InventoryServiceTest`.
 
 ## 2. Spells
 
+### `self.true_*` formula variables (T4C-0060)
+
+Formulas like `self.true_r_fire`, `self.true_dodge`, `self.true_str` read the caster's own
+**true** stat — base + gear + permanent quest bonuses, *excluding* any of the caster's own
+currently-active spell buffs — via `DiceFormula.Context.selfTrue` (populated in
+`SpellCastingService.selfTrue`). Reading the true value rather than the live/buffed one means
+re-casting a buff before it expires refreshes it to the same size instead of compounding forever.
+`DiceFormula` answers 0 for anything it can't parse rather than throwing, so a variable with no
+substitution rule silently becomes 0 — this is why Resist Fire, Resist Ice, Nimbleness's dodge
+half, Tranquility and Clear Thought did nothing for a while; check this file's mistakes log and
+`SelfReferentialBuffFormulaTest` before assuming a new formula variable "just works" the same way.
+
+- **Owner's ruling on Resist Fire / Resist Ice:** ship as written — `self.true_r_fire`/
+  `self.true_r_water` add 100% of your own resistance for 60 seconds. Elemental damage is
+  `raw * 100 / resistance`, so doubling a base-100 resistance is exactly a 50% damage cut,
+  regardless of how much gear has already raised that resistance — the formula is self-limiting,
+  not an uncapped multiplier. Light (base 5000) is never boosted by a spell, so it isn't a
+  consideration here. The existing "greater" resistance potions use the same `self.true_r_*`
+  formula and are intentionally left at parity with these spells; "lesser" (`/4`) and "partial"
+  (`/2`) potions are weaker versions of the same rule, not separate values to rebalance.
+
 ### Character creation
 
 Creation is a **class picker**, not a questionnaire (T4C-0059). The eight-question personality

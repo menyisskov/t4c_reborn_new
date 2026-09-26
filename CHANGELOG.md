@@ -13,6 +13,22 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-26 — Fixed self-buff spells that did nothing (T4C-0060)
+
+### Fixed
+- **Resist Fire and Resist Ice now actually reduce elemental damage.** Both spells were meant to
+  boost your own fire or ice resistance for a minute, cutting incoming damage of that type
+  roughly in half — but they were quietly doing nothing at all. They now work as intended.
+- **Nimbleness's dodge bonus now applies.** Its agility bonus already worked; the dodge half was
+  silently rolling to zero and has been fixed alongside it.
+- **Tranquility and Clear Thought now grant their full wisdom/intelligence bonus.** Both were
+  landing with no effect at all; they now scale properly with your own stats.
+- A handful of potions and weapon procs that were supposed to scale off your own strength,
+  agility, endurance, elemental resistance or dodge (several resistance and stat potions, a
+  couple of enchanted weapon effects) were affected by the same bug and are fixed too.
+- Recasting one of these buffs before the old one wears off now correctly refreshes it to the
+  same strength instead of stacking indefinitely.
+
 ## 2026-09-26 — Pick a class instead of answering riddles (T4C-0059)
 
 ### Added
