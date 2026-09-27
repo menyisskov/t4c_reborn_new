@@ -45,6 +45,7 @@ public final class PlayerStateMapper {
     state.statPoints = player.getStatPoints();
     state.skillPoints = player.getSkillPoints();
     state.rebirthCount = player.getRebirthCount();
+    state.gmRank = player.getStoredGmRank().name();
     state.spells = player.getSpells();
     state.quickSlots = player.getQuickSlots();
     state.macros = player.getMacros();
@@ -99,6 +100,7 @@ public final class PlayerStateMapper {
     // so cap it. The __FLAG_NUMBER_OF_REMORTS quest flag is left as saved: RemortNPC2 derives the
     // character's base attributes from it, and those were already granted.
     player.setRebirthCount(Math.min(state.rebirthCount, GameConstants.REBIRTH_MAX_REMORTS));
+    player.setGmRank(com.perso.T4C.player.GmRank.fromSave(state.gmRank));
     // T4C-0084: spells taken out of the game (RemovedSpells) vanish from every place a save can
     // still name them - spellbook, quick slots, macros (and active buffs, below). No refund.
     player.setSpells(

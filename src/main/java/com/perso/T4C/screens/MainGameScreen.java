@@ -3857,8 +3857,11 @@ public class MainGameScreen implements Screen {
       }
       if (monsterManager != null) {
         monsterManager.setScriptPlayer(player);
+        // GM peace mode: monsters get no player to chase, so they drop any fight with them.
         monsterManager.updateVisible(
-            delta, playerPositionTemp, renderStartX, renderEndX, renderStartY, renderEndY, margin);
+            delta,
+            player.isGmPeace() ? null : playerPositionTemp,
+            renderStartX, renderEndX, renderStartY, renderEndY, margin);
       }
       pruneSelectedMonster();
       performAttackTick();
@@ -4054,7 +4057,13 @@ public class MainGameScreen implements Screen {
     coordsHud = new PlayerCoordsHud(player);
     radarHud = new RadarHud();
     systemMessage = new SystemMessage();
-    GmCommandProcessor gmCommands = new GmCommandProcessor(xpCurve, npcManager, monsterManager);
+    GmCommandProcessor gmCommands =
+        new GmCommandProcessor(
+            xpCurve,
+            npcManager,
+            monsterManager,
+            new com.perso.T4C.helper.LocalCharacterDirectory());
+    gmCommands.setDayNightCycle(dayNightCycle);
     gameChat =
         new GameChat(
             text -> {

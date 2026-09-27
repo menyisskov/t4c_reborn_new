@@ -1256,6 +1256,13 @@ conversation). State lives in `quest/UnsignedLetterQuest.java`, plain quest flag
 
 ## 13. Multiplayer status (T4C-0057)
 
+**Standing rule (owner, T4C-0083): design every decision for the multiplayer game this will
+become.** The client is single-player today, but new state belongs to the character (not to a
+global/static or to the client install), anything one player toggles must affect only that
+player, anything that changes the whole world is treated as a privileged, server-wide action,
+and lookups of *other* characters go through a seam that a server implementation can replace
+(for example `input/CharacterDirectory`).
+
 **This client is single-player.** Confirmed in code, not assumed: `MainGameScreen`'s own radar
 build has a "Single-player for now: no other players to show yet" comment, and there is no
 `OtherPlayer`/`RemotePlayer`-style entity, no network client, anywhere in `src/main/java`. The
@@ -1275,3 +1282,27 @@ only real friendly-clickable entity today is the player's own companion
 - Any future networking/other-player work should extend `SpellCastingService.TargetKind.
   FRIENDLY_UNIT` (already fully wired server-side) and `tryCastFriendlyTargetedSpell` in
   `MainGameScreen` - the target-kind gating and mana/cooldown accounting already handle it.
+
+## 14. GM ranks and GM commands (T4C-0083)
+
+- **Every character has a GM rank, saved on the character:** player (default), GM, or Super GM.
+  Saves from before ranks existed, or with an unknown value, load as a plain player.
+- **Normal GMs** can use the GM chat commands. **Super GMs** can also give or take away other
+  characters' GM or Super GM rank (`.gm <name> player|gm|super`), including making a GM a
+  regular player again.
+- **Owners:** characters listed in `gm_seed.json` (game folder, git-ignored) are always Super GM
+  and cannot be demoted in game. This is how the first Super GM exists; on a server it becomes
+  the operator's admin list. Nobody can change their own rank.
+- **My call, flag for the owner to overrule:** commands that change the whole world rather than
+  the GM's own character (`.time`/`.day`/`.night`, `.gflag` world flags, rank changes) are Super
+  GM only. Everything else needs GM.
+- **Regular players aren't told GM commands exist:** a GM command from a player reads as an
+  unknown command. A GM missing the Super rank is told which rank is needed.
+- **GM toggles are per player and not saved:** god mode, peace mode (monsters ignore you),
+  noclip and speed reset when the character is loaded again.
+- **Which of the original game's GM commands we port** (from the owner's `GM_COMMANDS.xlsx`
+  review): only commands that help build, test or balance content, or that a multiplayer server
+  will need. Tier 2 (buff/dispel, monster counts, item info, show internal IDs, take-all,
+  rebirth count, self-slay) and player commands (`.roll`/`.dice`, XP/damage-per-hour meters,
+  clear chat, FPS) are planned next. Moderation (kick, mute, lockout, IP), per-feature server
+  toggles, and the old NMS-server-only commands are left out until there is a server to use them.

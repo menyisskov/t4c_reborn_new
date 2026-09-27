@@ -75,6 +75,23 @@ class PlayerStateMapperTest {
   }
 
   @Test
+  void gmRankRoundTripsAndOldOrUnknownSavesLoadAsPlayers() throws Exception {
+    Player gm = new Player();
+    gm.setGmRank(com.perso.T4C.player.GmRank.GM);
+    PlayerStateDto state = PlayerStateMapper.fromPlayer(gm);
+    Player restored = new Player();
+    PlayerStateMapper.applyToPlayer(state, restored);
+    assertEquals(com.perso.T4C.player.GmRank.GM, restored.getStoredGmRank());
+
+    for (String saved : new String[] {null, "ADMIN_GOD"}) {
+      state.gmRank = saved;
+      Player old = new Player();
+      PlayerStateMapper.applyToPlayer(state, old);
+      assertEquals(com.perso.T4C.player.GmRank.PLAYER, old.getStoredGmRank());
+    }
+  }
+
+  @Test
   void preservesQuestFlags() throws Exception {
     Player source = new Player();
     source.setQuestFlag("quest.lighthaven_samaritan_rats.status", 1);

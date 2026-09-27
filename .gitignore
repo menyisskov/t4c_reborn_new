@@ -46,3 +46,6 @@ graphify-out/
 
 ### Mac OS ###
 .DS_Store
+
+### Local GM owner list (server admin config, never committed) ###
+gm_seed.json
