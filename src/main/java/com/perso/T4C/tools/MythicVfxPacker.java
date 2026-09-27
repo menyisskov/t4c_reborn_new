@@ -67,7 +67,7 @@ public final class MythicVfxPacker {
       System.err.println(
           "Usage: MythicVfxPacker <input dir|sheet.png> <TargetBase> [--frames N] [--cols C]"
               + " [--downscale k] [--grow-in n] [--hold n] [--match RefBase | --ground Y]"
-              + " [--strip-matte] [--luma-alpha] [--soft-alpha] [--scale f] [--fade-out n]"
+              + " [--strip-matte] [--luma-alpha] [--soft-alpha] [--scale f] [--fade-out n] [--drop i,j]"
               + " [--preview dir] [--dry-run]"
               + " [--sprites assets/sprites]\n"
               + "       MythicVfxPacker --export <RefBase> <outDir>");
@@ -86,6 +86,7 @@ public final class MythicVfxPacker {
     boolean softAlpha = false;
     double scale = 1.0;
     int fadeOut = 0;
+    java.util.Set<Integer> drop = java.util.Set.of();
     String match = "GreatExplosion";
     Path preview = null;
     boolean dryRun = false;
@@ -103,6 +104,12 @@ public final class MythicVfxPacker {
         case "--soft-alpha" -> softAlpha = true;
         case "--scale" -> scale = Double.parseDouble(args[++i]);
         case "--fade-out" -> fadeOut = Integer.parseInt(args[++i]);
+        case "--drop" ->
+            drop =
+                java.util.Arrays.stream(args[++i].split(","))
+                    .map(String::trim)
+                    .map(Integer::parseInt)
+                    .collect(java.util.stream.Collectors.toSet());
         case "--match" -> match = args[++i];
         case "--preview" -> preview = Path.of(args[++i]);
         case "--dry-run" -> dryRun = true;
@@ -114,7 +121,7 @@ public final class MythicVfxPacker {
       throw new IllegalArgumentException("TargetBase must be a bare name like MythicFire");
     }
 
-    List<BufferedImage> read = readFrames(input, frames, cols);
+    List<BufferedImage> read = dropFrames(readFrames(input, frames, cols), drop);
     if (stripMatte) read = read.stream().map(MythicVfxPacker::stripMatte).toList();
     if (lumaAlpha) read = read.stream().map(MythicVfxPacker::lumaAlpha).toList();
     if (scale != 1.0) {
@@ -249,6 +256,17 @@ public final class MythicVfxPacker {
       }
       out.add(faded);
     }
+    return out;
+  }
+
+  /**
+   * Removes the given 0-based source frames - for the odd generated frame where the effect blinks
+   * out for one beat (it would flicker in game).
+   */
+  static List<BufferedImage> dropFrames(List<BufferedImage> frames, java.util.Set<Integer> drop) {
+    if (drop.isEmpty()) return frames;
+    List<BufferedImage> out = new ArrayList<>();
+    for (int i = 0; i < frames.size(); i++) if (!drop.contains(i)) out.add(frames.get(i));
     return out;
   }
 
@@ -528,7 +546,7 @@ public final class MythicVfxPacker {
    * Drawn with normal blending over any background this gives exactly the additive result
    * ({@code dst + c}) wherever the result does not clip, and black contributes nothing - so the
    * black halo such art shows when drawn opaquely disappears. The original game's "NM" grand
-   * spells (T4C-0083) and SpriteCook animations rendered on a black matte both need it.
+   * spells (T4C-0085) and SpriteCook animations rendered on a black matte both need it.
    */
   public static BufferedImage lumaAlpha(BufferedImage src) {
     BufferedImage out =

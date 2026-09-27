@@ -116,45 +116,32 @@ class HighTierSpellLadderTest {
   }
 
   /**
-   * T4C-0077 / T4C-0082 / T4C-0083: the impact escalates with tier. 150/200 keep the plain impact
-   * every lower-level spell of that element/shape already uses; 250 switches to the "-Ascended"
-   * recolor; 300 plays the original game's top-tier animation for the element (Grand); 350/400
-   * play the element's Mythic upgrade of that original.
+   * T4C-0085 (owner's call: every ladder spell its own animation): each spell plays exactly its
+   * entry in {@link HighTierSpellCurve#IMPACTS}, no two ladder spells share an impact, and none
+   * reuses the impact of any other spell in the game - so a level-150 fire bolt no longer looks
+   * like a level-27 Fireball, and the five rungs of a school look like five different spells.
    */
   @Test
-  void impactEscalatesPlainAscendedGrandMythic() {
+  void everyLadderSpellPlaysItsOwnDistinctImpact() {
+    java.util.Set<String> ladderImpacts = new java.util.HashSet<>();
     for (int tier : HighTierSpellCurve.TIERS) {
       for (int element : ELEMENTS) {
         SpellData spell = attackAt(element, tier);
-        String impact = spell.getImpactSpell();
-        String mythic = HighTierSpellCurve.MYTHIC_IMPACTS.get(element);
-        String grand = HighTierSpellCurve.GRAND_IMPACTS.get(element);
-        String expected;
-        if (tier >= HighTierSpellCurve.MYTHIC_TIER_THRESHOLD && mythic != null) {
-          expected = "mythic";
-        } else if (tier >= HighTierSpellCurve.GRAND_TIER_THRESHOLD && grand != null) {
-          expected = "grand";
-        } else {
-          expected = tier >= 250 ? "ascended" : "plain";
-        }
-        String actual;
-        if (mythic != null && impact.equals(mythic + "-")) {
-          actual = "mythic";
-        } else if (grand != null && impact.equals(grand + "-")) {
-          actual = "grand";
-        } else {
-          actual = impact.toLowerCase().contains("-ascended-") ? "ascended" : "plain";
-        }
-        assertEquals(expected, actual, spell.getName() + " at tier " + tier + " impact=" + impact);
+        String expected = HighTierSpellCurve.IMPACTS.get(element).get(tier);
+        assertTrue(expected != null, "No impact listed for element " + element + " tier " + tier);
+        assertEquals(expected + "-", spell.getImpactSpell(), spell.getName());
+        assertTrue(
+            ladderImpacts.add(spell.getImpactSpell().toLowerCase()),
+            spell.getName() + " shares its impact with another ladder spell");
       }
     }
-  }
-
-  @Test
-  void everyElementHasAGrandImpact() {
-    for (int element : ELEMENTS) {
+    for (SpellData other : SpellDefinitions.all()) {
+      if (highTierAttacks().stream().anyMatch(s -> s.getSpellId() == other.getSpellId())) continue;
+      String impact = other.getImpactSpell();
+      if (impact == null) continue;
       assertTrue(
-          HighTierSpellCurve.GRAND_IMPACTS.containsKey(element), "No Grand impact for " + element);
+          !ladderImpacts.contains(impact.toLowerCase()),
+          other.getName() + " uses the ladder impact " + impact);
     }
   }
 

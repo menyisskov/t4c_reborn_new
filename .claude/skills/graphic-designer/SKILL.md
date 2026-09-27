@@ -82,7 +82,8 @@ folder of frame PNGs or a spritesheet, downscales/alpha-snaps/trims it, names th
 sheet (`--dry-run --preview <dir>`), and merges via `SpriteBinWriter.replaceMatching`. The rules
 and the SpriteCook runbook are in `DESIGN_GUIDELINES.md` ("High-tier spell VFX escalation") and
 `docs/content-ideas/mythic-spell-vfx.md`. `tools.AscendedVfxGenerator` is the recolor-only
-equivalent.
+equivalent, and `tools.GrandVfxGenerator` makes the original game's additive "NM" animations
+drawable (black halo removed with `MythicVfxPacker.lumaAlpha`).
 
 For any other new sprite (icons, monsters, decor), there is no dedicated packer yet; build on
 `SpriteBinWriter.merge(...)` (`src/main/java/com/perso/T4C/helper/SpriteBinWriter.java`, writes

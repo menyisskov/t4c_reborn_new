@@ -12,7 +12,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 /**
- * One-off generator (T4C-0083) for the level-300 rung of the high-tier spell ladder: the original
+ * One-off generator (T4C-0085) for the level-300 rung of the high-tier spell ladder: the original
  * game's own top-tier ("NM", nightmare) spell animations, made drawable by this renderer.
  *
  * <p>Those animations were painted for additive blending - every pixel opaque, the effect glowing

@@ -222,6 +222,14 @@ class MythicVfxPackerTest {
   }
 
   @Test
+  void dropFramesRemovesOnlyTheListedSourceFrames() {
+    BufferedImage a = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    BufferedImage b = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    BufferedImage c = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    assertEquals(List.of(a, c), MythicVfxPacker.dropFrames(List.of(a, b, c), java.util.Set.of(1)));
+  }
+
+  @Test
   void emptyBeatKeepsItsSlot() {
     BufferedImage a = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
     fill(a, 1, 2, 2, 3, 3, RED);

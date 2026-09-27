@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 import org.junit.jupiter.api.Test;
 
 /**
- * T4C-0083: the level-300 "Grand" impacts - the original game's top-tier spell animations - are
+ * T4C-0085: the level-300 "Grand" impacts - the original game's top-tier spell animations - are
  * all packed, and each alpha-blended copy made by {@code tools.GrandVfxGenerator} matches its
  * additive original frame for frame (count, play order, size, draw offsets) with the black field
  * that caused a halo actually gone.
@@ -28,7 +28,8 @@ class GrandVfxAssetTest {
   @Test
   void everyGrandImpactIsPacked() throws Exception {
     List<SpriteBinIO.Packed> all = readAll();
-    for (String base : HighTierSpellCurve.GRAND_IMPACTS.values()) {
+    for (var byTier : HighTierSpellCurve.IMPACTS.values()) {
+      String base = byTier.get(300);
       assertTrue(framesOf(all, base).size() >= MIN_FRAMES, base + " is missing or too short");
     }
   }
