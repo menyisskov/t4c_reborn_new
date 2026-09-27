@@ -479,5 +479,23 @@
     "completionText": "You've held your ground, and Avalon's noticed. That's not nothing - it's the same proof the old trials used to demand, just asked a different way. Come find me whenever you're ready to be reborn; you won't need to go looking for the Oracle again.",
     "completedText": "Avalon already knows what you're capable of. Just say the word when you're ready to be reborn.",
     "walkthroughText": "Anchorite Rowan offers experienced characters a shortcut. Kill a handful of Fey Wardens in the same stretch of the Avalon Wilds that Ophira's vigil uses, then come back - though Rowan will not complete the rite for anyone below the level he names, so gather the kills whenever you like but expect to wait for the turn-in. Finishing it unlocks Rowan's own rebirth rite for good, so every future rebirth happens here instead of another trek down to the Oracle and back through her guardians."
+  },
+  {
+    "id": "renewed_wards",
+    "title": "Renewed Wards",
+    "giverNpc": "WardenAelric",
+    "targetMonster": "Skeleton",
+    "requiredKills": 12,
+    "targetWorldZ": 0,
+    "areaCenterX": 2785,
+    "areaCenterY": 1095,
+    "areaRadiusTiles": 50,
+    "rewardGold": 500,
+    "rewardXp": 400,
+    "requiredItemQty": 0,
+    "minLevel": 0,
+    "offerText": "Put down twelve of the skeletons rising at the old grave markers east of the temple grounds.",
+    "completionText": "The ground has gone still again. As promised - here's how to renew your own wards in a single breath.",
+    "completedText": "The wards are holding for now. Renew Armor should serve you well when they start to fray."
   }
 ]

@@ -108,7 +108,7 @@ public final class SpellCastingService {
     return Result.success(manaCost);
   }
 
-  private static boolean hasLearnedSpell(Player player, SpellData spell) {
+  public static boolean hasLearnedSpell(Player player, SpellData spell) {
     if (player.getSpells() == null) return false;
     for (String learned : player.getSpells()) {
       if (learned != null

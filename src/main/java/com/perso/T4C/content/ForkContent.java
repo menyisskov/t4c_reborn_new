@@ -92,7 +92,8 @@ public final class ForkContent {
           "SunkenLedgerCoffer",
           "PlagueWardensStrongbox",
           "WyrmlingsHoardCasket",
-          "WarbandsBuriedChest");
+          "WarbandsBuriedChest",
+          "WardenAelric");
 
   /** Pre-existing legacy NPCs that a content pass placed rather than authored. */
   public static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");

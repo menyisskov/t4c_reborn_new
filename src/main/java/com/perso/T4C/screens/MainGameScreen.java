@@ -94,6 +94,7 @@ import com.perso.T4C.render.ObjectRenderer;
 import com.perso.T4C.render.SpellRenderer;
 import com.perso.T4C.render.TeleportOverlayRenderer;
 import com.perso.T4C.spell.CompanionCastVfxHook;
+import com.perso.T4C.spell.GrandImpactShower;
 import com.perso.T4C.spell.SpellCastingService;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellEffectManager;
@@ -1842,6 +1843,9 @@ public class MainGameScreen implements Screen {
     } else {
       applyBuffIfNeeded(spell);
     }
+    if ("${spell.renew_armor}".equals(spell.getName())) {
+      applyRenewArmorRecast();
+    }
     SpellEffectManager.PlayerUtility utility =
         spellEffectManager.applyPlayerUtilityEffects(spell, player);
     boolean teleported = false;
@@ -2917,7 +2921,7 @@ public class MainGameScreen implements Screen {
     if (spell == null || monster == null || monster.isDead()) {
       return;
     }
-    applyResolvedSpellImpact(spell, monster, 0d, true);
+    applyResolvedSpellImpact(spell, monster, 0d, true, true);
     if (spell.getRadius() > 0 && monsterManager != null) {
       Vector2 center = monster.getPosition();
       for (BaseMonster candidate : monsterManager.getMonsters()) {
@@ -2925,13 +2929,25 @@ public class MainGameScreen implements Screen {
         double distanceTiles = center.dst(candidate.getPosition()) / Math.max(GRID_W, GRID_H);
         if (distanceTiles >= spell.getRadius()) continue;
         if (spell.isLineOfSight() && !hasLineOfSight(center, candidate.getPosition())) continue;
-        applyResolvedSpellImpact(spell, candidate, distanceTiles, true);
+        applyResolvedSpellImpact(spell, candidate, distanceTiles, true, false);
       }
     }
   }
 
   private void applyResolvedSpellImpact(
       SpellData spell, BaseMonster monster, double range, boolean installHooks) {
+    applyResolvedSpellImpact(spell, monster, range, installHooks, true);
+  }
+
+  /**
+   * @param grandEligible whether this hit may render as a multi-burst {@link GrandImpactShower}
+   *     when the spell qualifies. Pass {@code false} for splash hits on secondary targets within
+   *     an area spell's radius — those already get their own individual burst, so also showering
+   *     each one would multiply bursts per monster hit.
+   */
+  private void applyResolvedSpellImpact(
+      SpellData spell, BaseMonster monster, double range, boolean installHooks,
+      boolean grandEligible) {
     SpellEffectManager.Impact impactResult =
         spellEffectManager.resolve(spell, player, monster, range);
     SpellEffectManager.TargetExhaustion explicitExhaustion =
@@ -2965,7 +2981,11 @@ public class MainGameScreen implements Screen {
     String impact = visuals.impact();
     if (impact != null && !impact.isEmpty()) {
       Vector2 pos = monster.getPosition();
-      spellRenderer.triggerImpactSpell(impact, pos.x, pos.y, visuals.impactSound());
+      if (grandEligible) {
+        triggerAreaImpactShower(spell, visuals, pos);
+      } else {
+        spellRenderer.triggerImpactSpell(impact, pos.x, pos.y, visuals.impactSound());
+      }
     }
   }
 
@@ -3025,12 +3045,33 @@ public class MainGameScreen implements Screen {
         if (range >= spell.getRadius()) continue;
         if (spell.isLineOfSight() && !hasLineOfSight(targetPosition, candidate.getPosition()))
           continue;
-        applyResolvedSpellImpact(spell, candidate, range, true);
+        applyResolvedSpellImpact(spell, candidate, range, true, false);
       }
     }
     if (visuals.impact() != null && !visuals.impact().isEmpty()) {
-      spellRenderer.triggerImpactSpell(
-          visuals.impact(), targetPosition.x, targetPosition.y, visuals.impactSound());
+      triggerAreaImpactShower(spell, visuals, targetPosition);
+    }
+  }
+
+  /**
+   * Fires the spell's impact as a multi-burst "shower" scattered across its radius when the spell
+   * is high-tier enough to qualify (see {@link GrandImpactShower}), or as the original single
+   * centered burst otherwise.
+   */
+  private void triggerAreaImpactShower(
+      SpellData spell, SpellVisualResolver.Visuals visuals, Vector2 targetPosition) {
+    float radiusPixels = spell.getRadius() * Math.max(GRID_W, GRID_H);
+    boolean firstBurst = true;
+    for (GrandImpactShower.Burst burst : GrandImpactShower.bursts(spell)) {
+      float offsetX = (float) Math.cos(burst.angleRadians()) * burst.radiusFraction() * radiusPixels;
+      float offsetY = (float) Math.sin(burst.angleRadians()) * burst.radiusFraction() * radiusPixels;
+      spellRenderer.triggerImpactSpellDelayed(
+          visuals.impact(),
+          targetPosition.x + offsetX,
+          targetPosition.y + offsetY,
+          firstBurst ? visuals.impactSound() : null,
+          burst.delaySeconds());
+      firstBurst = false;
     }
   }
 
@@ -3527,6 +3568,48 @@ public class MainGameScreen implements Screen {
         buff.getDurationSeconds(),
         Boolean.TRUE.equals(buff.getUnlimited()),
         effects);
+  }
+
+  // T4C-0067: Renew Armor has no formula effect of its own - casting it re-lays whichever of
+  // these the caster currently knows (base and Ultra tiers both, independently), each refreshed
+  // exactly as if the player had cast it directly. Renew Armor's own SpellCastingService.begin()
+  // call already charged its mana/exhaustion once; re-applying a component's buff via
+  // Player.applyBuff directly does not re-trigger that component's own mana cost or exhaustion.
+  private static final List<String> RENEW_ARMOR_COMPONENT_KEYS =
+      List.of(
+          "${spell.barrier}",
+          "${spell.ultra_barrier}",
+          "${spell.protection}",
+          "${spell.ultra_protection}",
+          "${spell.stone_skin}",
+          "${spell.ultra_stone_skin}",
+          "${spell.mana_shield}",
+          "${spell.ultra_mana_shield}",
+          "${spell.mana_surge}",
+          "${spell.ultra_mana_surge}");
+
+  private void applyRenewArmorRecast() {
+    if (player == null) {
+      return;
+    }
+    for (String key : RENEW_ARMOR_COMPONENT_KEYS) {
+      SpellData component = SpellRegistry.findByName(key);
+      if (component == null || !SpellCastingService.hasLearnedSpell(player, component)) {
+        continue;
+      }
+      List<SpellData.SpellEffect> effects =
+          spellEffectManager.resolvePlayerBuffEffects(component, player);
+      if (effects.isEmpty()) {
+        continue;
+      }
+      player.applyBuff(
+          component.getName(),
+          component.getDescription(),
+          component.getIconId(),
+          spellEffectManager.resolveDurationSeconds(component, player),
+          false,
+          effects);
+    }
   }
 
   private List<ObjectRenderer.RenderItem> buildEntityRenderItems() {

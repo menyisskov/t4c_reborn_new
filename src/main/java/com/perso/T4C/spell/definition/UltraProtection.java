@@ -3,49 +3,50 @@ package com.perso.T4C.spell.definition;
 import com.perso.T4C.spell.SpellData;
 import java.util.List;
 
-public final class StoneSkin {
-  private StoneSkin() {}
+public final class UltraProtection {
+  private UltraProtection() {}
 
   public static SpellData definition() {
     return new SpellData(
-        "${spell.stone_skin}",
-        "${spell.description.stone_skin}",
-        "45",
+        "${spell.ultra_protection}",
+        "${spell.description.ultra_protection}",
+        "9",
         0,
-        37,
-        59,
-        37,
+        90,
+        375,
+        150,
         false,
-        false,
+        true,
         "64kSpellIconEarthDefense",
-        "RockyFly-",
-        null,
+        "64kSpellEnergyBallGreen-",
+        "GreenWipe-",
         0,
         0,
-        "Rocks Fly.wav",
-        null,
+        "Healing.wav",
+        "Mind Shield.wav",
         0,
         "1200000",
         "0",
-        59326,
+        1000000,
         null,
-        10147,
+        99948,
         2,
-        5,
+        3,
         1,
         "100",
         "0",
         "0",
         "0",
-        30021,
+        30092,
         0,
         false,
         List.of(
             new SpellData.T4cEffect(
                 2,
                 List.of(
-                    new SpellData.T4cEffect.EffectParam(1, null),
+                    new SpellData.T4cEffect.EffectParam(1, "TRUE"),
                     new SpellData.T4cEffect.EffectParam(2, "AC"),
-                    new SpellData.T4cEffect.EffectParam(3, "(10+self.int/25+self.wis/13)")))));
+                    new SpellData.T4cEffect.EffectParam(
+                        3, "(2*(3+self.int/100+self.wis/50))")))));
   }
 }

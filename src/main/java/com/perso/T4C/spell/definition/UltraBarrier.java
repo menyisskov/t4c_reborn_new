@@ -3,23 +3,23 @@ package com.perso.T4C.spell.definition;
 import com.perso.T4C.spell.SpellData;
 import java.util.List;
 
-public final class Protection {
-  private Protection() {}
+public final class UltraBarrier {
+  private UltraBarrier() {}
 
   public static SpellData definition() {
     return new SpellData(
-        "${spell.protection}",
-        "${spell.description.protection}",
-        "9",
+        "${spell.ultra_barrier}",
+        "${spell.description.ultra_barrier}",
+        "10",
         0,
-        20,
-        25,
-        8,
+        375,
+        90,
+        150,
         false,
         true,
-        "64kSpellIconEarthDefense",
-        "64kSpellEnergyBallGreen-",
-        "GreenWipe-",
+        "64kSpellIconWaterDefense",
+        "64kSpellEnergyBallBlue-",
+        "BlueWipe-",
         0,
         0,
         "Healing.wav",
@@ -27,17 +27,17 @@ public final class Protection {
         0,
         "1200000",
         "0",
-        3712,
+        1000000,
         null,
-        10115,
-        2,
+        99947,
+        4,
         3,
         1,
         "100",
         "0",
         "0",
         "0",
-        30092,
+        30052,
         0,
         false,
         List.of(
@@ -46,6 +46,7 @@ public final class Protection {
                 List.of(
                     new SpellData.T4cEffect.EffectParam(1, "TRUE"),
                     new SpellData.T4cEffect.EffectParam(2, "AC"),
-                    new SpellData.T4cEffect.EffectParam(3, "(3+self.int/100+self.wis/50)")))));
+                    new SpellData.T4cEffect.EffectParam(
+                        3, "(2*(5+self.int/50+self.wis/25))")))));
   }
 }

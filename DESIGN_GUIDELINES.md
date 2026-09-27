@@ -201,6 +201,59 @@ quiz is gone; its i18n strings were deleted with it.
   it roughly halved real cast cycle time without touching a single balance number. Don't reintroduce a
   pre-cast delay to "slow casting down" - change the exhaustion formulas instead. The progress bar is
   now only for harvesting and taming.
+- **The five protection spells (Barrier, Protection, Stone Skin, Mana Shield, Mana Surge) cast in
+  0ms - an explicit exception to the universal floor above (T4C-0067, owner's call).** Their
+  mental/physical/attack exhaustion fields are literal `"0"`, not the level-scaled-decay formula
+  every other spell uses. The floor exists to pace repeated *casting*; these five exist to be
+  re-applied the instant you need them (before a fight, after a death, on a fresh double-click), and
+  the owner asked for that friction removed rather than just reduced. This is these five spells'
+  own field, not a change to `SpellCastingService`/`Player.applyExhaustion` - a different spell cast
+  in between still exhausts normally, and casting one of these five still respects *that* exhaustion
+  window if one is already running. Give any future "protection spell" in this same family (a ward
+  meant to be topped up on demand, not a combat-paced buff) the same 0/0/0 treatment.
+
+### The Ultra tier (T4C-0067)
+
+- **Naming/shape convention for a "stronger version of an existing spell":** prefix the name with
+  `Ultra ` (`Ultra Barrier`, `Ultra Protection`, ...), keep every field identical to the base spell
+  (icon, projectile/impact, element, targetType, duration, mana cost, exhaustion) except the ones
+  that make it a genuinely separate, stackable spell: a new `spellId`, `minLevel` **150** (the
+  level-150+ tier the owner asked for), and the effect formula wrapped in `2*(...)` around the base
+  spell's own formula - literally double, not a hand-tuned different number. Don't invent a new
+  formula shape; wrapping the existing one is what keeps "double" verifiably true and keeps the two
+  tiers' relationship obvious to the next person reading the pair.
+- **Price ~1,000,000 gold to learn (owner's call, "not cheap").** Applied flat across all five Ultra
+  spells rather than varying per-spell - there's no basis in the base spells' own (very different)
+  prices to derive a ratio from, so a flat round number for the whole tier is simpler and just as
+  defensible.
+- **Stacking is the point, not a side effect.** An Ultra spell is a different spell name from its
+  base version, so `Player.applyBuff`'s per-`spellName` dedup means both can be active
+  simultaneously and their stat contributions add - a caster who learns both Barrier and Ultra
+  Barrier gets the sum of both AC bonuses from one cast of each. This falls out of the existing buff
+  system for free; no new stacking logic was needed or added.
+- **minInt/minWis for the Ultra tier (Claude's call, flag for the owner to overrule):** the five base
+  protection spells don't follow the level-150+ curve (`HighTierSpellCurve`, main stat 2.5×L / other
+  stat 0.6×L) themselves - they're much lower-level and don't share one consistent int/wis ratio.
+  Since minLevel 150 puts the Ultra tier inside that curve's range, and section 2's "support spells
+  above level 150 take their stat gate from the same curve" rule, each Ultra spell uses 375/90
+  (2.5×150 / 0.6×150), split main-vs-secondary by whichever stat its own *base* spell already leans
+  on more heavily: Ultra Barrier and Ultra Mana Shield/Mana Surge (int-leaning bases) get
+  `minInt=375, minWis=90`; Ultra Protection and Ultra Stone Skin (wis-leaning bases) get
+  `minInt=90, minWis=375`. Note `SpellCastingService.begin()` doesn't actually gate casting on
+  int/wis at all (only `hasLearnedSpell` + mana/exhaustion/cooldown) - these numbers only gate
+  *learning* the spell in `LearnScreen.blockReason()`, same as every other spell.
+- **Renew Armor is sellable, not quest-only (Claude's call, flag for the owner to overrule).** There
+  is no existing "quest-only spell, hidden from the regular seller" mechanism in this codebase, and
+  building one just for this spell would be new plumbing for a fairly small distinction. Renew Armor
+  is priced and sold at the Spell Merchant like any other spell (500,000 gold - a QoL spell, not a
+  new power budget, so priced below the Ultra tier); a quest that also grants it for free/early
+  remains a legitimate separate reward on top of that, the same way other content in this game is
+  reachable by more than one path.
+- **A spell whose real effect isn't a dice-formula `T4cEffect` needs the `tame_beast`-style exemption
+  in `SpellRegistry.isPlayerCastable`, not a fake placeholder effect.** Renew Armor's effect is
+  custom code in `MainGameScreen.castDefensiveSpell` (re-casting whichever of ten other spells the
+  caster knows), so it was added to that exemption list by name rather than given an inert formula
+  just to pass the filter. Do the same for any future spell whose effect is pure custom logic.
 ### Temple blessing chests (T4C-0061)
 
 - An **offering chest** stands outside each town's temple and lays nine wards on whoever clicks it:
@@ -732,6 +785,14 @@ should not consume it), that is a content change, not an editorial one, and need
 - A new quest stage must be added to `CompendiumExporter`'s `NEW_QUEST_IDS` allowlist (and a new
   NPC, if any, to `NEW_NPC_IDS`) or it silently never appears on the reference website - the
   exporter only emits quests/NPCs it's been told are new-since-fork.
+- **A quest can grant a spell reward (T4C-0068).** `QuestDef.rewardSpellKey` (parallel to the
+  existing `rewardItemKey`) resolves via `SpellRegistry.findByName` and adds the spell's name to
+  the player's known-spells list in `QuestService.complete()`'s `grantRewardSpell` step - same
+  mechanical shape as the item grant, just for `player.getSpells()` instead of the inventory. Does
+  nothing (no error) if the player already knows the spell, so a repeat call (e.g. re-running
+  `complete()` defensively) can't duplicate the entry. Use this instead of a custom
+  `completeWithAlternateReward`/`javaBehavior()` one-off whenever the spell IS the quest's own
+  reward, not an alternate to a normal payout - see `quest/definition/RenewedWards.java`.
 
 ### The "Two Masters" pattern (T4C-0046)
 - A reusable end-of-quest **choice**: two different NPCs can both complete the same already-ready

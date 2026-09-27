@@ -66,7 +66,7 @@ public final class SpellMerchant extends ScriptedNpc {
 
           String k = text == null ? "" : text.toUpperCase(Locale.ROOT);
 
-          if (k.equals("SPELLS") || k.equals("LEARN") || k.equals("BUY")) {
+          if (k.equals("SPELLS") || k.equals("LEARN") || k.equals("TEACH")) {
 
             List<String> spellNames =
                 SpellRegistry.playerCastableSpells().stream()
