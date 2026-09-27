@@ -13,6 +13,15 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — Bigger impacts for the strongest area spells (T4C-0069)
+
+### Changed
+- **The most powerful area-of-effect spells now hit like it.** Casting one of the level 150+
+  elemental nukes used to look identical to its much weaker, lower-level cousin - one small burst
+  at the target. Now the impact lands as a scattered volley of bursts across the blast radius, with
+  more of them, spread wider, the stronger the spell is - so the biggest nukes in the game finally
+  read as dramatically bigger than the spells they share art with.
+
 ## 2026-09-27 — Renewed Wards (T4C-0068)
 
 ### Added
