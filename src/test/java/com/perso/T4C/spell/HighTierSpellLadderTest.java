@@ -99,7 +99,7 @@ class HighTierSpellLadderTest {
   }
 
   /**
-   * T4C-0077 / T4C-0079: tiers 150/200 keep the plain impact every lower-level spell of that
+   * T4C-0077 / T4C-0082: tiers 150/200 keep the plain impact every lower-level spell of that
    * element/shape already uses; tiers 250+ switch to the palette-shifted "-Ascended" variant, so
    * the strongest spells look different, not just multiplied (see {@link GrandImpactShower},
    * T4C-0069) - except that at tier 350+ an element with a newly drawn Mythic impact uses that

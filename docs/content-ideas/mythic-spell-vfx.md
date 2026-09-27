@@ -1,4 +1,4 @@
-# Mythic spell impacts (T4C-0079) — SpriteCook runbook
+# Mythic spell impacts (T4C-0082) — SpriteCook runbook
 
 Third step of the high-tier spell VFX ladder (see `DESIGN_GUIDELINES.md`, "High-tier spell VFX
 escalation"). Tiers 150+ get the burst shower and tiers 250+ the Ascended recolor. Tiers 350+
@@ -71,8 +71,8 @@ directory, not the repo.
 6. **Pack** by re-running without `--dry-run`, then set
    `MYTHIC_IMPACTS = Map.of(FIRE, "MythicFire")` in `HighTierSpellCurve`, update the status table
    above, and run `mvn -q test` (`MythicVfxAssetTest` and `HighTierSpellLadderTest` cover it).
-7. **See it in game** if possible. Then add the changelog entry (player-facing) under T4C-0079,
-   or under a new ID if T4C-0079 is already closed.
+7. **See it in game** if possible. Then add the changelog entry (player-facing) under T4C-0082,
+   or under a new ID if T4C-0082 is already closed.
 
 ## Other elements (after fire)
 

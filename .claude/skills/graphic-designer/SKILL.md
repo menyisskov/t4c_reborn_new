@@ -76,7 +76,7 @@ effects) — always a sprite-name string flowing into `SpriteLoader`.
 
 ## 3. Where new art goes, and how to make a definition find it
 
-**For a new multi-frame spell impact, use `tools.MythicVfxPacker` (T4C-0079).** It takes a
+**For a new multi-frame spell impact, use `tools.MythicVfxPacker` (T4C-0082).** It takes a
 folder of frame PNGs or a spritesheet, downscales/alpha-snaps/trims it, names the frames
 `<Base>-a, -b, ...`, derives offsets by aligning to a reference legacy impact, previews a contact
 sheet (`--dry-run --preview <dir>`), and merges via `SpriteBinWriter.replaceMatching`. The rules

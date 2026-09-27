@@ -15,7 +15,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
- * T4C-0079: every element that {@link HighTierSpellCurve#MYTHIC_IMPACTS} points at has a complete,
+ * T4C-0082: every element that {@link HighTierSpellCurve#MYTHIC_IMPACTS} points at has a complete,
  * packed, newly drawn impact animation (see {@code tools.MythicVfxPacker}) - contiguous frames
  * {@code -a, -b, ...} with no gaps, offsets that mirror around the tile like every legacy sprite,
  * and a base name no other sprite family shares - so a level 350+ spell never points at a missing

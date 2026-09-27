@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-/** T4C-0079: the packer that turns externally drawn frames into playable, aligned sprites. */
+/** T4C-0082: the packer that turns externally drawn frames into playable, aligned sprites. */
 class MythicVfxPackerTest {
   private static final int RED = 0xFFFF0000;
 

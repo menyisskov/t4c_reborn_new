@@ -233,8 +233,40 @@ public final class MonsterRegistry {
     byNormalizedName = null;
   }
 
+  // T4C-0073 (owner's call): every monster level 300+ has a shot at the two general-vendor gold
+  // sinks (mana_prism, critical_healing_potion) landing at 5% each, regardless of whether it also
+  // has its own hand-authored loot table - a single rule here instead of touching every level-300+
+  // monster file individually, and one that new level-300+ content picks up automatically. Skips a
+  // monster that already lists one of these two keys (defensive: none do today), so re-running
+  // this never doubles up a drop chance.
+  private static final float ENDGAME_UTILITY_DROP_CHANCE = 0.05f;
+  private static final int ENDGAME_UTILITY_DROP_MIN_LEVEL = 300;
+  private static final List<String> ENDGAME_UTILITY_DROP_KEYS =
+      List.of("item.mana_prism", "item.critical_healing_potion");
+
+  private static MonsterDef withEndgameUtilityLoot(MonsterDef def) {
+    if (def == null || def.getLevel() < ENDGAME_UTILITY_DROP_MIN_LEVEL) {
+      return def;
+    }
+    List<MonsterDef.LootDrop> existing = def.getLoot();
+    List<String> existingKeys =
+        existing == null
+            ? List.of()
+            : existing.stream().map(MonsterDef.LootDrop::getItem).toList();
+    List<MonsterDef.LootDrop> augmented = new java.util.ArrayList<>(existing == null ? List.of() : existing);
+    for (String key : ENDGAME_UTILITY_DROP_KEYS) {
+      if (!existingKeys.contains(key)) {
+        augmented.add(new MonsterDef.LootDrop(key, ENDGAME_UTILITY_DROP_CHANCE));
+      }
+    }
+    return def.withLoot(augmented);
+  }
+
   private static void rebuild(List<MonsterDef> defs) {
-    cache = List.copyOf(defs);
+    cache =
+        defs == null
+            ? List.of()
+            : defs.stream().map(MonsterRegistry::withEndgameUtilityLoot).toList();
     Map<String, MonsterDef> map = new LinkedHashMap<>();
     Map<String, MonsterDef> normalized = new LinkedHashMap<>();
     Map<String, MonsterDef> aliases = new LinkedHashMap<>();

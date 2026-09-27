@@ -27,6 +27,7 @@ import com.perso.T4C.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.Setter;
@@ -105,6 +106,15 @@ public abstract class BaseMonster implements Nameable {
   @Setter protected boolean selected = false;
   protected boolean isDead = false;
   protected long deathTime = 0L;
+  // The corpse itself fades from view a few seconds after death (owner's call) - independent of
+  // respawnTime, which can be much longer and otherwise left the body lying around for the whole
+  // wait. Randomized per death (3-5s) so a field of corpses doesn't blink out in perfect unison.
+  private static final long CORPSE_MIN_VISIBLE_MILLIS = 3000L;
+  private static final long CORPSE_MAX_VISIBLE_MILLIS = 5000L;
+  // Long.MAX_VALUE ("never hide"), not 0, so a subclass that sets isDead directly without going
+  // through die() (e.g. EchoOfSelf.fade()) still plays its death animation instead of vanishing
+  // instantly - only die() itself schedules a real hide time.
+  protected long corpseHiddenAtMs = Long.MAX_VALUE;
   protected long respawnTime;
   private boolean respawnEnabled = true;
   protected boolean stationary = false;
@@ -1050,8 +1060,19 @@ public abstract class BaseMonster implements Nameable {
     isDead = true;
     animations.startDeath();
     deathTime = System.currentTimeMillis();
+    corpseHiddenAtMs =
+        deathTime
+            + ThreadLocalRandom.current()
+                .nextLong(CORPSE_MIN_VISIBLE_MILLIS, CORPSE_MAX_VISIBLE_MILLIS + 1);
     if (deathCallback != null) deathCallback.accept(this);
     log.info("{} has been slain!", name);
+  }
+
+  /** True until a few seconds after death (T4C-0072, owner's call) - the body itself fades from
+   * view well before the monster actually respawns or is removed, so a kill doesn't leave a
+   * corpse lying around for the whole (often much longer) respawn wait. */
+  public boolean isCorpseVisible() {
+    return !isDead || System.currentTimeMillis() < corpseHiddenAtMs;
   }
 
   public void setDeathCallback(java.util.function.Consumer<BaseMonster> deathCallback) {
@@ -1169,6 +1190,9 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void render(SpriteBatch batch, ShaderProgram outlineShader) {
+    if (!isCorpseVisible()) {
+      return;
+    }
     float healthPercent = (float) health / (float) maxHealth;
     animations.render(
         batch,
@@ -1251,6 +1275,7 @@ public abstract class BaseMonster implements Nameable {
   public void respawn() {
     isDead = false;
     deathTime = 0L;
+    corpseHiddenAtMs = Long.MAX_VALUE;
     isAggro = false;
     aggroTarget = null;
     retaliatingAgainstPlayer = false;

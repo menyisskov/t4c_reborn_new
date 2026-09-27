@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
 /**
- * Packs a brand-new, externally drawn spell impact animation (T4C-0079) into the sprite bins, so
+ * Packs a brand-new, externally drawn spell impact animation (T4C-0082) into the sprite bins, so
  * the level 350+ rung of {@link com.perso.T4C.spell.HighTierSpellCurve} can use genuinely new art
  * instead of a recolor of legacy frames (T4C-0077). The art comes from outside the repo (e.g. the
  * SpriteCook generator) as either a folder of per-frame PNGs or a single spritesheet; this tool
@@ -66,7 +66,8 @@ public final class MythicVfxPacker {
     if (args.length < 2) {
       System.err.println(
           "Usage: MythicVfxPacker <input dir|sheet.png> <TargetBase> [--frames N] [--cols C]"
-              + " [--downscale k] [--hold n] [--match RefBase] [--preview dir] [--dry-run]"
+              + " [--downscale k] [--grow-in n] [--hold n] [--match RefBase | --ground Y]"
+              + " [--preview dir] [--dry-run]"
               + " [--sprites assets/sprites]\n"
               + "       MythicVfxPacker --export <RefBase> <outDir>");
       System.exit(2);
@@ -77,6 +78,8 @@ public final class MythicVfxPacker {
     int cols = 0;
     int downscale = 1;
     int hold = 1;
+    int growIn = 0;
+    Integer ground = null;
     String match = "GreatExplosion";
     Path preview = null;
     boolean dryRun = false;
@@ -87,6 +90,8 @@ public final class MythicVfxPacker {
         case "--cols" -> cols = Integer.parseInt(args[++i]);
         case "--downscale" -> downscale = Integer.parseInt(args[++i]);
         case "--hold" -> hold = Integer.parseInt(args[++i]);
+        case "--grow-in" -> growIn = Integer.parseInt(args[++i]);
+        case "--ground" -> ground = Integer.parseInt(args[++i]);
         case "--match" -> match = args[++i];
         case "--preview" -> preview = Path.of(args[++i]);
         case "--dry-run" -> dryRun = true;
@@ -98,12 +103,12 @@ public final class MythicVfxPacker {
       throw new IllegalArgumentException("TargetBase must be a bare name like MythicFire");
     }
 
-    List<BufferedImage> raw = hold(readFrames(input, frames, cols), hold);
-    Bounds reference = referenceBounds(spriteDir, match);
-    List<SpriteBinWriter.Entry> entries = pack(raw, targetBase, downscale, reference);
+    List<BufferedImage> raw = hold(growIn(readFrames(input, frames, cols), growIn), hold);
+    Bounds reference = ground == null ? referenceBounds(spriteDir, match) : null;
+    List<SpriteBinWriter.Entry> entries = pack(raw, targetBase, downscale, reference, ground);
     System.out.println(
-        "Prepared " + entries.size() + " frame(s) for " + targetBase + ", aligned to " + match
-            + " " + reference);
+        "Prepared " + entries.size() + " frame(s) for " + targetBase + ", aligned to "
+            + (ground == null ? match + " " + reference : "ground y=" + ground));
     for (SpriteBinWriter.Entry e : entries) {
       System.out.println(
           "  " + e.name() + " " + e.width() + "x" + e.height() + " o1=" + e.off1X() + ","
@@ -160,6 +165,47 @@ public final class MythicVfxPacker {
   private static long lastNumber(String name) {
     java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)(?!.*\\d)").matcher(name);
     return m.find() ? Long.parseLong(m.group(1)) : -1;
+  }
+
+  /**
+   * Prepends {@code n} eruption frames grown out of the first frame: it is scaled (nearest, so no
+   * new colors) up from the bottom-center of its opaque pixels at 1/(n+1), 2/(n+1), ... of full
+   * size. For generated animations that open at full size and would otherwise pop in.
+   */
+  static List<BufferedImage> growIn(List<BufferedImage> frames, int n) {
+    if (n <= 0 || frames.isEmpty()) return frames;
+    BufferedImage first = frames.get(0);
+    int minX = Integer.MAX_VALUE, maxX = -1, maxY = -1;
+    for (int y = 0; y < first.getHeight(); y++) {
+      for (int x = 0; x < first.getWidth(); x++) {
+        if (((first.getRGB(x, y) >>> 24) & 0xFF) >= ALPHA_CUTOFF) {
+          minX = Math.min(minX, x);
+          maxX = Math.max(maxX, x);
+          maxY = Math.max(maxY, y);
+        }
+      }
+    }
+    if (maxX < 0) return frames;
+    double cx = (minX + maxX + 1) / 2.0;
+    double base = maxY + 1;
+    List<BufferedImage> out = new ArrayList<>();
+    for (int i = 1; i <= n; i++) {
+      double scale = (double) i / (n + 1);
+      BufferedImage grown =
+          new BufferedImage(first.getWidth(), first.getHeight(), BufferedImage.TYPE_INT_ARGB);
+      for (int y = 0; y < first.getHeight(); y++) {
+        for (int x = 0; x < first.getWidth(); x++) {
+          int sx = (int) Math.floor(cx + (x + 0.5 - cx) / scale);
+          int sy = (int) Math.floor(base + (y + 0.5 - base) / scale);
+          if (sx >= 0 && sy >= 0 && sx < first.getWidth() && sy < first.getHeight()) {
+            grown.setRGB(x, y, first.getRGB(sx, sy));
+          }
+        }
+      }
+      out.add(grown);
+    }
+    out.addAll(frames);
+    return out;
   }
 
   /**
@@ -230,6 +276,20 @@ public final class MythicVfxPacker {
    */
   static List<SpriteBinWriter.Entry> pack(
       List<BufferedImage> raw, String targetBase, int downscale, Bounds reference) {
+    return pack(raw, targetBase, downscale, reference, null);
+  }
+
+  /**
+   * As {@link #pack(List, String, int, Bounds)}, but with a non-null {@code groundY} the animation
+   * is instead centered on the tile horizontally and its lowest pixel sits on {@code groundY} - for
+   * effects that erupt from the ground, where matching a mid-air explosion's box would sink them.
+   */
+  static List<SpriteBinWriter.Entry> pack(
+      List<BufferedImage> raw,
+      String targetBase,
+      int downscale,
+      Bounds reference,
+      Integer groundY) {
     if (raw.isEmpty()) throw new IllegalArgumentException("No frames");
     List<BufferedImage> canvases = new ArrayList<>();
     for (BufferedImage frame : raw) {
@@ -255,8 +315,15 @@ public final class MythicVfxPacker {
       uMaxY = Math.max(uMaxY, boxes[i][3]);
     }
     if (uMaxX < 0) throw new IllegalArgumentException("Every frame is fully transparent");
-    int shiftX = reference.centerX() - Math.floorDiv(uMinX + uMaxX, 2);
-    int shiftY = reference.centerY() - Math.floorDiv(uMinY + uMaxY, 2);
+    int shiftX;
+    int shiftY;
+    if (groundY != null) {
+      shiftX = TILE_MIRROR / 2 - Math.floorDiv(uMinX + uMaxX, 2);
+      shiftY = groundY - uMaxY;
+    } else {
+      shiftX = reference.centerX() - Math.floorDiv(uMinX + uMaxX, 2);
+      shiftY = reference.centerY() - Math.floorDiv(uMinY + uMaxY, 2);
+    }
 
     List<SpriteBinWriter.Entry> entries = new ArrayList<>();
     for (int i = 0; i < canvases.size(); i++) {
