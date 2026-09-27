@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
+import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.player.Player;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,6 +99,27 @@ class GmCommandProcessorTest {
     assertEquals(level, player.getLevel());
     assertTrue(player.isPlayerCollisionsEnabled());
     assertEquals(0, saves.get());
+  }
+
+  @Test
+  void summonMonsterSpawnsRequestedCountWithoutRespawning() {
+    MonsterManager monsterManager = new MonsterManager(null);
+    GmCommandProcessor withMonsters =
+        new GmCommandProcessor(null, null, monsterManager, ignored -> saves.incrementAndGet());
+    withMonsters.handleChatMessage(".summon monster Pack Wolf 5", player);
+    assertEquals(5, monsterManager.getMonsters().size());
+    for (var monster : monsterManager.getMonsters()) {
+      assertFalse(monster.shouldRespawn());
+    }
+  }
+
+  @Test
+  void summonMonsterDefaultsToOneWithNoCount() {
+    MonsterManager monsterManager = new MonsterManager(null);
+    GmCommandProcessor withMonsters =
+        new GmCommandProcessor(null, null, monsterManager, ignored -> saves.incrementAndGet());
+    withMonsters.handleChatMessage(".summon monster Pack Wolf", player);
+    assertEquals(1, monsterManager.getMonsters().size());
   }
 
   @Test

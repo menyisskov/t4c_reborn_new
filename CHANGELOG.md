@@ -13,6 +13,14 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — GM summon monster count (T4C-0078) (Process/Tooling)
+
+### Changed
+- **GM's monster-summoning tool can now spawn a group at once.** Giving a number after the
+  monster's name (for example, summoning twenty wolves in one go) spawns that many instead of
+  just one. However many are summoned this way, they stay put once killed and won't keep
+  reappearing on their own.
+
 ## 2026-09-27 — New colors for the strongest elemental spells (T4C-0077)
 
 ### Changed
