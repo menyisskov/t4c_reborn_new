@@ -34,6 +34,46 @@ class PlayerStateMapperTest {
     assertEquals(com.perso.T4C.config.GameConstants.REBIRTH_MAX_REMORTS, restored.getRebirthCount());
   }
 
+  /**
+   * T4C-0084: a save made while the level-400 spells existed still names them in the spellbook, on
+   * quick slots, in macros and as an active buff; all of those references are dropped on load and
+   * everything else is kept untouched.
+   */
+  @Test
+  void dropsRemovedSpellsFromOldSaves() throws Exception {
+    PlayerStateDto state = PlayerStateMapper.fromPlayer(new Player());
+    state.spells =
+        new java.util.ArrayList<>(
+            java.util.List.of("${spell.meteor}", "${spell.ashfall}", "${spell.sanctum_ward}"));
+    state.quickSlots =
+        new java.util.ArrayList<>(
+            java.util.List.of(
+                new com.perso.T4C.model.QuickSlotEntry(0, "${spell.meteor}"),
+                new com.perso.T4C.model.QuickSlotEntry(1, "${spell.heavenfall}")));
+    com.perso.T4C.config.MacroBinding kept = new com.perso.T4C.config.MacroBinding();
+    kept.setSpellName("${spell.emberqueens_wrath}");
+    com.perso.T4C.config.MacroBinding gone = new com.perso.T4C.config.MacroBinding();
+    gone.setSpellName("${spell.tectonic_ruin}");
+    state.macros = new java.util.ArrayList<>(java.util.List.of(gone, kept));
+    PlayerStateDto.ActiveBuffState ward = new PlayerStateDto.ActiveBuffState();
+    ward.spellName = "${spell.sanctum_ward}";
+    ward.remainingSeconds = 60;
+    ward.totalDurationSeconds = 120;
+    state.activeBuffs = new java.util.ArrayList<>(java.util.List.of(ward));
+
+    Player restored = new Player();
+    PlayerStateMapper.applyToPlayer(state, restored);
+
+    assertEquals(java.util.List.of("${spell.meteor}"), restored.getSpells());
+    assertEquals(1, restored.getQuickSlots().size());
+    assertEquals("${spell.meteor}", restored.getQuickSlots().get(0).getSpell());
+    assertEquals(1, restored.getMacros().size());
+    assertEquals("${spell.emberqueens_wrath}", restored.getMacros().get(0).getSpellName());
+    assertTrue(
+        restored.getActiveBuffs().stream()
+            .noneMatch(b -> "${spell.sanctum_ward}".equals(b.getSpellName())));
+  }
+
   @Test
   void preservesQuestFlags() throws Exception {
     Player source = new Player();

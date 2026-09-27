@@ -93,9 +93,26 @@ class HighTierSpellLadderTest {
     }
   }
 
+  /**
+   * T4C-0084: the level-400 rung was removed, so the ladder tops out at 350 - below the level cap -
+   * and no attack spell of the ladder sits above it. Archmage Thalindra's dialogue quotes the top
+   * rung and its requirement in words; this pins those words to the curve's own numbers.
+   */
   @Test
-  void levelCapRequirementsMatchAWellBuiltCaster() {
-    assertEquals(1000, HighTierSpellCurve.primaryRequirement(GameConstants.MAX_PLAYER_LEVEL));
+  void ladderTopsOutAt350AndTheTrainerSaysSo() throws Exception {
+    int top = HighTierSpellCurve.TIERS.get(HighTierSpellCurve.TIERS.size() - 1);
+    assertEquals(350, top);
+    assertTrue(top < GameConstants.MAX_PLAYER_LEVEL);
+    assertEquals(875, HighTierSpellCurve.primaryRequirement(top));
+    for (SpellData spell : highTierAttacks()) {
+      assertTrue(spell.getMinLevel() <= top, spell.getName() + " is above the top rung");
+    }
+    String lang =
+        java.nio.file.Files.readString(
+            java.nio.file.Path.of("assets/i18n/lang.json"), java.nio.charset.StandardCharsets.UTF_8);
+    assertTrue(lang.contains("the three-hundred-and-fiftieth level, and a mind of eight hundred"
+        + " and seventy-five in its governing art"));
+    assertTrue(lang.contains("the same five rungs"));
   }
 
   /**

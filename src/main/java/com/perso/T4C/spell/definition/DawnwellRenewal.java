@@ -6,8 +6,8 @@ import java.util.List;
 
 /**
  * Level-300 light group heal (T4C-0025): the high-tier successor to {@code WellspringMercy} (75),
- * sitting between the {@code LeywardBastion} (200) and {@code SanctumWard} (400) wards so the
- * light school's support line has a rung at every other tier. Same shape as Wellspring Mercy -
+ * sitting above the {@code LeywardBastion} (200) ward in the light school's support line. The
+ * level-400 {@code SanctumWard} above it was removed with the level-400 rung (T4C-0084). Same shape as Wellspring Mercy -
  * self-centered, heals the caster and grouped allies in radius - with the heal scaled to the
  * damage monsters of this level deal and gated on the shared high-tier Wisdom curve.
  */

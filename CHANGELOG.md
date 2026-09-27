@@ -13,6 +13,17 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — The level-400 spells are gone (T4C-0084)
+
+### Removed
+- **The level-400 spells have been taken out of the game.** The six top-rung attack spells
+  (Ashfall, Tectonic Ruin, Heavenfall, Cataclysm's Herald, Solar Apotheosis and Eclipse of Ruin)
+  and the Sanctum Ward protection spell no longer exist. Every school's high-level ladder now ends
+  at level 350 with five spells, and Archmage Thalindra only teaches those.
+- If your character had learned any of them, they're gone from your spellbook, hotbar and macros
+  the next time you log in, and an active Sanctum Ward wears off. The gold spent on them is not
+  refunded.
+
 ## 2026-09-27 — All-new spell effects for the level 350 and 400 nukes (T4C-0082)
 
 ### Changed
