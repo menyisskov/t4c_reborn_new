@@ -94,12 +94,12 @@ half, Tranquility and Clear Thought did nothing for a while; check this file's m
 The first two escalation steps below are built from the existing legacy animation frames. The
 third, tier 350+, is newly drawn art brought in from outside the repo (SpriteCook) and packed by
 `tools.MythicVfxPacker`. These stacking mechanisms make a `HighTierSpellCurve` spell (levels
-150-400) read as stronger the higher its tier. Without them, every tier of a school/shape would
+150-350) read as stronger the higher its tier. Without them, every tier of a school/shape would
 share the exact impact sprite of the low-level spell it was copied from:
 
 - **Tiers 150+ (`GrandImpactShower`, T4C-0069):** the impact renders as a scattered, staggered
-  multi-burst "shower" instead of one flash — burst count climbs with tier (2 at 150, up to 7 at
-  400), each one randomly placed within the spell's actual radius. Bolts (no radius) are unaffected.
+  multi-burst "shower" instead of one flash — burst count climbs with tier (2 at 150, up to 6 at
+  350, the top rung), each one randomly placed within the spell's actual radius. Bolts (no radius) are unaffected.
 - **Tiers 250+ (`tools.AscendedVfxGenerator`, T4C-0077):** the impact sprite itself switches to a
   palette-shifted "-Ascended" variant, generated once by duotone-remapping the base animation's
   luminance onto a per-element dark→bright color gradient (fire → white-gold, earth → obsidian-red,
@@ -206,7 +206,13 @@ quiz is gone; its i18n strings were deleted with it.
 | Air | Intelligence and wisdom equally (the hybrid school) |
 
 - **The ladder is even.** Every school has exactly one attack spell at each of levels
-  **150, 200, 250, 300, 350 and 400**.
+  **150, 200, 250, 300 and 350**.
+- **The ladder stops at 350, below the level-400 cap (T4C-0084, owner's call).** The level-400
+  rung (Ashfall, Tectonic Ruin, Heavenfall, Cataclysm's Herald, Solar Apotheosis, Eclipse of
+  Ruin) and the level-400 light ward Sanctum Ward were removed outright. Characters that had
+  learned them simply lose them on load - spellbook, quick slots, macros and active buffs - with
+  **no gold refund**. Anything else removed later goes into `spell/RemovedSpells.java` the same
+  way, so old saves never keep a spell that no longer exists.
 - At a given level, every school's spell has the same requirements, mana, price and damage.
   If you add a spell at a new level, add it for every school.
 - Enforced by `spell/HighTierSpellCurve.java` (the single source for the numbers) and
@@ -214,11 +220,11 @@ quiz is gone; its i18n strings were deleted with it.
 - **Requirements at level L:**
   - Main stat 2.5 × L; other casting stat 0.6 × L.
   - Air needs 1.55 × L in each of intelligence and wisdom.
-  - So 375 at level 150, and 1000 at level 400.
+  - So 375 at level 150, and 875 at level 350 (the top rung).
 - **Damage** is `(1d(L/5) + L/2 + stat/4) × power/resist`.
   - Single-target bolts multiply by 6; area spells by 5.
   - Air uses `(int + wis)/5` as its stat term.
-- **Shapes per level:** 150 bolt, 200 area, 250 bolt, 300 bolt, 350 area, 400 area.
+- **Shapes per level:** 150 bolt, 200 area, 250 bolt, 300 bolt, 350 area.
 - **Support spells** above level 150 (wards, heals) take their stat gate from the same curve.
 - **Hard limits:**
   - No player spell may require a level above the cap.
@@ -229,9 +235,8 @@ quiz is gone; its i18n strings were deleted with it.
   used to have a flat, non-decaying exhaustion per shape (1600/1200/1200ms bolt, 1900/1400/1400ms
   area) at every tier and every caster level. They now decay from that same starting value down to
   the game's universal floor (1000/750/750ms) linearly between level 150 and the level cap (400),
-  via `(400-self.level)` rather than `(self.level-tier)` - one formula shared by every tier, so a
-  level-400 spell (whose `minLevel` is itself 400) is *already* at the floor the instant it's
-  learned, with no decay window at all. See `HighTierSpellCurve.attack`.
+  via `(400-self.level)` rather than `(self.level-tier)` - one formula shared by every tier, so
+  every rung reaches the floor exactly at the level cap. See `HighTierSpellCurve.attack`.
 - **Every element's offensive spells form one prerequisite chain (T4C-0054).** You must already
   know the previous rung (by ascending `minLevel`, ties broken by `spellId`) to learn the next one
   of the same element - e.g. Earth's `stone_shard → shatter → earthquake → boulders → ...`.

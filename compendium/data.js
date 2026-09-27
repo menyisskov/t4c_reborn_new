@@ -9546,143 +9546,6 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.sanctum_ward",
-      "isNew": true,
-      "name": "Sanctum Ward",
-      "description": "Raises a greater standing ward around the caster's party, granting large bonuses to air, water, earth, fire and dark resistance, armor class, and maximum hit points.",
-      "manaCost": "2200",
-      "minInt": 240,
-      "minWis": 1000,
-      "minLevel": 400,
-      "isAttack": false,
-      "lineOfSight": false,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "cooldownSeconds": 6,
-      "duration": "60000",
-      "price": 2600000,
-      "spellId": 99908,
-      "element": 5,
-      "targetType": 5,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": false,
-      "effects": [
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_fire"
-            },
-            {
-              "paramId": 3,
-              "expression": "250"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_water"
-            },
-            {
-              "paramId": 3,
-              "expression": "250"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_air"
-            },
-            {
-              "paramId": 3,
-              "expression": "250"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_earth"
-            },
-            {
-              "paramId": 3,
-              "expression": "250"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "r_dark"
-            },
-            {
-              "paramId": 3,
-              "expression": "250"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "AC"
-            },
-            {
-              "paramId": 3,
-              "expression": "150"
-            }
-          ]
-        },
-        {
-          "effectType": 2,
-          "parameters": [
-            {
-              "paramId": 1
-            },
-            {
-              "paramId": 2,
-              "expression": "max hp"
-            },
-            {
-              "paramId": 3,
-              "expression": "self.wis*2"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.emberqueens_wrath",
       "isNew": true,
       "name": "Emberqueen's Wrath",
@@ -10090,53 +9953,6 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.cataclysms_herald",
-      "isNew": true,
-      "name": "Cataclysm's Herald",
-      "description": "Summons a crushing deluge upon the target, heralding the end of all who stand against it. This spell has a large area of effect.",
-      "manaCost": "120",
-      "minInt": 1000,
-      "minWis": 240,
-      "minLevel": 400,
-      "isAttack": true,
-      "lineOfSight": true,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "damageAtReference": {
-        "formula": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)",
-        "min": 2255,
-        "max": 2650
-      },
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 4000000,
-      "spellId": 99916,
-      "element": 4,
-      "targetType": 19,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": true,
-      "effects": [
-        {
-          "effectType": 1,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)"
-            },
-            {
-              "paramId": 2,
-              "expression": "-(((1d80+200+self.int/4)*self.water/target.r_water)*5)"
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.scorchbrand",
       "isNew": true,
       "name": "Scorchbrand",
@@ -10312,53 +10128,6 @@ window.T4C_DATA = {
             },
             {
               "paramId": 2
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.ashfall",
-      "isNew": true,
-      "name": "Ashfall",
-      "description": "Calls down a storm of burning ash and embers that buries everything around the target. This spell has a large area of effect.",
-      "manaCost": "120",
-      "minInt": 1000,
-      "minWis": 240,
-      "minLevel": 400,
-      "isAttack": true,
-      "lineOfSight": true,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "damageAtReference": {
-        "formula": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)",
-        "min": 2255,
-        "max": 2650
-      },
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 4000000,
-      "spellId": 99921,
-      "element": 1,
-      "targetType": 19,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": true,
-      "effects": [
-        {
-          "effectType": 1,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)"
-            },
-            {
-              "paramId": 2,
-              "expression": "-(((1d80+200+self.int/4)*self.fire/target.r_fire)*5)"
             },
             {
               "paramId": 3,
@@ -10740,53 +10509,6 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.tectonic_ruin",
-      "isNew": true,
-      "name": "Tectonic Ruin",
-      "description": "Shatters the very bedrock beneath the target, collapsing the land around it. This spell has a large area of effect.",
-      "manaCost": "120",
-      "minInt": 240,
-      "minWis": 1000,
-      "minLevel": 400,
-      "isAttack": true,
-      "lineOfSight": true,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "damageAtReference": {
-        "formula": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)",
-        "min": 2255,
-        "max": 2650
-      },
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 4000000,
-      "spellId": 99930,
-      "element": 2,
-      "targetType": 19,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": true,
-      "effects": [
-        {
-          "effectType": 1,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)"
-            },
-            {
-              "paramId": 2,
-              "expression": "-(((1d80+200+self.wis/4)*self.earth/target.r_earth)*5)"
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.galespike",
       "isNew": true,
       "name": "Galespike",
@@ -10962,53 +10684,6 @@ window.T4C_DATA = {
             },
             {
               "paramId": 2
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.heavenfall",
-      "isNew": true,
-      "name": "Heavenfall",
-      "description": "Tears open the heavens, bringing a storm of lightning crashing down around the target. This spell has a large area of effect.",
-      "manaCost": "120",
-      "minInt": 620,
-      "minWis": 620,
-      "minLevel": 400,
-      "isAttack": true,
-      "lineOfSight": true,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "damageAtReference": {
-        "formula": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)",
-        "min": 2245,
-        "max": 2640
-      },
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 4000000,
-      "spellId": 99935,
-      "element": 3,
-      "targetType": 19,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": true,
-      "effects": [
-        {
-          "effectType": 1,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
-            },
-            {
-              "paramId": 2,
-              "expression": "-(((1d80+200+(self.int+self.wis)/5)*self.air/target.r_air)*5)"
             },
             {
               "paramId": 3,
@@ -11205,53 +10880,6 @@ window.T4C_DATA = {
       ]
     },
     {
-      "key": "spell.eclipse_of_ruin",
-      "isNew": true,
-      "name": "Eclipse of Ruin",
-      "description": "Blots out the sun above the target, and everything beneath the eclipse withers. This spell has a large area of effect.",
-      "manaCost": "120",
-      "minInt": 1000,
-      "minWis": 240,
-      "minLevel": 400,
-      "isAttack": true,
-      "lineOfSight": true,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "damageAtReference": {
-        "formula": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)",
-        "min": 2255,
-        "max": 2650
-      },
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 4000000,
-      "spellId": 99940,
-      "element": 6,
-      "targetType": 19,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": true,
-      "effects": [
-        {
-          "effectType": 1,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)"
-            },
-            {
-              "paramId": 2,
-              "expression": "-(((1d80+200+self.int/4)*self.dark/target.r_dark)*5)"
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "key": "spell.dawnflare",
       "isNew": true,
       "name": "Dawnflare",
@@ -11428,53 +11056,6 @@ window.T4C_DATA = {
             {
               "paramId": 2,
               "expression": "-(((1d70+175+self.wis/4)*self.light/target.r_light)*5)"
-            },
-            {
-              "paramId": 3,
-              "expression": "100"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "key": "spell.solar_apotheosis",
-      "isNew": true,
-      "name": "Solar Apotheosis",
-      "description": "Calls down the full fury of the sun upon the target and everything around it. This spell has a large area of effect.",
-      "manaCost": "120",
-      "minInt": 240,
-      "minWis": 1000,
-      "minLevel": 400,
-      "isAttack": true,
-      "lineOfSight": true,
-      "minDamage": 0,
-      "maxDamage": 0,
-      "damageAtReference": {
-        "formula": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)",
-        "min": 2255,
-        "max": 2650
-      },
-      "cooldownSeconds": 0,
-      "duration": "0",
-      "price": 4000000,
-      "spellId": 99945,
-      "element": 5,
-      "targetType": 19,
-      "attackType": 2,
-      "successRate": "100",
-      "pvp": true,
-      "effects": [
-        {
-          "effectType": 1,
-          "parameters": [
-            {
-              "paramId": 1,
-              "expression": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)"
-            },
-            {
-              "paramId": 2,
-              "expression": "-(((1d80+200+self.wis/4)*self.light/target.r_light)*5)"
             },
             {
               "paramId": 3,
@@ -12517,9 +12098,9 @@ window.T4C_DATA = {
             "teach",
             "spell"
           ],
-          "response": "Veilstone Aegis, Wellspring Mercy, Leyward Bastion, Dawnwell Renewal, Sanctum Ward - the ley-line wards and mercies. For the killing arts, name a school: fire, water, earth, air, dark or light.",
+          "response": "Veilstone Aegis, Wellspring Mercy, Leyward Bastion, Dawnwell Renewal - the ley-line wards and mercies. For the killing arts, name a school: fire, water, earth, air, dark or light.",
           "actions": [
-            "OPEN_SPELL_LEARNING:veilstone_aegis,wellspring_mercy,leyward_bastion,dawnwell_renewal,sanctum_ward"
+            "OPEN_SPELL_LEARNING:veilstone_aegis,wellspring_mercy,leyward_bastion,dawnwell_renewal"
           ]
         },
         {
@@ -12533,68 +12114,68 @@ window.T4C_DATA = {
           "keywords": [
             "elder"
           ],
-          "response": "The high arts were never meant to be taught lightly. Every school offers the same six rungs - at the hundred-and-fiftieth level, then every fifty levels after, up to the four hundredth - and each rung demands a mind to match it. Come back when you're ready.",
+          "response": "The high arts were never meant to be taught lightly. Every school offers the same five rungs - at the hundred-and-fiftieth level, then every fifty levels after, up to the three-hundred-and-fiftieth - and each rung demands a mind to match it. Come back when you're ready.",
           "actions": []
         },
         {
           "keywords": [
             "apex"
           ],
-          "response": "The apex of every school is the same distance up the ladder: the four hundredth level, and a mind of a thousand in its governing art. Name a school and I'll show you the whole climb.",
+          "response": "The apex of every school is the same distance up the ladder: the three-hundred-and-fiftieth level, and a mind of eight hundred and seventy-five in its governing art. Name a school and I'll show you the whole climb.",
           "actions": []
         },
         {
           "keywords": [
             "fire"
           ],
-          "response": "Scorchbrand, Pyreburst, Magmaheart Lance, Sunforge Brand, Emberqueen's Wrath, Ashfall - the pyromancer's ladder. Fire answers to Intelligence.",
+          "response": "Scorchbrand, Pyreburst, Magmaheart Lance, Sunforge Brand, Emberqueen's Wrath - the pyromancer's ladder. Fire answers to Intelligence.",
           "actions": [
-            "OPEN_SPELL_LEARNING:scorchbrand,pyreburst,magmaheart_lance,sunforge_brand,emberqueens_wrath,ashfall"
+            "OPEN_SPELL_LEARNING:scorchbrand,pyreburst,magmaheart_lance,sunforge_brand,emberqueens_wrath"
           ]
         },
         {
           "keywords": [
             "water"
           ],
-          "response": "Rime Lance, Frostgale, Abyssal Spear, Tidebreaker, Drowning Deep, Cataclysm's Herald - the tidecaller's ladder. Water answers to Intelligence.",
+          "response": "Rime Lance, Frostgale, Abyssal Spear, Tidebreaker, Drowning Deep - the tidecaller's ladder. Water answers to Intelligence.",
           "actions": [
-            "OPEN_SPELL_LEARNING:rime_lance,frostgale,abyssal_spear,tidebreaker,drowning_deep,cataclysms_herald"
+            "OPEN_SPELL_LEARNING:rime_lance,frostgale,abyssal_spear,tidebreaker,drowning_deep"
           ]
         },
         {
           "keywords": [
             "earth"
           ],
-          "response": "Stonefang, Land Slide, Gravebreaker, Mountain's Fist, Worldroot Upheaval, Tectonic Ruin - the geomancer's ladder. Earth answers to Wisdom.",
+          "response": "Stonefang, Land Slide, Gravebreaker, Mountain's Fist, Worldroot Upheaval - the geomancer's ladder. Earth answers to Wisdom.",
           "actions": [
-            "OPEN_SPELL_LEARNING:stonefang,land_slide,gravebreaker,mountains_fist,worldroot_upheaval,tectonic_ruin"
+            "OPEN_SPELL_LEARNING:stonefang,land_slide,gravebreaker,mountains_fist,worldroot_upheaval"
           ]
         },
         {
           "keywords": [
             "air"
           ],
-          "response": "Galespike, Thunderhead, Skysplitter, Tempest Lance, Stormcaller's Judgment, Heavenfall - the windweaver's ladder. The storm asks for Intelligence and Wisdom in equal measure.",
+          "response": "Galespike, Thunderhead, Skysplitter, Tempest Lance, Stormcaller's Judgment - the windweaver's ladder. The storm asks for Intelligence and Wisdom in equal measure.",
           "actions": [
-            "OPEN_SPELL_LEARNING:galespike,thunderhead,skysplitter,tempest_lance,stormcallers_judgment,heavenfall"
+            "OPEN_SPELL_LEARNING:galespike,thunderhead,skysplitter,tempest_lance,stormcallers_judgment"
           ]
         },
         {
           "keywords": [
             "dark"
           ],
-          "response": "Nightfang, Shadowblight, Soulrend, Voidreave Lance, Umbral Tide, Eclipse of Ruin - the shadowmancer's ladder. Darkness answers to Intelligence.",
+          "response": "Nightfang, Shadowblight, Soulrend, Voidreave Lance, Umbral Tide - the shadowmancer's ladder. Darkness answers to Intelligence.",
           "actions": [
-            "OPEN_SPELL_LEARNING:nightfang,shadowblight,soulrend,voidreave_lance,umbral_tide,eclipse_of_ruin"
+            "OPEN_SPELL_LEARNING:nightfang,shadowblight,soulrend,voidreave_lance,umbral_tide"
           ]
         },
         {
           "keywords": [
             "light"
           ],
-          "response": "Sunscour, Dawnflare, Radiant Spear, Seraph's Verdict, Hallowed Nova, Solar Apotheosis - the lightbringer's ladder. Light answers to Wisdom.",
+          "response": "Sunscour, Dawnflare, Radiant Spear, Seraph's Verdict, Hallowed Nova - the lightbringer's ladder. Light answers to Wisdom.",
           "actions": [
-            "OPEN_SPELL_LEARNING:sunscour,dawnflare,radiant_spear,seraphs_verdict,hallowed_nova,solar_apotheosis"
+            "OPEN_SPELL_LEARNING:sunscour,dawnflare,radiant_spear,seraphs_verdict,hallowed_nova"
           ]
         },
         {

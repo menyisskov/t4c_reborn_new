@@ -126,13 +126,13 @@ per-spell flavor choice inherited from the legacy game data, not something to co
 
 **Level 150 and above: don't hand-pick numbers — use `spell/HighTierSpellCurve.java`.** The
 level cap is 400 (`GameConstants.MAX_PLAYER_LEVEL`) and every school (fire, earth, air, water,
-light, dark) has exactly one attack spell at each of levels 150/200/250/300/350/400, all built by
+light, dark) has exactly one attack spell at each of levels 150/200/250/300/350 (the level-400
+rung was removed in T4C-0084; the ladder tops out at 350 even though the level cap is 400), all built by
 `HighTierSpellCurve.attack(key, spellId, element, tier, Shape.BOLT|AREA)` so requirements, mana,
 price and damage stay identical across schools (`HighTierSpellLadderTest` enforces this). Its
 Javadoc explains the stat-budget math (5 stat points per level; tier `L` needs `2.5L` main stat +
 `0.6L` other stat). A high-tier support spell (heal/ward) should still take its Int/Wis gate from
-`HighTierSpellCurve.primaryRequirement`/`secondaryRequirement` — see `DawnwellRenewal`,
-`SanctumWard`. Never give a player spell a `minLevel` above the level cap.
+`HighTierSpellCurve.primaryRequirement`/`secondaryRequirement` — see `DawnwellRenewal`. Never give a player spell a `minLevel` above the level cap.
 
 Use `references/spell-examples.md` (a table of 10 real spells from level 15 to 100 with their exact
 `minLevel`/`minInt`/`minWis`/`manaCost`/element/formula) to interpolate. Rules of thumb pulled from that data:
