@@ -9,7 +9,10 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "GaenenElthorn", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+// T4C-0066: was unplaced (x=0,y=0,z=0) - see GabrielArchonis.java for the full story (both are the
+// Oracle's two final-test assistants, one per alignment path). Placed a few tiles from Gabriel in
+// the same final chamber, just past the Oracle Invulnerable Guardian cluster's far edge.
+@Spawn(type = "GaenenElthorn", x = 2822, y = 2178, z = 2, stationary = false, aggressive = false)
 public final class GaenenElthorn extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

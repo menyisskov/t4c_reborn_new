@@ -671,12 +671,27 @@ should not consume it), that is a content change, not an editorial one, and need
   so it stays green and meaningful rather than being switched off.
 
 ## 6. Quests
-- **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest
-  hooks carried over from the original T4C (NPC dialogue that mentions or promises a quest, such
-  as the Dragon's Crypt tomb raider, Mirak's goblin bounty, Tristan's caravan or Rhodar's hammer),
-  as well as their rewards. Only quests this project authored itself may be extended.
-  Content-pass backlog ideas that would "finish" an original quest hook are off the table unless
-  the owner asks for one by name.
+- **T4C-0038's "don't touch the original quests" default is superseded for this content specifically**
+  (owner, in chat, T4C-0066): the owner has asked to audit the original game's own quests against
+  the real reference data and fill in what's genuinely missing or broken - the Dragon's Crypt tomb
+  raider, Mirak's goblin bounty, Tristan's caravan, Rhodar's hammer and the like are now in scope,
+  not off the table. T4C-0038's original point still holds for anything the owner *hasn't* asked
+  about: don't invent new rewards or storylines for original content on your own initiative -  the
+  scope here is "make the real thing actually work end to end," not "improve on it."
+- **Read this before assuming any original-game quest content is missing (T4C-0066).** A full audit
+  found the overwhelming majority of it - the Dragon/Dark Fang chain, Mirak's Trust Quest, Stone of
+  Life, Book of Feylor, the Gypsy alignment quiz, the entire Crimsonscale Letter chain, the
+  Good/Evil Seraph endgame, the Oracle dungeon puzzle, most of Stoneheim - is **already real,
+  spawned, working content**, just built on an older per-NPC flag system (`__QUEST_*`,
+  `ADDON_STORYLINE_PROGRESS`, `npcFlag`/`globalFlag`) that predates `quest/QuestDef`/`QuestService`
+  and therefore never shows up in the Quest Journal. Before writing a new NPC/monster/quest for
+  "missing" original content: grep `npc/`/`monster/` for a class matching the canon name (try
+  PascalCased/apostrophe-stripped variants, e.g. "Eye-Patched Qardos" -> `EyePatchedQardos.java`)
+  and read its `javaBehavior()` - it is very likely already there and already working, and the real
+  gap (if any) is usually a missing `@Spawn` placement, a missing kill-counter hookup, or one
+  un-wired turn-in keyword on an otherwise-complete NPC, not a from-scratch build. A full canon
+  reference (all 5 islands' quests, the NPC/monster/drop/trader charts) was captured from
+  t4cbible.com during this pass; ask the owner or re-scrape if a future pass needs it again.
 - Every zone-unlock quest added by the T4C-0019 pass follows the same mechanical shape: kill N
   of a monster in one area, turn in one boss-drop item, unlock fast travel to a zone. That's a
   fine default for a minor zone gate, but it undersells a **major** new location - see below for

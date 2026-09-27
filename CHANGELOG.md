@@ -13,6 +13,24 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — Three original-game NPCs that were never actually placed (T4C-0066)
+
+### Fixed
+- Dwarthon Stoneface, the guard outside Bane Blackblood's throne room, exists and talks but was
+  never actually standing anywhere in the world - now he is, right where he belongs. Ask him about
+  "Bane" and he'll send you after Delwobble the Mad Summoner in the dungeon below the castle;
+  killing Delwobble is now what actually earns you an audience with Bane, which nothing in the
+  game previously did.
+- The Oracle's two final trial-keepers, Gabriel Archonis and Gaenen Elthorn, were fully written
+  but standing nowhere reachable. Both are now placed in the Oracle's deepest chamber, past its
+  last guardians.
+
+### Process
+- A full audit against the original game's own quest reference (t4cbible.com) found that almost
+  everything that looked missing is actually already in the game, just built on an older system
+  than the newer Quest Journal reads - so it won't show up there, but it works. The real gaps were
+  much smaller and more specific than expected; this pass fixes the first three, more follow.
+
 ## 2026-09-26 — Quest journal tabs, chain progress, and a monster kill log (T4C-0065)
 
 ### Added
