@@ -118,8 +118,28 @@ public final class HighTierSpellCurve {
    * plain impact every lower-level spell of the same element/shape already uses. */
   private static final int ASCENDED_TIER_THRESHOLD = 250;
 
-  /** Tiers at or above this get a brand-new "Mythic" impact animation (T4C-0082) for every
-   * element listed in {@link #MYTHIC_IMPACTS}; an element without one keeps the Ascended impact. */
+  /** Tiers at or above this play the original game's own top-tier spell animation for their
+   * element (T4C-0083, see {@link #GRAND_IMPACTS}), instead of the Ascended recolor. */
+  public static final int GRAND_TIER_THRESHOLD = 300;
+
+  /**
+   * Element to the original top-tier animation its level-300 spells play (T4C-0083). The "Grand"
+   * names are alpha-blended copies of the original additive "NM" animations made by
+   * {@code tools.GrandVfxGenerator}; BoulderFire (earth) and iceTree (water) are the originals
+   * themselves, which already draw correctly. {@code GrandVfxAssetTest} checks every one is packed.
+   */
+  public static final Map<Integer, String> GRAND_IMPACTS =
+      Map.of(
+          FIRE, "GrandFire",
+          EARTH, "BoulderFire",
+          AIR, "GrandAir",
+          WATER, "iceTree",
+          LIGHT, "GrandLight",
+          DARK, "GrandDark");
+
+  /** Tiers at or above this get a "Mythic" impact (T4C-0082, redrawn in T4C-0083 as an upgrade of
+   * the element's {@link #GRAND_IMPACTS} original) for every element listed in
+   * {@link #MYTHIC_IMPACTS}; an element without one falls back to its Grand impact. */
   public static final int MYTHIC_TIER_THRESHOLD = 350;
 
   /**
@@ -140,9 +160,12 @@ public final class HighTierSpellCurve {
 
   public static SpellData attack(String key, int spellId, int element, int tier, Shape shape) {
     Visuals v = Visuals.of(element, shape, tier >= ASCENDED_TIER_THRESHOLD);
-    String mythic = tier >= MYTHIC_TIER_THRESHOLD ? MYTHIC_IMPACTS.get(element) : null;
-    if (mythic != null) {
-      v = v.withImpact(mythic + "-");
+    String special = tier >= MYTHIC_TIER_THRESHOLD ? MYTHIC_IMPACTS.get(element) : null;
+    if (special == null && tier >= GRAND_TIER_THRESHOLD) {
+      special = GRAND_IMPACTS.get(element);
+    }
+    if (special != null) {
+      v = v.withImpact(special + "-");
     }
     boolean area = shape == Shape.AREA;
     String damage = damageFormula(element, tier, shape);

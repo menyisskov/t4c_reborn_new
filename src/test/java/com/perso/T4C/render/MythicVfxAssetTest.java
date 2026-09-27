@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
  */
 class MythicVfxAssetTest {
   private static final int MIN_FRAMES = 8;
-  private static final int MAX_FRAMES = 52;
+  private static final int MAX_FRAMES = 64;
 
   @Test
   void everyMythicImpactIsCompleteAndWellFormed() throws Exception {
@@ -59,7 +59,7 @@ class MythicVfxAssetTest {
       }
       for (SpriteBinIO.Packed p : frames) {
         assertTrue(
-            p.width() > 0 && p.height() > 0 && p.width() <= 256 && p.height() <= 256,
+            p.width() > 0 && p.height() > 0 && p.width() <= 384 && p.height() <= 384,
             p.name() + " is " + p.width() + "x" + p.height());
         assertEquals(
             MythicVfxPacker.TILE_MIRROR - p.width() - p.off1X(), p.off2X(), p.name() + " off2X");

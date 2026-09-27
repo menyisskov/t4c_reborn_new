@@ -99,31 +99,45 @@ class HighTierSpellLadderTest {
   }
 
   /**
-   * T4C-0077 / T4C-0082: tiers 150/200 keep the plain impact every lower-level spell of that
-   * element/shape already uses; tiers 250+ switch to the palette-shifted "-Ascended" variant, so
-   * the strongest spells look different, not just multiplied (see {@link GrandImpactShower},
-   * T4C-0069) - except that at tier 350+ an element with a newly drawn Mythic impact uses that
-   * instead.
+   * T4C-0077 / T4C-0082 / T4C-0083: the impact escalates with tier. 150/200 keep the plain impact
+   * every lower-level spell of that element/shape already uses; 250 switches to the "-Ascended"
+   * recolor; 300 plays the original game's top-tier animation for the element (Grand); 350/400
+   * play the element's Mythic upgrade of that original.
    */
   @Test
-  void impactEscalatesPlainThenAscendedThenMythic() {
+  void impactEscalatesPlainAscendedGrandMythic() {
     for (int tier : HighTierSpellCurve.TIERS) {
       for (int element : ELEMENTS) {
         SpellData spell = attackAt(element, tier);
         String impact = spell.getImpactSpell();
         String mythic = HighTierSpellCurve.MYTHIC_IMPACTS.get(element);
+        String grand = HighTierSpellCurve.GRAND_IMPACTS.get(element);
         String expected;
         if (tier >= HighTierSpellCurve.MYTHIC_TIER_THRESHOLD && mythic != null) {
           expected = "mythic";
+        } else if (tier >= HighTierSpellCurve.GRAND_TIER_THRESHOLD && grand != null) {
+          expected = "grand";
         } else {
           expected = tier >= 250 ? "ascended" : "plain";
         }
-        String actual =
-            mythic != null && impact.equals(mythic + "-")
-                ? "mythic"
-                : impact.toLowerCase().contains("-ascended-") ? "ascended" : "plain";
+        String actual;
+        if (mythic != null && impact.equals(mythic + "-")) {
+          actual = "mythic";
+        } else if (grand != null && impact.equals(grand + "-")) {
+          actual = "grand";
+        } else {
+          actual = impact.toLowerCase().contains("-ascended-") ? "ascended" : "plain";
+        }
         assertEquals(expected, actual, spell.getName() + " at tier " + tier + " impact=" + impact);
       }
+    }
+  }
+
+  @Test
+  void everyElementHasAGrandImpact() {
+    for (int element : ELEMENTS) {
+      assertTrue(
+          HighTierSpellCurve.GRAND_IMPACTS.containsKey(element), "No Grand impact for " + element);
     }
   }
 
