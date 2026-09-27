@@ -1656,6 +1656,510 @@
     "chance": 0.008
   },
   {
+    "item": "item.critical_healing_potion",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP300",
+    "monsterDisplayName": "Arena experience monster (level 300)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP325",
+    "monsterDisplayName": "Arena experience monster (level 325)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP350",
+    "monsterDisplayName": "Arena experience monster (level 350)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP375",
+    "monsterDisplayName": "Arena experience monster (level 375)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP400",
+    "monsterDisplayName": "Arena experience monster (level 400)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP425",
+    "monsterDisplayName": "Arena experience monster (level 425)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP450",
+    "monsterDisplayName": "Arena experience monster (level 450)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP475",
+    "monsterDisplayName": "Arena experience monster (level 475)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP500",
+    "monsterDisplayName": "Arena experience monster (level 500)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP525",
+    "monsterDisplayName": "ArenaMobXP525",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP550",
+    "monsterDisplayName": "ArenaMobXP550",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP575",
+    "monsterDisplayName": "ArenaMobXP575",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP600",
+    "monsterDisplayName": "ArenaMobXP600",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP625",
+    "monsterDisplayName": "ArenaMobXP625",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP650",
+    "monsterDisplayName": "ArenaMobXP650",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP675",
+    "monsterDisplayName": "ArenaMobXP675",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP700",
+    "monsterDisplayName": "ArenaMobXP700",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP725",
+    "monsterDisplayName": "ArenaMobXP725",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "ArenaMobXP750",
+    "monsterDisplayName": "ArenaMobXP750",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Coastwarden Ithrak",
+    "monsterDisplayName": "Coastwarden Ithrak",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Kraanian Dragonguard",
+    "monsterDisplayName": "Kraanian Dragonguard",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Moonlit Stalker",
+    "monsterDisplayName": "Moonlit Stalker",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Sandglass Sentinel II",
+    "monsterDisplayName": "Sandglass Sentinel II",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Sandglass Sentinel III",
+    "monsterDisplayName": "Sandglass Sentinel III",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Sandglass Sentinel IV",
+    "monsterDisplayName": "Sandglass Sentinel IV",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Sandglass Sentinel V",
+    "monsterDisplayName": "Sandglass Sentinel V",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Sir Caradoc, the Sundered Knight",
+    "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Sundered Sentinel",
+    "monsterDisplayName": "Sundered Sentinel",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Test Skeleton Centaur",
+    "monsterDisplayName": "Skeleton Centaur Test",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "The Rootcrown Wyrm",
+    "monsterDisplayName": "The Rootcrown Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Veilbound Wraith",
+    "monsterDisplayName": "Veilbound Wraith",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Arch Drake",
+    "monsterDisplayName": "Arch Drake",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP300",
+    "monsterDisplayName": "Arena experience monster (level 300)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP325",
+    "monsterDisplayName": "Arena experience monster (level 325)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP350",
+    "monsterDisplayName": "Arena experience monster (level 350)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP375",
+    "monsterDisplayName": "Arena experience monster (level 375)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP400",
+    "monsterDisplayName": "Arena experience monster (level 400)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP425",
+    "monsterDisplayName": "Arena experience monster (level 425)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP450",
+    "monsterDisplayName": "Arena experience monster (level 450)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP475",
+    "monsterDisplayName": "Arena experience monster (level 475)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP500",
+    "monsterDisplayName": "Arena experience monster (level 500)",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP525",
+    "monsterDisplayName": "ArenaMobXP525",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP550",
+    "monsterDisplayName": "ArenaMobXP550",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP575",
+    "monsterDisplayName": "ArenaMobXP575",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP600",
+    "monsterDisplayName": "ArenaMobXP600",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP625",
+    "monsterDisplayName": "ArenaMobXP625",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP650",
+    "monsterDisplayName": "ArenaMobXP650",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP675",
+    "monsterDisplayName": "ArenaMobXP675",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP700",
+    "monsterDisplayName": "ArenaMobXP700",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP725",
+    "monsterDisplayName": "ArenaMobXP725",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "ArenaMobXP750",
+    "monsterDisplayName": "ArenaMobXP750",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Bastion Warden",
+    "monsterDisplayName": "Bastion Warden",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Coastwarden Ithrak",
+    "monsterDisplayName": "Coastwarden Ithrak",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Greater Drake",
+    "monsterDisplayName": "Grand Drake",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Kraanian Dragonguard",
+    "monsterDisplayName": "Kraanian Dragonguard",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Moonlit Stalker",
+    "monsterDisplayName": "Moonlit Stalker",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Sandglass Sentinel II",
+    "monsterDisplayName": "Sandglass Sentinel II",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Sandglass Sentinel III",
+    "monsterDisplayName": "Sandglass Sentinel III",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Sandglass Sentinel IV",
+    "monsterDisplayName": "Sandglass Sentinel IV",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Sandglass Sentinel V",
+    "monsterDisplayName": "Sandglass Sentinel V",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Sir Caradoc, the Sundered Knight",
+    "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Sundered Sentinel",
+    "monsterDisplayName": "Sundered Sentinel",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Test Skeleton Centaur",
+    "monsterDisplayName": "Skeleton Centaur Test",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "The Convergent Wyrm",
+    "monsterDisplayName": "The Convergent Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "The Rootcrown Wyrm",
+    "monsterDisplayName": "The Rootcrown Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "The Verdant Warden",
+    "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Veilbound Wraith",
+    "monsterDisplayName": "Veilbound Wraith",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Ysolde, the Veiled Matriarch",
+    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.05
+  },
+  {
     "item": "item.veiled_aether_shard",
     "monster": "The Rootcrown Wyrm",
     "monsterDisplayName": "The Rootcrown Wyrm",

@@ -10,6 +10,11 @@ import java.util.List;
  * MainGameScreen.castDefensiveSpell}, keyed off this spell's key; {@code
  * SpellRegistry.isPlayerCastable} exempts it from the "must have a T4cEffect" rule the same way
  * {@code tame_beast} is exempted, since its real effect isn't a dice formula.
+ *
+ * <p>Mana cost is the sum of all ten spells it can recast (Barrier/Protection/Stone
+ * Skin/Mana Shield/Mana Surge, base and Ultra tiers alike, {@code 10+9+45+14+39} each) - owner's
+ * call, charged whether or not the caster actually knows every one of them, since the price is for
+ * what the spell is capable of casting, not what a particular caster happens to know.
  */
 public final class RenewArmor {
   private RenewArmor() {}
@@ -18,7 +23,7 @@ public final class RenewArmor {
     return new SpellData(
         "${spell.renew_armor}",
         "${spell.description.renew_armor}",
-        "40",
+        "(10+9+45+14+39)*2",
         0,
         60,
         60,
@@ -35,7 +40,7 @@ public final class RenewArmor {
         0,
         "0",
         "0",
-        500000,
+        20000000,
         null,
         99952,
         0,

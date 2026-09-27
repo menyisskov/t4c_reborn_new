@@ -1634,6 +1634,14 @@
       {
         "item": "empyrean_water_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -1695,6 +1703,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.15
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -1804,6 +1820,14 @@
       {
         "item": "empyrean_light_protector",
         "chance": 0.003
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -1865,6 +1889,14 @@
       {
         "item": "potion_of_mana",
         "chance": 0.08
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -1978,6 +2010,14 @@
       {
         "item": "empyrean_warrior_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -2039,6 +2079,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.15
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -2104,6 +2152,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.03
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -2209,6 +2265,14 @@
       {
         "item": "empyrean_warrior_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -2280,7 +2344,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 901 + 709 ",
@@ -2332,7 +2405,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 944 + 743 ",
@@ -2444,6 +2526,14 @@
       {
         "item": "empyrean_warrior_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -2505,6 +2595,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.05
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -2558,7 +2656,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 987 + 777 ",
@@ -2610,7 +2717,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 1029 + 810 ",
@@ -2670,6 +2786,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.15
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -2787,6 +2911,14 @@
       {
         "item": "empyrean_dark_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -2858,7 +2990,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 1072 + 844 ",
@@ -2910,7 +3051,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 1115 + 878 ",
@@ -3018,6 +3168,14 @@
       {
         "item": "empyrean_earth_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -3071,7 +3229,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 1158 + 912 ",
@@ -3123,7 +3290,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 1201 + 946 ",
@@ -3247,6 +3423,14 @@
       {
         "item": "empyrean_dark_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -3372,6 +3556,14 @@
       {
         "item": "empyrean_air_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -3497,6 +3689,14 @@
       {
         "item": "empyrean_archer_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -3622,6 +3822,14 @@
       {
         "item": "empyrean_warrior_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -3703,6 +3911,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.2
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -3756,7 +3972,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 1244 + 980 ",
@@ -3808,7 +4033,16 @@
       "dark": 70,
       "light": 5000
     },
-    "loot": [],
+    "loot": [
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
     "attacks": [
       {
         "formula": "1d 1286 + 1013 ",
@@ -3868,6 +4102,14 @@
       {
         "item": "item.dragonguards_sealed_key",
         "chance": 0.03
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -3929,6 +4171,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.15
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -4026,6 +4276,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.25
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
@@ -4139,6 +4397,14 @@
       {
         "item": "empyrean_air_protector",
         "chance": 0.012
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
       }
     ],
     "attacks": [
