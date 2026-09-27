@@ -116,31 +116,32 @@ class HighTierSpellLadderTest {
   }
 
   /**
-   * T4C-0077 / T4C-0082: tiers 150/200 keep the plain impact every lower-level spell of that
-   * element/shape already uses; tiers 250+ switch to the palette-shifted "-Ascended" variant, so
-   * the strongest spells look different, not just multiplied (see {@link GrandImpactShower},
-   * T4C-0069) - except that at tier 350+ an element with a newly drawn Mythic impact uses that
-   * instead.
+   * T4C-0085 (owner's call: every ladder spell its own animation): each spell plays exactly its
+   * entry in {@link HighTierSpellCurve#IMPACTS}, no two ladder spells share an impact, and none
+   * reuses the impact of any other spell in the game - so a level-150 fire bolt no longer looks
+   * like a level-27 Fireball, and the five rungs of a school look like five different spells.
    */
   @Test
-  void impactEscalatesPlainThenAscendedThenMythic() {
+  void everyLadderSpellPlaysItsOwnDistinctImpact() {
+    java.util.Set<String> ladderImpacts = new java.util.HashSet<>();
     for (int tier : HighTierSpellCurve.TIERS) {
       for (int element : ELEMENTS) {
         SpellData spell = attackAt(element, tier);
-        String impact = spell.getImpactSpell();
-        String mythic = HighTierSpellCurve.MYTHIC_IMPACTS.get(element);
-        String expected;
-        if (tier >= HighTierSpellCurve.MYTHIC_TIER_THRESHOLD && mythic != null) {
-          expected = "mythic";
-        } else {
-          expected = tier >= 250 ? "ascended" : "plain";
-        }
-        String actual =
-            mythic != null && impact.equals(mythic + "-")
-                ? "mythic"
-                : impact.toLowerCase().contains("-ascended-") ? "ascended" : "plain";
-        assertEquals(expected, actual, spell.getName() + " at tier " + tier + " impact=" + impact);
+        String expected = HighTierSpellCurve.IMPACTS.get(element).get(tier);
+        assertTrue(expected != null, "No impact listed for element " + element + " tier " + tier);
+        assertEquals(expected + "-", spell.getImpactSpell(), spell.getName());
+        assertTrue(
+            ladderImpacts.add(spell.getImpactSpell().toLowerCase()),
+            spell.getName() + " shares its impact with another ladder spell");
       }
+    }
+    for (SpellData other : SpellDefinitions.all()) {
+      if (highTierAttacks().stream().anyMatch(s -> s.getSpellId() == other.getSpellId())) continue;
+      String impact = other.getImpactSpell();
+      if (impact == null) continue;
+      assertTrue(
+          !ladderImpacts.contains(impact.toLowerCase()),
+          other.getName() + " uses the ladder impact " + impact);
     }
   }
 

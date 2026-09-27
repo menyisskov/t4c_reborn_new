@@ -13,6 +13,24 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — Every high-level spell looks different (T4C-0085)
+
+### Changed
+- **Each of the thirty high-level attack spells now has its own animation.** Before, a school's
+  level-150 to level-350 spells borrowed the same few bursts as its ordinary low-level spells.
+  Now no two of them look alike, and none looks like a low-level spell:
+  - **Level 150** spells land with a new strike of their own: Scorchbrand's burning brand,
+    Stonefang's stone jaws, Galespike's twisting spike of wind and lightning, Rime Lance's
+    shattering ice, Sunscour's starburst of light, and Nightfang's shadowy bite.
+  - **Level 200** spells erupt from the ground in a pillar of their element.
+  - **Level 250** spells keep their brighter, recolored bursts.
+  - **Level 300** spells bring back the grandest effects from the original game: the great fire
+    blast, the flaming boulder eruption, the thunderstorm over a glowing pentagram, the ice tree,
+    the pillar of holy light and the dark miasma.
+  - **Level 350** spells play a far bigger version of that same effect: a towering mushroom
+    cloud of fire, a molten eruption hurling burning boulders, a storm raining lightning, a
+    colossal ice tree, a pouring column of light, and a void swallowed by shadow tendrils.
+
 ## 2026-09-27 — The level-400 spells are gone (T4C-0084)
 
 ### Removed

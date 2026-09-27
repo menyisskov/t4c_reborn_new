@@ -1,15 +1,40 @@
 {
-  "_note": "SpriteCook asset IDs behind the Mythic (tier 350+) spell impacts, T4C-0082. Reuse these (style references, re-animation) instead of regenerating. Stills: gemini-3.1-flash-image, pixel, 128x128 hint, transparent. Animations: pixel-engine default, 16 frames, spritesheet, edge_margin 6, removebg Basic.",
+  "_note": "SpriteCook asset IDs behind the high-tier ladder spell impacts (T4C-0082, T4C-0085). Reuse these - as edit/style references or to re-download a sheet - instead of regenerating. Sheets can be fetched again with get_asset_metadata(<animation id>).spritesheet_url.",
   "references": {
     "GreatExplosion-s": "c7e4b035-62dc-434c-b0bc-1ac8ea21f93b",
-    "64kSpellFireCircle-k": "5bff1cab-8278-4df7-997a-90591f5c0696"
+    "64kSpellFireCircle-k": "5bff1cab-8278-4df7-997a-90591f5c0696",
+    "original_fire_GrandFire-2f": "acf383e3-2c28-4066-866f-d744cae4f332",
+    "original_earth_BoulderFire-2a": "77900d41-d568-4493-a04c-3bccf11194fb",
+    "original_air_GrandAir-2d": "f902945f-5d7f-48a4-8e34-d756f910f8e9",
+    "original_water_iceTree-K": "48a95819-c49d-4b0d-b5b0-0814a17e2887",
+    "original_light_GrandLight-u": "afd0675c-9479-4256-aafc-ff456b11039f",
+    "original_dark_GrandDark-y": "0020f941-03c3-4c22-b88b-b39176f21ef8"
   },
-  "elements": {
-    "MythicFire": { "still": "4f3337cc-d33c-4504-9dc8-a5415a77fa57", "animation": "d58924af-6d37-4467-aa12-4b63d2210614" },
-    "MythicEarth": { "still": "aff77210-291b-4b51-a283-5c61180e5418", "animation": "383a2965-e7ba-461a-ad0b-b55c1226c09a" },
-    "MythicAir": { "still": "3a1d344e-975a-4e08-ae28-e2d81582b64d", "animation": "4e6fe789-9cd1-4193-975b-c99aef9de6d9" },
-    "MythicWater": { "still": "416be356-1602-4a14-8b65-6ed46fb12b00", "animation": "14b430f1-f6c6-468f-a830-ecc924145e66" },
-    "MythicLight": { "still": "64611704-37e5-4880-a69e-cdbd878f56d0", "animation": "6d02c65d-6fc2-4b62-9985-5b8c9f65ccc1" },
-    "MythicDark": { "still": "7104785a-d565-46c6-a152-dd6f95ccc670", "animation": "0c577c97-1054-4658-8296-83df534f7687" }
+  "tier200_eruptions_pixel": {
+    "_note": "Generated for T4C-0082 as MythicX; re-packed as EruptionX in T4C-0085 from the sheets kept next to this file.",
+    "EruptionFire": { "still": "4f3337cc-d33c-4504-9dc8-a5415a77fa57", "animation": "d58924af-6d37-4467-aa12-4b63d2210614" },
+    "EruptionEarth": { "still": "aff77210-291b-4b51-a283-5c61180e5418", "animation": "383a2965-e7ba-461a-ad0b-b55c1226c09a" },
+    "EruptionAir": { "still": "3a1d344e-975a-4e08-ae28-e2d81582b64d", "animation": "4e6fe789-9cd1-4193-975b-c99aef9de6d9" },
+    "EruptionWater": { "still": "416be356-1602-4a14-8b65-6ed46fb12b00", "animation": "14b430f1-f6c6-468f-a830-ecc924145e66" },
+    "EruptionLight": { "still": "64611704-37e5-4880-a69e-cdbd878f56d0", "animation": "6d02c65d-6fc2-4b62-9985-5b8c9f65ccc1" },
+    "EruptionDark": { "still": "7104785a-d565-46c6-a152-dd6f95ccc670", "animation": "0c577c97-1054-4658-8296-83df534f7687" }
+  },
+  "tier350_mythic_upgrades_painted": {
+    "_note": "Still = edit_asset_id of the element's original peak frame; animation = 24 frames, detailed. Packed with --scale 0.45 --soft-alpha --strip-matte --grow-in 3 --fade-out 3 --match <original>.",
+    "MythicFire": { "still": "727d1f44-f3d5-42fb-809b-8891854fb603", "animation": "9cc0c04c-da43-4975-81c5-f885117f81aa" },
+    "MythicEarth": { "still": "2de25729-cf8b-44a9-986d-5d97eff5289a", "animation": "128440fc-773b-42a4-b5cc-3b452963ded3" },
+    "MythicAir": { "still": "2c5411bf-4477-47f5-b4e4-73d58756aff1", "animation": "31b766e9-7cbb-4e59-9a74-5fbac7cb125b" },
+    "MythicWater": { "still": "63f23579-3f6e-4d48-ba4c-1b1e064dbf89", "animation": "3ddaaea2-8d6e-4a14-be06-641bcc020eb0" },
+    "MythicLight": { "still": "64213258-d9b5-46d9-883b-0277aed76314", "animation": "3b84974b-8fcd-4bd6-add3-81e56e00bb61" },
+    "MythicDark": { "still": "22f8ffe0-d5da-486d-8118-58dbc73bce21", "animation": "7267145a-0b31-4db1-abf3-25c92c2078b3" }
+  },
+  "tier150_strikes_painted": {
+    "_note": "Still = new prompt with style_asset_ids = the element's original peak frame; animation = 16 frames, detailed. Packed with --scale 0.3 --soft-alpha --strip-matte --grow-in 2 --fade-out 2 --match <legacy bolt impact>; StrikeLight also --drop 4 (a blank frame).",
+    "StrikeFire": { "still": "cbae3272-a4a1-4d79-8aaf-eaee6bd9f426", "animation": "4b86e94d-4914-47b6-85c1-6277a78d3937" },
+    "StrikeEarth": { "still": "362cf773-f76f-442c-9b48-8d6d98e8f7a1", "animation": "a5852ce5-7f7e-4ffe-93cf-027a1302fd67" },
+    "StrikeAir": { "still": "7f0e0b96-4279-455d-bea7-1153d388665a", "animation": "055d9bbd-fa82-477b-a7d6-c181eb114a5d" },
+    "StrikeWater": { "still": "1a69ca5f-e670-4d9b-ab53-ee2bb5ccc029", "animation": "66cde618-cc68-4a09-b79a-3d218d4ff36e" },
+    "StrikeLight": { "still": "f58ef3fa-d7b2-4e0b-8261-0ecc6285fce4", "animation": "4e46ef3a-913b-487e-8970-3e2581fdc215" },
+    "StrikeDark": { "still": "66a92965-d1a3-4968-99aa-7abd850ecf52", "animation": "3b39ec80-3556-45f1-bbcc-8a60e5de825f" }
   }
 }

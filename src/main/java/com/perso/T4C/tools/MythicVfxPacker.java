@@ -67,7 +67,7 @@ public final class MythicVfxPacker {
       System.err.println(
           "Usage: MythicVfxPacker <input dir|sheet.png> <TargetBase> [--frames N] [--cols C]"
               + " [--downscale k] [--grow-in n] [--hold n] [--match RefBase | --ground Y]"
-              + " [--strip-matte]"
+              + " [--strip-matte] [--luma-alpha] [--soft-alpha] [--scale f] [--fade-out n] [--drop i,j]"
               + " [--preview dir] [--dry-run]"
               + " [--sprites assets/sprites]\n"
               + "       MythicVfxPacker --export <RefBase> <outDir>");
@@ -82,6 +82,11 @@ public final class MythicVfxPacker {
     int growIn = 0;
     Integer ground = null;
     boolean stripMatte = false;
+    boolean lumaAlpha = false;
+    boolean softAlpha = false;
+    double scale = 1.0;
+    int fadeOut = 0;
+    java.util.Set<Integer> drop = java.util.Set.of();
     String match = "GreatExplosion";
     Path preview = null;
     boolean dryRun = false;
@@ -95,6 +100,16 @@ public final class MythicVfxPacker {
         case "--grow-in" -> growIn = Integer.parseInt(args[++i]);
         case "--ground" -> ground = Integer.parseInt(args[++i]);
         case "--strip-matte" -> stripMatte = true;
+        case "--luma-alpha" -> lumaAlpha = true;
+        case "--soft-alpha" -> softAlpha = true;
+        case "--scale" -> scale = Double.parseDouble(args[++i]);
+        case "--fade-out" -> fadeOut = Integer.parseInt(args[++i]);
+        case "--drop" ->
+            drop =
+                java.util.Arrays.stream(args[++i].split(","))
+                    .map(String::trim)
+                    .map(Integer::parseInt)
+                    .collect(java.util.stream.Collectors.toSet());
         case "--match" -> match = args[++i];
         case "--preview" -> preview = Path.of(args[++i]);
         case "--dry-run" -> dryRun = true;
@@ -106,11 +121,17 @@ public final class MythicVfxPacker {
       throw new IllegalArgumentException("TargetBase must be a bare name like MythicFire");
     }
 
-    List<BufferedImage> read = readFrames(input, frames, cols);
+    List<BufferedImage> read = dropFrames(readFrames(input, frames, cols), drop);
     if (stripMatte) read = read.stream().map(MythicVfxPacker::stripMatte).toList();
-    List<BufferedImage> raw = hold(growIn(read, growIn), hold);
+    if (lumaAlpha) read = read.stream().map(MythicVfxPacker::lumaAlpha).toList();
+    if (scale != 1.0) {
+      double f = scale;
+      read = read.stream().map(img -> smoothScale(img, f)).toList();
+    }
+    List<BufferedImage> raw = hold(fadeOut(growIn(read, growIn), fadeOut), hold);
     Bounds reference = ground == null ? referenceBounds(spriteDir, match) : null;
-    List<SpriteBinWriter.Entry> entries = pack(raw, targetBase, downscale, reference, ground);
+    List<SpriteBinWriter.Entry> entries =
+        pack(raw, targetBase, downscale, reference, ground, softAlpha);
     System.out.println(
         "Prepared " + entries.size() + " frame(s) for " + targetBase + ", aligned to "
             + (ground == null ? match + " " + reference : "ground y=" + ground));
@@ -214,6 +235,42 @@ public final class MythicVfxPacker {
   }
 
   /**
+   * Appends {@code n} copies of the last frame at decreasing opacity ({@code n/(n+1)} down to
+   * {@code 1/(n+1)}), for generated animations that end on a still-visible frame (lingering smoke)
+   * and would otherwise vanish in one step.
+   */
+  static List<BufferedImage> fadeOut(List<BufferedImage> frames, int n) {
+    if (n <= 0 || frames.isEmpty()) return frames;
+    BufferedImage last = frames.get(frames.size() - 1);
+    List<BufferedImage> out = new ArrayList<>(frames);
+    for (int i = 1; i <= n; i++) {
+      double keep = (double) (n + 1 - i) / (n + 1);
+      BufferedImage faded =
+          new BufferedImage(last.getWidth(), last.getHeight(), BufferedImage.TYPE_INT_ARGB);
+      for (int y = 0; y < last.getHeight(); y++) {
+        for (int x = 0; x < last.getWidth(); x++) {
+          int argb = last.getRGB(x, y);
+          int alpha = (int) Math.round(((argb >>> 24) & 0xFF) * keep);
+          faded.setRGB(x, y, (alpha << 24) | (argb & 0xFFFFFF));
+        }
+      }
+      out.add(faded);
+    }
+    return out;
+  }
+
+  /**
+   * Removes the given 0-based source frames - for the odd generated frame where the effect blinks
+   * out for one beat (it would flicker in game).
+   */
+  static List<BufferedImage> dropFrames(List<BufferedImage> frames, java.util.Set<Integer> drop) {
+    if (drop.isEmpty()) return frames;
+    List<BufferedImage> out = new ArrayList<>();
+    for (int i = 0; i < frames.size(); i++) if (!drop.contains(i)) out.add(frames.get(i));
+    return out;
+  }
+
+  /**
    * Repeats every frame {@code n} times. Impact frames play at one fixed rate, so a 16-frame
    * generated animation held x2 lasts about as long as the 33-frame legacy GreatExplosion.
    */
@@ -281,7 +338,7 @@ public final class MythicVfxPacker {
    */
   static List<SpriteBinWriter.Entry> pack(
       List<BufferedImage> raw, String targetBase, int downscale, Bounds reference) {
-    return pack(raw, targetBase, downscale, reference, null);
+    return pack(raw, targetBase, downscale, reference, null, false);
   }
 
   /**
@@ -294,11 +351,13 @@ public final class MythicVfxPacker {
       String targetBase,
       int downscale,
       Bounds reference,
-      Integer groundY) {
+      Integer groundY,
+      boolean softAlpha) {
     if (raw.isEmpty()) throw new IllegalArgumentException("No frames");
     List<BufferedImage> canvases = new ArrayList<>();
     for (BufferedImage frame : raw) {
-      canvases.add(snapAlpha(downscale(frame, downscale)));
+      BufferedImage scaled = downscale(frame, downscale);
+      canvases.add(softAlpha ? clearFaint(scaled) : snapAlpha(scaled));
     }
     int canvasW = canvases.get(0).getWidth();
     int canvasH = canvases.get(0).getHeight();
@@ -371,21 +430,38 @@ public final class MythicVfxPacker {
     return rest.matches("(?i)[0-9]*[a-z]");
   }
 
-  /** Screen box of an existing legacy animation, to align new art where players expect it. */
+  /**
+   * Screen box of an existing legacy animation, to align new art where players expect it. Frames
+   * smaller than {@value #PLACEHOLDER_AREA_PERCENT}% of the largest one's area are ignored: some
+   * originals open with tiny placeholder frames parked far off to one side (NM_Fire000's first two
+   * are 32x16 at x=-305), which would otherwise drag the box - and the new art - off the target.
+   */
   static Bounds referenceBounds(Path spriteDir, String refBase) throws IOException {
-    int[] b = {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE};
+    List<SpriteBinIO.Packed> frames = new ArrayList<>();
     SpriteBinIO.readAll(
         spriteDir,
         SpriteBinIO.DEFAULT_BASE_NAME,
         p -> {
-          if (!isFrameOf(p.name(), refBase)) return;
-          b[0] = Math.min(b[0], p.off1X());
-          b[1] = Math.min(b[1], p.off1Y());
-          b[2] = Math.max(b[2], p.off1X() + p.width() - 1);
-          b[3] = Math.max(b[3], p.off1Y() + p.height() - 1);
+          if (isFrameOf(p.name(), refBase)) frames.add(p);
         });
-    if (b[2] == Integer.MIN_VALUE) {
+    if (frames.isEmpty()) {
       throw new IllegalArgumentException("Reference animation not found: " + refBase);
+    }
+    return boundsOf(frames);
+  }
+
+  private static final int PLACEHOLDER_AREA_PERCENT = 5;
+
+  static Bounds boundsOf(List<SpriteBinIO.Packed> frames) {
+    long maxArea = 0;
+    for (SpriteBinIO.Packed p : frames) maxArea = Math.max(maxArea, (long) p.width() * p.height());
+    int[] b = {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE};
+    for (SpriteBinIO.Packed p : frames) {
+      if ((long) p.width() * p.height() * 100 < maxArea * PLACEHOLDER_AREA_PERCENT) continue;
+      b[0] = Math.min(b[0], p.off1X());
+      b[1] = Math.min(b[1], p.off1Y());
+      b[2] = Math.max(b[2], p.off1X() + p.width() - 1);
+      b[3] = Math.max(b[3], p.off1Y() + p.height() - 1);
     }
     return new Bounds(b[0], b[1], b[2], b[3]);
   }
@@ -400,6 +476,22 @@ public final class MythicVfxPacker {
         out.setRGB(x, y, src.getRGB(x * k + k / 2, y * k + k / 2));
       }
     }
+    return out;
+  }
+
+  /**
+   * Area-averaged resize by {@code factor}, for soft painted art (generated in detailed mode at
+   * several times in-game size). Pixel art uses {@link #downscale} instead, which never invents
+   * colors. Every frame gets the same factor, so relative motion is preserved.
+   */
+  static BufferedImage smoothScale(BufferedImage src, double factor) {
+    int w = Math.max(1, (int) Math.round(src.getWidth() * factor));
+    int h = Math.max(1, (int) Math.round(src.getHeight() * factor));
+    java.awt.Image scaled = src.getScaledInstance(w, h, java.awt.Image.SCALE_AREA_AVERAGING);
+    BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = out.createGraphics();
+    g.drawImage(scaled, 0, 0, null);
+    g.dispose();
     return out;
   }
 
@@ -429,6 +521,63 @@ public final class MythicVfxPacker {
       }
     }
     return out;
+  }
+
+  /** Alpha at or below this is cleared in soft-alpha mode, so invisible haze does not widen trims. */
+  private static final int FAINT_ALPHA = 8;
+
+  /**
+   * Soft-alpha counterpart of {@link #snapAlpha}: keeps partial alpha (for soft, pre-rendered glow
+   * art such as the original game's grand spells) and only clears near-invisible pixels.
+   */
+  static BufferedImage clearFaint(BufferedImage src) {
+    BufferedImage out = copy(src);
+    for (int y = 0; y < out.getHeight(); y++) {
+      for (int x = 0; x < out.getWidth(); x++) {
+        if (((out.getRGB(x, y) >>> 24) & 0xFF) <= FAINT_ALPHA) out.setRGB(x, y, 0);
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Converts art made for additive blending (opaque, on black) into the equivalent alpha-blended
+   * image: alpha becomes the pixel's brightest channel and the color is divided back up by it.
+   * Drawn with normal blending over any background this gives exactly the additive result
+   * ({@code dst + c}) wherever the result does not clip, and black contributes nothing - so the
+   * black halo such art shows when drawn opaquely disappears. The original game's "NM" grand
+   * spells (T4C-0085) and SpriteCook animations rendered on a black matte both need it.
+   */
+  public static BufferedImage lumaAlpha(BufferedImage src) {
+    BufferedImage out =
+        new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    for (int y = 0; y < src.getHeight(); y++) {
+      for (int x = 0; x < src.getWidth(); x++) {
+        int argb = src.getRGB(x, y);
+        int a0 = (argb >>> 24) & 0xFF;
+        int r = (argb >> 16) & 0xFF;
+        int g = (argb >> 8) & 0xFF;
+        int b = argb & 0xFF;
+        int max = Math.max(r, Math.max(g, b));
+        if (a0 == 0 || max == 0) continue;
+        int alpha = max * a0 / 255;
+        out.setRGB(
+            x, y, (alpha << 24) | ((r * 255 / max) << 16) | ((g * 255 / max) << 8) | (b * 255 / max));
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Play order of a frame of {@code base}, matching {@code SpellRenderer}'s frame lookup: the
+   * optional row number first (none counts as 1), then the letter, case-insensitively.
+   */
+  public static int frameOrder(String name, String base) {
+    String rest = name.substring(base.length() + 1).toLowerCase(Locale.ROOT);
+    int i = 0;
+    while (i < rest.length() && Character.isDigit(rest.charAt(i))) i++;
+    int row = i > 0 ? Integer.parseInt(rest.substring(0, i)) : 1;
+    return row * 26 + (rest.charAt(i) - 'a');
   }
 
   static BufferedImage snapAlpha(BufferedImage src) {

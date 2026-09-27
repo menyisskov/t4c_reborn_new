@@ -148,10 +148,85 @@ class MythicVfxPackerTest {
     BufferedImage a = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
     fill(a, 1, 3, 5, 6, 10, RED);
     List<SpriteBinWriter.Entry> entries =
-        MythicVfxPacker.pack(List.of(a), "MythicTest", 1, null, 0);
+        MythicVfxPacker.pack(List.of(a), "MythicTest", 1, null, 0, false);
     SpriteBinWriter.Entry e = entries.get(0);
     assertEquals(0, e.off1Y() + e.height() - 1);
     assertEquals(MythicVfxPacker.TILE_MIRROR / 2, e.off1X() + (e.width() - 1) / 2);
+  }
+
+  @Test
+  void lumaAlphaTurnsAdditiveArtIntoTheSameLookWithoutTheBlackField() {
+    BufferedImage img = new BufferedImage(3, 1, BufferedImage.TYPE_INT_ARGB);
+    img.setRGB(0, 0, 0xFF000000); // opaque black background of additive art
+    img.setRGB(1, 0, 0xFF804020); // dim orange glow
+    img.setRGB(2, 0, 0xFFFFFFFF); // white-hot core
+    BufferedImage out = MythicVfxPacker.lumaAlpha(img);
+    assertEquals(0, out.getRGB(0, 0) >>> 24);
+    int glow = out.getRGB(1, 0);
+    assertEquals(0x80, glow >>> 24); // alpha = brightest channel
+    assertEquals(0xFF, (glow >> 16) & 0xFF); // color scaled back up by it
+    // Alpha-blended over black, the pixel reproduces the additive original (to rounding).
+    assertTrue(Math.abs(((glow >> 8) & 0xFF) * 0x80 / 255 - 0x40) <= 1);
+    assertEquals(0xFFFFFFFF, out.getRGB(2, 0));
+  }
+
+  @Test
+  void softAlphaKeepsPartialAlphaButClearsInvisibleHaze() {
+    BufferedImage a = new BufferedImage(6, 6, BufferedImage.TYPE_INT_ARGB);
+    fill(a, 1, 2, 2, 2, 2, 0x80FF8000);
+    a.setRGB(0, 0, 0x05FFFFFF); // near-invisible: must not widen the trim
+    SpriteBinWriter.Entry e =
+        MythicVfxPacker.pack(List.of(a), "MythicTest", 1, null, 0, true).get(0);
+    assertEquals(2, e.width());
+    assertEquals(0x80, e.image().getRGB(0, 0) >>> 24);
+  }
+
+  @Test
+  void frameOrderMatchesTheRendererRowThenLetter() {
+    List<String> names =
+        new java.util.ArrayList<>(List.of("Fx-2a", "Fx-B", "Fx-z", "Fx-a", "Fx-2B"));
+    names.sort(java.util.Comparator.comparingInt(n -> MythicVfxPacker.frameOrder(n, "Fx")));
+    assertEquals(List.of("Fx-a", "Fx-B", "Fx-z", "Fx-2a", "Fx-2B"), names);
+  }
+
+  @Test
+  void smoothScaleAveragesInsteadOfSampling() {
+    BufferedImage img = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB);
+    img.setRGB(0, 0, 0xFFFFFFFF);
+    img.setRGB(1, 1, 0xFFFFFFFF); // checker of opaque white and clear
+    BufferedImage out = MythicVfxPacker.smoothScale(img, 0.5);
+    assertEquals(1, out.getWidth());
+    int alpha = out.getRGB(0, 0) >>> 24;
+    assertTrue(alpha > 100 && alpha < 156, "averaged alpha " + alpha);
+  }
+
+  @Test
+  void referenceBoundsIgnoreTinyPlaceholderFrames() {
+    var big = new com.perso.T4C.helper.SpriteBinIO.Packed("Fx-c", 200, 250, -90, -200, -78, -200, 0, new byte[0]);
+    var placeholder =
+        new com.perso.T4C.helper.SpriteBinIO.Packed("Fx-a", 32, 16, -305, -230, 305, -230, 0, new byte[0]);
+    MythicVfxPacker.Bounds b = MythicVfxPacker.boundsOf(List.of(placeholder, big));
+    assertEquals(new MythicVfxPacker.Bounds(-90, -200, 109, 49), b);
+  }
+
+  @Test
+  void fadeOutAppendsTheLastFrameAtDecreasingOpacity() {
+    BufferedImage last = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    last.setRGB(0, 0, 0xFF336699);
+    List<BufferedImage> out = MythicVfxPacker.fadeOut(List.of(last), 3);
+    assertEquals(4, out.size());
+    assertEquals(191, out.get(1).getRGB(0, 0) >>> 24); // 3/4
+    assertEquals(128, out.get(2).getRGB(0, 0) >>> 24); // 2/4
+    assertEquals(64, out.get(3).getRGB(0, 0) >>> 24); // 1/4
+    assertEquals(0x336699, out.get(3).getRGB(0, 0) & 0xFFFFFF);
+  }
+
+  @Test
+  void dropFramesRemovesOnlyTheListedSourceFrames() {
+    BufferedImage a = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    BufferedImage b = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    BufferedImage c = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    assertEquals(List.of(a, c), MythicVfxPacker.dropFrames(List.of(a, b, c), java.util.Set.of(1)));
   }
 
   @Test
