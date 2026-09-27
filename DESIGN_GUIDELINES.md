@@ -89,6 +89,34 @@ half, Tranquility and Clear Thought did nothing for a while; check this file's m
   formula and are intentionally left at parity with these spells; "lesser" (`/4`) and "partial"
   (`/2`) potions are weaker versions of the same rule, not separate values to rebalance.
 
+### High-tier spell VFX escalation (T4C-0069, T4C-0077)
+
+There is no wired art pipeline in this repo and no artist source for genuinely new spell VFX (see
+the `graphic-designer` skill) — every escalation below is built from the existing legacy animation
+frames, not hand-drawn art. Two separate, stacking mechanisms make a `HighTierSpellCurve` spell
+(levels 150-400) read as stronger the higher its tier, since without them every tier of a
+school/shape shares the exact same impact sprite as the low-level spell it was copied from:
+
+- **Tiers 150+ (`GrandImpactShower`, T4C-0069):** the impact renders as a scattered, staggered
+  multi-burst "shower" instead of one flash — burst count climbs with tier (2 at 150, up to 7 at
+  400), each one randomly placed within the spell's actual radius. Bolts (no radius) are unaffected.
+- **Tiers 250+ (`tools.AscendedVfxGenerator`, T4C-0077):** the impact sprite itself switches to a
+  palette-shifted "-Ascended" variant, generated once by duotone-remapping the base animation's
+  luminance onto a per-element dark→bright color gradient (fire → white-gold, earth → obsidian-red,
+  air → violet-white, water → indigo-blue, light → radiant gold, dark → violent violet). A plain
+  hue *shift* does not work here — most of the source frames are already near-grayscale (white
+  explosion, gray rock, near-black curse), so multiplying near-zero saturation stays near zero;
+  the duotone grade assigns new color at every luminance level regardless of source saturation.
+  Re-running the generator is idempotent (it skips its own `-Ascended` output) and always writes
+  the same frame count as the base animation — `AscendedVfxAssetTest` guards that invariant.
+
+Both thresholds are independent constants (`GrandImpactShower`'s tier gate, `HighTierSpellCurve
+.ASCENDED_TIER_THRESHOLD`) — raising or lowering one does not require touching the other. If a
+future content pass adds more "epic-named" spells below level 150 that share these same base
+sprites (Meteor, Boulders, GreatExplosion, etc. are also used outside `HighTierSpellCurve`), they
+are deliberately left on the plain animation; only the `HighTierSpellCurve` ladder gets the
+escalation, since attaching it more broadly would make routine low-level spells look inconsistent.
+
 ### Character creation
 
 Creation is a **class picker**, not a questionnaire (T4C-0059). The eight-question personality

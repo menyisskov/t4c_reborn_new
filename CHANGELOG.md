@@ -13,6 +13,17 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — New colors for the strongest elemental spells (T4C-0077)
+
+### Changed
+- **The level 250+ elemental nukes finally look like a different, more intense spell.** They used
+  to flash the exact same white explosion, gray boulders, or pale ice burst as the much weaker
+  version of the same spell decades of levels earlier - only more of them at once. Now that burst
+  itself is recolored into something distinctly stronger for every school: fire runs white-gold
+  instead of orange, earth erupts obsidian-red instead of gray rock, air arcs violet-white plasma
+  instead of yellow sparks, water turns a deep indigo-blue instead of pale ice, light blazes
+  radiant gold instead of plain white, and dark twists into violent violet instead of murky black.
+
 ## 2026-09-27 — Bigger impacts for the strongest area spells (T4C-0069)
 
 ### Changed

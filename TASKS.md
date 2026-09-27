@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0077`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0078`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -89,6 +89,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0074 | Combat mode (Ctrl+C) was never bound to a key, so peaceful NPCs like Balork could never be attacked; wired it up | Fix | In Progress | | |
 | T4C-0075 | Bound Ctrl+S to open the character sheet (attributes/stat points), alongside its existing Ctrl+T binding | Content | In Progress | | |
 | T4C-0076 | Removed plain Healing Potion from monster loot tables (higher tiers untouched); brought 19 monsters whose gold drop had drifted well under the roster's established level curve back in line, with a `MonsterGoldCurve` helper and an invariant test guarding it | Content/Fix | In Progress | | |
+| T4C-0077 | Level 250+ elemental attack spells (`HighTierSpellCurve`) now render a palette-shifted "Ascended" impact instead of reusing the plain lower-tier burst; recolors generated from the legacy animation frames via a new `AscendedVfxGenerator` tool | Content/Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--new-colors-for-the-strongest-elemental-spells-t4c-0077) |
 
 ## Type legend
 
