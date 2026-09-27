@@ -73,6 +73,43 @@ class DwarthonStonefaceBaneQuestTest {
     assertEquals(0, player.getQuestFlag("__QUEST_ROYAL_KEY4"));
   }
 
+  @Test
+  void refusesBaneSOwnQuestBusinessWithoutAudience() throws Exception {
+    // Codex caught, on the first version of this fix, that the audience gate only changed Bane's
+    // greeting - his own transactional keywords worked regardless. A player who never talked to
+    // Dwarthon (flag unset, the common case) must be refused all three.
+    BaneBlackblood npc = new BaneBlackblood(new NpcContext(null));
+    Player player = new Player();
+    NpcBehavior behavior = npc.javaBehavior();
+    NpcBehaviorContext context = new NpcBehaviorContext(npc, player);
+    player.setQuestFlag("__QUEST_KRAANIAN_EYES", 2);
+    player.setQuestFlag("__QUEST_ROYAL_KEY4", 5);
+
+    assertTrue(behavior.onKeyword(context, "ingredient"));
+    assertTrue(behavior.onKeyword(context, "kraanian eye"));
+    assertTrue(behavior.onKeyword(context, "royal key"));
+
+    assertEquals(0, com.perso.T4C.item.InventoryService.count(player, "blood_dagger"));
+    assertEquals(0, com.perso.T4C.item.InventoryService.count(player, "kraanian_eyes"));
+    assertEquals(0, com.perso.T4C.item.InventoryService.count(player, "royal_key_4"));
+    // The royal key counter must not silently advance for a refused attempt either.
+    assertEquals(5, player.getQuestFlag("__QUEST_ROYAL_KEY4"));
+  }
+
+  @Test
+  void allowsBaneSOwnQuestBusinessOnceAudienceIsGranted() throws Exception {
+    BaneBlackblood npc = new BaneBlackblood(new NpcContext(null));
+    Player player = new Player();
+    player.setQuestFlag(FLAG, 5);
+    player.setQuestFlag("__QUEST_ROYAL_KEY4", 5);
+    NpcBehavior behavior = npc.javaBehavior();
+    NpcBehaviorContext context = new NpcBehaviorContext(npc, player);
+
+    assertTrue(behavior.onKeyword(context, "royal key"));
+
+    assertTrue(com.perso.T4C.item.InventoryService.count(player, "royal_key_4") > 0);
+  }
+
   private static MonsterDef delwobbleDefinition() {
     return Delwobble.definition();
   }

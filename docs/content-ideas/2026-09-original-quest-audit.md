@@ -33,13 +33,21 @@ cross-referenced, is narrow and specific - see below.
   the Mad Summoner (`monster/Delwobble.java`, already spawned and stat-authored, just needed an
   `onDeath` hook) sets it to 5 if-and-only-if the player had the quest active. This is a separate
   flag from Bane's own pre-existing `"__QUEST_ROYAL_KEY4"` negotiation counter - confirmed by test,
-  see `DwarthonStonefaceBaneQuestTest.java`.
+  see `DwarthonStonefaceBaneQuestTest.java`. A Codex review caught that the first version of this
+  fix only changed Bane's *greeting* - his own `INGREDIENT`/`KRAANIAN EYE`/`ROYAL KEY` keywords
+  still worked with no audience granted at all. Fixed: all three now refuse (same "unavailable"
+  line) until the flag reaches 5.
 - **Gabriel Archonis / Gaenen Elthorn** (`npc/GabrielArchonis.java`, `npc/GaenenElthorn.java`), the
   Oracle's two alignment-specific final-test bosses - both had a complete, real fight mechanic
-  (miss-until-near-death, `__FLAG_USER_HAS_DEFEATED_ASSISTANT`) but were spawned at `(0,0,0)`. The
-  entire upstream Oracle dungeon (chests, doors, portals, guardians, all ~2700-2810,2180-2340,z=2)
-  is spawned and reachable; only this final room wasn't. Placed both a few tiles past the Oracle
-  Invulnerable Guardian cluster's far edge (2822-2828, 2172-2178, z=2).
+  (miss-until-near-death, `__FLAG_USER_HAS_DEFEATED_ASSISTANT`) but were spawned at `(0,0,0)`. A
+  first attempt at this fix placed both at an invented coordinate near the Oracle Invulnerable
+  Guardian cluster - **wrong**: a Codex review caught that the real canonical spawn already existed
+  as a plain, non-scripted `monster/GABRIELARCHONIS.java`/`GAENENELTHORN.java` (a `DataMonster`
+  duplicate of each, no fight logic at all) at (2628,2448,2)/(2660,2416,2), next to the Oracle's
+  escape-door groups. Those two duplicate classes (and their unused `SpawnGroup0074`/`0075` - dead
+  code, nothing ever called `SpawnGroupRegistry` except itself) were deleted; the real scripted
+  classes now own those exact canonical coordinates directly, via the same two-`@Spawn` pattern
+  (`BaneBlackblood.java` already uses: one NPC-kind for dialogue, one MONSTER-kind for combat).
 
 ## Confirmed already working (no action needed) - the long list
 

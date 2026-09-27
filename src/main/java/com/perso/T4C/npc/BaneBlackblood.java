@@ -241,6 +241,21 @@ public final class BaneBlackblood extends ScriptedNpc {
 
           String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 
+          // T4C-0066: a Codex review on the first version of this quest gate caught that it only
+          // changed Bane's greeting (onConversationStart) - every one of his own transactional
+          // keywords below still worked with no audience at all. Refuse all three the same way
+          // onConversationStart already refuses a fresh conversation, until Dwarthon Stoneface's
+          // "Audience to Bane Blackblood" quest (see npc/DwarthonStoneface.java) actually finishes.
+          boolean hasAudience = c.flag("__QUEST_DWARTHON_STONEFACE") == 5;
+          boolean isBaneBusiness =
+              k.contains("INGREDIENT") || (k.contains("KRAANIAN") && k.contains("EYE")) || k.equals("ROYAL KEY");
+          if (isBaneBusiness && !hasAudience) {
+
+            c.sayKey("npc.bane.unavailable");
+
+            return true;
+          }
+
           if (k.contains("INGREDIENT")) {
 
             if (c.hasItem("manastone") && c.hasItem("pouch_of_blue_cohosh")) {

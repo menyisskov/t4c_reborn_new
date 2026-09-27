@@ -7,17 +7,27 @@ import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.spawn.SpawnKind;
 import java.util.List;
 
 // T4C-0066: was unplaced (x=0,y=0,z=0) despite a fully-written "final test" fight (see
-// javaBehavior() below) - the Oracle dungeon's entire chest/door/portal puzzle chain
-// (OraclePortal1-8, OracleGuardian1a-1f, etc., clustered ~2700-2810,2180-2340,z=2) is spawned and
-// reachable, but nothing placed this room at the end of it. Placed just past the Oracle
-// Invulnerable Guardian cluster's far edge (monster/r172OracleInvulnerableGuardian.java's spawns
-// top out around 2808,2184) - a plausible "final chamber" a few tiles beyond the last guardians,
-// alongside GaenenElthorn.java (the good-path player fights one, the evil-path player the other,
-// per __FLAG_USER_HAS_DEFEATED_ASSISTANT/onKeyword gating already written elsewhere).
-@Spawn(type = "GabrielArchonis", x = 2828, y = 2172, z = 2, stationary = false, aggressive = false)
+// javaBehavior() below). A first attempt at this fix placed this at an invented coordinate near
+// the Oracle Invulnerable Guardian cluster - wrong: a Codex review on that PR caught that the
+// canonical spawn already exists as a plain, non-scripted monster/GABRIELARCHONIS.java
+// (DataMonster, no onHit fight logic) at (2628,2448,2), wired through SpawnGroup0075 next to the
+// escape-door groups. That duplicate class + its SpawnGroup file are deleted; this class's own
+// MONSTER-kind @Spawn below now owns that same canonical spot directly, the same two-@Spawn
+// pattern BaneBlackblood.java already uses (one NPC-kind for dialogue, one MONSTER-kind, real
+// coordinates, for combat/respawn).
+@Spawn(type = "GabrielArchonis", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "GABRIELARCHONIS",
+    x = 2628,
+    y = 2448,
+    z = 2,
+    stationary = false,
+    aggressive = false,
+    kind = SpawnKind.MONSTER)
 public final class GabrielArchonis extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
