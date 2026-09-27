@@ -11261,6 +11261,381 @@ window.T4C_DATA = {
       ]
     },
     {
+      "key": "spell.ultra_barrier",
+      "isNew": true,
+      "name": "Ultra Barrier",
+      "description": "A far stronger Barrier, increasing the target's armor class by twice as much. Learning it does not replace Barrier - a caster who knows both keeps the benefit of each.",
+      "manaCost": "10",
+      "minInt": 375,
+      "minWis": 90,
+      "minLevel": 150,
+      "isAttack": false,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "1200000",
+      "price": 1000000,
+      "spellId": 99947,
+      "element": 4,
+      "targetType": 3,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": false,
+      "effects": [
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "TRUE"
+            },
+            {
+              "paramId": 2,
+              "expression": "AC"
+            },
+            {
+              "paramId": 3,
+              "expression": "(2*(5+self.int/50+self.wis/25))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.ultra_protection",
+      "isNew": true,
+      "name": "Ultra Protection",
+      "description": "A far stronger Protection, increasing the target's armor class by twice as much. Learning it does not replace Protection - a caster who knows both keeps the benefit of each.",
+      "manaCost": "9",
+      "minInt": 90,
+      "minWis": 375,
+      "minLevel": 150,
+      "isAttack": false,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "1200000",
+      "price": 1000000,
+      "spellId": 99948,
+      "element": 2,
+      "targetType": 3,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": false,
+      "effects": [
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1,
+              "expression": "TRUE"
+            },
+            {
+              "paramId": 2,
+              "expression": "AC"
+            },
+            {
+              "paramId": 3,
+              "expression": "(2*(3+self.int/100+self.wis/50))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.ultra_stone_skin",
+      "isNew": true,
+      "name": "Ultra Stone Skin",
+      "description": "A far stronger Stone Skin, increasing the target's armor class by twice as much. Learning it does not replace Stone Skin - a caster who knows both keeps the benefit of each.",
+      "manaCost": "45",
+      "minInt": 90,
+      "minWis": 375,
+      "minLevel": 150,
+      "isAttack": false,
+      "lineOfSight": false,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "1200000",
+      "price": 1000000,
+      "spellId": 99949,
+      "element": 2,
+      "targetType": 3,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": false,
+      "effects": [
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "AC"
+            },
+            {
+              "paramId": 3,
+              "expression": "(2*(10+self.int/25+self.wis/13))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.ultra_mana_shield",
+      "isNew": true,
+      "name": "Ultra Mana Shield",
+      "description": "A far stronger Mana Shield, increasing the target's elemental resistances by twice as much. Learning it does not replace Mana Shield - a caster who knows both keeps the benefit of each.",
+      "manaCost": "14",
+      "minInt": 375,
+      "minWis": 90,
+      "minLevel": 150,
+      "isAttack": false,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "1200000",
+      "price": 1000000,
+      "spellId": 99950,
+      "element": 4,
+      "targetType": 3,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": false,
+      "effects": [
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_dark"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_r_dark/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_fire"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_r_fire/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_earth"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_r_earth/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_water"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_r_water/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "r_air"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_r_air/3)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.ultra_mana_surge",
+      "isNew": true,
+      "name": "Ultra Mana Surge",
+      "description": "A far stronger Mana Surge, increasing the target's elemental powers by twice as much. Learning it does not replace Mana Surge - a caster who knows both keeps the benefit of each.",
+      "manaCost": "39",
+      "minInt": 375,
+      "minWis": 90,
+      "minLevel": 150,
+      "isAttack": false,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "1200000",
+      "price": 1000000,
+      "spellId": 99951,
+      "element": 0,
+      "targetType": 3,
+      "attackType": 1,
+      "successRate": "100",
+      "pvp": false,
+      "effects": [
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "earth"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_earth/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "air"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_air/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "fire"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_fire/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "water"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_water/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "light"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_light/3)"
+            }
+          ]
+        },
+        {
+          "effectType": 2,
+          "parameters": [
+            {
+              "paramId": 1
+            },
+            {
+              "paramId": 2,
+              "expression": "dark"
+            },
+            {
+              "paramId": 3,
+              "expression": "2*(target.true_dark/4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "spell.renew_armor",
+      "isNew": true,
+      "name": "Renew Armor",
+      "description": "Refreshes Barrier, Protection, Stone Skin, Mana Shield and Mana Surge on the caster in one cast - along with their Ultra versions, if learned. Any of the five not yet learned are simply skipped.",
+      "manaCost": "40",
+      "minInt": 60,
+      "minWis": 60,
+      "minLevel": 60,
+      "isAttack": false,
+      "lineOfSight": true,
+      "minDamage": 0,
+      "maxDamage": 0,
+      "cooldownSeconds": 0,
+      "duration": "0",
+      "price": 500000,
+      "spellId": 99952,
+      "element": 0,
+      "targetType": 3,
+      "attackType": 2,
+      "successRate": "100",
+      "pvp": false,
+      "effects": []
+    },
+    {
       "key": "spell.avalon_gateway",
       "isNew": true,
       "name": "Avalon Gateway",
@@ -11784,6 +12159,24 @@ window.T4C_DATA = {
       "completionText": "You've held your ground, and Avalon's noticed. That's not nothing - it's the same proof the old trials used to demand, just asked a different way. Come find me whenever you're ready to be reborn; you won't need to go looking for the Oracle again.",
       "completedText": "Avalon already knows what you're capable of. Just say the word when you're ready to be reborn.",
       "walkthroughText": "Anchorite Rowan offers experienced characters a shortcut. Kill a handful of Fey Wardens in the same stretch of the Avalon Wilds that Ophira's vigil uses, then come back - though Rowan will not complete the rite for anyone below the level he names, so gather the kills whenever you like but expect to wait for the turn-in. Finishing it unlocks Rowan's own rebirth rite for good, so every future rebirth happens here instead of another trek down to the Oracle and back through her guardians."
+    },
+    {
+      "id": "renewed_wards",
+      "title": "Renewed Wards",
+      "giverNpc": "WardenAelric",
+      "targetMonster": "Skeleton",
+      "requiredKills": 12,
+      "targetWorldZ": 0,
+      "areaCenterX": 2785,
+      "areaCenterY": 1095,
+      "areaRadiusTiles": 50,
+      "rewardGold": 500,
+      "rewardXp": 400,
+      "requiredItemQty": 0,
+      "minLevel": 0,
+      "offerText": "Put down twelve of the skeletons rising at the old grave markers east of the temple grounds.",
+      "completionText": "The ground has gone still again. As promised - here's how to renew your own wards in a single breath.",
+      "completedText": "The wards are holding for now. Renew Armor should serve you well when they start to fray."
     }
   ],
   "npcs": [
@@ -13182,7 +13575,7 @@ window.T4C_DATA = {
           "worldZ": 0
         }
       ],
-      "welcomeText": "Welcome. I have every spell known to this world for sale. Say \"spells\" to browse my wares.",
+      "welcomeText": "Welcome. I can teach you nearly every spell known to this world. Say \"learn\" to see what I can teach you.",
       "topics": [],
       "combatProfile": {
         "level": 100,
@@ -13388,6 +13781,50 @@ window.T4C_DATA = {
         "attackSkill": 1,
         "dodge": 65535,
         "damageFormula": "1d3"
+      }
+    },
+    {
+      "id": "WardenAelric",
+      "origin": "new",
+      "displayName": "Warden Aelric",
+      "spawns": [
+        {
+          "x": 2948,
+          "y": 1044,
+          "worldZ": 0
+        }
+      ],
+      "welcomeText": "The old wards over this temple don't hold themselves. Keep the dead from stirring at the grave markers east of town, and I'll see you rewarded with something worth knowing.",
+      "topics": [
+        {
+          "keywords": [
+            "quest",
+            "wards"
+          ],
+          "response": "Skeletons keep rising at the old grave markers east of the temple grounds, and every one that claws free saps a little more strength from the wards keeping this town safe. Put twelve of them back in the ground and I'll teach you how to renew your own wards in a single breath.",
+          "actions": [
+            "GIVE_QUEST:renewed_wards"
+          ]
+        },
+        {
+          "keywords": [
+            "grave",
+            "markers"
+          ],
+          "response": "East, past the old grave markers - that's where the ground gave first. I don't know what stirred them, only that it hasn't stopped.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 100,
+        "maxHp": 1000000,
+        "strength": 65,
+        "endurance": 67,
+        "dexterity": 63,
+        "armorClass": 1000000,
+        "attackSkill": 250,
+        "dodge": 65535,
+        "damageFormula": "1d23+16"
       }
     },
     {

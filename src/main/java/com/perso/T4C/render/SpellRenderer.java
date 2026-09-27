@@ -30,6 +30,7 @@ public class SpellRenderer {
   private final List<SpellImpact> activeImpacts = new ArrayList<>();
   private final List<SpellProjectile> activeProjectiles = new ArrayList<>();
   private final List<ChannelEffect> activeChannels = new ArrayList<>();
+  private final List<PendingImpact> pendingImpacts = new ArrayList<>();
   private final float impactXOffset = 0f;
   private final float impactYOffset = 0f;
   private final float projectileSpeed = 500f;
@@ -41,9 +42,38 @@ public class SpellRenderer {
   }
 
   public void render(SpriteBatch batch) {
+    updatePendingImpacts();
     renderProjectiles(batch);
     renderImpacts(batch);
     renderChannels(batch);
+  }
+
+  /**
+   * Fires an impact burst after {@code delaySeconds}, or immediately if the delay is zero or
+   * negative. Used to stagger a multi-burst "shower" so bursts don't all land in the same frame.
+   */
+  public void triggerImpactSpellDelayed(
+      String impactSpell, float worldX, float worldY, String soundImpact, float delaySeconds) {
+    if (delaySeconds <= 0f) {
+      triggerImpactSpell(impactSpell, worldX, worldY, soundImpact);
+      return;
+    }
+    pendingImpacts.add(new PendingImpact(impactSpell, worldX, worldY, soundImpact, delaySeconds));
+  }
+
+  private void updatePendingImpacts() {
+    if (pendingImpacts.isEmpty()) {
+      return;
+    }
+    float delta = Gdx.graphics.getDeltaTime();
+    for (int i = pendingImpacts.size() - 1; i >= 0; i--) {
+      PendingImpact pending = pendingImpacts.get(i);
+      pending.remaining -= delta;
+      if (pending.remaining <= 0f) {
+        pendingImpacts.remove(i);
+        triggerImpactSpell(pending.impactSpell, pending.worldX, pending.worldY, pending.soundImpact);
+      }
+    }
   }
 
   public ChannelHandle startChannel(String effect, Supplier<Vector2> positionSupplier) {
@@ -518,6 +548,23 @@ public class SpellRenderer {
     @Override
     public int hashCode() {
       return 31 * number + letter;
+    }
+  }
+
+  private static final class PendingImpact {
+    private final String impactSpell;
+    private final float worldX;
+    private final float worldY;
+    private final String soundImpact;
+    private float remaining;
+
+    private PendingImpact(
+        String impactSpell, float worldX, float worldY, String soundImpact, float remaining) {
+      this.impactSpell = impactSpell;
+      this.worldX = worldX;
+      this.worldY = worldY;
+      this.soundImpact = soundImpact;
+      this.remaining = remaining;
     }
   }
 

@@ -15,6 +15,7 @@ import com.perso.T4C.gui.widget.GuiAnimatedSprite;
 import com.perso.T4C.gui.widget.GuiBoxedText;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.QuestChainInfo;
 import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.quest.QuestService;
@@ -32,7 +33,15 @@ public final class QuestScreen extends GuiScreenBase {
   private static final Color GOLD = Color.valueOf("F2B705");
   private static final Color WHITE = Color.valueOf("E6D8BC");
   private static final Color COMPLETED = Color.valueOf("78A66A");
+  private static final Color DIM = Color.valueOf("8A8067");
+
+  private enum Tab {
+    IN_PROGRESS,
+    COMPLETED
+  }
+
   private final Player player;
+  private final List<QuestDef> allQuests = new ArrayList<>();
   private final List<QuestDef> quests = new ArrayList<>();
   private final BitmapFont listFont;
   private final BitmapFont detailFont;
@@ -43,6 +52,12 @@ public final class QuestScreen extends GuiScreenBase {
   private GuiBoxedText detailDescription;
   private GuiBoxedText detailObjective;
   private GuiBoxedText detailGiver;
+  private GuiBoxedText detailChain;
+  private GuiBoxedText emptyLabel;
+  private GuiBoxedText tabInProgress;
+  private GuiBoxedText tabCompleted;
+  private GuiBoxedText killLogLink;
+  private Tab activeTab = Tab.IN_PROGRESS;
   private int selectedIndex;
   private int firstVisible;
 
@@ -54,18 +69,36 @@ public final class QuestScreen extends GuiScreenBase {
     centerOnScreen();
     addCloseButton(548f, 1f);
     loadPlayerQuests();
+    applyTabFilter();
     addStaticLabels();
+    addTabs();
     addQuestBoxes();
     addRewardIcons();
+    addKillLogButton();
   }
 
   private void loadPlayerQuests() {
     if (player == null) return;
     for (QuestDef quest : QuestRegistry.load()) {
       if (quest != null && status(quest) != QuestService.STATUS_NOT_STARTED) {
+        allQuests.add(quest);
+      }
+    }
+  }
+
+  /** Repopulates the visible {@code quests} list from {@code allQuests} for the active tab, and
+   * resets selection/scroll so a stale index from the other tab can't point past the new list's
+   * end. */
+  private void applyTabFilter() {
+    quests.clear();
+    for (QuestDef quest : allQuests) {
+      boolean isCompleted = status(quest) == QuestService.STATUS_COMPLETED;
+      if ((activeTab == Tab.COMPLETED) == isCompleted) {
         quests.add(quest);
       }
     }
+    selectedIndex = 0;
+    firstVisible = 0;
   }
 
   private void addStaticLabels() {
@@ -81,18 +114,67 @@ public final class QuestScreen extends GuiScreenBase {
                 () -> I18n.key("ui.quest_journal"),
                 () -> GOLD)
             .shrinkToFit());
-    if (quests.isEmpty()) {
-      labels.add(
-          new GuiBoxedText(
-                  detailFont,
-                  x + 20f,
-                  y + 150f,
-                  185f,
-                  30f,
-                  () -> I18n.key("quest.none"),
-                  () -> WHITE)
-              .shrinkToFit());
-    }
+    emptyLabel =
+        new GuiBoxedText(
+                detailFont,
+                x + 20f,
+                y + 150f,
+                185f,
+                30f,
+                () ->
+                    quests.isEmpty()
+                        ? I18n.key(
+                            activeTab == Tab.COMPLETED
+                                ? "quest.none_completed"
+                                : "quest.none")
+                        : "",
+                () -> WHITE)
+            .shrinkToFit();
+    labels.add(emptyLabel);
+  }
+
+  private void addTabs() {
+    BitmapFont tabFont = FontManager.getInstance().getTahomaFont(12, GOLD, true);
+    tabInProgress =
+        new GuiBoxedText(
+                tabFont,
+                x + LIST_X,
+                y + 33f,
+                90f,
+                18f,
+                () -> I18n.key("quest.tab.in_progress"),
+                () -> activeTab == Tab.IN_PROGRESS ? WHITE : DIM)
+            .align(GuiBoxedText.Align.LEFT)
+            .shrinkToFit();
+    tabCompleted =
+        new GuiBoxedText(
+                tabFont,
+                x + LIST_X + 95f,
+                y + 33f,
+                90f,
+                18f,
+                () -> I18n.key("quest.tab.completed"),
+                () -> activeTab == Tab.COMPLETED ? WHITE : DIM)
+            .align(GuiBoxedText.Align.LEFT)
+            .shrinkToFit();
+    labels.add(tabInProgress);
+    labels.add(tabCompleted);
+  }
+
+  private void addKillLogButton() {
+    BitmapFont linkFont = FontManager.getInstance().getTahomaFont(11, GOLD, true);
+    killLogLink =
+        new GuiBoxedText(
+                linkFont,
+                x + 430f,
+                y + 5f,
+                110f,
+                14f,
+                () -> I18n.key("quest.kill_log_link"),
+                () -> GOLD)
+            .align(GuiBoxedText.Align.RIGHT)
+            .shrinkToFit();
+    labels.add(killLogLink);
   }
 
   private void addQuestBoxes() {
@@ -131,7 +213,8 @@ public final class QuestScreen extends GuiScreenBase {
                 selectedQuest() != null && status(selectedQuest()) == QuestService.STATUS_COMPLETED
                     ? COMPLETED
                     : WHITE);
-    detailGiver = detailBox(242f, 244f, 308f, 26f, this::selectedGiver, () -> WHITE);
+    detailGiver = detailBox(242f, 244f, 308f, 22f, this::selectedGiver, () -> WHITE);
+    detailChain = detailBox(242f, 268f, 308f, 18f, this::selectedChain, () -> DIM);
   }
 
   private void addRewardIcons() {
@@ -214,6 +297,36 @@ public final class QuestScreen extends GuiScreenBase {
     return quest == null ? "" : I18n.message("quest.giver", QuestService.giverDisplayName(quest));
   }
 
+  /** Empty for the majority of quests (not part of any multi-stage chain, see QuestChainInfo).
+   * For a chain quest, names the chain, this quest's stage number, and - if any prerequisite
+   * stage isn't finished yet - which one, so a player never wonders why a later stage isn't
+   * offered yet. */
+  private String selectedChain() {
+    QuestDef quest = selectedQuest();
+    if (quest == null) return "";
+    QuestChainInfo.Stage stage = QuestChainInfo.stageFor(quest.getId());
+    if (stage == null) return "";
+    String base =
+        I18n.message(
+            "quest.chain.stage", stage.chainName(), stage.stageNumber(), stage.totalStages());
+    for (String prerequisiteId : stage.prerequisiteQuestIds()) {
+      QuestDef prerequisite = findQuestById(prerequisiteId);
+      if (prerequisite != null && status(prerequisite) != QuestService.STATUS_COMPLETED) {
+        return base
+            + " "
+            + I18n.message("quest.chain.waiting_on", I18n.resolve(prerequisite.getTitle()));
+      }
+    }
+    return base;
+  }
+
+  private QuestDef findQuestById(String id) {
+    for (QuestDef quest : QuestRegistry.load()) {
+      if (quest != null && quest.getId().equalsIgnoreCase(id)) return quest;
+    }
+    return null;
+  }
+
   @Override
   public void render(SpriteBatch batch) {
     if (background != null) GuiDraw.drawOverlayRegionFlipped(batch, background, x, y);
@@ -246,6 +359,20 @@ public final class QuestScreen extends GuiScreenBase {
 
   @Override
   public void onTouchUp(float screenX, float screenY) {
+    if (tabInProgress.contains(screenX, screenY) && activeTab != Tab.IN_PROGRESS) {
+      activeTab = Tab.IN_PROGRESS;
+      applyTabFilter();
+      return;
+    }
+    if (tabCompleted.contains(screenX, screenY) && activeTab != Tab.COMPLETED) {
+      activeTab = Tab.COMPLETED;
+      applyTabFilter();
+      return;
+    }
+    if (killLogLink.contains(screenX, screenY)) {
+      GuiManager.open(new MonsterKillLogScreen(player));
+      return;
+    }
     for (int row = 0; row < questRows.size(); row++) {
       if (questRows.get(row).contains(screenX, screenY)) {
         int index = firstVisible + row;

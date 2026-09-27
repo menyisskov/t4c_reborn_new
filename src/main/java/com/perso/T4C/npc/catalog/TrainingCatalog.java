@@ -189,6 +189,7 @@ public final class TrainingCatalog {
                   List.of(
                       o("earthen_strength", 12, 22057, true),
                       o("stone_skin", 17, 52577, true),
+                      o("ultra_stone_skin", 150, 1000000, true),
                       o("earthquake", 20, 82297, true)))),
           Map.entry(
               "Etheanan",
@@ -198,7 +199,9 @@ public final class TrainingCatalog {
                       o("fire_shield", 21, 85632, true),
                       o("rain_of_fire", 22, 103297, true),
                       o("mana_surge", 23, 107028, true),
+                      o("ultra_mana_surge", 150, 1000000, true),
                       o("mana_shield", 14, 33553, true),
+                      o("ultra_mana_shield", 150, 1000000, true),
                       o("glacier", 23, 110825, true),
                       o("electric_shield", 21, 89033, true)))),
           Map.entry(
@@ -249,7 +252,10 @@ public final class TrainingCatalog {
               "Kederic",
               new E(
                   true,
-                  List.of(o("barrier", 12, 18753, true), o("clear_thought", 14, 31472, true)))),
+                  List.of(
+                      o("barrier", 12, 18753, true),
+                      o("ultra_barrier", 150, 1000000, true),
+                      o("clear_thought", 14, 31472, true)))),
           Map.entry(
               "ArganorIargh",
               new E(

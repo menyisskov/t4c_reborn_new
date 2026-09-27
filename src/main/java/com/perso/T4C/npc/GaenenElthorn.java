@@ -7,9 +7,21 @@ import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.spawn.SpawnKind;
 import java.util.List;
 
+// T4C-0066: was unplaced (x=0,y=0,z=0) - see GabrielArchonis.java for the full story (both are the
+// Oracle's two final-test assistants, one per alignment path). The canonical spawn is the deleted
+// monster/GAENENELTHORN.java's old (2660,2416,2), via the same two-@Spawn pattern.
 @Spawn(type = "GaenenElthorn", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "GAENENELTHORN",
+    x = 2660,
+    y = 2416,
+    z = 2,
+    stationary = false,
+    aggressive = false,
+    kind = SpawnKind.MONSTER)
 public final class GaenenElthorn extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

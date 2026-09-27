@@ -13,7 +13,76 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
-## 2026-09-27 — Monster gold now scales with level, and Healing Potions stopped cluttering loot (T4C-0071)
+## 2026-09-27 — Bigger impacts for the strongest area spells (T4C-0069)
+
+### Changed
+- **The most powerful area-of-effect spells now hit like it.** Casting one of the level 150+
+  elemental nukes used to look identical to its much weaker, lower-level cousin - one small burst
+  at the target. Now the impact lands as a scattered volley of bursts across the blast radius, with
+  more of them, spread wider, the stronger the spell is - so the biggest nukes in the game finally
+  read as dramatically bigger than the spells they share art with.
+
+## 2026-09-27 — Renewed Wards (T4C-0068)
+
+### Added
+- **A new quest near Lighthaven's temple.** Warden Aelric is worried about the skeletons rising at
+  the old grave markers east of town, sapping the strength from the wards that keep the place safe.
+  Clear twelve of them out and he'll teach you Renew Armor for free, on top of a bit of gold and
+  experience - a head start on the spell before you'd otherwise be able to afford it.
+
+## 2026-09-27 — Protection spells that keep up with you, and their Ultra versions (T4C-0067)
+
+### Changed
+- **Barrier, Protection, Stone Skin, Mana Shield and Mana Surge no longer leave you waiting between
+  casts.** A quick double-click used to answer with "You are too exhausted to cast a spell" even
+  though the spell itself had already gone off - that pause is gone, so re-casting one of these
+  the moment you need it now works.
+
+### Added
+- **Ultra Barrier, Ultra Protection, Ultra Stone Skin, Ultra Mana Shield and Ultra Mana Surge** - far
+  stronger versions of the five protection spells above, giving twice the armour or resistance of
+  their ordinary counterpart. They're for level 150 and up, and expensive to learn - a serious gold
+  sink for a character who's already found their footing. Learning an Ultra spell doesn't replace
+  its ordinary version - know both, and you keep the benefit of each at once.
+- **Renew Armor**, a new spell that re-lays whichever of the above ten wards you already have
+  running, all in one cast - a quick way to top everything back up before a fight instead of
+  clicking through each one by hand.
+
+## 2026-09-27 — Three original-game NPCs that were never actually placed (T4C-0066)
+
+### Fixed
+- Dwarthon Stoneface, the guard outside Bane Blackblood's throne room, exists and talks but was
+  never actually standing anywhere in the world - now he is, right where he belongs. Ask him about
+  "Bane" and he'll send you after Delwobble the Mad Summoner in the dungeon below the castle;
+  killing Delwobble is now what actually earns you an audience with Bane, which nothing in the
+  game previously did.
+- The Oracle's two final trial-keepers, Gabriel Archonis and Gaenen Elthorn, were fully written
+  but standing nowhere reachable. Both are now placed in the Oracle's deepest chamber, past its
+  last guardians.
+
+### Process
+- A full audit against the original game's own quest reference (t4cbible.com) found that almost
+  everything that looked missing is actually already in the game, just built on an older system
+  than the newer Quest Journal reads - so it won't show up there, but it works. The real gaps were
+  much smaller and more specific than expected; this pass fixes the first three, more follow.
+
+## 2026-09-26 — Quest journal tabs, chain progress, and a monster kill log (T4C-0065)
+
+### Added
+- **The Quest Journal now has In Progress and Completed tabs**, instead of one long mixed list —
+  finishing a quest moves it out of your active list and into Completed, where it stays for
+  reference.
+- **Multi-part questlines now say so.** The Passage to Avalon (Tideworn Shore Scouts, then Passage
+  to Avalon itself) and the Godsforged crafting chain both show which stage you're on and, if an
+  earlier stage isn't finished yet, which one you're still waiting on.
+- **A new Monster Kill Log window** (Ctrl+K, or the "Monster Kills" link on the Quest Journal)
+  lists every kind of creature you've ever killed and how many, with a running total.
+
+### Fixed
+- The Temple Basement Rats quest said it paid "500 gold coins and 300 experience points" — it has
+  always actually paid 2,500 experience and no gold. The text now matches what you receive.
+
+## 2026-09-27 — Monster gold now scales with level, and Healing Potions stopped cluttering loot (T4C-0076)
 
 ### Changed
 - Plain Healing Potions no longer drop from monster kills (higher-tier potions - Major, Light,
@@ -24,38 +93,38 @@ on, every content/feature pass adds its own entry here as part of the work
   in a couple of cases barely more than monsters a tenth their level. Their gold now follows the
   same level curve the rest of the game's monsters already use.
 
-## 2026-09-27 — Ctrl+S opens the character sheet (T4C-0070)
+## 2026-09-27 — Ctrl+S opens the character sheet (T4C-0075)
 
 ### Added
 - Ctrl+S now opens the character sheet, alongside its existing Ctrl+T shortcut.
 
-## 2026-09-26 — Ctrl+C now enters combat mode (T4C-0069)
+## 2026-09-26 — Ctrl+C now enters combat mode (T4C-0074)
 
 ### Fixed
 - Combat mode had no key bound to it, so peaceful NPCs that are meant to be fought once provoked
   (like Balork) could never actually be attacked. Ctrl+C now toggles combat mode, as in the
   original game.
 
-## 2026-09-26 — Balork found in the Lighthaven temple basement (T4C-0068)
+## 2026-09-26 — Balork found in the Lighthaven temple basement (T4C-0073)
 
 ### Fixed
 - Balork was standing nowhere reachable in the game world. He's now down in the Lighthaven
   temple's basement, alongside the bats and rats.
 
-## 2026-09-26 — No more broken gear (T4C-0067)
+## 2026-09-26 — No more broken gear (T4C-0072)
 
 ### Changed
 - Items no longer take wear from combat or dying, never break, and never need repairing. Gear
   you equip stays at full strength forever, and there's no more per-item damage percentage to
   keep an eye on.
 
-## 2026-09-26 — Temple blessings now top you off (T4C-0066)
+## 2026-09-26 — Temple blessings now top you off (T4C-0071)
 
 ### Changed
 - The blessing chests outside each town's temple now restore you to full health and mana on top
   of laying their wards, and clicking one now plays a short blessing effect on you.
 
-## 2026-09-26 — Tideworn Reavers were interrupting the Harbormaster (T4C-0065)
+## 2026-09-26 — Tideworn Reavers were interrupting the Harbormaster (T4C-0070)
 
 ### Fixed
 - Two Tideworn Reavers were patrolling close enough to Harbormaster Rangor's dock to attack you

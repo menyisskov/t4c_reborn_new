@@ -9,9 +9,13 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.spell.SpellRegistry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
@@ -114,7 +118,13 @@ public final class QuestService {
     if (player == null || monsterName == null) {
       return false;
     }
-    boolean changed = false;
+    // T4C-0062: tallied for EVERY kill, independent of any quest matching it - backs the
+    // Monster Kill Log screen (see killLog()/killLogFlag()). Reuses the existing questFlags
+    // free-form map rather than a new save-file field (see quest-creator skill: "questFlags is a
+    // free-form String -> int map").
+    String logFlag = killLogFlag(monsterName);
+    player.setQuestFlag(logFlag, player.getQuestFlag(logFlag) + 1);
+    boolean changed = true;
     List<String> notifications = new ArrayList<>();
     for (QuestDef definition : loadDefinitions()) {
       if (statusFor(player, definition) != STATUS_ACTIVE
@@ -197,6 +207,7 @@ public final class QuestService {
             granted.failure());
       }
     }
+    grantRewardSpell(definition, player);
     persist.run();
     systemMessage.accept(
         I18n.message("message.quest_reward", definition.getRewardGold(), definition.getRewardXp()));
@@ -291,6 +302,26 @@ public final class QuestService {
     }
   }
 
+  /** T4C-0068: grants a quest's optional {@code rewardSpellKey}, if set and not already known -
+   * mirrors the {@code rewardItemKey} grant above but adds the spell's own name to the player's
+   * known-spells list instead of an item to the inventory. Silently does nothing if the key
+   * doesn't resolve or the player already knows it (a repeat turn-in, or a spell also bought from
+   * a trainer before this quest was finished, must not duplicate the entry). */
+  private static void grantRewardSpell(QuestDef definition, Player player) {
+    String rewardSpellKey = definition.getRewardSpellKey();
+    if (rewardSpellKey == null || rewardSpellKey.isBlank()) return;
+    SpellData spell = SpellRegistry.findByName(rewardSpellKey);
+    if (spell == null) return;
+    List<String> spells = player.getSpells();
+    if (spells == null) {
+      spells = new ArrayList<>();
+      player.setSpells(spells);
+    }
+    if (!spells.contains(spell.getName())) {
+      spells.add(spell.getName());
+    }
+  }
+
   /** True unless the quest also requires a minimum character level to turn in
    * ({@code minLevel > 0}) and the player hasn't reached it yet. Kills/items can still be
    * gathered below the floor - this only blocks the final completion, never the accept/progress
@@ -314,6 +345,32 @@ public final class QuestService {
    * NPC's dialogue check, a teleport gate, etc.) reads the exact same flag. */
   public static String zoneUnlockFlag(String zoneId) {
     return "unlock.zone." + zoneId;
+  }
+
+  private static final String KILL_LOG_PREFIX = "killlog.";
+
+  /** The durable per-monster-type kill tally flag, keyed by the monster's canonical registry
+   * name (not the raw string a caller passed in) so kills of the same monster reported under
+   * slightly different casing/aliases still accumulate on one counter. Backs the Monster Kill
+   * Log screen; unrelated to any quest's own kill-count objective. */
+  public static String killLogFlag(String monsterName) {
+    MonsterDef canonical = MonsterRegistry.findByName(monsterName);
+    String key = canonical != null ? canonical.getName() : monsterName;
+    return KILL_LOG_PREFIX + key.trim();
+  }
+
+  /** Every monster this player has ever killed and how many times, keyed by canonical monster
+   * name, sorted alphabetically. Empty (never {@code null}) for a null player. */
+  public static Map<String, Integer> killLog(Player player) {
+    Map<String, Integer> result = new TreeMap<>();
+    if (player == null) return result;
+    for (Map.Entry<String, Integer> entry : player.getQuestFlags().entrySet()) {
+      String flag = entry.getKey();
+      if (flag != null && flag.startsWith(KILL_LOG_PREFIX) && entry.getValue() != null) {
+        result.put(flag.substring(KILL_LOG_PREFIX.length()), entry.getValue());
+      }
+    }
+    return result;
   }
 
   /** True once the player has unlocked the given zone: either the explicit flag {@link

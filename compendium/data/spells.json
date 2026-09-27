@@ -7094,6 +7094,381 @@
     ]
   },
   {
+    "key": "spell.ultra_barrier",
+    "isNew": true,
+    "name": "Ultra Barrier",
+    "description": "A far stronger Barrier, increasing the target's armor class by twice as much. Learning it does not replace Barrier - a caster who knows both keeps the benefit of each.",
+    "manaCost": "10",
+    "minInt": 375,
+    "minWis": 90,
+    "minLevel": 150,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 1000000,
+    "spellId": 99947,
+    "element": 4,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "TRUE"
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "(2*(5+self.int/50+self.wis/25))"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ultra_protection",
+    "isNew": true,
+    "name": "Ultra Protection",
+    "description": "A far stronger Protection, increasing the target's armor class by twice as much. Learning it does not replace Protection - a caster who knows both keeps the benefit of each.",
+    "manaCost": "9",
+    "minInt": 90,
+    "minWis": 375,
+    "minLevel": 150,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 1000000,
+    "spellId": 99948,
+    "element": 2,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1,
+            "expression": "TRUE"
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "(2*(3+self.int/100+self.wis/50))"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ultra_stone_skin",
+    "isNew": true,
+    "name": "Ultra Stone Skin",
+    "description": "A far stronger Stone Skin, increasing the target's armor class by twice as much. Learning it does not replace Stone Skin - a caster who knows both keeps the benefit of each.",
+    "manaCost": "45",
+    "minInt": 90,
+    "minWis": 375,
+    "minLevel": 150,
+    "isAttack": false,
+    "lineOfSight": false,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 1000000,
+    "spellId": 99949,
+    "element": 2,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "AC"
+          },
+          {
+            "paramId": 3,
+            "expression": "(2*(10+self.int/25+self.wis/13))"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ultra_mana_shield",
+    "isNew": true,
+    "name": "Ultra Mana Shield",
+    "description": "A far stronger Mana Shield, increasing the target's elemental resistances by twice as much. Learning it does not replace Mana Shield - a caster who knows both keeps the benefit of each.",
+    "manaCost": "14",
+    "minInt": 375,
+    "minWis": 90,
+    "minLevel": 150,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 1000000,
+    "spellId": 99950,
+    "element": 4,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_r_dark/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_r_fire/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_earth"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_r_earth/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_water"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_r_water/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "r_air"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_r_air/3)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.ultra_mana_surge",
+    "isNew": true,
+    "name": "Ultra Mana Surge",
+    "description": "A far stronger Mana Surge, increasing the target's elemental powers by twice as much. Learning it does not replace Mana Surge - a caster who knows both keeps the benefit of each.",
+    "manaCost": "39",
+    "minInt": 375,
+    "minWis": 90,
+    "minLevel": 150,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "1200000",
+    "price": 1000000,
+    "spellId": 99951,
+    "element": 0,
+    "targetType": 3,
+    "attackType": 1,
+    "successRate": "100",
+    "pvp": false,
+    "effects": [
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "earth"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_earth/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "air"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_air/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "fire"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_fire/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "water"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_water/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "light"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_light/3)"
+          }
+        ]
+      },
+      {
+        "effectType": 2,
+        "parameters": [
+          {
+            "paramId": 1
+          },
+          {
+            "paramId": 2,
+            "expression": "dark"
+          },
+          {
+            "paramId": 3,
+            "expression": "2*(target.true_dark/4)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "spell.renew_armor",
+    "isNew": true,
+    "name": "Renew Armor",
+    "description": "Refreshes Barrier, Protection, Stone Skin, Mana Shield and Mana Surge on the caster in one cast - along with their Ultra versions, if learned. Any of the five not yet learned are simply skipped.",
+    "manaCost": "40",
+    "minInt": 60,
+    "minWis": 60,
+    "minLevel": 60,
+    "isAttack": false,
+    "lineOfSight": true,
+    "minDamage": 0,
+    "maxDamage": 0,
+    "cooldownSeconds": 0,
+    "duration": "0",
+    "price": 500000,
+    "spellId": 99952,
+    "element": 0,
+    "targetType": 3,
+    "attackType": 2,
+    "successRate": "100",
+    "pvp": false,
+    "effects": []
+  },
+  {
     "key": "spell.avalon_gateway",
     "isNew": true,
     "name": "Avalon Gateway",

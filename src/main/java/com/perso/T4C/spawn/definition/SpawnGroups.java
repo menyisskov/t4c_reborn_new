@@ -104,9 +104,12 @@ public final class SpawnGroups {
         SpawnGroup0070.definition(),
         SpawnGroup0071.definition(),
         SpawnGroup0072.definition(),
-        SpawnGroup0073.definition(),
-        SpawnGroup0074.definition(),
-        SpawnGroup0075.definition());
+        SpawnGroup0073.definition());
+    // T4C-0066: SpawnGroup0074 ("Gaenen Elthorn")/SpawnGroup0075 ("Gabriel Archonis") removed -
+    // this SpawnGroups.java data is never actually read (nothing calls SpawnGroupRegistry except
+    // itself), and the two monster classes they pointed at (a mute DataMonster duplicate of each,
+    // with none of the real fight logic) were deleted in favor of npc/GaenenElthorn.java's and
+    // npc/GabrielArchonis.java's own MONSTER-kind @Spawn at those same canonical coordinates.
   }
 
   private static List<SpawnGroupDefinition> c3() {

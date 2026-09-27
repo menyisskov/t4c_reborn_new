@@ -201,6 +201,59 @@ quiz is gone; its i18n strings were deleted with it.
   it roughly halved real cast cycle time without touching a single balance number. Don't reintroduce a
   pre-cast delay to "slow casting down" - change the exhaustion formulas instead. The progress bar is
   now only for harvesting and taming.
+- **The five protection spells (Barrier, Protection, Stone Skin, Mana Shield, Mana Surge) cast in
+  0ms - an explicit exception to the universal floor above (T4C-0067, owner's call).** Their
+  mental/physical/attack exhaustion fields are literal `"0"`, not the level-scaled-decay formula
+  every other spell uses. The floor exists to pace repeated *casting*; these five exist to be
+  re-applied the instant you need them (before a fight, after a death, on a fresh double-click), and
+  the owner asked for that friction removed rather than just reduced. This is these five spells'
+  own field, not a change to `SpellCastingService`/`Player.applyExhaustion` - a different spell cast
+  in between still exhausts normally, and casting one of these five still respects *that* exhaustion
+  window if one is already running. Give any future "protection spell" in this same family (a ward
+  meant to be topped up on demand, not a combat-paced buff) the same 0/0/0 treatment.
+
+### The Ultra tier (T4C-0067)
+
+- **Naming/shape convention for a "stronger version of an existing spell":** prefix the name with
+  `Ultra ` (`Ultra Barrier`, `Ultra Protection`, ...), keep every field identical to the base spell
+  (icon, projectile/impact, element, targetType, duration, mana cost, exhaustion) except the ones
+  that make it a genuinely separate, stackable spell: a new `spellId`, `minLevel` **150** (the
+  level-150+ tier the owner asked for), and the effect formula wrapped in `2*(...)` around the base
+  spell's own formula - literally double, not a hand-tuned different number. Don't invent a new
+  formula shape; wrapping the existing one is what keeps "double" verifiably true and keeps the two
+  tiers' relationship obvious to the next person reading the pair.
+- **Price ~1,000,000 gold to learn (owner's call, "not cheap").** Applied flat across all five Ultra
+  spells rather than varying per-spell - there's no basis in the base spells' own (very different)
+  prices to derive a ratio from, so a flat round number for the whole tier is simpler and just as
+  defensible.
+- **Stacking is the point, not a side effect.** An Ultra spell is a different spell name from its
+  base version, so `Player.applyBuff`'s per-`spellName` dedup means both can be active
+  simultaneously and their stat contributions add - a caster who learns both Barrier and Ultra
+  Barrier gets the sum of both AC bonuses from one cast of each. This falls out of the existing buff
+  system for free; no new stacking logic was needed or added.
+- **minInt/minWis for the Ultra tier (Claude's call, flag for the owner to overrule):** the five base
+  protection spells don't follow the level-150+ curve (`HighTierSpellCurve`, main stat 2.5×L / other
+  stat 0.6×L) themselves - they're much lower-level and don't share one consistent int/wis ratio.
+  Since minLevel 150 puts the Ultra tier inside that curve's range, and section 2's "support spells
+  above level 150 take their stat gate from the same curve" rule, each Ultra spell uses 375/90
+  (2.5×150 / 0.6×150), split main-vs-secondary by whichever stat its own *base* spell already leans
+  on more heavily: Ultra Barrier and Ultra Mana Shield/Mana Surge (int-leaning bases) get
+  `minInt=375, minWis=90`; Ultra Protection and Ultra Stone Skin (wis-leaning bases) get
+  `minInt=90, minWis=375`. Note `SpellCastingService.begin()` doesn't actually gate casting on
+  int/wis at all (only `hasLearnedSpell` + mana/exhaustion/cooldown) - these numbers only gate
+  *learning* the spell in `LearnScreen.blockReason()`, same as every other spell.
+- **Renew Armor is sellable, not quest-only (Claude's call, flag for the owner to overrule).** There
+  is no existing "quest-only spell, hidden from the regular seller" mechanism in this codebase, and
+  building one just for this spell would be new plumbing for a fairly small distinction. Renew Armor
+  is priced and sold at the Spell Merchant like any other spell (500,000 gold - a QoL spell, not a
+  new power budget, so priced below the Ultra tier); a quest that also grants it for free/early
+  remains a legitimate separate reward on top of that, the same way other content in this game is
+  reachable by more than one path.
+- **A spell whose real effect isn't a dice-formula `T4cEffect` needs the `tame_beast`-style exemption
+  in `SpellRegistry.isPlayerCastable`, not a fake placeholder effect.** Renew Armor's effect is
+  custom code in `MainGameScreen.castDefensiveSpell` (re-casting whichever of ten other spells the
+  caster knows), so it was added to that exemption list by name rather than given an inert formula
+  just to pass the filter. Do the same for any future spell whose effect is pure custom logic.
 ### Temple blessing chests (T4C-0061)
 
 - An **offering chest** stands outside each town's temple and lays nine wards on whoever clicks it:
@@ -671,12 +724,27 @@ should not consume it), that is a content change, not an editorial one, and need
   so it stays green and meaningful rather than being switched off.
 
 ## 6. Quests
-- **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest
-  hooks carried over from the original T4C (NPC dialogue that mentions or promises a quest, such
-  as the Dragon's Crypt tomb raider, Mirak's goblin bounty, Tristan's caravan or Rhodar's hammer),
-  as well as their rewards. Only quests this project authored itself may be extended.
-  Content-pass backlog ideas that would "finish" an original quest hook are off the table unless
-  the owner asks for one by name.
+- **T4C-0038's "don't touch the original quests" default is superseded for this content specifically**
+  (owner, in chat, T4C-0066): the owner has asked to audit the original game's own quests against
+  the real reference data and fill in what's genuinely missing or broken - the Dragon's Crypt tomb
+  raider, Mirak's goblin bounty, Tristan's caravan, Rhodar's hammer and the like are now in scope,
+  not off the table. T4C-0038's original point still holds for anything the owner *hasn't* asked
+  about: don't invent new rewards or storylines for original content on your own initiative -  the
+  scope here is "make the real thing actually work end to end," not "improve on it."
+- **Read this before assuming any original-game quest content is missing (T4C-0066).** A full audit
+  found the overwhelming majority of it - the Dragon/Dark Fang chain, Mirak's Trust Quest, Stone of
+  Life, Book of Feylor, the Gypsy alignment quiz, the entire Crimsonscale Letter chain, the
+  Good/Evil Seraph endgame, the Oracle dungeon puzzle, most of Stoneheim - is **already real,
+  spawned, working content**, just built on an older per-NPC flag system (`__QUEST_*`,
+  `ADDON_STORYLINE_PROGRESS`, `npcFlag`/`globalFlag`) that predates `quest/QuestDef`/`QuestService`
+  and therefore never shows up in the Quest Journal. Before writing a new NPC/monster/quest for
+  "missing" original content: grep `npc/`/`monster/` for a class matching the canon name (try
+  PascalCased/apostrophe-stripped variants, e.g. "Eye-Patched Qardos" -> `EyePatchedQardos.java`)
+  and read its `javaBehavior()` - it is very likely already there and already working, and the real
+  gap (if any) is usually a missing `@Spawn` placement, a missing kill-counter hookup, or one
+  un-wired turn-in keyword on an otherwise-complete NPC, not a from-scratch build. A full canon
+  reference (all 5 islands' quests, the NPC/monster/drop/trader charts) was captured from
+  t4cbible.com during this pass; ask the owner or re-scrape if a future pass needs it again.
 - Every zone-unlock quest added by the T4C-0019 pass follows the same mechanical shape: kill N
   of a monster in one area, turn in one boss-drop item, unlock fast travel to a zone. That's a
   fine default for a minor zone gate, but it undersells a **major** new location - see below for
@@ -717,6 +785,14 @@ should not consume it), that is a content change, not an editorial one, and need
 - A new quest stage must be added to `CompendiumExporter`'s `NEW_QUEST_IDS` allowlist (and a new
   NPC, if any, to `NEW_NPC_IDS`) or it silently never appears on the reference website - the
   exporter only emits quests/NPCs it's been told are new-since-fork.
+- **A quest can grant a spell reward (T4C-0068).** `QuestDef.rewardSpellKey` (parallel to the
+  existing `rewardItemKey`) resolves via `SpellRegistry.findByName` and adds the spell's name to
+  the player's known-spells list in `QuestService.complete()`'s `grantRewardSpell` step - same
+  mechanical shape as the item grant, just for `player.getSpells()` instead of the inventory. Does
+  nothing (no error) if the player already knows the spell, so a repeat call (e.g. re-running
+  `complete()` defensively) can't duplicate the entry. Use this instead of a custom
+  `completeWithAlternateReward`/`javaBehavior()` one-off whenever the spell IS the quest's own
+  reward, not an alternate to a normal payout - see `quest/definition/RenewedWards.java`.
 
 ### The "Two Masters" pattern (T4C-0046)
 - A reusable end-of-quest **choice**: two different NPCs can both complete the same already-ready
@@ -766,6 +842,28 @@ should not consume it), that is a content change, not an editorial one, and need
   spawn-group wiring anywhere) - a separate, pre-existing bug, not something this pass touched or
   depends on. Use `minLevel` the same way for any future "quality-of-life unlock" quest that
   should only be reachable once a character is already well past the early game.
+
+### Quest Journal tabs, chain-stage display, and the Monster Kill Log (T4C-0062)
+- The Quest Journal (`gui/screen/QuestScreen.java`) splits into an In Progress tab and a
+  Completed tab, filtered from `QuestService.statusFor()`. This is display-only - it doesn't
+  change when a quest actually completes, only where it's shown afterward.
+- `QuestChainInfo` (`quest/QuestChainInfo.java`) is a small, hand-maintained, UI-only map from
+  quest id to "chain name / stage N of M / prerequisite quest ids", used only to print a stage
+  line in the Journal's detail panel. It enforces nothing QuestService doesn't already enforce
+  (the giver NPC's own dialogue still does the real gating) - it only affects what a player reads.
+  Only two real multi-stage chains exist today: Passage to Avalon
+  (`tideworn_shore_scouts` → `passage_to_avalon`) and the Godsforged crafting chain
+  (`forge_the_godcore` + `bind_the_godsigil` → one of the five `forge_godsforged_*` finales).
+  Every other quest here - including a zone's own "borderwatch" access quest and the two
+  independent post-unlock Avalon quests - is deliberately *not* a chain (see each quest's own file
+  comment); don't add an entry to `QuestChainInfo` unless a quest is genuinely gated on another
+  quest's completion the way these two are.
+- **The `killlog.<canonical monster name>` quest-flag namespace is reserved** for the global,
+  per-monster-type kill tally (`QuestService.killLogFlag()`/`killLog()`, backing the Monster Kill
+  Log screen, Ctrl+K). It's written on *every* recognized kill, independent of any quest, using
+  `MonsterRegistry.findByName()`'s canonical name so aliased spawns (e.g. `"Rat"` → `Brown Rat`)
+  share one counter. Don't reuse the `killlog.` prefix for a quest-specific flag - use `quest.<id>.*`
+  for those, as every quest already does.
 
 ## 7. Economy
 
