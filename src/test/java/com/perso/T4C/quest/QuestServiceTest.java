@@ -84,15 +84,29 @@ class QuestServiceTest {
     assertNull(service.turnInReadyQuests(QUEST.getGiverNpc(), player));
     assertEquals(0, player.getGold());
     assertFalse(service.recordKill(null, "Brown Rat", 1, 304, 383));
-    assertFalse(service.recordKill(player, "Goblin", 1, 304, 383));
-    assertFalse(service.recordKill(player, "Brown Rat", 0, 304, 383));
-    assertFalse(service.recordKill(player, "Brown Rat", 1, 425, 383));
-    assertEquals(1, saves.get(), "rejected kills must not be persisted");
+    // T4C-0062: recordKill now also tallies a global, quest-independent kill log for every
+    // recognized kill (see QuestService.killLog()) - these three all miss QUEST's own objective
+    // (wrong monster, wrong map, wrong tile) but still count toward that kill log, so they
+    // persist and return true even though none of them advance killsFlag.
+    assertTrue(service.recordKill(player, "Goblin", 1, 304, 383));
+    assertTrue(service.recordKill(player, "Brown Rat", 0, 304, 383));
+    assertTrue(service.recordKill(player, "Brown Rat", 1, 425, 383));
+    assertEquals(
+        0,
+        player.getQuestFlag(QuestService.killsFlag(QUEST)),
+        "none of the above match QUEST's own monster/area, so its objective must not advance");
+    assertEquals(4, saves.get(), "every recognized kill persists the kill log, quest match or not");
     assertTrue(
         service.recordKill(player, "Rat", 1, 304, 383),
         "the canonical Rat alias must count as Brown Rat");
     assertEquals(1, player.getQuestFlag(QuestService.killsFlag(QUEST)));
-    assertEquals(2, saves.get());
+    assertEquals(5, saves.get());
+    assertEquals(
+        1, QuestService.killLog(player).get("Goblin"), "the goblin kill is tallied in the log");
+    assertEquals(
+        3,
+        QuestService.killLog(player).get("Brown Rat"),
+        "all three Brown Rat kills (2 off-objective + 1 matching) share one canonical tally");
     PlayerStateDto savedState = PlayerStateMapper.fromPlayer(player);
     Player restored = new Player();
     PlayerStateMapper.applyToPlayer(savedState, restored);
@@ -132,14 +146,17 @@ class QuestServiceTest {
             + " level-ups and leaves 277");
     assertEquals(15, restored.getStatPoints(), "5 stat points per level-up, three level-ups");
     assertEquals(45, restored.getSkillPoints(), "15 skill points per level-up, three level-ups");
-    assertEquals(17, saves.get(), "acceptance, fifteen kills and turn-in must each persist");
+    assertEquals(20, saves.get(), "acceptance, fifteen kills, turn-in, and 3 off-objective kills");
     assertNull(service.turnInReadyQuests(QUEST.getGiverNpc(), restored));
     assertEquals(
         "Already completed", service.giveOrReport(QUEST.getId(), QUEST.getGiverNpc(), restored));
-    assertFalse(service.recordKill(restored, "Brown Rat", 1, 304, 383));
+    // T4C-0062: the quest itself is done and pays nothing further, but the kill log still tallies
+    // this kill and persists - it's tracked independently of any quest's completion state.
+    assertTrue(service.recordKill(restored, "Brown Rat", 1, 304, 383));
     assertEquals(500, restored.getGold());
     assertEquals(4, restored.getLevel());
     assertEquals(277, restored.getCurrentXp());
-    assertEquals(17, saves.get(), "a completed one-time quest must never save or pay again");
+    assertEquals(
+        21, saves.get(), "a completed one-time quest must never pay again, but the kill log saves");
   }
 }
