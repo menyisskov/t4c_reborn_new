@@ -89,13 +89,13 @@ half, Tranquility and Clear Thought did nothing for a while; check this file's m
   formula and are intentionally left at parity with these spells; "lesser" (`/4`) and "partial"
   (`/2`) potions are weaker versions of the same rule, not separate values to rebalance.
 
-### High-tier spell VFX escalation (T4C-0069, T4C-0077)
+### High-tier spell VFX escalation (T4C-0069, T4C-0077, T4C-0082)
 
-There is no wired art pipeline in this repo and no artist source for genuinely new spell VFX (see
-the `graphic-designer` skill) — every escalation below is built from the existing legacy animation
-frames, not hand-drawn art. Two separate, stacking mechanisms make a `HighTierSpellCurve` spell
-(levels 150-400) read as stronger the higher its tier, since without them every tier of a
-school/shape shares the exact same impact sprite as the low-level spell it was copied from:
+The first two escalation steps below are built from the existing legacy animation frames. The
+third, tier 350+, is newly drawn art brought in from outside the repo (SpriteCook) and packed by
+`tools.MythicVfxPacker`. These stacking mechanisms make a `HighTierSpellCurve` spell (levels
+150-400) read as stronger the higher its tier. Without them, every tier of a school/shape would
+share the exact impact sprite of the low-level spell it was copied from:
 
 - **Tiers 150+ (`GrandImpactShower`, T4C-0069):** the impact renders as a scattered, staggered
   multi-burst "shower" instead of one flash — burst count climbs with tier (2 at 150, up to 7 at
@@ -110,8 +110,45 @@ school/shape shares the exact same impact sprite as the low-level spell it was c
   Re-running the generator is idempotent (it skips its own `-Ascended` output) and always writes
   the same frame count as the base animation — `AscendedVfxAssetTest` guards that invariant.
 
-Both thresholds are independent constants (`GrandImpactShower`'s tier gate, `HighTierSpellCurve
-.ASCENDED_TIER_THRESHOLD`) — raising or lowering one does not require touching the other. If a
+- **Tiers 350+ (`tools.MythicVfxPacker`, T4C-0082):** an element listed in
+  `HighTierSpellCurve.MYTHIC_IMPACTS` swaps its impact for a brand-new "Mythic" animation (one per
+  element, shared by bolt and area; the area version already differs through the shower). An
+  element not listed there keeps its Ascended impact, so the map is only filled in once an
+  element's frames are actually packed. `MythicVfxAssetTest` fails on a listed element whose
+  frames are missing, gapped or mis-offset. Rules for the new art:
+  - **Frames:** 8-52, named `<Base>-a` .. `-z`, then `-2a` .. (the legacy `GreatExplosion`
+    scheme). The base name must not be a prefix of any other sprite family. The renderer
+    prefix-matches, so e.g. `MythicFire` also claims `MythicFire-Ascended-a`. The test enforces
+    this.
+  - **Pixels:** crisp pixel art (textures are Nearest-filtered). The packer snaps alpha to fully
+    on or off, so soft glows become hard-edged. Upscaled generator output is sampled back down
+    with `--downscale k`, never smoothed.
+  - **Placement:** offsets are never hand-typed. The packer centers the whole animation on the
+    screen box of a reference legacy impact (`--match`, default `GreatExplosion`) and mirrors
+    `off2X = 32 - width - off1X`, the relation every legacy sprite satisfies. Round-tripping
+    `GreatExplosion`'s own frames through the packer reproduces its original offsets exactly.
+  - **Ground-erupting effects** (all six Mythic impacts are) use `--ground 0` instead of
+    `--match`: centered on the tile, lowest pixel at y=0. That puts the base ring at the same
+    ground height as the legacy `64kSpellFireCircle` ground ring. Matching a mid-air explosion's
+    box would sink a tall pillar's base far below the tile.
+  - **No pop-in, legacy length:** generated animations tend to open at full size, so
+    `--grow-in 3` prepends three frames of the first frame scaled up from the ground. `--hold 2`
+    doubles each frame, because impact frames play at one fixed rate and SpriteCook's pixel mode
+    caps at 16 frames. The result is 38 frames, about GreatExplosion's 33.
+  - **Matte leftovers:** SpriteCook composites animation frames over #808080 before removing
+    the background, and a sequence can end on a frame of pure matte gray. Always pack generated
+    art with `--strip-matte`.
+  - **Spending generation credits (owner's call):** pilot one element, inspect every still
+    before paying to animate it, use one variation, and reuse the recorded asset IDs and saved
+    sheets rather than regenerating (`docs/content-ideas/mythic-spell-vfx/`).
+  - **Size:** frames are packed at native generated size (roughly 100-230 px tall), never
+    rescaled by a non-integer factor. A pillar two or three characters tall suits the top tier.
+  - **Look before packing:** run with `--dry-run --preview <dir>` and inspect the contact sheet
+    (each frame drawn at its real offset over the tile outline) before writing the sprite bins.
+  - The generation settings and prompts live in `docs/content-ideas/mythic-spell-vfx.md`.
+
+All three thresholds are independent constants (`GrandImpactShower`'s tier gate, `HighTierSpellCurve
+.ASCENDED_TIER_THRESHOLD`, `.MYTHIC_TIER_THRESHOLD`) — changing one does not require touching the others. If a
 future content pass adds more "epic-named" spells below level 150 that share these same base
 sprites (Meteor, Boulders, GreatExplosion, etc. are also used outside `HighTierSpellCurve`), they
 are deliberately left on the plain animation; only the `HighTierSpellCurve` ladder gets the

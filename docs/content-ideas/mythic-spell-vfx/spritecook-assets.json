@@ -1,0 +1,15 @@
+{
+  "_note": "SpriteCook asset IDs behind the Mythic (tier 350+) spell impacts, T4C-0082. Reuse these (style references, re-animation) instead of regenerating. Stills: gemini-3.1-flash-image, pixel, 128x128 hint, transparent. Animations: pixel-engine default, 16 frames, spritesheet, edge_margin 6, removebg Basic.",
+  "references": {
+    "GreatExplosion-s": "c7e4b035-62dc-434c-b0bc-1ac8ea21f93b",
+    "64kSpellFireCircle-k": "5bff1cab-8278-4df7-997a-90591f5c0696"
+  },
+  "elements": {
+    "MythicFire": { "still": "4f3337cc-d33c-4504-9dc8-a5415a77fa57", "animation": "d58924af-6d37-4467-aa12-4b63d2210614" },
+    "MythicEarth": { "still": "aff77210-291b-4b51-a283-5c61180e5418", "animation": "383a2965-e7ba-461a-ad0b-b55c1226c09a" },
+    "MythicAir": { "still": "3a1d344e-975a-4e08-ae28-e2d81582b64d", "animation": "4e6fe789-9cd1-4193-975b-c99aef9de6d9" },
+    "MythicWater": { "still": "416be356-1602-4a14-8b65-6ed46fb12b00", "animation": "14b430f1-f6c6-468f-a830-ecc924145e66" },
+    "MythicLight": { "still": "64611704-37e5-4880-a69e-cdbd878f56d0", "animation": "6d02c65d-6fc2-4b62-9985-5b8c9f65ccc1" },
+    "MythicDark": { "still": "7104785a-d565-46c6-a152-dd6f95ccc670", "animation": "0c577c97-1054-4658-8296-83df534f7687" }
+  }
+}

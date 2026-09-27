@@ -76,11 +76,18 @@ effects) — always a sprite-name string flowing into `SpriteLoader`.
 
 ## 3. Where new art goes, and how to make a definition find it
 
-**There is currently no wired-up tool to pack a brand-new PNG into `sprites_N.bin`.**
-`SpriteBinWriter.merge(...)` (`src/main/java/com/perso/T4C/helper/SpriteBinWriter.java`) is the API
-that *would* do this (writes packed entries with name/dims/offsets/PNG), and
-`SpriteBinIO`/`SpriteBinWriter` fully support it, but nothing in the current codebase calls
-`SpriteBinWriter.merge`. Practically, to add new sprite art today you have two honest options:
+**For a new multi-frame spell impact, use `tools.MythicVfxPacker` (T4C-0082).** It takes a
+folder of frame PNGs or a spritesheet, downscales/alpha-snaps/trims it, names the frames
+`<Base>-a, -b, ...`, derives offsets by aligning to a reference legacy impact, previews a contact
+sheet (`--dry-run --preview <dir>`), and merges via `SpriteBinWriter.replaceMatching`. The rules
+and the SpriteCook runbook are in `DESIGN_GUIDELINES.md` ("High-tier spell VFX escalation") and
+`docs/content-ideas/mythic-spell-vfx.md`. `tools.AscendedVfxGenerator` is the recolor-only
+equivalent.
+
+For any other new sprite (icons, monsters, decor), there is no dedicated packer yet; build on
+`SpriteBinWriter.merge(...)` (`src/main/java/com/perso/T4C/helper/SpriteBinWriter.java`, writes
+packed entries with name/dims/offsets/PNG; pass the bare `sprites.bin` anchor, never an existing
+shard name). Practically, you have two honest options:
 
 1. **Preferred / verifiable:** write a small one-off script (Java, using
    `SpriteBinWriter.Entry`/`SpriteBinWriter.merge`, or Python replicating the format documented in

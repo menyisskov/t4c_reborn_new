@@ -99,20 +99,30 @@ class HighTierSpellLadderTest {
   }
 
   /**
-   * T4C-0077: tiers 150/200 keep the plain impact every lower-level spell of that element/shape
-   * already uses; tiers 250+ switch to the palette-shifted "-Ascended" variant, so the strongest
-   * spells finally look different, not just multiplied (see {@link GrandImpactShower}, T4C-0069).
+   * T4C-0077 / T4C-0082: tiers 150/200 keep the plain impact every lower-level spell of that
+   * element/shape already uses; tiers 250+ switch to the palette-shifted "-Ascended" variant, so
+   * the strongest spells look different, not just multiplied (see {@link GrandImpactShower},
+   * T4C-0069) - except that at tier 350+ an element with a newly drawn Mythic impact uses that
+   * instead.
    */
   @Test
-  void onlyTier250AndAboveUseTheAscendedImpact() {
+  void impactEscalatesPlainThenAscendedThenMythic() {
     for (int tier : HighTierSpellCurve.TIERS) {
       for (int element : ELEMENTS) {
         SpellData spell = attackAt(element, tier);
-        boolean usesAscended = spell.getImpactSpell().toLowerCase().contains("-ascended-");
-        assertEquals(
-            tier >= 250,
-            usesAscended,
-            spell.getName() + " at tier " + tier + " impact=" + spell.getImpactSpell());
+        String impact = spell.getImpactSpell();
+        String mythic = HighTierSpellCurve.MYTHIC_IMPACTS.get(element);
+        String expected;
+        if (tier >= HighTierSpellCurve.MYTHIC_TIER_THRESHOLD && mythic != null) {
+          expected = "mythic";
+        } else {
+          expected = tier >= 250 ? "ascended" : "plain";
+        }
+        String actual =
+            mythic != null && impact.equals(mythic + "-")
+                ? "mythic"
+                : impact.toLowerCase().contains("-ascended-") ? "ascended" : "plain";
+        assertEquals(expected, actual, spell.getName() + " at tier " + tier + " impact=" + impact);
       }
     }
   }
