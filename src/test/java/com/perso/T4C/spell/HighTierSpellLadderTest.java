@@ -98,6 +98,25 @@ class HighTierSpellLadderTest {
     assertEquals(1000, HighTierSpellCurve.primaryRequirement(GameConstants.MAX_PLAYER_LEVEL));
   }
 
+  /**
+   * T4C-0077: tiers 150/200 keep the plain impact every lower-level spell of that element/shape
+   * already uses; tiers 250+ switch to the palette-shifted "-Ascended" variant, so the strongest
+   * spells finally look different, not just multiplied (see {@link GrandImpactShower}, T4C-0069).
+   */
+  @Test
+  void onlyTier250AndAboveUseTheAscendedImpact() {
+    for (int tier : HighTierSpellCurve.TIERS) {
+      for (int element : ELEMENTS) {
+        SpellData spell = attackAt(element, tier);
+        boolean usesAscended = spell.getImpactSpell().toLowerCase().contains("-ascended-");
+        assertEquals(
+            tier >= 250,
+            usesAscended,
+            spell.getName() + " at tier " + tier + " impact=" + spell.getImpactSpell());
+      }
+    }
+  }
+
   private static SpellData attackAt(int element, int tier) {
     for (SpellData spell : highTierAttacks())
       if (spell.getMinLevel() == tier && spell.getElement() == element) return spell;
