@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0066`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0067`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -77,7 +77,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0062 | Quest-giver and NPC locations on the reference site: fast-travel landmark, distance and bearing, and a map link, all derived from the game's own spawn and landmark data | Content/Fix | Done | `207c6485` | [2026-09-26](CHANGELOG.md#2026-09-26--the-site-now-tells-you-where-to-find-people-t4c-0062) |
 | T4C-0063 | 33 creatures and characters this fork placed were standing in water or inside scenery, including every Sunken Chancel creature and the Avalon crossing; all moved onto reachable ground, with a guard test and a "too far away" message when a click can't reach someone | Fix | Done | `7bda17f7` | [2026-09-26](CHANGELOG.md#2026-09-26--people-and-creatures-stranded-in-the-sea-t4c-0063) |
 | T4C-0064 | Lighthaven rat quest can be turned in, and the game saves your character on a timer instead of only on shutdown | Fix | Done | `998e3218` | [2026-09-26](CHANGELOG.md#2026-09-26--lighthaven-errand-turn-in-and-autosave-t4c-0064) |
-| T4C-0065 | Quest Journal split into In Progress / Completed tabs with chain-stage progress shown for the Passage to Avalon and Godsforged lines, plus a new Monster Kill Log window tallying every kill by creature type | Systems/UI | Done | _this PR_ | [2026-09-26](CHANGELOG.md#2026-09-26--quest-journal-tabs-chain-progress-and-a-monster-kill-log-t4c-0065) |
+| T4C-0065 | Quest Journal split into In Progress / Completed tabs with chain-stage progress shown for the Passage to Avalon and Godsforged lines, plus a new Monster Kill Log window tallying every kill by creature type | Systems/UI | Done | `5834d597` | [2026-09-26](CHANGELOG.md#2026-09-26--quest-journal-tabs-chain-progress-and-a-monster-kill-log-t4c-0065) |
+| T4C-0066 | Original-game quest audit (t4cbible.com) + first fixes: placed Gabriel Archonis/Gaenen Elthorn in the Oracle's final chamber and Dwarthon Stoneface at Bane Blackblood's castle, and wired the "Audience to Bane Blackblood" quest gate (kill Delwobble) that none of that content could previously complete | Content/Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--three-original-game-npcs-that-were-never-actually-placed-t4c-0066) |
 
 ## Type legend
 
