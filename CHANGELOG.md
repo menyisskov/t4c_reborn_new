@@ -13,6 +13,14 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — Groundwork for new high-level spell art (T4C-0079) (Process/Tooling)
+
+### Added
+- **The project can now bring in brand-new spell animations.** The level 350 and 400 elemental
+  nukes are set up to get their own newly drawn impact effects, one per element, as a step
+  beyond the recolored bursts the level 250+ spells got. Nothing looks different in game yet:
+  each element switches over once its new art has been made and checked, starting with fire.
+
 ## 2026-09-27 — GM summon monster count (T4C-0078) (Process/Tooling)
 
 ### Changed

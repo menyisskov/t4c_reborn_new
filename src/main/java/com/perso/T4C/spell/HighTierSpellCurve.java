@@ -2,6 +2,7 @@ package com.perso.T4C.spell;
 
 import com.perso.T4C.config.GameConstants;
 import java.util.List;
+import java.util.Map;
 
 /**
  * One shared power curve for the high-tier (level 150-400) attack spells, so every school gets a
@@ -117,8 +118,25 @@ public final class HighTierSpellCurve {
    * plain impact every lower-level spell of the same element/shape already uses. */
   private static final int ASCENDED_TIER_THRESHOLD = 250;
 
+  /** Tiers at or above this get a brand-new "Mythic" impact animation (T4C-0079) for every
+   * element listed in {@link #MYTHIC_IMPACTS}; an element without one keeps the Ascended impact. */
+  public static final int MYTHIC_TIER_THRESHOLD = 350;
+
+  /**
+   * Element to the base name of its newly drawn Mythic impact, packed by
+   * {@code tools.MythicVfxPacker} (T4C-0079). One animation per element serves both shapes - the
+   * area version already reads differently through {@link GrandImpactShower}. Only list an element
+   * once its frames are actually packed: {@code MythicVfxAssetTest} fails on a listed element
+   * with missing or broken frames.
+   */
+  public static final Map<Integer, String> MYTHIC_IMPACTS = Map.of();
+
   public static SpellData attack(String key, int spellId, int element, int tier, Shape shape) {
     Visuals v = Visuals.of(element, shape, tier >= ASCENDED_TIER_THRESHOLD);
+    String mythic = tier >= MYTHIC_TIER_THRESHOLD ? MYTHIC_IMPACTS.get(element) : null;
+    if (mythic != null) {
+      v = v.withImpact(mythic + "-");
+    }
     boolean area = shape == Shape.AREA;
     String damage = damageFormula(element, tier, shape);
     return new SpellData(
@@ -190,6 +208,11 @@ public final class HighTierSpellCurve {
       String soundImpact,
       int visualEffect,
       int visualEffectTarget) {
+
+    Visuals withImpact(String newImpact) {
+      return new Visuals(
+          icon, projectile, newImpact, sound, soundImpact, visualEffect, visualEffectTarget);
+    }
 
     static Visuals of(int element, Shape shape, boolean ascended) {
       boolean area = shape == Shape.AREA;

@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0079`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0080`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -91,6 +91,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0076 | Removed plain Healing Potion from monster loot tables (higher tiers untouched); brought 19 monsters whose gold drop had drifted well under the roster's established level curve back in line, with a `MonsterGoldCurve` helper and an invariant test guarding it | Content/Fix | In Progress | | |
 | T4C-0077 | Level 250+ elemental attack spells (`HighTierSpellCurve`) now render a palette-shifted "Ascended" impact instead of reusing the plain lower-tier burst; recolors generated from the legacy animation frames via a new `AscendedVfxGenerator` tool | Content/Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--new-colors-for-the-strongest-elemental-spells-t4c-0077) |
 | T4C-0078 | GM `.summon monster` now takes an optional count (e.g. `.summon monster wolf 20`) and the summoned monsters never respawn on their own | Process/Tooling | Done | | [2026-09-27](CHANGELOG.md#2026-09-27--gm-summon-monster-count-t4c-0078-processtooling) |
+| T4C-0079 | New (not recolored) impact art for the level 350+ elemental attack spells: `MythicVfxPacker` tool + tier-350 wiring + tests shipped; the art itself (SpriteCook, fire pilot first) is pending the SpriteCook sign-in - runbook in `docs/content-ideas/mythic-spell-vfx.md` | Process/Tooling | In Progress | | [2026-09-27](CHANGELOG.md#2026-09-27--groundwork-for-new-high-level-spell-art-t4c-0079-processtooling) |
 
 ## Type legend
 
