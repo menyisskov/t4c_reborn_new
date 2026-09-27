@@ -67,6 +67,7 @@ public final class MythicVfxPacker {
       System.err.println(
           "Usage: MythicVfxPacker <input dir|sheet.png> <TargetBase> [--frames N] [--cols C]"
               + " [--downscale k] [--grow-in n] [--hold n] [--match RefBase | --ground Y]"
+              + " [--strip-matte]"
               + " [--preview dir] [--dry-run]"
               + " [--sprites assets/sprites]\n"
               + "       MythicVfxPacker --export <RefBase> <outDir>");
@@ -80,6 +81,7 @@ public final class MythicVfxPacker {
     int hold = 1;
     int growIn = 0;
     Integer ground = null;
+    boolean stripMatte = false;
     String match = "GreatExplosion";
     Path preview = null;
     boolean dryRun = false;
@@ -92,6 +94,7 @@ public final class MythicVfxPacker {
         case "--hold" -> hold = Integer.parseInt(args[++i]);
         case "--grow-in" -> growIn = Integer.parseInt(args[++i]);
         case "--ground" -> ground = Integer.parseInt(args[++i]);
+        case "--strip-matte" -> stripMatte = true;
         case "--match" -> match = args[++i];
         case "--preview" -> preview = Path.of(args[++i]);
         case "--dry-run" -> dryRun = true;
@@ -103,7 +106,9 @@ public final class MythicVfxPacker {
       throw new IllegalArgumentException("TargetBase must be a bare name like MythicFire");
     }
 
-    List<BufferedImage> raw = hold(growIn(readFrames(input, frames, cols), growIn), hold);
+    List<BufferedImage> read = readFrames(input, frames, cols);
+    if (stripMatte) read = read.stream().map(MythicVfxPacker::stripMatte).toList();
+    List<BufferedImage> raw = hold(growIn(read, growIn), hold);
     Bounds reference = ground == null ? referenceBounds(spriteDir, match) : null;
     List<SpriteBinWriter.Entry> entries = pack(raw, targetBase, downscale, reference, ground);
     System.out.println(
@@ -393,6 +398,34 @@ public final class MythicVfxPacker {
     for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
         out.setRGB(x, y, src.getRGB(x * k + k / 2, y * k + k / 2));
+      }
+    }
+    return out;
+  }
+
+  /** SpriteCook's default animation matte (#808080), composited behind frames before removal. */
+  static final int MATTE_GRAY = 128;
+
+  private static final int MATTE_TOLERANCE = 3;
+
+  /**
+   * Clears pixels within {@value #MATTE_TOLERANCE} of the neutral matte gray. Generated
+   * animations can end on a frame that is nothing but leftover matte, and leak a few matte pixels
+   * at edges elsewhere. The band is kept narrow so real grays in the art (smoke, rock) survive.
+   */
+  static BufferedImage stripMatte(BufferedImage src) {
+    BufferedImage out = copy(src);
+    for (int y = 0; y < out.getHeight(); y++) {
+      for (int x = 0; x < out.getWidth(); x++) {
+        int argb = out.getRGB(x, y);
+        int r = (argb >> 16) & 0xFF;
+        int g = (argb >> 8) & 0xFF;
+        int b = argb & 0xFF;
+        if (Math.abs(r - MATTE_GRAY) <= MATTE_TOLERANCE
+            && Math.abs(g - MATTE_GRAY) <= MATTE_TOLERANCE
+            && Math.abs(b - MATTE_GRAY) <= MATTE_TOLERANCE) {
+          out.setRGB(x, y, 0);
+        }
       }
     }
     return out;

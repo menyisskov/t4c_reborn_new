@@ -7,18 +7,25 @@ SpriteCook plugin and packed by `tools.MythicVfxPacker`.
 
 ## Status
 
-| Element | Base name | Art | Packed | Listed in `MYTHIC_IMPACTS` |
-|---|---|---|---|---|
-| Fire | `MythicFire` | not generated | no | no |
-| Earth | `MythicEarth` | not generated | no | no |
-| Air | `MythicAir` | not generated | no | no |
-| Water | `MythicWater` | not generated | no | no |
-| Light | `MythicLight` | not generated | no | no |
-| Dark | `MythicDark` | not generated | no | no |
+All six elements are generated, packed and listed in `MYTHIC_IMPACTS` (2026-09-27). The
+source stills and 16-frame sheets are kept next to this file (`mythic-spell-vfx/`), and their
+SpriteCook asset IDs are in `mythic-spell-vfx/spritecook-assets.json`. Re-pack from those
+sheets instead of paying to regenerate. Every element was packed with the same command:
 
-The pipeline (packer, tier wiring, tests) shipped first. The 2026-09-27 session found the
-SpriteCook MCP server installed but in `needs_auth`: the owner has to sign it in (`/mcp` in an
-interactive session, or the desktop app's Connectors settings) before any art can be generated.
+`MythicVfxPacker <Base>-sheet.png <Base> --frames 16 --cols 16 --strip-matte --grow-in 3 --hold 2 --ground 0`
+
+Cost of the whole pass: 192 credits, out of the 3,000 the account had. That was 6 stills at 12
+credits each (72) and 6 animations at 20 each (120). The two reference uploads were free.
+Everything went on the first try, and nothing was re-rolled.
+
+Lessons from the run:
+- **Animations end on a matte frame.** SpriteCook composites frames over #808080 before
+  removing the background, and the last frame of fire, air and light came back as nothing but
+  that gray. `--strip-matte` clears the narrow matte band (within 3 of 128 in every channel).
+- **Generated sequences open at full size.** The "starts as a small spark" part of the prompt
+  was ignored, so `--grow-in 3` builds the eruption from the first frame instead.
+- **Still sizes vary a lot** for the same 128x128 hint: 100 px for air, 232 px for water.
+  Packing them at native size was acceptable. Ask for a size in the prompt if it matters.
 
 ## Spend credits carefully
 
@@ -30,7 +37,7 @@ once fire is packed and looks right in game.
    bad still wastes it.
 3. Use `variations: 1`. If the still misses, fix the prompt rather than asking for 4 variations.
 
-## Steps (fire pilot)
+## Steps (as run for fire, then repeated per element)
 
 All commands run from the repo root after `mvn -q compile`, with `CP` holding the Maven classpath
 (`mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt`). Keep outputs in a scratch
@@ -62,7 +69,7 @@ directory, not the repo.
      smoke until nothing remains. The effect stays centered in place; it does not travel."
    - `negative_prompt`: "character, person, ground tiles, camera movement, text".
 5. **Dry-run the packer** and inspect the contact sheet:
-   `java -cp "target/classes;$CP" com.perso.T4C.tools.MythicVfxPacker <sheet.png> MythicFire --frames 16 --cols <cols> --hold 2 --dry-run --preview <scratch>/preview`
+   `java -cp "target/classes;$CP" com.perso.T4C.tools.MythicVfxPacker <sheet.png> MythicFire --frames 16 --cols 16 --strip-matte --grow-in 3 --hold 2 --ground 0 --dry-run --preview <scratch>/preview`
    - Add `--downscale k` if the sheet's cells are upscaled (the pixel grid is k screen pixels wide).
    - `--hold 2` makes 16 frames last about as long as the 33-frame GreatExplosion, since impact
      frames play at one fixed rate.

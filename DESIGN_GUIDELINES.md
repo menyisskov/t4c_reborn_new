@@ -127,6 +127,22 @@ share the exact impact sprite of the low-level spell it was copied from:
     screen box of a reference legacy impact (`--match`, default `GreatExplosion`) and mirrors
     `off2X = 32 - width - off1X`, the relation every legacy sprite satisfies. Round-tripping
     `GreatExplosion`'s own frames through the packer reproduces its original offsets exactly.
+  - **Ground-erupting effects** (all six Mythic impacts are) use `--ground 0` instead of
+    `--match`: centered on the tile, lowest pixel at y=0. That puts the base ring at the same
+    ground height as the legacy `64kSpellFireCircle` ground ring. Matching a mid-air explosion's
+    box would sink a tall pillar's base far below the tile.
+  - **No pop-in, legacy length:** generated animations tend to open at full size, so
+    `--grow-in 3` prepends three frames of the first frame scaled up from the ground. `--hold 2`
+    doubles each frame, because impact frames play at one fixed rate and SpriteCook's pixel mode
+    caps at 16 frames. The result is 38 frames, about GreatExplosion's 33.
+  - **Matte leftovers:** SpriteCook composites animation frames over #808080 before removing
+    the background, and a sequence can end on a frame of pure matte gray. Always pack generated
+    art with `--strip-matte`.
+  - **Spending generation credits (owner's call):** pilot one element, inspect every still
+    before paying to animate it, use one variation, and reuse the recorded asset IDs and saved
+    sheets rather than regenerating (`docs/content-ideas/mythic-spell-vfx/`).
+  - **Size:** frames are packed at native generated size (roughly 100-230 px tall), never
+    rescaled by a non-integer factor. A pillar two or three characters tall suits the top tier.
   - **Look before packing:** run with `--dry-run --preview <dir>` and inspect the contact sheet
     (each frame drawn at its real offset over the tile outline) before writing the sprite bins.
   - The generation settings and prompts live in `docs/content-ideas/mythic-spell-vfx.md`.

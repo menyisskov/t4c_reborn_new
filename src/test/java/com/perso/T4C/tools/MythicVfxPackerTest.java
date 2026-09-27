@@ -115,6 +115,46 @@ class MythicVfxPackerTest {
   }
 
   @Test
+  void stripMatteClearsOnlyTheNeutralMatteBand() {
+    BufferedImage img = new BufferedImage(4, 1, BufferedImage.TYPE_INT_ARGB);
+    img.setRGB(0, 0, 0xFF7F7F7F); // matte (127)
+    img.setRGB(1, 0, 0xFF838080); // matte within tolerance
+    img.setRGB(2, 0, 0xFF707070); // darker smoke gray: kept
+    img.setRGB(3, 0, 0xFF8080C0); // tinted: kept
+    BufferedImage out = MythicVfxPacker.stripMatte(img);
+    assertEquals(0, out.getRGB(0, 0) >>> 24);
+    assertEquals(0, out.getRGB(1, 0) >>> 24);
+    assertEquals(0xFF707070, out.getRGB(2, 0));
+    assertEquals(0xFF8080C0, out.getRGB(3, 0));
+  }
+
+  @Test
+  void growInScalesTheFirstFrameUpFromItsBase() {
+    BufferedImage first = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
+    fill(first, 1, 2, 0, 4, 8, RED); // 4 wide, 8 tall, base on the bottom row
+    List<BufferedImage> out = MythicVfxPacker.growIn(List.of(first), 1);
+    assertEquals(2, out.size());
+    assertEquals(first, out.get(1));
+    int[] box = MythicVfxPacker.opaqueBox(out.get(0));
+    // Half size, still standing on the same base row and centered on the same column.
+    assertEquals(7, box[3]);
+    assertEquals(4, box[3] - box[1] + 1);
+    assertEquals(2, box[2] - box[0] + 1);
+    assertEquals(3, box[0]);
+  }
+
+  @Test
+  void groundAlignmentPutsTheLowestPixelOnTheGroundAndCentersOnTheTile() {
+    BufferedImage a = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
+    fill(a, 1, 3, 5, 6, 10, RED);
+    List<SpriteBinWriter.Entry> entries =
+        MythicVfxPacker.pack(List.of(a), "MythicTest", 1, null, 0);
+    SpriteBinWriter.Entry e = entries.get(0);
+    assertEquals(0, e.off1Y() + e.height() - 1);
+    assertEquals(MythicVfxPacker.TILE_MIRROR / 2, e.off1X() + (e.width() - 1) / 2);
+  }
+
+  @Test
   void emptyBeatKeepsItsSlot() {
     BufferedImage a = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
     fill(a, 1, 2, 2, 3, 3, RED);

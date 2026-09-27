@@ -13,13 +13,17 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
-## 2026-09-27 — Groundwork for new high-level spell art (T4C-0082) (Process/Tooling)
+## 2026-09-27 — All-new spell effects for the level 350 and 400 nukes (T4C-0082)
 
-### Added
-- **The project can now bring in brand-new spell animations.** The level 350 and 400 elemental
-  nukes are set up to get their own newly drawn impact effects, one per element, as a step
-  beyond the recolored bursts the level 250+ spells got. Nothing looks different in game yet:
-  each element switches over once its new art has been made and checked, starting with fire.
+### Changed
+- **The strongest elemental spells finally have effects of their own.** The level 350 and 400
+  attack spells of every school now erupt with a brand-new animation instead of a recolored
+  version of an old one. Fire raises a roaring white-gold pillar of flame. Earth rips jagged
+  obsidian spires with glowing magma seams out of the ground. Air spins up a violet lightning
+  vortex. Water surges into a spike that freezes and shatters. Light slams down a column of
+  golden holy light. Dark tears open a void wrapped in writhing shadow tendrils. Each one grows
+  out of the ground, blazes at full strength, then crumbles away. The area versions still rain
+  several of them across the target zone.
 
 ## 2026-09-27 — Endgame monsters drop more useful potions (T4C-0081)
 

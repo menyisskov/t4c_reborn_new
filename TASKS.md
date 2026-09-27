@@ -94,7 +94,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0079 | Renew Armor's mana cost is now the sum of all ten spells it can recast, and it costs 20,000,000 gold to learn | Content/Balance | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--renew-armors-real-price-t4c-0079) |
 | T4C-0080 | A dead monster's body now fades from view 3-5 seconds after death, instead of lying there for the whole (often much longer) respawn wait | Content/Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--corpses-dont-linger-t4c-0080) |
 | T4C-0081 | Every monster level 300+ now has a 5% chance each to also drop a mana prism and a critical healing potion | Content/Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--endgame-monsters-drop-more-useful-potions-t4c-0081) |
-| T4C-0082 | New (not recolored) impact art for the level 350+ elemental attack spells: `MythicVfxPacker` tool + tier-350 wiring + tests shipped; the art itself (SpriteCook, fire pilot first) is pending the SpriteCook sign-in - runbook in `docs/content-ideas/mythic-spell-vfx.md` | Process/Tooling | In Progress | `6d9d458` | [2026-09-27](CHANGELOG.md#2026-09-27--groundwork-for-new-high-level-spell-art-t4c-0082-processtooling) |
+| T4C-0082 | Level 350+ elemental attack spells render brand-new SpriteCook-drawn impact animations (one per element) via a new `MythicVfxPacker` tool, on top of the 150+ shower and 250+ Ascended recolor | Content | Done | `6d9d458`, _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--all-new-spell-effects-for-the-level-350-and-400-nukes-t4c-0082) |
 
 ## Type legend
 

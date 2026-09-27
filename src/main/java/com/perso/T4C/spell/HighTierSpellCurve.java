@@ -129,7 +129,14 @@ public final class HighTierSpellCurve {
    * once its frames are actually packed: {@code MythicVfxAssetTest} fails on a listed element
    * with missing or broken frames.
    */
-  public static final Map<Integer, String> MYTHIC_IMPACTS = Map.of();
+  public static final Map<Integer, String> MYTHIC_IMPACTS =
+      Map.of(
+          FIRE, "MythicFire",
+          EARTH, "MythicEarth",
+          AIR, "MythicAir",
+          WATER, "MythicWater",
+          LIGHT, "MythicLight",
+          DARK, "MythicDark");
 
   public static SpellData attack(String key, int spellId, int element, int tier, Shape shape) {
     Visuals v = Visuals.of(element, shape, tier >= ASCENDED_TIER_THRESHOLD);
