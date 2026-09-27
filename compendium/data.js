@@ -33033,8 +33033,8 @@ window.T4C_DATA = {
         {
           "name": "Tideworn Reaver",
           "displayName": "Tideworn Reaver",
-          "x": 1519.0,
-          "y": 1241.0,
+          "x": 1571.0,
+          "y": 1265.0,
           "tier": "trash"
         },
         {
@@ -33096,8 +33096,8 @@ window.T4C_DATA = {
         {
           "name": "Tideworn Reaver",
           "displayName": "Tideworn Reaver",
-          "x": 1514.0,
-          "y": 1232.0,
+          "x": 1595.0,
+          "y": 1268.0,
           "tier": "trash"
         },
         {
