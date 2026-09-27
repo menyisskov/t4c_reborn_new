@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * One shared power curve for the high-tier (level 150-400) attack spells, so every school gets a
+ * One shared power curve for the high-tier (level 150-350) attack spells, so every school gets a
  * spell at the same levels with the same requirements and the same damage at those requirements
  * (T4C-0025). Each spell class in {@code spell.definition} just picks its element, tier and shape
  * and delegates here; all balancing lives in this one file.
@@ -17,11 +17,12 @@ import java.util.Map;
  * other casting stat - i.e. {@code 3.1L} of the {@code ~5L} points earned by level {@code L},
  * which even a first-life (never reborn) character can reach while still putting the rest into
  * endurance. Air, the hybrid school, splits the same total evenly ({@code 1.55L} each). At the
- * level cap (400) that is 1000 Intelligence (or Wisdom), matching a well-built caster there.
+ * top tier (350) that is 875 Intelligence (or Wisdom). The ladder stops at 350 although the level
+ * cap is 400: the level-400 rung was removed (T4C-0084).
  *
  * <p><b>Damage</b> is {@code (1d(L/5) + L/2 + stat/4) * power/resist}, times 6 for a single-target
  * bolt or 5 for an area spell (which hits everything in its radius). At exactly the requirements
- * that is ~7.35L per bolt (1100 at 150, 2940 at 400) - roughly a dozen casts for a same-level
+ * that is ~7.35L per bolt (1100 at 150, ~2570 at 350) - roughly a dozen casts for a same-level
  * monster - and it keeps climbing as the caster's stat outgrows the requirement. Air uses
  * {@code (int+wis)/5} for its stat term so a hybrid caster at requirements lands on the same
  * number.
@@ -35,7 +36,7 @@ public final class HighTierSpellCurve {
   public static final int DARK = 6;
 
   /** The tiers every school has exactly one attack spell at. */
-  public static final List<Integer> TIERS = List.of(150, 200, 250, 300, 350, 400);
+  public static final List<Integer> TIERS = List.of(150, 200, 250, 300, 350);
 
   /** Single-target bolt or ground-targeted area spell. */
   public enum Shape {

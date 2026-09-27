@@ -4,6 +4,7 @@ import com.perso.T4C.combat.SeraphAuraService;
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spell.RemovedSpells;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellEffectManager;
 import com.perso.T4C.spell.SpellRegistry;
@@ -44,6 +45,7 @@ public final class PlayerStateMapper {
     state.statPoints = player.getStatPoints();
     state.skillPoints = player.getSkillPoints();
     state.rebirthCount = player.getRebirthCount();
+    state.gmRank = player.getStoredGmRank().name();
     state.spells = player.getSpells();
     state.quickSlots = player.getQuickSlots();
     state.macros = player.getMacros();
@@ -98,11 +100,30 @@ public final class PlayerStateMapper {
     // so cap it. The __FLAG_NUMBER_OF_REMORTS quest flag is left as saved: RemortNPC2 derives the
     // character's base attributes from it, and those were already granted.
     player.setRebirthCount(Math.min(state.rebirthCount, GameConstants.REBIRTH_MAX_REMORTS));
-    player.setSpells(state.spells);
-    player.setQuickSlots(state.quickSlots);
+    player.setGmRank(com.perso.T4C.player.GmRank.fromSave(state.gmRank));
+    // T4C-0084: spells taken out of the game (RemovedSpells) vanish from every place a save can
+    // still name them - spellbook, quick slots, macros (and active buffs, below). No refund.
+    player.setSpells(
+        state.spells == null
+            ? state.spells
+            : new ArrayList<>(
+                state.spells.stream().filter(name -> !RemovedSpells.isRemoved(name)).toList()));
+    player.setQuickSlots(
+        state.quickSlots == null
+            ? state.quickSlots
+            : new ArrayList<>(
+                state.quickSlots.stream()
+                    .filter(slot -> slot == null || !RemovedSpells.isRemoved(slot.getSpell()))
+                    .toList()));
     // Saves predating T4C-0059 have no macros of their own; they start empty rather than
     // inheriting whatever game_preferences.json used to hold for every character at once.
-    player.setMacros(state.macros != null ? new ArrayList<>(state.macros) : new ArrayList<>());
+    player.setMacros(
+        state.macros != null
+            ? new ArrayList<>(
+                state.macros.stream()
+                    .filter(m -> m == null || !RemovedSpells.isRemoved(m.getSpellName()))
+                    .toList())
+            : new ArrayList<>());
     applyActiveBuffs(state, player);
     player.setInventory(state.inventory);
     player.setEquippedItems(toEquippedItems(state));
@@ -163,6 +184,9 @@ public final class PlayerStateMapper {
     }
     for (PlayerStateDto.ActiveBuffState buff : state.activeBuffs) {
       if (buff == null || buff.spellName == null || buff.spellName.isEmpty()) {
+        continue;
+      }
+      if (RemovedSpells.isRemoved(buff.spellName)) {
         continue;
       }
       boolean unlimited =

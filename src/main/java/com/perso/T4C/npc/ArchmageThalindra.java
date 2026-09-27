@@ -12,9 +12,10 @@ import java.util.List;
 // Spell trainer at the Avalon Sanctuary Spell Trainer's Tower door (1362,1512), worldZ 0. Wired
 // declaratively via OPEN_SPELL_LEARNING actions, exactly as SkywatchIlvara teaches Leyward
 // Bastion. "train"/"learn" opens Avalon's ley-line support spells (Veilstone Aegis, Wellspring
-// Mercy, Leyward Bastion, Dawnwell Renewal, Sanctum Ward). Naming a school ("fire", "water",
+// Mercy, Leyward Bastion, Dawnwell Renewal). Naming a school ("fire", "water",
 // "earth", "air", "dark", "light") opens that school's high-tier attack ladder - one spell at each
-// of levels 150/200/250/300/350/400, all built on HighTierSpellCurve (T4C-0025). "mantle" opens a
+// of levels 150/200/250/300/350 (the 400 rung was removed, T4C-0084), all built on
+// HighTierSpellCurve (T4C-0025). "mantle" opens a
 // small shop of the six elemental archmage mantles.
 @Spawn(type = "ArchmageThalindra", x = 1362, y = 1512, z = 0, stationary = false, aggressive = false)
 public final class ArchmageThalindra extends ScriptedNpc {
@@ -55,8 +56,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "veilstone_aegis",
                               "wellspring_mercy",
                               "leyward_bastion",
-                              "dawnwell_renewal",
-                              "sanctum_ward")))),
+                              "dawnwell_renewal")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.archmagethalindra.1.0}"),
@@ -84,8 +84,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "pyreburst",
                               "magmaheart_lance",
                               "sunforge_brand",
-                              "emberqueens_wrath",
-                              "ashfall")))),
+                              "emberqueens_wrath")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.archmagethalindra.5.0}"),
@@ -98,8 +97,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "frostgale",
                               "abyssal_spear",
                               "tidebreaker",
-                              "drowning_deep",
-                              "cataclysms_herald")))),
+                              "drowning_deep")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.archmagethalindra.6.0}"),
@@ -112,8 +110,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "land_slide",
                               "gravebreaker",
                               "mountains_fist",
-                              "worldroot_upheaval",
-                              "tectonic_ruin")))),
+                              "worldroot_upheaval")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.archmagethalindra.7.0}"),
@@ -126,8 +123,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "thunderhead",
                               "skysplitter",
                               "tempest_lance",
-                              "stormcallers_judgment",
-                              "heavenfall")))),
+                              "stormcallers_judgment")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.archmagethalindra.8.0}"),
@@ -140,8 +136,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "shadowblight",
                               "soulrend",
                               "voidreave_lance",
-                              "umbral_tide",
-                              "eclipse_of_ruin")))),
+                              "umbral_tide")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.archmagethalindra.9.0}"),
@@ -154,8 +149,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "dawnflare",
                               "radiant_spear",
                               "seraphs_verdict",
-                              "hallowed_nova",
-                              "solar_apotheosis")))),
+                              "hallowed_nova")))),
               new NpcSpec.DialogueTopic(
                   List.of(
                       "${npc.topic_keyword.archmagethalindra.10.0}",

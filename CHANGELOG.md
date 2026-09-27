@@ -13,6 +13,30 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — The level-400 spells are gone (T4C-0084)
+
+### Removed
+- **The level-400 spells have been taken out of the game.** The six top-rung attack spells
+  (Ashfall, Tectonic Ruin, Heavenfall, Cataclysm's Herald, Solar Apotheosis and Eclipse of Ruin)
+  and the Sanctum Ward protection spell no longer exist. Every school's high-level ladder now ends
+  at level 350 with five spells, and Archmage Thalindra only teaches those.
+- If your character had learned any of them, they're gone from your spellbook, hotbar and macros
+  the next time you log in, and an active Sanctum Ward wears off. The gold spent on them is not
+  refunded.
+
+## 2026-09-27 — GM ranks and new GM commands (T4C-0083)
+
+### Added
+- **Characters now have a GM rank: player, GM or Super GM.** Only GMs can use the GM chat
+  commands; to everyone else they don't exist. Super GMs can promote other characters to GM or
+  Super GM, or take that rank away again. The server's owner characters are always Super GM.
+- **New GM commands.** GMs can now teleport to a named place or straight to an NPC, check their
+  exact position, view and change quest progress flags, forget a spell, see a full stat
+  summary (including armor class and elemental power and resistance), move their respawn point,
+  save on demand, turn on god mode (no damage) or peace mode (monsters ignore you), and summon
+  several copies of an item at once. Super GMs can also set the time of day and world-wide
+  flags.
+
 ## 2026-09-27 — All-new spell effects for the level 350 and 400 nukes (T4C-0082)
 
 ### Changed
