@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0083`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0084`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -95,6 +95,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0080 | A dead monster's body now fades from view 3-5 seconds after death, instead of lying there for the whole (often much longer) respawn wait | Content/Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--corpses-dont-linger-t4c-0080) |
 | T4C-0081 | Every monster level 300+ now has a 5% chance each to also drop a mana prism and a critical healing potion | Content/Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--endgame-monsters-drop-more-useful-potions-t4c-0081) |
 | T4C-0082 | Level 350+ elemental attack spells render brand-new SpriteCook-drawn impact animations (one per element) via a new `MythicVfxPacker` tool, on top of the 150+ shower and 250+ Ascended recolor | Content | Done | `6d9d458`, `af7e6c8` | [2026-09-27](CHANGELOG.md#2026-09-27--all-new-spell-effects-for-the-level-350-and-400-nukes-t4c-0082) |
+| T4C-0083 | GM ranks (player/GM/Super GM, saved per character, owner seed file) gating the GM commands, plus new GM commands: named/NPC teleport, position, quest/world flags, unlearn, stats, respawn point, save, god/peace modes, time of day, item summon counts | Systems/Tooling | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--gm-ranks-and-new-gm-commands-t4c-0083) |
 
 ## Type legend
 

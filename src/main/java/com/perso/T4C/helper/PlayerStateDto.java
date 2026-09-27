@@ -29,6 +29,7 @@ public class PlayerStateDto {
   public int statPoints;
   public int skillPoints;
   public int rebirthCount;
+  public String gmRank;
   public List<String> spells;
   public List<QuickSlotEntry> quickSlots;
   public List<com.perso.T4C.config.MacroBinding> macros;
