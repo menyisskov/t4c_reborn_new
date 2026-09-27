@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 class LighthavenSamaritanTest {
   @Test
   void registryCreatesTheNativeSamaritanWithoutReadingNpcDefinitions() throws Exception {
-    // T4C-0063 added one new NPC: WardenAelric (Renewed Wards quest giver).
+    // T4C-0068 added one new NPC: WardenAelric (Renewed Wards quest giver).
     assertEquals(492, NpcFactoryRegistry.registrations().size());
     assertInstanceOf(
         LighthavenSamaritan.class,
@@ -63,5 +63,26 @@ class LighthavenSamaritanTest {
     QuestDef quest = QuestRegistry.findById("lighthaven_samaritan_rats");
     assertNotNull(quest);
     assertEquals(QuestService.STATUS_ACTIVE, player.getQuestFlag(QuestService.statusFlag(quest)));
+  }
+
+  @Test
+  void errandTurnsInTheRatQuestOnceTheKillsAreDone() throws Exception {
+    QuestService quests = new QuestService(XpCurve.loadDefault(), null, null);
+    LighthavenSamaritan npc = new LighthavenSamaritan(new NpcContext(quests));
+    Player player = new Player();
+    LighthavenSamaritan.DialogueTopic errand =
+        npc.getTopics().stream()
+            .filter(topic -> "errand".equals(topic.id()))
+            .findFirst()
+            .orElseThrow();
+    QuestDef quest = QuestRegistry.findById("lighthaven_samaritan_rats");
+    assertNotNull(quest);
+
+    npc.onTopic(errand, player);
+    player.setQuestFlag(QuestService.killsFlag(quest), quest.getRequiredKills());
+    npc.onTopic(errand, player);
+
+    assertEquals(
+        QuestService.STATUS_COMPLETED, player.getQuestFlag(QuestService.statusFlag(quest)));
   }
 }

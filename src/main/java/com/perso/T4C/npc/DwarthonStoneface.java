@@ -8,7 +8,13 @@ import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "DwarthonStoneface", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+// T4C-0066: was unplaced (x=0,y=0,z=0) despite having real dialogue content - see the canon
+// "Audience to Bane Blackblood" quest (t4cbible.com/RavensDustQ), which names him as standing
+// "west of Bane's Throne". Placed a few tiles west of BaneBlackblood's own real spot (342,1679,0)
+// - not the exact same tile as monster/DWARTHONSTONEFACE.java's (303,1678,0), a separate, older
+// duplicate stat-monster of the same name/location that this pass deliberately leaves alone
+// (removing it touches the SpawnGroup0168 pooled-spawn system, which needs its own careful pass).
+@Spawn(type = "DwarthonStoneface", x = 320, y = 1671, z = 0, stationary = false, aggressive = false)
 public final class DwarthonStoneface extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -166,6 +172,24 @@ public final class DwarthonStoneface extends ScriptedNpc {
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        // T4C-0066: the "Audience to Bane Blackblood" quest gate. "__QUEST_DWARTHON_STONEFACE" is
+        // read by BaneBlackblood.java's own onConversationStart (`!= 5` blocks all conversation) -
+        // a dedicated gate flag, independent of that same class's own "__QUEST_ROYAL_KEY4"
+        // negotiation counter used for a later, unrelated quest. Killing Delwobble (see
+        // monster/Delwobble.java) is what actually advances this flag to 5.
+        if (k.equals("BANE")) {
+          int q = c.flag("__QUEST_DWARTHON_STONEFACE");
+          if (q >= 5) {
+            c.sayKey("npc.dwarthonstoneface.bane.granted");
+          } else if (q >= 3) {
+            c.sayKey("npc.dwarthonstoneface.bane.reminder");
+          } else {
+            c.flag("__QUEST_DWARTHON_STONEFACE", 3);
+            c.sayKey("npc.dwarthonstoneface.bane.offer");
+          }
+          return true;
+        }
 
         if (k.equals("SUCK")
             || k.equals("ASSHOLE")

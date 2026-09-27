@@ -5,9 +5,9 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Cinder Whelp", x = 1870, y = 1570, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Cinder Whelp", x = 1860, y = 1582, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Cinder Whelp", x = 1920, y = 1630, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Cinder Whelp", x = 1950, y = 1580, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Cinder Whelp", x = 1932, y = 1599, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Cinder Whelp", x = 1860, y = 1640, z = 0, stationary = false, aggressive = true)
 public final class CinderWhelp extends DataMonster {
   // Reuses the Wolf animation/sound family (same precedent as FenrisWolf/GreatWolf) —

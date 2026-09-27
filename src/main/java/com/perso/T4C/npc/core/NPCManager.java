@@ -341,6 +341,11 @@ public class NPCManager {
         } else {
 
           log.info("NPC {} is too far away for interaction", npc.getName());
+
+          // T4C-0063: this branch used to log and tell the player nothing at all, so clicking
+          // someone you could not reach looked like the game ignoring the click. The sibling
+          // no-line-of-sight branch above always did say why.
+          SystemMessage.showShared(I18n.message("message.npc_too_far"));
         }
 
         return true;

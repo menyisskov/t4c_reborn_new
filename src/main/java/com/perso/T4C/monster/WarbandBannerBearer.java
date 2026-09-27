@@ -13,8 +13,8 @@ import com.perso.T4C.spawn.Spawn;
 // the on-demand Warband Warlord monster.
 @Spawn(
     type = "Warband Banner-Bearer",
-    x = 2280,
-    y = 2340,
+    x = 2285,
+    y = 2345,
     z = 0,
     stationary = false,
     aggressive = true)

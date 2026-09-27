@@ -202,7 +202,7 @@ quiz is gone; its i18n strings were deleted with it.
   pre-cast delay to "slow casting down" - change the exhaustion formulas instead. The progress bar is
   now only for harvesting and taming.
 - **The five protection spells (Barrier, Protection, Stone Skin, Mana Shield, Mana Surge) cast in
-  0ms - an explicit exception to the universal floor above (T4C-0062, owner's call).** Their
+  0ms - an explicit exception to the universal floor above (T4C-0067, owner's call).** Their
   mental/physical/attack exhaustion fields are literal `"0"`, not the level-scaled-decay formula
   every other spell uses. The floor exists to pace repeated *casting*; these five exist to be
   re-applied the instant you need them (before a fight, after a death, on a fresh double-click), and
@@ -212,7 +212,7 @@ quiz is gone; its i18n strings were deleted with it.
   window if one is already running. Give any future "protection spell" in this same family (a ward
   meant to be topped up on demand, not a combat-paced buff) the same 0/0/0 treatment.
 
-### The Ultra tier (T4C-0062)
+### The Ultra tier (T4C-0067)
 
 - **Naming/shape convention for a "stronger version of an existing spell":** prefix the name with
   `Ultra ` (`Ultra Barrier`, `Ultra Protection`, ...), keep every field identical to the base spell
@@ -623,6 +623,30 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   zone match still gets a schematic worldmap dot from its own `areaCenterX/Y`/`areaRadiusTiles`
   rather than showing nothing. Since T4C-0055 the map carries the location and the prose does
   not: walkthroughs no longer recite coordinates or tile radii, they say "the marked area".
+- **Naming a person is not telling the reader where they are (T4C-0062).** Every quest step that
+  says "talk to X", and every NPC page, must also answer "and where is X?". The site answers it
+  from data, never from prose: each NPC exports its own `@Spawn` position and the fast-travel
+  landmarks export from `NamedLocations`, and the page derives a landmark, a bearing and a
+  distance from those two. Three rules keep that honest:
+  - **Only name a landmark the reader can actually have.** A landmark gated behind a zone unlock
+    is offered only when some quest *other than the one being read, and given by somebody else*,
+    opens it at or before this point on the road. Elder Ophira stands in the Avalon Wilds, but
+    the Wilds entry is her own quest's reward, so her page routes via Avalon Sanctuary instead.
+  - **Only name a landmark you could walk from.** Past ~800 tiles the claim stops being a
+    shortcut and becomes a lie — two dungeon-level containers sit that far from the only landmark
+    on their level, with no route between. Those get their coordinates and no directions.
+  - **Only link a map that really pins them.** Being listed under a zone is not the same as being
+    inside that zone map's cropped box; four quest-givers are stationed back in town, outside it.
+    Link the map that carries the pin, or no map at all.
+
+  **Known gap (T4C-0062):** Tide Warden Bryn, Sentinel Corwin, Outrider Halvard and Dockmaster
+  Thessaly are listed under a zone whose map does not reach them, so they show no map link. The
+  fix is on the map side (widen the crop, or pin the giver separately), not the prose side.
+
+  **Deferred (T4C-0062):** showing a picture of each NPC alongside the directions. NPCs are
+  paper-doll composites of body-part sprites, so this needs a new headless exporter compositing
+  them out of the sprite bins — nothing on the site renders sprite art today. Agreed with the
+  owner to land as its own pass.
 
 ### 4a. Editorial rules for the site (T4C-0055)
 
@@ -681,14 +705,46 @@ should not consume it), that is a content change, not an editorial one, and need
   it, `verify-website` whenever website-visible data or pages change, and `technical-writer`
   whenever any player-facing wording changes (they pair: one checks the data and the render,
   the other checks the words).
+- **A coordinate is not a placement (T4C-0063).** Anything given a `@Spawn` has to stand on
+  ground a player can walk to, and picking coordinates off a map picture does not establish
+  that: deep *and* shallow water both block movement, as does scenery. Thirty-three of this
+  fork's own spawns were unreachable before anyone noticed — Harbormaster Rangor in the sea
+  west of Windhowl, and every Sunken Chancel creature including its boss, which made that
+  zone's quest impossible to finish. Two rules, both enforced by
+  `spawn/SpawnPlacementTest`:
+  - Check against `worldmap.colbin`, not against the minimap PNGs. The minimaps are coloured
+    from ground art, so open sea looks like a perfectly good beach on them.
+  - Walkable is not the same as reachable. A spawn also needs a decent stretch of *connected*
+    walkable ground around it, or it is on a sandbar nobody can stand next to.
+
+  The fork's own content lists live in `content/ForkContent`, shared by the compendium
+  exporter and that test, so adding new content can never register with one and not the other.
+  **Known gap:** the inherited legacy content has roughly 200 spawns on blocking tiles. That is
+  its own much larger piece of work, and the test is deliberately scoped to this fork's content
+  so it stays green and meaningful rather than being switched off.
 
 ## 6. Quests
-- **Don't change the original game's quests** (owner, T4C-0038). That covers the quests and quest
-  hooks carried over from the original T4C (NPC dialogue that mentions or promises a quest, such
-  as the Dragon's Crypt tomb raider, Mirak's goblin bounty, Tristan's caravan or Rhodar's hammer),
-  as well as their rewards. Only quests this project authored itself may be extended.
-  Content-pass backlog ideas that would "finish" an original quest hook are off the table unless
-  the owner asks for one by name.
+- **T4C-0038's "don't touch the original quests" default is superseded for this content specifically**
+  (owner, in chat, T4C-0066): the owner has asked to audit the original game's own quests against
+  the real reference data and fill in what's genuinely missing or broken - the Dragon's Crypt tomb
+  raider, Mirak's goblin bounty, Tristan's caravan, Rhodar's hammer and the like are now in scope,
+  not off the table. T4C-0038's original point still holds for anything the owner *hasn't* asked
+  about: don't invent new rewards or storylines for original content on your own initiative -  the
+  scope here is "make the real thing actually work end to end," not "improve on it."
+- **Read this before assuming any original-game quest content is missing (T4C-0066).** A full audit
+  found the overwhelming majority of it - the Dragon/Dark Fang chain, Mirak's Trust Quest, Stone of
+  Life, Book of Feylor, the Gypsy alignment quiz, the entire Crimsonscale Letter chain, the
+  Good/Evil Seraph endgame, the Oracle dungeon puzzle, most of Stoneheim - is **already real,
+  spawned, working content**, just built on an older per-NPC flag system (`__QUEST_*`,
+  `ADDON_STORYLINE_PROGRESS`, `npcFlag`/`globalFlag`) that predates `quest/QuestDef`/`QuestService`
+  and therefore never shows up in the Quest Journal. Before writing a new NPC/monster/quest for
+  "missing" original content: grep `npc/`/`monster/` for a class matching the canon name (try
+  PascalCased/apostrophe-stripped variants, e.g. "Eye-Patched Qardos" -> `EyePatchedQardos.java`)
+  and read its `javaBehavior()` - it is very likely already there and already working, and the real
+  gap (if any) is usually a missing `@Spawn` placement, a missing kill-counter hookup, or one
+  un-wired turn-in keyword on an otherwise-complete NPC, not a from-scratch build. A full canon
+  reference (all 5 islands' quests, the NPC/monster/drop/trader charts) was captured from
+  t4cbible.com during this pass; ask the owner or re-scrape if a future pass needs it again.
 - Every zone-unlock quest added by the T4C-0019 pass follows the same mechanical shape: kill N
   of a monster in one area, turn in one boss-drop item, unlock fast travel to a zone. That's a
   fine default for a minor zone gate, but it undersells a **major** new location - see below for
@@ -729,7 +785,7 @@ should not consume it), that is a content change, not an editorial one, and need
 - A new quest stage must be added to `CompendiumExporter`'s `NEW_QUEST_IDS` allowlist (and a new
   NPC, if any, to `NEW_NPC_IDS`) or it silently never appears on the reference website - the
   exporter only emits quests/NPCs it's been told are new-since-fork.
-- **A quest can grant a spell reward (T4C-0063).** `QuestDef.rewardSpellKey` (parallel to the
+- **A quest can grant a spell reward (T4C-0068).** `QuestDef.rewardSpellKey` (parallel to the
   existing `rewardItemKey`) resolves via `SpellRegistry.findByName` and adds the spell's name to
   the player's known-spells list in `QuestService.complete()`'s `grantRewardSpell` step - same
   mechanical shape as the item grant, just for `player.getSpells()` instead of the inventory. Does
@@ -786,6 +842,28 @@ should not consume it), that is a content change, not an editorial one, and need
   spawn-group wiring anywhere) - a separate, pre-existing bug, not something this pass touched or
   depends on. Use `minLevel` the same way for any future "quality-of-life unlock" quest that
   should only be reachable once a character is already well past the early game.
+
+### Quest Journal tabs, chain-stage display, and the Monster Kill Log (T4C-0062)
+- The Quest Journal (`gui/screen/QuestScreen.java`) splits into an In Progress tab and a
+  Completed tab, filtered from `QuestService.statusFor()`. This is display-only - it doesn't
+  change when a quest actually completes, only where it's shown afterward.
+- `QuestChainInfo` (`quest/QuestChainInfo.java`) is a small, hand-maintained, UI-only map from
+  quest id to "chain name / stage N of M / prerequisite quest ids", used only to print a stage
+  line in the Journal's detail panel. It enforces nothing QuestService doesn't already enforce
+  (the giver NPC's own dialogue still does the real gating) - it only affects what a player reads.
+  Only two real multi-stage chains exist today: Passage to Avalon
+  (`tideworn_shore_scouts` → `passage_to_avalon`) and the Godsforged crafting chain
+  (`forge_the_godcore` + `bind_the_godsigil` → one of the five `forge_godsforged_*` finales).
+  Every other quest here - including a zone's own "borderwatch" access quest and the two
+  independent post-unlock Avalon quests - is deliberately *not* a chain (see each quest's own file
+  comment); don't add an entry to `QuestChainInfo` unless a quest is genuinely gated on another
+  quest's completion the way these two are.
+- **The `killlog.<canonical monster name>` quest-flag namespace is reserved** for the global,
+  per-monster-type kill tally (`QuestService.killLogFlag()`/`killLog()`, backing the Monster Kill
+  Log screen, Ctrl+K). It's written on *every* recognized kill, independent of any quest, using
+  `MonsterRegistry.findByName()`'s canonical name so aliased spawns (e.g. `"Rat"` → `Brown Rat`)
+  share one counter. Don't reuse the `killlog.` prefix for a quest-specific flag - use `quest.<id>.*`
+  for those, as every quest already does.
 
 ## 7. Economy
 
@@ -867,6 +945,17 @@ should not consume it), that is a content change, not an editorial one, and need
   to the save file until T4C-0039. When you add player-owned state, add it to `PlayerStateDto`
   and `PlayerStateMapper` in the same change, with a round-trip test. Old saves without the new
   field must still load.
+- **Progress is saved on a timer, not only on the way out.** `MainGameScreen` autosaves every
+  `AUTOSAVE_INTERVAL_SECONDS` (**15 s**, owner's number), on level-up, and on `pause()` (window
+  minimise/close), on top of the event-driven `savePlayerState()` calls. Before T4C-0064 plain
+  play — XP, levels, kills, loot, walking — only reached disk if the client got to `dispose()`,
+  so a crash or a force-closed window threw the session away. Event-driven saves are still worth
+  adding for anything expensive or irreversible; the timer is the floor, not the plan.
+- **A quest-giver that isn't a `ScriptedNpc` needs its turn-in wired by hand.**
+  `ScriptedNpc.onInteractStart` calls `questService.turnInReadyQuests(id, player)` on every
+  greet; a `BaseNPC` that overrides `onInteractStart` (the Lighthaven Samaritan did) gets no such
+  call, so its quest can be accepted and finished but never completed. Any NPC that calls
+  `giveOrReport` must also have a path that calls `turnInReadyQuests`.
 - **A window with a text box or number prompt must override `capturesKeyboard()`**, so movement
   keys, macros and game hotkeys don't fire while the player types.
 - **Every shortcut is listed in the Controls window** (Ctrl+H, or the Controls button in

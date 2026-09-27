@@ -4,6 +4,8 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "MOBDELWOBBLE", x = 1523, y = 63, z = 1, stationary = false, aggressive = true)
@@ -15,6 +17,19 @@ public final class Delwobble extends NamedEventMonster {
   public Delwobble(MonsterDef d, float x, float y) throws GameException {
 
     super(d, x, y);
+  }
+
+  // T4C-0066: completes the "Audience to Bane Blackblood" quest gate that
+  // npc/DwarthonStoneface.java's BANE keyword starts - see that class for the full flag story.
+  // Only advances the flag if this player actually has the quest active (3, set by asking
+  // Dwarthon about "Bane") - an unrelated kill of this monster (e.g. by someone who never took
+  // the quest) must not silently grant Bane's audience.
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null && player.getQuestFlag("__QUEST_DWARTHON_STONEFACE") == 3) {
+      player.setQuestFlag("__QUEST_DWARTHON_STONEFACE", 5);
+    }
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

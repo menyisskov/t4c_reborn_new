@@ -20,7 +20,7 @@ import java.util.List;
 // something. Tier rises with rebirths (HourglassTrials.tierFor). See mirror/HourglassTrials.java
 // for the timing/best-time bookkeeping and MainGameScreen.handleHourglassTrialDeath for where a
 // win is actually recorded.
-@Spawn(type = "TrialWardenOsric", x = 1740, y = 1836, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "TrialWardenOsric", x = 1740, y = 1837, z = 0, stationary = true, aggressive = false)
 public final class TrialWardenOsric extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

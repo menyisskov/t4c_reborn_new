@@ -12,8 +12,8 @@ import com.perso.T4C.spawn.Spawn;
 // Centaur Warrior. See WarbandBannerBearer for the mini-boss that gates the camp's "cleared"
 // reward and WarbandCampState for the shared encounter tracking.
 @Spawn(type = "Warband Raider", x = 2260, y = 2320, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Warband Raider", x = 2300, y = 2320, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Warband Raider", x = 2260, y = 2360, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warband Raider", x = 2304, y = 2315, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Warband Raider", x = 2265, y = 2364, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Warband Raider", x = 2300, y = 2360, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Warband Raider", x = 2280, y = 2300, z = 0, stationary = false, aggressive = true)
 public final class WarbandRaider extends NamedEventMonster {

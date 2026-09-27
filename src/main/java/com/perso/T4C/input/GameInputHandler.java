@@ -10,6 +10,7 @@ import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.screen.ControlsScreen;
 import com.perso.T4C.gui.screen.Inventory;
 import com.perso.T4C.gui.screen.LocationsScreen;
+import com.perso.T4C.gui.screen.MonsterKillLogScreen;
 import com.perso.T4C.gui.screen.QuestScreen;
 import com.perso.T4C.gui.screen.SpellBook;
 import com.perso.T4C.gui.screen.Statistics;
@@ -135,6 +136,13 @@ public class GameInputHandler {
         GuiManager.close();
       } else {
         GuiManager.open(new LocationsScreen(player));
+      }
+    }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.K) && isCtrlDown()) {
+      if (GuiManager.isCurrent(MonsterKillLogScreen.class)) {
+        GuiManager.close();
+      } else {
+        GuiManager.open(new MonsterKillLogScreen(player));
       }
     }
     if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {

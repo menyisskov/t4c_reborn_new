@@ -9,7 +9,7 @@ class SpellRegistryParityTest {
   @Test
   void registryContainsEveryMigratedSpellOnce() {
     var registry = SpellRegistry.load();
-    // T4C-0062 added 6 spells: the Ultra tier of the 5 protection spells, plus Renew Armor.
+    // T4C-0067 added 6 spells: the Ultra tier of the 5 protection spells, plus Renew Armor.
     assertEquals(334, registry.size());
     registry.forEach(
         spell -> {

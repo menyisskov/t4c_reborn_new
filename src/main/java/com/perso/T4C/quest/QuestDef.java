@@ -44,7 +44,7 @@ public final class QuestDef {
   // a separate field rather than lengthening those. null means the compendium falls back to its
   // existing short-text-only rendering, which every quest predating this pass keeps doing.
   private final String walkthroughText;
-  // T4C-0063: an optional spell granted on completion, in addition to rewardGold/rewardXp - see
+  // T4C-0068: an optional spell granted on completion, in addition to rewardGold/rewardXp - see
   // QuestService.complete(). Resolved via SpellRegistry.findByName() and added to the player's
   // known spells (player.getSpells()), same mechanical shape as rewardItemKey above but for a
   // spell instead of an item. null preserves every quest shape predating this pass.
@@ -267,12 +267,12 @@ public final class QuestDef {
         null);
   }
 
-  /** Pre-T4C-0063 21-arg shape (adds the compendium walkthrough text, no reward spell) - every
-   * quest added by T4C-0052 through T4C-0062 uses this constructor unchanged. Restored exactly as
-   * it was: T4C-0063 originally replaced this overload's last parameter with rewardSpellKey,
-   * which silently discarded every existing quest's walkthroughText (it was still being passed
-   * positionally as the 21st argument) and misread it as a reward-spell key instead - caught by
-   * regenerating the compendium data and seeing every quest's walkthrough vanish. */
+  /** Pre-T4C-0068 21-arg shape (adds the compendium walkthrough text, no reward spell) - every
+   * quest predating T4C-0068's rewardSpellKey addition uses this constructor unchanged. Restored
+   * exactly as it was: T4C-0068 originally replaced this overload's last parameter with
+   * rewardSpellKey, which silently discarded every existing quest's walkthroughText (it was still
+   * being passed positionally as the 21st argument) and misread it as a reward-spell key instead -
+   * caught by regenerating the compendium data and seeing every quest's walkthrough vanish. */
   public QuestDef(
       String id,
       String title,
@@ -320,7 +320,7 @@ public final class QuestDef {
         null);
   }
 
-  // Current 22-arg shape (adds an optional reward spell, T4C-0063 - see rewardSpellKey above) is
+  // Current 22-arg shape (adds an optional reward spell, T4C-0068 - see rewardSpellKey above) is
   // Lombok's @AllArgsConstructor, generated automatically for all 22 fields in declaration order -
   // don't redeclare it manually here, that's a duplicate-constructor compile error.
 }

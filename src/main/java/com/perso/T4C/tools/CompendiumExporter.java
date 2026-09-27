@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.perso.T4C.combat.SeraphAuraService;
 import com.perso.T4C.config.GameConstants;
+import com.perso.T4C.content.ForkContent;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
@@ -24,6 +25,10 @@ import com.perso.T4C.quest.definition.QuestDefinitions;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.spell.definition.SpellDefinitions;
+import com.perso.T4C.spawn.SpawnDefinition;
+import com.perso.T4C.spawn.SpawnRegistry;
+import com.perso.T4C.teleport.NamedLocation;
+import com.perso.T4C.teleport.NamedLocations;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -54,49 +59,7 @@ import java.util.TreeMap;
 public final class CompendiumExporter {
   private CompendiumExporter() {}
 
-  private static final Set<String> NEW_MONSTER_NAMES =
-      Set.of(
-          "Drowned Acolyte",
-          "Tideclaw Crab",
-          "Mordrenn the Drowned Inquisitor",
-          "Cinder Whelp",
-          "Ashfang Stalker",
-          "Ignarok the Emberfang",
-          "Centaur Warrior",
-          "Centaur King",
-          "Barrow Wight",
-          "The Hollow King",
-          "Kraanian Wyrmling",
-          "Lesser Drake",
-          "Bastion Warden",
-          "Greater Drake",
-          "Kraanian Dragonguard",
-          "Fey Warden",
-          "Moonlit Stalker",
-          "Veilbound Wraith",
-          "Sundered Sentinel",
-          "Sir Caradoc, the Sundered Knight",
-          "Ysolde, the Veiled Matriarch",
-          "The Verdant Warden",
-          "Tideworn Reaver",
-          "Coastwarden Ithrak",
-          "The Rootcrown Wyrm",
-          "The Pyreclaw Wyrm",
-          "The Mistwing Wyrm",
-          "The Duskmaw Wyrm",
-          "The Galecrest Wyrm",
-          "Warband Raider",
-          "Warband Banner-Bearer",
-          "Warband Warlord",
-          "The Convergent Wyrm",
-          "Sandglass Sentinel I",
-          "Sandglass Sentinel II",
-          "Sandglass Sentinel III",
-          "Sandglass Sentinel IV",
-          "Sandglass Sentinel V");
 
-  /** Pre-existing legacy monsters that a content pass placed/activated rather than authored. */
-  private static final Set<String> ACTIVATED_MONSTER_NAMES = Set.of("Arch Drake");
 
   private static final Set<String> NEW_SPELL_CLASSES =
       Set.of(
@@ -152,41 +115,6 @@ public final class CompendiumExporter {
           "UltraManaSurge",
           "RenewArmor");
 
-  private static final Set<String> NEW_NPC_IDS =
-      Set.of(
-          "TideWardenBryn",
-          "RurikCinderwatch",
-          "SpellMerchant",
-          "StorageChest",
-          "ElderOphira",
-          "QuartermasterElenna",
-          "WayfarerBryndis",
-          "ArchmageThalindra",
-          "SisterIlyndra",
-          "OutriderKaelis",
-          "KeeperTamsin",
-          "MarshalTorrhen",
-          "WardenCael",
-          "GrandmasterVoss",
-          "HarbormasterRangor",
-          "SentinelCorwin",
-          "OutriderHalvard",
-          "DockmasterThessaly",
-          "EmberSmithCorvain",
-          "WardenSeressa",
-          "GrandmasterTholvenn",
-          "AnchoriteRowan",
-          "MirrorwardenYsmera",
-          "OldCorrin",
-          "KeeperOfTheSixthSeal",
-          "TrialWardenOsric",
-          "SunkenLedgerCoffer",
-          "PlagueWardensStrongbox",
-          "WyrmlingsHoardCasket",
-          "WarbandsBuriedChest",
-          "WardenAelric");
-
-  private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
   private static final Set<String> NEW_QUEST_IDS =
       Set.of(
@@ -298,6 +226,7 @@ public final class CompendiumExporter {
     writeJson(outDir.resolve("spells.json"), exportSpells());
     writeJson(outDir.resolve("quests.json"), exportQuests());
     writeJson(outDir.resolve("npcs.json"), exportNpcs());
+    writeJson(outDir.resolve("landmarks.json"), exportLandmarks());
     writeJson(outDir.resolve("items.json"), items);
     writeJson(outDir.resolve("shops.json"), shops);
     writeJson(outDir.resolve("lootSources.json"), lootSources);
@@ -313,6 +242,7 @@ public final class CompendiumExporter {
     bundle.put("spells", exportSpells());
     bundle.put("quests", exportQuests());
     bundle.put("npcs", exportNpcs());
+    bundle.put("landmarks", exportLandmarks());
     bundle.put("items", items);
     bundle.put("shops", shops);
     bundle.put("lootSources", lootSources);
@@ -345,9 +275,9 @@ public final class CompendiumExporter {
     List<Map<String, Object>> out = new ArrayList<>();
     for (MonsterDef def : defs) {
       String origin =
-          NEW_MONSTER_NAMES.contains(def.getName())
+          ForkContent.NEW_MONSTER_NAMES.contains(def.getName())
               ? "new"
-              : ACTIVATED_MONSTER_NAMES.contains(def.getName()) ? "activated" : null;
+              : ForkContent.ACTIVATED_MONSTER_NAMES.contains(def.getName()) ? "activated" : null;
       boolean jsonAuthored = JSON_MONSTER_NAMES.contains(def.getName());
       if (origin == null && !jsonAuthored) continue;
       if (origin == null) origin = "new";
@@ -633,6 +563,7 @@ public final class CompendiumExporter {
 
   private static List<Map<String, Object>> exportNpcs() {
     List<Map<String, Object>> out = new ArrayList<>();
+    Map<String, List<Map<String, Object>>> spawnsById = spawnsByNpcId();
     // NpcFactoryRegistry.registrations() order follows classpath-scan/directory-listing order,
     // which is not guaranteed stable across machines/filesystems - sort by id so re-running this
     // exporter on a different machine (e.g. CI) doesn't produce a pure-reorder diff.
@@ -640,14 +571,21 @@ public final class CompendiumExporter {
         new ArrayList<>(NpcFactoryRegistry.registrations());
     sortedRegs.sort(Comparator.comparing(NpcFactoryRegistry.Registration::id));
     for (NpcFactoryRegistry.Registration reg : sortedRegs) {
-      boolean isNew = NEW_NPC_IDS.contains(reg.id());
-      boolean activated = ACTIVATED_NPC_IDS.contains(reg.id());
+      boolean isNew = ForkContent.NEW_NPC_IDS.contains(reg.id());
+      boolean activated = ForkContent.ACTIVATED_NPC_IDS.contains(reg.id());
       if (!isNew && !activated) continue;
       Map<String, Object> m = new LinkedHashMap<>();
       m.put("id", reg.id());
       m.put("origin", isNew ? "new" : "activated");
       m.put("displayName", I18n.resolve(reg.displayName()));
       m.put("spriteBase", reg.spriteBase());
+      // T4C-0062: where in the world this person actually stands, straight from their @Spawn
+      // annotation. Without it every quest could only say "talk to so-and-so" with no way for a
+      // reader to work out where so-and-so is; the site turns these into a distance and bearing
+      // from the nearest fast-travel landmark (see exportLandmarks below) and a pin on the zone
+      // map. A handful of NPCs are spawned more than once, so this is a list, in the order
+      // SpawnRegistry reports them (already sorted, so it is stable across machines).
+      m.put("spawns", spawnsById.getOrDefault(reg.id(), List.of()));
       NpcSpec spec = reg.specification() == null ? null : safeSpec(reg);
       if (spec != null) {
         m.put("welcomeText", I18n.resolve(spec.welcomeText()));
@@ -686,6 +624,43 @@ public final class CompendiumExporter {
     return out;
   }
 
+  /** NPC id -&gt; every world position that id is spawned at, as plain exportable maps. */
+  private static Map<String, List<Map<String, Object>>> spawnsByNpcId() {
+    Map<String, List<Map<String, Object>>> byId = new LinkedHashMap<>();
+    for (SpawnDefinition s : SpawnRegistry.npcs()) {
+      Map<String, Object> pos = new LinkedHashMap<>();
+      pos.put("x", s.x());
+      pos.put("y", s.y());
+      pos.put("worldZ", s.z());
+      byId.computeIfAbsent(s.type(), k -> new ArrayList<>()).add(pos);
+    }
+    return byId;
+  }
+
+  // --------------------------------------------------------------- landmarks
+
+  /**
+   * T4C-0062: the fast-travel destinations from the in-game Locations panel, exactly as {@link
+   * NamedLocations} defines them - name, tile position, and the zone whose unlock quest gates the
+   * entry (null for the landmarks every character has from the start). The site pairs these with
+   * each NPC's own spawn position to answer "how do I get to this person?" with a landmark plus a
+   * distance and bearing, rather than a bare pair of coordinates. Exported rather than re-typed so
+   * moving a landmark in the game moves it on the site too.
+   */
+  private static List<Map<String, Object>> exportLandmarks() {
+    List<Map<String, Object>> out = new ArrayList<>();
+    for (NamedLocation loc : NamedLocations.all()) {
+      Map<String, Object> m = new LinkedHashMap<>();
+      m.put("name", loc.displayName());
+      m.put("x", loc.tileX());
+      m.put("y", loc.tileY());
+      m.put("worldZ", loc.worldZ());
+      m.put("unlockZoneId", loc.unlockZoneId());
+      out.add(m);
+    }
+    return out;
+  }
+
   private static NpcSpec safeSpec(NpcFactoryRegistry.Registration reg) {
     try {
       return reg.specification().get();
@@ -704,7 +679,7 @@ public final class CompendiumExporter {
       Field mField = shopCatalog.getDeclaredField("M");
       mField.setAccessible(true);
       Map<String, List<String>> m = (Map<String, List<String>>) mField.get(null);
-      // T4C-0021: previously restricted to NEW_NPC_IDS/ACTIVATED_NPC_IDS, which hid a real
+      // T4C-0021: previously restricted to the fork's own new/activated NPC ids, which hid a real
       // acquisition path for any item sold by a pre-existing/legacy NPC (e.g. the +4/+5
       // weapons sold by LordoftheShops) - exportItems() itself is unfiltered (every JSON item,
       // new or legacy), so an item's sources shouldn't be filtered by the seller's newness

@@ -94,6 +94,7 @@ import com.perso.T4C.render.ObjectRenderer;
 import com.perso.T4C.render.SpellRenderer;
 import com.perso.T4C.render.TeleportOverlayRenderer;
 import com.perso.T4C.spell.CompanionCastVfxHook;
+import com.perso.T4C.spell.GrandImpactShower;
 import com.perso.T4C.spell.SpellCastingService;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellEffectManager;
@@ -142,6 +143,7 @@ public class MainGameScreen implements Screen {
   private boolean switchingCharacter;
   private boolean disposed;
   private boolean playerStateSaved;
+  private float secondsSinceAutosave;
   private boolean displayInitialized;
   private int loadingStep;
   private GameInputHandler inputHandler;
@@ -217,6 +219,15 @@ public class MainGameScreen implements Screen {
   private BaseMonster selectedMonster = null;
   private java.util.function.BooleanSupplier textInputActiveSupplier;
   private static final float TAB_TARGET_RANGE_TILES = 12f;
+
+  /**
+   * Seconds between background saves. Every other save in this screen hangs off a discrete event
+   * (shop, storage, trial, teleport, quest turn-in), so plain play - XP, levels, kills, loot,
+   * walking - only reached disk if the client got to {@link #dispose()}. A window closed hard, a
+   * crash or a killed process lost everything since the last event, which is what "my character
+   * didn't persist after shutdown" actually was.
+   */
+  private static final float AUTOSAVE_INTERVAL_SECONDS = 15f;
   private final com.perso.T4C.profiler.GameProfiler gameProfiler =
       new com.perso.T4C.profiler.GameProfiler();
   private long profilerFrameIndex = 0;
@@ -407,7 +418,17 @@ public class MainGameScreen implements Screen {
   }
 
   private void savePlayerState() {
+    secondsSinceAutosave = 0f;
     PlayerStateStore.save(player, dayNightCycle.getHour());
+  }
+
+  /** Flushes the character to disk every {@link #AUTOSAVE_INTERVAL_SECONDS}. Skipped until the
+   * world is up, and after the state has already been handed off (character switch/dispose), so a
+   * tick in flight can't rewrite a save the shutdown path just finished. */
+  private void updateAutosave(float delta) {
+    if (!displayInitialized || playerStateSaved || disposed || player == null) return;
+    secondsSinceAutosave += delta;
+    if (secondsSinceAutosave >= AUTOSAVE_INTERVAL_SECONDS) savePlayerState();
   }
 
   private static com.perso.T4C.world.DayNightCycle loadDayNightCycle() {
@@ -1310,6 +1331,8 @@ public class MainGameScreen implements Screen {
         newLevel -> {
           spellRenderer.playImpactSound(LEVEL_UP_SOUND);
           spellRenderer.playLevelUpAnimation(player);
+          // Rare and the single most painful thing to lose to a hard shutdown.
+          savePlayerState();
         });
   }
 
@@ -1438,6 +1461,7 @@ public class MainGameScreen implements Screen {
           }
           inputHandler.handleInput(delta, player);
         });
+    section("autosave", () -> updateAutosave(delta));
     section("teleport", this::updateTeleportForPlayer);
     section("entities", () -> updateEntities(delta));
     section(
@@ -2897,7 +2921,7 @@ public class MainGameScreen implements Screen {
     if (spell == null || monster == null || monster.isDead()) {
       return;
     }
-    applyResolvedSpellImpact(spell, monster, 0d, true);
+    applyResolvedSpellImpact(spell, monster, 0d, true, true);
     if (spell.getRadius() > 0 && monsterManager != null) {
       Vector2 center = monster.getPosition();
       for (BaseMonster candidate : monsterManager.getMonsters()) {
@@ -2905,13 +2929,25 @@ public class MainGameScreen implements Screen {
         double distanceTiles = center.dst(candidate.getPosition()) / Math.max(GRID_W, GRID_H);
         if (distanceTiles >= spell.getRadius()) continue;
         if (spell.isLineOfSight() && !hasLineOfSight(center, candidate.getPosition())) continue;
-        applyResolvedSpellImpact(spell, candidate, distanceTiles, true);
+        applyResolvedSpellImpact(spell, candidate, distanceTiles, true, false);
       }
     }
   }
 
   private void applyResolvedSpellImpact(
       SpellData spell, BaseMonster monster, double range, boolean installHooks) {
+    applyResolvedSpellImpact(spell, monster, range, installHooks, true);
+  }
+
+  /**
+   * @param grandEligible whether this hit may render as a multi-burst {@link GrandImpactShower}
+   *     when the spell qualifies. Pass {@code false} for splash hits on secondary targets within
+   *     an area spell's radius — those already get their own individual burst, so also showering
+   *     each one would multiply bursts per monster hit.
+   */
+  private void applyResolvedSpellImpact(
+      SpellData spell, BaseMonster monster, double range, boolean installHooks,
+      boolean grandEligible) {
     SpellEffectManager.Impact impactResult =
         spellEffectManager.resolve(spell, player, monster, range);
     SpellEffectManager.TargetExhaustion explicitExhaustion =
@@ -2945,7 +2981,11 @@ public class MainGameScreen implements Screen {
     String impact = visuals.impact();
     if (impact != null && !impact.isEmpty()) {
       Vector2 pos = monster.getPosition();
-      spellRenderer.triggerImpactSpell(impact, pos.x, pos.y, visuals.impactSound());
+      if (grandEligible) {
+        triggerAreaImpactShower(spell, visuals, pos);
+      } else {
+        spellRenderer.triggerImpactSpell(impact, pos.x, pos.y, visuals.impactSound());
+      }
     }
   }
 
@@ -3005,12 +3045,33 @@ public class MainGameScreen implements Screen {
         if (range >= spell.getRadius()) continue;
         if (spell.isLineOfSight() && !hasLineOfSight(targetPosition, candidate.getPosition()))
           continue;
-        applyResolvedSpellImpact(spell, candidate, range, true);
+        applyResolvedSpellImpact(spell, candidate, range, true, false);
       }
     }
     if (visuals.impact() != null && !visuals.impact().isEmpty()) {
-      spellRenderer.triggerImpactSpell(
-          visuals.impact(), targetPosition.x, targetPosition.y, visuals.impactSound());
+      triggerAreaImpactShower(spell, visuals, targetPosition);
+    }
+  }
+
+  /**
+   * Fires the spell's impact as a multi-burst "shower" scattered across its radius when the spell
+   * is high-tier enough to qualify (see {@link GrandImpactShower}), or as the original single
+   * centered burst otherwise.
+   */
+  private void triggerAreaImpactShower(
+      SpellData spell, SpellVisualResolver.Visuals visuals, Vector2 targetPosition) {
+    float radiusPixels = spell.getRadius() * Math.max(GRID_W, GRID_H);
+    boolean firstBurst = true;
+    for (GrandImpactShower.Burst burst : GrandImpactShower.bursts(spell)) {
+      float offsetX = (float) Math.cos(burst.angleRadians()) * burst.radiusFraction() * radiusPixels;
+      float offsetY = (float) Math.sin(burst.angleRadians()) * burst.radiusFraction() * radiusPixels;
+      spellRenderer.triggerImpactSpellDelayed(
+          visuals.impact(),
+          targetPosition.x + offsetX,
+          targetPosition.y + offsetY,
+          firstBurst ? visuals.impactSound() : null,
+          burst.delaySeconds());
+      firstBurst = false;
     }
   }
 
@@ -3509,7 +3570,7 @@ public class MainGameScreen implements Screen {
         effects);
   }
 
-  // T4C-0062: Renew Armor has no formula effect of its own - casting it re-lays whichever of
+  // T4C-0067: Renew Armor has no formula effect of its own - casting it re-lays whichever of
   // these the caster currently knows (base and Ultra tiers both, independently), each refreshed
   // exactly as if the player had cast it directly. Renew Armor's own SpellCastingService.begin()
   // call already charged its mana/exhaustion once; re-applying a component's buff via
@@ -4458,8 +4519,12 @@ public class MainGameScreen implements Screen {
   @Override
   public void hide() {}
 
+  /** LibGDX calls this when the window is minimised/loses focus and once more on the way out, so
+   * it is the last reliable hook before a shutdown that never reaches {@link #dispose()}. */
   @Override
-  public void pause() {}
+  public void pause() {
+    if (!playerStateSaved && !disposed && player != null && displayInitialized) savePlayerState();
+  }
 
   @Override
   public void resume() {

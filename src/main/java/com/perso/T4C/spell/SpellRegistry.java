@@ -131,7 +131,7 @@ public final class SpellRegistry {
     if (spell.getMinLevel() <= 0) return false;
     // Renew Armor's real effect is re-casting whichever protection spells the caster already
     // knows (MainGameScreen.castDefensiveSpell), not a dice-formula T4cEffect, so it's exempted
-    // from the "has an effect" rule the same way tame_beast already is (T4C-0062).
+    // from the "has an effect" rule the same way tame_beast already is (T4C-0067).
     return !spell.getT4cEffects().isEmpty()
         || identity.equals("${spell.tame_beast}")
         || identity.equals("${spell.renew_armor}");

@@ -88,10 +88,11 @@ new QuestDef(
 Compare against `LighthavenSamaritanRats` (`requiredKills=15`, `targetWorldZ=1`
 DUNGEON — the "temple basement", `areaRadiusTiles=120`, `rewardGold=0`,
 `rewardXp=2500`, `activationFlag="__NEWBIE_QUEST"` — this one auto-starts, likely
-for new characters). **Caveat found while researching**: that quest's
-`completion` i18n text says "500 gold coins and 300 experience points", but the
-actual numeric fields pay `0 gold / 2500 XP` — the flavor text and the real reward
-have drifted apart. Don't repeat this mistake: when you write offer/completion
+for new characters). **Past mistake, now fixed (T4C-0062)**: that quest's
+`completion` i18n text used to say "500 gold coins and 300 experience points"
+while the actual numeric fields paid `0 gold / 2500 XP` — flavor text and the real
+reward had drifted apart. The text now just says "2,500 experience points" and
+matches the code. Don't repeat this mistake: when you write offer/completion
 text that names a gold/XP amount, make sure it matches `rewardGold`/`rewardXp`
 exactly, or better, keep flavor text reward-number-free.
 

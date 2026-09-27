@@ -13,7 +13,7 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
-## 2026-09-27 — Renewed Wards (T4C-0063)
+## 2026-09-27 — Renewed Wards (T4C-0068)
 
 ### Added
 - **A new quest near Lighthaven's temple.** Warden Aelric is worried about the skeletons rising at
@@ -21,7 +21,7 @@ on, every content/feature pass adds its own entry here as part of the work
   Clear twelve of them out and he'll teach you Renew Armor for free, on top of a bit of gold and
   experience - a head start on the spell before you'd otherwise be able to afford it.
 
-## 2026-09-27 — Protection spells that keep up with you, and their Ultra versions (T4C-0062)
+## 2026-09-27 — Protection spells that keep up with you, and their Ultra versions (T4C-0067)
 
 ### Changed
 - **Barrier, Protection, Stone Skin, Mana Shield and Mana Surge no longer leave you waiting between
@@ -38,6 +38,86 @@ on, every content/feature pass adds its own entry here as part of the work
 - **Renew Armor**, a new spell that re-lays whichever of the above ten wards you already have
   running, all in one cast - a quick way to top everything back up before a fight instead of
   clicking through each one by hand.
+
+## 2026-09-27 — Three original-game NPCs that were never actually placed (T4C-0066)
+
+### Fixed
+- Dwarthon Stoneface, the guard outside Bane Blackblood's throne room, exists and talks but was
+  never actually standing anywhere in the world - now he is, right where he belongs. Ask him about
+  "Bane" and he'll send you after Delwobble the Mad Summoner in the dungeon below the castle;
+  killing Delwobble is now what actually earns you an audience with Bane, which nothing in the
+  game previously did.
+- The Oracle's two final trial-keepers, Gabriel Archonis and Gaenen Elthorn, were fully written
+  but standing nowhere reachable. Both are now placed in the Oracle's deepest chamber, past its
+  last guardians.
+
+### Process
+- A full audit against the original game's own quest reference (t4cbible.com) found that almost
+  everything that looked missing is actually already in the game, just built on an older system
+  than the newer Quest Journal reads - so it won't show up there, but it works. The real gaps were
+  much smaller and more specific than expected; this pass fixes the first three, more follow.
+
+## 2026-09-26 — Quest journal tabs, chain progress, and a monster kill log (T4C-0065)
+
+### Added
+- **The Quest Journal now has In Progress and Completed tabs**, instead of one long mixed list —
+  finishing a quest moves it out of your active list and into Completed, where it stays for
+  reference.
+- **Multi-part questlines now say so.** The Passage to Avalon (Tideworn Shore Scouts, then Passage
+  to Avalon itself) and the Godsforged crafting chain both show which stage you're on and, if an
+  earlier stage isn't finished yet, which one you're still waiting on.
+- **A new Monster Kill Log window** (Ctrl+K, or the "Monster Kills" link on the Quest Journal)
+  lists every kind of creature you've ever killed and how many, with a running total.
+
+### Fixed
+- The Temple Basement Rats quest said it paid "500 gold coins and 300 experience points" — it has
+  always actually paid 2,500 experience and no gold. The text now matches what you receive.
+
+## 2026-09-26 — People and creatures stranded in the sea (T4C-0063)
+
+### Fixed
+- Harbormaster Rangor was standing in the water west of Windhowl, where nobody could reach him.
+  He is on the shore now, so the road to Avalon can actually be started.
+- The whole Avalon crossing was unreachable: Coastwarden Ithrak and most of his Tideworn Reavers
+  were out at sea, which made both the scouting errand and the crossing itself impossible.
+  They now hold the beach.
+- Every creature in the Sunken Chancel — the Drowned Acolytes, the Tideclaw Crabs and Mordrenn
+  himself — was in open water, so the Tide Warden's errand could never be finished. They have
+  moved onto the drowned shore inside the same stretch of coast, which means the ruin is fought
+  from its northwestern side rather than out on the waves.
+- Fire-wolves and cinder whelps in the Cinderreach hills, wardens and stalkers in the Avalon
+  Wilds, the warband raiders on Kraanhold and their buried chest, Keeper Tamsin at the Deep Ones
+  Cave, Trial Warden Osric, and one of the two storage chests were all standing in water or
+  inside scenery. All of them are on solid ground now.
+- Clicking somebody you are too far away to talk to now tells you to move closer, instead of
+  doing nothing at all.
+
+## 2026-09-26 — Lighthaven errand turn-in and autosave (T4C-0064)
+
+### Fixed
+- The Samaritan in Lighthaven now pays out his rat errand. Once you had all fifteen kills he would
+  only ever repeat "Progress: 15/15", so the reward and the errand's ending were unreachable — now
+  he hands them over, whether you greet him or ask about the errand again.
+- Your character is saved every fifteen seconds while you play, and again whenever the window
+  loses focus or you gain a level. Previously most of a session only reached disk when the game
+  shut down cleanly, so a crash or a force-closed window could throw away everything you'd done
+  since the last shop visit or quest turn-in.
+
+## 2026-09-26 — The site now tells you where to find people (T4C-0062)
+
+### Added
+- Every quest on the reference site now says where its quest-giver actually stands, not just who
+  to talk to: the nearest fast-travel point you will already have, which way to walk from it and
+  roughly how far, and the exact spot on the map. Where a map of the area exists, there is a link
+  straight to it with the person pinned.
+- The same directions appear on each person's own page, so looking up a shopkeeper or a trainer
+  tells you how to reach them.
+- Quest listings now note which fast-travel point a quest-giver is near, so you can see at a
+  glance which errands are close together.
+
+### Fixed
+- A boss aura, the rebirth aura and the automatic on-level-up effect were still listed as spells
+  on the site after being hidden in the game. They are gone from the spell list now.
 
 ## 2026-09-26 — Offering chests at the temples, and spells that go off when you cast them (T4C-0061)
 
