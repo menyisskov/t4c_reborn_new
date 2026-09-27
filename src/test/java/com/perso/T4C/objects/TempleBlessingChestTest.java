@@ -100,6 +100,26 @@ class TempleBlessingChestTest {
         "Each ward should be its own buff on the bar");
   }
 
+  /**
+   * T4C-0066: the blessing now also tops off health and mana, not just the wards. The restore has
+   * to read {@code getMaxHp()} after the ward loop, not before, since Bless itself can raise it -
+   * healing to the pre-blessing ceiling would leave the player short of the new one.
+   */
+  @Test
+  void clickingTheChestRestoresFullHealthAndMana() {
+    Player player = new Player();
+    player.setMaxHp(500);
+    player.setCurrentHp(1);
+    player.setMaxMana(300);
+    player.setMana(0);
+    TempleBlessingService service = new TempleBlessingService();
+    TempleBlessingService.Result result =
+        service.bless(player, chestAt(TempleBlessingService.SHRINES.get(0)));
+    assertTrue(result.blessed());
+    assertEquals(player.getMaxHp(), player.getCurrentHp(), "Blessing should heal to full");
+    assertEquals(player.getMaxMana(), player.getMana(), "Blessing should restore mana to full");
+  }
+
   /** A second click refreshes the same wards rather than stacking a second copy of each. */
   @Test
   void clickingTwiceRefreshesRatherThanStacks() {

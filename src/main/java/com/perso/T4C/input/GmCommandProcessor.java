@@ -7,7 +7,6 @@ import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.ItemRegistry;
-import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.npc.behavior.RebirthBehavior;
 import com.perso.T4C.npc.core.NPCManager;
@@ -115,9 +114,6 @@ public final class GmCommandProcessor {
           break;
         case "learn":
           learn(player, arg);
-          break;
-        case "repair":
-          repair(player, arg);
           break;
         case "rebirth":
           rebirth(player, arg);
@@ -310,15 +306,6 @@ public final class GmCommandProcessor {
     ok("Learned spell " + spell.getName(), player);
   }
 
-  private void repair(Player player, String arg) {
-    if (!arg.isBlank()) {
-      SystemMessage.showShared("GM: usage .repair");
-      return;
-    }
-    ItemDurabilityService.repairAllFree(player);
-    ok("All equipment repaired", player);
-  }
-
   private void rebirth(Player player, String arg) {
     if (!arg.isBlank()) {
       SystemMessage.showShared("GM: usage .rebirth");
@@ -425,7 +412,7 @@ public final class GmCommandProcessor {
     SystemMessage.showShared(
         "GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X");
     SystemMessage.showShared(
-        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .repair | .rebirth | .setpower ELEMENT X");
+        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .rebirth | .setpower ELEMENT X");
   }
 
   private static int parseInt(String s) {

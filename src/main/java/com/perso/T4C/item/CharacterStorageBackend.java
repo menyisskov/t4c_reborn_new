@@ -28,11 +28,6 @@ public final class CharacterStorageBackend implements StorageBackend {
   }
 
   @Override
-  public double durability(int index) {
-    return StorageService.durability(player, index);
-  }
-
-  @Override
   public InventoryService.Result deposit(int inventoryIndex, String itemKey) {
     return StorageService.deposit(player, inventoryIndex, itemKey);
   }

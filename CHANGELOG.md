@@ -13,6 +13,56 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — Monster gold now scales with level, and Healing Potions stopped cluttering loot (T4C-0071)
+
+### Changed
+- Plain Healing Potions no longer drop from monster kills (higher-tier potions - Major, Light,
+  Critical, Deific Healing Potion - are unaffected). It was cheap enough to become clutter rather
+  than a real reward.
+- A number of monsters - mostly in newer zones (the Sandglass Sentinels, Tideworn Reavers, a few
+  Skraug and Yoggoth Worm variants) - were dropping far less gold than their level should pay,
+  in a couple of cases barely more than monsters a tenth their level. Their gold now follows the
+  same level curve the rest of the game's monsters already use.
+
+## 2026-09-27 — Ctrl+S opens the character sheet (T4C-0070)
+
+### Added
+- Ctrl+S now opens the character sheet, alongside its existing Ctrl+T shortcut.
+
+## 2026-09-26 — Ctrl+C now enters combat mode (T4C-0069)
+
+### Fixed
+- Combat mode had no key bound to it, so peaceful NPCs that are meant to be fought once provoked
+  (like Balork) could never actually be attacked. Ctrl+C now toggles combat mode, as in the
+  original game.
+
+## 2026-09-26 — Balork found in the Lighthaven temple basement (T4C-0068)
+
+### Fixed
+- Balork was standing nowhere reachable in the game world. He's now down in the Lighthaven
+  temple's basement, alongside the bats and rats.
+
+## 2026-09-26 — No more broken gear (T4C-0067)
+
+### Changed
+- Items no longer take wear from combat or dying, never break, and never need repairing. Gear
+  you equip stays at full strength forever, and there's no more per-item damage percentage to
+  keep an eye on.
+
+## 2026-09-26 — Temple blessings now top you off (T4C-0066)
+
+### Changed
+- The blessing chests outside each town's temple now restore you to full health and mana on top
+  of laying their wards, and clicking one now plays a short blessing effect on you.
+
+## 2026-09-26 — Tideworn Reavers were interrupting the Harbormaster (T4C-0065)
+
+### Fixed
+- Two Tideworn Reavers were patrolling close enough to Harbormaster Rangor's dock to attack you
+  while you were still talking to him, making it hard to finish accepting or turning in either
+  stage of the Passage to Avalon quest. Both have been moved further down the shore, out of
+  reach of the dock.
+
 ## 2026-09-26 — People and creatures stranded in the sea (T4C-0063)
 
 ### Fixed

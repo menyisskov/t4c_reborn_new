@@ -1,9 +1,7 @@
 package com.perso.T4C.gui.widget;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.perso.T4C.exception.GameException;
@@ -11,9 +9,7 @@ import com.perso.T4C.gui.core.AbstractGuiElement;
 import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.player.Player;
-import com.perso.T4C.ui.FontManager;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +26,6 @@ public class GuiInventory extends AbstractGuiElement {
   private float width;
   private float height;
   private float scrollOffset;
-  private final BitmapFont durabilityFont;
 
   @Getter
   @AllArgsConstructor
@@ -64,7 +59,6 @@ public class GuiInventory extends AbstractGuiElement {
     this.itemsSupplier = itemsSupplier;
     this.width = width;
     this.height = height;
-    this.durabilityFont = FontManager.getInstance().getJetBrainsMonoFont(10, Color.WHITE);
   }
 
   @Override
@@ -195,17 +189,6 @@ public class GuiInventory extends AbstractGuiElement {
       if (cursorY + h < innerY || cursorY > innerY + innerH) {
       } else {
         GuiDraw.drawRegionFlipped(batch, region, cursorX, cursorY, w, h);
-        ItemDefinition definition = ItemDefinition.get(itemName);
-        if (player != null && ItemDurabilityService.isRepairable(definition)) {
-          double durability = ItemDurabilityService.inventory(player, stack.firstIndex);
-          durabilityFont.setColor(
-              durability >= 50 ? Color.GREEN : durability >= 25 ? Color.ORANGE : Color.RED);
-          durabilityFont.draw(
-              batch,
-              ItemDurabilityService.format(durability) + "%",
-              cursorX + 1f,
-              cursorY + h - 1f);
-        }
       }
       cursorX += w + CELL_PADDING;
       rowHeight = Math.max(rowHeight, h);
@@ -274,16 +257,11 @@ public class GuiInventory extends AbstractGuiElement {
 
   private List<StackEntry> stacks(List<String> items) {
     Map<String, int[]> grouped = new LinkedHashMap<>();
-    if (player != null) ItemDurabilityService.synchronize(player);
     if (items != null)
       for (int i = 0; i < items.size(); i++) {
         String key = items.get(i);
         if (key == null) continue;
-        ItemDefinition definition = ItemDefinition.get(key);
-        String groupKey =
-            player != null && ItemDurabilityService.isRepairable(definition)
-                ? key + "\u0000" + ItemDurabilityService.inventory(player, i)
-                : key;
+        String groupKey = key;
         int[] v = grouped.get(groupKey);
         if (v == null) {
           v = new int[] {i, 0};

@@ -12,13 +12,11 @@ public interface StorageBackend {
   /** Window title for this stash, already resolved through i18n. */
   String label();
 
-  /** The stash's item list, in storage order (parallel to durability/charges). */
+  /** The stash's item list, in storage order (parallel to charges). */
   List<String> items();
 
-  /** Pads/trims the durability and charge lists so they line up with {@link #items()}. */
+  /** Pads/trims the charge list so it lines up with {@link #items()}. */
   void synchronize();
-
-  double durability(int index);
 
   InventoryService.Result deposit(int inventoryIndex, String itemKey);
 

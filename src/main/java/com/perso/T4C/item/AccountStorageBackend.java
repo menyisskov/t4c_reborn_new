@@ -32,11 +32,6 @@ public final class AccountStorageBackend implements StorageBackend {
   }
 
   @Override
-  public double durability(int index) {
-    return AccountStorageService.durability(index);
-  }
-
-  @Override
   public InventoryService.Result deposit(int inventoryIndex, String itemKey) {
     return AccountStorageService.deposit(player, inventoryIndex, itemKey);
   }

@@ -337,7 +337,7 @@ public class ShopScreen extends GuiListScreen {
   @Override
   protected String rowInfoText(ListRow row) {
     ShopEntry entry = (ShopEntry) row;
-    String text = com.perso.T4C.gui.widget.ItemTooltipText.build(entry.def.getKey(), 100d);
+    String text = com.perso.T4C.gui.widget.ItemTooltipText.build(entry.def.getKey());
     int firstLine = text.indexOf('\n');
     return firstLine < 0 ? null : text.substring(firstLine + 1);
   }

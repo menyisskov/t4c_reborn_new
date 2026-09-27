@@ -48,7 +48,6 @@ public final class DrownedAcolyte extends DataMonster {
         60,
         200,
         java.util.List.of(
-            new MonsterDef.LootDrop("healing_potion", 0.04f),
             // Rare trash-mob source for the zone's Drowned Inquisition set (Mordrenn is the main
             // one).
             new MonsterDef.LootDrop("drowned_inquisition_armor", 0.004f),

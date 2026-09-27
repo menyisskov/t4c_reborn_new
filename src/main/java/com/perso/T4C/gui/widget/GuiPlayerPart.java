@@ -1,7 +1,5 @@
 package com.perso.T4C.gui.widget;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.perso.T4C.gui.core.AbstractGuiElement;
@@ -10,10 +8,8 @@ import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiResizable;
 import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
-import com.perso.T4C.ui.FontManager;
 import lombok.Getter;
 
 public class GuiPlayerPart extends AbstractGuiElement implements GuiResizable {
@@ -22,7 +18,6 @@ public class GuiPlayerPart extends AbstractGuiElement implements GuiResizable {
   private float zoneWidth;
   private float zoneHeight;
   private TextureRegion cachedRegion;
-  private final BitmapFont durabilityFont;
 
   public GuiPlayerPart(Player player, BodyPart part, float x, float y) {
     this(player, part, x, y, 0f, 0f);
@@ -35,7 +30,6 @@ public class GuiPlayerPart extends AbstractGuiElement implements GuiResizable {
     this.part = part;
     this.zoneWidth = zoneWidth;
     this.zoneHeight = zoneHeight;
-    this.durabilityFont = FontManager.getInstance().getJetBrainsMonoFont(10, Color.WHITE);
   }
 
   @Override
@@ -95,17 +89,6 @@ public class GuiPlayerPart extends AbstractGuiElement implements GuiResizable {
     float drawX = zoneWidth > 0f ? x + (zoneWidth - region.getRegionWidth()) / 2f : x;
     float drawY = zoneHeight > 0f ? y + (zoneHeight - region.getRegionHeight()) / 2f : y;
     GuiDraw.drawRegionFlipped(batch, region, drawX, drawY);
-    ItemDefinition definition = ItemDefinition.get(itemName);
-    if (ItemDurabilityService.isRepairable(definition)) {
-      double durability = ItemDurabilityService.equipped(player, occupiedPart());
-      durabilityFont.setColor(
-          durability >= 50 ? Color.GREEN : durability >= 25 ? Color.ORANGE : Color.RED);
-      durabilityFont.draw(
-          batch,
-          ItemDurabilityService.format(durability) + "%",
-          drawX + 1f,
-          drawY + region.getRegionHeight() - 1f);
-    }
   }
 
   private String resolveInventorySprite(String itemName) {

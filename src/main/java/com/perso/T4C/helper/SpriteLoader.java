@@ -106,7 +106,15 @@ public class SpriteLoader {
   public TextureRegion getRegionFromSpriteName(String name) throws GameException {
     if (name == null) return null;
     Integer id = nameToId.get(name.toLowerCase(Locale.ROOT));
-    if (id == null) return null;
+    if (id == null) {
+      if ("chest".equalsIgnoreCase(name)) {
+        System.err.println("[DEBUG-CHEST-SPRITE] MISS: " + name);
+      }
+      return null;
+    }
+    if ("chest".equalsIgnoreCase(name)) {
+      System.err.println("[DEBUG-CHEST-SPRITE] HIT: " + name + " -> id " + id);
+    }
     return getRegionFromSpriteId(id);
   }
 

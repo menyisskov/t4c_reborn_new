@@ -7,7 +7,6 @@ import static com.perso.T4C.config.GameConstants.NPC_PATROL_RADIUS;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.screen.LearnScreen;
-import com.perso.T4C.gui.screen.RepairScreen;
 import com.perso.T4C.gui.screen.ShopScreen;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
@@ -779,8 +778,6 @@ public abstract class ScriptedNpc extends BaseNPC {
 
         GuiManager.open(new ShopScreen(player, valid));
       }
-
-      case OPEN_REPAIR -> GuiManager.open(new RepairScreen(player));
 
       case GIVE_ITEM -> {
         if (action.targets().isEmpty()) return;

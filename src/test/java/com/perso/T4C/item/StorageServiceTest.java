@@ -38,32 +38,6 @@ class StorageServiceTest {
   }
 
   @Test
-  void depositingAndWithdrawingKeepsDurability() throws Exception {
-    Player player = strongPlayer();
-    player.setInventory(List.of(DAGGER));
-    player.setInventoryDurability(List.of(37d));
-
-    assertTrue(StorageService.deposit(player, 0, DAGGER).success());
-    assertEquals(37d, StorageService.durability(player, 0));
-
-    assertTrue(StorageService.withdraw(player, 0, DAGGER).success());
-    assertEquals(37d, ItemDurabilityService.inventory(player, 0), "storage must not repair items");
-    assertTrue(player.getStorage().isEmpty());
-  }
-
-  @Test
-  void storedDurabilitySurvivesASaveAndReload() throws Exception {
-    Player source = strongPlayer();
-    source.setInventory(List.of(DAGGER));
-    source.setInventoryDurability(List.of(12d));
-    StorageService.deposit(source, 0, DAGGER);
-
-    Player restored = strongPlayer();
-    PlayerStateMapper.applyToPlayer(PlayerStateMapper.fromPlayer(source), restored);
-    assertEquals(12d, StorageService.durability(restored, 0));
-  }
-
-  @Test
   void depositingAndWithdrawingKeepsRemainingCharges() throws Exception {
     Player player = strongPlayer();
     assertTrue(InventoryService.add(player, BOOK, 5).success());
@@ -77,15 +51,13 @@ class StorageServiceTest {
   }
 
   @Test
-  void legacySavesWithoutStorageMetadataLoadAtFullDurabilityAndCharges() throws Exception {
+  void legacySavesWithoutStorageMetadataLoadAtFullCharges() throws Exception {
     PlayerStateDto state = PlayerStateMapper.fromPlayer(strongPlayer());
     state.storage = List.of(DAGGER, BOOK);
-    state.storageDurability = null;
     state.storageCharges = null;
     Player restored = strongPlayer();
     PlayerStateMapper.applyToPlayer(state, restored);
 
-    assertEquals(ItemDurabilityService.MAX, StorageService.durability(restored, 0));
     assertTrue(StorageService.withdraw(restored, 1, BOOK).success());
     assertEquals(12, restored.getItemCharges().get(BOOK));
   }

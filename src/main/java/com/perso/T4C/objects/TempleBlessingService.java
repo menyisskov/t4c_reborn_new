@@ -10,9 +10,9 @@ import java.util.List;
 
 /**
  * The blessing chest that stands outside each town's temple (T4C-0061). Clicking it lays the town's
- * whole set of wards on the clicker at once, for free, cast by an unseen priest rather than by the
- * player - so a character too low to have learned any of these spells still benefits, and nobody
- * spends mana.
+ * whole set of wards on the clicker at once, restores health and mana to full, for free, cast by an
+ * unseen priest rather than by the player - so a character too low to have learned any of these
+ * spells still benefits, and nobody spends mana.
  *
  * <p>How strong the wards are is the only thing that differs between towns, and it comes entirely
  * from the stats the priest casts with. Every town but Avalon Sanctuary is served by a competent
@@ -145,6 +145,10 @@ public final class TempleBlessingService {
       applied++;
     }
     if (applied == 0) return Result.failure(Failure.NOT_A_BLESSING_CHEST);
+    // Read after the loop above, not before: Bless can raise maxHp, and the restore should heal to
+    // that new ceiling rather than the pre-blessing one.
+    player.setCurrentHp(player.getMaxHp());
+    player.setMana(player.getMaxMana());
     return new Result(true, Failure.NONE, applied, shrine.casterWisdom());
   }
 

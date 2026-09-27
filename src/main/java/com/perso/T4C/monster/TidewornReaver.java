@@ -3,13 +3,14 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
 // Coastal raiders guarding the last stretch of mainland shore before the crossing to Avalon
 // (center ~1550,1300, worldZ 0) — see quest/definition/PassageToAvalon.java. Reuses the
 // legacy "Thief" human-raider animation/sound family (same one r197Raider uses) at fork-tier
 // stats, since no dedicated smuggler sprite exists yet.
-@Spawn(type = "Tideworn Reaver", x = 1519, y = 1241, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Tideworn Reaver", x = 1571, y = 1265, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Tideworn Reaver", x = 1540, y = 1240, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Tideworn Reaver", x = 1580, y = 1255, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Tideworn Reaver", x = 1610, y = 1280, z = 0, stationary = false, aggressive = true)
@@ -18,7 +19,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Tideworn Reaver", x = 1563, y = 1277, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Tideworn Reaver", x = 1527, y = 1252, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Tideworn Reaver", x = 1620, y = 1330, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Tideworn Reaver", x = 1514, y = 1232, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Tideworn Reaver", x = 1595, y = 1268, z = 0, stationary = false, aggressive = true)
 public final class TidewornReaver extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -52,11 +53,9 @@ public final class TidewornReaver extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        270,
-        680,
-        java.util.List.of(
-            new MonsterDef.LootDrop("healing_potion", 0.1f),
-            new MonsterDef.LootDrop("mana_potion", 0.06f)),
+        MonsterGoldCurve.goldMin(280),
+        MonsterGoldCurve.goldMax(280),
+        java.util.List.of(new MonsterDef.LootDrop("mana_potion", 0.06f)),
         false,
         0.0f,
         250,

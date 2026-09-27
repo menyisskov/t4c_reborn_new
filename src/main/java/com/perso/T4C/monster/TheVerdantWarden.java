@@ -55,7 +55,6 @@ public final class TheVerdantWarden extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("verdant_wardens_bulwark", 0.015f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("healing_potion", 0.3f),
             // T4C-0021: earth-flavor source for the Ancient Celestial/Empyrean armor sets
             // (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_earth_armor", 0.025f),

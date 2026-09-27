@@ -3,6 +3,7 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
 // Upper-tier trash of The Fading Veil (center 1420,1560 r130, worldZ 0) — animated plate armor
@@ -65,12 +66,11 @@ public final class SunderedSentinel extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        560,
-        1400,
+        MonsterGoldCurve.goldMin(560),
+        MonsterGoldCurve.goldMax(560),
         java.util.List.of(
             new MonsterDef.LootDrop("serious_healing_potion", 0.1f),
-            new MonsterDef.LootDrop("mana_elixir", 0.05f),
-            new MonsterDef.LootDrop("healing_potion", 0.1f)),
+            new MonsterDef.LootDrop("mana_elixir", 0.05f)),
         false,
         0.0f,
         560,

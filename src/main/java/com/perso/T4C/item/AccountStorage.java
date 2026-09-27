@@ -18,7 +18,6 @@ import java.util.List;
 public final class AccountStorage {
   private static final class Dto {
     List<String> storage = new ArrayList<>();
-    List<Double> storageDurability = new ArrayList<>();
     List<Integer> storageCharges = new ArrayList<>();
     int storageGold;
   }
@@ -26,13 +25,11 @@ public final class AccountStorage {
   private static AccountStorage instance;
 
   private final List<String> storage;
-  private final List<Double> storageDurability;
   private final List<Integer> storageCharges;
   private int storageGold;
 
   private AccountStorage(Dto dto) {
     this.storage = dto.storage != null ? dto.storage : new ArrayList<>();
-    this.storageDurability = dto.storageDurability != null ? dto.storageDurability : new ArrayList<>();
     this.storageCharges = dto.storageCharges != null ? dto.storageCharges : new ArrayList<>();
     this.storageGold = dto.storageGold;
   }
@@ -51,10 +48,6 @@ public final class AccountStorage {
     return storage;
   }
 
-  public List<Double> storageDurability() {
-    return storageDurability;
-  }
-
   public List<Integer> storageCharges() {
     return storageCharges;
   }
@@ -70,7 +63,6 @@ public final class AccountStorage {
   public void save() {
     Dto dto = new Dto();
     dto.storage = storage;
-    dto.storageDurability = storageDurability;
     dto.storageCharges = storageCharges;
     dto.storageGold = storageGold;
     try {

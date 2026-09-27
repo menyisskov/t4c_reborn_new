@@ -95,7 +95,6 @@ public final class InventoryService {
       return Result.failure(Failure.TOO_HEAVY, canonicalKey);
     }
     player.getInventory().add(canonicalKey);
-    ItemDurabilityService.synchronize(player);
     if (!definition.isUnlimitedUse() && definition.getNbCharges() > 0) {
       int charges =
           remainingCharges < 0
@@ -117,9 +116,7 @@ public final class InventoryService {
       resolved = player.getInventory().indexOf(expectedItemKey);
     }
     if (resolved < 0) return Result.failure(Failure.ITEM_NOT_OWNED, expectedItemKey);
-    ItemDurabilityService.synchronize(player);
     String removed = player.getInventory().remove(resolved);
-    player.getInventoryDurability().remove(resolved);
     normalizeChargesAfterRemoval(player, removed);
     return Result.success(removed);
   }
@@ -131,19 +128,10 @@ public final class InventoryService {
     requestedSlot = definition.getBodyPart() == BodyPart.WEAPON2 ? BodyPart.WEAPON2 : requestedSlot;
     String previous = offHandOccupant(player, requestedSlot);
     ItemDefinition previousDefinition = ItemRegistry.findByKey(previous);
-    ItemDurabilityService.synchronize(player);
     int itemIndex = player.getInventory().indexOf(itemKey);
-    double itemDurability = ItemDurabilityService.inventory(player, itemIndex);
     player.getInventory().remove(itemIndex);
-    player.getInventoryDurability().remove(itemIndex);
     if (previous != null) {
       player.getInventory().add(previous);
-      BodyPart previousSlot =
-          previousDefinition == null ? requestedSlot : previousDefinition.getBodyPart();
-      player.getInventoryDurability().add(ItemDurabilityService.equipped(player, previousSlot));
-      player
-          .getEquippedDurability()
-          .remove(ItemDurabilityService.primarySlot(player, previousSlot));
       if (previousDefinition != null && previousDefinition.getBodyPart() != null) {
         player.getEquippedItems().remove(previousDefinition.getBodyPart(), previous);
       }
@@ -152,14 +140,10 @@ public final class InventoryService {
       }
     }
     player.getEquippedItems().put(requestedSlot, itemKey);
-    player.getEquippedDurability().put(requestedSlot, itemDurability);
     if (definition.getSecondaryBodyPart() != null) {
       String displaced = player.getEquippedItems().put(definition.getSecondaryBodyPart(), itemKey);
       if (displaced != null && !displaced.equals(previous) && !displaced.equals(itemKey)) {
         player.getInventory().add(displaced);
-        player
-            .getInventoryDurability()
-            .add(ItemDurabilityService.equipped(player, definition.getSecondaryBodyPart()));
       }
     }
     return Result.success(itemKey);
@@ -209,15 +193,11 @@ public final class InventoryService {
         && itemKey.equals(player.getEquippedItems().get(definition.getBodyPart()))) {
       slot = definition.getBodyPart();
     }
-    double durability = ItemDurabilityService.equipped(player, slot);
     player.getEquippedItems().remove(slot);
     if (definition != null && definition.getSecondaryBodyPart() != null) {
       player.getEquippedItems().remove(definition.getSecondaryBodyPart(), itemKey);
     }
     player.getInventory().add(itemKey);
-    ItemDurabilityService.synchronize(player);
-    player.getInventoryDurability().set(player.getInventoryDurability().size() - 1, durability);
-    player.getEquippedDurability().remove(slot);
     return Result.success(itemKey);
   }
 
@@ -282,7 +262,6 @@ public final class InventoryService {
     for (Map.Entry<BodyPart, String> entry : player.getEquippedItems().entrySet()) {
       ItemDefinition definition = ItemRegistry.findByKey(entry.getValue());
       if (definition == null
-          || ItemDurabilityService.isBroken(player, entry.getKey())
           || isMirroredSecondarySlot(player, entry.getKey(), entry.getValue(), definition))
         continue;
       armor += Math.max(0d, definition.getArmorClass());
@@ -297,7 +276,6 @@ public final class InventoryService {
     for (Map.Entry<BodyPart, String> entry : player.getEquippedItems().entrySet()) {
       ItemDefinition definition = ItemRegistry.findByKey(entry.getValue());
       if (definition == null
-          || ItemDurabilityService.isBroken(player, entry.getKey())
           || isMirroredSecondarySlot(player, entry.getKey(), entry.getValue(), definition))
         continue;
       penalty += Math.max(0L, definition.getDodgeLost());
@@ -306,9 +284,7 @@ public final class InventoryService {
   }
 
   public static boolean hasMainHandWeapon(Player player) {
-    return player != null
-        && player.getEquippedItems().containsKey(BodyPart.WEAPON)
-        && !ItemDurabilityService.isBroken(player, BodyPart.WEAPON);
+    return player != null && player.getEquippedItems().containsKey(BodyPart.WEAPON);
   }
 
   public static int chargesForNextInstance(Player player, String itemKey) {
@@ -388,6 +364,5 @@ public final class InventoryService {
     if (definition != null && definition.getSecondaryBodyPart() != null) {
       player.getEquippedItems().remove(definition.getSecondaryBodyPart(), itemKey);
     }
-    player.getEquippedDurability().remove(ItemDurabilityService.primarySlot(player, slot));
   }
 }

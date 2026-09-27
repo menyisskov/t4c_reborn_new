@@ -3,6 +3,7 @@ package com.perso.T4C.monster;
 import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.monster.core.NamedEventMonster;
 import com.perso.T4C.spawn.Spawn;
 
@@ -216,8 +217,8 @@ public final class YoggothWorm extends NamedEventMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        107,
-        330,
+        MonsterGoldCurve.goldMin(150),
+        MonsterGoldCurve.goldMax(150),
         java.util.List.of(
             new MonsterDef.LootDrop("Rough amethyst", 0.02f),
             new MonsterDef.LootDrop("Rough sapphire", 0.004f),

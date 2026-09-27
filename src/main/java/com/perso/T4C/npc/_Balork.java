@@ -9,7 +9,10 @@ import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "_Balork", x = 0, y = 0, z = 1, stationary = false, aggressive = false)
+// T4C-0068: was spawned at the uninitialized placeholder (0,0,1) - literally nowhere reachable.
+// Placed at (222,444,1), the exact spot the owner confirmed in-game as Balork's room in the
+// Lighthaven temple's basement (near the Green Slime spawns, monster/GreenSlime.java).
+@Spawn(type = "_Balork", x = 222, y = 444, z = 1, stationary = false, aggressive = false)
 public final class _Balork extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Demon Attack.wav";
   public static final String SOUND_DEATH = "Demon Dying.wav";

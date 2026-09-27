@@ -26,7 +26,6 @@ import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.item.ItemUseService;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
@@ -645,13 +644,7 @@ public class Inventory extends GuiScreenBase {
   private boolean showItemTooltipAt(float screenX, float screenY) {
     String equippedItem = findEquippedItemAt(screenX, screenY);
     if (equippedItem != null) {
-      BodyPart equippedSlot = findEquippedSlotAt(screenX, screenY);
-      tooltip.show(
-          buildItemTooltipText(
-              equippedItem,
-              equippedSlot == null ? 100d : ItemDurabilityService.equipped(player, equippedSlot)),
-          screenX,
-          screenY);
+      tooltip.show(buildItemTooltipText(equippedItem), screenX, screenY);
       return true;
     }
     GuiInventory inventory = findInventoryAt(screenX, screenY);
@@ -662,11 +655,7 @@ public class Inventory extends GuiScreenBase {
     if (hit == null || hit.getItemName() == null || hit.getItemName().isEmpty()) {
       return false;
     }
-    tooltip.show(
-        buildItemTooltipText(
-            hit.getItemName(), ItemDurabilityService.inventory(player, hit.getIndex())),
-        screenX,
-        screenY);
+    tooltip.show(buildItemTooltipText(hit.getItemName()), screenX, screenY);
     return true;
   }
 
@@ -687,17 +676,8 @@ public class Inventory extends GuiScreenBase {
     return null;
   }
 
-  private BodyPart findEquippedSlotAt(float screenX, float screenY) {
-    for (int i = playerParts.size() - 1; i >= 0; i--) {
-      GuiPlayerPart part = playerParts.get(i);
-      if (part.contains(screenX, screenY) && part.equippedItem() != null)
-        return part.occupiedPart();
-    }
-    return null;
-  }
-
-  private String buildItemTooltipText(String itemName, double durability) {
-    return ItemTooltipText.build(itemName, durability);
+  private String buildItemTooltipText(String itemName) {
+    return ItemTooltipText.build(itemName);
   }
 
   private static void appendLine(StringBuilder text, String slug, String value) {

@@ -13,7 +13,7 @@
   "soundAttack": "Rat Attack.wav",
   "soundDeath": "Rat Dying.wav",
   "soundHit": "Rat Hit.wav",
-  "gold": { "min": 2, "max": 9 },
+  "gold": { "min": 5, "max": 17 },
   "loot": [
     { "item": "Torch", "chance": 0.03 }
   ],
