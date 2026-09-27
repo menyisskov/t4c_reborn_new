@@ -6,17 +6,28 @@ import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.XpCurve;
+import com.perso.T4C.combat.ArmorClassRules;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.npc.behavior.RebirthBehavior;
 import com.perso.T4C.npc.core.NPCManager;
+import com.perso.T4C.npc.core.NpcWorldFlags;
+import com.perso.T4C.player.GmRank;
+import com.perso.T4C.player.GmSeed;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spawn.SpawnDefinition;
+import com.perso.T4C.spawn.SpawnRegistry;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
+import com.perso.T4C.teleport.NamedLocation;
+import com.perso.T4C.teleport.NamedLocations;
 import com.perso.T4C.ui.SystemMessage;
+import com.perso.T4C.world.DayNightCycle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
@@ -25,9 +36,15 @@ public final class GmCommandProcessor {
   private final NPCManager npcManager;
   private final MonsterManager monsterManager;
   private final Consumer<Player> saveHandler;
+  private final CharacterDirectory characters;
+  private DayNightCycle dayNightCycle;
 
-  public GmCommandProcessor(XpCurve xpCurve, NPCManager npcManager, MonsterManager monsterManager) {
-    this(xpCurve, npcManager, monsterManager, PlayerStateStore::save);
+  public GmCommandProcessor(
+      XpCurve xpCurve,
+      NPCManager npcManager,
+      MonsterManager monsterManager,
+      CharacterDirectory characters) {
+    this(xpCurve, npcManager, monsterManager, PlayerStateStore::save, characters);
   }
 
   GmCommandProcessor(
@@ -35,10 +52,36 @@ public final class GmCommandProcessor {
       NPCManager npcManager,
       MonsterManager monsterManager,
       Consumer<Player> saveHandler) {
+    this(xpCurve, npcManager, monsterManager, saveHandler, null);
+  }
+
+  GmCommandProcessor(
+      XpCurve xpCurve,
+      NPCManager npcManager,
+      MonsterManager monsterManager,
+      Consumer<Player> saveHandler,
+      CharacterDirectory characters) {
     this.xpCurve = xpCurve;
     this.npcManager = npcManager;
     this.monsterManager = monsterManager;
     this.saveHandler = saveHandler == null ? player -> {} : saveHandler;
+    this.characters = characters;
+  }
+
+  /**
+   * The rank a command needs. Commands that change the whole world (clock, world flags) or other
+   * characters' ranks are Super GM only; with several players online they affect everyone.
+   */
+  static GmRank requiredRank(String cmd) {
+    return switch (cmd) {
+      case "help", "commands" -> GmRank.PLAYER;
+      case "gm", "time", "day", "night", "gflag", "globalflag" -> GmRank.SUPER_GM;
+      default -> GmRank.GM;
+    };
+  }
+
+  public void setDayNightCycle(DayNightCycle dayNightCycle) {
+    this.dayNightCycle = dayNightCycle;
   }
 
   public boolean handleChatMessage(String text, Player player) {
@@ -61,8 +104,23 @@ public final class GmCommandProcessor {
     String[] parts = raw.trim().split("\\s+", 2);
     String cmd = parts[0].toLowerCase(Locale.ROOT);
     String arg = parts.length > 1 ? parts[1].trim() : "";
+    GmRank rank = player.getGmRank();
+    if (!rank.atLeast(requiredRank(cmd))) {
+      // Players aren't told which GM commands exist; a GM is told what rank they're missing.
+      SystemMessage.showShared(
+          rank == GmRank.PLAYER
+              ? "Unknown command ." + cmd + " (type .help)"
+              : "GM: ." + cmd + " needs the Super GM rank");
+      return;
+    }
     try {
       switch (cmd) {
+        case "gm":
+          gmRank(player, arg);
+          break;
+        case "gmlist", "staff":
+          gmList(player);
+          break;
         case "level", "setlevel":
           setLevel(player, parseInt(arg));
           break;
@@ -110,11 +168,56 @@ public final class GmCommandProcessor {
         case "summon":
           summon(player, arg);
           break;
-        case "teleport":
+        case "teleport", "tp":
           teleport(player, arg);
+          break;
+        case "pos", "getpos", "where":
+          position(player);
+          break;
+        case "flag":
+          flag(player, arg);
+          break;
+        case "unflag":
+          unflag(player, arg);
+          break;
+        case "flags":
+          listFlags(player, arg);
+          break;
+        case "gflag", "globalflag":
+          globalFlag(arg);
           break;
         case "learn":
           learn(player, arg);
+          break;
+        case "unlearn":
+          unlearn(player, arg);
+          break;
+        case "stats":
+          stats(player);
+          break;
+        case "sanctu", "sanctuary":
+          sanctuary(player, arg);
+          break;
+        case "save":
+          ok("Character saved", player);
+          break;
+        case "god":
+          player.setGmInvulnerable(toggle(arg, player.isGmInvulnerable(), "god"));
+          SystemMessage.showShared("GM: god mode " + (player.isGmInvulnerable() ? "on" : "off"));
+          break;
+        case "peace":
+          player.setGmPeace(toggle(arg, player.isGmPeace(), "peace"));
+          SystemMessage.showShared(
+              "GM: peace mode " + (player.isGmPeace() ? "on - monsters ignore you" : "off"));
+          break;
+        case "time":
+          time(arg);
+          break;
+        case "day":
+          time("12");
+          break;
+        case "night":
+          time("0");
           break;
         case "rebirth":
           rebirth(player, arg);
@@ -129,13 +232,15 @@ public final class GmCommandProcessor {
           speed(player, arg);
           break;
         case "help", "commands":
-          help();
+          help(rank);
           break;
         default:
           SystemMessage.showShared("GM: unknown command ." + cmd + " (type .help)");
       }
     } catch (NumberFormatException e) {
       SystemMessage.showShared("GM: invalid value \"" + arg + "\" - must be a number.");
+    } catch (UsageException e) {
+      SystemMessage.showShared("GM: " + e.getMessage());
     }
   }
 
@@ -225,7 +330,19 @@ public final class GmCommandProcessor {
     }
   }
 
-  private void summonItem(Player player, String key) {
+  private static final int SUMMON_ITEM_MAX_COUNT = 50;
+
+  private void summonItem(Player player, String arg) {
+    String key = arg;
+    int count = 1;
+    int lastSpace = arg.lastIndexOf(' ');
+    if (lastSpace > 0) {
+      Integer parsed = tryParseInt(arg.substring(lastSpace + 1).trim());
+      if (parsed != null) {
+        count = Math.max(1, Math.min(parsed, SUMMON_ITEM_MAX_COUNT));
+        key = arg.substring(0, lastSpace).trim();
+      }
+    }
     if (ItemRegistry.findByKey(key) == null) {
       SystemMessage.showShared("GM: unknown item \"" + key + "\"");
       return;
@@ -234,8 +351,10 @@ public final class GmCommandProcessor {
       SystemMessage.showShared("GM: inventory unavailable");
       return;
     }
-    player.getInventory().add(key);
-    ok("Summoned item " + key, player);
+    for (int i = 0; i < count; i++) {
+      player.getInventory().add(key);
+    }
+    ok("Summoned " + (count > 1 ? count + " x " : "item ") + key, player);
   }
 
   private void summonNpc(Player player, String name) {
@@ -296,9 +415,19 @@ public final class GmCommandProcessor {
         && (value.length() == 2 || Character.isWhitespace(value.charAt(2)))) {
       value = value.substring(2).trim();
     }
+    if (value.regionMatches(true, 0, "npc ", 0, 4)) {
+      teleportToNpc(player, value.substring(4).trim());
+      return;
+    }
     String[] coords = value.split("\\s*,\\s*");
     if (coords.length != 3) {
-      SystemMessage.showShared("GM: usage .teleport [to] X,Y,Z");
+      if (!value.isEmpty() && teleportToPlace(player, value)) {
+        return;
+      }
+      SystemMessage.showShared(
+          value.isEmpty()
+              ? "GM: usage .tp X,Y,Z | .tp <place> | .tp npc <id>"
+              : "GM: unknown place \"" + value + "\" (for an NPC use .tp npc <id>)");
       return;
     }
     int tileX = parseInt(coords[0]);
@@ -306,6 +435,282 @@ public final class GmCommandProcessor {
     int z = parseInt(coords[2]);
     player.setWorldPosition(tileX * GRID_W, tileY * GRID_H, z);
     ok("Teleported to " + tileX + "," + tileY + "," + z, player);
+  }
+
+  private void gmRank(Player player, String arg) {
+    if (arg.isEmpty()) {
+      SystemMessage.showShared("GM: your rank is " + player.getGmRank().label());
+      return;
+    }
+    int lastSpace = arg.lastIndexOf(' ');
+    GmRank rank = lastSpace > 0 ? GmRank.parse(arg.substring(lastSpace + 1)) : null;
+    if (rank == null) {
+      throw new UsageException("usage .gm <character> player|gm|super");
+    }
+    String name = arg.substring(0, lastSpace).trim();
+    if (name.equalsIgnoreCase(player.getName())) {
+      throw new UsageException("you can't change your own rank");
+    }
+    if (GmSeed.isOwner(name)) {
+      throw new UsageException(name + " is a server owner - their rank can't be changed in game");
+    }
+    String canonical = characters == null ? null : characters.findName(name);
+    if (canonical == null || !characters.setStoredRank(canonical, rank)) {
+      SystemMessage.showShared("GM: no character named \"" + name + "\"");
+      return;
+    }
+    SystemMessage.showShared("GM: " + canonical + " is now " + rankPhrase(rank));
+  }
+
+  private static String rankPhrase(GmRank rank) {
+    return switch (rank) {
+      case PLAYER -> "a regular player";
+      case GM -> "a GM";
+      case SUPER_GM -> "a Super GM";
+    };
+  }
+
+  private void gmList(Player player) {
+    Map<String, GmRank> ranks = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    if (characters != null) {
+      ranks.putAll(characters.storedRanks());
+    }
+    if (player.getName() != null) {
+      ranks.put(player.getName(), player.getStoredGmRank());
+    }
+    List<String> staff = new ArrayList<>();
+    for (Map.Entry<String, GmRank> entry : ranks.entrySet()) {
+      GmRank effective = GmSeed.isOwner(entry.getKey()) ? GmRank.SUPER_GM : entry.getValue();
+      if (effective != GmRank.PLAYER) {
+        staff.add(
+            entry.getKey()
+                + " ("
+                + effective.label()
+                + (GmSeed.isOwner(entry.getKey()) ? ", owner" : "")
+                + ")");
+      }
+    }
+    SystemMessage.showShared(
+        staff.isEmpty() ? "GM: no GMs" : "GM: staff - " + String.join(", ", staff));
+  }
+
+  private boolean teleportToPlace(Player player, String name) {
+    String needle = name.toLowerCase(Locale.ROOT);
+    NamedLocation match = null;
+    for (NamedLocation location : NamedLocations.all()) {
+      String candidate = location.displayName().toLowerCase(Locale.ROOT);
+      if (candidate.equals(needle)) {
+        match = location;
+        break;
+      }
+      if (match == null && candidate.startsWith(needle)) {
+        match = location;
+      }
+    }
+    if (match == null) {
+      return false;
+    }
+    player.setWorldPosition(match.tileX() * GRID_W, match.tileY() * GRID_H, match.worldZ());
+    ok("Teleported to " + match.displayName(), player);
+    return true;
+  }
+
+  private void teleportToNpc(Player player, String id) {
+    if (id.isEmpty()) {
+      throw new UsageException("usage .tp npc <id>");
+    }
+    for (SpawnDefinition spawn : SpawnRegistry.npcs()) {
+      if (spawn.type() != null && spawn.type().equalsIgnoreCase(id)) {
+        player.setWorldPosition(spawn.x() * GRID_W, spawn.y() * GRID_H, spawn.z());
+        ok(
+            "Teleported to " + spawn.type() + " at " + spawn.x() + "," + spawn.y() + "," + spawn.z(),
+            player);
+        return;
+      }
+    }
+    SystemMessage.showShared("GM: no NPC spawn named \"" + id + "\"");
+  }
+
+  private void position(Player player) {
+    var c = player.getCoordinates();
+    SystemMessage.showShared(
+        "GM: you are at "
+            + (int) (c.getX() / GRID_W)
+            + ","
+            + (int) (c.getY() / GRID_H)
+            + ","
+            + c.getZ());
+  }
+
+  private void flag(Player player, String arg) {
+    String[] parts = arg.split("\\s+");
+    if (arg.isEmpty() || parts.length > 2) {
+      throw new UsageException("usage .flag <key> [value]");
+    }
+    String key = parts[0];
+    if (parts.length == 2) {
+      player.setQuestFlag(key, parseInt(parts[1]));
+      ok("flag " + key + " = " + player.getQuestFlag(key), player);
+    } else {
+      SystemMessage.showShared("GM: flag " + key + " = " + player.getQuestFlag(key));
+    }
+  }
+
+  private void unflag(Player player, String arg) {
+    if (arg.isEmpty() || arg.contains(" ")) {
+      throw new UsageException("usage .unflag <key>");
+    }
+    player.clearQuestFlag(arg);
+    ok("flag " + arg + " removed", player);
+  }
+
+  private static final int FLAG_LIST_LIMIT = 20;
+
+  private void listFlags(Player player, String filter) {
+    String needle = filter.toLowerCase(Locale.ROOT);
+    List<String> matches = new ArrayList<>();
+    for (Map.Entry<String, Integer> entry : new TreeMap<>(player.getQuestFlags()).entrySet()) {
+      if (entry.getKey().toLowerCase(Locale.ROOT).contains(needle)) {
+        matches.add(entry.getKey() + " = " + entry.getValue());
+      }
+    }
+    if (matches.isEmpty()) {
+      SystemMessage.showShared(
+          "GM: no flags" + (needle.isEmpty() ? "" : " matching \"" + filter + "\""));
+      return;
+    }
+    int shown = Math.min(matches.size(), FLAG_LIST_LIMIT);
+    for (String line : matches.subList(0, shown)) {
+      SystemMessage.showShared("GM:   " + line);
+    }
+    if (matches.size() > shown) {
+      SystemMessage.showShared(
+          "GM: ... " + (matches.size() - shown) + " more - narrow it with .flags <text>");
+    }
+  }
+
+  private void globalFlag(String arg) {
+    String[] parts = arg.split("\\s+");
+    if (arg.isEmpty() || parts.length > 2) {
+      throw new UsageException("usage .gflag <key> [value]");
+    }
+    if (parts.length == 2) {
+      NpcWorldFlags.set(parts[0], parseInt(parts[1]));
+    }
+    SystemMessage.showShared("GM: global flag " + parts[0] + " = " + NpcWorldFlags.get(parts[0]));
+  }
+
+  private void stats(Player player) {
+    SystemMessage.showShared(
+        String.format(
+            Locale.ROOT,
+            "GM: level %d (rebirth %d) | XP %d / %d | HP %d/%d | mana %d/%d | gold %d",
+            player.getLevel(),
+            player.getRebirthCount(),
+            player.getCurrentXp(),
+            player.getXpToNextLevel(),
+            player.getCurrentHp(),
+            player.getMaxHp(),
+            player.getMana(),
+            player.getMaxMana(),
+            player.getGold()));
+    SystemMessage.showShared(
+        String.format(
+            Locale.ROOT,
+            "GM: STR %d DEX %d END %d INT %d WIS %d | AC %.0f | stat pts %d, skill pts %d",
+            player.getStrength(),
+            player.getDexterity(),
+            player.getEndurance(),
+            player.getIntelligence(),
+            player.getWisdom(),
+            ArmorClassRules.effectiveArmorClass(player),
+            player.getStatPoints(),
+            player.getSkillPoints()));
+    StringBuilder powers = new StringBuilder("GM: power/resist");
+    for (String element : ELEMENTS) {
+      powers
+          .append(" | ")
+          .append(element)
+          .append(' ')
+          .append(player.getElementPower(element))
+          .append('/')
+          .append(player.getElementResistance(element));
+    }
+    SystemMessage.showShared(powers.toString());
+  }
+
+  private void sanctuary(Player player, String arg) {
+    if ("clear".equalsIgnoreCase(arg) || "reset".equalsIgnoreCase(arg)) {
+      player.clearRespawnPoint();
+      ok("Respawn point reset to the default temple", player);
+      return;
+    }
+    if (arg.isEmpty()) {
+      var c = player.getCoordinates();
+      player.setRespawnPoint(c.getX(), c.getY(), c.getZ());
+      ok("Respawn point set here", player);
+      return;
+    }
+    String[] coords = arg.split("\\s*,\\s*");
+    if (coords.length != 3) {
+      throw new UsageException("usage .sanctu [X,Y,Z | clear]");
+    }
+    int tileX = parseInt(coords[0]);
+    int tileY = parseInt(coords[1]);
+    int z = parseInt(coords[2]);
+    player.setRespawnPoint(tileX * GRID_W, tileY * GRID_H, z);
+    ok("Respawn point set to " + tileX + "," + tileY + "," + z, player);
+  }
+
+  private void time(String arg) {
+    if (dayNightCycle == null) {
+      SystemMessage.showShared("GM: day/night cycle unavailable");
+      return;
+    }
+    if (!arg.isEmpty()) {
+      float hour = parseFloat(arg);
+      if (hour < 0 || hour >= 24) {
+        throw new UsageException("hour must be from 0 to 23");
+      }
+      dayNightCycle.setHour(hour);
+    }
+    float hour = dayNightCycle.getHour();
+    SystemMessage.showShared(
+        String.format(
+            Locale.ROOT,
+            "GM: time is %02d:%02d (%s)",
+            (int) hour,
+            (int) ((hour % 1f) * 60f),
+            dayNightCycle.isNight() ? "night" : "day"));
+  }
+
+  private static boolean toggle(String arg, boolean current, String name) {
+    String mode = arg == null ? "" : arg.trim().toLowerCase(Locale.ROOT);
+    return switch (mode) {
+      case "", "toggle" -> !current;
+      case "on", "enable", "enabled", "1" -> true;
+      case "off", "disable", "disabled", "0" -> false;
+      default -> throw new UsageException("usage ." + name + " on|off|toggle");
+    };
+  }
+
+  private void unlearn(Player player, String arg) {
+    String requested = stripTextId(arg).trim();
+    if (requested.isEmpty()) {
+      throw new UsageException("usage .unlearn <spell>");
+    }
+    SpellData spell = findSpell(requested);
+    String name = spell == null ? requested : spell.getName();
+    List<String> spells = player.getSpells();
+    if (spells != null
+        && spells.removeIf(
+            known ->
+                known != null
+                    && (known.equalsIgnoreCase(name) || known.equalsIgnoreCase(requested)))) {
+      ok("Forgot spell " + name, player);
+    } else {
+      SystemMessage.showShared("GM: doesn't know " + name);
+    }
   }
 
   private void learn(Player player, String arg) {
@@ -433,14 +838,33 @@ public final class GmCommandProcessor {
     SystemMessage.showShared("GM: " + msg);
   }
 
-  private void help() {
+  private void help(GmRank rank) {
+    if (rank == GmRank.PLAYER) {
+      SystemMessage.showShared("No chat commands are available yet.");
+      return;
+    }
+    if (rank.atLeast(GmRank.SUPER_GM)) {
+      SystemMessage.showShared(
+          "GM (Super): .gm NAME player|gm|super | .time [H] | .day | .night | .gflag KEY [X]");
+    }
     SystemMessage.showShared(
-        "GM: .noclip [on|off|toggle] | .teleport [to] X,Y,Z | .speed N|up|down|reset");
-    SystemMessage.showShared("GM: .setLevel/.setXp/.setGold/.setHp/.setMana X");
+        "GM: .tp X,Y,Z | .tp PLACE | .tp npc ID | .pos | .sanctu [X,Y,Z|clear] | .save");
+    SystemMessage.showShared(
+        "GM: .noclip | .god | .peace [on|off] | .speed N|up|down|reset | .gmlist");
+    SystemMessage.showShared("GM: .setLevel/.setXp/.setGold/.setHp/.setMana X | .stats");
     SystemMessage.showShared(
         "GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X");
     SystemMessage.showShared(
-        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME [count] | .learn SPELL | .rebirth | .setpower ELEMENT X");
+        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME [count] | .rebirth | .setpower ELEMENT X");
+    SystemMessage.showShared(
+        "GM: .learn/.unlearn SPELL | .flag KEY [X] | .unflag KEY | .flags [TEXT]");
+  }
+
+  /** Bad arguments: reported to the player, nothing changed or saved. */
+  private static final class UsageException extends RuntimeException {
+    UsageException(String message) {
+      super(message);
+    }
   }
 
   private static int parseInt(String s) {

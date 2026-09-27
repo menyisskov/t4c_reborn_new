@@ -44,6 +44,7 @@ public final class PlayerStateMapper {
     state.statPoints = player.getStatPoints();
     state.skillPoints = player.getSkillPoints();
     state.rebirthCount = player.getRebirthCount();
+    state.gmRank = player.getStoredGmRank().name();
     state.spells = player.getSpells();
     state.quickSlots = player.getQuickSlots();
     state.macros = player.getMacros();
@@ -98,6 +99,7 @@ public final class PlayerStateMapper {
     // so cap it. The __FLAG_NUMBER_OF_REMORTS quest flag is left as saved: RemortNPC2 derives the
     // character's base attributes from it, and those were already granted.
     player.setRebirthCount(Math.min(state.rebirthCount, GameConstants.REBIRTH_MAX_REMORTS));
+    player.setGmRank(com.perso.T4C.player.GmRank.fromSave(state.gmRank));
     player.setSpells(state.spells);
     player.setQuickSlots(state.quickSlots);
     // Saves predating T4C-0059 have no macros of their own; they start empty rather than

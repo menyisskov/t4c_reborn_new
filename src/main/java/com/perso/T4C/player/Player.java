@@ -113,6 +113,9 @@ public class Player extends Stats {
   private float buffSpeedMultiplier = 1.0f;
   private float gmSpeedMultiplier = 1.0f;
   private boolean playerCollisionsEnabled = true;
+  private boolean gmInvulnerable = false;
+  private boolean gmPeace = false;
+  private GmRank gmRank = GmRank.PLAYER;
   @Getter private boolean combatMode = false;
   private int buffDamageResistFlat = 0;
   private float buffDamageResistPercent = 0f;
@@ -269,6 +272,12 @@ public class Player extends Stats {
     String key = flag.trim();
     questFlags.put(key, value);
     questFlagExpirations.put(key, System.currentTimeMillis() + Math.max(0L, durationMillis));
+  }
+
+  public void clearQuestFlag(String flag) {
+    if (flag == null) return;
+    questFlags.remove(flag.trim());
+    questFlagExpirations.remove(flag.trim());
   }
 
   public void setQuestFlags(Map<String, Integer> flags) {
@@ -456,7 +465,7 @@ public class Player extends Stats {
   public void takeDamage(int damage, boolean pvpDamage) {
     meditating = false;
     lastDamageTaken = 0;
-    if (currentHp <= 0 || damage <= 0 || hasUnlimitedResources()) return;
+    if (currentHp <= 0 || damage <= 0 || hasUnlimitedResources() || gmInvulnerable) return;
     int mitigated = damage;
     if (buffDamageResistPercent > 0f)
       mitigated = (int) Math.ceil(mitigated * (1f - Math.min(buffDamageResistPercent, 0.99f)));
@@ -890,6 +899,37 @@ public class Player extends Stats {
 
   public void setPlayerCollisionsEnabled(boolean playerCollisionsEnabled) {
     this.playerCollisionsEnabled = playerCollisionsEnabled;
+  }
+
+  /** The stored rank, raised to Super GM for owners listed in {@link GmSeed}. */
+  public GmRank getGmRank() {
+    return GmSeed.isOwner(getName()) ? GmRank.SUPER_GM : gmRank;
+  }
+
+  /** The rank as saved on the character, before the owner list is applied. */
+  public GmRank getStoredGmRank() {
+    return gmRank;
+  }
+
+  public void setGmRank(GmRank gmRank) {
+    this.gmRank = gmRank == null ? GmRank.PLAYER : gmRank;
+  }
+
+  /** GM peace mode: monsters neither start nor keep a fight with this player. */
+  public boolean isGmPeace() {
+    return gmPeace;
+  }
+
+  public void setGmPeace(boolean gmPeace) {
+    this.gmPeace = gmPeace;
+  }
+
+  public boolean isGmInvulnerable() {
+    return gmInvulnerable;
+  }
+
+  public void setGmInvulnerable(boolean gmInvulnerable) {
+    this.gmInvulnerable = gmInvulnerable;
   }
 
   public List<ActiveBuff> getActiveBuffs() {
