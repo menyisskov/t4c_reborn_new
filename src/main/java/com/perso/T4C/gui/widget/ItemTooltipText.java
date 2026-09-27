@@ -2,13 +2,12 @@ package com.perso.T4C.gui.widget;
 
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.item.ItemDurabilityService;
 
-/** Multi-line hover text describing an item: name, slot, price, durability, stats, requirements. */
+/** Multi-line hover text describing an item: name, slot, price, stats, requirements. */
 public final class ItemTooltipText {
   private ItemTooltipText() {}
 
-  public static String build(String itemName, double durability) {
+  public static String build(String itemName) {
     ItemDefinition def = ItemDefinition.get(itemName);
     if (def == null) {
       return itemName;
@@ -19,11 +18,6 @@ public final class ItemTooltipText {
     appendLine(text, "type", def.getBodyPart() == null ? null : def.getBodyPart().name());
     appendLine(text, "price", def.getPrice() > 0 ? def.getPrice() + " gold" : null);
     appendLine(text, "weight", def.getWeight() > 0 ? String.valueOf(def.getWeight()) : null);
-    if (ItemDurabilityService.isRepairable(def)) {
-      String formatted = ItemDurabilityService.format(durability);
-      text.append('\n').append(I18n.message("tooltip.durability", formatted, formatted));
-      if (durability <= 0d) text.append(" - ").append(I18n.key("tooltip.broken"));
-    }
     appendLine(
         text, "armor_class", def.getArmorClass() != 0d ? formatDouble(def.getArmorClass()) : null);
     appendLine(

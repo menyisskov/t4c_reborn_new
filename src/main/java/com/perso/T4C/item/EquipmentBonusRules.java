@@ -14,9 +14,7 @@ public final class EquipmentBonusRules {
     Map<Integer, ActiveBoost> active = new LinkedHashMap<>();
     for (Map.Entry<BodyPart, String> equipped : player.getEquippedItems().entrySet()) {
       ItemDefinition item = ItemRegistry.findByKey(equipped.getValue());
-      if (item == null
-          || ItemDurabilityService.isBroken(player, equipped.getKey())
-          || isMirrored(player, equipped.getKey(), equipped.getValue(), item)) continue;
+      if (item == null || isMirrored(player, equipped.getKey(), equipped.getValue(), item)) continue;
       for (ItemDefinition.ItemBoost boost : item.getBoosts()) {
         if (player.getIntelligence() < boost.getMinInt() || player.getWisdom() < boost.getMinWis())
           continue;

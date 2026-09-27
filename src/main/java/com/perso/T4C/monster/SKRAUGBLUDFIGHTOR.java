@@ -4,6 +4,7 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "SKRAUGBLUDFIGHTOR", x = 1014, y = 528, z = 0, stationary = false, aggressive = true)
@@ -165,8 +166,8 @@ public final class SKRAUGBLUDFIGHTOR extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        122,
-        374,
+        MonsterGoldCurve.goldMin(150),
+        MonsterGoldCurve.goldMax(150),
         java.util.List.of(),
         false,
         0.0f,

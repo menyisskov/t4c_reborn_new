@@ -127,10 +127,7 @@ public class Player extends Stats {
   @Getter private List<String> inventory = new ArrayList<>();
   @Getter private Map<BodyPart, String> equippedItems = new HashMap<>();
   @Getter private Map<String, Integer> itemCharges = new HashMap<>();
-  @Getter private List<Double> inventoryDurability = new ArrayList<>();
-  @Getter private Map<BodyPart, Double> equippedDurability = new HashMap<>();
   @Getter private List<String> storage = new ArrayList<>();
-  @Getter private List<Double> storageDurability = new ArrayList<>();
   @Getter private List<Integer> storageCharges = new ArrayList<>();
   @Getter private int storageGold = 0;
   // T4C-0059: macros bind a spell name to a key, and spells are per-character - a Warrior has no
@@ -209,17 +206,11 @@ public class Player extends Stats {
 
   public void setInventory(List<String> inventory) {
     this.inventory = inventory == null ? new ArrayList<>() : new ArrayList<>(inventory);
-    this.inventoryDurability = new ArrayList<>();
   }
 
   public void setStorage(List<String> storage) {
     this.storage = storage == null ? new ArrayList<>() : new ArrayList<>(storage);
-    this.storageDurability = new ArrayList<>();
     this.storageCharges = new ArrayList<>();
-  }
-
-  public void setStorageDurability(List<Double> durability) {
-    this.storageDurability = durability == null ? new ArrayList<>() : new ArrayList<>(durability);
   }
 
   public void setStorageCharges(List<Integer> charges) {
@@ -230,18 +221,8 @@ public class Player extends Stats {
     this.storageGold = Math.max(0, storageGold);
   }
 
-  public void setInventoryDurability(List<Double> durability) {
-    this.inventoryDurability = durability == null ? new ArrayList<>() : new ArrayList<>(durability);
-    com.perso.T4C.item.ItemDurabilityService.synchronize(this);
-  }
-
-  public void setEquippedDurability(Map<BodyPart, Double> durability) {
-    this.equippedDurability = durability == null ? new HashMap<>() : new HashMap<>(durability);
-  }
-
   public void setEquippedItems(Map<BodyPart, String> equippedItems) {
     this.equippedItems = equippedItems == null ? new HashMap<>() : new HashMap<>(equippedItems);
-    this.equippedDurability = new HashMap<>();
   }
 
   public void showTalkText(String text) {

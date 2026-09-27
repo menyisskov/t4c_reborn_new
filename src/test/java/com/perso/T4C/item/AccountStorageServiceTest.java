@@ -52,7 +52,6 @@ class AccountStorageServiceTest {
   void depositAndWithdrawMoveTheItemBetweenBackpackAndVault() throws Exception {
     Player player = strongPlayer();
     player.setInventory(List.of(DAGGER));
-    player.setInventoryDurability(List.of(50d));
 
     assertTrue(AccountStorageService.deposit(player, 0, DAGGER).success());
     assertTrue(player.getInventory().isEmpty());
@@ -81,7 +80,6 @@ class AccountStorageServiceTest {
   void vaultContentsSurviveAReloadFromDisk() throws Exception {
     Player player = strongPlayer();
     player.setInventory(List.of(DAGGER));
-    player.setInventoryDurability(List.of(12d));
     player.setGold(750);
     AccountStorageService.deposit(player, 0, DAGGER);
     AccountStorageService.depositGold(player, 750);
@@ -91,14 +89,12 @@ class AccountStorageServiceTest {
 
     assertEquals(List.of(DAGGER), AccountStorage.get().storage());
     assertEquals(750, AccountStorage.get().storageGold());
-    assertEquals(12d, AccountStorage.get().storageDurability().get(0));
   }
 
   @Test
   void isSharedAcrossDifferentCharactersOnTheSameRoster() throws Exception {
     Player alice = strongPlayer();
     alice.setInventory(List.of(DAGGER));
-    alice.setInventoryDurability(List.of(100d));
     AccountStorageService.deposit(alice, 0, DAGGER);
 
     Player bob = strongPlayer();

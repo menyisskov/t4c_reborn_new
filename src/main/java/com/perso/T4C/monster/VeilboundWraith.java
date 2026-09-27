@@ -3,6 +3,7 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
 // Lower-tier trash of The Fading Veil (center 1420,1560 r130, worldZ 0) — a corrupted spirit
@@ -65,8 +66,8 @@ public final class VeilboundWraith extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        485,
-        1200,
+        MonsterGoldCurve.goldMin(485),
+        MonsterGoldCurve.goldMax(485),
         java.util.List.of(
             new MonsterDef.LootDrop("serious_healing_potion", 0.08f),
             new MonsterDef.LootDrop("potion_of_mana", 0.1f),

@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0070`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0077`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -82,6 +82,13 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0067 | Fixed the "too exhausted" double-click on the five protection spells (0ms exhaustion), added their level-150+ Ultra tier (double effect, stacks with the original, 1,000,000 gold to learn), and a new Renew Armor spell that re-lays whichever of the ten (base + Ultra) the caster knows in one cast | Content/Fix | Done | `397dff3a` | [2026-09-27](CHANGELOG.md#2026-09-27--protection-spells-that-keep-up-with-you-and-their-ultra-versions-t4c-0067) |
 | T4C-0068 | Renewed Wards: a new Lighthaven-area quest (Warden Aelric, clear the skeletons rising at the old grave markers) that teaches the Renew Armor spell for free | Content | Done | `397dff3a` | [2026-09-27](CHANGELOG.md#2026-09-27--renewed-wards-t4c-0068) |
 | T4C-0069 | Area attack spells at level 150+ now land as a scattered, staggered multi-burst impact instead of one flash, escalating with the spell's own tier | Content/Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--bigger-impacts-for-the-strongest-area-spells-t4c-0069) |
+| T4C-0070 | Two Tideworn Reaver spawns near Harbormaster Rangor's dock kept aggroing and interrupting the Passage to Avalon conversation; moved them further out | Fix | In Progress | | |
+| T4C-0071 | Temple blessing chests now also restore full health and mana, and play Bless's visual effect on the player | Content | In Progress | | |
+| T4C-0072 | Removed item durability entirely: gear no longer degrades, breaks or needs repair | Content/Systems | In Progress | | |
+| T4C-0073 | Balork was spawned at (0,0), an uninitialized placeholder; moved into the Lighthaven temple's basement | Fix | In Progress | | |
+| T4C-0074 | Combat mode (Ctrl+C) was never bound to a key, so peaceful NPCs like Balork could never be attacked; wired it up | Fix | In Progress | | |
+| T4C-0075 | Bound Ctrl+S to open the character sheet (attributes/stat points), alongside its existing Ctrl+T binding | Content | In Progress | | |
+| T4C-0076 | Removed plain Healing Potion from monster loot tables (higher tiers untouched); brought 19 monsters whose gold drop had drifted well under the roster's established level curve back in line, with a `MonsterGoldCurve` helper and an invariant test guarding it | Content/Fix | In Progress | | |
 
 ## Type legend
 

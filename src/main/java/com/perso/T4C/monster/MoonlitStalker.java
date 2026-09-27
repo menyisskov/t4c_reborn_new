@@ -3,6 +3,7 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
 // Upper-tier trash of The Avalon Wilds (center 1265,1400 r110, worldZ 0) — a nocturnal predator,
@@ -65,10 +66,9 @@ public final class MoonlitStalker extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        390,
-        975,
+        MonsterGoldCurve.goldMin(390),
+        MonsterGoldCurve.goldMax(390),
         java.util.List.of(
-            new MonsterDef.LootDrop("healing_potion", 0.1f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.05f),
             new MonsterDef.LootDrop("potion_of_mana", 0.08f)),
         false,

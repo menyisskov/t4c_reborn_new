@@ -3,6 +3,7 @@ package com.perso.T4C.monster;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
 // Loyal, still-unmarred trash of The Avalon Wilds (center 1265,1400 r110, worldZ 0). Reuses the
@@ -62,11 +63,10 @@ public final class FeyWarden extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        330,
-        825,
+        MonsterGoldCurve.goldMin(330),
+        MonsterGoldCurve.goldMax(330),
         java.util.List.of(
             new MonsterDef.LootDrop("light_healing_potion", 0.15f),
-            new MonsterDef.LootDrop("healing_potion", 0.08f),
             new MonsterDef.LootDrop("torch", 0.2f),
             // T4C-0021: light-flavor source for the Ancient Celestial/Empyrean armor sets
             // (ArmorSetGenerator) - previously generated with zero acquisition path. Rates are

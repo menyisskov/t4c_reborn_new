@@ -31,6 +31,7 @@ public class ObjectClickHandler extends InputAdapter {
   private final ChestService chestService = new ChestService();
   private final TempleBlessingService templeBlessingService = new TempleBlessingService();
   private final GroundItemManager groundItemManager;
+  private final Runnable onTempleBlessing;
 
   public ObjectClickHandler(
       ObjectRenderer objectRenderer,
@@ -39,7 +40,8 @@ public class ObjectClickHandler extends InputAdapter {
       OrthographicCamera camera,
       Player player,
       SystemMessage systemMessage,
-      GroundItemManager groundItemManager) {
+      GroundItemManager groundItemManager,
+      Runnable onTempleBlessing) {
     this.objectRenderer = objectRenderer;
     this.objectPositions = objectPositions;
     this.mapRenderer = mapRenderer;
@@ -47,6 +49,7 @@ public class ObjectClickHandler extends InputAdapter {
     this.player = player;
     this.systemMessage = systemMessage;
     this.groundItemManager = groundItemManager;
+    this.onTempleBlessing = onTempleBlessing;
   }
 
   @Override
@@ -91,6 +94,7 @@ public class ObjectClickHandler extends InputAdapter {
           if (blessing.blessed()) {
             PlayerStateStore.save(player);
             systemMessage.show(templeBlessingService.message(blessing));
+            if (onTempleBlessing != null) onTempleBlessing.run();
             log.info(
                 "Temple blessing applied: casterWisdom={}, spells={}, at ({}, {}, {})",
                 blessing.casterWisdom(),

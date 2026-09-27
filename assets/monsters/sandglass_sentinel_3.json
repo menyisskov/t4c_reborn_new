@@ -14,8 +14,8 @@
   "soundDeath": "Male Dying 1.wav",
   "soundHit": "Male Hit 1.wav",
   "gold": {
-    "min": 400,
-    "max": 900
+    "min": 810,
+    "max": 2475
   },
   "loot": [
     {

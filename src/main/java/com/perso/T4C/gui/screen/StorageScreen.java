@@ -22,7 +22,6 @@ import com.perso.T4C.item.AccountStorageBackend;
 import com.perso.T4C.item.CharacterStorageBackend;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.item.ItemDurabilityService;
 import com.perso.T4C.item.StorageBackend;
 import com.perso.T4C.item.StorageService;
 import com.perso.T4C.player.Player;
@@ -44,7 +43,6 @@ import java.util.Map;
 public class StorageScreen extends GuiScreenBase {
   private static final Color GOLD = Color.valueOf("F2B705");
   private static final Color DIM = Color.valueOf("A09880");
-  private static final Color DAMAGED = Color.valueOf("FF9A3C");
 
   static final float WIDTH = 600f;
   static final float HEIGHT = 456f;
@@ -97,13 +95,11 @@ public class StorageScreen extends GuiScreenBase {
     final String itemKey;
     final int firstIndex;
     final int count;
-    final double durability;
 
-    Stack(String itemKey, int firstIndex, int count, double durability) {
+    Stack(String itemKey, int firstIndex, int count) {
       this.itemKey = itemKey;
       this.firstIndex = firstIndex;
       this.count = count;
-      this.durability = durability;
     }
   }
 
@@ -141,13 +137,14 @@ public class StorageScreen extends GuiScreenBase {
 
   private static final class QuantityPrompt {
     String itemKey;
-    // The exact stack clicked (item key + durability), so a damaged stack never pulls copies
-    // from a pristine stack of the same item.
     Stack stack;
     boolean gold;
     boolean withdraw;
     int max;
     String value;
+    // The field opens pre-filled with the max amount; the first digit typed should replace that
+    // rather than append to it, or typing "5" onto a prefilled 90000000 makes 900000005.
+    boolean edited;
     final Rectangle bounds = new Rectangle();
     final List<Button> buttons = new ArrayList<>();
   }
@@ -344,24 +341,19 @@ public class StorageScreen extends GuiScreenBase {
   private List<Stack> buildStashStacks() {
     List<String> storage = backend.items();
     Map<String, int[]> grouped = new LinkedHashMap<>();
-    Map<String, Double> durabilityOf = new LinkedHashMap<>();
     String query = searchQuery.trim().toLowerCase(Locale.ROOT);
     for (int i = 0; i < storage.size(); i++) {
       String key = storage.get(i);
       if (key == null) continue;
       if (selectedCategory != null && StorageService.categoryOf(key) != selectedCategory) continue;
       if (!query.isEmpty() && !displayName(key).toLowerCase(Locale.ROOT).contains(query)) continue;
-      double durability = backend.durability(i);
-      String group = groupKey(key, durability);
-      grouped.computeIfAbsent(group, g -> new int[] {-1, 0});
-      int[] v = grouped.get(group);
+      grouped.computeIfAbsent(key, g -> new int[] {-1, 0});
+      int[] v = grouped.get(key);
       if (v[0] < 0) v[0] = i;
       v[1]++;
-      durabilityOf.putIfAbsent(group, durability);
     }
     List<Stack> result = new ArrayList<>();
-    grouped.forEach(
-        (group, v) -> result.add(new Stack(storage.get(v[0]), v[0], v[1], durabilityOf.get(group))));
+    grouped.forEach((key, v) -> result.add(new Stack(storage.get(v[0]), v[0], v[1])));
     result.sort(STACK_ORDER);
     return result;
   }
@@ -369,35 +361,22 @@ public class StorageScreen extends GuiScreenBase {
   private List<Stack> buildPackStacks() {
     List<String> inventory = player.getInventory();
     Map<String, int[]> grouped = new LinkedHashMap<>();
-    Map<String, Double> durabilityOf = new LinkedHashMap<>();
     for (int i = 0; i < inventory.size(); i++) {
       String key = inventory.get(i);
       if (key == null) continue;
-      double durability = ItemDurabilityService.inventory(player, i);
-      String group = groupKey(key, durability);
-      grouped.computeIfAbsent(group, g -> new int[] {-1, 0});
-      int[] v = grouped.get(group);
+      grouped.computeIfAbsent(key, g -> new int[] {-1, 0});
+      int[] v = grouped.get(key);
       if (v[0] < 0) v[0] = i;
       v[1]++;
-      durabilityOf.putIfAbsent(group, durability);
     }
     List<Stack> result = new ArrayList<>();
-    grouped.forEach(
-        (group, v) ->
-            result.add(new Stack(inventory.get(v[0]), v[0], v[1], durabilityOf.get(group))));
+    grouped.forEach((key, v) -> result.add(new Stack(inventory.get(v[0]), v[0], v[1])));
     return result;
   }
 
   private static final Comparator<Stack> STACK_ORDER =
       Comparator.<Stack, Integer>comparing(s -> StorageService.categoryOf(s.itemKey).ordinal())
-          .thenComparing(s -> displayName(s.itemKey), String.CASE_INSENSITIVE_ORDER)
-          .thenComparing(s -> -s.durability);
-
-  private static String groupKey(String key, double durability) {
-    return ItemDurabilityService.isRepairable(ItemDefinition.get(key))
-        ? key + "\u0000" + durability
-        : key;
-  }
+          .thenComparing(s -> displayName(s.itemKey), String.CASE_INSENSITIVE_ORDER);
 
   static String displayName(String itemKey) {
     ItemDefinition def = ItemDefinition.get(itemKey);
@@ -428,7 +407,7 @@ public class StorageScreen extends GuiScreenBase {
     if (player == null || stack == null || amount <= 0) return;
     int moved = 0;
     for (int i = 0; i < amount; i++) {
-      int index = indexOf(player.getInventory(), stack.itemKey, stack.durability, false);
+      int index = player.getInventory().indexOf(stack.itemKey);
       if (index < 0) break;
       if (!backend.deposit(index, stack.itemKey).success()) break;
       moved++;
@@ -441,7 +420,7 @@ public class StorageScreen extends GuiScreenBase {
     int moved = 0;
     InventoryService.Result last = null;
     for (int i = 0; i < amount; i++) {
-      int index = indexOf(backend.items(), stack.itemKey, stack.durability, true);
+      int index = backend.items().indexOf(stack.itemKey);
       if (index < 0) break;
       last = backend.withdraw(index, stack.itemKey);
       if (!last.success()) break;
@@ -451,21 +430,6 @@ public class StorageScreen extends GuiScreenBase {
     if (moved > 0) persist();
   }
 
-  /** Finds a copy of {@code key} with the given durability (same stack), else any copy. */
-  private int indexOf(List<String> items, String key, double durability, boolean stash) {
-    boolean repairable = ItemDurabilityService.isRepairable(ItemDefinition.get(key));
-    int fallback = -1;
-    for (int i = 0; i < items.size(); i++) {
-      if (!key.equals(items.get(i))) continue;
-      if (fallback < 0) fallback = i;
-      if (!repairable) return i;
-      double d =
-          stash ? backend.durability(i) : ItemDurabilityService.inventory(player, i);
-      if (d == durability) return i;
-    }
-    return fallback;
-  }
-
   private void takeAllVisible() {
     if (player == null) return;
     InventoryService.Result failure = null;
@@ -473,7 +437,7 @@ public class StorageScreen extends GuiScreenBase {
     int moved = 0;
     for (Stack stack : new ArrayList<>(stashStacks)) {
       for (int i = 0; i < stack.count; i++) {
-        int index = indexOf(backend.items(), stack.itemKey, stack.durability, true);
+        int index = backend.items().indexOf(stack.itemKey);
         if (index < 0) break;
         InventoryService.Result result = backend.withdraw(index, stack.itemKey);
         if (!result.success()) {
@@ -558,6 +522,7 @@ public class StorageScreen extends GuiScreenBase {
 
   private void setPromptValue(int value) {
     prompt.value = String.valueOf(Math.max(1, Math.min(prompt.max, value)));
+    prompt.edited = true;
   }
 
   private void applyPrompt() {
@@ -720,7 +685,6 @@ public class StorageScreen extends GuiScreenBase {
       SpriteBatch batch, Pane pane, Rectangle cells, int cols, int scrollRow, List<Stack> stacks) {
     BitmapFont countFont = FontManager.getInstance().getJetBrainsMonoFont(10, Color.WHITE);
     BitmapFont shadow = FontManager.getInstance().getJetBrainsMonoFont(10, Color.BLACK);
-    BitmapFont durFont = FontManager.getInstance().getJetBrainsMonoFont(9, DAMAGED);
     int first = scrollRow * cols;
     for (int i = first; i < Math.min(stacks.size(), first + cols * ROWS); i++) {
       Stack stack = stacks.get(i);
@@ -742,10 +706,6 @@ public class StorageScreen extends GuiScreenBase {
         float ty = cy + CELL - 13f;
         shadow.draw(batch, count, tx + 1f, ty + 1f);
         countFont.draw(batch, count, tx, ty);
-      }
-      if (ItemDurabilityService.isRepairable(ItemDefinition.get(stack.itemKey))
-          && stack.durability < ItemDurabilityService.MAX) {
-        durFont.draw(batch, ItemDurabilityService.format(stack.durability) + "%", cx + 2f, cy + 1f);
       }
     }
   }
@@ -1044,7 +1004,7 @@ public class StorageScreen extends GuiScreenBase {
       tooltip.clear();
       return;
     }
-    String text = ItemTooltipText.build(stack.itemKey, stack.durability);
+    String text = ItemTooltipText.build(stack.itemKey);
     if (stack.count > 1) {
       text += "\n" + I18n.message("ui.storage_stack_count", String.valueOf(stack.count));
     }
@@ -1117,7 +1077,8 @@ public class StorageScreen extends GuiScreenBase {
   public boolean onKeyTyped(char character) {
     if (prompt != null) {
       if (Character.isDigit(character)) {
-        String candidate = (prompt.value.equals("0") ? "" : prompt.value) + character;
+        String base = (!prompt.edited || prompt.value.equals("0")) ? "" : prompt.value;
+        String candidate = base + character;
         if (candidate.length() <= 10) setPromptValue((int) Math.min(Integer.MAX_VALUE, Long.parseLong(candidate)));
       }
       return true;

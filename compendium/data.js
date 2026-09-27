@@ -13,8 +13,8 @@ window.T4C_DATA = {
       "hitDamageMin": 3,
       "hitDamageMax": 7,
       "respawnTimeMs": 30000,
-      "goldMin": 2,
-      "goldMax": 9,
+      "goldMin": 5,
+      "goldMax": 17,
       "dodge": 18,
       "acMin": 0,
       "acMax": 0,
@@ -98,10 +98,6 @@ window.T4C_DATA = {
         "light": 35
       },
       "loot": [
-        {
-          "item": "healing_potion",
-          "chance": 0.04
-        },
         {
           "item": "drowned_inquisition_armor",
           "chance": 0.004
@@ -1004,8 +1000,8 @@ window.T4C_DATA = {
       "hitDamageMin": 1,
       "hitDamageMax": 4,
       "respawnTimeMs": 30000,
-      "goldMin": 50,
-      "goldMax": 150,
+      "goldMin": 270,
+      "goldMax": 825,
       "dodge": 610,
       "acMin": 0,
       "acMax": 203,
@@ -1500,8 +1496,8 @@ window.T4C_DATA = {
       "hitDamageMin": 150,
       "hitDamageMax": 330,
       "respawnTimeMs": 30000,
-      "goldMin": 270,
-      "goldMax": 680,
+      "goldMin": 504,
+      "goldMax": 1540,
       "dodge": 1080,
       "acMin": 0,
       "acMax": 165,
@@ -1528,10 +1524,6 @@ window.T4C_DATA = {
         "light": 130
       },
       "loot": [
-        {
-          "item": "healing_potion",
-          "chance": 0.1
-        },
         {
           "item": "mana_potion",
           "chance": 0.06
@@ -1592,10 +1584,6 @@ window.T4C_DATA = {
         {
           "item": "tideworn_avalon_chart",
           "chance": 0.02
-        },
-        {
-          "item": "healing_potion",
-          "chance": 0.3
         },
         {
           "item": "mana_elixir",
@@ -1674,8 +1662,8 @@ window.T4C_DATA = {
       "hitDamageMin": 1,
       "hitDamageMax": 4,
       "respawnTimeMs": 30000,
-      "goldMin": 150,
-      "goldMax": 400,
+      "goldMin": 540,
+      "goldMax": 1650,
       "dodge": 1210,
       "acMin": 0,
       "acMax": 403,
@@ -1735,8 +1723,8 @@ window.T4C_DATA = {
       "hitDamageMin": 180,
       "hitDamageMax": 400,
       "respawnTimeMs": 30000,
-      "goldMin": 330,
-      "goldMax": 825,
+      "goldMin": 594,
+      "goldMax": 1815,
       "dodge": 1320,
       "acMin": 0,
       "acMax": 200,
@@ -1766,10 +1754,6 @@ window.T4C_DATA = {
         {
           "item": "light_healing_potion",
           "chance": 0.15
-        },
-        {
-          "item": "healing_potion",
-          "chance": 0.08
         },
         {
           "item": "torch",
@@ -1848,8 +1832,8 @@ window.T4C_DATA = {
       "hitDamageMin": 210,
       "hitDamageMax": 460,
       "respawnTimeMs": 30000,
-      "goldMin": 390,
-      "goldMax": 975,
+      "goldMin": 702,
+      "goldMax": 2145,
       "dodge": 1560,
       "acMin": 0,
       "acMax": 180,
@@ -1876,10 +1860,6 @@ window.T4C_DATA = {
         "light": 90
       },
       "loot": [
-        {
-          "item": "healing_potion",
-          "chance": 0.1
-        },
         {
           "item": "serious_healing_potion",
           "chance": 0.05
@@ -2026,8 +2006,8 @@ window.T4C_DATA = {
       "hitDamageMin": 1,
       "hitDamageMax": 4,
       "respawnTimeMs": 30000,
-      "goldMin": 400,
-      "goldMax": 900,
+      "goldMin": 810,
+      "goldMax": 2475,
       "dodge": 1810,
       "acMin": 0,
       "acMax": 603,
@@ -2087,8 +2067,8 @@ window.T4C_DATA = {
       "hitDamageMin": 260,
       "hitDamageMax": 560,
       "respawnTimeMs": 30000,
-      "goldMin": 485,
-      "goldMax": 1200,
+      "goldMin": 873,
+      "goldMax": 2668,
       "dodge": 1940,
       "acMin": 0,
       "acMax": 150,
@@ -2492,8 +2472,8 @@ window.T4C_DATA = {
       "hitDamageMin": 300,
       "hitDamageMax": 640,
       "respawnTimeMs": 30000,
-      "goldMin": 560,
-      "goldMax": 1400,
+      "goldMin": 1008,
+      "goldMax": 3080,
       "dodge": 2240,
       "acMin": 0,
       "acMax": 500,
@@ -2527,10 +2507,6 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.05
-        },
-        {
-          "item": "healing_potion",
-          "chance": 0.1
         }
       ],
       "attacks": [
@@ -2661,8 +2637,8 @@ window.T4C_DATA = {
       "hitDamageMin": 1,
       "hitDamageMax": 4,
       "respawnTimeMs": 30000,
-      "goldMin": 900,
-      "goldMax": 1800,
+      "goldMin": 1080,
+      "goldMax": 3300,
       "dodge": 2410,
       "acMin": 0,
       "acMax": 803,
@@ -2995,10 +2971,6 @@ window.T4C_DATA = {
         },
         {
           "item": "serious_healing_potion",
-          "chance": 0.3
-        },
-        {
-          "item": "healing_potion",
           "chance": 0.3
         },
         {
@@ -3924,8 +3896,8 @@ window.T4C_DATA = {
       "hitDamageMin": 1,
       "hitDamageMax": 4,
       "respawnTimeMs": 30000,
-      "goldMin": 1800,
-      "goldMax": 3200,
+      "goldMin": 1350,
+      "goldMax": 4125,
       "dodge": 3010,
       "acMin": 0,
       "acMax": 1003,

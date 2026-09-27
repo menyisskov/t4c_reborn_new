@@ -12,32 +12,13 @@ import java.util.Objects;
 public final class AccountStorageService {
   private AccountStorageService() {}
 
-  /** Pads/trims the vault's durability and charge lists so they line up with its item list. */
+  /** Pads/trims the vault's charge list so it lines up with its item list. */
   public static void synchronize() {
     AccountStorage account = AccountStorage.get();
     int size = account.storage().size();
-    List<Double> durability = account.storageDurability();
-    while (durability.size() < size) durability.add(ItemDurabilityService.MAX);
-    while (durability.size() > size) durability.remove(durability.size() - 1);
-    for (int i = 0; i < size; i++) {
-      Double value = durability.get(i);
-      durability.set(
-          i,
-          value == null
-              ? ItemDurabilityService.MAX
-              : Math.max(0d, Math.min(ItemDurabilityService.MAX, value)));
-    }
     List<Integer> charges = account.storageCharges();
     while (charges.size() < size) charges.add(-1);
     while (charges.size() > size) charges.remove(charges.size() - 1);
-  }
-
-  public static double durability(int index) {
-    synchronize();
-    AccountStorage account = AccountStorage.get();
-    return index < 0 || index >= account.storageDurability().size()
-        ? ItemDurabilityService.MAX
-        : account.storageDurability().get(index);
   }
 
   public static InventoryService.Result deposit(Player player, int inventoryIndex, String itemKey) {
@@ -53,14 +34,12 @@ public final class AccountStorageService {
     if (resolved < 0) {
       return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
     }
-    double durability = ItemDurabilityService.inventory(player, resolved);
     int charges = InventoryService.chargesForNextInstance(player, itemKey);
     InventoryService.Result removed = InventoryService.remove(player, resolved, itemKey);
     if (!removed.success()) return removed;
     synchronize();
     AccountStorage account = AccountStorage.get();
     account.storage().add(removed.itemKey());
-    account.storageDurability().add(durability);
     account.storageCharges().add(charges);
     account.save();
     return removed;
@@ -81,15 +60,10 @@ public final class AccountStorageService {
       return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
     }
     synchronize();
-    double durability = account.storageDurability().get(resolved);
     int charges = account.storageCharges().get(resolved);
     InventoryService.Result added = InventoryService.add(player, itemKey, charges);
     if (!added.success()) return added;
-    ItemDurabilityService.synchronize(player);
-    List<Double> inventoryDurability = player.getInventoryDurability();
-    inventoryDurability.set(inventoryDurability.size() - 1, durability);
     account.storage().remove(resolved);
-    account.storageDurability().remove(resolved);
     account.storageCharges().remove(resolved);
     account.save();
     return added;

@@ -880,6 +880,23 @@ should not consume it), that is a content change, not an editorial one, and need
   worst-proportioned boss found) - raising Mordrenn to 200-600 gold and the Centaur King to
   1,100-2,900 gold. When authoring or auditing a boss's `goldMin`/`goldMax`, sanity-check this
   ratio against a couple of regular monsters near its level before shipping.
+- **A regular monster's gold should scale with its level** (`MonsterGoldCurve`,
+  `goldMin ~= level * 1.8`, `goldMax ~= level * 5.5`) - this is the roster's own established
+  baseline, confirmed by sampling the existing (mostly original-game) content, not an invented
+  number. T4C-0071 (owner's call, "a lvl 300 monster dropping 500 gold is ridiculous") found 19
+  monsters, nearly all in newer fork-added zones, paying well under this despite a normal level
+  and normal XP - in the worst case a level-300 monster paying less gold than a level-30 one
+  nearby. `MonsterGoldCurveTest` floors every monster's `goldMax` at 60% of the curve's value for
+  its level, so new content can't silently repeat this; a boss is expected to sit *above* the
+  curve per the rule above, not just clear the floor. Exempt from the floor: anything with
+  `goldMax <= 1`, this roster's existing convention for "not meant to pay real gold" (arena/
+  training dummies, a handful of verbatim-ported original-game oddities like the literal `Test
+  Skeleton Centaur`).
+- **Plain Healing Potion doesn't drop from monsters** (T4C-0071, owner's call - "it becomes
+  junk"). It's a 42-gold trivial-tier consumable that piled up faster than it was ever worth
+  using; the higher tiers (`serious_healing_potion`/Major, `light_healing_potion`/Light,
+  `critical_healing_potion`/Critical, `deific_healing_potion`/Deific) are unaffected and still
+  drop normally. Don't add a fresh `LootDrop("healing_potion", ...)` to new content.
 - **Endgame quest gold should have a ceiling well under "instantly buys everything."** T4C-0036
   (owner's call) trimmed the five `forge_godsforged_*` final-craft quests and the
   `forge_the_godcore`/`bind_the_godsigil` component quests from 10,000,000/2,000,000 gold down to
@@ -938,9 +955,11 @@ should not consume it), that is a content change, not an editorial one, and need
 - **Check a UI change by looking at it.** Render the screen off-screen (under Xvfb with an
   LWJGL3 harness) and look at the screenshot before calling it done; a compiling screen can
   still be unreadable.
-- **Moving an item must never repair or recharge it.** Anything that moves items (storage,
-  trade, a future bank or mail) carries each item's durability and remaining charges along with
-  it (`StorageService` keeps per-item lists parallel to the storage list).
+- **Moving an item must never recharge it.** Anything that moves items (storage, trade, a
+  future bank or mail) carries each item's remaining charges along with it (`StorageService`
+  keeps a per-item charge list parallel to the storage list). Items have no durability or
+  breakage mechanic (removed in T4C-0066, owner's call) - gear never degrades and never needs
+  repair, so there is nothing to preserve on that front.
 - **Everything a player owns must be saved.** Storage items and banked gold were never written
   to the save file until T4C-0039. When you add player-owned state, add it to `PlayerStateDto`
   and `PlayerStateMapper` in the same change, with a round-trip test. Old saves without the new

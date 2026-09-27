@@ -4,6 +4,7 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterGoldCurve;
 
 public final class r147MOBYOGGOTHWORM1 extends DataMonster {
   public static final String SOUND_ATTACK = "Worm Attack.wav";
@@ -33,8 +34,8 @@ public final class r147MOBYOGGOTHWORM1 extends DataMonster {
         SOUND_ATTACK,
         SOUND_DEATH,
         SOUND_HIT,
-        107,
-        330,
+        MonsterGoldCurve.goldMin(150),
+        MonsterGoldCurve.goldMax(150),
         java.util.List.of(),
         false,
         0.0f,

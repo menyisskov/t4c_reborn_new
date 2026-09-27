@@ -1034,7 +1034,6 @@ public class MainGameScreen implements Screen {
             player.takeDamage(damage);
             int appliedDamage = player.getLastDamageTaken();
             if (appliedDamage > 0) {
-              com.perso.T4C.item.ItemDurabilityService.wearArmorOnPhysicalHit(player);
               playRandomPlayerHitSound();
               floatingDamage.spawn(
                   appliedDamage,
@@ -1283,7 +1282,6 @@ public class MainGameScreen implements Screen {
           player.takeDamage(result.damage());
           int appliedDamage = player.getLastDamageTaken();
           if (appliedDamage > 0) {
-            com.perso.T4C.item.ItemDurabilityService.wearArmorOnPhysicalHit(player);
             playRandomPlayerHitSound();
             floatingDamage.spawn(
                 appliedDamage,
@@ -2722,10 +2720,6 @@ public class MainGameScreen implements Screen {
     boolean wasDead = monster.isDead();
     int appliedPrimaryDamage = 0;
     if (result.hit()) {
-      com.perso.T4C.item.ItemDurabilityService.damageEquipped(
-          player,
-          com.perso.T4C.player.BodyPart.WEAPON,
-          com.perso.T4C.item.ItemDurabilityService.COMBAT_WEAR);
       handleSeraphAuraAttackHit();
       if (!monster.isDead()) {
         if (monster.isStunned()) monster.clearStun();
@@ -4097,6 +4091,20 @@ public class MainGameScreen implements Screen {
     playNpcCastVfx(spell, castOn, casterPosition, null);
   }
 
+  // T4C-0066: the blessing chest has no caster entity of its own to launch a visual from, so this
+  // plays Bless's impact effect directly on the player - the same idiom self-cast player buffs
+  // already use (see the impact-on-`player` call a few lines up in castSelectedSpell).
+  private void playTempleBlessingVfx() {
+    SpellData spell = SpellRegistry.findByName("spell.bless");
+    if (spell == null) return;
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playImpactSound(visuals.impactSound());
+    String impact = visuals.impact();
+    if (impact != null && !impact.isEmpty()) {
+      spellRenderer.triggerImpactSpell(impact, player);
+    }
+  }
+
   private void playNpcSelfVfx(SpellData spell, Vector2 casterPosition) {
     if (spell == null || casterPosition == null) return;
     SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
@@ -4282,7 +4290,8 @@ public class MainGameScreen implements Screen {
             camera,
             player,
             systemMessage,
-            groundItemManager);
+            groundItemManager,
+            this::playTempleBlessingVfx);
     NPCInputHandler npcInputHandler =
         new NPCInputHandler(npcManager, camera, player, this::tryCastAttackSpell, systemMessage);
     MonsterInputHandler monsterInputHandler =
@@ -4334,6 +4343,15 @@ public class MainGameScreen implements Screen {
                 && !GuiManager.isOpen()
                 && !isTextInputActive()) {
               GuiManager.open(new com.perso.T4C.gui.screen.MacrosScreen(player, hud));
+              return true;
+            }
+            if (keycode == Input.Keys.C
+                && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                    || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+                && !GuiManager.isOpen()
+                && !isTextInputActive()
+                && player != null) {
+              player.toggleCombatMode();
               return true;
             }
             if (!GuiManager.isOpen() && !isTextInputActive() && tryFireMacro(keycode)) {

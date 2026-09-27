@@ -115,6 +115,15 @@ public class GameInputHandler {
         GuiManager.open(new Inventory(player, hud));
       }
     }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.S)
+        && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+            || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))) {
+      if (GuiManager.isCurrent(Statistics.class)) {
+        GuiManager.close();
+      } else {
+        GuiManager.open(new Statistics(player));
+      }
+    }
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)
         && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
             || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))) {

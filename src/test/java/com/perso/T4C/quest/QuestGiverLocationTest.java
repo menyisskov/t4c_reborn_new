@@ -1,5 +1,9 @@
 package com.perso.T4C.quest;
 
+import static com.perso.T4C.config.GameConstants.GRID_W;
+import static com.perso.T4C.config.GameConstants.MONSTER_AGGRO_RANGE;
+import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_RADIUS;
+import static com.perso.T4C.config.GameConstants.NPC_PATROL_RADIUS;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -78,5 +82,40 @@ class QuestGiverLocationTest {
     assertTrue(
         duplicates.isEmpty(),
         "two landmarks sharing a name makes \"travel to X\" ambiguous; duplicates: " + duplicates);
+  }
+
+  /**
+   * T4C-0065: two Tideworn Reaver spawns sat 16-24 tiles from HarbormasterRangor's dock - close
+   * enough that, between the reaver's own 6-tile patrol radius and 8-tile aggro range and the
+   * (non-stationary) giver's own 15-tile patrol radius, a reaver could reach and aggro a player
+   * standing at the dock, interrupting the "Passage to Avalon" conversation before it could
+   * finish. The safe distance below is exactly that worst case, in tiles; anything past it means
+   * the two roaming ranges can no longer touch.
+   *
+   * <p>Scoped to this one giver/monster pair rather than every quest giver in the game: a
+   * game-wide sweep turns up the same shape of problem at many other, unrelated NPCs, and fixing
+   * those is a separate pass, not part of this one.
+   */
+  @Test
+  void tidewornReaversCannotWanderIntoHarbormasterRangorsInteractionRange() {
+    float safeDistanceTiles =
+        NPC_PATROL_RADIUS / GRID_W + MONSTER_PATROL_RADIUS / GRID_W + MONSTER_AGGRO_RANGE / GRID_W;
+    List<SpawnDefinition> givers = spawnsOf("HarbormasterRangor");
+    assertFalse(givers.isEmpty(), "HarbormasterRangor must still be spawned somewhere");
+    List<String> tooClose = new ArrayList<>();
+    for (SpawnDefinition giver : givers) {
+      for (SpawnDefinition monster : SpawnRegistry.monsters()) {
+        if (!"Tideworn Reaver".equals(monster.type()) || monster.z() != giver.z()) continue;
+        double distance = Math.hypot(monster.x() - giver.x(), monster.y() - giver.y());
+        if (distance < safeDistanceTiles) {
+          tooClose.add(
+              "(" + monster.x() + "," + monster.y() + ") is " + Math.round(distance) + " tiles");
+        }
+      }
+    }
+    assertTrue(
+        tooClose.isEmpty(),
+        "a Tideworn Reaver can wander into HarbormasterRangor's dialogue and interrupt it: "
+            + tooClose);
   }
 }
