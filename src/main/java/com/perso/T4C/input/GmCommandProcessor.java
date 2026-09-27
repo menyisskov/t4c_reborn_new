@@ -17,6 +17,7 @@ import com.perso.T4C.ui.SystemMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 public final class GmCommandProcessor {
@@ -203,7 +204,7 @@ public final class GmCommandProcessor {
     String[] parts = arg == null ? new String[0] : arg.trim().split("\\s+", 2);
     if (parts.length < 2 || parts[0].isBlank() || parts[1].isBlank()) {
       SystemMessage.showShared(
-          "GM: usage .summon item <key>, .summon npc <name>, .summon monster <name>");
+          "GM: usage .summon item <key>, .summon npc <name>, .summon monster <name> [count]");
       return;
     }
     String type = parts[0].toLowerCase();
@@ -249,16 +250,43 @@ public final class GmCommandProcessor {
     }
   }
 
-  private void summonMonster(Player player, String name) {
+  private static final int SUMMON_MONSTER_MAX_COUNT = 50;
+
+  private void summonMonster(Player player, String arg) {
     if (monsterManager == null) {
       SystemMessage.showShared("GM: monster manager unavailable");
       return;
     }
+    String name = arg;
+    int count = 1;
+    int lastSpace = arg.lastIndexOf(' ');
+    if (lastSpace > 0) {
+      String tail = arg.substring(lastSpace + 1).trim();
+      try {
+        int parsed = Integer.parseInt(tail);
+        count = Math.max(1, Math.min(parsed, SUMMON_MONSTER_MAX_COUNT));
+        name = arg.substring(0, lastSpace).trim();
+      } catch (NumberFormatException ignored) {
+        // trailing token isn't a count; treat the whole arg as the monster name
+      }
+    }
+    if (name.isBlank()) {
+      SystemMessage.showShared("GM: unknown monster \"" + arg + "\"");
+      return;
+    }
     Vector2 feetPosition = new Vector2(player.getPositionVector());
-    if (monsterManager.spawnMonster(name, feetPosition.x, feetPosition.y)) {
-      SystemMessage.showShared("GM: Summoned monster " + name);
-    } else {
+    int spawned = 0;
+    for (int i = 0; i < count; i++) {
+      float offsetX = feetPosition.x + ThreadLocalRandom.current().nextInt(-32, 33);
+      float offsetY = feetPosition.y + ThreadLocalRandom.current().nextInt(-32, 33);
+      if (monsterManager.spawnMonster(name, offsetX, offsetY, false)) {
+        spawned++;
+      }
+    }
+    if (spawned == 0) {
       SystemMessage.showShared("GM: unknown monster \"" + name + "\"");
+    } else {
+      SystemMessage.showShared("GM: Summoned " + spawned + " x " + name);
     }
   }
 
@@ -412,7 +440,7 @@ public final class GmCommandProcessor {
     SystemMessage.showShared(
         "GM: .setStrength/.setDexterity/.setEndurance/.setIntelligence/.setWisdom X");
     SystemMessage.showShared(
-        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME | .learn SPELL | .rebirth | .setpower ELEMENT X");
+        "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME [count] | .learn SPELL | .rebirth | .setpower ELEMENT X");
   }
 
   private static int parseInt(String s) {
