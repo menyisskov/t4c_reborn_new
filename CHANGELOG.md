@@ -13,6 +13,25 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — Endgame monsters drop more useful potions (T4C-0081)
+
+### Added
+- **Every monster level 300 and up now has a shot at a mana prism and a critical healing potion**
+  when it falls, on top of whatever else it already drops - 5% for each, independently.
+
+## 2026-09-27 — Corpses don't linger (T4C-0080)
+
+### Changed
+- **A monster's body now fades from view a few seconds after it falls**, instead of lying there in
+  plain sight for the whole (often much longer) stretch before it respawns.
+
+## 2026-09-27 — Renew Armor's real price (T4C-0079)
+
+### Changed
+- **Renew Armor now costs what it's actually worth.** Its mana cost is the combined cost of every
+  ward it can re-lay in one cast, and learning it costs 20,000,000 gold - it was priced far below
+  both before.
+
 ## 2026-09-27 — GM summon monster count (T4C-0078) (Process/Tooling)
 
 ### Changed

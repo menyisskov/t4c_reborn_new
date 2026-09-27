@@ -273,10 +273,17 @@ quiz is gone; its i18n strings were deleted with it.
 - **Renew Armor is sellable, not quest-only (Claude's call, flag for the owner to overrule).** There
   is no existing "quest-only spell, hidden from the regular seller" mechanism in this codebase, and
   building one just for this spell would be new plumbing for a fairly small distinction. Renew Armor
-  is priced and sold at the Spell Merchant like any other spell (500,000 gold - a QoL spell, not a
-  new power budget, so priced below the Ultra tier); a quest that also grants it for free/early
-  remains a legitimate separate reward on top of that, the same way other content in this game is
-  reachable by more than one path.
+  is priced and sold at the Spell Merchant like any other spell; a quest that also grants it for
+  free/early remains a legitimate separate reward on top of that, the same way other content in
+  this game is reachable by more than one path.
+- **Renew Armor's mana cost and price, corrected (T4C-0079, owner's call).** It was priced as if it
+  were a small convenience (40 mana, 500,000 gold) despite casting up to ten other spells' worth of
+  effect in one go. It now costs **the sum of all ten recast targets' own mana costs**
+  (`(10+9+45+14+39)*2` - base and Ultra tiers alike, `RenewArmorCostTest` pins this against the
+  components' own live `manaCost` fields rather than a copied number) and **20,000,000 gold** to
+  learn. The mana charge is flat and unconditional - it's charged whether or not the caster actually
+  knows every recast target, since the price reflects what the spell is capable of casting, not
+  what one caster happens to know yet.
 - **A spell whose real effect isn't a dice-formula `T4cEffect` needs the `tame_beast`-style exemption
   in `SpellRegistry.isPlayerCastable`, not a fake placeholder effect.** Renew Armor's effect is
   custom code in `MainGameScreen.castDefensiveSpell` (re-casting whichever of ten other spells the
@@ -972,6 +979,13 @@ should not consume it), that is a content change, not an editorial one, and need
   this as an open backlog item, not something to silently batch-fix; if you're touching one of
   these items anyway for an unrelated reason, it's reasonable to fix its id too and note it, but
   don't scope-creep a content pass into fixing the whole list.
+- **Every monster level 300+ drops mana_prism and critical_healing_potion at 5% each (T4C-0081,
+  owner's call).** Applied as one rule in `MonsterRegistry.rebuild()`
+  (`withEndgameUtilityLoot`/`ENDGAME_UTILITY_DROP_MIN_LEVEL`/`ENDGAME_UTILITY_DROP_CHANCE`) rather
+  than hand-editing every level-300+ monster's own loot table - it stacks on top of whatever a
+  monster already drops, and a monster that somehow already lists one of these two keys is skipped
+  for that key rather than doubled up. New level-300+ content picks this up automatically; there is
+  nothing to add per-monster. Guarded by `EndgameUtilityLootTest`.
 
 ## 8. Interface and controls
 - **Windows should look like the original game's windows.** The owner called the old storage
@@ -1055,6 +1069,14 @@ should not consume it), that is a content change, not an editorial one, and need
   `render()` (already called every frame) rather than a new update hook - every spin/plus button
   in the game (stat points, skill points, spell/shop baskets) gets this for free with no per-screen
   change needed.
+- **A monster's corpse fades from view 3-5 seconds after death (T4C-0080, owner's call), well
+  before it actually respawns.** `BaseMonster.isCorpseVisible()`/`corpseHiddenAtMs` (set in `die()`,
+  randomized per death so a field of corpses doesn't blink out in unison) gate the render call
+  only - the entity itself keeps ticking toward its own `respawnTime` exactly as before, so aggro/
+  loot/quest-kill bookkeeping is untouched. The field defaults to `Long.MAX_VALUE` ("never hide"),
+  not 0, so a subclass that flips `isDead` directly without going through `die()` (`EchoOfSelf`'s
+  `fade()`) still plays its own death animation instead of vanishing instantly. Guarded by
+  `CorpseVisibilityTest`.
 
 
 ## 9. The Mirror of Echoes (T4C-0042)

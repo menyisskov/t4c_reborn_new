@@ -1636,6 +1636,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_water_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -1697,6 +1705,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.15
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -1806,6 +1822,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_light_protector",
           "chance": 0.003
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -1867,6 +1891,14 @@ window.T4C_DATA = {
         {
           "item": "potion_of_mana",
           "chance": 0.08
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -1980,6 +2012,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_warrior_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -2041,6 +2081,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.15
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -2106,6 +2154,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.03
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -2211,6 +2267,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_warrior_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -2282,7 +2346,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 901 + 709 ",
@@ -2334,7 +2407,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 944 + 743 ",
@@ -2446,6 +2528,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_warrior_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -2507,6 +2597,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.05
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -2560,7 +2658,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 987 + 777 ",
@@ -2612,7 +2719,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 1029 + 810 ",
@@ -2672,6 +2788,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.15
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -2789,6 +2913,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_dark_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -2860,7 +2992,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 1072 + 844 ",
@@ -2912,7 +3053,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 1115 + 878 ",
@@ -3020,6 +3170,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_earth_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -3073,7 +3231,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 1158 + 912 ",
@@ -3125,7 +3292,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 1201 + 946 ",
@@ -3249,6 +3425,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_dark_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -3374,6 +3558,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_air_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -3499,6 +3691,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_archer_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -3624,6 +3824,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_warrior_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -3705,6 +3913,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.2
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -3758,7 +3974,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 1244 + 980 ",
@@ -3810,7 +4035,16 @@ window.T4C_DATA = {
         "dark": 70,
         "light": 5000
       },
-      "loot": [],
+      "loot": [
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
       "attacks": [
         {
           "formula": "1d 1286 + 1013 ",
@@ -3870,6 +4104,14 @@ window.T4C_DATA = {
         {
           "item": "item.dragonguards_sealed_key",
           "chance": 0.03
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -3931,6 +4173,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.15
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -4028,6 +4278,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.25
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -4141,6 +4399,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_air_protector",
           "chance": 0.012
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
         }
       ],
       "attacks": [
@@ -11616,7 +11882,7 @@ window.T4C_DATA = {
       "isNew": true,
       "name": "Renew Armor",
       "description": "Refreshes Barrier, Protection, Stone Skin, Mana Shield and Mana Surge on the caster in one cast - along with their Ultra versions, if learned. Any of the five not yet learned are simply skipped.",
-      "manaCost": "40",
+      "manaCost": "(10+9+45+14+39)*2",
       "minInt": 60,
       "minWis": 60,
       "minLevel": 60,
@@ -11626,7 +11892,7 @@ window.T4C_DATA = {
       "maxDamage": 0,
       "cooldownSeconds": 0,
       "duration": "0",
-      "price": 500000,
+      "price": 20000000,
       "spellId": 99952,
       "element": 0,
       "targetType": 3,
@@ -28553,6 +28819,510 @@ window.T4C_DATA = {
       "monster": "Ignarok the Emberfang",
       "monsterDisplayName": "Ignarok the Emberfang",
       "chance": 0.008
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP300",
+      "monsterDisplayName": "Arena experience monster (level 300)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP325",
+      "monsterDisplayName": "Arena experience monster (level 325)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP350",
+      "monsterDisplayName": "Arena experience monster (level 350)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP375",
+      "monsterDisplayName": "Arena experience monster (level 375)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP400",
+      "monsterDisplayName": "Arena experience monster (level 400)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP425",
+      "monsterDisplayName": "Arena experience monster (level 425)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP450",
+      "monsterDisplayName": "Arena experience monster (level 450)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP475",
+      "monsterDisplayName": "Arena experience monster (level 475)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP500",
+      "monsterDisplayName": "Arena experience monster (level 500)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP525",
+      "monsterDisplayName": "ArenaMobXP525",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP550",
+      "monsterDisplayName": "ArenaMobXP550",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP575",
+      "monsterDisplayName": "ArenaMobXP575",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP600",
+      "monsterDisplayName": "ArenaMobXP600",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP625",
+      "monsterDisplayName": "ArenaMobXP625",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP650",
+      "monsterDisplayName": "ArenaMobXP650",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP675",
+      "monsterDisplayName": "ArenaMobXP675",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP700",
+      "monsterDisplayName": "ArenaMobXP700",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP725",
+      "monsterDisplayName": "ArenaMobXP725",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "ArenaMobXP750",
+      "monsterDisplayName": "ArenaMobXP750",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Kraanian Dragonguard",
+      "monsterDisplayName": "Kraanian Dragonguard",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Moonlit Stalker",
+      "monsterDisplayName": "Moonlit Stalker",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Sandglass Sentinel II",
+      "monsterDisplayName": "Sandglass Sentinel II",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Sandglass Sentinel III",
+      "monsterDisplayName": "Sandglass Sentinel III",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Sandglass Sentinel IV",
+      "monsterDisplayName": "Sandglass Sentinel IV",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Sandglass Sentinel V",
+      "monsterDisplayName": "Sandglass Sentinel V",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Sundered Sentinel",
+      "monsterDisplayName": "Sundered Sentinel",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Test Skeleton Centaur",
+      "monsterDisplayName": "Skeleton Centaur Test",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "The Rootcrown Wyrm",
+      "monsterDisplayName": "The Rootcrown Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Veilbound Wraith",
+      "monsterDisplayName": "Veilbound Wraith",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Arch Drake",
+      "monsterDisplayName": "Arch Drake",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP300",
+      "monsterDisplayName": "Arena experience monster (level 300)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP325",
+      "monsterDisplayName": "Arena experience monster (level 325)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP350",
+      "monsterDisplayName": "Arena experience monster (level 350)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP375",
+      "monsterDisplayName": "Arena experience monster (level 375)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP400",
+      "monsterDisplayName": "Arena experience monster (level 400)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP425",
+      "monsterDisplayName": "Arena experience monster (level 425)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP450",
+      "monsterDisplayName": "Arena experience monster (level 450)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP475",
+      "monsterDisplayName": "Arena experience monster (level 475)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP500",
+      "monsterDisplayName": "Arena experience monster (level 500)",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP525",
+      "monsterDisplayName": "ArenaMobXP525",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP550",
+      "monsterDisplayName": "ArenaMobXP550",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP575",
+      "monsterDisplayName": "ArenaMobXP575",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP600",
+      "monsterDisplayName": "ArenaMobXP600",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP625",
+      "monsterDisplayName": "ArenaMobXP625",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP650",
+      "monsterDisplayName": "ArenaMobXP650",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP675",
+      "monsterDisplayName": "ArenaMobXP675",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP700",
+      "monsterDisplayName": "ArenaMobXP700",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP725",
+      "monsterDisplayName": "ArenaMobXP725",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "ArenaMobXP750",
+      "monsterDisplayName": "ArenaMobXP750",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Bastion Warden",
+      "monsterDisplayName": "Bastion Warden",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Coastwarden Ithrak",
+      "monsterDisplayName": "Coastwarden Ithrak",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Greater Drake",
+      "monsterDisplayName": "Grand Drake",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Kraanian Dragonguard",
+      "monsterDisplayName": "Kraanian Dragonguard",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Moonlit Stalker",
+      "monsterDisplayName": "Moonlit Stalker",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Sandglass Sentinel II",
+      "monsterDisplayName": "Sandglass Sentinel II",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Sandglass Sentinel III",
+      "monsterDisplayName": "Sandglass Sentinel III",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Sandglass Sentinel IV",
+      "monsterDisplayName": "Sandglass Sentinel IV",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Sandglass Sentinel V",
+      "monsterDisplayName": "Sandglass Sentinel V",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Sir Caradoc, the Sundered Knight",
+      "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Sundered Sentinel",
+      "monsterDisplayName": "Sundered Sentinel",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Test Skeleton Centaur",
+      "monsterDisplayName": "Skeleton Centaur Test",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "The Convergent Wyrm",
+      "monsterDisplayName": "The Convergent Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "The Rootcrown Wyrm",
+      "monsterDisplayName": "The Rootcrown Wyrm",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "The Verdant Warden",
+      "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Veilbound Wraith",
+      "monsterDisplayName": "Veilbound Wraith",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Ysolde, the Veiled Matriarch",
+      "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.05
     },
     {
       "item": "item.veiled_aether_shard",
