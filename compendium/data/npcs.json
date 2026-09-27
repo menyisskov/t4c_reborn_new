@@ -1233,7 +1233,7 @@
     "id": "SpellMerchant",
     "origin": "new",
     "displayName": "Ilarion the Spell Merchant",
-    "welcomeText": "Welcome. I have every spell known to this world for sale. Say \"spells\" to browse my wares.",
+    "welcomeText": "Welcome. I can teach you nearly every spell known to this world. Say \"learn\" to see what I can teach you.",
     "topics": [],
     "combatProfile": {
       "level": 100,
@@ -1399,6 +1399,43 @@
       "attackSkill": 1,
       "dodge": 65535,
       "damageFormula": "1d3"
+    }
+  },
+  {
+    "id": "WardenAelric",
+    "origin": "new",
+    "displayName": "Warden Aelric",
+    "welcomeText": "The old wards over this temple don't hold themselves. Keep the dead from stirring at the grave markers east of town, and I'll see you rewarded with something worth knowing.",
+    "topics": [
+      {
+        "keywords": [
+          "quest",
+          "wards"
+        ],
+        "response": "Skeletons keep rising at the old grave markers east of the temple grounds, and every one that claws free saps a little more strength from the wards keeping this town safe. Put twelve of them back in the ground and I'll teach you how to renew your own wards in a single breath.",
+        "actions": [
+          "GIVE_QUEST:renewed_wards"
+        ]
+      },
+      {
+        "keywords": [
+          "grave",
+          "markers"
+        ],
+        "response": "East, past the old grave markers - that's where the ground gave first. I don't know what stirred them, only that it hasn't stopped.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
     }
   },
   {

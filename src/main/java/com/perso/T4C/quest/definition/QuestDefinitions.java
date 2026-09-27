@@ -32,6 +32,7 @@ public final class QuestDefinitions {
         ForgeGodsforgedVoidglassRod.definition(),
         ForgeGodsforgedZephyrWand.definition(),
         ForgeGodsforgedTorc.definition(),
-        TheWakingRite.definition());
+        TheWakingRite.definition(),
+        RenewedWards.definition());
   }
 }

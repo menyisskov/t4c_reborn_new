@@ -1819,6 +1819,9 @@ public class MainGameScreen implements Screen {
     } else {
       applyBuffIfNeeded(spell);
     }
+    if ("${spell.renew_armor}".equals(spell.getName())) {
+      applyRenewArmorRecast();
+    }
     SpellEffectManager.PlayerUtility utility =
         spellEffectManager.applyPlayerUtilityEffects(spell, player);
     boolean teleported = false;
@@ -3504,6 +3507,48 @@ public class MainGameScreen implements Screen {
         buff.getDurationSeconds(),
         Boolean.TRUE.equals(buff.getUnlimited()),
         effects);
+  }
+
+  // T4C-0062: Renew Armor has no formula effect of its own - casting it re-lays whichever of
+  // these the caster currently knows (base and Ultra tiers both, independently), each refreshed
+  // exactly as if the player had cast it directly. Renew Armor's own SpellCastingService.begin()
+  // call already charged its mana/exhaustion once; re-applying a component's buff via
+  // Player.applyBuff directly does not re-trigger that component's own mana cost or exhaustion.
+  private static final List<String> RENEW_ARMOR_COMPONENT_KEYS =
+      List.of(
+          "${spell.barrier}",
+          "${spell.ultra_barrier}",
+          "${spell.protection}",
+          "${spell.ultra_protection}",
+          "${spell.stone_skin}",
+          "${spell.ultra_stone_skin}",
+          "${spell.mana_shield}",
+          "${spell.ultra_mana_shield}",
+          "${spell.mana_surge}",
+          "${spell.ultra_mana_surge}");
+
+  private void applyRenewArmorRecast() {
+    if (player == null) {
+      return;
+    }
+    for (String key : RENEW_ARMOR_COMPONENT_KEYS) {
+      SpellData component = SpellRegistry.findByName(key);
+      if (component == null || !SpellCastingService.hasLearnedSpell(player, component)) {
+        continue;
+      }
+      List<SpellData.SpellEffect> effects =
+          spellEffectManager.resolvePlayerBuffEffects(component, player);
+      if (effects.isEmpty()) {
+        continue;
+      }
+      player.applyBuff(
+          component.getName(),
+          component.getDescription(),
+          component.getIconId(),
+          spellEffectManager.resolveDurationSeconds(component, player),
+          false,
+          effects);
+    }
   }
 
   private List<ObjectRenderer.RenderItem> buildEntityRenderItems() {

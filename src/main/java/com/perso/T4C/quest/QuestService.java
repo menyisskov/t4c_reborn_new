@@ -9,6 +9,8 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.spell.SpellRegistry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -197,6 +199,7 @@ public final class QuestService {
             granted.failure());
       }
     }
+    grantRewardSpell(definition, player);
     persist.run();
     systemMessage.accept(
         I18n.message("message.quest_reward", definition.getRewardGold(), definition.getRewardXp()));
@@ -288,6 +291,26 @@ public final class QuestService {
     if (key == null || key.isBlank() || qty <= 0) return;
     for (int i = 0; i < qty; i++) {
       InventoryService.remove(player, -1, key);
+    }
+  }
+
+  /** T4C-0063: grants a quest's optional {@code rewardSpellKey}, if set and not already known -
+   * mirrors the {@code rewardItemKey} grant above but adds the spell's own name to the player's
+   * known-spells list instead of an item to the inventory. Silently does nothing if the key
+   * doesn't resolve or the player already knows it (a repeat turn-in, or a spell also bought from
+   * a trainer before this quest was finished, must not duplicate the entry). */
+  private static void grantRewardSpell(QuestDef definition, Player player) {
+    String rewardSpellKey = definition.getRewardSpellKey();
+    if (rewardSpellKey == null || rewardSpellKey.isBlank()) return;
+    SpellData spell = SpellRegistry.findByName(rewardSpellKey);
+    if (spell == null) return;
+    List<String> spells = player.getSpells();
+    if (spells == null) {
+      spells = new ArrayList<>();
+      player.setSpells(spells);
+    }
+    if (!spells.contains(spell.getName())) {
+      spells.add(spell.getName());
     }
   }
 

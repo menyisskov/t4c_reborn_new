@@ -18,7 +18,8 @@ import org.junit.jupiter.api.Test;
 class LighthavenSamaritanTest {
   @Test
   void registryCreatesTheNativeSamaritanWithoutReadingNpcDefinitions() throws Exception {
-    assertEquals(491, NpcFactoryRegistry.registrations().size());
+    // T4C-0063 added one new NPC: WardenAelric (Renewed Wards quest giver).
+    assertEquals(492, NpcFactoryRegistry.registrations().size());
     assertInstanceOf(
         LighthavenSamaritan.class,
         NpcFactoryRegistry.create(LighthavenSamaritan.ID, new NpcContext(null)));

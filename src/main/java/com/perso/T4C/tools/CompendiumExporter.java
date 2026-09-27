@@ -144,7 +144,13 @@ public final class CompendiumExporter {
           "SeraphsVerdict",
           "HallowedNova",
           "SolarApotheosis",
-          "DawnwellRenewal");
+          "DawnwellRenewal",
+          "UltraBarrier",
+          "UltraProtection",
+          "UltraStoneSkin",
+          "UltraManaShield",
+          "UltraManaSurge",
+          "RenewArmor");
 
   private static final Set<String> NEW_NPC_IDS =
       Set.of(
@@ -177,7 +183,8 @@ public final class CompendiumExporter {
           "SunkenLedgerCoffer",
           "PlagueWardensStrongbox",
           "WyrmlingsHoardCasket",
-          "WarbandsBuriedChest");
+          "WarbandsBuriedChest",
+          "WardenAelric");
 
   private static final Set<String> ACTIVATED_NPC_IDS = Set.of("RhodarHeatforge", "SkywatchIlvara");
 
@@ -205,7 +212,8 @@ public final class CompendiumExporter {
           "forge_godsforged_voidglass_rod",
           "forge_godsforged_zephyr_wand",
           "forge_godsforged_torc",
-          "the_waking_rite");
+          "the_waking_rite",
+          "renewed_wards");
 
   // T4C-0033: the Godsforged crafting chain's raw materials/components are legacy Java items (not
   // assets/items/*.json), specifically so they're exempt from ItemBalanceGuidelinesTest's gear

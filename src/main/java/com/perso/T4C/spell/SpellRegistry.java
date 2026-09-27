@@ -129,7 +129,12 @@ public final class SpellRegistry {
     // Light is the one real spell that had no requirement; it carries minLevel 1 now, so this rule
     // needs no exception for it.
     if (spell.getMinLevel() <= 0) return false;
-    return !spell.getT4cEffects().isEmpty() || identity.equals("${spell.tame_beast}");
+    // Renew Armor's real effect is re-casting whichever protection spells the caster already
+    // knows (MainGameScreen.castDefensiveSpell), not a dice-formula T4cEffect, so it's exempted
+    // from the "has an effect" rule the same way tame_beast already is (T4C-0062).
+    return !spell.getT4cEffects().isEmpty()
+        || identity.equals("${spell.tame_beast}")
+        || identity.equals("${spell.renew_armor}");
   }
 
   // T4C-0054: every element's offensive spells form one hierarchy, ascending by minLevel (ties

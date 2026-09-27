@@ -13,6 +13,32 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — Renewed Wards (T4C-0063)
+
+### Added
+- **A new quest near Lighthaven's temple.** Warden Aelric is worried about the skeletons rising at
+  the old grave markers east of town, sapping the strength from the wards that keep the place safe.
+  Clear twelve of them out and he'll teach you Renew Armor for free, on top of a bit of gold and
+  experience - a head start on the spell before you'd otherwise be able to afford it.
+
+## 2026-09-27 — Protection spells that keep up with you, and their Ultra versions (T4C-0062)
+
+### Changed
+- **Barrier, Protection, Stone Skin, Mana Shield and Mana Surge no longer leave you waiting between
+  casts.** A quick double-click used to answer with "You are too exhausted to cast a spell" even
+  though the spell itself had already gone off - that pause is gone, so re-casting one of these
+  the moment you need it now works.
+
+### Added
+- **Ultra Barrier, Ultra Protection, Ultra Stone Skin, Ultra Mana Shield and Ultra Mana Surge** - far
+  stronger versions of the five protection spells above, giving twice the armour or resistance of
+  their ordinary counterpart. They're for level 150 and up, and expensive to learn - a serious gold
+  sink for a character who's already found their footing. Learning an Ultra spell doesn't replace
+  its ordinary version - know both, and you keep the benefit of each at once.
+- **Renew Armor**, a new spell that re-lays whichever of the above ten wards you already have
+  running, all in one cast - a quick way to top everything back up before a fight instead of
+  clicking through each one by hand.
+
 ## 2026-09-26 — Offering chests at the temples, and spells that go off when you cast them (T4C-0061)
 
 ### Added
