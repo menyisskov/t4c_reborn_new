@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class SystemMessage {
@@ -25,6 +27,7 @@ public class SystemMessage {
   private static final Color OUTLINE_COLOR = Color.BLACK;
   private static SystemMessage shared;
   private static Consumer<String> chatSink;
+  private static BiConsumer<String, List<String>> npcDialogueSink;
 
   public static void setShared(SystemMessage instance) {
     shared = instance;
@@ -34,10 +37,32 @@ public class SystemMessage {
     chatSink = sink;
   }
 
+  /**
+   * Registers where NPC dialogue responses go, together with that NPC's own recognized keywords so
+   * the chat log can highlight them (see {@code GameChat#addNpcDialogueMessage}). Optional: when
+   * unset, {@link #showSharedNpcDialogue} behaves exactly like {@link #showShared}.
+   */
+  public static void setNpcDialogueSink(BiConsumer<String, List<String>> sink) {
+    npcDialogueSink = sink;
+  }
+
   public static void showShared(String message) {
     if (shared != null) {
       shared.show(message);
     }
+  }
+
+  /**
+   * Shows an NPC's dialogue line, offering its recognized keywords so the chat log can highlight
+   * them. Falls back to plain {@link #showShared} when no dialogue sink is registered, so this is
+   * safe to call even where the chat UI isn't wired up (e.g. tests).
+   */
+  public static void showSharedNpcDialogue(String message, List<String> keywords) {
+    if (npcDialogueSink != null) {
+      npcDialogueSink.accept(message, keywords == null ? List.of() : keywords);
+      return;
+    }
+    showShared(message);
   }
 
   public static void showSharedLive(String message) {

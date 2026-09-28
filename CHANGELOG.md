@@ -13,6 +13,13 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-28 — NPC dialogue highlights what you can ask about next (T4C-0097)
+
+### Added
+- **Talking to any NPC now highlights the words in their reply that you can ask about next**,
+  in gold, right in the chat log. No more guessing what to type after an NPC mentions something
+  interesting - if it's a recognized topic, it stands out.
+
 ## 2026-09-27 — Instant-kill spells now drop loot and count for quests (T4C-0088)
 
 ### Fixed

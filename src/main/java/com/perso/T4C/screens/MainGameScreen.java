@@ -4092,6 +4092,7 @@ public class MainGameScreen implements Screen {
     gameChat.addSystemMessage(I18n.key("chat.help"));
     SystemMessage.setShared(systemMessage);
     SystemMessage.setChatSink(gameChat::addSystemMessage);
+    SystemMessage.setNpcDialogueSink(gameChat::addNpcDialogueMessage);
     com.perso.T4C.spell.NpcCastVfxHook.setShared(this::playNpcCastVfx, this::playNpcSelfVfx);
     com.perso.T4C.spell.CompanionCastVfxHook.setShared(
         this::playCompanionAttackVfx, this::playCompanionHealVfx, this::playCompanionVanishVfx);

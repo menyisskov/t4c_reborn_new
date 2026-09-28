@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0003 | Content-authoring Claude skills | Process/Tooling | Done | `0f2cba7`, `2bfcd38`, `99e6f39`, `1758ed7` | [2026-09-17](CHANGELOG.md#2026-09-17--content-authoring-skills-t4c-0003-processtooling) |
 | T4C-0004 | Sunken Chancel & Cinderreach Hills zones | Content | Done | `8f67c16` | [2026-09-17](CHANGELOG.md#2026-09-17--sunken-chancel--cinderreach-hills-zones-t4c-0004) |
 | T4C-0005 | Leveling overhaul (XP overflow fix) + 4 endgame zones 100–500 | Content/Fix | Done | `a8c3f55` | [2026-09-17](CHANGELOG.md#2026-09-17--leveling-overhaul--4-endgame-zones-levels-100500-t4c-0005) |
+| T4C-0097 | Highlight recognized keywords in NPC dialogue | Content/Systems | Done | (uncommitted) | [2026-09-28](CHANGELOG.md#2026-09-28--npc-dialogue-highlights-what-you-can-ask-about-next-t4c-0097) |
 | T4C-0006 | Fix new spells unlearnable via TrainingCatalog | Fix | Done | `52db68e` | [2026-09-17](CHANGELOG.md#2026-09-17--spell-learnability-fix-t4c-0006) |
 | T4C-0007 | English-only localization pass | Fix/Process | Done | `a8d76b1` | [2026-09-18](CHANGELOG.md#2026-09-18--english-only-localization-pass-t4c-0007) |
 | T4C-0008 | Canon-verified content pass (Goblin Slayer, Arch Drake, Deep Ones Cave, Sentinel) | Content | Done | `67d940e` | [2026-09-18](CHANGELOG.md#2026-09-18--canon-verified-content-pass-t4c-0008) |

@@ -54,11 +54,16 @@ public final class GameChat extends InputAdapter {
   private static final Color SYSTEM = SystemMessage.MESSAGE_COLOR;
   private static final Color LOCAL = Color.valueOf("E6D8BC");
   private static final Color SELECTION = Color.valueOf("3B73B9CC");
+  // Same gold used for emphasized text in the confirm-dialog screens - reused here so a
+  // recognized NPC dialogue keyword reads as "important" the same way it does elsewhere in the UI.
+  private static final Color KEYWORD_HIGHLIGHT = Color.valueOf("DF9D00");
   private static final float INPUT_PADDING = 2f;
   private static final float KEY_REPEAT_DELAY = 0.38f;
   private static final float KEY_REPEAT_INTERVAL = 0.045f;
 
-  private record Entry(String text, Color color) {}
+  private record Segment(String text, Color color) {}
+
+  private record Entry(List<Segment> segments) {}
 
   private final BitmapFont font;
   private final GlyphLayout layout = new GlyphLayout();
@@ -135,6 +140,26 @@ public final class GameChat extends InputAdapter {
     }
   }
 
+  /**
+   * Adds an NPC's dialogue response to the log, highlighting any substring that matches one of
+   * that NPC's own recognized keywords (see {@link KeywordHighlighter}) so the player can see what
+   * they can ask about next. When nothing matches, or {@code keywords} is empty, this renders
+   * exactly like {@link #addSystemMessage}, which is how NPC dialogue was displayed before this
+   * highlighting existed.
+   */
+  public void addNpcDialogueMessage(String message, java.util.Collection<String> keywords) {
+    if (message == null || message.isBlank()) return;
+    List<Segment> segments = new ArrayList<>();
+    for (KeywordHighlighter.Segment segment : KeywordHighlighter.segmentsFor(message, keywords)) {
+      segments.add(
+          new Segment(
+              segment.text(), new Color(segment.highlighted() ? KEYWORD_HIGHLIGHT : SYSTEM)));
+    }
+    if (segments.isEmpty()) segments.add(new Segment(message, new Color(SYSTEM)));
+    addEntry(new Entry(segments));
+    appendLog(message);
+  }
+
   private static void appendLog(String message) {
     var preferences = com.perso.T4C.config.GamePreferencesStore.get();
     if (!preferences.isChatLogging() || message == null || message.isBlank()) return;
@@ -157,7 +182,11 @@ public final class GameChat extends InputAdapter {
 
   private void add(String message, Color color) {
     if (message == null || message.isBlank()) return;
-    entries.add(new Entry(message, new Color(color)));
+    addEntry(new Entry(List.of(new Segment(message, new Color(color)))));
+  }
+
+  private void addEntry(Entry entry) {
+    entries.add(entry);
     if (entries.size() > MAX_ENTRIES) entries.remove(0);
     scroll = 0;
   }
@@ -195,8 +224,13 @@ public final class GameChat extends InputAdapter {
       float textY = logY + LOG_TEXT_INSET_Y * scale;
       for (int i = first; i < last; i++) {
         Entry line = lines.get(i);
-        font.setColor(line.color());
-        font.draw(batch, line.text(), logX, textY);
+        float segmentX = logX;
+        for (Segment segment : line.segments()) {
+          font.setColor(segment.color());
+          font.draw(batch, segment.text(), segmentX, textY);
+          layout.setText(font, segment.text());
+          segmentX += layout.width;
+        }
         textY += LINE_HEIGHT * scale;
       }
       endScissor(batch);
@@ -468,18 +502,31 @@ public final class GameChat extends InputAdapter {
   private List<Entry> visualLines(float width) {
     List<Entry> result = new ArrayList<>();
     for (Entry entry : entries) {
-      for (String paragraph : entry.text().split("\\R")) {
-        Entry line = new Entry(paragraph, entry.color());
-        layout.setText(font, paragraph);
-        if (layout.width <= width) result.add(line);
-        else wrap(line, width, result);
+      List<Segment> segments = entry.segments();
+      if (segments.size() <= 1) {
+        // Single-color entry (system/local messages, or a keyword-free NPC line): identical to
+        // this method's pre-highlighting behavior, unchanged.
+        String text = segments.isEmpty() ? "" : segments.get(0).text();
+        Color color = segments.isEmpty() ? SYSTEM : segments.get(0).color();
+        for (String paragraph : text.split("\\R")) {
+          layout.setText(font, paragraph);
+          if (layout.width <= width) result.add(singleSegmentEntry(paragraph, color));
+          else wrap(paragraph, color, width, result);
+        }
+      } else {
+        // A keyword-highlighted NPC line: word-wrap while preserving each word's color.
+        wrapSegments(segments, width, result);
       }
     }
     return result;
   }
 
-  private void wrap(Entry entry, float width, List<Entry> output) {
-    String remaining = entry.text();
+  private Entry singleSegmentEntry(String text, Color color) {
+    return new Entry(List.of(new Segment(text, color)));
+  }
+
+  private void wrap(String text, Color color, float width, List<Entry> output) {
+    String remaining = text;
     while (!remaining.isEmpty()) {
       int fit = remaining.length();
       while (fit > 1) {
@@ -491,9 +538,81 @@ public final class GameChat extends InputAdapter {
         int space = remaining.lastIndexOf(' ', fit);
         if (space > 0) fit = space;
       }
-      output.add(new Entry(remaining.substring(0, fit).stripTrailing(), entry.color()));
+      output.add(singleSegmentEntry(remaining.substring(0, fit).stripTrailing(), color));
       remaining = remaining.substring(fit).stripLeading();
     }
+  }
+
+  /** A contiguous run of non-whitespace or whitespace characters, tagged with its color. */
+  private record Token(String text, Color color, boolean whitespace) {}
+
+  private List<Token> tokenize(List<Segment> segments) {
+    List<Token> tokens = new ArrayList<>();
+    java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("\\s+|\\S+").matcher("");
+    for (Segment segment : segments) {
+      matcher.reset(segment.text());
+      while (matcher.find()) {
+        String piece = matcher.group();
+        tokens.add(new Token(piece, segment.color(), Character.isWhitespace(piece.charAt(0))));
+      }
+    }
+    return tokens;
+  }
+
+  private float widthOf(List<Token> tokens) {
+    float width = 0f;
+    for (Token token : tokens) {
+      layout.setText(font, token.text());
+      width += layout.width;
+    }
+    return width;
+  }
+
+  private void wrapSegments(List<Segment> segments, float width, List<Entry> output) {
+    List<Token> tokens = tokenize(segments);
+    List<Token> currentLine = new ArrayList<>();
+    float currentWidth = 0f;
+    int i = 0;
+    while (i < tokens.size()) {
+      List<Token> unit = new ArrayList<>();
+      if (tokens.get(i).whitespace()) {
+        unit.add(tokens.get(i));
+        i++;
+      }
+      while (i < tokens.size() && !tokens.get(i).whitespace()) {
+        unit.add(tokens.get(i));
+        i++;
+      }
+      if (unit.isEmpty()) continue;
+      float unitWidth = widthOf(unit);
+      if (!currentLine.isEmpty() && currentWidth + unitWidth > width) {
+        output.add(mergeIntoEntry(currentLine));
+        currentLine = new ArrayList<>();
+        currentWidth = 0f;
+        if (unit.get(0).whitespace()) {
+          unit = unit.subList(1, unit.size());
+          unitWidth = widthOf(unit);
+        }
+      }
+      if (!unit.isEmpty()) {
+        currentLine.addAll(unit);
+        currentWidth += unitWidth;
+      }
+    }
+    if (!currentLine.isEmpty()) output.add(mergeIntoEntry(currentLine));
+  }
+
+  private Entry mergeIntoEntry(List<Token> tokens) {
+    List<Segment> segments = new ArrayList<>();
+    for (Token token : tokens) {
+      if (!segments.isEmpty() && segments.get(segments.size() - 1).color().equals(token.color())) {
+        Segment last = segments.remove(segments.size() - 1);
+        segments.add(new Segment(last.text() + token.text(), last.color()));
+      } else {
+        segments.add(new Segment(token.text(), token.color()));
+      }
+    }
+    return new Entry(segments);
   }
 
   @Override

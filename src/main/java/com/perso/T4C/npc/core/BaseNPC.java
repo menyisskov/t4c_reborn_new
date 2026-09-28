@@ -972,7 +972,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
     dialogActive = true;
 
-    SystemMessage.showShared(displayedText);
+    SystemMessage.showSharedNpcDialogue(displayedText, getDialogKeywords());
   }
 
   public void shout(String text, long durationMs) {
