@@ -101,6 +101,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0086 | Pressing Alt now reveals the names of every ground item and NPC nearby for a few seconds | Systems | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--reveal-nearby-item-and-npc-names-with-alt-t4c-0086) |
 | T4C-0087 | Inventory: click an item to select it, then Drop or Junk it without dragging | Systems | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--drop-and-junk-buttons-in-the-inventory-t4c-0087) |
 | T4C-0088 | Fix: a monster killed by an instant-kill ("vaporize") spell effect dropped no loot and gave no quest credit | Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--instant-kill-spells-now-drop-loot-and-count-for-quests-t4c-0088) |
+| T4C-0096 | Fix: Avalon island's terrain was mostly an unpainted, collision-blocked "Black Tile" void (the reported solid-black patches); repainted a cohesive, much larger island with distinct grove/blight/coastal biomes, a grown Avalon Sanctuary town, and roads out to each area | Content/Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--avalon-island-terrain-rebuilt-t4c-0096) |
 
 ## Type legend
 
