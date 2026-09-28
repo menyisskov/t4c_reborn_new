@@ -150,6 +150,12 @@ public class GroundItemManager {
     }
   }
 
+  public void showAllNames() {
+    for (GroundItem groundItem : items) {
+      groundItem.showName();
+    }
+  }
+
   public boolean isAnyHovered() {
     for (GroundItem groundItem : items) {
       if (groundItem.isHovered()) {

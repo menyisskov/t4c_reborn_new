@@ -73,6 +73,8 @@ public class Inventory extends GuiScreenBase {
   private int lastClickInventoryIndex = -1;
   private final HudTooltip tooltip = new HudTooltip();
   private String hoverItemText = DEBUG_HOVER_TEXT ? DEBUG_HOVER_PLACEHOLDER : "";
+  private int selectedInventoryIndex = -1;
+  private String selectedItemName;
 
   public Inventory(Player player) {
     this(player, null);
@@ -88,6 +90,7 @@ public class Inventory extends GuiScreenBase {
     addPlayerPreview();
     addPlayerParts();
     addStatLabels();
+    addInventoryActionButtons();
   }
 
   private void loadBackgrounds() {
@@ -161,6 +164,7 @@ public class Inventory extends GuiScreenBase {
 
   @Override
   public void render(SpriteBatch batch) {
+    refreshSelection();
     if (backgroundTop != null) {
       GuiDraw.drawOverlayRegionFlipped(batch, backgroundTop, x, y);
     }
@@ -311,6 +315,105 @@ public class Inventory extends GuiScreenBase {
 
   private void clearHoverItemText() {
     hoverItemText = DEBUG_HOVER_TEXT ? DEBUG_HOVER_PLACEHOLDER : "";
+  }
+
+  private void refreshSelection() {
+    if (selectedItemName == null || player == null) {
+      return;
+    }
+    var inventory = player.getInventory();
+    if (selectedInventoryIndex >= 0
+        && selectedInventoryIndex < inventory.size()
+        && selectedItemName.equals(inventory.get(selectedInventoryIndex))) {
+      return;
+    }
+    int index = inventory.indexOf(selectedItemName);
+    if (index < 0) {
+      selectedInventoryIndex = -1;
+      selectedItemName = null;
+    } else {
+      selectedInventoryIndex = index;
+    }
+  }
+
+  private String selectedItemLabel() {
+    if (selectedItemName == null) {
+      return "";
+    }
+    ItemDefinition def = ItemDefinition.get(selectedItemName);
+    String name = def != null && def.getName() != null ? def.getName() : selectedItemName;
+    return I18n.resolve(name);
+  }
+
+  private void addInventoryActionButtons() {
+    var normal = GuiSprites.load("GUI_ButtonUp");
+    var hover = GuiSprites.load("GUI_ButtonHUp");
+    var pressed = GuiSprites.load("GUI_ButtonDown");
+    if (normal == null || hover == null || pressed == null) {
+      return;
+    }
+    var buttonFont = FontManager.getInstance().getJetBrainsMonoFont(10, Color.BLACK);
+    var gold = Color.valueOf("F2B705");
+    buttons.add(
+        new GuiButton(normal, hover, pressed, x + 454f, y + 375f, this::dropSelectedItem)
+            .setSize(46f, 18f)
+            .withLabel(buttonFont, () -> I18n.key("ui.drop")));
+    buttons.add(
+        new GuiButton(normal, hover, pressed, x + 502f, y + 375f, this::junkSelectedItem)
+            .setSize(46f, 18f)
+            .withLabel(buttonFont, () -> I18n.key("ui.junk")));
+    labels.add(
+        new GuiBoxedText(
+                FontManager.getInstance().getJetBrainsMonoFont(10, gold),
+                x + 454f,
+                y + 396f,
+                94f,
+                16f,
+                this::selectedItemLabel,
+                () -> gold)
+            .shrinkToFit());
+  }
+
+  private void dropSelectedItem() {
+    if (player == null || selectedItemName == null) {
+      SystemMessage.showShared(I18n.message("message.inventory_select_item_first"));
+      return;
+    }
+    if (player.dropInventoryItem(selectedInventoryIndex, selectedItemName)) {
+      selectedInventoryIndex = -1;
+      selectedItemName = null;
+    }
+  }
+
+  private void junkSelectedItem() {
+    if (player == null || selectedItemName == null) {
+      SystemMessage.showShared(I18n.message("message.inventory_select_item_first"));
+      return;
+    }
+    ItemDefinition def = ItemDefinition.get(selectedItemName);
+    if (def != null && def.isUndroppable()) {
+      SystemMessage.showShared(I18n.key("message.gem_of_destiny_undroppable"));
+      return;
+    }
+    GuiManager.open(new JunkConfirmScreen(selectedItemLabel(), this::performJunk, this::reopen));
+  }
+
+  private void performJunk() {
+    if (player != null && selectedItemName != null) {
+      InventoryService.Result removed =
+          InventoryService.remove(player, selectedInventoryIndex, selectedItemName);
+      if (removed.success()) {
+        SystemMessage.showShared(I18n.message("message.item_junked", selectedItemLabel()));
+        PlayerStateStore.save(player);
+      }
+    }
+    selectedInventoryIndex = -1;
+    selectedItemName = null;
+    reopen();
+  }
+
+  private void reopen() {
+    GuiManager.open(this);
   }
 
   @Override
@@ -585,6 +688,9 @@ public class Inventory extends GuiScreenBase {
             player.getAnimations().refresh();
           }
         }
+      } else if (drag.source == DragSource.INVENTORY) {
+        selectedInventoryIndex = drag.inventoryIndex;
+        selectedItemName = drag.itemName;
       }
       return;
     }

@@ -2951,7 +2951,11 @@ public class MainGameScreen implements Screen {
         explicitExhaustion.mentalMillis(),
         explicitExhaustion.moveMillis());
     if (impactResult.vaporize()) {
+      boolean wasDeadBeforeVaporize = monster.isDead();
       monster.takeDamage(Math.max(1, monster.getHealth()));
+      if (!wasDeadBeforeVaporize && monster.isDead() && monsterManager != null) {
+        monsterManager.notifyKilledByPlayer(monster);
+      }
     }
     int healthDelta = impactResult.healthDelta();
     if (!impactResult.vaporize() && healthDelta < 0) {
@@ -4394,6 +4398,15 @@ public class MainGameScreen implements Screen {
             if (keycode == Input.Keys.F11) {
               boolean fullscreen = DisplayModeToggle.toggle();
               showSystemMessage(DisplayModeToggle.message(fullscreen));
+              return true;
+            }
+            if ((keycode == Input.Keys.ALT_LEFT || keycode == Input.Keys.ALT_RIGHT)
+                && !GuiManager.isOpen()
+                && !isTextInputActive()) {
+              groundItemManager.showAllNames();
+              if (npcManager != null) {
+                npcManager.showAllNames();
+              }
               return true;
             }
             return false;

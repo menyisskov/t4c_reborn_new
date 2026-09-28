@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0086`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0089`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -98,6 +98,9 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0083 | GM ranks (player/GM/Super GM, saved per character, owner seed file) gating the GM commands, plus new GM commands: named/NPC teleport, position, quest/world flags, unlearn, stats, respawn point, save, god/peace modes, time of day, item summon counts | Systems/Tooling | Done | `190efbd` | [2026-09-27](CHANGELOG.md#2026-09-27--gm-ranks-and-new-gm-commands-t4c-0083) |
 | T4C-0084 | Removed the level-400 rung of the attack ladder (Ashfall, Tectonic Ruin, Heavenfall, Cataclysm's Herald, Solar Apotheosis, Eclipse of Ruin) and the level-400 ward Sanctum Ward; old saves drop them on load with no refund | Content/Balance | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--the-level-400-spells-are-gone-t4c-0084) |
 | T4C-0085 | Every high-tier ladder spell (150-350) gets its own impact animation: new SpriteCook strikes at 150, the pixel-art eruptions at 200, the recolors at 250, the original game's top-tier animations at 300 (made halo-free), SpriteCook upgrades of those originals at 350; `GrandVfxGenerator`, `MythicVfxPacker` painted-art options | Content | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--every-high-level-spell-looks-different-t4c-0085) |
+| T4C-0086 | Pressing Alt now reveals the names of every ground item and NPC nearby for a few seconds | Systems | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--reveal-nearby-item-and-npc-names-with-alt-t4c-0086) |
+| T4C-0087 | Inventory: click an item to select it, then Drop or Junk it without dragging | Systems | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--drop-and-junk-buttons-in-the-inventory-t4c-0087) |
+| T4C-0088 | Fix: a monster killed by an instant-kill ("vaporize") spell effect dropped no loot and gave no quest credit | Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--instant-kill-spells-now-drop-loot-and-count-for-quests-t4c-0088) |
 
 ## Type legend
 
