@@ -22,7 +22,7 @@ public final class BastionWardenSiege {
         "${quest.bastion_warden_siege.completion}",
         "${quest.bastion_warden_siege.completed}",
         null,
-        "heartfire_of_the_greater_drake",
+        "item.heartfire_of_the_greater_drake",
         1,
         "greater_drakes_bastion",
         null,

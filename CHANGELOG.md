@@ -13,6 +13,18 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-28 — Item-turn-in quests that never recognized the item you brought back (T4C-0098)
+
+### Fixed
+- **Several quests that ask you to bring back a specific item could never be turned in**, even
+  after you'd gathered every kill and were holding the item: the quest dialogue kept insisting
+  you still needed it. This is now fixed for Avalon's "Wilds Vigil" and "Fading Veil Reckoning"
+  (Elder Ophira), the passage to Avalon itself (Harbormaster Rangor's chart turn-in), and the
+  same bug in seven other quests across the world (Silversky's drowned cowl, the Emberfang
+  Hills bounty, the Windhowl Marches, Hollow March, the drake's-lair vigil, the deep ones' cave,
+  and the bastion warden siege) - all of them now correctly recognize the item once you're
+  carrying it.
+
 ## 2026-09-27 — Instant-kill spells now drop loot and count for quests (T4C-0088)
 
 ### Fixed

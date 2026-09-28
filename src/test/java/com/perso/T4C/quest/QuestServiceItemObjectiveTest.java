@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.helper.XpCurve;
+import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
 import java.util.List;
@@ -169,5 +170,31 @@ class QuestServiceItemObjectiveTest {
     service.giveOrReport(killOnly.getId(), killOnly.getGiverNpc(), player);
     service.recordKill(player, "Test Monster", 1, 100, 100);
     assertEquals("Success", service.turnInReadyQuests(killOnly.getGiverNpc(), player));
+  }
+
+  /** T4C-0098: {@link #hasRequiredItem} and {@link #consumeRequiredItem} compare {@code
+   * requiredItemKey} against {@code player.getInventory()} with a raw {@code Collections
+   * .frequency} - no normalization, unlike {@code InventoryService.count}. A registered item's
+   * inventory entries always carry the canonical {@code "item."}-prefixed key (see {@code
+   * ItemDefinition.normalizeKey}), so a quest whose {@code requiredItemKey} omits that prefix can
+   * never see the item as held: kills complete, the player turns in the item, and the quest is
+   * stuck at "still need the item" forever. Three Avalon quests (passage_to_avalon,
+   * avalon_wilds_vigil, fading_veil_reckoning) shipped with exactly this bug. */
+  @Test
+  void everyRealQuestsRequiredItemKeyIsAlreadyNormalized() {
+    StringBuilder bad = new StringBuilder();
+    for (QuestDef quest : QuestRegistry.load()) {
+      String key = quest.getRequiredItemKey();
+      if (key == null || key.isBlank()) continue;
+      if (!ItemDefinition.normalizeKey(key).equals(key)) {
+        bad.append(quest.getId()).append(" -> ").append(key).append("\n");
+      }
+    }
+    assertEquals(
+        "",
+        bad.toString(),
+        "these quests' requiredItemKey is missing the 'item.' prefix that the player's actual "
+            + "inventory entries use, so hasRequiredItem()'s raw Collections.frequency check can "
+            + "never see the item as held and turn-in is permanently stuck");
   }
 }

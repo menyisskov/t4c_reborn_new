@@ -101,6 +101,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0086 | Pressing Alt now reveals the names of every ground item and NPC nearby for a few seconds | Systems | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--reveal-nearby-item-and-npc-names-with-alt-t4c-0086) |
 | T4C-0087 | Inventory: click an item to select it, then Drop or Junk it without dragging | Systems | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--drop-and-junk-buttons-in-the-inventory-t4c-0087) |
 | T4C-0088 | Fix: a monster killed by an instant-kill ("vaporize") spell effect dropped no loot and gave no quest credit | Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--instant-kill-spells-now-drop-loot-and-count-for-quests-t4c-0088) |
+| T4C-0098 | Avalon NPC/quest audit: fixed item-turn-in quests across Avalon and 7 other zones stuck forever on a missing key prefix | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--item-turn-in-quests-that-never-recognized-the-item-you-brought-back-t4c-0098) |
 
 ## Type legend
 

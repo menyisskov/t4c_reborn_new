@@ -129,6 +129,13 @@ that now guards against it.
   walkthroughs were corrected while four zone summaries kept the same "that boss is optional"
   claim, and the review caught it. When a fact lives in two places, check both. Now guarded by
   the zone-summary/forced-boss cross-check in the `technical-writer` skill.
+- Ten quests' item-turn-in objective (`requiredItemKey`) was set to the bare item key
+  (`"tideworn_avalon_chart"`) instead of the registered `item.`-prefixed one. The kill count would
+  finish, the player would be holding the item, and the quest would still insist it wasn't there
+  forever — because the check compares directly against the player's inventory strings, which are
+  always `item.`-prefixed, with no normalization. Now guarded by
+  `QuestServiceItemObjectiveTest.everyRealQuestsRequiredItemKeyIsAlreadyNormalized`, which checks
+  every real quest's `requiredItemKey` against `ItemDefinition.normalizeKey`.
 
 ## Other project docs worth knowing about
 
