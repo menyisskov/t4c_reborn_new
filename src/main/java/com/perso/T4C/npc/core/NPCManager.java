@@ -265,6 +265,14 @@ public class NPCManager {
     return true;
   }
 
+  public void showAllNames() {
+
+    for (BaseNPC npc : npcs) {
+
+      npc.showName();
+    }
+  }
+
   public boolean isNpcAt(float mouseX, float mouseY) {
 
     return findNpcAt(mouseX, mouseY) != null;

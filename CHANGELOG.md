@@ -13,6 +13,29 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-27 — Instant-kill spells now drop loot and count for quests (T4C-0088)
+
+### Fixed
+- **Killing a monster with an instant-kill spell effect now drops its loot and counts toward
+  quest kills**, same as any other kill. Before this fix, a monster destroyed that way vanished
+  with nothing to show for it - no gold, no items, and no progress toward a quest that needed it,
+  even though it was very much dead.
+
+## 2026-09-27 — Drop and Junk buttons in the inventory (T4C-0087)
+
+### Added
+- **Clicking an item in your inventory now selects it**, and two new buttons appear: **Drop**
+  puts it on the ground (same as dragging it out of the window), and **Junk** permanently
+  destroys it after a confirmation prompt — no more dragging an item off-window just to get rid
+  of it. Items that can't be dropped (like the Stone of Destiny) can't be junked either.
+
+## 2026-09-27 — Reveal nearby item and NPC names with Alt (T4C-0086)
+
+### Added
+- **Pressing Alt now shows the names of every item on the ground and every NPC nearby**, not just
+  the one under your cursor. The names fade back out after a few seconds, the same way hovering
+  over a single item or NPC already worked. Listed in the in-game controls reference (Ctrl+H).
+
 ## 2026-09-27 — Every high-level spell looks different (T4C-0085)
 
 ### Changed
