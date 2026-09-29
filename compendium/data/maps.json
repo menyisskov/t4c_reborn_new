@@ -988,269 +988,1054 @@
   {
     "zoneId": "avalon_sanctuary",
     "image": "maps/avalon_sanctuary.png",
-    "imageWidth": 1280,
-    "imageHeight": 1280,
-    "originX": 1390,
-    "originY": 1140,
+    "imageWidth": 1440,
+    "imageHeight": 1440,
+    "originX": 240,
+    "originY": 550,
     "pxPerTile": 4,
     "npcs": [
       {
-        "id": "ArganorIargh",
-        "displayName": "Arganor Iargh",
-        "x": 1689,
-        "y": 1232
+        "id": "AnnithaeTeardrop",
+        "displayName": "Annithae Teardrop",
+        "x": 300,
+        "y": 830
       },
       {
-        "id": "AssystAnter",
-        "displayName": "Assyst Anter",
-        "x": 1639,
-        "y": 1191
+        "id": "ChryseidaYolangda",
+        "displayName": "Chryseida Yolangda",
+        "x": 255,
+        "y": 740
       },
       {
-        "id": "BrotherHarforr",
-        "displayName": "Brother Harforr",
-        "x": 1653,
-        "y": 1171
+        "id": "DaranLightfoot",
+        "displayName": "Daran Lightfoot",
+        "x": 365,
+        "y": 820
       },
       {
-        "id": "BrotherNiuss",
-        "displayName": "Brother Niuss",
-        "x": 1693,
-        "y": 1176
+        "id": "DelnarSteelblade",
+        "displayName": "Delnar Steelblade",
+        "x": 315,
+        "y": 700
       },
       {
-        "id": "CaptainHarockHarr",
-        "displayName": "Captain Harock Harr",
-        "x": 1583,
-        "y": 1215
+        "id": "Eldantor",
+        "displayName": "A wandering mage",
+        "x": 343,
+        "y": 766
       },
       {
-        "id": "DoorNomad1",
-        "displayName": "Wooden Door",
-        "x": 1672,
-        "y": 1330
+        "id": "Eldrig",
+        "displayName": "Eldrig",
+        "x": 340,
+        "y": 840
       },
       {
-        "id": "Garnir",
-        "displayName": "Garnir",
-        "x": 1692,
-        "y": 1224
+        "id": "GrantHornkeep",
+        "displayName": "Sheriff Grant Hornkeep",
+        "x": 315,
+        "y": 740
       },
       {
-        "id": "GreyarEedy",
-        "displayName": "Greyard Eedy",
-        "x": 1620,
-        "y": 1209
+        "id": "HerewaldIronbender",
+        "displayName": "Herewald Ironbender",
+        "x": 285,
+        "y": 765
       },
       {
-        "id": "Gwen",
-        "displayName": "Gwen",
-        "x": 1667,
-        "y": 1271
+        "id": "KheralSilverhawk",
+        "displayName": "Kheral Silverhawk",
+        "x": 290,
+        "y": 685
       },
       {
-        "id": "HarbormasterRangor",
-        "displayName": "Harbormaster Rangor",
-        "x": 1519,
-        "y": 1217
+        "id": "MayorFairweather",
+        "displayName": "Mayor Fairweather",
+        "x": 305,
+        "y": 870
       },
       {
-        "id": "JurnistakrKira",
-        "displayName": "Jurnistakr Kira",
-        "x": 1698,
-        "y": 1152
+        "id": "MordredChest",
+        "displayName": "metallic chest",
+        "x": 576,
+        "y": 760
       },
       {
-        "id": "Karl",
-        "displayName": "Karl",
-        "x": 1701,
-        "y": 1238
+        "id": "NorimarSteelwind",
+        "displayName": "Norimar Steelwind",
+        "x": 275,
+        "y": 785
       },
       {
-        "id": "LaonianRikarr",
-        "displayName": "Laonian Rikarr",
-        "x": 1705,
-        "y": 1158
+        "id": "OmarHald",
+        "displayName": "Omar Hald",
+        "x": 305,
+        "y": 840
       },
       {
-        "id": "LiurnClar",
-        "displayName": "Liurn Clar",
-        "x": 1599,
-        "y": 1250
+        "id": "Resha",
+        "displayName": "Resha",
+        "x": 280,
+        "y": 695
       },
       {
-        "id": "LordSunrock",
-        "displayName": "Lord Sunrock",
-        "x": 1609,
-        "y": 1181
+        "id": "Torgas",
+        "displayName": "Torgas",
+        "x": 370,
+        "y": 805
       },
       {
-        "id": "Malaar",
-        "displayName": "Malaar",
-        "x": 1690,
-        "y": 1165
-      },
-      {
-        "id": "MarsacCred",
-        "displayName": "Marsac Cred",
-        "x": 1608,
-        "y": 1253
-      },
-      {
-        "id": "MirakNira",
-        "displayName": "Mirak Nira",
-        "x": 1641,
-        "y": 1181
-      },
-      {
-        "id": "NisalmMalorik",
-        "displayName": "Nisalm Malorik",
-        "x": 1621,
-        "y": 1175
-      },
-      {
-        "id": "RylethCth",
-        "displayName": "R\u0027yleth Cth",
-        "x": 1604,
-        "y": 1244
-      },
-      {
-        "id": "SamilAlgder",
-        "displayName": "Samil Algder",
-        "x": 1704,
-        "y": 1158
-      },
-      {
-        "id": "SkipperRedBeard",
-        "displayName": "Skipper Red Beard",
-        "x": 1570,
-        "y": 1226
-      },
-      {
-        "id": "StorageChest",
-        "displayName": "Storage Chest",
-        "x": 1607,
-        "y": 1178
-      },
-      {
-        "id": "Yolak",
-        "displayName": "Yolak",
-        "x": 1649,
-        "y": 1243
+        "id": "Tristan",
+        "displayName": "Tristan",
+        "x": 295,
+        "y": 738
       }
     ],
     "monsters": [
       {
+        "name": "Arachnofiend",
+        "displayName": "Arachnofiend",
+        "x": 583,
+        "y": 704,
+        "tier": "trash"
+      },
+      {
+        "name": "Arachnofiend",
+        "displayName": "Arachnofiend",
+        "x": 583,
+        "y": 729,
+        "tier": "trash"
+      },
+      {
+        "name": "Arachnofiend",
+        "displayName": "Arachnofiend",
+        "x": 599,
+        "y": 676,
+        "tier": "trash"
+      },
+      {
         "name": "Coastwarden Ithrak",
         "displayName": "Coastwarden Ithrak",
-        "x": 1565,
-        "y": 1285,
+        "x": 455,
+        "y": 745,
         "tier": "boss"
       },
       {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1571,
-        "y": 1265,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1540,
-        "y": 1240,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1580,
-        "y": 1255,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1610,
-        "y": 1280,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1593,
-        "y": 1318,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1584,
-        "y": 1306,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1563,
-        "y": 1277,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1527,
-        "y": 1252,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1620,
-        "y": 1330,
-        "tier": "trash"
-      },
-      {
-        "name": "Tideworn Reaver",
-        "displayName": "Tideworn Reaver",
-        "x": 1595,
-        "y": 1268,
-        "tier": "trash"
-      },
-      {
-        "name": "Raider",
-        "displayName": "Raider",
-        "x": 1591,
-        "y": 1154,
+        "name": "Great Wolf",
+        "displayName": "Grand loup",
+        "x": 555,
+        "y": 860,
         "tier": "boss"
       },
       {
-        "name": "Raider",
-        "displayName": "Raider",
-        "x": 1597,
-        "y": 1140,
+        "name": "MOBHUNTER1",
+        "displayName": "A Powerful Hunter",
+        "x": 437,
+        "y": 755,
         "tier": "boss"
+      },
+      {
+        "name": "MOBHUNTER1",
+        "displayName": "A Powerful Hunter",
+        "x": 495,
+        "y": 553,
+        "tier": "boss"
+      },
+      {
+        "name": "MOBOBSIDIANCONCLAVEKNIGHT",
+        "displayName": "Obsidian Conclave Knight",
+        "x": 567,
+        "y": 764,
+        "tier": "trash"
+      },
+      {
+        "name": "MOBOBSIDIANCONCLAVEKNIGHT",
+        "displayName": "Obsidian Conclave Knight",
+        "x": 568,
+        "y": 771,
+        "tier": "trash"
+      },
+      {
+        "name": "MOBOBSIDIANCONCLAVEKNIGHT",
+        "displayName": "Obsidian Conclave Knight",
+        "x": 573,
+        "y": 771,
+        "tier": "trash"
+      },
+      {
+        "name": "MOBOBSIDIANCONCLAVEKNIGHT",
+        "displayName": "Obsidian Conclave Knight",
+        "x": 579,
+        "y": 768,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 390,
+        "y": 680,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 410,
+        "y": 715,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 435,
+        "y": 750,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 450,
+        "y": 690,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 405,
+        "y": 765,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 445,
+        "y": 770,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 480,
+        "y": 780,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 365,
+        "y": 760,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 425,
+        "y": 735,
+        "tier": "trash"
+      },
+      {
+        "name": "Tideworn Reaver",
+        "displayName": "Tideworn Reaver",
+        "x": 400,
+        "y": 720,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 253,
+        "y": 564,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 287,
+        "y": 594,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 305,
+        "y": 574,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 308,
+        "y": 583,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 313,
+        "y": 613,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 317,
+        "y": 562,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 330,
+        "y": 687,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 332,
+        "y": 597,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 343,
+        "y": 582,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 347,
+        "y": 631,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 355,
+        "y": 570,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 356,
+        "y": 672,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 356,
+        "y": 886,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 357,
+        "y": 642,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 359,
+        "y": 874,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 364,
+        "y": 597,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 365,
+        "y": 580,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 371,
+        "y": 653,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 375,
+        "y": 691,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 382,
+        "y": 893,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 387,
+        "y": 764,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 393,
+        "y": 721,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 394,
+        "y": 738,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 396,
+        "y": 670,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 402,
+        "y": 846,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 405,
+        "y": 776,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 405,
+        "y": 906,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 409,
+        "y": 619,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 409,
+        "y": 873,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 412,
+        "y": 766,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 419,
+        "y": 657,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 419,
+        "y": 820,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 421,
+        "y": 739,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 426,
+        "y": 595,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 428,
+        "y": 631,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 432,
+        "y": 800,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 433,
+        "y": 608,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 434,
+        "y": 731,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 437,
+        "y": 652,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 438,
+        "y": 625,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 452,
+        "y": 755,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 459,
+        "y": 823,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 460,
+        "y": 793,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 470,
+        "y": 775,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 477,
+        "y": 806,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 485,
+        "y": 775,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 490,
+        "y": 722,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 493,
+        "y": 707,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 502,
+        "y": 719,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 502,
+        "y": 792,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 504,
+        "y": 731,
+        "tier": "trash"
+      },
+      {
+        "name": "Nightcreeper",
+        "displayName": "Nightcreeper",
+        "x": 506,
+        "y": 744,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 322,
+        "y": 645,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 330,
+        "y": 631,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 333,
+        "y": 660,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 362,
+        "y": 561,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 393,
+        "y": 555,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 406,
+        "y": 753,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 406,
+        "y": 839,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 417,
+        "y": 582,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 421,
+        "y": 570,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 441,
+        "y": 578,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 461,
+        "y": 559,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 462,
+        "y": 579,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 465,
+        "y": 593,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 468,
+        "y": 669,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 468,
+        "y": 683,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 475,
+        "y": 663,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 477,
+        "y": 568,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 478,
+        "y": 582,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 481,
+        "y": 593,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 484,
+        "y": 571,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 484,
+        "y": 691,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 485,
+        "y": 659,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 487,
+        "y": 557,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 491,
+        "y": 665,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 491,
+        "y": 689,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 492,
+        "y": 565,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 495,
+        "y": 579,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 497,
+        "y": 680,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 504,
+        "y": 560,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 507,
+        "y": 569,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 536,
+        "y": 869,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 540,
+        "y": 854,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 541,
+        "y": 882,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 548,
+        "y": 849,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 560,
+        "y": 853,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 563,
+        "y": 881,
+        "tier": "trash"
+      },
+      {
+        "name": "Pack Wolf",
+        "displayName": "Pack Wolf",
+        "x": 570,
+        "y": 869,
+        "tier": "trash"
+      },
+      {
+        "name": "Ribbon Fiend",
+        "displayName": "Ribbon Fiend",
+        "x": 326,
+        "y": 671,
+        "tier": "trash"
+      },
+      {
+        "name": "Ribbon Fiend",
+        "displayName": "Ribbon Fiend",
+        "x": 343,
+        "y": 734,
+        "tier": "trash"
+      },
+      {
+        "name": "Ribbon Fiend",
+        "displayName": "Ribbon Fiend",
+        "x": 411,
+        "y": 719,
+        "tier": "trash"
       },
       {
         "name": "Wild Horse",
         "displayName": "Wild Horse",
-        "x": 1555,
-        "y": 1148,
-        "tier": "boss"
+        "x": 266,
+        "y": 561,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 343,
+        "y": 648,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 406,
+        "y": 570,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 463,
+        "y": 892,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 469,
+        "y": 904,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 475,
+        "y": 682,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 489,
+        "y": 872,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 496,
+        "y": 898,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 518,
+        "y": 909,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 521,
+        "y": 884,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 579,
+        "y": 594,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 584,
+        "y": 896,
+        "tier": "trash"
+      },
+      {
+        "name": "Wild Horse",
+        "displayName": "Wild Horse",
+        "x": 596,
+        "y": 907,
+        "tier": "trash"
+      },
+      {
+        "name": "Wolfhound",
+        "displayName": "Wolfhound",
+        "x": 483,
+        "y": 680,
+        "tier": "trash"
+      },
+      {
+        "name": "Wolfhound",
+        "displayName": "Wolfhound",
+        "x": 484,
+        "y": 577,
+        "tier": "trash"
+      },
+      {
+        "name": "Wolfhound",
+        "displayName": "Wolfhound",
+        "x": 546,
+        "y": 874,
+        "tier": "trash"
+      },
+      {
+        "name": "Wolfhound",
+        "displayName": "Wolfhound",
+        "x": 548,
+        "y": 859,
+        "tier": "trash"
+      },
+      {
+        "name": "Wolfhound",
+        "displayName": "Wolfhound",
+        "x": 562,
+        "y": 875,
+        "tier": "trash"
       },
       {
         "name": "SUNDIAL",
         "displayName": "SUNDIAL",
-        "x": 1667,
-        "y": 1242,
-        "tier": "boss"
+        "x": 273,
+        "y": 744,
+        "tier": "trash"
+      },
+      {
+        "name": "SUNDIAL",
+        "displayName": "SUNDIAL",
+        "x": 277,
+        "y": 827,
+        "tier": "trash"
+      },
+      {
+        "name": "SUNDIAL",
+        "displayName": "SUNDIAL",
+        "x": 295,
+        "y": 808,
+        "tier": "trash"
       }
     ],
     "namedLocations": [
       {
-        "name": "Lord Sunrock",
-        "x": 1609,
-        "y": 1181
+        "name": "Grant Hornkeep",
+        "x": 315,
+        "y": 740
       }
     ]
   },
@@ -1650,12 +2435,12 @@
     ],
     "namedLocations": [
       {
-        "name": "Avalon Sanctuary",
+        "name": "Witness Isles Sanctuary",
         "x": 4040,
         "y": 1477
       },
       {
-        "name": "The Avalon Wilds",
+        "name": "The Witness Wilds",
         "x": 3965,
         "y": 1400
       }
@@ -2316,12 +3101,12 @@
     ],
     "namedLocations": [
       {
-        "name": "Avalon Sanctuary",
+        "name": "Witness Isles Sanctuary",
         "x": 4040,
         "y": 1477
       },
       {
-        "name": "The Avalon Wilds",
+        "name": "The Witness Wilds",
         "x": 3965,
         "y": 1400
       },
