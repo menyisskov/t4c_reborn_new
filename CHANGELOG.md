@@ -11,6 +11,13 @@ dates are the commit dates of the work, not retroactively invented. From now
 on, every content/feature pass adds its own entry here as part of the work
 (see `CLAUDE.md`), not after the fact.
 
+## 2026-09-29 — Avalon islands and landmarks (T4C-0105)
+
+### Added
+- Two new islands extend Avalon to the north and south, with walkable routes, a lagoon, a crater pool, landmark buildings, and clear areas for future adventures.
+- Crescent Pools, Oathstone Grove, and Sable Fen give the mainland distinct places to explore beyond the sanctuary and existing hunting regions.
+
+
 ## 2026-09-29 — Map editor group selection (T4C-0104)
 
 ### Added
