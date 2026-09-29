@@ -1,6 +1,6 @@
 # Avalon — sanctuary, Wilds and eastern relocation
 
-Avalon now occupies its own eastern area of the **5120×3072** world map. Its coordinates moved
+Avalon occupies its own eastern area of the **6144×3072** world map. Its coordinates moved
 **+2700 X**, with Y and map layer unchanged. The Great Library and other original terrain
 were restored at their original coordinates. Existing cave and stair links remain there.
 
@@ -26,7 +26,7 @@ clearing. Tree groups frame open travel and fighting areas.
 Dense overlapping ghost trees have been removed from encounter space. Widely separated trees
 retain the blighted woodland setting, with clear space around spawns and routes for fighting
 and collecting loot. The restored extended land reaches beyond the two existing quest regions;
-additional encounter design and progression balancing remain future work.
+The later Hollow Dawn campaign adds more encounters and progression tuning.
 
 ## Quest walkthrough
 
@@ -34,9 +34,13 @@ Speak to Elder Ophira inside the temple at **(4044,1462)**:
 
 1. Say **wilds** to hear the mission, then **accept**.
 2. Say **route** for directions to the Stalkers and Caradoc.
-3. Complete the journal's kill objective and recover Caradoc's Sundered Blade.
-4. Return and say **report**. Ophira checks both objectives before advancing.
+3. Complete the journal's kill objective. Caradoc's Sundered Blade is optional rare loot.
+4. Return and say **report**. Ophira checks the marked objective before advancing.
 5. Say **veil** to hear the next chapter, then **accept**.
+
+After Ophira's Veil reckoning, speak with Chronicler Maelin in the sanctuary to begin
+[The Hollow Dawn campaign](hollow-dawn-campaign.md). It leads through Moonwake and Emberglass
+to the new level 300–400 land of Threnody Reach.
 
 Existing quest acceptance, completion and kill progress remain intact. Players who already
 accepted the Veil quest can still finish it.

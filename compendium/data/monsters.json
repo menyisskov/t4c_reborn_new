@@ -27702,6 +27702,116 @@
     ]
   },
   {
+    "name": "Fey Warden",
+    "displayName": "Fey Warden",
+    "origin": "new",
+    "sprite": "sprites/monsters/fey_warden.png",
+    "level": 210,
+    "health": 36300,
+    "mana": 0,
+    "xpPerHit": 6,
+    "xpOnDeath": 115000,
+    "hitDamageMin": 180,
+    "hitDamageMax": 400,
+    "respawnTimeMs": 30000,
+    "goldMin": 378,
+    "goldMax": 1155,
+    "dodge": 850,
+    "acMin": 0,
+    "acMax": 200,
+    "aggro": -50,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 300,
+      "end": 280,
+      "agi": 280,
+      "intel": 230,
+      "will": 0,
+      "wis": 300,
+      "luck": 0
+    },
+    "resists": {
+      "air": 130,
+      "earth": 140,
+      "water": 110,
+      "fire": 70,
+      "dark": 60,
+      "light": 150
+    },
+    "loot": [
+      {
+        "item": "light_healing_potion",
+        "chance": 0.15
+      },
+      {
+        "item": "torch",
+        "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_light_armor",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_boots",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_gauntlets",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_helmet",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_leggings",
+        "chance": 0.006
+      },
+      {
+        "item": "ancient_celestial_light_protector",
+        "chance": 0.006
+      },
+      {
+        "item": "empyrean_light_armor",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_boots",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_gauntlets",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_helmet",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_leggings",
+        "chance": 0.003
+      },
+      {
+        "item": "empyrean_light_protector",
+        "chance": 0.003
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d495+430",
+        "combatAttack": 3960,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
     "name": "Kraanian Wyrmling",
     "displayName": "Kraanian Wyrmling",
     "origin": "new",
@@ -27809,6 +27919,304 @@
         "formula": "1d 387 + 303 ",
         "combatAttack": 2710,
         "selectionWeight": 55,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Moonlit Stalker",
+    "displayName": "Moonlit Stalker",
+    "origin": "new",
+    "sprite": "sprites/monsters/moonlit_stalker.png",
+    "level": 225,
+    "health": 42900,
+    "mana": 0,
+    "xpPerHit": 7,
+    "xpOnDeath": 150000,
+    "hitDamageMin": 210,
+    "hitDamageMax": 460,
+    "respawnTimeMs": 30000,
+    "goldMin": 405,
+    "goldMax": 1238,
+    "dodge": 950,
+    "acMin": 0,
+    "acMax": 180,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 330,
+      "end": 310,
+      "agi": 430,
+      "intel": 195,
+      "will": 0,
+      "wis": 235,
+      "luck": 0
+    },
+    "resists": {
+      "air": 140,
+      "earth": 100,
+      "water": 120,
+      "fire": 70,
+      "dark": 110,
+      "light": 90
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.05
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.08
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d585+507",
+        "combatAttack": 4680,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Moonwake Revenant",
+    "displayName": "Moonwake Revenant",
+    "origin": "new",
+    "level": 230,
+    "health": 43000,
+    "mana": 0,
+    "xpPerHit": 5,
+    "xpOnDeath": 175000,
+    "hitDamageMin": 280,
+    "hitDamageMax": 420,
+    "respawnTimeMs": 30000,
+    "goldMin": 414,
+    "goldMax": 1265,
+    "dodge": 920,
+    "acMin": 0,
+    "acMax": 115,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 230,
+      "end": 230,
+      "agi": 230,
+      "intel": 115,
+      "will": 0,
+      "wis": 115,
+      "luck": 0
+    },
+    "resists": {
+      "air": 110,
+      "earth": 90,
+      "water": 100,
+      "fire": 80,
+      "dark": 160,
+      "light": 40
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.08
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.08
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d140+280",
+        "combatAttack": 2840,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Sir Caradoc, the Sundered Knight",
+    "displayName": "Sir Caradoc, the Sundered Knight",
+    "origin": "new",
+    "sprite": "sprites/monsters/sir_caradoc_the_sundered_knight.png",
+    "level": 245,
+    "health": 62000,
+    "mana": 0,
+    "xpPerHit": 10,
+    "xpOnDeath": 5000000,
+    "hitDamageMin": 740,
+    "hitDamageMax": 1680,
+    "respawnTimeMs": 30000,
+    "goldMin": 1100,
+    "goldMax": 2750,
+    "dodge": 1200,
+    "acMin": 0,
+    "acMax": 550,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 605,
+      "end": 575,
+      "agi": 300,
+      "intel": 220,
+      "will": 0,
+      "wis": 220,
+      "luck": 0
+    },
+    "resists": {
+      "air": 80,
+      "earth": 140,
+      "water": 110,
+      "fire": 100,
+      "dark": 200,
+      "light": 20
+    },
+    "loot": [
+      {
+        "item": "caradocs_sundered_blade",
+        "chance": 0.02
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.2
+      },
+      {
+        "item": "ancient_celestial_warrior_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_warrior_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_warrior_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d825+715",
+        "combatAttack": 6600,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Pale Cantor",
+    "displayName": "The Pale Cantor",
+    "origin": "new",
+    "level": 245,
+    "health": 85000,
+    "mana": 15000,
+    "xpPerHit": 8,
+    "xpOnDeath": 5500000,
+    "hitDamageMin": 466,
+    "hitDamageMax": 700,
+    "respawnTimeMs": 120000,
+    "goldMin": 441,
+    "goldMax": 1348,
+    "dodge": 980,
+    "acMin": 0,
+    "acMax": 122,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 245,
+      "end": 245,
+      "agi": 245,
+      "intel": 122,
+      "will": 0,
+      "wis": 122,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 90,
+      "water": 90,
+      "fire": 120,
+      "dark": 250,
+      "light": 10
+    },
+    "loot": [
+      {
+        "item": "item.moonwake_bell_shard",
+        "chance": 1.0
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.5
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d234+466",
+        "combatAttack": 2960,
+        "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
         "rangeMinTiles": 0,
@@ -27941,6 +28349,331 @@
     ]
   },
   {
+    "name": "Veilbound Wraith",
+    "displayName": "Veilbound Wraith",
+    "origin": "new",
+    "sprite": "sprites/monsters/veilbound_wraith.png",
+    "level": 255,
+    "health": 53400,
+    "mana": 0,
+    "xpPerHit": 8,
+    "xpOnDeath": 190000,
+    "hitDamageMin": 260,
+    "hitDamageMax": 560,
+    "respawnTimeMs": 30000,
+    "goldMin": 459,
+    "goldMax": 1403,
+    "dodge": 1100,
+    "acMin": 0,
+    "acMax": 150,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 290,
+      "end": 340,
+      "agi": 435,
+      "intel": 435,
+      "will": 0,
+      "wis": 390,
+      "luck": 0
+    },
+    "resists": {
+      "air": 110,
+      "earth": 90,
+      "water": 100,
+      "fire": 80,
+      "dark": 160,
+      "light": 40
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.08
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.1
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.03
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d728+631",
+        "combatAttack": 5820,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Ysolde, the Veiled Matriarch",
+    "displayName": "Ysolde, the Veiled Matriarch",
+    "origin": "new",
+    "sprite": "sprites/monsters/ysolde_the_veiled_matriarch.png",
+    "level": 265,
+    "health": 64000,
+    "mana": 15000,
+    "xpPerHit": 10,
+    "xpOnDeath": 6500000,
+    "hitDamageMin": 600,
+    "hitDamageMax": 1300,
+    "respawnTimeMs": 30000,
+    "goldMin": 1200,
+    "goldMax": 3000,
+    "dodge": 1150,
+    "acMin": 0,
+    "acMax": 180,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 300,
+      "end": 480,
+      "agi": 420,
+      "intel": 840,
+      "will": 0,
+      "wis": 840,
+      "luck": 0
+    },
+    "resists": {
+      "air": 100,
+      "earth": 90,
+      "water": 90,
+      "fire": 120,
+      "dark": 250,
+      "light": 10
+    },
+    "loot": [
+      {
+        "item": "ysoldes_veiled_circlet",
+        "chance": 0.02
+      },
+      {
+        "item": "item.veiled_aether_shard",
+        "chance": 0.05
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.3
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.3
+      },
+      {
+        "item": "ancient_celestial_dark_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_dark_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_dark_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d420+400",
+        "combatAttack": 5000,
+        "selectionWeight": 40,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 1
+      },
+      {
+        "formula": "",
+        "combatAttack": 0,
+        "selectionWeight": 35,
+        "isSpell": true,
+        "spellId": 10094,
+        "rangeMinTiles": 2,
+        "rangeMaxTiles": 15
+      },
+      {
+        "formula": "",
+        "combatAttack": 0,
+        "selectionWeight": 25,
+        "isSpell": true,
+        "spellId": 10352,
+        "rangeMinTiles": 2,
+        "rangeMaxTiles": 15
+      }
+    ]
+  },
+  {
+    "name": "Emberglass Ashguard",
+    "displayName": "Emberglass Ashguard",
+    "origin": "new",
+    "level": 270,
+    "health": 61000,
+    "mana": 0,
+    "xpPerHit": 5,
+    "xpOnDeath": 245000,
+    "hitDamageMin": 366,
+    "hitDamageMax": 550,
+    "respawnTimeMs": 30000,
+    "goldMin": 486,
+    "goldMax": 1485,
+    "dodge": 1080,
+    "acMin": 0,
+    "acMax": 135,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 270,
+      "end": 270,
+      "agi": 270,
+      "intel": 135,
+      "will": 0,
+      "wis": 135,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 130,
+      "water": 100,
+      "fire": 90,
+      "dark": 170,
+      "light": 30
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.08
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.08
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d184+366",
+        "combatAttack": 3160,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Sundered Sentinel",
+    "displayName": "Sundered Sentinel",
+    "origin": "new",
+    "sprite": "sprites/monsters/sundered_sentinel.png",
+    "level": 275,
+    "health": 61600,
+    "mana": 0,
+    "xpPerHit": 9,
+    "xpOnDeath": 260000,
+    "hitDamageMin": 300,
+    "hitDamageMax": 640,
+    "respawnTimeMs": 30000,
+    "goldMin": 495,
+    "goldMax": 1513,
+    "dodge": 1300,
+    "acMin": 0,
+    "acMax": 500,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 560,
+      "end": 560,
+      "agi": 280,
+      "intel": 170,
+      "will": 0,
+      "wis": 170,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 130,
+      "water": 100,
+      "fire": 90,
+      "dark": 170,
+      "light": 30
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.1
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.05
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d840+728",
+        "combatAttack": 6720,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
     "name": "Tideworn Reaver",
     "displayName": "Tideworn Reaver",
     "origin": "new",
@@ -27990,6 +28723,177 @@
       {
         "formula": "1d410+355",
         "combatAttack": 3300,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Cinder Marshal",
+    "displayName": "The Cinder Marshal",
+    "origin": "new",
+    "level": 290,
+    "health": 120000,
+    "mana": 0,
+    "xpPerHit": 8,
+    "xpOnDeath": 8500000,
+    "hitDamageMin": 566,
+    "hitDamageMax": 850,
+    "respawnTimeMs": 120000,
+    "goldMin": 522,
+    "goldMax": 1595,
+    "dodge": 1160,
+    "acMin": 0,
+    "acMax": 145,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 290,
+      "end": 290,
+      "agi": 290,
+      "intel": 145,
+      "will": 0,
+      "wis": 145,
+      "luck": 0
+    },
+    "resists": {
+      "air": 80,
+      "earth": 140,
+      "water": 110,
+      "fire": 100,
+      "dark": 200,
+      "light": 20
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.5
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.4
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d284+566",
+        "combatAttack": 3320,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "The Verdant Warden",
+    "displayName": "The Verdant Warden",
+    "origin": "new",
+    "sprite": "sprites/monsters/the_verdant_warden.png",
+    "level": 290,
+    "health": 92000,
+    "mana": 0,
+    "xpPerHit": 11,
+    "xpOnDeath": 7500000,
+    "hitDamageMin": 860,
+    "hitDamageMax": 1850,
+    "respawnTimeMs": 30000,
+    "goldMin": 1300,
+    "goldMax": 3250,
+    "dodge": 1250,
+    "acMin": 0,
+    "acMax": 650,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 780,
+      "end": 845,
+      "agi": 260,
+      "intel": 390,
+      "will": 0,
+      "wis": 650,
+      "luck": 0
+    },
+    "resists": {
+      "air": 120,
+      "earth": 180,
+      "water": 150,
+      "fire": 60,
+      "dark": 130,
+      "light": 160
+    },
+    "loot": [
+      {
+        "item": "verdant_wardens_bulwark",
+        "chance": 0.015
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.3
+      },
+      {
+        "item": "ancient_celestial_earth_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "ancient_celestial_earth_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_earth_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "empyrean_earth_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d975+845",
+        "combatAttack": 7800,
         "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
@@ -28249,6 +29153,75 @@
     ]
   },
   {
+    "name": "Ashbound Exile",
+    "displayName": "Ashbound Exile",
+    "origin": "new",
+    "level": 315,
+    "health": 72000,
+    "mana": 0,
+    "xpPerHit": 5,
+    "xpOnDeath": 355000,
+    "hitDamageMin": 413,
+    "hitDamageMax": 620,
+    "respawnTimeMs": 30000,
+    "goldMin": 567,
+    "goldMax": 1733,
+    "dodge": 1260,
+    "acMin": 0,
+    "acMax": 157,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 315,
+      "end": 315,
+      "agi": 315,
+      "intel": 157,
+      "will": 0,
+      "wis": 157,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 130,
+      "water": 100,
+      "fire": 90,
+      "dark": 170,
+      "light": 30
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.08
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.08
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d207+413",
+        "combatAttack": 3520,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
     "name": "ArenaMobXP325",
     "displayName": "Arena experience monster (level 325)",
     "origin": "legacy",
@@ -28311,101 +29284,52 @@
     ]
   },
   {
-    "name": "Fey Warden",
-    "displayName": "Fey Warden",
+    "name": "The Hush Cantor",
+    "displayName": "The Hush Cantor",
     "origin": "new",
-    "sprite": "sprites/monsters/fey_warden.png",
-    "level": 330,
-    "health": 36300,
-    "mana": 0,
-    "xpPerHit": 6,
-    "xpOnDeath": 300000,
-    "hitDamageMin": 180,
-    "hitDamageMax": 400,
-    "respawnTimeMs": 30000,
-    "goldMin": 594,
-    "goldMax": 1815,
-    "dodge": 1320,
+    "level": 340,
+    "health": 155000,
+    "mana": 15000,
+    "xpPerHit": 8,
+    "xpOnDeath": 15000000,
+    "hitDamageMin": 700,
+    "hitDamageMax": 1050,
+    "respawnTimeMs": 120000,
+    "goldMin": 612,
+    "goldMax": 1870,
+    "dodge": 1360,
     "acMin": 0,
-    "acMax": 200,
-    "aggro": -50,
+    "acMax": 170,
+    "aggro": 100,
     "speed": 0,
     "canAttack": true,
     "tameable": false,
     "tameMaxLevel": 0,
     "stats": {
-      "str": 300,
-      "end": 280,
-      "agi": 280,
-      "intel": 230,
+      "str": 340,
+      "end": 340,
+      "agi": 340,
+      "intel": 170,
       "will": 0,
-      "wis": 300,
+      "wis": 170,
       "luck": 0
     },
     "resists": {
-      "air": 130,
-      "earth": 140,
-      "water": 110,
-      "fire": 70,
-      "dark": 60,
-      "light": 150
+      "air": 100,
+      "earth": 90,
+      "water": 90,
+      "fire": 120,
+      "dark": 250,
+      "light": 10
     },
     "loot": [
       {
-        "item": "light_healing_potion",
-        "chance": 0.15
+        "item": "serious_healing_potion",
+        "chance": 0.5
       },
       {
-        "item": "torch",
-        "chance": 0.2
-      },
-      {
-        "item": "ancient_celestial_light_armor",
-        "chance": 0.006
-      },
-      {
-        "item": "ancient_celestial_light_boots",
-        "chance": 0.006
-      },
-      {
-        "item": "ancient_celestial_light_gauntlets",
-        "chance": 0.006
-      },
-      {
-        "item": "ancient_celestial_light_helmet",
-        "chance": 0.006
-      },
-      {
-        "item": "ancient_celestial_light_leggings",
-        "chance": 0.006
-      },
-      {
-        "item": "ancient_celestial_light_protector",
-        "chance": 0.006
-      },
-      {
-        "item": "empyrean_light_armor",
-        "chance": 0.003
-      },
-      {
-        "item": "empyrean_light_boots",
-        "chance": 0.003
-      },
-      {
-        "item": "empyrean_light_gauntlets",
-        "chance": 0.003
-      },
-      {
-        "item": "empyrean_light_helmet",
-        "chance": 0.003
-      },
-      {
-        "item": "empyrean_light_leggings",
-        "chance": 0.003
-      },
-      {
-        "item": "empyrean_light_protector",
-        "chance": 0.003
+        "item": "mana_elixir",
+        "chance": 0.4
       },
       {
         "item": "item.mana_prism",
@@ -28418,8 +29342,8 @@
     ],
     "attacks": [
       {
-        "formula": "1d495+430",
-        "combatAttack": 3960,
+        "formula": "1d350+700",
+        "combatAttack": 3720,
         "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
@@ -28491,6 +29415,75 @@
     ]
   },
   {
+    "name": "Nullguard",
+    "displayName": "Nullguard",
+    "origin": "new",
+    "level": 355,
+    "health": 94000,
+    "mana": 0,
+    "xpPerHit": 5,
+    "xpOnDeath": 460000,
+    "hitDamageMin": 533,
+    "hitDamageMax": 800,
+    "respawnTimeMs": 30000,
+    "goldMin": 639,
+    "goldMax": 1953,
+    "dodge": 1420,
+    "acMin": 0,
+    "acMax": 177,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 355,
+      "end": 355,
+      "agi": 355,
+      "intel": 177,
+      "will": 0,
+      "wis": 177,
+      "luck": 0
+    },
+    "resists": {
+      "air": 70,
+      "earth": 130,
+      "water": 100,
+      "fire": 90,
+      "dark": 170,
+      "light": 30
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.08
+      },
+      {
+        "item": "potion_of_mana",
+        "chance": 0.08
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d267+533",
+        "combatAttack": 3840,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
     "name": "ArenaMobXP375",
     "displayName": "Arena experience monster (level 375)",
     "origin": "legacy",
@@ -28553,49 +29546,117 @@
     ]
   },
   {
-    "name": "Moonlit Stalker",
-    "displayName": "Moonlit Stalker",
+    "name": "The Dusk Regent",
+    "displayName": "The Dusk Regent",
     "origin": "new",
-    "sprite": "sprites/monsters/moonlit_stalker.png",
-    "level": 390,
-    "health": 42900,
+    "level": 375,
+    "health": 225000,
     "mana": 0,
-    "xpPerHit": 7,
-    "xpOnDeath": 430000,
-    "hitDamageMin": 210,
-    "hitDamageMax": 460,
-    "respawnTimeMs": 30000,
-    "goldMin": 702,
-    "goldMax": 2145,
-    "dodge": 1560,
+    "xpPerHit": 8,
+    "xpOnDeath": 26000000,
+    "hitDamageMin": 933,
+    "hitDamageMax": 1400,
+    "respawnTimeMs": 120000,
+    "goldMin": 675,
+    "goldMax": 2063,
+    "dodge": 1500,
     "acMin": 0,
-    "acMax": 180,
+    "acMax": 187,
     "aggro": 100,
     "speed": 0,
     "canAttack": true,
     "tameable": false,
     "tameMaxLevel": 0,
     "stats": {
-      "str": 330,
-      "end": 310,
-      "agi": 430,
-      "intel": 195,
+      "str": 375,
+      "end": 375,
+      "agi": 375,
+      "intel": 187,
       "will": 0,
-      "wis": 235,
+      "wis": 187,
       "luck": 0
     },
     "resists": {
-      "air": 140,
-      "earth": 100,
-      "water": 120,
-      "fire": 70,
-      "dark": 110,
-      "light": 90
+      "air": 80,
+      "earth": 140,
+      "water": 110,
+      "fire": 100,
+      "dark": 200,
+      "light": 20
+    },
+    "loot": [
+      {
+        "item": "item.last_witness_seal",
+        "chance": 1.0
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.5
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d467+933",
+        "combatAttack": 4000,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Rift Wraith",
+    "displayName": "Rift Wraith",
+    "origin": "new",
+    "level": 390,
+    "health": 130000,
+    "mana": 0,
+    "xpPerHit": 5,
+    "xpOnDeath": 600000,
+    "hitDamageMin": 700,
+    "hitDamageMax": 1050,
+    "respawnTimeMs": 30000,
+    "goldMin": 702,
+    "goldMax": 2145,
+    "dodge": 1560,
+    "acMin": 0,
+    "acMax": 195,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 390,
+      "end": 390,
+      "agi": 390,
+      "intel": 195,
+      "will": 0,
+      "wis": 195,
+      "luck": 0
+    },
+    "resists": {
+      "air": 110,
+      "earth": 90,
+      "water": 100,
+      "fire": 80,
+      "dark": 160,
+      "light": 40
     },
     "loot": [
       {
         "item": "serious_healing_potion",
-        "chance": 0.05
+        "chance": 0.08
       },
       {
         "item": "potion_of_mana",
@@ -28612,8 +29673,8 @@
     ],
     "attacks": [
       {
-        "formula": "1d585+507",
-        "combatAttack": 4680,
+        "formula": "1d350+700",
+        "combatAttack": 4120,
         "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
@@ -28677,6 +29738,75 @@
         "formula": "1d 687 + 540 ",
         "combatAttack": 4810,
         "selectionWeight": 20,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Rhunor, the Hollow Dawn",
+    "displayName": "Rhunor, the Hollow Dawn",
+    "origin": "new",
+    "level": 400,
+    "health": 480000,
+    "mana": 0,
+    "xpPerHit": 8,
+    "xpOnDeath": 50000000,
+    "hitDamageMin": 1400,
+    "hitDamageMax": 2100,
+    "respawnTimeMs": 120000,
+    "goldMin": 720,
+    "goldMax": 2200,
+    "dodge": 1600,
+    "acMin": 0,
+    "acMax": 200,
+    "aggro": 100,
+    "speed": 0,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 400,
+      "end": 400,
+      "agi": 400,
+      "intel": 200,
+      "will": 0,
+      "wis": 200,
+      "luck": 0
+    },
+    "resists": {
+      "air": 120,
+      "earth": 180,
+      "water": 150,
+      "fire": 60,
+      "dark": 130,
+      "light": 160
+    },
+    "loot": [
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.5
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.4
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d700+1400",
+        "combatAttack": 4200,
+        "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
         "rangeMinTiles": 0,
@@ -29063,80 +30193,6 @@
     ]
   },
   {
-    "name": "Veilbound Wraith",
-    "displayName": "Veilbound Wraith",
-    "origin": "new",
-    "sprite": "sprites/monsters/veilbound_wraith.png",
-    "level": 485,
-    "health": 53400,
-    "mana": 0,
-    "xpPerHit": 8,
-    "xpOnDeath": 630000,
-    "hitDamageMin": 260,
-    "hitDamageMax": 560,
-    "respawnTimeMs": 30000,
-    "goldMin": 873,
-    "goldMax": 2668,
-    "dodge": 1940,
-    "acMin": 0,
-    "acMax": 150,
-    "aggro": 100,
-    "speed": 0,
-    "canAttack": true,
-    "tameable": false,
-    "tameMaxLevel": 0,
-    "stats": {
-      "str": 290,
-      "end": 340,
-      "agi": 435,
-      "intel": 435,
-      "will": 0,
-      "wis": 390,
-      "luck": 0
-    },
-    "resists": {
-      "air": 110,
-      "earth": 90,
-      "water": 100,
-      "fire": 80,
-      "dark": 160,
-      "light": 40
-    },
-    "loot": [
-      {
-        "item": "serious_healing_potion",
-        "chance": 0.08
-      },
-      {
-        "item": "potion_of_mana",
-        "chance": 0.1
-      },
-      {
-        "item": "mana_elixir",
-        "chance": 0.03
-      },
-      {
-        "item": "item.mana_prism",
-        "chance": 0.05
-      },
-      {
-        "item": "item.critical_healing_potion",
-        "chance": 0.05
-      }
-    ],
-    "attacks": [
-      {
-        "formula": "1d728+631",
-        "combatAttack": 5820,
-        "selectionWeight": 100,
-        "isSpell": false,
-        "spellId": 0,
-        "rangeMinTiles": 0,
-        "rangeMaxTiles": 0
-      }
-    ]
-  },
-  {
     "name": "ArenaMobXP500",
     "displayName": "Arena experience monster (level 500)",
     "origin": "legacy",
@@ -29455,198 +30511,6 @@
     ]
   },
   {
-    "name": "Sir Caradoc, the Sundered Knight",
-    "displayName": "Sir Caradoc, the Sundered Knight",
-    "origin": "new",
-    "sprite": "sprites/monsters/sir_caradoc_the_sundered_knight.png",
-    "level": 550,
-    "health": 62000,
-    "mana": 0,
-    "xpPerHit": 10,
-    "xpOnDeath": 65000000,
-    "hitDamageMin": 740,
-    "hitDamageMax": 1680,
-    "respawnTimeMs": 30000,
-    "goldMin": 1100,
-    "goldMax": 2750,
-    "dodge": 2200,
-    "acMin": 0,
-    "acMax": 550,
-    "aggro": 100,
-    "speed": 0,
-    "canAttack": true,
-    "tameable": false,
-    "tameMaxLevel": 0,
-    "stats": {
-      "str": 605,
-      "end": 575,
-      "agi": 300,
-      "intel": 220,
-      "will": 0,
-      "wis": 220,
-      "luck": 0
-    },
-    "resists": {
-      "air": 80,
-      "earth": 140,
-      "water": 110,
-      "fire": 100,
-      "dark": 200,
-      "light": 20
-    },
-    "loot": [
-      {
-        "item": "caradocs_sundered_blade",
-        "chance": 0.02
-      },
-      {
-        "item": "serious_healing_potion",
-        "chance": 0.3
-      },
-      {
-        "item": "mana_elixir",
-        "chance": 0.2
-      },
-      {
-        "item": "ancient_celestial_warrior_armor",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_warrior_boots",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_warrior_gauntlets",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_warrior_helmet",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_warrior_leggings",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_warrior_protector",
-        "chance": 0.025
-      },
-      {
-        "item": "empyrean_warrior_armor",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_warrior_boots",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_warrior_gauntlets",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_warrior_helmet",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_warrior_leggings",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_warrior_protector",
-        "chance": 0.012
-      },
-      {
-        "item": "item.mana_prism",
-        "chance": 0.05
-      },
-      {
-        "item": "item.critical_healing_potion",
-        "chance": 0.05
-      }
-    ],
-    "attacks": [
-      {
-        "formula": "1d825+715",
-        "combatAttack": 6600,
-        "selectionWeight": 100,
-        "isSpell": false,
-        "spellId": 0,
-        "rangeMinTiles": 0,
-        "rangeMaxTiles": 0
-      }
-    ]
-  },
-  {
-    "name": "Sundered Sentinel",
-    "displayName": "Sundered Sentinel",
-    "origin": "new",
-    "sprite": "sprites/monsters/sundered_sentinel.png",
-    "level": 560,
-    "health": 61600,
-    "mana": 0,
-    "xpPerHit": 9,
-    "xpOnDeath": 840000,
-    "hitDamageMin": 300,
-    "hitDamageMax": 640,
-    "respawnTimeMs": 30000,
-    "goldMin": 1008,
-    "goldMax": 3080,
-    "dodge": 2240,
-    "acMin": 0,
-    "acMax": 500,
-    "aggro": 100,
-    "speed": 0,
-    "canAttack": true,
-    "tameable": false,
-    "tameMaxLevel": 0,
-    "stats": {
-      "str": 560,
-      "end": 560,
-      "agi": 280,
-      "intel": 170,
-      "will": 0,
-      "wis": 170,
-      "luck": 0
-    },
-    "resists": {
-      "air": 70,
-      "earth": 130,
-      "water": 100,
-      "fire": 90,
-      "dark": 170,
-      "light": 30
-    },
-    "loot": [
-      {
-        "item": "serious_healing_potion",
-        "chance": 0.1
-      },
-      {
-        "item": "mana_elixir",
-        "chance": 0.05
-      },
-      {
-        "item": "item.mana_prism",
-        "chance": 0.05
-      },
-      {
-        "item": "item.critical_healing_potion",
-        "chance": 0.05
-      }
-    ],
-    "attacks": [
-      {
-        "formula": "1d840+728",
-        "combatAttack": 6720,
-        "selectionWeight": 100,
-        "isSpell": false,
-        "spellId": 0,
-        "rangeMinTiles": 0,
-        "rangeMaxTiles": 0
-      }
-    ]
-  },
-  {
     "name": "ArenaMobXP575",
     "displayName": "ArenaMobXP575",
     "origin": "new",
@@ -29841,150 +30705,6 @@
     ]
   },
   {
-    "name": "Ysolde, the Veiled Matriarch",
-    "displayName": "Ysolde, the Veiled Matriarch",
-    "origin": "new",
-    "sprite": "sprites/monsters/ysolde_the_veiled_matriarch.png",
-    "level": 600,
-    "health": 64000,
-    "mana": 15000,
-    "xpPerHit": 10,
-    "xpOnDeath": 88000000,
-    "hitDamageMin": 600,
-    "hitDamageMax": 1300,
-    "respawnTimeMs": 30000,
-    "goldMin": 1200,
-    "goldMax": 3000,
-    "dodge": 1800,
-    "acMin": 0,
-    "acMax": 180,
-    "aggro": 100,
-    "speed": 0,
-    "canAttack": true,
-    "tameable": false,
-    "tameMaxLevel": 0,
-    "stats": {
-      "str": 300,
-      "end": 480,
-      "agi": 420,
-      "intel": 840,
-      "will": 0,
-      "wis": 840,
-      "luck": 0
-    },
-    "resists": {
-      "air": 100,
-      "earth": 90,
-      "water": 90,
-      "fire": 120,
-      "dark": 250,
-      "light": 10
-    },
-    "loot": [
-      {
-        "item": "ysoldes_veiled_circlet",
-        "chance": 0.02
-      },
-      {
-        "item": "item.veiled_aether_shard",
-        "chance": 0.05
-      },
-      {
-        "item": "mana_elixir",
-        "chance": 0.3
-      },
-      {
-        "item": "potion_of_mana",
-        "chance": 0.3
-      },
-      {
-        "item": "ancient_celestial_dark_armor",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_dark_boots",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_dark_gauntlets",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_dark_helmet",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_dark_leggings",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_dark_protector",
-        "chance": 0.025
-      },
-      {
-        "item": "empyrean_dark_armor",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_dark_boots",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_dark_gauntlets",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_dark_helmet",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_dark_leggings",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_dark_protector",
-        "chance": 0.012
-      },
-      {
-        "item": "item.mana_prism",
-        "chance": 0.05
-      },
-      {
-        "item": "item.critical_healing_potion",
-        "chance": 0.05
-      }
-    ],
-    "attacks": [
-      {
-        "formula": "1d420+400",
-        "combatAttack": 5000,
-        "selectionWeight": 40,
-        "isSpell": false,
-        "spellId": 0,
-        "rangeMinTiles": 0,
-        "rangeMaxTiles": 1
-      },
-      {
-        "formula": "",
-        "combatAttack": 0,
-        "selectionWeight": 35,
-        "isSpell": true,
-        "spellId": 10094,
-        "rangeMinTiles": 2,
-        "rangeMaxTiles": 15
-      },
-      {
-        "formula": "",
-        "combatAttack": 0,
-        "selectionWeight": 25,
-        "isSpell": true,
-        "spellId": 10352,
-        "rangeMinTiles": 2,
-        "rangeMaxTiles": 15
-      }
-    ]
-  },
-  {
     "name": "ArenaMobXP625",
     "displayName": "ArenaMobXP625",
     "origin": "new",
@@ -30101,124 +30821,6 @@
         "formula": "1d 1115 + 878 ",
         "combatAttack": 7810,
         "selectionWeight": 20,
-        "isSpell": false,
-        "spellId": 0,
-        "rangeMinTiles": 0,
-        "rangeMaxTiles": 0
-      }
-    ]
-  },
-  {
-    "name": "The Verdant Warden",
-    "displayName": "The Verdant Warden",
-    "origin": "new",
-    "sprite": "sprites/monsters/the_verdant_warden.png",
-    "level": 650,
-    "health": 92000,
-    "mana": 0,
-    "xpPerHit": 11,
-    "xpOnDeath": 118000000,
-    "hitDamageMin": 860,
-    "hitDamageMax": 1850,
-    "respawnTimeMs": 30000,
-    "goldMin": 1300,
-    "goldMax": 3250,
-    "dodge": 2000,
-    "acMin": 0,
-    "acMax": 650,
-    "aggro": 100,
-    "speed": 0,
-    "canAttack": true,
-    "tameable": false,
-    "tameMaxLevel": 0,
-    "stats": {
-      "str": 780,
-      "end": 845,
-      "agi": 260,
-      "intel": 390,
-      "will": 0,
-      "wis": 650,
-      "luck": 0
-    },
-    "resists": {
-      "air": 120,
-      "earth": 180,
-      "water": 150,
-      "fire": 60,
-      "dark": 130,
-      "light": 160
-    },
-    "loot": [
-      {
-        "item": "verdant_wardens_bulwark",
-        "chance": 0.015
-      },
-      {
-        "item": "serious_healing_potion",
-        "chance": 0.3
-      },
-      {
-        "item": "ancient_celestial_earth_armor",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_earth_boots",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_earth_gauntlets",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_earth_helmet",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_earth_leggings",
-        "chance": 0.025
-      },
-      {
-        "item": "ancient_celestial_earth_protector",
-        "chance": 0.025
-      },
-      {
-        "item": "empyrean_earth_armor",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_earth_boots",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_earth_gauntlets",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_earth_helmet",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_earth_leggings",
-        "chance": 0.012
-      },
-      {
-        "item": "empyrean_earth_protector",
-        "chance": 0.012
-      },
-      {
-        "item": "item.mana_prism",
-        "chance": 0.05
-      },
-      {
-        "item": "item.critical_healing_potion",
-        "chance": 0.05
-      }
-    ],
-    "attacks": [
-      {
-        "formula": "1d975+845",
-        "combatAttack": 7800,
-        "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,
         "rangeMinTiles": 0,

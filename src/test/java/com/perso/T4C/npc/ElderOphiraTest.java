@@ -1,7 +1,6 @@
 package com.perso.T4C.npc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.helper.PlayerStateMapper;
@@ -42,7 +41,6 @@ class ElderOphiraTest {
   private static void ready(Player player, QuestDef quest) {
     player.setQuestFlag(QuestService.statusFlag(quest), QuestService.STATUS_ACTIVE);
     player.setQuestFlag(QuestService.killsFlag(quest), quest.getRequiredKills());
-    player.getInventory().add(quest.getRequiredItemKey());
   }
 
   @Test
@@ -69,7 +67,7 @@ class ElderOphiraTest {
   }
 
   @Test
-  void greetingAndLoreNeverTurnInEvenWhenBothObjectivesAreReady() throws Exception {
+  void greetingAndLoreNeverTurnInEvenWhenObjectivesAreReady() throws Exception {
     ElderOphira npc = npc();
     Player player = new Player();
     ready(player, WILDS);
@@ -78,22 +76,19 @@ class ElderOphiraTest {
     keyword(npc, player, "wilds");
     keyword(npc, player, "accept");
     assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, WILDS));
-    assertTrue(player.getInventory().contains(WILDS.getRequiredItemKey()));
     assertEquals(gold, player.getGold());
     assertEquals(0, saves.get());
   }
 
   @Test
-  void bothKillAndItemObjectivesMustBeMetBeforeReportUnlocksNextChapter() throws Exception {
+  void markedKillsMustBeMetBeforeReportUnlocksNextChapter() throws Exception {
     ElderOphira npc = npc();
     Player player = new Player();
     keyword(npc, player, "wilds");
     keyword(npc, player, "accept");
-    player.getInventory().add(WILDS.getRequiredItemKey());
     keyword(npc, player, "report");
     assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, WILDS));
-    assertTrue(player.getInventory().remove(WILDS.getRequiredItemKey()));
-    for (int i = 0; i < WILDS.getRequiredKills(); i++) {
+    for (int i = 0; i < WILDS.getRequiredKills() - 1; i++) {
       quests.recordKill(player, "Moonlit Stalker", 0, 3965, 1400);
     }
     keyword(npc, player, "report");
@@ -102,11 +97,10 @@ class ElderOphiraTest {
     keyword(npc, player, "accept");
     assertEquals(QuestService.STATUS_NOT_STARTED, QuestService.statusFor(player, VEIL));
 
-    player.getInventory().add(WILDS.getRequiredItemKey());
+    quests.recordKill(player, "Moonlit Stalker", 0, 3965, 1400);
     int gold = player.getGold();
     keyword(npc, player, "report");
     assertEquals(QuestService.STATUS_COMPLETED, QuestService.statusFor(player, WILDS));
-    assertFalse(player.getInventory().contains(WILDS.getRequiredItemKey()));
     assertEquals(gold + WILDS.getRewardGold(), player.getGold());
     assertTrue(QuestService.hasUnlockedZone(player, "avalon_wilds"));
     keyword(npc, player, "veil");
@@ -124,7 +118,6 @@ class ElderOphiraTest {
     PlayerStateMapper.applyToPlayer(PlayerStateMapper.fromPlayer(old), restored);
     quests.recordKill(restored, "Moonlit Stalker", 0, 3965, 1400);
     assertEquals(20, restored.getQuestFlag(QuestService.killsFlag(WILDS)));
-    restored.getInventory().add(WILDS.getRequiredItemKey());
     ElderOphira npc = npc();
     keyword(npc, restored, "report");
     int gold = restored.getGold();
@@ -162,7 +155,7 @@ class ElderOphiraTest {
     keyword(npc, both, "report");
     assertEquals(QuestService.STATUS_COMPLETED, QuestService.statusFor(both, WILDS));
     assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(both, VEIL));
-    assertTrue(both.getInventory().contains(VEIL.getRequiredItemKey()));
+    assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(both, VEIL));
   }
 
   @Test

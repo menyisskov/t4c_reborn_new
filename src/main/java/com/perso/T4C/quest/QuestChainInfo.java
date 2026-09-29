@@ -24,6 +24,36 @@ public final class QuestChainInfo {
           Map.entry(
               "fading_veil_reckoning",
               new Stage("${quest.chain.avalon_pact}", 2, 2, List.of("avalon_wilds_vigil"))),
+          Map.entry(
+              "moonwake_missing",
+              new Stage("${quest.chain.hollow_dawn}", 1, 10, List.of("fading_veil_reckoning"))),
+          Map.entry(
+              "pale_cantor",
+              new Stage("${quest.chain.hollow_dawn}", 2, 10, List.of("moonwake_missing"))),
+          Map.entry(
+              "emberglass_oath",
+              new Stage("${quest.chain.hollow_dawn}", 3, 10, List.of("pale_cantor"))),
+          Map.entry(
+              "cinder_marshal",
+              new Stage("${quest.chain.hollow_dawn}", 4, 10, List.of("emberglass_oath"))),
+          Map.entry(
+              "ashbound_exiles",
+              new Stage("${quest.chain.hollow_dawn}", 5, 10, List.of("cinder_marshal"))),
+          Map.entry(
+              "hush_cantor",
+              new Stage("${quest.chain.hollow_dawn}", 6, 10, List.of("ashbound_exiles"))),
+          Map.entry(
+              "nullguard_watch",
+              new Stage("${quest.chain.hollow_dawn}", 7, 10, List.of("hush_cantor"))),
+          Map.entry(
+              "dusk_regent",
+              new Stage("${quest.chain.hollow_dawn}", 8, 10, List.of("nullguard_watch"))),
+          Map.entry(
+              "rift_unbinding",
+              new Stage("${quest.chain.hollow_dawn}", 9, 10, List.of("dusk_regent"))),
+          Map.entry(
+              "rhunor_hollow_dawn",
+              new Stage("${quest.chain.hollow_dawn}", 10, 10, List.of("rift_unbinding"))),
           Map.entry("forge_the_godcore", new Stage("The Godsforged", 1, 2, List.of())),
           Map.entry("bind_the_godsigil", new Stage("The Godsforged", 1, 2, List.of())),
           Map.entry(

@@ -29,7 +29,7 @@ class AvalonSanctuaryMapIntegrationTest {
         SpawnRegistry.npcs().stream()
             .filter(AvalonSanctuaryMapIntegrationTest::insideTown)
             .toList();
-    assertEquals(9, townNpcs.size(), "all nine Avalon sanctuary services must remain in town");
+    assertEquals(10, townNpcs.size(), "Avalon services and the new chronicler must remain in town");
     for (SpawnDefinition npc : townNpcs) {
       assertTrue(
           DeathPenaltyService.isSafeHaven(map.getCollision(npc.x(), npc.y())),

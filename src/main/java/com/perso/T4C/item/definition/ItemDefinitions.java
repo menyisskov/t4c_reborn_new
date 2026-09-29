@@ -2726,6 +2726,8 @@ public final class ItemDefinitions {
         ItemItemFocusOfTheEarthEmpyrean.definition(),
         WyrmforgedEmber.definition(),
         VeiledAetherShard.definition(),
+        MoonwakeBellShard.definition(),
+        LastWitnessSeal.definition(),
         TemperedGodcore.definition(),
         BoundGodsigil.definition(),
         WyrmScales.rootcrown(),

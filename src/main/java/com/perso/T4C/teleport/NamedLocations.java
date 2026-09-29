@@ -65,6 +65,8 @@ public final class NamedLocations {
         new NamedLocation("Avalon Sanctuary", 4040, 1477, 0, "avalon_sanctuary"),
         new NamedLocation("The Avalon Wilds", 3965, 1400, 0, "avalon_wilds"),
         new NamedLocation("The Fading Veil", 4120, 1560, 0, "fading_veil"),
+        new NamedLocation("Threnody Reach", 5505, 1150, 0, "threnody_reach"),
+        new NamedLocation("The Hollow Dawn", 5650, 2290, 0, "hollow_dawn"),
         // T4C-0056: quality-of-life stops at NPCs a player ends up walking back to repeatedly -
         // either across several unrelated quests, or because a single quest bounces the player
         // to and from them multiple times. Unconditional like the original landmarks above:

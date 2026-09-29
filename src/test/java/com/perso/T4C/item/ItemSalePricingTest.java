@@ -56,6 +56,8 @@ class ItemSalePricingTest {
             "item.unsigned_letter",
             "item.wyrmforged_ember",
             "item.veiled_aether_shard",
+            "item.moonwake_bell_shard",
+            "item.last_witness_seal",
             "item.tempered_godcore",
             "item.bound_godsigil")) {
       var item = ItemRegistry.findByKey(key);

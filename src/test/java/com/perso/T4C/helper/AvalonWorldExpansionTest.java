@@ -20,7 +20,7 @@ class AvalonWorldExpansionTest {
   void expandedWorldPreservesLibraryAndProvidesReadableAvalonEncounters() throws Exception {
     try (MapReader map = new MapReader(new File(Paths.MAP))) {
       CollisionReader collision = new CollisionReader(new File(Paths.COLLISION_MAP));
-      assertEquals(5120, map.getWidth());
+      assertEquals(6144, map.getWidth());
       assertEquals(3072, map.getHeight());
       assertEquals(map.getWidth(), collision.getWidth());
       assertEquals(map.getHeight(), collision.getHeight());
