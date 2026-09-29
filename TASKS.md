@@ -143,4 +143,4 @@ work happens.
 
 | T4C-0104 | Map editor box selection and group dragging | Editor | Done | `9c0b0a7f` | [2026-09-29](CHANGELOG.md#2026-09-29--map-editor-group-selection-t4c-0104) |
 
-| T4C-0105 | Avalon islands and mainland landmarks | Content/Map | Done | Pending | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-islands-and-landmarks-t4c-0105) |
+| T4C-0105 | Avalon islands and mainland landmarks | Content/Map | Done | `acfc4a87` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-islands-and-landmarks-t4c-0105) |
