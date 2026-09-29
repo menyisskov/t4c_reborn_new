@@ -18,7 +18,7 @@ public final class ForgeTheGodcore {
         "",
         0,
         0,
-        1300,
+        4000,
         1460,
         1,
         800000,

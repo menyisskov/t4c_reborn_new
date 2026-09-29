@@ -9,12 +9,12 @@ import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
 // T4C-0033: one of the three surviving Forgewrights of the First Pact, now working within the
-// Avalon Wilds (1300,1460), worldZ 0 - the order that helped bind Avalon's original fey pact
+// Avalon Wilds (4000,1460), worldZ 0 - the order that helped bind Avalon's original fey pact
 // centuries ago (see npc/HarbormasterRangor.java, quest/definition/PassageToAvalon.java for the
 // pact's established lore). Corvain tempers the Godsforged chain's physical component (a Tempered
 // Godcore) from Wyrmforged Embers - see quest/definition/ForgeTheGodcore.java. A standard
 // single-item turn-in quest; no custom behavior needed here.
-@Spawn(type = "EmberSmithCorvain", x = 1361, y = 1518, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "EmberSmithCorvain", x = 4061, y = 1518, z = 0, stationary = true, aggressive = false)
 public final class EmberSmithCorvain extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

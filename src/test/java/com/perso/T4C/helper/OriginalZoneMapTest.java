@@ -2,9 +2,18 @@ package com.perso.T4C.helper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.junit.jupiter.api.Test;
 
 class OriginalZoneMapTest {
+  @Test
+  void relocatedAvalonHasNamesWithoutReinterpretingLegacyMapBytes() {
+    assertEquals("Avalon Sanctuary", OriginalZoneMap.displayName(0, 4040, 1477));
+    assertEquals("The Avalon Wilds", OriginalZoneMap.displayName(0, 3965, 1400));
+    assertEquals("The Fading Veil", OriginalZoneMap.displayName(0, 4120, 1560));
+    assertNull(OriginalZoneMap.displayName(1, 4040, 1477));
+  }
+
   @Test
   void lighthavenTempleTileIsNamedLighthaven() {
     assertEquals(0, OriginalZoneMap.zoneId(0, 2961, 1093));

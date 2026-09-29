@@ -123,21 +123,21 @@
   },
   {
     "name": "Avalon Sanctuary",
-    "x": 1340,
+    "x": 4040,
     "y": 1477,
     "worldZ": 0,
     "unlockZoneId": "avalon_sanctuary"
   },
   {
     "name": "The Avalon Wilds",
-    "x": 1265,
+    "x": 3965,
     "y": 1400,
     "worldZ": 0,
     "unlockZoneId": "avalon_wilds"
   },
   {
     "name": "The Fading Veil",
-    "x": 1420,
+    "x": 4120,
     "y": 1560,
     "worldZ": 0,
     "unlockZoneId": "fading_veil"

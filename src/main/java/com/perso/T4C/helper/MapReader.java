@@ -55,6 +55,50 @@ public class MapReader implements AutoCloseable {
     return new MapReader(mapFile, true, false, false);
   }
 
+  /** Expands east/south without shifting any existing tile or its metadata. */
+  public MapReader expandedCopy(int newWidth, int newHeight, String groundFill)
+      throws GameException {
+    if (newWidth < width || newHeight < height || newWidth <= 0 || newHeight <= 0) {
+      throw new IllegalArgumentException("Expansion cannot shrink or shift the existing map");
+    }
+    if (!loadTileMetadata) {
+      throw new IllegalStateException("Expansion requires a map loaded with tile metadata");
+    }
+    MapReader expanded = new MapReader(newWidth, newHeight);
+    Arrays.fill(expanded.spriteNames, groundFill);
+    expanded.nameToId.putAll(nameToId);
+    expanded.idToName.putAll(idToName);
+    if (groundFill != null) expanded.registerNameFast(groundFill);
+    for (int y = 0; y < height; y++) {
+      int oldRow = y * width, newRow = y * newWidth;
+      System.arraycopy(spriteNames, oldRow, expanded.spriteNames, newRow, width);
+      System.arraycopy(decorNames, oldRow, expanded.decorNames, newRow, width);
+      System.arraycopy(scaleX, oldRow, expanded.scaleX, newRow, width);
+      System.arraycopy(scaleY, oldRow, expanded.scaleY, newRow, width);
+      System.arraycopy(offsetX, oldRow, expanded.offsetX, newRow, width);
+      System.arraycopy(offsetY, oldRow, expanded.offsetY, newRow, width);
+      System.arraycopy(zOrder, oldRow, expanded.zOrder, newRow, width);
+    }
+    return expanded;
+  }
+
+  private MapReader(int width, int height) throws GameException {
+    this.width = width;
+    this.height = height;
+    this.registerSpriteIds = true;
+    this.loadTileMetadata = true;
+    int total = checkedTotalTiles(width, height);
+    this.spriteNames = new String[total];
+    this.decorNames = new String[total];
+    this.scaleX = new float[total];
+    this.scaleY = new float[total];
+    this.offsetX = new float[total];
+    this.offsetY = new float[total];
+    this.zOrder = new int[total];
+    Arrays.fill(scaleX, 1f);
+    Arrays.fill(scaleY, 1f);
+  }
+
   private MapReader(
       File mapFile, boolean readOnly, boolean registerSpriteIds, boolean loadTileMetadata)
       throws GameException {

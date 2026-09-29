@@ -19,7 +19,7 @@ import java.util.List;
 
 // T4C-0033: the last of the three surviving Forgewrights of the First Pact (see
 // npc/EmberSmithCorvain.java, npc/WardenSeressa.java), working within the Avalon Wilds
-// (1330,1440), worldZ 0. Tholvenn is the only one who can still finish the working: combine a
+// (4030,1440), worldZ 0. Tholvenn is the only one who can still finish the working: combine a
 // Tempered Godcore (quest/definition/ForgeTheGodcore.java) and a Bound Godsigil
 // (quest/definition/BindTheGodsigil.java) into one of five Godsforged items, one per class
 // archetype - see DESIGN_GUIDELINES.md "Godsforged: a tier above Legendary".
@@ -33,7 +33,7 @@ import java.util.List;
 // as a player has both components, naming the item finishes the forge in one conversation.
 @Spawn(
     type = "GrandmasterTholvenn",
-    x = 1374,
+    x = 4074,
     y = 1522,
     z = 0,
     stationary = true,

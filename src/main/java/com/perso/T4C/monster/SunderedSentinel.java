@@ -6,33 +6,33 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
-// Upper-tier trash of The Fading Veil (center 1420,1560 r130, worldZ 0) — animated plate armor
+// Upper-tier trash of The Fading Veil (center 4120,1560 r130, worldZ 0) — animated plate armor
 // from Sir Caradoc's fallen retinue, reusing the armored "SkeletonKing" animation/sound family
-// (Undead Sentinel precedent). Three extra spawns stand near Caradoc's border glade (1265,1460) as
+// (Undead Sentinel precedent). Three extra spawns stand near Caradoc's border glade (3965,1460) as
 // his guard.
-@Spawn(type = "Sundered Sentinel", x = 1510, y = 1630, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1430, y = 1535, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1470, y = 1675, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1450, y = 1535, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1545, y = 1540, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1295, y = 1575, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1435, y = 1435, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1405, y = 1685, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1485, y = 1451, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1447, y = 1485, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1440, y = 1552, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1521, y = 1549, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1346, y = 1558, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1511, y = 1572, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1345, y = 1590, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1460, y = 1598, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1339, y = 1636, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1400, y = 1641, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1418, y = 1659, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1440, y = 1672, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1255, y = 1455, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1275, y = 1455, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Sundered Sentinel", x = 1265, y = 1472, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4210, y = 1630, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4130, y = 1535, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4170, y = 1675, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4150, y = 1535, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4245, y = 1540, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 3995, y = 1575, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4135, y = 1435, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4105, y = 1685, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4185, y = 1451, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4147, y = 1485, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4140, y = 1552, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4221, y = 1549, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4046, y = 1558, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4211, y = 1572, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4045, y = 1590, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4160, y = 1598, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4039, y = 1636, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4100, y = 1641, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4118, y = 1659, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 4140, y = 1672, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 3955, y = 1455, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 3975, y = 1455, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Sundered Sentinel", x = 3965, y = 1472, z = 0, stationary = false, aggressive = true)
 public final class SunderedSentinel extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Skeleton Dying.wav";

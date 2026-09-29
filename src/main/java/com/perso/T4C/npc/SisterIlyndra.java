@@ -10,10 +10,10 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-// Temple priest at the Avalon Sanctuary Temple door (1340,1479), worldZ 0. Refuge/recall-flavored
+// Temple priest at the Avalon Sanctuary Temple door (4040,1479), worldZ 0. Refuge/recall-flavored
 // dialogue and a paid heal, following the Kilhiam/BrotherKiran "temple" pattern (npc.kilhiam.temple
 // / npc.kiran.temple topics, a stationary priest, HEAL keyword -> yes/no -> gold-for-hp).
-@Spawn(type = "SisterIlyndra", x = 1347, y = 1465, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "SisterIlyndra", x = 4047, y = 1465, z = 0, stationary = true, aggressive = false)
 public final class SisterIlyndra extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

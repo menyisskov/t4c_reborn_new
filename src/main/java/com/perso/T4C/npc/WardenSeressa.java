@@ -9,11 +9,11 @@ import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
 // T4C-0033: one of the three surviving Forgewrights of the First Pact (see
-// npc/EmberSmithCorvain.java), working within the Avalon Wilds (1355,1465), worldZ 0. Seressa
+// npc/EmberSmithCorvain.java), working within the Avalon Wilds (4055,1465), worldZ 0. Seressa
 // binds the Godsforged chain's arcane component (a Bound Godsigil) from Veiled Aether Shards -
 // see quest/definition/BindTheGodsigil.java. A standard single-item turn-in quest; no custom
 // behavior needed here.
-@Spawn(type = "WardenSeressa", x = 1321, y = 1483, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "WardenSeressa", x = 4021, y = 1483, z = 0, stationary = true, aggressive = false)
 public final class WardenSeressa extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

@@ -8,11 +8,11 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-// Scroll & travel merchant at the Avalon Sanctuary Scroll & Travel Merchant door (1318,1512),
+// Scroll & travel merchant at the Avalon Sanctuary Scroll & Travel Merchant door (4018,1512),
 // worldZ 0. Sells item.scroll_of_avalon (teleports to the Sanctuary temple via the AvalonGateway
 // spell) alongside a Chryseida-style mix of potions and other destination scrolls — see the
 // "WayfarerBryndis" entry in npc/catalog/ShopCatalog.java.
-@Spawn(type = "WayfarerBryndis", x = 1305, y = 1516, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "WayfarerBryndis", x = 4005, y = 1516, z = 0, stationary = true, aggressive = false)
 public final class WayfarerBryndis extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

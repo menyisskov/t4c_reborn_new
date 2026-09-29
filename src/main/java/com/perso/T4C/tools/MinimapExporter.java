@@ -39,14 +39,14 @@ import javax.imageio.ImageIO;
  * T4C-0023: renders a stylized top-down "minimap" PNG for each of the fork's own zones (read from
  * the hand-authored {@code zones.json}, the same list the compendium website already documents),
  * colored by the real ground-tile art at each world tile (sampled average color per sprite, not
- * invented), plus a JSON sidecar with every NPC/monster spawn and nearby named landmark inside
- * each zone's cropped area - the compendium website overlays these as clickable pins.
+ * invented), plus a JSON sidecar with every NPC/monster spawn and nearby named landmark inside each
+ * zone's cropped area - the compendium website overlays these as clickable pins.
  *
  * <p>Deliberately scoped down from "the whole worldmap": the populated area of {@code
- * worldmap.mapbin} is ~2800x2500 tiles, which at real pixel resolution is several gigapixels -
- * far too large to ship as a web image. Cropping to a padded box around each zone's own
- * {@code worldmapCenter} keeps each output image small (a few hundred KB) while still being
- * accurately colored from the game's real tile art, not a schematic placeholder.
+ * worldmap.mapbin} is ~2800x2500 tiles, which at real pixel resolution is several gigapixels - far
+ * too large to ship as a web image. Cropping to a padded box around each zone's own {@code
+ * worldmapCenter} keeps each output image small (a few hundred KB) while still being accurately
+ * colored from the game's real tile art, not a schematic placeholder.
  *
  * <p>Ground layer only (no decor overlay) - a deliberate simplification, see class javadoc above;
  * still gives real color variation (grass/water/stone/sand are different sprites with different
@@ -56,9 +56,12 @@ public final class MinimapExporter {
   private static final int PADDING_TILES = 50;
   private static final int PX_PER_TILE = 4;
   private static final int[] VOID_COLOR = {18, 18, 22};
-  /** A monster type with this many or fewer spawns inside a zone's crop is treated as a
-   * "boss" tier pin (bigger, always labeled); more than this is "trash" tier. Purely a spawn-count
-   * heuristic - this codebase has no explicit boss/unique flag on MonsterDef to key off instead. */
+
+  /**
+   * A monster type with this many or fewer spawns inside a zone's crop is treated as a "boss" tier
+   * pin (bigger, always labeled); more than this is "trash" tier. Purely a spawn-count heuristic -
+   * this codebase has no explicit boss/unique flag on MonsterDef to key off instead.
+   */
   private static final int BOSS_SPAWN_COUNT_THRESHOLD = 2;
 
   private MinimapExporter() {}
@@ -105,7 +108,9 @@ public final class MinimapExporter {
           for (int dy = 0; dy < z.h; dy++) {
             String name = grid[dy * z.w + dx];
             int[] c =
-                name != null ? colorByKey.getOrDefault(SpriteBinIO.key(name), VOID_COLOR) : VOID_COLOR;
+                name != null
+                    ? colorByKey.getOrDefault(SpriteBinIO.key(name), VOID_COLOR)
+                    : VOID_COLOR;
             g.setColor(new Color(c[0], c[1], c[2]));
             g.fillRect(dx * PX_PER_TILE, dy * PX_PER_TILE, PX_PER_TILE, PX_PER_TILE);
           }
@@ -203,7 +208,7 @@ public final class MinimapExporter {
     return resolved == null || resolved.isBlank() || resolved.equals(key) ? fallback : resolved;
   }
 
-  private static Map<String, int[]> sampleColors(Set<String> neededKeys) throws Exception {
+  static Map<String, int[]> sampleColors(Set<String> neededKeys) throws Exception {
     Map<String, int[]> colors = new HashMap<>();
     SpriteBinIO.readAll(
         Path.of(Paths.SPRITE_DIR),

@@ -5,13 +5,13 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-// Boss at the Wilds border glade (1265,1460), worldZ 0 — once a noble knight, now bound in
+// Boss at the Wilds border glade (3965,1460), worldZ 0 — once a noble knight, now bound in
 // service to Ysolde's corruption. Reuses the "MonsDraconianPlate" armored-knight animation family
 // (Draconis Knight precedent), paired with undead sounds befitting his bound-in-undeath state.
 // Guarded by three Sundered Sentinel adds from his own fallen retinue (see SunderedSentinel.java).
 @Spawn(
     type = "Sir Caradoc, the Sundered Knight",
-    x = 1265,
+    x = 3965,
     y = 1460,
     z = 0,
     stationary = false,

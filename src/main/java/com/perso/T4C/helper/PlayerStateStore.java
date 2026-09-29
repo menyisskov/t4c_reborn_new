@@ -91,6 +91,12 @@ public final class PlayerStateStore {
   }
 
   public static PlayerStateDto load(String filename) {
+    // Keep migration failures outside file-read fallbacks: a missing ownership mask must not
+    // turn a valid character into a missing save or place them on the now-restored old terrain.
+    return PlayerWorldLayoutMigration.migrate(loadUnmigrated(filename));
+  }
+
+  private static PlayerStateDto loadUnmigrated(String filename) {
     try {
       Path inPath = Paths.get(System.getProperty("user.dir"), filename);
       if (!Files.exists(inPath)) {

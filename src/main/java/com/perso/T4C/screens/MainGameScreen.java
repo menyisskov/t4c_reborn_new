@@ -415,6 +415,8 @@ public class MainGameScreen implements Screen {
         if (state.gender == null || state.gender.isBlank()) state.gender = active.gender();
       }
       return state;
+    } catch (IllegalStateException migrationFailure) {
+      throw migrationFailure;
     } catch (Throwable ignored) {
       return null;
     }

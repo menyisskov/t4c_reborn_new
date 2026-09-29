@@ -5,14 +5,14 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-// Boss lair at (1460,1600), worldZ 0 — an ancient treant guardian, the last loyal defender of the
+// Boss lair at (4160,1600), worldZ 0 — an ancient treant guardian, the last loyal defender of the
 // Wilds physically opposing the corruption; not allied with Caradoc or Ysolde. Reuses the TreeEnt
 // animation/sound family (Forest Guardian precedent), scaled up to the strongest, tankiest of the
 // three lair bosses. Guarded by three Moonlit Stalker adds — loyal Wilds beasts rallied to his
 // last stand (see MoonlitStalker.java).
 @Spawn(
     type = "The Verdant Warden",
-    x = 1460,
+    x = 4160,
     y = 1600,
     z = 0,
     stationary = false,

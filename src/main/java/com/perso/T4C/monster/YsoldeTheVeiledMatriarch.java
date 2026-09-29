@@ -5,14 +5,14 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-// Boss of The Fading Veil's lair at (1400,1580), worldZ 0 — the corruption's source. A robed,
+// Boss of The Fading Veil's lair at (4100,1580), worldZ 0 — the corruption's source. A robed,
 // caster-leaning matriarch: reuses the plain Skeleton animation family (fits her gaunt, veiled
 // silhouette) with two ranged spell-attacks alongside a weaker melee strike, mirroring Greater
 // Drake's melee+spell attack shape. Guarded by three Veilbound Wraith adds (see
 // VeilboundWraith.java).
 @Spawn(
     type = "Ysolde, the Veiled Matriarch",
-    x = 1400,
+    x = 4100,
     y = 1580,
     z = 0,
     stationary = false,

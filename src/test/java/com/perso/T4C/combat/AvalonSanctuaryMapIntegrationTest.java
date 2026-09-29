@@ -24,7 +24,7 @@ class AvalonSanctuaryMapIntegrationTest {
   @Test
   void arrivalConnectsToSafeTownServicesChestAndHuntingLocations() throws Exception {
     CollisionReader map = new CollisionReader(new File("assets/maps/worldmap/worldmap.colbin"));
-    Set<Tile> reachable = floodFill(map, new Tile(1340, 1477));
+    Set<Tile> reachable = floodFill(map, new Tile(4040, 1477));
     List<SpawnDefinition> townNpcs =
         SpawnRegistry.npcs().stream()
             .filter(AvalonSanctuaryMapIntegrationTest::insideTown)
@@ -40,15 +40,15 @@ class AvalonSanctuaryMapIntegrationTest {
     }
     for (Tile destination :
         List.of(
-            new Tile(1353, 1465), // sanctuary chest
-            new Tile(1250, 1345), // northern Stalker glade
-            new Tile(1300, 1390), // southern Stalker glade
-            new Tile(1205, 1400), // Fey Warden grove
-            new Tile(1265, 1460))) { // Caradoc's clearing
+            new Tile(4053, 1465), // sanctuary chest
+            new Tile(3950, 1345), // northern Stalker glade
+            new Tile(4000, 1390), // southern Stalker glade
+            new Tile(3905, 1400), // Fey Warden grove
+            new Tile(3965, 1460))) { // Caradoc's clearing
       assertTrue(reachable.contains(destination), "unreachable Avalon destination " + destination);
     }
     assertTrue(
-        DeathPenaltyService.isSafeHaven(map.getCollision(1340, 1477)),
+        DeathPenaltyService.isSafeHaven(map.getCollision(4040, 1477)),
         "arrivals must begin protected");
     for (SpawnDefinition monster : SpawnRegistry.monsters()) {
       assertFalse(
@@ -61,16 +61,16 @@ class AvalonSanctuaryMapIntegrationTest {
   void allWildsStalkersCountForVigilButVerdantEscortsDoNot() throws Exception {
     QuestDef quest = AvalonWildsVigil.definition();
     CollisionReader map = new CollisionReader(new File("assets/maps/worldmap/worldmap.colbin"));
-    Set<Tile> reachable = floodFill(map, new Tile(1340, 1477));
+    Set<Tile> reachable = floodFill(map, new Tile(4040, 1477));
     List<SpawnDefinition> stalkers =
         SpawnRegistry.monsters().stream()
             .filter(
                 s -> s.type().equals(quest.getTargetMonster()) && s.z() == quest.getTargetWorldZ())
             .toList();
     List<SpawnDefinition> wilds =
-        stalkers.stream().filter(s -> s.x() < 1400 && s.y() < 1500).toList();
+        stalkers.stream().filter(s -> s.x() < 4100 && s.y() < 1500).toList();
     List<SpawnDefinition> escorts =
-        stalkers.stream().filter(s -> s.x() >= 1400 && s.y() >= 1500).toList();
+        stalkers.stream().filter(s -> s.x() >= 4100 && s.y() >= 1500).toList();
     assertEquals(20, wilds.size(), "the two hunting glades provide twenty Stalker spawns");
     assertEquals(3, escorts.size(), "Verdant Warden escorts must stay separate from the Wilds");
     assertEquals(wilds.size() + escorts.size(), stalkers.size());
@@ -90,8 +90,8 @@ class AvalonSanctuaryMapIntegrationTest {
 
   private static boolean insideTown(SpawnDefinition spawn) {
     return spawn.z() == 0
-        && spawn.x() >= 1295
-        && spawn.x() <= 1390
+        && spawn.x() >= 3995
+        && spawn.x() <= 4090
         && spawn.y() >= 1440
         && spawn.y() <= 1545;
   }
@@ -118,8 +118,8 @@ class AvalonSanctuaryMapIntegrationTest {
               new Tile(current.x(), current.y() + 1))) {
         // A route must stay within the rebuilt sanctuary/Wilds region; leaving Avalon is no
         // shortcut.
-        if (next.x() < 1150
-            || next.x() > 1450
+        if (next.x() < 3850
+            || next.x() > 4150
             || next.y() < 1300
             || next.y() > 1550
             || map.hasCollision(next.x(), next.y())

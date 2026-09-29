@@ -22,7 +22,7 @@ public final class TheWakingRite {
         "Fey Warden",
         8,
         0,
-        1265,
+        3965,
         1400,
         110,
         100000,

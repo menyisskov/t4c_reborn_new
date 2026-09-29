@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fast-travel destinations offered in the Locations panel (Ctrl+L). Coordinates are tile
- * positions, matching the ones used by the existing Gateway spells (e.g. Scroll of Lighthaven).
- * Add more entries here as new landmarks get coordinates confirmed.
+ * Fast-travel destinations offered in the Locations panel (Ctrl+L). Coordinates are tile positions,
+ * matching the ones used by the existing Gateway spells (e.g. Scroll of Lighthaven). Add more
+ * entries here as new landmarks get coordinates confirmed.
  */
 public final class NamedLocations {
   private NamedLocations() {}
@@ -62,9 +62,9 @@ public final class NamedLocations {
         new NamedLocation("Greater Drake's Bastion", 2650, 2880, 0, "greater_drakes_bastion"),
         new NamedLocation("Drake's Lair", 2850, 2780, 0, "drakes_lair"),
         new NamedLocation("Deep Ones Cave", 330, 2246, 0, "deep_ones_cave"),
-        new NamedLocation("Avalon Sanctuary", 1340, 1477, 0, "avalon_sanctuary"),
-        new NamedLocation("The Avalon Wilds", 1265, 1400, 0, "avalon_wilds"),
-        new NamedLocation("The Fading Veil", 1420, 1560, 0, "fading_veil"),
+        new NamedLocation("Avalon Sanctuary", 4040, 1477, 0, "avalon_sanctuary"),
+        new NamedLocation("The Avalon Wilds", 3965, 1400, 0, "avalon_wilds"),
+        new NamedLocation("The Fading Veil", 4120, 1560, 0, "fading_veil"),
         // T4C-0056: quality-of-life stops at NPCs a player ends up walking back to repeatedly -
         // either across several unrelated quests, or because a single quest bounces the player
         // to and from them multiple times. Unconditional like the original landmarks above:
@@ -82,15 +82,18 @@ public final class NamedLocations {
         new NamedLocation("Filandrius", 985, 1465, 0));
   }
 
-  /** {@link #all()} filtered to the entries a given player currently has access to: every
+  /**
+   * {@link #all()} filtered to the entries a given player currently has access to: every
    * unconditional landmark, plus any zone whose unlock quest they've completed, plus any
    * original-island landmark whose island-access tier they've reached, plus any entry gated on
-   * carrying one of a set of items. */
+   * carrying one of a set of items.
+   */
   public static List<NamedLocation> forPlayer(Player player) {
     List<NamedLocation> visible = new ArrayList<>();
     for (NamedLocation location : all()) {
       boolean zoneOk =
-          location.unlockZoneId() == null || QuestService.hasUnlockedZone(player, location.unlockZoneId());
+          location.unlockZoneId() == null
+              || QuestService.hasUnlockedZone(player, location.unlockZoneId());
       boolean islandOk = player.getQuestFlag("__QUEST_ISLAND_ACCESS") >= location.minIslandAccess();
       boolean itemOk =
           location.requiresAnyItem().isEmpty()

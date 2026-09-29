@@ -8,12 +8,12 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-// Weapons merchant at the Avalon Sanctuary Weapons Merchant door (1364,1494), worldZ 0. Stock is
+// Weapons merchant at the Avalon Sanctuary Weapons Merchant door (4064,1494), worldZ 0. Stock is
 // wired via ShopCatalog under this NPC's id (see npc/catalog/ShopCatalog.java) — no boss-drop
 // uniques listed here, those stay drop-only per their price: 0.
 @Spawn(
     type = "QuartermasterElenna",
-    x = 1368,
+    x = 4068,
     y = 1510,
     z = 0,
     stationary = true,

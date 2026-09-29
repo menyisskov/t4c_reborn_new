@@ -17,7 +17,7 @@ public final class BindTheGodsigil {
         "",
         0,
         0,
-        1355,
+        4055,
         1465,
         1,
         800000,
