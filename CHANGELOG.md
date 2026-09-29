@@ -13,6 +13,17 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-28 — Avalon NPC/quest audit (T4C-0098)
+
+### Fixed
+- Audited every Avalon NPC's dialogue against its quests: every keyword that should offer or
+  complete a quest was confirmed to actually work correctly.
+
+### Known gap
+- Archmage Thalindra and Grandmaster Tholvenn each expect a keyword (Thalindra's "mantle";
+  Tholvenn's five forge-item names) that their own dialogue never actually says anywhere, so
+  there's no in-game way to learn them without outside knowledge. Not yet fixed.
+
 ## 2026-09-28 — NPC dialogue highlights what you can ask about next (T4C-0097)
 
 ### Added

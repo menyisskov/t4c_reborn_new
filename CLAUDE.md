@@ -152,6 +152,11 @@ that now guards against it.
   every real `QuestDef` and asserts `requiredItemKey` is already normalized. When writing a new
   item-turn-in quest, use the normalized `"item.<key>"` form (see any existing quest that grants
   the same item for the exact string), not the JSON file's bare `key` field.
+- Two agents working in parallel from stale, pre-fix worktrees independently rediscovered and
+  re-fixed the exact bug above (T4C-0098 duplicating T4C-0095) before either was merged. When
+  spawning parallel agents to work on a large, related request, expect this kind of overlap if
+  their branch points predate a fix landed earlier in the same session, and check for it at merge
+  time rather than assuming independent branches found independent bugs.
 
 ## Other project docs worth knowing about
 
