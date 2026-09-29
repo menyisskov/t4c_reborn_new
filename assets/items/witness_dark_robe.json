@@ -1,0 +1,5 @@
+{
+  "key": "witness_dark_robe", "name": "${item.witness_dark_robe}", "bodyPart": "BODY", "appearanceEquippedPrimary": "PupNecromanRobe", "appearanceInventory": "64kInvNecromanRobe", "weight": 6, "armorClass": 138.9,
+  "requirements": {"endurance": 560, "intelligence": 625}, "unique": true,
+  "boosts": [{"boostId":38119,"statId":1,"expression":"63"},{"boostId":38120,"statId":24,"expression":"63"},{"boostId":38121,"statId":12,"expression":"25"},{"boostId":38122,"statId":13,"expression":"25"},{"boostId":38123,"statId":14,"expression":"25"},{"boostId":38124,"statId":15,"expression":"25"},{"boostId":38125,"statId":22,"expression":"25"}]
+}

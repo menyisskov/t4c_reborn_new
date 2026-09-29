@@ -16,6 +16,14 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Nullguard", x = 5475, y = 1760, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Nullguard", x = 5490, y = 1760, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Nullguard", x = 5505, y = 1760, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Nullguard", x = 5438, y = 1750, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Nullguard", x = 5453, y = 1750, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Nullguard", x = 5468, y = 1750, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Nullguard", x = 5483, y = 1750, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Nullguard", x = 5498, y = 1750, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Nullguard", x = 5438, y = 1770, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Nullguard", x = 5453, y = 1770, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Nullguard", x = 5468, y = 1770, z = 0, stationary = false, aggressive = true)
 public final class Nullguard extends DataMonster {
   public static final String CANONICAL_NAME = "Nullguard";
 
@@ -29,7 +37,20 @@ public final class Nullguard extends DataMonster {
   }
 
   public static MonsterDef definition() {
-    return EndgameMonsterFactory.create(
-        CANONICAL_NAME, "nullguard", SunderedSentinel.definition(), 355, 94000, 460000, 800, false);
+    return EndgameMonsterFactory.withWitnessLoot(
+        EndgameMonsterFactory.create(
+            CANONICAL_NAME,
+            "nullguard",
+            SunderedSentinel.definition(),
+            355,
+            94000,
+            460000,
+            800,
+            false),
+        false,
+        "witness_light_amulet",
+        "witness_light_bracelet",
+        "witness_light_signet",
+        "witness_light_tiara");
   }
 }

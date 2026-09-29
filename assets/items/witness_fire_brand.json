@@ -1,0 +1,5 @@
+{
+  "key": "witness_fire_brand", "name": "${item.witness_fire_brand}", "bodyPart": "WEAPON", "appearanceEquippedPrimary": "PupWoodenStaff", "appearanceInventory": "64kInvWoodenStaff", "weight": 4, "dmgFormula": "1d36+45", "atkDelay": "1300",
+  "requirements": {"intelligence": 240}, "unique": true,
+  "boosts": [{"boostId":38021,"statId":1,"expression":"24"},{"boostId":38022,"statId":17,"expression":"24"}]
+}

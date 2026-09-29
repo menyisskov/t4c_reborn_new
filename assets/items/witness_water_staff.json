@@ -1,0 +1,1 @@
+{"key":"witness_water_staff","name":"${item.witness_water_staff}","bodyPart":"WEAPON","appearanceEquippedPrimary":"PupLichStaff","appearanceInventory":"64kInvLichStaff","weight":4,"dmgFormula":"1d48+60","atkDelay":"1300","requirements":{"intelligence":325},"unique":true,"boosts":[{"boostId":38373,"statId":1,"expression":"33"},{"boostId":38374,"statId":18,"expression":"33"}]}

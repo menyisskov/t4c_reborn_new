@@ -10,6 +10,7 @@ import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.quest.QuestService;
+import com.perso.T4C.quest.definition.HollowDawnCampaign;
 import java.util.List;
 
 /** Conversation gate shared by the two campaign witnesses. Save state lives in quest flags. */
@@ -35,12 +36,17 @@ abstract class CampaignQuestNpc extends ScriptedNpc {
     return new NpcBehavior() {
       @Override
       public void onConversationStart(NpcBehaviorContext context) {
+        if (HollowDawnCampaign.accountCompleted(context.player())) {
+          context.flag(QuestService.zoneUnlockFlag("threnody_reach"), 1);
+        }
         String status =
             !unlocked(context.player())
                 ? "${npc.hollow_dawn.locked}"
-                : current(context.player()) == null
-                    ? "${npc.hollow_dawn.finished}"
-                    : "${npc.hollow_dawn.ask_story}";
+                : choosing(context.player())
+                    ? "${npc.hollow_dawn.choose}"
+                    : current(context.player()) == null
+                        ? finishedText()
+                        : "${npc.hollow_dawn.ask_story}";
         context.say(I18n.resolve(specification().welcomeText()) + "\n" + I18n.resolve(status));
       }
 
@@ -59,9 +65,42 @@ abstract class CampaignQuestNpc extends ScriptedNpc {
           context.say("${npc.hollow_dawn.locked}");
           return true;
         }
+        if (topic >= 4) {
+          if (topic == 6 || topic == 7) {
+            if (!isChronicler()) {
+              context.say("${npc.hollow_dawn.threnody}");
+            } else if (!choosing(context.player())) {
+              context.say("${npc.hollow_dawn.path_chosen}");
+            } else if (questService() != null) {
+              QuestDef first = HollowDawnCampaign.avalon().get(topic == 6 ? 0 : 2);
+              context.say(
+                  questService().giveOrReport(first.getId(), spec.id(), context.player())
+                      + "\n"
+                      + I18n.resolve("${npc.hollow_dawn.pending}"));
+            }
+          } else {
+            context.say(
+                switch (topic) {
+                  case 4 -> "${npc.hollow_dawn.witnesses}";
+                  case 5 -> "${npc.hollow_dawn.warders}";
+                  case 8 -> "${npc.hollow_dawn.hierarchy}";
+                  default -> "${npc.hollow_dawn.threnody}";
+                });
+          }
+          return true;
+        }
+        if (choosing(context.player())) {
+          context.say("${npc.hollow_dawn.choose}");
+          return true;
+        }
         QuestDef quest = current(context.player());
         if (quest == null) {
-          context.say("${npc.hollow_dawn.finished}");
+          context.say(finishedText());
+          return true;
+        }
+        String missingClue = HollowDawnCampaign.missingClue(context.player(), quest);
+        if (missingClue != null) {
+          context.say("${npc.hollow_dawn.seek_" + missingClue + "}");
           return true;
         }
         QuestService service = questService();
@@ -87,7 +126,7 @@ abstract class CampaignQuestNpc extends ScriptedNpc {
                     "\n"
                         + I18n.resolve(
                             next == null
-                                ? "${npc.hollow_dawn.finished}"
+                                ? finishedText()
                                 : "${npc.hollow_dawn.next}");
               } else {
                 response += "\n" + I18n.resolve("${npc.hollow_dawn.pending}");
@@ -105,12 +144,36 @@ abstract class CampaignQuestNpc extends ScriptedNpc {
     };
   }
 
+  private boolean isChronicler() {
+    return HollowDawnCampaign.CHRONICLER.equals(specification().id());
+  }
+
+  private String finishedText() {
+    return isChronicler() ? "${npc.hollow_dawn.account_finished}" : "${npc.hollow_dawn.finished}";
+  }
+
+  private boolean choosing(Player player) {
+    return isChronicler() && HollowDawnCampaign.selectedPath(player).isEmpty();
+  }
+
   private boolean unlocked(Player player) {
-    return QuestService.statusFor(player, prerequisite) == QuestService.STATUS_COMPLETED;
+    // Grandfather active/completed quest saves, even if their earlier prerequisite is absent.
+    return stages.stream().anyMatch(q -> QuestService.statusFor(player, q) != 0)
+        || (isChronicler()
+            ? QuestService.statusFor(player, prerequisite) == QuestService.STATUS_COMPLETED
+            : HollowDawnCampaign.accountCompleted(player));
   }
 
   private QuestDef current(Player player) {
-    for (QuestDef quest : stages) {
+    List<QuestDef> available = isChronicler() ? HollowDawnCampaign.selectedPath(player) : stages;
+    for (QuestDef quest : available) {
+      if (QuestService.statusFor(player, quest) == QuestService.STATUS_ACTIVE) return quest;
+    }
+    if (!available.isEmpty()
+        && QuestService.statusFor(player, available.getLast()) == QuestService.STATUS_COMPLETED) {
+      return null;
+    }
+    for (QuestDef quest : available) {
       if (QuestService.statusFor(player, quest) != QuestService.STATUS_COMPLETED) return quest;
     }
     return null;

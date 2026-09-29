@@ -11900,7 +11900,7 @@
         "expression": "10"
       }
     ],
-    "sellPrice": 5000
+    "sellPrice": 100
   },
   {
     "key": "verdant_wardens_bulwark",
@@ -12169,6 +12169,2457 @@
       }
     ],
     "sellPrice": 750000
+  },
+  {
+    "key": "witness_air_amulet",
+    "name": "${item.witness_air_amulet}",
+    "bodyPart": "NECK",
+    "appearanceInventory": "64kInvNecklace 3",
+    "weight": 1.0,
+    "armorClass": 15.3,
+    "requirements": {
+      "endurance": 340.0,
+      "intelligence": 275.0,
+      "wisdom": 275.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38257.0,
+        "statId": 1.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38258.0,
+        "statId": 4.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38259.0,
+        "statId": 16.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38260.0,
+        "statId": 12.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38261.0,
+        "statId": 13.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38262.0,
+        "statId": 14.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38263.0,
+        "statId": 15.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38264.0,
+        "statId": 22.0,
+        "expression": "18"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_air_bracelet",
+    "name": "${item.witness_air_bracelet}",
+    "bodyPart": "BRACER",
+    "appearanceInventory": "64kInvBelt",
+    "weight": 1.0,
+    "armorClass": 15.3,
+    "requirements": {
+      "endurance": 340.0,
+      "intelligence": 275.0,
+      "wisdom": 275.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38214.0,
+        "statId": 1.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38215.0,
+        "statId": 4.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38216.0,
+        "statId": 16.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38217.0,
+        "statId": 12.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38218.0,
+        "statId": 13.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38219.0,
+        "statId": 14.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38220.0,
+        "statId": 15.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38221.0,
+        "statId": 22.0,
+        "expression": "18"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_air_plate",
+    "name": "${item.witness_air_plate}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "weight": 8.0,
+    "armorClass": 116.0,
+    "requirements": {
+      "endurance": 340.0,
+      "strength": 440.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38343.0,
+        "statId": 3.0,
+        "expression": "37"
+      },
+      {
+        "boostId": 38344.0,
+        "statId": 8.0,
+        "expression": "88"
+      },
+      {
+        "boostId": 38345.0,
+        "statId": 12.0,
+        "expression": "11"
+      },
+      {
+        "boostId": 38346.0,
+        "statId": 13.0,
+        "expression": "11"
+      },
+      {
+        "boostId": 38347.0,
+        "statId": 14.0,
+        "expression": "11"
+      },
+      {
+        "boostId": 38348.0,
+        "statId": 15.0,
+        "expression": "11"
+      },
+      {
+        "boostId": 38349.0,
+        "statId": 22.0,
+        "expression": "11"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_air_robe",
+    "name": "${item.witness_air_robe}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupWhiteRobe__pal7",
+    "appearanceInventory": "64kInvWhiteRobe__pal7",
+    "weight": 5.0,
+    "armorClass": 94.9,
+    "requirements": {
+      "endurance": 340.0,
+      "intelligence": 275.0,
+      "wisdom": 275.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38046.0,
+        "statId": 1.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38047.0,
+        "statId": 4.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38048.0,
+        "statId": 16.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38049.0,
+        "statId": 12.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38050.0,
+        "statId": 13.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38051.0,
+        "statId": 14.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38052.0,
+        "statId": 15.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38053.0,
+        "statId": 22.0,
+        "expression": "18"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_air_signet",
+    "name": "${item.witness_air_signet}",
+    "bodyPart": "RING1",
+    "appearanceInventory": "64kInvRings 3",
+    "weight": 1.0,
+    "armorClass": 15.3,
+    "requirements": {
+      "endurance": 340.0,
+      "intelligence": 275.0,
+      "wisdom": 275.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38062.0,
+        "statId": 1.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38063.0,
+        "statId": 4.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38064.0,
+        "statId": 16.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38065.0,
+        "statId": 12.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38066.0,
+        "statId": 13.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38067.0,
+        "statId": 14.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38068.0,
+        "statId": 15.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38069.0,
+        "statId": 22.0,
+        "expression": "18"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_air_tiara",
+    "name": "${item.witness_air_tiara}",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "weight": 2.0,
+    "armorClass": 27.4,
+    "requirements": {
+      "endurance": 340.0,
+      "intelligence": 275.0,
+      "wisdom": 275.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38300.0,
+        "statId": 1.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38301.0,
+        "statId": 4.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38302.0,
+        "statId": 16.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38303.0,
+        "statId": 12.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38304.0,
+        "statId": 13.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38305.0,
+        "statId": 14.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38306.0,
+        "statId": 15.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38307.0,
+        "statId": 22.0,
+        "expression": "18"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_air_wand",
+    "name": "${item.witness_air_wand}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupWoodenStaff",
+    "appearanceInventory": "64kInvWoodenStaff",
+    "weight": 4.0,
+    "dmgFormula": "1d48+65",
+    "atkDelay": "1250",
+    "requirements": {
+      "intelligence": 275.0,
+      "wisdom": 275.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38070.0,
+        "statId": 1.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38071.0,
+        "statId": 4.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38072.0,
+        "statId": 16.0,
+        "expression": "44"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_air_wings",
+    "name": "${item.witness_air_wings}",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal6",
+    "appearanceInventory": "64kInvSeraphWhiteWings__pal6",
+    "weight": 2.0,
+    "armorClass": 27.5,
+    "requirements": {
+      "endurance": 340.0,
+      "intelligence": 275.0,
+      "wisdom": 275.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38054.0,
+        "statId": 1.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38055.0,
+        "statId": 4.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38056.0,
+        "statId": 16.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38057.0,
+        "statId": 12.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38058.0,
+        "statId": 13.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38059.0,
+        "statId": 14.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38060.0,
+        "statId": 15.0,
+        "expression": "18"
+      },
+      {
+        "boostId": 38061.0,
+        "statId": 22.0,
+        "expression": "18"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_dark_amulet",
+    "name": "${item.witness_dark_amulet}",
+    "bodyPart": "NECK",
+    "appearanceInventory": "64kInvNecklace 3",
+    "weight": 1.0,
+    "armorClass": 22.4,
+    "requirements": {
+      "endurance": 560.0,
+      "intelligence": 625.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38279.0,
+        "statId": 1.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38280.0,
+        "statId": 24.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38281.0,
+        "statId": 12.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38282.0,
+        "statId": 13.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38283.0,
+        "statId": 14.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38284.0,
+        "statId": 15.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38285.0,
+        "statId": 22.0,
+        "expression": "25"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_dark_bracelet",
+    "name": "${item.witness_dark_bracelet}",
+    "bodyPart": "BRACER",
+    "appearanceInventory": "64kInvBelt",
+    "weight": 1.0,
+    "armorClass": 22.4,
+    "requirements": {
+      "endurance": 560.0,
+      "intelligence": 625.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38236.0,
+        "statId": 1.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38237.0,
+        "statId": 24.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38238.0,
+        "statId": 12.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38239.0,
+        "statId": 13.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38240.0,
+        "statId": 14.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38241.0,
+        "statId": 15.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38242.0,
+        "statId": 22.0,
+        "expression": "25"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_dark_dagger",
+    "name": "${item.witness_dark_dagger}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupBattleDagger",
+    "appearanceInventory": "64kInvBattleDagger",
+    "weight": 3.0,
+    "dmgFormula": "1d180+180",
+    "atkDelay": "950",
+    "requirements": {
+      "agility": 760.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38375.0,
+        "statId": 6.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38376.0,
+        "statId": 10035.0,
+        "expression": "152"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_dark_plate",
+    "name": "${item.witness_dark_plate}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "weight": 8.0,
+    "armorClass": 191.0,
+    "requirements": {
+      "endurance": 560.0,
+      "strength": 760.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38364.0,
+        "statId": 3.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38365.0,
+        "statId": 8.0,
+        "expression": "152"
+      },
+      {
+        "boostId": 38366.0,
+        "statId": 12.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38367.0,
+        "statId": 13.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38368.0,
+        "statId": 14.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38369.0,
+        "statId": 15.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38370.0,
+        "statId": 22.0,
+        "expression": "19"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_dark_robe",
+    "name": "${item.witness_dark_robe}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupNecromanRobe",
+    "appearanceInventory": "64kInvNecromanRobe",
+    "weight": 6.0,
+    "armorClass": 138.9,
+    "requirements": {
+      "endurance": 560.0,
+      "intelligence": 625.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38119.0,
+        "statId": 1.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38120.0,
+        "statId": 24.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38121.0,
+        "statId": 12.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38122.0,
+        "statId": 13.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38123.0,
+        "statId": 14.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38124.0,
+        "statId": 15.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38125.0,
+        "statId": 22.0,
+        "expression": "25"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_dark_rod",
+    "name": "${item.witness_dark_rod}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLichStaff",
+    "appearanceInventory": "64kInvLichStaff",
+    "weight": 4.0,
+    "dmgFormula": "1d70+100",
+    "atkDelay": "1300",
+    "requirements": {
+      "intelligence": 625.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38140.0,
+        "statId": 1.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38141.0,
+        "statId": 24.0,
+        "expression": "63"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_dark_signet",
+    "name": "${item.witness_dark_signet}",
+    "bodyPart": "RING1",
+    "appearanceInventory": "64kInvRings 5",
+    "weight": 1.0,
+    "armorClass": 22.4,
+    "requirements": {
+      "endurance": 560.0,
+      "intelligence": 625.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38133.0,
+        "statId": 1.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38134.0,
+        "statId": 24.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38135.0,
+        "statId": 12.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38136.0,
+        "statId": 13.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38137.0,
+        "statId": 14.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38138.0,
+        "statId": 15.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38139.0,
+        "statId": 22.0,
+        "expression": "25"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_dark_tiara",
+    "name": "${item.witness_dark_tiara}",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "weight": 2.0,
+    "armorClass": 40.1,
+    "requirements": {
+      "endurance": 560.0,
+      "intelligence": 625.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38322.0,
+        "statId": 1.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38323.0,
+        "statId": 24.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38324.0,
+        "statId": 12.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38325.0,
+        "statId": 13.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38326.0,
+        "statId": 14.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38327.0,
+        "statId": 15.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38328.0,
+        "statId": 22.0,
+        "expression": "25"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_dark_wings",
+    "name": "${item.witness_dark_wings}",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal8",
+    "appearanceInventory": "64kInvSeraphWhiteWings__pal8",
+    "weight": 2.0,
+    "armorClass": 40.3,
+    "requirements": {
+      "endurance": 560.0,
+      "intelligence": 625.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38126.0,
+        "statId": 1.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38127.0,
+        "statId": 24.0,
+        "expression": "63"
+      },
+      {
+        "boostId": 38128.0,
+        "statId": 12.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38129.0,
+        "statId": 13.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38130.0,
+        "statId": 14.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38131.0,
+        "statId": 15.0,
+        "expression": "25"
+      },
+      {
+        "boostId": 38132.0,
+        "statId": 22.0,
+        "expression": "25"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_earth_amulet",
+    "name": "${item.witness_earth_amulet}",
+    "bodyPart": "NECK",
+    "appearanceInventory": "64kInvNecklace 1",
+    "weight": 1.0,
+    "armorClass": 20.0,
+    "requirements": {
+      "endurance": 400.0,
+      "wisdom": 475.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38265.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 38266.0,
+        "statId": 19.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 38267.0,
+        "statId": 12.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38268.0,
+        "statId": 13.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38269.0,
+        "statId": 14.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38270.0,
+        "statId": 15.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38271.0,
+        "statId": 22.0,
+        "expression": "19"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_earth_bracelet",
+    "name": "${item.witness_earth_bracelet}",
+    "bodyPart": "BRACER",
+    "appearanceInventory": "64kInvBelt",
+    "weight": 1.0,
+    "armorClass": 20.0,
+    "requirements": {
+      "endurance": 400.0,
+      "wisdom": 475.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38222.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 38223.0,
+        "statId": 19.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 38224.0,
+        "statId": 12.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38225.0,
+        "statId": 13.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38226.0,
+        "statId": 14.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38227.0,
+        "statId": 15.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38228.0,
+        "statId": 22.0,
+        "expression": "19"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_earth_plate",
+    "name": "${item.witness_earth_plate}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "weight": 8.0,
+    "armorClass": 136.4,
+    "requirements": {
+      "endurance": 400.0,
+      "strength": 540.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38350.0,
+        "statId": 3.0,
+        "expression": "45"
+      },
+      {
+        "boostId": 38351.0,
+        "statId": 8.0,
+        "expression": "108"
+      },
+      {
+        "boostId": 38352.0,
+        "statId": 12.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 38353.0,
+        "statId": 13.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 38354.0,
+        "statId": 14.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 38355.0,
+        "statId": 15.0,
+        "expression": "14"
+      },
+      {
+        "boostId": 38356.0,
+        "statId": 22.0,
+        "expression": "14"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_earth_robe",
+    "name": "${item.witness_earth_robe}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupWhiteRobe__pal8",
+    "appearanceInventory": "64kInvWhiteRobe__pal8",
+    "weight": 6.0,
+    "armorClass": 124.0,
+    "requirements": {
+      "endurance": 400.0,
+      "wisdom": 475.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38073.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 38074.0,
+        "statId": 19.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 38075.0,
+        "statId": 12.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38076.0,
+        "statId": 13.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38077.0,
+        "statId": 14.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38078.0,
+        "statId": 15.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38079.0,
+        "statId": 22.0,
+        "expression": "19"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_earth_sceptre",
+    "name": "${item.witness_earth_sceptre}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupWoodenStaff",
+    "appearanceInventory": "64kInvWoodenStaff",
+    "weight": 4.0,
+    "dmgFormula": "1d54+75",
+    "atkDelay": "1300",
+    "requirements": {
+      "wisdom": 475.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38094.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 38095.0,
+        "statId": 19.0,
+        "expression": "48"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_earth_signet",
+    "name": "${item.witness_earth_signet}",
+    "bodyPart": "RING1",
+    "appearanceInventory": "64kInvRings 1",
+    "weight": 1.0,
+    "armorClass": 20.0,
+    "requirements": {
+      "endurance": 400.0,
+      "wisdom": 475.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38087.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 38088.0,
+        "statId": 19.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 38089.0,
+        "statId": 12.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38090.0,
+        "statId": 13.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38091.0,
+        "statId": 14.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38092.0,
+        "statId": 15.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38093.0,
+        "statId": 22.0,
+        "expression": "19"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_earth_tiara",
+    "name": "${item.witness_earth_tiara}",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "weight": 2.0,
+    "armorClass": 35.8,
+    "requirements": {
+      "endurance": 400.0,
+      "wisdom": 475.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38308.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 38309.0,
+        "statId": 19.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 38310.0,
+        "statId": 12.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38311.0,
+        "statId": 13.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38312.0,
+        "statId": 14.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38313.0,
+        "statId": 15.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38314.0,
+        "statId": 22.0,
+        "expression": "19"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_earth_wings",
+    "name": "${item.witness_earth_wings}",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal7",
+    "appearanceInventory": "64kInvSeraphWhiteWings__pal7",
+    "weight": 2.0,
+    "armorClass": 36.0,
+    "requirements": {
+      "endurance": 400.0,
+      "wisdom": 475.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38080.0,
+        "statId": 4.0,
+        "expression": "40"
+      },
+      {
+        "boostId": 38081.0,
+        "statId": 19.0,
+        "expression": "48"
+      },
+      {
+        "boostId": 38082.0,
+        "statId": 12.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38083.0,
+        "statId": 13.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38084.0,
+        "statId": 14.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38085.0,
+        "statId": 15.0,
+        "expression": "19"
+      },
+      {
+        "boostId": 38086.0,
+        "statId": 22.0,
+        "expression": "19"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_fire_amulet",
+    "name": "${item.witness_fire_amulet}",
+    "bodyPart": "NECK",
+    "appearanceInventory": "64kInvNecklace 1",
+    "weight": 1.0,
+    "armorClass": 8.0,
+    "requirements": {
+      "endurance": 200.0,
+      "intelligence": 240.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38243.0,
+        "statId": 1.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38244.0,
+        "statId": 17.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38245.0,
+        "statId": 12.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38246.0,
+        "statId": 13.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38247.0,
+        "statId": 14.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38248.0,
+        "statId": 15.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38249.0,
+        "statId": 22.0,
+        "expression": "10"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_fire_bracelet",
+    "name": "${item.witness_fire_bracelet}",
+    "bodyPart": "BRACER",
+    "appearanceInventory": "64kInvBelt",
+    "weight": 1.0,
+    "armorClass": 8.0,
+    "requirements": {
+      "endurance": 200.0,
+      "intelligence": 240.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38200.0,
+        "statId": 1.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38201.0,
+        "statId": 17.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38202.0,
+        "statId": 12.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38203.0,
+        "statId": 13.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38204.0,
+        "statId": 14.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38205.0,
+        "statId": 15.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38206.0,
+        "statId": 22.0,
+        "expression": "10"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_fire_brand",
+    "name": "${item.witness_fire_brand}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupWoodenStaff",
+    "appearanceInventory": "64kInvWoodenStaff",
+    "weight": 4.0,
+    "dmgFormula": "1d36+45",
+    "atkDelay": "1300",
+    "requirements": {
+      "intelligence": 240.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38021.0,
+        "statId": 1.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38022.0,
+        "statId": 17.0,
+        "expression": "24"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_fire_mace",
+    "name": "${item.witness_fire_mace}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupMace",
+    "appearanceInventory": "64kInvMace",
+    "weight": 6.0,
+    "dmgFormula": "1d120+90",
+    "atkDelay": "1400",
+    "requirements": {
+      "strength": 260.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38371.0,
+        "statId": 3.0,
+        "expression": "22"
+      },
+      {
+        "boostId": 38372.0,
+        "statId": 8.0,
+        "expression": "52"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_fire_plate",
+    "name": "${item.witness_fire_plate}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "weight": 8.0,
+    "armorClass": 68.2,
+    "requirements": {
+      "endurance": 200.0,
+      "strength": 260.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38329.0,
+        "statId": 3.0,
+        "expression": "22"
+      },
+      {
+        "boostId": 38330.0,
+        "statId": 8.0,
+        "expression": "52"
+      },
+      {
+        "boostId": 38331.0,
+        "statId": 12.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 38332.0,
+        "statId": 13.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 38333.0,
+        "statId": 14.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 38334.0,
+        "statId": 15.0,
+        "expression": "7"
+      },
+      {
+        "boostId": 38335.0,
+        "statId": 22.0,
+        "expression": "7"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_fire_robe",
+    "name": "${item.witness_fire_robe}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupRedRobe",
+    "appearanceInventory": "64kInvRedRobe",
+    "weight": 5.0,
+    "armorClass": 49.6,
+    "requirements": {
+      "endurance": 200.0,
+      "intelligence": 240.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38000.0,
+        "statId": 1.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38001.0,
+        "statId": 17.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38002.0,
+        "statId": 12.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38003.0,
+        "statId": 13.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38004.0,
+        "statId": 14.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38005.0,
+        "statId": 15.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38006.0,
+        "statId": 22.0,
+        "expression": "10"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_fire_signet",
+    "name": "${item.witness_fire_signet}",
+    "bodyPart": "RING1",
+    "appearanceInventory": "64kInvRings 4",
+    "weight": 1.0,
+    "armorClass": 8.0,
+    "requirements": {
+      "endurance": 200.0,
+      "intelligence": 240.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38014.0,
+        "statId": 1.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38015.0,
+        "statId": 17.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38016.0,
+        "statId": 12.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38017.0,
+        "statId": 13.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38018.0,
+        "statId": 14.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38019.0,
+        "statId": 15.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38020.0,
+        "statId": 22.0,
+        "expression": "10"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_fire_tiara",
+    "name": "${item.witness_fire_tiara}",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "weight": 2.0,
+    "armorClass": 14.3,
+    "requirements": {
+      "endurance": 200.0,
+      "intelligence": 240.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38286.0,
+        "statId": 1.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38287.0,
+        "statId": 17.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38288.0,
+        "statId": 12.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38289.0,
+        "statId": 13.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38290.0,
+        "statId": 14.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38291.0,
+        "statId": 15.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38292.0,
+        "statId": 22.0,
+        "expression": "10"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_fire_wings",
+    "name": "${item.witness_fire_wings}",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal3",
+    "appearanceInventory": "64kInvSeraphWhiteWings__pal3",
+    "weight": 2.0,
+    "armorClass": 14.4,
+    "requirements": {
+      "endurance": 200.0,
+      "intelligence": 240.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38007.0,
+        "statId": 1.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38008.0,
+        "statId": 17.0,
+        "expression": "24"
+      },
+      {
+        "boostId": 38009.0,
+        "statId": 12.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38010.0,
+        "statId": 13.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38011.0,
+        "statId": 14.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38012.0,
+        "statId": 15.0,
+        "expression": "10"
+      },
+      {
+        "boostId": 38013.0,
+        "statId": 22.0,
+        "expression": "10"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_light_amulet",
+    "name": "${item.witness_light_amulet}",
+    "bodyPart": "NECK",
+    "appearanceInventory": "64kInvNecklace 2",
+    "weight": 1.0,
+    "armorClass": 24.0,
+    "requirements": {
+      "endurance": 480.0,
+      "wisdom": 525.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38272.0,
+        "statId": 4.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38273.0,
+        "statId": 23.0,
+        "expression": "53"
+      },
+      {
+        "boostId": 38274.0,
+        "statId": 12.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38275.0,
+        "statId": 13.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38276.0,
+        "statId": 14.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38277.0,
+        "statId": 15.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38278.0,
+        "statId": 22.0,
+        "expression": "21"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_light_bracelet",
+    "name": "${item.witness_light_bracelet}",
+    "bodyPart": "BRACER",
+    "appearanceInventory": "64kInvBelt",
+    "weight": 1.0,
+    "armorClass": 24.0,
+    "requirements": {
+      "endurance": 480.0,
+      "wisdom": 525.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38229.0,
+        "statId": 4.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38230.0,
+        "statId": 23.0,
+        "expression": "53"
+      },
+      {
+        "boostId": 38231.0,
+        "statId": 12.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38232.0,
+        "statId": 13.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38233.0,
+        "statId": 14.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38234.0,
+        "statId": 15.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38235.0,
+        "statId": 22.0,
+        "expression": "21"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_light_plate",
+    "name": "${item.witness_light_plate}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "weight": 8.0,
+    "armorClass": 163.7,
+    "requirements": {
+      "endurance": 480.0,
+      "strength": 650.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38357.0,
+        "statId": 3.0,
+        "expression": "54"
+      },
+      {
+        "boostId": 38358.0,
+        "statId": 8.0,
+        "expression": "130"
+      },
+      {
+        "boostId": 38359.0,
+        "statId": 12.0,
+        "expression": "16"
+      },
+      {
+        "boostId": 38360.0,
+        "statId": 13.0,
+        "expression": "16"
+      },
+      {
+        "boostId": 38361.0,
+        "statId": 14.0,
+        "expression": "16"
+      },
+      {
+        "boostId": 38362.0,
+        "statId": 15.0,
+        "expression": "16"
+      },
+      {
+        "boostId": 38363.0,
+        "statId": 22.0,
+        "expression": "16"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_light_robe",
+    "name": "${item.witness_light_robe}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupWhiteRobe__pal9",
+    "appearanceInventory": "64kInvWhiteRobe__pal9",
+    "weight": 6.0,
+    "armorClass": 148.8,
+    "requirements": {
+      "endurance": 480.0,
+      "wisdom": 525.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38096.0,
+        "statId": 4.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38097.0,
+        "statId": 23.0,
+        "expression": "53"
+      },
+      {
+        "boostId": 38098.0,
+        "statId": 12.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38099.0,
+        "statId": 13.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38100.0,
+        "statId": 14.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38101.0,
+        "statId": 15.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38102.0,
+        "statId": 22.0,
+        "expression": "21"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_light_signet",
+    "name": "${item.witness_light_signet}",
+    "bodyPart": "RING1",
+    "appearanceInventory": "64kInvRings 5",
+    "weight": 1.0,
+    "armorClass": 24.0,
+    "requirements": {
+      "endurance": 480.0,
+      "wisdom": 525.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38110.0,
+        "statId": 4.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38111.0,
+        "statId": 23.0,
+        "expression": "53"
+      },
+      {
+        "boostId": 38112.0,
+        "statId": 12.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38113.0,
+        "statId": 13.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38114.0,
+        "statId": 14.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38115.0,
+        "statId": 15.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38116.0,
+        "statId": 22.0,
+        "expression": "21"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_light_staff",
+    "name": "${item.witness_light_staff}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLichStaff",
+    "appearanceInventory": "64kInvLichStaff",
+    "weight": 4.0,
+    "dmgFormula": "1d60+85",
+    "atkDelay": "1300",
+    "requirements": {
+      "wisdom": 525.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38117.0,
+        "statId": 4.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38118.0,
+        "statId": 23.0,
+        "expression": "53"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_light_tiara",
+    "name": "${item.witness_light_tiara}",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "weight": 2.0,
+    "armorClass": 42.9,
+    "requirements": {
+      "endurance": 480.0,
+      "wisdom": 525.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38315.0,
+        "statId": 4.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38316.0,
+        "statId": 23.0,
+        "expression": "53"
+      },
+      {
+        "boostId": 38317.0,
+        "statId": 12.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38318.0,
+        "statId": 13.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38319.0,
+        "statId": 14.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38320.0,
+        "statId": 15.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38321.0,
+        "statId": 22.0,
+        "expression": "21"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_light_wings",
+    "name": "${item.witness_light_wings}",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal4",
+    "appearanceInventory": "64kInvSeraphWhiteWings__pal4",
+    "weight": 2.0,
+    "armorClass": 43.2,
+    "requirements": {
+      "endurance": 480.0,
+      "wisdom": 525.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38103.0,
+        "statId": 4.0,
+        "expression": "44"
+      },
+      {
+        "boostId": 38104.0,
+        "statId": 23.0,
+        "expression": "53"
+      },
+      {
+        "boostId": 38105.0,
+        "statId": 12.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38106.0,
+        "statId": 13.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38107.0,
+        "statId": 14.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38108.0,
+        "statId": 15.0,
+        "expression": "21"
+      },
+      {
+        "boostId": 38109.0,
+        "statId": 22.0,
+        "expression": "21"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_water_amulet",
+    "name": "${item.witness_water_amulet}",
+    "bodyPart": "NECK",
+    "appearanceInventory": "64kInvNecklace 2",
+    "weight": 1.0,
+    "armorClass": 11.2,
+    "requirements": {
+      "endurance": 280.0,
+      "intelligence": 325.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38250.0,
+        "statId": 1.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38251.0,
+        "statId": 18.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38252.0,
+        "statId": 12.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38253.0,
+        "statId": 13.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38254.0,
+        "statId": 14.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38255.0,
+        "statId": 15.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38256.0,
+        "statId": 22.0,
+        "expression": "13"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_water_bracelet",
+    "name": "${item.witness_water_bracelet}",
+    "bodyPart": "BRACER",
+    "appearanceInventory": "64kInvBelt",
+    "weight": 1.0,
+    "armorClass": 11.2,
+    "requirements": {
+      "endurance": 280.0,
+      "intelligence": 325.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38207.0,
+        "statId": 1.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38208.0,
+        "statId": 18.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38209.0,
+        "statId": 12.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38210.0,
+        "statId": 13.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38211.0,
+        "statId": 14.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38212.0,
+        "statId": 15.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38213.0,
+        "statId": 22.0,
+        "expression": "13"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_water_plate",
+    "name": "${item.witness_water_plate}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupPlateBody",
+    "appearanceInventory": "64kInvPlateArmorSleeves",
+    "weight": 8.0,
+    "armorClass": 95.5,
+    "requirements": {
+      "endurance": 280.0,
+      "strength": 350.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38336.0,
+        "statId": 3.0,
+        "expression": "29"
+      },
+      {
+        "boostId": 38337.0,
+        "statId": 8.0,
+        "expression": "70"
+      },
+      {
+        "boostId": 38338.0,
+        "statId": 12.0,
+        "expression": "9"
+      },
+      {
+        "boostId": 38339.0,
+        "statId": 13.0,
+        "expression": "9"
+      },
+      {
+        "boostId": 38340.0,
+        "statId": 14.0,
+        "expression": "9"
+      },
+      {
+        "boostId": 38341.0,
+        "statId": 15.0,
+        "expression": "9"
+      },
+      {
+        "boostId": 38342.0,
+        "statId": 22.0,
+        "expression": "9"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_water_robe",
+    "name": "${item.witness_water_robe}",
+    "bodyPart": "BODY",
+    "appearanceEquippedPrimary": "PupWhiteRobe__pal2",
+    "appearanceInventory": "64kInvWhiteRobe__pal2",
+    "weight": 5.0,
+    "armorClass": 69.4,
+    "requirements": {
+      "endurance": 280.0,
+      "intelligence": 325.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38023.0,
+        "statId": 1.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38024.0,
+        "statId": 18.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38025.0,
+        "statId": 12.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38026.0,
+        "statId": 13.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38027.0,
+        "statId": 14.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38028.0,
+        "statId": 15.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38029.0,
+        "statId": 22.0,
+        "expression": "13"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_water_sceptre",
+    "name": "${item.witness_water_sceptre}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupWoodenStaff",
+    "appearanceInventory": "64kInvWoodenStaff",
+    "weight": 4.0,
+    "dmgFormula": "1d42+55",
+    "atkDelay": "1300",
+    "requirements": {
+      "intelligence": 325.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38044.0,
+        "statId": 1.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38045.0,
+        "statId": 18.0,
+        "expression": "33"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_water_signet",
+    "name": "${item.witness_water_signet}",
+    "bodyPart": "RING1",
+    "appearanceInventory": "64kInvRings 2",
+    "weight": 1.0,
+    "armorClass": 11.2,
+    "requirements": {
+      "endurance": 280.0,
+      "intelligence": 325.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38037.0,
+        "statId": 1.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38038.0,
+        "statId": 18.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38039.0,
+        "statId": 12.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38040.0,
+        "statId": 13.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38041.0,
+        "statId": 14.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38042.0,
+        "statId": 15.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38043.0,
+        "statId": 22.0,
+        "expression": "13"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_water_staff",
+    "name": "${item.witness_water_staff}",
+    "bodyPart": "WEAPON",
+    "appearanceEquippedPrimary": "PupLichStaff",
+    "appearanceInventory": "64kInvLichStaff",
+    "weight": 4.0,
+    "dmgFormula": "1d48+60",
+    "atkDelay": "1300",
+    "requirements": {
+      "intelligence": 325.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38373.0,
+        "statId": 1.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38374.0,
+        "statId": 18.0,
+        "expression": "33"
+      }
+    ],
+    "sellPrice": 20000
+  },
+  {
+    "key": "witness_water_tiara",
+    "name": "${item.witness_water_tiara}",
+    "bodyPart": "HEAD",
+    "appearanceEquippedPrimary": "PupPlateHelm",
+    "appearanceInventory": "64kInvPlateArmorHelm",
+    "weight": 2.0,
+    "armorClass": 20.0,
+    "requirements": {
+      "endurance": 280.0,
+      "intelligence": 325.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38293.0,
+        "statId": 1.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38294.0,
+        "statId": 18.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38295.0,
+        "statId": 12.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38296.0,
+        "statId": 13.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38297.0,
+        "statId": 14.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38298.0,
+        "statId": 15.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38299.0,
+        "statId": 22.0,
+        "expression": "13"
+      }
+    ],
+    "sellPrice": 16667
+  },
+  {
+    "key": "witness_water_wings",
+    "name": "${item.witness_water_wings}",
+    "bodyPart": "BACK",
+    "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal2",
+    "appearanceInventory": "64kInvSeraphWhiteWings__pal2",
+    "weight": 2.0,
+    "armorClass": 20.2,
+    "requirements": {
+      "endurance": 280.0,
+      "intelligence": 325.0
+    },
+    "unique": true,
+    "boosts": [
+      {
+        "boostId": 38030.0,
+        "statId": 1.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38031.0,
+        "statId": 18.0,
+        "expression": "33"
+      },
+      {
+        "boostId": 38032.0,
+        "statId": 12.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38033.0,
+        "statId": 13.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38034.0,
+        "statId": 14.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38035.0,
+        "statId": 15.0,
+        "expression": "13"
+      },
+      {
+        "boostId": 38036.0,
+        "statId": 22.0,
+        "expression": "13"
+      }
+    ],
+    "sellPrice": 20000
   },
   {
     "key": "wyrmling_scale_bracer",
@@ -12770,7 +15221,7 @@
   },
   {
     "key": "item.scroll_of_avalon",
-    "name": "Scroll of Avalon",
+    "name": "Scroll of the Witness Isles",
     "price": 16666,
     "sellPrice": 8333,
     "weight": 2,
@@ -12788,7 +15239,7 @@
     "boosts": [],
     "unlimitedUse": false,
     "useEffects": [
-      "Teleports the caster to the sanctuary of Avalon."
+      "Teleports the caster to the sanctuary of the Witness Isles."
     ]
   },
   {

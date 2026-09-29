@@ -1,5 +1,6 @@
 package com.perso.T4C.teleport;
 
+import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
@@ -62,8 +63,10 @@ public final class NamedLocations {
         new NamedLocation("Greater Drake's Bastion", 2650, 2880, 0, "greater_drakes_bastion"),
         new NamedLocation("Drake's Lair", 2850, 2780, 0, "drakes_lair"),
         new NamedLocation("Deep Ones Cave", 330, 2246, 0, "deep_ones_cave"),
-        new NamedLocation("Avalon Sanctuary", 4040, 1477, 0, "avalon_sanctuary"),
-        new NamedLocation("The Avalon Wilds", 3965, 1400, 0, "avalon_wilds"),
+        new NamedLocation(
+            I18n.resolve("${location.witness_isles_sanctuary}"), 4040, 1477, 0, "avalon_sanctuary"),
+        new NamedLocation(
+            I18n.resolve("${location.witness_wilds}"), 3965, 1400, 0, "avalon_wilds"),
         new NamedLocation("The Fading Veil", 4120, 1560, 0, "fading_veil"),
         new NamedLocation("Threnody Reach", 5505, 1150, 0, "threnody_reach"),
         new NamedLocation("The Hollow Dawn", 5650, 2290, 0, "hollow_dawn"),

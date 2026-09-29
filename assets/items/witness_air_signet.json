@@ -1,0 +1,5 @@
+{
+  "key": "witness_air_signet", "name": "${item.witness_air_signet}", "bodyPart": "RING1", "appearanceInventory": "64kInvRings 3", "weight": 1, "armorClass": 15.3,
+  "requirements": {"endurance": 340, "intelligence": 275, "wisdom": 275}, "unique": true,
+  "boosts": [{"boostId":38062,"statId":1,"expression":"18"},{"boostId":38063,"statId":4,"expression":"18"},{"boostId":38064,"statId":16,"expression":"44"},{"boostId":38065,"statId":12,"expression":"18"},{"boostId":38066,"statId":13,"expression":"18"},{"boostId":38067,"statId":14,"expression":"18"},{"boostId":38068,"statId":15,"expression":"18"},{"boostId":38069,"statId":22,"expression":"18"}]
+}

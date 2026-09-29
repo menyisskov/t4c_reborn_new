@@ -30,7 +30,7 @@ class HollowDawnDialogueTest {
 
     completeFlag(player, FadingVeilReckoning.definition());
     say(maelin, player, "story");
-    say(maelin, player, "accept");
+    say(maelin, player, "moonwake");
     assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, first));
     for (int i = 0; i < first.getRequiredKills(); i++)
       quests.recordKill(
@@ -40,6 +40,7 @@ class HollowDawnDialogueTest {
     player.setLevel(first.getMinLevel());
     say(maelin, player, "report");
     assertEquals(QuestService.STATUS_COMPLETED, QuestService.statusFor(player, first));
+    hearClue(player, "moonwake");
     say(maelin, player, "accept");
     assertEquals(
         QuestService.STATUS_ACTIVE,
@@ -52,7 +53,8 @@ class HollowDawnDialogueTest {
     KeeperVael keeper = new KeeperVael(new NpcContext(quests));
     Player player = new Player();
     completeFlag(player, FadingVeilReckoning.definition());
-    for (int i = 0; i < 3; i++) completeFlag(player, HollowDawnCampaign.avalon().get(i));
+    completeFlag(player, HollowDawnCampaign.avalon().get(2));
+    hearClue(player, "emberglass");
     QuestDef marshal = HollowDawnCampaign.avalon().getLast();
     say(keeper, player, "accept");
     assertEquals(
@@ -83,6 +85,7 @@ class HollowDawnDialogueTest {
     completeFlag(player, FadingVeilReckoning.definition());
     completeFlag(player, HollowDawnCampaign.avalon().getFirst());
     ChroniclerMaelin maelin = new ChroniclerMaelin(new NpcContext(quests));
+    hearClue(player, "moonwake");
     QuestDef cantor = HollowDawnCampaign.avalon().get(1);
     assertRelicStage(maelin, player, cantor);
 
@@ -91,6 +94,75 @@ class HollowDawnDialogueTest {
     for (int i = 0; i < 3; i++) completeFlag(player, HollowDawnCampaign.threnody().get(i));
     KeeperVael keeper = new KeeperVael(new NpcContext(quests));
     assertRelicStage(keeper, player, HollowDawnCampaign.threnody().get(3));
+  }
+
+  @Test
+  void eitherChosenPathCanReachVaelWithoutCompletingTheOther() throws Exception {
+    for (String choice : new String[] {"moonwake", "emberglass"}) {
+      Player player = new Player();
+      player.setLevel(400);
+      completeFlag(player, FadingVeilReckoning.definition());
+      ChroniclerMaelin maelin = new ChroniclerMaelin(new NpcContext(quests));
+      say(maelin, player, choice);
+      var path = HollowDawnCampaign.selectedPath(player);
+      assertEquals(2, path.size());
+      say(maelin, player, choice.equals("moonwake") ? "emberglass" : "moonwake");
+      assertEquals(path.stream().map(QuestDef::getId).toList(),
+          HollowDawnCampaign.selectedPath(player).stream().map(QuestDef::getId).toList());
+      for (QuestDef stage : path) {
+        if (stage != path.getFirst()) hearClue(player, choice);
+        say(maelin, player, "accept");
+        for (int i = 0; i < stage.getRequiredKills(); i++) {
+          quests.recordKill(player, stage.getTargetMonster(), 0,
+              stage.getAreaCenterX(), stage.getAreaCenterY());
+        }
+        if (stage.getRequiredItemKey() != null) player.getInventory().add(stage.getRequiredItemKey());
+        say(maelin, player, "report");
+        assertEquals(QuestService.STATUS_COMPLETED, QuestService.statusFor(player, stage));
+      }
+      assertTrue(has(player, "Threnody Reach"));
+      for (QuestDef other : HollowDawnCampaign.avalon()) {
+        if (path.stream().noneMatch(q -> q.getId().equals(other.getId())))
+          assertEquals(0, QuestService.statusFor(player, other));
+      }
+      KeeperVael keeper = new KeeperVael(new NpcContext(quests));
+      say(keeper, player, "accept");
+      assertEquals(QuestService.STATUS_ACTIVE,
+          QuestService.statusFor(player, HollowDawnCampaign.threnody().getFirst()));
+    }
+  }
+
+  @Test
+  void oldLinearSavesContinueActiveWorkAndRecoverTheEarlierBellPassage() throws Exception {
+    Player player = new Player();
+    completeFlag(player, HollowDawnCampaign.avalon().get(1));
+    QuestDef oldActive = HollowDawnCampaign.avalon().get(2);
+    player.setQuestFlag(QuestService.statusFlag(oldActive), QuestService.STATUS_ACTIVE);
+    ChroniclerMaelin maelin = new ChroniclerMaelin(new NpcContext(quests));
+    maelin.publicBehavior().onConversationStart(new NpcBehaviorContext(maelin, player));
+    assertTrue(has(player, "Threnody Reach"));
+    say(maelin, player, "accept");
+    assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, oldActive));
+    assertEquals(oldActive.getId(), HollowDawnCampaign.selectedPath(player).getFirst().getId());
+    assertEquals(0, QuestService.statusFor(player, HollowDawnCampaign.avalon().getFirst()));
+  }
+
+  @Test
+  void legacyActiveThrenodyQuestDoesNotRequireNewPrerequisiteFlags() throws Exception {
+    Player player = new Player();
+    QuestDef active = HollowDawnCampaign.threnody().get(2);
+    player.setQuestFlag(QuestService.statusFlag(active), QuestService.STATUS_ACTIVE);
+    KeeperVael keeper = new KeeperVael(new NpcContext(quests));
+    say(keeper, player, "accept");
+    assertEquals(0, QuestService.statusFor(player, HollowDawnCampaign.threnody().getFirst()));
+    assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, active));
+  }
+
+  private static void hearClue(Player player, String branch) throws Exception {
+    CampaignWitnessNpc witness = branch.equals("moonwake")
+        ? new MoonwakeWitnessIlyra(new NpcContext(null))
+        : new EmberglassWarderSoren(new NpcContext(null));
+    assertTrue(witness.publicBehavior().onKeyword(new NpcBehaviorContext(witness, player), "clue"));
   }
 
   private void assertRelicStage(CampaignQuestNpc npc, Player player, QuestDef stage) {

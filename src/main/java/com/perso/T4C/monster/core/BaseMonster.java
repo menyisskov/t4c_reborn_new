@@ -1254,6 +1254,14 @@ public abstract class BaseMonster implements Nameable {
     return (int) (position.y / GRID_H);
   }
 
+  public int getSpawnTileX() {
+    return (int) (initialPosition.x / GRID_W);
+  }
+
+  public int getSpawnTileY() {
+    return (int) (initialPosition.y / GRID_H);
+  }
+
   public boolean shouldRespawn() {
     if (!respawnEnabled || !isDead) return false;
     if (!animations.isDeadComplete()) return false;

@@ -1,0 +1,5 @@
+{
+  "key": "witness_light_staff", "name": "${item.witness_light_staff}", "bodyPart": "WEAPON", "appearanceEquippedPrimary": "PupLichStaff", "appearanceInventory": "64kInvLichStaff", "weight": 4, "dmgFormula": "1d60+85", "atkDelay": "1300",
+  "requirements": {"wisdom": 525}, "unique": true,
+  "boosts": [{"boostId":38117,"statId":4,"expression":"44"},{"boostId":38118,"statId":23,"expression":"53"}]
+}

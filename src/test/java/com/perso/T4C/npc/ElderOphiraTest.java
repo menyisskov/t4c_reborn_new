@@ -44,6 +44,12 @@ class ElderOphiraTest {
   }
 
   @Test
+  void routeFollowsTheCurrentChapter() {
+    assertTrue(ElderOphira.routeText(WILDS).contains("northbound"));
+    assertTrue(ElderOphira.routeText(VEIL).contains("(4120,1560)"));
+  }
+
+  @Test
   void mustHearAnOfferAndExplicitlyAcceptAndCannotSkipToVeil() throws Exception {
     ElderOphira npc = npc();
     Player player = new Player();

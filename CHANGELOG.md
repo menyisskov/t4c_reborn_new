@@ -11,6 +11,17 @@ dates are the commit dates of the work, not retroactively invented. From now
 on, every content/feature pass adds its own entry here as part of the work
 (see `CLAUDE.md`), not after the fact.
 
+## 2026-09-29 - Witness Isles story and hunting (T4C-0107)
+
+### Added
+- The journey now begins with a Stoneheim harbormaster and continues through a choice between Moonwake witnesses and Emberglass warders. Each path has a living witness to find before confronting its lieutenant, then joins Keeper Vael's story in Threnody Reach.
+- Wider groups of ordinary monsters fill the Isles and Threnody hunting grounds, with faster return when players move between clearings.
+- Fifty-one elemental equipment pieces give high-level players robes, wings, armor, jewelry, and weapon options to hunt. Every new piece has a monster source and a resale value above one gold.
+
+### Changed
+- Avalon is now called the Witness Isles in player-facing text. Existing travel and quest progress remain available after rebirth.
+- Quest givers name the next keyword, NPC, and destination; they wait for the required deed and level before continuing.
+
 ## 2026-09-29 - The Hollow Dawn campaign (T4C-0106)
 
 ### Added
@@ -21,14 +32,14 @@ on, every content/feature pass adds its own entry here as part of the work
 ### Changed
 - Avalon enemies and quest rewards now fit the intended level 200-300 route. Caradoc's blade and Ysolde's circlet remain rare loot; their drops no longer block the first two Avalon quests.
 
-## 2026-09-29 — Avalon islands and landmarks (T4C-0105)
+## 2026-09-29 â€” Avalon islands and landmarks (T4C-0105)
 
 ### Added
 - Two new islands extend Avalon to the north and south, with walkable routes, a lagoon, a crater pool, landmark buildings, and clear areas for future adventures.
 - Crescent Pools, Oathstone Grove, and Sable Fen give the mainland distinct places to explore beyond the sanctuary and existing hunting regions.
 
 
-## 2026-09-29 — Map editor group selection (T4C-0104)
+## 2026-09-29 â€” Map editor group selection (T4C-0104)
 
 ### Added
 - Select several scenery objects with a dragged box, add more with Shift, and drag the selection together. Group moves preview their destination, keep terrain in place, and undo in one step.
@@ -36,13 +47,13 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
-## 2026-09-29 — Repeat sprites while dragging (T4C-0103)
+## 2026-09-29 â€” Repeat sprites while dragging (T4C-0103)
 
 ### Fixed
 - Selecting a sprite now defaults to continuous painting: hold and drag across the map to place multiple copies, including when dragging from the asset browser.
 - A click still places one copy, Stamp remains available for deliberate single placements, and whole templates still place once per drag.
 
-## 2026-09-29 — Map editor build workspace (T4C-0102)
+## 2026-09-29 â€” Map editor build workspace (T4C-0102)
 
 ### Added
 - A resizable asset browser with named previews, search, categories, materials, facing filters, grouped variants, favorites and recent selections.

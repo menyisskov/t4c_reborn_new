@@ -1,0 +1,5 @@
+{
+  "key": "witness_earth_wings", "name": "${item.witness_earth_wings}", "bodyPart": "BACK", "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal7", "appearanceInventory": "64kInvSeraphWhiteWings__pal7", "weight": 2, "armorClass": 36.0,
+  "requirements": {"endurance": 400, "wisdom": 475}, "unique": true,
+  "boosts": [{"boostId":38080,"statId":4,"expression":"40"},{"boostId":38081,"statId":19,"expression":"48"},{"boostId":38082,"statId":12,"expression":"19"},{"boostId":38083,"statId":13,"expression":"19"},{"boostId":38084,"statId":14,"expression":"19"},{"boostId":38085,"statId":15,"expression":"19"},{"boostId":38086,"statId":22,"expression":"19"}]
+}

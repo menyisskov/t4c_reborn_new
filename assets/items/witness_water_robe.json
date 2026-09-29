@@ -1,0 +1,5 @@
+{
+  "key": "witness_water_robe", "name": "${item.witness_water_robe}", "bodyPart": "BODY", "appearanceEquippedPrimary": "PupWhiteRobe__pal2", "appearanceInventory": "64kInvWhiteRobe__pal2", "weight": 5, "armorClass": 69.4,
+  "requirements": {"endurance": 280, "intelligence": 325}, "unique": true,
+  "boosts": [{"boostId":38023,"statId":1,"expression":"33"},{"boostId":38024,"statId":18,"expression":"33"},{"boostId":38025,"statId":12,"expression":"13"},{"boostId":38026,"statId":13,"expression":"13"},{"boostId":38027,"statId":14,"expression":"13"},{"boostId":38028,"statId":15,"expression":"13"},{"boostId":38029,"statId":22,"expression":"13"}]
+}

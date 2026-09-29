@@ -1,0 +1,5 @@
+{
+  "key": "witness_fire_wings", "name": "${item.witness_fire_wings}", "bodyPart": "BACK", "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal3", "appearanceInventory": "64kInvSeraphWhiteWings__pal3", "weight": 2, "armorClass": 14.4,
+  "requirements": {"endurance": 200, "intelligence": 240}, "unique": true,
+  "boosts": [{"boostId":38007,"statId":1,"expression":"24"},{"boostId":38008,"statId":17,"expression":"24"},{"boostId":38009,"statId":12,"expression":"10"},{"boostId":38010,"statId":13,"expression":"10"},{"boostId":38011,"statId":14,"expression":"10"},{"boostId":38012,"statId":15,"expression":"10"},{"boostId":38013,"statId":22,"expression":"10"}]
+}

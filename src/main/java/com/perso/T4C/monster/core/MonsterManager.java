@@ -26,12 +26,29 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MonsterManager {
   private static final int LOCAL_TYPE_CAP = 4;
+  private static final int HUNTING_TYPE_CAP = 8;
   private static final int DENSITY_RADIUS_TILES = 12;
   private static final long RESPAWN_MIN_MILLIS = 18_000L;
   private static final long RESPAWN_MAX_MILLIS = 30_000L;
+  private static final long HUNTING_RESPAWN_MIN_MILLIS = 8_000L;
+  private static final long HUNTING_RESPAWN_MAX_MILLIS = 12_000L;
+  private static final long HUNTING_REENTRY_RESPAWN_MILLIS = 5_000L;
+  private static final Set<String> HUNTING_TYPES =
+      Set.of(
+          "Fey Warden",
+          "Moonlit Stalker",
+          "Veilbound Wraith",
+          "Sundered Sentinel",
+          "Moonwake Revenant",
+          "Emberglass Ashguard",
+          "Ashbound Exile",
+          "Nullguard",
+          "Rift Wraith");
   private final List<BaseMonster> monsters = new ArrayList<>();
   private final List<BaseMonster> readonlyMonsters = Collections.unmodifiableList(monsters);
   private final List<PendingSpawn> pendingSpawns = new ArrayList<>();
+  private Set<BaseMonster> previouslyVisible = Collections.newSetFromMap(new IdentityHashMap<>());
+  private Set<BaseMonster> visibleNow = Collections.newSetFromMap(new IdentityHashMap<>());
   private final ShaderProgram outlineShader;
   private DamageCallback playerDamageCallback;
   private java.util.function.Consumer<BaseMonster> deathCallback;
@@ -59,6 +76,8 @@ public class MonsterManager {
   public boolean despawnMonster(BaseMonster monster) {
     if (monster == null) return false;
     notifiedPlayerKills.remove(monster);
+    previouslyVisible.remove(monster);
+    visibleNow.remove(monster);
     return monsters.remove(monster);
   }
 
@@ -127,6 +146,7 @@ public class MonsterManager {
 
   public void addMonster(BaseMonster monster) {
     monsters.add(monster);
+    if (isHuntingMonster(monster)) scheduleNextRespawn(monster);
     monster.setScriptPlayer(scriptPlayer);
     if (playerDamageCallback != null) {
       monster.setDamageCallback(playerDamageCallback);
@@ -164,14 +184,19 @@ public class MonsterManager {
   public void updateVisible(
       float delta, Vector2 playerPosition, int startX, int endX, int startY, int endY, int margin) {
     spawnPendingInView(startX, endX, startY, endY, margin);
+    visibleNow.clear();
     for (BaseMonster monster : monsters) {
-      int tileX = monster.getTileX();
-      int tileY = monster.getTileY();
+      int tileX = monster.isDead() ? monster.getSpawnTileX() : monster.getTileX();
+      int tileY = monster.isDead() ? monster.getSpawnTileY() : monster.getTileY();
       if (tileX < startX - margin
           || tileX > endX + margin
           || tileY < startY - margin
           || tileY > endY + margin) {
         continue;
+      }
+      visibleNow.add(monster);
+      if (!previouslyVisible.contains(monster) && monster.isDead() && isHuntingMonster(monster)) {
+        monster.setRespawnDelayMillis(HUNTING_REENTRY_RESPAWN_MILLIS);
       }
       monster.update(delta, playerPosition, monsters);
       if (monster.shouldRespawn() && canRespawn(monster)) {
@@ -180,23 +205,32 @@ public class MonsterManager {
         scheduleNextRespawn(monster);
       }
     }
+    Set<BaseMonster> lastFrame = previouslyVisible;
+    previouslyVisible = visibleNow;
+    visibleNow = lastFrame;
     monsters.removeIf(BaseMonster::shouldRemoveAfterDeath);
   }
 
   private boolean canRespawn(BaseMonster monster) {
     int nearby = 0;
-    int x = monster.getTileX(), y = monster.getTileY();
+    int x = monster.getSpawnTileX(), y = monster.getSpawnTileY();
     for (BaseMonster candidate : monsters) {
-      if (candidate.isDead || !monster.getName().equalsIgnoreCase(candidate.getName())) continue;
-      if (Math.max(Math.abs(candidate.getTileX() - x), Math.abs(candidate.getTileY() - y))
+      if (candidate.isDead
+          || !monster.getCanonicalName().equalsIgnoreCase(candidate.getCanonicalName())) continue;
+      if (Math.max(Math.abs(candidate.getSpawnTileX() - x), Math.abs(candidate.getSpawnTileY() - y))
           <= DENSITY_RADIUS_TILES) nearby++;
     }
-    return nearby < LOCAL_TYPE_CAP;
+    return nearby < (isHuntingMonster(monster) ? HUNTING_TYPE_CAP : LOCAL_TYPE_CAP);
+  }
+
+  private static boolean isHuntingMonster(BaseMonster monster) {
+    return HUNTING_TYPES.contains(monster.getCanonicalName());
   }
 
   private void scheduleNextRespawn(BaseMonster monster) {
-    monster.setRespawnDelayMillis(
-        ThreadLocalRandom.current().nextLong(RESPAWN_MIN_MILLIS, RESPAWN_MAX_MILLIS + 1));
+    long min = isHuntingMonster(monster) ? HUNTING_RESPAWN_MIN_MILLIS : RESPAWN_MIN_MILLIS;
+    long max = isHuntingMonster(monster) ? HUNTING_RESPAWN_MAX_MILLIS : RESPAWN_MAX_MILLIS;
+    monster.setRespawnDelayMillis(ThreadLocalRandom.current().nextLong(min, max + 1));
   }
 
   private void spawnPendingInView(int startX, int endX, int startY, int endY, int margin) {
@@ -457,6 +491,8 @@ public class MonsterManager {
   public void clear() {
     monsters.clear();
     pendingSpawns.clear();
+    previouslyVisible.clear();
+    visibleNow.clear();
     notifiedSpawns.clear();
     notifiedPlayerKills.clear();
     log.info("Cleared all monsters");

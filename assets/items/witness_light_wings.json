@@ -1,0 +1,5 @@
+{
+  "key": "witness_light_wings", "name": "${item.witness_light_wings}", "bodyPart": "BACK", "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal4", "appearanceInventory": "64kInvSeraphWhiteWings__pal4", "weight": 2, "armorClass": 43.2,
+  "requirements": {"endurance": 480, "wisdom": 525}, "unique": true,
+  "boosts": [{"boostId":38103,"statId":4,"expression":"44"},{"boostId":38104,"statId":23,"expression":"53"},{"boostId":38105,"statId":12,"expression":"21"},{"boostId":38106,"statId":13,"expression":"21"},{"boostId":38107,"statId":14,"expression":"21"},{"boostId":38108,"statId":15,"expression":"21"},{"boostId":38109,"statId":22,"expression":"21"}]
+}

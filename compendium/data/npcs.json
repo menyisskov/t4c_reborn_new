@@ -10,14 +10,14 @@
         "worldZ": 0
       }
     ],
-    "welcomeText": "Avalon doesn't forget who's proven themselves to it. Neither do I.",
+    "welcomeText": "The Witness Isles remember those who have proven themselves. So do I. Ask about the \"rite\" if you wish to be reborn.",
     "topics": [
       {
         "keywords": [
           "rite",
           "waking"
         ],
-        "response": "Avalon's pact is stirring again - I can feel it. It doesn't forgive the reckless, only the proven. Stand against enough of the Fey Wardens still testing themselves against it, and come back once you've held your own at full strength - then we'll talk about what waking rite Avalon still remembers.",
+        "response": "The Witness Isles' pact is stirring. Stand against the Fey Wardens that still test it, then return at full strength. Ask about the \"rite\" again when you are ready.",
         "actions": [
           "GIVE_QUEST:the_waking_rite"
         ]
@@ -27,14 +27,14 @@
           "ready",
           "reborn"
         ],
-        "response": "Once Avalon's satisfied you're proven, ask me when you're ready to be reborn - you won't need to go looking for the Oracle again.",
+        "response": "Once the Witness Isles have seen your proof, ask me for \"rebirth\". You need not return to the Oracle.",
         "actions": []
       },
       {
         "keywords": [
           "rowan"
         ],
-        "response": "I used to think the Oracle's trial was the only door left standing. Turns out Avalon kept one of its own, quieter than the Oracle's ever was.",
+        "response": "I thought the Oracle's trial was the only door left. The Witness Isles kept another. Ask about the \"rite\".",
         "actions": []
       }
     ],
@@ -61,7 +61,7 @@
         "worldZ": 0
       }
     ],
-    "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the high arts here and nowhere else on this coast. Name a school - fire, water, earth, air, dark or light - and I'll show you what it holds.",
+    "welcomeText": "Archmage Thalindra. The Witness Isles sit on old ley lines. Name a school - fire, water, earth, air, dark or light - and I will show you what it holds.",
     "topics": [
       {
         "keywords": [
@@ -184,34 +184,76 @@
         "worldZ": 0
       }
     ],
-    "welcomeText": "I keep the names Avalon tried to forget. Ophira's Veil was only the first wound. Ask me for the story when you are ready to follow it.",
+    "welcomeText": "Ophira has exposed the wound in the Witness Isles. I can guide you through two accounts of its cause. Ask \"witnesses\", \"warders\", or \"hierarchy\" to learn more.",
     "topics": [
       {
         "keywords": [
           "story"
         ],
-        "response": "Ask me for the story.",
+        "response": "Ask me for the \"story\".",
         "actions": []
       },
       {
         "keywords": [
           "accept"
         ],
-        "response": "Say accept when you are ready.",
+        "response": "Say \"accept\" when you are ready.",
         "actions": []
       },
       {
         "keywords": [
           "report"
         ],
-        "response": "Say report when the deed is done.",
+        "response": "Say \"report\" when the deed is done.",
         "actions": []
       },
       {
         "keywords": [
           "route"
         ],
-        "response": "Say route for the marked location.",
+        "response": "Say \"route\" for the marked location.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "witnesses"
+        ],
+        "response": "Ask about \"witnesses\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "warders"
+        ],
+        "response": "Ask about \"warders\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "moonwake"
+        ],
+        "response": "Say \"moonwake\" to choose this account.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "emberglass"
+        ],
+        "response": "Say \"emberglass\" to choose this account.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "hierarchy"
+        ],
+        "response": "Ask about \"hierarchy\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "threnody"
+        ],
+        "response": "Ask about \"threnody\".",
         "actions": []
       }
     ],
@@ -296,14 +338,14 @@
         "worldZ": 0
       }
     ],
-    "welcomeText": "Welcome to Avalon Sanctuary. I am Elder Ophira. Our loyal fey hold the northern Wilds while corruption spreads from the Veil. Ask about the wilds to learn how you can help.",
+    "welcomeText": "Welcome to Witness Isles Sanctuary. I am Elder Ophira. Our loyal fey hold the northern wilds while corruption spreads from the Veil. Ask about the \"wilds\" to learn how you can help.",
     "topics": [
       {
         "keywords": [
           "wilds",
           "avalon wilds"
         ],
-        "response": "The Avalon Wilds lie north of the sanctuary. Moonlit Stalkers hunt in two clearings along our northern route. The fey still honor our pact; protect them from those predators. Ask about the route if you need directions.",
+        "response": "The Witness Wilds lie north of the sanctuary. Moonlit Stalkers hunt in two clearings along the route. The fey still honor our pact; protect them. Ask \"route\" for directions.",
         "actions": []
       },
       {
@@ -418,6 +460,46 @@
       "attackSkill": 250,
       "dodge": 65535,
       "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "EmberglassWarderSoren",
+    "origin": "new",
+    "displayName": "Soren, Emberglass Warder",
+    "spawns": [
+      {
+        "x": 4280,
+        "y": 2620,
+        "worldZ": 0
+      }
+    ],
+    "welcomeText": "I am Soren, the last warder who refused the Marshal's new oath. Ask \"testimony\" about our betrayal, then \"clue\" about his chart.",
+    "topics": [
+      {
+        "keywords": [
+          "testimony"
+        ],
+        "response": "We swore to guard a prison, not worship its prisoner. The Marshal sold our names to the Dusk Regent, Rhunor's half-god, and received a chart that crosses forgotten water. You have broken his patrols; now I can expose his bargain. Ask \"clue\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "clue"
+        ],
+        "response": "The Marshal carries the chart under his broken command seal. Defeat him at (4360,2630); the seal will release the route to Threnody. His oath answers to the Regent, not the bell. Return to Maelin at (4050,1480) and say \"accept\", then \"route\" for her instructions.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 1,
+      "maxHp": 1,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 0,
+      "attackSkill": 1,
+      "dodge": 1,
+      "damageFormula": "1d3"
     }
   },
   {
@@ -556,42 +638,69 @@
     "displayName": "Harbormaster Rangor",
     "spawns": [
       {
-        "x": 1519,
-        "y": 1217,
+        "x": 180,
+        "y": 740,
         "worldZ": 0
       }
     ],
-    "welcomeText": "Welcome to what's left of the dock. Nobody sails from here anymore - not since the reavers took the shore and Ithrak took their coin.",
+    "welcomeText": "Stonecrest's quay remembers every ship that failed to return. Ask me about the \"isles\" beyond the shoal, or why I still keep this dock.",
     "topics": [
       {
         "keywords": [
-          "avalon",
-          "passage"
+          "isles",
+          "passage",
+          "avalon"
         ],
-        "response": "Coastwarden Ithrak runs the reavers squatting on the shore south of here, and he's the only one left who knows the safe line through the shoal to Avalon. Prove you can handle his scouts first, and then we'll talk about taking his chart off his corpse - I'll see you're recognized as someone Avalon can trust.",
-        "actions": [
-          "GIVE_QUEST:tideworn_shore_scouts"
-        ]
+        "response": "East of Stonecrest, Ithrak's Tideworn Reavers hold the only safe crossing to the Witness Isles. The last sailors who tried it lost more than their way: their families forgot their names. Ask about the \"scouts\" to prove you can face his warband, or ask \"route\" for directions.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "scouts"
+        ],
+        "response": "Ask about the scouts to begin the first test.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "chart"
+        ],
+        "response": "Ask about Ithrak's chart after the scouts.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "report"
+        ],
+        "response": "Return to me and report what happened.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "route"
+        ],
+        "response": "Leave Stonecrest by the eastern road. The reavers gather near (420,730), and Ithrak keeps his command near (455,745). Bring his chart back to me. Say \"scouts\" to begin, then \"report\" when the first deed is done.",
+        "actions": []
       },
       {
         "keywords": [
           "ithrak"
         ],
-        "response": "Ithrak used to be a knight, they say, before he decided guarding a smuggling route paid better than guarding anything worth guarding.",
+        "response": "Ithrak was once a sworn coastwarden. Now he sells the crossing and keeps its \"chart\" for himself. Ask about the chart after you have faced his scouts.",
         "actions": []
       },
       {
         "keywords": [
           "crossing"
         ],
-        "response": "Avalon's out there, past the shoal. Nobody's crossed it on their own in years - not without that chart, or without knowing the tide by heart the way Ithrak did.",
+        "response": "The crossing is yours once the reavers are driven back and Ithrak's chart is returned. Use Locations to travel to Witness Isles Sanctuary, then ask Elder Ophira about the \"wilds\". Your passage remains open after rebirth.",
         "actions": []
       },
       {
         "keywords": [
           "reavers"
         ],
-        "response": "Watch the tideline past the dock. The reavers don't wait for you to see them first.",
+        "response": "The reavers patrol Stoneheim's road east of Stonecrest. Ask for the \"route\", then return and \"report\" each deed.",
         "actions": []
       },
       {
@@ -599,7 +708,7 @@
           "why",
           "son"
         ],
-        "response": "My boy tried the crossing years back, chart or no chart. The tide took him before the reavers ever did. I don't sail anymore. I just make sure nobody else goes in as blind as he did.",
+        "response": "My son crossed without a chart. The tide took him, and for one night even I forgot his name. The old \"pact\" beyond the shoal is failing; I will not send another traveler blind.",
         "actions": []
       },
       {
@@ -607,7 +716,7 @@
           "fey",
           "pact"
         ],
-        "response": "The fey pact's older than this dock, older than Ithrak's smuggling. Sailors used to say it was fraying even before the reavers came. I don't know what's true and what's dockside talk - only that fewer of us who cross ever come back to say.",
+        "response": "The pact once kept the Witness Isles and Stoneheim from sharing the same wound. Its warders left us this road. Ask about the \"scouts\" if you mean to follow them.",
         "actions": []
       }
     ],
@@ -719,34 +828,76 @@
         "worldZ": 0
       }
     ],
-    "welcomeText": "I have stood watch at Threnody Reach since the last ward bell fell silent. Maelin sent you because you carry the memory of the oath. Ask me for the story.",
+    "welcomeText": "Maelin has sent another keeper of the oath. Whether you recovered the first bell or the betrayer's chart, the road ends here at Threnody Reach. Ask \"story\", or \"hierarchy\" to learn more.",
     "topics": [
       {
         "keywords": [
           "story"
         ],
-        "response": "Ask me for the story.",
+        "response": "Ask me for the \"story\".",
         "actions": []
       },
       {
         "keywords": [
           "accept"
         ],
-        "response": "Say accept when you are ready.",
+        "response": "Say \"accept\" when you are ready.",
         "actions": []
       },
       {
         "keywords": [
           "report"
         ],
-        "response": "Say report when the deed is done.",
+        "response": "Say \"report\" when the deed is done.",
         "actions": []
       },
       {
         "keywords": [
           "route"
         ],
-        "response": "Say route for the marked location.",
+        "response": "Say \"route\" for the marked location.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "witnesses"
+        ],
+        "response": "Ask about \"witnesses\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "warders"
+        ],
+        "response": "Ask about \"warders\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "moonwake"
+        ],
+        "response": "Say \"moonwake\" to choose this account.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "emberglass"
+        ],
+        "response": "Say \"emberglass\" to choose this account.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "hierarchy"
+        ],
+        "response": "Ask about \"hierarchy\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "threnody"
+        ],
+        "response": "Ask about \"threnody\".",
         "actions": []
       }
     ],
@@ -839,7 +990,7 @@
           "mirror",
           "glass"
         ],
-        "response": "This mirror has hung in the Colosseum longer than the Colosseum has had a name. When the Oracle - or Avalon - remakes you, the life you shed doesn't simply vanish. Its echo settles here. Say echo, and yours will step out of the glass: your face, your gear, your spells, your strength. Win, and the mirror rewards you. Fall, and it takes nothing - it only wants to be seen.",
+        "response": "This mirror has hung in the Colosseum longer than the Colosseum has had a name. When the Oracle - or the Witness Isles - remakes you, the life you shed doesn't simply vanish. Its echo settles here. Say echo, and yours will step out of the glass: your face, your gear, your spells, your strength. Win, and the mirror rewards you. Fall, and it takes nothing - it only wants to be seen.",
         "actions": []
       },
       {
@@ -893,6 +1044,46 @@
       "attackSkill": 250,
       "dodge": 65535,
       "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "MoonwakeWitnessIlyra",
+    "origin": "new",
+    "displayName": "Ilyra, Moonwake Witness",
+    "spawns": [
+      {
+        "x": 3930,
+        "y": 830,
+        "worldZ": 0
+      }
+    ],
+    "welcomeText": "I am Ilyra. The sea took my family's voices, but it has not taken their names. Ask \"testimony\" about the bell, then \"clue\" about its keeper.",
+    "topics": [
+      {
+        "keywords": [
+          "testimony"
+        ],
+        "response": "My sister rang the first bell while the warders bound Rhunor. The Pale Cantor stole her last note and made the drowned sing it forever. Now that you have freed their names, I can remember the bell's flaw. Ask \"clue\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "clue"
+        ],
+        "response": "The Cantor hid the original note inside her Bell Shard. Defeat her at (4050,675) and recover it; the shard remembers Threnody even when every chart forgets. I entrust this memory to you. Return to Maelin at (4050,1480) and say \"accept\", then \"route\" for her instructions.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 1,
+      "maxHp": 1,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 0,
+      "attackSkill": 1,
+      "dodge": 1,
+      "damageFormula": "1d3"
     }
   },
   {
@@ -1876,21 +2067,21 @@
         "worldZ": 0
       }
     ],
-    "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of Avalon before you leave - you'll thank me the first time you need to get back here in a hurry.",
+    "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of the Witness Isles before you leave - you'll thank me the first time you need to get back here in a hurry.",
     "topics": [
       {
         "keywords": [
           "travel",
           "scroll"
         ],
-        "response": "The Scroll of Avalon carries you straight to the Sanctuary temple, no matter how far you've wandered. Cheap insurance, if you ask me.",
+        "response": "The Scroll of the Witness Isles carries you straight to the Sanctuary temple, no matter how far you've wandered. Cheap insurance, if you ask me.",
         "actions": []
       },
       {
         "keywords": [
           "gateway"
         ],
-        "response": "The Avalon Gateway is the spell woven into that scroll. Ask Archmage Thalindra if you'd rather learn to cast it yourself.",
+        "response": "The Witness Isles Gateway is the spell woven into that scroll. Ask Archmage Thalindra if you'd rather learn to cast it yourself.",
         "actions": []
       },
       {

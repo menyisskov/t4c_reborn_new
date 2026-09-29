@@ -171,6 +171,11 @@ public final class ElderOphira extends ScriptedNpc {
           }
           return true;
         }
+        if (matches(SPEC.topics().get(8), keyword)) {
+          QuestDef route = selectedQuest == null ? currentQuest(player) : selectedQuest;
+          context.say(routeText(route));
+          return true;
+        }
         for (int topic = 0; topic <= 1; topic++) {
           if (!matches(SPEC.topics().get(topic), keyword)) continue;
           if (topic == 1 && !canDiscussVeil(player)) {
@@ -209,6 +214,13 @@ public final class ElderOphira extends ScriptedNpc {
     // A saved character who already accepted the old independent Veil quest can still finish it.
     return QuestService.statusFor(player, WILDS) == QuestService.STATUS_COMPLETED
         || QuestService.statusFor(player, VEIL) != QuestService.STATUS_NOT_STARTED;
+  }
+
+  static String routeText(QuestDef quest) {
+    return I18n.resolve(
+        quest != null && VEIL.getId().equals(quest.getId())
+            ? "${npc.elderophira.veil_route}"
+            : SPEC.topics().get(8).response());
   }
 
   private static QuestDef currentQuest(Player player) {

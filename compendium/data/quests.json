@@ -229,47 +229,47 @@
   },
   {
     "id": "tideworn_shore_scouts",
-    "title": "Tideworn Shore Scouts",
+    "title": "Stoneheim Shore Scouts",
     "giverNpc": "HarbormasterRangor",
     "targetMonster": "Tideworn Reaver",
     "requiredKills": 8,
     "targetWorldZ": 0,
-    "areaCenterX": 1550,
-    "areaCenterY": 1300,
-    "areaRadiusTiles": 110,
+    "areaCenterX": 420,
+    "areaCenterY": 730,
+    "areaRadiusTiles": 130,
     "rewardGold": 40000,
-    "rewardXp": 20000000,
+    "rewardXp": 3000000,
     "requiredItemQty": 0,
-    "minLevel": 0,
-    "offerText": "The reavers thin out fast if you know where to hit them, but I need to see you can actually do it before I put you anywhere near Ithrak himself. Clear enough of them off the tideline and come back - then we'll talk about the chart.",
-    "completionText": "You've got the stomach for this after all. Ithrak's warband won't fold as easy, but you've earned the right to try. Ask me about the crossing again when you're ready for the rest of them - and for him.",
-    "completedText": "You already proved yourself against the scouts. It's Ithrak's turn now, if you haven't finished that already.",
-    "walkthroughText": "Harbormaster Rangor is not sending a stranger at Coastwarden Ithrak's entire warband on trust. Kill a handful of Tideworn Reavers on the marked stretch of beach - the same stretch the full crossing quest uses - and he will take you seriously. There is no item at the end of this one, just pay and Rangor's attention: finishing it is what makes him offer Passage to Avalon at all. Ask him about the crossing again once you are done."
+    "minLevel": 200,
+    "offerText": "Rhunor's servants have not reached Stonecrest yet, but Ithrak's reavers keep the road to the crossing closed. Defeat eight Tideworn Reavers east of town. Return at level 200 or higher and say \"report\"; ask \"route\" for their position.",
+    "completionText": "You held the road. Ithrak knows it, and his warband is gathering. Ask about the \"chart\" to take the next step.",
+    "completedText": "The scouts are beaten. Ask about the \"chart\" to confront Ithrak.",
+    "walkthroughText": "On Stoneheim, speak to Harbormaster Rangor on Stonecrest's quay (180,740). Ask \"isles\", then \"scouts\". Defeat eight Tideworn Reavers near (420,730) and \"report\" at level 200 or higher. Ask \"chart\" for the next step."
   },
   {
     "id": "passage_to_avalon",
-    "title": "Passage to Avalon",
+    "title": "Passage to the Witness Isles",
     "giverNpc": "HarbormasterRangor",
     "targetMonster": "Tideworn Reaver",
     "requiredKills": 25,
     "targetWorldZ": 0,
-    "areaCenterX": 1550,
-    "areaCenterY": 1300,
-    "areaRadiusTiles": 110,
-    "rewardGold": 400000,
-    "rewardXp": 200000000,
+    "areaCenterX": 420,
+    "areaCenterY": 730,
+    "areaRadiusTiles": 130,
+    "rewardGold": 100000,
+    "rewardXp": 12000000,
     "requiredItemKey": "item.tideworn_avalon_chart",
     "requiredItemQty": 1,
-    "minLevel": 0,
+    "minLevel": 200,
     "unlockZoneId": "avalon_sanctuary",
-    "offerText": "The scouts were the easy part. Ithrak keeps the rest of his warband close, and he's the only one left who knows the safe line through the shoal. My boy went out there once without a chart of his own. Clear the warband, then take Ithrak's chart before it goes down with him - I won't watch another one go in blind.",
-    "completionText": "The warband's scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive. It's more than my boy ever had.",
-    "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross. Whatever's waiting on the other side, it's more than this dock's seen in years.",
-    "walkthroughText": "Once you have proved yourself on the shore scouts, ask Rangor about the crossing again and he offers the real thing. Kill Tideworn Reavers on the same beach, a great many more of them this time, and take Ithrak's Chart off Coastwarden Ithrak - the chart is what actually gets you onto the island, so Ithrak has to fall. Hand both to Rangor and the crossing to Avalon Sanctuary opens. There is no other way in."
+    "offerText": "The scouts were the easy part. Defeat 25 reavers on Stoneheim's eastern road and confront Ithrak near (455,745). His chart is guaranteed proof of the safe crossing. Bring it back and say \"report\" at level 200 or higher; ask \"route\" if you need directions.",
+    "completionText": "Ithrak's chart has shown us the safe line through the shoal. Witness Isles Sanctuary is now in Locations, and this passage will remain yours after rebirth. Once there, ask Elder Ophira about the \"wilds\".",
+    "completedText": "Your passage to the Witness Isles is permanent. Use Locations to return, then ask Ophira about the \"wilds\".",
+    "walkthroughText": "After Rangor's scouts task, say \"chart\". Defeat 25 Tideworn Reavers around (420,730), then Coastwarden Ithrak near (455,745). His chart drops every time. Return to Rangor and say \"report\" at level 200 or higher. Witness Isles Sanctuary becomes a permanent Locations destination, including after rebirth. Speak with Elder Ophira there about the \"wilds\"."
   },
   {
     "id": "avalon_wilds_vigil",
-    "title": "Avalon Wilds Vigil",
+    "title": "Witness Wilds Vigil",
     "giverNpc": "ElderOphira",
     "targetMonster": "Moonlit Stalker",
     "requiredKills": 20,
@@ -285,7 +285,7 @@
     "offerText": "Defeat 20 Moonlit Stalkers in the clearings north of the sanctuary, then report to me. Sir Caradoc's blade remains a rare treasure, but the vigil does not depend on finding it.",
     "completionText": "The Wilds breathe easier. The pact holds a little longer because of you.",
     "completedText": "The Wardens still speak well of you. The Wilds remain ours - for now.",
-    "walkthroughText": "Ask Elder Ophira about the wilds and accept her task. Defeat 20 Moonlit Stalkers within the marked Wilds objective area near (3965,1400). Report to her to unlock fast travel to the Avalon Wilds. Caradoc's Sundered Blade is optional loot."
+    "walkthroughText": "Ask Elder Ophira about the \"wilds\" and accept her task. Defeat 20 Moonlit Stalkers near (3965,1400), then \"report\" to unlock travel to the Witness Wilds. Caradoc's blade is optional loot."
   },
   {
     "id": "fading_veil_reckoning",
@@ -305,7 +305,7 @@
     "offerText": "The Veil is swallowing the names of those who cross it. Defeat 15 Veilbound Wraiths in the marked region, then report to me. Ysolde's circlet remains rare loot, not proof I require.",
     "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
     "completedText": "The blight hasn't forgotten what you did to it out there. Ysolde surely hasn't either.",
-    "walkthroughText": "Complete Avalon Wilds Vigil, ask Ophira about the veil, and accept. Defeat 15 Veilbound Wraiths near (4120,1560), then report to unlock the Fading Veil. Ysolde's Veiled Circlet is optional loot. Next speak with Chronicler Maelin at the sanctuary."
+    "walkthroughText": "Complete Witness Wilds Vigil, ask Ophira about the veil, and accept. Defeat 15 Veilbound Wraiths near (4120,1560), then report to unlock the Fading Veil. Ysolde's Veiled Circlet is optional loot. Next speak with Chronicler Maelin at the sanctuary."
   },
   {
     "id": "forge_the_godcore",
@@ -457,7 +457,7 @@
     "offerText": "This one's closer to my own heart than the rest. Bring me a core and a sigil, and I'll set what's left of the pact itself into a torc worth wearing.",
     "completionText": "There. Something of the old pact, worn instead of buried in the ground it was meant to protect. Wear it well - it's the closest thing to the original working any of us have managed in a very long time.",
     "completedText": "You're already wearing the Godsforged Torc of the First Pact. There's no more of that particular working left to give.",
-    "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Torc of the First Pact, the wisdom caster's piece. Both components are consumed and the torc is yours. Of everything the Forgewrights make, the Torc comes closest to repairing Avalon's fraying fey pact rather than simply borrowing its strength - which is either reassuring or alarming, depending on who you ask."
+    "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Torc of the First Pact, the wisdom caster's piece. Both components are consumed and the torc is yours. Of everything the Forgewrights make, the Torc comes closest to repairing the Witness Isles' fraying fey pact rather than simply borrowing its strength - which is either reassuring or alarming, depending on who you ask."
   },
   {
     "id": "the_waking_rite",
@@ -473,10 +473,10 @@
     "rewardXp": 5000000,
     "requiredItemQty": 0,
     "minLevel": 125,
-    "offerText": "Avalon's pact is stirring again - I can feel it. It doesn't forgive the reckless, only the proven. Clear enough of the Fey Wardens still testing themselves against it, and come back once you've held your own at full strength - then we'll talk about what waking rite Avalon still remembers.",
-    "completionText": "You've held your ground, and Avalon's noticed. That's not nothing - it's the same proof the old trials used to demand, just asked a different way. Come find me whenever you're ready to be reborn; you won't need to go looking for the Oracle again.",
-    "completedText": "Avalon already knows what you're capable of. Just say the word when you're ready to be reborn.",
-    "walkthroughText": "Anchorite Rowan offers experienced characters a shortcut. Kill a handful of Fey Wardens in the same stretch of the Avalon Wilds that Ophira's vigil uses, then come back - though Rowan will not complete the rite for anyone below the level he names, so gather the kills whenever you like but expect to wait for the turn-in. Finishing it unlocks Rowan's own rebirth rite for good, so every future rebirth happens here instead of another trek down to the Oracle and back through her guardians."
+    "offerText": "The Witness Isles' pact is stirring. Clear enough Fey Wardens from the wilds and return at the required level. The rite will then be yours whenever you choose rebirth.",
+    "completionText": "You held your ground. The Witness Isles remember your proof. Ask Rowan for \"rebirth\" whenever you are ready; the rite remains available in future lives.",
+    "completedText": "The Witness Isles remember your proof. Ask Rowan for \"rebirth\" when ready.",
+    "walkthroughText": "Anchorite Rowan offers experienced characters a shortcut. Kill a handful of Fey Wardens in the same stretch of the Witness Wilds that Ophira's vigil uses, then come back - though Rowan will not complete the rite for anyone below the level he names, so gather the kills whenever you like but expect to wait for the turn-in. Finishing it unlocks Rowan's own rebirth rite for good, so every future rebirth happens here instead of another trek down to the Oracle and back through her guardians."
   },
   {
     "id": "renewed_wards",
@@ -507,13 +507,13 @@
     "areaCenterY": 750,
     "areaRadiusTiles": 100,
     "rewardGold": 1000000,
-    "rewardXp": 18000000,
+    "rewardXp": 30000000,
     "requiredItemQty": 0,
-    "minLevel": 220,
-    "offerText": "The people of Moonwake did not die first. Their names vanished from every record, and their friends forgot their faces. The revenants wandering the shoal are the memory left behind. Defeat 25 near Moonwake; their silence may reveal who taught them to feed.",
-    "completionText": "The revenants fall, and a name returns to my ledger: the Pale Cantor. She was once the keeper of the first ward bell.",
+    "minLevel": 240,
+    "offerText": "The people of Moonwake did not die first. Their names vanished from every record, and their friends forgot their faces. The revenants wandering the shoal are the memory left behind. Defeat 25 near Moonwake; their silence may reveal who taught them to feed. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "The names return, but only a living witness can interpret them. Find Ilyra south of Moonwake at (3930,830), ask \"testimony\", then \"clue\". Return to me and say \"accept\" to confront the Pale Cantor.",
     "completedText": "Moonwake's missing have names again.",
-    "walkthroughText": "From Avalon, follow the northern causeway to Moonwake Shoals. Defeat 25 Moonwake Revenants near (3930,750). Return to Maelin and report at level 220 or higher."
+    "walkthroughText": "From the Witness Isles camp, follow the northern causeway to Moonwake Shoals. Defeat 25 Moonwake Revenants near (3930,750). Return to Maelin and report at level 240 or higher; then ask \"story\"."
   },
   {
     "id": "pale_cantor",
@@ -526,14 +526,15 @@
     "areaCenterY": 675,
     "areaRadiusTiles": 70,
     "rewardGold": 1000000,
-    "rewardXp": 25000000,
+    "rewardXp": 40000000,
     "requiredItemKey": "item.moonwake_bell_shard",
     "requiredItemQty": 1,
-    "minLevel": 240,
-    "offerText": "The Pale Cantor cracked the bell that helped bind Rhunor, the god of the Hollow Dawn. Rhunor erases a person from memory before taking their life. Face the Cantor near Moonwake, recover her Bell Shard, and bring it to me.",
-    "completionText": "She called Rhunor's prison an oath, not a tomb. A second bell still burns on Emberglass Crown.",
-    "completedText": "The first bell is quiet again.",
-    "walkthroughText": "Defeat the Pale Cantor near (4050,675). She drops a Moonwake Bell Shard. Bring it to Maelin and report at level 240 or higher; the shard is consumed on turn-in."
+    "minLevel": 300,
+    "unlockZoneId": "threnody_reach",
+    "offerText": "The Pale Cantor cracked the bell that helped bind Rhunor, the god of the Hollow Dawn. Rhunor erases a person from memory before taking their life. Face the Cantor near Moonwake, recover her Bell Shard, and bring it to me. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "The shard remembers the prison's true name: Threnody Reach. I have marked it in Locations. Keeper Vael waits at its sheltered camp; ask him \"story\". The warders' lost chart tells the same road, but your witness is enough. Ask \"story\" for what follows.",
+    "completedText": "The first bell remembers. Your passage to Threnody Reach is open.",
+    "walkthroughText": "Defeat the Pale Cantor near (4050,675). Bring her guaranteed Moonwake Bell Shard to Maelin and report at level 300 or higher. The shard is consumed, and Threnody Reach opens in Locations. Visit Keeper Vael at (5505,1150) and ask \"story\"."
   },
   {
     "id": "emberglass_oath",
@@ -548,11 +549,11 @@
     "rewardGold": 1000000,
     "rewardXp": 30000000,
     "requiredItemQty": 0,
-    "minLevel": 260,
-    "offerText": "On Emberglass Crown, the old defenders still fight a war they no longer understand. The Ashguard have been ordered to keep the second bell hidden. Break their patrols; I will read the scorched oath they guard.",
-    "completionText": "The oath says the guardians were volunteers. One betrayed them: the Cinder Marshal, their commander, sold the bell's true name for power.",
+    "minLevel": 240,
+    "offerText": "On Emberglass Crown, the old defenders still fight a war they no longer understand. The Ashguard have been ordered to keep the second bell hidden. Break their patrols; I will read the scorched oath they guard. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "The patrols release a scorched oath. Soren, the surviving warder at (4280,2620), can explain its betrayal. Ask him \"testimony\", then \"clue\". Return to me and say \"accept\" to confront the Marshal.",
     "completedText": "The Ashguard's patrols are broken.",
-    "walkthroughText": "Travel south from Avalon to Emberglass Crown. Defeat 30 Emberglass Ashguards around (4360,2620), then report to Maelin at level 260 or higher."
+    "walkthroughText": "Travel south from the Witness Isles camp to Emberglass Crown. Defeat 30 Emberglass Ashguards around (4360,2620), then report to Maelin at level 240 or higher; then ask \"story\"."
   },
   {
     "id": "cinder_marshal",
@@ -569,10 +570,10 @@
     "requiredItemQty": 0,
     "minLevel": 300,
     "unlockZoneId": "threnody_reach",
-    "offerText": "The Cinder Marshal commands the ashbound host and carries the route to Threnody Reach, where Rhunor's last seal stands. Defeat him. I can open that destination for you once you have endured the trials of Avalon.",
-    "completionText": "The chart names Threnody Reach. I have marked it for travel. Keeper Vael waits at its sheltered camp; tell him the oath still has witnesses.",
+    "offerText": "The Cinder Marshal, lieutenant of the Dusk Regent, sold his warders' oath to Rhunor. He carries a chart to Threnody Reach, where the god's last seal stands. Defeat him and report to me; the chart will open the same road the witnesses seek through their bell. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "The chart names Threnody Reach. I have marked it for travel. Keeper Vael waits at its sheltered camp; tell him the oath still has witnesses. Ask \"story\" for what follows.",
     "completedText": "The route to Threnody Reach is already yours.",
-    "walkthroughText": "Defeat the Cinder Marshal near (4360,2630). Report to Maelin at level 300 or higher to unlock Threnody Reach in Locations."
+    "walkthroughText": "Defeat the Cinder Marshal near (4360,2630). Report to Maelin at level 300 or higher to unlock Threnody Reach in Locations. Say \"report\" when ready."
   },
   {
     "id": "ashbound_exiles",
@@ -588,10 +589,10 @@
     "rewardXp": 45000000,
     "requiredItemQty": 0,
     "minLevel": 315,
-    "offerText": "Threnody's exiles once built the wards. Rhunor stripped their memories until they served the enemy they had sworn to cage. Clear their march near the northern bell court, and I will tell you how the seal failed.",
-    "completionText": "One exile remembered a single word: 'hush'. A cantor in the court has been swallowing every warning before it can be spoken.",
+    "offerText": "Threnody's exiles once built the wards. Rhunor stripped their memories until they served the enemy they had sworn to cage. Clear their march near the northern bell court, and I will tell you how the seal failed. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "One exile remembered a single word: 'hush'. A cantor in the court has been swallowing every warning before it can be spoken. Ask \"story\" for what follows.",
     "completedText": "The northern march remains clear.",
-    "walkthroughText": "Defeat 35 Ashbound Exiles near (5690,1410). Return to Vael at level 315 or higher."
+    "walkthroughText": "Defeat 35 Ashbound Exiles near (5690,1410). Return to Vael at level 315 or higher. Say \"report\" when ready."
   },
   {
     "id": "hush_cantor",
@@ -607,10 +608,10 @@
     "rewardXp": 55000000,
     "requiredItemQty": 0,
     "minLevel": 340,
-    "offerText": "The Hush Cantor commands the northern court. She sings over the bell to silence every witness. Face her, then listen to what the court remembers when the song stops.",
-    "completionText": "The bell says Rhunor was never defeated by one champion. Mortal witnesses held his name together while the warders closed the gate. We will need those witnesses again.",
+    "offerText": "The Hush Cantor commands the northern court. She sings over the bell to silence every witness. Face her, then listen to what the court remembers when the song stops. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "The bell says Rhunor was never defeated by one champion. Mortal witnesses held his name together while the warders closed the gate. We will need those witnesses again. Ask \"story\" for what follows.",
     "completedText": "The warning can be heard again.",
-    "walkthroughText": "Defeat the Hush Cantor near (5750,1500). Report to Vael at level 340 or higher."
+    "walkthroughText": "Defeat the Hush Cantor near (5750,1500). Report to Vael at level 340 or higher. Say \"report\" when ready."
   },
   {
     "id": "nullguard_watch",
@@ -626,10 +627,10 @@
     "rewardXp": 65000000,
     "requiredItemQty": 0,
     "minLevel": 355,
-    "offerText": "At the middle court, the Nullguard wear the armor of the old warders. They are not the warders now. Break their watch so the living can carry the oath toward the southern gate.",
-    "completionText": "Their armor bears the seal of the Dusk Regent. He was the last mortal to remember Rhunor's true name, and he has chosen to forget it.",
+    "offerText": "At the middle court, the Nullguard wear the armor of the old warders. They are not the warders now. Break their watch so the living can carry the oath toward the southern gate. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "Their armor bears the seal of the Dusk Regent. He was the last mortal to remember Rhunor's true name, and he has chosen to forget it. Ask \"story\" for what follows.",
     "completedText": "The middle court is open.",
-    "walkthroughText": "Defeat 40 Nullguard near (5470,1760). Report to Vael at level 355 or higher."
+    "walkthroughText": "Defeat 40 Nullguard near (5470,1760). Report to Vael at level 355 or higher. Say \"report\" when ready."
   },
   {
     "id": "dusk_regent",
@@ -646,10 +647,10 @@
     "requiredItemKey": "item.last_witness_seal",
     "requiredItemQty": 1,
     "minLevel": 375,
-    "offerText": "The Dusk Regent guards the southern court. He surrendered his own memories to keep Rhunor from knowing the final ward. Defeat him and bring me his Last Witness Seal; it carries the warning he could no longer speak.",
-    "completionText": "The Regent falls lucid for one breath. He says the last ward is an island inside this island. The rift wraiths at the outer court are gnawing through its anchor.",
+    "offerText": "The Dusk Regent is Rhunor's demigod: a half-god made from a mortal warder and a shard of Rhunor, now sustained by every name his lieutenants erase. The Pale Cantor, Cinder Marshal and Hush Cantor answer to him. Defeat the Regent and bring me his Last Witness Seal, so we can reach the anchors feeding his master. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "The Regent falls lucid for one breath. He says the last ward is an island inside this island. The rift wraiths at the outer court are gnawing through its anchor. Ask \"story\" for what follows.",
     "completedText": "The Regent's warning has been heard.",
-    "walkthroughText": "Defeat the Dusk Regent near (5860,2040). He drops the Last Witness Seal. Bring it to Vael and report at level 375 or higher; the seal is consumed on turn-in."
+    "walkthroughText": "Defeat the Dusk Regent near (5860,2040). He drops the Last Witness Seal. Bring it to Vael and report at level 375 or higher; the seal is consumed on turn-in. Say \"report\" when ready."
   },
   {
     "id": "rift_unbinding",
@@ -666,10 +667,10 @@
     "requiredItemQty": 0,
     "minLevel": 390,
     "unlockZoneId": "hollow_dawn",
-    "offerText": "Rift wraiths are feeding on the anchor that surrounds Rhunor's prison. Destroy enough of them to steady the crossing. I will reveal the inner court only when the ward can bear your weight.",
-    "completionText": "The anchor holds. The Hollow Dawn is now marked in Locations; travel inside the water ring. Remember every name the bells returned.",
+    "offerText": "Rift wraiths are feeding on the anchor that surrounds Rhunor's prison. Destroy enough of them to steady the crossing. I will reveal the inner court only when the ward can bear your weight. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "The anchor holds. The Hollow Dawn is now marked in Locations; travel inside the water ring. Remember every name the bells returned. Ask \"story\" for what follows.",
     "completedText": "The inner court remains open.",
-    "walkthroughText": "Defeat 45 Rift Wraiths near (5630,2100). Report to Vael at level 390 or higher to unlock The Hollow Dawn in Locations."
+    "walkthroughText": "Defeat 45 Rift Wraiths near (5630,2100). Report to Vael at level 390 or higher to unlock The Hollow Dawn in Locations. Say \"report\" when ready."
   },
   {
     "id": "rhunor_hollow_dawn",
@@ -685,9 +686,9 @@
     "rewardXp": 100000000,
     "requiredItemQty": 0,
     "minLevel": 400,
-    "offerText": "Rhunor wakes beneath the final bell. He was an ancient god who learned to rule by erasing memory itself. The warders could only bind him while mortals remembered one another. Go to the inner court and face him; I will keep the names alive outside.",
-    "completionText": "Rhunor's form breaks and the bell sounds across both lands. The oath holds because the living chose to remember, not because a god showed mercy.",
+    "offerText": "Rhunor wakes beneath the final bell. He was an ancient god who learned to rule by erasing memory itself. The warders could only bind him while mortals remembered one another. Go to the inner court and face him; I will keep the names alive outside. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+    "completionText": "Rhunor's form breaks and the bell sounds across both lands. The oath holds because the living chose to remember, not because a god showed mercy. Ask \"story\" for what follows.",
     "completedText": "The Hollow Dawn is bound. Its memory remains yours.",
-    "walkthroughText": "Use Locations to enter The Hollow Dawn after the rift anchor quest. Defeat Rhunor near (5650,2290), then return to Vael at level 400."
+    "walkthroughText": "Use Locations to enter The Hollow Dawn after the rift anchor quest. Defeat Rhunor near (5650,2290), then return to Vael at level 400. Say \"report\" when ready."
   }
 ]

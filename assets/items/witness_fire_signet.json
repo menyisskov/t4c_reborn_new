@@ -1,0 +1,5 @@
+{
+  "key": "witness_fire_signet", "name": "${item.witness_fire_signet}", "bodyPart": "RING1", "appearanceInventory": "64kInvRings 4", "weight": 1, "armorClass": 8.0,
+  "requirements": {"endurance": 200, "intelligence": 240}, "unique": true,
+  "boosts": [{"boostId":38014,"statId":1,"expression":"24"},{"boostId":38015,"statId":17,"expression":"24"},{"boostId":38016,"statId":12,"expression":"10"},{"boostId":38017,"statId":13,"expression":"10"},{"boostId":38018,"statId":14,"expression":"10"},{"boostId":38019,"statId":15,"expression":"10"},{"boostId":38020,"statId":22,"expression":"10"}]
+}

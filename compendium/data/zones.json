@@ -219,17 +219,17 @@
   },
   {
     "id": "avalon_sanctuary",
-    "name": "The Avalon Crossing",
+    "name": "Stoneheim Passage",
     "chapter": "avalon",
     "chapterOrder": 1,
-    "levelRange": "260–300",
-    "biome": "Mainland coast",
-    "summary": "The last stretch of mainland shore before Avalon, and the only way onto the island. Coastwarden Ithrak's reavers have the beach and are collecting a toll nobody agreed to. Harbormaster Rangor will vouch for you once you have thinned them out — and he is the only person who can, so there is no route around this one.",
+    "levelRange": "200–220",
+    "biome": "Stoneheim shore road",
+    "summary": "Begin at Harbormaster Rangor on Stonecrest's quay (180,740). Ask about the isles, defeat the Tideworn scouts east of town, then face Ithrak and bring back his guaranteed chart. Reporting to Rangor opens the Witness Isles sanctuary in Locations permanently, even after rebirth.",
     "nextZoneId": "avalon_wilds",
     "worldmapCenter": {
-      "x": 1550,
-      "y": 1300,
-      "radius": 110
+      "x": 420,
+      "y": 730,
+      "radius": 130
     },
     "monsters": [
       "Tideworn Reaver",
@@ -249,13 +249,13 @@
   },
   {
     "id": "avalon_wilds",
-    "name": "The Avalon Wilds",
+    "name": "The Witness Wilds",
     "chapter": "avalon",
     "chapterOrder": 2,
-    "levelRange": "Monster tiers 330–550",
+    "levelRange": "200–240",
     "biome": "Fey woodland",
-    "settlement": "Avalon Sanctuary",
-    "summary": "The loyal Wilds north of Avalon Sanctuary have two Moonlit Stalker hunting clearings, around (4000,1390) and (3950,1345). Sir Caradoc haunts the western border glade around (3965,1460). Elder Ophira at the sanctuary temple asks for Stalker kills and his sundered blade; ask about the wilds, accept, then report with both objectives fulfilled. The protected settlement and fast-travel arrival are at (4040,1477). Player levels stop at 400; Caradoc is an above-cap monster challenge.",
+    "settlement": "Witness Isles Sanctuary",
+    "summary": "The loyal wilds north of Witness Isles Sanctuary contain two Moonlit Stalker hunting clearings around (4000,1390) and (3950,1345). Sir Caradoc haunts the western border glade. Elder Ophira asks for Stalker kills; Caradoc's blade is optional loot. After reporting to Ophira, ask about the Veil. The protected settlement and permanent fast-travel arrival are at (4040,1477).",
     "nextZoneId": "greater_drakes_bastion",
     "worldmapCenter": {
       "x": 3965,
@@ -331,10 +331,10 @@
     "name": "The Fading Veil",
     "chapter": "unmaking",
     "chapterOrder": 2,
-    "levelRange": "Monster tiers 485–650",
+    "levelRange": "225–260",
     "biome": "Blighted woodland",
-    "settlement": "Avalon Sanctuary",
-    "summary": "Ysolde's blight spreads south of Avalon Sanctuary. After the Wilds vigil, Elder Ophira at the sanctuary temple offers the Veil reckoning: defeat Veilbound Wraiths and recover Ysolde's Veiled Circlet, then report with both objectives complete. The protected settlement and fast-travel arrival are at (4040,1477). These monster tiers exceed the player level cap of 400 and are intended as endgame challenges. Ysolde carries Veiled Aether Shards; the Rootcrown Wyrm in Drake's Lair is the other source.",
+    "settlement": "Witness Isles Sanctuary",
+    "summary": "Ysolde's blight spreads south of Witness Isles Sanctuary. After the Wilds vigil, Elder Ophira offers the Veil reckoning against Veilbound Wraiths. Ysolde's circlet is optional loot. Report to Ophira, then speak with Chronicler Maelin at the sanctuary to choose the Moonwake witness account or the Emberglass warder account. Ysolde carries Veiled Aether Shards.",
     "nextZoneId": "drakes_lair",
     "worldmapCenter": {
       "x": 4120,

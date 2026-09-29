@@ -1,6 +1,6 @@
-# Avalon — sanctuary, Wilds and eastern relocation
+# Witness Isles (formerly Avalon) — sanctuary, Wilds and eastern relocation
 
-Avalon occupies its own eastern area of the **6144×3072** world map. Its coordinates moved
+The Witness Isles occupy their own eastern area of the **6144×3072** world map. Their coordinates moved
 **+2700 X**, with Y and map layer unchanged. The Great Library and other original terrain
 were restored at their original coordinates. Existing cave and stair links remain there.
 
@@ -39,8 +39,9 @@ Speak to Elder Ophira inside the temple at **(4044,1462)**:
 5. Say **veil** to hear the next chapter, then **accept**.
 
 After Ophira's Veil reckoning, speak with Chronicler Maelin in the sanctuary to begin
-[The Hollow Dawn campaign](hollow-dawn-campaign.md). It leads through Moonwake and Emberglass
-to the new level 300–400 land of Threnody Reach.
+[The Hollow Dawn campaign](hollow-dawn-campaign.md). Choose Moonwake or Emberglass, speak to
+the branch witness, then face a lieutenant. Either route leads to the level 300–400 land of
+Threnody Reach. The first passage begins with Harbormaster Rangor in Stonecrest, Stoneheim.
 
 Existing quest acceptance, completion and kill progress remain intact. Players who already
 accepted the Veil quest can still finish it.
