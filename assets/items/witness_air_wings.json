@@ -1,0 +1,5 @@
+{
+  "key": "witness_air_wings", "name": "${item.witness_air_wings}", "bodyPart": "BACK", "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal6", "appearanceInventory": "64kInvSeraphWhiteWings__pal6", "weight": 2, "armorClass": 27.5,
+  "requirements": {"endurance": 340, "intelligence": 275, "wisdom": 275}, "unique": true,
+  "boosts": [{"boostId":38054,"statId":1,"expression":"18"},{"boostId":38055,"statId":4,"expression":"18"},{"boostId":38056,"statId":16,"expression":"44"},{"boostId":38057,"statId":12,"expression":"18"},{"boostId":38058,"statId":13,"expression":"18"},{"boostId":38059,"statId":14,"expression":"18"},{"boostId":38060,"statId":15,"expression":"18"},{"boostId":38061,"statId":22,"expression":"18"}]
+}

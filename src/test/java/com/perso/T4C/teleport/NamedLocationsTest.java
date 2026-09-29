@@ -101,6 +101,6 @@ class NamedLocationsTest {
     assertTrue(QuestService.hasUnlockedZone(player, "avalon_sanctuary"));
     assertTrue(
         NamedLocations.forPlayer(player).stream()
-            .anyMatch(l -> "Avalon Sanctuary".equals(l.displayName())));
+            .anyMatch(l -> "Witness Isles Sanctuary".equals(l.displayName())));
   }
 }

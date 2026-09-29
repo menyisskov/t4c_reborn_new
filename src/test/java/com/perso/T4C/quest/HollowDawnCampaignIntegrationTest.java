@@ -74,17 +74,31 @@ class HollowDawnCampaignIntegrationTest {
   }
 
   @Test
-  void campaignStagesAndJournalPrerequisitesStayInOrder() {
-    List<QuestDef> stages = HollowDawnCampaign.all();
-    assertEquals(10, stages.size());
-    for (int i = 0; i < stages.size(); i++) {
-      QuestChainInfo.Stage info = QuestChainInfo.stageFor(stages.get(i).getId());
+  void campaignStagesAndJournalPrerequisitesRepresentBothPaths() {
+    assertEquals(10, HollowDawnCampaign.all().size());
+    for (String first : List.of("moonwake_missing", "emberglass_oath")) {
+      QuestChainInfo.Stage info = QuestChainInfo.stageFor(first);
       assertNotNull(info);
-      assertEquals(i + 1, info.stageNumber());
-      assertEquals(stages.size(), info.totalStages());
-      assertEquals(
-          List.of(i == 0 ? "fading_veil_reckoning" : stages.get(i - 1).getId()),
-          info.prerequisiteQuestIds());
+      assertEquals(1, info.stageNumber());
+      assertEquals(8, info.totalStages());
+      assertEquals(List.of("fading_veil_reckoning"), info.prerequisiteQuestIds());
+    }
+    for (var route : List.of(List.of("moonwake_missing", "pale_cantor"),
+        List.of("emberglass_oath", "cinder_marshal"))) {
+      QuestChainInfo.Stage lieutenant = QuestChainInfo.stageFor(route.get(1));
+      assertEquals(2, lieutenant.stageNumber());
+      assertEquals(List.of(route.get(0)), lieutenant.prerequisiteQuestIds());
+    }
+    QuestChainInfo.Stage convergence = QuestChainInfo.stageFor("ashbound_exiles");
+    assertEquals(3, convergence.stageNumber());
+    assertEquals(List.of("pale_cantor", "cinder_marshal"), convergence.prerequisiteQuestIds());
+    assertTrue(convergence.anyPrerequisite());
+    List<QuestDef> shared = HollowDawnCampaign.threnody();
+    for (int i = 1; i < shared.size(); i++) {
+      QuestChainInfo.Stage info = QuestChainInfo.stageFor(shared.get(i).getId());
+      assertEquals(i + 3, info.stageNumber());
+      assertEquals(8, info.totalStages());
+      assertEquals(List.of(shared.get(i - 1).getId()), info.prerequisiteQuestIds());
     }
   }
 
@@ -92,12 +106,16 @@ class HollowDawnCampaignIntegrationTest {
   void avalonQuestRewardsDoNotSkipTheLevelTwoHundredToThreeHundredCurve() {
     long xpNeeded = XpCurve.loadDefault().getTotalXp(300)
         - XpCurve.loadDefault().getTotalXp(200);
-    long questXp = AvalonWildsVigil.definition().getRewardXp()
-        + FadingVeilReckoning.definition().getRewardXp()
-        + HollowDawnCampaign.avalon().stream().mapToLong(QuestDef::getRewardXp).sum();
-    assertEquals(218_000_000L, questXp);
+    long openingXp = AvalonWildsVigil.definition().getRewardXp()
+        + FadingVeilReckoning.definition().getRewardXp();
+    long witnessXp = openingXp + HollowDawnCampaign.avalon().subList(0, 2)
+        .stream().mapToLong(QuestDef::getRewardXp).sum();
+    long warderXp = openingXp + HollowDawnCampaign.avalon().subList(2, 4)
+        .stream().mapToLong(QuestDef::getRewardXp).sum();
+    assertEquals(175_000_000L, witnessXp);
+    assertEquals(witnessXp, warderXp);
     assertTrue(xpNeeded > 1_000_000_000L);
-    assertTrue(questXp < xpNeeded / 4, "quest turn-ins must leave a meaningful hunting budget");
+    assertTrue(witnessXp < xpNeeded / 4, "quest turn-ins must leave a meaningful hunting budget");
   }
 
   private static boolean has(Player player, String name) {

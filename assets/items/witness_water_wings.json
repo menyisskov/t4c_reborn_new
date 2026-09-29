@@ -1,0 +1,5 @@
+{
+  "key": "witness_water_wings", "name": "${item.witness_water_wings}", "bodyPart": "BACK", "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal2", "appearanceInventory": "64kInvSeraphWhiteWings__pal2", "weight": 2, "armorClass": 20.2,
+  "requirements": {"endurance": 280, "intelligence": 325}, "unique": true,
+  "boosts": [{"boostId":38030,"statId":1,"expression":"33"},{"boostId":38031,"statId":18,"expression":"33"},{"boostId":38032,"statId":12,"expression":"13"},{"boostId":38033,"statId":13,"expression":"13"},{"boostId":38034,"statId":14,"expression":"13"},{"boostId":38035,"statId":15,"expression":"13"},{"boostId":38036,"statId":22,"expression":"13"}]
+}

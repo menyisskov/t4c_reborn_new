@@ -27797,6 +27797,14 @@
       {
         "item": "empyrean_light_protector",
         "chance": 0.003
+      },
+      {
+        "item": "witness_fire_amulet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_fire_bracelet",
+        "chance": 0.006
       }
     ],
     "attacks": [
@@ -27974,6 +27982,14 @@
       {
         "item": "potion_of_mana",
         "chance": 0.08
+      },
+      {
+        "item": "witness_fire_signet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_fire_tiara",
+        "chance": 0.006
       }
     ],
     "attacks": [
@@ -28035,6 +28051,14 @@
       {
         "item": "potion_of_mana",
         "chance": 0.08
+      },
+      {
+        "item": "witness_water_signet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_water_tiara",
+        "chance": 0.006
       }
     ],
     "attacks": [
@@ -28210,6 +28234,46 @@
       {
         "item": "serious_healing_potion",
         "chance": 0.5
+      },
+      {
+        "item": "witness_fire_plate",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_fire_robe",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_fire_wings",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_fire_brand",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_fire_mace",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_water_plate",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_water_robe",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_water_wings",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_water_sceptre",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_water_staff",
+        "chance": 0.005
       }
     ],
     "attacks": [
@@ -28400,6 +28464,14 @@
       {
         "item": "mana_elixir",
         "chance": 0.03
+      },
+      {
+        "item": "witness_water_amulet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_water_bracelet",
+        "chance": 0.006
       }
     ],
     "attacks": [
@@ -28597,6 +28669,22 @@
       {
         "item": "potion_of_mana",
         "chance": 0.08
+      },
+      {
+        "item": "witness_air_amulet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_air_bracelet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_air_signet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_air_tiara",
+        "chance": 0.006
       }
     ],
     "attacks": [
@@ -28778,6 +28866,22 @@
       {
         "item": "mana_elixir",
         "chance": 0.4
+      },
+      {
+        "item": "witness_air_plate",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_air_robe",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_air_wings",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_air_wand",
+        "chance": 0.005
       }
     ],
     "attacks": [
@@ -29007,7 +29111,7 @@
     "loot": [
       {
         "item": "tideworn_avalon_chart",
-        "chance": 0.02
+        "chance": 1.0
       },
       {
         "item": "mana_elixir",
@@ -29201,6 +29305,22 @@
         "chance": 0.08
       },
       {
+        "item": "witness_earth_amulet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_earth_bracelet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_earth_signet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_earth_tiara",
+        "chance": 0.006
+      },
+      {
         "item": "item.mana_prism",
         "chance": 0.05
       },
@@ -29330,6 +29450,22 @@
       {
         "item": "mana_elixir",
         "chance": 0.4
+      },
+      {
+        "item": "witness_earth_plate",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_earth_robe",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_earth_wings",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_earth_sceptre",
+        "chance": 0.005
       },
       {
         "item": "item.mana_prism",
@@ -29463,6 +29599,22 @@
         "chance": 0.08
       },
       {
+        "item": "witness_light_amulet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_light_bracelet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_light_signet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_light_tiara",
+        "chance": 0.006
+      },
+      {
         "item": "item.mana_prism",
         "chance": 0.05
       },
@@ -29594,6 +29746,22 @@
         "chance": 0.5
       },
       {
+        "item": "witness_light_plate",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_light_robe",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_light_wings",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_light_staff",
+        "chance": 0.005
+      },
+      {
         "item": "item.mana_prism",
         "chance": 0.05
       },
@@ -29661,6 +29829,22 @@
       {
         "item": "potion_of_mana",
         "chance": 0.08
+      },
+      {
+        "item": "witness_dark_amulet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_dark_bracelet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_dark_signet",
+        "chance": 0.006
+      },
+      {
+        "item": "witness_dark_tiara",
+        "chance": 0.006
       },
       {
         "item": "item.mana_prism",
@@ -29792,6 +29976,26 @@
       {
         "item": "mana_elixir",
         "chance": 0.4
+      },
+      {
+        "item": "witness_dark_plate",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_dark_robe",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_dark_wings",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_dark_dagger",
+        "chance": 0.005
+      },
+      {
+        "item": "witness_dark_rod",
+        "chance": 0.005
       },
       {
         "item": "item.mana_prism",

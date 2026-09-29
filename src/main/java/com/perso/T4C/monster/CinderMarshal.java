@@ -25,14 +25,20 @@ public final class CinderMarshal extends DataMonster {
   }
 
   public static MonsterDef definition() {
-    return EndgameMonsterFactory.create(
-        CANONICAL_NAME,
-        "cinder_marshal",
-        SirCaradocTheSunderedKnight.definition(),
-        290,
-        120000,
-        8500000,
-        850,
-        true);
+    return EndgameMonsterFactory.withWitnessLoot(
+        EndgameMonsterFactory.create(
+            CANONICAL_NAME,
+            "cinder_marshal",
+            SirCaradocTheSunderedKnight.definition(),
+            290,
+            120000,
+            8500000,
+            850,
+            true),
+        true,
+        "witness_air_plate",
+        "witness_air_robe",
+        "witness_air_wings",
+        "witness_air_wand");
   }
 }

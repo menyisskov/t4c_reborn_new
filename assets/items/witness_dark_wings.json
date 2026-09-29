@@ -1,0 +1,5 @@
+{
+  "key": "witness_dark_wings", "name": "${item.witness_dark_wings}", "bodyPart": "BACK", "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal8", "appearanceInventory": "64kInvSeraphWhiteWings__pal8", "weight": 2, "armorClass": 40.3,
+  "requirements": {"endurance": 560, "intelligence": 625}, "unique": true,
+  "boosts": [{"boostId":38126,"statId":1,"expression":"63"},{"boostId":38127,"statId":24,"expression":"63"},{"boostId":38128,"statId":12,"expression":"25"},{"boostId":38129,"statId":13,"expression":"25"},{"boostId":38130,"statId":14,"expression":"25"},{"boostId":38131,"statId":15,"expression":"25"},{"boostId":38132,"statId":22,"expression":"25"}]
+}

@@ -25,14 +25,21 @@ public final class RhunorTheHollowDawn extends DataMonster {
   }
 
   public static MonsterDef definition() {
-    return EndgameMonsterFactory.create(
-        CANONICAL_NAME,
-        "rhunor_the_hollow_dawn",
-        TheVerdantWarden.definition(),
-        400,
-        480000,
-        50000000,
-        2100,
-        true);
+    return EndgameMonsterFactory.withWitnessLoot(
+        EndgameMonsterFactory.create(
+            CANONICAL_NAME,
+            "rhunor_the_hollow_dawn",
+            TheVerdantWarden.definition(),
+            400,
+            480000,
+            50000000,
+            2100,
+            true),
+        true,
+        "witness_dark_plate",
+        "witness_dark_robe",
+        "witness_dark_wings",
+        "witness_dark_dagger",
+        "witness_dark_rod");
   }
 }

@@ -1,0 +1,1 @@
+{"key":"witness_fire_mace","name":"${item.witness_fire_mace}","bodyPart":"WEAPON","appearanceEquippedPrimary":"PupMace","appearanceInventory":"64kInvMace","weight":6,"dmgFormula":"1d120+90","atkDelay":"1400","requirements":{"strength":260},"unique":true,"boosts":[{"boostId":38371,"statId":3,"expression":"22"},{"boostId":38372,"statId":8,"expression":"52"}]}

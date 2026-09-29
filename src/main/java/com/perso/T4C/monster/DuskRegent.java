@@ -19,17 +19,24 @@ public final class DuskRegent extends DataMonster {
   }
 
   public static MonsterDef definition() {
-    return EndgameMonsterFactory.create(
-        CANONICAL_NAME,
-        "dusk_regent",
-        SirCaradocTheSunderedKnight.definition(),
-        375,
-        225000,
-        26000000,
-        1400,
-        true)
-        .withLoot(java.util.List.of(
-            new MonsterDef.LootDrop("item.last_witness_seal", 1.0f),
-            new MonsterDef.LootDrop("mana_elixir", .5f)));
+    return EndgameMonsterFactory.withWitnessLoot(
+        EndgameMonsterFactory.create(
+                CANONICAL_NAME,
+                "dusk_regent",
+                SirCaradocTheSunderedKnight.definition(),
+                375,
+                225000,
+                26000000,
+                1400,
+                true)
+            .withLoot(
+                java.util.List.of(
+                    new MonsterDef.LootDrop("item.last_witness_seal", 1.0f),
+                    new MonsterDef.LootDrop("mana_elixir", .5f))),
+        true,
+        "witness_light_plate",
+        "witness_light_robe",
+        "witness_light_wings",
+        "witness_light_staff");
   }
 }

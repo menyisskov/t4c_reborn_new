@@ -75,6 +75,48 @@ import com.perso.T4C.spawn.Spawn;
     z = 0,
     stationary = false,
     aggressive = true)
+@Spawn(
+    type = "Emberglass Ashguard",
+    x = 4347,
+    y = 2610,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Emberglass Ashguard",
+    x = 4359,
+    y = 2610,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Emberglass Ashguard",
+    x = 4371,
+    y = 2610,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Emberglass Ashguard",
+    x = 4342,
+    y = 2630,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Emberglass Ashguard",
+    x = 4357,
+    y = 2630,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "Emberglass Ashguard",
+    x = 4372,
+    y = 2630,
+    z = 0,
+    stationary = false,
+    aggressive = true)
 public final class EmberglassAshguard extends DataMonster {
   public static final String CANONICAL_NAME = "Emberglass Ashguard";
 
@@ -88,14 +130,20 @@ public final class EmberglassAshguard extends DataMonster {
   }
 
   public static MonsterDef definition() {
-    return EndgameMonsterFactory.create(
-        CANONICAL_NAME,
-        "emberglass_ashguard",
-        SunderedSentinel.definition(),
-        270,
-        61000,
-        245000,
-        550,
-        false);
+    return EndgameMonsterFactory.withWitnessLoot(
+        EndgameMonsterFactory.create(
+            CANONICAL_NAME,
+            "emberglass_ashguard",
+            SunderedSentinel.definition(),
+            270,
+            61000,
+            245000,
+            550,
+            false),
+        false,
+        "witness_air_amulet",
+        "witness_air_bracelet",
+        "witness_air_signet",
+        "witness_air_tiara");
   }
 }

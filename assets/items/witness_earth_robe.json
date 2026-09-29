@@ -1,0 +1,5 @@
+{
+  "key": "witness_earth_robe", "name": "${item.witness_earth_robe}", "bodyPart": "BODY", "appearanceEquippedPrimary": "PupWhiteRobe__pal8", "appearanceInventory": "64kInvWhiteRobe__pal8", "weight": 6, "armorClass": 124.0,
+  "requirements": {"endurance": 400, "wisdom": 475}, "unique": true,
+  "boosts": [{"boostId":38073,"statId":4,"expression":"40"},{"boostId":38074,"statId":19,"expression":"48"},{"boostId":38075,"statId":12,"expression":"19"},{"boostId":38076,"statId":13,"expression":"19"},{"boostId":38077,"statId":14,"expression":"19"},{"boostId":38078,"statId":15,"expression":"19"},{"boostId":38079,"statId":22,"expression":"19"}]
+}

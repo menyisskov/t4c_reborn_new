@@ -1,0 +1,5 @@
+{
+  "key": "witness_dark_rod", "name": "${item.witness_dark_rod}", "bodyPart": "WEAPON", "appearanceEquippedPrimary": "PupLichStaff", "appearanceInventory": "64kInvLichStaff", "weight": 4, "dmgFormula": "1d70+100", "atkDelay": "1300",
+  "requirements": {"intelligence": 625}, "unique": true,
+  "boosts": [{"boostId":38140,"statId":1,"expression":"63"},{"boostId":38141,"statId":24,"expression":"63"}]
+}

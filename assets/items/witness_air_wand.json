@@ -1,0 +1,5 @@
+{
+  "key": "witness_air_wand", "name": "${item.witness_air_wand}", "bodyPart": "WEAPON", "appearanceEquippedPrimary": "PupWoodenStaff", "appearanceInventory": "64kInvWoodenStaff", "weight": 4, "dmgFormula": "1d48+65", "atkDelay": "1250",
+  "requirements": {"intelligence": 275, "wisdom": 275}, "unique": true,
+  "boosts": [{"boostId":38070,"statId":1,"expression":"18"},{"boostId":38071,"statId":4,"expression":"18"},{"boostId":38072,"statId":16,"expression":"44"}]
+}

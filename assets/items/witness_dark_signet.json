@@ -1,0 +1,5 @@
+{
+  "key": "witness_dark_signet", "name": "${item.witness_dark_signet}", "bodyPart": "RING1", "appearanceInventory": "64kInvRings 5", "weight": 1, "armorClass": 22.4,
+  "requirements": {"endurance": 560, "intelligence": 625}, "unique": true,
+  "boosts": [{"boostId":38133,"statId":1,"expression":"63"},{"boostId":38134,"statId":24,"expression":"63"},{"boostId":38135,"statId":12,"expression":"25"},{"boostId":38136,"statId":13,"expression":"25"},{"boostId":38137,"statId":14,"expression":"25"},{"boostId":38138,"statId":15,"expression":"25"},{"boostId":38139,"statId":22,"expression":"25"}]
+}

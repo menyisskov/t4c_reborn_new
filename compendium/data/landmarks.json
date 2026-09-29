@@ -122,14 +122,14 @@
     "unlockZoneId": "deep_ones_cave"
   },
   {
-    "name": "Avalon Sanctuary",
+    "name": "Witness Isles Sanctuary",
     "x": 4040,
     "y": 1477,
     "worldZ": 0,
     "unlockZoneId": "avalon_sanctuary"
   },
   {
-    "name": "The Avalon Wilds",
+    "name": "The Witness Wilds",
     "x": 3965,
     "y": 1400,
     "worldZ": 0,

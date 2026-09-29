@@ -1,7 +1,8 @@
 package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.npc.ActionType;
+import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
 import com.perso.T4C.npc.core.NpcContext;
@@ -15,20 +16,11 @@ import com.perso.T4C.quest.definition.TidewornShoreScouts;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-// The last dock still standing on the mainland shore facing Avalon (1519,1217), worldZ 0 - gives
-// the two-stage "Passage to Avalon" chain: quest/definition/TidewornShoreScouts.java (prove
-// yourself against the scouts first) then quest/definition/PassageToAvalon.java (the real
-// assault on Ithrak's warband and the actual zone unlock). This is the same role the Oracle
-// plays for rebirth: without finishing the chain, no fresh character can ever reach Avalon
-// Sanctuary, since every NPC and shop that could sell a scroll_of_avalon or teach AvalonGateway
-// is itself stationed inside Avalon.
-//
-// T4C-0032: the "avalon"/"passage" keyword is handled by javaBehavior() below instead of a plain
-// GIVE_QUEST action, so it always offers/reports whichever stage of the chain the player is
-// actually on - see the dispatch logic there. A character who already completed the original
-// single-stage "passage_to_avalon" (pre-T4C-0032) is unaffected: QuestService.statusFor() still
-// reports that quest COMPLETED, so the dispatch never re-offers the scouting stage to them.
-@Spawn(type = "HarbormasterRangor", x = 1519, y = 1217, z = 0, stationary = false, aggressive = false)
+// Stoneheim's Stonecrest quay (180,740) begins the Witness Isles story. The old quest IDs and
+// unlock zone ID remain unchanged so existing character saves retain passage after rebirth.
+// Conversation keywords lead through scouts, Ithrak's chart, and an explicit report for each
+// objective. A character who completed the original passage is never re-offered the scouts.
+@Spawn(type = "HarbormasterRangor", x = 180, y = 740, z = 0, stationary = true, aggressive = false)
 public final class HarbormasterRangor extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -46,9 +38,10 @@ public final class HarbormasterRangor extends ScriptedNpc {
       new NpcSpec.DialogueTopic(
           List.of(
               "${npc.topic_keyword.harbormasterrangor.0.0}",
-              "${npc.topic_keyword.harbormasterrangor.0.1}"),
+              "${npc.topic_keyword.harbormasterrangor.0.1}",
+              "${npc.topic_keyword.harbormasterrangor.0.2}"),
           "${npc.topic.harbormasterrangor.0}",
-          List.of(new NpcSpec.Action(ActionType.GIVE_QUEST, List.of("tideworn_shore_scouts"))));
+          List.of());
 
   private static final NpcSpec SPEC =
       new NpcSpec(
@@ -64,6 +57,22 @@ public final class HarbormasterRangor extends ScriptedNpc {
           "${npc.welcome.harbormasterrangor}",
           List.of(
               AVALON_TOPIC,
+              new NpcSpec.DialogueTopic(
+                  List.of("${npc.harbormasterrangor.keyword.scouts}"),
+                  "${npc.harbormasterrangor.scouts}",
+                  List.of()),
+              new NpcSpec.DialogueTopic(
+                  List.of("${npc.harbormasterrangor.keyword.chart}"),
+                  "${npc.harbormasterrangor.chart}",
+                  List.of()),
+              new NpcSpec.DialogueTopic(
+                  List.of("${npc.harbormasterrangor.keyword.report}"),
+                  "${npc.harbormasterrangor.report}",
+                  List.of()),
+              new NpcSpec.DialogueTopic(
+                  List.of("${npc.harbormasterrangor.keyword.route}"),
+                  "${npc.harbormasterrangor.route}",
+                  List.of()),
               new NpcSpec.DialogueTopic(
                   List.of("${npc.topic_keyword.harbormasterrangor.1.0}"),
                   "${npc.topic.harbormasterrangor.1}",
@@ -100,24 +109,70 @@ public final class HarbormasterRangor extends ScriptedNpc {
   }
 
   @Override
+  protected boolean automaticallyTurnInQuests() {
+    return false;
+  }
+
+  @Override
   protected NpcBehavior javaBehavior() {
     return new NpcBehavior() {
       @Override
       public boolean onKeyword(NpcBehaviorContext context, String keyword) {
-        if (!ScriptedNpc.matches(AVALON_TOPIC, keyword)) {
-          return false;
-        }
         Player player = context.player();
         QuestService quests = context.npc().questService();
-        if (quests == null) {
-          return false;
+        if (quests == null) return false;
+        if (ScriptedNpc.matches(AVALON_TOPIC, keyword)) {
+          context.say(I18n.resolve("${npc.topic.harbormasterrangor.0}"));
+          return true;
         }
-        String questId = nextQuestIdFor(player);
-        String response = quests.giveOrReport(questId, ID, player);
-        if (response != null && !response.isBlank()) {
-          context.say(response);
+        if (ScriptedNpc.matches(SPEC.topics().get(1), keyword)) {
+          if (QuestService.statusFor(player, TidewornShoreScouts.definition())
+              == QuestService.STATUS_COMPLETED) {
+            context.say(I18n.resolve("${npc.harbormasterrangor.scouts_done}"));
+          } else {
+            context.say(
+                quests.giveOrReport("tideworn_shore_scouts", ID, player)
+                    + "\n"
+                    + I18n.resolve("${npc.harbormasterrangor.report_prompt}"));
+          }
+          return true;
         }
-        return true;
+        if (ScriptedNpc.matches(SPEC.topics().get(2), keyword)) {
+          if (QuestService.statusFor(player, TidewornShoreScouts.definition())
+                  != QuestService.STATUS_COMPLETED
+              && QuestService.statusFor(player, PassageToAvalon.definition())
+                  == QuestService.STATUS_NOT_STARTED) {
+            context.say(I18n.resolve("${npc.harbormasterrangor.scouts_first}"));
+          } else {
+            context.say(
+                quests.giveOrReport("passage_to_avalon", ID, player)
+                    + "\n"
+                    + I18n.resolve("${npc.harbormasterrangor.report_prompt}"));
+          }
+          return true;
+        }
+        if (ScriptedNpc.matches(SPEC.topics().get(4), keyword)) {
+          context.say(I18n.resolve("${npc.harbormasterrangor.route}"));
+          return true;
+        }
+        if (ScriptedNpc.matches(SPEC.topics().get(3), keyword)) {
+          String id = nextQuestIdFor(player);
+          if (QuestService.statusFor(player, QuestRegistry.findById(id))
+              == QuestService.STATUS_NOT_STARTED) {
+            context.say(I18n.resolve("${npc.harbormasterrangor.start_first}"));
+          } else {
+            String response = quests.turnInQuest(id, ID, player);
+            if (response != null) {
+              if (QuestService.statusFor(player, QuestRegistry.findById(id))
+                  == QuestService.STATUS_ACTIVE) {
+                response += "\n" + I18n.resolve("${npc.harbormasterrangor.report_prompt}");
+              }
+              context.say(response);
+            }
+          }
+          return true;
+        }
+        return false;
       }
     };
   }

@@ -1,0 +1,5 @@
+{
+  "key": "witness_water_signet", "name": "${item.witness_water_signet}", "bodyPart": "RING1", "appearanceInventory": "64kInvRings 2", "weight": 1, "armorClass": 11.2,
+  "requirements": {"endurance": 280, "intelligence": 325}, "unique": true,
+  "boosts": [{"boostId":38037,"statId":1,"expression":"33"},{"boostId":38038,"statId":18,"expression":"33"},{"boostId":38039,"statId":12,"expression":"13"},{"boostId":38040,"statId":13,"expression":"13"},{"boostId":38041,"statId":14,"expression":"13"},{"boostId":38042,"statId":15,"expression":"13"},{"boostId":38043,"statId":22,"expression":"13"}]
+}

@@ -316,6 +316,15 @@ public final class QuestScreen extends GuiScreenBase {
     // Legacy saves may already have a later stage active or finished. Do not claim they
     // are waiting on a prerequisite which the giver deliberately grandfathers for them.
     if (status(quest) != QuestService.STATUS_NOT_STARTED) return base;
+    if (stage.anyPrerequisite()) {
+      boolean oneComplete =
+          stage.prerequisiteQuestIds().stream()
+              .map(this::findQuestById)
+              .anyMatch(prerequisite ->
+                  prerequisite != null && status(prerequisite) == QuestService.STATUS_COMPLETED);
+      if (oneComplete) return base;
+      return base + " " + I18n.resolve("${quest.chain.waiting_on_either}");
+    }
     for (String prerequisiteId : stage.prerequisiteQuestIds()) {
       QuestDef prerequisite = findQuestById(prerequisiteId);
       if (prerequisite != null && status(prerequisite) != QuestService.STATUS_COMPLETED) {

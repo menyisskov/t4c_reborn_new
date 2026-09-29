@@ -1,0 +1,5 @@
+{
+  "key": "witness_earth_sceptre", "name": "${item.witness_earth_sceptre}", "bodyPart": "WEAPON", "appearanceEquippedPrimary": "PupWoodenStaff", "appearanceInventory": "64kInvWoodenStaff", "weight": 4, "dmgFormula": "1d54+75", "atkDelay": "1300",
+  "requirements": {"wisdom": 475}, "unique": true,
+  "boosts": [{"boostId":38094,"statId":4,"expression":"40"},{"boostId":38095,"statId":19,"expression":"48"}]
+}

@@ -19,17 +19,30 @@ public final class PaleCantor extends DataMonster {
   }
 
   public static MonsterDef definition() {
-    return EndgameMonsterFactory.create(
-        CANONICAL_NAME,
-        "pale_cantor",
-        YsoldeTheVeiledMatriarch.definition(),
-        245,
-        85000,
-        5500000,
-        700,
-        true)
-        .withLoot(java.util.List.of(
-            new MonsterDef.LootDrop("item.moonwake_bell_shard", 1.0f),
-            new MonsterDef.LootDrop("serious_healing_potion", .5f)));
+    return EndgameMonsterFactory.withWitnessLoot(
+        EndgameMonsterFactory.create(
+                CANONICAL_NAME,
+                "pale_cantor",
+                YsoldeTheVeiledMatriarch.definition(),
+                245,
+                85000,
+                5500000,
+                700,
+                true)
+            .withLoot(
+                java.util.List.of(
+                    new MonsterDef.LootDrop("item.moonwake_bell_shard", 1.0f),
+                    new MonsterDef.LootDrop("serious_healing_potion", .5f))),
+        true,
+        "witness_fire_plate",
+        "witness_fire_robe",
+        "witness_fire_wings",
+        "witness_fire_brand",
+        "witness_fire_mace",
+        "witness_water_plate",
+        "witness_water_robe",
+        "witness_water_wings",
+        "witness_water_sceptre",
+        "witness_water_staff");
   }
 }

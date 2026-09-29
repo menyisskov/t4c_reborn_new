@@ -1,0 +1,5 @@
+{
+  "key": "witness_air_robe", "name": "${item.witness_air_robe}", "bodyPart": "BODY", "appearanceEquippedPrimary": "PupWhiteRobe__pal7", "appearanceInventory": "64kInvWhiteRobe__pal7", "weight": 5, "armorClass": 94.9,
+  "requirements": {"endurance": 340, "intelligence": 275, "wisdom": 275}, "unique": true,
+  "boosts": [{"boostId":38046,"statId":1,"expression":"18"},{"boostId":38047,"statId":4,"expression":"18"},{"boostId":38048,"statId":16,"expression":"44"},{"boostId":38049,"statId":12,"expression":"18"},{"boostId":38050,"statId":13,"expression":"18"},{"boostId":38051,"statId":14,"expression":"18"},{"boostId":38052,"statId":15,"expression":"18"},{"boostId":38053,"statId":22,"expression":"18"}]
+}

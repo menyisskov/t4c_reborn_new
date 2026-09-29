@@ -27799,6 +27799,14 @@ window.T4C_DATA = {
         {
           "item": "empyrean_light_protector",
           "chance": 0.003
+        },
+        {
+          "item": "witness_fire_amulet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_fire_bracelet",
+          "chance": 0.006
         }
       ],
       "attacks": [
@@ -27976,6 +27984,14 @@ window.T4C_DATA = {
         {
           "item": "potion_of_mana",
           "chance": 0.08
+        },
+        {
+          "item": "witness_fire_signet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_fire_tiara",
+          "chance": 0.006
         }
       ],
       "attacks": [
@@ -28037,6 +28053,14 @@ window.T4C_DATA = {
         {
           "item": "potion_of_mana",
           "chance": 0.08
+        },
+        {
+          "item": "witness_water_signet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_water_tiara",
+          "chance": 0.006
         }
       ],
       "attacks": [
@@ -28212,6 +28236,46 @@ window.T4C_DATA = {
         {
           "item": "serious_healing_potion",
           "chance": 0.5
+        },
+        {
+          "item": "witness_fire_plate",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_fire_robe",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_fire_wings",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_fire_brand",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_fire_mace",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_water_plate",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_water_robe",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_water_wings",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_water_sceptre",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_water_staff",
+          "chance": 0.005
         }
       ],
       "attacks": [
@@ -28402,6 +28466,14 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.03
+        },
+        {
+          "item": "witness_water_amulet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_water_bracelet",
+          "chance": 0.006
         }
       ],
       "attacks": [
@@ -28599,6 +28671,22 @@ window.T4C_DATA = {
         {
           "item": "potion_of_mana",
           "chance": 0.08
+        },
+        {
+          "item": "witness_air_amulet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_air_bracelet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_air_signet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_air_tiara",
+          "chance": 0.006
         }
       ],
       "attacks": [
@@ -28780,6 +28868,22 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.4
+        },
+        {
+          "item": "witness_air_plate",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_air_robe",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_air_wings",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_air_wand",
+          "chance": 0.005
         }
       ],
       "attacks": [
@@ -29009,7 +29113,7 @@ window.T4C_DATA = {
       "loot": [
         {
           "item": "tideworn_avalon_chart",
-          "chance": 0.02
+          "chance": 1.0
         },
         {
           "item": "mana_elixir",
@@ -29203,6 +29307,22 @@ window.T4C_DATA = {
           "chance": 0.08
         },
         {
+          "item": "witness_earth_amulet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_earth_bracelet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_earth_signet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_earth_tiara",
+          "chance": 0.006
+        },
+        {
           "item": "item.mana_prism",
           "chance": 0.05
         },
@@ -29332,6 +29452,22 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.4
+        },
+        {
+          "item": "witness_earth_plate",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_earth_robe",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_earth_wings",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_earth_sceptre",
+          "chance": 0.005
         },
         {
           "item": "item.mana_prism",
@@ -29465,6 +29601,22 @@ window.T4C_DATA = {
           "chance": 0.08
         },
         {
+          "item": "witness_light_amulet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_light_bracelet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_light_signet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_light_tiara",
+          "chance": 0.006
+        },
+        {
           "item": "item.mana_prism",
           "chance": 0.05
         },
@@ -29596,6 +29748,22 @@ window.T4C_DATA = {
           "chance": 0.5
         },
         {
+          "item": "witness_light_plate",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_light_robe",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_light_wings",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_light_staff",
+          "chance": 0.005
+        },
+        {
           "item": "item.mana_prism",
           "chance": 0.05
         },
@@ -29663,6 +29831,22 @@ window.T4C_DATA = {
         {
           "item": "potion_of_mana",
           "chance": 0.08
+        },
+        {
+          "item": "witness_dark_amulet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_dark_bracelet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_dark_signet",
+          "chance": 0.006
+        },
+        {
+          "item": "witness_dark_tiara",
+          "chance": 0.006
         },
         {
           "item": "item.mana_prism",
@@ -29794,6 +29978,26 @@ window.T4C_DATA = {
         {
           "item": "mana_elixir",
           "chance": 0.4
+        },
+        {
+          "item": "witness_dark_plate",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_dark_robe",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_dark_wings",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_dark_dagger",
+          "chance": 0.005
+        },
+        {
+          "item": "witness_dark_rod",
+          "chance": 0.005
         },
         {
           "item": "item.mana_prism",
@@ -39198,8 +39402,8 @@ window.T4C_DATA = {
     {
       "key": "spell.avalon_gateway",
       "isNew": true,
-      "name": "Avalon Gateway",
-      "description": "Teleports the caster to the sanctuary of Avalon.",
+      "name": "Witness Isles Gateway",
+      "description": "Teleports the caster to the sanctuary of the Witness Isles.",
       "manaCost": "0",
       "minInt": 0,
       "minWis": 0,
@@ -39469,47 +39673,47 @@ window.T4C_DATA = {
     },
     {
       "id": "tideworn_shore_scouts",
-      "title": "Tideworn Shore Scouts",
+      "title": "Stoneheim Shore Scouts",
       "giverNpc": "HarbormasterRangor",
       "targetMonster": "Tideworn Reaver",
       "requiredKills": 8,
       "targetWorldZ": 0,
-      "areaCenterX": 1550,
-      "areaCenterY": 1300,
-      "areaRadiusTiles": 110,
+      "areaCenterX": 420,
+      "areaCenterY": 730,
+      "areaRadiusTiles": 130,
       "rewardGold": 40000,
-      "rewardXp": 20000000,
+      "rewardXp": 3000000,
       "requiredItemQty": 0,
-      "minLevel": 0,
-      "offerText": "The reavers thin out fast if you know where to hit them, but I need to see you can actually do it before I put you anywhere near Ithrak himself. Clear enough of them off the tideline and come back - then we'll talk about the chart.",
-      "completionText": "You've got the stomach for this after all. Ithrak's warband won't fold as easy, but you've earned the right to try. Ask me about the crossing again when you're ready for the rest of them - and for him.",
-      "completedText": "You already proved yourself against the scouts. It's Ithrak's turn now, if you haven't finished that already.",
-      "walkthroughText": "Harbormaster Rangor is not sending a stranger at Coastwarden Ithrak's entire warband on trust. Kill a handful of Tideworn Reavers on the marked stretch of beach - the same stretch the full crossing quest uses - and he will take you seriously. There is no item at the end of this one, just pay and Rangor's attention: finishing it is what makes him offer Passage to Avalon at all. Ask him about the crossing again once you are done."
+      "minLevel": 200,
+      "offerText": "Rhunor's servants have not reached Stonecrest yet, but Ithrak's reavers keep the road to the crossing closed. Defeat eight Tideworn Reavers east of town. Return at level 200 or higher and say \"report\"; ask \"route\" for their position.",
+      "completionText": "You held the road. Ithrak knows it, and his warband is gathering. Ask about the \"chart\" to take the next step.",
+      "completedText": "The scouts are beaten. Ask about the \"chart\" to confront Ithrak.",
+      "walkthroughText": "On Stoneheim, speak to Harbormaster Rangor on Stonecrest's quay (180,740). Ask \"isles\", then \"scouts\". Defeat eight Tideworn Reavers near (420,730) and \"report\" at level 200 or higher. Ask \"chart\" for the next step."
     },
     {
       "id": "passage_to_avalon",
-      "title": "Passage to Avalon",
+      "title": "Passage to the Witness Isles",
       "giverNpc": "HarbormasterRangor",
       "targetMonster": "Tideworn Reaver",
       "requiredKills": 25,
       "targetWorldZ": 0,
-      "areaCenterX": 1550,
-      "areaCenterY": 1300,
-      "areaRadiusTiles": 110,
-      "rewardGold": 400000,
-      "rewardXp": 200000000,
+      "areaCenterX": 420,
+      "areaCenterY": 730,
+      "areaRadiusTiles": 130,
+      "rewardGold": 100000,
+      "rewardXp": 12000000,
       "requiredItemKey": "item.tideworn_avalon_chart",
       "requiredItemQty": 1,
-      "minLevel": 0,
+      "minLevel": 200,
       "unlockZoneId": "avalon_sanctuary",
-      "offerText": "The scouts were the easy part. Ithrak keeps the rest of his warband close, and he's the only one left who knows the safe line through the shoal. My boy went out there once without a chart of his own. Clear the warband, then take Ithrak's chart before it goes down with him - I won't watch another one go in blind.",
-      "completionText": "The warband's scattered and Ithrak's chart is yours. The tide out past the shoal finally looks like something you could survive. It's more than my boy ever had.",
-      "completedText": "The chart's already charted the route for you - Avalon's just past the shoal, whenever you're ready to cross. Whatever's waiting on the other side, it's more than this dock's seen in years.",
-      "walkthroughText": "Once you have proved yourself on the shore scouts, ask Rangor about the crossing again and he offers the real thing. Kill Tideworn Reavers on the same beach, a great many more of them this time, and take Ithrak's Chart off Coastwarden Ithrak - the chart is what actually gets you onto the island, so Ithrak has to fall. Hand both to Rangor and the crossing to Avalon Sanctuary opens. There is no other way in."
+      "offerText": "The scouts were the easy part. Defeat 25 reavers on Stoneheim's eastern road and confront Ithrak near (455,745). His chart is guaranteed proof of the safe crossing. Bring it back and say \"report\" at level 200 or higher; ask \"route\" if you need directions.",
+      "completionText": "Ithrak's chart has shown us the safe line through the shoal. Witness Isles Sanctuary is now in Locations, and this passage will remain yours after rebirth. Once there, ask Elder Ophira about the \"wilds\".",
+      "completedText": "Your passage to the Witness Isles is permanent. Use Locations to return, then ask Ophira about the \"wilds\".",
+      "walkthroughText": "After Rangor's scouts task, say \"chart\". Defeat 25 Tideworn Reavers around (420,730), then Coastwarden Ithrak near (455,745). His chart drops every time. Return to Rangor and say \"report\" at level 200 or higher. Witness Isles Sanctuary becomes a permanent Locations destination, including after rebirth. Speak with Elder Ophira there about the \"wilds\"."
     },
     {
       "id": "avalon_wilds_vigil",
-      "title": "Avalon Wilds Vigil",
+      "title": "Witness Wilds Vigil",
       "giverNpc": "ElderOphira",
       "targetMonster": "Moonlit Stalker",
       "requiredKills": 20,
@@ -39525,7 +39729,7 @@ window.T4C_DATA = {
       "offerText": "Defeat 20 Moonlit Stalkers in the clearings north of the sanctuary, then report to me. Sir Caradoc's blade remains a rare treasure, but the vigil does not depend on finding it.",
       "completionText": "The Wilds breathe easier. The pact holds a little longer because of you.",
       "completedText": "The Wardens still speak well of you. The Wilds remain ours - for now.",
-      "walkthroughText": "Ask Elder Ophira about the wilds and accept her task. Defeat 20 Moonlit Stalkers within the marked Wilds objective area near (3965,1400). Report to her to unlock fast travel to the Avalon Wilds. Caradoc's Sundered Blade is optional loot."
+      "walkthroughText": "Ask Elder Ophira about the \"wilds\" and accept her task. Defeat 20 Moonlit Stalkers near (3965,1400), then \"report\" to unlock travel to the Witness Wilds. Caradoc's blade is optional loot."
     },
     {
       "id": "fading_veil_reckoning",
@@ -39545,7 +39749,7 @@ window.T4C_DATA = {
       "offerText": "The Veil is swallowing the names of those who cross it. Defeat 15 Veilbound Wraiths in the marked region, then report to me. Ysolde's circlet remains rare loot, not proof I require.",
       "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
       "completedText": "The blight hasn't forgotten what you did to it out there. Ysolde surely hasn't either.",
-      "walkthroughText": "Complete Avalon Wilds Vigil, ask Ophira about the veil, and accept. Defeat 15 Veilbound Wraiths near (4120,1560), then report to unlock the Fading Veil. Ysolde's Veiled Circlet is optional loot. Next speak with Chronicler Maelin at the sanctuary."
+      "walkthroughText": "Complete Witness Wilds Vigil, ask Ophira about the veil, and accept. Defeat 15 Veilbound Wraiths near (4120,1560), then report to unlock the Fading Veil. Ysolde's Veiled Circlet is optional loot. Next speak with Chronicler Maelin at the sanctuary."
     },
     {
       "id": "forge_the_godcore",
@@ -39697,7 +39901,7 @@ window.T4C_DATA = {
       "offerText": "This one's closer to my own heart than the rest. Bring me a core and a sigil, and I'll set what's left of the pact itself into a torc worth wearing.",
       "completionText": "There. Something of the old pact, worn instead of buried in the ground it was meant to protect. Wear it well - it's the closest thing to the original working any of us have managed in a very long time.",
       "completedText": "You're already wearing the Godsforged Torc of the First Pact. There's no more of that particular working left to give.",
-      "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Torc of the First Pact, the wisdom caster's piece. Both components are consumed and the torc is yours. Of everything the Forgewrights make, the Torc comes closest to repairing Avalon's fraying fey pact rather than simply borrowing its strength - which is either reassuring or alarming, depending on who you ask."
+      "walkthroughText": "Bring Grandmaster Tholvenn a Tempered Godcore and a Bound Godsigil and he forges the Godsforged Torc of the First Pact, the wisdom caster's piece. Both components are consumed and the torc is yours. Of everything the Forgewrights make, the Torc comes closest to repairing the Witness Isles' fraying fey pact rather than simply borrowing its strength - which is either reassuring or alarming, depending on who you ask."
     },
     {
       "id": "the_waking_rite",
@@ -39713,10 +39917,10 @@ window.T4C_DATA = {
       "rewardXp": 5000000,
       "requiredItemQty": 0,
       "minLevel": 125,
-      "offerText": "Avalon's pact is stirring again - I can feel it. It doesn't forgive the reckless, only the proven. Clear enough of the Fey Wardens still testing themselves against it, and come back once you've held your own at full strength - then we'll talk about what waking rite Avalon still remembers.",
-      "completionText": "You've held your ground, and Avalon's noticed. That's not nothing - it's the same proof the old trials used to demand, just asked a different way. Come find me whenever you're ready to be reborn; you won't need to go looking for the Oracle again.",
-      "completedText": "Avalon already knows what you're capable of. Just say the word when you're ready to be reborn.",
-      "walkthroughText": "Anchorite Rowan offers experienced characters a shortcut. Kill a handful of Fey Wardens in the same stretch of the Avalon Wilds that Ophira's vigil uses, then come back - though Rowan will not complete the rite for anyone below the level he names, so gather the kills whenever you like but expect to wait for the turn-in. Finishing it unlocks Rowan's own rebirth rite for good, so every future rebirth happens here instead of another trek down to the Oracle and back through her guardians."
+      "offerText": "The Witness Isles' pact is stirring. Clear enough Fey Wardens from the wilds and return at the required level. The rite will then be yours whenever you choose rebirth.",
+      "completionText": "You held your ground. The Witness Isles remember your proof. Ask Rowan for \"rebirth\" whenever you are ready; the rite remains available in future lives.",
+      "completedText": "The Witness Isles remember your proof. Ask Rowan for \"rebirth\" when ready.",
+      "walkthroughText": "Anchorite Rowan offers experienced characters a shortcut. Kill a handful of Fey Wardens in the same stretch of the Witness Wilds that Ophira's vigil uses, then come back - though Rowan will not complete the rite for anyone below the level he names, so gather the kills whenever you like but expect to wait for the turn-in. Finishing it unlocks Rowan's own rebirth rite for good, so every future rebirth happens here instead of another trek down to the Oracle and back through her guardians."
     },
     {
       "id": "renewed_wards",
@@ -39747,13 +39951,13 @@ window.T4C_DATA = {
       "areaCenterY": 750,
       "areaRadiusTiles": 100,
       "rewardGold": 1000000,
-      "rewardXp": 18000000,
+      "rewardXp": 30000000,
       "requiredItemQty": 0,
-      "minLevel": 220,
-      "offerText": "The people of Moonwake did not die first. Their names vanished from every record, and their friends forgot their faces. The revenants wandering the shoal are the memory left behind. Defeat 25 near Moonwake; their silence may reveal who taught them to feed.",
-      "completionText": "The revenants fall, and a name returns to my ledger: the Pale Cantor. She was once the keeper of the first ward bell.",
+      "minLevel": 240,
+      "offerText": "The people of Moonwake did not die first. Their names vanished from every record, and their friends forgot their faces. The revenants wandering the shoal are the memory left behind. Defeat 25 near Moonwake; their silence may reveal who taught them to feed. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "The names return, but only a living witness can interpret them. Find Ilyra south of Moonwake at (3930,830), ask \"testimony\", then \"clue\". Return to me and say \"accept\" to confront the Pale Cantor.",
       "completedText": "Moonwake's missing have names again.",
-      "walkthroughText": "From Avalon, follow the northern causeway to Moonwake Shoals. Defeat 25 Moonwake Revenants near (3930,750). Return to Maelin and report at level 220 or higher."
+      "walkthroughText": "From the Witness Isles camp, follow the northern causeway to Moonwake Shoals. Defeat 25 Moonwake Revenants near (3930,750). Return to Maelin and report at level 240 or higher; then ask \"story\"."
     },
     {
       "id": "pale_cantor",
@@ -39766,14 +39970,15 @@ window.T4C_DATA = {
       "areaCenterY": 675,
       "areaRadiusTiles": 70,
       "rewardGold": 1000000,
-      "rewardXp": 25000000,
+      "rewardXp": 40000000,
       "requiredItemKey": "item.moonwake_bell_shard",
       "requiredItemQty": 1,
-      "minLevel": 240,
-      "offerText": "The Pale Cantor cracked the bell that helped bind Rhunor, the god of the Hollow Dawn. Rhunor erases a person from memory before taking their life. Face the Cantor near Moonwake, recover her Bell Shard, and bring it to me.",
-      "completionText": "She called Rhunor's prison an oath, not a tomb. A second bell still burns on Emberglass Crown.",
-      "completedText": "The first bell is quiet again.",
-      "walkthroughText": "Defeat the Pale Cantor near (4050,675). She drops a Moonwake Bell Shard. Bring it to Maelin and report at level 240 or higher; the shard is consumed on turn-in."
+      "minLevel": 300,
+      "unlockZoneId": "threnody_reach",
+      "offerText": "The Pale Cantor cracked the bell that helped bind Rhunor, the god of the Hollow Dawn. Rhunor erases a person from memory before taking their life. Face the Cantor near Moonwake, recover her Bell Shard, and bring it to me. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "The shard remembers the prison's true name: Threnody Reach. I have marked it in Locations. Keeper Vael waits at its sheltered camp; ask him \"story\". The warders' lost chart tells the same road, but your witness is enough. Ask \"story\" for what follows.",
+      "completedText": "The first bell remembers. Your passage to Threnody Reach is open.",
+      "walkthroughText": "Defeat the Pale Cantor near (4050,675). Bring her guaranteed Moonwake Bell Shard to Maelin and report at level 300 or higher. The shard is consumed, and Threnody Reach opens in Locations. Visit Keeper Vael at (5505,1150) and ask \"story\"."
     },
     {
       "id": "emberglass_oath",
@@ -39788,11 +39993,11 @@ window.T4C_DATA = {
       "rewardGold": 1000000,
       "rewardXp": 30000000,
       "requiredItemQty": 0,
-      "minLevel": 260,
-      "offerText": "On Emberglass Crown, the old defenders still fight a war they no longer understand. The Ashguard have been ordered to keep the second bell hidden. Break their patrols; I will read the scorched oath they guard.",
-      "completionText": "The oath says the guardians were volunteers. One betrayed them: the Cinder Marshal, their commander, sold the bell's true name for power.",
+      "minLevel": 240,
+      "offerText": "On Emberglass Crown, the old defenders still fight a war they no longer understand. The Ashguard have been ordered to keep the second bell hidden. Break their patrols; I will read the scorched oath they guard. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "The patrols release a scorched oath. Soren, the surviving warder at (4280,2620), can explain its betrayal. Ask him \"testimony\", then \"clue\". Return to me and say \"accept\" to confront the Marshal.",
       "completedText": "The Ashguard's patrols are broken.",
-      "walkthroughText": "Travel south from Avalon to Emberglass Crown. Defeat 30 Emberglass Ashguards around (4360,2620), then report to Maelin at level 260 or higher."
+      "walkthroughText": "Travel south from the Witness Isles camp to Emberglass Crown. Defeat 30 Emberglass Ashguards around (4360,2620), then report to Maelin at level 240 or higher; then ask \"story\"."
     },
     {
       "id": "cinder_marshal",
@@ -39809,10 +40014,10 @@ window.T4C_DATA = {
       "requiredItemQty": 0,
       "minLevel": 300,
       "unlockZoneId": "threnody_reach",
-      "offerText": "The Cinder Marshal commands the ashbound host and carries the route to Threnody Reach, where Rhunor's last seal stands. Defeat him. I can open that destination for you once you have endured the trials of Avalon.",
-      "completionText": "The chart names Threnody Reach. I have marked it for travel. Keeper Vael waits at its sheltered camp; tell him the oath still has witnesses.",
+      "offerText": "The Cinder Marshal, lieutenant of the Dusk Regent, sold his warders' oath to Rhunor. He carries a chart to Threnody Reach, where the god's last seal stands. Defeat him and report to me; the chart will open the same road the witnesses seek through their bell. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "The chart names Threnody Reach. I have marked it for travel. Keeper Vael waits at its sheltered camp; tell him the oath still has witnesses. Ask \"story\" for what follows.",
       "completedText": "The route to Threnody Reach is already yours.",
-      "walkthroughText": "Defeat the Cinder Marshal near (4360,2630). Report to Maelin at level 300 or higher to unlock Threnody Reach in Locations."
+      "walkthroughText": "Defeat the Cinder Marshal near (4360,2630). Report to Maelin at level 300 or higher to unlock Threnody Reach in Locations. Say \"report\" when ready."
     },
     {
       "id": "ashbound_exiles",
@@ -39828,10 +40033,10 @@ window.T4C_DATA = {
       "rewardXp": 45000000,
       "requiredItemQty": 0,
       "minLevel": 315,
-      "offerText": "Threnody's exiles once built the wards. Rhunor stripped their memories until they served the enemy they had sworn to cage. Clear their march near the northern bell court, and I will tell you how the seal failed.",
-      "completionText": "One exile remembered a single word: 'hush'. A cantor in the court has been swallowing every warning before it can be spoken.",
+      "offerText": "Threnody's exiles once built the wards. Rhunor stripped their memories until they served the enemy they had sworn to cage. Clear their march near the northern bell court, and I will tell you how the seal failed. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "One exile remembered a single word: 'hush'. A cantor in the court has been swallowing every warning before it can be spoken. Ask \"story\" for what follows.",
       "completedText": "The northern march remains clear.",
-      "walkthroughText": "Defeat 35 Ashbound Exiles near (5690,1410). Return to Vael at level 315 or higher."
+      "walkthroughText": "Defeat 35 Ashbound Exiles near (5690,1410). Return to Vael at level 315 or higher. Say \"report\" when ready."
     },
     {
       "id": "hush_cantor",
@@ -39847,10 +40052,10 @@ window.T4C_DATA = {
       "rewardXp": 55000000,
       "requiredItemQty": 0,
       "minLevel": 340,
-      "offerText": "The Hush Cantor commands the northern court. She sings over the bell to silence every witness. Face her, then listen to what the court remembers when the song stops.",
-      "completionText": "The bell says Rhunor was never defeated by one champion. Mortal witnesses held his name together while the warders closed the gate. We will need those witnesses again.",
+      "offerText": "The Hush Cantor commands the northern court. She sings over the bell to silence every witness. Face her, then listen to what the court remembers when the song stops. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "The bell says Rhunor was never defeated by one champion. Mortal witnesses held his name together while the warders closed the gate. We will need those witnesses again. Ask \"story\" for what follows.",
       "completedText": "The warning can be heard again.",
-      "walkthroughText": "Defeat the Hush Cantor near (5750,1500). Report to Vael at level 340 or higher."
+      "walkthroughText": "Defeat the Hush Cantor near (5750,1500). Report to Vael at level 340 or higher. Say \"report\" when ready."
     },
     {
       "id": "nullguard_watch",
@@ -39866,10 +40071,10 @@ window.T4C_DATA = {
       "rewardXp": 65000000,
       "requiredItemQty": 0,
       "minLevel": 355,
-      "offerText": "At the middle court, the Nullguard wear the armor of the old warders. They are not the warders now. Break their watch so the living can carry the oath toward the southern gate.",
-      "completionText": "Their armor bears the seal of the Dusk Regent. He was the last mortal to remember Rhunor's true name, and he has chosen to forget it.",
+      "offerText": "At the middle court, the Nullguard wear the armor of the old warders. They are not the warders now. Break their watch so the living can carry the oath toward the southern gate. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "Their armor bears the seal of the Dusk Regent. He was the last mortal to remember Rhunor's true name, and he has chosen to forget it. Ask \"story\" for what follows.",
       "completedText": "The middle court is open.",
-      "walkthroughText": "Defeat 40 Nullguard near (5470,1760). Report to Vael at level 355 or higher."
+      "walkthroughText": "Defeat 40 Nullguard near (5470,1760). Report to Vael at level 355 or higher. Say \"report\" when ready."
     },
     {
       "id": "dusk_regent",
@@ -39886,10 +40091,10 @@ window.T4C_DATA = {
       "requiredItemKey": "item.last_witness_seal",
       "requiredItemQty": 1,
       "minLevel": 375,
-      "offerText": "The Dusk Regent guards the southern court. He surrendered his own memories to keep Rhunor from knowing the final ward. Defeat him and bring me his Last Witness Seal; it carries the warning he could no longer speak.",
-      "completionText": "The Regent falls lucid for one breath. He says the last ward is an island inside this island. The rift wraiths at the outer court are gnawing through its anchor.",
+      "offerText": "The Dusk Regent is Rhunor's demigod: a half-god made from a mortal warder and a shard of Rhunor, now sustained by every name his lieutenants erase. The Pale Cantor, Cinder Marshal and Hush Cantor answer to him. Defeat the Regent and bring me his Last Witness Seal, so we can reach the anchors feeding his master. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "The Regent falls lucid for one breath. He says the last ward is an island inside this island. The rift wraiths at the outer court are gnawing through its anchor. Ask \"story\" for what follows.",
       "completedText": "The Regent's warning has been heard.",
-      "walkthroughText": "Defeat the Dusk Regent near (5860,2040). He drops the Last Witness Seal. Bring it to Vael and report at level 375 or higher; the seal is consumed on turn-in."
+      "walkthroughText": "Defeat the Dusk Regent near (5860,2040). He drops the Last Witness Seal. Bring it to Vael and report at level 375 or higher; the seal is consumed on turn-in. Say \"report\" when ready."
     },
     {
       "id": "rift_unbinding",
@@ -39906,10 +40111,10 @@ window.T4C_DATA = {
       "requiredItemQty": 0,
       "minLevel": 390,
       "unlockZoneId": "hollow_dawn",
-      "offerText": "Rift wraiths are feeding on the anchor that surrounds Rhunor's prison. Destroy enough of them to steady the crossing. I will reveal the inner court only when the ward can bear your weight.",
-      "completionText": "The anchor holds. The Hollow Dawn is now marked in Locations; travel inside the water ring. Remember every name the bells returned.",
+      "offerText": "Rift wraiths are feeding on the anchor that surrounds Rhunor's prison. Destroy enough of them to steady the crossing. I will reveal the inner court only when the ward can bear your weight. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "The anchor holds. The Hollow Dawn is now marked in Locations; travel inside the water ring. Remember every name the bells returned. Ask \"story\" for what follows.",
       "completedText": "The inner court remains open.",
-      "walkthroughText": "Defeat 45 Rift Wraiths near (5630,2100). Report to Vael at level 390 or higher to unlock The Hollow Dawn in Locations."
+      "walkthroughText": "Defeat 45 Rift Wraiths near (5630,2100). Report to Vael at level 390 or higher to unlock The Hollow Dawn in Locations. Say \"report\" when ready."
     },
     {
       "id": "rhunor_hollow_dawn",
@@ -39925,10 +40130,10 @@ window.T4C_DATA = {
       "rewardXp": 100000000,
       "requiredItemQty": 0,
       "minLevel": 400,
-      "offerText": "Rhunor wakes beneath the final bell. He was an ancient god who learned to rule by erasing memory itself. The warders could only bind him while mortals remembered one another. Go to the inner court and face him; I will keep the names alive outside.",
-      "completionText": "Rhunor's form breaks and the bell sounds across both lands. The oath holds because the living chose to remember, not because a god showed mercy.",
+      "offerText": "Rhunor wakes beneath the final bell. He was an ancient god who learned to rule by erasing memory itself. The warders could only bind him while mortals remembered one another. Go to the inner court and face him; I will keep the names alive outside. Say \"accept\" to begin, \"route\" for directions, or \"report\" when the deed is done.",
+      "completionText": "Rhunor's form breaks and the bell sounds across both lands. The oath holds because the living chose to remember, not because a god showed mercy. Ask \"story\" for what follows.",
       "completedText": "The Hollow Dawn is bound. Its memory remains yours.",
-      "walkthroughText": "Use Locations to enter The Hollow Dawn after the rift anchor quest. Defeat Rhunor near (5650,2290), then return to Vael at level 400."
+      "walkthroughText": "Use Locations to enter The Hollow Dawn after the rift anchor quest. Defeat Rhunor near (5650,2290), then return to Vael at level 400. Say \"report\" when ready."
     }
   ],
   "npcs": [
@@ -39943,14 +40148,14 @@ window.T4C_DATA = {
           "worldZ": 0
         }
       ],
-      "welcomeText": "Avalon doesn't forget who's proven themselves to it. Neither do I.",
+      "welcomeText": "The Witness Isles remember those who have proven themselves. So do I. Ask about the \"rite\" if you wish to be reborn.",
       "topics": [
         {
           "keywords": [
             "rite",
             "waking"
           ],
-          "response": "Avalon's pact is stirring again - I can feel it. It doesn't forgive the reckless, only the proven. Stand against enough of the Fey Wardens still testing themselves against it, and come back once you've held your own at full strength - then we'll talk about what waking rite Avalon still remembers.",
+          "response": "The Witness Isles' pact is stirring. Stand against the Fey Wardens that still test it, then return at full strength. Ask about the \"rite\" again when you are ready.",
           "actions": [
             "GIVE_QUEST:the_waking_rite"
           ]
@@ -39960,14 +40165,14 @@ window.T4C_DATA = {
             "ready",
             "reborn"
           ],
-          "response": "Once Avalon's satisfied you're proven, ask me when you're ready to be reborn - you won't need to go looking for the Oracle again.",
+          "response": "Once the Witness Isles have seen your proof, ask me for \"rebirth\". You need not return to the Oracle.",
           "actions": []
         },
         {
           "keywords": [
             "rowan"
           ],
-          "response": "I used to think the Oracle's trial was the only door left standing. Turns out Avalon kept one of its own, quieter than the Oracle's ever was.",
+          "response": "I thought the Oracle's trial was the only door left. The Witness Isles kept another. Ask about the \"rite\".",
           "actions": []
         }
       ],
@@ -39994,7 +40199,7 @@ window.T4C_DATA = {
           "worldZ": 0
         }
       ],
-      "welcomeText": "Archmage Thalindra. Avalon sits on a confluence of old ley lines - it's why I teach the high arts here and nowhere else on this coast. Name a school - fire, water, earth, air, dark or light - and I'll show you what it holds.",
+      "welcomeText": "Archmage Thalindra. The Witness Isles sit on old ley lines. Name a school - fire, water, earth, air, dark or light - and I will show you what it holds.",
       "topics": [
         {
           "keywords": [
@@ -40117,34 +40322,76 @@ window.T4C_DATA = {
           "worldZ": 0
         }
       ],
-      "welcomeText": "I keep the names Avalon tried to forget. Ophira's Veil was only the first wound. Ask me for the story when you are ready to follow it.",
+      "welcomeText": "Ophira has exposed the wound in the Witness Isles. I can guide you through two accounts of its cause. Ask \"witnesses\", \"warders\", or \"hierarchy\" to learn more.",
       "topics": [
         {
           "keywords": [
             "story"
           ],
-          "response": "Ask me for the story.",
+          "response": "Ask me for the \"story\".",
           "actions": []
         },
         {
           "keywords": [
             "accept"
           ],
-          "response": "Say accept when you are ready.",
+          "response": "Say \"accept\" when you are ready.",
           "actions": []
         },
         {
           "keywords": [
             "report"
           ],
-          "response": "Say report when the deed is done.",
+          "response": "Say \"report\" when the deed is done.",
           "actions": []
         },
         {
           "keywords": [
             "route"
           ],
-          "response": "Say route for the marked location.",
+          "response": "Say \"route\" for the marked location.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "witnesses"
+          ],
+          "response": "Ask about \"witnesses\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "warders"
+          ],
+          "response": "Ask about \"warders\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "moonwake"
+          ],
+          "response": "Say \"moonwake\" to choose this account.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "emberglass"
+          ],
+          "response": "Say \"emberglass\" to choose this account.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "hierarchy"
+          ],
+          "response": "Ask about \"hierarchy\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "threnody"
+          ],
+          "response": "Ask about \"threnody\".",
           "actions": []
         }
       ],
@@ -40229,14 +40476,14 @@ window.T4C_DATA = {
           "worldZ": 0
         }
       ],
-      "welcomeText": "Welcome to Avalon Sanctuary. I am Elder Ophira. Our loyal fey hold the northern Wilds while corruption spreads from the Veil. Ask about the wilds to learn how you can help.",
+      "welcomeText": "Welcome to Witness Isles Sanctuary. I am Elder Ophira. Our loyal fey hold the northern wilds while corruption spreads from the Veil. Ask about the \"wilds\" to learn how you can help.",
       "topics": [
         {
           "keywords": [
             "wilds",
             "avalon wilds"
           ],
-          "response": "The Avalon Wilds lie north of the sanctuary. Moonlit Stalkers hunt in two clearings along our northern route. The fey still honor our pact; protect them from those predators. Ask about the route if you need directions.",
+          "response": "The Witness Wilds lie north of the sanctuary. Moonlit Stalkers hunt in two clearings along the route. The fey still honor our pact; protect them. Ask \"route\" for directions.",
           "actions": []
         },
         {
@@ -40351,6 +40598,46 @@ window.T4C_DATA = {
         "attackSkill": 250,
         "dodge": 65535,
         "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "EmberglassWarderSoren",
+      "origin": "new",
+      "displayName": "Soren, Emberglass Warder",
+      "spawns": [
+        {
+          "x": 4280,
+          "y": 2620,
+          "worldZ": 0
+        }
+      ],
+      "welcomeText": "I am Soren, the last warder who refused the Marshal's new oath. Ask \"testimony\" about our betrayal, then \"clue\" about his chart.",
+      "topics": [
+        {
+          "keywords": [
+            "testimony"
+          ],
+          "response": "We swore to guard a prison, not worship its prisoner. The Marshal sold our names to the Dusk Regent, Rhunor's half-god, and received a chart that crosses forgotten water. You have broken his patrols; now I can expose his bargain. Ask \"clue\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "clue"
+          ],
+          "response": "The Marshal carries the chart under his broken command seal. Defeat him at (4360,2630); the seal will release the route to Threnody. His oath answers to the Regent, not the bell. Return to Maelin at (4050,1480) and say \"accept\", then \"route\" for her instructions.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 1,
+        "maxHp": 1,
+        "strength": 10,
+        "endurance": 10,
+        "dexterity": 10,
+        "armorClass": 0,
+        "attackSkill": 1,
+        "dodge": 1,
+        "damageFormula": "1d3"
       }
     },
     {
@@ -40489,42 +40776,69 @@ window.T4C_DATA = {
       "displayName": "Harbormaster Rangor",
       "spawns": [
         {
-          "x": 1519,
-          "y": 1217,
+          "x": 180,
+          "y": 740,
           "worldZ": 0
         }
       ],
-      "welcomeText": "Welcome to what's left of the dock. Nobody sails from here anymore - not since the reavers took the shore and Ithrak took their coin.",
+      "welcomeText": "Stonecrest's quay remembers every ship that failed to return. Ask me about the \"isles\" beyond the shoal, or why I still keep this dock.",
       "topics": [
         {
           "keywords": [
-            "avalon",
-            "passage"
+            "isles",
+            "passage",
+            "avalon"
           ],
-          "response": "Coastwarden Ithrak runs the reavers squatting on the shore south of here, and he's the only one left who knows the safe line through the shoal to Avalon. Prove you can handle his scouts first, and then we'll talk about taking his chart off his corpse - I'll see you're recognized as someone Avalon can trust.",
-          "actions": [
-            "GIVE_QUEST:tideworn_shore_scouts"
-          ]
+          "response": "East of Stonecrest, Ithrak's Tideworn Reavers hold the only safe crossing to the Witness Isles. The last sailors who tried it lost more than their way: their families forgot their names. Ask about the \"scouts\" to prove you can face his warband, or ask \"route\" for directions.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "scouts"
+          ],
+          "response": "Ask about the scouts to begin the first test.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "chart"
+          ],
+          "response": "Ask about Ithrak's chart after the scouts.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "report"
+          ],
+          "response": "Return to me and report what happened.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "route"
+          ],
+          "response": "Leave Stonecrest by the eastern road. The reavers gather near (420,730), and Ithrak keeps his command near (455,745). Bring his chart back to me. Say \"scouts\" to begin, then \"report\" when the first deed is done.",
+          "actions": []
         },
         {
           "keywords": [
             "ithrak"
           ],
-          "response": "Ithrak used to be a knight, they say, before he decided guarding a smuggling route paid better than guarding anything worth guarding.",
+          "response": "Ithrak was once a sworn coastwarden. Now he sells the crossing and keeps its \"chart\" for himself. Ask about the chart after you have faced his scouts.",
           "actions": []
         },
         {
           "keywords": [
             "crossing"
           ],
-          "response": "Avalon's out there, past the shoal. Nobody's crossed it on their own in years - not without that chart, or without knowing the tide by heart the way Ithrak did.",
+          "response": "The crossing is yours once the reavers are driven back and Ithrak's chart is returned. Use Locations to travel to Witness Isles Sanctuary, then ask Elder Ophira about the \"wilds\". Your passage remains open after rebirth.",
           "actions": []
         },
         {
           "keywords": [
             "reavers"
           ],
-          "response": "Watch the tideline past the dock. The reavers don't wait for you to see them first.",
+          "response": "The reavers patrol Stoneheim's road east of Stonecrest. Ask for the \"route\", then return and \"report\" each deed.",
           "actions": []
         },
         {
@@ -40532,7 +40846,7 @@ window.T4C_DATA = {
             "why",
             "son"
           ],
-          "response": "My boy tried the crossing years back, chart or no chart. The tide took him before the reavers ever did. I don't sail anymore. I just make sure nobody else goes in as blind as he did.",
+          "response": "My son crossed without a chart. The tide took him, and for one night even I forgot his name. The old \"pact\" beyond the shoal is failing; I will not send another traveler blind.",
           "actions": []
         },
         {
@@ -40540,7 +40854,7 @@ window.T4C_DATA = {
             "fey",
             "pact"
           ],
-          "response": "The fey pact's older than this dock, older than Ithrak's smuggling. Sailors used to say it was fraying even before the reavers came. I don't know what's true and what's dockside talk - only that fewer of us who cross ever come back to say.",
+          "response": "The pact once kept the Witness Isles and Stoneheim from sharing the same wound. Its warders left us this road. Ask about the \"scouts\" if you mean to follow them.",
           "actions": []
         }
       ],
@@ -40652,34 +40966,76 @@ window.T4C_DATA = {
           "worldZ": 0
         }
       ],
-      "welcomeText": "I have stood watch at Threnody Reach since the last ward bell fell silent. Maelin sent you because you carry the memory of the oath. Ask me for the story.",
+      "welcomeText": "Maelin has sent another keeper of the oath. Whether you recovered the first bell or the betrayer's chart, the road ends here at Threnody Reach. Ask \"story\", or \"hierarchy\" to learn more.",
       "topics": [
         {
           "keywords": [
             "story"
           ],
-          "response": "Ask me for the story.",
+          "response": "Ask me for the \"story\".",
           "actions": []
         },
         {
           "keywords": [
             "accept"
           ],
-          "response": "Say accept when you are ready.",
+          "response": "Say \"accept\" when you are ready.",
           "actions": []
         },
         {
           "keywords": [
             "report"
           ],
-          "response": "Say report when the deed is done.",
+          "response": "Say \"report\" when the deed is done.",
           "actions": []
         },
         {
           "keywords": [
             "route"
           ],
-          "response": "Say route for the marked location.",
+          "response": "Say \"route\" for the marked location.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "witnesses"
+          ],
+          "response": "Ask about \"witnesses\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "warders"
+          ],
+          "response": "Ask about \"warders\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "moonwake"
+          ],
+          "response": "Say \"moonwake\" to choose this account.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "emberglass"
+          ],
+          "response": "Say \"emberglass\" to choose this account.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "hierarchy"
+          ],
+          "response": "Ask about \"hierarchy\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "threnody"
+          ],
+          "response": "Ask about \"threnody\".",
           "actions": []
         }
       ],
@@ -40772,7 +41128,7 @@ window.T4C_DATA = {
             "mirror",
             "glass"
           ],
-          "response": "This mirror has hung in the Colosseum longer than the Colosseum has had a name. When the Oracle - or Avalon - remakes you, the life you shed doesn't simply vanish. Its echo settles here. Say echo, and yours will step out of the glass: your face, your gear, your spells, your strength. Win, and the mirror rewards you. Fall, and it takes nothing - it only wants to be seen.",
+          "response": "This mirror has hung in the Colosseum longer than the Colosseum has had a name. When the Oracle - or the Witness Isles - remakes you, the life you shed doesn't simply vanish. Its echo settles here. Say echo, and yours will step out of the glass: your face, your gear, your spells, your strength. Win, and the mirror rewards you. Fall, and it takes nothing - it only wants to be seen.",
           "actions": []
         },
         {
@@ -40826,6 +41182,46 @@ window.T4C_DATA = {
         "attackSkill": 250,
         "dodge": 65535,
         "damageFormula": "1d23+16"
+      }
+    },
+    {
+      "id": "MoonwakeWitnessIlyra",
+      "origin": "new",
+      "displayName": "Ilyra, Moonwake Witness",
+      "spawns": [
+        {
+          "x": 3930,
+          "y": 830,
+          "worldZ": 0
+        }
+      ],
+      "welcomeText": "I am Ilyra. The sea took my family's voices, but it has not taken their names. Ask \"testimony\" about the bell, then \"clue\" about its keeper.",
+      "topics": [
+        {
+          "keywords": [
+            "testimony"
+          ],
+          "response": "My sister rang the first bell while the warders bound Rhunor. The Pale Cantor stole her last note and made the drowned sing it forever. Now that you have freed their names, I can remember the bell's flaw. Ask \"clue\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "clue"
+          ],
+          "response": "The Cantor hid the original note inside her Bell Shard. Defeat her at (4050,675) and recover it; the shard remembers Threnody even when every chart forgets. I entrust this memory to you. Return to Maelin at (4050,1480) and say \"accept\", then \"route\" for her instructions.",
+          "actions": []
+        }
+      ],
+      "combatProfile": {
+        "level": 1,
+        "maxHp": 1,
+        "strength": 10,
+        "endurance": 10,
+        "dexterity": 10,
+        "armorClass": 0,
+        "attackSkill": 1,
+        "dodge": 1,
+        "damageFormula": "1d3"
       }
     },
     {
@@ -41809,21 +42205,21 @@ window.T4C_DATA = {
           "worldZ": 0
         }
       ],
-      "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of Avalon before you leave - you'll thank me the first time you need to get back here in a hurry.",
+      "welcomeText": "Bryndis, wayfarer and scroll-trader. Buy a Scroll of the Witness Isles before you leave - you'll thank me the first time you need to get back here in a hurry.",
       "topics": [
         {
           "keywords": [
             "travel",
             "scroll"
           ],
-          "response": "The Scroll of Avalon carries you straight to the Sanctuary temple, no matter how far you've wandered. Cheap insurance, if you ask me.",
+          "response": "The Scroll of the Witness Isles carries you straight to the Sanctuary temple, no matter how far you've wandered. Cheap insurance, if you ask me.",
           "actions": []
         },
         {
           "keywords": [
             "gateway"
           ],
-          "response": "The Avalon Gateway is the spell woven into that scroll. Ask Archmage Thalindra if you'd rather learn to cast it yourself.",
+          "response": "The Witness Isles Gateway is the spell woven into that scroll. Ask Archmage Thalindra if you'd rather learn to cast it yourself.",
           "actions": []
         },
         {
@@ -41997,14 +42393,14 @@ window.T4C_DATA = {
       "unlockZoneId": "deep_ones_cave"
     },
     {
-      "name": "Avalon Sanctuary",
+      "name": "Witness Isles Sanctuary",
       "x": 4040,
       "y": 1477,
       "worldZ": 0,
       "unlockZoneId": "avalon_sanctuary"
     },
     {
-      "name": "The Avalon Wilds",
+      "name": "The Witness Wilds",
       "x": 3965,
       "y": 1400,
       "worldZ": 0,
@@ -53988,7 +54384,7 @@ window.T4C_DATA = {
           "expression": "10"
         }
       ],
-      "sellPrice": 5000
+      "sellPrice": 100
     },
     {
       "key": "verdant_wardens_bulwark",
@@ -54257,6 +54653,2457 @@ window.T4C_DATA = {
         }
       ],
       "sellPrice": 750000
+    },
+    {
+      "key": "witness_air_amulet",
+      "name": "${item.witness_air_amulet}",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 3",
+      "weight": 1.0,
+      "armorClass": 15.3,
+      "requirements": {
+        "endurance": 340.0,
+        "intelligence": 275.0,
+        "wisdom": 275.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38257.0,
+          "statId": 1.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38258.0,
+          "statId": 4.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38259.0,
+          "statId": 16.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38260.0,
+          "statId": 12.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38261.0,
+          "statId": 13.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38262.0,
+          "statId": 14.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38263.0,
+          "statId": 15.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38264.0,
+          "statId": 22.0,
+          "expression": "18"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_air_bracelet",
+      "name": "${item.witness_air_bracelet}",
+      "bodyPart": "BRACER",
+      "appearanceInventory": "64kInvBelt",
+      "weight": 1.0,
+      "armorClass": 15.3,
+      "requirements": {
+        "endurance": 340.0,
+        "intelligence": 275.0,
+        "wisdom": 275.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38214.0,
+          "statId": 1.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38215.0,
+          "statId": 4.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38216.0,
+          "statId": 16.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38217.0,
+          "statId": 12.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38218.0,
+          "statId": 13.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38219.0,
+          "statId": 14.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38220.0,
+          "statId": 15.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38221.0,
+          "statId": 22.0,
+          "expression": "18"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_air_plate",
+      "name": "${item.witness_air_plate}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "weight": 8.0,
+      "armorClass": 116.0,
+      "requirements": {
+        "endurance": 340.0,
+        "strength": 440.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38343.0,
+          "statId": 3.0,
+          "expression": "37"
+        },
+        {
+          "boostId": 38344.0,
+          "statId": 8.0,
+          "expression": "88"
+        },
+        {
+          "boostId": 38345.0,
+          "statId": 12.0,
+          "expression": "11"
+        },
+        {
+          "boostId": 38346.0,
+          "statId": 13.0,
+          "expression": "11"
+        },
+        {
+          "boostId": 38347.0,
+          "statId": 14.0,
+          "expression": "11"
+        },
+        {
+          "boostId": 38348.0,
+          "statId": 15.0,
+          "expression": "11"
+        },
+        {
+          "boostId": 38349.0,
+          "statId": 22.0,
+          "expression": "11"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_air_robe",
+      "name": "${item.witness_air_robe}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupWhiteRobe__pal7",
+      "appearanceInventory": "64kInvWhiteRobe__pal7",
+      "weight": 5.0,
+      "armorClass": 94.9,
+      "requirements": {
+        "endurance": 340.0,
+        "intelligence": 275.0,
+        "wisdom": 275.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38046.0,
+          "statId": 1.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38047.0,
+          "statId": 4.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38048.0,
+          "statId": 16.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38049.0,
+          "statId": 12.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38050.0,
+          "statId": 13.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38051.0,
+          "statId": 14.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38052.0,
+          "statId": 15.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38053.0,
+          "statId": 22.0,
+          "expression": "18"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_air_signet",
+      "name": "${item.witness_air_signet}",
+      "bodyPart": "RING1",
+      "appearanceInventory": "64kInvRings 3",
+      "weight": 1.0,
+      "armorClass": 15.3,
+      "requirements": {
+        "endurance": 340.0,
+        "intelligence": 275.0,
+        "wisdom": 275.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38062.0,
+          "statId": 1.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38063.0,
+          "statId": 4.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38064.0,
+          "statId": 16.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38065.0,
+          "statId": 12.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38066.0,
+          "statId": 13.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38067.0,
+          "statId": 14.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38068.0,
+          "statId": 15.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38069.0,
+          "statId": 22.0,
+          "expression": "18"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_air_tiara",
+      "name": "${item.witness_air_tiara}",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "weight": 2.0,
+      "armorClass": 27.4,
+      "requirements": {
+        "endurance": 340.0,
+        "intelligence": 275.0,
+        "wisdom": 275.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38300.0,
+          "statId": 1.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38301.0,
+          "statId": 4.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38302.0,
+          "statId": 16.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38303.0,
+          "statId": 12.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38304.0,
+          "statId": 13.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38305.0,
+          "statId": 14.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38306.0,
+          "statId": 15.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38307.0,
+          "statId": 22.0,
+          "expression": "18"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_air_wand",
+      "name": "${item.witness_air_wand}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "weight": 4.0,
+      "dmgFormula": "1d48+65",
+      "atkDelay": "1250",
+      "requirements": {
+        "intelligence": 275.0,
+        "wisdom": 275.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38070.0,
+          "statId": 1.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38071.0,
+          "statId": 4.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38072.0,
+          "statId": 16.0,
+          "expression": "44"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_air_wings",
+      "name": "${item.witness_air_wings}",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal6",
+      "appearanceInventory": "64kInvSeraphWhiteWings__pal6",
+      "weight": 2.0,
+      "armorClass": 27.5,
+      "requirements": {
+        "endurance": 340.0,
+        "intelligence": 275.0,
+        "wisdom": 275.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38054.0,
+          "statId": 1.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38055.0,
+          "statId": 4.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38056.0,
+          "statId": 16.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38057.0,
+          "statId": 12.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38058.0,
+          "statId": 13.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38059.0,
+          "statId": 14.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38060.0,
+          "statId": 15.0,
+          "expression": "18"
+        },
+        {
+          "boostId": 38061.0,
+          "statId": 22.0,
+          "expression": "18"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_dark_amulet",
+      "name": "${item.witness_dark_amulet}",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 3",
+      "weight": 1.0,
+      "armorClass": 22.4,
+      "requirements": {
+        "endurance": 560.0,
+        "intelligence": 625.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38279.0,
+          "statId": 1.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38280.0,
+          "statId": 24.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38281.0,
+          "statId": 12.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38282.0,
+          "statId": 13.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38283.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38284.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38285.0,
+          "statId": 22.0,
+          "expression": "25"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_dark_bracelet",
+      "name": "${item.witness_dark_bracelet}",
+      "bodyPart": "BRACER",
+      "appearanceInventory": "64kInvBelt",
+      "weight": 1.0,
+      "armorClass": 22.4,
+      "requirements": {
+        "endurance": 560.0,
+        "intelligence": 625.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38236.0,
+          "statId": 1.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38237.0,
+          "statId": 24.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38238.0,
+          "statId": 12.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38239.0,
+          "statId": 13.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38240.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38241.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38242.0,
+          "statId": 22.0,
+          "expression": "25"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_dark_dagger",
+      "name": "${item.witness_dark_dagger}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupBattleDagger",
+      "appearanceInventory": "64kInvBattleDagger",
+      "weight": 3.0,
+      "dmgFormula": "1d180+180",
+      "atkDelay": "950",
+      "requirements": {
+        "agility": 760.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38375.0,
+          "statId": 6.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38376.0,
+          "statId": 10035.0,
+          "expression": "152"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_dark_plate",
+      "name": "${item.witness_dark_plate}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "weight": 8.0,
+      "armorClass": 191.0,
+      "requirements": {
+        "endurance": 560.0,
+        "strength": 760.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38364.0,
+          "statId": 3.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38365.0,
+          "statId": 8.0,
+          "expression": "152"
+        },
+        {
+          "boostId": 38366.0,
+          "statId": 12.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38367.0,
+          "statId": 13.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38368.0,
+          "statId": 14.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38369.0,
+          "statId": 15.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38370.0,
+          "statId": 22.0,
+          "expression": "19"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_dark_robe",
+      "name": "${item.witness_dark_robe}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupNecromanRobe",
+      "appearanceInventory": "64kInvNecromanRobe",
+      "weight": 6.0,
+      "armorClass": 138.9,
+      "requirements": {
+        "endurance": 560.0,
+        "intelligence": 625.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38119.0,
+          "statId": 1.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38120.0,
+          "statId": 24.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38121.0,
+          "statId": 12.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38122.0,
+          "statId": 13.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38123.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38124.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38125.0,
+          "statId": 22.0,
+          "expression": "25"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_dark_rod",
+      "name": "${item.witness_dark_rod}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLichStaff",
+      "appearanceInventory": "64kInvLichStaff",
+      "weight": 4.0,
+      "dmgFormula": "1d70+100",
+      "atkDelay": "1300",
+      "requirements": {
+        "intelligence": 625.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38140.0,
+          "statId": 1.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38141.0,
+          "statId": 24.0,
+          "expression": "63"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_dark_signet",
+      "name": "${item.witness_dark_signet}",
+      "bodyPart": "RING1",
+      "appearanceInventory": "64kInvRings 5",
+      "weight": 1.0,
+      "armorClass": 22.4,
+      "requirements": {
+        "endurance": 560.0,
+        "intelligence": 625.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38133.0,
+          "statId": 1.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38134.0,
+          "statId": 24.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38135.0,
+          "statId": 12.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38136.0,
+          "statId": 13.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38137.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38138.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38139.0,
+          "statId": 22.0,
+          "expression": "25"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_dark_tiara",
+      "name": "${item.witness_dark_tiara}",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "weight": 2.0,
+      "armorClass": 40.1,
+      "requirements": {
+        "endurance": 560.0,
+        "intelligence": 625.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38322.0,
+          "statId": 1.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38323.0,
+          "statId": 24.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38324.0,
+          "statId": 12.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38325.0,
+          "statId": 13.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38326.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38327.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38328.0,
+          "statId": 22.0,
+          "expression": "25"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_dark_wings",
+      "name": "${item.witness_dark_wings}",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal8",
+      "appearanceInventory": "64kInvSeraphWhiteWings__pal8",
+      "weight": 2.0,
+      "armorClass": 40.3,
+      "requirements": {
+        "endurance": 560.0,
+        "intelligence": 625.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38126.0,
+          "statId": 1.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38127.0,
+          "statId": 24.0,
+          "expression": "63"
+        },
+        {
+          "boostId": 38128.0,
+          "statId": 12.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38129.0,
+          "statId": 13.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38130.0,
+          "statId": 14.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38131.0,
+          "statId": 15.0,
+          "expression": "25"
+        },
+        {
+          "boostId": 38132.0,
+          "statId": 22.0,
+          "expression": "25"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_earth_amulet",
+      "name": "${item.witness_earth_amulet}",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 1",
+      "weight": 1.0,
+      "armorClass": 20.0,
+      "requirements": {
+        "endurance": 400.0,
+        "wisdom": 475.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38265.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 38266.0,
+          "statId": 19.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 38267.0,
+          "statId": 12.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38268.0,
+          "statId": 13.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38269.0,
+          "statId": 14.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38270.0,
+          "statId": 15.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38271.0,
+          "statId": 22.0,
+          "expression": "19"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_earth_bracelet",
+      "name": "${item.witness_earth_bracelet}",
+      "bodyPart": "BRACER",
+      "appearanceInventory": "64kInvBelt",
+      "weight": 1.0,
+      "armorClass": 20.0,
+      "requirements": {
+        "endurance": 400.0,
+        "wisdom": 475.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38222.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 38223.0,
+          "statId": 19.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 38224.0,
+          "statId": 12.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38225.0,
+          "statId": 13.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38226.0,
+          "statId": 14.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38227.0,
+          "statId": 15.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38228.0,
+          "statId": 22.0,
+          "expression": "19"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_earth_plate",
+      "name": "${item.witness_earth_plate}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "weight": 8.0,
+      "armorClass": 136.4,
+      "requirements": {
+        "endurance": 400.0,
+        "strength": 540.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38350.0,
+          "statId": 3.0,
+          "expression": "45"
+        },
+        {
+          "boostId": 38351.0,
+          "statId": 8.0,
+          "expression": "108"
+        },
+        {
+          "boostId": 38352.0,
+          "statId": 12.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 38353.0,
+          "statId": 13.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 38354.0,
+          "statId": 14.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 38355.0,
+          "statId": 15.0,
+          "expression": "14"
+        },
+        {
+          "boostId": 38356.0,
+          "statId": 22.0,
+          "expression": "14"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_earth_robe",
+      "name": "${item.witness_earth_robe}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupWhiteRobe__pal8",
+      "appearanceInventory": "64kInvWhiteRobe__pal8",
+      "weight": 6.0,
+      "armorClass": 124.0,
+      "requirements": {
+        "endurance": 400.0,
+        "wisdom": 475.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38073.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 38074.0,
+          "statId": 19.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 38075.0,
+          "statId": 12.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38076.0,
+          "statId": 13.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38077.0,
+          "statId": 14.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38078.0,
+          "statId": 15.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38079.0,
+          "statId": 22.0,
+          "expression": "19"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_earth_sceptre",
+      "name": "${item.witness_earth_sceptre}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "weight": 4.0,
+      "dmgFormula": "1d54+75",
+      "atkDelay": "1300",
+      "requirements": {
+        "wisdom": 475.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38094.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 38095.0,
+          "statId": 19.0,
+          "expression": "48"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_earth_signet",
+      "name": "${item.witness_earth_signet}",
+      "bodyPart": "RING1",
+      "appearanceInventory": "64kInvRings 1",
+      "weight": 1.0,
+      "armorClass": 20.0,
+      "requirements": {
+        "endurance": 400.0,
+        "wisdom": 475.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38087.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 38088.0,
+          "statId": 19.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 38089.0,
+          "statId": 12.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38090.0,
+          "statId": 13.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38091.0,
+          "statId": 14.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38092.0,
+          "statId": 15.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38093.0,
+          "statId": 22.0,
+          "expression": "19"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_earth_tiara",
+      "name": "${item.witness_earth_tiara}",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "weight": 2.0,
+      "armorClass": 35.8,
+      "requirements": {
+        "endurance": 400.0,
+        "wisdom": 475.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38308.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 38309.0,
+          "statId": 19.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 38310.0,
+          "statId": 12.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38311.0,
+          "statId": 13.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38312.0,
+          "statId": 14.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38313.0,
+          "statId": 15.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38314.0,
+          "statId": 22.0,
+          "expression": "19"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_earth_wings",
+      "name": "${item.witness_earth_wings}",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal7",
+      "appearanceInventory": "64kInvSeraphWhiteWings__pal7",
+      "weight": 2.0,
+      "armorClass": 36.0,
+      "requirements": {
+        "endurance": 400.0,
+        "wisdom": 475.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38080.0,
+          "statId": 4.0,
+          "expression": "40"
+        },
+        {
+          "boostId": 38081.0,
+          "statId": 19.0,
+          "expression": "48"
+        },
+        {
+          "boostId": 38082.0,
+          "statId": 12.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38083.0,
+          "statId": 13.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38084.0,
+          "statId": 14.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38085.0,
+          "statId": 15.0,
+          "expression": "19"
+        },
+        {
+          "boostId": 38086.0,
+          "statId": 22.0,
+          "expression": "19"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_fire_amulet",
+      "name": "${item.witness_fire_amulet}",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 1",
+      "weight": 1.0,
+      "armorClass": 8.0,
+      "requirements": {
+        "endurance": 200.0,
+        "intelligence": 240.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38243.0,
+          "statId": 1.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38244.0,
+          "statId": 17.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38245.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38246.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38247.0,
+          "statId": 14.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38248.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38249.0,
+          "statId": 22.0,
+          "expression": "10"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_fire_bracelet",
+      "name": "${item.witness_fire_bracelet}",
+      "bodyPart": "BRACER",
+      "appearanceInventory": "64kInvBelt",
+      "weight": 1.0,
+      "armorClass": 8.0,
+      "requirements": {
+        "endurance": 200.0,
+        "intelligence": 240.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38200.0,
+          "statId": 1.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38201.0,
+          "statId": 17.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38202.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38203.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38204.0,
+          "statId": 14.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38205.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38206.0,
+          "statId": 22.0,
+          "expression": "10"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_fire_brand",
+      "name": "${item.witness_fire_brand}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "weight": 4.0,
+      "dmgFormula": "1d36+45",
+      "atkDelay": "1300",
+      "requirements": {
+        "intelligence": 240.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38021.0,
+          "statId": 1.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38022.0,
+          "statId": 17.0,
+          "expression": "24"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_fire_mace",
+      "name": "${item.witness_fire_mace}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupMace",
+      "appearanceInventory": "64kInvMace",
+      "weight": 6.0,
+      "dmgFormula": "1d120+90",
+      "atkDelay": "1400",
+      "requirements": {
+        "strength": 260.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38371.0,
+          "statId": 3.0,
+          "expression": "22"
+        },
+        {
+          "boostId": 38372.0,
+          "statId": 8.0,
+          "expression": "52"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_fire_plate",
+      "name": "${item.witness_fire_plate}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "weight": 8.0,
+      "armorClass": 68.2,
+      "requirements": {
+        "endurance": 200.0,
+        "strength": 260.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38329.0,
+          "statId": 3.0,
+          "expression": "22"
+        },
+        {
+          "boostId": 38330.0,
+          "statId": 8.0,
+          "expression": "52"
+        },
+        {
+          "boostId": 38331.0,
+          "statId": 12.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 38332.0,
+          "statId": 13.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 38333.0,
+          "statId": 14.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 38334.0,
+          "statId": 15.0,
+          "expression": "7"
+        },
+        {
+          "boostId": 38335.0,
+          "statId": 22.0,
+          "expression": "7"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_fire_robe",
+      "name": "${item.witness_fire_robe}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupRedRobe",
+      "appearanceInventory": "64kInvRedRobe",
+      "weight": 5.0,
+      "armorClass": 49.6,
+      "requirements": {
+        "endurance": 200.0,
+        "intelligence": 240.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38000.0,
+          "statId": 1.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38001.0,
+          "statId": 17.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38002.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38003.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38004.0,
+          "statId": 14.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38005.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38006.0,
+          "statId": 22.0,
+          "expression": "10"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_fire_signet",
+      "name": "${item.witness_fire_signet}",
+      "bodyPart": "RING1",
+      "appearanceInventory": "64kInvRings 4",
+      "weight": 1.0,
+      "armorClass": 8.0,
+      "requirements": {
+        "endurance": 200.0,
+        "intelligence": 240.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38014.0,
+          "statId": 1.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38015.0,
+          "statId": 17.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38016.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38017.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38018.0,
+          "statId": 14.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38019.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38020.0,
+          "statId": 22.0,
+          "expression": "10"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_fire_tiara",
+      "name": "${item.witness_fire_tiara}",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "weight": 2.0,
+      "armorClass": 14.3,
+      "requirements": {
+        "endurance": 200.0,
+        "intelligence": 240.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38286.0,
+          "statId": 1.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38287.0,
+          "statId": 17.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38288.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38289.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38290.0,
+          "statId": 14.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38291.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38292.0,
+          "statId": 22.0,
+          "expression": "10"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_fire_wings",
+      "name": "${item.witness_fire_wings}",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal3",
+      "appearanceInventory": "64kInvSeraphWhiteWings__pal3",
+      "weight": 2.0,
+      "armorClass": 14.4,
+      "requirements": {
+        "endurance": 200.0,
+        "intelligence": 240.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38007.0,
+          "statId": 1.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38008.0,
+          "statId": 17.0,
+          "expression": "24"
+        },
+        {
+          "boostId": 38009.0,
+          "statId": 12.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38010.0,
+          "statId": 13.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38011.0,
+          "statId": 14.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38012.0,
+          "statId": 15.0,
+          "expression": "10"
+        },
+        {
+          "boostId": 38013.0,
+          "statId": 22.0,
+          "expression": "10"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_light_amulet",
+      "name": "${item.witness_light_amulet}",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 2",
+      "weight": 1.0,
+      "armorClass": 24.0,
+      "requirements": {
+        "endurance": 480.0,
+        "wisdom": 525.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38272.0,
+          "statId": 4.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38273.0,
+          "statId": 23.0,
+          "expression": "53"
+        },
+        {
+          "boostId": 38274.0,
+          "statId": 12.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38275.0,
+          "statId": 13.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38276.0,
+          "statId": 14.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38277.0,
+          "statId": 15.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38278.0,
+          "statId": 22.0,
+          "expression": "21"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_light_bracelet",
+      "name": "${item.witness_light_bracelet}",
+      "bodyPart": "BRACER",
+      "appearanceInventory": "64kInvBelt",
+      "weight": 1.0,
+      "armorClass": 24.0,
+      "requirements": {
+        "endurance": 480.0,
+        "wisdom": 525.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38229.0,
+          "statId": 4.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38230.0,
+          "statId": 23.0,
+          "expression": "53"
+        },
+        {
+          "boostId": 38231.0,
+          "statId": 12.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38232.0,
+          "statId": 13.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38233.0,
+          "statId": 14.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38234.0,
+          "statId": 15.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38235.0,
+          "statId": 22.0,
+          "expression": "21"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_light_plate",
+      "name": "${item.witness_light_plate}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "weight": 8.0,
+      "armorClass": 163.7,
+      "requirements": {
+        "endurance": 480.0,
+        "strength": 650.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38357.0,
+          "statId": 3.0,
+          "expression": "54"
+        },
+        {
+          "boostId": 38358.0,
+          "statId": 8.0,
+          "expression": "130"
+        },
+        {
+          "boostId": 38359.0,
+          "statId": 12.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 38360.0,
+          "statId": 13.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 38361.0,
+          "statId": 14.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 38362.0,
+          "statId": 15.0,
+          "expression": "16"
+        },
+        {
+          "boostId": 38363.0,
+          "statId": 22.0,
+          "expression": "16"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_light_robe",
+      "name": "${item.witness_light_robe}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupWhiteRobe__pal9",
+      "appearanceInventory": "64kInvWhiteRobe__pal9",
+      "weight": 6.0,
+      "armorClass": 148.8,
+      "requirements": {
+        "endurance": 480.0,
+        "wisdom": 525.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38096.0,
+          "statId": 4.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38097.0,
+          "statId": 23.0,
+          "expression": "53"
+        },
+        {
+          "boostId": 38098.0,
+          "statId": 12.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38099.0,
+          "statId": 13.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38100.0,
+          "statId": 14.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38101.0,
+          "statId": 15.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38102.0,
+          "statId": 22.0,
+          "expression": "21"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_light_signet",
+      "name": "${item.witness_light_signet}",
+      "bodyPart": "RING1",
+      "appearanceInventory": "64kInvRings 5",
+      "weight": 1.0,
+      "armorClass": 24.0,
+      "requirements": {
+        "endurance": 480.0,
+        "wisdom": 525.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38110.0,
+          "statId": 4.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38111.0,
+          "statId": 23.0,
+          "expression": "53"
+        },
+        {
+          "boostId": 38112.0,
+          "statId": 12.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38113.0,
+          "statId": 13.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38114.0,
+          "statId": 14.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38115.0,
+          "statId": 15.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38116.0,
+          "statId": 22.0,
+          "expression": "21"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_light_staff",
+      "name": "${item.witness_light_staff}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLichStaff",
+      "appearanceInventory": "64kInvLichStaff",
+      "weight": 4.0,
+      "dmgFormula": "1d60+85",
+      "atkDelay": "1300",
+      "requirements": {
+        "wisdom": 525.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38117.0,
+          "statId": 4.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38118.0,
+          "statId": 23.0,
+          "expression": "53"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_light_tiara",
+      "name": "${item.witness_light_tiara}",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "weight": 2.0,
+      "armorClass": 42.9,
+      "requirements": {
+        "endurance": 480.0,
+        "wisdom": 525.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38315.0,
+          "statId": 4.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38316.0,
+          "statId": 23.0,
+          "expression": "53"
+        },
+        {
+          "boostId": 38317.0,
+          "statId": 12.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38318.0,
+          "statId": 13.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38319.0,
+          "statId": 14.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38320.0,
+          "statId": 15.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38321.0,
+          "statId": 22.0,
+          "expression": "21"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_light_wings",
+      "name": "${item.witness_light_wings}",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal4",
+      "appearanceInventory": "64kInvSeraphWhiteWings__pal4",
+      "weight": 2.0,
+      "armorClass": 43.2,
+      "requirements": {
+        "endurance": 480.0,
+        "wisdom": 525.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38103.0,
+          "statId": 4.0,
+          "expression": "44"
+        },
+        {
+          "boostId": 38104.0,
+          "statId": 23.0,
+          "expression": "53"
+        },
+        {
+          "boostId": 38105.0,
+          "statId": 12.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38106.0,
+          "statId": 13.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38107.0,
+          "statId": 14.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38108.0,
+          "statId": 15.0,
+          "expression": "21"
+        },
+        {
+          "boostId": 38109.0,
+          "statId": 22.0,
+          "expression": "21"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_water_amulet",
+      "name": "${item.witness_water_amulet}",
+      "bodyPart": "NECK",
+      "appearanceInventory": "64kInvNecklace 2",
+      "weight": 1.0,
+      "armorClass": 11.2,
+      "requirements": {
+        "endurance": 280.0,
+        "intelligence": 325.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38250.0,
+          "statId": 1.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38251.0,
+          "statId": 18.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38252.0,
+          "statId": 12.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38253.0,
+          "statId": 13.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38254.0,
+          "statId": 14.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38255.0,
+          "statId": 15.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38256.0,
+          "statId": 22.0,
+          "expression": "13"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_water_bracelet",
+      "name": "${item.witness_water_bracelet}",
+      "bodyPart": "BRACER",
+      "appearanceInventory": "64kInvBelt",
+      "weight": 1.0,
+      "armorClass": 11.2,
+      "requirements": {
+        "endurance": 280.0,
+        "intelligence": 325.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38207.0,
+          "statId": 1.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38208.0,
+          "statId": 18.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38209.0,
+          "statId": 12.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38210.0,
+          "statId": 13.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38211.0,
+          "statId": 14.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38212.0,
+          "statId": 15.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38213.0,
+          "statId": 22.0,
+          "expression": "13"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_water_plate",
+      "name": "${item.witness_water_plate}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupPlateBody",
+      "appearanceInventory": "64kInvPlateArmorSleeves",
+      "weight": 8.0,
+      "armorClass": 95.5,
+      "requirements": {
+        "endurance": 280.0,
+        "strength": 350.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38336.0,
+          "statId": 3.0,
+          "expression": "29"
+        },
+        {
+          "boostId": 38337.0,
+          "statId": 8.0,
+          "expression": "70"
+        },
+        {
+          "boostId": 38338.0,
+          "statId": 12.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 38339.0,
+          "statId": 13.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 38340.0,
+          "statId": 14.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 38341.0,
+          "statId": 15.0,
+          "expression": "9"
+        },
+        {
+          "boostId": 38342.0,
+          "statId": 22.0,
+          "expression": "9"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_water_robe",
+      "name": "${item.witness_water_robe}",
+      "bodyPart": "BODY",
+      "appearanceEquippedPrimary": "PupWhiteRobe__pal2",
+      "appearanceInventory": "64kInvWhiteRobe__pal2",
+      "weight": 5.0,
+      "armorClass": 69.4,
+      "requirements": {
+        "endurance": 280.0,
+        "intelligence": 325.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38023.0,
+          "statId": 1.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38024.0,
+          "statId": 18.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38025.0,
+          "statId": 12.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38026.0,
+          "statId": 13.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38027.0,
+          "statId": 14.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38028.0,
+          "statId": 15.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38029.0,
+          "statId": 22.0,
+          "expression": "13"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_water_sceptre",
+      "name": "${item.witness_water_sceptre}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupWoodenStaff",
+      "appearanceInventory": "64kInvWoodenStaff",
+      "weight": 4.0,
+      "dmgFormula": "1d42+55",
+      "atkDelay": "1300",
+      "requirements": {
+        "intelligence": 325.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38044.0,
+          "statId": 1.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38045.0,
+          "statId": 18.0,
+          "expression": "33"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_water_signet",
+      "name": "${item.witness_water_signet}",
+      "bodyPart": "RING1",
+      "appearanceInventory": "64kInvRings 2",
+      "weight": 1.0,
+      "armorClass": 11.2,
+      "requirements": {
+        "endurance": 280.0,
+        "intelligence": 325.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38037.0,
+          "statId": 1.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38038.0,
+          "statId": 18.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38039.0,
+          "statId": 12.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38040.0,
+          "statId": 13.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38041.0,
+          "statId": 14.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38042.0,
+          "statId": 15.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38043.0,
+          "statId": 22.0,
+          "expression": "13"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_water_staff",
+      "name": "${item.witness_water_staff}",
+      "bodyPart": "WEAPON",
+      "appearanceEquippedPrimary": "PupLichStaff",
+      "appearanceInventory": "64kInvLichStaff",
+      "weight": 4.0,
+      "dmgFormula": "1d48+60",
+      "atkDelay": "1300",
+      "requirements": {
+        "intelligence": 325.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38373.0,
+          "statId": 1.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38374.0,
+          "statId": 18.0,
+          "expression": "33"
+        }
+      ],
+      "sellPrice": 20000
+    },
+    {
+      "key": "witness_water_tiara",
+      "name": "${item.witness_water_tiara}",
+      "bodyPart": "HEAD",
+      "appearanceEquippedPrimary": "PupPlateHelm",
+      "appearanceInventory": "64kInvPlateArmorHelm",
+      "weight": 2.0,
+      "armorClass": 20.0,
+      "requirements": {
+        "endurance": 280.0,
+        "intelligence": 325.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38293.0,
+          "statId": 1.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38294.0,
+          "statId": 18.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38295.0,
+          "statId": 12.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38296.0,
+          "statId": 13.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38297.0,
+          "statId": 14.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38298.0,
+          "statId": 15.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38299.0,
+          "statId": 22.0,
+          "expression": "13"
+        }
+      ],
+      "sellPrice": 16667
+    },
+    {
+      "key": "witness_water_wings",
+      "name": "${item.witness_water_wings}",
+      "bodyPart": "BACK",
+      "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal2",
+      "appearanceInventory": "64kInvSeraphWhiteWings__pal2",
+      "weight": 2.0,
+      "armorClass": 20.2,
+      "requirements": {
+        "endurance": 280.0,
+        "intelligence": 325.0
+      },
+      "unique": true,
+      "boosts": [
+        {
+          "boostId": 38030.0,
+          "statId": 1.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38031.0,
+          "statId": 18.0,
+          "expression": "33"
+        },
+        {
+          "boostId": 38032.0,
+          "statId": 12.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38033.0,
+          "statId": 13.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38034.0,
+          "statId": 14.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38035.0,
+          "statId": 15.0,
+          "expression": "13"
+        },
+        {
+          "boostId": 38036.0,
+          "statId": 22.0,
+          "expression": "13"
+        }
+      ],
+      "sellPrice": 20000
     },
     {
       "key": "wyrmling_scale_bracer",
@@ -54858,7 +57705,7 @@ window.T4C_DATA = {
     },
     {
       "key": "item.scroll_of_avalon",
-      "name": "Scroll of Avalon",
+      "name": "Scroll of the Witness Isles",
       "price": 16666,
       "sellPrice": 8333,
       "weight": 2,
@@ -54876,7 +57723,7 @@ window.T4C_DATA = {
       "boosts": [],
       "unlimitedUse": false,
       "useEffects": [
-        "Teleports the caster to the sanctuary of Avalon."
+        "Teleports the caster to the sanctuary of the Witness Isles."
       ]
     },
     {
@@ -57870,7 +60717,7 @@ window.T4C_DATA = {
       "item": "tideworn_avalon_chart",
       "monster": "Coastwarden Ithrak",
       "monsterDisplayName": "Coastwarden Ithrak",
-      "chance": 0.02
+      "chance": 1.0
     },
     {
       "item": "verdant_wardens_bulwark",
@@ -57883,6 +60730,312 @@ window.T4C_DATA = {
       "monster": "Barrow Wight",
       "monsterDisplayName": "Barrow Wight",
       "chance": 0.03
+    },
+    {
+      "item": "witness_air_amulet",
+      "monster": "Emberglass Ashguard",
+      "monsterDisplayName": "Emberglass Ashguard",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_air_bracelet",
+      "monster": "Emberglass Ashguard",
+      "monsterDisplayName": "Emberglass Ashguard",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_air_plate",
+      "monster": "The Cinder Marshal",
+      "monsterDisplayName": "The Cinder Marshal",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_air_robe",
+      "monster": "The Cinder Marshal",
+      "monsterDisplayName": "The Cinder Marshal",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_air_signet",
+      "monster": "Emberglass Ashguard",
+      "monsterDisplayName": "Emberglass Ashguard",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_air_tiara",
+      "monster": "Emberglass Ashguard",
+      "monsterDisplayName": "Emberglass Ashguard",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_air_wand",
+      "monster": "The Cinder Marshal",
+      "monsterDisplayName": "The Cinder Marshal",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_air_wings",
+      "monster": "The Cinder Marshal",
+      "monsterDisplayName": "The Cinder Marshal",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_dark_amulet",
+      "monster": "Rift Wraith",
+      "monsterDisplayName": "Rift Wraith",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_dark_bracelet",
+      "monster": "Rift Wraith",
+      "monsterDisplayName": "Rift Wraith",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_dark_dagger",
+      "monster": "Rhunor, the Hollow Dawn",
+      "monsterDisplayName": "Rhunor, the Hollow Dawn",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_dark_plate",
+      "monster": "Rhunor, the Hollow Dawn",
+      "monsterDisplayName": "Rhunor, the Hollow Dawn",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_dark_robe",
+      "monster": "Rhunor, the Hollow Dawn",
+      "monsterDisplayName": "Rhunor, the Hollow Dawn",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_dark_rod",
+      "monster": "Rhunor, the Hollow Dawn",
+      "monsterDisplayName": "Rhunor, the Hollow Dawn",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_dark_signet",
+      "monster": "Rift Wraith",
+      "monsterDisplayName": "Rift Wraith",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_dark_tiara",
+      "monster": "Rift Wraith",
+      "monsterDisplayName": "Rift Wraith",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_dark_wings",
+      "monster": "Rhunor, the Hollow Dawn",
+      "monsterDisplayName": "Rhunor, the Hollow Dawn",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_earth_amulet",
+      "monster": "Ashbound Exile",
+      "monsterDisplayName": "Ashbound Exile",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_earth_bracelet",
+      "monster": "Ashbound Exile",
+      "monsterDisplayName": "Ashbound Exile",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_earth_plate",
+      "monster": "The Hush Cantor",
+      "monsterDisplayName": "The Hush Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_earth_robe",
+      "monster": "The Hush Cantor",
+      "monsterDisplayName": "The Hush Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_earth_sceptre",
+      "monster": "The Hush Cantor",
+      "monsterDisplayName": "The Hush Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_earth_signet",
+      "monster": "Ashbound Exile",
+      "monsterDisplayName": "Ashbound Exile",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_earth_tiara",
+      "monster": "Ashbound Exile",
+      "monsterDisplayName": "Ashbound Exile",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_earth_wings",
+      "monster": "The Hush Cantor",
+      "monsterDisplayName": "The Hush Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_fire_amulet",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_fire_bracelet",
+      "monster": "Fey Warden",
+      "monsterDisplayName": "Fey Warden",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_fire_brand",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_fire_mace",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_fire_plate",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_fire_robe",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_fire_signet",
+      "monster": "Moonlit Stalker",
+      "monsterDisplayName": "Moonlit Stalker",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_fire_tiara",
+      "monster": "Moonlit Stalker",
+      "monsterDisplayName": "Moonlit Stalker",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_fire_wings",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_light_amulet",
+      "monster": "Nullguard",
+      "monsterDisplayName": "Nullguard",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_light_bracelet",
+      "monster": "Nullguard",
+      "monsterDisplayName": "Nullguard",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_light_plate",
+      "monster": "The Dusk Regent",
+      "monsterDisplayName": "The Dusk Regent",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_light_robe",
+      "monster": "The Dusk Regent",
+      "monsterDisplayName": "The Dusk Regent",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_light_signet",
+      "monster": "Nullguard",
+      "monsterDisplayName": "Nullguard",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_light_staff",
+      "monster": "The Dusk Regent",
+      "monsterDisplayName": "The Dusk Regent",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_light_tiara",
+      "monster": "Nullguard",
+      "monsterDisplayName": "Nullguard",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_light_wings",
+      "monster": "The Dusk Regent",
+      "monsterDisplayName": "The Dusk Regent",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_water_amulet",
+      "monster": "Veilbound Wraith",
+      "monsterDisplayName": "Veilbound Wraith",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_water_bracelet",
+      "monster": "Veilbound Wraith",
+      "monsterDisplayName": "Veilbound Wraith",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_water_plate",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_water_robe",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_water_sceptre",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_water_signet",
+      "monster": "Moonwake Revenant",
+      "monsterDisplayName": "Moonwake Revenant",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_water_staff",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
+    },
+    {
+      "item": "witness_water_tiara",
+      "monster": "Moonwake Revenant",
+      "monsterDisplayName": "Moonwake Revenant",
+      "chance": 0.006
+    },
+    {
+      "item": "witness_water_wings",
+      "monster": "The Pale Cantor",
+      "monsterDisplayName": "The Pale Cantor",
+      "chance": 0.005
     },
     {
       "item": "wyrmling_scale_bracer",
@@ -60603,17 +63756,17 @@ window.T4C_DATA = {
     },
     {
       "id": "avalon_sanctuary",
-      "name": "The Avalon Crossing",
+      "name": "Stoneheim Passage",
       "chapter": "avalon",
       "chapterOrder": 1.0,
-      "levelRange": "260–300",
-      "biome": "Mainland coast",
-      "summary": "The last stretch of mainland shore before Avalon, and the only way onto the island. Coastwarden Ithrak's reavers have the beach and are collecting a toll nobody agreed to. Harbormaster Rangor will vouch for you once you have thinned them out — and he is the only person who can, so there is no route around this one.",
+      "levelRange": "200–220",
+      "biome": "Stoneheim shore road",
+      "summary": "Begin at Harbormaster Rangor on Stonecrest's quay (180,740). Ask about the isles, defeat the Tideworn scouts east of town, then face Ithrak and bring back his guaranteed chart. Reporting to Rangor opens the Witness Isles sanctuary in Locations permanently, even after rebirth.",
       "nextZoneId": "avalon_wilds",
       "worldmapCenter": {
-        "x": 1550.0,
-        "y": 1300.0,
-        "radius": 110.0
+        "x": 420.0,
+        "y": 730.0,
+        "radius": 130.0
       },
       "monsters": [
         "Tideworn Reaver",
@@ -60633,13 +63786,13 @@ window.T4C_DATA = {
     },
     {
       "id": "avalon_wilds",
-      "name": "The Avalon Wilds",
+      "name": "The Witness Wilds",
       "chapter": "avalon",
       "chapterOrder": 2.0,
-      "levelRange": "Monster tiers 330–550",
+      "levelRange": "200–240",
       "biome": "Fey woodland",
-      "settlement": "Avalon Sanctuary",
-      "summary": "The loyal Wilds north of Avalon Sanctuary have two Moonlit Stalker hunting clearings, around (4000,1390) and (3950,1345). Sir Caradoc haunts the western border glade around (3965,1460). Elder Ophira at the sanctuary temple asks for Stalker kills and his sundered blade; ask about the wilds, accept, then report with both objectives fulfilled. The protected settlement and fast-travel arrival are at (4040,1477). Player levels stop at 400; Caradoc is an above-cap monster challenge.",
+      "settlement": "Witness Isles Sanctuary",
+      "summary": "The loyal wilds north of Witness Isles Sanctuary contain two Moonlit Stalker hunting clearings around (4000,1390) and (3950,1345). Sir Caradoc haunts the western border glade. Elder Ophira asks for Stalker kills; Caradoc's blade is optional loot. After reporting to Ophira, ask about the Veil. The protected settlement and permanent fast-travel arrival are at (4040,1477).",
       "nextZoneId": "greater_drakes_bastion",
       "worldmapCenter": {
         "x": 3965.0,
@@ -60715,10 +63868,10 @@ window.T4C_DATA = {
       "name": "The Fading Veil",
       "chapter": "unmaking",
       "chapterOrder": 2.0,
-      "levelRange": "Monster tiers 485–650",
+      "levelRange": "225–260",
       "biome": "Blighted woodland",
-      "settlement": "Avalon Sanctuary",
-      "summary": "Ysolde's blight spreads south of Avalon Sanctuary. After the Wilds vigil, Elder Ophira at the sanctuary temple offers the Veil reckoning: defeat Veilbound Wraiths and recover Ysolde's Veiled Circlet, then report with both objectives complete. The protected settlement and fast-travel arrival are at (4040,1477). These monster tiers exceed the player level cap of 400 and are intended as endgame challenges. Ysolde carries Veiled Aether Shards; the Rootcrown Wyrm in Drake's Lair is the other source.",
+      "settlement": "Witness Isles Sanctuary",
+      "summary": "Ysolde's blight spreads south of Witness Isles Sanctuary. After the Wilds vigil, Elder Ophira offers the Veil reckoning against Veilbound Wraiths. Ysolde's circlet is optional loot. Report to Ophira, then speak with Chronicler Maelin at the sanctuary to choose the Moonwake witness account or the Emberglass warder account. Ysolde carries Veiled Aether Shards.",
       "nextZoneId": "drakes_lair",
       "worldmapCenter": {
         "x": 4120.0,

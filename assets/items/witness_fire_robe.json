@@ -1,0 +1,5 @@
+{
+  "key": "witness_fire_robe", "name": "${item.witness_fire_robe}", "bodyPart": "BODY", "appearanceEquippedPrimary": "PupRedRobe", "appearanceInventory": "64kInvRedRobe", "weight": 5, "armorClass": 49.6,
+  "requirements": {"endurance": 200, "intelligence": 240}, "unique": true,
+  "boosts": [{"boostId":38000,"statId":1,"expression":"24"},{"boostId":38001,"statId":17,"expression":"24"},{"boostId":38002,"statId":12,"expression":"10"},{"boostId":38003,"statId":13,"expression":"10"},{"boostId":38004,"statId":14,"expression":"10"},{"boostId":38005,"statId":15,"expression":"10"},{"boostId":38006,"statId":22,"expression":"10"}]
+}

@@ -2391,7 +2391,7 @@
     "item": "tideworn_avalon_chart",
     "monster": "Coastwarden Ithrak",
     "monsterDisplayName": "Coastwarden Ithrak",
-    "chance": 0.02
+    "chance": 1.0
   },
   {
     "item": "verdant_wardens_bulwark",
@@ -2404,6 +2404,312 @@
     "monster": "Barrow Wight",
     "monsterDisplayName": "Barrow Wight",
     "chance": 0.03
+  },
+  {
+    "item": "witness_air_amulet",
+    "monster": "Emberglass Ashguard",
+    "monsterDisplayName": "Emberglass Ashguard",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_air_bracelet",
+    "monster": "Emberglass Ashguard",
+    "monsterDisplayName": "Emberglass Ashguard",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_air_plate",
+    "monster": "The Cinder Marshal",
+    "monsterDisplayName": "The Cinder Marshal",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_air_robe",
+    "monster": "The Cinder Marshal",
+    "monsterDisplayName": "The Cinder Marshal",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_air_signet",
+    "monster": "Emberglass Ashguard",
+    "monsterDisplayName": "Emberglass Ashguard",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_air_tiara",
+    "monster": "Emberglass Ashguard",
+    "monsterDisplayName": "Emberglass Ashguard",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_air_wand",
+    "monster": "The Cinder Marshal",
+    "monsterDisplayName": "The Cinder Marshal",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_air_wings",
+    "monster": "The Cinder Marshal",
+    "monsterDisplayName": "The Cinder Marshal",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_dark_amulet",
+    "monster": "Rift Wraith",
+    "monsterDisplayName": "Rift Wraith",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_dark_bracelet",
+    "monster": "Rift Wraith",
+    "monsterDisplayName": "Rift Wraith",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_dark_dagger",
+    "monster": "Rhunor, the Hollow Dawn",
+    "monsterDisplayName": "Rhunor, the Hollow Dawn",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_dark_plate",
+    "monster": "Rhunor, the Hollow Dawn",
+    "monsterDisplayName": "Rhunor, the Hollow Dawn",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_dark_robe",
+    "monster": "Rhunor, the Hollow Dawn",
+    "monsterDisplayName": "Rhunor, the Hollow Dawn",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_dark_rod",
+    "monster": "Rhunor, the Hollow Dawn",
+    "monsterDisplayName": "Rhunor, the Hollow Dawn",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_dark_signet",
+    "monster": "Rift Wraith",
+    "monsterDisplayName": "Rift Wraith",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_dark_tiara",
+    "monster": "Rift Wraith",
+    "monsterDisplayName": "Rift Wraith",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_dark_wings",
+    "monster": "Rhunor, the Hollow Dawn",
+    "monsterDisplayName": "Rhunor, the Hollow Dawn",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_earth_amulet",
+    "monster": "Ashbound Exile",
+    "monsterDisplayName": "Ashbound Exile",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_earth_bracelet",
+    "monster": "Ashbound Exile",
+    "monsterDisplayName": "Ashbound Exile",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_earth_plate",
+    "monster": "The Hush Cantor",
+    "monsterDisplayName": "The Hush Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_earth_robe",
+    "monster": "The Hush Cantor",
+    "monsterDisplayName": "The Hush Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_earth_sceptre",
+    "monster": "The Hush Cantor",
+    "monsterDisplayName": "The Hush Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_earth_signet",
+    "monster": "Ashbound Exile",
+    "monsterDisplayName": "Ashbound Exile",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_earth_tiara",
+    "monster": "Ashbound Exile",
+    "monsterDisplayName": "Ashbound Exile",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_earth_wings",
+    "monster": "The Hush Cantor",
+    "monsterDisplayName": "The Hush Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_fire_amulet",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_fire_bracelet",
+    "monster": "Fey Warden",
+    "monsterDisplayName": "Fey Warden",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_fire_brand",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_fire_mace",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_fire_plate",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_fire_robe",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_fire_signet",
+    "monster": "Moonlit Stalker",
+    "monsterDisplayName": "Moonlit Stalker",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_fire_tiara",
+    "monster": "Moonlit Stalker",
+    "monsterDisplayName": "Moonlit Stalker",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_fire_wings",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_light_amulet",
+    "monster": "Nullguard",
+    "monsterDisplayName": "Nullguard",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_light_bracelet",
+    "monster": "Nullguard",
+    "monsterDisplayName": "Nullguard",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_light_plate",
+    "monster": "The Dusk Regent",
+    "monsterDisplayName": "The Dusk Regent",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_light_robe",
+    "monster": "The Dusk Regent",
+    "monsterDisplayName": "The Dusk Regent",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_light_signet",
+    "monster": "Nullguard",
+    "monsterDisplayName": "Nullguard",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_light_staff",
+    "monster": "The Dusk Regent",
+    "monsterDisplayName": "The Dusk Regent",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_light_tiara",
+    "monster": "Nullguard",
+    "monsterDisplayName": "Nullguard",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_light_wings",
+    "monster": "The Dusk Regent",
+    "monsterDisplayName": "The Dusk Regent",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_water_amulet",
+    "monster": "Veilbound Wraith",
+    "monsterDisplayName": "Veilbound Wraith",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_water_bracelet",
+    "monster": "Veilbound Wraith",
+    "monsterDisplayName": "Veilbound Wraith",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_water_plate",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_water_robe",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_water_sceptre",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_water_signet",
+    "monster": "Moonwake Revenant",
+    "monsterDisplayName": "Moonwake Revenant",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_water_staff",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
+  },
+  {
+    "item": "witness_water_tiara",
+    "monster": "Moonwake Revenant",
+    "monsterDisplayName": "Moonwake Revenant",
+    "chance": 0.006
+  },
+  {
+    "item": "witness_water_wings",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 0.005
   },
   {
     "item": "wyrmling_scale_bracer",

@@ -19,14 +19,20 @@ public final class HushCantor extends DataMonster {
   }
 
   public static MonsterDef definition() {
-    return EndgameMonsterFactory.create(
-        CANONICAL_NAME,
-        "hush_cantor",
-        YsoldeTheVeiledMatriarch.definition(),
-        340,
-        155000,
-        15000000,
-        1050,
-        true);
+    return EndgameMonsterFactory.withWitnessLoot(
+        EndgameMonsterFactory.create(
+            CANONICAL_NAME,
+            "hush_cantor",
+            YsoldeTheVeiledMatriarch.definition(),
+            340,
+            155000,
+            15000000,
+            1050,
+            true),
+        true,
+        "witness_earth_plate",
+        "witness_earth_robe",
+        "witness_earth_wings",
+        "witness_earth_sceptre");
   }
 }

@@ -7052,8 +7052,8 @@
   {
     "key": "spell.avalon_gateway",
     "isNew": true,
-    "name": "Avalon Gateway",
-    "description": "Teleports the caster to the sanctuary of Avalon.",
+    "name": "Witness Isles Gateway",
+    "description": "Teleports the caster to the sanctuary of the Witness Isles.",
     "manaCost": "0",
     "minInt": 0,
     "minWis": 0,

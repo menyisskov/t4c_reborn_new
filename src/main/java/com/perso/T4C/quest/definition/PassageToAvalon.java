@@ -2,12 +2,9 @@ package com.perso.T4C.quest.definition;
 
 import com.perso.T4C.quest.QuestDef;
 
-// The special access quest that unlocks Avalon itself - see npc/HarbormasterRangor.java. Every
-// other NPC tied to Avalon (ElderOphira, WayfarerBryndis, ArchmageThalindra, SisterIlyndra,
-// QuartermasterElenna) is stationed inside Avalon Sanctuary, and the only existing way in
-// (item.scroll_of_avalon) is sold by WayfarerBryndis herself - so without this quest a fresh
-// character could never reach Avalon at all. Area (1550,1300, radius 110, worldZ 0) covers every
-// TidewornReaver @Spawn and CoastwardenIthrak's own spawn point.
+// The permanent Witness Isles access quest begins on Stoneheim with Harbormaster Rangor.
+// Historical quest and zone IDs stay stable for saved characters. The (420,730) objective
+// encloses the Stoneheim reavers and Ithrak; the chart is guaranteed on Ithrak's defeat.
 public final class PassageToAvalon {
   private PassageToAvalon() {}
 
@@ -19,11 +16,11 @@ public final class PassageToAvalon {
         "Tideworn Reaver",
         25,
         0,
-        1550,
-        1300,
-        110,
-        400000,
-        200000000,
+        420,
+        730,
+        130,
+        100000,
+        12000000,
         "${quest.passage_to_avalon.offer}",
         "${quest.passage_to_avalon.completion}",
         "${quest.passage_to_avalon.completed}",
@@ -32,7 +29,7 @@ public final class PassageToAvalon {
         1,
         "avalon_sanctuary",
         null,
-        0,
+        200,
         "${quest.passage_to_avalon.walkthrough}");
   }
 }

@@ -1,0 +1,5 @@
+{
+  "key": "witness_earth_signet", "name": "${item.witness_earth_signet}", "bodyPart": "RING1", "appearanceInventory": "64kInvRings 1", "weight": 1, "armorClass": 20.0,
+  "requirements": {"endurance": 400, "wisdom": 475}, "unique": true,
+  "boosts": [{"boostId":38087,"statId":4,"expression":"40"},{"boostId":38088,"statId":19,"expression":"48"},{"boostId":38089,"statId":12,"expression":"19"},{"boostId":38090,"statId":13,"expression":"19"},{"boostId":38091,"statId":14,"expression":"19"},{"boostId":38092,"statId":15,"expression":"19"},{"boostId":38093,"statId":22,"expression":"19"}]
+}

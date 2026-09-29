@@ -16,6 +16,13 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Moonwake Revenant", x = 3930, y = 765, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Moonwake Revenant", x = 3945, y = 765, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Moonwake Revenant", x = 3960, y = 765, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonwake Revenant", x = 3926, y = 742, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonwake Revenant", x = 3938, y = 742, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonwake Revenant", x = 3950, y = 742, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonwake Revenant", x = 3924, y = 758, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonwake Revenant", x = 3936, y = 758, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonwake Revenant", x = 3948, y = 758, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonwake Revenant", x = 3958, y = 758, z = 0, stationary = false, aggressive = true)
 public final class MoonwakeRevenant extends DataMonster {
   public static final String CANONICAL_NAME = "Moonwake Revenant";
 
@@ -29,14 +36,18 @@ public final class MoonwakeRevenant extends DataMonster {
   }
 
   public static MonsterDef definition() {
-    return EndgameMonsterFactory.create(
-        CANONICAL_NAME,
-        "moonwake_revenant",
-        VeilboundWraith.definition(),
-        230,
-        43000,
-        175000,
-        420,
-        false);
+    return EndgameMonsterFactory.withWitnessLoot(
+        EndgameMonsterFactory.create(
+            CANONICAL_NAME,
+            "moonwake_revenant",
+            VeilboundWraith.definition(),
+            230,
+            43000,
+            175000,
+            420,
+            false),
+        false,
+        "witness_water_signet",
+        "witness_water_tiara");
   }
 }

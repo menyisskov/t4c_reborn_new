@@ -80,6 +80,8 @@ public final class ForkContent {
           "ElderOphira",
           "ChroniclerMaelin",
           "KeeperVael",
+          "MoonwakeWitnessIlyra",
+          "EmberglassWarderSoren",
           "QuartermasterElenna",
           "WayfarerBryndis",
           "ArchmageThalindra",

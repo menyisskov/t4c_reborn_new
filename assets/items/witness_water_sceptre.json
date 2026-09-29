@@ -1,0 +1,5 @@
+{
+  "key": "witness_water_sceptre", "name": "${item.witness_water_sceptre}", "bodyPart": "WEAPON", "appearanceEquippedPrimary": "PupWoodenStaff", "appearanceInventory": "64kInvWoodenStaff", "weight": 4, "dmgFormula": "1d42+55", "atkDelay": "1300",
+  "requirements": {"intelligence": 325}, "unique": true,
+  "boosts": [{"boostId":38044,"statId":1,"expression":"33"},{"boostId":38045,"statId":18,"expression":"33"}]
+}

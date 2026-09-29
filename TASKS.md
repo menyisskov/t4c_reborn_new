@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0107`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0108`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -146,3 +146,4 @@ work happens.
 | T4C-0105 | Avalon islands and mainland landmarks | Content/Map | Done | `acfc4a87` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-islands-and-landmarks-t4c-0105) |
 
 | T4C-0106 | Hollow Dawn Avalon campaign and Threnody Reach (levels 200-400) | Content/Map | Done | `cfc7bda7` | [2026-09-29](CHANGELOG.md#2026-09-29--the-hollow-dawn-campaign-t4c-0106) |
+| T4C-0107 | Witness Isles story routes, hunting grounds and equipment | Content/Systems | Done | `ef2db40a` | [2026-09-29](CHANGELOG.md#2026-09-29--witness-isles-story-and-hunting-t4c-0107) |

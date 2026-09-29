@@ -2,12 +2,25 @@ package com.perso.T4C.monster;
 
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterGoldCurve;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /** Builds distinct campaign enemies using animation families already shipped with the game. */
 final class EndgameMonsterFactory {
+  private static final float WITNESS_HUNTING_DROP_CHANCE = .006f;
+  private static final float WITNESS_BOSS_DROP_CHANCE = .005f;
+
   private EndgameMonsterFactory() {}
+
+  static MonsterDef withWitnessLoot(MonsterDef base, boolean boss, String... itemKeys) {
+    List<MonsterDef.LootDrop> loot = new ArrayList<>(base.getLoot());
+    float chance = boss ? WITNESS_BOSS_DROP_CHANCE : WITNESS_HUNTING_DROP_CHANCE;
+    for (String key : itemKeys) {
+      loot.add(new MonsterDef.LootDrop(key, chance));
+    }
+    return base.withLoot(loot);
+  }
 
   static MonsterDef create(
       String name,
