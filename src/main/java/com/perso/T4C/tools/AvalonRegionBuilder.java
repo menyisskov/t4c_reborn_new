@@ -246,16 +246,16 @@ public final class AvalonRegionBuilder {
         var tile = cell.tile();
         if (tile.ground() != null && !tile.ground().equals("Black Tile"))
           map.setGroundSpriteName(tx, ty, tile.ground());
-        if (tile.decor() == null || tile.decor().toLowerCase().startsWith("stair")) continue;
-        map.setDecorSpriteName(tx, ty, tile.decor());
-        map.setScale(tx, ty, tile.scaleX(), tile.scaleY());
-        map.setOffset(tx, ty, tile.offsetX(), tile.offsetY());
-        map.setZOrder(tx, ty, tile.depth());
         collision[index(tx, ty)] =
             (byte)
                 (CollisionType.fromValue(tile.collision()).isBlocksMovement()
                     ? tile.collision()
                     : FREE);
+        if (tile.decor() == null || tile.decor().toLowerCase().startsWith("stair")) continue;
+        map.setDecorSpriteName(tx, ty, tile.decor());
+        map.setScale(tx, ty, tile.scaleX(), tile.scaleY());
+        map.setOffset(tx, ty, tile.offsetX(), tile.offsetY());
+        map.setZOrder(tx, ty, tile.depth());
         decorAnchors++;
       }
     }

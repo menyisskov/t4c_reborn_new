@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.death.DeathPenaltyService;
+import com.perso.T4C.editor.build.MapStamp;
 import com.perso.T4C.helper.CollisionMapIO;
 import com.perso.T4C.helper.CollisionType;
 import com.perso.T4C.helper.MapReader;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.BitSet;
 import org.junit.jupiter.api.Test;
@@ -54,6 +56,33 @@ class AvalonRegionMapIntegrationTest {
             site.name() + " should not silently become a sanctuary");
       }
     }
+  }
+
+  @Test
+  void reusedBuildingWallsKeepTheirFullCollisionFootprint() throws Exception {
+    byte[] data = CollisionMapIO.read(new File("assets/maps/worldmap/worldmap.colbin")).getData();
+    assertBuildingWalls(data, "temple", 3868, 692);
+    assertBuildingWalls(data, "cottage", 3727, 765);
+    assertBuildingWalls(data, "storehouse", 4070, 605);
+    assertBuildingWalls(data, "cottage", 4305, 2585);
+    assertBuildingWalls(data, "storehouse", 4450, 2684);
+    assertBuildingWalls(data, "cottage", 3604, 1317);
+    assertBuildingWalls(data, "storehouse", 4440, 2050);
+  }
+
+  private static void assertBuildingWalls(byte[] data, String name, int x, int y)
+      throws Exception {
+    MapStamp stamp = MapStamp.load(Path.of("assets/editor/templates", name + ".json"));
+    int blockingCells = 0;
+    for (var cell : stamp.cells()) {
+      if (!CollisionType.fromValue(cell.tile().collision()).isBlocksMovement()) continue;
+      blockingCells++;
+      int tile = index(x + cell.x(), y + cell.y());
+      assertTrue(
+          CollisionType.fromValue(data[tile] & 255).isBlocksMovement(),
+          name + " wall is passable at " + (x + cell.x()) + "," + (y + cell.y()));
+    }
+    assertTrue(blockingCells > 10, name + " template should include a wall footprint");
   }
 
   private static BitSet flood(byte[] data, int x, int y) {
