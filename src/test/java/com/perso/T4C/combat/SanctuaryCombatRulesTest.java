@@ -16,7 +16,9 @@ import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellCastingService;
 import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.spell.SpellEffectManager;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,6 +116,106 @@ class SanctuaryCombatRulesTest {
                 spell, player, SpellCastingService.TargetKind.SELF, 0f, true, false, false));
     assertTrue(healing.success());
     assertEquals(90, player.getMana());
+  }
+
+  @Test
+  void hostilePositionSpellsIncludingSummonsAreRejectedBeforeActivation() throws Exception {
+    for (int targetType : new int[] {6, 16, 19}) {
+      Player player = playerAt(GRID_W, GRID_H);
+      player.setMana(100);
+      SpellData spell = positionSpell(true, targetType);
+      assertEquals(
+          1,
+          new SpellEffectManager().resolvePositionSummons(spell).size(),
+          "fixture must exercise a position spell that would create a summon after activation");
+      var result =
+          SpellCastingService.begin(
+              new SpellCastingService.Request(
+                  spell, player, SpellCastingService.TargetKind.POSITION, 1f, true, false, false));
+      assertFalse(result.success(), "position effects and summons require successful activation");
+      assertEquals(SpellCastingService.Failure.SAFE_HAVEN, result.failure());
+      assertEquals(0, result.manaSpent());
+      assertEquals(100, player.getMana());
+      assertFalse(player.isSpellOnCooldown(spell.getName()));
+      assertFalse(player.isMentallyExhausted());
+      assertFalse(player.isPhysicallyExhausted());
+      assertTrue(player.isAttackReady());
+      player.setWorldPosition(0, 0, 0);
+      assertTrue(
+          SpellCastingService.begin(
+                  new SpellCastingService.Request(
+                      spell,
+                      player,
+                      SpellCastingService.TargetKind.POSITION,
+                      1f,
+                      true,
+                      false,
+                      false))
+              .success(),
+          "the same attack must remain usable outside sanctuary");
+    }
+  }
+
+  @Test
+  void nonHostilePositionSpellsRemainAvailableInsideSanctuary() throws Exception {
+    Player player = playerAt(GRID_W, GRID_H);
+    player.setMana(100);
+    var result =
+        SpellCastingService.begin(
+            new SpellCastingService.Request(
+                positionSpell(false, 6),
+                player,
+                SpellCastingService.TargetKind.POSITION,
+                1f,
+                true,
+                false,
+                false));
+    assertTrue(result.success());
+    assertEquals(90, player.getMana());
+  }
+
+  private SpellData positionSpell(boolean attack, int targetType) {
+    return new SpellData(
+        "Position test",
+        "",
+        "10",
+        3,
+        0,
+        0,
+        0,
+        attack,
+        true,
+        "",
+        "",
+        "",
+        0,
+        0,
+        "",
+        "",
+        10,
+        "0",
+        null,
+        0,
+        null,
+        1,
+        0,
+        targetType,
+        0,
+        "100",
+        "1000",
+        "1000",
+        "1000",
+        0,
+        0,
+        false,
+        attack
+            ? List.of(
+                new SpellData.T4cEffect(
+                    6,
+                    List.of(
+                        new SpellData.T4cEffect.EffectParam(1, "monster"),
+                        new SpellData.T4cEffect.EffectParam(2, "Moonlit Stalker"))))
+            : List.of());
   }
 
   private Player playerAt(float x, float y) throws Exception {

@@ -3037,6 +3037,11 @@ public class MainGameScreen implements Screen {
     if (hud != null && hud.isQuickBarHit(screenX, screenY)) return false;
     Vector3 target = camera.unproject(clickWorldCoordsTemp.set(screenX, screenY, 0f));
     Vector2 targetPosition = new Vector2(target.x, target.y);
+    if (spell.isAttack()
+        && !SanctuaryCombatRules.canFight(player.getPositionVector(), targetPosition)) {
+      showSystemMessage(SpellCastingService.message(SpellCastingService.Failure.SAFE_HAVEN));
+      return true;
+    }
     float distanceTiles = player.getPositionVector().dst(targetPosition) / Math.max(GRID_W, GRID_H);
     boolean sightClear =
         !spell.isLineOfSight() || hasLineOfSight(player.getPositionVector(), targetPosition);

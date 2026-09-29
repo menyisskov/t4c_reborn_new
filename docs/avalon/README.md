@@ -28,7 +28,7 @@ Existing accepted/completed quest states and kill progress are retained. Players
 
 ## Verification
 
-- Full Maven suite: 512 tests passed, no failures, errors or skips.
+- Full Maven suite: 514 tests passed, no failures, errors or skips.
 - Real collision-map tests check town safety, service access, hunting routes, hostile spawn exclusion and quest bounds.
 - Full-map comparison of ground, decor, offsets, scale, draw order and collision found zero edits outside the documented sanctuary/Wilds mask.
 - These images use the game's OpenGL ground/decor/object renderer. They omit characters; they are scenery checks, not an interactive gameplay recording.

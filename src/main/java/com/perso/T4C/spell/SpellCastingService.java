@@ -66,7 +66,8 @@ public final class SpellCastingService {
     if (request == null || request.spell() == null || request.caster() == null) {
       return Result.failure(Failure.ACTIVATION_FAILED);
     }
-    if (request.targetKind() == TargetKind.HOSTILE_UNIT
+    if ((request.targetKind() == TargetKind.HOSTILE_UNIT
+            || (request.targetKind() == TargetKind.POSITION && request.spell().isAttack()))
         && SanctuaryCombatRules.isProtected(request.caster().getPositionVector())) {
       return Result.failure(Failure.SAFE_HAVEN);
     }
