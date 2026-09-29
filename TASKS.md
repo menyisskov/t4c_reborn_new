@@ -137,4 +137,4 @@ work happens.
 
 | T4C-0101 | Rarity-based resale values for new items | Economy | Done | `fb6944e4` | [2026-09-29](CHANGELOG.md#2026-09-29--rarity-based-item-sell-values-t4c-0101) |
 
-| T4C-0102 | Map editor build workspace and reusable templates | Editor | Done | — | [2026-09-29](CHANGELOG.md#2026-09-29--map-editor-build-workspace-t4c-0102) |
+| T4C-0102 | Map editor build workspace and reusable templates | Editor | Done | `7bc7e82a` | [2026-09-29](CHANGELOG.md#2026-09-29--map-editor-build-workspace-t4c-0102) |
