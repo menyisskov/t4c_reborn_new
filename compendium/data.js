@@ -54433,7 +54433,7 @@ window.T4C_DATA = {
       "key": "item.moonwake_bell_shard",
       "name": "Moonwake Bell Shard",
       "price": 0,
-      "sellPrice": 1,
+      "sellPrice": 100,
       "weight": 1,
       "armorClass": 0.0,
       "requirements": {
@@ -54454,7 +54454,7 @@ window.T4C_DATA = {
       "key": "item.last_witness_seal",
       "name": "Last Witness Seal",
       "price": 0,
-      "sellPrice": 1,
+      "sellPrice": 100,
       "weight": 1,
       "armorClass": 0.0,
       "requirements": {
