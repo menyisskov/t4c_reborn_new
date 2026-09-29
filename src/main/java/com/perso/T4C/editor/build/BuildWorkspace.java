@@ -216,10 +216,10 @@ public final class BuildWorkspace {
   }
 
   private void choose(AssetCatalog.Asset asset) {
-    validated = false;
+    cancel();
     selected = asset;
     template = null;
-    tool = Tool.STAMP;
+    tool = Tool.PAINT;
     blocking = asset.category() == AssetCatalog.Category.WALLS;
     preferences.remember(asset.name());
     savePreferences();
@@ -732,19 +732,18 @@ public final class BuildWorkspace {
       return true;
     }
     if (button != Input.Buttons.LEFT || tool == Tool.SELECT) return false;
+    beginGesture(x, y);
+    return true;
+  }
+
+  private void beginGesture(int x, int y) {
     var tile = tile(x, y);
     startX = endX = tile.x();
     startY = endY = tile.y();
-    if (tool == Tool.STAMP || tool == Tool.TEMPLATE) {
-      dragging = true;
-      updatePreview();
-      return true;
-    }
     dragging = true;
     painted.clear();
     painted.add(tile);
     updatePreview();
-    return true;
   }
 
   public boolean touchDragged(int x, int y) {
@@ -759,8 +758,17 @@ public final class BuildWorkspace {
       lastY = y;
       return true;
     }
-    if (paletteDrag) return true;
+    if (paletteDrag) {
+      // Templates remain single structures; sprites become a paint stroke on entering the canvas.
+      if (selected != null && !overPanel(x, y) && y >= 48) {
+        paletteDrag = false;
+        beginGesture(x, y);
+        return true;
+      }
+      return true;
+    }
     if (!dragging) return false;
+    if (tool == Tool.PAINT && (overPanel(x, y) || y < 48)) return true;
     var p = tile(x, y);
     if (tool == Tool.PAINT)
       painted.addAll(BuildGeometry.line(endX, endY, p.x(), p.y(), spacing, false));
@@ -787,6 +795,10 @@ public final class BuildWorkspace {
         var p = tile(x, y);
         startX = endX = p.x();
         startY = endY = p.y();
+        if (tool == Tool.PAINT) {
+          painted.clear();
+          painted.add(p);
+        }
         updatePreview();
         place();
       }
