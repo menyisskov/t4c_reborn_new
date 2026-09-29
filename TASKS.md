@@ -132,4 +132,4 @@ HUD rework, original NPC/quest content, etc.) predates this tracking effort
 and was not backfilled with IDs — only the passes covered by
 `CHANGELOG.md` are. Everything from T4C-0010 onward is tracked live, as the
 work happens.
-| T4C-0099 | Avalon sanctuary, Wilds hunting grounds and staged quest dialogue | Content/Systems | In Progress | — | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-sanctuary-and-wilds-t4c-0099) |
+| T4C-0099 | Avalon sanctuary, Wilds hunting grounds and staged quest dialogue | Content/Systems | Done | `d18b1772` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-sanctuary-and-wilds-t4c-0099) |
