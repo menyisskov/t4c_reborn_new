@@ -141,4 +141,4 @@ work happens.
 
 | T4C-0103 | Repeat sprite placement while dragging | Editor | Done | `a83e0b91` | [2026-09-29](CHANGELOG.md#2026-09-29--repeat-sprites-while-dragging-t4c-0103) |
 
-| T4C-0104 | Map editor box selection and group dragging | Editor | Done | Pending | [2026-09-29](CHANGELOG.md#2026-09-29--map-editor-group-selection-t4c-0104) |
+| T4C-0104 | Map editor box selection and group dragging | Editor | Done | `9c0b0a7f` | [2026-09-29](CHANGELOG.md#2026-09-29--map-editor-group-selection-t4c-0104) |
