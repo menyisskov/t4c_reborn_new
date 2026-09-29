@@ -15,6 +15,8 @@ import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemIconRegistry;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.ItemSalePricing;
+import com.perso.T4C.item.ItemSaleService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.SystemMessage;
@@ -65,7 +67,7 @@ public class ShopScreen extends GuiListScreen {
     if (background == null) return;
     BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
     labels.add(
-        boxed(chewy, TITLE_BOX, 0f, () -> selling ? "VENDRE" : I18n.key("ui.buy"), GOLD)
+        boxed(chewy, TITLE_BOX, 0f, () -> selling ? I18n.key("ui.sell") : I18n.key("ui.buy"), GOLD)
             .shrinkToFit());
     labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.key("ui.gold"), GOLD).shrinkToFit());
     BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
@@ -83,9 +85,8 @@ public class ShopScreen extends GuiListScreen {
     for (String itemKey : itemKeys) {
       if (itemKey == null || itemKey.isEmpty()) continue;
       ItemDefinition def = ItemRegistry.findByKey(itemKey);
-      if (def != null) {
-        entries.add(
-            new ShopEntry(def, selling ? Math.max(1L, def.getPrice() / 2L) : def.getPrice()));
+      if (def != null && (!selling || ItemSalePricing.sellPrice(def) > 0)) {
+        entries.add(new ShopEntry(def, selling ? ItemSalePricing.sellPrice(def) : def.getPrice()));
       }
     }
   }
@@ -159,7 +160,7 @@ public class ShopScreen extends GuiListScreen {
     addScrollThumb(pages);
     final long onHand = player.getGold();
     final long cost = basketCost();
-    final long left = onHand - cost;
+    final long left = selling ? Math.min(Integer.MAX_VALUE, onHand + cost) : onHand - cost;
     addDyn(fontGo, ONHAND_VAL_BOX, 0f, () -> String.valueOf(onHand), GOLD);
     addDyn(
         cost > 0 ? fontGo : fontDm,
@@ -192,7 +193,8 @@ public class ShopScreen extends GuiListScreen {
                 x + ACTION_BTN_X,
                 y + ACTION_BTN_Y,
                 canBuy ? this::buyBasket : null)
-            .withLabel(chewy, () -> selling ? "VENDRE" : I18n.key("ui.buy_action"));
+            .withLabel(
+                chewy, () -> selling ? I18n.key("ui.sell_action") : I18n.key("ui.buy_action"));
     buttons.add(buy);
     dynButtons.add(buy);
   }
@@ -258,10 +260,7 @@ public class ShopScreen extends GuiListScreen {
       return;
     }
     if (selling) {
-      for (ShopEntry entry : entries)
-        for (int n = 0; n < entry.count; n++)
-          InventoryService.destroyOne(player, entry.def.getKey());
-      player.setGold((int) Math.min(Integer.MAX_VALUE, player.getGold() + cost));
+      for (ShopEntry entry : entries) ItemSaleService.sell(player, entry.def.getKey(), entry.count);
       entries.forEach(entry -> entry.count = 0);
       PlayerStateStore.save(player);
       selected = null;

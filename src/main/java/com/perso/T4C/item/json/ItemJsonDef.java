@@ -48,48 +48,51 @@ public class ItemJsonDef {
                     new ItemDefinition.ItemBoost(
                         b.boostId, b.statId, b.expression == null ? "0" : b.expression, 0, 0))
             .toList();
-    return new ItemDefinition(
-        key,
-        name == null ? key : name,
-        BodyPart.valueOf(bodyPart.toUpperCase(java.util.Locale.ROOT)),
-        appearanceEquippedPrimary,
-        secondaryBodyPart == null || secondaryBodyPart.isBlank()
-            ? null
-            : BodyPart.valueOf(secondaryBodyPart.toUpperCase(java.util.Locale.ROOT)),
-        appearanceEquippedSecondary,
-        appearanceInventory,
-        price,
-        weight,
-        armorClass,
-        dodgeLost,
-        requirements.endurance,
-        requirements.attack,
-        requirements.strength,
-        requirements.agility,
-        requirements.intelligence,
-        requirements.wisdom,
-        attackSpeed,
-        unique,
-        isBow,
-        unlimitedUse,
-        numId,
-        structure,
-        appearanceId,
-        dmgFormula,
-        atkDelay == null || atkDelay.isBlank() ? "0" : atkDelay,
-        0,
-        0,
-        false,
-        null,
-        0,
-        null,
-        0,
-        0,
-        0,
-        List.of(),
-        boostDefs,
-        List.of(),
-        undroppable);
+    ItemDefinition definition =
+        new ItemDefinition(
+            key,
+            name == null ? key : name,
+            BodyPart.valueOf(bodyPart.toUpperCase(java.util.Locale.ROOT)),
+            appearanceEquippedPrimary,
+            secondaryBodyPart == null || secondaryBodyPart.isBlank()
+                ? null
+                : BodyPart.valueOf(secondaryBodyPart.toUpperCase(java.util.Locale.ROOT)),
+            appearanceEquippedSecondary,
+            appearanceInventory,
+            price,
+            weight,
+            armorClass,
+            dodgeLost,
+            requirements.endurance,
+            requirements.attack,
+            requirements.strength,
+            requirements.agility,
+            requirements.intelligence,
+            requirements.wisdom,
+            attackSpeed,
+            unique,
+            isBow,
+            unlimitedUse,
+            numId,
+            structure,
+            appearanceId,
+            dmgFormula,
+            atkDelay == null || atkDelay.isBlank() ? "0" : atkDelay,
+            0,
+            0,
+            false,
+            null,
+            0,
+            null,
+            0,
+            0,
+            0,
+            List.of(),
+            boostDefs,
+            List.of(),
+            undroppable);
+    definition.setRarityPriced(true);
+    return definition;
   }
 
   public static final class Requirements {

@@ -1444,3 +1444,13 @@ only real friendly-clickable entity today is the player's own companion
 - The larger dense map uses more memory and loading work; do not infer performance parity
   merely because the tile format accepts larger dimensions. Additional encounter design and
   progression balance across Avalon's extended terrain remain open work.
+
+## New-item resale (T4C-0101)
+
+**Owner rule:** every new droppable item must sell for more than one gold; rarer loot must sell for more.
+
+**Implementation choice:** `ItemSalePricing` owns resale independently of the buy-price field. All JSON equipment opts in automatically, along with the new Java-defined materials, Wyrm scales, Kraanhold keys, Unsigned Letter and Avalon scroll. For zero-buy-price monster loot, value is inversely proportional to the easiest source's drop probability. Repeated independent rolls for the same item on one monster are combined before comparing sources. This prevents a rare alternate source inflating an otherwise common item's value.
+
+Items with positive buy prices retain the existing half-price resale spread. For zero-buy-price items with no monster source, the helper defines fallback tiers for Godsforged products, unique items/crafting materials, and other equipment. See `ItemSalePricing` for the amounts and `ItemSalePricingTest` for checked examples. Undroppable items cannot be sold. The original Java item catalogue otherwise keeps its existing prices.
+
+The shop, item tooltip and compendium exporter use this same helper. Inventory saves store item keys, so old possessions receive current prices without migration or changes to stats, requirements or quest progress. A sale pays only for successfully removed units and respects the existing gold ceiling.

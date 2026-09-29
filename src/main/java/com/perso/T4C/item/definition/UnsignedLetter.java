@@ -12,7 +12,7 @@ public final class UnsignedLetter {
   public static final String KEY = "item.unsigned_letter";
 
   public static ItemDefinition definition() {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         KEY,
         "${item.unsigned_letter}",
         null,
@@ -54,5 +54,7 @@ public final class UnsignedLetter {
         List.of(),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

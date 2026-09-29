@@ -33,7 +33,7 @@ Full field list: `item/json/ItemJsonDef.java`. Real example, `assets/items/empyr
   "name": "Empyrean Dark Protector",      // display name
   "bodyPart": "BELT",                     // see BodyPart enum — references/stat-ids.md
   "appearanceInventory": "64kInvBelt",    // inventory icon sprite name (must exist — see "Verifying a sprite name" below)
-  "price": 0,                             // 0 = drop-only, not sold anywhere. Nonzero = shop-buyable at that price.
+  "price": 0,                             // 0 = no shop buy price; resale is computed separately. Nonzero = shop buy price.
   "weight": 2,
   "armorClass": 38.1,                     // 0 for pure jewelry; real armor pieces scale with tier, see below
   "dodgeLost": 0,                         // dodge-skill penalty for wearing this (heavy armor would set this > 0)
@@ -184,7 +184,8 @@ curve and continue it — don't invent a new curve from scratch.
 
 ## Buy vs. drop, and scaling rarity to power
 
-- `price: 0` → drop-only, not sold anywhere.
+- `price: 0` → no shop buy price (drop, quest or crafting acquisition). It does not mean worthless to vendors.
+- `ItemSalePricing` computes resale for all JSON equipment and the new Java-authored loot from the easiest monster drop source, with fallback tiers for items without loot sources. New Java-authored item factories should set `rarityPriced` on their definition. Keep this separate from `price`; tooltips, shop sales and the compendium use that helper. See `DESIGN_GUIDELINES.md` and `ItemSalePricingTest`.
 - `price` > 0 → shop-buyable. Add the item's `key` string to the relevant NPC's item list in
   `src/main/java/com/perso/T4C/npc/catalog/ShopCatalog.java` (each shop is a `List<String>` of
   item keys, e.g. `KARAHN`, `FALI`, `CHRYSEIDA`).

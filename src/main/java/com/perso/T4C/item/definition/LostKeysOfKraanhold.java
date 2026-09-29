@@ -42,7 +42,7 @@ public final class LostKeysOfKraanhold {
   }
 
   private static ItemDefinition key(String key, String name) {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         key,
         name,
         null,
@@ -82,5 +82,7 @@ public final class LostKeysOfKraanhold {
         List.of(),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

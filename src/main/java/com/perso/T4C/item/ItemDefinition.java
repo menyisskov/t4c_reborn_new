@@ -17,6 +17,8 @@ public class ItemDefinition {
   private final String appearanceEquippedSecondary;
   private final String appearanceInventory;
   private final long price;
+  /** New content opts into resale based on loot rarity; legacy definitions keep their prices. */
+  @lombok.Setter private boolean rarityPriced;
   private final long weight;
   private final double armorClass;
   private final long dodgeLost;
