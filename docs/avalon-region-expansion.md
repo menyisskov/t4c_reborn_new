@@ -1,5 +1,9 @@
 # Avalon region expansion
 
+This document records the earlier two-island terrain pass on the 5120×3072 world. The later
+[Hollow Dawn campaign](avalon/hollow-dawn-campaign.md) expands the world to 6144×3072 and adds
+Threnody Reach with encounters and story quests.
+
 ## Reference and direction
 
 The [Realmud map index](https://www.t4c.com/cms/rmmaps.html) shows how a large outdoor region gains depth through distinct caves, temples, towns, and smaller destinations. The [T4C Fantasy map collection](https://www.t4cfantasy.com/Maps) uses a mainland with several routes on its [Avalon map](https://www.t4cfantasy.com/images/maps/i4Avalon/Avalon.png), connected water precincts on its [Atlantis map](https://www.t4cfantasy.com/images/maps/i5-7Atlantis/Atlantis.png), and a long route through several hubs on its [Oblivion map](https://www.t4cfantasy.com/images/maps/i8Oblivion/Oblivion.png). Those are spatial references only. This region uses original place names and does not import their characters, quests, or location names.

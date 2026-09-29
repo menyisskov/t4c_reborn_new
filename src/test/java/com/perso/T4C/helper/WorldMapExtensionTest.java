@@ -15,7 +15,7 @@ class WorldMapExtensionTest {
   void overviewCentersOnRelocatedPlayerAndDoesNotPaintLegacyOrDungeonPixels() throws Exception {
     GdxNativesLoader.load();
     BufferedImage image = ImageIO.read(new File(WorldMapExtension.IMAGE_PATH));
-    assertEquals(5120 - 3072, image.getWidth());
+    assertEquals(6144 - 3072, image.getWidth());
     assertEquals(3072, image.getHeight());
     Pixmap view = new Pixmap(640, 448, Pixmap.Format.RGBA8888);
     try {

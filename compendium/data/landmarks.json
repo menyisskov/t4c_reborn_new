@@ -143,6 +143,20 @@
     "unlockZoneId": "fading_veil"
   },
   {
+    "name": "Threnody Reach",
+    "x": 5505,
+    "y": 1150,
+    "worldZ": 0,
+    "unlockZoneId": "threnody_reach"
+  },
+  {
+    "name": "The Hollow Dawn",
+    "x": 5650,
+    "y": 2290,
+    "worldZ": 0,
+    "unlockZoneId": "hollow_dawn"
+  },
+  {
     "name": "Lord Sunrock",
     "x": 1609,
     "y": 1181,

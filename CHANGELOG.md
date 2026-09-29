@@ -11,6 +11,16 @@ dates are the commit dates of the work, not retroactively invented. From now
 on, every content/feature pass adds its own entry here as part of the work
 (see `CLAUDE.md`), not after the fact.
 
+## 2026-09-29 - The Hollow Dawn campaign (T4C-0106)
+
+### Added
+- A new story follows the failing Avalon pact through Moonwake, Emberglass, and Threnody Reach. Chronicler Maelin and Keeper Vael guide ten quest chapters toward Rhunor, an ancient god who steals names and memory.
+- Threnody Reach is a new level 300-400 land with a protected camp, three hunting courts, lieutenants, and an isolated final arena unlocked through the story.
+- Ten new enemy types, including the Pale Cantor, Cinder Marshal, Hush Cantor, Dusk Regent, and Rhunor. The Cantor and Regent drop quest relics guaranteed for their chapter turn-ins.
+
+### Changed
+- Avalon enemies and quest rewards now fit the intended level 200-300 route. Caradoc's blade and Ysolde's circlet remain rare loot; their drops no longer block the first two Avalon quests.
+
 ## 2026-09-29 — Avalon islands and landmarks (T4C-0105)
 
 ### Added

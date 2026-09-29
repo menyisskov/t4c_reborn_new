@@ -174,6 +174,60 @@
     }
   },
   {
+    "id": "ChroniclerMaelin",
+    "origin": "new",
+    "displayName": "Chronicler Maelin",
+    "spawns": [
+      {
+        "x": 4050,
+        "y": 1480,
+        "worldZ": 0
+      }
+    ],
+    "welcomeText": "I keep the names Avalon tried to forget. Ophira's Veil was only the first wound. Ask me for the story when you are ready to follow it.",
+    "topics": [
+      {
+        "keywords": [
+          "story"
+        ],
+        "response": "Ask me for the story.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "accept"
+        ],
+        "response": "Say accept when you are ready.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "report"
+        ],
+        "response": "Say report when the deed is done.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "route"
+        ],
+        "response": "Say route for the marked location.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 1,
+      "maxHp": 1,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 0,
+      "attackSkill": 1,
+      "dodge": 1,
+      "damageFormula": "1d3"
+    }
+  },
+  {
     "id": "DockmasterThessaly",
     "origin": "new",
     "displayName": "Dockmaster Thessaly",
@@ -264,7 +318,7 @@
         "keywords": [
           "caradoc"
         ],
-        "response": "Sir Caradoc was once the truest knight our isle ever raised. Ysolde bound his spirit to her service. He now haunts the border glade west of the sanctuary, south of the Stalker clearings. Recover his sundered blade there and bring it back with your report.",
+        "response": "Sir Caradoc was once the truest knight our isle ever raised. Ysolde bound his spirit to her service. He haunts the border glade west of the sanctuary. His sundered blade is rare loot, not proof required for the vigil.",
         "actions": []
       },
       {
@@ -307,7 +361,7 @@
         "keywords": [
           "route"
         ],
-        "response": "Leave the temple and follow the northbound road. The nearer Stalker clearing lies northwest of us; the second lies farther northwest. Keep to those two clearings for the vigil. Caradoc haunts the western border glade, south of the hunting grounds. Return to the temple when you have his blade and the Stalker kills, then report.",
+        "response": "Leave the temple and follow the northbound road. The Stalker clearings lie northwest of us. Defeat them within the marked Wilds area, then return to report. Caradoc haunts the western border glade if you seek his rare blade.",
         "actions": []
       }
     ],
@@ -652,6 +706,60 @@
       "attackSkill": 250,
       "dodge": 65535,
       "damageFormula": "1d23+16"
+    }
+  },
+  {
+    "id": "KeeperVael",
+    "origin": "new",
+    "displayName": "Keeper Vael",
+    "spawns": [
+      {
+        "x": 5505,
+        "y": 1150,
+        "worldZ": 0
+      }
+    ],
+    "welcomeText": "I have stood watch at Threnody Reach since the last ward bell fell silent. Maelin sent you because you carry the memory of the oath. Ask me for the story.",
+    "topics": [
+      {
+        "keywords": [
+          "story"
+        ],
+        "response": "Ask me for the story.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "accept"
+        ],
+        "response": "Say accept when you are ready.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "report"
+        ],
+        "response": "Say report when the deed is done.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "route"
+        ],
+        "response": "Say route for the marked location.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 1,
+      "maxHp": 1,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 0,
+      "attackSkill": 1,
+      "dodge": 1,
+      "damageFormula": "1d3"
     }
   },
   {

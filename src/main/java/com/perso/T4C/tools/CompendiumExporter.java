@@ -24,11 +24,11 @@ import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.quest.definition.QuestDefinitions;
+import com.perso.T4C.spawn.SpawnDefinition;
+import com.perso.T4C.spawn.SpawnRegistry;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import com.perso.T4C.spell.definition.SpellDefinitions;
-import com.perso.T4C.spawn.SpawnDefinition;
-import com.perso.T4C.spawn.SpawnRegistry;
 import com.perso.T4C.teleport.NamedLocation;
 import com.perso.T4C.teleport.NamedLocations;
 import java.io.File;
@@ -54,17 +54,15 @@ import java.util.TreeMap;
  * QuestDefinitions, NpcFactoryRegistry) instead of re-parsing source, and resolves every i18n key
  * through {@link I18n} so the site never has to embed lang.json itself.
  *
- * <p>Monsters are the one category exported unfiltered (see exportMonsters()'s "legacy" origin):
- * a player looking up an original-game monster's drops or gold needs a page too, not just the
- * ones this fork added. Spells/NPCs/quests/items keep the "new content only" scope below - the
- * "is this new content" allow-lists were compiled by cross-referencing CHANGELOG.md and
+ * <p>Monsters are the one category exported unfiltered (see exportMonsters()'s "legacy" origin): a
+ * player looking up an original-game monster's drops or gold needs a page too, not just the ones
+ * this fork added. Spells/NPCs/quests/items keep the "new content only" scope below - the "is this
+ * new content" allow-lists were compiled by cross-referencing CHANGELOG.md and
  * docs/content-ideas/*.md against the actual class names in the repo (see T4C-0012's changelog
  * entry for the pass this was built in).
  */
 public final class CompendiumExporter {
   private CompendiumExporter() {}
-
-
 
   private static final Set<String> NEW_SPELL_CLASSES =
       Set.of(
@@ -113,7 +111,6 @@ public final class CompendiumExporter {
           "UltraManaSurge",
           "RenewArmor");
 
-
   private static final Set<String> NEW_QUEST_IDS =
       Set.of(
           "silversky_tide_warden",
@@ -126,6 +123,16 @@ public final class CompendiumExporter {
           "drakes_lair_vigil",
           "avalon_wilds_vigil",
           "fading_veil_reckoning",
+          "moonwake_missing",
+          "pale_cantor",
+          "emberglass_oath",
+          "cinder_marshal",
+          "ashbound_exiles",
+          "hush_cantor",
+          "nullguard_watch",
+          "dusk_regent",
+          "rift_unbinding",
+          "rhunor_hollow_dawn",
           "passage_to_avalon",
           "silversky_borderwatch",
           "windhowl_borderwatch",
@@ -153,6 +160,8 @@ public final class CompendiumExporter {
       List.of(
           "item.wyrmforged_ember",
           "item.veiled_aether_shard",
+          "item.moonwake_bell_shard",
+          "item.last_witness_seal",
           "item.tempered_godcore",
           "item.bound_godsigil",
           // T4C-0036: both pre-existing but previously unsold at any vendor (price 0/333,
@@ -356,9 +365,9 @@ public final class CompendiumExporter {
 
   /**
    * {@link I18n#resolve} returns its input unchanged when the key isn't in lang.json - some
-   * JSON-authored monsters (the level 525-750 Colosseum ladder) reference i18n keys that were
-   * never added to the catalogue, so resolving them leaves a literal {@code ${monster.xxx}}
-   * placeholder. Fall back to the raw spawn name rather than publish that placeholder verbatim.
+   * JSON-authored monsters (the level 525-750 Colosseum ladder) reference i18n keys that were never
+   * added to the catalogue, so resolving them leaves a literal {@code ${monster.xxx}} placeholder.
+   * Fall back to the raw spawn name rather than publish that placeholder verbatim.
    */
   private static String resolveOrFallback(String i18nValue, String fallback) {
     String resolved = I18n.resolve(i18nValue);
@@ -471,25 +480,28 @@ public final class CompendiumExporter {
     return s;
   }
 
-  /** A concrete, reproducible damage figure for an attack spell's primary effect (effectType 1
-   * or 10 - both are treated as the "health delta" formula by SpellEffectManager#
-   * resolveHealthDelta, effectType 10 being the drain-life variant), since the raw min/maxDamage
-   * fields on SpellData are always 0 for every effect-driven spell (the real damage lives in the
-   * T4cEffect formula string, not those fields). Evaluated at a fixed, labeled reference: the
-   * caster at exactly this spell's own minInt/minWis/minLevel requirements, an untrained (100)
-   * elemental skill, and a neutral (100) target resistance - the same "self.element" default the
-   * engine itself falls back to. Real in-game damage scales up with the caster's trained
-   * elemental skill and down/up with the target's real resistance (see SpellEffectManager -
-   * self.fire/self.water/etc. are trained skills, not attributes), so this is a reference point
-   * for comparison, not a promise of what any given cast will deal. Returns null for non-attack
-   * spells or spells with no damage-effect formula (pure buffs/wards/heals). */
+  /**
+   * A concrete, reproducible damage figure for an attack spell's primary effect (effectType 1 or 10
+   * - both are treated as the "health delta" formula by SpellEffectManager# resolveHealthDelta,
+   * effectType 10 being the drain-life variant), since the raw min/maxDamage fields on SpellData
+   * are always 0 for every effect-driven spell (the real damage lives in the T4cEffect formula
+   * string, not those fields). Evaluated at a fixed, labeled reference: the caster at exactly this
+   * spell's own minInt/minWis/minLevel requirements, an untrained (100) elemental skill, and a
+   * neutral (100) target resistance - the same "self.element" default the engine itself falls back
+   * to. Real in-game damage scales up with the caster's trained elemental skill and down/up with
+   * the target's real resistance (see SpellEffectManager - self.fire/self.water/etc. are trained
+   * skills, not attributes), so this is a reference point for comparison, not a promise of what any
+   * given cast will deal. Returns null for non-attack spells or spells with no damage-effect
+   * formula (pure buffs/wards/heals).
+   */
   private static Map<String, Object> damageAtReference(SpellData spell) {
     if (!spell.isAttack() || spell.getT4cEffects() == null) return null;
     for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
       if (effect == null || effect.getParameters() == null) continue;
       int type = effect.getEffectType();
       if (type != 1 && type != 10) continue;
-      String formula = effect.getParameters().isEmpty() ? null : effect.getParameters().get(0).getExpression();
+      String formula =
+          effect.getParameters().isEmpty() ? null : effect.getParameters().get(0).getExpression();
       if (formula == null || formula.isBlank()) continue;
       // The formula is a "health delta" (negative = damage), sometimes wrapped in a leading
       // "-(...)" and sometimes with the sign buried inside a conditional (e.g. Mana Burst's
@@ -500,8 +512,27 @@ public final class CompendiumExporter {
       String magnitude = "-(" + formula + ")";
       DiceFormula.Context ctx =
           new DiceFormula.Context(
-              0, 0, 0, spell.getMinInt(), 0, spell.getMinWis(), 0, spell.getMinLevel(),
-              0, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100);
+              0,
+              0,
+              0,
+              spell.getMinInt(),
+              0,
+              spell.getMinWis(),
+              0,
+              spell.getMinLevel(),
+              0,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100);
       int a = DiceFormula.of(magnitude).min(ctx);
       int b = DiceFormula.of(magnitude).max(ctx);
       Map<String, Object> out = new LinkedHashMap<>();
@@ -559,7 +590,9 @@ public final class CompendiumExporter {
       m.put("offerText", I18n.resolve(q.getOfferText()));
       m.put("completionText", I18n.resolve(q.getCompletionText()));
       m.put("completedText", I18n.resolve(q.getCompletedText()));
-      m.put("walkthroughText", q.getWalkthroughText() == null ? null : I18n.resolve(q.getWalkthroughText()));
+      m.put(
+          "walkthroughText",
+          q.getWalkthroughText() == null ? null : I18n.resolve(q.getWalkthroughText()));
       out.add(m);
     }
     return out;
@@ -604,7 +637,11 @@ public final class CompendiumExporter {
           t.put("response", I18n.resolve(topic.response()));
           List<String> actions = new ArrayList<>();
           for (NpcSpec.Action action : topic.actions()) {
-            actions.add(action.type() + (action.targets().isEmpty() ? "" : (":" + String.join(",", action.targets()))));
+            actions.add(
+                action.type()
+                    + (action.targets().isEmpty()
+                        ? ""
+                        : (":" + String.join(",", action.targets()))));
           }
           t.put("actions", actions);
           topics.add(t);
@@ -733,11 +770,13 @@ public final class CompendiumExporter {
     return out;
   }
 
-  /** Every real monster-loot source for a tracked item, scanning the FULL monster registry.
+  /**
+   * Every real monster-loot source for a tracked item, scanning the FULL monster registry.
    * exportMonsters() now documents every monster (including legacy ones) with its own page, but
-   * this stays a separate full scan regardless, so an item's drop sources never depend on that
-   * list staying in sync. monsterLink() in the site falls back to plain text for a name with no
-   * page, so this stays safe even if the two ever diverge. */
+   * this stays a separate full scan regardless, so an item's drop sources never depend on that list
+   * staying in sync. monsterLink() in the site falls back to plain text for a name with no page, so
+   * this stays safe even if the two ever diverge.
+   */
   private static List<Map<String, Object>> exportLootSources(Set<String> trackedItemKeys) {
     List<Map<String, Object>> out = new ArrayList<>();
     for (MonsterDef def : MonsterRegistry.load()) {
@@ -781,7 +820,8 @@ public final class CompendiumExporter {
           item.put(field, gson.fromJson(obj.get(field), Object.class));
         }
         if (!item.containsKey("key")) item.put("key", f.getName().replace(".json", ""));
-        item.put("sellPrice",
+        item.put(
+            "sellPrice",
             ItemSalePricing.sellPrice(ItemRegistry.findByKey((String) item.get("key"))));
         out.add(item);
       } catch (IOException | RuntimeException ex) {
@@ -789,15 +829,17 @@ public final class CompendiumExporter {
       }
     }
     // Include all new Java-authored loot too, without duplicating JSON equipment.
-    Set<String> exportedKeys = out.stream()
-        .map(item -> ItemDefinition.normalizeKey((String) item.get("key")))
-        .collect(java.util.stream.Collectors.toSet());
+    Set<String> exportedKeys =
+        out.stream()
+            .map(item -> ItemDefinition.normalizeKey((String) item.get("key")))
+            .collect(java.util.stream.Collectors.toSet());
     List<String> utilityKeys = new ArrayList<>(NEW_UTILITY_ITEM_KEYS);
     ItemRegistry.allByKey().values().stream()
         .filter(ItemDefinition::isRarityPriced)
         .map(ItemDefinition::getKey)
         .filter(key -> !exportedKeys.contains(key) && !utilityKeys.contains(key))
-        .sorted().forEach(utilityKeys::add);
+        .sorted()
+        .forEach(utilityKeys::add);
     for (String key : utilityKeys) {
       ItemDefinition d = ItemRegistry.findByKey(key);
       if (d == null) continue;
@@ -841,11 +883,11 @@ public final class CompendiumExporter {
   // -------------------------------------------------------------- xp curve
 
   /**
-   * The live leveling curve ({@link XpCurve#loadDefault()}, levels 1 to
-   * {@link GameConstants#MAX_PLAYER_LEVEL}), for the Systems page's
-   * XP-per-level chart. {@code serverXpRate} is {@link GameConstants#SERVER_XP_RATE}, the flat
-   * multiplier applied to every monster's granted XP ({@code PlayerProgression#addXp}) - it does
-   * not change the curve itself, only how many real kills a given {@code xpToNextLevel} costs.
+   * The live leveling curve ({@link XpCurve#loadDefault()}, levels 1 to {@link
+   * GameConstants#MAX_PLAYER_LEVEL}), for the Systems page's XP-per-level chart. {@code
+   * serverXpRate} is {@link GameConstants#SERVER_XP_RATE}, the flat multiplier applied to every
+   * monster's granted XP ({@code PlayerProgression#addXp}) - it does not change the curve itself,
+   * only how many real kills a given {@code xpToNextLevel} costs.
    */
   private static Map<String, Object> exportXpCurve() {
     List<Map<String, Object>> entries = new ArrayList<>();
@@ -879,25 +921,42 @@ public final class CompendiumExporter {
       row.put("requiredLevel", RebirthBehavior.requiredLevelFor(n));
       row.put("startingAttributes", RebirthBehavior.startingAttributeFor(n));
       row.put("energyPoints", RebirthBehavior.energyPointsFor(n));
-      row.put("auraHealChance", SeraphAuraService.effectivePercent(SeraphAuraService.healingChance(n)));
-      row.put("auraRetaliationChance", SeraphAuraService.effectivePercent(SeraphAuraService.retaliationChance(n)));
-      row.put("auraBurstChance", SeraphAuraService.effectivePercent(SeraphAuraService.areaBurstChance(n)));
+      row.put(
+          "auraHealChance", SeraphAuraService.effectivePercent(SeraphAuraService.healingChance(n)));
+      row.put(
+          "auraRetaliationChance",
+          SeraphAuraService.effectivePercent(SeraphAuraService.retaliationChance(n)));
+      row.put(
+          "auraBurstChance",
+          SeraphAuraService.effectivePercent(SeraphAuraService.areaBurstChance(n)));
       rows.add(row);
     }
     List<Map<String, Object>> energyShop = new ArrayList<>();
-    energyShop.add(energyVendor("Betran", "Attributes",
-        "Raises strength, endurance, agility, intelligence or wisdom by 1, up to 10 above your"
-            + " new starting value. Each attribute costs more the higher you push it: the 1st"
-            + " point costs 1, the 2nd-4th cost 2, the 5th-7th cost 3, the 8th costs 4 and the"
-            + " 9th-10th cost 5 (30 points to max one attribute)."));
-    energyShop.add(energyVendor("Caplan", "Elemental power",
-        "Raises your power in fire, water, air, earth, light or dark by 5. Costs 1 point at"
-            + " first, rising as that element's power grows."));
-    energyShop.add(energyVendor("Del Aan", "Elemental resistance",
-        "Raises your resistance to fire, water, air, earth or dark by 10 for 2 points."));
-    energyShop.add(energyVendor("Epilan", "Health and mana",
-        "Adds 10 maximum health or 5 maximum mana for 1 point each, with no limit - use it to"
-            + " spend whatever is left over."));
+    energyShop.add(
+        energyVendor(
+            "Betran",
+            "Attributes",
+            "Raises strength, endurance, agility, intelligence or wisdom by 1, up to 10 above your"
+                + " new starting value. Each attribute costs more the higher you push it: the 1st"
+                + " point costs 1, the 2nd-4th cost 2, the 5th-7th cost 3, the 8th costs 4 and the"
+                + " 9th-10th cost 5 (30 points to max one attribute)."));
+    energyShop.add(
+        energyVendor(
+            "Caplan",
+            "Elemental power",
+            "Raises your power in fire, water, air, earth, light or dark by 5. Costs 1 point at"
+                + " first, rising as that element's power grows."));
+    energyShop.add(
+        energyVendor(
+            "Del Aan",
+            "Elemental resistance",
+            "Raises your resistance to fire, water, air, earth or dark by 10 for 2 points."));
+    energyShop.add(
+        energyVendor(
+            "Epilan",
+            "Health and mana",
+            "Adds 10 maximum health or 5 maximum mana for 1 point each, with no limit - use it to"
+                + " spend whatever is left over."));
     Map<String, Object> out = new LinkedHashMap<>();
     out.put("maxRebirths", GameConstants.REBIRTH_MAX_REMORTS);
     out.put("maxLevel", GameConstants.MAX_PLAYER_LEVEL);

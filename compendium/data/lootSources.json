@@ -1783,6 +1783,12 @@
   },
   {
     "item": "item.critical_healing_potion",
+    "monster": "Ashbound Exile",
+    "monsterDisplayName": "Ashbound Exile",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
     "chance": 0.05
@@ -1791,12 +1797,6 @@
     "item": "item.critical_healing_potion",
     "monster": "Coastwarden Ithrak",
     "monsterDisplayName": "Coastwarden Ithrak",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Fey Warden",
-    "monsterDisplayName": "Fey Warden",
     "chance": 0.05
   },
   {
@@ -1813,8 +1813,20 @@
   },
   {
     "item": "item.critical_healing_potion",
-    "monster": "Moonlit Stalker",
-    "monsterDisplayName": "Moonlit Stalker",
+    "monster": "Nullguard",
+    "monsterDisplayName": "Nullguard",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Rhunor, the Hollow Dawn",
+    "monsterDisplayName": "Rhunor, the Hollow Dawn",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Rift Wraith",
+    "monsterDisplayName": "Rift Wraith",
     "chance": 0.05
   },
   {
@@ -1843,18 +1855,6 @@
   },
   {
     "item": "item.critical_healing_potion",
-    "monster": "Sir Caradoc, the Sundered Knight",
-    "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Sundered Sentinel",
-    "monsterDisplayName": "Sundered Sentinel",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
     "monster": "Test Skeleton Centaur",
     "monsterDisplayName": "Skeleton Centaur Test",
     "chance": 0.05
@@ -1867,6 +1867,12 @@
   },
   {
     "item": "item.critical_healing_potion",
+    "monster": "The Dusk Regent",
+    "monsterDisplayName": "The Dusk Regent",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.05
@@ -1875,6 +1881,12 @@
     "item": "item.critical_healing_potion",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "The Hush Cantor",
+    "monsterDisplayName": "The Hush Cantor",
     "chance": 0.05
   },
   {
@@ -1893,24 +1905,6 @@
     "item": "item.critical_healing_potion",
     "monster": "The Rootcrown Wyrm",
     "monsterDisplayName": "The Rootcrown Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "The Verdant Warden",
-    "monsterDisplayName": "The Verdant Warden",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Veilbound Wraith",
-    "monsterDisplayName": "Veilbound Wraith",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Ysolde, the Veiled Matriarch",
-    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
     "chance": 0.05
   },
   {
@@ -1936,6 +1930,12 @@
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.12
+  },
+  {
+    "item": "item.last_witness_seal",
+    "monster": "The Dusk Regent",
+    "monsterDisplayName": "The Dusk Regent",
+    "chance": 1.0
   },
   {
     "item": "item.mana_prism",
@@ -2059,6 +2059,12 @@
   },
   {
     "item": "item.mana_prism",
+    "monster": "Ashbound Exile",
+    "monsterDisplayName": "Ashbound Exile",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
     "chance": 0.05
@@ -2067,12 +2073,6 @@
     "item": "item.mana_prism",
     "monster": "Coastwarden Ithrak",
     "monsterDisplayName": "Coastwarden Ithrak",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Fey Warden",
-    "monsterDisplayName": "Fey Warden",
     "chance": 0.05
   },
   {
@@ -2089,8 +2089,20 @@
   },
   {
     "item": "item.mana_prism",
-    "monster": "Moonlit Stalker",
-    "monsterDisplayName": "Moonlit Stalker",
+    "monster": "Nullguard",
+    "monsterDisplayName": "Nullguard",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Rhunor, the Hollow Dawn",
+    "monsterDisplayName": "Rhunor, the Hollow Dawn",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Rift Wraith",
+    "monsterDisplayName": "Rift Wraith",
     "chance": 0.05
   },
   {
@@ -2119,18 +2131,6 @@
   },
   {
     "item": "item.mana_prism",
-    "monster": "Sir Caradoc, the Sundered Knight",
-    "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Sundered Sentinel",
-    "monsterDisplayName": "Sundered Sentinel",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
     "monster": "Test Skeleton Centaur",
     "monsterDisplayName": "Skeleton Centaur Test",
     "chance": 0.05
@@ -2143,6 +2143,12 @@
   },
   {
     "item": "item.mana_prism",
+    "monster": "The Dusk Regent",
+    "monsterDisplayName": "The Dusk Regent",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.05
@@ -2151,6 +2157,12 @@
     "item": "item.mana_prism",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "The Hush Cantor",
+    "monsterDisplayName": "The Hush Cantor",
     "chance": 0.05
   },
   {
@@ -2172,24 +2184,6 @@
     "chance": 0.05
   },
   {
-    "item": "item.mana_prism",
-    "monster": "The Verdant Warden",
-    "monsterDisplayName": "The Verdant Warden",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Veilbound Wraith",
-    "monsterDisplayName": "Veilbound Wraith",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Ysolde, the Veiled Matriarch",
-    "monsterDisplayName": "Ysolde, the Veiled Matriarch",
-    "chance": 0.05
-  },
-  {
     "item": "item.milipedes_chitin_key",
     "monster": "Kraanian Milipede",
     "monsterDisplayName": "Kraanian Millipede",
@@ -2200,6 +2194,12 @@
     "monster": "The Mistwing Wyrm",
     "monsterDisplayName": "The Mistwing Wyrm",
     "chance": 0.12
+  },
+  {
+    "item": "item.moonwake_bell_shard",
+    "monster": "The Pale Cantor",
+    "monsterDisplayName": "The Pale Cantor",
+    "chance": 1.0
   },
   {
     "item": "item.plague_eaten_key",

@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 /** Checks the shipped terrain, collision layer, and mainland connection together. */
 class AvalonRegionMapIntegrationTest {
-  private static final int WIDTH = 5120;
+  private static final int WIDTH = 6144;
   private static final int HEIGHT = 3072;
 
   @Test
@@ -70,8 +70,7 @@ class AvalonRegionMapIntegrationTest {
     assertBuildingWalls(data, "storehouse", 4440, 2050);
   }
 
-  private static void assertBuildingWalls(byte[] data, String name, int x, int y)
-      throws Exception {
+  private static void assertBuildingWalls(byte[] data, String name, int x, int y) throws Exception {
     MapStamp stamp = MapStamp.load(Path.of("assets/editor/templates", name + ".json"));
     int blockingCells = 0;
     for (var cell : stamp.cells()) {
