@@ -6,33 +6,33 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
-// Upper-tier trash of The Avalon Wilds (center 1265,1400 r110, worldZ 0) — a nocturnal predator,
+// Upper-tier trash of The Avalon Wilds (center 3965,1400 r110, worldZ 0) — a nocturnal predator,
 // threatening the fey groves. Reuses the Wolf animation/sound family (Ashfang
 // Stalker precedent) but is a distinct, higher-level creature. Three extra spawns stand near The
-// Verdant Warden's lair (1460,1600) as his loyal escorts making a last stand against the blight.
-@Spawn(type = "Moonlit Stalker", x = 1238, y = 1337, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1244, y = 1337, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1250, y = 1337, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1256, y = 1337, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1262, y = 1337, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1238, y = 1353, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1244, y = 1353, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1250, y = 1353, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1256, y = 1353, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1262, y = 1353, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1288, y = 1382, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1294, y = 1382, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1300, y = 1382, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1306, y = 1382, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1312, y = 1382, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1288, y = 1398, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1294, y = 1398, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1300, y = 1398, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1306, y = 1398, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1312, y = 1398, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1450, y = 1595, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1470, y = 1595, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Moonlit Stalker", x = 1460, y = 1613, z = 0, stationary = false, aggressive = true)
+// Verdant Warden's lair (4160,1600) as his loyal escorts making a last stand against the blight.
+@Spawn(type = "Moonlit Stalker", x = 3938, y = 1337, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3944, y = 1337, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3950, y = 1337, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3956, y = 1337, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3962, y = 1337, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3938, y = 1353, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3944, y = 1353, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3950, y = 1353, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3956, y = 1353, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3962, y = 1353, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3988, y = 1382, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3994, y = 1382, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4000, y = 1382, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4006, y = 1382, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4012, y = 1382, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3988, y = 1398, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 3994, y = 1398, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4000, y = 1398, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4006, y = 1398, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4012, y = 1398, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4150, y = 1595, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4170, y = 1595, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Moonlit Stalker", x = 4160, y = 1613, z = 0, stationary = false, aggressive = true)
 public final class MoonlitStalker extends DataMonster {
   public static final String SOUND_ATTACK = "Wolf Attack.wav";
   public static final String SOUND_DEATH = "Wolf Dying.wav";

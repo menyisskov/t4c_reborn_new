@@ -15,7 +15,7 @@ public final class ForgeGodsforgedZephyrWand {
         "",
         0,
         0,
-        1330,
+        4030,
         1440,
         1,
         1500000,

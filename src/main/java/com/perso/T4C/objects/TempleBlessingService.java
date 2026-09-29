@@ -85,9 +85,9 @@ public final class TempleBlessingService {
           townShrine(209, 737, 0),
           // The Oracle - where travellers arrive in the cavern (2968,2141).
           townShrine(2970, 2143, 2),
-          // Avalon Sanctuary - outside the Temple door Sister Ilyndra keeps (1340,1479). The one
+          // Avalon Sanctuary - outside the Temple door Sister Ilyndra keeps (4040,1479). The one
           // archmage, and the only chest whose blessing is worth the journey.
-          new Shrine(1353, 1465, 0, AVALON_CASTER_INTELLIGENCE, AVALON_CASTER_WISDOM));
+          new Shrine(4053, 1465, 0, AVALON_CASTER_INTELLIGENCE, AVALON_CASTER_WISDOM));
 
   public enum Failure {
     NONE,

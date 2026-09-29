@@ -15,14 +15,14 @@ import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-// T4C-0035: a shortcut rebirth rite, found within the Avalon Wilds (1290,1500), worldZ 0 - for a
+// T4C-0035: a shortcut rebirth rite, found within the Avalon Wilds (3990,1500), worldZ 0 - for a
 // character who's already proven themselves once and doesn't want to re-trek to the Oracle's
 // dungeon (and its guardian gauntlet) for every subsequent rebirth. Once quest/definition/
 // TheWakingRite.java is completed (level 125+, a one-time unlock that then sticks permanently -
 // owner's call), Rowan can perform the same rebirth rite the Oracle does, without leaving Avalon.
 // Deliberately independent of the Oracle's own "__FLAG_USER_HAS_DEFEATED_ASSISTANT" gate - this
 // is an alternate proof of worth, not a duplicate of it.
-@Spawn(type = "AnchoriteRowan", x = 1307, y = 1505, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "AnchoriteRowan", x = 4007, y = 1505, z = 0, stationary = true, aggressive = false)
 public final class AnchoriteRowan extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

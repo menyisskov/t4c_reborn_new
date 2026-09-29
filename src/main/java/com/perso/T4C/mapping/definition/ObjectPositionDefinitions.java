@@ -1585,6 +1585,6 @@ public final class ObjectPositionDefinitions {
         new ObjectPos("TEMPLE BLESSING CHEST", 1815, 1299, 0, false),
         new ObjectPos("TEMPLE BLESSING CHEST", 209, 737, 0, false),
         new ObjectPos("TEMPLE BLESSING CHEST", 2970, 2143, 2, false),
-        new ObjectPos("TEMPLE BLESSING CHEST", 1353, 1465, 0, false));
+        new ObjectPos("TEMPLE BLESSING CHEST", 4053, 1465, 0, false));
   }
 }

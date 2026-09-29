@@ -24328,7 +24328,7 @@
   "quest.avalon_wilds_vigil.offer": "Defeat 20 Moonlit Stalkers in the two hunting clearings north of the sanctuary. Then recover Caradoc's Sundered Blade from the fallen Sir Caradoc in the border glade to the west. Both deeds are required. Ask about the route for directions, and return here to report with the blade as proof.",
   "quest.avalon_wilds_vigil.completion": "The Wilds breathe easier. The pact holds a little longer because of you.",
   "quest.avalon_wilds_vigil.completed": "The Wardens still speak well of you. The Wilds remain ours - for now.",
-  "quest.avalon_wilds_vigil.walkthrough": "Speak to Elder Ophira at the sanctuary temple about the wilds, then say accept. Ask about the route for directions to the Moonlit Stalker clearings around (1300,1390) and (1250,1345). Defeat 20 Stalkers inside the marked Wilds objective area. Recover Caradoc's Sundered Blade from Sir Caradoc in the border glade around (1265,1460), west of the sanctuary. Return to Ophira and say report. She checks both objectives, consumes the blade, and unlocks fast travel to the Avalon Wilds. Ask about the veil for the next chapter.",
+  "quest.avalon_wilds_vigil.walkthrough": "Speak to Elder Ophira at the sanctuary temple about the wilds, then say accept. Ask about the route for directions to the Moonlit Stalker clearings around (4000,1390) and (3950,1345). Defeat 20 Stalkers inside the marked Wilds objective area. Recover Caradoc's Sundered Blade from Sir Caradoc in the border glade around (3965,1460), west of the sanctuary. Return to Ophira and say report. She checks both objectives, consumes the blade, and unlocks fast travel to the Avalon Wilds. Ask about the veil for the next chapter.",
   "quest.fading_veil_reckoning.title": "The Fading Veil's Reckoning",
   "quest.fading_veil_reckoning.offer": "Defeat 15 Veilbound Wraiths in the marked Fading Veil region south of the sanctuary. Defeat Ysolde, the Veiled Matriarch, and bring me Ysolde's Veiled Circlet. Return and say report after both objectives are complete; I will take the circlet to break its hold on this isle.",
   "quest.fading_veil_reckoning.completion": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
@@ -25840,5 +25840,8 @@
   "npc.xanth.elvenbane.give": "Elvenbane, forged in secret. Do not let anyone see it who shouldn't.",
   "npc.elysana.poisonapple.need": "Bring me an apple first. I cannot poison what I don't have.",
   "npc.elysana.poisonapple.offer": "Give me the apple, and I will lace it with something the Bishop will never taste coming.",
-  "npc.elysana.poisonapple.done": "There. A poisoned apple, sweet as any other - until it isn't."
+  "npc.elysana.poisonapple.done": "There. A poisoned apple, sweet as any other - until it isn't.",
+  "zone.0.256": "Avalon Sanctuary",
+  "zone.0.257": "The Avalon Wilds",
+  "zone.0.258": "The Fading Veil"
 }

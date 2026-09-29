@@ -22,6 +22,7 @@ public final class PlayerStateMapper {
 
   public static PlayerStateDto fromPlayer(Player player, float dayNightHour) {
     PlayerStateDto state = new PlayerStateDto();
+    state.worldLayoutVersion = AvalonWorldLayout.WORLD_LAYOUT_VERSION;
     state.name = player.getName();
     state.gender = player.getGender();
     state.dayNightHour = dayNightHour;

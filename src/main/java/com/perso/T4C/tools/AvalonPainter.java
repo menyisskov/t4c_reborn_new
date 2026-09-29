@@ -1,6 +1,7 @@
 package com.perso.T4C.tools;
 
 import com.perso.T4C.config.Paths;
+import com.perso.T4C.helper.AvalonWorldLayout;
 import com.perso.T4C.helper.CollisionMapIO;
 import com.perso.T4C.helper.GroundMosaicCatalog;
 import com.perso.T4C.helper.MapReader;
@@ -10,29 +11,28 @@ import java.util.List;
 /**
  * T4C-0096: repaints and substantially enlarges the Avalon island landmass, following the same
  * pattern {@link ContinentPainter} (T4C-0024) established for Kraanhold - real ground art plus
- * walkable collision written directly into {@code worldmap.mapbin}/{@code .colbin}, not just
- * spawns dropped on whatever ground happens to already be there.
+ * walkable collision written directly into {@code worldmap.mapbin}/{@code .colbin}, not just spawns
+ * dropped on whatever ground happens to already be there.
  *
- * <p><b>Root cause of the player-reported "solid black rectangles":</b> a survey of the region
- * (see the now-removed {@code AvalonSurvey} scratch tool used to investigate this pass) found
- * that most of Avalon's nominal footprint was never actually painted - it still carries the
- * literal ground sprite {@code "Black Tile"}, a placeholder the game's own map editor
- * ({@code MapEditorScreen.isUsableGroundForRepair}) explicitly excludes as "not real ground".
- * Roughly 63,000 of those Black Tile cells in the Avalon area also carry {@code ABSOLUTE}
- * collision, i.e. they render solid black *and* block movement - this is exactly the bug the
- * player described, and it is also why the explorable area felt tiny despite a much larger
- * nominal footprint: a large fraction of that footprint was an invisible wall of black void, not
- * rendering/streaming pop-in. This pass repaints every Black Tile cell found within the painted
- * territories below with real terrain and (where nothing else is on top of it) walkable
- * collision.
+ * <p><b>Root cause of the player-reported "solid black rectangles":</b> a survey of the region (see
+ * the now-removed {@code AvalonSurvey} scratch tool used to investigate this pass) found that most
+ * of Avalon's nominal footprint was never actually painted - it still carries the literal ground
+ * sprite {@code "Black Tile"}, a placeholder the game's own map editor ({@code
+ * MapEditorScreen.isUsableGroundForRepair}) explicitly excludes as "not real ground". Roughly
+ * 63,000 of those Black Tile cells in the Avalon area also carry {@code ABSOLUTE} collision, i.e.
+ * they render solid black *and* block movement - this is exactly the bug the player described, and
+ * it is also why the explorable area felt tiny despite a much larger nominal footprint: a large
+ * fraction of that footprint was an invisible wall of black void, not rendering/streaming pop-in.
+ * This pass repaints every Black Tile cell found within the painted territories below with real
+ * terrain and (where nothing else is on top of it) walkable collision.
  *
  * <p><b>Never touches already-good art:</b> unlike a from-scratch continent, most of Avalon's
  * existing small hand-painted patch (the Avalon Sanctuary settlement plus its immediate
- * surroundings) is already correct - real ground art, trees/buildings as decor, hard-cut
- * coastline. This painter only ever repaints a tile that is currently the "Black Tile" void or
- * open {@code Ground_Water}; any tile that already carries other real ground art is left
- * completely alone. That protects the existing settlement look and every existing coastline
- * while still letting new territory be claimed from open ocean to grow the island.
+ * surroundings) is already correct - real ground art, trees/buildings as decor, hard-cut coastline.
+ * This painter only ever repaints a tile that is currently the "Black Tile" void or open {@code
+ * Ground_Water}; any tile that already carries other real ground art is left completely alone. That
+ * protects the existing settlement look and every existing coastline while still letting new
+ * territory be claimed from open ocean to grow the island.
  *
  * <p><b>Territories</b> (same circle-with-sine-wobble + straight-road-bridge approach as {@link
  * ContinentPainter}, checked in priority order so a smaller, more specific territory always wins
@@ -40,34 +40,33 @@ import java.util.List;
  * between sub-zones without any dedicated transition art, since this game has none):
  *
  * <ul>
- *   <li>{@code WildsCore} / {@code WildsReach} - The Avalon Wilds, the fey grove
- *       ({@code avalon_wilds_vigil}'s own canon center/radius, plus a new north-western
- *       extension of the same lush grass terrain to grow the grove considerably).
- *   <li>{@code VeilCore} / {@code VeilReach} - The Fading Veil, the blighted woodland
- *       ({@code fading_veil_reckoning}'s own canon center/radius, plus a new south-eastern
- *       extension). Uses {@code Hardrock} - its own zone summary calls it "the hardest ground on
- *       the island", so the harsh rocky tile family already in the catalog is a literal match,
- *       not just a mood match, and it reads as visually distinct from the Wilds' grass at a
- *       glance.
+ *   <li>{@code WildsCore} / {@code WildsReach} - The Avalon Wilds, the fey grove ({@code
+ *       avalon_wilds_vigil}'s own canon center/radius, plus a new north-western extension of the
+ *       same lush grass terrain to grow the grove considerably).
+ *   <li>{@code VeilCore} / {@code VeilReach} - The Fading Veil, the blighted woodland ({@code
+ *       fading_veil_reckoning}'s own canon center/radius, plus a new south-eastern extension). Uses
+ *       {@code Hardrock} - its own zone summary calls it "the hardest ground on the island", so the
+ *       harsh rocky tile family already in the catalog is a literal match, not just a mood match,
+ *       and it reads as visually distinct from the Wilds' grass at a glance.
  *   <li>{@code Town} - Avalon Sanctuary, grown from a ~75x80 cramped NPC cluster to a real town
  *       footprint (radius 150, ~300x300) using the {@code EarthTile} trodden-earth ground the
- *       existing settlement patch already uses, so the enlarged town reads as one continuous
- *       place rather than a patchwork.
- *   <li>{@code TideWest} / {@code TideSouth} - two new coastal/wetland accent territories
- *       (west shore strand on {@code RockFloor}, southern marsh on {@code Dgrass}) that round out
- *       the island to five visually distinct ground families total and give the hub-and-spoke
- *       road network real destinations beyond the two existing lore zones.
+ *       existing settlement patch already uses, so the enlarged town reads as one continuous place
+ *       rather than a patchwork.
+ *   <li>{@code TideWest} / {@code TideSouth} - two new coastal/wetland accent territories (west
+ *       shore strand on {@code RockFloor}, southern marsh on {@code Dgrass}) that round out the
+ *       island to five visually distinct ground families total and give the hub-and-spoke road
+ *       network real destinations beyond the two existing lore zones.
  * </ul>
  *
  * <p>Every non-town territory is connected back to the town by a straight dirt-road bridge (the
  * same {@code Town Road Dale} tile family {@link ContinentPainter} used), so the enlarged
  * settlement is a real hub with paths radiating out to every area - including, implicitly, the
- * {@code spell.avalon_gateway} landing tile (1340, 1477), which already sits inside the town's
- * own territory.
+ * {@code spell.avalon_gateway} landing tile (1340, 1477), which already sits inside the town's own
+ * territory.
  *
- * <p>A small rectangular exclusion (with a buffer) around the "Passage to Avalon" mainland
- * crossing (roughly 1440-1660, 1190-1410) is skipped entirely - that shore is a separate
- * landmass reached by boat/NPC vouching, not part of the island, and must not be repainted.
+ * <p>A small rectangular exclusion (with a buffer) around the "Passage to Avalon" mainland crossing
+ * (roughly 1440-1660, 1190-1410) is skipped entirely - that shore is a separate landmass reached by
+ * boat/NPC vouching, not part of the island, and must not be repainted.
  */
 public final class AvalonPainter {
   private AvalonPainter() {}
@@ -122,6 +121,9 @@ public final class AvalonPainter {
   private static final int MAINLAND_MAX_Y = 1450;
 
   public static void main(String[] args) throws Exception {
+    if (args.length != 1 || !"--apply".equals(args[0])) {
+      throw new IllegalArgumentException("Usage: AvalonPainter --apply (expanded world only)");
+    }
     int minX = 650, minY = 1100, maxX = 2100, maxY = 2250;
 
     GroundMosaicCatalog catalog = GroundMosaicCatalog.load();
@@ -133,6 +135,8 @@ public final class AvalonPainter {
     int collisionCleared = 0;
 
     try (MapReader map = new MapReader(mapFile)) {
+      if (map.getWidth() < 5120)
+        throw new IllegalStateException("Expand the world before painting Avalon");
       CollisionMapIO.CollisionMap col = CollisionMapIO.read(colFile);
       byte[] colData = col.getData();
       int colWidth = col.getWidth();
@@ -142,7 +146,8 @@ public final class AvalonPainter {
           if (isMainlandExclusion(x, y)) {
             continue;
           }
-          String existing = map.getGroundSpriteName(x, y);
+          int targetX = x + AvalonWorldLayout.SHIFT_X;
+          String existing = map.getGroundSpriteName(targetX, y);
           if (!isVoidOrWater(existing)) {
             // Real, already-painted ground (existing settlement patch, existing forest, existing
             // coastline) - never touched.
@@ -164,16 +169,16 @@ public final class AvalonPainter {
           if (spriteName == null) {
             continue;
           }
-          map.setGroundSpriteName(x, y, spriteName);
+          map.setGroundSpriteName(targetX, y, spriteName);
           if (isRoad) {
             paintedRoad++;
           } else {
             paintedGround++;
           }
 
-          String decorHere = map.getDecorSpriteName(x, y);
+          String decorHere = map.getDecorSpriteName(targetX, y);
           if (decorHere == null || decorHere.isBlank()) {
-            colData[y * colWidth + x] = (byte) NONE_COLLISION;
+            colData[y * colWidth + targetX] = (byte) NONE_COLLISION;
             collisionCleared++;
           }
         }
@@ -197,7 +202,7 @@ public final class AvalonPainter {
             + " tiles.");
   }
 
-  private static boolean isMainlandExclusion(int x, int y) {
+  static boolean isMainlandExclusion(int x, int y) {
     return x >= MAINLAND_MIN_X && x < MAINLAND_MAX_X && y >= MAINLAND_MIN_Y && y < MAINLAND_MAX_Y;
   }
 
@@ -209,7 +214,7 @@ public final class AvalonPainter {
     return base.equalsIgnoreCase("Black Tile") || base.equalsIgnoreCase("Ground_Water");
   }
 
-  private static String terrainFor(int x, int y) {
+  static String terrainFor(int x, int y) {
     for (ZoneSite z : ZONES) {
       double dx = x - z.cx();
       double dy = y - z.cy();
@@ -225,7 +230,7 @@ public final class AvalonPainter {
     return null;
   }
 
-  private static String bridgeFor(int x, int y) {
+  static String bridgeFor(int x, int y) {
     for (int[] bridge : BRIDGES) {
       ZoneSite a = ZONES.get(bridge[0]);
       ZoneSite b = ZONES.get(bridge[1]);

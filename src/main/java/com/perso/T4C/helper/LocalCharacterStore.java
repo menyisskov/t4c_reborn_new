@@ -114,6 +114,7 @@ public final class LocalCharacterStore {
       CharacterClass characterClass,
       CharacterCreationRules.Stats stats) {
     PlayerStateDto state = new PlayerStateDto();
+    state.worldLayoutVersion = AvalonWorldLayout.WORLD_LAYOUT_VERSION;
     state.name = name;
     state.gender = gender;
     state.x = GameConstants.NEW_CHARACTER_START_TILE_X;
@@ -185,7 +186,7 @@ public final class LocalCharacterStore {
         String name =
             state != null && state.name != null && !state.name.isBlank()
                 ? state.name
-                : "Personnage";
+                : com.perso.T4C.i18n.I18n.key("character.column.name");
         String gender = state != null ? normalizeGender(state.gender) : MALE;
         migrated.characters.add(
             new CharacterSlot(

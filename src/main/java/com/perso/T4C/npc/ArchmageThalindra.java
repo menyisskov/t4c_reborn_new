@@ -8,7 +8,7 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-// Spell trainer at the Avalon Sanctuary Spell Trainer's Tower door (1362,1512), worldZ 0. Wired
+// Spell trainer at the Avalon Sanctuary Spell Trainer's Tower door (4062,1512), worldZ 0. Wired
 // declaratively via OPEN_SPELL_LEARNING actions, exactly as SkywatchIlvara teaches Leyward
 // Bastion. "train"/"learn" opens Avalon's ley-line support spells (Veilstone Aegis, Wellspring
 // Mercy, Leyward Bastion, Dawnwell Renewal). Naming a school ("fire", "water",
@@ -16,7 +16,7 @@ import java.util.List;
 // of levels 150/200/250/300/350 (the 400 rung was removed, T4C-0084), all built on
 // HighTierSpellCurve (T4C-0025). "mantle" opens a
 // small shop of the six elemental archmage mantles.
-@Spawn(type = "ArchmageThalindra", x = 1342, y = 1503, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "ArchmageThalindra", x = 4042, y = 1503, z = 0, stationary = true, aggressive = false)
 public final class ArchmageThalindra extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

@@ -94,7 +94,7 @@ class ElderOphiraTest {
     assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, WILDS));
     assertTrue(player.getInventory().remove(WILDS.getRequiredItemKey()));
     for (int i = 0; i < WILDS.getRequiredKills(); i++) {
-      quests.recordKill(player, "Moonlit Stalker", 0, 1265, 1400);
+      quests.recordKill(player, "Moonlit Stalker", 0, 3965, 1400);
     }
     keyword(npc, player, "report");
     assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, WILDS));
@@ -122,7 +122,7 @@ class ElderOphiraTest {
     old.setQuestFlag(QuestService.killsFlag(WILDS), 19);
     Player restored = new Player();
     PlayerStateMapper.applyToPlayer(PlayerStateMapper.fromPlayer(old), restored);
-    quests.recordKill(restored, "Moonlit Stalker", 0, 1265, 1400);
+    quests.recordKill(restored, "Moonlit Stalker", 0, 3965, 1400);
     assertEquals(20, restored.getQuestFlag(QuestService.killsFlag(WILDS)));
     restored.getInventory().add(WILDS.getRequiredItemKey());
     ElderOphira npc = npc();

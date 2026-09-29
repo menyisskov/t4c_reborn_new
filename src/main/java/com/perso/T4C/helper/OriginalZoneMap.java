@@ -22,11 +22,25 @@ public final class OriginalZoneMap {
   private OriginalZoneMap() {}
 
   public static int zoneId(int world, int tileX, int tileY) {
+    // Extension regions are independent of the fixed-size original Zone_Map.dat layout.
+    if (world == 0) {
+      int legacyX = tileX - AvalonWorldLayout.SHIFT_X;
+      if (legacyX >= 1295 && legacyX <= 1390 && tileY >= 1440 && tileY <= 1545) return 256;
+      if (insideCircle(legacyX, tileY, 1265, 1400, 110)) return 257;
+      if (insideCircle(legacyX, tileY, 1420, 1560, 130)) return 258;
+    }
     byte[] grid = grid(world);
     if (grid == null || tileX < 0 || tileY < 0 || tileX >= TILE_COLUMNS || tileY >= TILE_ROWS) {
       return EMPTY_ZONE;
     }
-    return grid[tileY * TILE_COLUMNS + tileX] & 0xff;
+    int index = tileY * TILE_COLUMNS + tileX;
+    return index < grid.length ? grid[index] & 0xff : EMPTY_ZONE;
+  }
+
+  private static boolean insideCircle(int x, int y, int cx, int cy, int radius) {
+    long dx = (long) x - cx;
+    long dy = (long) y - cy;
+    return dx * dx + dy * dy <= (long) radius * radius;
   }
 
   public static String displayName(int world, int tileX, int tileY) {

@@ -17,7 +17,7 @@ import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
 // A conversation-led quest chain: explain, accept, fulfill the objectives, then report.
-@Spawn(type = "ElderOphira", x = 1344, y = 1462, z = 0, stationary = true, aggressive = false)
+@Spawn(type = "ElderOphira", x = 4044, y = 1462, z = 0, stationary = true, aggressive = false)
 public final class ElderOphira extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

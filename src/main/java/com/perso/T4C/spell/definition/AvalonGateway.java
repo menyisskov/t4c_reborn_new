@@ -46,7 +46,7 @@ public final class AvalonGateway {
             new SpellData.T4cEffect(
                 7,
                 List.of(
-                    new SpellData.T4cEffect.EffectParam(1, "1340"),
+                    new SpellData.T4cEffect.EffectParam(1, "4040"),
                     new SpellData.T4cEffect.EffectParam(2, "1477"),
                     new SpellData.T4cEffect.EffectParam(3, "0")))));
   }

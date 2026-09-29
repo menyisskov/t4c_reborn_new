@@ -1,6 +1,5 @@
 package com.perso.T4C.helper;
 
-import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -87,6 +86,45 @@ class MapReaderCompressionTest {
       assertEquals(TILE_A, reader.getSpriteName(0, 0));
       assertEquals(TILE_B, reader.getSpriteName(1, 0));
       assertEquals(TILE_A, reader.getSpriteName(0, 1));
+    }
+  }
+
+  @Test
+  void expansionPreservesCoordinatesMetadataAndRoundTripsBothLayers(@TempDir Path dir)
+      throws Exception {
+    File source = writeRawMap(dir, "source.mapbin");
+    File output = dir.resolve("expanded.mapbin").toFile();
+    try (MapReader original = new MapReader(source)) {
+      original.setDecorSpriteName(7, 3, "Test Wall");
+      original.setScale(7, 3, 1.25f, 0.75f);
+      original.setOffset(7, 3, -4, -96);
+      original.setZOrder(7, 3, 2);
+      try (MapReader expanded = original.expandedCopy(96, 80, TILE_A)) {
+        for (int y = 0; y < HEIGHT; y++) {
+          for (int x = 0; x < WIDTH; x++) {
+            assertEquals(original.getGroundSpriteName(x, y), expanded.getGroundSpriteName(x, y));
+            assertEquals(original.getDecorSpriteName(x, y), expanded.getDecorSpriteName(x, y));
+            assertEquals(original.getOffsetY(x, y), expanded.getOffsetY(x, y));
+          }
+        }
+        assertEquals(TILE_A, expanded.getGroundSpriteName(95, 79));
+        assertEquals(1f, expanded.getScaleX(95, 79));
+        expanded.writeCompact(output);
+      }
+      assertEquals(WIDTH, original.getWidth(), "expansion must not mutate its source");
+      org.junit.jupiter.api.Assertions.assertThrows(
+          IllegalArgumentException.class, () -> original.expandedCopy(WIDTH - 1, HEIGHT, TILE_A));
+    }
+    try (MapReader reloaded = new MapReader(output)) {
+      assertEquals(96, reloaded.getWidth());
+      assertEquals(80, reloaded.getHeight());
+      assertEquals("Test Wall", reloaded.getDecorSpriteName(7, 3));
+      assertEquals(1.25f, reloaded.getScaleX(7, 3));
+      assertEquals(0.75f, reloaded.getScaleY(7, 3));
+      assertEquals(-4f, reloaded.getOffsetX(7, 3));
+      assertEquals(-96f, reloaded.getOffsetY(7, 3));
+      assertEquals(2, reloaded.getZOrder(7, 3));
+      assertEquals(TILE_A, reloaded.getGroundSpriteName(0, HEIGHT));
     }
   }
 

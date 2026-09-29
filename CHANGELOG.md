@@ -13,6 +13,18 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-29 — Avalon separated from the Great Library (T4C-0100)
+
+### Changed
+- Expanded the world eastward and moved Avalon into its own island area, with its sanctuary, quests, travel destinations and monster groups moving together.
+- Opened the Fading Veil's dense ghost woodland into visible fighting space with widely separated trees and clear routes.
+- The in-game map now displays the new eastern terrain.
+
+### Fixed
+- Restored the Great Library and other original terrain affected by Avalon's construction; existing cave and stair links keep their coordinates.
+- Restored missing Avalon ground that had left walkable black gaps.
+- Existing saves on identifiable Avalon ground and their Avalon respawn points move to the new location once, retaining quest progress and possessions.
+
 ## 2026-09-29 — Avalon sanctuary and Wilds (T4C-0099)
 
 ### Changed

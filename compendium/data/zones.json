@@ -255,10 +255,10 @@
     "levelRange": "Monster tiers 330–550",
     "biome": "Fey woodland",
     "settlement": "Avalon Sanctuary",
-    "summary": "The loyal Wilds north of Avalon Sanctuary have two Moonlit Stalker hunting clearings, around (1300,1390) and (1250,1345). Sir Caradoc haunts the western border glade around (1265,1460). Elder Ophira at the sanctuary temple asks for Stalker kills and his sundered blade; ask about the wilds, accept, then report with both objectives fulfilled. The protected settlement and fast-travel arrival are at (1340,1477). Player levels stop at 400; Caradoc is an above-cap monster challenge.",
+    "summary": "The loyal Wilds north of Avalon Sanctuary have two Moonlit Stalker hunting clearings, around (4000,1390) and (3950,1345). Sir Caradoc haunts the western border glade around (3965,1460). Elder Ophira at the sanctuary temple asks for Stalker kills and his sundered blade; ask about the wilds, accept, then report with both objectives fulfilled. The protected settlement and fast-travel arrival are at (4040,1477). Player levels stop at 400; Caradoc is an above-cap monster challenge.",
     "nextZoneId": "greater_drakes_bastion",
     "worldmapCenter": {
-      "x": 1265,
+      "x": 3965,
       "y": 1400,
       "radius": 110
     },
@@ -334,10 +334,10 @@
     "levelRange": "Monster tiers 485–650",
     "biome": "Blighted woodland",
     "settlement": "Avalon Sanctuary",
-    "summary": "Ysolde's blight spreads south of Avalon Sanctuary. After the Wilds vigil, Elder Ophira at the sanctuary temple offers the Veil reckoning: defeat Veilbound Wraiths and recover Ysolde's Veiled Circlet, then report with both objectives complete. The protected settlement and fast-travel arrival are at (1340,1477). These monster tiers exceed the player level cap of 400 and are intended as endgame challenges. Ysolde carries Veiled Aether Shards; the Rootcrown Wyrm in Drake's Lair is the other source.",
+    "summary": "Ysolde's blight spreads south of Avalon Sanctuary. After the Wilds vigil, Elder Ophira at the sanctuary temple offers the Veil reckoning: defeat Veilbound Wraiths and recover Ysolde's Veiled Circlet, then report with both objectives complete. The protected settlement and fast-travel arrival are at (4040,1477). These monster tiers exceed the player level cap of 400 and are intended as endgame challenges. Ysolde carries Veiled Aether Shards; the Rootcrown Wyrm in Drake's Lair is the other source.",
     "nextZoneId": "drakes_lair",
     "worldmapCenter": {
-      "x": 1420,
+      "x": 4120,
       "y": 1560,
       "radius": 130
     },

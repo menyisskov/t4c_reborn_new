@@ -1,6 +1,7 @@
 package com.perso.T4C.tools;
 
 import com.perso.T4C.config.Paths;
+import com.perso.T4C.helper.AvalonWorldLayout;
 import com.perso.T4C.helper.CollisionMapIO;
 import com.perso.T4C.helper.CollisionType;
 import com.perso.T4C.helper.GroundMosaicCatalog;
@@ -12,8 +13,9 @@ import java.util.Arrays;
 /**
  * Rebuilds Avalon's sanctuary and first hunting region from existing game art.
  *
- * <p>The edit mask is the inclusive settlement rectangle (1295,1440)-(1390,1545), union the Wilds
- * circle (1265,1400), radius 110. Everything outside that mask is preserved. Source polygons follow
+ * <p>Coordinates below are historical layout coordinates; writes add AvalonWorldLayout.SHIFT_X. The
+ * edit mask is the inclusive settlement rectangle (1295,1440)-(1390,1545), union the Wilds circle
+ * (1265,1400), radius 110. Everything outside that mask is preserved. Source polygons follow
  * complete Lighthaven buildings, including boundary wall anchors; their doors, NPCs, teleport links
  * and interactive objects are deliberately not imported. Run with {@code --apply} to write the
  * three world-map binaries. Without arguments this builds and validates in memory only. Re-running
@@ -21,6 +23,8 @@ import java.util.Arrays;
  */
 public final class AvalonSanctuaryBuilder {
   private AvalonSanctuaryBuilder() {}
+
+  private static final int SHIFT_X = AvalonWorldLayout.SHIFT_X;
 
   private static final int[][] TEMPLE = {
     {2950, 1032}, {2951, 1033}, {2952, 1032}, {2958, 1038},
@@ -66,6 +70,8 @@ public final class AvalonSanctuaryBuilder {
     File colFile = new File(Paths.COLLISION_MAP);
     GroundMosaicCatalog catalog = GroundMosaicCatalog.load();
     try (MapReader map = new MapReader(mapFile)) {
+      if (map.getWidth() < 5120)
+        throw new IllegalStateException("Expand the world before rebuilding Avalon");
       var collision = CollisionMapIO.read(colFile);
       if (map.getWidth() != collision.getWidth() || map.getHeight() != collision.getHeight()) {
         throw new IllegalStateException("Map and collision dimensions differ");
@@ -81,11 +87,11 @@ public final class AvalonSanctuaryBuilder {
           boolean boss = distanceSquared(x, y, 1265, 1460) <= 20 * 20;
           String family = road || plaza || boss ? "EarthTile" : "Grass";
           setGround(map, catalog, x, y, family);
-          map.setDecorSpriteName(x, y, null);
-          map.setScale(x, y, 1, 1);
-          map.setOffset(x, y, 0, 0);
-          map.setZOrder(x, y, 0);
-          data[y * width + x] = (byte) (inTown(x, y) ? 6 : 0);
+          map.setDecorSpriteName(x + SHIFT_X, y, null);
+          map.setScale(x + SHIFT_X, y, 1, 1);
+          map.setOffset(x + SHIFT_X, y, 0, 0);
+          map.setZOrder(x + SHIFT_X, y, 0);
+          data[y * width + x + SHIFT_X] = (byte) (inTown(x, y) ? 6 : 0);
           changed++;
         }
       }
@@ -146,15 +152,15 @@ public final class AvalonSanctuaryBuilder {
       // Remove only the two stair anchors; retain every surrounding wall collision.
       for (int[] p : new int[][] {{2931, 1057}, {2964, 1037}}) {
         int x = p[0] - 1601, y = p[1] + 415;
-        String decor = map.getDecorSpriteName(x, y);
+        String decor = map.getDecorSpriteName(x + SHIFT_X, y);
         if (decor == null || !decor.startsWith("Stair")) {
           throw new IllegalStateException("Expected donor stair at " + Arrays.toString(p));
         }
-        map.setDecorSpriteName(x, y, null);
-        map.setScale(x, y, 1, 1);
-        map.setOffset(x, y, 0, 0);
-        map.setZOrder(x, y, 0);
-        data[y * width + x] = 7;
+        map.setDecorSpriteName(x + SHIFT_X, y, null);
+        map.setScale(x + SHIFT_X, y, 1, 1);
+        map.setOffset(x + SHIFT_X, y, 0, 0);
+        map.setZOrder(x + SHIFT_X, y, 0);
+        data[y * width + x + SHIFT_X] = 7;
       }
       validateConnectivity(data, width, collision.getHeight());
       if (apply) {
@@ -171,7 +177,7 @@ public final class AvalonSanctuaryBuilder {
       MapReader map, GroundMosaicCatalog catalog, int x, int y, String family) {
     String name = catalog.tileName(family, x, y);
     if (name == null) throw new IllegalStateException("Missing terrain family: " + family);
-    map.setGroundSpriteName(x, y, name);
+    map.setGroundSpriteName(x + SHIFT_X, y, name);
   }
 
   private static void copyScenery(MapReader map, int sx, int sy, int x, int y) {
@@ -182,10 +188,10 @@ public final class AvalonSanctuaryBuilder {
   }
 
   private static void copyDecor(MapReader map, int sx, int sy, int x, int y) {
-    map.setDecorSpriteName(x, y, map.getDecorSpriteName(sx, sy));
-    map.setScale(x, y, map.getScaleX(sx, sy), map.getScaleY(sx, sy));
-    map.setOffset(x, y, map.getOffsetX(sx, sy), map.getOffsetY(sx, sy));
-    map.setZOrder(x, y, map.getZOrder(sx, sy));
+    map.setDecorSpriteName(x + SHIFT_X, y, map.getDecorSpriteName(sx, sy));
+    map.setScale(x + SHIFT_X, y, map.getScaleX(sx, sy), map.getScaleY(sx, sy));
+    map.setOffset(x + SHIFT_X, y, map.getOffsetX(sx, sy), map.getOffsetY(sx, sy));
+    map.setZOrder(x + SHIFT_X, y, map.getZOrder(sx, sy));
   }
 
   private static void copyBuilding(
@@ -199,10 +205,10 @@ public final class AvalonSanctuaryBuilder {
         if (!insidePolygon(polygon, sx, sy)) continue;
         int x = sx + dx, y = sy + dy;
         if (!inEditMask(x, y)) throw new IllegalStateException("Building exceeds edit mask");
-        map.setGroundSpriteName(x, y, map.getGroundSpriteName(sx, sy));
+        map.setGroundSpriteName(x + SHIFT_X, y, map.getGroundSpriteName(sx, sy));
         copyDecor(map, sx, sy, x, y);
         int sourceCollision = data[sy * width + sx] & 255;
-        data[y * width + x] =
+        data[y * width + x + SHIFT_X] =
             (byte)
                 (CollisionType.fromValue(sourceCollision).isBlocksMovement() ? sourceCollision : 7);
       }
@@ -248,7 +254,7 @@ public final class AvalonSanctuaryBuilder {
   private static void validateConnectivity(byte[] data, int width, int height) {
     boolean[] visited = new boolean[data.length];
     ArrayDeque<Integer> queue = new ArrayDeque<>();
-    int start = 1477 * width + 1340;
+    int start = 1477 * width + 1340 + SHIFT_X;
     queue.add(start);
     visited[start] = true;
     while (!queue.isEmpty()) {
@@ -256,7 +262,8 @@ public final class AvalonSanctuaryBuilder {
       int x = current % width, y = current / width;
       for (int[] d : new int[][] {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {
         int nx = x + d[0], ny = y + d[1];
-        if (nx < 0 || nx >= width || ny < 0 || ny >= height || !inEditMask(nx, ny)) continue;
+        if (nx < 0 || nx >= width || ny < 0 || ny >= height || !inEditMask(nx - SHIFT_X, ny))
+          continue;
         int next = ny * width + nx;
         if (!visited[next] && !CollisionType.fromValue(data[next] & 255).isBlocksMovement()) {
           visited[next] = true;
@@ -285,7 +292,7 @@ public final class AvalonSanctuaryBuilder {
           {1275, 1455},
           {1265, 1472}
         }) {
-      if (!visited[p[1] * width + p[0]])
+      if (!visited[p[1] * width + p[0] + SHIFT_X])
         throw new IllegalStateException("Unreachable destination " + Arrays.toString(p));
     }
   }

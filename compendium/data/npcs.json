@@ -5,7 +5,7 @@
     "displayName": "Anchorite Rowan",
     "spawns": [
       {
-        "x": 1307,
+        "x": 4007,
         "y": 1505,
         "worldZ": 0
       }
@@ -56,7 +56,7 @@
     "displayName": "Archmage Thalindra",
     "spawns": [
       {
-        "x": 1342,
+        "x": 4042,
         "y": 1503,
         "worldZ": 0
       }
@@ -237,7 +237,7 @@
     "displayName": "Elder Ophira",
     "spawns": [
       {
-        "x": 1344,
+        "x": 4044,
         "y": 1462,
         "worldZ": 0
       }
@@ -329,7 +329,7 @@
     "displayName": "Ember-Smith Corvain",
     "spawns": [
       {
-        "x": 1361,
+        "x": 4061,
         "y": 1518,
         "worldZ": 0
       }
@@ -372,7 +372,7 @@
     "displayName": "Grandmaster Tholvenn",
     "spawns": [
       {
-        "x": 1374,
+        "x": 4074,
         "y": 1522,
         "worldZ": 0
       }
@@ -962,7 +962,7 @@
     "displayName": "Quartermaster Elenna",
     "spawns": [
       {
-        "x": 1368,
+        "x": 4068,
         "y": 1510,
         "worldZ": 0
       }
@@ -1297,7 +1297,7 @@
     "displayName": "Sister Ilyndra",
     "spawns": [
       {
-        "x": 1347,
+        "x": 4047,
         "y": 1465,
         "worldZ": 0
       }
@@ -1720,7 +1720,7 @@
     "displayName": "Warden Seressa",
     "spawns": [
       {
-        "x": 1321,
+        "x": 4021,
         "y": 1483,
         "worldZ": 0
       }
@@ -1763,7 +1763,7 @@
     "displayName": "Wayfarer Bryndis",
     "spawns": [
       {
-        "x": 1305,
+        "x": 4005,
         "y": 1516,
         "worldZ": 0
       }

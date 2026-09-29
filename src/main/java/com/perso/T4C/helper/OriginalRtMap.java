@@ -58,7 +58,13 @@ public final class OriginalRtMap {
         }
       }
     }
-    return result;
+    try {
+      WorldMapExtension.draw(result, world, playerTileX, playerTileY);
+      return result;
+    } catch (IOException failure) {
+      result.dispose();
+      throw failure;
+    }
   }
 
   private static synchronized void loadWorld(int world) throws IOException {

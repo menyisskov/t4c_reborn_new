@@ -6,30 +6,30 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterGoldCurve;
 import com.perso.T4C.spawn.Spawn;
 
-// Loyal, still-unmarred trash of The Avalon Wilds (center 1265,1400 r110, worldZ 0). Reuses the
+// Loyal, still-unmarred trash of The Avalon Wilds (center 3965,1400 r110, worldZ 0). Reuses the
 // TreeEnt animation/sound family already used by Forest Guardian — a calm, defensive nature
 // spirit, not the corrupted Veil horrors further south. Passive like Forest Guardian: it defends
 // the Wilds rather than hunting through them.
-@Spawn(type = "Fey Warden", x = 1193, y = 1390, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1199, y = 1390, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1205, y = 1390, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1211, y = 1390, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1217, y = 1390, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1193, y = 1397, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1199, y = 1397, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1205, y = 1397, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1211, y = 1397, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1217, y = 1397, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1193, y = 1404, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1199, y = 1404, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1205, y = 1404, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1211, y = 1404, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1217, y = 1404, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1193, y = 1411, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1199, y = 1411, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1205, y = 1411, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1211, y = 1411, z = 0, stationary = false, aggressive = false)
-@Spawn(type = "Fey Warden", x = 1217, y = 1411, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3893, y = 1390, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3899, y = 1390, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3905, y = 1390, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3911, y = 1390, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3917, y = 1390, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3893, y = 1397, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3899, y = 1397, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3905, y = 1397, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3911, y = 1397, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3917, y = 1397, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3893, y = 1404, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3899, y = 1404, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3905, y = 1404, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3911, y = 1404, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3917, y = 1404, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3893, y = 1411, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3899, y = 1411, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3905, y = 1411, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3911, y = 1411, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Fey Warden", x = 3917, y = 1411, z = 0, stationary = false, aggressive = false)
 public final class FeyWarden extends DataMonster {
   public static final String SOUND_ATTACK = "Electrik.wav";
   public static final String SOUND_DEATH = "Tree Ent Dying.wav";

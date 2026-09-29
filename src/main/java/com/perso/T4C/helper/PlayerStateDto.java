@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class PlayerStateDto {
+  // Missing in legacy JSON means layout 0; current saves explicitly stamp the current layout.
+  public int worldLayoutVersion;
   public String name;
   public String gender;
   public float x;

@@ -54,17 +54,29 @@ class LocalCharacterStoreTest {
     CharacterCreationRules.Stats stats =
         new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
     LocalCharacterStore.CharacterSlot first =
-        LocalCharacterStore.create("alice", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats);
+        LocalCharacterStore.create(
+            "alice", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats);
     LocalCharacterStore.CharacterSlot second =
         LocalCharacterStore.create("Bob", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
     assertEquals("Alice", first.name());
+    PlayerStateDto written =
+        new com.google.gson.Gson()
+            .fromJson(Files.readString(tempDir.resolve(first.stateFile())), PlayerStateDto.class);
+    assertEquals(
+        AvalonWorldLayout.WORLD_LAYOUT_VERSION,
+        written.worldLayoutVersion,
+        "new characters must be stamped before their first load");
     assertThrows(
         IllegalArgumentException.class,
-        () -> LocalCharacterStore.create("ALICE", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats));
+        () ->
+            LocalCharacterStore.create(
+                "ALICE", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats));
     LocalCharacterStore.create("Charlie", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
     assertThrows(
         IllegalStateException.class,
-        () -> LocalCharacterStore.create("Denis", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats));
+        () ->
+            LocalCharacterStore.create(
+                "Denis", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats));
     LocalCharacterStore.activate(first);
     assertEquals(first.stateFile(), PlayerStateStore.getActiveFilename());
     PlayerStateDto state = LocalCharacterStore.loadState(first);
@@ -110,7 +122,8 @@ class LocalCharacterStoreTest {
     CharacterCreationRules.Stats stats =
         new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
     LocalCharacterStore.CharacterSlot slot =
-        LocalCharacterStore.create("Ancien", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
+        LocalCharacterStore.create(
+            "Ancien", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
     PlayerStateDto legacy = LocalCharacterStore.loadState(slot);
     legacy.gold = 0;
     legacy.inventory.clear();

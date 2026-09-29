@@ -15,7 +15,7 @@ public final class AvalonWildsVigil {
         "Moonlit Stalker",
         20,
         0,
-        1265,
+        3965,
         1400,
         110,
         800000,

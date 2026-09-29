@@ -1422,3 +1422,25 @@ only real friendly-clickable entity today is the player's own companion
 - **Verification:** inspect map changes with the actual terrain/decor renderer as well as
   collision connectivity checks. Sparse screenshots, ground-only minimaps or raw template
   masks do not establish that a playable scene renders correctly.
+
+
+## World expansion and Avalon separation (T4C-0100)
+
+- **Owner direction:** new continents must not overlap existing interiors. Check historic terrain,
+  entrances and both endpoints of travel links before claiming apparently empty world space.
+- **Implementation decision:** extend the world eastward from 3072×3072 to 5120×3072 and move
+  Avalon +2700 X. Keep the original origin, Y coordinates and layer IDs. Existing islands,
+  Library rooms, cave/stair links and dungeon/cavern/underworld dimensions remain in place.
+- **Save compatibility:** migrate only identifiable old Avalon tiles, using a versioned ownership
+  mask; active positions and pixel-based respawn anchors are independent. Preserve original
+  interior positions in ambiguous overlapping areas. Never translate a broad rectangle of saves
+  or teleport definitions. Quest progress, inventories and character stats are retained.
+- **Ghost trees:** visibility applies across the blighted region, not just the sanctuary. Leave
+  sparse scenery outside routes and encounters, allowing room for the whole canopy around
+  player, monster and loot positions. The actual rendered scene is the acceptance check.
+- The original RT map/zone data retains its original binary dimensions; additional overview
+  terrain and zone names support the eastern extension independently. Editing the eastern
+  terrain requires regenerating its overview, as well as the compendium's cropped maps.
+- The larger dense map uses more memory and loading work; do not infer performance parity
+  merely because the tile format accepts larger dimensions. Additional encounter design and
+  progression balance across Avalon's extended terrain remain open work.
