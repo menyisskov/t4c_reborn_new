@@ -994,13 +994,12 @@ should not consume it), that is a content change, not an editorial one, and need
   quest id to "chain name / stage N of M / prerequisite quest ids", used only to print a stage
   line in the Journal's detail panel. It enforces nothing QuestService doesn't already enforce
   (the giver NPC's own dialogue still does the real gating) - it only affects what a player reads.
-  Only two real multi-stage chains exist today: Passage to Avalon
-  (`tideworn_shore_scouts` → `passage_to_avalon`) and the Godsforged crafting chain
-  (`forge_the_godcore` + `bind_the_godsigil` → one of the five `forge_godsforged_*` finales).
-  Every other quest here - including a zone's own "borderwatch" access quest and the two
-  independent post-unlock Avalon quests - is deliberately *not* a chain (see each quest's own file
-  comment); don't add an entry to `QuestChainInfo` unless a quest is genuinely gated on another
-  quest's completion the way these two are.
+  The Avalon sanctuary chain now gates `fading_veil_reckoning` behind
+  `avalon_wilds_vigil`, alongside Passage to Avalon and the Godsforged chain.
+  Existing active or completed Veil saves retain access. NPC dialogue must explain an offer,
+  highlight the next keywords, require explicit acceptance and reporting, and stop progression
+  until every kill/item objective is met. Opening a conversation must not silently turn in
+  Ophira's quests. `ElderOphiraTest` covers these transitions and save compatibility.
 - **The `killlog.<canonical monster name>` quest-flag namespace is reserved** for the global,
   per-monster-type kill tally (`QuestService.killLogFlag()`/`killLog()`, backing the Monster Kill
   Log screen, Ctrl+K). It's written on *every* recognized kill, independent of any quest, using
@@ -1400,3 +1399,26 @@ only real friendly-clickable entity today is the player's own companion
   rebirth count, self-slay) and player commands (`.roll`/`.dice`, XP/damage-per-hour meters,
   clear chat, FPS) are planned next. Moderation (kick, mute, lockout, IP), per-feature server
   toggles, and the old NMS-server-only commands are left out until there is a server to use them.
+
+## Avalon map construction (T4C-0099)
+
+- **Owner direction:** Avalon should ultimately offer the playable extent and varied destinations
+  of a full classic island such as Arakas, Raven's Dust or Stoneheim. Painted empty ground alone
+  does not meet this goal. The approved first pass is the sanctuary, one hunting region and its
+  staged NPC quest; the remaining island expansion is open work.
+- **Readable ground:** keep characters visible in travel routes and fighting clearings. Group
+  trees around clearings instead of covering every walkable tile with overlapping canopies.
+- **Complete structures:** reuse coherent existing buildings, carrying ground, decor, scale,
+  offsets, draw order and collision together. Never assemble a temple from isolated wall sprites.
+  Do not inherit another building's teleports when copying its scenery.
+- **Safe sanctuary:** a temple needs enclosing walls and accessible entrances. Protected tiles
+  prevent combat from either side, including delayed impacts; enemies do not acquire or chase
+  protected players. Healing and intentional noncombat HP costs still work. This uses the
+  existing safe-haven collision flags and is checked by `SanctuaryCombatRulesTest`.
+- **Designated encounters:** place monster groups in recognizable, connected destinations,
+  with quest targets inside the objective area and required bosses reachable from the giver.
+  Current monster tiers above the player cap remain challenge content; do not present them as
+  attainable player levels. Damage/reward balancing is a separate follow-up.
+- **Verification:** inspect map changes with the actual terrain/decor renderer as well as
+  collision connectivity checks. Sparse screenshots, ground-only minimaps or raw template
+  masks do not establish that a playable scene renders correctly.

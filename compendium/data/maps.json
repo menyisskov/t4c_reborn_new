@@ -1236,21 +1236,14 @@
         "displayName": "Veilbound Wraith",
         "x": 1460,
         "y": 1450,
-        "tier": "trash"
-      },
-      {
-        "name": "Veilbound Wraith",
-        "displayName": "Veilbound Wraith",
-        "x": 1390,
-        "y": 1445,
-        "tier": "trash"
+        "tier": "boss"
       },
       {
         "name": "Veilbound Wraith",
         "displayName": "Veilbound Wraith",
         "x": 1415,
         "y": 1450,
-        "tier": "trash"
+        "tier": "boss"
       },
       {
         "name": "Raider",
@@ -1301,38 +1294,38 @@
       {
         "id": "AnchoriteRowan",
         "displayName": "Anchorite Rowan",
-        "x": 1290,
-        "y": 1500
+        "x": 1307,
+        "y": 1505
       },
       {
         "id": "ArchmageThalindra",
         "displayName": "Archmage Thalindra",
-        "x": 1362,
-        "y": 1512
+        "x": 1342,
+        "y": 1503
       },
       {
         "id": "ElderOphira",
         "displayName": "Elder Ophira",
-        "x": 1316,
-        "y": 1493
+        "x": 1344,
+        "y": 1462
       },
       {
         "id": "EmberSmithCorvain",
         "displayName": "Ember-Smith Corvain",
-        "x": 1300,
-        "y": 1460
+        "x": 1361,
+        "y": 1518
       },
       {
         "id": "GrandmasterTholvenn",
         "displayName": "Grandmaster Tholvenn",
-        "x": 1330,
-        "y": 1440
+        "x": 1374,
+        "y": 1522
       },
       {
         "id": "QuartermasterElenna",
         "displayName": "Quartermaster Elenna",
-        "x": 1364,
-        "y": 1494
+        "x": 1368,
+        "y": 1510
       },
       {
         "id": "Scholar1",
@@ -1361,20 +1354,20 @@
       {
         "id": "SisterIlyndra",
         "displayName": "Sister Ilyndra",
-        "x": 1340,
-        "y": 1479
+        "x": 1347,
+        "y": 1465
       },
       {
         "id": "WardenSeressa",
         "displayName": "Warden Seressa",
-        "x": 1355,
-        "y": 1465
+        "x": 1321,
+        "y": 1483
       },
       {
         "id": "WayfarerBryndis",
         "displayName": "Wayfarer Bryndis",
-        "x": 1318,
-        "y": 1512
+        "x": 1305,
+        "y": 1516
       }
     ],
     "monsters": [
@@ -1395,303 +1388,289 @@
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1345,
-        "y": 1420,
+        "x": 1193,
+        "y": 1390,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1194,
-        "y": 1451,
+        "x": 1199,
+        "y": 1390,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1295,
-        "y": 1310,
+        "x": 1205,
+        "y": 1390,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1175,
-        "y": 1358,
+        "x": 1211,
+        "y": 1390,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1325,
-        "y": 1470,
+        "x": 1217,
+        "y": 1390,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1225,
-        "y": 1485,
+        "x": 1193,
+        "y": 1397,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1360,
-        "y": 1385,
+        "x": 1199,
+        "y": 1397,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1165,
-        "y": 1422,
+        "x": 1205,
+        "y": 1397,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1195,
-        "y": 1319,
+        "x": 1211,
+        "y": 1397,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1253,
-        "y": 1293,
+        "x": 1217,
+        "y": 1397,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1315,
-        "y": 1306,
+        "x": 1193,
+        "y": 1404,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1222,
-        "y": 1379,
+        "x": 1199,
+        "y": 1404,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1266,
-        "y": 1366,
+        "x": 1205,
+        "y": 1404,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1321,
-        "y": 1364,
+        "x": 1211,
+        "y": 1404,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1222,
-        "y": 1433,
+        "x": 1217,
+        "y": 1404,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1261,
-        "y": 1424,
+        "x": 1193,
+        "y": 1411,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1325,
-        "y": 1423,
+        "x": 1199,
+        "y": 1411,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1249,
-        "y": 1461,
+        "x": 1205,
+        "y": 1411,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1291,
-        "y": 1480,
+        "x": 1211,
+        "y": 1411,
         "tier": "trash"
       },
       {
         "name": "Fey Warden",
         "displayName": "Fey Warden",
-        "x": 1236,
-        "y": 1502,
+        "x": 1217,
+        "y": 1411,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1315,
-        "y": 1460,
+        "x": 1238,
+        "y": 1337,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1195,
-        "y": 1452,
-        "tier": "trash"
-      },
-      {
-        "name": "Moonlit Stalker",
-        "displayName": "Moonlit Stalker",
-        "x": 1335,
-        "y": 1360,
-        "tier": "trash"
-      },
-      {
-        "name": "Moonlit Stalker",
-        "displayName": "Moonlit Stalker",
-        "x": 1235,
-        "y": 1325,
-        "tier": "trash"
-      },
-      {
-        "name": "Moonlit Stalker",
-        "displayName": "Moonlit Stalker",
-        "x": 1285,
-        "y": 1495,
-        "tier": "trash"
-      },
-      {
-        "name": "Moonlit Stalker",
-        "displayName": "Moonlit Stalker",
-        "x": 1180,
-        "y": 1358,
-        "tier": "trash"
-      },
-      {
-        "name": "Moonlit Stalker",
-        "displayName": "Moonlit Stalker",
-        "x": 1355,
-        "y": 1435,
+        "x": 1244,
+        "y": 1337,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
         "x": 1250,
-        "y": 1300,
+        "y": 1337,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1229,
-        "y": 1299,
+        "x": 1256,
+        "y": 1337,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1273,
-        "y": 1293,
+        "x": 1262,
+        "y": 1337,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1332,
-        "y": 1317,
+        "x": 1238,
+        "y": 1353,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1195,
-        "y": 1349,
+        "x": 1244,
+        "y": 1353,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1280,
-        "y": 1381,
+        "x": 1250,
+        "y": 1353,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1333,
-        "y": 1380,
+        "x": 1256,
+        "y": 1353,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1222,
-        "y": 1409,
+        "x": 1262,
+        "y": 1353,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1245,
-        "y": 1412,
+        "x": 1288,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1301,
-        "y": 1430,
+        "x": 1294,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1260,
-        "y": 1444,
+        "x": 1300,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1231,
-        "y": 1451,
+        "x": 1306,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1264,
-        "y": 1475,
+        "x": 1312,
+        "y": 1382,
         "tier": "trash"
       },
       {
-        "name": "Sundered Sentinel",
-        "displayName": "Sundered Sentinel",
-        "x": 1330,
-        "y": 1500,
+        "name": "Moonlit Stalker",
+        "displayName": "Moonlit Stalker",
+        "x": 1288,
+        "y": 1398,
         "tier": "trash"
       },
       {
-        "name": "Sundered Sentinel",
-        "displayName": "Sundered Sentinel",
-        "x": 1370,
-        "y": 1445,
+        "name": "Moonlit Stalker",
+        "displayName": "Moonlit Stalker",
+        "x": 1294,
+        "y": 1398,
         "tier": "trash"
       },
       {
-        "name": "Sundered Sentinel",
-        "displayName": "Sundered Sentinel",
-        "x": 1380,
-        "y": 1520,
+        "name": "Moonlit Stalker",
+        "displayName": "Moonlit Stalker",
+        "x": 1300,
+        "y": 1398,
         "tier": "trash"
+      },
+      {
+        "name": "Moonlit Stalker",
+        "displayName": "Moonlit Stalker",
+        "x": 1306,
+        "y": 1398,
+        "tier": "trash"
+      },
+      {
+        "name": "Moonlit Stalker",
+        "displayName": "Moonlit Stalker",
+        "x": 1312,
+        "y": 1398,
+        "tier": "trash"
+      },
+      {
+        "name": "Sir Caradoc, the Sundered Knight",
+        "displayName": "Sir Caradoc, the Sundered Knight",
+        "x": 1265,
+        "y": 1460,
+        "tier": "boss"
       },
       {
         "name": "Sundered Sentinel",
@@ -1701,17 +1680,24 @@
         "tier": "trash"
       },
       {
-        "name": "Veilbound Wraith",
-        "displayName": "Veilbound Wraith",
-        "x": 1305,
-        "y": 1530,
+        "name": "Sundered Sentinel",
+        "displayName": "Sundered Sentinel",
+        "x": 1255,
+        "y": 1455,
         "tier": "trash"
       },
       {
-        "name": "Veilbound Wraith",
-        "displayName": "Veilbound Wraith",
-        "x": 1390,
-        "y": 1445,
+        "name": "Sundered Sentinel",
+        "displayName": "Sundered Sentinel",
+        "x": 1275,
+        "y": 1455,
+        "tier": "trash"
+      },
+      {
+        "name": "Sundered Sentinel",
+        "displayName": "Sundered Sentinel",
+        "x": 1265,
+        "y": 1472,
         "tier": "trash"
       },
       {
@@ -1719,21 +1705,7 @@
         "displayName": "Veilbound Wraith",
         "x": 1415,
         "y": 1450,
-        "tier": "trash"
-      },
-      {
-        "name": "Veilbound Wraith",
-        "displayName": "Veilbound Wraith",
-        "x": 1360,
-        "y": 1536,
-        "tier": "trash"
-      },
-      {
-        "name": "Veilbound Wraith",
-        "displayName": "Veilbound Wraith",
-        "x": 1329,
-        "y": 1539,
-        "tier": "trash"
+        "tier": "boss"
       },
       {
         "name": "Wild Horse",
@@ -1915,8 +1887,8 @@
       {
         "id": "AnchoriteRowan",
         "displayName": "Anchorite Rowan",
-        "x": 1290,
-        "y": 1500
+        "x": 1307,
+        "y": 1505
       },
       {
         "id": "AnrakBrownbark",
@@ -1927,163 +1899,121 @@
       {
         "id": "ArchmageThalindra",
         "displayName": "Archmage Thalindra",
-        "x": 1362,
-        "y": 1512
+        "x": 1342,
+        "y": 1503
       },
       {
         "id": "ElderOphira",
         "displayName": "Elder Ophira",
-        "x": 1316,
-        "y": 1493
+        "x": 1344,
+        "y": 1462
       },
       {
         "id": "EmberSmithCorvain",
         "displayName": "Ember-Smith Corvain",
-        "x": 1300,
-        "y": 1460
+        "x": 1361,
+        "y": 1518
       },
       {
         "id": "GrandmasterTholvenn",
         "displayName": "Grandmaster Tholvenn",
-        "x": 1330,
-        "y": 1440
+        "x": 1374,
+        "y": 1522
       },
       {
         "id": "QuartermasterElenna",
         "displayName": "Quartermaster Elenna",
-        "x": 1364,
-        "y": 1494
+        "x": 1368,
+        "y": 1510
       },
       {
         "id": "SisterIlyndra",
         "displayName": "Sister Ilyndra",
-        "x": 1340,
-        "y": 1479
+        "x": 1347,
+        "y": 1465
       },
       {
         "id": "WardenSeressa",
         "displayName": "Warden Seressa",
-        "x": 1355,
-        "y": 1465
+        "x": 1321,
+        "y": 1483
       },
       {
         "id": "WayfarerBryndis",
         "displayName": "Wayfarer Bryndis",
-        "x": 1318,
-        "y": 1512
+        "x": 1305,
+        "y": 1516
       }
     ],
     "monsters": [
       {
-        "name": "Fey Warden",
-        "displayName": "Fey Warden",
-        "x": 1345,
-        "y": 1420,
-        "tier": "trash"
-      },
-      {
-        "name": "Fey Warden",
-        "displayName": "Fey Warden",
-        "x": 1325,
-        "y": 1470,
-        "tier": "trash"
-      },
-      {
-        "name": "Fey Warden",
-        "displayName": "Fey Warden",
-        "x": 1360,
-        "y": 1385,
-        "tier": "trash"
-      },
-      {
-        "name": "Fey Warden",
-        "displayName": "Fey Warden",
-        "x": 1261,
-        "y": 1424,
-        "tier": "trash"
-      },
-      {
-        "name": "Fey Warden",
-        "displayName": "Fey Warden",
-        "x": 1325,
-        "y": 1423,
-        "tier": "trash"
-      },
-      {
-        "name": "Fey Warden",
-        "displayName": "Fey Warden",
-        "x": 1249,
-        "y": 1461,
-        "tier": "trash"
-      },
-      {
-        "name": "Fey Warden",
-        "displayName": "Fey Warden",
-        "x": 1291,
-        "y": 1480,
+        "name": "Moonlit Stalker",
+        "displayName": "Moonlit Stalker",
+        "x": 1288,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1315,
-        "y": 1460,
+        "x": 1294,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1285,
-        "y": 1495,
+        "x": 1300,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1355,
-        "y": 1435,
+        "x": 1306,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1280,
-        "y": 1381,
+        "x": 1312,
+        "y": 1382,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1333,
-        "y": 1380,
+        "x": 1288,
+        "y": 1398,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1245,
-        "y": 1412,
+        "x": 1294,
+        "y": 1398,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1301,
-        "y": 1430,
+        "x": 1300,
+        "y": 1398,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1260,
-        "y": 1444,
+        "x": 1306,
+        "y": 1398,
         "tier": "trash"
       },
       {
         "name": "Moonlit Stalker",
         "displayName": "Moonlit Stalker",
-        "x": 1264,
-        "y": 1475,
+        "x": 1312,
+        "y": 1398,
         "tier": "trash"
       },
       {
@@ -2110,8 +2040,8 @@
       {
         "name": "Sir Caradoc, the Sundered Knight",
         "displayName": "Sir Caradoc, the Sundered Knight",
-        "x": 1440,
-        "y": 1540,
+        "x": 1265,
+        "y": 1460,
         "tier": "boss"
       },
       {
@@ -2124,8 +2054,8 @@
       {
         "name": "Sundered Sentinel",
         "displayName": "Sundered Sentinel",
-        "x": 1330,
-        "y": 1500,
+        "x": 1430,
+        "y": 1535,
         "tier": "trash"
       },
       {
@@ -2138,8 +2068,8 @@
       {
         "name": "Sundered Sentinel",
         "displayName": "Sundered Sentinel",
-        "x": 1370,
-        "y": 1445,
+        "x": 1450,
+        "y": 1535,
         "tier": "trash"
       },
       {
@@ -2187,8 +2117,8 @@
       {
         "name": "Sundered Sentinel",
         "displayName": "Sundered Sentinel",
-        "x": 1380,
-        "y": 1520,
+        "x": 1440,
+        "y": 1552,
         "tier": "trash"
       },
       {
@@ -2257,22 +2187,22 @@
       {
         "name": "Sundered Sentinel",
         "displayName": "Sundered Sentinel",
-        "x": 1430,
-        "y": 1535,
+        "x": 1255,
+        "y": 1455,
         "tier": "trash"
       },
       {
         "name": "Sundered Sentinel",
         "displayName": "Sundered Sentinel",
-        "x": 1450,
-        "y": 1535,
+        "x": 1275,
+        "y": 1455,
         "tier": "trash"
       },
       {
         "name": "Sundered Sentinel",
         "displayName": "Sundered Sentinel",
-        "x": 1440,
-        "y": 1552,
+        "x": 1265,
+        "y": 1472,
         "tier": "trash"
       },
       {
@@ -2320,8 +2250,8 @@
       {
         "name": "Veilbound Wraith",
         "displayName": "Veilbound Wraith",
-        "x": 1305,
-        "y": 1530,
+        "x": 1440,
+        "y": 1540,
         "tier": "trash"
       },
       {
@@ -2334,8 +2264,8 @@
       {
         "name": "Veilbound Wraith",
         "displayName": "Veilbound Wraith",
-        "x": 1390,
-        "y": 1445,
+        "x": 1431,
+        "y": 1535,
         "tier": "trash"
       },
       {
@@ -2355,8 +2285,8 @@
       {
         "name": "Veilbound Wraith",
         "displayName": "Veilbound Wraith",
-        "x": 1360,
-        "y": 1536,
+        "x": 1451,
+        "y": 1535,
         "tier": "trash"
       },
       {
@@ -2369,8 +2299,8 @@
       {
         "name": "Veilbound Wraith",
         "displayName": "Veilbound Wraith",
-        "x": 1329,
-        "y": 1539,
+        "x": 1441,
+        "y": 1552,
         "tier": "trash"
       },
       {

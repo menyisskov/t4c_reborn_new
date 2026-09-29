@@ -1,7 +1,6 @@
 package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
@@ -14,7 +13,7 @@ import java.util.List;
 // binds the Godsforged chain's arcane component (a Bound Godsigil) from Veiled Aether Shards -
 // see quest/definition/BindTheGodsigil.java. A standard single-item turn-in quest; no custom
 // behavior needed here.
-@Spawn(type = "WardenSeressa", x = 1355, y = 1465, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "WardenSeressa", x = 1321, y = 1483, z = 0, stationary = true, aggressive = false)
 public final class WardenSeressa extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

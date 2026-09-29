@@ -5,7 +5,6 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
-import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
 import com.perso.T4C.npc.core.NpcContext;
@@ -32,7 +31,13 @@ import java.util.List;
 // QuestService.completeCraftingQuest() - which checks/consumes the sigil and grants the item
 // reward in the same step. This skips the normal accept-now-return-later flow entirely: as soon
 // as a player has both components, naming the item finishes the forge in one conversation.
-@Spawn(type = "GrandmasterTholvenn", x = 1330, y = 1440, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "GrandmasterTholvenn",
+    x = 1374,
+    y = 1522,
+    z = 0,
+    stationary = true,
+    aggressive = false)
 public final class GrandmasterTholvenn extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -59,14 +64,16 @@ public final class GrandmasterTholvenn extends ScriptedNpc {
                   List.of("${npc.topic_keyword.grandmastertholvenn.0.0}"),
                   "${npc.topic.grandmastertholvenn.0}",
                   List.of(
-                      new NpcSpec.Action(ActionType.GIVE_QUEST, List.of("forge_godsforged_warblade")))),
+                      new NpcSpec.Action(
+                          ActionType.GIVE_QUEST, List.of("forge_godsforged_warblade")))),
               "forge_godsforged_warblade"),
           new ForgeEntry(
               new NpcSpec.DialogueTopic(
                   List.of("${npc.topic_keyword.grandmastertholvenn.1.0}"),
                   "${npc.topic.grandmastertholvenn.1}",
                   List.of(
-                      new NpcSpec.Action(ActionType.GIVE_QUEST, List.of("forge_godsforged_stormbow")))),
+                      new NpcSpec.Action(
+                          ActionType.GIVE_QUEST, List.of("forge_godsforged_stormbow")))),
               "forge_godsforged_stormbow"),
           new ForgeEntry(
               new NpcSpec.DialogueTopic(
@@ -88,7 +95,8 @@ public final class GrandmasterTholvenn extends ScriptedNpc {
               new NpcSpec.DialogueTopic(
                   List.of("${npc.topic_keyword.grandmastertholvenn.4.0}"),
                   "${npc.topic.grandmastertholvenn.4}",
-                  List.of(new NpcSpec.Action(ActionType.GIVE_QUEST, List.of("forge_godsforged_torc")))),
+                  List.of(
+                      new NpcSpec.Action(ActionType.GIVE_QUEST, List.of("forge_godsforged_torc")))),
               "forge_godsforged_torc"));
 
   private static final NpcSpec SPEC =
@@ -185,8 +193,10 @@ public final class GrandmasterTholvenn extends ScriptedNpc {
     };
   }
 
-  /** Player-facing name for an item key, mirroring QuestService's own private helper of the same
-   * shape - falls back to the raw key if the item isn't registered. */
+  /**
+   * Player-facing name for an item key, mirroring QuestService's own private helper of the same
+   * shape - falls back to the raw key if the item isn't registered.
+   */
   private static String itemDisplayName(String itemKey) {
     if (itemKey == null || itemKey.isBlank()) return itemKey;
     ItemDefinition item = ItemRegistry.findByKey(itemKey);

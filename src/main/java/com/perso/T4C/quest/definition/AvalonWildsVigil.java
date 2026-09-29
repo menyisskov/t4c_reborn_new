@@ -2,11 +2,8 @@ package com.perso.T4C.quest.definition;
 
 import com.perso.T4C.quest.QuestDef;
 
-// Avalon Wilds (center 1265,1400, radius 110, worldZ 0) — every Fey Warden @Spawn point in
-// monster/FeyWarden.java sits within this circle, so recordKill's geofence always registers
-// progress. Moonlit Stalker was deliberately not used here: several of its spawns sit near
-// The Fading Veil, outside this quest's area, which would make some of its kills silently fail
-// to count.
+// Protect the loyal fey from Moonlit Stalkers in the marked Avalon Wilds hunting region.
+// Existing quest/status/kill flags are retained so previously earned progress is preserved.
 public final class AvalonWildsVigil {
   private AvalonWildsVigil() {}
 
@@ -15,7 +12,7 @@ public final class AvalonWildsVigil {
         "avalon_wilds_vigil",
         "${quest.avalon_wilds_vigil.title}",
         "ElderOphira",
-        "Fey Warden",
+        "Moonlit Stalker",
         20,
         0,
         1265,

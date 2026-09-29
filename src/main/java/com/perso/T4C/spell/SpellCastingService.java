@@ -1,6 +1,7 @@
 package com.perso.T4C.spell;
 
 import com.perso.T4C.helper.DiceFormula;
+import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import java.util.LinkedHashMap;
@@ -23,6 +24,7 @@ public final class SpellCastingService {
     NOT_LEARNED,
     WRONG_TARGET,
     PVP_FORBIDDEN,
+    SAFE_HAVEN,
     OUT_OF_RANGE,
     NO_LINE_OF_SIGHT,
     COOLDOWN,
@@ -63,6 +65,11 @@ public final class SpellCastingService {
   private static Result begin(Request request, boolean interruptActions) {
     if (request == null || request.spell() == null || request.caster() == null) {
       return Result.failure(Failure.ACTIVATION_FAILED);
+    }
+    if ((request.targetKind() == TargetKind.HOSTILE_UNIT
+            || (request.targetKind() == TargetKind.POSITION && request.spell().isAttack()))
+        && SanctuaryCombatRules.isProtected(request.caster().getPositionVector())) {
+      return Result.failure(Failure.SAFE_HAVEN);
     }
     SpellData spell = request.spell();
     Player caster = request.caster();
@@ -125,6 +132,7 @@ public final class SpellCastingService {
     return switch (failure) {
       case NOT_LEARNED -> I18n.message("message.spell_not_learned");
       case WRONG_TARGET -> I18n.message("message.spell_wrong_target");
+      case SAFE_HAVEN -> I18n.message("message.combat_safe_haven");
       case PVP_FORBIDDEN -> I18n.message("message.spell_pvp_forbidden");
       case OUT_OF_RANGE -> I18n.message("message.target_too_far");
       case NO_LINE_OF_SIGHT -> I18n.message("message.target_no_line_of_sight");

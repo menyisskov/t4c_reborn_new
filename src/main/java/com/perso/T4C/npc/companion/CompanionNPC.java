@@ -13,6 +13,7 @@ import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILE
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 import static com.perso.T4C.config.GameConstants.MONSTER_ATTACK_RANGE;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -24,11 +25,12 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.Pathfinding;
+import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterAnimations;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.BaseNPC;
 import com.perso.T4C.player.Player;
@@ -303,7 +305,7 @@ public class CompanionNPC extends BaseNPC {
 
   public boolean takeDamage(int damage) {
 
-    if (dead || damage <= 0) {
+    if (dead || damage <= 0 || SanctuaryCombatRules.isProtected(getPosition())) {
 
       return false;
     }
@@ -406,6 +408,8 @@ public class CompanionNPC extends BaseNPC {
     return monster != null
         && !monster.isDead()
         && monster.canBeAttackedByPlayer()
+        && SanctuaryCombatRules.canFight(getPosition(), monster.getPosition())
+        && !SanctuaryCombatRules.isProtected(playerPosition)
         && playerPosition.dst(monster.getPosition()) <= COMPANION_COMBAT_LEASH_RANGE;
   }
 
@@ -506,6 +510,8 @@ public class CompanionNPC extends BaseNPC {
   }
 
   private void performCompanionAttack(BaseMonster monster) {
+    if (!SanctuaryCombatRules.canFight(getPosition(), monster.getPosition())
+        || SanctuaryCombatRules.isProtected(owner.getPositionVector())) return;
 
     startAttackAnimation();
 
@@ -705,6 +711,8 @@ public class CompanionNPC extends BaseNPC {
   }
 
   private void castAttackSpell(CompanionDef.SpellEntry entry, BaseMonster monster) {
+    if (!SanctuaryCombatRules.canFight(getPosition(), monster.getPosition())
+        || SanctuaryCombatRules.isProtected(owner.getPositionVector())) return;
 
     SpellData spell = SpellRegistry.findByName(entry.getSpellKey());
 
@@ -783,6 +791,8 @@ public class CompanionNPC extends BaseNPC {
   }
 
   private void applySpellDamage(BaseMonster monster, int damage) {
+    if (!SanctuaryCombatRules.canFight(getPosition(), monster.getPosition())
+        || SanctuaryCombatRules.isProtected(owner.getPositionVector())) return;
 
     if (dead || monster.isDead() || damage <= 0) {
 

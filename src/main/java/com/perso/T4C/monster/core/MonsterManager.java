@@ -2,13 +2,14 @@ package com.perso.T4C.monster.core;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
@@ -362,6 +362,7 @@ public class MonsterManager {
       return false;
     }
     Vector2 playerPos = player.getPositionVector();
+    if (!SanctuaryCombatRules.canFight(playerPos, monster.getPosition())) return false;
     float distance = playerPos.dst(monster.getPosition());
     float maxMeleeRange = 2f * Math.max(GRID_W, GRID_H);
     if (distance > maxMeleeRange) {

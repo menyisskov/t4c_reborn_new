@@ -86,9 +86,11 @@ public final class QuestScreen extends GuiScreenBase {
     }
   }
 
-  /** Repopulates the visible {@code quests} list from {@code allQuests} for the active tab, and
+  /**
+   * Repopulates the visible {@code quests} list from {@code allQuests} for the active tab, and
    * resets selection/scroll so a stale index from the other tab can't point past the new list's
-   * end. */
+   * end.
+   */
   private void applyTabFilter() {
     quests.clear();
     for (QuestDef quest : allQuests) {
@@ -124,9 +126,7 @@ public final class QuestScreen extends GuiScreenBase {
                 () ->
                     quests.isEmpty()
                         ? I18n.key(
-                            activeTab == Tab.COMPLETED
-                                ? "quest.none_completed"
-                                : "quest.none")
+                            activeTab == Tab.COMPLETED ? "quest.none_completed" : "quest.none")
                         : "",
                 () -> WHITE)
             .shrinkToFit();
@@ -297,10 +297,11 @@ public final class QuestScreen extends GuiScreenBase {
     return quest == null ? "" : I18n.message("quest.giver", QuestService.giverDisplayName(quest));
   }
 
-  /** Empty for the majority of quests (not part of any multi-stage chain, see QuestChainInfo).
-   * For a chain quest, names the chain, this quest's stage number, and - if any prerequisite
-   * stage isn't finished yet - which one, so a player never wonders why a later stage isn't
-   * offered yet. */
+  /**
+   * Empty for the majority of quests (not part of any multi-stage chain, see QuestChainInfo). For a
+   * chain quest, names the chain, this quest's stage number, and - if any prerequisite stage isn't
+   * finished yet - which one, so a player never wonders why a later stage isn't offered yet.
+   */
   private String selectedChain() {
     QuestDef quest = selectedQuest();
     if (quest == null) return "";
@@ -308,7 +309,13 @@ public final class QuestScreen extends GuiScreenBase {
     if (stage == null) return "";
     String base =
         I18n.message(
-            "quest.chain.stage", stage.chainName(), stage.stageNumber(), stage.totalStages());
+            "quest.chain.stage",
+            I18n.resolve(stage.chainName()),
+            stage.stageNumber(),
+            stage.totalStages());
+    // Legacy saves may already have a later stage active or finished. Do not claim they
+    // are waiting on a prerequisite which the giver deliberately grandfathers for them.
+    if (status(quest) != QuestService.STATUS_NOT_STARTED) return base;
     for (String prerequisiteId : stage.prerequisiteQuestIds()) {
       QuestDef prerequisite = findQuestById(prerequisiteId);
       if (prerequisite != null && status(prerequisite) != QuestService.STATUS_COMPLETED) {

@@ -13,6 +13,20 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-29 — Avalon sanctuary and Wilds (T4C-0099)
+
+### Changed
+- Rebuilt Avalon Sanctuary around a complete stone temple, two service buildings, open paths and clearly placed townsfolk.
+- Opened the Wilds into separate Stalker hunting clearings, a Warden grove and Sir Caradoc's border clearing, connected to the sanctuary by paths.
+- Elder Ophira now explains each mission before you accept it, waits for both the kills and the required item, and advances the story only when you report back. Existing quest progress is preserved.
+
+### Fixed
+- Sanctuary ground now prevents combat, including attacks already in flight; monsters no longer pursue players into protected ground.
+- Removed the dense tree cover and disconnected wall fragments from the rebuilt area, and moved hostile spawns out of town.
+
+### Still to come
+- Expanding this treatment across the full island, adding more distinct hunting regions and tuning progression across them.
+
 ## 2026-09-28 — Avalon NPC/quest audit (T4C-0098)
 
 ### Fixed

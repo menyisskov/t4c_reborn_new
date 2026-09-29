@@ -2,7 +2,6 @@ package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
 import com.perso.T4C.npc.behavior.RebirthBehavior;
@@ -23,7 +22,7 @@ import java.util.List;
 // owner's call), Rowan can perform the same rebirth rite the Oracle does, without leaving Avalon.
 // Deliberately independent of the Oracle's own "__FLAG_USER_HAS_DEFEATED_ASSISTANT" gate - this
 // is an alternate proof of worth, not a duplicate of it.
-@Spawn(type = "AnchoriteRowan", x = 1290, y = 1500, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "AnchoriteRowan", x = 1307, y = 1505, z = 0, stationary = true, aggressive = false)
 public final class AnchoriteRowan extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

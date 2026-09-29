@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0099`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0100`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -132,3 +132,4 @@ HUD rework, original NPC/quest content, etc.) predates this tracking effort
 and was not backfilled with IDs — only the passes covered by
 `CHANGELOG.md` are. Everything from T4C-0010 onward is tracked live, as the
 work happens.
+| T4C-0099 | Avalon sanctuary, Wilds hunting grounds and staged quest dialogue | Content/Systems | Done | `d18b1772` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-sanctuary-and-wilds-t4c-0099) |
