@@ -145,4 +145,4 @@ work happens.
 
 | T4C-0105 | Avalon islands and mainland landmarks | Content/Map | Done | `acfc4a87` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-islands-and-landmarks-t4c-0105) |
 
-| T4C-0106 | Hollow Dawn Avalon campaign and Threnody Reach (levels 200-400) | Content/Map | Done | _this PR_ | [2026-09-29](CHANGELOG.md#2026-09-29--the-hollow-dawn-campaign-t4c-0106) |
+| T4C-0106 | Hollow Dawn Avalon campaign and Threnody Reach (levels 200-400) | Content/Map | Done | `4ad2c1a7` | [2026-09-29](CHANGELOG.md#2026-09-29--the-hollow-dawn-campaign-t4c-0106) |
