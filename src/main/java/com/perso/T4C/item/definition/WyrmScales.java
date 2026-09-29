@@ -38,7 +38,7 @@ public final class WyrmScales {
   }
 
   private static ItemDefinition scale(String key, String name) {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         key,
         name,
         null,
@@ -78,5 +78,7 @@ public final class WyrmScales {
         List.of(),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

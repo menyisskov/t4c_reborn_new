@@ -8,7 +8,7 @@ public final class ItemItemEmpyreanEarthSceptre {
   private ItemItemEmpyreanEarthSceptre() {}
 
   public static ItemDefinition definition() {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         "item.empyrean_earth_sceptre",
         "${item.empyrean_earth_sceptre}",
         BodyPart.WEAPON,
@@ -57,5 +57,7 @@ public final class ItemItemEmpyreanEarthSceptre {
             new ItemDefinition.ItemBoost(90110, 20, "50", 0, 0)),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

@@ -13,6 +13,8 @@ import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.ItemSalePricing;
+import com.perso.T4C.item.json.ItemJsonLoader;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.monster.json.MonsterJsonLoader;
@@ -210,6 +212,7 @@ public final class CompendiumExporter {
     Path outDir = Path.of(args.length > 0 ? args[0] : "compendium/data");
     Files.createDirectories(outDir);
 
+    ItemJsonLoader.loadAndRegister();
     MonsterJsonLoader.loadAndRegister();
 
     Map<String, Object> shops = exportShops();
@@ -778,12 +781,24 @@ public final class CompendiumExporter {
           item.put(field, gson.fromJson(obj.get(field), Object.class));
         }
         if (!item.containsKey("key")) item.put("key", f.getName().replace(".json", ""));
+        item.put("sellPrice",
+            ItemSalePricing.sellPrice(ItemRegistry.findByKey((String) item.get("key"))));
         out.add(item);
       } catch (IOException | RuntimeException ex) {
         System.err.println("Skipping item file " + f + ": " + ex);
       }
     }
-    for (String key : NEW_UTILITY_ITEM_KEYS) {
+    // Include all new Java-authored loot too, without duplicating JSON equipment.
+    Set<String> exportedKeys = out.stream()
+        .map(item -> ItemDefinition.normalizeKey((String) item.get("key")))
+        .collect(java.util.stream.Collectors.toSet());
+    List<String> utilityKeys = new ArrayList<>(NEW_UTILITY_ITEM_KEYS);
+    ItemRegistry.allByKey().values().stream()
+        .filter(ItemDefinition::isRarityPriced)
+        .map(ItemDefinition::getKey)
+        .filter(key -> !exportedKeys.contains(key) && !utilityKeys.contains(key))
+        .sorted().forEach(utilityKeys::add);
+    for (String key : utilityKeys) {
       ItemDefinition d = ItemRegistry.findByKey(key);
       if (d == null) continue;
       Map<String, Object> item = new LinkedHashMap<>();
@@ -791,6 +806,7 @@ public final class CompendiumExporter {
       item.put("name", I18n.resolve(d.getName()));
       item.put("bodyPart", d.getBodyPart());
       item.put("price", d.getPrice());
+      item.put("sellPrice", ItemSalePricing.sellPrice(d));
       item.put("weight", d.getWeight());
       item.put("armorClass", d.getArmorClass());
       Map<String, Object> requirements = new LinkedHashMap<>();

@@ -13,6 +13,19 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-29 — Rarity-based item sell values (T4C-0101)
+
+### Changed
+- New droppable equipment and crafting materials now sell for meaningful amounts of gold, with rarer monster drops worth more.
+- Items already in your inventory receive the updated sell values automatically.
+- Item tooltips and the compendium now show sell values alongside purchase prices.
+
+### Fixed
+- Editing and regenerating items preserves their sell-value rules.
+- Nine enchanted weapons and shields from Lord of the Shops now have purchase prices above their sell values.
+- Selling now shows the gold you will have after the sale and pays only for items actually surrendered.
+- The sell window's title and button are now in English.
+
 ## 2026-09-29 — Avalon separated from the Great Library (T4C-0100)
 
 ### Changed

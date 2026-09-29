@@ -1656,6 +1656,12 @@
     "chance": 0.008
   },
   {
+    "item": "item.banner_bearers_key",
+    "monster": "Warband Banner-Bearer",
+    "monsterDisplayName": "Warband Banner-Bearer",
+    "chance": 0.05
+  },
+  {
     "item": "item.critical_healing_potion",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
@@ -1908,6 +1914,30 @@
     "chance": 0.05
   },
   {
+    "item": "item.dragonguards_sealed_key",
+    "monster": "Kraanian Dragonguard",
+    "monsterDisplayName": "Kraanian Dragonguard",
+    "chance": 0.03
+  },
+  {
+    "item": "item.duskmaw_wyrm_scale",
+    "monster": "The Duskmaw Wyrm",
+    "monsterDisplayName": "The Duskmaw Wyrm",
+    "chance": 0.12
+  },
+  {
+    "item": "item.flyers_barbed_key",
+    "monster": "Kraanian Flyer",
+    "monsterDisplayName": "Kraanian Flyer",
+    "chance": 0.05
+  },
+  {
+    "item": "item.galecrest_wyrm_scale",
+    "monster": "The Galecrest Wyrm",
+    "monsterDisplayName": "The Galecrest Wyrm",
+    "chance": 0.12
+  },
+  {
     "item": "item.mana_prism",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
@@ -2160,6 +2190,60 @@
     "chance": 0.05
   },
   {
+    "item": "item.milipedes_chitin_key",
+    "monster": "Kraanian Milipede",
+    "monsterDisplayName": "Kraanian Millipede",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mistwing_wyrm_scale",
+    "monster": "The Mistwing Wyrm",
+    "monsterDisplayName": "The Mistwing Wyrm",
+    "chance": 0.12
+  },
+  {
+    "item": "item.plague_eaten_key",
+    "monster": "Kraanian Plague",
+    "monsterDisplayName": "Kraanian Plague",
+    "chance": 0.05
+  },
+  {
+    "item": "item.pyreclaw_wyrm_scale",
+    "monster": "The Pyreclaw Wyrm",
+    "monsterDisplayName": "The Pyreclaw Wyrm",
+    "chance": 0.12
+  },
+  {
+    "item": "item.raiders_notched_key",
+    "monster": "Warband Raider",
+    "monsterDisplayName": "Warband Raider",
+    "chance": 0.05
+  },
+  {
+    "item": "item.reapers_iron_key",
+    "monster": "Kraanian Reaper",
+    "monsterDisplayName": "Kraanian Reaper",
+    "chance": 0.05
+  },
+  {
+    "item": "item.rootcrown_wyrm_scale",
+    "monster": "The Rootcrown Wyrm",
+    "monsterDisplayName": "The Rootcrown Wyrm",
+    "chance": 0.12
+  },
+  {
+    "item": "item.stompers_cracked_key",
+    "monster": "Kraanian Stomper",
+    "monsterDisplayName": "Kraanian Stomper",
+    "chance": 0.05
+  },
+  {
+    "item": "item.toll_trolls_rusted_key",
+    "monster": "Toll Troll",
+    "monsterDisplayName": "Toll Troll",
+    "chance": 0.02
+  },
+  {
     "item": "item.veiled_aether_shard",
     "monster": "The Rootcrown Wyrm",
     "monsterDisplayName": "The Rootcrown Wyrm",
@@ -2169,6 +2253,18 @@
     "item": "item.veiled_aether_shard",
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.05
+  },
+  {
+    "item": "item.warlords_signet_key",
+    "monster": "Warband Warlord",
+    "monsterDisplayName": "Warband Warlord",
+    "chance": 0.03
+  },
+  {
+    "item": "item.workers_calloused_key",
+    "monster": "Kraanian Worker",
+    "monsterDisplayName": "Kraanian Worker",
     "chance": 0.05
   },
   {
@@ -2181,6 +2277,12 @@
     "item": "item.wyrmforged_ember",
     "monster": "MakrshPtangh2",
     "monsterDisplayName": "Makrsh P'Tangh",
+    "chance": 0.05
+  },
+  {
+    "item": "item.wyrmlings_tarnished_key",
+    "monster": "Kraanian Wyrmling",
+    "monsterDisplayName": "Kraanian Wyrmling",
     "chance": 0.05
   },
   {

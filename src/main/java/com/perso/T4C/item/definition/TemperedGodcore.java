@@ -11,7 +11,7 @@ public final class TemperedGodcore {
   private TemperedGodcore() {}
 
   public static ItemDefinition definition() {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         "item.tempered_godcore",
         "${item.tempered_godcore}",
         null,
@@ -51,5 +51,7 @@ public final class TemperedGodcore {
         List.of(),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

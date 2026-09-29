@@ -41233,7 +41233,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "1"
         }
-      ]
+      ],
+      "sellPrice": 225
     },
     {
       "key": "acolytes_dawnlit_staff",
@@ -41274,7 +41275,8 @@ window.T4C_DATA = {
           "statId": 23.0,
           "expression": "4"
         }
-      ]
+      ],
+      "sellPrice": 225
     },
     {
       "key": "acolytes_earthen_mace",
@@ -41315,7 +41317,8 @@ window.T4C_DATA = {
           "statId": 19.0,
           "expression": "3"
         }
-      ]
+      ],
+      "sellPrice": 225
     },
     {
       "key": "acolytes_tarnished_locket",
@@ -41378,7 +41381,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "5"
         }
-      ]
+      ],
+      "sellPrice": 4250
     },
     {
       "key": "adamantite_shield_3",
@@ -41386,7 +41390,7 @@ window.T4C_DATA = {
       "bodyPart": "SHIELD",
       "appearanceEquippedPrimary": "PupCentaurShield",
       "appearanceInventory": "64kInvCentaurShield1",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 12.0,
       "armorClass": 40.5,
       "dodgeLost": 38.0,
@@ -41447,7 +41451,8 @@ window.T4C_DATA = {
           "statId": 10008.0,
           "expression": "180"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "adamantite_shield_4",
@@ -41455,7 +41460,7 @@ window.T4C_DATA = {
       "bodyPart": "SHIELD",
       "appearanceEquippedPrimary": "PupCentaurShield",
       "appearanceInventory": "64kInvCentaurShield1",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 12.0,
       "armorClass": 45.8,
       "dodgeLost": 38.0,
@@ -41516,7 +41521,8 @@ window.T4C_DATA = {
           "statId": 10008.0,
           "expression": "260"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "adamantite_shield_5",
@@ -41524,7 +41530,7 @@ window.T4C_DATA = {
       "bodyPart": "SHIELD",
       "appearanceEquippedPrimary": "PupCentaurShield",
       "appearanceInventory": "64kInvCentaurShield1",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 12.0,
       "armorClass": 51.0,
       "dodgeLost": 38.0,
@@ -41585,7 +41591,8 @@ window.T4C_DATA = {
           "statId": 10008.0,
           "expression": "350"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "adamantite_two_handed_sword_4",
@@ -41593,7 +41600,7 @@ window.T4C_DATA = {
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupNormalSword",
       "appearanceInventory": "64kInvGlinting Sword",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 12.0,
       "armorClass": 0.0,
       "dodgeLost": 0.0,
@@ -41626,7 +41633,8 @@ window.T4C_DATA = {
           "statId": 3.0,
           "expression": "33"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "adamantite_two_handed_sword_5",
@@ -41634,7 +41642,7 @@ window.T4C_DATA = {
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupNormalSword",
       "appearanceInventory": "64kInvGlinting Sword",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 12.0,
       "armorClass": 0.0,
       "dodgeLost": 0.0,
@@ -41667,7 +41675,8 @@ window.T4C_DATA = {
           "statId": 3.0,
           "expression": "33"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "aeries_drakeheart_signet",
@@ -41735,7 +41744,8 @@ window.T4C_DATA = {
           "statId": 10.0,
           "expression": "40"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "ancient_celestial_air_armor",
@@ -41804,7 +41814,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "16"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_air_boots",
@@ -41873,7 +41884,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "5"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_air_gauntlets",
@@ -41944,7 +41956,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "5"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_air_helmet",
@@ -42013,7 +42026,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "5"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_air_leggings",
@@ -42082,7 +42096,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "5"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_air_protector",
@@ -42150,7 +42165,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "3"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_archer_armor",
@@ -42219,7 +42235,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "25"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_archer_boots",
@@ -42288,7 +42305,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_archer_gauntlets",
@@ -42359,7 +42377,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_archer_helmet",
@@ -42428,7 +42447,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_archer_leggings",
@@ -42497,7 +42517,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_archer_protector",
@@ -42565,7 +42586,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "6"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_dark_armor",
@@ -42629,7 +42651,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "37"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_dark_boots",
@@ -42693,7 +42716,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_dark_gauntlets",
@@ -42759,7 +42783,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_dark_helmet",
@@ -42823,7 +42848,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_dark_leggings",
@@ -42887,7 +42913,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_dark_protector",
@@ -42950,7 +42977,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_earth_armor",
@@ -43014,7 +43042,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "31"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_earth_boots",
@@ -43078,7 +43107,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_earth_gauntlets",
@@ -43144,7 +43174,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_earth_helmet",
@@ -43208,7 +43239,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_earth_leggings",
@@ -43272,7 +43304,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_earth_protector",
@@ -43335,7 +43368,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_fire_armor",
@@ -43399,7 +43433,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "37"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_fire_boots",
@@ -43463,7 +43498,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_fire_gauntlets",
@@ -43529,7 +43565,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_fire_helmet",
@@ -43593,7 +43630,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_fire_leggings",
@@ -43657,7 +43695,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_fire_protector",
@@ -43720,7 +43759,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_light_armor",
@@ -43784,7 +43824,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "31"
         }
-      ]
+      ],
+      "sellPrice": 16667
     },
     {
       "key": "ancient_celestial_light_boots",
@@ -43848,7 +43889,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 16667
     },
     {
       "key": "ancient_celestial_light_gauntlets",
@@ -43914,7 +43956,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 16667
     },
     {
       "key": "ancient_celestial_light_helmet",
@@ -43978,7 +44021,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 16667
     },
     {
       "key": "ancient_celestial_light_leggings",
@@ -44042,7 +44086,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "ancient_celestial_light_protector",
@@ -44105,7 +44150,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 16667
     },
     {
       "key": "ancient_celestial_warrior_armor",
@@ -44174,7 +44220,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "25"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_warrior_boots",
@@ -44243,7 +44290,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_warrior_gauntlets",
@@ -44314,7 +44362,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_warrior_helmet",
@@ -44383,7 +44432,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_warrior_leggings",
@@ -44452,7 +44502,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_warrior_protector",
@@ -44520,7 +44571,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "6"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_water_armor",
@@ -44584,7 +44636,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "37"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_water_boots",
@@ -44648,7 +44701,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_water_gauntlets",
@@ -44714,7 +44768,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_water_helmet",
@@ -44778,7 +44833,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_water_leggings",
@@ -44842,7 +44898,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "ancient_celestial_water_protector",
@@ -44905,7 +44962,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 4000
     },
     {
       "key": "apprentices_emberweave_robe",
@@ -44969,7 +45027,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "1"
         }
-      ]
+      ],
+      "sellPrice": 225
     },
     {
       "key": "archdrakes_molten_heart",
@@ -45032,7 +45091,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "25"
         }
-      ]
+      ],
+      "sellPrice": 12500
     },
     {
       "key": "barnacled_gauntlets",
@@ -45098,7 +45158,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "4"
         }
-      ]
+      ],
+      "sellPrice": 3333
     },
     {
       "key": "bastion_sentinels_mantle",
@@ -45162,7 +45223,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "22"
         }
-      ]
+      ],
+      "sellPrice": 3333
     },
     {
       "key": "black_locust_composite_bow_4",
@@ -45170,7 +45232,7 @@ window.T4C_DATA = {
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupLongBow",
       "appearanceInventory": "64kInvLongBow2",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 11.0,
       "armorClass": 0.0,
       "dodgeLost": 0.0,
@@ -45203,7 +45265,8 @@ window.T4C_DATA = {
           "statId": 6.0,
           "expression": "49"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "black_locust_composite_bow_5",
@@ -45211,7 +45274,7 @@ window.T4C_DATA = {
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupLongBow",
       "appearanceInventory": "64kInvLongBow2",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 11.0,
       "armorClass": 0.0,
       "dodgeLost": 0.0,
@@ -45244,7 +45307,8 @@ window.T4C_DATA = {
           "statId": 6.0,
           "expression": "49"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "bow_of_centaur_slaying",
@@ -45290,7 +45354,8 @@ window.T4C_DATA = {
           "statId": 10.0,
           "expression": "25"
         }
-      ]
+      ],
+      "sellPrice": 5000
     },
     {
       "key": "caradocs_sundered_blade",
@@ -45336,7 +45401,8 @@ window.T4C_DATA = {
           "statId": 10.0,
           "expression": "95"
         }
-      ]
+      ],
+      "sellPrice": 5000
     },
     {
       "key": "centaur_slaying_armor",
@@ -45405,7 +45471,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "30"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "centaur_slaying_boots",
@@ -45474,7 +45541,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "centaur_slaying_gauntlets",
@@ -45545,7 +45613,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "centaur_slaying_helmet",
@@ -45614,7 +45683,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "centaur_slaying_leggings",
@@ -45683,7 +45753,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "centaur_slaying_protector",
@@ -45751,7 +45822,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "centaur_slaying_quiver",
@@ -45824,7 +45896,8 @@ window.T4C_DATA = {
           "statId": 10.0,
           "expression": "15"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "centaur_warband_ring",
@@ -45892,7 +45965,8 @@ window.T4C_DATA = {
           "statId": 9.0,
           "expression": "40"
         }
-      ]
+      ],
+      "sellPrice": 1250
     },
     {
       "key": "chieftains_warhorn",
@@ -45955,7 +46029,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 1250
     },
     {
       "key": "cinderforged_armor",
@@ -46019,7 +46094,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "29"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "cinderforged_boots",
@@ -46083,7 +46159,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "cinderforged_gauntlets",
@@ -46149,7 +46226,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "cinderforged_helmet",
@@ -46213,7 +46291,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "cinderforged_leggings",
@@ -46277,7 +46356,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "cinderforged_protector",
@@ -46340,7 +46420,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "cinderwrought_sash",
@@ -46403,7 +46484,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "5"
         }
-      ]
+      ],
+      "sellPrice": 5000
     },
     {
       "key": "convergent_wyrms_halo_crown",
@@ -46472,7 +46554,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "40"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "convergent_wyrms_prism_heart",
@@ -46540,7 +46623,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "40"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "convergent_wyrms_stormstaff",
@@ -46611,7 +46695,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "40"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "crown_of_the_hollow_king",
@@ -46675,7 +46760,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "16"
         }
-      ]
+      ],
+      "sellPrice": 12500
     },
     {
       "key": "depths_wardens_talisman",
@@ -46738,7 +46824,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "15"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "dragonguards_scale_bracer",
@@ -46801,7 +46888,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 3333
     },
     {
       "key": "drowned_inquisition_armor",
@@ -46865,7 +46953,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "22"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "drowned_inquisition_boots",
@@ -46929,7 +47018,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "drowned_inquisition_gauntlets",
@@ -46995,7 +47085,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "drowned_inquisition_helmet",
@@ -47059,7 +47150,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "6"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "drowned_inquisition_leggings",
@@ -47123,7 +47215,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "drowned_inquisition_protector",
@@ -47186,7 +47279,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "5"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "duskmaw_wyrms_eclipsed_crown",
@@ -47250,7 +47344,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "duskmaw_wyrms_nightshroud_mantle",
@@ -47314,7 +47409,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "duskmaw_wyrms_umbral_rod",
@@ -47380,7 +47476,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "empyrean_air_armor",
@@ -47449,7 +47546,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "23"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_air_boots",
@@ -47518,7 +47616,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_air_gauntlets",
@@ -47589,7 +47688,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_air_helmet",
@@ -47658,7 +47758,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_air_leggings",
@@ -47727,7 +47828,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_air_protector",
@@ -47795,7 +47897,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "5"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_archer_armor",
@@ -47864,7 +47967,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "37"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_archer_boots",
@@ -47933,7 +48037,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_archer_gauntlets",
@@ -48004,7 +48109,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_archer_helmet",
@@ -48073,7 +48179,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_archer_leggings",
@@ -48142,7 +48249,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_archer_protector",
@@ -48210,7 +48318,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_dark_armor",
@@ -48274,7 +48383,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "55"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_dark_boots",
@@ -48338,7 +48448,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "17"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_dark_gauntlets",
@@ -48404,7 +48515,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "17"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_dark_helmet",
@@ -48468,7 +48580,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "16"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_dark_leggings",
@@ -48532,7 +48645,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "18"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_dark_protector",
@@ -48595,7 +48709,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_earth_armor",
@@ -48659,7 +48774,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "47"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_earth_boots",
@@ -48723,7 +48839,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "14"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_earth_gauntlets",
@@ -48789,7 +48906,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "14"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_earth_helmet",
@@ -48853,7 +48971,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "13"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_earth_leggings",
@@ -48917,7 +49036,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "16"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_earth_protector",
@@ -48980,7 +49100,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_fire_armor",
@@ -49044,7 +49165,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "55"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_fire_boots",
@@ -49108,7 +49230,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "17"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_fire_gauntlets",
@@ -49174,7 +49297,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "17"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_fire_helmet",
@@ -49238,7 +49362,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "16"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_fire_leggings",
@@ -49302,7 +49427,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "18"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_fire_protector",
@@ -49365,7 +49491,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_light_armor",
@@ -49429,7 +49556,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "47"
         }
-      ]
+      ],
+      "sellPrice": 33333
     },
     {
       "key": "empyrean_light_boots",
@@ -49493,7 +49621,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "14"
         }
-      ]
+      ],
+      "sellPrice": 33333
     },
     {
       "key": "empyrean_light_gauntlets",
@@ -49559,7 +49688,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "14"
         }
-      ]
+      ],
+      "sellPrice": 33333
     },
     {
       "key": "empyrean_light_helmet",
@@ -49623,7 +49753,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "13"
         }
-      ]
+      ],
+      "sellPrice": 33333
     },
     {
       "key": "empyrean_light_leggings",
@@ -49687,7 +49818,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "16"
         }
-      ]
+      ],
+      "sellPrice": 33333
     },
     {
       "key": "empyrean_light_protector",
@@ -49750,7 +49882,8 @@ window.T4C_DATA = {
           "statId": 4.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 33333
     },
     {
       "key": "empyrean_warrior_armor",
@@ -49819,7 +49952,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "37"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_warrior_boots",
@@ -49888,7 +50022,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_warrior_gauntlets",
@@ -49959,7 +50094,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_warrior_helmet",
@@ -50028,7 +50164,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "11"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_warrior_leggings",
@@ -50097,7 +50234,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_warrior_protector",
@@ -50165,7 +50303,8 @@ window.T4C_DATA = {
           "statId": 2.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_water_armor",
@@ -50229,7 +50368,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "55"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_water_boots",
@@ -50293,7 +50433,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "17"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_water_gauntlets",
@@ -50359,7 +50500,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "17"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_water_helmet",
@@ -50423,7 +50565,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "16"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_water_leggings",
@@ -50487,7 +50630,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "18"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "empyrean_water_protector",
@@ -50550,7 +50694,8 @@ window.T4C_DATA = {
           "statId": 1.0,
           "expression": "12"
         }
-      ]
+      ],
+      "sellPrice": 8333
     },
     {
       "key": "galecrest_wyrms_tempest_wand",
@@ -50621,7 +50766,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "galecrest_wyrms_thunderhead_circlet",
@@ -50690,7 +50836,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "galecrest_wyrms_windswept_mantle",
@@ -50759,7 +50906,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "geomancers_mantle",
@@ -50823,7 +50971,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 750000
     },
     {
       "key": "goblin_slayer",
@@ -50869,7 +51018,8 @@ window.T4C_DATA = {
           "statId": 10.0,
           "expression": "55"
         }
-      ]
+      ],
+      "sellPrice": 25000
     },
     {
       "key": "godsforged_stormbow",
@@ -50935,7 +51085,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "30"
         }
-      ]
+      ],
+      "sellPrice": 100000
     },
     {
       "key": "godsforged_torc_of_the_first_pact",
@@ -50998,7 +51149,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "48"
         }
-      ]
+      ],
+      "sellPrice": 100000
     },
     {
       "key": "godsforged_voidglass_rod",
@@ -51064,7 +51216,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "48"
         }
-      ]
+      ],
+      "sellPrice": 100000
     },
     {
       "key": "godsforged_warblade",
@@ -51130,7 +51283,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "30"
         }
-      ]
+      ],
+      "sellPrice": 100000
     },
     {
       "key": "godsforged_zephyr_wand",
@@ -51201,7 +51355,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "48"
         }
-      ]
+      ],
+      "sellPrice": 100000
     },
     {
       "key": "heartfire_of_the_greater_drake",
@@ -51264,7 +51419,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "25"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "ignaroks_emberfang_claw",
@@ -51310,7 +51466,8 @@ window.T4C_DATA = {
           "statId": 10.0,
           "expression": "30"
         }
-      ]
+      ],
+      "sellPrice": 12500
     },
     {
       "key": "lightbringers_mantle",
@@ -51374,7 +51531,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 750000
     },
     {
       "key": "marchwardens_crown",
@@ -51438,7 +51596,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 5000
     },
     {
       "key": "mistwing_wyrms_farsight_longbow",
@@ -51504,7 +51663,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "mistwing_wyrms_fogstride_boots",
@@ -51568,7 +51728,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "mistwing_wyrms_rainveil_mantle",
@@ -51632,7 +51793,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "mithril_two_handed_sword_4",
@@ -51640,7 +51802,7 @@ window.T4C_DATA = {
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupNormalSword",
       "appearanceInventory": "64kInvGlinting Sword",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 12.0,
       "armorClass": 0.0,
       "dodgeLost": 0.0,
@@ -51673,7 +51835,8 @@ window.T4C_DATA = {
           "statId": 3.0,
           "expression": "27"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "mithril_two_handed_sword_5",
@@ -51681,7 +51844,7 @@ window.T4C_DATA = {
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupNormalSword",
       "appearanceInventory": "64kInvGlinting Sword",
-      "price": 0.0,
+      "price": 5000.0,
       "weight": 12.0,
       "armorClass": 0.0,
       "dodgeLost": 0.0,
@@ -51714,7 +51877,8 @@ window.T4C_DATA = {
           "statId": 3.0,
           "expression": "27"
         }
-      ]
+      ],
+      "sellPrice": 2500
     },
     {
       "key": "mordrenns_drowned_cowl",
@@ -51778,7 +51942,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "ptanghs_boneshard_longbow",
@@ -51824,7 +51989,8 @@ window.T4C_DATA = {
           "statId": 10.0,
           "expression": "70"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "ptanghs_lichbone_staff",
@@ -51890,7 +52056,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "pyreclaw_wyrms_forgeplate_gauntlets",
@@ -51956,7 +52123,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "pyreclaw_wyrms_molten_warhelm",
@@ -52020,7 +52188,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "pyreclaw_wyrms_searing_greatsword",
@@ -52086,7 +52255,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "pyromancers_mantle",
@@ -52150,7 +52320,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 750000
     },
     {
       "key": "recruits_greatsword",
@@ -52191,7 +52362,8 @@ window.T4C_DATA = {
           "statId": 8.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 450
     },
     {
       "key": "ring_of_the_archer",
@@ -52245,7 +52417,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "19"
         }
-      ]
+      ],
+      "sellPrice": 5000
     },
     {
       "key": "rootcrown_wyrms_ageless_mantle",
@@ -52309,7 +52482,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "rootcrown_wyrms_timeless_circlet",
@@ -52373,7 +52547,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "rootcrown_wyrms_verdant_sceptre",
@@ -52439,7 +52614,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "38"
         }
-      ]
+      ],
+      "sellPrice": 10000
     },
     {
       "key": "sealed_signet_of_the_dragonguard",
@@ -52502,7 +52678,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "8"
         }
-      ]
+      ],
+      "sellPrice": 25000
     },
     {
       "key": "shadowmancers_mantle",
@@ -52566,7 +52743,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 750000
     },
     {
       "key": "sunken_vestment",
@@ -52630,7 +52808,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "7"
         }
-      ]
+      ],
+      "sellPrice": 7500
     },
     {
       "key": "templars_earthen_vestment",
@@ -52694,7 +52873,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "1"
         }
-      ]
+      ],
+      "sellPrice": 225
     },
     {
       "key": "tidecallers_mantle",
@@ -52758,7 +52938,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 750000
     },
     {
       "key": "tideclaw_band",
@@ -52826,7 +53007,8 @@ window.T4C_DATA = {
           "statId": 9.0,
           "expression": "35"
         }
-      ]
+      ],
+      "sellPrice": 5000
     },
     {
       "key": "tideworn_avalon_chart",
@@ -52889,7 +53071,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 5000
     },
     {
       "key": "verdant_wardens_bulwark",
@@ -52958,7 +53141,8 @@ window.T4C_DATA = {
           "statId": 10008.0,
           "expression": "40"
         }
-      ]
+      ],
+      "sellPrice": 6667
     },
     {
       "key": "warlords_iron_signet",
@@ -53021,7 +53205,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "9"
         }
-      ]
+      ],
+      "sellPrice": 25000
     },
     {
       "key": "wight_bound_amulet",
@@ -53084,7 +53269,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "14"
         }
-      ]
+      ],
+      "sellPrice": 3333
     },
     {
       "key": "windweavers_mantle",
@@ -53153,7 +53339,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "24"
         }
-      ]
+      ],
+      "sellPrice": 750000
     },
     {
       "key": "wyrmling_scale_bracer",
@@ -53216,7 +53403,8 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "10"
         }
-      ]
+      ],
+      "sellPrice": 3333
     },
     {
       "key": "ysoldes_veiled_circlet",
@@ -53280,12 +53468,14 @@ window.T4C_DATA = {
           "statId": 22.0,
           "expression": "36"
         }
-      ]
+      ],
+      "sellPrice": 5000
     },
     {
       "key": "item.wyrmforged_ember",
       "name": "Wyrmforged Ember",
       "price": 0,
+      "sellPrice": 2000,
       "weight": 1,
       "armorClass": 0.0,
       "requirements": {
@@ -53306,6 +53496,7 @@ window.T4C_DATA = {
       "key": "item.veiled_aether_shard",
       "name": "Veiled Aether Shard",
       "price": 0,
+      "sellPrice": 2000,
       "weight": 1,
       "armorClass": 0.0,
       "requirements": {
@@ -53326,6 +53517,7 @@ window.T4C_DATA = {
       "key": "item.tempered_godcore",
       "name": "Tempered Godcore",
       "price": 0,
+      "sellPrice": 25000,
       "weight": 1,
       "armorClass": 0.0,
       "requirements": {
@@ -53346,6 +53538,7 @@ window.T4C_DATA = {
       "key": "item.bound_godsigil",
       "name": "Bound Godsigil",
       "price": 0,
+      "sellPrice": 25000,
       "weight": 1,
       "armorClass": 0.0,
       "requirements": {
@@ -53366,6 +53559,7 @@ window.T4C_DATA = {
       "key": "item.mana_prism",
       "name": "Mana Prism",
       "price": 10000,
+      "sellPrice": 5000,
       "weight": 5,
       "armorClass": 0.0,
       "requirements": {
@@ -53388,6 +53582,7 @@ window.T4C_DATA = {
       "key": "item.critical_healing_potion",
       "name": "Critical Healing Potion",
       "price": 25000,
+      "sellPrice": 12500,
       "weight": 2,
       "armorClass": 0.0,
       "requirements": {
@@ -53405,6 +53600,452 @@ window.T4C_DATA = {
       "useEffects": [
         "Restores hit points to the target."
       ]
+    },
+    {
+      "key": "item.banner_bearers_key",
+      "name": "Banner-Bearer's Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.dragonguards_sealed_key",
+      "name": "Dragonguard's Sealed Key",
+      "price": 0,
+      "sellPrice": 3333,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.duskmaw_wyrm_scale",
+      "name": "Duskmaw Wyrm Scale",
+      "price": 0,
+      "sellPrice": 833,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.empyrean_earth_sceptre",
+      "name": "Empyrean Earth Sceptre",
+      "bodyPart": "WEAPON",
+      "price": 0,
+      "sellPrice": 2500,
+      "weight": 6,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 200,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 1000,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "dmgFormula": "1d24+43",
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.flyers_barbed_key",
+      "name": "Flyer's Barbed Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.focus_of_the_earth_empyrean",
+      "name": "Focus of the Earth Empyrean",
+      "bodyPart": "WEAPON2",
+      "price": 0,
+      "sellPrice": 2500,
+      "weight": 2,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 200,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 1000,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.galecrest_wyrm_scale",
+      "name": "Galecrest Wyrm Scale",
+      "price": 0,
+      "sellPrice": 833,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.milipedes_chitin_key",
+      "name": "Milipede's Chitin Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.mistwing_wyrm_scale",
+      "name": "Mistwing Wyrm Scale",
+      "price": 0,
+      "sellPrice": 833,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.plague_eaten_key",
+      "name": "Plague-Eaten Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.pyreclaw_wyrm_scale",
+      "name": "Pyreclaw Wyrm Scale",
+      "price": 0,
+      "sellPrice": 833,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.raiders_notched_key",
+      "name": "Raider's Notched Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.reapers_iron_key",
+      "name": "Reaper's Iron Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.rootcrown_wyrm_scale",
+      "name": "Rootcrown Wyrm Scale",
+      "price": 0,
+      "sellPrice": 833,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.scroll_of_avalon",
+      "name": "Scroll of Avalon",
+      "price": 16666,
+      "sellPrice": 8333,
+      "weight": 2,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": false,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": false,
+      "useEffects": [
+        "Teleports the caster to the sanctuary of Avalon."
+      ]
+    },
+    {
+      "key": "item.stompers_cracked_key",
+      "name": "Stomper's Cracked Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.toll_trolls_rusted_key",
+      "name": "Toll Troll's Rusted Key",
+      "price": 0,
+      "sellPrice": 5000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.unsigned_letter",
+      "name": "An Unsigned Letter",
+      "price": 0,
+      "sellPrice": 25000,
+      "weight": 0,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.warlords_signet_key",
+      "name": "Warlord's Signet Key",
+      "price": 0,
+      "sellPrice": 3333,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.workers_calloused_key",
+      "name": "Worker's Calloused Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
+    },
+    {
+      "key": "item.wyrmlings_tarnished_key",
+      "name": "Wyrmling's Tarnished Key",
+      "price": 0,
+      "sellPrice": 2000,
+      "weight": 1,
+      "armorClass": 0.0,
+      "requirements": {
+        "endurance": 0,
+        "strength": 0,
+        "agility": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "attack": 0
+      },
+      "unique": true,
+      "isBow": false,
+      "boosts": [],
+      "unlimitedUse": true,
+      "useEffects": []
     }
   ],
   "shops": {
@@ -55536,6 +56177,12 @@ window.T4C_DATA = {
       "chance": 0.008
     },
     {
+      "item": "item.banner_bearers_key",
+      "monster": "Warband Banner-Bearer",
+      "monsterDisplayName": "Warband Banner-Bearer",
+      "chance": 0.05
+    },
+    {
       "item": "item.critical_healing_potion",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
@@ -55788,6 +56435,30 @@ window.T4C_DATA = {
       "chance": 0.05
     },
     {
+      "item": "item.dragonguards_sealed_key",
+      "monster": "Kraanian Dragonguard",
+      "monsterDisplayName": "Kraanian Dragonguard",
+      "chance": 0.03
+    },
+    {
+      "item": "item.duskmaw_wyrm_scale",
+      "monster": "The Duskmaw Wyrm",
+      "monsterDisplayName": "The Duskmaw Wyrm",
+      "chance": 0.12
+    },
+    {
+      "item": "item.flyers_barbed_key",
+      "monster": "Kraanian Flyer",
+      "monsterDisplayName": "Kraanian Flyer",
+      "chance": 0.05
+    },
+    {
+      "item": "item.galecrest_wyrm_scale",
+      "monster": "The Galecrest Wyrm",
+      "monsterDisplayName": "The Galecrest Wyrm",
+      "chance": 0.12
+    },
+    {
       "item": "item.mana_prism",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
@@ -56040,6 +56711,60 @@ window.T4C_DATA = {
       "chance": 0.05
     },
     {
+      "item": "item.milipedes_chitin_key",
+      "monster": "Kraanian Milipede",
+      "monsterDisplayName": "Kraanian Millipede",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mistwing_wyrm_scale",
+      "monster": "The Mistwing Wyrm",
+      "monsterDisplayName": "The Mistwing Wyrm",
+      "chance": 0.12
+    },
+    {
+      "item": "item.plague_eaten_key",
+      "monster": "Kraanian Plague",
+      "monsterDisplayName": "Kraanian Plague",
+      "chance": 0.05
+    },
+    {
+      "item": "item.pyreclaw_wyrm_scale",
+      "monster": "The Pyreclaw Wyrm",
+      "monsterDisplayName": "The Pyreclaw Wyrm",
+      "chance": 0.12
+    },
+    {
+      "item": "item.raiders_notched_key",
+      "monster": "Warband Raider",
+      "monsterDisplayName": "Warband Raider",
+      "chance": 0.05
+    },
+    {
+      "item": "item.reapers_iron_key",
+      "monster": "Kraanian Reaper",
+      "monsterDisplayName": "Kraanian Reaper",
+      "chance": 0.05
+    },
+    {
+      "item": "item.rootcrown_wyrm_scale",
+      "monster": "The Rootcrown Wyrm",
+      "monsterDisplayName": "The Rootcrown Wyrm",
+      "chance": 0.12
+    },
+    {
+      "item": "item.stompers_cracked_key",
+      "monster": "Kraanian Stomper",
+      "monsterDisplayName": "Kraanian Stomper",
+      "chance": 0.05
+    },
+    {
+      "item": "item.toll_trolls_rusted_key",
+      "monster": "Toll Troll",
+      "monsterDisplayName": "Toll Troll",
+      "chance": 0.02
+    },
+    {
       "item": "item.veiled_aether_shard",
       "monster": "The Rootcrown Wyrm",
       "monsterDisplayName": "The Rootcrown Wyrm",
@@ -56049,6 +56774,18 @@ window.T4C_DATA = {
       "item": "item.veiled_aether_shard",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.05
+    },
+    {
+      "item": "item.warlords_signet_key",
+      "monster": "Warband Warlord",
+      "monsterDisplayName": "Warband Warlord",
+      "chance": 0.03
+    },
+    {
+      "item": "item.workers_calloused_key",
+      "monster": "Kraanian Worker",
+      "monsterDisplayName": "Kraanian Worker",
       "chance": 0.05
     },
     {
@@ -56061,6 +56798,12 @@ window.T4C_DATA = {
       "item": "item.wyrmforged_ember",
       "monster": "MakrshPtangh2",
       "monsterDisplayName": "Makrsh P'Tangh",
+      "chance": 0.05
+    },
+    {
+      "item": "item.wyrmlings_tarnished_key",
+      "monster": "Kraanian Wyrmling",
+      "monsterDisplayName": "Kraanian Wyrmling",
       "chance": 0.05
     },
     {

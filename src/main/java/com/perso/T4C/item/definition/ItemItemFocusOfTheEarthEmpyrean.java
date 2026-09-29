@@ -8,7 +8,7 @@ public final class ItemItemFocusOfTheEarthEmpyrean {
   private ItemItemFocusOfTheEarthEmpyrean() {}
 
   public static ItemDefinition definition() {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         "item.focus_of_the_earth_empyrean",
         "${item.focus_of_the_earth_empyrean}",
         BodyPart.WEAPON2,
@@ -57,5 +57,7 @@ public final class ItemItemFocusOfTheEarthEmpyrean {
             new ItemDefinition.ItemBoost(90120, 20, "50", 0, 0)),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

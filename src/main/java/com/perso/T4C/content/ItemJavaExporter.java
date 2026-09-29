@@ -49,7 +49,7 @@ public final class ItemJavaExporter {
         + className
         + " {\n  private "
         + className
-        + "() {}\n  public static ItemDefinition definition() {\n    return new ItemDefinition(\n        "
+        + "() {}\n  public static ItemDefinition definition() {\n    ItemDefinition definition = new ItemDefinition(\n        "
         + lit(i.getKey())
         + ", "
         + lit(i.getName())
@@ -127,7 +127,9 @@ public final class ItemJavaExporter {
         + groups(i.getContainerLootGroups())
         + ", "
         + i.isUndroppable()
-        + ");\n  }\n}\n";
+        + ");\n    definition.setRarityPriced("
+        + i.isRarityPriced()
+        + ");\n    return definition;\n  }\n}\n";
   }
 
   private static String spells(List<ItemDefinition.ItemSpell> values) {

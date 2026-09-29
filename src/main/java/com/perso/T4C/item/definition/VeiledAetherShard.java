@@ -11,7 +11,7 @@ public final class VeiledAetherShard {
   private VeiledAetherShard() {}
 
   public static ItemDefinition definition() {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         "item.veiled_aether_shard",
         "${item.veiled_aether_shard}",
         null,
@@ -51,5 +51,7 @@ public final class VeiledAetherShard {
         List.of(),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

@@ -4,7 +4,7 @@
   "bodyPart": "SHIELD",
   "appearanceEquippedPrimary": "PupCentaurShield",
   "appearanceInventory": "64kInvCentaurShield1",
-  "price": 0,
+  "price": 5000,
   "weight": 12,
   "armorClass": 45.8,
   "dodgeLost": 38,

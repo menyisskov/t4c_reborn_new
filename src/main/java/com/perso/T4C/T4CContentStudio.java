@@ -1726,7 +1726,7 @@ public class T4CContentStudio {
     return text;
   }
 
-  private Map<String, Object> itemToMap(ItemDefinition def) {
+  Map<String, Object> itemToMap(ItemDefinition def) {
     Map<String, Object> item = new LinkedHashMap<>();
     item.put("key", def.getKey());
     item.put("name", I18n.placeholderFor("item", def.getKey(), def.getName()));
@@ -1738,6 +1738,7 @@ public class T4CContentStudio {
     item.put("appearanceEquippedSecondary", def.getAppearanceEquippedSecondary());
     item.put("appearanceInventory", def.getAppearanceInventory());
     item.put("price", def.getPrice());
+    item.put("rarityPriced", def.isRarityPriced());
     item.put("weight", def.getWeight());
     item.put("armorClass", def.getArmorClass());
     item.put("dodgeLost", def.getDodgeLost());
@@ -1765,10 +1766,10 @@ public class T4CContentStudio {
     return item;
   }
 
-  private ItemDefinition itemFromMap(Map<String, Object> item) {
+  ItemDefinition itemFromMap(Map<String, Object> item) {
     String key = str(item.get("key")).trim();
     if (key.isEmpty()) return null;
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         key,
         str(item.get("name")),
         parseEnum(BodyPart.class, str(item.get("bodyPart")), null),
@@ -1805,6 +1806,8 @@ public class T4CContentStudio {
         (int) lng(item.get("globalRespawn"), 0L),
         (int) lng(item.get("localRespawn"), 0L),
         java.util.Collections.emptyList());
+    definition.setRarityPriced(bool(item.get("rarityPriced"), false));
+    return definition;
   }
 
   private Map<String, Object> spellToMap(SpellData spell) {

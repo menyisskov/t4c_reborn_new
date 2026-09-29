@@ -12,7 +12,7 @@ public final class WyrmforgedEmber {
   private WyrmforgedEmber() {}
 
   public static ItemDefinition definition() {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         "item.wyrmforged_ember",
         "${item.wyrmforged_ember}",
         null,
@@ -52,5 +52,7 @@ public final class WyrmforgedEmber {
         List.of(),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

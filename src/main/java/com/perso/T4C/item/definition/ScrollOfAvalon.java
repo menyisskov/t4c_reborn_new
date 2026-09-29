@@ -7,7 +7,7 @@ public final class ScrollOfAvalon {
   private ScrollOfAvalon() {}
 
   public static ItemDefinition definition() {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         "item.scroll_of_avalon",
         "${item.scroll_of_avalon}",
         null,
@@ -47,5 +47,7 @@ public final class ScrollOfAvalon {
         List.of(),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

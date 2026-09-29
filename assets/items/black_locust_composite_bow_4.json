@@ -4,7 +4,7 @@
   "bodyPart": "WEAPON",
   "appearanceEquippedPrimary": "PupLongBow",
   "appearanceInventory": "64kInvLongBow2",
-  "price": 0,
+  "price": 5000,
   "weight": 11,
   "armorClass": 0.0,
   "dodgeLost": 0,

@@ -2,6 +2,7 @@ package com.perso.T4C.gui.widget;
 
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemSalePricing;
 
 /** Multi-line hover text describing an item: name, slot, price, stats, requirements. */
 public final class ItemTooltipText {
@@ -16,7 +17,13 @@ public final class ItemTooltipText {
     text.append(
         I18n.resolve(def.getName() != null && !def.getName().isEmpty() ? def.getName() : itemName));
     appendLine(text, "type", def.getBodyPart() == null ? null : def.getBodyPart().name());
-    appendLine(text, "price", def.getPrice() > 0 ? def.getPrice() + " gold" : null);
+    appendLine(
+        text,
+        "price",
+        def.getPrice() > 0 ? I18n.message("tooltip.gold_amount", def.getPrice()) : null);
+    long sellPrice = ItemSalePricing.sellPrice(def);
+    appendLine(
+        text, "sell_price", sellPrice > 0 ? I18n.message("tooltip.gold_amount", sellPrice) : null);
     appendLine(text, "weight", def.getWeight() > 0 ? String.valueOf(def.getWeight()) : null);
     appendLine(
         text, "armor_class", def.getArmorClass() != 0d ? formatDouble(def.getArmorClass()) : null);

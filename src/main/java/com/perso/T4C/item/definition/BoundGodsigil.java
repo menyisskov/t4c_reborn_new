@@ -11,7 +11,7 @@ public final class BoundGodsigil {
   private BoundGodsigil() {}
 
   public static ItemDefinition definition() {
-    return new ItemDefinition(
+    ItemDefinition definition = new ItemDefinition(
         "item.bound_godsigil",
         "${item.bound_godsigil}",
         null,
@@ -51,5 +51,7 @@ public final class BoundGodsigil {
         List.of(),
         List.of(),
         false);
+    definition.setRarityPriced(true);
+    return definition;
   }
 }

@@ -1005,7 +1005,8 @@
       (it.undroppable ? '<span class="tag plain">Can\'t be dropped or traded</span>' : "") +
       "</div></div></div>" +
       panel("The piece itself", '<div class="kv-grid">' +
-        kv("Price", it.price ? fmtNum(it.price) + " gold" : "Not for sale") +
+        kv("Buy price", it.price ? fmtNum(it.price) + " gold" : "Not sold by shops") +
+        kv("Sell value", it.sellPrice ? fmtNum(it.sellPrice) + " gold" : "Cannot be sold") +
         kv("Weight", fmtNum(it.weight)) +
         kv("Armor", it.armorClass ? fmtNum(it.armorClass) : "—") +
         (it.dmgFormula ? kv("Damage", esc(damageWording(it.dmgFormula))) : "") +
