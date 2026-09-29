@@ -1,0 +1,63 @@
+{
+  "name": "Lighthaven brick",
+  "descending": {
+    "ground": "Town Road Dale (1, 1)",
+    "decor": "BrickDarkWall 1",
+    "scaleX": 1.0,
+    "scaleY": 1.0,
+    "offsetX": 0.0,
+    "offsetY": -96.0,
+    "depth": 0,
+    "collision": 7
+  },
+  "ascending": {
+    "ground": "Town Road Dale (2, 2)",
+    "decor": "BrickWall 1",
+    "scaleX": 1.0,
+    "scaleY": 1.0,
+    "offsetX": 0.0,
+    "offsetY": -97.0,
+    "depth": 0,
+    "collision": 7
+  },
+  "north": {
+    "ground": "Town Road Dale (1, 1)",
+    "decor": "BrickWallCornerN",
+    "scaleX": 1.0,
+    "scaleY": 1.0,
+    "offsetX": 0.0,
+    "offsetY": -89.0,
+    "depth": 0,
+    "collision": 7
+  },
+  "east": {
+    "ground": "Tmpl3 24",
+    "decor": "BrickWallCorner",
+    "scaleX": 1.0,
+    "scaleY": 1.0,
+    "offsetX": 0.0,
+    "offsetY": -96.0,
+    "depth": 0,
+    "collision": 6
+  },
+  "south": {
+    "ground": "Town Road Dale (2, 2)",
+    "decor": "BrickWallCornerV",
+    "scaleX": 1.0,
+    "scaleY": 1.0,
+    "offsetX": 0.0,
+    "offsetY": -88.0,
+    "depth": 0,
+    "collision": 7
+  },
+  "west": {
+    "ground": "64kNormalGrass (1, 8)",
+    "decor": "BrickWallCorner2",
+    "scaleX": 1.0,
+    "scaleY": 1.0,
+    "offsetX": -2.0,
+    "offsetY": -95.0,
+    "depth": 0,
+    "collision": 1
+  }
+}

@@ -51,3 +51,7 @@ graphify-out/
 gm_seed.json
 
 *.jfr
+
+# Local editor browser preferences
+editor_build_preferences.json
+editor_build_preferences.json.tmp

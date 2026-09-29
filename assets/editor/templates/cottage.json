@@ -1,0 +1,2151 @@
+{
+  "version": 1,
+  "name": "${editor.build.template_cottage}",
+  "category": "buildings",
+  "source": "worldmap (2930, 1117)",
+  "width": 18,
+  "height": 18,
+  "cells": [
+    {
+      "x": 9,
+      "y": 0,
+      "tile": {
+        "ground": "Tmpl3 1",
+        "decor": "BrickWallCornerN",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -89.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "decor": "BrickWall 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 10,
+      "y": 1,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "decor": "BrickDarkWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 5
+      }
+    },
+    {
+      "x": 7,
+      "y": 2,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "decor": "BrickWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -97.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 10,
+      "y": 2,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 11,
+      "y": 2,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "decor": "BrickDarkWall 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "decor": "BrickWall 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -97.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 3,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 11,
+      "y": 3,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 12,
+      "y": 3,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "decor": "BrickDarkWall 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "decor": "BrickWall 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 11,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 12,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 13,
+      "y": 4,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "decor": "BrickDarkWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "tile": {
+        "ground": "Tmpl3 24",
+        "decor": "BrickWallDoor 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": -1.0,
+        "offsetY": -92.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 6,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 8,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 11,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 12,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 13,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 14,
+      "y": 5,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "decor": "BrickDarkWall 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 5
+      }
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "tile": {
+        "ground": "Tmpl3 27",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 9,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 11,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 12,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 13,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 14,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 15,
+      "y": 6,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "decor": "BrickDarkWall 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 2,
+      "y": 7,
+      "tile": {
+        "ground": "Tmpl3 15",
+        "decor": "BrickWallDoor 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -89.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 3,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 8,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "decor": "Grande Table Rectangle BoisM",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 7.0,
+        "offsetY": -112.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 11,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 12,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 13,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 14,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 15,
+      "y": 7,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 16,
+      "y": 7,
+      "tile": {
+        "ground": "Tmpl3 3",
+        "decor": "BrickDarkWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 1,
+      "y": 8,
+      "tile": {
+        "ground": "Tmpl3 22",
+        "decor": "BrickWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -97.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 2,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 3,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 4,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 5,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 6,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 8,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 11,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 12,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 13,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 14,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 15,
+      "y": 8,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 16,
+      "y": 8,
+      "tile": {
+        "ground": "Tmpl3 24",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 17,
+      "y": 8,
+      "tile": {
+        "ground": "64kNormalGrass (10, 1)",
+        "decor": "BrickWallCorner",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 0,
+      "y": 9,
+      "tile": {
+        "ground": "64kNormalGrass (6, 2)",
+        "decor": "BrickWallCorner2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": -2.0,
+        "offsetY": -95.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 1,
+      "y": 9,
+      "tile": {
+        "ground": "Tmpl3 23",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 2,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 3,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 4,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 5,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 6,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 8,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 11,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 12,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 13,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 14,
+      "y": 9,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 15,
+      "y": 9,
+      "tile": {
+        "ground": "Tmpl3 27",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 16,
+      "y": 9,
+      "tile": {
+        "ground": "64kNormalGrass (9, 2)",
+        "decor": "BrickWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -97.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 1,
+      "y": 10,
+      "tile": {
+        "ground": "64kNormalGrass (7, 3)",
+        "decor": "BrickDarkWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 2,
+      "y": 10,
+      "tile": {
+        "ground": "Tmpl3 28",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 3,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 4,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 5,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 6,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 8,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "decor": "Bed SimpleM",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 3.0,
+        "offsetY": -66.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 9,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 11,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 12,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 13,
+      "y": 10,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 14,
+      "y": 10,
+      "tile": {
+        "ground": "Tmpl3 27",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 15,
+      "y": 10,
+      "tile": {
+        "ground": "64kNormalGrass (8, 3)",
+        "decor": "Ruined_BrickWallWindow 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -114.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 2,
+      "y": 11,
+      "tile": {
+        "ground": "64kNormalGrass (8, 4)",
+        "decor": "BrickDarkWall 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 3,
+      "y": 11,
+      "tile": {
+        "ground": "Tmpl3 28",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 4,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 5,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 6,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 7,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 8,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 9,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 10,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 11,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 12,
+      "y": 11,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 13,
+      "y": 11,
+      "tile": {
+        "ground": "Tmpl3 27",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 14,
+      "y": 11,
+      "tile": {
+        "ground": "64kNormalGrass (7, 4)",
+        "decor": "Ruined_BrickWallWindow 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -112.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 3,
+      "y": 12,
+      "tile": {
+        "ground": "64kNormalGrass (9, 5)",
+        "decor": "BrickDarkWall 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 4,
+      "y": 12,
+      "tile": {
+        "ground": "Tmpl3 28",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 5,
+      "y": 12,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 6,
+      "y": 12,
+      "tile": {
+        "ground": "Floor: Wooden 4",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 7,
+      "y": 12,
+      "tile": {
+        "ground": "Floor: Wooden 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 8,
+      "y": 12,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 9,
+      "y": 12,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 10,
+      "y": 12,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 11,
+      "y": 12,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 12,
+      "y": 12,
+      "tile": {
+        "ground": "Tmpl3 27",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 13,
+      "y": 12,
+      "tile": {
+        "ground": "64kNormalGrass (6, 5)",
+        "decor": "Ruined_BrickWallWindow 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -113.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 4,
+      "y": 13,
+      "tile": {
+        "ground": "64kNormalGrass (10, 6)",
+        "decor": "Ruined_BrickDarkWallWindow 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -118.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 5,
+      "y": 13,
+      "tile": {
+        "ground": "Tmpl3 28",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 6,
+      "y": 13,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 7,
+      "y": 13,
+      "tile": {
+        "ground": "Floor: Wooden Separation",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 8,
+      "y": 13,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 7
+      }
+    },
+    {
+      "x": 9,
+      "y": 13,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 13,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 11,
+      "y": 13,
+      "tile": {
+        "ground": "Tmpl3 27",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 12,
+      "y": 13,
+      "tile": {
+        "ground": "64kNormalGrass (5, 6)",
+        "decor": "BrickWall 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -97.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 5,
+      "y": 14,
+      "tile": {
+        "ground": "64kNormalGrass (11, 7)",
+        "decor": "Ruined_BrickDarkWallWindow 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -118.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 6,
+      "y": 14,
+      "tile": {
+        "ground": "Tmpl3 28",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 7,
+      "y": 14,
+      "tile": {
+        "ground": "Floor: Wooden 5",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 8,
+      "y": 14,
+      "tile": {
+        "ground": "Floor: Wooden 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 14,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 14,
+      "tile": {
+        "ground": "Tmpl3 27",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 11,
+      "y": 14,
+      "tile": {
+        "ground": "64kNormalGrass (4, 7)",
+        "decor": "BrickWall 2",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 6,
+      "y": 15,
+      "tile": {
+        "ground": "64kNormalGrass (12, 8)",
+        "decor": "Ruined_BrickDarkWallWindow 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -121.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 7,
+      "y": 15,
+      "tile": {
+        "ground": "Tmpl3 28",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 8,
+      "y": 15,
+      "tile": {
+        "ground": "Floor: Wooden 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 15,
+      "tile": {
+        "ground": "Tmpl3 27",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 10,
+      "y": 15,
+      "tile": {
+        "ground": "64kNormalGrass (3, 8)",
+        "decor": "BrickWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -97.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 7,
+      "y": 16,
+      "tile": {
+        "ground": "64kNormalGrass (13, 9)",
+        "decor": "BrickDarkWall 1",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -96.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 8,
+      "y": 16,
+      "tile": {
+        "ground": "Tmpl3 15",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "depth": 0,
+        "collision": 1
+      }
+    },
+    {
+      "x": 9,
+      "y": 16,
+      "tile": {
+        "ground": "64kNormalGrass (2, 9)",
+        "decor": "BrickWall 3",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -97.0,
+        "depth": 0,
+        "collision": 6
+      }
+    },
+    {
+      "x": 8,
+      "y": 17,
+      "tile": {
+        "ground": "64kNormalGrass (1, 10)",
+        "decor": "BrickWallCornerV",
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "offsetX": 0.0,
+        "offsetY": -88.0,
+        "depth": 0,
+        "collision": 6
+      }
+    }
+  ]
+}

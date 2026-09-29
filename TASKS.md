@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0102`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0103`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -136,3 +136,5 @@ work happens.
 | T4C-0100 | Expand world and separate Avalon from legacy interiors | Content/Systems | Done | `c39fd433` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-separated-from-the-great-library-t4c-0100) |
 
 | T4C-0101 | Rarity-based resale values for new items | Economy | Done | `fb6944e4` | [2026-09-29](CHANGELOG.md#2026-09-29--rarity-based-item-sell-values-t4c-0101) |
+
+| T4C-0102 | Map editor build workspace and reusable templates | Editor | Done | — | [2026-09-29](CHANGELOG.md#2026-09-29--map-editor-build-workspace-t4c-0102) |
