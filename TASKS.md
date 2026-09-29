@@ -139,4 +139,4 @@ work happens.
 
 | T4C-0102 | Map editor build workspace and reusable templates | Editor | Done | `7bc7e82a` | [2026-09-29](CHANGELOG.md#2026-09-29--map-editor-build-workspace-t4c-0102) |
 
-| T4C-0103 | Repeat sprite placement while dragging | Editor | Done | — | [2026-09-29](CHANGELOG.md#2026-09-29--repeat-sprites-while-dragging-t4c-0103) |
+| T4C-0103 | Repeat sprite placement while dragging | Editor | Done | `a83e0b91` | [2026-09-29](CHANGELOG.md#2026-09-29--repeat-sprites-while-dragging-t4c-0103) |
