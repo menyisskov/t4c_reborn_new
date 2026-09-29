@@ -135,4 +135,4 @@ work happens.
 | T4C-0099 | Avalon sanctuary, Wilds hunting grounds and staged quest dialogue | Content/Systems | Done | `d18b1772` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-sanctuary-and-wilds-t4c-0099) |
 | T4C-0100 | Expand world and separate Avalon from legacy interiors | Content/Systems | Done | `c39fd433` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-separated-from-the-great-library-t4c-0100) |
 
-| T4C-0101 | Rarity-based resale values for new items | Economy | Done | _this PR_ | [2026-09-29](CHANGELOG.md#2026-09-29--rarity-based-item-sell-values-t4c-0101) |
+| T4C-0101 | Rarity-based resale values for new items | Economy | Done | `fb6944e4` | [2026-09-29](CHANGELOG.md#2026-09-29--rarity-based-item-sell-values-t4c-0101) |
