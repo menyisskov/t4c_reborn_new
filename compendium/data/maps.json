@@ -1276,6 +1276,12 @@
         "y": 1503
       },
       {
+        "id": "ChroniclerMaelin",
+        "displayName": "Chronicler Maelin",
+        "x": 4050,
+        "y": 1480
+      },
+      {
         "id": "ElderOphira",
         "displayName": "Elder Ophira",
         "x": 4044,
@@ -1822,6 +1828,12 @@
         "displayName": "Archmage Thalindra",
         "x": 4042,
         "y": 1503
+      },
+      {
+        "id": "ChroniclerMaelin",
+        "displayName": "Chronicler Maelin",
+        "x": 4050,
+        "y": 1480
       },
       {
         "id": "ElderOphira",

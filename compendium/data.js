@@ -62331,6 +62331,12 @@ window.T4C_DATA = {
           "y": 1503.0
         },
         {
+          "id": "ChroniclerMaelin",
+          "displayName": "Chronicler Maelin",
+          "x": 4050.0,
+          "y": 1480.0
+        },
+        {
           "id": "ElderOphira",
           "displayName": "Elder Ophira",
           "x": 4044.0,
@@ -62877,6 +62883,12 @@ window.T4C_DATA = {
           "displayName": "Archmage Thalindra",
           "x": 4042.0,
           "y": 1503.0
+        },
+        {
+          "id": "ChroniclerMaelin",
+          "displayName": "Chronicler Maelin",
+          "x": 4050.0,
+          "y": 1480.0
         },
         {
           "id": "ElderOphira",
