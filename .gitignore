@@ -49,3 +49,5 @@ graphify-out/
 
 ### Local GM owner list (server admin config, never committed) ###
 gm_seed.json
+
+*.jfr
