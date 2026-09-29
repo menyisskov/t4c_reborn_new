@@ -11,6 +11,7 @@ import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_PAUSE_MIN;
 import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_RADIUS;
 import static com.perso.T4C.config.GameConstants.MONSTER_RETALIATION_LEASH_RANGE;
 import static com.perso.T4C.config.GameConstants.MONSTER_SPEED;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -19,9 +20,9 @@ import com.perso.T4C.entity.Nameable;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.Pathfinding;
+import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
@@ -243,8 +244,9 @@ public abstract class BaseMonster implements Nameable {
     if (attackCooldownTimer > 0) {
       attackCooldownTimer -= delta;
     }
+    boolean playerProtected = !SanctuaryCombatRules.canFight(position, playerPosition);
     float distanceToPlayer =
-        playerPosition == null ? Float.MAX_VALUE : position.dst(playerPosition);
+        playerPosition == null || playerProtected ? Float.MAX_VALUE : position.dst(playerPosition);
     BaseMonster enemyTarget = findNearestEnemyMonster(nearbyMonsters);
     if (companionAggroTarget != null && companionAggroTarget.isDead()) {
       companionAggroTarget = null;
@@ -747,6 +749,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   protected void performAttack(Vector2 playerPosition) {
+    if (!SanctuaryCombatRules.canFight(position, playerPosition)) return;
     if (scriptPlayer != null && scriptEffectsCallback != null) {
       if (this instanceof MonsterLifecycle lifecycle) {
         scriptEffectsCallback.accept(lifecycle.onAttack(scriptPlayer));
@@ -1017,7 +1020,9 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void applyPlayerDamage(int damage, Player player, XpCurve xpCurve) {
-    if (isDead) {
+    if (isDead
+        || !SanctuaryCombatRules.canFight(
+            player == null ? null : player.getPositionVector(), position)) {
       return;
     }
     if (player != null) {
@@ -1068,9 +1073,11 @@ public abstract class BaseMonster implements Nameable {
     log.info("{} has been slain!", name);
   }
 
-  /** True until a few seconds after death (T4C-0072, owner's call) - the body itself fades from
-   * view well before the monster actually respawns or is removed, so a kill doesn't leave a
-   * corpse lying around for the whole (often much longer) respawn wait. */
+  /**
+   * True until a few seconds after death (T4C-0072, owner's call) - the body itself fades from view
+   * well before the monster actually respawns or is removed, so a kill doesn't leave a corpse lying
+   * around for the whole (often much longer) respawn wait.
+   */
   public boolean isCorpseVisible() {
     return !isDead || System.currentTimeMillis() < corpseHiddenAtMs;
   }
@@ -1080,7 +1087,10 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void aggroOn(Vector2 playerPosition) {
-    if (isDead || stationary || playerPosition == null) {
+    if (isDead
+        || stationary
+        || playerPosition == null
+        || !SanctuaryCombatRules.canFight(position, playerPosition)) {
       return;
     }
     if (!isAggro || monsterAggroTarget != null) {
@@ -1255,8 +1265,7 @@ public abstract class BaseMonster implements Nameable {
     this.scriptPlayer = player;
   }
 
-  public void setScriptEffectsCallback(
-      Consumer<NpcScriptRuntime.Effects> callback) {
+  public void setScriptEffectsCallback(Consumer<NpcScriptRuntime.Effects> callback) {
     this.scriptEffectsCallback = callback;
   }
 

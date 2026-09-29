@@ -5,8 +5,8 @@
     "displayName": "Anchorite Rowan",
     "spawns": [
       {
-        "x": 1290,
-        "y": 1500,
+        "x": 1307,
+        "y": 1505,
         "worldZ": 0
       }
     ],
@@ -56,8 +56,8 @@
     "displayName": "Archmage Thalindra",
     "spawns": [
       {
-        "x": 1362,
-        "y": 1512,
+        "x": 1342,
+        "y": 1503,
         "worldZ": 0
       }
     ],
@@ -237,38 +237,34 @@
     "displayName": "Elder Ophira",
     "spawns": [
       {
-        "x": 1316,
-        "y": 1493,
+        "x": 1344,
+        "y": 1462,
         "worldZ": 0
       }
     ],
-    "welcomeText": "Welcome, traveler. I am Elder Ophira of Avalon Sanctuary. You stand at the seam between two halves of one isle - ask, and I will tell you of our plight.",
+    "welcomeText": "Welcome to Avalon Sanctuary. I am Elder Ophira. Our loyal fey hold the northern Wilds while corruption spreads from the Veil. Ask about the wilds to learn how you can help.",
     "topics": [
       {
         "keywords": [
           "wilds",
           "avalon wilds"
         ],
-        "response": "The Avalon Wilds still answer to the old pact. The fey there remain loyal, the groves unmarred - for now. That could change before the season turns.",
-        "actions": [
-          "GIVE_QUEST:avalon_wilds_vigil"
-        ]
+        "response": "The Avalon Wilds lie north of the sanctuary. Moonlit Stalkers hunt in two clearings along our northern route. The fey still honor our pact; protect them from those predators. Ask about the route if you need directions.",
+        "actions": []
       },
       {
         "keywords": [
           "veil",
           "fading veil"
         ],
-        "response": "South of here spreads the Fading Veil - a blight eating outward from Ysolde's lair. Every season it claims more ground. We do not know how to stop it.",
-        "actions": [
-          "GIVE_QUEST:fading_veil_reckoning"
-        ]
+        "response": "The Fading Veil lies south of the sanctuary. Ysolde's wraiths spread the blight from her ruined court. After the Wilds, this is our next struggle.",
+        "actions": []
       },
       {
         "keywords": [
           "caradoc"
         ],
-        "response": "Sir Caradoc was once the truest knight our isle ever raised. Ysolde bound his spirit to her service when he fell defending the old borders. What walks the Veil now wears his armor, not his honor.",
+        "response": "Sir Caradoc was once the truest knight our isle ever raised. Ysolde bound his spirit to her service. He now haunts the border glade west of the sanctuary, south of the Stalker clearings. Recover his sundered blade there and bring it back with your report.",
         "actions": []
       },
       {
@@ -290,7 +286,28 @@
           "help",
           "quest"
         ],
-        "response": "I have work for capable hands - ask me of the Wilds if you'd stand vigil with our loyal fey, or of the Veil if you'd push back its corruption.",
+        "response": "Ask about the wilds first. I will explain the task before you accept it. When the vigil is finished, we can turn our attention to the veil.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "accept"
+        ],
+        "response": "First ask me about the wilds, or the veil if you have already finished the vigil. Hear what must be done before you accept.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "report"
+        ],
+        "response": "You have not accepted this task. Ask about the wilds to begin, or the veil after completing the vigil.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "route"
+        ],
+        "response": "Leave the temple and follow the northbound road. The nearer Stalker clearing lies northwest of us; the second lies farther northwest. Keep to those two clearings for the vigil. Caradoc haunts the western border glade, south of the hunting grounds. Return to the temple when you have his blade and the Stalker kills, then report.",
         "actions": []
       }
     ],
@@ -312,8 +329,8 @@
     "displayName": "Ember-Smith Corvain",
     "spawns": [
       {
-        "x": 1300,
-        "y": 1460,
+        "x": 1361,
+        "y": 1518,
         "worldZ": 0
       }
     ],
@@ -355,8 +372,8 @@
     "displayName": "Grandmaster Tholvenn",
     "spawns": [
       {
-        "x": 1330,
-        "y": 1440,
+        "x": 1374,
+        "y": 1522,
         "worldZ": 0
       }
     ],
@@ -945,8 +962,8 @@
     "displayName": "Quartermaster Elenna",
     "spawns": [
       {
-        "x": 1364,
-        "y": 1494,
+        "x": 1368,
+        "y": 1510,
         "worldZ": 0
       }
     ],
@@ -1280,8 +1297,8 @@
     "displayName": "Sister Ilyndra",
     "spawns": [
       {
-        "x": 1340,
-        "y": 1479,
+        "x": 1347,
+        "y": 1465,
         "worldZ": 0
       }
     ],
@@ -1703,8 +1720,8 @@
     "displayName": "Warden Seressa",
     "spawns": [
       {
-        "x": 1355,
-        "y": 1465,
+        "x": 1321,
+        "y": 1483,
         "worldZ": 0
       }
     ],
@@ -1746,8 +1763,8 @@
     "displayName": "Wayfarer Bryndis",
     "spawns": [
       {
-        "x": 1318,
-        "y": 1512,
+        "x": 1305,
+        "y": 1516,
         "worldZ": 0
       }
     ],

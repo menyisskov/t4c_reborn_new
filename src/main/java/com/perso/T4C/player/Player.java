@@ -7,6 +7,7 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.combat.RegenerationRules;
 import com.perso.T4C.combat.StealthRules;
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.EquipmentBonusRules;
@@ -456,6 +457,15 @@ public class Player extends Stats {
 
   public boolean dropInventoryItem(int inventoryIndex, String itemKey) {
     return itemDropCallback != null && itemDropCallback.drop(inventoryIndex, itemKey);
+  }
+
+  /** Hostile hits recheck the current tile, so entering a sanctuary cancels pending hits. */
+  public void takeCombatDamage(int damage) {
+    if (SanctuaryCombatRules.isProtected(getPositionVector())) {
+      lastDamageTaken = 0;
+      return;
+    }
+    takeDamage(damage);
   }
 
   public void takeDamage(int damage) {

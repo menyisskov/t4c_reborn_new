@@ -79,8 +79,10 @@ public final class QuestService {
     }
     String itemKey = definition.getRequiredItemKey();
     if (itemKey != null && !itemKey.isBlank() && definition.getRequiredItemQty() > 0) {
-      int have = Math.min(
-          definition.getRequiredItemQty(), Collections.frequency(player.getInventory(), itemKey));
+      int have =
+          Math.min(
+              definition.getRequiredItemQty(),
+              Collections.frequency(player.getInventory(), itemKey));
       return I18n.message(
           "message.quest_progress_dialog_item",
           kills,
@@ -95,6 +97,24 @@ public final class QuestService {
         kills,
         definition.getRequiredKills(),
         definition.getRequiredKills() - kills);
+  }
+
+  /** Report exactly one accepted quest; never starts an unaccepted quest or pays another one. */
+  public String turnInQuest(String questId, String npcName, Player player) {
+    QuestDef definition = findById(questId);
+    if (definition == null
+        || player == null
+        || !same(definition.getGiverNpc(), npcName)
+        || statusFor(player, definition) == STATUS_NOT_STARTED) {
+      return null;
+    }
+    if (statusFor(player, definition) == STATUS_ACTIVE
+        && kills(player, definition) >= definition.getRequiredKills()
+        && hasRequiredItem(player, definition)
+        && meetsMinLevel(player, definition)) {
+      return complete(definition, player);
+    }
+    return giveOrReport(questId, npcName, player);
   }
 
   public String turnInReadyQuests(String npcName, Player player) {
@@ -214,15 +234,17 @@ public final class QuestService {
     return I18n.resolve(definition.getCompletionText());
   }
 
-  /** Lets an NpcBehavior that has already verified/consumed an EXTRA required item the standard
-   * single-item {@code QuestDef} shape can't express (e.g. a second component needed alongside
-   * this quest's own {@code requiredItemKey}) grant this quest's completion directly, without
-   * going through the normal STATUS_ACTIVE accept-then-return-later flow. Still honors this
-   * quest's own {@code requiredKills}/{@code requiredItemKey} objective (if any) - this is a way
-   * to ADD an extra check on top of a quest, never to bypass the quest's own native one. Used by
-   * the Godsforged crafting chain's final "combine two components" turn-ins (see
-   * {@code npc/GrandmasterTholvenn.java}), where a single QuestDef can only natively track one
-   * required item but the forge needs two. */
+  /**
+   * Lets an NpcBehavior that has already verified/consumed an EXTRA required item the standard
+   * single-item {@code QuestDef} shape can't express (e.g. a second component needed alongside this
+   * quest's own {@code requiredItemKey}) grant this quest's completion directly, without going
+   * through the normal STATUS_ACTIVE accept-then-return-later flow. Still honors this quest's own
+   * {@code requiredKills}/{@code requiredItemKey} objective (if any) - this is a way to ADD an
+   * extra check on top of a quest, never to bypass the quest's own native one. Used by the
+   * Godsforged crafting chain's final "combine two components" turn-ins (see {@code
+   * npc/GrandmasterTholvenn.java}), where a single QuestDef can only natively track one required
+   * item but the forge needs two.
+   */
   public String completeCraftingQuest(String questId, String npcName, Player player) {
     QuestDef definition = findById(questId);
     if (definition == null || player == null) {
@@ -249,14 +271,14 @@ public final class QuestService {
   }
 
   /**
-   * The "Two Masters" pattern (T4C-0046, see DESIGN_GUIDELINES.md "Quest patterns"): lets a
-   * SECOND NPC — not the quest's own {@code giverNpc} — complete an already-ready quest with a
+   * The "Two Masters" pattern (T4C-0046, see DESIGN_GUIDELINES.md "Quest patterns"): lets a SECOND
+   * NPC — not the quest's own {@code giverNpc} — complete an already-ready quest with a
    * caller-supplied alternate reward instead of the quest's normal gold/XP/item payout. Still
    * enforces the quest's own {@code STATUS_ACTIVE} + {@code requiredKills} + item + level gates,
    * still applies its {@code unlockZoneId}, and still marks it {@code STATUS_COMPLETED} — so
-   * whichever master the player picks first locks the other one out, since {@link #statusFor}
-   * then reads {@code STATUS_COMPLETED} for both. Returns {@code null} (offer nothing) when the
-   * quest isn't ready yet or was already claimed through either master; only calls {@code
+   * whichever master the player picks first locks the other one out, since {@link #statusFor} then
+   * reads {@code STATUS_COMPLETED} for both. Returns {@code null} (offer nothing) when the quest
+   * isn't ready yet or was already claimed through either master; only calls {@code
    * grantAlternateReward} on an actual, successful completion.
    */
   public String completeWithAlternateReward(
@@ -284,9 +306,11 @@ public final class QuestService {
     return I18n.resolve(definition.getCompletionText());
   }
 
-  /** True unless the quest also requires turning in {@code requiredItemQty} copies of
-   * {@code requiredItemKey} and the player doesn't have enough. Quests with no item objective
-   * (the original shape, and most quests) always pass this check. */
+  /**
+   * True unless the quest also requires turning in {@code requiredItemQty} copies of {@code
+   * requiredItemKey} and the player doesn't have enough. Quests with no item objective (the
+   * original shape, and most quests) always pass this check.
+   */
   private static boolean hasRequiredItem(Player player, QuestDef definition) {
     String key = definition.getRequiredItemKey();
     if (key == null || key.isBlank() || definition.getRequiredItemQty() <= 0) return true;
@@ -302,11 +326,13 @@ public final class QuestService {
     }
   }
 
-  /** T4C-0068: grants a quest's optional {@code rewardSpellKey}, if set and not already known -
+  /**
+   * T4C-0068: grants a quest's optional {@code rewardSpellKey}, if set and not already known -
    * mirrors the {@code rewardItemKey} grant above but adds the spell's own name to the player's
-   * known-spells list instead of an item to the inventory. Silently does nothing if the key
-   * doesn't resolve or the player already knows it (a repeat turn-in, or a spell also bought from
-   * a trainer before this quest was finished, must not duplicate the entry). */
+   * known-spells list instead of an item to the inventory. Silently does nothing if the key doesn't
+   * resolve or the player already knows it (a repeat turn-in, or a spell also bought from a trainer
+   * before this quest was finished, must not duplicate the entry).
+   */
   private static void grantRewardSpell(QuestDef definition, Player player) {
     String rewardSpellKey = definition.getRewardSpellKey();
     if (rewardSpellKey == null || rewardSpellKey.isBlank()) return;
@@ -322,45 +348,54 @@ public final class QuestService {
     }
   }
 
-  /** True unless the quest also requires a minimum character level to turn in
-   * ({@code minLevel > 0}) and the player hasn't reached it yet. Kills/items can still be
-   * gathered below the floor - this only blocks the final completion, never the accept/progress
-   * flow. Quests with no level gate (the original shape, and most quests) always pass this
-   * check. */
+  /**
+   * True unless the quest also requires a minimum character level to turn in ({@code minLevel > 0})
+   * and the player hasn't reached it yet. Kills/items can still be gathered below the floor - this
+   * only blocks the final completion, never the accept/progress flow. Quests with no level gate
+   * (the original shape, and most quests) always pass this check.
+   */
   private static boolean meetsMinLevel(Player player, QuestDef definition) {
     return definition.getMinLevel() <= 0 || player.getLevel() >= definition.getMinLevel();
   }
 
-  /** Player-facing name for an item objective key, so quest messaging can name the item instead
-   * of just gating on it silently. Falls back to the raw key if the item isn't registered. */
+  /**
+   * Player-facing name for an item objective key, so quest messaging can name the item instead of
+   * just gating on it silently. Falls back to the raw key if the item isn't registered.
+   */
   private static String itemDisplayName(String itemKey) {
     if (itemKey == null || itemKey.isBlank()) return itemKey;
     ItemDefinition item = ItemRegistry.findByKey(itemKey);
     return item == null ? itemKey : I18n.resolve(item.getName());
   }
 
-  /** The durable, rebirth-proof flag a completed {@code unlockZoneId} quest sets - checked by
-   * the fast-travel menu ({@code NamedLocations}) to decide whether a zone's entry shows. Public
-   * so any other system that also wants to know "has this player unlocked zone X" (a gateway
-   * NPC's dialogue check, a teleport gate, etc.) reads the exact same flag. */
+  /**
+   * The durable, rebirth-proof flag a completed {@code unlockZoneId} quest sets - checked by the
+   * fast-travel menu ({@code NamedLocations}) to decide whether a zone's entry shows. Public so any
+   * other system that also wants to know "has this player unlocked zone X" (a gateway NPC's
+   * dialogue check, a teleport gate, etc.) reads the exact same flag.
+   */
   public static String zoneUnlockFlag(String zoneId) {
     return "unlock.zone." + zoneId;
   }
 
   private static final String KILL_LOG_PREFIX = "killlog.";
 
-  /** The durable per-monster-type kill tally flag, keyed by the monster's canonical registry
-   * name (not the raw string a caller passed in) so kills of the same monster reported under
-   * slightly different casing/aliases still accumulate on one counter. Backs the Monster Kill
-   * Log screen; unrelated to any quest's own kill-count objective. */
+  /**
+   * The durable per-monster-type kill tally flag, keyed by the monster's canonical registry name
+   * (not the raw string a caller passed in) so kills of the same monster reported under slightly
+   * different casing/aliases still accumulate on one counter. Backs the Monster Kill Log screen;
+   * unrelated to any quest's own kill-count objective.
+   */
   public static String killLogFlag(String monsterName) {
     MonsterDef canonical = MonsterRegistry.findByName(monsterName);
     String key = canonical != null ? canonical.getName() : monsterName;
     return KILL_LOG_PREFIX + key.trim();
   }
 
-  /** Every monster this player has ever killed and how many times, keyed by canonical monster
-   * name, sorted alphabetically. Empty (never {@code null}) for a null player. */
+  /**
+   * Every monster this player has ever killed and how many times, keyed by canonical monster name,
+   * sorted alphabetically. Empty (never {@code null}) for a null player.
+   */
   public static Map<String, Integer> killLog(Player player) {
     Map<String, Integer> result = new TreeMap<>();
     if (player == null) return result;
@@ -373,11 +408,13 @@ public final class QuestService {
     return result;
   }
 
-  /** True once the player has unlocked the given zone: either the explicit flag {@link
-   * #complete} set on turn-in, or (for a character who already completed a quest before this
-   * flag existed, or before that quest had an {@code unlockZoneId} at all) any registered quest
-   * whose {@code unlockZoneId} matches and is already {@link #STATUS_COMPLETED} for this player -
-   * so access is never permanently missed just because it predates the flag. */
+  /**
+   * True once the player has unlocked the given zone: either the explicit flag {@link #complete}
+   * set on turn-in, or (for a character who already completed a quest before this flag existed, or
+   * before that quest had an {@code unlockZoneId} at all) any registered quest whose {@code
+   * unlockZoneId} matches and is already {@link #STATUS_COMPLETED} for this player - so access is
+   * never permanently missed just because it predates the flag.
+   */
   public static boolean hasUnlockedZone(Player player, String zoneId) {
     if (player == null || zoneId == null) return false;
     if (player.getQuestFlag(zoneUnlockFlag(zoneId)) != 0) return true;

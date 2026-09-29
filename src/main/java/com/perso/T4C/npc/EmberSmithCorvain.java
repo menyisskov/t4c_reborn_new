@@ -1,7 +1,6 @@
 package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
@@ -15,7 +14,7 @@ import java.util.List;
 // pact's established lore). Corvain tempers the Godsforged chain's physical component (a Tempered
 // Godcore) from Wyrmforged Embers - see quest/definition/ForgeTheGodcore.java. A standard
 // single-item turn-in quest; no custom behavior needed here.
-@Spawn(type = "EmberSmithCorvain", x = 1300, y = 1460, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "EmberSmithCorvain", x = 1361, y = 1518, z = 0, stationary = true, aggressive = false)
 public final class EmberSmithCorvain extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

@@ -2,15 +2,17 @@ package com.perso.T4C.npc.core;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.npc.companion.CompanionNPC;
 import com.perso.T4C.npc.companion.CompanionManager;
+import com.perso.T4C.npc.companion.CompanionNPC;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.spawn.SpawnRegistry;
@@ -372,6 +374,10 @@ public class NPCManager {
       return false;
     }
 
+    if (player == null
+        || !SanctuaryCombatRules.canFight(player.getPositionVector(), npc.getPosition()))
+      return false;
+
     if (npc instanceof CompanionNPC) {
 
       return false;
@@ -404,6 +410,8 @@ public class NPCManager {
   public boolean damageNpc(BaseNPC npc, int damage, Player player) {
 
     if (npc == null || damage <= 0 || !npcs.contains(npc)) return false;
+    if (!SanctuaryCombatRules.canFight(
+        player == null ? null : player.getPositionVector(), npc.getPosition())) return false;
 
     npc.setCurrentHp(Math.max(0, npc.getCurrentHp() - damage));
 
@@ -609,8 +617,10 @@ public class NPCManager {
     var it = pendingSpawns.iterator();
     while (it.hasNext()) {
       NpcSpawnEntry entry = it.next();
-      if (entry.x < startX - margin || entry.x > endX + margin
-          || entry.y < startY - margin || entry.y > endY + margin) continue;
+      if (entry.x < startX - margin
+          || entry.x > endX + margin
+          || entry.y < startY - margin
+          || entry.y > endY + margin) continue;
       it.remove();
       try {
         BaseNPC npc = NpcFactoryRegistry.create(entry.type, npcContext());
@@ -621,7 +631,12 @@ public class NPCManager {
         npc.onInitialise(lifecyclePlayer);
         npc.onPopup(lifecyclePlayer);
       } catch (Exception ex) {
-        log.warn("Failed to load visible NPC spawn type={} at ({}, {})", entry.type, entry.x, entry.y, ex);
+        log.warn(
+            "Failed to load visible NPC spawn type={} at ({}, {})",
+            entry.type,
+            entry.x,
+            entry.y,
+            ex);
       }
     }
   }

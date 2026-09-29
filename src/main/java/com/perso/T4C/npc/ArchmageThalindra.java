@@ -1,7 +1,6 @@
 package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.npc.ActionType;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
@@ -17,7 +16,7 @@ import java.util.List;
 // of levels 150/200/250/300/350 (the 400 rung was removed, T4C-0084), all built on
 // HighTierSpellCurve (T4C-0025). "mantle" opens a
 // small shop of the six elemental archmage mantles.
-@Spawn(type = "ArchmageThalindra", x = 1362, y = 1512, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "ArchmageThalindra", x = 1342, y = 1503, z = 0, stationary = true, aggressive = false)
 public final class ArchmageThalindra extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";
@@ -58,23 +57,19 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "leyward_bastion",
                               "dawnwell_renewal")))),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.1.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.1.0}"),
                   "${npc.topic.archmagethalindra.1}",
                   List.of()),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.2.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.2.0}"),
                   "${npc.topic.archmagethalindra.2}",
                   List.of()),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.3.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.3.0}"),
                   "${npc.topic.archmagethalindra.3}",
                   List.of()),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.4.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.4.0}"),
                   "${npc.topic.archmagethalindra.4}",
                   List.of(
                       new NpcSpec.Action(
@@ -86,8 +81,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "sunforge_brand",
                               "emberqueens_wrath")))),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.5.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.5.0}"),
                   "${npc.topic.archmagethalindra.5}",
                   List.of(
                       new NpcSpec.Action(
@@ -99,8 +93,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "tidebreaker",
                               "drowning_deep")))),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.6.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.6.0}"),
                   "${npc.topic.archmagethalindra.6}",
                   List.of(
                       new NpcSpec.Action(
@@ -112,8 +105,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "mountains_fist",
                               "worldroot_upheaval")))),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.7.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.7.0}"),
                   "${npc.topic.archmagethalindra.7}",
                   List.of(
                       new NpcSpec.Action(
@@ -125,8 +117,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "tempest_lance",
                               "stormcallers_judgment")))),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.8.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.8.0}"),
                   "${npc.topic.archmagethalindra.8}",
                   List.of(
                       new NpcSpec.Action(
@@ -138,8 +129,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                               "voidreave_lance",
                               "umbral_tide")))),
               new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.archmagethalindra.9.0}"),
+                  List.of("${npc.topic_keyword.archmagethalindra.9.0}"),
                   "${npc.topic.archmagethalindra.9}",
                   List.of(
                       new NpcSpec.Action(

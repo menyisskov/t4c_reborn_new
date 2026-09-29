@@ -1,6 +1,5 @@
 package com.perso.T4C.npc.core;
 
-import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 import static com.perso.T4C.config.GameConstants.NPC_PATROL_RADIUS;
 
@@ -96,11 +95,13 @@ public abstract class ScriptedNpc extends BaseNPC {
     return spec;
   }
 
-  /** Exposed so a subclass's custom {@link com.perso.T4C.npc.behavior.NpcBehavior} can call
-   * {@link QuestService#giveOrReport}/{@link QuestService#statusFor} directly - needed when a
-   * single keyword must dispatch to different quest ids depending on prerequisite quest state
-   * (a multi-stage chain), which the declarative {@code GIVE_QUEST} action can't express on its
-   * own. See {@code npc/HarbormasterRangor.java} for the pattern. */
+  /**
+   * Exposed so a subclass's custom {@link com.perso.T4C.npc.behavior.NpcBehavior} can call {@link
+   * QuestService#giveOrReport}/{@link QuestService#statusFor} directly - needed when a single
+   * keyword must dispatch to different quest ids depending on prerequisite quest state (a
+   * multi-stage chain), which the declarative {@code GIVE_QUEST} action can't express on its own.
+   * See {@code npc/HarbormasterRangor.java} for the pattern.
+   */
   public final QuestService questService() {
 
     return questService;
@@ -372,7 +373,7 @@ public abstract class ScriptedNpc extends BaseNPC {
   @Override
   protected void onInteractStart(Player player) {
 
-    if (questService != null) {
+    if (questService != null && automaticallyTurnInQuests()) {
 
       String completion = questService.turnInReadyQuests(spec.id(), player);
 
@@ -408,6 +409,11 @@ public abstract class ScriptedNpc extends BaseNPC {
 
       return;
     }
+  }
+
+  /** Dialogue-driven quest givers may require an explicit report instead of paying on greeting. */
+  protected boolean automaticallyTurnInQuests() {
+    return true;
   }
 
   @Override
@@ -495,7 +501,6 @@ public abstract class ScriptedNpc extends BaseNPC {
 
     return spec.sourceEvents();
   }
-
 
   @Override
   public final void onInitialise(Player player) {

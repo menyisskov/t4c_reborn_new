@@ -271,7 +271,7 @@
     "id": "avalon_wilds_vigil",
     "title": "Avalon Wilds Vigil",
     "giverNpc": "ElderOphira",
-    "targetMonster": "Fey Warden",
+    "targetMonster": "Moonlit Stalker",
     "requiredKills": 20,
     "targetWorldZ": 0,
     "areaCenterX": 1265,
@@ -283,10 +283,10 @@
     "requiredItemQty": 1,
     "minLevel": 0,
     "unlockZoneId": "avalon_wilds",
-    "offerText": "The Fey Wardens of the Wilds still hold to the old pact, but even loyal groves need a blade at their border while the Veil keeps pressing north. Stand vigil with them - thin whatever presses too close.",
+    "offerText": "Defeat 20 Moonlit Stalkers in the two hunting clearings north of the sanctuary. Then recover Caradoc's Sundered Blade from the fallen Sir Caradoc in the border glade to the west. Both deeds are required. Ask about the route for directions, and return here to report with the blade as proof.",
     "completionText": "The Wilds breathe easier. The pact holds a little longer because of you.",
     "completedText": "The Wardens still speak well of you. The Wilds remain ours - for now.",
-    "walkthroughText": "Elder Ophira has been holding the old fey pact at Avalon's border with fewer and fewer people, and asks you to stand the vigil alongside her Fey Wardens. Kill Fey Wardens in the marked stretch of the Wilds. Turning it in also takes Caradoc's Sundered Blade, carried by the thing wearing Sir Caradoc's armour deeper in - not an optional detour. Completing it opens the fast road to the Avalon Wilds."
+    "walkthroughText": "Speak to Elder Ophira at the sanctuary temple about the wilds, then say accept. Ask about the route for directions to the Moonlit Stalker clearings around (1300,1390) and (1250,1345). Defeat 20 Stalkers inside the marked Wilds objective area. Recover Caradoc's Sundered Blade from Sir Caradoc in the border glade around (1265,1460), west of the sanctuary. Return to Ophira and say report. She checks both objectives, consumes the blade, and unlocks fast travel to the Avalon Wilds. Ask about the veil for the next chapter."
   },
   {
     "id": "fading_veil_reckoning",
@@ -304,10 +304,10 @@
     "requiredItemQty": 1,
     "minLevel": 0,
     "unlockZoneId": "fading_veil",
-    "offerText": "Veilbound Wraiths spread Ysolde's corruption outward with every season that passes. Push back into the Veil and cut their numbers down before the blight claims ground we can't take back.",
+    "offerText": "Defeat 15 Veilbound Wraiths in the marked Fading Veil region south of the sanctuary. Defeat Ysolde, the Veiled Matriarch, and bring me Ysolde's Veiled Circlet. Return and say report after both objectives are complete; I will take the circlet to break its hold on this isle.",
     "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
     "completedText": "The blight hasn't forgotten what you did to it out there. Ysolde surely hasn't either.",
-    "walkthroughText": "Ophira's harder request: the Veilbound Wraiths carrying Ysolde's blight outward have to be cut back. Kill Wraiths in the marked area, further into the Veil than the Wilds vigil goes. You also need Ysolde's Veiled Circlet to finish, so the Veiled Matriarch herself is the end of this quest, not a rumour at the edge of it. Stand the Wilds vigil first if you have not - this is the tougher of the two by a wide margin. It opens the fast road to the Fading Veil."
+    "walkthroughText": "Complete Elder Ophira's Avalon Wilds Vigil, then ask her about the veil and say accept. Defeat 15 Veilbound Wraiths inside the marked Fading Veil objective area and recover Ysolde's Veiled Circlet from Ysolde, the Veiled Matriarch. Return to Ophira and say report. She checks both objectives, consumes the circlet, and unlocks fast travel to the Fading Veil. A character who already accepted this quest can still finish it without repeating the Wilds vigil."
   },
   {
     "id": "forge_the_godcore",

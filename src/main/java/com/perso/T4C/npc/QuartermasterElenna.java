@@ -11,7 +11,13 @@ import java.util.List;
 // Weapons merchant at the Avalon Sanctuary Weapons Merchant door (1364,1494), worldZ 0. Stock is
 // wired via ShopCatalog under this NPC's id (see npc/catalog/ShopCatalog.java) — no boss-drop
 // uniques listed here, those stay drop-only per their price: 0.
-@Spawn(type = "QuartermasterElenna", x = 1364, y = 1494, z = 0, stationary = false, aggressive = false)
+@Spawn(
+    type = "QuartermasterElenna",
+    x = 1368,
+    y = 1510,
+    z = 0,
+    stationary = true,
+    aggressive = false)
 public final class QuartermasterElenna extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Female Dying 1.wav";

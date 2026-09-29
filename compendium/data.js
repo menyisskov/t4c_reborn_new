@@ -38909,7 +38909,7 @@ window.T4C_DATA = {
       "id": "avalon_wilds_vigil",
       "title": "Avalon Wilds Vigil",
       "giverNpc": "ElderOphira",
-      "targetMonster": "Fey Warden",
+      "targetMonster": "Moonlit Stalker",
       "requiredKills": 20,
       "targetWorldZ": 0,
       "areaCenterX": 1265,
@@ -38921,10 +38921,10 @@ window.T4C_DATA = {
       "requiredItemQty": 1,
       "minLevel": 0,
       "unlockZoneId": "avalon_wilds",
-      "offerText": "The Fey Wardens of the Wilds still hold to the old pact, but even loyal groves need a blade at their border while the Veil keeps pressing north. Stand vigil with them - thin whatever presses too close.",
+      "offerText": "Defeat 20 Moonlit Stalkers in the two hunting clearings north of the sanctuary. Then recover Caradoc's Sundered Blade from the fallen Sir Caradoc in the border glade to the west. Both deeds are required. Ask about the route for directions, and return here to report with the blade as proof.",
       "completionText": "The Wilds breathe easier. The pact holds a little longer because of you.",
       "completedText": "The Wardens still speak well of you. The Wilds remain ours - for now.",
-      "walkthroughText": "Elder Ophira has been holding the old fey pact at Avalon's border with fewer and fewer people, and asks you to stand the vigil alongside her Fey Wardens. Kill Fey Wardens in the marked stretch of the Wilds. Turning it in also takes Caradoc's Sundered Blade, carried by the thing wearing Sir Caradoc's armour deeper in - not an optional detour. Completing it opens the fast road to the Avalon Wilds."
+      "walkthroughText": "Speak to Elder Ophira at the sanctuary temple about the wilds, then say accept. Ask about the route for directions to the Moonlit Stalker clearings around (1300,1390) and (1250,1345). Defeat 20 Stalkers inside the marked Wilds objective area. Recover Caradoc's Sundered Blade from Sir Caradoc in the border glade around (1265,1460), west of the sanctuary. Return to Ophira and say report. She checks both objectives, consumes the blade, and unlocks fast travel to the Avalon Wilds. Ask about the veil for the next chapter."
     },
     {
       "id": "fading_veil_reckoning",
@@ -38942,10 +38942,10 @@ window.T4C_DATA = {
       "requiredItemQty": 1,
       "minLevel": 0,
       "unlockZoneId": "fading_veil",
-      "offerText": "Veilbound Wraiths spread Ysolde's corruption outward with every season that passes. Push back into the Veil and cut their numbers down before the blight claims ground we can't take back.",
+      "offerText": "Defeat 15 Veilbound Wraiths in the marked Fading Veil region south of the sanctuary. Defeat Ysolde, the Veiled Matriarch, and bring me Ysolde's Veiled Circlet. Return and say report after both objectives are complete; I will take the circlet to break its hold on this isle.",
       "completionText": "The Veil recoils, if only a little. It's the first ground we've clawed back in longer than I care to admit.",
       "completedText": "The blight hasn't forgotten what you did to it out there. Ysolde surely hasn't either.",
-      "walkthroughText": "Ophira's harder request: the Veilbound Wraiths carrying Ysolde's blight outward have to be cut back. Kill Wraiths in the marked area, further into the Veil than the Wilds vigil goes. You also need Ysolde's Veiled Circlet to finish, so the Veiled Matriarch herself is the end of this quest, not a rumour at the edge of it. Stand the Wilds vigil first if you have not - this is the tougher of the two by a wide margin. It opens the fast road to the Fading Veil."
+      "walkthroughText": "Complete Elder Ophira's Avalon Wilds Vigil, then ask her about the veil and say accept. Defeat 15 Veilbound Wraiths inside the marked Fading Veil objective area and recover Ysolde's Veiled Circlet from Ysolde, the Veiled Matriarch. Return to Ophira and say report. She checks both objectives, consumes the circlet, and unlocks fast travel to the Fading Veil. A character who already accepted this quest can still finish it without repeating the Wilds vigil."
     },
     {
       "id": "forge_the_godcore",
@@ -39144,8 +39144,8 @@ window.T4C_DATA = {
       "displayName": "Anchorite Rowan",
       "spawns": [
         {
-          "x": 1290,
-          "y": 1500,
+          "x": 1307,
+          "y": 1505,
           "worldZ": 0
         }
       ],
@@ -39195,8 +39195,8 @@ window.T4C_DATA = {
       "displayName": "Archmage Thalindra",
       "spawns": [
         {
-          "x": 1362,
-          "y": 1512,
+          "x": 1342,
+          "y": 1503,
           "worldZ": 0
         }
       ],
@@ -39376,38 +39376,34 @@ window.T4C_DATA = {
       "displayName": "Elder Ophira",
       "spawns": [
         {
-          "x": 1316,
-          "y": 1493,
+          "x": 1344,
+          "y": 1462,
           "worldZ": 0
         }
       ],
-      "welcomeText": "Welcome, traveler. I am Elder Ophira of Avalon Sanctuary. You stand at the seam between two halves of one isle - ask, and I will tell you of our plight.",
+      "welcomeText": "Welcome to Avalon Sanctuary. I am Elder Ophira. Our loyal fey hold the northern Wilds while corruption spreads from the Veil. Ask about the wilds to learn how you can help.",
       "topics": [
         {
           "keywords": [
             "wilds",
             "avalon wilds"
           ],
-          "response": "The Avalon Wilds still answer to the old pact. The fey there remain loyal, the groves unmarred - for now. That could change before the season turns.",
-          "actions": [
-            "GIVE_QUEST:avalon_wilds_vigil"
-          ]
+          "response": "The Avalon Wilds lie north of the sanctuary. Moonlit Stalkers hunt in two clearings along our northern route. The fey still honor our pact; protect them from those predators. Ask about the route if you need directions.",
+          "actions": []
         },
         {
           "keywords": [
             "veil",
             "fading veil"
           ],
-          "response": "South of here spreads the Fading Veil - a blight eating outward from Ysolde's lair. Every season it claims more ground. We do not know how to stop it.",
-          "actions": [
-            "GIVE_QUEST:fading_veil_reckoning"
-          ]
+          "response": "The Fading Veil lies south of the sanctuary. Ysolde's wraiths spread the blight from her ruined court. After the Wilds, this is our next struggle.",
+          "actions": []
         },
         {
           "keywords": [
             "caradoc"
           ],
-          "response": "Sir Caradoc was once the truest knight our isle ever raised. Ysolde bound his spirit to her service when he fell defending the old borders. What walks the Veil now wears his armor, not his honor.",
+          "response": "Sir Caradoc was once the truest knight our isle ever raised. Ysolde bound his spirit to her service. He now haunts the border glade west of the sanctuary, south of the Stalker clearings. Recover his sundered blade there and bring it back with your report.",
           "actions": []
         },
         {
@@ -39429,7 +39425,28 @@ window.T4C_DATA = {
             "help",
             "quest"
           ],
-          "response": "I have work for capable hands - ask me of the Wilds if you'd stand vigil with our loyal fey, or of the Veil if you'd push back its corruption.",
+          "response": "Ask about the wilds first. I will explain the task before you accept it. When the vigil is finished, we can turn our attention to the veil.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "accept"
+          ],
+          "response": "First ask me about the wilds, or the veil if you have already finished the vigil. Hear what must be done before you accept.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "report"
+          ],
+          "response": "You have not accepted this task. Ask about the wilds to begin, or the veil after completing the vigil.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "route"
+          ],
+          "response": "Leave the temple and follow the northbound road. The nearer Stalker clearing lies northwest of us; the second lies farther northwest. Keep to those two clearings for the vigil. Caradoc haunts the western border glade, south of the hunting grounds. Return to the temple when you have his blade and the Stalker kills, then report.",
           "actions": []
         }
       ],
@@ -39451,8 +39468,8 @@ window.T4C_DATA = {
       "displayName": "Ember-Smith Corvain",
       "spawns": [
         {
-          "x": 1300,
-          "y": 1460,
+          "x": 1361,
+          "y": 1518,
           "worldZ": 0
         }
       ],
@@ -39494,8 +39511,8 @@ window.T4C_DATA = {
       "displayName": "Grandmaster Tholvenn",
       "spawns": [
         {
-          "x": 1330,
-          "y": 1440,
+          "x": 1374,
+          "y": 1522,
           "worldZ": 0
         }
       ],
@@ -40084,8 +40101,8 @@ window.T4C_DATA = {
       "displayName": "Quartermaster Elenna",
       "spawns": [
         {
-          "x": 1364,
-          "y": 1494,
+          "x": 1368,
+          "y": 1510,
           "worldZ": 0
         }
       ],
@@ -40419,8 +40436,8 @@ window.T4C_DATA = {
       "displayName": "Sister Ilyndra",
       "spawns": [
         {
-          "x": 1340,
-          "y": 1479,
+          "x": 1347,
+          "y": 1465,
           "worldZ": 0
         }
       ],
@@ -40842,8 +40859,8 @@ window.T4C_DATA = {
       "displayName": "Warden Seressa",
       "spawns": [
         {
-          "x": 1355,
-          "y": 1465,
+          "x": 1321,
+          "y": 1483,
           "worldZ": 0
         }
       ],
@@ -40885,8 +40902,8 @@ window.T4C_DATA = {
       "displayName": "Wayfarer Bryndis",
       "spawns": [
         {
-          "x": 1318,
-          "y": 1512,
+          "x": 1305,
+          "y": 1516,
           "worldZ": 0
         }
       ],
@@ -58918,10 +58935,10 @@ window.T4C_DATA = {
       "name": "The Avalon Wilds",
       "chapter": "avalon",
       "chapterOrder": 2.0,
-      "levelRange": "300–420",
+      "levelRange": "Monster tiers 330–550",
       "biome": "Fey woodland",
       "settlement": "Avalon Sanctuary",
-      "summary": "The half of Avalon that still keeps the old fey pact — for now. Fey Wardens patrol a border they are steadily losing, and Elder Ophira is running out of people willing to stand it with them. Green, quiet, and far more dangerous than it looks.",
+      "summary": "The loyal Wilds north of Avalon Sanctuary have two Moonlit Stalker hunting clearings, around (1300,1390) and (1250,1345). Sir Caradoc haunts the western border glade around (1265,1460). Elder Ophira at the sanctuary temple asks for Stalker kills and his sundered blade; ask about the wilds, accept, then report with both objectives fulfilled. The protected settlement and fast-travel arrival are at (1340,1477). Player levels stop at 400; Caradoc is an above-cap monster challenge.",
       "nextZoneId": "greater_drakes_bastion",
       "worldmapCenter": {
         "x": 1265.0,
@@ -58997,10 +59014,10 @@ window.T4C_DATA = {
       "name": "The Fading Veil",
       "chapter": "unmaking",
       "chapterOrder": 2.0,
-      "levelRange": "450–650",
+      "levelRange": "Monster tiers 485–650",
       "biome": "Blighted woodland",
       "settlement": "Avalon Sanctuary",
-      "summary": "A blight spreading outward from Ysolde's lair, taking Avalon one season at a time. Sir Caradoc's armour still walks the Veil, worn by something that stopped being him a long time ago. The hardest ground on the island, and one of the two places Veiled Aether Shards drop — the Rootcrown Wyrm, away in Drake's Lair, is the other.",
+      "summary": "Ysolde's blight spreads south of Avalon Sanctuary. After the Wilds vigil, Elder Ophira at the sanctuary temple offers the Veil reckoning: defeat Veilbound Wraiths and recover Ysolde's Veiled Circlet, then report with both objectives complete. The protected settlement and fast-travel arrival are at (1340,1477). These monster tiers exceed the player level cap of 400 and are intended as endgame challenges. Ysolde carries Veiled Aether Shards; the Rootcrown Wyrm in Drake's Lair is the other source.",
       "nextZoneId": "drakes_lair",
       "worldmapCenter": {
         "x": 1420.0,
@@ -60573,21 +60590,14 @@ window.T4C_DATA = {
           "displayName": "Veilbound Wraith",
           "x": 1460.0,
           "y": 1450.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1390.0,
-          "y": 1445.0,
-          "tier": "trash"
+          "tier": "boss"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 1415.0,
           "y": 1450.0,
-          "tier": "trash"
+          "tier": "boss"
         },
         {
           "name": "Raider",
@@ -60638,38 +60648,38 @@ window.T4C_DATA = {
         {
           "id": "AnchoriteRowan",
           "displayName": "Anchorite Rowan",
-          "x": 1290.0,
-          "y": 1500.0
+          "x": 1307.0,
+          "y": 1505.0
         },
         {
           "id": "ArchmageThalindra",
           "displayName": "Archmage Thalindra",
-          "x": 1362.0,
-          "y": 1512.0
+          "x": 1342.0,
+          "y": 1503.0
         },
         {
           "id": "ElderOphira",
           "displayName": "Elder Ophira",
-          "x": 1316.0,
-          "y": 1493.0
+          "x": 1344.0,
+          "y": 1462.0
         },
         {
           "id": "EmberSmithCorvain",
           "displayName": "Ember-Smith Corvain",
-          "x": 1300.0,
-          "y": 1460.0
+          "x": 1361.0,
+          "y": 1518.0
         },
         {
           "id": "GrandmasterTholvenn",
           "displayName": "Grandmaster Tholvenn",
-          "x": 1330.0,
-          "y": 1440.0
+          "x": 1374.0,
+          "y": 1522.0
         },
         {
           "id": "QuartermasterElenna",
           "displayName": "Quartermaster Elenna",
-          "x": 1364.0,
-          "y": 1494.0
+          "x": 1368.0,
+          "y": 1510.0
         },
         {
           "id": "Scholar1",
@@ -60698,20 +60708,20 @@ window.T4C_DATA = {
         {
           "id": "SisterIlyndra",
           "displayName": "Sister Ilyndra",
-          "x": 1340.0,
-          "y": 1479.0
+          "x": 1347.0,
+          "y": 1465.0
         },
         {
           "id": "WardenSeressa",
           "displayName": "Warden Seressa",
-          "x": 1355.0,
-          "y": 1465.0
+          "x": 1321.0,
+          "y": 1483.0
         },
         {
           "id": "WayfarerBryndis",
           "displayName": "Wayfarer Bryndis",
-          "x": 1318.0,
-          "y": 1512.0
+          "x": 1305.0,
+          "y": 1516.0
         }
       ],
       "monsters": [
@@ -60732,303 +60742,289 @@ window.T4C_DATA = {
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1345.0,
-          "y": 1420.0,
+          "x": 1193.0,
+          "y": 1390.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1194.0,
-          "y": 1451.0,
+          "x": 1199.0,
+          "y": 1390.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1295.0,
-          "y": 1310.0,
+          "x": 1205.0,
+          "y": 1390.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1175.0,
-          "y": 1358.0,
+          "x": 1211.0,
+          "y": 1390.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1325.0,
-          "y": 1470.0,
+          "x": 1217.0,
+          "y": 1390.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1225.0,
-          "y": 1485.0,
+          "x": 1193.0,
+          "y": 1397.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1360.0,
-          "y": 1385.0,
+          "x": 1199.0,
+          "y": 1397.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1165.0,
-          "y": 1422.0,
+          "x": 1205.0,
+          "y": 1397.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1195.0,
-          "y": 1319.0,
+          "x": 1211.0,
+          "y": 1397.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1253.0,
-          "y": 1293.0,
+          "x": 1217.0,
+          "y": 1397.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1315.0,
-          "y": 1306.0,
+          "x": 1193.0,
+          "y": 1404.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1222.0,
-          "y": 1379.0,
+          "x": 1199.0,
+          "y": 1404.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1266.0,
-          "y": 1366.0,
+          "x": 1205.0,
+          "y": 1404.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1321.0,
-          "y": 1364.0,
+          "x": 1211.0,
+          "y": 1404.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1222.0,
-          "y": 1433.0,
+          "x": 1217.0,
+          "y": 1404.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1261.0,
-          "y": 1424.0,
+          "x": 1193.0,
+          "y": 1411.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1325.0,
-          "y": 1423.0,
+          "x": 1199.0,
+          "y": 1411.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1249.0,
-          "y": 1461.0,
+          "x": 1205.0,
+          "y": 1411.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1291.0,
-          "y": 1480.0,
+          "x": 1211.0,
+          "y": 1411.0,
           "tier": "trash"
         },
         {
           "name": "Fey Warden",
           "displayName": "Fey Warden",
-          "x": 1236.0,
-          "y": 1502.0,
+          "x": 1217.0,
+          "y": 1411.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1315.0,
-          "y": 1460.0,
+          "x": 1238.0,
+          "y": 1337.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1195.0,
-          "y": 1452.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Moonlit Stalker",
-          "displayName": "Moonlit Stalker",
-          "x": 1335.0,
-          "y": 1360.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Moonlit Stalker",
-          "displayName": "Moonlit Stalker",
-          "x": 1235.0,
-          "y": 1325.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Moonlit Stalker",
-          "displayName": "Moonlit Stalker",
-          "x": 1285.0,
-          "y": 1495.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Moonlit Stalker",
-          "displayName": "Moonlit Stalker",
-          "x": 1180.0,
-          "y": 1358.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Moonlit Stalker",
-          "displayName": "Moonlit Stalker",
-          "x": 1355.0,
-          "y": 1435.0,
+          "x": 1244.0,
+          "y": 1337.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
           "x": 1250.0,
-          "y": 1300.0,
+          "y": 1337.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1229.0,
-          "y": 1299.0,
+          "x": 1256.0,
+          "y": 1337.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1273.0,
-          "y": 1293.0,
+          "x": 1262.0,
+          "y": 1337.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1332.0,
-          "y": 1317.0,
+          "x": 1238.0,
+          "y": 1353.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1195.0,
-          "y": 1349.0,
+          "x": 1244.0,
+          "y": 1353.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1280.0,
-          "y": 1381.0,
+          "x": 1250.0,
+          "y": 1353.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1333.0,
-          "y": 1380.0,
+          "x": 1256.0,
+          "y": 1353.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1222.0,
-          "y": 1409.0,
+          "x": 1262.0,
+          "y": 1353.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1245.0,
-          "y": 1412.0,
+          "x": 1288.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1301.0,
-          "y": 1430.0,
+          "x": 1294.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1260.0,
-          "y": 1444.0,
+          "x": 1300.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1231.0,
-          "y": 1451.0,
+          "x": 1306.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1264.0,
-          "y": 1475.0,
+          "x": 1312.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1330.0,
-          "y": 1500.0,
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1288.0,
+          "y": 1398.0,
           "tier": "trash"
         },
         {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1370.0,
-          "y": 1445.0,
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1294.0,
+          "y": 1398.0,
           "tier": "trash"
         },
         {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 1380.0,
-          "y": 1520.0,
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1300.0,
+          "y": 1398.0,
           "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1306.0,
+          "y": 1398.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1312.0,
+          "y": 1398.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sir Caradoc, the Sundered Knight",
+          "displayName": "Sir Caradoc, the Sundered Knight",
+          "x": 1265.0,
+          "y": 1460.0,
+          "tier": "boss"
         },
         {
           "name": "Sundered Sentinel",
@@ -61038,17 +61034,24 @@ window.T4C_DATA = {
           "tier": "trash"
         },
         {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1305.0,
-          "y": 1530.0,
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1255.0,
+          "y": 1455.0,
           "tier": "trash"
         },
         {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1390.0,
-          "y": 1445.0,
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1275.0,
+          "y": 1455.0,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 1265.0,
+          "y": 1472.0,
           "tier": "trash"
         },
         {
@@ -61056,21 +61059,7 @@ window.T4C_DATA = {
           "displayName": "Veilbound Wraith",
           "x": 1415.0,
           "y": 1450.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1360.0,
-          "y": 1536.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 1329.0,
-          "y": 1539.0,
-          "tier": "trash"
+          "tier": "boss"
         },
         {
           "name": "Wild Horse",
@@ -61252,8 +61241,8 @@ window.T4C_DATA = {
         {
           "id": "AnchoriteRowan",
           "displayName": "Anchorite Rowan",
-          "x": 1290.0,
-          "y": 1500.0
+          "x": 1307.0,
+          "y": 1505.0
         },
         {
           "id": "AnrakBrownbark",
@@ -61264,163 +61253,121 @@ window.T4C_DATA = {
         {
           "id": "ArchmageThalindra",
           "displayName": "Archmage Thalindra",
-          "x": 1362.0,
-          "y": 1512.0
+          "x": 1342.0,
+          "y": 1503.0
         },
         {
           "id": "ElderOphira",
           "displayName": "Elder Ophira",
-          "x": 1316.0,
-          "y": 1493.0
+          "x": 1344.0,
+          "y": 1462.0
         },
         {
           "id": "EmberSmithCorvain",
           "displayName": "Ember-Smith Corvain",
-          "x": 1300.0,
-          "y": 1460.0
+          "x": 1361.0,
+          "y": 1518.0
         },
         {
           "id": "GrandmasterTholvenn",
           "displayName": "Grandmaster Tholvenn",
-          "x": 1330.0,
-          "y": 1440.0
+          "x": 1374.0,
+          "y": 1522.0
         },
         {
           "id": "QuartermasterElenna",
           "displayName": "Quartermaster Elenna",
-          "x": 1364.0,
-          "y": 1494.0
+          "x": 1368.0,
+          "y": 1510.0
         },
         {
           "id": "SisterIlyndra",
           "displayName": "Sister Ilyndra",
-          "x": 1340.0,
-          "y": 1479.0
+          "x": 1347.0,
+          "y": 1465.0
         },
         {
           "id": "WardenSeressa",
           "displayName": "Warden Seressa",
-          "x": 1355.0,
-          "y": 1465.0
+          "x": 1321.0,
+          "y": 1483.0
         },
         {
           "id": "WayfarerBryndis",
           "displayName": "Wayfarer Bryndis",
-          "x": 1318.0,
-          "y": 1512.0
+          "x": 1305.0,
+          "y": 1516.0
         }
       ],
       "monsters": [
         {
-          "name": "Fey Warden",
-          "displayName": "Fey Warden",
-          "x": 1345.0,
-          "y": 1420.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Fey Warden",
-          "displayName": "Fey Warden",
-          "x": 1325.0,
-          "y": 1470.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Fey Warden",
-          "displayName": "Fey Warden",
-          "x": 1360.0,
-          "y": 1385.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Fey Warden",
-          "displayName": "Fey Warden",
-          "x": 1261.0,
-          "y": 1424.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Fey Warden",
-          "displayName": "Fey Warden",
-          "x": 1325.0,
-          "y": 1423.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Fey Warden",
-          "displayName": "Fey Warden",
-          "x": 1249.0,
-          "y": 1461.0,
-          "tier": "trash"
-        },
-        {
-          "name": "Fey Warden",
-          "displayName": "Fey Warden",
-          "x": 1291.0,
-          "y": 1480.0,
+          "name": "Moonlit Stalker",
+          "displayName": "Moonlit Stalker",
+          "x": 1288.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1315.0,
-          "y": 1460.0,
+          "x": 1294.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1285.0,
-          "y": 1495.0,
+          "x": 1300.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1355.0,
-          "y": 1435.0,
+          "x": 1306.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1280.0,
-          "y": 1381.0,
+          "x": 1312.0,
+          "y": 1382.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1333.0,
-          "y": 1380.0,
+          "x": 1288.0,
+          "y": 1398.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1245.0,
-          "y": 1412.0,
+          "x": 1294.0,
+          "y": 1398.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1301.0,
-          "y": 1430.0,
+          "x": 1300.0,
+          "y": 1398.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1260.0,
-          "y": 1444.0,
+          "x": 1306.0,
+          "y": 1398.0,
           "tier": "trash"
         },
         {
           "name": "Moonlit Stalker",
           "displayName": "Moonlit Stalker",
-          "x": 1264.0,
-          "y": 1475.0,
+          "x": 1312.0,
+          "y": 1398.0,
           "tier": "trash"
         },
         {
@@ -61447,8 +61394,8 @@ window.T4C_DATA = {
         {
           "name": "Sir Caradoc, the Sundered Knight",
           "displayName": "Sir Caradoc, the Sundered Knight",
-          "x": 1440.0,
-          "y": 1540.0,
+          "x": 1265.0,
+          "y": 1460.0,
           "tier": "boss"
         },
         {
@@ -61461,8 +61408,8 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 1330.0,
-          "y": 1500.0,
+          "x": 1430.0,
+          "y": 1535.0,
           "tier": "trash"
         },
         {
@@ -61475,8 +61422,8 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 1370.0,
-          "y": 1445.0,
+          "x": 1450.0,
+          "y": 1535.0,
           "tier": "trash"
         },
         {
@@ -61524,8 +61471,8 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 1380.0,
-          "y": 1520.0,
+          "x": 1440.0,
+          "y": 1552.0,
           "tier": "trash"
         },
         {
@@ -61594,22 +61541,22 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 1430.0,
-          "y": 1535.0,
+          "x": 1255.0,
+          "y": 1455.0,
           "tier": "trash"
         },
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 1450.0,
-          "y": 1535.0,
+          "x": 1275.0,
+          "y": 1455.0,
           "tier": "trash"
         },
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 1440.0,
-          "y": 1552.0,
+          "x": 1265.0,
+          "y": 1472.0,
           "tier": "trash"
         },
         {
@@ -61657,8 +61604,8 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 1305.0,
-          "y": 1530.0,
+          "x": 1440.0,
+          "y": 1540.0,
           "tier": "trash"
         },
         {
@@ -61671,8 +61618,8 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 1390.0,
-          "y": 1445.0,
+          "x": 1431.0,
+          "y": 1535.0,
           "tier": "trash"
         },
         {
@@ -61692,8 +61639,8 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 1360.0,
-          "y": 1536.0,
+          "x": 1451.0,
+          "y": 1535.0,
           "tier": "trash"
         },
         {
@@ -61706,8 +61653,8 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 1329.0,
-          "y": 1539.0,
+          "x": 1441.0,
+          "y": 1552.0,
           "tier": "trash"
         },
         {

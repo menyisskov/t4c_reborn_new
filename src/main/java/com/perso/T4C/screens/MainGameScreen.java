@@ -1,6 +1,7 @@
 package com.perso.T4C.screens;
 
 import static com.perso.T4C.config.GameConstants.*;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -59,6 +60,7 @@ import com.perso.T4C.helper.MusicZoneBinaryIO;
 import com.perso.T4C.helper.OriginalZoneMap;
 import com.perso.T4C.helper.PlayerAppearanceDefaults;
 import com.perso.T4C.helper.PlayerStateStore;
+import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
@@ -72,8 +74,8 @@ import com.perso.T4C.input.NPCInputHandler;
 import com.perso.T4C.input.ObjectClickHandler;
 import com.perso.T4C.input.TileClickHandler;
 import com.perso.T4C.item.ItemDefinition;
-import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.BaseMonster;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.companion.CompanionDef;
@@ -228,6 +230,7 @@ public class MainGameScreen implements Screen {
    * didn't persist after shutdown" actually was.
    */
   private static final float AUTOSAVE_INTERVAL_SECONDS = 15f;
+
   private final com.perso.T4C.profiler.GameProfiler gameProfiler =
       new com.perso.T4C.profiler.GameProfiler();
   private long profilerFrameIndex = 0;
@@ -422,9 +425,11 @@ public class MainGameScreen implements Screen {
     PlayerStateStore.save(player, dayNightCycle.getHour());
   }
 
-  /** Flushes the character to disk every {@link #AUTOSAVE_INTERVAL_SECONDS}. Skipped until the
-   * world is up, and after the state has already been handed off (character switch/dispose), so a
-   * tick in flight can't rewrite a save the shutdown path just finished. */
+  /**
+   * Flushes the character to disk every {@link #AUTOSAVE_INTERVAL_SECONDS}. Skipped until the world
+   * is up, and after the state has already been handed off (character switch/dispose), so a tick in
+   * flight can't rewrite a save the shutdown path just finished.
+   */
   private void updateAutosave(float delta) {
     if (!displayInitialized || playerStateSaved || disposed || player == null) return;
     secondsSinceAutosave += delta;
@@ -1009,6 +1014,8 @@ public class MainGameScreen implements Screen {
         new com.perso.T4C.monster.core.DamageCallback() {
           @Override
           public void applyDamage(BaseMonster attacker, int rawDamage) {
+            if (!SanctuaryCombatRules.canFight(attacker.getPosition(), player.getPositionVector()))
+              return;
             CombatProfile attackerProfile = CombatProfiles.fromMonster(attacker);
             CombatProfile playerProfile = CombatProfiles.fromPlayer(player);
             CombatResult result =
@@ -1031,7 +1038,7 @@ public class MainGameScreen implements Screen {
             monsterManager.notifyMonsterAttackHit(attacker, player);
             Vector2 impactPosition = player.getPositionVector().cpy();
             handleSeraphAuraOnHit(attacker, attackerProfile.armorClass());
-            player.takeDamage(damage);
+            player.takeCombatDamage(damage);
             int appliedDamage = player.getLastDamageTaken();
             if (appliedDamage > 0) {
               playRandomPlayerHitSound();
@@ -1056,6 +1063,8 @@ public class MainGameScreen implements Screen {
 
           @Override
           public void applySpell(BaseMonster attacker, int spellId, int rawDamage) {
+            if (!SanctuaryCombatRules.canFight(attacker.getPosition(), player.getPositionVector()))
+              return;
             if (spellId == 10596) {
               SpellData teleport = SpellRegistry.findById(spellId);
               Vector2 origin = attacker.getPosition().cpy();
@@ -1078,8 +1087,10 @@ public class MainGameScreen implements Screen {
             int damage = Math.max(0, rawDamage * 100 / resistance);
             Runnable impact =
                 () -> {
+                  if (!SanctuaryCombatRules.canFight(
+                      attacker.getPosition(), player.getPositionVector())) return;
                   Vector2 impactPosition = player.getPositionVector().cpy();
-                  player.takeDamage(damage);
+                  player.takeCombatDamage(damage);
                   int appliedDamage = player.getLastDamageTaken();
                   if (appliedDamage > 0) {
                     playRandomPlayerHitSound();
@@ -1160,8 +1171,8 @@ public class MainGameScreen implements Screen {
   /**
    * The Windhowl War-Party (T4C-0045): felling the banner-bearer opens a scatter window, and
    * clearing every raider inside that window summons the Warband Warlord where the last raider
-   * fell. See {@code monster/WarbandCampState.java} for the shared encounter tracking - the
-   * monster classes themselves only carry flavor text, this is where the actual reward fires.
+   * fell. See {@code monster/WarbandCampState.java} for the shared encounter tracking - the monster
+   * classes themselves only carry flavor text, this is where the actual reward fires.
    */
   private void handleWarbandDeath(com.perso.T4C.monster.core.BaseMonster monster) {
     com.perso.T4C.monster.WarbandCampState.Camp camp =
@@ -1183,10 +1194,12 @@ public class MainGameScreen implements Screen {
     }
   }
 
-  /** Gold paid once, only the first time a character posts a new best at a given tier (T4C-0048).
+  /**
+   * Gold paid once, only the first time a character posts a new best at a given tier (T4C-0048).
    * Repeat clears of an already-beaten tier pay nothing - the Hourglass is a speed record, not a
    * farm spot, which is also why every Sandglass Sentinel's own {@code xpOnDeath}/gold are 0/low
-   * (see assets/monsters/sandglass_sentinel_*.json). */
+   * (see assets/monsters/sandglass_sentinel_*.json).
+   */
   private static int hourglassNewBestReward(int tier) {
     return Math.max(1, tier) * 5000;
   }
@@ -1263,6 +1276,8 @@ public class MainGameScreen implements Screen {
     }
     npcManager.setPlayerDamageCallback(
         (attacker, rawDamage) -> {
+          if (!SanctuaryCombatRules.canFight(attacker.getPosition(), player.getPositionVector()))
+            return;
           attacker.onAttack(player);
           if (attacker.getCurrentHp() <= 0) {
             npcManager.damageNpc(attacker, 1, player);
@@ -1279,7 +1294,7 @@ public class MainGameScreen implements Screen {
             return;
           }
           Vector2 impactPosition = player.getPositionVector().cpy();
-          player.takeDamage(result.damage());
+          player.takeCombatDamage(result.damage());
           int appliedDamage = player.getLastDamageTaken();
           if (appliedDamage > 0) {
             playRandomPlayerHitSound();
@@ -1668,12 +1683,12 @@ public class MainGameScreen implements Screen {
 
   /**
    * T4C-0057: Shift+quickbar arms a friendly-unit target cursor for beneficial spells (Barrier,
-   * Protection, Mana Shield, Mana Surge, Bless, Healing) instead of the default instant self-cast
-   * - see tryCastAttackSpell(BaseNPC) for how an armed click is resolved. There is no other-player
+   * Protection, Mana Shield, Mana Surge, Bless, Healing) instead of the default instant self-cast -
+   * see tryCastAttackSpell(BaseNPC) for how an armed click is resolved. There is no other-player
    * entity in this single-player build yet (see the "single-player for now" note where the radar's
    * blue/player blips are built), so nothing can currently satisfy a friendly-unit click; this
-   * wires the target-selection half of the feature now so a real other-player entity only needs
-   * to be recognized at the click-resolution end later, not a rewrite of the arming/casting UI. A
+   * wires the target-selection half of the feature now so a real other-player entity only needs to
+   * be recognized at the click-resolution end later, not a rewrite of the arming/casting UI. A
    * plain quickbar press (no Shift) is completely unaffected and keeps casting on yourself
    * instantly, exactly as before.
    */
@@ -2209,6 +2224,8 @@ public class MainGameScreen implements Screen {
   }
 
   private SpellCastingService.Result castAttackSpell(SpellData spell, BaseMonster monster) {
+    if (!SanctuaryCombatRules.canFight(player.getPositionVector(), monster.getPosition()))
+      return new SpellCastingService.Result(false, SpellCastingService.Failure.SAFE_HAVEN, 0);
     float distanceTiles =
         player.getPositionVector().dst(monster.getPosition()) / Math.max(GRID_W, GRID_H);
     boolean sightClear =
@@ -2292,6 +2309,8 @@ public class MainGameScreen implements Screen {
   }
 
   private SpellCastingService.Result castAttackSpell(SpellData spell, BaseNPC npc) {
+    if (!SanctuaryCombatRules.canFight(player.getPositionVector(), npc.getPosition()))
+      return new SpellCastingService.Result(false, SpellCastingService.Failure.SAFE_HAVEN, 0);
     Vector2 playerPos = player.getPositionVector();
     Vector2 npcPos = npc.getPosition();
     float distanceTiles = playerPos.dst(npcPos) / Math.max(GRID_W, GRID_H);
@@ -2363,6 +2382,8 @@ public class MainGameScreen implements Screen {
   }
 
   private void applyNpcSpellImpact(SpellData spell, BaseNPC npc) {
+    if (npc != null
+        && !SanctuaryCombatRules.canFight(player.getPositionVector(), npc.getPosition())) return;
     if (spell == null || npc == null) {
       return;
     }
@@ -2469,6 +2490,10 @@ public class MainGameScreen implements Screen {
   }
 
   private boolean canFireBowAt(BaseMonster monster, boolean announce) {
+    if (monster != null
+        && player != null
+        && !SanctuaryCombatRules.canFight(player.getPositionVector(), monster.getPosition()))
+      return false;
     if (monster == null || monster.isDead() || player == null) {
       return false;
     }
@@ -2701,6 +2726,9 @@ public class MainGameScreen implements Screen {
   }
 
   private void applyBowImpact(BaseMonster monster) {
+    if (monster != null
+        && !SanctuaryCombatRules.canFight(player.getPositionVector(), monster.getPosition()))
+      return;
     if (monster == null || monster.isDead()) {
       return;
     }
@@ -2935,13 +2963,17 @@ public class MainGameScreen implements Screen {
 
   /**
    * @param grandEligible whether this hit may render as a multi-burst {@link GrandImpactShower}
-   *     when the spell qualifies. Pass {@code false} for splash hits on secondary targets within
-   *     an area spell's radius — those already get their own individual burst, so also showering
-   *     each one would multiply bursts per monster hit.
+   *     when the spell qualifies. Pass {@code false} for splash hits on secondary targets within an
+   *     area spell's radius — those already get their own individual burst, so also showering each
+   *     one would multiply bursts per monster hit.
    */
   private void applyResolvedSpellImpact(
-      SpellData spell, BaseMonster monster, double range, boolean installHooks,
+      SpellData spell,
+      BaseMonster monster,
+      double range,
+      boolean installHooks,
       boolean grandEligible) {
+    if (!SanctuaryCombatRules.canFight(player.getPositionVector(), monster.getPosition())) return;
     SpellEffectManager.Impact impactResult =
         spellEffectManager.resolve(spell, player, monster, range);
     SpellEffectManager.TargetExhaustion explicitExhaustion =
@@ -3061,8 +3093,10 @@ public class MainGameScreen implements Screen {
     float radiusPixels = spell.getRadius() * Math.max(GRID_W, GRID_H);
     boolean firstBurst = true;
     for (GrandImpactShower.Burst burst : GrandImpactShower.bursts(spell)) {
-      float offsetX = (float) Math.cos(burst.angleRadians()) * burst.radiusFraction() * radiusPixels;
-      float offsetY = (float) Math.sin(burst.angleRadians()) * burst.radiusFraction() * radiusPixels;
+      float offsetX =
+          (float) Math.cos(burst.angleRadians()) * burst.radiusFraction() * radiusPixels;
+      float offsetY =
+          (float) Math.sin(burst.angleRadians()) * burst.radiusFraction() * radiusPixels;
       spellRenderer.triggerImpactSpellDelayed(
           visuals.impact(),
           targetPosition.x + offsetX,
@@ -3679,7 +3713,8 @@ public class MainGameScreen implements Screen {
   }
 
   private void applyPeriodicSpellImpact(SpellData spell, Player caster, BaseMonster target) {
-    if (caster != player) return;
+    if (caster != player
+        || !SanctuaryCombatRules.canFight(caster.getPositionVector(), target.getPosition())) return;
     SpellEffectManager.TargetExhaustion exhaustion =
         spellEffectManager.resolveTargetExhaustion(spell, caster, target);
     target.exhaustMovementFor(exhaustion.moveMillis());
@@ -3756,8 +3791,7 @@ public class MainGameScreen implements Screen {
     com.perso.T4C.monster.EchoOfSelf.onMakerFell();
     clearCurrentAttackTarget();
     player.respawnAfterDeath();
-    showSystemMessage(
-        com.perso.T4C.mirror.MirrorTrials.line("mirror.player_fell", player, 0));
+    showSystemMessage(com.perso.T4C.mirror.MirrorTrials.line("mirror.player_fell", player, 0));
     savePlayerState();
   }
 
@@ -3865,7 +3899,11 @@ public class MainGameScreen implements Screen {
         monsterManager.updateVisible(
             delta,
             player.isGmPeace() ? null : playerPositionTemp,
-            renderStartX, renderEndX, renderStartY, renderEndY, margin);
+            renderStartX,
+            renderEndX,
+            renderStartY,
+            renderEndY,
+            margin);
       }
       pruneSelectedMonster();
       performAttackTick();
@@ -3985,10 +4023,7 @@ public class MainGameScreen implements Screen {
     }
     Vector2 position = player.getPositionVector();
     spellRenderer.triggerImpactSpell(
-        seraphArrivalKind.spritePrefix(),
-        position.x,
-        position.y,
-        seraphArrivalKind.sound());
+        seraphArrivalKind.spritePrefix(), position.x, position.y, seraphArrivalKind.sound());
     seraphArrivalPlaying = spellRenderer.hasActiveImpact(seraphArrivalKind.spritePrefix());
   }
 
@@ -4560,8 +4595,10 @@ public class MainGameScreen implements Screen {
   @Override
   public void hide() {}
 
-  /** LibGDX calls this when the window is minimised/loses focus and once more on the way out, so
-   * it is the last reliable hook before a shutdown that never reaches {@link #dispose()}. */
+  /**
+   * LibGDX calls this when the window is minimised/loses focus and once more on the way out, so it
+   * is the last reliable hook before a shutdown that never reaches {@link #dispose()}.
+   */
   @Override
   public void pause() {
     if (!playerStateSaved && !disposed && player != null && displayInitialized) savePlayerState();
