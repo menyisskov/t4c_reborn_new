@@ -1046,7 +1046,15 @@ public final class BuildWorkspace {
     }
     if (tool == Tool.MULTI_SELECT) {
       // Keep legacy single-object delete/copy/nudge shortcuts out of group selection mode.
-      return key != Input.Keys.B;
+      if (key >= Input.Keys.F1 && key <= Input.Keys.F12) clearSelection();
+      return key == Input.Keys.DEL
+          || key == Input.Keys.FORWARD_DEL
+          || key == Input.Keys.LEFT
+          || key == Input.Keys.RIGHT
+          || key == Input.Keys.UP
+          || key == Input.Keys.DOWN
+          || key == Input.Keys.R
+          || (ctrl && (key == Input.Keys.C || key == Input.Keys.V));
     }
     if (!ctrl && key == Input.Keys.R) {
       cycleVariant(1);

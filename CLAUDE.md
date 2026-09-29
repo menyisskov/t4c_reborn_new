@@ -158,6 +158,10 @@ that now guards against it.
   their branch points predate a fix landed earlier in the same session, and check for it at merge
   time rather than assuming independent branches found independent bugs.
 
+- An editor mode consumed every key to protect its own selection and accidentally disabled
+  fullscreen and the NPC/monster pickers. Only consume shortcuts owned by the mode; pass
+  unrelated keys to the global handlers. `BuildWorkspaceInputSmoke` checks this routing.
+
 ## Other project docs worth knowing about
 
 - `AGENT.md` — engineering charter (rendering/camera constraints,

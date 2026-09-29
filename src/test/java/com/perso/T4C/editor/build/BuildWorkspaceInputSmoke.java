@@ -222,6 +222,14 @@ public final class BuildWorkspaceInputSmoke {
                   replay("performRedo");
                   check(after.equals(snapshot()), "Group redo lost scenery/collision");
                   System.out.println("BOX_SELECTION_GROUP_MOVE_UNDO_REDO_OK");
+                  check(
+                      workspace.keyDown(Input.Keys.FORWARD_DEL),
+                      "Legacy delete escaped multi-select");
+                  for (int key :
+                      new int[] {
+                        Input.Keys.F11, Input.Keys.F8, Input.Keys.F9, Input.Keys.B, Input.Keys.W
+                      }) check(!workspace.keyDown(key), "Global hotkey was swallowed: " + key);
+                  System.out.println("MULTI_SELECT_GLOBAL_HOTKEY_PASSTHROUGH_OK");
                   Gdx.app.exit();
                 }
               } catch (Exception e) {
