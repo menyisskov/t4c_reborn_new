@@ -3770,6 +3770,7 @@ public class MapEditorScreen implements Screen {
   private void performRedo() { replayHistory(true); }
 
   private void replayHistory(boolean forward) {
+    if (buildWorkspace != null) buildWorkspace.clearSelection();
     commitPendingOffsets();
     var source = forward ? redoStack : undoStack;
     if (mapReader == null || source.isEmpty()) {
@@ -3828,6 +3829,20 @@ public class MapEditorScreen implements Screen {
         return collisionData;
       }
       public Vector3 world(int x, int y) { return camera.unproject(new Vector3(x, y, 0)); }
+      public void beginSelection() {
+        commitPendingOffsets();
+        restoreTransientDragState();
+        selectedDecorInfo = null;
+        rectangleSelection = null;
+        lassoSelectionTiles.clear();
+        lassoSelectionPath.clear();
+        isSelecting = false;
+      }
+      public com.perso.T4C.editor.build.BuildGeometry.Point decorAt(int x, int y) {
+        var position = world(x, y);
+        var decor = findDecorAtPosition(position.x, position.y);
+        return decor == null ? null : new com.perso.T4C.editor.build.BuildGeometry.Point(decor.tileX, decor.tileY);
+      }
       public void commit(String label, BuildEdits.Edit edit) {
         commitPendingOffsets();
         selectedDecorInfo = null;
@@ -3877,7 +3892,7 @@ public class MapEditorScreen implements Screen {
   }
 
   private void updateDecorNudge(float delta) {
-    if ((buildActive() && buildWorkspace.typing()) || editorMode == EditorMode.SPRITE_PICKER || !hasOffsetNudgeTarget()) {
+    if ((buildActive() && (buildWorkspace.typing() || buildWorkspace.multiSelecting())) || editorMode == EditorMode.SPRITE_PICKER || !hasOffsetNudgeTarget()) {
       decorNudgeHoldTime = 0f;
       decorNudgeAccumulator = 0f;
       decorNudgeLastDx = 0;

@@ -89,6 +89,13 @@ public final class BuildWorkspaceInputSmoke {
                 var input = Gdx.input.getInputProcessor();
                 if (ready == 2) {
                   ((Vector2) field(screen, "cameraPosition")).set(4900 * 32, 2000 * 16);
+                  // An empty ocean region is our in-memory fixture. Allow moving walls here.
+                  var map = (MapReader) field(screen, "mapReader");
+                  replay("loadCollisionData");
+                  var collision = (byte[]) field(screen, "collisionData");
+                  for (int y = 1960; y < 2050; y++)
+                    java.util.Arrays.fill(
+                        collision, y * map.getWidth() + 4870, y * map.getWidth() + 4930, (byte) 0);
                   input.touchDown(970, 140, 0, 0);
                   for (char c : "BrickWall 1".toCharArray()) input.keyTyped(c);
                 }
@@ -147,6 +154,82 @@ public final class BuildWorkspaceInputSmoke {
                   check(before.equals(snapshot()), "Drop over sidebar must cancel the stroke");
                   check(history == history(), "Canceled stroke changed history");
                   System.out.println("SIDEBAR_CANCEL_OK");
+                }
+                if (ready == 9) {
+                  // Use the visible header button, then box-select the second painted row.
+                  input.touchDown(1000, 75, 0, 0);
+                  input.touchUp(1000, 75, 0, 0);
+                  input.touchDown(190, 430, 0, 0);
+                  input.touchDragged(530, 475, 0);
+                  input.touchUp(530, 475, 0, 0);
+                  var workspace = (BuildWorkspace) field(screen, "buildWorkspace");
+                  check(workspace.multiSelecting(), "Multi-select button did not activate");
+                  check(
+                      ((java.util.Set<?>) field(workspace, "selection")).size() > 2,
+                      "Box did not select multiple objects");
+                  var selected = (java.util.Set<?>) field(workspace, "selection");
+                  int selectedCount = selected.size();
+                  Input nativeInput = Gdx.input;
+                  Gdx.input =
+                      (Input)
+                          java.lang.reflect.Proxy.newProxyInstance(
+                              Input.class.getClassLoader(),
+                              new Class<?>[] {Input.class},
+                              (proxy, method, arguments) ->
+                                  method.getName().equals("isKeyPressed")
+                                          && (int) arguments[0] == Input.Keys.SHIFT_LEFT
+                                      ? true
+                                      : method.invoke(nativeInput, arguments));
+                  try {
+                    input.touchDown(300, 450, 0, 0);
+                    input.touchUp(300, 450, 0, 0);
+                    check(
+                        selected.size() == selectedCount - 1,
+                        "Shift-click did not remove one object");
+                    input.touchDown(300, 450, 0, 0);
+                    input.touchUp(300, 450, 0, 0);
+                    check(selected.size() == selectedCount, "Shift-click did not add one object");
+                    input.touchDown(100, 280, 0, 0);
+                    input.touchDragged(880, 320, 0);
+                    input.touchUp(880, 320, 0, 0);
+                    check(selected.size() > selectedCount, "Shift-box did not add objects");
+                  } finally {
+                    Gdx.input = nativeInput;
+                  }
+                  // Reselect just the second row for the movement checks.
+                  input.touchDown(190, 430, 0, 0);
+                  input.touchDragged(530, 475, 0);
+                  input.touchUp(530, 475, 0, 0);
+                  before = snapshot();
+                  int history = history();
+                  input.touchDown(300, 450, 0, 0);
+                  input.touchDragged(332, 498, 0);
+                  screen.render(1f / 30);
+                  var capture =
+                      com.badlogic.gdx.graphics.Pixmap.createFromFrameBuffer(0, 0, 1280, 768);
+                  com.badlogic.gdx.graphics.PixmapIO.writePNG(
+                      Gdx.files.local("target/multi-selection-preview.png"), capture, -1, true);
+                  capture.dispose();
+                  input.touchUp(332, 498, 0, 0);
+                  after = snapshot();
+                  check(changed(before, after) > 4, "Group drag did not move multiple objects");
+                  check(history() == history + 1, "Group drag must be one history entry");
+                  replay("performUndo");
+                  check(before.equals(snapshot()), "Group undo lost scenery/collision");
+                  check(
+                      ((java.util.Set<?>) field(workspace, "selection")).isEmpty(),
+                      "Undo left stale selected anchors");
+                  replay("performRedo");
+                  check(after.equals(snapshot()), "Group redo lost scenery/collision");
+                  System.out.println("BOX_SELECTION_GROUP_MOVE_UNDO_REDO_OK");
+                  check(
+                      workspace.keyDown(Input.Keys.FORWARD_DEL),
+                      "Legacy delete escaped multi-select");
+                  for (int key :
+                      new int[] {
+                        Input.Keys.F11, Input.Keys.F8, Input.Keys.F9, Input.Keys.B, Input.Keys.W
+                      }) check(!workspace.keyDown(key), "Global hotkey was swallowed: " + key);
+                  System.out.println("MULTI_SELECT_GLOBAL_HOTKEY_PASSTHROUGH_OK");
                   Gdx.app.exit();
                 }
               } catch (Exception e) {

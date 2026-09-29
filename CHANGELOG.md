@@ -11,6 +11,12 @@ dates are the commit dates of the work, not retroactively invented. From now
 on, every content/feature pass adds its own entry here as part of the work
 (see `CLAUDE.md`), not after the fact.
 
+## 2026-09-29 — Map editor group selection (T4C-0104)
+
+### Added
+- Select several scenery objects with a dragged box, add more with Shift, and drag the selection together. Group moves preview their destination, keep terrain in place, and undo in one step.
+
+
 ## [Unreleased]
 
 ## 2026-09-29 — Repeat sprites while dragging (T4C-0103)
