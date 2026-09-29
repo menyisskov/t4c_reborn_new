@@ -13,6 +13,24 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-28 — Avalon island terrain rebuilt (T4C-0096)
+
+### Fixed
+- **The solid black patches on Avalon are gone.** Large parts of the island were never actually
+  given ground art - they were an invisible wall of empty placeholder tiles that rendered as flat
+  black and blocked movement, which is also why the island felt far smaller than it should have.
+  That ground is now real, walkable terrain.
+
+### Changed
+- **Avalon has been repainted and considerably enlarged.** The Avalon Wilds keep their lush,
+  fey-touched grove, and the Fading Veil keeps its harsh, blighted ground - each now spreads much
+  further and reads as a clearly different place at a glance, with a hard, natural-looking
+  coastline instead of terrain that trails off into nothing. Two new coastal areas round out the
+  island with their own distinct look: a rocky western shore and a withered southern marsh.
+- **Avalon Sanctuary is a real town now**, not a handful of buildings standing in a field - its
+  walkable grounds have grown several times over. Dirt roads now run from the town out to the
+  Wilds, the Veil, and both new coastal areas, so getting around the island finally makes sense.
+
 ## 2026-09-28 — Fixed 11 quests stuck at 0/N on their item turn-in (T4C-0095)
 
 ### Fixed

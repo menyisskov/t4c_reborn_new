@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0096`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0097`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -108,6 +108,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0093 | Fix two quest-reward necklaces (Tideworn Avalon Chart, Godsforged Torc of the First Pact) rendering as a blank inventory icon due to a nonexistent sprite variant | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--fixed-blank-quest-item-icons-t4c-0093) |
 | T4C-0094 | Corrected the Windhowl fast-travel location's coordinates | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--windhowl-teleport-coordinate-fix-t4c-0094) |
 | T4C-0095 | Fix: 11 item-turn-in quests (Passage to Avalon and 10 others) never registered progress on the required item no matter how many the player carried, because each was missing the "item." prefix inventory entries actually use | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--fixed-11-quests-stuck-at-0n-on-their-item-turn-in-t4c-0095) |
+| T4C-0096 | Fix: Avalon island's terrain was mostly an unpainted, collision-blocked "Black Tile" void (the reported solid-black patches); repainted a cohesive, much larger island with distinct grove/blight/coastal biomes, a grown Avalon Sanctuary town, and roads out to each area | Content/Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--avalon-island-terrain-rebuilt-t4c-0096) |
 
 ## Type legend
 
