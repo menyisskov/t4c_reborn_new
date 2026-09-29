@@ -52,6 +52,8 @@ import com.perso.T4C.helper.ResolvedSprite;
 import com.perso.T4C.helper.SpriteBinIO;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.helper.SpriteNameParser;
+import com.perso.T4C.editor.build.BuildWorkspace;
+import com.perso.T4C.editor.build.BuildEdits;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
@@ -326,6 +328,8 @@ public class MapEditorScreen implements Screen {
   private boolean scaleToolEnabled = false;
   private static final int MAX_UNDO = 30;
   private final Deque<UndoEntry> undoStack = new ArrayDeque<>();
+  private final Deque<UndoEntry> redoStack = new ArrayDeque<>();
+  private BuildWorkspace buildWorkspace;
   private boolean mapDirty = false;
   private boolean monstersDirty = false;
   private boolean npcsDirty = false;
@@ -824,6 +828,7 @@ public class MapEditorScreen implements Screen {
     final String label;
     final boolean persistOnUndo;
     final List<TileChange> changes = new ArrayList<>();
+    Runnable customUndo, customRedo;
 
     UndoEntry(String label, boolean persistOnUndo) {
       this.label = label;
@@ -831,7 +836,7 @@ public class MapEditorScreen implements Screen {
     }
 
     boolean hasChanges() {
-      return !changes.isEmpty();
+      return customUndo != null || !changes.isEmpty();
     }
   }
 
@@ -1172,7 +1177,7 @@ public class MapEditorScreen implements Screen {
                 && handleObjectPositionEditorKeyTyped(character)) {
               return true;
             }
-            return false;
+            return buildActive() && buildWorkspace.keyTyped(character);
           }
 
           @Override
@@ -1232,6 +1237,7 @@ public class MapEditorScreen implements Screen {
             if (handleMenuClick(screenX, screenY)) {
               return true;
             }
+            if (buildActive() && buildWorkspace.touchDown(screenX, screenY, button)) return true;
             if (handleGroundSelectClick(screenX, screenY)) {
               return true;
             }
@@ -1532,6 +1538,7 @@ public class MapEditorScreen implements Screen {
             if (tmpl3Regenerating || groundRecalculating) {
               return true;
             }
+            if (buildActive() && buildWorkspace.touchUp(screenX, screenY, button)) return true;
             if (draggedTeleport != null && button == Input.Buttons.LEFT) {
               finishDraggingTeleport();
               return true;
@@ -1586,6 +1593,7 @@ public class MapEditorScreen implements Screen {
             if (tmpl3Regenerating || groundRecalculating) {
               return true;
             }
+            if (buildActive() && buildWorkspace.touchDragged(screenX, screenY)) return true;
             if (draggedTeleport != null && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
               Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
               int tileX = (int) (worldCoords.x / GameConstants.GRID_W);
@@ -1719,6 +1727,7 @@ public class MapEditorScreen implements Screen {
             if (itemEditor != null) {
               return itemEditor.handleScroll(amountY);
             }
+            if (buildActive() && buildWorkspace.scrolled(amountY)) return true;
             if (groundSelectOpen && groundSelectDropdownBounds != null) {
               int uiY = Gdx.graphics.getHeight() - Gdx.input.getY();
               if (groundSelectDropdownBounds.contains(Gdx.input.getX(), uiY)) {
@@ -1837,6 +1846,9 @@ public class MapEditorScreen implements Screen {
             if (itemEditor != null) {
               return itemEditor.handleKeyDown(keycode);
             }
+            if (buildActive() && buildWorkspace.keyDown(keycode)) return true;
+            if (!isModalEditorOpen() && entityPicker == null && spritePicker == null
+                && keycode == Input.Keys.B) { toggleBuildWorkspace(); return true; }
             if (keycode == Input.Keys.F11) {
               boolean fullscreen = DisplayModeToggle.toggle();
               showEditorMessage(DisplayModeToggle.message(fullscreen));
@@ -3634,6 +3646,7 @@ public class MapEditorScreen implements Screen {
     if (entry == null || !entry.hasChanges()) {
       return;
     }
+    redoStack.clear();
     undoStack.addFirst(entry);
     while (undoStack.size() > MAX_UNDO) {
       undoStack.removeLast();
@@ -3752,48 +3765,119 @@ public class MapEditorScreen implements Screen {
     mapDirty = true;
   }
 
-  private void performUndo() {
-    if (mapReader == null || undoStack.isEmpty()) {
-      showEditorMessage("Nothing to undo");
+  private void performUndo() { replayHistory(false); }
+
+  private void performRedo() { replayHistory(true); }
+
+  private void replayHistory(boolean forward) {
+    commitPendingOffsets();
+    var source = forward ? redoStack : undoStack;
+    if (mapReader == null || source.isEmpty()) {
+      showEditorMessage(I18n.key("editor.build." + (forward ? "nothing_redo" : "nothing_undo")));
       return;
     }
-    UndoEntry entry = undoStack.removeFirst();
-    boolean bulkInvalidate = entry.changes.size() > 64;
-    String bulkInvalidateName = null;
-    for (TileChange change : entry.changes) {
-      if (change.groundUnderDecor) {
-        mapReader.setGroundSpriteName(change.x, change.y, change.oldName);
-      } else if (change.isDecor) {
-        mapReader.setDecorSpriteName(change.x, change.y, change.oldName);
-      } else {
-        mapReader.setSpriteNameFast(change.x, change.y, change.oldName);
+    UndoEntry entry = source.removeFirst();
+    if (entry.customUndo != null) {
+      (forward ? entry.customRedo : entry.customUndo).run();
+    } else {
+      // Repeated changes to one tile must be unwound in reverse order.
+      var changes = forward ? entry.changes : entry.changes.reversed();
+      for (TileChange change : changes) {
+        String name = forward ? change.newName : change.oldName;
+        if (change.groundUnderDecor) mapReader.setGroundSpriteName(change.x, change.y, name);
+        else if (change.isDecor) mapReader.setDecorSpriteName(change.x, change.y, name);
+        else mapReader.setSpriteNameFast(change.x, change.y, name);
+        mapReader.setScale(change.x, change.y, forward ? change.newScaleX : change.oldScaleX,
+            forward ? change.newScaleY : change.oldScaleY);
+        mapReader.setOffset(change.x, change.y, forward ? change.newOffsetX : change.oldOffsetX,
+            forward ? change.newOffsetY : change.oldOffsetY);
+        mapReader.setZOrder(change.x, change.y, forward ? change.newZOrder : change.oldZOrder);
       }
-      mapReader.setScale(change.x, change.y, change.oldScaleX, change.oldScaleY);
-      mapReader.setOffset(change.x, change.y, change.oldOffsetX, change.oldOffsetY);
-      mapReader.setZOrder(change.x, change.y, change.oldZOrder);
-      String invalidateName = change.oldName != null ? change.oldName : change.newName;
-      if (bulkInvalidate) {
-        if (bulkInvalidateName == null && invalidateName != null) {
-          bulkInvalidateName = invalidateName;
-        } else {
-          clearTmplCacheIfNeeded(invalidateName);
-        }
-      } else {
-        invalidateGroundAround(change.x, change.y, invalidateName);
+      invalidateGroundAfterBulkChange(null);
+      mapDirty = true;
+      minimapDirty = true;
+    }
+    (forward ? undoStack : redoStack).addFirst(entry);
+    showEditorMessage(I18n.key("editor.build." + (forward ? "redo" : "undo")) + ": " + entry.label);
+  }
+
+  private boolean buildActive() {
+    return buildWorkspace != null && buildWorkspace.visible() && !isLoading && !spriteHotReloading
+        && !isModalEditorOpen() && entityPicker == null && editorMode == EditorMode.SELECT_TILE
+        && !tmpl3Regenerating && !groundRecalculating && !collisionRegenerating;
+  }
+
+  private void toggleBuildWorkspace() {
+    if (buildWorkspace == null) return;
+    boolean wasActive = buildActive();
+    commitPendingOffsets();
+    restoreTransientDragState();
+    editorMode = EditorMode.SELECT_TILE;
+    selectedDecorInfo = null;
+    fillToolEnabled = false;
+    autofillEnabled = false;
+    if (wasActive || !buildWorkspace.visible()) buildWorkspace.toggle();
+    else buildWorkspace.reset();
+  }
+
+  private void initializeBuildWorkspace() {
+    buildWorkspace = new BuildWorkspace(new BuildWorkspace.Host() {
+      public MapReader map() { return mapReader; }
+      public byte[] collisions() {
+        if (collisionData == null) loadCollisionData();
+        return collisionData;
       }
-    }
-    if (bulkInvalidate) {
-      invalidateGroundAfterBulkChange(bulkInvalidateName);
-    }
-    mapDirty = true;
-    minimapDirty = true;
-    showEditorMessage("Undo: " + entry.label + " (not saved)");
-    log.info(
-        "Undo {} (persist={}, changes={})", entry.label, entry.persistOnUndo, entry.changes.size());
+      public Vector3 world(int x, int y) { return camera.unproject(new Vector3(x, y, 0)); }
+      public void commit(String label, BuildEdits.Edit edit) {
+        commitPendingOffsets();
+        selectedDecorInfo = null;
+        var targetMap = mapReader;
+        var targetCollision = collisions();
+        UndoEntry entry = new UndoEntry(label, false);
+        entry.customUndo = () -> { edit.apply(targetMap, targetCollision, false); changed(); };
+        entry.customRedo = () -> { edit.apply(targetMap, targetCollision, true); changed(); };
+        entry.customRedo.run();
+        pushUndoEntry(entry);
+        showEditorMessage(I18n.key("editor.build.placed") + ": " + edit.changes().size());
+      }
+      private void changed() {
+        mapDirty = true;
+        collisionDirty = true;
+        minimapDirty = true;
+        invalidateGroundAfterBulkChange(null);
+      }
+      public void undo() { performUndo(); }
+      public void redo() { performRedo(); }
+      public void save() {
+        allowManualSave = true;
+        try { saveAllState(); } finally { allowManualSave = false; }
+        showEditorMessage(I18n.key("editor.build.saved"));
+      }
+      public void status(String message) { showEditorMessage(message); }
+      public void pan(float dx, float dy) {
+        cameraPosition.x -= dx * zoom;
+        cameraPosition.y -= dy * zoom;
+        camera.position.set(cameraPosition.x, cameraPosition.y, 0);
+        camera.update();
+      }
+      public void preview(SpriteBatch target, String name, float x, float y,
+          float sx, float sy, float ox, float oy) {
+        if (name == null) return;
+        var resolved = SpriteNameParser.parse(name, mapRenderer.getMetaByName());
+        var region = spriteLoader.getRegionFromSpriteName(resolved.name);
+        if (region == null) return;
+        float[] offsets = getSpriteDrawOffsets(resolved.name, resolved.mirror);
+        float w = region.getRegionWidth() * sx, h = region.getRegionHeight() * sy;
+        x += ox + offsets[0] * sx;
+        y += oy + offsets[1] * sy;
+        target.draw(region, x + (resolved.mirror ? w : 0), y + h,
+            resolved.mirror ? -w : w, -h);
+      }
+    }, spriteLoader, font);
   }
 
   private void updateDecorNudge(float delta) {
-    if (editorMode == EditorMode.SPRITE_PICKER || !hasOffsetNudgeTarget()) {
+    if ((buildActive() && buildWorkspace.typing()) || editorMode == EditorMode.SPRITE_PICKER || !hasOffsetNudgeTarget()) {
       decorNudgeHoldTime = 0f;
       decorNudgeAccumulator = 0f;
       decorNudgeLastDx = 0;
@@ -3864,7 +3948,7 @@ public class MapEditorScreen implements Screen {
   }
 
   private void updateCamera(float delta) {
-    if (isModalEditorOpen()) {
+    if (isModalEditorOpen() || (buildActive() && buildWorkspace.typing())) {
       cameraMoveHoldTime = 0f;
       camera.position.set(cameraPosition.x, cameraPosition.y, 0);
       camera.zoom = zoom;
@@ -3958,6 +4042,7 @@ public class MapEditorScreen implements Screen {
         return;
       }
     }
+    if (buildWorkspace == null) initializeBuildWorkspace();
     checkSpritesBinUpdates();
     processPendingTmpl3RegenerationApply();
     processPendingGroundRecalculationApply();
@@ -4067,9 +4152,11 @@ public class MapEditorScreen implements Screen {
     }
     uiBatch.begin();
     uiBatch.end();
+    if (buildActive()) buildWorkspace.renderPreview(batch, shapeRenderer, camera.combined);
     renderToolbar();
     renderGroundSelect();
-    renderMinimap();
+    // The build sidebar covers the minimap. Defer its full-map scan until it is visible.
+    if (!buildActive()) renderMinimap();
     renderContextBar();
     renderTeleportEditorPanel();
     renderObjectPositionEditorPanel();
@@ -4077,6 +4164,7 @@ public class MapEditorScreen implements Screen {
     renderSpawnContextMenu();
     renderObjectContextMenu();
     renderDecorContextMenu();
+    if (buildActive()) buildWorkspace.render(uiBatch, shapeRenderer);
     if (editorMode == EditorMode.SPRITE_PICKER && spritePicker != null) {
       spritePicker.render(uiBatch, shapeRenderer);
     }
@@ -4165,6 +4253,8 @@ public class MapEditorScreen implements Screen {
           loadingMessage = "Loading editor data...";
           buildGroundFillSprites();
           undoStack.clear();
+          redoStack.clear();
+          if (buildWorkspace != null) buildWorkspace.reset();
           mapDirty = false;
           collisionDirty = false;
           initializeToolbar();
@@ -4337,6 +4427,8 @@ public class MapEditorScreen implements Screen {
           loadingMessage = "Loading map sidecars...";
           buildGroundFillSprites();
           undoStack.clear();
+          redoStack.clear();
+          if (buildWorkspace != null) buildWorkspace.reset();
           mapDirty = false;
           collisionDirty = false;
           collisionData = null;
@@ -4689,6 +4781,7 @@ public class MapEditorScreen implements Screen {
 
   @Override
   public void dispose() {
+    if (buildWorkspace != null) buildWorkspace.dispose();
     saveCameraPosition();
     offsetWriteExecutor.shutdownNow();
     tmpl3RegenerationExecutor.shutdownNow();
@@ -9604,6 +9697,7 @@ public class MapEditorScreen implements Screen {
         }
         case 3 -> {
           loadingMessage = "Refreshing sprite tools...";
+          if (buildWorkspace != null) buildWorkspace.reloadSprites();
           buildGroundFillSprites();
           lastSpritesBinModified = getSpritesBinLastModified();
           showEditorMessage("Sprites reloaded");
@@ -13191,6 +13285,7 @@ public class MapEditorScreen implements Screen {
             }));
     MenuTitle edit = new MenuTitle("Edit");
     edit.items.add(new MenuItem("Undo", this::performUndo));
+    edit.items.add(new MenuItem(I18n.key("editor.build.redo"), this::performRedo));
     edit.items.add(new MenuItem("Copy", this::performCopy));
     edit.items.add(new MenuItem("Paste", this::performPaste));
     MenuTitle view = new MenuTitle("View");
@@ -13218,6 +13313,7 @@ public class MapEditorScreen implements Screen {
     view.items.add(
         new MenuItem("Teleport", this::toggleTeleportOverlay, () -> teleportOverlayVisible));
     MenuTitle tools = new MenuTitle("Tools");
+    tools.items.add(new MenuItem(I18n.key("editor.build.menu"), this::toggleBuildWorkspace));
     tools.items.add(
         new MenuItem("Autofill")
             .add(new MenuItem("Toggle", this::toggleAutofill, () -> autofillEnabled))

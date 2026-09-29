@@ -13,6 +13,14 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-29 — Map editor build workspace (T4C-0102)
+
+### Added
+- A resizable asset browser with named previews, search, categories, materials, facing filters, grouped variants, favorites and recent selections.
+- Drag-and-drop placement, continuous painting, repeated lines, connected brick walls and room outlines, with placement previews and undo/redo for a whole gesture.
+- Reusable scenery templates for temples, buildings, an underground chamber and a cavern passage, plus a capture tool for saving your own selections.
+- Templates preserve terrain, scenery offsets and collision while keeping character spawns, quests and travel links separate.
+
 ## 2026-09-29 â€” Rarity-based item sell values (T4C-0101)
 
 ### Changed

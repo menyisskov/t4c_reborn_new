@@ -23,6 +23,7 @@ public class MapEditor {
         com.perso.T4C.config.GameConstants.WINDOW_WIDTH,
         com.perso.T4C.config.GameConstants.WINDOW_HEIGHT);
     config.setResizable(true);
+    config.setWindowSizeLimits(960, 640, -1, -1);
     config.useVsync(true);
     config.setWindowIcon(
         Files.FileType.Absolute,

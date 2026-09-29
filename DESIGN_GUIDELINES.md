@@ -1456,3 +1456,12 @@ Items with positive buy prices retain the existing half-price resale spread. For
 The shop, item tooltip and compendium exporter use this same helper. Inventory saves store item keys, so old possessions receive current prices without migration or changes to stats, requirements or quest progress. A sale pays only for successfully removed units and respects the existing gold ceiling.
 
 The pricing opt-in must survive Content Studio editing and Java catalogue export; `T4CContentStudioItemPricingTest` compiles the generated definition and checks both new and legacy modes. The nine new enchanted weapons/shields stocked by Lord of the Shops use positive buy prices (at twice their previous fallback resale), preventing free purchases from becoming a resale exploit; `ItemSalePricingTest` checks this shop spread.
+
+
+## Map editor build workspace (T4C-0102)
+
+- Build operations validate the whole footprint before changing it; one drag is one undo entry containing complete before/after ground, decor, scale, offsets, depth and collision. New edits invalidate redo; map switches clear history. Template files use relative coordinates and a versioned schema with bounded selections.
+- Bundled structure templates come from actual checked-in maps with documented source coordinates. Building masks preserve boundary wall anchors. Custom rectangular captures preserve empty cells as well as scenery. Occupied decor requires explicit Replace; previews indicate rejection before placement.
+- Templates never copy NPCs, monsters, interactive object definitions, quests or teleports. Art for stairs/chests is scenery only. Add gameplay definitions separately and validate their destinations.
+- Connected wall/room tools use vetted directional sprites and corner offsets from existing buildings. Do not rotate a bitmap or assume every wall family shares the same layout. Generic Line supports manual variants for other families. Walls block movement; room outlines need separately authored doorways and floors.
+- Sprite IDs remain unchanged. The editor derives searchable display metadata, retains access to every variant, and stores favorites/recents locally. Never regenerate source maps when rebuilding the editor template library.
