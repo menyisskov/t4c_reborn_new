@@ -23,8 +23,8 @@ The build sidebar opens by default. Press **B**, or use **Tools > Build workspac
 
 | Tool | Action |
 | --- | --- |
-| Stamp | Drag an asset from the sidebar to the map, or select it and click repeatedly. |
-| Paint | Hold the left mouse button and draw a continuous stroke. |
+| Stamp | Choose Stamp for one copy per click or drag. |
+| Paint | Selecting an asset activates Paint. Hold the left mouse button and drag across the map for multiple copies. You can also drag from the asset thumbnail into the map and keep dragging; painting starts where the pointer first enters the canvas. A click or quick drop places one copy. |
 | Line | Drag between two points to repeat the selected sprite. Spacing controls the interval. |
 | Brick wall | Drag a straight wall; it snaps to a map diagonal and uses the matching brick facing. |
 | Brick room | Drag between opposite corners to create four connected brick walls with corner pieces. |
@@ -98,3 +98,7 @@ It compares commits `21273765`, `2d804017` and `d18b1772` against their parents,
 only their affected old-world fields, and requires the unexpanded source map. It refuses to
 run on the already enlarged map. `--apply` writes the result; without it, it only validates.
 Normal editing uses the editor and the shifted sanctuary/terrain authoring tools.
+
+### Repeat-placement regression check
+
+After `mvn test`, run `com.perso.T4C.editor.build.BuildWorkspaceInputSmoke` with `target/test-classes`, `target/classes` and the dependency classpath. It opens a hidden OpenGL editor and verifies palette/canvas repeat dragging, atomic undo/redo, explicit single stamps, quick drops and sidebar cancellation. It does not save map edits and restores palette preferences on exit. Run from a clean checkout with the default palette layout.

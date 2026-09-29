@@ -13,6 +13,12 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-29 — Repeat sprites while dragging (T4C-0103)
+
+### Fixed
+- Selecting a sprite now defaults to continuous painting: hold and drag across the map to place multiple copies, including when dragging from the asset browser.
+- A click still places one copy, Stamp remains available for deliberate single placements, and whole templates still place once per drag.
+
 ## 2026-09-29 — Map editor build workspace (T4C-0102)
 
 ### Added
