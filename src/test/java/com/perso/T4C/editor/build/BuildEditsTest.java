@@ -29,6 +29,77 @@ class BuildEditsTest {
   }
 
   @Test
+  void overlappingGroupMovePreservesGroundMetadataAndUndo() throws Exception {
+    try (var map = map()) {
+      byte[] collision = new byte[1024];
+      original().write(map, collision, 4, 5);
+      var second = new MapStamp.Tile("Sand", "Second", 2, .5f, 8, -17, 3, 1);
+      second.write(map, collision, 5, 5);
+      var destination = new MapStamp.Tile("Floor", null, 1, 1, 0, 0, 0, 0);
+      destination.write(map, collision, 6, 5);
+      var points = List.of(new BuildGeometry.Point(4, 5), new BuildGeometry.Point(5, 5));
+      var edit = BuildEdits.moveDecor(map, collision, points, 1, 0);
+      assertEquals(3, edit.changes().size());
+      assertEquals(original(), MapStamp.Tile.read(map, collision, 4, 5));
+      edit.apply(map, collision, true);
+      assertEquals(
+          new MapStamp.Tile("Grass", null, 1, 1, 0, 0, 0, 0),
+          MapStamp.Tile.read(map, collision, 4, 5));
+      assertEquals(
+          new MapStamp.Tile("Sand", "Old wall", .5f, 2, -3, -90, 7, 9),
+          MapStamp.Tile.read(map, collision, 5, 5));
+      assertEquals(
+          new MapStamp.Tile("Floor", "Second", 2, .5f, 8, -17, 3, 1),
+          MapStamp.Tile.read(map, collision, 6, 5));
+      edit.apply(map, collision, false);
+      assertEquals(original(), MapStamp.Tile.read(map, collision, 4, 5));
+      assertEquals(second, MapStamp.Tile.read(map, collision, 5, 5));
+      assertEquals(destination, MapStamp.Tile.read(map, collision, 6, 5));
+      edit.apply(map, collision, true);
+      assertEquals("Second", map.getDecorSpriteName(6, 5));
+    }
+  }
+
+  @Test
+  void groupMoveRejectsOccupiedBoundsAndCollisionWithoutMutating() throws Exception {
+    try (var map = map()) {
+      byte[] collision = new byte[1024];
+      original().write(map, collision, 4, 5);
+      original().write(map, collision, 6, 5);
+      var points = List.of(new BuildGeometry.Point(4, 5));
+      assertThrows(
+          IllegalArgumentException.class, () -> BuildEdits.moveDecor(map, collision, points, 2, 0));
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> BuildEdits.moveDecor(map, collision, points, -5, 0));
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> BuildEdits.moveDecor(map, collision, points, Integer.MAX_VALUE, 0));
+      collision[5 * 32 + 5] = 6;
+      assertThrows(
+          IllegalArgumentException.class, () -> BuildEdits.moveDecor(map, collision, points, 1, 0));
+      assertEquals(original(), MapStamp.Tile.read(map, collision, 4, 5));
+      assertEquals(6, collision[5 * 32 + 5]);
+      assertTrue(BuildEdits.moveDecor(map, collision, points, 0, 0).changes().isEmpty());
+    }
+  }
+
+  @Test
+  void groupMoveLeavesAreaRulesAtTheirCoordinates() throws Exception {
+    try (var map = map()) {
+      byte[] collision = new byte[1024];
+      new MapStamp.Tile("Floor", "Statue", 1, 1, 0, 0, 0, 6).write(map, collision, 4, 5);
+      collision[5 * 32 + 5] = 3;
+      BuildEdits.moveDecor(map, collision, List.of(new BuildGeometry.Point(4, 5)), 1, 0)
+          .apply(map, collision, true);
+      assertEquals(6, collision[5 * 32 + 4]);
+      assertEquals(3, collision[5 * 32 + 5]);
+      assertNull(map.getDecorSpriteName(4, 5));
+      assertEquals("Statue", map.getDecorSpriteName(5, 5));
+    }
+  }
+
+  @Test
   void gestureRestoresEveryLayerAndCollisionAndCanRedoAfterSaving() throws Exception {
     try (var map = map()) {
       byte[] collision = new byte[1024];

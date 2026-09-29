@@ -25918,5 +25918,11 @@
   "npc.elysana.poisonapple.done": "There. A poisoned apple, sweet as any other - until it isn't.",
   "zone.0.256": "Avalon Sanctuary",
   "zone.0.257": "The Avalon Wilds",
-  "zone.0.258": "The Fading Veil"
+  "zone.0.258": "The Fading Veil",
+  "editor.build.multi_select": "Multi-select (drag a box)",
+  "editor.build.selected_count": "Selected scenery",
+  "editor.build.selection_hint": "Shift: add/toggle | Drag selection: move | Esc: clear",
+  "editor.build.move_selection": "Move selected scenery",
+  "editor.build.selection_changed": "Selection changed. Please select the scenery again.",
+  "editor.build.collision_conflict": "Move blocked: destination has collision or an area rule."
 }

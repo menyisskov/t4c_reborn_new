@@ -36,6 +36,14 @@ A green preview is valid; red means the gesture extends outside the map or would
 
 Each placement or stroke is one **Undo** operation. **Ctrl+Z** undoes, **Ctrl+Y** or **Ctrl+Shift+Z** redoes while the workspace is active. A new edit clears redo history, and switching maps clears both histories. Right- or middle-drag pans the map; the wheel zooms over the map and scrolls the sidebar over the asset grid. **Escape** cancels a gesture and returns to Select. **Ctrl+S** saves while the workspace is active; **File > Save** works in every mode.
 
+### Multi-select and move scenery
+
+Click **Multi-select (drag a box)** at the top of the sidebar. Drag a rectangle around the base tiles of walls, trees or other scenery, then drag any highlighted tile or selected sprite to move the group. Click a sprite to select just that object. **Shift-drag** adds another rectangle; **Shift-click** adds or removes one object. The sidebar shows the selected count. **Escape** clears the selection and returns to the original Select tool.
+
+Moves snap to tiles and show a colored destination preview. Red means the move is invalid; releasing changes nothing. Releasing over the sidebar or toolbar cancels the move. A group move is one undo step; undo/redo clears the selection so old coordinates cannot move unrelated objects. Ground stays in place, and scenery retains its scale, offsets and depth. Blocking collision (absolute, fly-over or force field) on selected anchors travels with the scenery; water and area rules stay in place. A blocking object cannot overwrite a destination collision or zone rule. Multi-select never replaces unselected scenery, even with Replace enabled. Selection rectangles are limited to 65,536 tiles.
+
+This moves **scenery only**: NPCs, monsters, interactive objects, entrances and travel links stay at their existing coordinates. Use Capture/Template when you want terrain included in a reusable copy. The regular **Select** tool still provides the original individual-object editing controls.
+
 ### Reusable templates
 
 The bundled library contains the **Lighthaven temple, cottage, storehouse, underground chamber, and cavern passage**. These are snapshots of existing game scenery with original tile offsets, scale, depth and collision. The cavern passage and underground chamber have open connection points; join them to other sections when building a larger interior. Brick wall/room tools use a vetted Lighthaven brick style. For other wall families, select a sprite and use Line, cycling variants manually where needed.

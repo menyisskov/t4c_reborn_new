@@ -25,6 +25,10 @@ public final class BuildWorkspace {
 
     void commit(String label, BuildEdits.Edit edit);
 
+    void beginSelection();
+
+    BuildGeometry.Point decorAt(int x, int y);
+
     void undo();
 
     void redo();
@@ -47,7 +51,8 @@ public final class BuildWorkspace {
     WALL,
     ROOM,
     CAPTURE,
-    TEMPLATE
+    TEMPLATE,
+    MULTI_SELECT
   }
 
   private record Button(Rectangle box, String label, Runnable action, boolean active) {}
@@ -92,6 +97,8 @@ public final class BuildWorkspace {
   private float width, left, top, gridTop, gridBottom;
   private final LinkedHashSet<BuildGeometry.Point> painted = new LinkedHashSet<>();
   private List<BuildEdits.Placement> preview = List.of();
+  private final LinkedHashSet<BuildGeometry.Point> selection = new LinkedHashSet<>();
+  private boolean movingSelection, additiveSelection;
   private String invalid = "";
   private boolean validated = false;
   private static final Path PREFS = Path.of("editor_build_preferences.json");
@@ -125,6 +132,14 @@ public final class BuildWorkspace {
     return visible;
   }
 
+  public void clearSelection() {
+    cancel();
+  }
+
+  public boolean multiSelecting() {
+    return tool == Tool.MULTI_SELECT;
+  }
+
   public boolean typing() {
     return visible && (searchFocus || nameFocus);
   }
@@ -140,6 +155,7 @@ public final class BuildWorkspace {
     searchFocus = false;
     nameFocus = false;
     cancel();
+    if (value == Tool.MULTI_SELECT) host.beginSelection();
   }
 
   public void reloadSprites() {
@@ -163,6 +179,8 @@ public final class BuildWorkspace {
     panning = false;
     preview = List.of();
     painted.clear();
+    selection.clear();
+    movingSelection = false;
     invalid = "";
     validated = false;
   }
@@ -277,7 +295,14 @@ public final class BuildWorkspace {
     shapes.setProjectionMatrix(matrix);
     buttons.clear();
     cards.clear();
-    button(left + 12, top - 35, width - 62, 30, t("title"), () -> {}, false);
+    button(
+        left + 12,
+        top - 35,
+        width - 62,
+        30,
+        t("multi_select"),
+        () -> selectTool(Tool.MULTI_SELECT),
+        tool == Tool.MULTI_SELECT);
     button(sw - 42, top - 35, 30, 30, "X", this::toggle, false);
     float y = top - 72;
     button(
@@ -388,6 +413,7 @@ public final class BuildWorkspace {
     y -= 31;
     int index = 0;
     for (Tool value : Tool.values()) {
+      if (value == Tool.MULTI_SELECT) continue;
       int col = index % 4, row = index / 4;
       button(
           left + 12 + col * (quarter + 4),
@@ -585,11 +611,17 @@ public final class BuildWorkspace {
       text(batch, b.label, b.box.x + 6, b.box.y + b.box.height - 6, b.box.width - 12, Color.WHITE);
     if (dropdown.isEmpty()) {
       String name =
-          template != null
-              ? I18n.resolve(template.name()) + "  " + template.width() + " x " + template.height()
-              : selected != null
-                  ? selected.name() + "  " + selected.width() + " x " + selected.height()
-                  : t("choose");
+          tool == Tool.MULTI_SELECT
+              ? t("selected_count") + ": " + selection.size()
+              : template != null
+                  ? I18n.resolve(template.name())
+                      + "  "
+                      + template.width()
+                      + " x "
+                      + template.height()
+                  : selected != null
+                      ? selected.name() + "  " + selected.width() + " x " + selected.height()
+                      : t("choose");
       text(batch, name, left + 12, gridBottom + 10, width - 24, new Color(.65f, .85f, .9f, 1));
     }
     if (dropdown.isEmpty()) {
@@ -601,7 +633,13 @@ public final class BuildWorkspace {
         }
     }
     if (dropdown.isEmpty())
-      text(batch, t("hint"), left + 12, 31, width - 24, new Color(.64f, .7f, .77f, 1));
+      text(
+          batch,
+          t(tool == Tool.MULTI_SELECT ? "selection_hint" : "hint"),
+          left + 12,
+          31,
+          width - 24,
+          new Color(.64f, .7f, .77f, 1));
     font.getData().setScale(oldX, oldY);
     font.setColor(Color.WHITE);
     batch.end();
@@ -732,6 +770,20 @@ public final class BuildWorkspace {
       return true;
     }
     if (button != Input.Buttons.LEFT || tool == Tool.SELECT) return false;
+    if (tool == Tool.MULTI_SELECT) {
+      var p = tile(x, y);
+      startX = endX = p.x();
+      startY = endY = p.y();
+      additiveSelection =
+          Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+              || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+      var hit = selection.contains(p) ? p : selectionHit(x, y);
+      movingSelection = !additiveSelection && hit != null && selection.contains(hit);
+      if (!movingSelection && !additiveSelection) selection.clear();
+      dragging = true;
+      invalid = "";
+      return true;
+    }
     beginGesture(x, y);
     return true;
   }
@@ -815,6 +867,10 @@ public final class BuildWorkspace {
       painted.addAll(BuildGeometry.line(endX, endY, p.x(), p.y(), spacing, false));
     endX = p.x();
     endY = p.y();
+    if (tool == Tool.MULTI_SELECT) {
+      finishSelection(x, y);
+      return true;
+    }
     if (tool == Tool.CAPTURE) {
       updatePreview();
       if (invalid.isEmpty()) capture();
@@ -824,6 +880,103 @@ public final class BuildWorkspace {
     updatePreview();
     place();
     return true;
+  }
+
+  private BuildGeometry.Point selectionHit(int x, int y) {
+    var p = tile(x, y);
+    if (p.x() >= 0
+        && p.y() >= 0
+        && p.x() < host.map().getWidth()
+        && p.y() < host.map().getHeight()) {
+      String decor = host.map().getDecorSpriteName(p.x(), p.y());
+      if (decor != null && !decor.isBlank()) return p;
+    }
+    return host.decorAt(x, y);
+  }
+
+  private void finishSelection(int x, int y) {
+    updatePreview();
+    if (!invalid.isEmpty()) {
+      host.status(invalid);
+      movingSelection = false;
+      return;
+    }
+    if (movingSelection) {
+      int dx = endX - startX, dy = endY - startY;
+      var edit = BuildEdits.moveDecor(host.map(), host.collisions(), selection, dx, dy);
+      if (!edit.changes().isEmpty()) {
+        host.commit(t("move_selection"), edit);
+        var moved =
+            selection.stream().map(p -> new BuildGeometry.Point(p.x() + dx, p.y() + dy)).toList();
+        selection.clear();
+        selection.addAll(moved);
+      }
+    } else {
+      var found = new LinkedHashSet<BuildGeometry.Point>();
+      if (startX == endX && startY == endY) {
+        var hit = selectionHit(x, y);
+        if (hit != null) found.add(hit);
+      } else {
+        for (int ty = Math.max(0, Math.min(startY, endY));
+            ty <= Math.min(host.map().getHeight() - 1, Math.max(startY, endY));
+            ty++)
+          for (int tx = Math.max(0, Math.min(startX, endX));
+              tx <= Math.min(host.map().getWidth() - 1, Math.max(startX, endX));
+              tx++) {
+            String decor = host.map().getDecorSpriteName(tx, ty);
+            if (decor != null && !decor.isBlank()) found.add(new BuildGeometry.Point(tx, ty));
+          }
+      }
+      if ((long) selection.size() + found.stream().filter(p -> !selection.contains(p)).count()
+          > MapStamp.MAX_CELLS) {
+        host.status(t("too_large"));
+        return;
+      }
+      // Shift-click toggles an object; Shift-box adds the enclosed anchors.
+      if (additiveSelection && startX == endX && startY == endY)
+        for (var p : found) {
+          if (!selection.remove(p)) selection.add(p);
+        }
+      else selection.addAll(found);
+    }
+    movingSelection = false;
+    host.status(t("selected_count") + ": " + selection.size());
+  }
+
+  private void renderSelection(SpriteBatch batch, ShapeRenderer shapes, Matrix4 projection) {
+    int dx = dragging && movingSelection ? endX - startX : 0;
+    int dy = dragging && movingSelection ? endY - startY : 0;
+    Color color =
+        invalid.isEmpty() ? new Color(.2f, .85f, .75f, .65f) : new Color(1, .25f, .25f, .7f);
+    shapes.setProjectionMatrix(projection);
+    shapes.begin(ShapeRenderer.ShapeType.Line);
+    shapes.setColor(color);
+    for (var p : selection) shapes.rect((p.x() + dx) * 32, (p.y() + dy) * 16, 32, 16);
+    if (dragging && !movingSelection)
+      shapes.rect(
+          Math.min(startX, endX) * 32,
+          Math.min(startY, endY) * 16,
+          (Math.abs(endX - startX) + 1) * 32,
+          (Math.abs(endY - startY) + 1) * 16);
+    shapes.end();
+    batch.setProjectionMatrix(projection);
+    batch.begin();
+    batch.setColor(color);
+    for (var p : selection) {
+      var t = MapStamp.Tile.read(host.map(), host.collisions(), p.x(), p.y());
+      if (t.decor() != null)
+        host.preview(
+            batch,
+            t.decor(),
+            (p.x() + dx) * 32,
+            (p.y() + dy) * 16,
+            t.scaleX(),
+            t.scaleY(),
+            t.offsetX(),
+            t.offsetY());
+    }
+    batch.setColor(Color.WHITE);
+    batch.end();
   }
 
   public boolean scrolled(float amount) {
@@ -891,6 +1044,10 @@ public final class BuildWorkspace {
       host.save();
       return true;
     }
+    if (tool == Tool.MULTI_SELECT) {
+      // Keep legacy single-object delete/copy/nudge shortcuts out of group selection mode.
+      return key != Input.Keys.B;
+    }
     if (!ctrl && key == Input.Keys.R) {
       cycleVariant(1);
       return true;
@@ -911,6 +1068,15 @@ public final class BuildWorkspace {
     invalid = "";
     validated = true;
     try {
+      if (tool == Tool.MULTI_SELECT) {
+        preview = List.of();
+        if (movingSelection)
+          BuildEdits.moveDecor(
+              host.map(), host.collisions(), selection, endX - startX, endY - startY);
+        else if ((long) (Math.abs(endX - startX) + 1) * (Math.abs(endY - startY) + 1)
+            > MapStamp.MAX_CELLS) throw new IllegalArgumentException("editor.build.too_large");
+        return;
+      }
       if (tool == Tool.CAPTURE) {
         if (Math.min(startX, endX) < 0
             || Math.min(startY, endY) < 0
@@ -1009,6 +1175,10 @@ public final class BuildWorkspace {
 
   public void renderPreview(SpriteBatch batch, ShapeRenderer shapes, Matrix4 projection) {
     if (!visible) return;
+    if (tool == Tool.MULTI_SELECT) {
+      renderSelection(batch, shapes, projection);
+      return;
+    }
     int mx = Gdx.input.getX(), my = Gdx.input.getY();
     if (!dragging && tool != Tool.SELECT && !overPanel(mx, my) && my >= 48) {
       var p = tile(mx, my);
