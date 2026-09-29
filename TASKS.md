@@ -133,4 +133,4 @@ and was not backfilled with IDs — only the passes covered by
 `CHANGELOG.md` are. Everything from T4C-0010 onward is tracked live, as the
 work happens.
 | T4C-0099 | Avalon sanctuary, Wilds hunting grounds and staged quest dialogue | Content/Systems | Done | `d18b1772` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-sanctuary-and-wilds-t4c-0099) |
-| T4C-0100 | Expand world and separate Avalon from legacy interiors | Content/Systems | Done | — | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-separated-from-the-great-library-t4c-0100) |
+| T4C-0100 | Expand world and separate Avalon from legacy interiors | Content/Systems | Done | `c39fd433` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-separated-from-the-great-library-t4c-0100) |
