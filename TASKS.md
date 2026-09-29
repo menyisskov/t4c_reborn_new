@@ -146,4 +146,4 @@ work happens.
 | T4C-0105 | Avalon islands and mainland landmarks | Content/Map | Done | `acfc4a87` | [2026-09-29](CHANGELOG.md#2026-09-29--avalon-islands-and-landmarks-t4c-0105) |
 
 | T4C-0106 | Hollow Dawn Avalon campaign and Threnody Reach (levels 200-400) | Content/Map | Done | `cfc7bda7` | [2026-09-29](CHANGELOG.md#2026-09-29--the-hollow-dawn-campaign-t4c-0106) |
-| T4C-0107 | Witness Isles story routes, hunting grounds and equipment | Content/Systems | Done | pending | [2026-09-29](CHANGELOG.md#2026-09-29--witness-isles-story-and-hunting-t4c-0107) |
+| T4C-0107 | Witness Isles story routes, hunting grounds and equipment | Content/Systems | Done | `ef2db40a` | [2026-09-29](CHANGELOG.md#2026-09-29--witness-isles-story-and-hunting-t4c-0107) |
