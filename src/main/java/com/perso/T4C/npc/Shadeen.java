@@ -167,6 +167,13 @@ public final class Shadeen extends ScriptedNpc {
       public void onDeath(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
         c.shoutKey("npc.shadeen.death");
+
+        if (c.flag("__FLAG_SHADEEN_DROPPED_SCROLL") == 0) {
+
+          c.giveItem("scroll_of_evil_deed");
+
+          c.flag("__FLAG_SHADEEN_DROPPED_SCROLL", 1);
+        }
       }
     };
   }

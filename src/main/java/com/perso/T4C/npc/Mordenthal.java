@@ -249,6 +249,28 @@ public final class Mordenthal extends ScriptedNpc {
           return true;
         }
 
+        if (k.contains("KEY") && k.contains("OGRIMAR")) {
+
+          if (c.hasItem("key_of_ogrimar")) c.sayKey("npc.mordenthal.key.already");
+          else if (c.hasItem("skull_of_ogrimar")
+              && c.hasItem("blood_of_ogrimar")
+              && c.hasItem("bones_of_ogrimar")) {
+
+            c.takeItem("skull_of_ogrimar");
+
+            c.takeItem("blood_of_ogrimar");
+
+            c.takeItem("bones_of_ogrimar");
+
+            c.giveItem("key_of_ogrimar");
+
+            c.sayKey("npc.mordenthal.key.ok");
+
+          } else c.sayKey("npc.mordenthal.key.need");
+
+          return true;
+        }
+
         return StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
       }
 

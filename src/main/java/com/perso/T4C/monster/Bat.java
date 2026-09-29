@@ -65,7 +65,8 @@ public final class Bat extends DataMonster {
         5,
         java.util.List.of(
             new MonsterDef.LootDrop("Torch", 0.05f),
-            new MonsterDef.LootDrop("Light healing potion", 0.02f)),
+            new MonsterDef.LootDrop("Light healing potion", 0.02f),
+            new MonsterDef.LootDrop("pouch_of_willow_bark", 0.05f)),
         false,
         0.0f,
         12,

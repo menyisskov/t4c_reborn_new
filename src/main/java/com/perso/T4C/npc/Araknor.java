@@ -140,6 +140,13 @@ public final class Araknor extends ScriptedNpc {
           return true;
         }
 
+        if (text != null && text.toUpperCase(java.util.Locale.ROOT).contains("SCROLL")) {
+
+          c.openShop(java.util.List.of("necromantic_scroll"));
+
+          return true;
+        }
+
         return false;
       }
     };

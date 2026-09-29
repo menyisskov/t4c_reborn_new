@@ -109,6 +109,8 @@ final class DeadBrotherBehavior implements NpcBehavior {
 
         c.teleport(595, 300, 2);
 
+        c.summon("MOBMORDRED", 596, 300, 2);
+
       } else c.sayKey("npc.brother12.lost_keys");
 
     } else c.sayKey("npc.brother12.no");

@@ -139,14 +139,49 @@ public final class Moonrock extends ScriptedNpc {
   @Override
   protected NpcBehavior javaBehavior() {
 
-    return new TrainingAndFleeBehavior(
-        true,
-        List.of(
-            new LearnScreen.TrainingOffer("heal_light", 9, 897, true),
-            new LearnScreen.TrainingOffer("cure_poison", 6, 1825, true),
-            new LearnScreen.TrainingOffer("protection", 7, 3712, true),
-            new LearnScreen.TrainingOffer("heal_serious", 14, 8177, true)),
-        "npc.markam.attacked.");
+    NpcBehavior training =
+        new TrainingAndFleeBehavior(
+            true,
+            List.of(
+                new LearnScreen.TrainingOffer("heal_light", 9, 897, true),
+                new LearnScreen.TrainingOffer("cure_poison", 6, 1825, true),
+                new LearnScreen.TrainingOffer("protection", 7, 3712, true),
+                new LearnScreen.TrainingOffer("heal_serious", 14, 8177, true)),
+            "npc.markam.attacked.");
+
+    return new NpcBehavior() {
+
+      @Override
+      public void onAttacked(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
+
+        training.onAttacked(c);
+      }
+
+      @Override
+      public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
+
+        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        if (k.contains("PEARL") && k.contains("WISDOM")) {
+
+          if (c.flag("__FLAG_MOONROCK_GAVE_PEARLS") == 1) c.sayKey("npc.moonrock.pearl.already");
+          else {
+
+            c.giveItem("pearl_of_wisdom");
+
+            c.giveItem("pearl_of_wisdom");
+
+            c.flag("__FLAG_MOONROCK_GAVE_PEARLS", 1);
+
+            c.sayKey("npc.moonrock.pearl.give");
+          }
+
+          return true;
+        }
+
+        return training.onKeyword(c, text);
+      }
+    };
   }
 
   public Moonrock(NpcContext context) throws GameException {

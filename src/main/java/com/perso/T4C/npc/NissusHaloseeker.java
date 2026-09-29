@@ -214,6 +214,21 @@ public final class NissusHaloseeker extends ScriptedNpc {
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 
+        if (k.contains("FANG") && k.contains("RESOLVE")) {
+
+          if (c.flag("__FLAG_NISSUS_GAVE_FANG") == 1) c.sayKey("npc.nissus.fang.already");
+          else {
+
+            c.giveItem("fang_of_true_resolve");
+
+            c.flag("__FLAG_NISSUS_GAVE_FANG", 1);
+
+            c.sayKey("npc.nissus.fang.give");
+          }
+
+          return true;
+        }
+
         if (k.contains("SOUL") && k.contains("ARTHERK")) {
 
           if (c.hasItem("key_of_artherk")) c.sayKey("npc.nissus.key");

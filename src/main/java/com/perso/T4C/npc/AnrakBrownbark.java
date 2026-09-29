@@ -144,7 +144,7 @@ public final class AnrakBrownbark extends ScriptedNpc {
             || !text.toUpperCase(java.util.Locale.ROOT).contains("DRUM")
             || !text.toUpperCase(java.util.Locale.ROOT).contains("FATE")) return false;
 
-        int quest = c.flag("QUEST_FLAG_WILL_OF_ARTHERK_QUEST");
+        int quest = c.flag("__QUEST_FLAG_WILL_OF_ARTHERK_QUEST");
 
         if (quest >= 16) c.sayKey("npc.anrak.drums.done");
         else if (quest == 15) {
@@ -201,15 +201,15 @@ public final class AnrakBrownbark extends ScriptedNpc {
 
         c.giveItem("drum_of_fate");
 
-        int count = c.flag("FLAG_COUNTER_DRUM_OF_FATE") + 1;
+        int count = c.flag("__FLAG_COUNTER_DRUM_OF_FATE") + 1;
 
-        c.flag("FLAG_COUNTER_DRUM_OF_FATE", count);
+        c.flag("__FLAG_COUNTER_DRUM_OF_FATE", count);
 
         c.sayKey("npc.anrak.drums.complete");
 
         if (count == 2) {
 
-          c.flag("QUEST_FLAG_WILL_OF_ARTHERK_QUEST", 16);
+          c.flag("__QUEST_FLAG_WILL_OF_ARTHERK_QUEST", 16);
 
           c.summon("MOBGEHENNAREAVER", c.npcTileX() + 1, c.npcTileY() + 1, 0);
         }

@@ -22,7 +22,7 @@ public final class EmberfangHillsBounty {
         "${quest.emberfang_hills_bounty.completion}",
         "${quest.emberfang_hills_bounty.completed}",
         null,
-        "ignaroks_emberfang_claw",
+        "item.ignaroks_emberfang_claw",
         1,
         "cinderreach_hills",
         null,

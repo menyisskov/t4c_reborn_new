@@ -192,6 +192,19 @@ public final class ElysanaBlackrose extends ScriptedNpc {
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 
+        if (k.contains("POISON") && k.contains("APPLE")) {
+
+          if (!c.hasItem("apple")) c.sayKey("npc.elysana.poisonapple.need");
+          else {
+
+            c.sayKey("npc.elysana.poisonapple.offer");
+
+            c.askYesNo("poisonapple");
+          }
+
+          return true;
+        }
+
         if (k.equals("INGREDIENT")) {
 
           if (c.hasItem("pouch_of_woody_nightshade")
@@ -232,6 +245,21 @@ public final class ElysanaBlackrose extends ScriptedNpc {
         if (!yes) {
 
           c.sayKey("npc.elysana.no");
+
+          return true;
+        }
+
+        if ("poisonapple".equals(state)) {
+
+          if (c.hasItem("apple")) {
+
+            c.takeItem("apple");
+
+            c.giveItem("poison_apple");
+
+            c.sayKey("npc.elysana.poisonapple.done");
+
+          } else c.sayKey("npc.elysana.poisonapple.need");
 
           return true;
         }

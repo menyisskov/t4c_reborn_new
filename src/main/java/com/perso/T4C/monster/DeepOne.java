@@ -87,7 +87,8 @@ public final class DeepOne extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("Light healing potion", 0.02f),
             new MonsterDef.LootDrop("Potion of fury", 0.05f),
-            new MonsterDef.LootDrop("barnacled_gauntlets", 0.03f)),
+            new MonsterDef.LootDrop("barnacled_gauntlets", 0.03f),
+            new MonsterDef.LootDrop("note_deepone", 0.05f)),
         false,
         0.0f,
         47,

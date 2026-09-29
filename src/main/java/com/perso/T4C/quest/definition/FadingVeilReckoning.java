@@ -26,7 +26,7 @@ public final class FadingVeilReckoning {
         "${quest.fading_veil_reckoning.completion}",
         "${quest.fading_veil_reckoning.completed}",
         null,
-        "ysoldes_veiled_circlet",
+        "item.ysoldes_veiled_circlet",
         1,
         "fading_veil",
         null,

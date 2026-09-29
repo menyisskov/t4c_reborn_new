@@ -27,7 +27,7 @@ public final class AvalonWildsVigil {
         "${quest.avalon_wilds_vigil.completion}",
         "${quest.avalon_wilds_vigil.completed}",
         null,
-        "caradocs_sundered_blade",
+        "item.caradocs_sundered_blade",
         1,
         "avalon_wilds",
         null,

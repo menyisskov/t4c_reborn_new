@@ -333,10 +333,17 @@ table.data-table tbody tr:hover { background: var(--panel-hover); }
 table.data-table tbody tr { cursor: pointer; }
 table.data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .table-wrap { overflow-x: auto; border-radius: var(--radius); }
+table.data-table tbody tr.expanded { background: var(--panel-hover); }
+table.data-table tbody tr.detail-row { cursor: default; }
+table.data-table tbody tr.detail-row:hover { background: none; }
+table.data-table tbody tr.detail-row td { padding: 0; border-bottom: 1px solid var(--border); }
+.inline-detail { padding: 18px 20px; background: var(--bg, transparent); }
+.inline-detail .panel:last-child { margin-bottom: 0; }
 
 /* ------------------------------------------------------------------ detail */
 
 .detail-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.monster-portrait { width: 96px; height: 96px; object-fit: contain; image-rendering: pixelated; background: var(--panel-hover); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px; flex-shrink: 0; }
 .detail-head h1 { margin: 0 0 8px; font-size: 26px; }
 .detail-head .tags { display: flex; gap: 6px; flex-wrap: wrap; }
 

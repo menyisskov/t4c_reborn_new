@@ -129,6 +129,29 @@ that now guards against it.
   walkthroughs were corrected while four zone summaries kept the same "that boss is optional"
   claim, and the review caught it. When a fact lives in two places, check both. Now guarded by
   the zone-summary/forced-boss cross-check in the `technical-writer` skill.
+- When wiring a missing item grant (a "quest checks for X but nothing gives X" fix), a free
+  no-cost grant was added for the Key of Artherk instead of reading that same NPC's own existing
+  dialogue text first — which already spelled out the real recipe (Will + Heart + Soul of
+  Artherk, parallel to the Key of Ogrimar's Skull + Blood + Bones, both already-sourced items).
+  Before inventing a grant condition for an item that already has flavor text describing how
+  it's obtained, grep `lang.json` for that item's name - the requirement is very often already
+  written down, just not yet wired into code.
+- Two JSON items shipped with `appearanceInventory: "64kInvNecklace 4"` — a plausible-looking
+  name one increment past the real range (`1`-`3`), so nothing caught it until a player saw a
+  blank inventory icon. The `item-creator` skill already documents how to verify a sprite name
+  against the packed bin before using it; this is what happens when that step is skipped for a
+  name that merely *looks* consistent with ones seen elsewhere. Verify, don't pattern-match.
+- 11 quests (`passage_to_avalon` and 10 others) passed their `requiredItemKey` as the bare item
+  key (e.g. `"tideworn_avalon_chart"`) instead of the normalized form inventory entries actually
+  use (`"item.tideworn_avalon_chart"`). `QuestService.hasRequiredItem`/the progress dialog check
+  it with a raw `Collections.frequency()` against the player's inventory list, which never
+  normalizes either side — so the quest silently never registered the item, no matter how many
+  the player carried. `ItemRegistry.findByKey` is prefix-tolerant so this was invisible in
+  isolation; only a real inventory-list comparison catches it. Now guarded by
+  `QuestServiceItemObjectiveTest.everyRealQuestsRequiredItemKeyIsAlreadyNormalized`, which sweeps
+  every real `QuestDef` and asserts `requiredItemKey` is already normalized. When writing a new
+  item-turn-in quest, use the normalized `"item.<key>"` form (see any existing quest that grants
+  the same item for the exact string), not the JSON file's bare `key` field.
 
 ## Other project docs worth knowing about
 

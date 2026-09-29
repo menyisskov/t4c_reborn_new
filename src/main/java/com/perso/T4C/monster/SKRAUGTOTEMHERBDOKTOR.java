@@ -16,8 +16,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 1019,
+    y = 519,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 1099,
     y = 446,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 1100,
+    y = 447,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -30,8 +44,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 1180,
+    y = 484,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 1952,
     y = 1376,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 1953,
+    y = 1377,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -44,8 +72,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2430,
+    y = 1520,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2450,
     y = 1534,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2451,
+    y = 1535,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -58,8 +100,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2507,
+    y = 1427,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2511,
     y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2512,
+    y = 648,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -72,42 +128,14 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2511,
+    x = 2512,
     y = 649,
     z = 2,
     stationary = false,
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2512,
-    y = 645,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2512,
-    y = 646,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2512,
-    y = 647,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2512,
-    y = 648,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2512,
+    x = 2511,
     y = 649,
     z = 2,
     stationary = false,
@@ -122,7 +150,98 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2512,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2513,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2512,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2513,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2512,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2513,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2512,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2513,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2512,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2513,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2512,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2513,
     y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2512,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2513,
+    y = 652,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -135,8 +254,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 1414,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2513,
     y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 646,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -149,8 +282,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2513,
     y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 648,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -163,8 +310,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2513,
     y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 650,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -177,63 +338,14 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2513,
+    x = 2514,
     y = 651,
     z = 2,
     stationary = false,
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2514,
-    y = 644,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2514,
-    y = 645,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2514,
-    y = 646,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2514,
-    y = 647,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2514,
-    y = 648,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2514,
-    y = 649,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2514,
-    y = 650,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2514,
+    x = 2513,
     y = 651,
     z = 2,
     stationary = false,
@@ -247,7 +359,7 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2515,
+    x = 2514,
     y = 644,
     z = 2,
     stationary = false,
@@ -261,7 +373,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2515,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
     y = 646,
     z = 2,
     stationary = false,
@@ -275,7 +401,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2515,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
     y = 648,
     z = 2,
     stationary = false,
@@ -289,7 +429,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2515,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
     y = 650,
     z = 2,
     stationary = false,
@@ -303,6 +457,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2514,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2515,
     y = 652,
     z = 2,
@@ -310,7 +471,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2516,
+    x = 2514,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
     y = 644,
     z = 2,
     stationary = false,
@@ -324,7 +499,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2516,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
     y = 646,
     z = 2,
     stationary = false,
@@ -338,7 +527,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2516,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
     y = 648,
     z = 2,
     stationary = false,
@@ -352,6 +555,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2516,
     y = 650,
     z = 2,
@@ -359,7 +569,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2516,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
     y = 651,
     z = 2,
     stationary = false,
@@ -373,7 +597,35 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2515,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
+    y = 644,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2517,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
     y = 645,
     z = 2,
     stationary = false,
@@ -387,7 +639,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2517,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
     y = 647,
     z = 2,
     stationary = false,
@@ -401,7 +667,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2517,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
     y = 649,
     z = 2,
     stationary = false,
@@ -415,6 +695,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2517,
     y = 651,
     z = 2,
@@ -422,7 +709,35 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
-    x = 2518,
+    x = 2516,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2516,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
     y = 645,
     z = 2,
     stationary = false,
@@ -436,7 +751,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2518,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
     y = 647,
     z = 2,
     stationary = false,
@@ -450,7 +779,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2518,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
     y = 649,
     z = 2,
     stationary = false,
@@ -464,6 +807,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2518,
     y = 651,
     z = 2,
@@ -471,7 +821,49 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2517,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2518,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2518,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2519,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2518,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2519,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2518,
     y = 647,
     z = 2,
     stationary = false,
@@ -485,8 +877,99 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2518,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2519,
     y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2518,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2519,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2518,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2519,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2518,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2519,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2519,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2520,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2519,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2520,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2519,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2520,
+    y = 650,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -499,8 +982,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2677,
+    y = 446,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 2876,
     y = 447,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 2877,
+    y = 448,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -513,8 +1010,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 805,
+    y = 484,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 828,
     y = 464,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 829,
+    y = 465,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -527,6 +1038,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 922,
+    y = 559,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 978,
     y = 490,
     z = 0,
@@ -534,8 +1052,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 979,
+    y = 491,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
     x = 992,
     y = 625,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGTOTEMHERBDOKTOR",
+    x = 993,
+    y = 626,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -569,7 +1101,10 @@ public final class SKRAUGTOTEMHERBDOKTOR extends DataMonster {
         SOUND_HIT,
         MonsterGoldCurve.goldMin(150),
         MonsterGoldCurve.goldMax(150),
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("red_spellbook", 0.24f),
+            new MonsterDef.LootDrop("moon_tug_scalp", 0.3f),
+            new MonsterDef.LootDrop("raw_crystal", 0.3f)),
         false,
         0.0f,
         90,

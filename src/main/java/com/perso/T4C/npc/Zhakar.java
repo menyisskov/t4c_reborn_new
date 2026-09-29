@@ -207,6 +207,33 @@ public final class Zhakar extends ScriptedNpc {
 
         if (roll <= 2) c.shoutKey("npc.zhakar.attacked." + roll);
       }
+
+      @Override
+      public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
+
+        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        if (k.contains("SPELLBOOK")) {
+
+          if (c.flag("__FLAG_FOLLOWER_OF_OGRIMAR") != 1) c.sayKey("npc.zhakar.spellbook.no");
+          else if (c.flag("__FLAG_ZHAKAR_GAVE_SPELLBOOKS") == 1)
+            c.sayKey("npc.zhakar.spellbook.already");
+          else {
+
+            c.giveItem("arcane_spellbook");
+
+            c.giveItem("arcane_spellbook");
+
+            c.flag("__FLAG_ZHAKAR_GAVE_SPELLBOOKS", 1);
+
+            c.sayKey("npc.zhakar.spellbook.give");
+          }
+
+          return true;
+        }
+
+        return com.perso.T4C.npc.behavior.StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
+      }
     };
   }
 

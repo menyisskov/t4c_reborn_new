@@ -46,7 +46,8 @@ public final class DerangedOrderly extends NamedEventMonster {
         0,
         java.util.List.of(
             new MonsterDef.LootDrop("C5 Permit", 0.05f),
-            new MonsterDef.LootDrop("J3 Permit", 0.5f)),
+            new MonsterDef.LootDrop("J3 Permit", 0.5f),
+            new MonsterDef.LootDrop("c1_permit", 0.05f)),
         false,
         0.0f,
         0,

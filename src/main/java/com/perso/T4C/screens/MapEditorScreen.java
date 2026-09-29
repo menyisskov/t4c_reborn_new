@@ -32,6 +32,7 @@ import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.content.SpawnJavaExporter;
 import com.perso.T4C.content.SpellJavaExporter;
+import com.perso.T4C.editor.MapDraftService;
 import com.perso.T4C.editor.ui.EditorButton;
 import com.perso.T4C.editor.ui.EditorContextMenu;
 import com.perso.T4C.editor.ui.EditorDialog;
@@ -10945,6 +10946,16 @@ public class MapEditorScreen implements Screen {
     return teleportEditorZ;
   }
 
+  private boolean isRegisteredMap() {
+    String current = normalizeMapPath(currentMapPath);
+    for (MapDefinition def : MapDefinition.values()) {
+      if (Objects.equals(current, normalizeMapPath(def.getMapPath()))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private void loadTeleports() {
     teleports.clear();
     selectedTeleport = null;
@@ -13160,7 +13171,7 @@ public class MapEditorScreen implements Screen {
 
   private void buildEditorMenus() {
     MenuTitle file = new MenuTitle("File");
-    file.items.add(new MenuItem("New Map", this::createNewMap));
+    file.items.add(new MenuItem("New Map Draft...", this::createNewMap));
     file.items.add(
         new MenuItem(
             "Save",
@@ -17720,22 +17731,50 @@ public class MapEditorScreen implements Screen {
   }
 
   private void createNewMap() {
-    File current = new File(currentMapPath);
-    if (!current.exists()) {
+    if (currentMapPath == null || !new File(currentMapPath).isFile()) {
       showEditorMessage("Error: Map file not found");
       return;
     }
-    File mapsDir = current.getParentFile();
-    String newName = "NewMap_" + System.currentTimeMillis() + ".mapbin";
-    File newMap = new File(mapsDir, newName);
+    Gdx.input.getTextInput(
+        new Input.TextInputListener() {
+          @Override
+          public void input(String name) {
+            Gdx.app.postRunnable(() -> createNamedMap(name));
+          }
+
+          @Override
+          public void canceled() {}
+        },
+        "New map draft name",
+        "",
+        "Letters, digits, underscores, hyphens");
+    openMenu = null;
+  }
+
+  private void createNamedMap(String name) {
     try {
-      Files.copy(current.toPath(), newMap.toPath());
-      availableMaps.add(normalizeMapPath(newMap.getPath()));
-      selectMapByIndex(availableMaps.size() - 1);
-      showEditorMessage("New map created: " + getMapDisplayName(newName));
-    } catch (IOException e) {
-      log.error("Failed to create new map", e);
-      showEditorMessage("Error: Failed to create new map");
+      saveAllState();
+      java.nio.file.Path draft =
+          MapDraftService.duplicate(
+              new File(currentMapPath).toPath(), new File(Paths.MAPS_DIR).toPath(), name);
+      String draftPath =
+          normalizeMapPath(
+              Paths.MAPS_DIR
+                  + "/"
+                  + new File(Paths.MAPS_DIR)
+                      .toPath()
+                      .toAbsolutePath()
+                      .normalize()
+                      .relativize(draft)
+                      .toString());
+      loadAvailableMaps();
+      buildEditorMenus();
+      int index = availableMaps.indexOf(draftPath);
+      startMapSwitchLoading(draftPath, index);
+      showEditorMessage("Created map draft: " + getMapDisplayName(draftPath));
+    } catch (IOException | IllegalArgumentException e) {
+      log.warn("Failed to create map draft", e);
+      showEditorMessage("New map: " + e.getMessage());
     }
   }
 
@@ -18151,9 +18190,15 @@ public class MapEditorScreen implements Screen {
   private void loadMonsterSpawns() {
     monsterSpawns.clear();
     try {
-      int z = getCurrentMapZ();
-      for (SpawnDefinition entry : SpawnRegistry.monsters()) {
-        if (entry.z() == z) {
+      if (isRegisteredMap()) {
+        int z = getCurrentMapZ();
+        for (SpawnDefinition entry : SpawnRegistry.monsters()) {
+          if (entry.z() == z) {
+            monsterSpawns.add(fromSpawnDefinition(entry));
+          }
+        }
+      } else {
+        for (SpawnDefinition entry : readDraftSpawns(false)) {
           monsterSpawns.add(fromSpawnDefinition(entry));
         }
       }
@@ -18165,7 +18210,11 @@ public class MapEditorScreen implements Screen {
 
   private void saveMonsterSpawns() {
     try {
-      writeGlobalSpawns(false, monsterSpawns);
+      if (isRegisteredMap()) {
+        writeGlobalSpawns(false, monsterSpawns);
+      } else {
+        writeDraftSpawns(false, monsterSpawns);
+      }
       monstersDirty = false;
       showEditorMessage("Monster spawns saved");
     } catch (Exception e) {
@@ -18206,9 +18255,15 @@ public class MapEditorScreen implements Screen {
   private void loadNpcSpawns() {
     npcSpawns.clear();
     try {
-      int z = getCurrentMapZ();
-      for (SpawnDefinition entry : SpawnRegistry.npcs()) {
-        if (entry.z() == z) {
+      if (isRegisteredMap()) {
+        int z = getCurrentMapZ();
+        for (SpawnDefinition entry : SpawnRegistry.npcs()) {
+          if (entry.z() == z) {
+            npcSpawns.add(fromSpawnDefinition(entry));
+          }
+        }
+      } else {
+        for (SpawnDefinition entry : readDraftSpawns(true)) {
           npcSpawns.add(fromSpawnDefinition(entry));
         }
       }
@@ -18220,7 +18275,11 @@ public class MapEditorScreen implements Screen {
 
   private void saveNpcSpawns() {
     try {
-      writeGlobalSpawns(true, npcSpawns);
+      if (isRegisteredMap()) {
+        writeGlobalSpawns(true, npcSpawns);
+      } else {
+        writeDraftSpawns(true, npcSpawns);
+      }
       npcsDirty = false;
       showEditorMessage("NPC spawns saved");
     } catch (Exception e) {
@@ -18249,6 +18308,38 @@ public class MapEditorScreen implements Screen {
     }
     merged.addAll(toSpawnDefinitions(currentMapSpawns, z));
     SpawnJavaExporter.export(merged, npc);
+  }
+
+  private List<SpawnDefinition> readDraftSpawns(boolean npc) throws IOException {
+    File file = new File(getMapSidecarPath(npc ? ".npcs.json" : ".monsters.json"));
+    if (!file.isFile()) {
+      return List.of();
+    }
+    try (FileReader reader = new FileReader(file, java.nio.charset.StandardCharsets.UTF_8)) {
+      Type type = new TypeToken<List<SpawnDefinition>>() {}.getType();
+      List<SpawnDefinition> definitions = new Gson().fromJson(reader, type);
+      return definitions == null ? List.of() : definitions.stream().filter(Objects::nonNull).toList();
+    }
+  }
+
+  private void writeDraftSpawns(boolean npc, List<MonsterSpawnEntry> spawns) throws IOException {
+    File file = new File(getMapSidecarPath(npc ? ".npcs.json" : ".monsters.json"));
+    java.nio.file.Path output = file.toPath();
+    java.nio.file.Path temporary = output.resolveSibling(file.getName() + ".tmp");
+    List<SpawnDefinition> definitions = toSpawnDefinitions(spawns, -1);
+    Files.writeString(
+        temporary,
+        new GsonBuilder().setPrettyPrinting().create().toJson(definitions),
+        java.nio.charset.StandardCharsets.UTF_8);
+    try {
+      Files.move(
+          temporary,
+          output,
+          java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+          java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+    } catch (IOException atomicFail) {
+      Files.move(temporary, output, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+    }
   }
 
   private MonsterSpawnEntry fromSpawnDefinition(SpawnDefinition entry) {

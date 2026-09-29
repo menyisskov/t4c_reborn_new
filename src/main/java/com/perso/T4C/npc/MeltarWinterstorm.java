@@ -145,6 +145,30 @@ public final class MeltarWinterstorm extends ScriptedNpc {
                             ? "npc.meltar.f600"
                             : f <= 800 ? "npc.meltar.f800" : "npc.meltar.fhigh");
       }
+
+      @Override
+      public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
+
+        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        if (k.contains("CROWN") && k.contains("CORRUPTION")) {
+
+          if (c.flag("__FLAG_FOLLOWER_OF_OGRIMAR") != 1) c.sayKey("npc.meltar.crown.no");
+          else if (c.flag("__FLAG_MELTAR_GAVE_CROWN") == 1) c.sayKey("npc.meltar.crown.already");
+          else {
+
+            c.giveItem("crown_of_corruption");
+
+            c.flag("__FLAG_MELTAR_GAVE_CROWN", 1);
+
+            c.sayKey("npc.meltar.crown.give");
+          }
+
+          return true;
+        }
+
+        return com.perso.T4C.npc.behavior.StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
+      }
     };
   }
 

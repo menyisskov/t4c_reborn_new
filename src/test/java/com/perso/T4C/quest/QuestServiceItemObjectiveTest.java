@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.helper.XpCurve;
+import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.json.ItemJsonLoader;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +146,31 @@ class QuestServiceItemObjectiveTest {
     assertTrue(
         QuestService.hasUnlockedZone(player, realQuest.getUnlockZoneId()),
         "a previously-completed quest must still grant its zone unlock, not just a fresh one");
+  }
+
+  @Test
+  void everyRealQuestsRequiredItemKeyIsAlreadyNormalized() {
+    // A quest's item objective is checked with a raw Collections.frequency() lookup against the
+    // player's inventory (see QuestService.hasRequiredItem), which never normalizes either side.
+    // Inventory entries are always stored normalized (e.g. "item.foo"), so a requiredItemKey
+    // missing that same "item." prefix silently never matches - the quest shows 0/N forever no
+    // matter how many the player is carrying. This happened to passage_to_avalon and ten other
+    // quests at once (T4C-0095): every one had the bare item key instead of the normalized form.
+    ItemJsonLoader.loadAndRegister("assets/items");
+    for (QuestDef quest : QuestRegistry.load()) {
+      String key = quest.getRequiredItemKey();
+      if (key == null || key.isBlank()) continue;
+      assertEquals(
+          ItemDefinition.normalizeKey(key),
+          key,
+          "quest '"
+              + quest.getId()
+              + "' requiredItemKey must already be normalized (e.g. 'item.foo'), or its "
+              + "item-turn-in progress can never match the player's actual inventory entries");
+      assertNotNull(
+          ItemRegistry.findByKey(key),
+          "quest '" + quest.getId() + "' requiredItemKey '" + key + "' must resolve to a real item");
+    }
   }
 
   @Test

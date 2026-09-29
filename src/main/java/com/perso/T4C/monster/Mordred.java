@@ -34,7 +34,7 @@ public final class Mordred extends NamedEventMonster {
         SOUND_HIT,
         0,
         0,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("mordred_key", 1.0f)),
         false,
         0.0f,
         10,

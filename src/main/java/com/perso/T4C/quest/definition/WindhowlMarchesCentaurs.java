@@ -22,7 +22,7 @@ public final class WindhowlMarchesCentaurs {
         "${quest.windhowl_marches_centaurs.completion}",
         "${quest.windhowl_marches_centaurs.completed}",
         null,
-        "marchwardens_crown",
+        "item.marchwardens_crown",
         1,
         "windhowl_marches",
         null,

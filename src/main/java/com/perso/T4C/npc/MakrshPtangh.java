@@ -73,7 +73,7 @@ public final class MakrshPtangh extends ScriptedNpc {
 
       int now = (int) (System.currentTimeMillis() / 1000L);
 
-      if (now < deadTimer || now >= deadTimer + 24000) {
+      if (now < deadTimer || now >= deadTimer + 600) {
 
         c.globalFlag("MAKRSH_PTANGH_IS_FIGHTING", 2);
 

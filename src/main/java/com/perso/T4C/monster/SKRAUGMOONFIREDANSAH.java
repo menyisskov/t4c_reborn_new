@@ -15,6 +15,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 1823,
+    y = 1116,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 1912,
     y = 1005,
     z = 2,
@@ -22,8 +29,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 1913,
+    y = 1006,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2488,
     y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 649,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -36,8 +57,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2488,
     y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2489,
+    y = 651,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -50,8 +85,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2489,
     y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 648,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -64,8 +113,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2489,
     y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 650,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -78,8 +141,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2489,
     y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
+    y = 652,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -93,7 +170,21 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
     x = 2490,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2490,
     y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 647,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -106,8 +197,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2490,
     y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 649,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -120,8 +225,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2490,
     y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 651,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -134,63 +253,14 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
-    x = 2490,
+    x = 2491,
     y = 652,
     z = 2,
     stationary = false,
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
-    x = 2491,
-    y = 645,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMOONFIREDANSAH",
-    x = 2491,
-    y = 646,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMOONFIREDANSAH",
-    x = 2491,
-    y = 647,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMOONFIREDANSAH",
-    x = 2491,
-    y = 648,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMOONFIREDANSAH",
-    x = 2491,
-    y = 649,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMOONFIREDANSAH",
-    x = 2491,
-    y = 650,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMOONFIREDANSAH",
-    x = 2491,
-    y = 651,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMOONFIREDANSAH",
-    x = 2491,
+    x = 2490,
     y = 652,
     z = 2,
     stationary = false,
@@ -204,7 +274,7 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
-    x = 2492,
+    x = 2491,
     y = 645,
     z = 2,
     stationary = false,
@@ -218,7 +288,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2492,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
     y = 647,
     z = 2,
     stationary = false,
@@ -232,7 +316,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2492,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
     y = 649,
     z = 2,
     stationary = false,
@@ -246,7 +344,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2492,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
     y = 651,
     z = 2,
     stationary = false,
@@ -260,6 +372,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2491,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2492,
     y = 653,
     z = 2,
@@ -267,7 +386,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
-    x = 2493,
+    x = 2491,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 654,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
     y = 645,
     z = 2,
     stationary = false,
@@ -281,7 +414,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2493,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
     y = 647,
     z = 2,
     stationary = false,
@@ -295,7 +442,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2493,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
     y = 649,
     z = 2,
     stationary = false,
@@ -309,6 +470,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2493,
     y = 651,
     z = 2,
@@ -316,7 +484,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2493,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
     y = 652,
     z = 2,
     stationary = false,
@@ -330,7 +512,35 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2492,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 654,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 645,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2494,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
     y = 646,
     z = 2,
     stationary = false,
@@ -344,7 +554,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2494,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
     y = 648,
     z = 2,
     stationary = false,
@@ -358,7 +582,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2494,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
     y = 650,
     z = 2,
     stationary = false,
@@ -372,6 +610,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2494,
     y = 652,
     z = 2,
@@ -379,7 +624,35 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
-    x = 2495,
+    x = 2493,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2493,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 654,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
     y = 646,
     z = 2,
     stationary = false,
@@ -393,7 +666,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2495,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
     y = 648,
     z = 2,
     stationary = false,
@@ -407,7 +694,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2495,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
     y = 650,
     z = 2,
     stationary = false,
@@ -421,6 +722,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2495,
     y = 652,
     z = 2,
@@ -428,7 +736,49 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2494,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 646,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2496,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 647,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
     y = 648,
     z = 2,
     stationary = false,
@@ -442,8 +792,99 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 2496,
     y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 651,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2495,
+    y = 652,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 653,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 648,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2497,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 649,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2497,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2496,
+    y = 650,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 2497,
+    y = 651,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -456,8 +897,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 2575,
+    y = 497,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 509,
     y = 417,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 510,
+    y = 418,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -470,8 +925,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 597,
+    y = 147,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 738,
     y = 147,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 739,
+    y = 148,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -484,8 +953,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMOONFIREDANSAH",
+    x = 790,
+    y = 114,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
     x = 843,
     y = 149,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMOONFIREDANSAH",
+    x = 844,
+    y = 150,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -519,7 +1002,11 @@ public final class SKRAUGMOONFIREDANSAH extends DataMonster {
         SOUND_HIT,
         134,
         412,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("red_spellbook", 0.24f),
+            new MonsterDef.LootDrop("moon_tug_scalp", 0.3f),
+            new MonsterDef.LootDrop("raw_crystal", 0.3f),
+            new MonsterDef.LootDrop("bones_of_ogrimar", 0.1f)),
         false,
         0.0f,
         90,

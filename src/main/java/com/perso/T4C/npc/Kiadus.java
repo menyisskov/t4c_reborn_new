@@ -78,7 +78,8 @@ public final class Kiadus extends ScriptedNpc {
               "high_metal_flail",
               "bo",
               "rang_kwan",
-              "tetsubo");
+              "tetsubo",
+              "fake_blade_of_ruin");
 
       private boolean closed() {
 

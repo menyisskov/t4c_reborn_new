@@ -16,8 +16,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 1022,
+    y = 477,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 1042,
     y = 445,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 1043,
+    y = 446,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -30,8 +44,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 1151,
+    y = 464,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 1184,
     y = 457,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 1185,
+    y = 458,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -44,8 +72,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 1957,
+    y = 1433,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2511,
     y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2512,
+    y = 626,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -58,8 +100,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2512,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2511,
     y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2512,
+    y = 628,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -72,8 +128,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2513,
+    y = 624,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2512,
     y = 624,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2513,
+    y = 625,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -86,8 +156,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2513,
+    y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2512,
     y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2513,
+    y = 627,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -100,8 +184,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2513,
+    y = 628,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2512,
     y = 628,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2513,
+    y = 629,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -115,7 +213,21 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
     x = 2513,
+    y = 630,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2513,
     y = 623,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 624,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -128,8 +240,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2513,
     y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 626,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -142,8 +268,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2513,
     y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 628,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -156,63 +296,14 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
-    x = 2513,
+    x = 2514,
     y = 629,
     z = 2,
     stationary = false,
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
-    x = 2514,
-    y = 622,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMADLIMBMANGLOR",
-    x = 2514,
-    y = 623,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMADLIMBMANGLOR",
-    x = 2514,
-    y = 624,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMADLIMBMANGLOR",
-    x = 2514,
-    y = 625,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMADLIMBMANGLOR",
-    x = 2514,
-    y = 626,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMADLIMBMANGLOR",
-    x = 2514,
-    y = 627,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMADLIMBMANGLOR",
-    x = 2514,
-    y = 628,
-    z = 2,
-    stationary = false,
-    aggressive = true)
-@Spawn(
-    type = "SKRAUGMADLIMBMANGLOR",
-    x = 2514,
+    x = 2513,
     y = 629,
     z = 2,
     stationary = false,
@@ -226,7 +317,7 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
-    x = 2515,
+    x = 2514,
     y = 622,
     z = 2,
     stationary = false,
@@ -240,7 +331,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 623,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2515,
+    y = 624,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
     y = 624,
     z = 2,
     stationary = false,
@@ -254,7 +359,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2515,
+    y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
     y = 626,
     z = 2,
     stationary = false,
@@ -268,7 +387,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2515,
+    y = 628,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
     y = 628,
     z = 2,
     stationary = false,
@@ -282,6 +415,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2514,
+    y = 629,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2515,
     y = 630,
     z = 2,
@@ -289,7 +429,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
-    x = 2516,
+    x = 2514,
+    y = 630,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
+    y = 631,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
     y = 622,
     z = 2,
     stationary = false,
@@ -303,7 +457,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
+    y = 623,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2516,
+    y = 624,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
     y = 624,
     z = 2,
     stationary = false,
@@ -317,7 +485,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
+    y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2516,
+    y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
     y = 626,
     z = 2,
     stationary = false,
@@ -331,6 +513,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2516,
     y = 628,
     z = 2,
@@ -338,7 +527,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
+    y = 628,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2516,
+    y = 629,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
     y = 629,
     z = 2,
     stationary = false,
@@ -352,7 +555,35 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2515,
+    y = 630,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
+    y = 631,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
+    y = 622,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2517,
+    y = 623,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
     y = 623,
     z = 2,
     stationary = false,
@@ -366,7 +597,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
+    y = 624,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2517,
+    y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
     y = 625,
     z = 2,
     stationary = false,
@@ -380,7 +625,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
+    y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2517,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
     y = 627,
     z = 2,
     stationary = false,
@@ -394,6 +653,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
+    y = 628,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2517,
     y = 629,
     z = 2,
@@ -401,7 +667,35 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
-    x = 2518,
+    x = 2516,
+    y = 629,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
+    y = 630,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2516,
+    y = 630,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
+    y = 631,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
     y = 623,
     z = 2,
     stationary = false,
@@ -415,7 +709,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
+    y = 624,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2518,
+    y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
     y = 625,
     z = 2,
     stationary = false,
@@ -429,7 +737,21 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
+    y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2518,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
     y = 627,
     z = 2,
     stationary = false,
@@ -443,6 +765,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
+    y = 628,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2518,
     y = 629,
     z = 2,
@@ -450,7 +779,49 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2517,
+    y = 629,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2518,
+    y = 630,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2518,
+    y = 623,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2519,
+    y = 624,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2518,
+    y = 624,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2519,
+    y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2518,
     y = 625,
     z = 2,
     stationary = false,
@@ -464,8 +835,99 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2518,
+    y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2519,
     y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2518,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2519,
+    y = 628,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2518,
+    y = 628,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2519,
+    y = 629,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2518,
+    y = 629,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2519,
+    y = 630,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2519,
+    y = 625,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2520,
+    y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2519,
+    y = 626,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2520,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2519,
+    y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2520,
+    y = 628,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -478,8 +940,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2590,
+    y = 515,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2692,
     y = 409,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2693,
+    y = 410,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -492,8 +968,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2799,
+    y = 392,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 2808,
     y = 627,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 2809,
+    y = 628,
     z = 2,
     stationary = false,
     aggressive = true)
@@ -506,8 +996,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 2861,
+    y = 482,
+    z = 2,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 796,
     y = 466,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 797,
+    y = 467,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -520,8 +1024,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 861,
+    y = 411,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 860,
     y = 545,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 861,
+    y = 546,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -534,8 +1052,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 892,
+    y = 438,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 906,
     y = 585,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 907,
+    y = 586,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -548,6 +1080,13 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 914,
+    y = 414,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 943,
     y = 458,
     z = 0,
@@ -555,8 +1094,22 @@ import com.perso.T4C.spawn.Spawn;
     aggressive = true)
 @Spawn(
     type = "SKRAUGMADLIMBMANGLOR",
+    x = 944,
+    y = 459,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
     x = 997,
     y = 582,
+    z = 0,
+    stationary = false,
+    aggressive = true)
+@Spawn(
+    type = "SKRAUGMADLIMBMANGLOR",
+    x = 998,
+    y = 583,
     z = 0,
     stationary = false,
     aggressive = true)
@@ -590,7 +1143,9 @@ public final class SKRAUGMADLIMBMANGLOR extends DataMonster {
         SOUND_HIT,
         MonsterGoldCurve.goldMin(150),
         MonsterGoldCurve.goldMax(150),
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("moon_tug_scalp", 0.3f),
+            new MonsterDef.LootDrop("raw_crystal", 0.3f)),
         false,
         0.0f,
         89,

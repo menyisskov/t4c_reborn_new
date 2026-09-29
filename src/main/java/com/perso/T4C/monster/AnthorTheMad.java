@@ -36,7 +36,9 @@ public final class AnthorTheMad extends NamedEventMonster {
         SOUND_HIT,
         0,
         0,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("tome_of_arcane_knowledge", 0.1f),
+            new MonsterDef.LootDrop("book_of_feylor", 0.08f)),
         false,
         0.0f,
         115,

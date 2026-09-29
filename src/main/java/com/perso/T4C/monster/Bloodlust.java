@@ -7,7 +7,14 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
 import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.spawn.Spawn;
 
+// T4C-00XX: Bloodlust had no @Spawn at all - Bloodstone Ring/Essence of Bloodlust (both required
+// by Xanth's quests) had a loot entry but the monster carrying it never actually appeared
+// anywhere in the world. Placed adjacent to Xanth's own verified-walkable position since no
+// other placement reference exists for this monster.
+@Spawn(type = "Bloodlust", x = 691, y = 1610, z = 2, stationary = false, aggressive = true)
+@Spawn(type = "Bloodlust", x = 690, y = 1611, z = 2, stationary = false, aggressive = true)
 public final class Bloodlust extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Worm Attack.wav";
   public static final String SOUND_DEATH = "Worm Dying.wav";
@@ -56,7 +63,9 @@ public final class Bloodlust extends NamedEventMonster {
         SOUND_HIT,
         0,
         0,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("bloodstone_ring", 0.3f),
+            new MonsterDef.LootDrop("essence_of_bloodlust", 0.45f)),
         false,
         0.0f,
         10,

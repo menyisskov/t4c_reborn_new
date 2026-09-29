@@ -22,7 +22,7 @@ public final class AerieWyrmlingCull {
         "${quest.aerie_wyrmling_cull.completion}",
         "${quest.aerie_wyrmling_cull.completed}",
         null,
-        "aeries_drakeheart_signet",
+        "item.aeries_drakeheart_signet",
         1,
         "lesser_drakes_aerie",
         null,

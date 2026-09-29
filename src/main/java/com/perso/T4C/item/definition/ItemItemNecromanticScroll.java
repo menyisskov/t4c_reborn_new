@@ -15,7 +15,7 @@ public final class ItemItemNecromanticScroll {
         null,
         null,
         "64kInvMisc1 3",
-        0L,
+        10000L,
         0L,
         0.0d,
         0L,

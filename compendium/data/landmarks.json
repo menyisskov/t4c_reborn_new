@@ -6,15 +6,9 @@
     "worldZ": 0
   },
   {
-    "name": "Silversky",
-    "x": 1495,
-    "y": 2470,
-    "worldZ": 0
-  },
-  {
     "name": "Windhowl",
-    "x": 1812,
-    "y": 1293,
+    "x": 1723,
+    "y": 1237,
     "worldZ": 0
   },
   {
@@ -30,18 +24,6 @@
     "worldZ": 0
   },
   {
-    "name": "Makrsh Ptangh",
-    "x": 2265,
-    "y": 295,
-    "worldZ": 1
-  },
-  {
-    "name": "Stonecrest",
-    "x": 144,
-    "y": 737,
-    "worldZ": 0
-  },
-  {
     "name": "Tarantula Pond",
     "x": 773,
     "y": 1831,
@@ -54,9 +36,33 @@
     "worldZ": 0
   },
   {
+    "name": "Silversky",
+    "x": 1495,
+    "y": 2470,
+    "worldZ": 0
+  },
+  {
+    "name": "Makrsh Ptangh",
+    "x": 2265,
+    "y": 295,
+    "worldZ": 1
+  },
+  {
+    "name": "Stonecrest",
+    "x": 144,
+    "y": 737,
+    "worldZ": 0
+  },
+  {
+    "name": "Oracle access",
+    "x": 2660,
+    "y": 2610,
+    "worldZ": 2
+  },
+  {
     "name": "The Oracle",
-    "x": 2968,
-    "y": 2141,
+    "x": 2724,
+    "y": 2192,
     "worldZ": 2
   },
   {
@@ -149,12 +155,6 @@
     "worldZ": 0
   },
   {
-    "name": "Araknor",
-    "x": 2981,
-    "y": 1035,
-    "worldZ": 0
-  },
-  {
     "name": "Lance Silversmith",
     "x": 2580,
     "y": 690,
@@ -170,6 +170,12 @@
     "name": "Elysana Blackrose",
     "x": 1561,
     "y": 2471,
+    "worldZ": 0
+  },
+  {
+    "name": "Araknor",
+    "x": 2981,
+    "y": 1035,
     "worldZ": 0
   },
   {

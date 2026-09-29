@@ -46,15 +46,18 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Dumps every new-since-fork monster/spell/npc/quest/item into flat JSON files under
- * {@code compendium/data/} for the standalone local compendium website (T4C-0012). Reuses the
- * game's own registries (MonsterRegistry, SpellDefinitions, QuestDefinitions,
- * NpcFactoryRegistry) instead of re-parsing source, and resolves every i18n key through
- * {@link I18n} so the site never has to embed lang.json itself.
+ * Dumps every new-since-fork spell/npc/quest/item, plus every monster (new and original-game
+ * alike), into flat JSON files under {@code compendium/data/} for the standalone local compendium
+ * website (T4C-0012). Reuses the game's own registries (MonsterRegistry, SpellDefinitions,
+ * QuestDefinitions, NpcFactoryRegistry) instead of re-parsing source, and resolves every i18n key
+ * through {@link I18n} so the site never has to embed lang.json itself.
  *
- * <p>The "is this new content" allow-lists below were compiled by cross-referencing
- * CHANGELOG.md and docs/content-ideas/*.md against the actual class names in the repo (see
- * T4C-0012's changelog entry for the pass this was built in).
+ * <p>Monsters are the one category exported unfiltered (see exportMonsters()'s "legacy" origin):
+ * a player looking up an original-game monster's drops or gold needs a page too, not just the
+ * ones this fork added. Spells/NPCs/quests/items keep the "new content only" scope below - the
+ * "is this new content" allow-lists were compiled by cross-referencing CHANGELOG.md and
+ * docs/content-ideas/*.md against the actual class names in the repo (see T4C-0012's changelog
+ * entry for the pass this was built in).
  */
 public final class CompendiumExporter {
   private CompendiumExporter() {}
@@ -214,8 +217,12 @@ public final class CompendiumExporter {
     Set<String> itemKeys = new java.util.HashSet<>();
     for (Map<String, Object> item : items) itemKeys.add((String) item.get("key"));
     List<Map<String, Object>> lootSources = exportLootSources(itemKeys);
+    // Written ahead of this exporter by MonsterSpriteExporter (run it first, like
+    // MinimapExporter for maps.json below) - read back in and merged per monster rather than
+    // this tool touching image bytes itself.
+    Map<String, String> monsterSprites = loadMonsterSprites(outDir);
 
-    writeJson(outDir.resolve("monsters.json"), exportMonsters());
+    writeJson(outDir.resolve("monsters.json"), exportMonsters(monsterSprites));
     writeJson(outDir.resolve("spells.json"), exportSpells());
     writeJson(outDir.resolve("quests.json"), exportQuests());
     writeJson(outDir.resolve("npcs.json"), exportNpcs());
@@ -231,7 +238,7 @@ public final class CompendiumExporter {
     // or fetch()-over-file:// CORS workaround required.
     Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     Map<String, Object> bundle = new LinkedHashMap<>();
-    bundle.put("monsters", exportMonsters());
+    bundle.put("monsters", exportMonsters(monsterSprites));
     bundle.put("spells", exportSpells());
     bundle.put("quests", exportQuests());
     bundle.put("npcs", exportNpcs());
@@ -260,25 +267,28 @@ public final class CompendiumExporter {
 
   // ---------------------------------------------------------------- monsters
 
-  private static List<Map<String, Object>> exportMonsters() {
+  private static List<Map<String, Object>> exportMonsters(Map<String, String> spriteByMonster) {
     List<MonsterDef> defs =
         MonsterRegistry.load().stream()
             .sorted(Comparator.comparing(MonsterDef::getLevel).thenComparing(MonsterDef::getName))
             .toList();
     List<Map<String, Object>> out = new ArrayList<>();
     for (MonsterDef def : defs) {
+      // T4C-00XX: every monster gets a page now, not just this fork's new/activated/JSON-authored
+      // ones - a player looking up an original-game monster's drops/gold couldn't find it before.
+      // "legacy" marks the ones that predate the fork and were never touched by it.
       String origin =
           ForkContent.NEW_MONSTER_NAMES.contains(def.getName())
               ? "new"
-              : ForkContent.ACTIVATED_MONSTER_NAMES.contains(def.getName()) ? "activated" : null;
-      boolean jsonAuthored = JSON_MONSTER_NAMES.contains(def.getName());
-      if (origin == null && !jsonAuthored) continue;
-      if (origin == null) origin = "new";
+              : ForkContent.ACTIVATED_MONSTER_NAMES.contains(def.getName())
+                  ? "activated"
+                  : JSON_MONSTER_NAMES.contains(def.getName()) ? "new" : "legacy";
 
       Map<String, Object> m = new LinkedHashMap<>();
       m.put("name", def.getName());
       m.put("displayName", resolveOrFallback(def.getDisplayName(), def.getName()));
       m.put("origin", origin);
+      m.put("sprite", spriteByMonster.get(def.getName()));
       m.put("level", def.getLevel());
       m.put("health", def.getHealth());
       m.put("mana", def.getMana());
@@ -720,12 +730,11 @@ public final class CompendiumExporter {
     return out;
   }
 
-  /** Every real monster-loot source for a tracked item, scanning the FULL monster registry
-   * (not just the new/activated ones exportMonsters() documents as their own pages) - the same
-   * blind spot exportShops() had: an item's drop source can be a pre-existing/legacy monster
-   * (e.g. Deep One / Deep One Boss) that doesn't get its own compendium page. monsterLink() in
-   * the site already falls back to plain text for a name with no page, so this is safe to
-   * surface even for monsters this compendium doesn't otherwise document. */
+  /** Every real monster-loot source for a tracked item, scanning the FULL monster registry.
+   * exportMonsters() now documents every monster (including legacy ones) with its own page, but
+   * this stays a separate full scan regardless, so an item's drop sources never depend on that
+   * list staying in sync. monsterLink() in the site falls back to plain text for a name with no
+   * page, so this stays safe even if the two ever diverge. */
   private static List<Map<String, Object>> exportLootSources(Set<String> trackedItemKeys) {
     List<Map<String, Object>> out = new ArrayList<>();
     for (MonsterDef def : MonsterRegistry.load()) {
@@ -892,6 +901,17 @@ public final class CompendiumExporter {
   }
 
   // ------------------------------------------------------------------- write
+
+  private static Map<String, String> loadMonsterSprites(Path outDir) throws IOException {
+    Path path = outDir.resolve("monsterSprites.json");
+    if (!Files.exists(path)) return Map.of();
+    try (FileReader reader = new FileReader(path.toFile(), StandardCharsets.UTF_8)) {
+      java.lang.reflect.Type type =
+          new com.google.gson.reflect.TypeToken<Map<String, String>>() {}.getType();
+      Map<String, String> m = new Gson().fromJson(reader, type);
+      return m == null ? Map.of() : m;
+    }
+  }
 
   private static Object readHandAuthored(Path path) throws IOException {
     if (!Files.exists(path)) return List.of();

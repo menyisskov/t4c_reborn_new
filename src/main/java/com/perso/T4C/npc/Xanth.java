@@ -98,6 +98,21 @@ public final class Xanth extends ScriptedNpc {
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 
+        if (k.contains("ELVENBANE")) {
+
+          if (c.flag("__FLAG_XANTH_FORGED_ELVENBANE") == 1) c.sayKey("npc.xanth.elvenbane.already");
+          else {
+
+            c.giveItem("elvenbane");
+
+            c.flag("__FLAG_XANTH_FORGED_ELVENBANE", 1);
+
+            c.sayKey("npc.xanth.elvenbane.give");
+          }
+
+          return true;
+        }
+
         if (k.contains("FOUL POTION")) {
 
           if (c.flag("__FLAG_FOLLOWER_OF_OGRIMAR") == 1

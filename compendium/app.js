@@ -631,7 +631,7 @@
     var monsters = (z.monsters || []).map(function (n) {
       var m = byKey.monster[n];
       return (
-        '<div class="loot-row"><span>' + monsterLink(n) + (m ? " · level " + m.level : "") + "</span>" +
+        '<div class="loot-row"><span>' + monsterLink(n, m && m.displayName) + (m ? " · level " + m.level : "") + "</span>" +
         (m ? originTag(m.origin) : "") + "</div>"
       );
     }).join("") || '<p class="lead">Nothing hostile that we have a page for.</p>';
@@ -824,7 +824,7 @@
       lead: "Everything that will try to kill you, sorted by how hard it hits back. Search by name, or sort by level to find something your size.",
       rows: MONSTERS,
       columns: [
-        { key: "displayName", label: "Name", render: function (m) { return monsterLink(m.name); } },
+        { key: "displayName", label: "Name", render: function (m) { return monsterLink(m.name, m.displayName); } },
         { key: "level", label: "Level", numeric: true },
         { key: "health", label: "HP", numeric: true },
         { key: "hitDamageMax", label: "Hardest hit", numeric: true },
@@ -835,12 +835,20 @@
       searchFields: ["displayName", "name"],
       filters: [],
       defaultSort: "level",
+      detailRender: renderMonsterDetail,
     });
   });
 
   route("monsters/:name", function (params) {
     var m = byKey.monster[params.name];
     if (!m) return notFound("Monster");
+    return breadcrumb([["Monsters", "monsters"], [m.displayName, null]]) + renderMonsterDetail(m);
+  });
+
+  // Shared between the standalone monster page (above) and the inline expand row on the
+  // "Monster roster" table (see listPage's detailRender) - the same content either way, just
+  // with or without a breadcrumb wrapped around it.
+  function renderMonsterDetail(m) {
     var zone = monsterZone[m.name];
 
     var statsHtml = Object.keys(m.stats).map(function (k) { return statBar(k.toUpperCase(), m.stats[k], 1000); }).join("");
@@ -878,8 +886,9 @@
       : '<p class="lead">Does not fight back.</p>';
 
     return (
-      breadcrumb([["Monsters", "monsters"], [m.displayName, null]]) +
-      '<div class="detail-head"><div><p class="eyebrow">Monster · Level ' + m.level +
+      '<div class="detail-head">' +
+      (m.sprite ? '<img class="monster-portrait" src="data/' + esc(m.sprite) + '" alt="" width="96" height="96">' : "") +
+      '<div><p class="eyebrow">Monster · Level ' + m.level +
       (zone ? " · " + esc((byKey.zone[zone] || {}).name || "") : "") + '</p>' +
       "<h1>" + esc(m.displayName) + "</h1>" +
       '<div class="tags">' + originTag(m.origin) +
@@ -903,7 +912,7 @@
       panel("How it fights", attackHtml) +
       panel("What it drops", lootHtml)
     );
-  });
+  }
 
   function kv(label, value) {
     return '<div class="kv"><span>' + esc(label) + "</span><strong>" + value + "</strong></div>";
@@ -943,12 +952,19 @@
         { label: "Rarity", field: "__rarity", options: ["godsforged", "legendary", "set", "rare", "common"], computed: function (it) { return rarityOf(it).tier; } },
       ],
       defaultSort: "name",
+      detailRender: renderItemDetail,
     });
   });
 
   route("items/:key", function (params) {
     var it = byKey.item[params.key];
     if (!it) return notFound("Item");
+    return breadcrumb([["Items", "items"], [it.name, null]]) + renderItemDetail(it);
+  });
+
+  // Shared between the standalone item page (above) and the inline expand row on the "Items"
+  // table (see listPage's detailRender).
+  function renderItemDetail(it) {
     var r = rarityOf(it);
     var zone = itemZone[it.key];
 
@@ -981,7 +997,6 @@
       : '<p class="lead">Nothing sells this and nothing is known to drop it — it most likely comes from talking to the right person.</p>';
 
     return (
-      breadcrumb([["Items", "items"], [it.name, null]]) +
       '<div class="detail-head"><div><p class="eyebrow">' + esc(it.bodyPart || "Item") + (it.isBow ? " · Bow" : "") + '</p>' +
       "<h1>" + esc(it.name) + "</h1>" +
       '<div class="tags">' + rarityTag(it) +
@@ -1005,7 +1020,7 @@
       panel("What it grants you", boostHtml) +
       panel("Where to get it", sourcesHtml)
     );
-  });
+  }
 
   // ----------------------------------------------------------------- spells
 
@@ -1031,12 +1046,19 @@
         { label: "New only", field: "isNew", options: [true] },
       ],
       defaultSort: "minLevel",
+      detailRender: renderSpellDetail,
     });
   });
 
   route("spells/:key", function (params) {
     var s = byKey.spell[params.key];
     if (!s) return notFound("Spell");
+    return breadcrumb([["Spells", "spells"], [s.name, null]]) + renderSpellDetail(s);
+  });
+
+  // Shared between the standalone spell page (above) and the inline expand row on the "Spells"
+  // table (see listPage's detailRender).
+  function renderSpellDetail(s) {
     var zone = spellZone[s.key];
     var el = elementName(s.element);
 
@@ -1057,7 +1079,6 @@
     var landChance = esc(String(s.successRate).replace(/^(\d+)$/, "$1%"));
 
     return (
-      breadcrumb([["Spells", "spells"], [s.name, null]]) +
       '<div class="detail-head"><div><p class="eyebrow">' + (el ? el.charAt(0).toUpperCase() + el.slice(1) + " spell" : "Spell") + '</p>' +
       "<h1>" + esc(s.name) + "</h1>" +
       '<div class="tags">' + (s.isNew ? '<span class="tag origin-new">New</span>' : "") +
@@ -1091,7 +1112,7 @@
       ) : "") +
       effectsHtml
     );
-  });
+  }
 
   // ------------------------------------------------------------------- npcs
 
@@ -1110,12 +1131,19 @@
       searchFields: ["displayName", "id"],
       filters: [],
       defaultSort: "displayName",
+      detailRender: renderNpcDetail,
     });
   });
 
   route("npcs/:id", function (params) {
     var n = byKey.npc[params.id];
     if (!n) return notFound("NPC");
+    return breadcrumb([["NPCs", "npcs"], [n.displayName, null]]) + renderNpcDetail(n);
+  });
+
+  // Shared between the standalone NPC page (above) and the inline expand row on the "NPCs"
+  // table (see listPage's detailRender).
+  function renderNpcDetail(n) {
     var zones = npcZone[n.id] || [];
 
     var topicsHtml = (n.topics || []).map(function (t) {
@@ -1132,7 +1160,6 @@
     var whereHtml = whereToFind(n.id, zones[0]);
 
     return (
-      breadcrumb([["NPCs", "npcs"], [n.displayName, null]]) +
       '<div class="detail-head"><div><p class="eyebrow">NPC</p><h1>' + esc(n.displayName) + "</h1>" +
       '<div class="tags">' + originTag(n.origin) +
       zones.map(function (z) { return '<span class="tag plain">' + zoneLink(z) + "</span>"; }).join("") +
@@ -1152,7 +1179,7 @@
         kv("Accuracy", combat.attackSkill) + kv("Dodge", combat.dodge) +
         kv("Damage", esc(damageWording(combat.damageFormula))) + "</div>") : "")
     );
-  });
+  }
 
   // ----------------------------------------------------------------- quests
 
@@ -1237,7 +1264,7 @@
         "</div></div>" +
         '<div class="quest-step"><span class="num">2</span><div>' +
         (q.requiredKills > 0
-          ? "<strong>Kill " + q.requiredKills + " " + monsterLink(q.targetMonster) + "</strong>" +
+          ? "<strong>Kill " + q.requiredKills + " " + monsterLink(q.targetMonster, (byKey.monster[q.targetMonster] || {}).displayName) + "</strong>" +
             '<p class="lead">Only kills inside the area on the map below count, so work that ground.</p>'
           : "<strong>Gather what they asked for</strong>") +
         bringHtml +
@@ -1261,7 +1288,7 @@
       panel(
         q.requiredKills > 0 ? "Where to do it" : "Where to hand it in",
         '<div class="kv-grid">' +
-          (q.requiredKills > 0 ? kv("What to kill", monsterLink(q.targetMonster)) + kv("How many", q.requiredKills) : "") +
+          (q.requiredKills > 0 ? kv("What to kill", monsterLink(q.targetMonster, (byKey.monster[q.targetMonster] || {}).displayName)) + kv("How many", q.requiredKills) : "") +
           (bring.length ? kv("What to hand over", bring.join(", ")) : "") +
           (q.rewardItemKey ? kv("What you're given", itemLink(q.rewardItemKey)) : "") +
           (q.minLevel > 0 ? kv("Level needed to finish", q.minLevel) : "") +
@@ -1468,7 +1495,7 @@
     var arenaMobs = MONSTERS.filter(function (m) { return m.name.indexOf((META.colosseum || {}).monsterNamePrefix || "\0") === 0; });
     var colosseumHtml = META.colosseum
       ? panel(META.colosseum.name, '<p class="lead">' + esc(META.colosseum.summary) + "</p><div class=\"pill-row\">" +
-          arenaMobs.map(function (m) { return '<span class="pill">' + monsterLink(m.name) + " (lvl " + m.level + ")</span>"; }).join("") + "</div>")
+          arenaMobs.map(function (m) { return '<span class="pill">' + monsterLink(m.name, m.displayName) + " (lvl " + m.level + ")</span>"; }).join("") + "</div>")
       : "";
 
     return (
@@ -1646,12 +1673,49 @@
         );
       }).join("") || '<tr><td colspan="' + cfg.columns.length + '"><div class="empty-state">No matches.</div></td></tr>';
 
-      bodyEl.querySelectorAll("tr[data-target]").forEach(function (tr) {
-        tr.addEventListener("click", function () {
-          var base = cfg.title === "Monster roster" ? "monsters" : cfg.title === "Items" ? "items" : cfg.title === "Spells" ? "spells" : "npcs";
-          location.hash = "#/" + base + "/" + slug(tr.getAttribute("data-target"));
+      bodyEl.querySelectorAll("tr[data-target]").forEach(function (tr, idx) {
+        var row = rows[idx];
+        tr.addEventListener("click", function (e) {
+          // Tables with no detailRender (none today, but keep the door open for a future one)
+          // fall back to the old "click navigates to its own page" behavior.
+          if (!cfg.detailRender) {
+            var base = cfg.title === "Monster roster" ? "monsters" : cfg.title === "Items" ? "items" : cfg.title === "Spells" ? "spells" : "npcs";
+            location.hash = "#/" + base + "/" + slug(tr.getAttribute("data-target"));
+            return;
+          }
+          var anchor = e.target.closest("a");
+          // A link elsewhere in the row (e.g. the "Found in" zone) should still navigate there -
+          // only the row's own name link (always the first cell) triggers the inline expand.
+          if (anchor && (!tr.cells[0] || !tr.cells[0].contains(anchor))) return;
+          if (anchor) e.preventDefault();
+          toggleInlineDetail(tr, row);
         });
       });
+    }
+
+    // Expands/collapses a detail panel as an extra row directly beneath the clicked one, instead
+    // of navigating to that item/monster/spell/npc's own page - keeps the table (and the reader's
+    // place in it) on screen. Only one row is expanded at a time per table.
+    function toggleInlineDetail(tr, row) {
+      var next = tr.nextElementSibling;
+      if (next && next.classList.contains("detail-row")) {
+        next.remove();
+        tr.classList.remove("expanded");
+        return;
+      }
+      var openDetail = bodyEl.querySelector("tr.detail-row");
+      if (openDetail) openDetail.remove();
+      var openTr = bodyEl.querySelector("tr.expanded");
+      if (openTr) openTr.classList.remove("expanded");
+      var detailTr = document.createElement("tr");
+      detailTr.className = "detail-row";
+      var td = document.createElement("td");
+      td.colSpan = cfg.columns.length;
+      td.innerHTML = '<div class="inline-detail">' + cfg.detailRender(row) + "</div>";
+      detailTr.appendChild(td);
+      tr.parentNode.insertBefore(detailTr, tr.nextSibling);
+      tr.classList.add("expanded");
+      detailTr.scrollIntoView({ block: "nearest" });
     }
 
     searchEl.addEventListener("input", function () { st.search = searchEl.value; apply(); });

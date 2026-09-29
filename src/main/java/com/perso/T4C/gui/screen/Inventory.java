@@ -374,15 +374,46 @@ public class Inventory extends GuiScreenBase {
             .shrinkToFit());
   }
 
+  private int countOwned(String itemName) {
+    int count = 0;
+    for (String item : player.getInventory()) if (itemName.equals(item)) count++;
+    return count;
+  }
+
   private void dropSelectedItem() {
     if (player == null || selectedItemName == null) {
       SystemMessage.showShared(I18n.message("message.inventory_select_item_first"));
       return;
     }
-    if (player.dropInventoryItem(selectedInventoryIndex, selectedItemName)) {
-      selectedInventoryIndex = -1;
-      selectedItemName = null;
+    int owned = countOwned(selectedItemName);
+    if (owned <= 1) {
+      if (player.dropInventoryItem(selectedInventoryIndex, selectedItemName)) {
+        selectedInventoryIndex = -1;
+        selectedItemName = null;
+      }
+      return;
     }
+    GuiManager.open(
+        new ItemQuantityConfirmScreen(
+            "message.drop_confirm", selectedItemLabel(), owned, this::performDrop, this::reopen));
+  }
+
+  private void performDrop(int quantity) {
+    if (player != null && selectedItemName != null) {
+      String itemName = selectedItemName;
+      String label = selectedItemLabel();
+      int dropped = 0;
+      for (int i = 0; i < quantity; i++) {
+        if (!player.dropInventoryItem(selectedInventoryIndex, itemName)) break;
+        dropped++;
+      }
+      if (dropped > 0) {
+        SystemMessage.showShared(I18n.message("message.items_dropped", dropped, label));
+      }
+    }
+    selectedInventoryIndex = -1;
+    selectedItemName = null;
+    reopen();
   }
 
   private void junkSelectedItem() {
@@ -395,15 +426,31 @@ public class Inventory extends GuiScreenBase {
       SystemMessage.showShared(I18n.key("message.gem_of_destiny_undroppable"));
       return;
     }
-    GuiManager.open(new JunkConfirmScreen(selectedItemLabel(), this::performJunk, this::reopen));
+    GuiManager.open(
+        new ItemQuantityConfirmScreen(
+            "message.junk_confirm",
+            selectedItemLabel(),
+            countOwned(selectedItemName),
+            this::performJunk,
+            this::reopen));
   }
 
-  private void performJunk() {
+  private void performJunk(int quantity) {
     if (player != null && selectedItemName != null) {
-      InventoryService.Result removed =
-          InventoryService.remove(player, selectedInventoryIndex, selectedItemName);
-      if (removed.success()) {
-        SystemMessage.showShared(I18n.message("message.item_junked", selectedItemLabel()));
+      String itemName = selectedItemName;
+      String label = selectedItemLabel();
+      int junked = 0;
+      for (int i = 0; i < quantity; i++) {
+        InventoryService.Result removed =
+            InventoryService.remove(player, selectedInventoryIndex, itemName);
+        if (!removed.success()) break;
+        junked++;
+      }
+      if (junked > 0) {
+        SystemMessage.showShared(
+            junked == 1
+                ? I18n.message("message.item_junked", label)
+                : I18n.message("message.items_junked", junked, label));
         PlayerStateStore.save(player);
       }
     }

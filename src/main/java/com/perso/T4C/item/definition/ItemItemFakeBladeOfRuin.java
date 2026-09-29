@@ -15,7 +15,7 @@ public final class ItemItemFakeBladeOfRuin {
         null,
         null,
         "64kInvBattleSword",
-        0L,
+        25000L,
         0L,
         0.0d,
         0L,

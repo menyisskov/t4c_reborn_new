@@ -22,7 +22,7 @@ public final class SilverskyTideWarden {
         "${quest.silversky_tide_warden.completion}",
         "${quest.silversky_tide_warden.completed}",
         null,
-        "mordrenns_drowned_cowl",
+        "item.mordrenns_drowned_cowl",
         1,
         "sunken_chancel",
         null,

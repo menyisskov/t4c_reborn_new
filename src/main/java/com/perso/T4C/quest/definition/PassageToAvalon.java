@@ -28,7 +28,7 @@ public final class PassageToAvalon {
         "${quest.passage_to_avalon.completion}",
         "${quest.passage_to_avalon.completed}",
         null,
-        "tideworn_avalon_chart",
+        "item.tideworn_avalon_chart",
         1,
         "avalon_sanctuary",
         null,

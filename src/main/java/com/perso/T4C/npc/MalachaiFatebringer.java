@@ -148,7 +148,46 @@ public final class MalachaiFatebringer extends ScriptedNpc {
   @Override
   protected NpcBehavior javaBehavior() {
 
-    return StaticDialogueBehavior.INSTANCE;
+    return new NpcBehavior() {
+
+      @Override
+      public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
+
+        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        if (k.contains("HORSE") && k.contains("FRIENDSHIP")) {
+
+          if (c.itemCount("scroll_of_horse_friendship") >= 1) c.askYesNo("malachai_fate");
+          else c.sayKey("npc.malachaifatebringer.fate.need");
+
+          return true;
+        }
+
+        return StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
+      }
+
+      @Override
+      public boolean onYesNo(
+          com.perso.T4C.npc.behavior.NpcBehaviorContext c, String state, boolean yes) {
+
+        if (!"malachai_fate".equals(state)) return false;
+
+        if (yes && c.itemCount("scroll_of_horse_friendship") >= 1) {
+
+          c.takeItem("scroll_of_horse_friendship");
+
+          if (Math.random() < 0.25) {
+
+            c.giveItem(Math.random() < 0.5 ? "assassin_blade" : "robe_of_hell");
+
+            c.sayKey("npc.malachaifatebringer.fate.ok");
+
+          } else c.sayKey("npc.malachaifatebringer.fate.fail");
+        }
+
+        return true;
+      }
+    };
   }
 
   public MalachaiFatebringer(NpcContext context) throws GameException {

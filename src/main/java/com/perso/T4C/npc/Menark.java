@@ -99,6 +99,32 @@ public final class Menark extends ScriptedNpc {
         else if (c.flag("__QUEST_DAMIEN_SUBPLOT") == 2) c.sayKey("npc.menark.visitor");
         else c.sayKey("npc.menark.welcome");
       }
+
+      @Override
+      public boolean onKeyword(NpcBehaviorContext c, String text) {
+
+        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        if (k.contains("HOURGLASS") && k.contains("ESSENCE")) {
+
+          if (c.flag("__QUEST_FLAG_WILL_OF_ARTHERK_QUEST") < 14)
+            c.sayKey("npc.menark.hourglass.no");
+          else if (c.flag("__FLAG_MENARK_GAVE_HOURGLASS") == 1)
+            c.sayKey("npc.menark.hourglass.already");
+          else {
+
+            for (int i = 0; i < 4; i++) c.giveItem("hourglass_of_essence");
+
+            c.flag("__FLAG_MENARK_GAVE_HOURGLASS", 1);
+
+            c.sayKey("npc.menark.hourglass.give");
+          }
+
+          return true;
+        }
+
+        return false;
+      }
     };
   }
 

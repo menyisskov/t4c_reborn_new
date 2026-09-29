@@ -226,6 +226,36 @@ public final class BeltiganWhitesword extends ScriptedNpc {
 
         if (roll < 2) c.shoutKey("npc.beltiganwhitesword.attacked." + roll);
       }
+
+      @Override
+      public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
+
+        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        if (k.contains("KEY") && k.contains("ARTHERK")) {
+
+          if (c.hasItem("key_of_artherk")) c.sayKey("npc.beltiganwhitesword.key.already");
+          else if (c.hasItem("will_of_artherk")
+              && c.hasItem("heart_of_artherk")
+              && c.hasItem("soul_of_artherk")) {
+
+            c.takeItem("will_of_artherk");
+
+            c.takeItem("heart_of_artherk");
+
+            c.takeItem("soul_of_artherk");
+
+            c.giveItem("key_of_artherk");
+
+            c.sayKey("npc.beltiganwhitesword.key.give");
+
+          } else c.sayKey("npc.beltiganwhitesword.key.need");
+
+          return true;
+        }
+
+        return false;
+      }
     };
   }
 

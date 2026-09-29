@@ -667,8 +667,11 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 ## 4. Reference website (compendium)
 - Generated from the live game data by `tools/CompendiumExporter`. CI regenerates it on every
   push to `main`, and Vercel deploys `main`.
-- When adding a genuinely new spell, item, NPC, monster or quest class, add it to the
-  exporter's "new content" lists.
+- When adding a genuinely new spell, item, NPC or quest class, add it to the exporter's "new
+  content" lists. Monsters are the exception (T4C-0089): every monster is exported and gets its
+  own page, original-game creatures included, tagged with an `origin` of `new`/`activated`/
+  `legacy` rather than being filtered by an allow-list — a player looking up an original
+  monster's drops or gold needs a page too.
 - Show numbers the way the game really uses them. Publish computed values from the game's own
   helpers, not hand-typed copies. For example, the Seraph aura rolls 0–100 inclusive, so the
   Rebirths page shows (c + 1)/101, not c%.
@@ -713,8 +716,25 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 
   **Deferred (T4C-0062):** showing a picture of each NPC alongside the directions. NPCs are
   paper-doll composites of body-part sprites, so this needs a new headless exporter compositing
-  them out of the sprite bins — nothing on the site renders sprite art today. Agreed with the
-  owner to land as its own pass.
+  them out of the sprite bins. **Partially superseded by T4C-0089**, which added monster
+  portraits (`MonsterSpriteExporter`, single-sprite-sheet monsters only, no compositing needed)
+  — the same approach does not extend to NPCs' multi-layer paper-doll rendering, so this NPC
+  half of the gap is still open.
+
+- **Monster portraits (T4C-0089):** `MonsterSpriteExporter` writes one PNG per monster (its
+  walk-cycle frame 0, facing angle "000") straight from the packed sprite database
+  (`SpriteBinIO`, already PNG-encoded per entry), into `compendium/data/sprites/monsters/`, with
+  a `monsterSprites.json` sidecar `CompendiumExporter` merges in as each monster's `sprite`
+  field. Run it before `CompendiumExporter`, same ordering as `MinimapExporter` for zone maps.
+  Only covers monsters with a named walk-cycle sprite sheet; monsters drawn through the
+  appearance/item-layered puppet system (no `walkPattern` of their own) get no portrait — this
+  is most named creatures but not humanoid mobs wearing generic equipment layers.
+- **Inline row expansion (T4C-0089):** the Monsters/Items/Spells/NPCs tables expand a row's
+  detail panel directly beneath it on click (accordion, one row open at a time) instead of
+  navigating to that thing's own page. `listPage`'s `detailRender` config + `wireListPage`'s
+  `toggleInlineDetail` own this; the standalone `#/monsters/:name` etc. routes still exist for
+  direct links (search results, cross-references from other pages) and reuse the exact same
+  `renderXDetail()` function so the two views can't drift apart.
 
 ### 4a. Editorial rules for the site (T4C-0055)
 
@@ -813,6 +833,61 @@ should not consume it), that is a content change, not an editorial one, and need
   un-wired turn-in keyword on an otherwise-complete NPC, not a from-scratch build. A full canon
   reference (all 5 islands' quests, the NPC/monster/drop/trader charts) was captured from
   t4cbible.com during this pass; ask the owner or re-scrape if a future pass needs it again.
+- **Drop-source audit (T4C-0090).** Cross-referenced t4cbible.com/Items against every monster's
+  loot table, every shop, and every `giveItem`/`itemCount`/`takeItem` call in the Java source
+  (the accurate check - not the compendium's filtered exports). Of 195 items this fork's own
+  quest/NPC logic already checks for, 39 had **no source anywhere** - the same "unreachable
+  quest" failure mode as the spawn-placement gap above, just for items instead of monster
+  placement. 37 of the 39 are now fixed:
+  - 15 were a one-line loot-table addition to a monster that already exists and spawns (drop
+    chances are a judgment call, ~5-15% for a quest/crafting material, since no source data gave
+    an exact rate).
+  - Mordred's Key needed its giver monster actually summoned first - `Mordred.java`
+    (`MOBMORDRED`) existed but nothing called `c.summon(...)` for it. Now summoned when a
+    character opens the six-key door in `DeadBrotherBehavior`, and its loot entry was added.
+  - 8 (Arcane Spellbook, Crown of Corruption, Fang of True Resolve, Hourglass of Essence, Key of
+    Artherk, Pearl of Wisdom, Robe of Hell, Scroll of Evil Deed) needed a `javaBehavior()` NPC
+    that had the right dialogue scaffolding but no logic to actually hand the item over - matches
+    the "otherwise-complete NPC missing one wired keyword" pattern above exactly (see
+    `TrackerOoglaThraaglurh.java`'s `skull_of_evil` trade for the pattern copied: a keyword or
+    condition check, a `giveItem`/flag pair). Robe of Hell and a newly-added Assassin's Blade
+    both come from one new trade on `MalachaiFatebringer` (a Scroll of Horse Friendship for a
+    25% chance at either).
+  - 2 (Fake Blade of Ruin, Necromantic Scroll) were a missing shop listing (`Kiadus`/`Araknor`);
+    both items' own price fields were still `0` and needed setting too.
+  - A quest-flag **typo bug**, not a missing source: `AnrakBrownbark`'s drum-crafting stage read
+    and wrote `QUEST_FLAG_WILL_OF_ARTHERK_QUEST`/`FLAG_COUNTER_DRUM_OF_FATE` (no leading `__`),
+    a different flag than every other NPC in that questline uses. That stage could never trigger
+    regardless of progress, and was silently stranding Hourglass of Essence and Finely Crafted
+    Drum as pointless items to carry.
+  **Known gap, not yet done:** `letter_from_damien_to_xanth` sits inside a partially-wired
+  "Damien subplot" (`MonsignorDamien`/`Menark`/`Xanth`, flag `__QUEST_DAMIEN_SUBPLOT`) that this
+  pass could not fully reconstruct from the code alone - `MonsignorDamien` reads
+  `hasItem("letter_from_damien_to_xanth")` to advance the subplot but nothing grants that letter,
+  and it wasn't clear which NPC action should. Left open rather than guessed at.
+- **Availability buff for island-access and good/evil-path items (T4C-0090 follow-up, owner's
+  call).** The owner flagged these three quest categories specifically as painful: island
+  access, the good/evil alignment path, and Oracle access. Applied to the item/monster set from
+  the audit above that belongs to those categories (Red Spellbook, Blade of Heroism, Bloodstone
+  Ring, Essence of Bloodlust, Grail of Purity, Moon Tug Scalp, Raw Crystal, Sword of Might,
+  Diamond, Finely Crafted Drum):
+  - **Drop chance x3** on each of those specific `LootDrop` entries only - not the monster's
+    other loot.
+  - **Every `@Spawn` doubled**, each duplicate offset by exactly (+1, +1) from the original tile
+    it's copying. Deliberately small: a copy one tile off a position the original spawn already
+    proved walkable is very unlikely to land on water or a wall, unlike picking new coordinates
+    from scratch. Not proven safe the way `SpawnPlacementTest` proves new-fork spawns safe (that
+    test is scoped to `ForkContent`, and these are all legacy monsters) - an acceptable risk
+    given the alternative was checking ~2000 new tiles against `worldmap.colbin` by hand.
+  - **Oracle access has no item-drop bottleneck to fix** - it's gated by killing Makrsh P'Tangh
+    plus a rebirth-count requirement, not a drop. The real bottleneck there was a 24000-second
+    (~6.7 hour) global cooldown in `MakrshPtangh.java`'s `SpawnerBehavior.onPopup` before he
+    could be fought again, cut to 600 seconds (10 minutes) instead.
+  - **Found while implementing this: Bloodlust had zero `@Spawn` anywhere** - its Bloodstone
+    Ring/Essence of Bloodlust loot entries (added in the T4C-0090 audit above) could never
+    actually be reached no matter the drop chance, since the monster itself never appeared.
+    Given two spawns next to Xanth's own position (the only nearby placement with a verified
+    walkable NPC standing on it) - own judgment call, not owner-specified coordinates.
 - Every zone-unlock quest added by the T4C-0019 pass follows the same mechanical shape: kill N
   of a monster in one area, turn in one boss-drop item, unlock fast travel to a zone. That's a
   fine default for a minor zone gate, but it undersells a **major** new location - see below for
@@ -1021,6 +1096,34 @@ should not consume it), that is a content change, not an editorial one, and need
   nothing to add per-monster. Guarded by `EndgameUtilityLootTest`.
 
 ## 8. Interface and controls
+- **The Locations panel (Ctrl+L) must not show a place a character can't actually reach yet
+  (T4C-0091, owner's call).** `NamedLocation`/`NamedLocations` supports three independent gates,
+  all combined with AND when more than one is set: `unlockZoneId` (a fork zone's own unlock
+  quest), `minIslandAccess` (the original islands' `__QUEST_ISLAND_ACCESS` flag - 0 Arakas, 1
+  Raven's Dust confirmed reachable via `RenegadeOrcLeader`), and `requiresAnyItem` (carrying at
+  least one of a set of items - used for the Oracle entries, gated on the Key of Artherk/Ogrimar
+  per the canon walkthrough, not on a zone or island tier).
+  - **Never gate a location on a flag/value nothing in the codebase actually sets to that
+    threshold.** `Boreas`/`Yolak`'s own shop logic checks `__QUEST_ISLAND_ACCESS == 2` for a
+    Stonecrest scroll, but nothing anywhere sets that flag past 1 - so Stoneheim-tier locations
+    (Stonecrest, Araknor, Dionysus Silverstream, Grant Hornkeep, Filandrius, Makrsh Ptangh) stay
+    unconditional for now rather than being gated on 2, which would hide them from every
+    character permanently instead of progressively. Grep every setter of a flag before gating
+    anything new on a threshold of it, the same way `SpawnPlacementTest` protects new spawns -
+    the failure mode here is silent and looks identical to "working as designed" until someone
+    goes looking for why nobody has reached level 2.
+  - **Island membership per landmark/NPC was sourced from the canon walkthrough text**
+    (t4cbible.com), specifically the `"NPC (located at Island)"` phrasing, not from word-frequency
+    counts across the per-island quest pages - those pages reference NPCs from other islands
+    constantly (a Stoneheim quest chain sends the player back to `Lance Silversmith` in Arakas),
+    so raw mention counts are unreliable; the explicit "(located at X)" sentences are not.
+  - **Known gap:** the Oracle Realm's dungeon between its entrance (the Ivory Chest) and the
+    Oracle NPC himself - roughly twenty more chests and monster rooms across five named chambers
+    (Perseverance, Deception, Illusions, Swiftness, Despair), per the walkthrough - is not built
+    in this codebase at all. The Ivory Chest's coordinates (2660, 2610, world Z 2) were found by
+    the owner walking there in a live client session; there's no NPC or object there yet, hence
+    the "it's empty" the owner saw clicking it. Building that dungeon is its own large content
+    pass, not something to attempt inside a teleport-gating fix.
 - **Windows should look like the original game's windows.** The owner called the old storage
   screen "gruesome": text spilling outside the window, the same items listed twice, and art that
   didn't match what was drawn on it. Build screens from the original GUI art (`GUI_BackTrade`,

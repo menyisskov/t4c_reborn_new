@@ -187,8 +187,12 @@ public final class Yrian extends ScriptedNpc {
 
           if (keyword.equals("COMMANDER")) {
 
-            if (c.flag("ADDON_STORYLINE_PROGRESS") == 13)
-              c.flag("ADDON_STORYLINE_PROGRESS", 14);
+            if (c.flag("ADDON_STORYLINE_PROGRESS") == 13) {
+
+              c.flag("ADDON_STORYLINE_PROGRESS", 15);
+
+              c.giveItem("solinae_staff");
+            }
 
             return StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
           }

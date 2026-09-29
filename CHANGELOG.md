@@ -13,6 +13,109 @@ on, every content/feature pass adds its own entry here as part of the work
 
 ## [Unreleased]
 
+## 2026-09-28 — Fixed 11 quests stuck at 0/N on their item turn-in (T4C-0095)
+
+### Fixed
+- **Passage to Avalon and ten other quests never counted the item you turned in**, always
+  showing 0 of however many were needed no matter how many you were actually carrying: Silversky
+  Tide Warden, Windhowl Marches Centaurs, Hollow March Wights, Aerie Wyrmling Cull, Bastion
+  Warden Siege, Deep Ones Cave Purge, Drake's Lair Vigil, Avalon Wilds Vigil, Fading Veil
+  Reckoning, and Emberfang Hills Bounty. All eleven are now fixed and will recognize the item the
+  moment you have it.
+
+## 2026-09-28 — Windhowl teleport coordinate fix (T4C-0094)
+
+### Fixed
+- The Windhowl fast-travel location was landing you in the wrong spot; corrected its coordinates.
+
+## 2026-09-28 — Fixed blank quest item icons (T4C-0093)
+
+### Fixed
+- The Tideworn Avalon Chart and the Godsforged Torc of the First Pact showed up in your
+  inventory as a blank slot with only their name on hover — both were pointing at an icon
+  variant that doesn't exist. They now display properly.
+
+## 2026-09-28 — Inventory quantity picker and vendor selling fix (T4C-0092)
+
+### Added
+- **Dropping or junking a stack of the same item now lets you pick how many** instead of only
+  ever affecting one at a time — a quantity stepper appears whenever you own more than one.
+
+### Fixed
+- **Selling to a general vendor showed an empty list for every item, always.** Talking to any
+  vendor and asking to sell now correctly offers everything sellable in your inventory (at
+  half its value), including gear from recent content that could never be sold back before.
+
+## 2026-09-28 — Locations panel now respects island progression (T4C-0091)
+
+### Added
+- **The Key of Ogrimar can now actually be forged.** Bring the Skull, Blood, and Bones of
+  Ogrimar to Mordenthal and he'll craft it — the recipe existed only in his own words before,
+  with no way to complete it.
+- **The Key of Artherk now correctly asks for the Will, the Heart, and the Soul of Artherk**
+  before Beltigan Whitesword will forge it — matching what he's always said he needed. All
+  three had real sources already; only the final combine step was missing.
+- **Holding either the Key of Artherk or the Key of Ogrimar now reveals two new fast-travel
+  stops**: Oracle access (the entrance to the Oracle's realm) and The Oracle itself. Both NPCs
+  who hand over those keys now mention it when they do.
+
+### Fixed
+- **The Locations panel showed places a brand-new character has no way to have discovered yet** —
+  Silversky and the people who live there (Zhakar, Elysana Blackrose) now only appear once a
+  character has actually gained passage to Raven's Dust.
+- The Oracle's realm entrance was pointing at the wrong spot — moved to the actual Ivory Chest
+  location in the Oracle Realm.
+
+### Known gap
+- The dungeon between the Oracle Realm's entrance and the Oracle himself — the Ivory Chest and
+  roughly twenty more chests and monster rooms across five named chambers, per the canon
+  walkthrough — is not built in this codebase. Clicking the Ivory Chest currently does nothing
+  because there's nothing there to click. This is a large separate content pass, not a quick fix.
+- Stoneheim-tier locations (Stonecrest, Araknor, Dionysus Silverstream, Grant Hornkeep,
+  Filandrius, Makrsh Ptangh) are still shown unconditionally — the flag that should gate them
+  never gets set past the Raven's Dust tier anywhere in this codebase yet.
+
+## 2026-09-28 — Missing quest-item drops restored (T4C-0090)
+
+### Fixed
+- **37 quest and trade items had no way to actually obtain them** — nothing in the game dropped,
+  sold, or handed over the Red Spellbook, Blade of Heroism, Bloodstone Ring, Essence of
+  Bloodlust, Grail of Purity, Moon Tug Scalp, Raw Crystal, Tome of Arcane Knowledge, Mordred's
+  Key, the Arcane Spellbook, Crown of Corruption, Fang of True Resolve, Hourglass of Essence,
+  Key of Artherk, Pearl of Wisdom, Robe of Hell, Scroll of Evil Deed, Assassin's Blade, Blank
+  Magical Tome, Dragon Tooth, Tiger Tooth, Hel Soulstone, Jarko's Sortbook, Necromantic Scroll,
+  Note from the Deep Ones, Poison Apple, Pouch of Willow Bark, Runic Scripting Kit, Secret
+  Document, Solinae's Staff, Sword of Might, Book of Feylor, Elvenbane, the Fake Blade of Ruin,
+  C1 Permit, and a Finely Crafted Drum — so every trade and quest step that needed one of them
+  could never be finished. Each now comes from the monster, shop, or NPC that was always
+  supposed to provide it.
+- **A one-word quest-flag typo had silently disconnected part of the Will of Artherk questline**
+  from the rest of it: the drum-crafting stage was reading and writing a different flag than
+  every other step in the chain, so it could never actually trigger, no matter how far a
+  character had progressed.
+- Malachai Fatebringer will now trade a Scroll of Horse Friendship for a chance at either an
+  Assassin's Blade or a Robe of Hell.
+
+### Changed
+- **Island-access and good/evil-path quest items are now much easier to find.** The monsters
+  that carry the Red Spellbook, Blade of Heroism, Bloodstone Ring, Essence of Bloodlust, Grail
+  of Purity, Moon Tug Scalp, Raw Crystal, Sword of Might, Diamond, and Finely Crafted Drum spawn
+  in twice as many places, and each of those items is three times as likely to drop.
+- **Bloodlust had no way to appear anywhere in the world at all** — the Bloodstone Ring and
+  Essence of Bloodlust it's supposed to carry were unreachable no matter what. It now spawns.
+- **The Oracle no longer keeps the same challenger locked out for nearly seven hours after
+  defeating Makrsh P'Tangh.** That cooldown is now ten minutes.
+
+## 2026-09-28 — Every monster documented, with portraits and inline details (T4C-0089)
+
+### Added
+- **The reference website's Monsters page now covers every monster in the game**, not just the
+  ones added since the fork — including gold carried and every item it drops, for the original
+  game's creatures too.
+- **Monster pages now show the creature's in-game sprite** where one exists.
+- **Clicking a row in the Monsters, Items, Spells, or NPCs tables now expands its details in
+  place**, right below that row, instead of leaving the table for a separate page.
+
 ## 2026-09-27 — Instant-kill spells now drop loot and count for quests (T4C-0088)
 
 ### Fixed

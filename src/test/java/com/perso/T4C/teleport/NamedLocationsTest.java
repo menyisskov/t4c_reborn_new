@@ -3,6 +3,7 @@ package com.perso.T4C.teleport;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.quest.QuestService;
@@ -20,7 +21,31 @@ class NamedLocationsTest {
   void unconditionalLocationsAreAlwaysVisible() {
     List<NamedLocation> visible = NamedLocations.forPlayer(new Player());
     assertTrue(visible.stream().anyMatch(l -> "Lighthaven".equals(l.displayName())));
-    assertTrue(visible.stream().anyMatch(l -> "The Oracle".equals(l.displayName())));
+  }
+
+  @Test
+  void oracleEntriesAreHiddenUntilTheCharacterHoldsEitherKey() {
+    Player player = new Player();
+    assertFalse(
+        NamedLocations.forPlayer(player).stream().anyMatch(l -> "Oracle access".equals(l.displayName())));
+    assertFalse(
+        NamedLocations.forPlayer(player).stream().anyMatch(l -> "The Oracle".equals(l.displayName())));
+
+    InventoryService.add(player, "key_of_artherk");
+
+    assertTrue(
+        NamedLocations.forPlayer(player).stream().anyMatch(l -> "Oracle access".equals(l.displayName())));
+    assertTrue(
+        NamedLocations.forPlayer(player).stream().anyMatch(l -> "The Oracle".equals(l.displayName())));
+  }
+
+  @Test
+  void oracleEntriesAlsoOpenOnTheKeyOfOgrimarAlone() {
+    Player player = new Player();
+    InventoryService.add(player, "key_of_ogrimar");
+
+    assertTrue(
+        NamedLocations.forPlayer(player).stream().anyMatch(l -> "Oracle access".equals(l.displayName())));
   }
 
   @Test

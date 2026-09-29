@@ -1,5 +1,6 @@
 package com.perso.T4C.teleport;
 
+import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
 import java.util.ArrayList;
@@ -16,15 +17,36 @@ public final class NamedLocations {
   public static List<NamedLocation> all() {
     return List.of(
         new NamedLocation("Lighthaven", 2941, 1062, 0),
-        new NamedLocation("Silversky", 1495, 2470, 0),
-        new NamedLocation("Windhowl", 1812, 1293, 0),
+        new NamedLocation("Windhowl", 1723, 1237, 0),
         new NamedLocation("Colosseum", 1725, 1825, 0),
         new NamedLocation("Home", 2951, 1038, 0),
-        new NamedLocation("Makrsh Ptangh", 2265, 295, 1),
-        new NamedLocation("Stonecrest", 144, 737, 0),
         new NamedLocation("Tarantula Pond", 773, 1831, 0),
         new NamedLocation("Skraug Camp", 601, 172, 0),
-        new NamedLocation("The Oracle", 2968, 2141, 2),
+        // T4C-00XX: Raven's Dust - confirmed reachable in-game today (__QUEST_ISLAND_ACCESS
+        // reaches 1 via RenegadeOrcLeader). Silversky itself, and the two NPCs confirmed to
+        // stand there in the original walkthrough text (Zhakar at the Tower of Sorcery, Elysana
+        // Blackrose in Silversky town).
+        new NamedLocation("Silversky", 1495, 2470, 0, 1),
+        // T4C-00XX: Stoneheim/Oracle-tier entries below were previously unconditional, which let
+        // a brand-new Arakas-only character fast-travel there. Left unconditional for now rather
+        // than gated on __QUEST_ISLAND_ACCESS >= 2: nothing in this codebase currently sets that
+        // flag past 1 (Boreas/Yolak's own shop logic checks for a 2 that never happens), so
+        // gating on it would hide these permanently instead of progressively. Needs the real
+        // Stoneheim-access trigger identified before this can be tightened - see
+        // DESIGN_GUIDELINES.md.
+        new NamedLocation("Makrsh Ptangh", 2265, 295, 1),
+        new NamedLocation("Stonecrest", 144, 737, 0),
+        // T4C-00XX: the canon Oracle walkthrough opens with "Once you have the Key of Artherk or
+        // the Key of Ogrimar, head to the Chamber of Providence" - that's the real gate, not an
+        // island tier. "Oracle access" drops the character at the Ivory Chest (the Oracle Realm's
+        // own entrance, coordinates confirmed in-game by the owner); "The Oracle" is the NPC's
+        // own room, further in. Both open on the same item check since nothing in this codebase
+        // currently tracks "has walked the intervening dungeon" as a separate flag - see
+        // DESIGN_GUIDELINES.md for how much of that dungeon is unbuilt.
+        NamedLocation.requiringAnyItem(
+            "Oracle access", 2660, 2610, 2, "key_of_artherk", "key_of_ogrimar"),
+        NamedLocation.requiringAnyItem(
+            "The Oracle", 2724, 2192, 2, "key_of_artherk", "key_of_ogrimar"),
         // T4C-0019: the fork's new zones - each entry only appears for a player who has
         // completed that zone's own quest (see QuestDef.unlockZoneId / QuestService.complete()),
         // so fast travel to a newly discovered zone is granted automatically on completion and
@@ -49,22 +71,32 @@ public final class NamedLocations {
         // nothing to unlock, these NPCs are already reachable, this just cuts the walk.
         new NamedLocation("Lord Sunrock", 1609, 1181, 0),
         new NamedLocation("Asarr", 2139, 1226, 0),
-        new NamedLocation("Araknor", 2981, 1035, 0),
         new NamedLocation("Lance Silversmith", 2580, 690, 0),
-        new NamedLocation("Zhakar", 55, 1769, 0),
-        new NamedLocation("Elysana Blackrose", 1561, 2471, 0),
+        new NamedLocation("Zhakar", 55, 1769, 0, 1),
+        new NamedLocation("Elysana Blackrose", 1561, 2471, 0, 1),
+        // Stoneheim-tier - see the comment above The Oracle: unconditional for now, same
+        // unreachable-flag reason.
+        new NamedLocation("Araknor", 2981, 1035, 0),
         new NamedLocation("Dionysus Silverstream", 1025, 1000, 0),
         new NamedLocation("Grant Hornkeep", 315, 740, 0),
         new NamedLocation("Filandrius", 985, 1465, 0));
   }
 
   /** {@link #all()} filtered to the entries a given player currently has access to: every
-   * unconditional (original) landmark, plus any zone whose unlock quest they've completed. */
+   * unconditional landmark, plus any zone whose unlock quest they've completed, plus any
+   * original-island landmark whose island-access tier they've reached, plus any entry gated on
+   * carrying one of a set of items. */
   public static List<NamedLocation> forPlayer(Player player) {
     List<NamedLocation> visible = new ArrayList<>();
     for (NamedLocation location : all()) {
-      if (location.unlockZoneId() == null
-          || QuestService.hasUnlockedZone(player, location.unlockZoneId())) {
+      boolean zoneOk =
+          location.unlockZoneId() == null || QuestService.hasUnlockedZone(player, location.unlockZoneId());
+      boolean islandOk = player.getQuestFlag("__QUEST_ISLAND_ACCESS") >= location.minIslandAccess();
+      boolean itemOk =
+          location.requiresAnyItem().isEmpty()
+              || location.requiresAnyItem().stream()
+                  .anyMatch(key -> InventoryService.count(player, key) > 0);
+      if (zoneOk && islandOk && itemOk) {
         visible.add(location);
       }
     }

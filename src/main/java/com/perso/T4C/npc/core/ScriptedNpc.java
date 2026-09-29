@@ -833,7 +833,25 @@ public abstract class ScriptedNpc extends BaseNPC {
 
   public void openSellShop(Player player) {
 
-    if (player != null) GuiManager.open(ShopScreen.forSelling(player, List.of()));
+    if (player == null) return;
+
+    List<String> inventory = player.getInventory();
+
+    List<String> sellable = new ArrayList<>();
+
+    if (inventory != null) {
+
+      for (String itemKey : inventory) {
+
+        if (itemKey == null || sellable.contains(itemKey)) continue;
+
+        var def = ItemRegistry.findByKey(itemKey);
+
+        if (def != null && !def.isUndroppable()) sellable.add(itemKey);
+      }
+    }
+
+    GuiManager.open(ShopScreen.forSelling(player, sellable));
   }
 
   public void openSpellLearning(Player player, List<String> spellKeys) {

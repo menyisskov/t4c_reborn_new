@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0089`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0096`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -101,6 +101,13 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0086 | Pressing Alt now reveals the names of every ground item and NPC nearby for a few seconds | Systems | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--reveal-nearby-item-and-npc-names-with-alt-t4c-0086) |
 | T4C-0087 | Inventory: click an item to select it, then Drop or Junk it without dragging | Systems | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--drop-and-junk-buttons-in-the-inventory-t4c-0087) |
 | T4C-0088 | Fix: a monster killed by an instant-kill ("vaporize") spell effect dropped no loot and gave no quest credit | Fix | Done | _this PR_ | [2026-09-27](CHANGELOG.md#2026-09-27--instant-kill-spells-now-drop-loot-and-count-for-quests-t4c-0088) |
+| T4C-0089 | Compendium: every monster (including original-game ones) gets a page with drops/gold, portrait sprites, and monster/item/spell/NPC tables expand details inline instead of navigating away | Content/Systems | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--every-monster-documented-with-portraits-inline-details-t4c-0089) |
+| T4C-0090 | Fix: 37 of 39 quest/trade items (incl. the Red Spellbook) had no source anywhere in the game - restored via monster drops, new NPC trades, and a fixed quest-flag typo that had silently disconnected part of the Will of Artherk questline | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--missing-quest-item-drops-restored-t4c-0090) |
+| T4C-0091 | Locations panel: gate original-island landmarks by real progression instead of showing everything unconditionally; Key of Ogrimar crafting wired up; Oracle entries gated on holding the Key of Artherk/Ogrimar per canon walkthrough | Content/Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--locations-panel-now-respects-island-progression-t4c-0091) |
+| T4C-0092 | Inventory: Drop/Junk now offer a quantity picker for stacked items instead of one at a time; general vendors' "sell" list was silently empty for everyone and now offers the player's actual sellable inventory | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--inventory-quantity-picker-and-vendor-selling-fix-t4c-0092) |
+| T4C-0093 | Fix two quest-reward necklaces (Tideworn Avalon Chart, Godsforged Torc of the First Pact) rendering as a blank inventory icon due to a nonexistent sprite variant | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--fixed-blank-quest-item-icons-t4c-0093) |
+| T4C-0094 | Corrected the Windhowl fast-travel location's coordinates | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--windhowl-teleport-coordinate-fix-t4c-0094) |
+| T4C-0095 | Fix: 11 item-turn-in quests (Passage to Avalon and 10 others) never registered progress on the required item no matter how many the player carried, because each was missing the "item." prefix inventory entries actually use | Fix | Done | _this PR_ | [2026-09-28](CHANGELOG.md#2026-09-28--fixed-11-quests-stuck-at-0n-on-their-item-turn-in-t4c-0095) |
 
 ## Type legend
 
