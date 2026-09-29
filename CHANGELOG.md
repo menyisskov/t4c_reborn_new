@@ -21,6 +21,8 @@ on, every content/feature pass adds its own entry here as part of the work
 - Item tooltips and the compendium now show sell values alongside purchase prices.
 
 ### Fixed
+- Editing and regenerating items preserves their sell-value rules.
+- Nine enchanted weapons and shields from Lord of the Shops now have purchase prices above their sell values.
 - Selling now shows the gold you will have after the sale and pays only for items actually surrendered.
 - The sell window's title and button are now in English.
 

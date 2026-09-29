@@ -65,6 +65,20 @@ class ItemSalePricingTest {
   }
 
   @Test
+  void newStockCannotBeBoughtAndResoldForProfit() {
+    var shop =
+        (com.perso.T4C.npc.behavior.ShopBehavior)
+            com.perso.T4C.npc.catalog.ShopCatalog.get("LordoftheShops");
+    for (String key : shop.items()) {
+      var item = ItemRegistry.findByKey(key);
+      if (item != null && item.isRarityPriced()) {
+        assertTrue(item.getPrice() > ItemSalePricing.sellPrice(item), key);
+        assertTrue(ItemSalePricing.sellPrice(item) > 1, key);
+      }
+    }
+  }
+
+  @Test
   void rarerDropsSellForMore() {
     double[] chances = {.08, .04, .025, .01, .003};
     long[] values = {1250, 2500, 4000, 10000, 33333};
