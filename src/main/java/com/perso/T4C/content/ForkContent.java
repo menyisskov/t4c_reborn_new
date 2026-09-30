@@ -73,6 +73,7 @@ public final class ForkContent {
 
   public static final Set<String> NEW_NPC_IDS =
       Set.of(
+          "RitekeeperEdrin",
           "TideWardenBryn",
           "RurikCinderwatch",
           "SpellMerchant",

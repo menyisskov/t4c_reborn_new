@@ -26183,5 +26183,19 @@
   "npc.hollow_dawn.chapter.rift_unbinding": "The rift wraiths draw names out of the last anchor. Break their hold before the inner court can be entered; the living must carry those names through the gate.",
   "npc.hollow_dawn.handoff.rift_unbinding": "The inner court is open through Locations. Ask \"story\" about Rhunor, then \"accept\" and \"route\" before you face the god beneath the final bell.",
   "npc.hollow_dawn.chapter.rhunor_hollow_dawn": "Rhunor rules by making the living forget one another. The warders’ bells can hold him only while witnesses remember. Carry their names into the inner court.",
-  "npc.hollow_dawn.handoff.rhunor_hollow_dawn": "Rhunor is bound. Ask for the \"epilogue\" to hear where Ilyra, Soren, and Maelin carry the oath next. The Witness Isles and Threnody remain open to you."
+  "npc.hollow_dawn.handoff.rhunor_hollow_dawn": "Rhunor is bound. Ask for the \"epilogue\" to hear where Ilyra, Soren, and Maelin carry the oath next. The Witness Isles and Threnody remain open to you.",
+  "npc.ritekeeperedrin": "Ritekeeper Edrin",
+  "npc.welcome.ritekeeperedrin": "I can take you straight to the Oracle's final trial. Ask about the \"path\"; choose \"light\" or \"shadow\", then say \"trial\" when you are ready.",
+  "npc.ritekeeperedrin.path": "Choose \"light\" to face Gabriel Archonis or \"shadow\" to face Gaenen Elthorn. Your choice sets your karma and fixed alignment, affecting other conversations. Say \"prepare\" for the travel key and return scroll, then \"trial\" to enter the chamber. After victory, return and say \"oracle\".",
+  "npc.ritekeeperedrin.light": "Your path is light: your karma is now 100. Say \"prepare\" for the key and return scroll, then \"trial\" when ready to face Gabriel.",
+  "npc.ritekeeperedrin.shadow": "Your path is shadow: your karma is now -100. Say \"prepare\" for the key and return scroll, then \"trial\" when ready to face Gaenen.",
+  "npc.ritekeeperedrin.choose": "Choose \"light\" or \"shadow\" first. That choice determines your karma and which assistant you will face.",
+  "npc.ritekeeperedrin.prepared": "I have arranged your Stoneheim passage and Oracle introduction, and given you a trial key and Stonecrest return scroll. Say \"trial\" to enter the final chamber. After victory, use the scroll and return to say \"oracle\".",
+  "npc.ritekeeperedrin.trial": "Gabriel Archonis waits ahead. Survive his trial, then use the Stonecrest scroll to return and say \"oracle\".",
+  "npc.ritekeeperedrin.dark_trial": "Gaenen Elthorn waits ahead. Survive the trial, then use the Stonecrest scroll to return and say \"oracle\".",
+  "npc.ritekeeperedrin.level": "The Oracle requires level %d for your next rebirth. Grow stronger, then say \"trial\" again.",
+  "npc.ritekeeperedrin.already_proven": "The assistant has already acknowledged your victory. Say \"oracle\" and I will take you to the rebirth audience.",
+  "npc.ritekeeperedrin.not_proven": "The Oracle needs proof from the final trial. Say \"trial\" to face the assistant, then return and ask for the \"oracle\".",
+  "npc.ritekeeperedrin.oracle": "Your victory is known. Speak to the Oracle and say \"rebirth\", then \"ready to be reborn\" to begin the rite.",
+  "npc.ritekeeperedrin.limit": "You have reached the rebirth limit. The Oracle cannot renew you again."
 }

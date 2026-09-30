@@ -34,6 +34,13 @@ owner can strike it.
 
 ## 1. Character progression
 
+### Stonecrest rebirth shortcut (T4C-0115)
+
+- A Stonecrest NPC may prepare the Oracle's travel prerequisites, alignment, key and return scroll,
+  then send a character to the appropriate assistant fight. The assistant must still grant the
+  victory flag through combat; the shortcut does not grant a rebirth, alter the rebirth count or
+  waive the Oracle's required level. After victory, the NPC can send the character to the Oracle.
+
 | Rule | Value | Where |
 |---|---|---|
 | Level cap | **400**. XP stops counting at 400; saves above it are clamped to 400 when loaded. | `GameConstants.MAX_PLAYER_LEVEL`, `XpCurve`, `PlayerProgression`, `PlayerStateMapper` |
