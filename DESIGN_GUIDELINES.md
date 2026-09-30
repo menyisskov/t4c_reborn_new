@@ -794,9 +794,9 @@ should not consume it), that is a content change, not an editorial one, and need
 ## 5. Process
 - Every player-visible change gets a `T4C-XXXX` ID in `TASKS.md` and a player-facing
   `CHANGELOG.md` entry (see `CLAUDE.md`).
-- Open a PR, then wait for **Build and test** to go green and the **Codex** review to finish.
-  Fix real findings, reply on each thread, and resolve it. Merge only after all of that.
-  Never merge while Codex is still running.
+- Open a PR, self-review, and wait for **Build and test** to go green on the
+  current head. Handle real Codex findings already posted, but do not delay
+  merge for a review that is still running.
 - Once a PR is merged, start follow-up work on the same branch name, freshly from `main`.
 - When asked to "double check and merge", re-audit your own diff first (anything that could
   still break the rules above or old saves). Then follow the merge rule above; you may merge

@@ -83,8 +83,8 @@ the same PR as the work. That file's section 0 has the full criteria.
 
 ## Before opening a PR — self-review first
 
-Nothing reviews these PRs automatically (Codex review was switched off on 2026-09-26), so
-this self-review is the only one they get. Use the `ship-pr` skill.
+Always self-review before opening a PR; Codex review may still run, but the
+owner does not want merges to wait for it. Use the `ship-pr` skill.
 Its step 1 is the full checklist; at minimum:
 
 - **Rebuild the local game after every fix** with `mvn -q '-DskipTests' package`, then rebuild the
