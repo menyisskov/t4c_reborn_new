@@ -152,4 +152,4 @@ work happens.
 | T4C-0110 | Resolve quest delivery names in the compendium, protect new-character saves, and trim redundant tests | Fix/Process | Done | `8509ba30` | [2026-09-30](CHANGELOG.md#2026-09-30--character-saves-and-quest-item-names-t4c-0110) |
 | T4C-0111 | Raise Ancient Celestial armor and all Empyrean item resale to endgame values | Balance | Done | `f1834530` | [2026-09-30](CHANGELOG.md#2026-09-30--rare-endgame-resale-t4c-0111) |
 | T4C-0112 | Let new characters choose Good or Evil starting karma | Systems/UI | Done | `e5abc9a3` | [2026-09-30](CHANGELOG.md#2026-09-30--choose-your-path-t4c-0112) |
-| T4C-0113 | Cast self-centered area spells without target selection | Spells | Done | — | [2026-09-30](CHANGELOG.md#2026-09-30--self-centered-area-spells-t4c-0113) |
+| T4C-0113 | Cast self-centered area spells without target selection | Spells | Done | `20ac2b53` | [2026-09-30](CHANGELOG.md#2026-09-30--self-centered-area-spells-t4c-0113) |
