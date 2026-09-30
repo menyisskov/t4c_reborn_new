@@ -44,6 +44,24 @@ public class MonsterManager {
           "Ashbound Exile",
           "Nullguard",
           "Rift Wraith");
+
+  /** Runtime hunting policy shared with the compendium exporter. */
+  public static boolean hasHuntingRespawn(String canonicalName) {
+    return canonicalName != null && HUNTING_TYPES.contains(canonicalName);
+  }
+
+  public static long huntingRespawnMinMillis() {
+    return HUNTING_RESPAWN_MIN_MILLIS;
+  }
+
+  public static long huntingRespawnMaxMillis() {
+    return HUNTING_RESPAWN_MAX_MILLIS;
+  }
+
+  public static long huntingReentryRespawnMillis() {
+    return HUNTING_REENTRY_RESPAWN_MILLIS;
+  }
+
   private final List<BaseMonster> monsters = new ArrayList<>();
   private final List<BaseMonster> readonlyMonsters = Collections.unmodifiableList(monsters);
   private final List<PendingSpawn> pendingSpawns = new ArrayList<>();
@@ -224,7 +242,7 @@ public class MonsterManager {
   }
 
   private static boolean isHuntingMonster(BaseMonster monster) {
-    return HUNTING_TYPES.contains(monster.getCanonicalName());
+    return hasHuntingRespawn(monster.getCanonicalName());
   }
 
   private void scheduleNextRespawn(BaseMonster monster) {

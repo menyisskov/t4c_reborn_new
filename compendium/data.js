@@ -27716,6 +27716,9 @@ window.T4C_DATA = {
       "hitDamageMin": 180,
       "hitDamageMax": 400,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 378,
       "goldMax": 1155,
       "dodge": 850,
@@ -27949,6 +27952,9 @@ window.T4C_DATA = {
       "hitDamageMin": 210,
       "hitDamageMax": 460,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 405,
       "goldMax": 1238,
       "dodge": 950,
@@ -28018,6 +28024,9 @@ window.T4C_DATA = {
       "hitDamageMin": 280,
       "hitDamageMax": 420,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 414,
       "goldMax": 1265,
       "dodge": 920,
@@ -28427,6 +28436,9 @@ window.T4C_DATA = {
       "hitDamageMin": 260,
       "hitDamageMax": 560,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 459,
       "goldMax": 1403,
       "dodge": 1100,
@@ -28636,6 +28648,9 @@ window.T4C_DATA = {
       "hitDamageMin": 366,
       "hitDamageMax": 550,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 486,
       "goldMax": 1485,
       "dodge": 1080,
@@ -28714,6 +28729,9 @@ window.T4C_DATA = {
       "hitDamageMin": 300,
       "hitDamageMax": 640,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 495,
       "goldMax": 1513,
       "dodge": 1300,
@@ -29270,6 +29288,9 @@ window.T4C_DATA = {
       "hitDamageMin": 413,
       "hitDamageMax": 620,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 567,
       "goldMax": 1733,
       "dodge": 1260,
@@ -29564,6 +29585,9 @@ window.T4C_DATA = {
       "hitDamageMin": 533,
       "hitDamageMax": 800,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 639,
       "goldMax": 1953,
       "dodge": 1420,
@@ -29796,6 +29820,9 @@ window.T4C_DATA = {
       "hitDamageMin": 700,
       "hitDamageMax": 1050,
       "respawnTimeMs": 30000,
+      "respawnMinMs": 8000,
+      "respawnMaxMs": 12000,
+      "movementRefillMs": 5000,
       "goldMin": 702,
       "goldMax": 2145,
       "dodge": 1560,
@@ -54656,7 +54683,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_air_amulet",
-      "name": "${item.witness_air_amulet}",
+      "name": "Gale Witness Amulet",
       "bodyPart": "NECK",
       "appearanceInventory": "64kInvNecklace 3",
       "weight": 1.0,
@@ -54713,7 +54740,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_air_bracelet",
-      "name": "${item.witness_air_bracelet}",
+      "name": "Gale Witness Bracelet",
       "bodyPart": "BRACER",
       "appearanceInventory": "64kInvBelt",
       "weight": 1.0,
@@ -54770,7 +54797,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_air_plate",
-      "name": "${item.witness_air_plate}",
+      "name": "Gale Witness Plate",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupPlateBody",
       "appearanceInventory": "64kInvPlateArmorSleeves",
@@ -54822,7 +54849,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_air_robe",
-      "name": "${item.witness_air_robe}",
+      "name": "Gale Witness Robe",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupWhiteRobe__pal7",
       "appearanceInventory": "64kInvWhiteRobe__pal7",
@@ -54880,7 +54907,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_air_signet",
-      "name": "${item.witness_air_signet}",
+      "name": "Gale Witness Signet",
       "bodyPart": "RING1",
       "appearanceInventory": "64kInvRings 3",
       "weight": 1.0,
@@ -54937,7 +54964,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_air_tiara",
-      "name": "${item.witness_air_tiara}",
+      "name": "Gale Witness Tiara",
       "bodyPart": "HEAD",
       "appearanceEquippedPrimary": "PupPlateHelm",
       "appearanceInventory": "64kInvPlateArmorHelm",
@@ -54995,7 +55022,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_air_wand",
-      "name": "${item.witness_air_wand}",
+      "name": "Gale Witness Wand",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupWoodenStaff",
       "appearanceInventory": "64kInvWoodenStaff",
@@ -55028,7 +55055,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_air_wings",
-      "name": "${item.witness_air_wings}",
+      "name": "Gale Witness Wings",
       "bodyPart": "BACK",
       "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal6",
       "appearanceInventory": "64kInvSeraphWhiteWings__pal6",
@@ -55086,7 +55113,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_amulet",
-      "name": "${item.witness_dark_amulet}",
+      "name": "Dusk Witness Amulet",
       "bodyPart": "NECK",
       "appearanceInventory": "64kInvNecklace 3",
       "weight": 1.0,
@@ -55137,7 +55164,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_bracelet",
-      "name": "${item.witness_dark_bracelet}",
+      "name": "Dusk Witness Bracelet",
       "bodyPart": "BRACER",
       "appearanceInventory": "64kInvBelt",
       "weight": 1.0,
@@ -55188,7 +55215,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_dagger",
-      "name": "${item.witness_dark_dagger}",
+      "name": "Dusk Witness Dagger",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupBattleDagger",
       "appearanceInventory": "64kInvBattleDagger",
@@ -55215,7 +55242,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_plate",
-      "name": "${item.witness_dark_plate}",
+      "name": "Dusk Witness Plate",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupPlateBody",
       "appearanceInventory": "64kInvPlateArmorSleeves",
@@ -55267,7 +55294,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_robe",
-      "name": "${item.witness_dark_robe}",
+      "name": "Dusk Witness Robe",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupNecromanRobe",
       "appearanceInventory": "64kInvNecromanRobe",
@@ -55319,7 +55346,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_rod",
-      "name": "${item.witness_dark_rod}",
+      "name": "Dusk Witness Rod",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupLichStaff",
       "appearanceInventory": "64kInvLichStaff",
@@ -55346,7 +55373,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_signet",
-      "name": "${item.witness_dark_signet}",
+      "name": "Dusk Witness Signet",
       "bodyPart": "RING1",
       "appearanceInventory": "64kInvRings 5",
       "weight": 1.0,
@@ -55397,7 +55424,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_tiara",
-      "name": "${item.witness_dark_tiara}",
+      "name": "Dusk Witness Tiara",
       "bodyPart": "HEAD",
       "appearanceEquippedPrimary": "PupPlateHelm",
       "appearanceInventory": "64kInvPlateArmorHelm",
@@ -55449,7 +55476,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_dark_wings",
-      "name": "${item.witness_dark_wings}",
+      "name": "Dusk Witness Wings",
       "bodyPart": "BACK",
       "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal8",
       "appearanceInventory": "64kInvSeraphWhiteWings__pal8",
@@ -55501,7 +55528,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_earth_amulet",
-      "name": "${item.witness_earth_amulet}",
+      "name": "Stone Witness Amulet",
       "bodyPart": "NECK",
       "appearanceInventory": "64kInvNecklace 1",
       "weight": 1.0,
@@ -55552,7 +55579,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_earth_bracelet",
-      "name": "${item.witness_earth_bracelet}",
+      "name": "Stone Witness Bracelet",
       "bodyPart": "BRACER",
       "appearanceInventory": "64kInvBelt",
       "weight": 1.0,
@@ -55603,7 +55630,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_earth_plate",
-      "name": "${item.witness_earth_plate}",
+      "name": "Stone Witness Plate",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupPlateBody",
       "appearanceInventory": "64kInvPlateArmorSleeves",
@@ -55655,7 +55682,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_earth_robe",
-      "name": "${item.witness_earth_robe}",
+      "name": "Stone Witness Robe",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupWhiteRobe__pal8",
       "appearanceInventory": "64kInvWhiteRobe__pal8",
@@ -55707,7 +55734,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_earth_sceptre",
-      "name": "${item.witness_earth_sceptre}",
+      "name": "Stone Witness Sceptre",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupWoodenStaff",
       "appearanceInventory": "64kInvWoodenStaff",
@@ -55734,7 +55761,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_earth_signet",
-      "name": "${item.witness_earth_signet}",
+      "name": "Stone Witness Signet",
       "bodyPart": "RING1",
       "appearanceInventory": "64kInvRings 1",
       "weight": 1.0,
@@ -55785,7 +55812,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_earth_tiara",
-      "name": "${item.witness_earth_tiara}",
+      "name": "Stone Witness Tiara",
       "bodyPart": "HEAD",
       "appearanceEquippedPrimary": "PupPlateHelm",
       "appearanceInventory": "64kInvPlateArmorHelm",
@@ -55837,7 +55864,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_earth_wings",
-      "name": "${item.witness_earth_wings}",
+      "name": "Stone Witness Wings",
       "bodyPart": "BACK",
       "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal7",
       "appearanceInventory": "64kInvSeraphWhiteWings__pal7",
@@ -55889,7 +55916,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_amulet",
-      "name": "${item.witness_fire_amulet}",
+      "name": "Ember Witness Amulet",
       "bodyPart": "NECK",
       "appearanceInventory": "64kInvNecklace 1",
       "weight": 1.0,
@@ -55940,7 +55967,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_bracelet",
-      "name": "${item.witness_fire_bracelet}",
+      "name": "Ember Witness Bracelet",
       "bodyPart": "BRACER",
       "appearanceInventory": "64kInvBelt",
       "weight": 1.0,
@@ -55991,7 +56018,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_brand",
-      "name": "${item.witness_fire_brand}",
+      "name": "Ember Witness Brand",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupWoodenStaff",
       "appearanceInventory": "64kInvWoodenStaff",
@@ -56018,7 +56045,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_mace",
-      "name": "${item.witness_fire_mace}",
+      "name": "Ember Witness Mace",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupMace",
       "appearanceInventory": "64kInvMace",
@@ -56045,7 +56072,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_plate",
-      "name": "${item.witness_fire_plate}",
+      "name": "Ember Witness Plate",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupPlateBody",
       "appearanceInventory": "64kInvPlateArmorSleeves",
@@ -56097,7 +56124,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_robe",
-      "name": "${item.witness_fire_robe}",
+      "name": "Ember Witness Robe",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupRedRobe",
       "appearanceInventory": "64kInvRedRobe",
@@ -56149,7 +56176,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_signet",
-      "name": "${item.witness_fire_signet}",
+      "name": "Ember Witness Signet",
       "bodyPart": "RING1",
       "appearanceInventory": "64kInvRings 4",
       "weight": 1.0,
@@ -56200,7 +56227,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_tiara",
-      "name": "${item.witness_fire_tiara}",
+      "name": "Ember Witness Tiara",
       "bodyPart": "HEAD",
       "appearanceEquippedPrimary": "PupPlateHelm",
       "appearanceInventory": "64kInvPlateArmorHelm",
@@ -56252,7 +56279,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_fire_wings",
-      "name": "${item.witness_fire_wings}",
+      "name": "Ember Witness Wings",
       "bodyPart": "BACK",
       "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal3",
       "appearanceInventory": "64kInvSeraphWhiteWings__pal3",
@@ -56304,7 +56331,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_light_amulet",
-      "name": "${item.witness_light_amulet}",
+      "name": "Dawn Witness Amulet",
       "bodyPart": "NECK",
       "appearanceInventory": "64kInvNecklace 2",
       "weight": 1.0,
@@ -56355,7 +56382,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_light_bracelet",
-      "name": "${item.witness_light_bracelet}",
+      "name": "Dawn Witness Bracelet",
       "bodyPart": "BRACER",
       "appearanceInventory": "64kInvBelt",
       "weight": 1.0,
@@ -56406,7 +56433,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_light_plate",
-      "name": "${item.witness_light_plate}",
+      "name": "Dawn Witness Plate",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupPlateBody",
       "appearanceInventory": "64kInvPlateArmorSleeves",
@@ -56458,7 +56485,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_light_robe",
-      "name": "${item.witness_light_robe}",
+      "name": "Dawn Witness Robe",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupWhiteRobe__pal9",
       "appearanceInventory": "64kInvWhiteRobe__pal9",
@@ -56510,7 +56537,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_light_signet",
-      "name": "${item.witness_light_signet}",
+      "name": "Dawn Witness Signet",
       "bodyPart": "RING1",
       "appearanceInventory": "64kInvRings 5",
       "weight": 1.0,
@@ -56561,7 +56588,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_light_staff",
-      "name": "${item.witness_light_staff}",
+      "name": "Dawn Witness Staff",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupLichStaff",
       "appearanceInventory": "64kInvLichStaff",
@@ -56588,7 +56615,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_light_tiara",
-      "name": "${item.witness_light_tiara}",
+      "name": "Dawn Witness Tiara",
       "bodyPart": "HEAD",
       "appearanceEquippedPrimary": "PupPlateHelm",
       "appearanceInventory": "64kInvPlateArmorHelm",
@@ -56640,7 +56667,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_light_wings",
-      "name": "${item.witness_light_wings}",
+      "name": "Dawn Witness Wings",
       "bodyPart": "BACK",
       "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal4",
       "appearanceInventory": "64kInvSeraphWhiteWings__pal4",
@@ -56692,7 +56719,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_amulet",
-      "name": "${item.witness_water_amulet}",
+      "name": "Tide Witness Amulet",
       "bodyPart": "NECK",
       "appearanceInventory": "64kInvNecklace 2",
       "weight": 1.0,
@@ -56743,7 +56770,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_bracelet",
-      "name": "${item.witness_water_bracelet}",
+      "name": "Tide Witness Bracelet",
       "bodyPart": "BRACER",
       "appearanceInventory": "64kInvBelt",
       "weight": 1.0,
@@ -56794,7 +56821,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_plate",
-      "name": "${item.witness_water_plate}",
+      "name": "Tide Witness Plate",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupPlateBody",
       "appearanceInventory": "64kInvPlateArmorSleeves",
@@ -56846,7 +56873,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_robe",
-      "name": "${item.witness_water_robe}",
+      "name": "Tide Witness Robe",
       "bodyPart": "BODY",
       "appearanceEquippedPrimary": "PupWhiteRobe__pal2",
       "appearanceInventory": "64kInvWhiteRobe__pal2",
@@ -56898,7 +56925,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_sceptre",
-      "name": "${item.witness_water_sceptre}",
+      "name": "Tide Witness Sceptre",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupWoodenStaff",
       "appearanceInventory": "64kInvWoodenStaff",
@@ -56925,7 +56952,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_signet",
-      "name": "${item.witness_water_signet}",
+      "name": "Tide Witness Signet",
       "bodyPart": "RING1",
       "appearanceInventory": "64kInvRings 2",
       "weight": 1.0,
@@ -56976,7 +57003,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_staff",
-      "name": "${item.witness_water_staff}",
+      "name": "Tide Witness Staff",
       "bodyPart": "WEAPON",
       "appearanceEquippedPrimary": "PupLichStaff",
       "appearanceInventory": "64kInvLichStaff",
@@ -57003,7 +57030,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_tiara",
-      "name": "${item.witness_water_tiara}",
+      "name": "Tide Witness Tiara",
       "bodyPart": "HEAD",
       "appearanceEquippedPrimary": "PupPlateHelm",
       "appearanceInventory": "64kInvPlateArmorHelm",
@@ -57055,7 +57082,7 @@ window.T4C_DATA = {
     },
     {
       "key": "witness_water_wings",
-      "name": "${item.witness_water_wings}",
+      "name": "Tide Witness Wings",
       "bodyPart": "BACK",
       "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal2",
       "appearanceInventory": "64kInvSeraphWhiteWings__pal2",

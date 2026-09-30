@@ -902,7 +902,12 @@
         kv("How readily it attacks", fmtNum(m.aggro)) + kv("Speed", fmtNum(m.speed)) +
         kv("XP per hit you land", fmtNum(m.xpPerHit)) + kv("XP for the kill", fmtNum(m.xpOnDeath)) +
         kv("Gold it carries", fmtNum(m.goldMin) + "–" + fmtNum(m.goldMax)) +
-        kv("Comes back after", (m.respawnTimeMs / 1000).toFixed(0) + " seconds") +
+        kv("Comes back after", m.respawnMinMs != null
+          ? (m.respawnMinMs / 1000).toFixed(0) + "–" +
+            (m.respawnMaxMs / 1000).toFixed(0) +
+            " seconds; moving away and back can refill in " +
+            (m.movementRefillMs / 1000).toFixed(0) + " seconds"
+          : (m.respawnTimeMs / 1000).toFixed(0) + " seconds") +
         "</div>") +
       panel("Attributes", '<div class="stat-bars">' + statsHtml + "</div>") +
       panel("How well it shrugs off each element",
