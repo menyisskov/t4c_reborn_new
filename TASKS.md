@@ -148,4 +148,4 @@ work happens.
 | T4C-0106 | Hollow Dawn Avalon campaign and Threnody Reach (levels 200-400) | Content/Map | Done | `cfc7bda7` | [2026-09-29](CHANGELOG.md#2026-09-29--the-hollow-dawn-campaign-t4c-0106) |
 | T4C-0107 | Witness Isles story routes, hunting grounds and equipment | Content/Systems | Done | `ef2db40a` | [2026-09-29](CHANGELOG.md#2026-09-29--witness-isles-story-and-hunting-t4c-0107) |
 | T4C-0108 | Correct Witness Isles compendium names and hunting respawn details | Fix | Done | `fb0ef732` | [2026-09-30](CHANGELOG.md#2026-09-30--witness-isles-compendium-corrections-t4c-0108) |
-| T4C-0109 | Connect the mainland chapters to the Witness Isles and Hollow Dawn questline with persistent NPC testimony, clearer handoffs, and a resolved epilogue | Content/Systems | Done | _this PR_ | [2026-09-30](CHANGELOG.md#2026-09-30--the-names-that-remain-t4c-0109) |
+| T4C-0109 | Connect the mainland chapters to the Witness Isles and Hollow Dawn questline with persistent NPC testimony, clearer handoffs, and a resolved epilogue | Content/Systems | Done | `2291b22e` | [2026-09-30](CHANGELOG.md#2026-09-30--the-names-that-remain-t4c-0109) |
