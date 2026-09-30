@@ -86,11 +86,14 @@ without an automated reviewer moving the goalposts every push.
 There is no separate automated approval check in this repo. The PR's
 driving agent (a Claude Code session; see `.claude/skills/steward/SKILL.md`
 for its exact mechanics) merges directly, once:
-- any enabled automated review has finished (not still "🔄 Running"), and
 - CI (`Build and test`) is green on the current head, with no merge
   conflict, and
-- every finding from the original review has an explicit fix-or-skip
-  decision from the steward.
+- the steward has self-reviewed the change and handled any automated review
+  findings already posted at merge time.
+
+Do not wait for Codex review to start or finish. Its "🔄 Running" status does
+not block a merge after the conditions above are met. A review posted after
+merge can be handled as follow-up work if it identifies a real issue.
 
 A steward's own considered skip is a legitimate way to clear a finding —
 it does not require a human to sign off on each one. It is only legitimate

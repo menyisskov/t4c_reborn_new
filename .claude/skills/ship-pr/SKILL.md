@@ -5,8 +5,8 @@ description: End-to-end delivery of a change in this repo, from a finished worki
 
 # Ship a PR (t4c_reborn_new)
 
-> Check the PR's current review status before merging. Any enabled automated review must
-> finish, along with green CI, as required by `AGENTS.md`.
+> Green CI on the current head and a self-review are required by `AGENTS.md`.
+> Handle review findings already posted, but do not wait for Codex review.
 
 `steward` says **when** a PR may be merged. This skill is the **how**, start to finish, and it
 exists because the same avoidable review round-trips kept happening: old saves missed by a new
@@ -63,14 +63,14 @@ Commit the regenerated `compendium/` data if it changed. If you touched `compend
 - [ ] Commit message references the task ID and ends with the session's attribution lines.
 - [ ] After the main commit, a small follow-up commit records its hash in the `TASKS.md` row.
 
-## 3. Open the PR and wait properly
+## 3. Open the PR and check CI
 
 1. Branch: the session's designated branch. If its previous PR is already merged, restart it from
    `origin/main` (`git checkout -B <branch> origin/main`, bringing uncommitted work across with a
    stash). A normal push is then a fast-forward. **Never force-push.**
 2. Open the PR (GitHub MCP), ready for review. The body carries the technical detail the
    changelog leaves out: rules as a table, what changed, how it was tested.
-3. Wait for **Build and test** and any enabled automated review to finish on the current head.
+3. Wait for **Build and test** to finish on the current head. Do not wait for Codex review.
 4. End your turn or merge once CI is green. Don't sleep or poll in a loop.
 
 ## 4. Handle review findings
@@ -82,7 +82,7 @@ If a human or bot leaves findings, check each against the code, then decide.
   whole class, as the boostId-uniqueness test did.
 - **Not worth fixing** (out of scope, pre-existing, a destructive guess): reply once with the
   reason and resolve. You don't need the owner's sign-off.
-- If an automated reviewer is enabled, a pushed fix triggers a re-review; wait for it.
+- If a pushed fix triggers a re-review, do not wait for it after CI is green.
 
 ## 5. Merge and clean up
 

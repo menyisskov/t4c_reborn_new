@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-09-30 — Merge review timing (T4C-0116)
+
+### Changed
+- Project changes can now be merged after self-review and green CI without waiting for the automated reviewer to finish. Findings already posted still receive a decision before merge.
+
+## 2026-09-30 — Stonecrest ritekeeper (T4C-0115)
+
+### Added
+- Ritekeeper Edrin in Stonecrest can prepare a Good or Evil path and send eligible players directly to Gabriel Archonis or Gaenen Elthorn for the Oracle's final trial. After earning victory, return to Edrin to reach the Oracle and begin rebirth.
+
 ## 2026-09-30 — Lighthaven temple sanctuary (T4C-0114)
 
 ### Fixed

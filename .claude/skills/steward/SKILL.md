@@ -9,9 +9,9 @@ skipping/disabling tests, no rewriting someone else's history, etc.).
 
 ## Review engine
 
-**Automated PR review is currently disabled in this repo** (owner's call, 2026-09-26):
-there is no reviewer to wait for, and green CI on the current head is the merge bar.
-Everything below describes the protocol for when it is switched back on.
+Automated Codex review may run, but the owner no longer wants it to delay a
+merge. Green CI on the current head, no conflict, and self-review are the
+merge bar. Handle any findings already posted before merging.
 
 This repo's automated PR reviewer is **Codex** (`chatgpt-codex-connector[bot]`),
 triggered automatically on PR open/sync/reopen. There is no Claude-based
@@ -23,9 +23,9 @@ comments if you're ever the one leaving them.
 
 ## After opening a PR
 
-1. Subscribe to the PR and wait for Codex's review to complete — its status
-   comment moves from "🔄 Running" to "✅ Completed".
-2. Read every finding Codex posted. For each one, use your own judgment —
+1. Check CI and any Codex findings already posted. Do not wait for the
+   review's status comment to move from "🔄 Running" to "✅ Completed".
+2. For each finding already posted, use your own judgment —
    there is no rule that decides this for you:
    - **Fix it** if it's a real correctness, security, or data/behavior
      integrity issue (the same bar `AGENTS.md` sets for what a reviewer
@@ -38,7 +38,7 @@ comments if you're ever the one leaving them.
    - There is no round limit and no obligation to reach "zero open
      comments." The bar is "nothing important left unaddressed," not
      "every comment resolved."
-3. If you pushed fixes, Codex will typically re-review the new commit. Per
+3. If you pushed fixes, Codex may re-review the new commit. Per
    `AGENTS.md` Section 3, that pass is fix-verification only against the
    findings from step 2 above — not a license to raise anything new, even
    something the fix commit itself introduced. If Codex raises a new
@@ -54,13 +54,13 @@ Once all of the following hold, merge the PR yourself — don't wait for a
 human to click merge:
 - CI (`Build and test`) is green on the current head.
 - There is no merge conflict.
-- No automated review is "🔄 Running" (with Codex disabled, there never is one).
-- You've made a judgment call on every Codex finding: fixed what mattered,
+- You've self-reviewed the change and made a judgment call on every Codex
+  finding already posted: fixed what mattered,
   consciously skipped the rest.
 
 Use `merge_pull_request` directly. This repo does not have GitHub's native
 auto-merge toggle enabled, so don't rely on `enable_pr_auto_merge` — it will
 fail; merge directly instead.
 
-Never merge while an enabled reviewer is still running, while CI is red, or while an
-important finding you judged worth fixing hasn't actually been pushed yet.
+Never merge while CI is red or while an important finding you judged worth
+fixing hasn't actually been pushed yet. A running review does not block merge.

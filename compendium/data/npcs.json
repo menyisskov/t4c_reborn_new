@@ -1499,6 +1499,74 @@
     }
   },
   {
+    "id": "RitekeeperEdrin",
+    "origin": "new",
+    "displayName": "Ritekeeper Edrin",
+    "spawns": [
+      {
+        "x": 225,
+        "y": 735,
+        "worldZ": 0
+      }
+    ],
+    "welcomeText": "I can take you straight to the Oracle's final trial. Ask about the \"path\"; choose \"light\" or \"shadow\", then say \"trial\" when you are ready.",
+    "topics": [
+      {
+        "keywords": [
+          "path"
+        ],
+        "response": "Choose \"light\" to face Gabriel Archonis or \"shadow\" to face Gaenen Elthorn. Your choice sets your karma and fixed alignment, affecting other conversations. Say \"prepare\" for the travel key and return scroll, then \"trial\" to enter the chamber. After victory, return and say \"oracle\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "light"
+        ],
+        "response": "Your path is light: your karma is now 100. Say \"prepare\" for the key and return scroll, then \"trial\" when ready to face Gabriel.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "shadow"
+        ],
+        "response": "Your path is shadow: your karma is now -100. Say \"prepare\" for the key and return scroll, then \"trial\" when ready to face Gaenen.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "prepare"
+        ],
+        "response": "I have arranged your Stoneheim passage and Oracle introduction, and given you a trial key and Stonecrest return scroll. Say \"trial\" to enter the final chamber. After victory, use the scroll and return to say \"oracle\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "trial"
+        ],
+        "response": "Gabriel Archonis waits ahead. Survive his trial, then use the Stonecrest scroll to return and say \"oracle\".",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "oracle"
+        ],
+        "response": "Your victory is known. Speak to the Oracle and say \"rebirth\", then \"ready to be reborn\" to begin the rite.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 100,
+      "maxHp": 1000000,
+      "strength": 65,
+      "endurance": 67,
+      "dexterity": 63,
+      "armorClass": 1000000,
+      "attackSkill": 250,
+      "dodge": 65535,
+      "damageFormula": "1d23+16"
+    }
+  },
+  {
     "id": "RurikCinderwatch",
     "origin": "new",
     "displayName": "Rurik Cinderwatch",
