@@ -92,6 +92,23 @@ class ItemSalePricingTest {
   }
 
   @Test
+  void celestialAndEmpyreanArmorKeepTheirEndgameResaleValue() {
+    long ancient =
+        ItemSalePricing.sellPrice(ItemRegistry.findByKey("item.ancient_celestial_fire_armor"));
+    long empyrean =
+        ItemSalePricing.sellPrice(ItemRegistry.findByKey("item.empyrean_fire_armor"));
+    long rarerEmpyrean =
+        ItemSalePricing.sellPrice(ItemRegistry.findByKey("item.empyrean_light_armor"));
+
+    assertEquals(200_000, ancient);
+    assertTrue(empyrean > ancient);
+    assertTrue(rarerEmpyrean > empyrean);
+    assertEquals(
+        200_000,
+        ItemSalePricing.sellPrice(ItemRegistry.findByKey("item.empyrean_earth_sceptre")));
+  }
+
+  @Test
   void easiestSourceIncludesRepeatedIndependentRollsAndRefreshesAfterReload() {
     var base = MonsterRegistry.load().getFirst();
     var easy =

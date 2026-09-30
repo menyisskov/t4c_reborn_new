@@ -643,7 +643,7 @@
         "expression": "16"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_air_boots",
@@ -713,7 +713,7 @@
         "expression": "5"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_air_gauntlets",
@@ -785,7 +785,7 @@
         "expression": "5"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_air_helmet",
@@ -855,7 +855,7 @@
         "expression": "5"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_air_leggings",
@@ -925,7 +925,7 @@
         "expression": "5"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_air_protector",
@@ -994,7 +994,7 @@
         "expression": "3"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_archer_armor",
@@ -1064,7 +1064,7 @@
         "expression": "25"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_archer_boots",
@@ -1134,7 +1134,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_archer_gauntlets",
@@ -1206,7 +1206,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_archer_helmet",
@@ -1276,7 +1276,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_archer_leggings",
@@ -1346,7 +1346,7 @@
         "expression": "8"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_archer_protector",
@@ -1415,7 +1415,7 @@
         "expression": "6"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_dark_armor",
@@ -1480,7 +1480,7 @@
         "expression": "37"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_dark_boots",
@@ -1545,7 +1545,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_dark_gauntlets",
@@ -1612,7 +1612,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_dark_helmet",
@@ -1677,7 +1677,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_dark_leggings",
@@ -1742,7 +1742,7 @@
         "expression": "12"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_dark_protector",
@@ -1806,7 +1806,7 @@
         "expression": "8"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_earth_armor",
@@ -1871,7 +1871,7 @@
         "expression": "31"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_earth_boots",
@@ -1936,7 +1936,7 @@
         "expression": "9"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_earth_gauntlets",
@@ -2003,7 +2003,7 @@
         "expression": "9"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_earth_helmet",
@@ -2068,7 +2068,7 @@
         "expression": "9"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_earth_leggings",
@@ -2133,7 +2133,7 @@
         "expression": "10"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_earth_protector",
@@ -2197,7 +2197,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_fire_armor",
@@ -2262,7 +2262,7 @@
         "expression": "37"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_fire_boots",
@@ -2327,7 +2327,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_fire_gauntlets",
@@ -2394,7 +2394,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_fire_helmet",
@@ -2459,7 +2459,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_fire_leggings",
@@ -2524,7 +2524,7 @@
         "expression": "12"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_fire_protector",
@@ -2588,7 +2588,7 @@
         "expression": "8"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_light_armor",
@@ -2653,7 +2653,7 @@
         "expression": "31"
       }
     ],
-    "sellPrice": 16667
+    "sellPrice": 833350
   },
   {
     "key": "ancient_celestial_light_boots",
@@ -2718,7 +2718,7 @@
         "expression": "9"
       }
     ],
-    "sellPrice": 16667
+    "sellPrice": 833350
   },
   {
     "key": "ancient_celestial_light_gauntlets",
@@ -2785,7 +2785,7 @@
         "expression": "9"
       }
     ],
-    "sellPrice": 16667
+    "sellPrice": 833350
   },
   {
     "key": "ancient_celestial_light_helmet",
@@ -2850,7 +2850,7 @@
         "expression": "9"
       }
     ],
-    "sellPrice": 16667
+    "sellPrice": 833350
   },
   {
     "key": "ancient_celestial_light_leggings",
@@ -2915,7 +2915,7 @@
         "expression": "10"
       }
     ],
-    "sellPrice": 6667
+    "sellPrice": 333350
   },
   {
     "key": "ancient_celestial_light_protector",
@@ -2979,7 +2979,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 16667
+    "sellPrice": 833350
   },
   {
     "key": "ancient_celestial_warrior_armor",
@@ -3049,7 +3049,7 @@
         "expression": "25"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_warrior_boots",
@@ -3119,7 +3119,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_warrior_gauntlets",
@@ -3191,7 +3191,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_warrior_helmet",
@@ -3261,7 +3261,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_warrior_leggings",
@@ -3331,7 +3331,7 @@
         "expression": "8"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_warrior_protector",
@@ -3400,7 +3400,7 @@
         "expression": "6"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_water_armor",
@@ -3465,7 +3465,7 @@
         "expression": "37"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_water_boots",
@@ -3530,7 +3530,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_water_gauntlets",
@@ -3597,7 +3597,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_water_helmet",
@@ -3662,7 +3662,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_water_leggings",
@@ -3727,7 +3727,7 @@
         "expression": "12"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "ancient_celestial_water_protector",
@@ -3791,7 +3791,7 @@
         "expression": "8"
       }
     ],
-    "sellPrice": 4000
+    "sellPrice": 200000
   },
   {
     "key": "apprentices_emberweave_robe",
@@ -6375,7 +6375,7 @@
         "expression": "23"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_air_boots",
@@ -6445,7 +6445,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_air_gauntlets",
@@ -6517,7 +6517,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_air_helmet",
@@ -6587,7 +6587,7 @@
         "expression": "7"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_air_leggings",
@@ -6657,7 +6657,7 @@
         "expression": "8"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_air_protector",
@@ -6726,7 +6726,7 @@
         "expression": "5"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_archer_armor",
@@ -6796,7 +6796,7 @@
         "expression": "37"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_archer_boots",
@@ -6866,7 +6866,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_archer_gauntlets",
@@ -6938,7 +6938,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_archer_helmet",
@@ -7008,7 +7008,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_archer_leggings",
@@ -7078,7 +7078,7 @@
         "expression": "12"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_archer_protector",
@@ -7147,7 +7147,7 @@
         "expression": "8"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_dark_armor",
@@ -7212,7 +7212,7 @@
         "expression": "55"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_dark_boots",
@@ -7277,7 +7277,7 @@
         "expression": "17"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_dark_gauntlets",
@@ -7344,7 +7344,7 @@
         "expression": "17"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_dark_helmet",
@@ -7409,7 +7409,7 @@
         "expression": "16"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_dark_leggings",
@@ -7474,7 +7474,7 @@
         "expression": "18"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_dark_protector",
@@ -7538,7 +7538,7 @@
         "expression": "12"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_earth_armor",
@@ -7603,7 +7603,7 @@
         "expression": "47"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_earth_boots",
@@ -7668,7 +7668,7 @@
         "expression": "14"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_earth_gauntlets",
@@ -7735,7 +7735,7 @@
         "expression": "14"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_earth_helmet",
@@ -7800,7 +7800,7 @@
         "expression": "13"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_earth_leggings",
@@ -7865,7 +7865,7 @@
         "expression": "16"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_earth_protector",
@@ -7929,7 +7929,7 @@
         "expression": "10"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_fire_armor",
@@ -7994,7 +7994,7 @@
         "expression": "55"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_fire_boots",
@@ -8059,7 +8059,7 @@
         "expression": "17"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_fire_gauntlets",
@@ -8126,7 +8126,7 @@
         "expression": "17"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_fire_helmet",
@@ -8191,7 +8191,7 @@
         "expression": "16"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_fire_leggings",
@@ -8256,7 +8256,7 @@
         "expression": "18"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_fire_protector",
@@ -8320,7 +8320,7 @@
         "expression": "12"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_light_armor",
@@ -8385,7 +8385,7 @@
         "expression": "47"
       }
     ],
-    "sellPrice": 33333
+    "sellPrice": 1666650
   },
   {
     "key": "empyrean_light_boots",
@@ -8450,7 +8450,7 @@
         "expression": "14"
       }
     ],
-    "sellPrice": 33333
+    "sellPrice": 1666650
   },
   {
     "key": "empyrean_light_gauntlets",
@@ -8517,7 +8517,7 @@
         "expression": "14"
       }
     ],
-    "sellPrice": 33333
+    "sellPrice": 1666650
   },
   {
     "key": "empyrean_light_helmet",
@@ -8582,7 +8582,7 @@
         "expression": "13"
       }
     ],
-    "sellPrice": 33333
+    "sellPrice": 1666650
   },
   {
     "key": "empyrean_light_leggings",
@@ -8647,7 +8647,7 @@
         "expression": "16"
       }
     ],
-    "sellPrice": 33333
+    "sellPrice": 1666650
   },
   {
     "key": "empyrean_light_protector",
@@ -8711,7 +8711,7 @@
         "expression": "10"
       }
     ],
-    "sellPrice": 33333
+    "sellPrice": 1666650
   },
   {
     "key": "empyrean_warrior_armor",
@@ -8781,7 +8781,7 @@
         "expression": "37"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_warrior_boots",
@@ -8851,7 +8851,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_warrior_gauntlets",
@@ -8923,7 +8923,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_warrior_helmet",
@@ -8993,7 +8993,7 @@
         "expression": "11"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_warrior_leggings",
@@ -9063,7 +9063,7 @@
         "expression": "12"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_warrior_protector",
@@ -9132,7 +9132,7 @@
         "expression": "8"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_water_armor",
@@ -9197,7 +9197,7 @@
         "expression": "55"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_water_boots",
@@ -9262,7 +9262,7 @@
         "expression": "17"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_water_gauntlets",
@@ -9329,7 +9329,7 @@
         "expression": "17"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_water_helmet",
@@ -9394,7 +9394,7 @@
         "expression": "16"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_water_leggings",
@@ -9459,7 +9459,7 @@
         "expression": "18"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "empyrean_water_protector",
@@ -9523,7 +9523,7 @@
         "expression": "12"
       }
     ],
-    "sellPrice": 8333
+    "sellPrice": 416650
   },
   {
     "key": "galecrest_wyrms_tempest_wand",
@@ -14990,7 +14990,7 @@
     "name": "Empyrean Earth Sceptre",
     "bodyPart": "WEAPON",
     "price": 0,
-    "sellPrice": 2500,
+    "sellPrice": 200000,
     "weight": 6,
     "armorClass": 0.0,
     "requirements": {

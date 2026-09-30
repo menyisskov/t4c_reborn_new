@@ -43190,7 +43190,7 @@ window.T4C_DATA = {
           "expression": "16"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_air_boots",
@@ -43260,7 +43260,7 @@ window.T4C_DATA = {
           "expression": "5"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_air_gauntlets",
@@ -43332,7 +43332,7 @@ window.T4C_DATA = {
           "expression": "5"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_air_helmet",
@@ -43402,7 +43402,7 @@ window.T4C_DATA = {
           "expression": "5"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_air_leggings",
@@ -43472,7 +43472,7 @@ window.T4C_DATA = {
           "expression": "5"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_air_protector",
@@ -43541,7 +43541,7 @@ window.T4C_DATA = {
           "expression": "3"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_archer_armor",
@@ -43611,7 +43611,7 @@ window.T4C_DATA = {
           "expression": "25"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_archer_boots",
@@ -43681,7 +43681,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_archer_gauntlets",
@@ -43753,7 +43753,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_archer_helmet",
@@ -43823,7 +43823,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_archer_leggings",
@@ -43893,7 +43893,7 @@ window.T4C_DATA = {
           "expression": "8"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_archer_protector",
@@ -43962,7 +43962,7 @@ window.T4C_DATA = {
           "expression": "6"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_dark_armor",
@@ -44027,7 +44027,7 @@ window.T4C_DATA = {
           "expression": "37"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_dark_boots",
@@ -44092,7 +44092,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_dark_gauntlets",
@@ -44159,7 +44159,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_dark_helmet",
@@ -44224,7 +44224,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_dark_leggings",
@@ -44289,7 +44289,7 @@ window.T4C_DATA = {
           "expression": "12"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_dark_protector",
@@ -44353,7 +44353,7 @@ window.T4C_DATA = {
           "expression": "8"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_earth_armor",
@@ -44418,7 +44418,7 @@ window.T4C_DATA = {
           "expression": "31"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_earth_boots",
@@ -44483,7 +44483,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_earth_gauntlets",
@@ -44550,7 +44550,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_earth_helmet",
@@ -44615,7 +44615,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_earth_leggings",
@@ -44680,7 +44680,7 @@ window.T4C_DATA = {
           "expression": "10"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_earth_protector",
@@ -44744,7 +44744,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_fire_armor",
@@ -44809,7 +44809,7 @@ window.T4C_DATA = {
           "expression": "37"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_fire_boots",
@@ -44874,7 +44874,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_fire_gauntlets",
@@ -44941,7 +44941,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_fire_helmet",
@@ -45006,7 +45006,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_fire_leggings",
@@ -45071,7 +45071,7 @@ window.T4C_DATA = {
           "expression": "12"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_fire_protector",
@@ -45135,7 +45135,7 @@ window.T4C_DATA = {
           "expression": "8"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_light_armor",
@@ -45200,7 +45200,7 @@ window.T4C_DATA = {
           "expression": "31"
         }
       ],
-      "sellPrice": 16667
+      "sellPrice": 833350
     },
     {
       "key": "ancient_celestial_light_boots",
@@ -45265,7 +45265,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 16667
+      "sellPrice": 833350
     },
     {
       "key": "ancient_celestial_light_gauntlets",
@@ -45332,7 +45332,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 16667
+      "sellPrice": 833350
     },
     {
       "key": "ancient_celestial_light_helmet",
@@ -45397,7 +45397,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 16667
+      "sellPrice": 833350
     },
     {
       "key": "ancient_celestial_light_leggings",
@@ -45462,7 +45462,7 @@ window.T4C_DATA = {
           "expression": "10"
         }
       ],
-      "sellPrice": 6667
+      "sellPrice": 333350
     },
     {
       "key": "ancient_celestial_light_protector",
@@ -45526,7 +45526,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 16667
+      "sellPrice": 833350
     },
     {
       "key": "ancient_celestial_warrior_armor",
@@ -45596,7 +45596,7 @@ window.T4C_DATA = {
           "expression": "25"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_warrior_boots",
@@ -45666,7 +45666,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_warrior_gauntlets",
@@ -45738,7 +45738,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_warrior_helmet",
@@ -45808,7 +45808,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_warrior_leggings",
@@ -45878,7 +45878,7 @@ window.T4C_DATA = {
           "expression": "8"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_warrior_protector",
@@ -45947,7 +45947,7 @@ window.T4C_DATA = {
           "expression": "6"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_water_armor",
@@ -46012,7 +46012,7 @@ window.T4C_DATA = {
           "expression": "37"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_water_boots",
@@ -46077,7 +46077,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_water_gauntlets",
@@ -46144,7 +46144,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_water_helmet",
@@ -46209,7 +46209,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_water_leggings",
@@ -46274,7 +46274,7 @@ window.T4C_DATA = {
           "expression": "12"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_water_protector",
@@ -46338,7 +46338,7 @@ window.T4C_DATA = {
           "expression": "8"
         }
       ],
-      "sellPrice": 4000
+      "sellPrice": 200000
     },
     {
       "key": "apprentices_emberweave_robe",
@@ -48922,7 +48922,7 @@ window.T4C_DATA = {
           "expression": "23"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_air_boots",
@@ -48992,7 +48992,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_air_gauntlets",
@@ -49064,7 +49064,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_air_helmet",
@@ -49134,7 +49134,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_air_leggings",
@@ -49204,7 +49204,7 @@ window.T4C_DATA = {
           "expression": "8"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_air_protector",
@@ -49273,7 +49273,7 @@ window.T4C_DATA = {
           "expression": "5"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_archer_armor",
@@ -49343,7 +49343,7 @@ window.T4C_DATA = {
           "expression": "37"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_archer_boots",
@@ -49413,7 +49413,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_archer_gauntlets",
@@ -49485,7 +49485,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_archer_helmet",
@@ -49555,7 +49555,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_archer_leggings",
@@ -49625,7 +49625,7 @@ window.T4C_DATA = {
           "expression": "12"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_archer_protector",
@@ -49694,7 +49694,7 @@ window.T4C_DATA = {
           "expression": "8"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_dark_armor",
@@ -49759,7 +49759,7 @@ window.T4C_DATA = {
           "expression": "55"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_dark_boots",
@@ -49824,7 +49824,7 @@ window.T4C_DATA = {
           "expression": "17"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_dark_gauntlets",
@@ -49891,7 +49891,7 @@ window.T4C_DATA = {
           "expression": "17"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_dark_helmet",
@@ -49956,7 +49956,7 @@ window.T4C_DATA = {
           "expression": "16"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_dark_leggings",
@@ -50021,7 +50021,7 @@ window.T4C_DATA = {
           "expression": "18"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_dark_protector",
@@ -50085,7 +50085,7 @@ window.T4C_DATA = {
           "expression": "12"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_earth_armor",
@@ -50150,7 +50150,7 @@ window.T4C_DATA = {
           "expression": "47"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_earth_boots",
@@ -50215,7 +50215,7 @@ window.T4C_DATA = {
           "expression": "14"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_earth_gauntlets",
@@ -50282,7 +50282,7 @@ window.T4C_DATA = {
           "expression": "14"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_earth_helmet",
@@ -50347,7 +50347,7 @@ window.T4C_DATA = {
           "expression": "13"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_earth_leggings",
@@ -50412,7 +50412,7 @@ window.T4C_DATA = {
           "expression": "16"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_earth_protector",
@@ -50476,7 +50476,7 @@ window.T4C_DATA = {
           "expression": "10"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_fire_armor",
@@ -50541,7 +50541,7 @@ window.T4C_DATA = {
           "expression": "55"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_fire_boots",
@@ -50606,7 +50606,7 @@ window.T4C_DATA = {
           "expression": "17"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_fire_gauntlets",
@@ -50673,7 +50673,7 @@ window.T4C_DATA = {
           "expression": "17"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_fire_helmet",
@@ -50738,7 +50738,7 @@ window.T4C_DATA = {
           "expression": "16"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_fire_leggings",
@@ -50803,7 +50803,7 @@ window.T4C_DATA = {
           "expression": "18"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_fire_protector",
@@ -50867,7 +50867,7 @@ window.T4C_DATA = {
           "expression": "12"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_light_armor",
@@ -50932,7 +50932,7 @@ window.T4C_DATA = {
           "expression": "47"
         }
       ],
-      "sellPrice": 33333
+      "sellPrice": 1666650
     },
     {
       "key": "empyrean_light_boots",
@@ -50997,7 +50997,7 @@ window.T4C_DATA = {
           "expression": "14"
         }
       ],
-      "sellPrice": 33333
+      "sellPrice": 1666650
     },
     {
       "key": "empyrean_light_gauntlets",
@@ -51064,7 +51064,7 @@ window.T4C_DATA = {
           "expression": "14"
         }
       ],
-      "sellPrice": 33333
+      "sellPrice": 1666650
     },
     {
       "key": "empyrean_light_helmet",
@@ -51129,7 +51129,7 @@ window.T4C_DATA = {
           "expression": "13"
         }
       ],
-      "sellPrice": 33333
+      "sellPrice": 1666650
     },
     {
       "key": "empyrean_light_leggings",
@@ -51194,7 +51194,7 @@ window.T4C_DATA = {
           "expression": "16"
         }
       ],
-      "sellPrice": 33333
+      "sellPrice": 1666650
     },
     {
       "key": "empyrean_light_protector",
@@ -51258,7 +51258,7 @@ window.T4C_DATA = {
           "expression": "10"
         }
       ],
-      "sellPrice": 33333
+      "sellPrice": 1666650
     },
     {
       "key": "empyrean_warrior_armor",
@@ -51328,7 +51328,7 @@ window.T4C_DATA = {
           "expression": "37"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_warrior_boots",
@@ -51398,7 +51398,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_warrior_gauntlets",
@@ -51470,7 +51470,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_warrior_helmet",
@@ -51540,7 +51540,7 @@ window.T4C_DATA = {
           "expression": "11"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_warrior_leggings",
@@ -51610,7 +51610,7 @@ window.T4C_DATA = {
           "expression": "12"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_warrior_protector",
@@ -51679,7 +51679,7 @@ window.T4C_DATA = {
           "expression": "8"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_water_armor",
@@ -51744,7 +51744,7 @@ window.T4C_DATA = {
           "expression": "55"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_water_boots",
@@ -51809,7 +51809,7 @@ window.T4C_DATA = {
           "expression": "17"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_water_gauntlets",
@@ -51876,7 +51876,7 @@ window.T4C_DATA = {
           "expression": "17"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_water_helmet",
@@ -51941,7 +51941,7 @@ window.T4C_DATA = {
           "expression": "16"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_water_leggings",
@@ -52006,7 +52006,7 @@ window.T4C_DATA = {
           "expression": "18"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_water_protector",
@@ -52070,7 +52070,7 @@ window.T4C_DATA = {
           "expression": "12"
         }
       ],
-      "sellPrice": 8333
+      "sellPrice": 416650
     },
     {
       "key": "galecrest_wyrms_tempest_wand",
@@ -57537,7 +57537,7 @@ window.T4C_DATA = {
       "name": "Empyrean Earth Sceptre",
       "bodyPart": "WEAPON",
       "price": 0,
-      "sellPrice": 2500,
+      "sellPrice": 200000,
       "weight": 6,
       "armorClass": 0.0,
       "requirements": {

@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-09-30 — Rare endgame resale (T4C-0111)
+
+### Changed
+- Ancient Celestial armor and all Empyrean items now sell for at least 200,000 gold each. Rarer drops fetch more, and existing possessions gain the new value automatically.
+
 ## 2026-09-30 — Character saves and quest item names (T4C-0110)
 
 ### Fixed
