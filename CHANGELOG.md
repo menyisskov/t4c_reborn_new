@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-09-30 — Choose your path (T4C-0112)
+
+### Added
+- New characters now choose a Good or Evil path during creation and begin with +100 or -100 karma. The choice is saved with the character.
+
 ## 2026-09-30 — Rare endgame resale (T4C-0111)
 
 ### Changed
