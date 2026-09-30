@@ -1,11 +1,8 @@
 # AGENTS.md — PR Review Protocol
 
-This file governs any automated agent — the repo's configured code-review
-bot (e.g. a Codex-based review workflow), or a Claude Code session asked to
-review or babysit a pull request — that posts review comments on a pull
-request here. It does **not** relax or replace `AGENT.md` (the general
-engineering charter) — it adds review-specific scope rules that take
-precedence over a reviewer's own instincts about what's "worth mentioning."
+Sections 1–4 govern automated agents that review or babysit a pull request.
+Section 5 governs agents that author or modify tests. This file does **not**
+relax or replace `AGENT.md` (the general engineering charter).
 
 The two failure modes this file exists to prevent: a reviewer that wanders
 outside the PR's actual purpose and buries real feedback under nitpicks and
@@ -89,8 +86,7 @@ without an automated reviewer moving the goalposts every push.
 There is no separate automated approval check in this repo. The PR's
 driving agent (a Claude Code session; see `.claude/skills/steward/SKILL.md`
 for its exact mechanics) merges directly, once:
-- any enabled automated review has finished (not still "🔄 Running") - Codex review is
-  currently disabled, so there is normally none to wait for, and
+- any enabled automated review has finished (not still "🔄 Running"), and
 - CI (`Build and test`) is green on the current head, with no merge
   conflict, and
 - every finding from the original review has an explicit fix-or-skip
@@ -106,3 +102,23 @@ fixed and pushed, not skipped, before the PR is ready.
 consciously-skipped nitpicks is ready; a PR with an unaddressed Section-2
 finding is not, and nothing outside Sections 1–2 should hold a PR up in
 the first place.
+
+## 5. Test scope when authoring changes
+
+- Add a test for a real behavior, regression, data contract, or save
+  compatibility risk that existing tests do not cover. Prefer one focused
+  representative case per behavior. Add a second case only when it exercises
+  a different failure mode or an important boundary.
+- Before adding a test, search for existing coverage. Extend an existing
+  focused test when that makes the behavior clearer; do not repeat its setup
+  and assertions in a new method or class.
+- Do not enumerate every input, direction, item, map, or NPC variation when
+  they follow the same code path. Do not pin incidental implementation details,
+  exact design numbers, or content counts unless the number itself is a game
+  rule or integrity contract.
+- Keep integration tests for consequential joins: save/load, quest and item
+  references, registry uniqueness, map entrances, and other failures that
+  could silently strand a player or corrupt progress.
+- When removing tests, identify the surviving coverage for each removed
+  behavior. Fewer tests is useful only if the suite still catches meaningful
+  regressions.

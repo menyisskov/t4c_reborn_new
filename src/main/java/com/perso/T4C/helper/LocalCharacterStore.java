@@ -69,7 +69,7 @@ public final class LocalCharacterStore {
         new CharacterSlot(
             id, name, gender, characterClass.id(), stateFile, System.currentTimeMillis());
     PlayerStateDto state = newInitialState(name, gender, characterClass, stats);
-    PlayerStateStore.save(stateFile, state);
+    PlayerStateStore.saveOrThrow(stateFile, state);
     roster.characters.add(slot);
     try {
       saveRoster(roster);

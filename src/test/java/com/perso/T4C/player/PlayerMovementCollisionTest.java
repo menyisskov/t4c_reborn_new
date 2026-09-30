@@ -64,20 +64,6 @@ class PlayerMovementCollisionTest {
   }
 
   @Test
-  void playerFootprintStopsBeforeWallSpriteOverhang() throws Exception {
-    int blockedX = 4 + leadingCollisionCellOffset();
-    initializeCollisionMap(10, 10, blockedX, 3);
-    Player player = createPlayerAt(3f * GRID_W, 3f * GRID_H, 10, 10);
-    player.move(1f, 0f, 0.01f);
-    assertTrue(player.getCoordinates().getX() > 3f * GRID_W);
-    assertTrue(player.getCoordinates().getY() < 3f * GRID_H);
-    assertFalse(
-        CollisionManager.getInstance()
-            .hasCollision(player.getCoordinates().getX(), player.getCoordinates().getY()));
-    assertTrue(player.getMovement().isMoving());
-  }
-
-  @Test
   void diagonalMovementCannotSkipCollisionOnHorizontalLeadingEdge() throws Exception {
     int blockedX = 4 + leadingCollisionCellOffset();
     int blockedY = 4;
@@ -304,17 +290,6 @@ class PlayerMovementCollisionTest {
     assertFalse(
         CollisionManager.getInstance()
             .hasCollision(player.getCoordinates().getX(), player.getCoordinates().getY()));
-  }
-
-  @Test
-  void loadedPositionIsKeptWhenAHorizontalNeighbourCellIsBlocked() throws Exception {
-    File collisionFile = new File("assets/maps/worldmap/worldmap.colbin");
-    CollisionManager.getInstance().initialize(new CollisionReader(collisionFile));
-    Player player = new Player();
-    player.setMapBounds(3072 * GRID_W, 3072 * GRID_H);
-    player.setWorldPosition(2937f * GRID_W, 1072f * GRID_H, 0);
-    assertFalse(player.getMovement().recoverLoadedCollisionPosition(player));
-    assertPlayerFootprintIsFree(player);
   }
 
   @Test

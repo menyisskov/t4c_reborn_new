@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-09-30 — Character saves and quest item names (T4C-0110)
+
+### Fixed
+- New characters are registered only after their save has been written successfully, and replacement saves preserve the previous file if writing fails.
+- Quest delivery requirements in the compendium display item names and working item links instead of internal keys.
+
 ## 2026-09-30 — The Names That Remain (T4C-0109)
 
 ### Added

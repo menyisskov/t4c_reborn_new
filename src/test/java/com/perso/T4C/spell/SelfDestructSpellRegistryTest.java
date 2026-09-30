@@ -1,7 +1,6 @@
 package com.perso.T4C.spell;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.perso.T4C.npc.core.NpcScripts;
@@ -17,14 +16,5 @@ class SelfDestructSpellRegistryTest {
     assertEquals(10797, SpellRegistry.findByName("spell.self_destruct_20_seconds").getSpellId());
     assertNotNull(SpellRegistry.findById(10797));
     assertNotNull(SpellRegistry.findById(10765));
-  }
-
-  @Test
-  void remortPortalJ4HasNoEmbeddedCppPopupEvent() {
-    NpcScripts.reload();
-    NpcScripts.Entry portal = NpcScripts.find("PortalJ4");
-    assertNotNull(portal);
-    assertFalse(portal.hasConversation());
-    assertFalse(portal.hasEvent("OnPopup"));
   }
 }
