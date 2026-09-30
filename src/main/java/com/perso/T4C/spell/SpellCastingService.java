@@ -73,6 +73,10 @@ public final class SpellCastingService {
         && SanctuaryCombatRules.isProtected(request.caster().getPositionVector())) {
       return Result.failure(Failure.SAFE_HAVEN);
     }
+    if (request.pvpTarget()
+        && SanctuaryCombatRules.isPvpProtected(request.caster().getPositionVector())) {
+      return Result.failure(Failure.SAFE_HAVEN);
+    }
     SpellData spell = request.spell();
     Player caster = request.caster();
     if (request.knownSpellRequired() && !hasLearnedSpell(caster, spell)) {

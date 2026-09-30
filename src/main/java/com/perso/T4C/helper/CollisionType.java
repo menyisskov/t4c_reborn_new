@@ -24,8 +24,9 @@ public enum CollisionType {
   HARDCORE(13, "Hardcore", false, false, new Color(0.65f, 0.05f, 0.05f, 0.65f)),
   FULL_PVP(14, "Full PvP", false, false, new Color(0.92f, 0.08f, 0.42f, 0.65f)),
   FULL_PVP_NO_DROP_CAST(
-      15, "Full PvP no drop/cast", false, false, new Color(0.52f, 0.05f, 0.32f, 0.65f));
-  private static final CollisionType[] BY_VALUE = new CollisionType[16];
+      15, "Full PvP no drop/cast", false, false, new Color(0.52f, 0.05f, 0.32f, 0.65f)),
+  PVP_SANCTUARY(16, "PvP sanctuary", false, false, new Color(0.20f, 0.82f, 0.68f, 0.65f));
+  private static final CollisionType[] BY_VALUE = new CollisionType[17];
 
   static {
     Arrays.stream(values()).forEach(type -> BY_VALUE[type.value] = type);

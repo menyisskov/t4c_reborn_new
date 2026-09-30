@@ -59,12 +59,18 @@ public final class DeathPenaltyService {
         || collisionValue == CollisionType.INDOOR_SAFE_HAVEN.getValue();
   }
 
+  public static boolean isPvpSafeHaven(int collisionValue) {
+    return isSafeHaven(collisionValue)
+        || collisionValue == CollisionType.PVP_SANCTUARY.getValue();
+  }
+
   public Result apply(Player player, boolean pvp, XpCurve curve, RandomGenerator random) {
     if (player == null || random == null)
       throw new IllegalArgumentException("Player and random generator are required");
-    if (isSafeHaven(
+    int collision =
         CollisionManager.getInstance()
-            .getCollisionValue(player.getPositionVector().x, player.getPositionVector().y))) {
+            .getCollisionValue(player.getPositionVector().x, player.getPositionVector().y);
+    if (pvp ? isPvpSafeHaven(collision) : isSafeHaven(collision)) {
       return new Result(pvp, 0, 0, 0, List.of(), List.of(), List.of());
     }
     Rates rates = pvp ? config.pvp() : config.pve();

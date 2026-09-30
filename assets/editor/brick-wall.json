@@ -8,7 +8,7 @@
     "offsetX": 0.0,
     "offsetY": -96.0,
     "depth": 0,
-    "collision": 7
+    "collision": 16
   },
   "ascending": {
     "ground": "Town Road Dale (2, 2)",
@@ -18,7 +18,7 @@
     "offsetX": 0.0,
     "offsetY": -97.0,
     "depth": 0,
-    "collision": 7
+    "collision": 16
   },
   "north": {
     "ground": "Town Road Dale (1, 1)",
@@ -28,7 +28,7 @@
     "offsetX": 0.0,
     "offsetY": -89.0,
     "depth": 0,
-    "collision": 7
+    "collision": 16
   },
   "east": {
     "ground": "Tmpl3 24",
@@ -38,7 +38,7 @@
     "offsetX": 0.0,
     "offsetY": -96.0,
     "depth": 0,
-    "collision": 6
+    "collision": 16
   },
   "south": {
     "ground": "Town Road Dale (2, 2)",
@@ -48,7 +48,7 @@
     "offsetX": 0.0,
     "offsetY": -88.0,
     "depth": 0,
-    "collision": 7
+    "collision": 16
   },
   "west": {
     "ground": "64kNormalGrass (1, 8)",

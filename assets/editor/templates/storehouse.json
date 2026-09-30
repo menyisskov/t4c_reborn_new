@@ -17,7 +17,7 @@
         "offsetX": 0.0,
         "offsetY": -89.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -31,7 +31,7 @@
         "offsetX": 0.0,
         "offsetY": -97.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -44,7 +44,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -58,7 +58,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -72,7 +72,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -85,7 +85,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -98,7 +98,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -111,7 +111,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -125,7 +125,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -139,7 +139,7 @@
         "offsetX": -1.0,
         "offsetY": -92.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -152,7 +152,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -165,7 +165,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -178,7 +178,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -191,7 +191,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -204,7 +204,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -218,7 +218,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -231,7 +231,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -244,7 +244,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -257,7 +257,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -270,7 +270,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -283,7 +283,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -296,7 +296,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -309,7 +309,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -322,7 +322,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -336,7 +336,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -350,7 +350,7 @@
         "offsetX": 0.0,
         "offsetY": -89.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -363,7 +363,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -376,7 +376,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -389,7 +389,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -402,7 +402,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -415,7 +415,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -428,7 +428,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -441,7 +441,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -454,7 +454,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -467,7 +467,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -481,7 +481,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -495,7 +495,7 @@
         "offsetX": 0.0,
         "offsetY": -97.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -508,7 +508,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -521,7 +521,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -534,7 +534,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -547,7 +547,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -560,7 +560,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -573,7 +573,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -586,7 +586,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -599,7 +599,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -612,7 +612,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -625,7 +625,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -692,7 +692,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -705,7 +705,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -718,7 +718,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -731,7 +731,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -744,7 +744,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -757,7 +757,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -770,7 +770,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -783,7 +783,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -796,7 +796,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -849,7 +849,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -863,7 +863,7 @@
         "offsetX": -2.0,
         "offsetY": -95.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -915,7 +915,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -928,7 +928,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -941,7 +941,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -954,7 +954,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -967,7 +967,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -980,7 +980,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -993,7 +993,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1046,7 +1046,7 @@
         "offsetX": 0.0,
         "offsetY": -97.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1060,7 +1060,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1112,7 +1112,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1125,7 +1125,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1138,7 +1138,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1151,7 +1151,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1164,7 +1164,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1217,7 +1217,7 @@
         "offsetX": 0.0,
         "offsetY": -114.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1231,7 +1231,7 @@
         "offsetX": 0.0,
         "offsetY": -118.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1283,7 +1283,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1296,7 +1296,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1309,7 +1309,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1362,7 +1362,7 @@
         "offsetX": 0.0,
         "offsetY": -112.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1376,7 +1376,7 @@
         "offsetX": 0.0,
         "offsetY": -118.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1428,7 +1428,7 @@
         "offsetX": 0.0,
         "offsetY": 0.0,
         "depth": 0,
-        "collision": 7
+        "collision": 5
       }
     },
     {
@@ -1481,7 +1481,7 @@
         "offsetX": 0.0,
         "offsetY": -113.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1495,7 +1495,7 @@
         "offsetX": 0.0,
         "offsetY": -121.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1574,7 +1574,7 @@
         "offsetX": 0.0,
         "offsetY": -97.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1588,7 +1588,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1641,7 +1641,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1655,7 +1655,7 @@
         "offsetX": 0.0,
         "offsetY": -96.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1682,7 +1682,7 @@
         "offsetX": 0.0,
         "offsetY": -97.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     },
     {
@@ -1696,7 +1696,7 @@
         "offsetX": 0.0,
         "offsetY": -88.0,
         "depth": 0,
-        "collision": 6
+        "collision": 0
       }
     }
   ]

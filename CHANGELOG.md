@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-09-30 — Lighthaven temple sanctuary (T4C-0114)
+
+### Fixed
+- Lighthaven town and temple now allow monster combat. Only the temple protects against fights between players; other sanctuaries keep their existing protection.
+
 ## 2026-09-30 — Self-centered area spells (T4C-0113)
 
 ### Fixed
