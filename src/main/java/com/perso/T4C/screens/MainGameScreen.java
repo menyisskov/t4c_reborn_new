@@ -97,6 +97,7 @@ import com.perso.T4C.render.SpellRenderer;
 import com.perso.T4C.render.TeleportOverlayRenderer;
 import com.perso.T4C.spell.CompanionCastVfxHook;
 import com.perso.T4C.spell.GrandImpactShower;
+import com.perso.T4C.spell.SpellAreaTargeting;
 import com.perso.T4C.spell.SpellCastingService;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellEffectManager;
@@ -1668,6 +1669,11 @@ public class MainGameScreen implements Screen {
       castDefensiveSpell(spell);
       return;
     }
+    if (SpellAreaTargeting.isSelfCenteredAttack(spell)) {
+      if (selectedTargetedSpell != null) clearSelectedTargetedSpell(true);
+      castSelfCenteredAreaSpell(spell);
+      return;
+    }
     if (isHostileUnitSpell(spell) || isPositionTargetSpell(spell) || isTameSpell(spell)) {
       if (selectedTargetedSpell != null && selectedTargetedSlot == slotNumber) {
         clearSelectedTargetedSpell(false);
@@ -1769,6 +1775,7 @@ public class MainGameScreen implements Screen {
 
   private boolean isHostileUnitSpell(SpellData spell) {
     if (spell == null) return false;
+    if (SpellAreaTargeting.isSelfCenteredAttack(spell)) return false;
     if (spell.isAttack() || spellEffectManager.hasVaporizeEffect(spell)) return true;
     return switch (spell.getTargetType()) {
       case 2, 8, 9, 11 -> true;
@@ -1899,6 +1906,36 @@ public class MainGameScreen implements Screen {
       currentAttackNpcTarget = previousAutoCombatNpcTarget;
       currentAttackSpell = previousAutoCombatSpell;
       nextAutoSpellAttemptAtMs = previousAutoSpellAttemptAtMs;
+    }
+  }
+
+  private void castSelfCenteredAreaSpell(SpellData spell) {
+    if (player == null || !SpellAreaTargeting.isSelfCenteredAttack(spell)) return;
+    SpellCastingService.Result cast =
+        SpellCastingService.begin(
+            new SpellCastingService.Request(
+                spell, player, SpellCastingService.TargetKind.SELF, 0f, true, false, true));
+    if (!cast.success()) {
+      showSystemMessage(SpellCastingService.message(cast.failure()));
+      return;
+    }
+    Vector2 center = player.getPositionVector();
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    spellRenderer.playLaunchSound(visuals.launchSound());
+    if (monsterManager != null) {
+      for (BaseMonster candidate : monsterManager.getMonsters()) {
+        Vector2 target = candidate.getPosition();
+        if (candidate.isDead()
+            || !candidate.canBeAttackedByPlayer()
+            || !SpellAreaTargeting.contains(spell, center.x, center.y, target.x, target.y))
+          continue;
+        if (spell.isLineOfSight() && !hasLineOfSight(center, target)) continue;
+        double range = SpellAreaTargeting.distanceInTiles(center.x, center.y, target.x, target.y);
+        applyResolvedSpellImpact(spell, candidate, range, true, false);
+      }
+    }
+    if (visuals.impact() != null && !visuals.impact().isEmpty()) {
+      triggerAreaImpactShower(spell, visuals, center);
     }
   }
 

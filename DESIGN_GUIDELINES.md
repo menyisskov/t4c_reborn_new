@@ -268,6 +268,11 @@ quiz is gone; its i18n strings were deleted with it.
   it roughly halved real cast cycle time without touching a single balance number. Don't reintroduce a
   pre-cast delay to "slow casting down" - change the exhaustion formulas instead. The progress bar is
   now only for harvesting and taming.
+- **Self-centered area attacks (T4C-0113).** Earthquake and Flame Wave cast immediately from the
+  caster when activated; they do not require a clicked target. They affect every attackable monster
+  within their spell radius measured in map tiles on both axes. Earthquake reaches seven tiles and
+  Flame Wave five, including monsters on the radius boundary. Safe havens block these attacks before
+  mana is spent.
 - **The five protection spells (Barrier, Protection, Stone Skin, Mana Shield, Mana Surge) cast in
   0ms - an explicit exception to the universal floor above (T4C-0067, owner's call).** Their
   mental/physical/attack exhaustion fields are literal `"0"`, not the level-scaled-decay formula

@@ -43,10 +43,10 @@ this list. Fix what you find before pushing.
       `CompendiumExporter`'s "new content" sets, or the website won't show them.
 - [ ] **i18n.** Every new `${...}` key exists in `assets/i18n/lang.json` (English only).
 
-Then run, locally:
+Then rebuild the local game. Run focused or full tests when a specific risk warrants them:
 
 ```bash
-mvn -q test                       # full suite; CI runs a scoped subset, so don't rely on it alone
+mvn -q -DskipTests package         # always refresh the runnable local build after fixes
 mvn -q dependency:build-classpath -Dmdep.outputFile=/tmp/cp.txt
 java -cp "target/classes:$(cat /tmp/cp.txt)" com.perso.T4C.tools.CompendiumExporter compendium/data
 ```
@@ -93,5 +93,7 @@ is no conflict, and any findings left by a reviewer have had a decision. Merge w
 - [ ] Delete your pending `send_later` triggers for this PR (`delete_trigger`).
 - [ ] If the user asked whether the site is live, or the PR changed website-visible data, run
       `verify-website` step 3 after the compendium workflow and Vercel finish.
+- [ ] Rebuild the user's main local checkout with `mvn -q -DskipTests package` after pulling the
+      merged commit, preserving local saves and other user changes.
 - [ ] Report to the user in plain language: what's merged, anything a reviewer caught and how it
       was handled, and the open follow-ups.
