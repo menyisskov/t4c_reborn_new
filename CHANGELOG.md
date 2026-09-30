@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-09-30 — Self-centered area spells (T4C-0113)
+
+### Fixed
+- Earthquake now casts immediately around you and damages monsters up to seven tiles away, without selecting a target. Flame Wave follows the same behavior within its five-tile radius.
+
 ## 2026-09-30 — Choose your path (T4C-0112)
 
 ### Added
