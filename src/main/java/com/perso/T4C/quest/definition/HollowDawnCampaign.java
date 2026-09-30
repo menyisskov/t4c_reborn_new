@@ -25,7 +25,17 @@ public final class HollowDawnCampaign {
             240,
             30000000,
             null),
-        stage("pale_cantor", CHRONICLER, "The Pale Cantor", 1, 4050, 675, 70, 300, 40000000, "threnody_reach",
+        stage(
+            "pale_cantor",
+            CHRONICLER,
+            "The Pale Cantor",
+            1,
+            4050,
+            675,
+            70,
+            300,
+            40000000,
+            "threnody_reach",
             "item.moonwake_bell_shard"),
         stage(
             "emberglass_oath",
@@ -51,10 +61,13 @@ public final class HollowDawnCampaign {
             "threnody_reach"));
   }
 
-  /** Existing quest statuses are the durable branch choice, including saves from the linear chain. */
+  /**
+   * Existing quest statuses are the durable branch choice, including saves from the linear chain.
+   */
   public static List<QuestDef> selectedPath(Player player) {
     List<QuestDef> quests = avalon();
-    // Old saves may have finished Moonwake and already accepted Emberglass. Keep that work playable.
+    // Old saves may have finished Moonwake and already accepted Emberglass. Keep that work
+    // playable.
     if (quests.subList(2, 4).stream().anyMatch(q -> QuestService.statusFor(player, q) != 0)) {
       return quests.subList(2, 4);
     }
@@ -73,7 +86,9 @@ public final class HollowDawnCampaign {
   public static final String MOONWAKE_CLUE = "hollow_dawn.clue.moonwake";
   public static final String EMBERGLASS_CLUE = "hollow_dawn.clue.emberglass";
 
-  /** Only unstarted lieutenants need the new witness step; old active saves keep their objective. */
+  /**
+   * Only unstarted lieutenants need the new witness step; old active saves keep their objective.
+   */
   public static String missingClue(Player player, QuestDef quest) {
     if (QuestService.statusFor(player, quest) != QuestService.STATUS_NOT_STARTED) return null;
     return switch (quest.getId()) {
@@ -89,7 +104,17 @@ public final class HollowDawnCampaign {
             "ashbound_exiles", KEEPER, "Ashbound Exile", 35, 5690, 1410, 100, 315, 45000000, null),
         stage("hush_cantor", KEEPER, "The Hush Cantor", 1, 5750, 1500, 80, 340, 55000000, null),
         stage("nullguard_watch", KEEPER, "Nullguard", 40, 5470, 1760, 115, 355, 65000000, null),
-        stage("dusk_regent", KEEPER, "The Dusk Regent", 1, 5860, 2040, 80, 375, 75000000, null,
+        stage(
+            "dusk_regent",
+            KEEPER,
+            "The Dusk Regent",
+            1,
+            5860,
+            2040,
+            80,
+            375,
+            75000000,
+            null,
             "item.last_witness_seal"),
         stage(
             "rift_unbinding",
@@ -117,6 +142,15 @@ public final class HollowDawnCampaign {
 
   public static List<QuestDef> all() {
     return java.util.stream.Stream.concat(avalon().stream(), threnody().stream()).toList();
+  }
+
+  /** Chapter cues and turn-in handoffs are keyed by stable quest IDs, including old saves. */
+  public static String chapterCue(QuestDef quest) {
+    return "${npc.hollow_dawn.chapter." + quest.getId() + "}";
+  }
+
+  public static String chapterHandoff(QuestDef quest) {
+    return "${npc.hollow_dawn.handoff." + quest.getId() + "}";
   }
 
   private static QuestDef stage(

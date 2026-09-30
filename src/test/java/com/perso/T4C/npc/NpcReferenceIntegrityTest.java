@@ -51,7 +51,8 @@ class NpcReferenceIntegrityTest {
   @Test
   void literalMessageReferencesResolve() throws Exception {
     JsonObject messages =
-        JsonParser.parseString(Files.readString(Path.of("assets/i18n/lang.json"))).getAsJsonObject();
+        JsonParser.parseString(Files.readString(Path.of("assets/i18n/lang.json")))
+            .getAsJsonObject();
 
     try (Stream<Path> files = Files.walk(NPC_ROOT)) {
       for (Path file : files.filter(path -> path.toString().endsWith(".java")).toList()) {

@@ -2,7 +2,6 @@ package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
 import com.perso.T4C.npc.core.NpcContext;
@@ -10,6 +9,7 @@ import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.QuestRegistry;
 import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.quest.definition.PassageToAvalon;
 import com.perso.T4C.quest.definition.TidewornShoreScouts;
@@ -55,48 +55,50 @@ public final class HarbormasterRangor extends ScriptedNpc {
           0,
           List.of(),
           "${npc.welcome.harbormasterrangor}",
-          List.of(
-              AVALON_TOPIC,
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.harbormasterrangor.keyword.scouts}"),
-                  "${npc.harbormasterrangor.scouts}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.harbormasterrangor.keyword.chart}"),
-                  "${npc.harbormasterrangor.chart}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.harbormasterrangor.keyword.report}"),
-                  "${npc.harbormasterrangor.report}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.harbormasterrangor.keyword.route}"),
-                  "${npc.harbormasterrangor.route}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.harbormasterrangor.1.0}"),
-                  "${npc.topic.harbormasterrangor.1}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.harbormasterrangor.2.0}"),
-                  "${npc.topic.harbormasterrangor.2}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.harbormasterrangor.3.0}"),
-                  "${npc.topic.harbormasterrangor.3}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.harbormasterrangor.4.0}",
-                      "${npc.topic_keyword.harbormasterrangor.4.1}"),
-                  "${npc.topic.harbormasterrangor.4}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.harbormasterrangor.5.0}",
-                      "${npc.topic_keyword.harbormasterrangor.5.1}"),
-                  "${npc.topic.harbormasterrangor.5}",
-                  List.of())),
+          WitnessStoryDialogue.append(
+              ID,
+              List.of(
+                  AVALON_TOPIC,
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.harbormasterrangor.keyword.scouts}"),
+                      "${npc.harbormasterrangor.scouts}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.harbormasterrangor.keyword.chart}"),
+                      "${npc.harbormasterrangor.chart}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.harbormasterrangor.keyword.report}"),
+                      "${npc.harbormasterrangor.report}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.harbormasterrangor.keyword.route}"),
+                      "${npc.harbormasterrangor.route}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.harbormasterrangor.1.0}"),
+                      "${npc.topic.harbormasterrangor.1}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.harbormasterrangor.2.0}"),
+                      "${npc.topic.harbormasterrangor.2}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.harbormasterrangor.3.0}"),
+                      "${npc.topic.harbormasterrangor.3}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.harbormasterrangor.4.0}",
+                          "${npc.topic_keyword.harbormasterrangor.4.1}"),
+                      "${npc.topic.harbormasterrangor.4}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.harbormasterrangor.5.0}",
+                          "${npc.topic_keyword.harbormasterrangor.5.1}"),
+                      "${npc.topic.harbormasterrangor.5}",
+                      List.of()))),
           "HarbormasterRangorNPC",
           new NpcSpec.CombatProfile(100, 1000000, 65, 67, 63, 1000000, 250, 65535, "1d23+16"));
 
@@ -118,6 +120,7 @@ public final class HarbormasterRangor extends ScriptedNpc {
     return new NpcBehavior() {
       @Override
       public boolean onKeyword(NpcBehaviorContext context, String keyword) {
+        if (WitnessStoryDialogue.onKeyword(context, keyword)) return true;
         Player player = context.player();
         QuestService quests = context.npc().questService();
         if (quests == null) return false;
@@ -177,9 +180,11 @@ public final class HarbormasterRangor extends ScriptedNpc {
     };
   }
 
-  /** Stage two once it's ever been touched (active, or completed - including by a character who
-   * finished the original single-stage quest before this chain existed); otherwise stage two
-   * once stage one is done, or stage one itself. */
+  /**
+   * Stage two once it's ever been touched (active, or completed - including by a character who
+   * finished the original single-stage quest before this chain existed); otherwise stage two once
+   * stage one is done, or stage one itself.
+   */
   private static String nextQuestIdFor(Player player) {
     if (QuestService.statusFor(player, PassageToAvalon.definition())
         != QuestService.STATUS_NOT_STARTED) {

@@ -35,109 +35,116 @@ public final class Lantalir extends ScriptedNpc {
           0,
           List.of(),
           "${npc.welcome.lantalir}",
-          List.of(
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.0.0}", "${npc.topic_keyword.lantalir.0.1}"),
-                  "${npc.topic.lantalir.0}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.lantalir.1.0}",
-                      "${npc.topic_keyword.lantalir.1.1}",
-                      "${npc.topic_keyword.lantalir.1.2}"),
-                  "${npc.topic.lantalir.1}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.2.0}"),
-                  "${npc.topic.lantalir.2}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.3.0}", "${npc.topic_keyword.lantalir.3.1}"),
-                  "${npc.topic.lantalir.3}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.4.0}"),
-                  "${npc.topic.lantalir.4}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.lantalir.5.0}",
-                      "${npc.topic_keyword.lantalir.5.1}",
-                      "${npc.topic_keyword.lantalir.5.2}"),
-                  "${npc.topic.lantalir.5}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.6.0}"),
-                  "${npc.topic.lantalir.6}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.7.0}"),
-                  "${npc.topic.lantalir.7}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.8.0}"),
-                  "${npc.topic.lantalir.8}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.9.0}"),
-                  "${npc.topic.lantalir.9}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.10.0}"),
-                  "${npc.topic.lantalir.10}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.11.0}"),
-                  "${npc.topic.lantalir.11}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.12.0}"),
-                  "${npc.topic.lantalir.12}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.13.0}"),
-                  "${npc.topic.lantalir.13}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.14.0}"),
-                  "${npc.topic.lantalir.14}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.15.0}"),
-                  "${npc.topic.lantalir.15}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.lantalir.16.0}", "${npc.topic_keyword.lantalir.16.1}"),
-                  "${npc.topic.lantalir.16}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.17.0}"),
-                  "${npc.topic.lantalir.17}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.lantalir.18.0}", "${npc.topic_keyword.lantalir.18.1}"),
-                  "${npc.topic.lantalir.18}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.lantalir.19.0}", "${npc.topic_keyword.lantalir.19.1}"),
-                  "${npc.topic.lantalir.19}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.lantalir.20.0}"),
-                  "${npc.topic.lantalir.20}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.lantalir.21.0}",
-                      "${npc.topic_keyword.lantalir.21.1}",
-                      "${npc.topic_keyword.lantalir.21.2}",
-                      "${npc.topic_keyword.lantalir.21.3}",
-                      "${npc.topic_keyword.lantalir.21.4}"),
-                  "${npc.topic.lantalir.21}",
-                  List.of())),
+          WitnessStoryDialogue.append(
+              ID,
+              List.of(
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.lantalir.0.0}", "${npc.topic_keyword.lantalir.0.1}"),
+                      "${npc.topic.lantalir.0}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.lantalir.1.0}",
+                          "${npc.topic_keyword.lantalir.1.1}",
+                          "${npc.topic_keyword.lantalir.1.2}"),
+                      "${npc.topic.lantalir.1}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.2.0}"),
+                      "${npc.topic.lantalir.2}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.lantalir.3.0}", "${npc.topic_keyword.lantalir.3.1}"),
+                      "${npc.topic.lantalir.3}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.4.0}"),
+                      "${npc.topic.lantalir.4}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.lantalir.5.0}",
+                          "${npc.topic_keyword.lantalir.5.1}",
+                          "${npc.topic_keyword.lantalir.5.2}"),
+                      "${npc.topic.lantalir.5}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.6.0}"),
+                      "${npc.topic.lantalir.6}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.7.0}"),
+                      "${npc.topic.lantalir.7}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.8.0}"),
+                      "${npc.topic.lantalir.8}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.9.0}"),
+                      "${npc.topic.lantalir.9}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.10.0}"),
+                      "${npc.topic.lantalir.10}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.11.0}"),
+                      "${npc.topic.lantalir.11}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.12.0}"),
+                      "${npc.topic.lantalir.12}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.13.0}"),
+                      "${npc.topic.lantalir.13}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.14.0}"),
+                      "${npc.topic.lantalir.14}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.15.0}"),
+                      "${npc.topic.lantalir.15}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.lantalir.16.0}",
+                          "${npc.topic_keyword.lantalir.16.1}"),
+                      "${npc.topic.lantalir.16}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.17.0}"),
+                      "${npc.topic.lantalir.17}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.lantalir.18.0}",
+                          "${npc.topic_keyword.lantalir.18.1}"),
+                      "${npc.topic.lantalir.18}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.lantalir.19.0}",
+                          "${npc.topic_keyword.lantalir.19.1}"),
+                      "${npc.topic.lantalir.19}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.lantalir.20.0}"),
+                      "${npc.topic.lantalir.20}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.lantalir.21.0}",
+                          "${npc.topic_keyword.lantalir.21.1}",
+                          "${npc.topic_keyword.lantalir.21.2}",
+                          "${npc.topic_keyword.lantalir.21.3}",
+                          "${npc.topic_keyword.lantalir.21.4}"),
+                      "${npc.topic.lantalir.21}",
+                      List.of()))),
           "LantalirNPC",
           new NpcSpec.CombatProfile(100, 1000000, 20, 22, 24, 1000000, 250, 65535, "1d23+16"));
 
@@ -148,6 +155,7 @@ public final class Lantalir extends ScriptedNpc {
 
       @Override
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
+        if (WitnessStoryDialogue.onKeyword(c, text)) return true;
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 

@@ -33,37 +33,40 @@ public final class Librarian2 extends ScriptedNpc {
           0,
           List.of(),
           "${npc.welcome.librarian2}",
-          List.of(
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.librarian2.0.0}", "${npc.topic_keyword.librarian2.0.1}"),
-                  "${npc.topic.librarian2.0}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.librarian2.1.0}"),
-                  "${npc.topic.librarian2.1}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.librarian2.2.0}"),
-                  "${npc.topic.librarian2.2}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.librarian2.3.0}"),
-                  "${npc.topic.librarian2.3}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.librarian2.4.0}"),
-                  "${npc.topic.librarian2.4}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.librarian2.5.0}",
-                      "${npc.topic_keyword.librarian2.5.1}",
-                      "${npc.topic_keyword.librarian2.5.2}",
-                      "${npc.topic_keyword.librarian2.5.3}",
-                      "${npc.topic_keyword.librarian2.5.4}"),
-                  "${npc.topic.librarian2.5}",
-                  List.of())),
+          WitnessStoryDialogue.append(
+              ID,
+              List.of(
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.librarian2.0.0}",
+                          "${npc.topic_keyword.librarian2.0.1}"),
+                      "${npc.topic.librarian2.0}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.librarian2.1.0}"),
+                      "${npc.topic.librarian2.1}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.librarian2.2.0}"),
+                      "${npc.topic.librarian2.2}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.librarian2.3.0}"),
+                      "${npc.topic.librarian2.3}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.librarian2.4.0}"),
+                      "${npc.topic.librarian2.4}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.librarian2.5.0}",
+                          "${npc.topic_keyword.librarian2.5.1}",
+                          "${npc.topic_keyword.librarian2.5.2}",
+                          "${npc.topic_keyword.librarian2.5.3}",
+                          "${npc.topic_keyword.librarian2.5.4}"),
+                      "${npc.topic.librarian2.5}",
+                      List.of()))),
           "HighPriestGuntharNPC",
           new NpcSpec.CombatProfile(100, 1000000, 20, 22, 24, 1000000, 0, 65535, "1d3"));
 
@@ -96,6 +99,7 @@ public final class Librarian2 extends ScriptedNpc {
 
         @Override
         public boolean onKeyword(NpcBehaviorContext c, String text) {
+          if (WitnessStoryDialogue.onKeyword(c, text)) return true;
 
           String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 

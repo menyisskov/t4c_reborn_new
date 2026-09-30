@@ -6,6 +6,17 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-09-30 — The Names That Remain (T4C-0109)
+
+### Added
+- A missing-names mystery now leads from Kilhiam and Lantalir on Arakas through both Great Library historians to Rangor in Stoneheim. Each witness provides a repeatable `story` recap with the next destination and spoken keyword.
+- The Oracle can offer an optional account of the mystery without requiring a faction, rebirth, or a replay of older quests.
+- The existing two-path Witness Isles and Threnody campaign now gives clearer chapter transitions, witness clues, and an ending that sends the player back to the mainland.
+- The compendium Quests page shows the full chapter route alongside its individual quest entries.
+
+### Fixed
+- Antonian now checks the same island-access flag that the Arakas passage quest sets, allowing his nexus-stone dialogue to advance.
+
 This file was backfilled on 2026-09-19 by walking the project's git history;
 dates are the commit dates of the work, not retroactively invented. From now
 on, every content/feature pass adds its own entry here as part of the work

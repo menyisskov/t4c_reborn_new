@@ -7,9 +7,18 @@ final class CampaignTopics {
   private CampaignTopics() {}
 
   static List<NpcSpec.DialogueTopic> all() {
-    return List.of(topic("story"), topic("accept"), topic("report"), topic("route"),
-        topic("witnesses"), topic("warders"), topic("moonwake"), topic("emberglass"),
-        topic("hierarchy"), topic("threnody"));
+    return List.of(
+        topic("story"),
+        topic("accept"),
+        topic("report"),
+        topic("route"),
+        topic("witnesses"),
+        topic("warders"),
+        topic("moonwake"),
+        topic("emberglass"),
+        topic("hierarchy"),
+        topic("threnody"),
+        topic("epilogue"));
   }
 
   private static NpcSpec.DialogueTopic topic(String name) {

@@ -14,7 +14,11 @@ mythic themes of memory, loyalty, and an old evil returning.
 
 ## Player route and cast
 
-The route begins with Harbormaster Rangor in **Stonecrest, Stoneheim (180,740)**. His `isles`,
+The optional mainland investigation in [The Names That Remain](the-names-that-remain.md)
+connects Kilhiam and Lantalir on Arakas, the two Great Library historians on Raven's Dust,
+and Rangor on Stoneheim. Its evidence flags provide context and a repeatable `story` route;
+they do not replace classic quests or revoke existing passage. The island route begins with
+Harbormaster Rangor in **Stonecrest, Stoneheim (180,740)**. His `isles`,
 `scouts`, `report`, and `chart` topics lead through Tideworn scouts and the chart from
 Coastwarden Ithrak. The passage quest unlocks travel to the Witness Isles. That unlock and the
 later Threnody destinations survive rebirth. Existing quest IDs and completed saves remain

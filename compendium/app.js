@@ -1190,6 +1190,19 @@
   // ----------------------------------------------------------------- quests
 
   route("quests", function () {
+    var story = META.mainStory;
+    var storyHtml = story ?
+      '<section class="chapter story-route"><div class="chapter-head">' +
+      '<p class="eyebrow">Main story</p><h2>' + esc(story.title) + '</h2>' +
+      '<p class="lead">' + esc(story.intro) + '</p></div>' +
+      '<div class="card-grid">' + (story.chapters || []).map(function (chapter) {
+        var questLinks = (chapter.quests || []).filter(function (id) { return !!byKey.quest[id]; })
+          .map(function (id) { return '<span class="tag plain">' + questLink(id) + '</span>'; }).join('');
+        return '<article class="card"><h3>' + esc(chapter.title) + '</h3>' +
+          '<p>' + esc(chapter.summary) + '</p>' +
+          (chapter.steps || []).map(function (step) { return '<p>' + esc(step) + '</p>'; }).join('') +
+          (questLinks ? '<div class="tags">' + questLinks + '</div>' : '') + '</article>';
+      }).join('') + '</div></section>' : '';
     function questCardsIn(chapterId) {
       return QUESTS.filter(function (q) {
         var z = byKey.zone[questZone[q.id]];
@@ -1216,6 +1229,7 @@
       '<p class="lead">Laid out along the same road as everything else, so you can read down the ' +
       "page and see what to take on next. Each one tells you who to talk to, exactly what they " +
       "want, what you have to hand over, and what you walk away with.</p></div>" +
+      storyHtml +
       chapterSections(questCardsIn)
     );
   });

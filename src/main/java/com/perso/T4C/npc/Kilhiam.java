@@ -34,52 +34,68 @@ public final class Kilhiam extends ScriptedNpc {
           0,
           List.of(),
           "${npc.welcome.kilhiam}",
-          List.of(
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.0.0}", "${npc.topic_keyword.kilhiam.0.1}"),
-                  "${npc.topic.kilhiam.0}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.1.0}"), "${npc.topic.kilhiam.1}", List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.kilhiam.2.0}",
-                      "${npc.topic_keyword.kilhiam.2.1}",
-                      "${npc.topic_keyword.kilhiam.2.2}"),
-                  "${npc.topic.kilhiam.2}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.3.0}"), "${npc.topic.kilhiam.3}", List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.4.0}"), "${npc.topic.kilhiam.4}", List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.5.0}"), "${npc.topic.kilhiam.5}", List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.6.0}", "${npc.topic_keyword.kilhiam.6.1}"),
-                  "${npc.topic.kilhiam.6}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.7.0}"), "${npc.topic.kilhiam.7}", List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.8.0}"), "${npc.topic.kilhiam.8}", List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.kilhiam.9.0}",
-                      "${npc.topic_keyword.kilhiam.9.1}",
-                      "${npc.topic_keyword.kilhiam.9.2}"),
-                  "${npc.topic.kilhiam.9}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of("${npc.topic_keyword.kilhiam.10.0}"),
-                  "${npc.topic.kilhiam.10}",
-                  List.of()),
-              new NpcSpec.DialogueTopic(
-                  List.of(
-                      "${npc.topic_keyword.kilhiam.11.0}",
-                      "${npc.topic_keyword.kilhiam.11.1}",
-                      "${npc.topic_keyword.kilhiam.11.2}"),
-                  "${npc.topic.kilhiam.11}",
-                  List.of())),
+          WitnessStoryDialogue.append(
+              ID,
+              List.of(
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.kilhiam.0.0}", "${npc.topic_keyword.kilhiam.0.1}"),
+                      "${npc.topic.kilhiam.0}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.kilhiam.1.0}"),
+                      "${npc.topic.kilhiam.1}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.kilhiam.2.0}",
+                          "${npc.topic_keyword.kilhiam.2.1}",
+                          "${npc.topic_keyword.kilhiam.2.2}"),
+                      "${npc.topic.kilhiam.2}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.kilhiam.3.0}"),
+                      "${npc.topic.kilhiam.3}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.kilhiam.4.0}"),
+                      "${npc.topic.kilhiam.4}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.kilhiam.5.0}"),
+                      "${npc.topic.kilhiam.5}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.kilhiam.6.0}", "${npc.topic_keyword.kilhiam.6.1}"),
+                      "${npc.topic.kilhiam.6}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.kilhiam.7.0}"),
+                      "${npc.topic.kilhiam.7}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.kilhiam.8.0}"),
+                      "${npc.topic.kilhiam.8}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.kilhiam.9.0}",
+                          "${npc.topic_keyword.kilhiam.9.1}",
+                          "${npc.topic_keyword.kilhiam.9.2}"),
+                      "${npc.topic.kilhiam.9}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of("${npc.topic_keyword.kilhiam.10.0}"),
+                      "${npc.topic.kilhiam.10}",
+                      List.of()),
+                  new NpcSpec.DialogueTopic(
+                      List.of(
+                          "${npc.topic_keyword.kilhiam.11.0}",
+                          "${npc.topic_keyword.kilhiam.11.1}",
+                          "${npc.topic_keyword.kilhiam.11.2}"),
+                      "${npc.topic.kilhiam.11}",
+                      List.of()))),
           "KilhiamNPC",
           new NpcSpec.CombatProfile(100, 1000000, 65, 67, 63, 1000000, 0, 65535, "1d3"));
 
@@ -124,6 +140,7 @@ public final class Kilhiam extends ScriptedNpc {
 
         @Override
         public boolean onKeyword(NpcBehaviorContext c, String text) {
+          if (WitnessStoryDialogue.onKeyword(c, text)) return true;
 
           String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 
