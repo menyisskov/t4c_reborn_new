@@ -257,8 +257,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
           true,
           LocalCharacterStore.FEMALE.equals(pendingGender));
     } else if (mode == Mode.ALIGNMENT) {
-      goldFont.draw(
-          batch, I18n.message("character.alignment.prompt", pendingName), x + 16f, y + 244f);
+      goldFont.draw(batch, I18n.key("character.alignment.prompt"), x + 16f, y + 244f);
       drawSmallButton(
           x + 289f,
           y + 243f,

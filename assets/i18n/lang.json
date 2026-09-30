@@ -79,7 +79,7 @@
   "ac.title": "Armor Class (AC)",
   "character.alignment.evil": "Evil",
   "character.alignment.good": "Good",
-  "character.alignment.prompt": "Choose %s's moral path",
+  "character.alignment.prompt": "Good or Evil?",
   "character.back": "Back",
   "character.class.archer.description": "A marksman. Unmatched agility, a reflex bow and a quiver of arrows, and light leather to stay quick.",
   "character.class.archer.name": "Archer",
