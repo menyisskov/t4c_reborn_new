@@ -107,6 +107,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private Mode mode = Mode.SELECT;
   private String pendingName = "";
   private String pendingGender = LocalCharacterStore.MALE;
+  private LocalCharacterStore.Alignment pendingAlignment;
   private String errorMessage;
   private int selectedClass;
   private CharacterCreationRules.Stats rolledStats;
@@ -176,7 +177,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     GuiDraw.drawRegionFlipped(
         batch, title, (camera.viewportWidth - title.getRegionWidth()) / 2f, titleY);
     switch (mode) {
-      case SELECT, NAME, SEX, DELETE_CONFIRM -> drawCharacterPanel();
+      case SELECT, NAME, SEX, ALIGNMENT, DELETE_CONFIRM -> drawCharacterPanel();
       case CLASS -> drawClassPanel(titleY + title.getRegionHeight() + 20f);
     }
     drawKeyHints();
@@ -191,6 +192,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     boolean selectError = mode == Mode.SELECT && errorMessage != null;
     if (mode == Mode.NAME
         || mode == Mode.SEX
+        || mode == Mode.ALIGNMENT
         || mode == Mode.DELETE_CONFIRM
         || hasDetails
         || selectError) {
@@ -254,6 +256,20 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
           I18n.key("character.gender.female"),
           true,
           LocalCharacterStore.FEMALE.equals(pendingGender));
+    } else if (mode == Mode.ALIGNMENT) {
+      goldFont.draw(batch, I18n.key("character.alignment.prompt"), x + 16f, y + 244f);
+      drawSmallButton(
+          x + 289f,
+          y + 243f,
+          I18n.key("character.alignment.good"),
+          true,
+          pendingAlignment == LocalCharacterStore.Alignment.GOOD);
+      drawSmallButton(
+          x + 367f,
+          y + 243f,
+          I18n.key("character.alignment.evil"),
+          true,
+          pendingAlignment == LocalCharacterStore.Alignment.EVIL);
     }
   }
 
@@ -423,6 +439,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
           case SELECT -> characters.isEmpty() ? null : "character.hints.select";
           case NAME -> "character.hints.name";
           case SEX -> "character.hints.gender";
+          case ALIGNMENT -> "character.hints.alignment";
           case DELETE_CONFIRM -> "character.hints.delete";
           case CLASS -> "character.hints.class";
         };
@@ -475,6 +492,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       case SELECT -> clickSelection();
       case DELETE_CONFIRM -> clickDeleteConfirmation();
       case SEX -> clickGender();
+      case ALIGNMENT -> clickAlignment();
       case CLASS -> clickClassPanel();
       case NAME -> {}
     }
@@ -550,9 +568,23 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     if (contains(x + 289f, y + 243f, 72f, 27f)) {
       pendingGender = LocalCharacterStore.MALE;
       playButtonSound();
-      startClassSelection();
+      startAlignmentSelection();
     } else if (contains(x + 367f, y + 243f, 72f, 27f)) {
       pendingGender = LocalCharacterStore.FEMALE;
+      playButtonSound();
+      startAlignmentSelection();
+    }
+  }
+
+  private void clickAlignment() {
+    float x = panelX();
+    float y = panelY();
+    if (contains(x + 289f, y + 243f, 72f, 27f)) {
+      pendingAlignment = LocalCharacterStore.Alignment.GOOD;
+      playButtonSound();
+      startClassSelection();
+    } else if (contains(x + 367f, y + 243f, 72f, 27f)) {
+      pendingAlignment = LocalCharacterStore.Alignment.EVIL;
       playButtonSound();
       startClassSelection();
     }
@@ -574,7 +606,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       rolledStats = CharacterCreationRules.rerollVitals(rolledStats, random);
     } else if (contains(x + CLASS_BUTTON_X, y + CLASS_BACK_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
       playButtonSound();
-      cancelCreation();
+      mode = Mode.ALIGNMENT;
     }
   }
 
@@ -616,6 +648,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
       case SELECT -> handleSelectionKey(keycode);
       case NAME -> handleNameKey(keycode);
       case SEX -> handleGenderKey(keycode);
+      case ALIGNMENT -> handleAlignmentKey(keycode);
       case DELETE_CONFIRM -> handleDeleteKey(keycode);
       case CLASS -> handleClassKey(keycode);
     }
@@ -667,9 +700,21 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     } else if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.F) {
       pendingGender = LocalCharacterStore.FEMALE;
     } else if (keycode == Input.Keys.ENTER) {
-      startClassSelection();
+      startAlignmentSelection();
     } else if (keycode == Input.Keys.ESCAPE) {
       mode = Mode.NAME;
+    }
+  }
+
+  private void handleAlignmentKey(int keycode) {
+    if (keycode == Input.Keys.LEFT || keycode == Input.Keys.G) {
+      pendingAlignment = LocalCharacterStore.Alignment.GOOD;
+    } else if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.E) {
+      pendingAlignment = LocalCharacterStore.Alignment.EVIL;
+    } else if (keycode == Input.Keys.ENTER && pendingAlignment != null) {
+      startClassSelection();
+    } else if (keycode == Input.Keys.ESCAPE) {
+      mode = Mode.SEX;
     }
   }
 
@@ -692,7 +737,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     } else if (keycode == Input.Keys.R) {
       rolledStats = CharacterCreationRules.rerollVitals(rolledStats, random);
     } else if (keycode == Input.Keys.ESCAPE) {
-      cancelCreation();
+      mode = Mode.ALIGNMENT;
     } else if (keycode >= Input.Keys.NUM_1 && keycode < Input.Keys.NUM_1 + classCount) {
       selectClass(keycode - Input.Keys.NUM_1);
     }
@@ -701,6 +746,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private void startCreation() {
     pendingName = "";
     pendingGender = LocalCharacterStore.MALE;
+    pendingAlignment = null;
     errorMessage = null;
     mode = Mode.NAME;
   }
@@ -726,11 +772,21 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     mode = Mode.CLASS;
   }
 
+  private void startAlignmentSelection() {
+    pendingAlignment = null;
+    errorMessage = null;
+    mode = Mode.ALIGNMENT;
+  }
+
   private void finishCreation() {
     try {
       LocalCharacterStore.CharacterSlot slot =
           LocalCharacterStore.create(
-              pendingName, pendingGender, CharacterClass.values()[selectedClass], rolledStats);
+              pendingName,
+              pendingGender,
+              CharacterClass.values()[selectedClass],
+              rolledStats,
+              pendingAlignment);
       refreshCharacters();
       selected = Math.max(0, characters.indexOf(slot));
       enterCharacter(slot);
@@ -885,6 +941,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     SELECT,
     NAME,
     SEX,
+    ALIGNMENT,
     DELETE_CONFIRM,
     CLASS
   }

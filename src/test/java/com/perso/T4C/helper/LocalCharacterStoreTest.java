@@ -58,9 +58,12 @@ class LocalCharacterStoreTest {
         new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
     LocalCharacterStore.CharacterSlot first =
         LocalCharacterStore.create(
-            "alice", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats);
+            "alice", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats,
+            LocalCharacterStore.Alignment.GOOD);
     LocalCharacterStore.CharacterSlot second =
-        LocalCharacterStore.create("Bob", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
+        LocalCharacterStore.create(
+            "Bob", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats,
+            LocalCharacterStore.Alignment.EVIL);
     assertEquals("Alice", first.name());
     PlayerStateDto written =
         new com.google.gson.Gson()
@@ -69,17 +72,23 @@ class LocalCharacterStoreTest {
         AvalonWorldLayout.WORLD_LAYOUT_VERSION,
         written.worldLayoutVersion,
         "new characters must be stamped before their first load");
+    assertEquals(100, written.karma);
+    assertEquals(-100, LocalCharacterStore.loadState(second).karma);
     assertThrows(
         IllegalArgumentException.class,
         () ->
             LocalCharacterStore.create(
-                "ALICE", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats));
-    LocalCharacterStore.create("Charlie", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
+                "ALICE", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats,
+                LocalCharacterStore.Alignment.GOOD));
+    LocalCharacterStore.create(
+        "Charlie", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats,
+        LocalCharacterStore.Alignment.GOOD);
     assertThrows(
         IllegalStateException.class,
         () ->
             LocalCharacterStore.create(
-                "Denis", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats));
+                "Denis", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats,
+                LocalCharacterStore.Alignment.GOOD));
     LocalCharacterStore.activate(first);
     assertEquals(first.stateFile(), PlayerStateStore.getActiveFilename());
     PlayerStateDto state = LocalCharacterStore.loadState(first);
@@ -126,7 +135,8 @@ class LocalCharacterStoreTest {
         new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
     LocalCharacterStore.CharacterSlot slot =
         LocalCharacterStore.create(
-            "Ancien", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats);
+            "Ancien", LocalCharacterStore.MALE, CharacterClass.WARRIOR, stats,
+            LocalCharacterStore.Alignment.GOOD);
     PlayerStateDto legacy = LocalCharacterStore.loadState(slot);
     legacy.gold = 0;
     legacy.inventory.clear();
@@ -143,7 +153,9 @@ class LocalCharacterStoreTest {
     CharacterCreationRules.Stats stats =
         new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
     LocalCharacterStore.CharacterSlot created =
-        LocalCharacterStore.create("Mira", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats);
+        LocalCharacterStore.create(
+            "Mira", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats,
+            LocalCharacterStore.Alignment.EVIL);
     LocalCharacterStore.activate(created);
     Player player = new Player();
     PlayerStateMapper.applyToPlayer(LocalCharacterStore.loadState(created), player);
@@ -156,6 +168,7 @@ class LocalCharacterStoreTest {
     Player restored = new Player();
     PlayerStateMapper.applyToPlayer(LocalCharacterStore.loadState(reloaded), restored);
     assertEquals("Mira", restored.getName());
+    assertEquals(-100, restored.getKarma());
     assertEquals(1, restored.getQuestFlag(WitnessStory.ARAKAS_RECORD));
     assertFalse(Files.exists(tempDir.resolve(created.stateFile() + ".tmp")));
   }
@@ -170,7 +183,8 @@ class LocalCharacterStoreTest {
         IOException.class,
         () ->
             LocalCharacterStore.create(
-                "Mira", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats));
+                "Mira", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats,
+                LocalCharacterStore.Alignment.GOOD));
     assertFalse(Files.exists(tempDir.resolve("characters.json")));
     assertTrue(LocalCharacterStore.list().isEmpty());
   }

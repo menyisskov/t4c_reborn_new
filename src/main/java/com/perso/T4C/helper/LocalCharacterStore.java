@@ -23,6 +23,21 @@ public final class LocalCharacterStore {
   public static final int MAX_CHARACTERS = 3;
   public static final String MALE = AppearanceDefaultsCatalog.MALE;
   public static final String FEMALE = AppearanceDefaultsCatalog.FEMALE;
+  public enum Alignment {
+    GOOD(100),
+    EVIL(-100);
+
+    private final int startingKarma;
+
+    Alignment(int startingKarma) {
+      this.startingKarma = startingKarma;
+    }
+
+    public int startingKarma() {
+      return startingKarma;
+    }
+  }
+
   public static final int MIN_STARTING_GOLD = 201;
   public static final int MAX_STARTING_GOLD = 250;
   private static final String STARTING_TORCH = "item.torch";
@@ -48,9 +63,11 @@ public final class LocalCharacterStore {
       String rawName,
       String rawGender,
       CharacterClass characterClass,
-      CharacterCreationRules.Stats stats)
+      CharacterCreationRules.Stats stats,
+      Alignment alignment)
       throws IOException {
     if (characterClass == null) throw new IllegalArgumentException("Character class is required");
+    if (alignment == null) throw new IllegalArgumentException("Character alignment is required");
     String name = CharacterCreationRules.normalizeName(rawName);
     if (!CharacterCreationRules.isValidName(name)) {
       throw new IllegalArgumentException("Invalid character name");
@@ -68,7 +85,7 @@ public final class LocalCharacterStore {
     CharacterSlot slot =
         new CharacterSlot(
             id, name, gender, characterClass.id(), stateFile, System.currentTimeMillis());
-    PlayerStateDto state = newInitialState(name, gender, characterClass, stats);
+    PlayerStateDto state = newInitialState(name, gender, characterClass, stats, alignment);
     PlayerStateStore.saveOrThrow(stateFile, state);
     roster.characters.add(slot);
     try {
@@ -112,7 +129,8 @@ public final class LocalCharacterStore {
       String name,
       String gender,
       CharacterClass characterClass,
-      CharacterCreationRules.Stats stats) {
+      CharacterCreationRules.Stats stats,
+      Alignment alignment) {
     PlayerStateDto state = new PlayerStateDto();
     state.worldLayoutVersion = AvalonWorldLayout.WORLD_LAYOUT_VERSION;
     state.name = name;
@@ -130,6 +148,7 @@ public final class LocalCharacterStore {
     state.maxMana = stats.maxMana();
     state.mana = stats.maxMana();
     state.level = 1;
+    state.karma = alignment.startingKarma();
     state.gold = ThreadLocalRandom.current().nextInt(MIN_STARTING_GOLD, MAX_STARTING_GOLD + 1);
     state.dayNightHour = 7f;
     state.spells = startingSpellNames(characterClass);

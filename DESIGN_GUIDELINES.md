@@ -190,6 +190,9 @@ quiz is gone; its i18n strings were deleted with it.
 - **A roster entry must have a complete character save.** Creation writes the character state
   before registering the slot. A failed write must leave the roster unchanged. Replacement saves
   use a temporary file so a failed write does not damage existing progress.
+- **New characters choose Good or Evil after gender and before class.** The chosen path starts
+  with +100 or -100 karma in the character save. Existing characters keep their recorded karma;
+  this choice applies only when creating a new one.
 
 **Schools and their casting stat:**
 
