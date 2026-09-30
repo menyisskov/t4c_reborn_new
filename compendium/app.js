@@ -476,10 +476,15 @@
     if (!byKey.monster[name]) return esc(displayName || name);
     return link("monsters/" + slug(name), esc(displayName || name));
   }
+  function findItem(key) {
+    if (!key) return null;
+    return byKey.item[key] ||
+      (key.indexOf("item.") === 0 ? byKey.item[key.slice(5)] : byKey.item["item." + key]) || null;
+  }
   function itemLink(key) {
-    var it = byKey.item[key];
+    var it = findItem(key);
     if (!it) return esc(key);
-    return link("items/" + slug(key), esc(it.name || key));
+    return link("items/" + slug(it.key), esc(it.name || key));
   }
   function npcLink(id) {
     var n = byKey.npc[id];
@@ -1240,7 +1245,7 @@
   }
 
   function itemPlain(key) {
-    var it = byKey.item[key];
+    var it = findItem(key);
     return it ? esc(it.name) : esc(key);
   }
 

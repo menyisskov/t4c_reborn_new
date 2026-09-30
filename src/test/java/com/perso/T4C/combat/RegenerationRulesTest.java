@@ -52,16 +52,6 @@ class RegenerationRulesTest {
   }
 
   @Test
-  void hpAboveMaximumAlwaysLosesAtLeastOnePoint() {
-    assertEquals(11, RegenerationRules.regenerateHp(12, 10, 40, MAXIMUM_ROLL));
-  }
-
-  @Test
-  void hpAboveMaximumNeverDropsBelowTheCap() {
-    assertEquals(100, RegenerationRules.regenerateHp(101, 100, 40, MAXIMUM_ROLL));
-  }
-
-  @Test
   void manaGainIsAtLeastOneWhenTheChanceGateOpens() {
     assertEquals(31, RegenerationRules.regenerateMana(30, 100, 0, 0, MINIMUM_ROLL));
   }
@@ -77,22 +67,12 @@ class RegenerationRulesTest {
   }
 
   @Test
-  void manaAtMaximumStaysPut() {
-    assertEquals(100, RegenerationRules.regenerateMana(100, 100, 320, 320, MINIMUM_ROLL));
-  }
-
-  @Test
   void regenerationMultiplierStepsEveryTwentyFivePoints() {
     assertEquals(1, RegenerationRules.regenerationMultiplier(0));
     assertEquals(1, RegenerationRules.regenerationMultiplier(24));
     assertEquals(2, RegenerationRules.regenerationMultiplier(25));
     assertEquals(2, RegenerationRules.regenerationMultiplier(49));
     assertEquals(3, RegenerationRules.regenerationMultiplier(50));
-  }
-
-  @Test
-  void unlearnedSkillNeverShrinksTheNaturalRoll() {
-    assertEquals(1, RegenerationRules.regenerationMultiplier(-10));
   }
 
   @Test

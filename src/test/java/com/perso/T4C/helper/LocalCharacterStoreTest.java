@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.WitnessStory;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -133,5 +136,56 @@ class LocalCharacterStoreTest {
     assertEquals(0, loaded.gold);
     assertTrue(loaded.inventory.isEmpty());
     assertTrue(loaded.itemCharges.isEmpty());
+  }
+
+  @Test
+  void newCharacterAndStoryProgressPersistAcrossRosterReload() throws Exception {
+    CharacterCreationRules.Stats stats =
+        new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
+    LocalCharacterStore.CharacterSlot created =
+        LocalCharacterStore.create("Mira", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats);
+    LocalCharacterStore.activate(created);
+    Player player = new Player();
+    PlayerStateMapper.applyToPlayer(LocalCharacterStore.loadState(created), player);
+    player.setQuestFlag(WitnessStory.ARAKAS_RECORD, 1);
+    PlayerStateStore.save(player, 7f);
+    PlayerStateStore.resetActiveFilename();
+
+    LocalCharacterStore.CharacterSlot reloaded = LocalCharacterStore.list().getFirst();
+    assertEquals(created.id(), reloaded.id());
+    Player restored = new Player();
+    PlayerStateMapper.applyToPlayer(LocalCharacterStore.loadState(reloaded), restored);
+    assertEquals("Mira", restored.getName());
+    assertEquals(1, restored.getQuestFlag(WitnessStory.ARAKAS_RECORD));
+    assertFalse(Files.exists(tempDir.resolve(created.stateFile() + ".tmp")));
+  }
+
+  @Test
+  void failedSaveDoesNotRegisterAnUnplayableCharacter() throws Exception {
+    Files.writeString(tempDir.resolve("characters"), "occupied by a file");
+    CharacterCreationRules.Stats stats =
+        new CharacterCreationRules.Stats(15, 14, 13, 12, 11, 28, 10);
+
+    assertThrows(
+        IOException.class,
+        () ->
+            LocalCharacterStore.create(
+                "Mira", LocalCharacterStore.FEMALE, CharacterClass.WARRIOR, stats));
+    assertFalse(Files.exists(tempDir.resolve("characters.json")));
+    assertTrue(LocalCharacterStore.list().isEmpty());
+  }
+
+  @Test
+  void failedReplacementPreservesTheLastReadableSave() throws Exception {
+    PlayerStateDto state = new PlayerStateDto();
+    state.name = "Before";
+    state.level = 1;
+    state.worldLayoutVersion = AvalonWorldLayout.WORLD_LAYOUT_VERSION;
+    PlayerStateStore.saveOrThrow("state.json", state);
+    Files.createDirectory(tempDir.resolve("state.json.tmp"));
+    state.name = "After";
+
+    assertThrows(IOException.class, () -> PlayerStateStore.saveOrThrow("state.json", state));
+    assertEquals("Before", PlayerStateStore.load("state.json").name);
   }
 }

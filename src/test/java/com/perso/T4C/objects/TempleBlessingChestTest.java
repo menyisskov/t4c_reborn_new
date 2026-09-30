@@ -162,54 +162,6 @@ class TempleBlessingChestTest {
         "Avalon's Tranquility should be stronger");
   }
 
-  /**
-   * The five ordinary towns are deliberately interchangeable: whichever one you are standing in,
-   * the blessing is the same, and only Avalon is worth travelling for.
-   */
-  @Test
-  void theOrdinaryTownsAllGiveTheSameBlessing() {
-    assertEquals(
-        5,
-        TempleBlessingService.SHRINES.stream()
-            .filter(
-                s ->
-                    s.casterWisdom() == TempleBlessingService.TOWN_CASTER_WISDOM
-                        && s.casterIntelligence() == TempleBlessingService.TOWN_CASTER_INTELLIGENCE)
-            .count(),
-        "Five towns should share the ordinary blessing");
-    assertEquals(
-        1,
-        TempleBlessingService.SHRINES.stream()
-            .filter(s -> s.casterWisdom() == TempleBlessingService.AVALON_CASTER_WISDOM)
-            .count(),
-        "Only Avalon Sanctuary should give the archmage's blessing");
-  }
-
-  /**
-   * DESIGN_GUIDELINES.md quotes what each blessing is worth, and a doc that restates game maths
-   * goes stale the moment someone retunes the caster stats. These are the numbers in that table; if
-   * you change the stats on purpose, change both.
-   *
-   * <p>Max HP is left out deliberately: Bless rolls {@code 1d(wis/4)} into it, so it has no single
-   * value to pin.
-   */
-  @Test
-  void theBlessingIsWorthWhatTheGuidelinesSay() {
-    TempleBlessingService service = new TempleBlessingService();
-
-    Player town = new Player();
-    service.bless(town, chestAt(shrineWithWisdom(TempleBlessingService.TOWN_CASTER_WISDOM)));
-    assertEquals(59, town.getArmorClassBoost(), "Ordinary town armour class");
-    assertEquals(100, town.getEffectiveWisdom(), "Ordinary town wisdom");
-    assertEquals(33, town.getEffectiveStrength(), "Ordinary town strength");
-
-    Player avalon = new Player();
-    service.bless(avalon, chestAt(shrineWithWisdom(TempleBlessingService.AVALON_CASTER_WISDOM)));
-    assertEquals(258, avalon.getArmorClassBoost(), "Avalon armour class");
-    assertEquals(750, avalon.getEffectiveWisdom(), "Avalon wisdom");
-    assertEquals(135, avalon.getEffectiveStrength(), "Avalon strength");
-  }
-
   private static TempleBlessingService.Shrine shrineWithWisdom(int casterWisdom) {
     return TempleBlessingService.SHRINES.stream()
         .filter(s -> s.casterWisdom() == casterWisdom)

@@ -6,10 +6,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.perso.T4C.npc.companion.CompanionNPC;
 import com.perso.T4C.player.Player;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.function.Supplier;
 import lombok.Setter;
 
@@ -48,25 +50,27 @@ public final class PlayerStateStore {
 
   public static void save(String filename, PlayerStateDto state) {
     try {
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      Path outPath = Paths.get(System.getProperty("user.dir"), filename);
-      Path parent = outPath.getParent();
-      if (parent != null) {
-        Files.createDirectories(parent);
-      }
-      Files.writeString(outPath, gson.toJson(state), StandardCharsets.UTF_8);
+      saveOrThrow(filename, state);
     } catch (Exception e) {
       try {
-        FileHandle fh = Gdx.files.local(filename);
-        Gson gson2 = new GsonBuilder().setPrettyPrinting().create();
-        fh.writeString(gson2.toJson(state), false, "UTF-8");
-        return;
+        Gdx.app.error("PlayerStateStore", "Failed to save player state", e);
       } catch (Throwable ignored) {
       }
-      try {
-        Gdx.app.error("PlayerStateStore", "Failed to save player state", e);
-      } catch (Throwable ignored2) {
-      }
+    }
+  }
+
+  /** Write a complete save before replacing the prior one; creation must observe write failures. */
+  public static void saveOrThrow(String filename, PlayerStateDto state) throws IOException {
+    Path outPath = Paths.get(System.getProperty("user.dir"), filename);
+    Path parent = outPath.getParent();
+    if (parent != null) Files.createDirectories(parent);
+    Path temp = outPath.resolveSibling(outPath.getFileName() + ".tmp");
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    try {
+      Files.writeString(temp, gson.toJson(state), StandardCharsets.UTF_8);
+      Files.move(temp, outPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+    } finally {
+      Files.deleteIfExists(temp);
     }
   }
 

@@ -5,15 +5,13 @@ description: End-to-end delivery of a change in this repo, from a finished worki
 
 # Ship a PR (t4c_reborn_new)
 
-> **Codex review is currently disabled in this repo** (owner's call, 2026-09-26). Nothing
-> automated reviews PRs right now, so do not wait for a review before merging: green CI and a
-> clean self-review are the bar. The steps below still apply if it is turned back on.
+> Check the PR's current review status before merging. Any enabled automated review must
+> finish, along with green CI, as required by `AGENTS.md`.
 
 `steward` says **when** a PR may be merged. This skill is the **how**, start to finish, and it
 exists because the same avoidable review round-trips kept happening: old saves missed by a new
 cap, an off-by-one in odds shown on the website, a doc restating a number that had already
-changed. Nothing reviews these PRs automatically any more, so step 1 is the only
-review they get - do it properly.
+changed. Do step 1 properly regardless of whether an automated reviewer is enabled.
 
 The build is **Maven** (`mvn`), not Gradle.
 
@@ -72,28 +70,24 @@ Commit the regenerated `compendium/` data if it changed. If you touched `compend
    stash). A normal push is then a fast-forward. **Never force-push.**
 2. Open the PR (GitHub MCP), ready for review. The body carries the technical detail the
    changelog leaves out: rules as a table, what changed, how it was tested.
-3. Wait for **Build and test** only. Codex review is disabled in this repo, so there is no
-   review to wait for - don't block on one.
+3. Wait for **Build and test** and any enabled automated review to finish on the current head.
 4. End your turn or merge once CI is green. Don't sleep or poll in a loop.
 
-## 4. Handle review findings (only if a reviewer is enabled)
+## 4. Handle review findings
 
-Codex review is disabled in this repo right now, so this step is usually a no-op. If a human
-or a re-enabled bot does leave findings, for each one: check it against the code, then decide.
+If a human or bot leaves findings, check each against the code, then decide.
 - **Real:** reproduce it as a failing test where practical, fix the root cause (not just the
   instance), run `mvn -q test`, and push. Reply on the thread naming the commit and what it
   changes, then resolve it. If the fix exposes a *class* of mistake, add a test that guards the
   whole class, as the boostId-uniqueness test did.
 - **Not worth fixing** (out of scope, pre-existing, a destructive guess): reply once with the
   reason and resolve. You don't need the owner's sign-off.
-- If an automated reviewer is enabled, a pushed fix triggers a re-review; wait for it. With
-  reviews disabled, just wait for CI to go green again.
+- If an automated reviewer is enabled, a pushed fix triggers a re-review; wait for it.
 
 ## 5. Merge and clean up
 
 Merge only when `steward`'s conditions hold: **Build and test** is green on the current head, there
-is no conflict, and any findings left by a reviewer have had a decision. With Codex disabled,
-green CI on the current head is the bar. Merge with
+is no conflict, and any findings left by a reviewer have had a decision. Merge with
 `merge_pull_request` (`merge_method: merge`, `expectedHeadSha` = current head). Then:
 
 - [ ] Delete your pending `send_later` triggers for this PR (`delete_trigger`).

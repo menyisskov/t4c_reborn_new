@@ -187,6 +187,9 @@ quiz is gone; its i18n strings were deleted with it.
 - **The preview must call `PlayerAnimations.refresh()` after changing the part map.** Frames are
   cached and only reload on a texture-generation change, so without it a newly dressed class keeps
   the previous one's sprites - or draws nothing at all if its own were never loaded.
+- **A roster entry must have a complete character save.** Creation writes the character state
+  before registering the slot. A failed write must leave the roster unchanged. Replacement saves
+  use a temporary file so a failed write does not damage existing progress.
 
 **Schools and their casting stat:**
 
@@ -667,6 +670,8 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 ## 4. Reference website (compendium)
 - Generated from the live game data by `tools/CompendiumExporter`. CI regenerates it on every
   push to `main`, and Vercel deploys `main`.
+- Quest item keys may use the game's `item.` prefix while exported item keys are bare. Resolve
+  both forms to the exported item before displaying a delivery requirement or making its link.
 - When adding a genuinely new spell, item, NPC or quest class, add it to the exporter's "new
   content" lists. Monsters are the exception (T4C-0089): every monster is exported and gets its
   own page, original-game creatures included, tagged with an `origin` of `new`/`activated`/
