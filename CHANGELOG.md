@@ -11,6 +11,12 @@ dates are the commit dates of the work, not retroactively invented. From now
 on, every content/feature pass adds its own entry here as part of the work
 (see `CLAUDE.md`), not after the fact.
 
+## 2026-09-30 - Witness Isles compendium corrections (T4C-0108)
+
+### Fixed
+- New Witness Isles equipment now appears under its proper name in the compendium instead of a text key.
+- Hunting monster pages show their faster respawn range and the possible refill when players leave and return to an area.
+
 ## 2026-09-29 - Witness Isles story and hunting (T4C-0107)
 
 ### Added

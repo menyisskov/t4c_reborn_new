@@ -16,6 +16,7 @@ import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.ItemSalePricing;
 import com.perso.T4C.item.json.ItemJsonLoader;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.monster.json.MonsterJsonLoader;
 import com.perso.T4C.npc.ActionType;
@@ -279,7 +280,7 @@ public final class CompendiumExporter {
 
   // ---------------------------------------------------------------- monsters
 
-  private static List<Map<String, Object>> exportMonsters(Map<String, String> spriteByMonster) {
+  static List<Map<String, Object>> exportMonsters(Map<String, String> spriteByMonster) {
     List<MonsterDef> defs =
         MonsterRegistry.load().stream()
             .sorted(Comparator.comparing(MonsterDef::getLevel).thenComparing(MonsterDef::getName))
@@ -309,6 +310,11 @@ public final class CompendiumExporter {
       m.put("hitDamageMin", def.getHitDamageMin());
       m.put("hitDamageMax", def.getHitDamageMax());
       m.put("respawnTimeMs", def.getRespawnTime());
+      if (MonsterManager.hasHuntingRespawn(def.getName())) {
+        m.put("respawnMinMs", MonsterManager.huntingRespawnMinMillis());
+        m.put("respawnMaxMs", MonsterManager.huntingRespawnMaxMillis());
+        m.put("movementRefillMs", MonsterManager.huntingReentryRespawnMillis());
+      }
       m.put("goldMin", def.getGoldMin());
       m.put("goldMax", def.getGoldMax());
       m.put("dodge", def.getDodge());
@@ -803,7 +809,7 @@ public final class CompendiumExporter {
 
   // -------------------------------------------------------------------- items
 
-  private static List<Map<String, Object>> exportItems() {
+  static List<Map<String, Object>> exportItems() {
     List<Map<String, Object>> out = new ArrayList<>();
     File dir = new File("assets/items");
     File[] files = dir.listFiles((d, n) -> n.endsWith(".json"));
@@ -820,6 +826,7 @@ public final class CompendiumExporter {
           item.put(field, gson.fromJson(obj.get(field), Object.class));
         }
         if (!item.containsKey("key")) item.put("key", f.getName().replace(".json", ""));
+        if (item.get("name") instanceof String name) item.put("name", I18n.resolve(name));
         item.put(
             "sellPrice",
             ItemSalePricing.sellPrice(ItemRegistry.findByKey((String) item.get("key"))));
