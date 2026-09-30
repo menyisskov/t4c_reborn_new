@@ -1458,6 +1458,12 @@ only real friendly-clickable entity today is the player's own companion
   merely because the tile format accepts larger dimensions. Additional encounter design and
   progression balance across Avalon's extended terrain remain open work.
 
+### Lighthaven temple sanctuary (T4C-0114)
+
+- Lighthaven's temple is a PvP sanctuary only. Monster combat and ordinary PvE death penalties
+  remain active even inside it. The surrounding town has no sanctuary protection. Other
+  sanctuaries retain their existing PvE and PvP protection.
+
 ## New-item resale (T4C-0101)
 
 **Owner rule:** every new droppable item must sell for more than one gold; rarer loot must sell for more.

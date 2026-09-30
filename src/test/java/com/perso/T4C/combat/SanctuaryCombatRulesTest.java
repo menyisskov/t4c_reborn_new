@@ -34,6 +34,7 @@ class SanctuaryCombatRulesTest {
     byte[] collision = new byte[16];
     collision[5] = 6;
     collision[6] = 7;
+    collision[7] = 16;
     Path file = tempDir.resolve("sanctuary.colbin");
     CollisionMapIO.write(file.toFile(), 4, 4, collision);
     CollisionManager.getInstance().initialize(new CollisionReader(file.toFile()));
@@ -53,6 +54,38 @@ class SanctuaryCombatRulesTest {
       assertFalse(SanctuaryCombatRules.canFight(sanctuary, outside));
     }
     assertTrue(SanctuaryCombatRules.canFight(outside, new Vector2(3 * GRID_W, GRID_H)));
+  }
+
+  @Test
+  void pvpOnlyTempleAllowsMonsterCombatButProtectsBothPvpEndpoints() throws Exception {
+    Vector2 outside = new Vector2(0, 0);
+    Vector2 temple = new Vector2(3 * GRID_W, GRID_H);
+    assertTrue(SanctuaryCombatRules.canFight(outside, temple));
+    assertTrue(SanctuaryCombatRules.canFight(temple, outside));
+    assertFalse(SanctuaryCombatRules.canPvp(outside, temple));
+    assertFalse(SanctuaryCombatRules.canPvp(temple, outside));
+
+    Player player = playerAt(temple.x, temple.y);
+    player.setCurrentHp(100);
+    player.takeCombatDamage(20);
+    assertEquals(80, player.getCurrentHp());
+    TestMonster monster = new TestMonster();
+    monster.applyPlayerDamage(3, player, null);
+    assertEquals(7, monster.getHealth());
+
+    player.setMana(100);
+    SpellData spell = positionSpell(true, 6);
+    var pvp =
+        SpellCastingService.begin(
+            new SpellCastingService.Request(
+                spell, player, SpellCastingService.TargetKind.POSITION, 1f, true, true, false));
+    assertEquals(SpellCastingService.Failure.SAFE_HAVEN, pvp.failure());
+    assertEquals(100, player.getMana());
+    var pve =
+        SpellCastingService.begin(
+            new SpellCastingService.Request(
+                spell, player, SpellCastingService.TargetKind.POSITION, 1f, true, false, false));
+    assertTrue(pve.success());
   }
 
   @Test

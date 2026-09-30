@@ -21,5 +21,7 @@ class DeathPenaltyServiceTest {
   void ordinaryGroundStillAppliesPenalties() {
     assertFalse(DeathPenaltyService.isSafeHaven(CollisionType.NONE.getValue()));
     assertFalse(DeathPenaltyService.isSafeHaven(CollisionType.ABSOLUTE.getValue()));
+    assertFalse(DeathPenaltyService.isSafeHaven(CollisionType.PVP_SANCTUARY.getValue()));
+    assertTrue(DeathPenaltyService.isPvpSafeHaven(CollisionType.PVP_SANCTUARY.getValue()));
   }
 }

@@ -6,7 +6,7 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0114`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0115`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -153,3 +153,4 @@ work happens.
 | T4C-0111 | Raise Ancient Celestial armor and all Empyrean item resale to endgame values | Balance | Done | `f1834530` | [2026-09-30](CHANGELOG.md#2026-09-30--rare-endgame-resale-t4c-0111) |
 | T4C-0112 | Let new characters choose Good or Evil starting karma | Systems/UI | Done | `e5abc9a3` | [2026-09-30](CHANGELOG.md#2026-09-30--choose-your-path-t4c-0112) |
 | T4C-0113 | Cast self-centered area spells without target selection | Spells | Done | `20ac2b53` | [2026-09-30](CHANGELOG.md#2026-09-30--self-centered-area-spells-t4c-0113) |
+| T4C-0114 | Restrict Lighthaven sanctuary to temple PvP protection | Map/Combat | Done | — | [2026-09-30](CHANGELOG.md#2026-09-30--lighthaven-temple-sanctuary-t4c-0114) |

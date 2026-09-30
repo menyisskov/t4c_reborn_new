@@ -27,11 +27,7 @@ public final class EditorTemplateExporter {
           "temple",
           "buildings",
           "worldmap",
-          new int[][] {
-            {2950, 1032}, {2951, 1033}, {2952, 1032}, {2958, 1038}, {2964, 1032}, {2972, 1040},
-            {2966, 1046}, {2972, 1052}, {2971, 1053}, {2972, 1054}, {2947, 1079}, {2946, 1078},
-            {2945, 1079}, {2925, 1059}, {2926, 1058}, {2925, 1057}
-          });
+          LighthavenSanctuaryBuilder.TEMPLE_POLYGON);
       export(
           map,
           collision,

@@ -13,7 +13,17 @@ public final class SanctuaryCombatRules {
             CollisionManager.getInstance().getCollisionValue(position.x, position.y));
   }
 
+  public static boolean isPvpProtected(Vector2 position) {
+    return position != null
+        && DeathPenaltyService.isPvpSafeHaven(
+            CollisionManager.getInstance().getCollisionValue(position.x, position.y));
+  }
+
   public static boolean canFight(Vector2 attacker, Vector2 target) {
     return !isProtected(attacker) && !isProtected(target);
+  }
+
+  public static boolean canPvp(Vector2 attacker, Vector2 target) {
+    return !isPvpProtected(attacker) && !isPvpProtected(target);
   }
 }
