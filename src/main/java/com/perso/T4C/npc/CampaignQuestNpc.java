@@ -84,6 +84,7 @@ abstract class CampaignQuestNpc extends ScriptedNpc {
                   case 4 -> "${npc.hollow_dawn.witnesses}";
                   case 5 -> "${npc.hollow_dawn.warders}";
                   case 8 -> "${npc.hollow_dawn.hierarchy}";
+                  case 10 -> epilogueText(context.player());
                   default -> "${npc.hollow_dawn.threnody}";
                 });
           }
@@ -112,6 +113,8 @@ abstract class CampaignQuestNpc extends ScriptedNpc {
               response =
                   I18n.resolve(quest.getOfferText())
                       + "\n"
+                      + I18n.resolve(HollowDawnCampaign.chapterCue(quest))
+                      + "\n"
                       + I18n.resolve("${npc.hollow_dawn.accept_prompt}");
           case 1 -> response = service.giveOrReport(quest.getId(), spec.id(), context.player());
           case 2 -> {
@@ -121,13 +124,7 @@ abstract class CampaignQuestNpc extends ScriptedNpc {
               response = service.turnInQuest(quest.getId(), spec.id(), context.player());
               if (QuestService.statusFor(context.player(), quest)
                   == QuestService.STATUS_COMPLETED) {
-                QuestDef next = current(context.player());
-                response +=
-                    "\n"
-                        + I18n.resolve(
-                            next == null
-                                ? finishedText()
-                                : "${npc.hollow_dawn.next}");
+                response += "\n" + I18n.resolve(HollowDawnCampaign.chapterHandoff(quest));
               } else {
                 response += "\n" + I18n.resolve("${npc.hollow_dawn.pending}");
               }
@@ -150,6 +147,18 @@ abstract class CampaignQuestNpc extends ScriptedNpc {
 
   private String finishedText() {
     return isChronicler() ? "${npc.hollow_dawn.account_finished}" : "${npc.hollow_dawn.finished}";
+  }
+
+  private String epilogueText(Player player) {
+    if (isChronicler()) {
+      return HollowDawnCampaign.accountCompleted(player)
+          ? "${npc.hollow_dawn.epilogue_maelin}"
+          : "${npc.hollow_dawn.epilogue_pending}";
+    }
+    QuestDef finalQuest = stages.getLast();
+    return QuestService.statusFor(player, finalQuest) == QuestService.STATUS_COMPLETED
+        ? "${npc.hollow_dawn.epilogue_vael}"
+        : "${npc.hollow_dawn.epilogue_pending}";
   }
 
   private boolean choosing(Player player) {

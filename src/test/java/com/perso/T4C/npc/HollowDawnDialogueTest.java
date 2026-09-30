@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.helper.XpCurve;
+import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
@@ -107,16 +108,18 @@ class HollowDawnDialogueTest {
       var path = HollowDawnCampaign.selectedPath(player);
       assertEquals(2, path.size());
       say(maelin, player, choice.equals("moonwake") ? "emberglass" : "moonwake");
-      assertEquals(path.stream().map(QuestDef::getId).toList(),
+      assertEquals(
+          path.stream().map(QuestDef::getId).toList(),
           HollowDawnCampaign.selectedPath(player).stream().map(QuestDef::getId).toList());
       for (QuestDef stage : path) {
         if (stage != path.getFirst()) hearClue(player, choice);
         say(maelin, player, "accept");
         for (int i = 0; i < stage.getRequiredKills(); i++) {
-          quests.recordKill(player, stage.getTargetMonster(), 0,
-              stage.getAreaCenterX(), stage.getAreaCenterY());
+          quests.recordKill(
+              player, stage.getTargetMonster(), 0, stage.getAreaCenterX(), stage.getAreaCenterY());
         }
-        if (stage.getRequiredItemKey() != null) player.getInventory().add(stage.getRequiredItemKey());
+        if (stage.getRequiredItemKey() != null)
+          player.getInventory().add(stage.getRequiredItemKey());
         say(maelin, player, "report");
         assertEquals(QuestService.STATUS_COMPLETED, QuestService.statusFor(player, stage));
       }
@@ -127,7 +130,8 @@ class HollowDawnDialogueTest {
       }
       KeeperVael keeper = new KeeperVael(new NpcContext(quests));
       say(keeper, player, "accept");
-      assertEquals(QuestService.STATUS_ACTIVE,
+      assertEquals(
+          QuestService.STATUS_ACTIVE,
           QuestService.statusFor(player, HollowDawnCampaign.threnody().getFirst()));
     }
   }
@@ -159,21 +163,82 @@ class HollowDawnDialogueTest {
   }
 
   private static void hearClue(Player player, String branch) throws Exception {
-    CampaignWitnessNpc witness = branch.equals("moonwake")
-        ? new MoonwakeWitnessIlyra(new NpcContext(null))
-        : new EmberglassWarderSoren(new NpcContext(null));
+    CampaignWitnessNpc witness =
+        branch.equals("moonwake")
+            ? new MoonwakeWitnessIlyra(new NpcContext(null))
+            : new EmberglassWarderSoren(new NpcContext(null));
+    assertTrue(
+        witness.publicBehavior().onKeyword(new NpcBehaviorContext(witness, player), "testimony"));
     assertTrue(witness.publicBehavior().onKeyword(new NpcBehaviorContext(witness, player), "clue"));
+  }
+
+  @Test
+  void advertisedCampaignKeywordsRemainConnectedThroughTheFinalEpilogue() throws Exception {
+    Player player = new Player();
+    completeFlag(player, FadingVeilReckoning.definition());
+    ChroniclerMaelin maelin = new ChroniclerMaelin(new NpcContext(quests));
+    for (String keyword :
+        new String[] {
+          "story",
+          "accept",
+          "report",
+          "route",
+          "witnesses",
+          "warders",
+          "moonwake",
+          "emberglass",
+          "hierarchy",
+          "threnody",
+          "epilogue"
+        }) {
+      say(maelin, player, keyword);
+    }
+
+    completeFlag(player, HollowDawnCampaign.avalon().get(1));
+    KeeperVael keeper = new KeeperVael(new NpcContext(quests));
+    for (String keyword :
+        new String[] {
+          "story",
+          "accept",
+          "report",
+          "route",
+          "witnesses",
+          "warders",
+          "moonwake",
+          "emberglass",
+          "hierarchy",
+          "threnody",
+          "epilogue"
+        }) {
+      say(keeper, player, keyword);
+    }
+    completeFlag(player, HollowDawnCampaign.threnody().getLast());
+    say(keeper, player, "epilogue");
+  }
+
+  @Test
+  void everyChapterCueAndHandoffResolvesToPlayerFacingText() {
+    for (QuestDef quest : HollowDawnCampaign.all()) {
+      assertTrue(I18n.has(I18n.keyOf(HollowDawnCampaign.chapterCue(quest))), quest.getId());
+      assertTrue(I18n.has(I18n.keyOf(HollowDawnCampaign.chapterHandoff(quest))), quest.getId());
+    }
+    for (var topic : CampaignTopics.all()) {
+      assertTrue(I18n.has(I18n.keyOf(topic.response())));
+      for (String keyword : topic.keywords()) assertTrue(I18n.has(I18n.keyOf(keyword)));
+    }
   }
 
   private void assertRelicStage(CampaignQuestNpc npc, Player player, QuestDef stage) {
     assertTrue(stage.getRequiredItemKey().startsWith("item."));
     assertTrue(ItemRegistry.findByKey(stage.getRequiredItemKey()) != null);
-    assertTrue(MonsterRegistry.findByName(stage.getTargetMonster()).getLoot().stream()
-        .anyMatch(drop -> stage.getRequiredItemKey().equals(drop.getItem())
-            && drop.getChance() >= 1f));
+    assertTrue(
+        MonsterRegistry.findByName(stage.getTargetMonster()).getLoot().stream()
+            .anyMatch(
+                drop ->
+                    stage.getRequiredItemKey().equals(drop.getItem()) && drop.getChance() >= 1f));
     say(npc, player, "accept");
-    quests.recordKill(player, stage.getTargetMonster(), 0,
-        stage.getAreaCenterX(), stage.getAreaCenterY());
+    quests.recordKill(
+        player, stage.getTargetMonster(), 0, stage.getAreaCenterX(), stage.getAreaCenterY());
     say(npc, player, "report");
     assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, stage));
     player.getInventory().add(stage.getRequiredItemKey());

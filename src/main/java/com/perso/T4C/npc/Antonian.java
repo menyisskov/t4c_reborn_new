@@ -170,11 +170,11 @@ public final class Antonian extends ScriptedNpc {
               }
 
             c.sayKey(
-                c.flag("QUEST_ISLAND_ACCESS") == 0
+                c.flag("__QUEST_ISLAND_ACCESS") == 0
                     ? "npc.antonian.direction.doneLocked"
                     : "npc.antonian.direction.done");
 
-            if (c.flag("QUEST_ISLAND_ACCESS") > 0) {
+            if (c.flag("__QUEST_ISLAND_ACCESS") > 0) {
 
               c.flag("ADDON_STORYLINE_PROGRESS", 28);
 

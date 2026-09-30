@@ -27,9 +27,12 @@ class CampaignWitnessNpcTest {
       Player player = new Player();
       QuestService quests = new QuestService(XpCurve.loadDefault(), null, null);
       ChroniclerMaelin maelin = new ChroniclerMaelin(new NpcContext(quests));
-      ScriptedNpc witness = index == 0 ? new MoonwakeWitnessIlyra(new NpcContext(null))
-          : new EmberglassWarderSoren(new NpcContext(null));
-      String flag = index == 0 ? HollowDawnCampaign.MOONWAKE_CLUE : HollowDawnCampaign.EMBERGLASS_CLUE;
+      ScriptedNpc witness =
+          index == 0
+              ? new MoonwakeWitnessIlyra(new NpcContext(null))
+              : new EmberglassWarderSoren(new NpcContext(null));
+      String flag =
+          index == 0 ? HollowDawnCampaign.MOONWAKE_CLUE : HollowDawnCampaign.EMBERGLASS_CLUE;
       var first = HollowDawnCampaign.avalon().get(index);
       var lieutenant = HollowDawnCampaign.avalon().get(index + 1);
       say(witness, player, "clue");
@@ -37,11 +40,14 @@ class CampaignWitnessNpcTest {
       player.setQuestFlag(QuestService.statusFlag(first), QuestService.STATUS_COMPLETED);
       say(maelin, player, "accept");
       assertEquals(QuestService.STATUS_NOT_STARTED, QuestService.statusFor(player, lieutenant));
+      say(witness, player, "clue");
+      assertEquals(0, player.getQuestFlag(flag), "a clue requires the witness's testimony first");
       say(witness, player, "testimony");
       assertEquals(0, player.getQuestFlag(flag), "testimony must lead to the explicit clue");
       say(witness, player, "clue");
       assertEquals(1, player.getQuestFlag(flag));
-      String otherFlag = index == 0 ? HollowDawnCampaign.EMBERGLASS_CLUE : HollowDawnCampaign.MOONWAKE_CLUE;
+      String otherFlag =
+          index == 0 ? HollowDawnCampaign.EMBERGLASS_CLUE : HollowDawnCampaign.MOONWAKE_CLUE;
       assertEquals(0, player.getQuestFlag(otherFlag));
       // A fresh NPC instance uses the player's durable flag, not conversation-local state.
       maelin = new ChroniclerMaelin(new NpcContext(quests));
@@ -64,11 +70,16 @@ class CampaignWitnessNpcTest {
 
   @Test
   void witnessesAreRegisteredOnWalkableGroundBeyondMonsterAggroAndLeash() throws Exception {
-    CollisionReader collision = new CollisionReader(new File("assets/maps/worldmap/worldmap.colbin"));
+    CollisionReader collision =
+        new CollisionReader(new File("assets/maps/worldmap/worldmap.colbin"));
     try (MapReader map = new MapReader(new File("assets/maps/worldmap/worldmap.mapbin"))) {
       for (String id : new String[] {MoonwakeWitnessIlyra.ID, EmberglassWarderSoren.ID}) {
         assertNotNull(NpcFactoryRegistry.create(id, new NpcContext(null)));
-        var point = SpawnRegistry.npcs().stream().filter(s -> id.equals(s.type())).findFirst().orElseThrow();
+        var point =
+            SpawnRegistry.npcs().stream()
+                .filter(s -> id.equals(s.type()))
+                .findFirst()
+                .orElseThrow();
         assertFalse(collision.hasCollision(point.x(), point.y()));
         String ground = map.getGroundSpriteName(point.x(), point.y());
         assertNotNull(ground);

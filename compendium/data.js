@@ -40420,6 +40420,13 @@ window.T4C_DATA = {
           ],
           "response": "Ask about \"threnody\".",
           "actions": []
+        },
+        {
+          "keywords": [
+            "epilogue"
+          ],
+          "response": "Ask for the \"epilogue\" after the final report.",
+          "actions": []
         }
       ],
       "combatProfile": {
@@ -40808,7 +40815,7 @@ window.T4C_DATA = {
           "worldZ": 0
         }
       ],
-      "welcomeText": "Stonecrest's quay remembers every ship that failed to return. Ask me about the \"isles\" beyond the shoal, or why I still keep this dock.",
+      "welcomeText": "Stonecrest's quay remembers every ship that failed to return. Ask me about the \"isles\" beyond the shoal, or why I still keep this dock. My \"manifest\" also connects these waters to missing names on the mainland. Ask \"story\" to follow that optional investigation.",
       "topics": [
         {
           "keywords": [
@@ -40882,6 +40889,28 @@ window.T4C_DATA = {
             "pact"
           ],
           "response": "The pact once kept the Witness Isles and Stoneheim from sharing the same wound. Its warders left us this road. Ask about the \"scouts\" if you mean to follow them.",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "manifest"
+          ],
+          "response": "A captain remembers paying a crew whose names have vanished from his manifest. Kilhiam in Lighthaven has another such account. Ask \"story\" to follow the mainland witnesses. When Thomas has compared their testimony at the Library, say \"compare\" here. The passage itself remains available through \"isles\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "compare"
+          ],
+          "response": "The library account matches the spaces in my manifest. Your investigation now reaches the Witness Isles: mortal lives leave traces even as their names disappear. Ask \"isles\" about passage, \"scouts\" for the first deed, or \"route\" for the current voyage objective. Once across, ask Elder Ophira \"wilds\". You can always return and ask \"story\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "investigation",
+            "story"
+          ],
+          "response": "Ask \"story\" for the next speaker, destination and keyword in the missing-names investigation.",
           "actions": []
         }
       ],
@@ -41063,6 +41092,13 @@ window.T4C_DATA = {
             "threnody"
           ],
           "response": "Ask about \"threnody\".",
+          "actions": []
+        },
+        {
+          "keywords": [
+            "epilogue"
+          ],
+          "response": "Ask for the \"epilogue\" after the final report.",
           "actions": []
         }
       ],
@@ -64132,6 +64168,94 @@ window.T4C_DATA = {
     }
   },
   "meta": {
+    "mainStory": {
+      "title": "The Names That Remain",
+      "intro": "A missing name first noticed on Arakas becomes an investigation across Raven's Dust and Stoneheim. Its evidence leads to the Witness Isles, where one of two accounts can open the road to Threnody Reach. The people in the game give each next keyword and destination; these chapters collect the route in one place.",
+      "chapters": [
+        {
+          "title": "I. A Place Left Blank — Arakas",
+          "summary": "Kilhiam records a survivor whose family name has vanished. Lantalir recognizes the same deliberate gap in the grove's memory.",
+          "steps": [
+            "Kilhiam: ask ‘missing names’, then ‘record’.  Lantalir: ask ‘remembrance’, then ‘testimony’."
+          ]
+        },
+        {
+          "title": "II. Silence and Judgment — Raven's Dust",
+          "summary": "Thomas and Jeremiah at the Great Library compare the missing record with the known histories of Oberon, Makrsh P'Tangh and the Harbinger.",
+          "steps": [
+            "Thomas: ask ‘missing names’ and ‘record’.  Jeremiah: ask ‘judgment’, then ‘difference’.  Return to Thomas and ask ‘compare’."
+          ]
+        },
+        {
+          "title": "III. The Stonecrest Passage — Stoneheim",
+          "summary": "Rangor's incomplete ship manifest gives the librarians' finding a present-day source. The Oracle can offer optional corroboration after the older trials.",
+          "steps": [
+            "Rangor: ask ‘manifest’, then ‘compare’. Continue with ‘isles’, ‘scouts’, ‘report’, ‘chart’, and ‘report’ to earn passage."
+          ],
+          "quests": [
+            "tideworn_shore_scouts",
+            "passage_to_avalon"
+          ]
+        },
+        {
+          "title": "IV. The Failing Pact — Witness Isles",
+          "summary": "Ophira traces damage in the Wilds and Veil. Maelin reveals two surviving ways to testify about the ward that held Rhunor.",
+          "steps": [
+            "Ophira: follow ‘wilds’ and ‘veil’, accepting and reporting each deed. Maelin: ask ‘story’, then choose ‘moonwake’ or ‘emberglass’."
+          ],
+          "quests": [
+            "avalon_wilds_vigil",
+            "fading_veil_reckoning"
+          ]
+        },
+        {
+          "title": "V. Two Accounts, One Route",
+          "summary": "Moonwake's witness Ilyra and Emberglass's warder Soren each hold an essential clue. Complete one account and confront its lieutenant to open Threnody.",
+          "steps": [
+            "Moonwake: Maelin → Ilyra ‘testimony’ and ‘clue’ → Pale Cantor → Maelin ‘report’. Or Emberglass: Maelin → Soren ‘testimony’ and ‘clue’ → Cinder Marshal → Maelin ‘report’."
+          ],
+          "quests": [
+            "moonwake_missing",
+            "pale_cantor",
+            "emberglass_oath",
+            "cinder_marshal"
+          ]
+        },
+        {
+          "title": "VI. The Silenced — Threnody Reach",
+          "summary": "Vael names the people Rhunor's court has taught the world to forget. The exiles and Hush Cantor guard the first answer.",
+          "steps": [
+            "Ask Vael ‘story’, ‘accept’, ‘route’, and ‘report’ as each deed is completed."
+          ],
+          "quests": [
+            "ashbound_exiles",
+            "hush_cantor"
+          ]
+        },
+        {
+          "title": "VII. The Regent's Bargain",
+          "summary": "Nullguard defend the Dusk Regent, a former mortal warder joined to a shard of Rhunor. His seal opens the rift's last ward.",
+          "steps": [
+            "Follow Vael's next ‘accept’ and ‘report’ prompts; bring the Regent's Last Witness Seal for his turn-in."
+          ],
+          "quests": [
+            "nullguard_watch",
+            "dusk_regent",
+            "rift_unbinding"
+          ]
+        },
+        {
+          "title": "VIII. The Name That Remains",
+          "summary": "Rhunor offers a world without grief by stripping away memory. The final encounter preserves the mortal testimony gathered along the road.",
+          "steps": [
+            "Return to Vael after the encounter for the ending, then revisit mainland witnesses for their epilogue."
+          ],
+          "quests": [
+            "rhunor_hollow_dawn"
+          ]
+        }
+      ]
+    },
     "chapters": [
       {
         "id": "coast_road",

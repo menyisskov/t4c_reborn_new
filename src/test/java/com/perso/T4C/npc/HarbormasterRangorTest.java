@@ -1,14 +1,14 @@
 package com.perso.T4C.npc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.helper.XpCurve;
-import com.perso.T4C.npc.behavior.RebirthBehavior;
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.NpcBehaviorContext;
+import com.perso.T4C.npc.behavior.RebirthBehavior;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestDef;
@@ -33,8 +33,7 @@ class HarbormasterRangorTest {
     assertNotNull(scouts);
     assertEquals(QuestService.STATUS_NOT_STARTED, QuestService.statusFor(player, scouts));
     assertTrue(behavior.onKeyword(context, "scouts"));
-    assertEquals(
-        QuestService.STATUS_ACTIVE, player.getQuestFlag(QuestService.statusFlag(scouts)));
+    assertEquals(QuestService.STATUS_ACTIVE, player.getQuestFlag(QuestService.statusFlag(scouts)));
 
     QuestDef passage = QuestRegistry.findById("passage_to_avalon");
     assertNotNull(passage);
@@ -51,8 +50,7 @@ class HarbormasterRangorTest {
         QuestService.STATUS_COMPLETED, player.getQuestFlag(QuestService.statusFlag(scouts)));
 
     assertTrue(behavior.onKeyword(context, "chart"));
-    assertEquals(
-        QuestService.STATUS_ACTIVE, player.getQuestFlag(QuestService.statusFlag(passage)));
+    assertEquals(QuestService.STATUS_ACTIVE, player.getQuestFlag(QuestService.statusFlag(passage)));
     player.setQuestFlag(QuestService.killsFlag(passage), passage.getRequiredKills());
     assertTrue(behavior.onKeyword(context, "report"));
     assertEquals(QuestService.STATUS_ACTIVE, QuestService.statusFor(player, passage));

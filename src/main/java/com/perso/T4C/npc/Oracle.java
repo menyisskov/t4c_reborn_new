@@ -34,61 +34,63 @@ public final class Oracle extends ScriptedNpc {
           0,
           List.of(),
           "${npc.welcome.oracle}",
-          List.of(
-              topic(
-                  "${npc.topic_keyword.oracle.0.0}",
-                  "${npc.topic_keyword.oracle.0.1}",
-                  "${npc.topic_keyword.oracle.0.2}",
-                  "${npc.topic.oracle.0}"),
-              topic(
-                  "${npc.topic_keyword.oracle.1.0}",
-                  "${npc.topic_keyword.oracle.1.1}",
-                  "${npc.topic.oracle.1}"),
-              topic(
-                  "${npc.topic_keyword.oracle.2.0}",
-                  "${npc.topic_keyword.oracle.2.1}",
-                  "${npc.topic.oracle.2}"),
-              topic(
-                  "${npc.topic_keyword.oracle.3.0}",
-                  "${npc.topic_keyword.oracle.3.1}",
-                  "${npc.topic.oracle.3}"),
-              topic("${npc.topic_keyword.oracle.4.0}", "${npc.topic.oracle.4}"),
-              topic("${npc.topic_keyword.oracle.5.0}", "${npc.topic.oracle.5}"),
-              topic(
-                  "${npc.topic_keyword.oracle.6.0}",
-                  "${npc.topic_keyword.oracle.6.1}",
-                  "${npc.topic.oracle.6}"),
-              topic(
-                  "${npc.topic_keyword.oracle.7.0}",
-                  "${npc.topic_keyword.oracle.7.1}",
-                  "${npc.topic_keyword.oracle.7.2}",
-                  "${npc.topic.oracle.7}"),
-              topic("${npc.topic_keyword.oracle.8.0}", "${npc.topic.oracle.8}"),
-              topic("${npc.topic_keyword.oracle.9.0}", "${npc.topic.oracle.9}"),
-              topic(
-                  "${npc.topic_keyword.oracle.10.0}",
-                  "${npc.topic_keyword.oracle.10.1}",
-                  "${npc.topic.oracle.10}"),
-              topic(
-                  "${npc.topic_keyword.oracle.11.0}",
-                  "${npc.topic_keyword.oracle.11.1}",
-                  "${npc.topic.oracle.11}"),
-              topic("${npc.topic_keyword.oracle.12.0}", "${npc.topic.oracle.12}"),
-              topic("${npc.topic_keyword.oracle.13.0}", "${npc.topic.oracle.13}"),
-              topic(
-                  "${npc.topic_keyword.oracle.14.0}",
-                  "${npc.topic_keyword.oracle.14.1}",
-                  "${npc.topic.oracle.14}"),
-              topic("${npc.topic_keyword.oracle.15.0}", "${npc.topic.oracle.15}"),
-              topic("${npc.topic_keyword.oracle.16.0}", "${npc.topic.oracle.16}"),
-              topic(
-                  "${npc.topic_keyword.oracle.17.0}",
-                  "${npc.topic_keyword.oracle.17.1}",
-                  "${npc.topic.oracle.17}"),
-              topic(
-                  "${npc.topic_keyword.oracle.18.0}",
-                  "${npc.topic_keyword.oracle.18.1}",
-                  "${npc.topic.oracle.18}")),
+          WitnessStoryDialogue.append(
+              ID,
+              List.of(
+                  topic(
+                      "${npc.topic_keyword.oracle.0.0}",
+                      "${npc.topic_keyword.oracle.0.1}",
+                      "${npc.topic_keyword.oracle.0.2}",
+                      "${npc.topic.oracle.0}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.1.0}",
+                      "${npc.topic_keyword.oracle.1.1}",
+                      "${npc.topic.oracle.1}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.2.0}",
+                      "${npc.topic_keyword.oracle.2.1}",
+                      "${npc.topic.oracle.2}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.3.0}",
+                      "${npc.topic_keyword.oracle.3.1}",
+                      "${npc.topic.oracle.3}"),
+                  topic("${npc.topic_keyword.oracle.4.0}", "${npc.topic.oracle.4}"),
+                  topic("${npc.topic_keyword.oracle.5.0}", "${npc.topic.oracle.5}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.6.0}",
+                      "${npc.topic_keyword.oracle.6.1}",
+                      "${npc.topic.oracle.6}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.7.0}",
+                      "${npc.topic_keyword.oracle.7.1}",
+                      "${npc.topic_keyword.oracle.7.2}",
+                      "${npc.topic.oracle.7}"),
+                  topic("${npc.topic_keyword.oracle.8.0}", "${npc.topic.oracle.8}"),
+                  topic("${npc.topic_keyword.oracle.9.0}", "${npc.topic.oracle.9}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.10.0}",
+                      "${npc.topic_keyword.oracle.10.1}",
+                      "${npc.topic.oracle.10}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.11.0}",
+                      "${npc.topic_keyword.oracle.11.1}",
+                      "${npc.topic.oracle.11}"),
+                  topic("${npc.topic_keyword.oracle.12.0}", "${npc.topic.oracle.12}"),
+                  topic("${npc.topic_keyword.oracle.13.0}", "${npc.topic.oracle.13}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.14.0}",
+                      "${npc.topic_keyword.oracle.14.1}",
+                      "${npc.topic.oracle.14}"),
+                  topic("${npc.topic_keyword.oracle.15.0}", "${npc.topic.oracle.15}"),
+                  topic("${npc.topic_keyword.oracle.16.0}", "${npc.topic.oracle.16}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.17.0}",
+                      "${npc.topic_keyword.oracle.17.1}",
+                      "${npc.topic.oracle.17}"),
+                  topic(
+                      "${npc.topic_keyword.oracle.18.0}",
+                      "${npc.topic_keyword.oracle.18.1}",
+                      "${npc.topic.oracle.18}"))),
           "OracleNPC",
           new NpcSpec.CombatProfile(100, 1_000_000, 500, 500, 500, 1_000_000, 1, 65_535, "1d3"));
 
@@ -180,6 +182,7 @@ public final class Oracle extends ScriptedNpc {
 
         @Override
         public boolean onKeyword(NpcBehaviorContext c, String input) {
+          if (WitnessStoryDialogue.onKeyword(c, input)) return true;
 
           String keyword = normalize(input);
 
