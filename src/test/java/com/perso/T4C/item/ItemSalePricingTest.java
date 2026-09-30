@@ -103,6 +103,9 @@ class ItemSalePricingTest {
     assertEquals(200_000, ancient);
     assertTrue(empyrean > ancient);
     assertTrue(rarerEmpyrean > empyrean);
+    assertEquals(
+        200_000,
+        ItemSalePricing.sellPrice(ItemRegistry.findByKey("item.empyrean_earth_sceptre")));
   }
 
   @Test

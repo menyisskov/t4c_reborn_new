@@ -1458,7 +1458,7 @@ only real friendly-clickable entity today is the player's own companion
 
 Items with positive buy prices retain the existing half-price resale spread. For zero-buy-price items with no monster source, the helper defines fallback tiers for Godsforged products, unique items/crafting materials, and other equipment. See `ItemSalePricing` for the amounts and `ItemSalePricingTest` for checked examples. Undroppable items cannot be sold. The original Java item catalogue otherwise keeps its existing prices.
 
-Ancient Celestial and Empyrean armor are endgame sets: each sellable piece has a 200,000-gold minimum, while the ordinary drop-chance value is multiplied by 50 (up to the gold cap) so rarer variants remain worth more. Stat requirements differ by class and do not set resale value.
+Ancient Celestial armor and every Empyrean item are endgame loot: each sellable item has a 200,000-gold minimum, while the ordinary drop-chance value is multiplied by 50 (up to the gold cap) so rarer variants remain worth more. This includes Empyrean weapons, not only armor. Stat requirements differ by class and do not set resale value.
 
 The shop, item tooltip and compendium exporter use this same helper. Inventory saves store item keys, so old possessions receive current prices without migration or changes to stats, requirements or quest progress. A sale pays only for successfully removed units and respects the existing gold ceiling.
 

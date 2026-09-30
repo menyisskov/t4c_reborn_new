@@ -9,8 +9,8 @@ import java.util.Set;
 
 /** Vendor resale is independent of the buy price (zero still means drop/quest-only). */
 public final class ItemSalePricing {
-  private static final long RARE_ARMOR_MINIMUM = 200_000;
-  private static final long RARE_ARMOR_DROP_MULTIPLIER = 50;
+  private static final long ENDGAME_MINIMUM = 200_000;
+  private static final long ENDGAME_DROP_MULTIPLIER = 50;
   private static final Set<String> CRAFTING_MATERIAL_KEYS =
       Set.of(
           "item.wyrmforged_ember", "item.veiled_aether_shard",
@@ -27,13 +27,13 @@ public final class ItemSalePricing {
     double chance = easiestDropChance(item.getKey());
     if (item.getKey().startsWith("item.ancient_celestial_")
         || item.getKey().startsWith("item.empyrean_")) {
-      if (chance <= 0) return RARE_ARMOR_MINIMUM;
+      if (chance <= 0) return ENDGAME_MINIMUM;
       long dropPrice = priceForDropChance(chance);
       long scaled =
-          dropPrice >= Integer.MAX_VALUE / RARE_ARMOR_DROP_MULTIPLIER
+          dropPrice >= Integer.MAX_VALUE / ENDGAME_DROP_MULTIPLIER
               ? Integer.MAX_VALUE
-              : dropPrice * RARE_ARMOR_DROP_MULTIPLIER;
-      return Math.max(RARE_ARMOR_MINIMUM, scaled);
+              : dropPrice * ENDGAME_DROP_MULTIPLIER;
+      return Math.max(ENDGAME_MINIMUM, scaled);
     }
     if (chance > 0) return priceForDropChance(chance);
     if (item.getKey().startsWith("item.godsforged_")) return 100_000;
