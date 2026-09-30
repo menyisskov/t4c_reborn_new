@@ -155,4 +155,4 @@ work happens.
 | T4C-0113 | Cast self-centered area spells without target selection | Spells | Done | `20ac2b53` | [2026-09-30](CHANGELOG.md#2026-09-30--self-centered-area-spells-t4c-0113) |
 | T4C-0114 | Restrict Lighthaven sanctuary to temple PvP protection | Map/Combat | Done | `85165631` | [2026-09-30](CHANGELOG.md#2026-09-30--lighthaven-temple-sanctuary-t4c-0114) |
 | T4C-0115 | Add a Stonecrest shortcut to the Oracle's final trial | Content/Systems | Done | `9db4863a` | [2026-09-30](CHANGELOG.md#2026-09-30--stonecrest-ritekeeper-t4c-0115) |
-| T4C-0116 | Allow CI-green PRs to merge without waiting for Codex review | Process/Tooling | Done | pending commit | [2026-09-30](CHANGELOG.md#2026-09-30--merge-review-timing-t4c-0116) |
+| T4C-0116 | Allow CI-green PRs to merge without waiting for Codex review | Process/Tooling | Done | `4c257e95` | [2026-09-30](CHANGELOG.md#2026-09-30--merge-review-timing-t4c-0116) |
