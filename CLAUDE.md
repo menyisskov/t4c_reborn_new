@@ -87,8 +87,9 @@ Nothing reviews these PRs automatically (Codex review was switched off on 2026-0
 this self-review is the only one they get. Use the `ship-pr` skill.
 Its step 1 is the full checklist; at minimum:
 
-- **Build and test with Maven** (`mvn -q test`, the full suite). CI only runs a scoped subset,
-  so a green CI alone doesn't prove the rest still passes.
+- **Rebuild the local game after every fix** with `mvn -q '-DskipTests' package`, then rebuild the
+  user's main checkout after merging so its launcher runs the latest code. Run focused or full
+  tests when they help verify a concrete risk; tests are not a prerequisite for every fix.
 - **Old saves:** any new or lowered cap or limit needs a load-time clamp and a test that loads an
   over-the-limit save. Clamp derived values; never claw back what the player chose or spent.
   See the `balance-change` skill.
