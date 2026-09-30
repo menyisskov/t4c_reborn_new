@@ -174,4 +174,18 @@ class LocalCharacterStoreTest {
     assertFalse(Files.exists(tempDir.resolve("characters.json")));
     assertTrue(LocalCharacterStore.list().isEmpty());
   }
+
+  @Test
+  void failedReplacementPreservesTheLastReadableSave() throws Exception {
+    PlayerStateDto state = new PlayerStateDto();
+    state.name = "Before";
+    state.level = 1;
+    state.worldLayoutVersion = AvalonWorldLayout.WORLD_LAYOUT_VERSION;
+    PlayerStateStore.saveOrThrow("state.json", state);
+    Files.createDirectory(tempDir.resolve("state.json.tmp"));
+    state.name = "After";
+
+    assertThrows(IOException.class, () -> PlayerStateStore.saveOrThrow("state.json", state));
+    assertEquals("Before", PlayerStateStore.load("state.json").name);
+  }
 }

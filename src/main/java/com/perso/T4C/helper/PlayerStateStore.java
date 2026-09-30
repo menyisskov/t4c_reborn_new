@@ -8,7 +8,6 @@ import com.perso.T4C.npc.companion.CompanionNPC;
 import com.perso.T4C.player.Player;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -69,11 +68,7 @@ public final class PlayerStateStore {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     try {
       Files.writeString(temp, gson.toJson(state), StandardCharsets.UTF_8);
-      try {
-        Files.move(temp, outPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-      } catch (AtomicMoveNotSupportedException ignored) {
-        Files.move(temp, outPath, StandardCopyOption.REPLACE_EXISTING);
-      }
+      Files.move(temp, outPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     } finally {
       Files.deleteIfExists(temp);
     }
