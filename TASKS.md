@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0159 | Deliver a local two-client movement preview with server-owned positions | Multiplayer / Alpha | Done | Pending commit | [2026-10-26](CHANGELOG.md#2026-10-26--local-multiplayer-movement-preview-t4c-0159) |
+| T4C-0159 | Deliver a local two-client movement preview with server-owned positions | Multiplayer / Alpha | Done | `1e9178b5` | [2026-10-26](CHANGELOG.md#2026-10-26--local-multiplayer-movement-preview-t4c-0159) |
 | T4C-0158 | Share world-scoped static collision rules without changing offline movement | Architecture / Alpha | Done | `6bbb7f93` | [2026-10-26](CHANGELOG.md#2026-10-26--shared-world-collision-t4c-0158) |
 | T4C-0157 | Establish an isolated headless multiplayer build and server lifecycle | Architecture / Alpha | Done | `5b08a7f4` | [2026-10-26](CHANGELOG.md#2026-10-26--multiplayer-alpha-foundation-t4c-0157) |
 | T4C-0156 | Consolidate pending single-player work before multiplayer development | Process / Integration | Done | `f25803b0` | [2026-10-26](CHANGELOG.md#2026-10-26--single-player-integration-t4c-0156) |
