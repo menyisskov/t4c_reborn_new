@@ -1,6 +1,36 @@
 # Multiplayer Alpha work
 
-The first playable QA surface is a **local movement preview**, not the complete Alpha.
+## Native game client QA
+
+The next test uses the existing desktop game's map renderer, scenery and layered character
+animations. Start the local server as below, then run this twice from the repository root:
+
+```powershell
+.\multiplayer\start-client.ps1
+```
+
+This opens a separate **T4C Reborn - Online Alpha** window for each player. Use WASD or
+arrows to move; the other window should show that character moving. Switching focus stops
+input from the previous window. Close one window to disconnect. If the server is restarted,
+press R to reconnect. Escape closes only that online client. The normal `launch.bat` still
+starts single-player.
+
+This is the first native movement slice, not complete Alpha. Characters are temporary and
+use default appearances (male/female alternating by temporary ID). No saved character is
+imported. The native entry point shares the actual game renderer and animations, but does
+not initialize the offline gameplay screen, combat, inventory, quests or saving. It inherits
+the server's conservative movement and cropped test area. There is no prediction yet.
+The animation renderer may read the existing timing preference; it does not write preferences.
+Rebuild the desktop with `mvn -DskipTests package` after source changes before launching.
+Client logs are separate `target/online-client-*.log` files, in addition to normal renderer logs.
+
+Native QA: join with two windows; move in each; verify scenery occlusion, facing and walking;
+test walls; switch focus during movement; close/reopen one client; stop/restart the server
+and reconnect with R. Confirm single-player still starts with its own saved characters.
+
+## Browser diagnostic client
+
+The browser diagnostic surface is a **local movement preview**, not the complete Alpha.
 It serves a browser client, temporary sessions, shared player positions and server-owned
 movement on the real game's starting-area collision map. It has no combat, quests,
 inventory, portals, account login or persistence yet.
@@ -98,8 +128,11 @@ HTTP requests, 20 simultaneous clients receiving state, disconnect/rejoin and po
 The 20-client check is a short integration test, **not a production capacity/soak benchmark**.
 The desktop suite covers unchanged collision behavior through its adapter.
 
-Remaining Alpha work: extract full player movement and entity state from rendering; connect
-the actual desktop client; implement combat/quest/loot and map transfer; introduce real
+The native desktop client now renders server-owned player movement, and the owner has
+verified facing and two connected players in the actual game windows.
+
+Remaining Alpha work: extract full player movement and entity state from rendering;
+implement combat/quest/loot and map transfer; introduce real
 authentication and remote encrypted transport; persist online characters and transactional
 rewards separately from offline files; verify reconnect, restart and recovery.
 Beta completes launch gameplay and validates sustained play with 20 users. GA requires

@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Native online client (T4C-0160)
+
+### Added
+- A separate online launch option shows connected players in the real game town with the existing character sprites and walking animations. This first native test supports movement, other connected players and reconnecting; characters are temporary, and single-player progress is unchanged.
+
 ## 2026-10-26 — Local multiplayer movement preview (T4C-0159)
 
 ### Added
