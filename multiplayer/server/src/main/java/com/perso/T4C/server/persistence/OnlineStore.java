@@ -1,6 +1,10 @@
 package com.perso.T4C.server.persistence;
 
 import java.sql.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.HexFormat;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -10,6 +14,15 @@ public final class OnlineStore {
   public record CharacterState(UUID id, UUID accountId, String name, int world, double x, double y,
       long gold, long experience, long revision) {}
   public record RewardResult(boolean applied, CharacterState character) {}
+  /** One-time delivery to an operator; never log or serialize this record into world snapshots. */
+  public record AccountKey(UUID accountId, String secret) {
+    @Override public String toString() { return "AccountKey[accountId=" + accountId + ", secret=REDACTED]"; }
+  }
+  /** Internal server capability, not a client-supplied account/character identity. */
+  public record Session(UUID accountId, UUID characterId, UUID leaseId, CharacterState character) {
+    @Override public String toString() { return "Session[characterId=" + characterId + ", leaseId=REDACTED]"; }
+  }
+  private static final SecureRandom RANDOM = new SecureRandom();
   public static final class Conflict extends SQLException {
     public Conflict(String message) { super(message); }
   }
@@ -20,7 +33,10 @@ public final class OnlineStore {
   public static OnlineStore fromEnvironment() {
     String url = required("T4C_DB_URL"), user = required("T4C_DB_USER"), password = required("T4C_DB_PASSWORD");
     if (!url.startsWith("jdbc:postgresql://")) throw new IllegalArgumentException("PostgreSQL URL required");
-    return new OnlineStore(() -> DriverManager.getConnection(url, user, password));
+    var properties = new java.util.Properties();
+    properties.setProperty("user", user); properties.setProperty("password", password);
+    properties.setProperty("connectTimeout", "5"); properties.setProperty("socketTimeout", "10");
+    return new OnlineStore(() -> DriverManager.getConnection(url, properties));
   }
 
   private static String required(String key) {
@@ -37,13 +53,13 @@ public final class OnlineStore {
         s.execute("SET LOCAL lock_timeout = '5s'");
         s.execute("SELECT pg_advisory_xact_lock(7404161001)");
         s.execute("CREATE TABLE IF NOT EXISTS online_schema (version integer PRIMARY KEY, installed_at timestamptz NOT NULL DEFAULT now())");
+        int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
-          if (rows.next()) {
-            if (rows.getInt(1) != 1 || rows.next()) throw new SQLException("Unsupported online schema version");
-            c.commit();
-            return;
+          while (rows.next()) {
+            if (rows.getInt(1) != ++version || version > 2) throw new SQLException("Unsupported online schema version");
           }
         }
+        if (version == 0) {
         s.execute("""
             CREATE TABLE online_characters (
               id uuid PRIMARY KEY, account_id uuid NOT NULL,
@@ -67,8 +83,100 @@ public final class OnlineStore {
               PRIMARY KEY(character_id, event_id))
             """);
         s.execute("INSERT INTO online_schema(version) VALUES (1)");
+        }
+        if (version < 2) {
+          s.execute("""
+              CREATE TABLE online_accounts (
+                id uuid PRIMARY KEY, access_hash varchar(64) UNIQUE,
+                CHECK (access_hash IS NULL OR access_hash ~ '^[0-9a-f]{64}$'))
+              """);
+          // Preserve version-one records, but never silently grant their accounts credentials.
+          s.execute("INSERT INTO online_accounts(id) SELECT DISTINCT account_id FROM online_characters");
+          s.execute("ALTER TABLE online_characters ADD CONSTRAINT online_owner FOREIGN KEY(account_id) REFERENCES online_accounts(id)");
+          s.execute("ALTER TABLE online_characters ADD COLUMN session_id uuid, ADD COLUMN session_until timestamptz");
+          s.execute("ALTER TABLE online_characters ADD CONSTRAINT online_session_pair CHECK ((session_id IS NULL) = (session_until IS NULL))");
+          s.execute("INSERT INTO online_schema(version) VALUES (2)");
+        }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
+    }
+  }
+
+  /** Operator-only provisioning. The database stores a verifier, not the usable access key. */
+  public AccountKey provisionAccount() throws SQLException {
+    UUID account = UUID.randomUUID(); String secret = newKey();
+    try (var c = connections.open(); var s = c.prepareStatement("INSERT INTO online_accounts(id,access_hash) VALUES (?,?)")) {
+      s.setObject(1, account); s.setString(2, hash(secret)); s.executeUpdate();
+    }
+    return new AccountKey(account, secret);
+  }
+
+  /** Operator-only rotation also fences all existing sessions before returning the new key. */
+  public AccountKey rotateAccountKey(UUID account) throws SQLException {
+    String secret = newKey();
+    try (var c = connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        try (var s = c.prepareStatement("UPDATE online_accounts SET access_hash=? WHERE id=?")) {
+          s.setString(1, hash(secret)); s.setObject(2, account);
+          if (s.executeUpdate() != 1) throw new Conflict("Account unavailable");
+        }
+        try (var s = c.prepareStatement("UPDATE online_characters SET session_id=NULL, session_until=NULL WHERE account_id=?")) {
+          s.setObject(1, account); s.executeUpdate();
+        }
+        c.commit();
+      } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
+    }
+    return new AccountKey(account, secret);
+  }
+
+  /** Authenticate a provisioned key, then atomically acquire one character's expiring write lease. */
+  public Session acquire(String secret, UUID character) throws SQLException {
+    String verifier = hash(secret);
+    try (var c = connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        UUID account;
+        // Lock order is account then character, also used by key rotation.
+        try (var s = c.prepareStatement("SELECT id FROM online_accounts WHERE access_hash=? FOR SHARE")) {
+          s.setString(1, verifier);
+          try (var rows = s.executeQuery()) {
+            if (!rows.next()) throw new Conflict("Account or character unavailable");
+            account = rows.getObject(1, UUID.class);
+          }
+        }
+        UUID lease = UUID.randomUUID();
+        try (var s = c.prepareStatement("""
+            UPDATE online_characters SET session_id=?, session_until=clock_timestamp()+interval '30 seconds'
+            WHERE id=? AND account_id=? AND (session_id IS NULL OR session_until<=clock_timestamp()) RETURNING *
+            """)) {
+          s.setObject(1, lease); s.setObject(2, character); s.setObject(3, account);
+          try (var rows = s.executeQuery()) {
+            if (!rows.next()) throw new Conflict("Account or character unavailable");
+            var session = new Session(account, character, lease, read(rows));
+            c.commit(); return session;
+          }
+        }
+      } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
+    }
+  }
+
+  public void renew(Session session) throws SQLException {
+    try (var c = connections.open(); var s = c.prepareStatement("""
+        UPDATE online_characters SET session_until=clock_timestamp()+interval '30 seconds'
+        WHERE id=? AND account_id=? AND session_id=? AND session_until>clock_timestamp()
+        """)) {
+      bindSession(s, session, 1);
+      if (s.executeUpdate()!=1) throw new Conflict("Session expired or replaced");
+    }
+  }
+
+  public void release(Session session) throws SQLException {
+    try (var c = connections.open(); var s = c.prepareStatement("""
+        UPDATE online_characters SET session_id=NULL, session_until=NULL
+        WHERE id=? AND account_id=? AND session_id=?
+        """)) {
+      bindSession(s, session, 1); s.executeUpdate();
     }
   }
 
@@ -90,14 +198,14 @@ public final class OnlineStore {
   }
 
   /** Compare-and-set: an old checkpoint cannot overwrite a later checkpoint or reward. */
-  public CharacterState checkpoint(UUID account, UUID character, long revision, int world, double x, double y) throws SQLException {
+  public CharacterState checkpoint(Session session, long revision, int world, double x, double y) throws SQLException {
     position(world, x, y);
     try (var c = connections.open(); var s = c.prepareStatement("""
         UPDATE online_characters SET world=?, x=?, y=?, revision=revision+1, updated_at=now()
-        WHERE id=? AND account_id=? AND revision=? RETURNING *
+        WHERE id=? AND account_id=? AND session_id=? AND session_until>clock_timestamp() AND revision=? RETURNING *
         """)) {
       s.setInt(1, world); s.setDouble(2, x); s.setDouble(3, y);
-      s.setObject(4, character); s.setObject(5, account); s.setLong(6, revision);
+      bindSession(s, session, 4); s.setLong(7, revision);
       try (var rows = s.executeQuery()) {
         if (!rows.next()) throw new Conflict("Character unavailable or stale checkpoint");
         return read(rows);
@@ -106,13 +214,24 @@ public final class OnlineStore {
   }
 
   /** Event IDs and amounts must originate from authoritative gameplay, never a client request. */
-  public RewardResult reward(UUID account, UUID character, UUID event, long gold, long experience) throws SQLException {
+  public RewardResult reward(Session session, UUID event, long gold, long experience) throws SQLException {
     Objects.requireNonNull(event);
     if (gold < 0 || experience < 0) throw new IllegalArgumentException("Negative reward");
+    UUID account = session.accountId(), character = session.characterId();
     try (var c = connections.open()) {
       c.setAutoCommit(false);
       try {
-        CharacterState state = load(c, account, character, true);
+        CharacterState state;
+        try (var s = c.prepareStatement("""
+            SELECT * FROM online_characters WHERE id=? AND account_id=? AND session_id=?
+            AND session_until>clock_timestamp() FOR UPDATE
+            """)) {
+          bindSession(s, session, 1);
+          try (var rows = s.executeQuery()) {
+            if (!rows.next()) throw new Conflict("Session expired or replaced");
+            state = read(rows);
+          }
+        }
         try (var s = c.prepareStatement("SELECT gold, experience FROM online_rewards WHERE character_id=? AND event_id=?")) {
           s.setObject(1, character); s.setObject(2, event);
           try (var rows = s.executeQuery()) {
@@ -132,6 +251,20 @@ public final class OnlineStore {
         c.commit(); return new RewardResult(true, state);
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
+  }
+
+  private static void bindSession(PreparedStatement s, Session session, int first) throws SQLException {
+    s.setObject(first, session.characterId()); s.setObject(first+1, session.accountId()); s.setObject(first+2, session.leaseId());
+  }
+
+  private static String newKey() {
+    byte[] bytes = new byte[32]; RANDOM.nextBytes(bytes); return HexFormat.of().formatHex(bytes);
+  }
+
+  private static String hash(String key) throws Conflict {
+    if (key == null || !key.matches("[0-9a-f]{64}")) throw new Conflict("Account or character unavailable");
+    try { return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(key.getBytes(StandardCharsets.US_ASCII))); }
+    catch (java.security.NoSuchAlgorithmException error) { throw new AssertionError(error); }
   }
 
   private CharacterState load(Connection c, UUID account, UUID character, boolean lock) throws SQLException {

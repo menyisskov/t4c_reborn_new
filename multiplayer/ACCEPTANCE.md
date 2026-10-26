@@ -46,8 +46,8 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 
 ## Next integration order
 
-Finish and verify the storage foundation, then add account/session ownership and an asynchronous
-checkpoint path with fencing. Connect that path to native character entry/reconnect before
+The PostgreSQL storage and account/session ownership foundations are implemented; database
+CI verifies their contracts. Next add the asynchronous checkpoint path using those writer leases. Connect that path to native character entry/reconnect before
 expanding authoritative combat, inventory/quests and map transfer. Validate each consequential
 join against actual PostgreSQL and the real native client. Optional utilities and polish do not
 take precedence over these release gates.
