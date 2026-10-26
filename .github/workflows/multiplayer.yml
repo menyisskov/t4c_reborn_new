@@ -6,12 +6,16 @@ on:
     paths:
       - 'multiplayer/**'
       - 'src/main/java/com/perso/T4C/combat/**'
+      - 'src/main/java/com/perso/T4C/world/**'
+      - 'src/test/java/com/perso/T4C/world/**'
       - 'src/test/java/com/perso/T4C/combat/CombatResolverTest.java'
       - '.github/workflows/multiplayer.yml'
   pull_request:
     paths:
       - 'multiplayer/**'
       - 'src/main/java/com/perso/T4C/combat/**'
+      - 'src/main/java/com/perso/T4C/world/**'
+      - 'src/test/java/com/perso/T4C/world/**'
       - 'src/test/java/com/perso/T4C/combat/CombatResolverTest.java'
       - '.github/workflows/multiplayer.yml'
 

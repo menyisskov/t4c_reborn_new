@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Shared world collision (T4C-0158)
+
+### Changed
+- Continued multiplayer preparation so separate worlds can retain their own terrain and visibility rules while preserving the current single-player movement behavior. Online play is not available yet.
+
 ## 2026-10-26 — Multiplayer Alpha foundation (T4C-0157)
 
 ### Added
