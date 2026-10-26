@@ -1,13 +1,13 @@
 package com.perso.T4C.death;
 
 import com.perso.T4C.helper.CollisionManager;
-import com.perso.T4C.helper.CollisionType;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.world.CollisionRules;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,13 +55,11 @@ public final class DeathPenaltyService {
   }
 
   public static boolean isSafeHaven(int collisionValue) {
-    return collisionValue == CollisionType.SAFE_HAVEN.getValue()
-        || collisionValue == CollisionType.INDOOR_SAFE_HAVEN.getValue();
+    return CollisionRules.isSafeHaven(collisionValue);
   }
 
   public static boolean isPvpSafeHaven(int collisionValue) {
-    return isSafeHaven(collisionValue)
-        || collisionValue == CollisionType.PVP_SANCTUARY.getValue();
+    return CollisionRules.isPvpSafeHaven(collisionValue);
   }
 
   public Result apply(Player player, boolean pvp, XpCurve curve, RandomGenerator random) {
