@@ -17,6 +17,9 @@ class MonsterSpawnTypeResolutionTest {
   void spawnTypeAndDefinitionNameAreIndexedAsIdentities() {
     assertNotNull(MonsterRegistry.findByName("MOBYOGGOTHWORM"));
     assertEquals("Yoggoth Worm", MonsterRegistry.findByName("MOBYOGGOTHWORM").getName());
+    assertEquals(YoggothWorm.definition().getGoldMin(),
+        MonsterRegistry.findByName("MOBYOGGOTHWORM").getGoldMin(),
+        "The named definition must keep precedence over its numbered legacy duplicate on every OS");
     assertNotNull(MonsterRegistry.findByName("MOBDARKNOBLE"));
     assertEquals("MOBDARKNOBLE", MonsterRegistry.findByName("MOBDARKNOBLE").getName());
   }

@@ -85,6 +85,9 @@ public final class MonsterRegistry {
     String packageName = MonsterRegistry.class.getPackageName().replace(".core", "");
     String packagePath = packageName.replace('.', '/');
     List<MonsterDef> definitions = new java.util.ArrayList<>();
+    // Preserve the Windows class-name order on every OS and in packaged jars. Duplicate legacy
+    // identities must not choose different stats/appearance according to filesystem enumeration.
+    var classNames = new java.util.TreeSet<String>(String.CASE_INSENSITIVE_ORDER.thenComparing(java.util.Comparator.naturalOrder()));
     try {
       Enumeration<URL> resources = MonsterRegistry.class.getClassLoader().getResources(packagePath);
       while (resources.hasMoreElements()) {
@@ -95,8 +98,7 @@ public final class MonsterRegistry {
               directory.listFiles((dir, name) -> name.endsWith(".class") && !name.contains("$"));
           if (classes != null) {
             for (File file : classes)
-              registerGeneratedClass(
-                  packageName + '.' + file.getName().replace(".class", ""), definitions);
+              classNames.add(packageName + '.' + file.getName().replace(".class", ""));
           }
         } else if ("jar".equals(resource.getProtocol())) {
           JarURLConnection connection = (JarURLConnection) resource.openConnection();
@@ -107,13 +109,13 @@ public final class MonsterRegistry {
               if (name.startsWith(packagePath + "/")
                   && name.endsWith(".class")
                   && !name.contains("$")) {
-                registerGeneratedClass(
-                    name.substring(0, name.length() - 6).replace('/', '.'), definitions);
+                classNames.add(name.substring(0, name.length() - 6).replace('/', '.'));
               }
             }
           }
         }
       }
+      for (String className : classNames) registerGeneratedClass(className, definitions);
     } catch (Exception e) {
       throw new ExceptionInInitializerError(e);
     }

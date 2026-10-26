@@ -37,6 +37,11 @@ class OnlineMonsterContentExporterTest {
       if (process.isAlive()) { process.destroyForcibly(); process.waitFor(5,TimeUnit.SECONDS); }
     }
     String expected=Files.readString(generated);
+    if (!digest(expected).equals(digest(actual))) {
+      var report=Path.of("target/surefire-reports/online-monster-runtime.json");
+      Files.createDirectories(report.getParent());
+      Files.writeString(report,expected);
+    }
     assertEquals(digest(expected),digest(actual),
         "Online monster content is stale: run OnlineMonsterContentExporter for the bundled JSON");
   }
