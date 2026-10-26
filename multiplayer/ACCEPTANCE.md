@@ -34,6 +34,11 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
   acknowledgement; recovery yields either no award or the complete award, and retry grants once.
   These tests advance the dead writer's lease deterministically; real-time expiry has separate QA.
   Combat/quest producers and durable world-event recovery remain unbuilt.
+- Native networking now receives owner-only committed character state and refreshes it by revision.
+  HTTP/PostgreSQL checks verify account isolation and absence of private payloads from world snapshots;
+  adapter checks cover caching, revision refresh and oversized/stalled reply rejection. A real native
+  paladin profile connected and closed cleanly. The payload is available to the client model, but
+  inventory UI, equipped appearance, combat and quest interactions are still unimplemented.
 - Live sessions now serialize accepted server-authored gameplay results with movement checkpoints
   and final logout saves, exposing only committed state. Real PostgreSQL tests gate an in-flight
   checkpoint while accepting a result and moving the actor, then verify logout preserves both.

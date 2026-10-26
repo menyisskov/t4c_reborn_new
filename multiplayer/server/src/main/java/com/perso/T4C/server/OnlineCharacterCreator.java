@@ -4,7 +4,7 @@ import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.CharacterClass;
 import com.perso.T4C.helper.CharacterCreationRules;
 import com.perso.T4C.helper.CharacterStartingKit;
-import com.perso.T4C.server.persistence.CharacterProgress;
+import com.perso.T4C.online.model.CharacterProgress;
 import java.util.*;
 
 /** Server-created starting state using the same class rolls and kit data as offline creation. */

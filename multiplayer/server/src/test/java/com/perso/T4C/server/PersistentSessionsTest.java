@@ -3,7 +3,7 @@ package com.perso.T4C.server;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.perso.T4C.helper.CharacterClass;
-import com.perso.T4C.server.persistence.CharacterProgress;
+import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;

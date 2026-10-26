@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'multiplayer/**'
+      - 'src/main/java/com/perso/T4C/online/model/**'
       - 'src/main/java/com/perso/T4C/combat/**'
       - 'src/main/java/com/perso/T4C/world/**'
       - 'src/main/java/com/perso/T4C/config/GameConstants.java'
@@ -20,6 +21,7 @@ on:
   pull_request:
     paths:
       - 'multiplayer/**'
+      - 'src/main/java/com/perso/T4C/online/model/**'
       - 'src/main/java/com/perso/T4C/combat/**'
       - 'src/main/java/com/perso/T4C/world/**'
       - 'src/main/java/com/perso/T4C/config/GameConstants.java'

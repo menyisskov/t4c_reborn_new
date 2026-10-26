@@ -21,6 +21,9 @@ class OnlineConnectionTest {
       throws Exception {
     var input = new AtomicReference<String>();
     var login = new AtomicReference<String>();
+    var revision = new java.util.concurrent.atomic.AtomicLong(1);
+    var characterReads = new java.util.concurrent.atomic.AtomicInteger();
+    var characterAuth = new AtomicReference<String>();
     var credentials = new OnlineConnection.Credentials("b".repeat(64), java.util.UUID.randomUUID());
     var leave = new CountDownLatch(1);
     var tapReceived = new CountDownLatch(1);
@@ -40,6 +43,10 @@ class OnlineConnectionTest {
               stoppedAfterTap.countDown();
           }
           if (path.equals("/leave")) leave.countDown();
+          if (path.equals("/character")) {
+            characterReads.incrementAndGet();
+            characterAuth.set(exchange.getRequestHeaders().getFirst("Authorization"));
+          }
           String result =
               switch (path) {
                 case "/map" ->
@@ -48,7 +55,11 @@ class OnlineConnectionTest {
                         + "}";
                 case "/join" -> "{\"token\":\"" + token + "\",\"id\":7}";
                 case "/state" ->
-                    "{\"tick\":8,\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0}]}";
+                    "{\"tick\":8,\"characterRevision\":" + revision.get()
+                        + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0}]}";
+                case "/character" ->
+                    "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Online tester\",\"gold\":"
+                        + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + "}";
                 default -> "{}";
               };
           byte[] bytes = result.getBytes(StandardCharsets.UTF_8);
@@ -81,6 +92,16 @@ class OnlineConnectionTest {
         assertTrue(tapReceived.await(3, TimeUnit.SECONDS), "A brief key tap must reach the server");
         assertTrue(
             stoppedAfterTap.await(3, TimeUnit.SECONDS), "A key tap must not become held movement");
+        assertEquals(persistent ? 1 : 0, characterReads.get(), "Unchanged state is not downloaded every frame");
+        if (persistent) {
+          assertEquals("Bearer " + token, characterAuth.get());
+          assertEquals(201, connection.view().character().gold());
+          revision.set(2);
+          deadline = System.nanoTime() + Duration.ofSeconds(3).toNanos();
+          while (connection.view().character().revision() < 2 && System.nanoTime() < deadline) Thread.sleep(10);
+          assertEquals(202, connection.view().character().gold());
+          assertEquals(2, characterReads.get());
+        } else assertNull(connection.view().character());
       }
       assertTrue(leave.await(3, TimeUnit.SECONDS), "Closing must release the temporary session");
     } finally {
@@ -96,5 +117,49 @@ class OnlineConnectionTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> new OnlineConnection(URI.create("http://secret@127.0.0.1:18765")));
+  }
+
+  @Test
+  void oversizedServerResponseDisconnectsWithoutPublishingState() throws Exception {
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/", exchange -> {
+      try {
+        byte[] oversized = new byte[2 * 1024 * 1024 + 1];
+        exchange.sendResponseHeaders(200, oversized.length);
+        exchange.getResponseBody().write(oversized);
+      } catch (java.io.IOException expectedDisconnect) {
+        // The receiver is expected to cancel as soon as its bound is exceeded.
+      } finally { exchange.close(); }
+    });
+    server.start();
+    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()))) {
+      long deadline = System.nanoTime() + Duration.ofSeconds(4).toNanos();
+      while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
+      assertEquals("disconnected", connection.status());
+      assertNull(connection.view());
+    } finally { server.stop(0); }
+  }
+
+  @Test
+  void stalledBodyCannotKeepTheNetworkWorkerConnectedIndefinitely() throws Exception {
+    var release = new CountDownLatch(1);
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/", exchange -> {
+      try {
+        exchange.sendResponseHeaders(200, 100);
+        exchange.getResponseBody().write('{');
+        exchange.getResponseBody().flush();
+        release.await(6, TimeUnit.SECONDS);
+      } catch (Exception expectedDisconnect) {
+        // Test shutdown can interrupt or close the deliberately unfinished response.
+      } finally { exchange.close(); }
+    });
+    server.start();
+    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()))) {
+      long deadline = System.nanoTime() + Duration.ofSeconds(4).toNanos();
+      while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
+      assertEquals("disconnected", connection.status());
+      assertNull(connection.view());
+    } finally { release.countDown(); server.stop(0); }
   }
 }

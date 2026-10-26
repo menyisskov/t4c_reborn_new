@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Private online character state (T4C-0169)
+
+### Added
+- The online client now receives its own saved attributes, belongings and quest progress privately, refreshing them when the server saves a newer version. This prepares the gameplay controls; inventory and combat are not yet playable. Oversized or stalled replies disconnect safely.
+
 ## 2026-10-26 — Online reward save ordering (T4C-0168)
 
 ### Added

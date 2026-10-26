@@ -1,6 +1,7 @@
 package com.perso.T4C.online;
 
 import com.google.gson.Gson;
+import com.perso.T4C.online.model.OnlineCharacterView;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -27,9 +28,9 @@ public final class OnlineConnection implements AutoCloseable {
 
   public record Actor(long id, double x, double y, long sequence, long appearance) {}
 
-  public record Snapshot(long tick, List<Actor> players) {}
+  public record Snapshot(long tick, List<Actor> players, Long characterRevision) {}
 
-  public record View(long ownId, MapInfo map, Snapshot snapshot) {}
+  public record View(long ownId, MapInfo map, Snapshot snapshot, OnlineCharacterView character) {}
 
   private record Joined(String token, long id) {}
 
@@ -106,6 +107,7 @@ public final class OnlineConnection implements AutoCloseable {
           throw new IllegalStateException("Invalid server session");
         token = joined.token();
         long sequence = 0;
+        OnlineCharacterView character = null;
         while (!closed) {
           int intent = direction.get();
           int tap = pendingTap.getAndSet(-1);
@@ -132,9 +134,23 @@ public final class OnlineConnection implements AutoCloseable {
             hasSelf |= actor.id() == joined.id();
           }
           if (!hasSelf) throw new IllegalStateException("Session missing from snapshot");
+          if (map.persistent()) {
+            if (snapshot.characterRevision() == null || snapshot.characterRevision() < 0)
+              throw new IllegalStateException("Missing committed character revision");
+            if (character == null || character.revision() < snapshot.characterRevision()) {
+              OnlineCharacterView updated =
+                  JSON.fromJson(send(client, "/character", null, token), OnlineCharacterView.class);
+              if (updated == null || !credentials.characterId().equals(updated.id())
+                  || updated.revision() < snapshot.characterRevision())
+                throw new IllegalStateException("Invalid private character state");
+              character = updated;
+            }
+          }
           view =
               new View(
-                  joined.id(), map, new Snapshot(snapshot.tick(), List.copyOf(snapshot.players())));
+                  joined.id(), map,
+                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision()),
+                  character);
           status = "connected";
           Thread.sleep(75);
         }
@@ -165,10 +181,41 @@ public final class OnlineConnection implements AutoCloseable {
           .header("Origin", endpoint.toString())
           .header("Content-Type", "text/plain")
           .POST(HttpRequest.BodyPublishers.ofString(body));
-    var response = client.send(request.build(), HttpResponse.BodyHandlers.ofString());
+    var pending = client.sendAsync(request.build(), ignored -> new BoundedBody());
+    HttpResponse<byte[]> response;
+    try {
+      // Bound the whole body transfer too; a headers-only timeout is insufficient for streamed data.
+      response = pending.get(2, java.util.concurrent.TimeUnit.SECONDS);
+    } catch (java.util.concurrent.TimeoutException | InterruptedException error) {
+      pending.cancel(true);
+      throw error;
+    }
     if (response.statusCode() != 200)
       throw new IllegalStateException("Server rejected request: " + response.statusCode());
-    return response.body();
+    return new String(response.body(), java.nio.charset.StandardCharsets.UTF_8);
+  }
+
+  /** Bound bytes while receiving, before allocating the complete response. */
+  private static final class BoundedBody implements HttpResponse.BodySubscriber<byte[]> {
+    // The store caps gameplay JSON at 1 MiB. Allow its envelope without unbounded buffering.
+    private static final int LIMIT = 2 * 1024 * 1024;
+    private final HttpResponse.BodySubscriber<byte[]> delegate = HttpResponse.BodySubscribers.ofByteArray();
+    private java.util.concurrent.Flow.Subscription subscription;
+    private long received;
+
+    @Override public java.util.concurrent.CompletionStage<byte[]> getBody() { return delegate.getBody(); }
+    @Override public void onSubscribe(java.util.concurrent.Flow.Subscription value) {
+      subscription = value; delegate.onSubscribe(value);
+    }
+    @Override public void onNext(List<java.nio.ByteBuffer> buffers) {
+      for (var buffer : buffers) received += buffer.remaining();
+      if (received > LIMIT) {
+        subscription.cancel();
+        delegate.onError(new java.io.IOException("Server response exceeds limit"));
+      } else delegate.onNext(buffers);
+    }
+    @Override public void onError(Throwable error) { delegate.onError(error); }
+    @Override public void onComplete() { delegate.onComplete(); }
   }
 
   @Override
