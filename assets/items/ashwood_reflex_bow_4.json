@@ -1,0 +1,41 @@
+{
+  "key": "ashwood_reflex_bow_4",
+  "name": "${item.ashwood_reflex_bow_4}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "appearanceInventory": "64kInvLongBow",
+  "price": 19500,
+  "weight": 8,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 17,
+    "agility": 39,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 1000.0,
+  "unique": false,
+  "isBow": true,
+  "unlimitedUse": false,
+  "numId": 59800,
+  "structure": 9,
+  "appearanceId": 421,
+  "undroppable": false,
+  "dmgFormula": "1d13+17+3*arrow_dmg/2",
+  "atkDelay": "1000",
+  "boosts": [
+    {
+      "boostId": 720000,
+      "statId": 6,
+      "expression": "3"
+    },
+    {
+      "boostId": 720001,
+      "statId": 10035,
+      "expression": "true_skill(35)*75/100"
+    }
+  ]
+}

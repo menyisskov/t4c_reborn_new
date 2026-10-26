@@ -1,0 +1,60 @@
+{
+  "key": "splinterstorm_quiver",
+  "name": "${item.splinterstorm_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 5000,
+  "weight": 2,
+  "requirements": {
+    "strength": 18,
+    "agility": 70
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59902,
+  "structure": 8,
+  "appearanceId": 59902,
+  "dmgFormula": "1d16+14",
+  "quiverSplash": {
+    "radius": 1.25,
+    "targets": 4,
+    "damagePercent": 20
+  },
+  "boosts": [
+    {
+      "boostId": 730020,
+      "statId": 6,
+      "expression": "6"
+    },
+    {
+      "boostId": 730021,
+      "statId": 10035,
+      "expression": "14"
+    },
+    {
+      "boostId": 730022,
+      "statId": 12,
+      "expression": "2"
+    },
+    {
+      "boostId": 730023,
+      "statId": 13,
+      "expression": "2"
+    },
+    {
+      "boostId": 730024,
+      "statId": 14,
+      "expression": "2"
+    },
+    {
+      "boostId": 730025,
+      "statId": 15,
+      "expression": "2"
+    },
+    {
+      "boostId": 730026,
+      "statId": 22,
+      "expression": "2"
+    }
+  ]
+}

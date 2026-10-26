@@ -33,7 +33,7 @@ public final class ItemItemTranchoirEcarlateUltimate {
         4009,
         1,
         1602,
-        "1d2160+6960",
+        "1d351+799",
         "if(750-self.agi/250*750/2<600?600:750-self.agi/250*750/2)+1d469",
         0,
         0,

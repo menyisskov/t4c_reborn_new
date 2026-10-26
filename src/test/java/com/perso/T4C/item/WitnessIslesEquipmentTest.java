@@ -91,6 +91,20 @@ class WitnessIslesEquipmentTest {
         assertSpriteExists(packed, item.getAppearanceInventory(), item.getKey());
       }
     }
+    for (var god : com.perso.T4C.divine.DivinePantheon.all()) {
+      for (String key : com.perso.T4C.divine.DivinePantheon.equipmentKeys(god)) {
+        ItemDefinition item = ItemRegistry.findByKey(key);
+        assertSpriteExists(packed, item.getAppearanceInventory(), key);
+        if (item.getAppearanceEquippedPrimary() != null && !item.getAppearanceEquippedPrimary().isBlank()) {
+          assertSpriteExists(packed, item.getAppearanceEquippedPrimary(), key);
+          var female = com.perso.T4C.helper.AppearanceDefaultsCatalog.equippedAppearance(
+              "FEMALE", item.getBodyPart(), item.getAppearanceEquippedPrimary());
+          assertSpriteExists(packed, female.sprite(), key);
+        }
+        if (item.getAppearanceEquippedSecondary() != null)
+          assertSpriteExists(packed, item.getAppearanceEquippedSecondary(), key);
+      }
+    }
   }
 
   private static String weaponRole(String element) {

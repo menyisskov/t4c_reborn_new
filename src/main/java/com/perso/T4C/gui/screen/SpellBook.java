@@ -8,6 +8,9 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.config.MacroBinding;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiManager;
+import com.perso.T4C.gui.core.CharacterPanel;
+import com.perso.T4C.gui.core.JournalTheme;
+import com.perso.T4C.gui.core.GuiElement;
 import com.perso.T4C.gui.core.GuiScreenBase;
 import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.gui.widget.GuiAnimatedSprite;
@@ -32,48 +35,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SpellBook extends GuiScreenBase {
+public class SpellBook extends CharacterPanel {
+  private static final int PAGE_SIZE = 10;
   private static final float[][] SLOT_POSITIONS = {
-    {70f, 60f},
-    {320f, 60f},
-    {70f, 200f},
-    {320f, 200f}
+    {28, 150}, {366, 150}, {28, 210}, {366, 210}, {28, 270}, {366, 270},
+    {28, 330}, {366, 330}, {28, 390}, {366, 390}
   };
-  private static final float[][] ICON_OFFSETS = {
-    {72f, 15f},
-    {69f, 18f},
-    {75f, -1f},
-    {67f, -2f}
-  };
-  private static final float ICON_ZONE_W = 48f;
-  private static final float ICON_ZONE_H = 48f;
-  private static final float LABEL_X = -3f;
-  private static final float LEVEL_X = 130f;
-  private static final float TEXT_TOP_Y_UPPER = 64f;
-  private static final float TEXT_TOP_Y_LOWER = 45f;
-  private static final float NAME_DY = 0f;
-  private static final float TYPE_DY = 16f;
-  private static final float DURATION_DY = 31f;
-  private static final float MANA_DY = 46f;
-  private static final float LABEL_VALUE_GAP = 74f;
-  private static final float LEVEL_LABEL_VALUE_GAP = 51f;
-  private static final float LINE_H = 16f;
-  private static final float LABEL_W = 70f;
-  private static final float VALUE_W = 120f;
-  private static final float LEVEL_LABEL_W = 48f;
-  private static final float LEVEL_VALUE_W = 40f;
-  private static final Color LABEL_COLOR = Color.valueOf("09090E");
-  private static final Color VALUE_COLOR = Color.valueOf("09090E");
-  private static final float FRAME_TIME = 0.1f;
+  private static final float ICON_ZONE_W = 38;
+  private static final float ICON_ZONE_H = 38;
+  private static final float FRAME_TIME = .1f;
+  private static final String[] SCHOOLS = {"all", "fire", "earth", "air", "water", "light", "dark", "other"};
+  private final List<SpellBookEntry> allSpells = new ArrayList<>();
+  private int school;
   private final Player player;
   private final PlayerHUD hud;
   private final List<GuiText> pageLabels = new ArrayList<>();
   private final List<GuiAnimatedSprite> pageSprites = new ArrayList<>();
   private final List<GuiButton> pageButtons = new ArrayList<>();
-  private static final float MACRO_BTN_DX = 195f;
-  private static final float MACRO_BTN_DY = -2f;
-  private static final float MACRO_BTN_W = 20f;
-  private static final float MACRO_BTN_H = 16f;
   private final List<SpellBookEntry> spells = new ArrayList<>();
   private final com.badlogic.gdx.graphics.g2d.GlyphLayout hintLayout =
       new com.badlogic.gdx.graphics.g2d.GlyphLayout();
@@ -91,66 +69,36 @@ public class SpellBook extends GuiScreenBase {
   }
 
   public SpellBook(Player player, PlayerHUD hud) {
+    super(player, hud, "ui.journal.spellbook", "spells");
     this.player = player;
     this.hud = hud;
-    try {
-      background = SpriteLoader.getInstance().getRegionFromSpriteName("GUI_BackSpell");
-    } catch (GameException ignored) {
-      background = null;
+    for (int i = 0; i < SCHOOLS.length; i++) {
+      int selected = i;
+      buttons.add(theme.button(x + 28 + i * 84, y + 108, 80, 28,
+          () -> I18n.key(selected > 0 && selected < 7 ? "element." + SCHOOLS[selected]
+              : "ui.journal." + SCHOOLS[selected]), () -> selectSchool(selected)));
     }
-    centerOnScreen();
-    addCloseButton();
-    addCornerAnimations();
-    addHeader();
+    buttons.add(theme.button(x + 28, y + 485, 32, 24, () -> "<", () -> turnPage(-1)));
+    buttons.add(theme.button(x + 660, y + 485, 32, 24, () -> ">", () -> turnPage(1)));
     loadSpells();
+    selectSchool(0);
+  }
+
+  private void selectSchool(int selected) {
+    school = selected;
+    currentPage = 0;
+    spells.clear();
+    for (SpellBookEntry entry : allSpells) {
+      int element = entry.spell.getElement();
+      if (school == 0 || (school == 7 ? element < 1 || element > 6 : element == school)) {
+        spells.add(entry);
+      }
+    }
     rebuildPage();
   }
 
-  private void addCloseButton() {
-    addCloseButton(550f, 1f);
-  }
-
-  private void addCornerAnimations() {
-    if (background == null) {
-      return;
-    }
-    var leftFrames = loadCornerFrames("64kSpellBookCornerL");
-    var rightFrames = loadCornerFrames("64kSpellBookCornerR");
-    if (leftFrames.isEmpty() || rightFrames.isEmpty()) {
-      return;
-    }
-    float leftX = x + 448f;
-    float leftY = y + 52f;
-    float rightX = x + 17f;
-    float rightY = y + 50f;
-    Runnable prevPage = () -> turnPage(-1);
-    Runnable nextPage = () -> turnPage(1);
-    animatedSprites.add(
-        new GuiAnimatedSprite(leftFrames, leftX, leftY, FRAME_TIME, nextPage).withOverlayOpacity());
-    animatedSprites.add(
-        new GuiAnimatedSprite(rightFrames, rightX, rightY, FRAME_TIME, prevPage)
-            .withOverlayOpacity());
-  }
-
-  private void addHeader() {
-    if (background == null) {
-      return;
-    }
-    var gold = Color.valueOf("F2B705");
-    labels.add(
-        new GuiBoxedText(
-                FontManager.getInstance().getHaettenschweilerFont(18, gold),
-                x + 237f,
-                y + 2f,
-                101f,
-                19f,
-                () -> I18n.key("ui.spellbook"),
-                () -> gold)
-            .shrinkToFit());
-  }
-
   private void loadSpells() {
-    spells.clear();
+    allSpells.clear();
     if (player == null || player.getSpells() == null) {
       return;
     }
@@ -160,7 +108,7 @@ public class SpellBook extends GuiScreenBase {
       // internal-only spells (wrath_of_the_ancients, remort_aura, level_up) in their spell list;
       // keep hiding them here too so those old saves don't keep showing them in the spellbook.
       if (data != null && SpellRegistry.playerCastableSpells().contains(data)) {
-        spells.add(new SpellBookEntry(spellName, data));
+        allSpells.add(new SpellBookEntry(spellName, data));
       }
     }
   }
@@ -187,8 +135,8 @@ public class SpellBook extends GuiScreenBase {
       buttons.removeAll(pageButtons);
       pageButtons.clear();
     }
-    int start = currentPage * 4;
-    for (int i = 0; i < 4; i++) {
+    int start = currentPage * PAGE_SIZE;
+    for (int i = 0; i < PAGE_SIZE; i++) {
       int index = start + i;
       if (index >= spells.size()) {
         break;
@@ -201,136 +149,26 @@ public class SpellBook extends GuiScreenBase {
 
   private void addSpellEntry(SpellBookEntry entry, int slotIndex, float slotX, float slotY) {
     SpellData spell = entry.spell;
-    TextureRegion icon = null;
-    if (spell.getIconId() != null && !spell.getIconId().isEmpty()) {
-      try {
-        icon = SpriteLoader.getInstance().getRegionFromSpriteName(spell.getIconId());
-      } catch (GameException ignored) {
-      }
-    }
+    TextureRegion icon = loadSpellIcon(spell);
     if (icon != null) {
-      List<TextureRegion> frames = new ArrayList<>();
-      frames.add(icon);
-      float iconX = slotX + ICON_OFFSETS[slotIndex][0];
-      float iconY = slotY + ICON_OFFSETS[slotIndex][1];
-      GuiAnimatedSprite iconSprite =
-          new GuiAnimatedSprite(frames, iconX, iconY, FRAME_TIME).boxed(ICON_ZONE_W, ICON_ZONE_H);
-      animatedSprites.add(iconSprite);
-      pageSprites.add(iconSprite);
+      GuiAnimatedSprite sprite = new GuiAnimatedSprite(List.of(icon), slotX + 7, slotY + 8,
+          FRAME_TIME).boxed(ICON_ZONE_W, ICON_ZONE_H);
+      animatedSprites.add(sprite);
+      pageSprites.add(sprite);
     }
-    var labelFont = FontManager.getInstance().getTahomaFont(12, LABEL_COLOR, true);
-    var valueFont = FontManager.getInstance().getTahomaFont(12, VALUE_COLOR, false);
-    String name = I18n.resolve(spell.getName());
-    String manaCost = spell.getManaCost() == null ? "" : spell.getManaCost();
-    String type =
-        spell.getAttackType() == SpellData.ATTACK_MENTAL
-            ? I18n.key("ui.spell_type.mental")
-            : I18n.key("ui.spell_type.physical");
-    String duration = formatDuration(spell);
-    String level = String.valueOf(spell.getMinLevel());
-    float topY = slotIndex < 2 ? TEXT_TOP_Y_UPPER : TEXT_TOP_Y_LOWER;
-    addPageBox(
-        labelFont,
-        slotX + LABEL_X,
-        slotY + topY + NAME_DY,
-        LABEL_W,
-        LINE_H,
-        () -> I18n.key("ui.spell_stat.name"),
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        valueFont,
-        slotX + LABEL_X + LABEL_VALUE_GAP,
-        slotY + topY + NAME_DY,
-        VALUE_W,
-        LINE_H,
-        () -> name,
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        labelFont,
-        slotX + LABEL_X,
-        slotY + topY + TYPE_DY,
-        LABEL_W,
-        LINE_H,
-        () -> I18n.key("ui.spell_stat.type"),
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        valueFont,
-        slotX + LABEL_X + LABEL_VALUE_GAP,
-        slotY + topY + TYPE_DY,
-        VALUE_W,
-        LINE_H,
-        () -> type,
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        labelFont,
-        slotX + LABEL_X,
-        slotY + topY + DURATION_DY,
-        LABEL_W,
-        LINE_H,
-        () -> I18n.key("ui.spell_stat.duration"),
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        valueFont,
-        slotX + LABEL_X + LABEL_VALUE_GAP,
-        slotY + topY + DURATION_DY,
-        VALUE_W,
-        LINE_H,
-        () -> duration,
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        labelFont,
-        slotX + LABEL_X,
-        slotY + topY + MANA_DY,
-        LABEL_W,
-        LINE_H,
-        () -> I18n.key("ui.spell_stat.mana"),
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        valueFont,
-        slotX + LABEL_X + LABEL_VALUE_GAP,
-        slotY + topY + MANA_DY,
-        VALUE_W,
-        LINE_H,
-        () -> manaCost,
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        labelFont,
-        slotX + LEVEL_X,
-        slotY + topY + MANA_DY,
-        LEVEL_LABEL_W,
-        LINE_H,
-        () -> I18n.key("ui.spell_stat.level"),
-        GuiBoxedText.Align.LEFT);
-    addPageBox(
-        valueFont,
-        slotX + LEVEL_X + LEVEL_LABEL_VALUE_GAP,
-        slotY + topY + MANA_DY,
-        LEVEL_VALUE_W,
-        LINE_H,
-        () -> level,
-        GuiBoxedText.Align.LEFT);
-    addMacroToggleButton(entry, slotX, slotY + topY);
-  }
-
-  private void addMacroToggleButton(SpellBookEntry entry, float slotX, float topY) {
-    var normal = GuiSprites.load("GUI_ButtonUp");
-    var hover = GuiSprites.load("GUI_ButtonHUp");
-    var pressed = GuiSprites.load("GUI_ButtonDown");
-    if (normal == null || hover == null || pressed == null) {
-      return;
-    }
-    String spellName = entry.quickSlotSpellName;
-    var font = FontManager.getInstance().getTahomaFont(12, Color.BLACK, true);
-    GuiButton button =
-        new GuiButton(
-                normal,
-                hover,
-                pressed,
-                slotX + MACRO_BTN_DX,
-                topY + NAME_DY + MACRO_BTN_DY,
-                () -> toggleMacro(spellName))
-            .setSize(MACRO_BTN_W, MACRO_BTN_H)
-            .withLabel(font, () -> isMacro(spellName) ? "-" : "+");
+    var nameFont = FontManager.getInstance().getTahomaFont(14, JournalTheme.TEXT, false);
+    var detailFont = FontManager.getInstance().getTahomaFont(11, JournalTheme.DIM, false);
+    addPageBox(nameFont, slotX + 52, slotY + 3, 230, 20,
+        () -> I18n.resolve(spell.getName()), GuiBoxedText.Align.LEFT);
+    String type = I18n.key(spell.getAttackType() == SpellData.ATTACK_MENTAL
+        ? "ui.spell_type.mental" : "ui.spell_type.physical");
+    addPageBox(detailFont, slotX + 52, slotY + 24, 152, 13,
+        () -> type + " / " + formatDuration(spell), GuiBoxedText.Align.LEFT);
+    addPageBox(detailFont, slotX + 52, slotY + 38, 232, 13,
+        () -> I18n.key("ui.spell_stat.mana") + " " + spell.getManaCost(), GuiBoxedText.Align.LEFT);
+    GuiButton button = theme.button(slotX + 291, slotY + 16, 24, 24,
+        () -> isMacro(entry.quickSlotSpellName) ? "-" : "+",
+        () -> toggleMacro(entry.quickSlotSpellName));
     buttons.add(button);
     pageButtons.add(button);
   }
@@ -356,13 +194,13 @@ public class SpellBook extends GuiScreenBase {
       float bh,
       java.util.function.Supplier<String> text,
       GuiBoxedText.Align align) {
-    GuiBoxedText label = new GuiBoxedText(font, bx, by, bw, bh, text, null).align(align);
+    GuiBoxedText label = new GuiBoxedText(font, bx, by, bw, bh, text, null).align(align).shrinkToFit();
     labels.add(label);
     pageLabels.add(label);
   }
 
   private void turnPage(int delta) {
-    int maxPage = spells.isEmpty() ? 0 : (spells.size() - 1) / 4;
+    int maxPage = spells.isEmpty() ? 0 : (spells.size() - 1) / PAGE_SIZE;
     int next = Math.max(0, Math.min(maxPage, currentPage + delta));
     if (next == currentPage) {
       return;
@@ -392,34 +230,39 @@ public class SpellBook extends GuiScreenBase {
   }
 
   private int pageCount() {
-    return Math.max(1, (spells.size() + 3) / 4);
+    return Math.max(1, (spells.size() + PAGE_SIZE - 1) / PAGE_SIZE);
   }
 
   /** The spell whose "+"/"-" macro button is under the mouse, for the hint line. */
   private String hoveredMacroSpell() {
-    float mx = Gdx.input.getX();
-    float my = Gdx.input.getY();
-    int start = currentPage * 4;
-    for (int i = 0; i < 4 && start + i < spells.size(); i++) {
-      float topY = y + SLOT_POSITIONS[i][1] + (i < 2 ? TEXT_TOP_Y_UPPER : TEXT_TOP_Y_LOWER);
-      float bx = x + SLOT_POSITIONS[i][0] + MACRO_BTN_DX;
-      float by = topY + NAME_DY + MACRO_BTN_DY;
-      if (mx >= bx && mx <= bx + MACRO_BTN_W && my >= by && my <= by + MACRO_BTN_H) {
-        return spells.get(start + i).quickSlotSpellName;
+    for (int i = 0; i < pageButtons.size(); i++) {
+      if (pageButtons.get(i).contains(Gdx.input.getX(), Gdx.input.getY())) {
+        return spells.get(currentPage * PAGE_SIZE + i).quickSlotSpellName;
       }
     }
     return null;
   }
 
   @Override
+  public void dispose() {
+    tooltip.dispose();
+    super.dispose();
+  }
+
+  @Override
   public void render(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
-    super.render(batch);
+    renderPanelBackground(batch);
+    theme.rect(batch, x + 28 + school * 84, y + 135, 80, 2, JournalTheme.GOLD);
+    for (int i = 0; i < PAGE_SIZE; i++) {
+      well(batch, SLOT_POSITIONS[i][0], SLOT_POSITIONS[i][1], 326, 55);
+    }
+    for (GuiElement element : orderedElements()) element.render(batch);
     if (background != null) {
       // Status line in the dark band above the pages: page number and what the controls do.
       String macroSpell = hoveredMacroSpell();
       String hint;
       if (spells.isEmpty()) {
-        hint = I18n.key("ui.spellbook.empty");
+        hint = I18n.key(allSpells.isEmpty() ? "ui.spellbook.empty" : "ui.journal.no_spells");
       } else if (macroSpell != null) {
         hint = I18n.key(isMacro(macroSpell) ? "ui.spellbook.remove_macro" : "ui.spellbook.add_macro");
       } else {
@@ -431,7 +274,7 @@ public class SpellBook extends GuiScreenBase {
       }
       var font = FontManager.getInstance().getJetBrainsMonoFont(11, Color.valueOf("E6D8BC"));
       hintLayout.setText(font, hint);
-      font.draw(batch, hintLayout, x + 288f - hintLayout.width / 2f, y + 31f);
+      font.draw(batch, hintLayout, x + 360f - hintLayout.width / 2f, y + 491f);
     }
     updateSpellTooltip();
     tooltip.render(batch);
@@ -451,47 +294,6 @@ public class SpellBook extends GuiScreenBase {
           false,
           true);
     }
-  }
-
-  @Override
-  public void onTouchDown(float screenX, float screenY) {
-    if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-      SpellBookEntry hit = findSpellAt(screenX, screenY);
-      if (hit != null) {
-        draggedSpell = hit;
-        draggedIcon = loadSpellIcon(hit.spell);
-        draggedX = screenX;
-        draggedY = screenY;
-        return;
-      }
-    }
-    super.onTouchDown(screenX, screenY);
-  }
-
-  @Override
-  public void onMouseMove(float screenX, float screenY) {
-    if (draggedSpell != null) {
-      draggedX = screenX;
-      draggedY = screenY;
-      return;
-    }
-    super.onMouseMove(screenX, screenY);
-  }
-
-  @Override
-  public void onTouchUp(float screenX, float screenY) {
-    if (draggedSpell != null) {
-      if (hud != null) {
-        int slot = hud.getQuickSlotAt((int) screenX, (int) screenY);
-        if (slot > 0) {
-          assignSpellToQuickSlot(draggedSpell.quickSlotSpellName, slot);
-        }
-      }
-      draggedSpell = null;
-      draggedIcon = null;
-      return;
-    }
-    super.onTouchUp(screenX, screenY);
   }
 
   @Override
@@ -528,8 +330,8 @@ public class SpellBook extends GuiScreenBase {
   }
 
   private SpellBookEntry findSpellAt(float screenX, float screenY) {
-    int start = currentPage * 4;
-    for (int i = 0; i < 4; i++) {
+    int start = currentPage * PAGE_SIZE;
+    for (int i = 0; i < PAGE_SIZE; i++) {
       int index = start + i;
       if (index >= spells.size()) {
         break;
@@ -541,8 +343,8 @@ public class SpellBook extends GuiScreenBase {
       }
       float slotX = x + SLOT_POSITIONS[i][0];
       float slotY = y + SLOT_POSITIONS[i][1];
-      float iconX = slotX + ICON_OFFSETS[i][0];
-      float iconY = slotY + ICON_OFFSETS[i][1];
+      float iconX = slotX + 7;
+      float iconY = slotY + 8;
       if (screenX >= iconX
           && screenX <= iconX + ICON_ZONE_W
           && screenY >= iconY
@@ -592,21 +394,6 @@ public class SpellBook extends GuiScreenBase {
       target.setSpell(spellName);
     }
     PlayerStateStore.save(player);
-  }
-
-  private List<TextureRegion> loadCornerFrames(String baseName) {
-    List<TextureRegion> frames = new ArrayList<>();
-    try {
-      var loader = SpriteLoader.getInstance();
-      for (char c = 'a'; c <= 'h'; c++) {
-        var region = loader.getRegionFromSpriteName(baseName + "-" + c);
-        if (region != null) {
-          frames.add(region);
-        }
-      }
-    } catch (GameException ignored) {
-    }
-    return frames;
   }
 
   private static void ensureRegistry() {

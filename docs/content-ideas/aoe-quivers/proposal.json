@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Flintspark Quiver",
+    "strength": 13,
+    "agility": 15,
+    "targets": 3,
+    "splashPercent": 15,
+    "radius": 1,
+    "arrowDamage": "1d3",
+    "color": "#bcaa7c",
+    "tier": 1
+  },
+  {
+    "name": "Cinderburst Quiver",
+    "strength": 17,
+    "agility": 35,
+    "targets": 4,
+    "splashPercent": 18,
+    "radius": 1,
+    "arrowDamage": "1d5",
+    "color": "#d78548",
+    "tier": 2
+  },
+  {
+    "name": "Splinterstorm Quiver",
+    "strength": 18,
+    "agility": 70,
+    "targets": 4,
+    "splashPercent": 20,
+    "radius": 1.25,
+    "arrowDamage": "1d8",
+    "color": "#95a66c",
+    "tier": 3
+  },
+  {
+    "name": "Thunderburst Quiver",
+    "strength": 27,
+    "agility": 140,
+    "targets": 5,
+    "splashPercent": 25,
+    "radius": 1.5,
+    "arrowDamage": "1d12",
+    "color": "#a9b7d8",
+    "tier": 4
+  },
+  {
+    "name": "Frostshatter Quiver",
+    "strength": 42,
+    "agility": 240,
+    "targets": 6,
+    "splashPercent": 28,
+    "radius": 1.75,
+    "arrowDamage": "1d18",
+    "color": "#84c9d6",
+    "tier": 5
+  },
+  {
+    "name": "Faultline Quiver",
+    "strength": 80,
+    "agility": 360,
+    "targets": 6,
+    "splashPercent": 30,
+    "radius": 2,
+    "arrowDamage": "1d25",
+    "color": "#b6a285",
+    "tier": 6
+  },
+  {
+    "name": "Stormfront Quiver",
+    "strength": 90,
+    "agility": 500,
+    "targets": 7,
+    "splashPercent": 33,
+    "radius": 2,
+    "arrowDamage": "1d35",
+    "color": "#b3bee5",
+    "tier": 7
+  },
+  {
+    "name": "Starfall Quiver",
+    "strength": 155,
+    "agility": 650,
+    "targets": 8,
+    "splashPercent": 36,
+    "radius": 2.25,
+    "arrowDamage": "1d45",
+    "color": "#e4b978",
+    "tier": 8
+  },
+  {
+    "name": "Dawnstorm Quiver",
+    "strength": 195,
+    "agility": 800,
+    "targets": 8,
+    "splashPercent": 40,
+    "radius": 2.5,
+    "arrowDamage": "1d60",
+    "color": "#e6d79b",
+    "tier": 9
+  },
+  {
+    "name": "Worldbreaker Quiver",
+    "strength": 250,
+    "agility": 1000,
+    "targets": 8,
+    "splashPercent": 45,
+    "radius": 2.5,
+    "arrowDamage": "1d80",
+    "color": "#b297ca",
+    "tier": 10
+  }
+]

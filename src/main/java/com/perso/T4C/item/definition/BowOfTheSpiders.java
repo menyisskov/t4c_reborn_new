@@ -45,7 +45,7 @@ public final class BowOfTheSpiders {
         0,
         0,
         List.of(new ItemDefinition.ItemSpell(10681, 0, 100)),
-        List.of(),
+        List.of(new ItemDefinition.ItemBoost(731021, 10035, "true_skill(35)*50/100", 0, 0)),
         List.of(),
         false);
   }

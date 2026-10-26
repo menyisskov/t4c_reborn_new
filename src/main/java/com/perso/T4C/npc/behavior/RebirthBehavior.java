@@ -25,6 +25,35 @@ public final class RebirthBehavior {
   /** Extra levels the Oracle asks for per rebirth already taken. */
   public static final int LEVEL_PER_PREVIOUS_REBIRTH = 5;
 
+  public static final int MAX_ATTRIBUTE_TRAINING_BONUS = 100;
+  public static final int ATTRIBUTE_TRAINING_COST = 1;
+  public static final int WEAPON_SKILL_PER_REBIRTH = 15;
+
+  public static int attributeTrainingBonus(int value, int rebirths) {
+    return value - startingAttributeFor(rebirths);
+  }
+
+  public static int totalAttributeTrainingCost(int increases) {
+    return Math.max(0, increases) * ATTRIBUTE_TRAINING_COST;
+  }
+
+  public static int startingWeaponSkillFor(int rebirths) {
+    return Math.max(0, Math.min(GameConstants.REBIRTH_MAX_REMORTS, rebirths))
+        * WEAPON_SKILL_PER_REBIRTH;
+  }
+
+  /** Old characters receive the new starting minimum without losing trained skill levels. */
+  public static void ensureStartingWeaponSkills(Player player) {
+    if (player == null) return;
+    int rebirths =
+        Math.max(player.getRebirthCount(), player.getQuestFlag("__FLAG_NUMBER_OF_REMORTS"));
+    int minimum = startingWeaponSkillFor(rebirths);
+    if (minimum <= 0) return;
+    for (String skill : List.of("attack", "archery")) {
+      player.setSkillLevel(skill, Math.max(minimum, player.getSkillLevel(skill)));
+    }
+  }
+
   /** Character level the Oracle requires before the {@code rebirthNumber}-th rebirth (1-based). */
   public static int requiredLevelFor(int rebirthNumber) {
 
@@ -38,8 +67,10 @@ public final class RebirthBehavior {
         + rebirthNumber * GameConstants.REBIRTH_ATTRIBUTE_PER_REMORT;
   }
 
-  /** Energy points granted by the {@code rebirthNumber}-th rebirth (1-based), spent with Alphan's
-   * associates before returning to the world. */
+  /**
+   * Energy points granted by the {@code rebirthNumber}-th rebirth (1-based), spent with Alphan's
+   * associates before returning to the world.
+   */
   public static int energyPointsFor(int rebirthNumber) {
 
     return GameConstants.REBIRTH_REMORT_POINTS_PER_REBIRTH
@@ -113,6 +144,7 @@ public final class RebirthBehavior {
     player.setSkillPoints(0);
 
     if (player.getSkills() != null) player.getSkills().clear();
+    ensureStartingWeaponSkills(player);
 
     if (player.getSpells() != null) player.getSpells().clear();
 

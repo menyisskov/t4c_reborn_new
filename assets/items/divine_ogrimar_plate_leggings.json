@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_plate_leggings",
+  "name": "${item.divine_ogrimar_plate_leggings}",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs__pal91",
+  "appearanceInventory": "64kInvPlateArmorLegs__pal91",
+  "numId": 55915,
+  "appearanceId": 55915,
+  "weight": 1,
+  "armorClass": 11.4,
+  "requirements": {
+    "strength": 180,
+    "endurance": 100
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50787,
+      "statId": 3,
+      "expression": "15"
+    },
+    {
+      "boostId": 50788,
+      "statId": 8,
+      "expression": "36"
+    },
+    {
+      "boostId": 50789,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 50790,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 50791,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 50792,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 50793,
+      "statId": 22,
+      "expression": "4"
+    }
+  ]
+}

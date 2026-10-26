@@ -1,0 +1,58 @@
+{
+  "key": "concord_oath_ring_air",
+  "name": "${item.concord_oath_ring_air}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 1",
+  "numId": 59005,
+  "appearanceId": 59005,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61035,
+      "statId": 1,
+      "expression": "3"
+    },
+    {
+      "boostId": 61036,
+      "statId": 16,
+      "expression": "8"
+    },
+    {
+      "boostId": 61037,
+      "statId": 4,
+      "expression": "3"
+    },
+    {
+      "boostId": 61038,
+      "statId": 12,
+      "expression": "3"
+    },
+    {
+      "boostId": 61039,
+      "statId": 13,
+      "expression": "3"
+    },
+    {
+      "boostId": 61040,
+      "statId": 14,
+      "expression": "3"
+    },
+    {
+      "boostId": 61041,
+      "statId": 15,
+      "expression": "3"
+    },
+    {
+      "boostId": 61042,
+      "statId": 22,
+      "expression": "3"
+    }
+  ],
+  "armorClass": 2.3,
+  "requirements": {
+    "intelligence": 50,
+    "wisdom": 50,
+    "endurance": 50
+  }
+}

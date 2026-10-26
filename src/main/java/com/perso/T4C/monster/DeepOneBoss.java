@@ -4,6 +4,8 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "DEEPONEBOSS", x = 932, y = 424, z = 2, stationary = false, aggressive = true)
@@ -15,6 +17,13 @@ public final class DeepOneBoss extends NamedEventMonster {
   public DeepOneBoss(MonsterDef d, float x, float y) throws GameException {
 
     super(d, x, y);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null && player.getQuestFlag("__QUEST_KRAANIAN_EGG_STAGE") == 2)
+      player.setQuestFlag("__QUEST_KRAANIAN_EGG_STAGE", 3);
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {
@@ -38,7 +47,8 @@ public final class DeepOneBoss extends NamedEventMonster {
         462,
         java.util.List.of(
             new MonsterDef.LootDrop("depths_wardens_talisman", 0.015f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f)),
+            new MonsterDef.LootDrop("mana_elixir", 0.2f),
+            new MonsterDef.LootDrop("note_deepone", 1.0f)),
         false,
         0.0f,
         57,

@@ -33,7 +33,7 @@ public final class ItemItemLameDuDragonRubisUltimate {
         4013,
         1,
         1087,
-        "1d1200+3000",
+        "1d301+749",
         "if(750-self.agi/250*750/2<600?600:750-self.agi/250*750/2)+1d469",
         0,
         -1,

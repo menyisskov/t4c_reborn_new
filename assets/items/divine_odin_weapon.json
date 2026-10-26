@@ -1,0 +1,55 @@
+{
+  "key": "divine_odin_weapon",
+  "name": "${item.divine_odin_weapon}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupNormalSword__pal95",
+  "appearanceInventory": "64kInvShortSword__pal95",
+  "numId": 56100,
+  "appearanceId": 56100,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 801000,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 801001,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 801002,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 801003,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 801004,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 801005,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 801006,
+      "statId": 22,
+      "expression": "16"
+    }
+  ],
+  "dmgFormula": "1d325+216",
+  "atkDelay": "1300"
+}

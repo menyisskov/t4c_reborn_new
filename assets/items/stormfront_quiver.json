@@ -1,0 +1,60 @@
+{
+  "key": "stormfront_quiver",
+  "name": "${item.stormfront_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 350000,
+  "weight": 2,
+  "requirements": {
+    "strength": 90,
+    "agility": 500
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59906,
+  "structure": 8,
+  "appearanceId": 59906,
+  "dmgFormula": "1d301+699",
+  "quiverSplash": {
+    "radius": 2,
+    "targets": 7,
+    "damagePercent": 33
+  },
+  "boosts": [
+    {
+      "boostId": 730060,
+      "statId": 6,
+      "expression": "42"
+    },
+    {
+      "boostId": 730061,
+      "statId": 10035,
+      "expression": "100"
+    },
+    {
+      "boostId": 730062,
+      "statId": 12,
+      "expression": "12"
+    },
+    {
+      "boostId": 730063,
+      "statId": 13,
+      "expression": "12"
+    },
+    {
+      "boostId": 730064,
+      "statId": 14,
+      "expression": "12"
+    },
+    {
+      "boostId": 730065,
+      "statId": 15,
+      "expression": "12"
+    },
+    {
+      "boostId": 730066,
+      "statId": 22,
+      "expression": "12"
+    }
+  ]
+}

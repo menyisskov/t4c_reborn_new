@@ -1,0 +1,53 @@
+{
+  "key": "divine_artherk_ring",
+  "name": "${item.divine_artherk_ring}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 4__pal90",
+  "numId": 55808,
+  "appearanceId": 55808,
+  "weight": 1,
+  "armorClass": 5.0,
+  "requirements": {
+    "endurance": 100,
+    "wisdom": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50626,
+      "statId": 4,
+      "expression": "15"
+    },
+    {
+      "boostId": 50627,
+      "statId": 23,
+      "expression": "18"
+    },
+    {
+      "boostId": 50628,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50629,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50630,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50631,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50632,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

@@ -133,6 +133,7 @@ public final class AppearanceDefaultsDefinitions {
             new EquippedOverride(
                 "FEMALE", "RIGHT_HAND", "PupPlateGloveR", "RIGHT_HAND", "WoPlateGloveR"),
             new EquippedOverride("FEMALE", "HAT", "PupPlateHelm", "HAT", "WoPlateHelm"),
+            new EquippedOverride("FEMALE", "HEAD", "PupPlateHelm", "HEAD", "WoPlateHelm"),
             new EquippedOverride("FEMALE", "LEGS", "PupPlateLegs", "LEGS", "WoPlateLegs"),
             new EquippedOverride("FEMALE", "BODY", "PupLeatherBody", "BODY", "WoLeatherArms"),
             new EquippedOverride("FEMALE", "BODY", "PupSpikeLeatherBody", "BODY", "WoLeatherArms"),

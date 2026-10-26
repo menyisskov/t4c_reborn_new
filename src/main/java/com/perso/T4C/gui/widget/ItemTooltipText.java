@@ -43,10 +43,29 @@ public final class ItemTooltipText {
     appendLine(text, "req_wis", def.getMinWis() > 0 ? String.valueOf(def.getMinWis()) : null);
     appendLine(text, "charges", def.getNbCharges() > 0 ? String.valueOf(def.getNbCharges()) : null);
     appendLine(text, "radiance", def.getRadiance() > 0 ? String.valueOf(def.getRadiance()) : null);
+    if ("item.gem_of_unstable_protection".equals(def.getKey()))
+      text.append('\n').append(I18n.key("tooltip.unstable_protection_mana_cost"));
+    if (def.getQuiverSplash() != null) {
+      var splash = def.getQuiverSplash();
+      text.append('\n')
+          .append(
+              I18n.message(
+                  "tooltip.quiver_splash",
+                  splash.targets(),
+                  splash.damagePercent(),
+                  splash.radius()));
+    }
     if (def.isBow()) appendFlag(text, "bow");
     if (def.isUnique()) appendFlag(text, "unique");
     if (def.isUnlimitedUse()) appendFlag(text, "unlimited_use");
     if (def.isCanSummon()) appendFlag(text, "can_summon");
+    if (com.perso.T4C.divine.DivineReturnScrolls.isBoundReturnScroll(def.getKey()))
+      text.append('\n')
+          .append(
+              I18n.key(
+                  def.getKey().contains("training_ground_")
+                      ? "tooltip.training_return_scroll"
+                      : "tooltip.divine_return_scroll"));
     return text.toString();
   }
 

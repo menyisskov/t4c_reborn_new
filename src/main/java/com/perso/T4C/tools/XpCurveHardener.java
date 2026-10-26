@@ -9,21 +9,21 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Regenerates the XP curve so a single kill can never skip several levels at high level, and so
- * the required XP grows increasingly (not just linearly) harder to earn the higher you go.
+ * Regenerates the XP curve so a single kill can never skip several levels at high level, and so the
+ * required XP grows increasingly (not just linearly) harder to earn the higher you go.
  *
  * <p>Levels 1-99 are kept exactly as authored (unchanged low/mid-level pacing). From level 100
- * onward, xpToNextLevel(level) = round(BASE * x^p(level)), where x = level/100 and p(level) =
- * 2.5 + (level-100)/200 — an exponent that itself grows with level, so the curve's steepness
- * compounds rather than staying a fixed power law. BASE is read from the existing level-100
- * entry, so the curve is continuous at the 99/100 seam (no discontinuity for anyone near it).
+ * onward, xpToNextLevel(level) = round(BASE * x^p(level)), where x = level/100 and p(level) = 2.5 +
+ * (level-100)/200 — an exponent that itself grows with level, so the curve's steepness compounds
+ * rather than staying a fixed power law. BASE is read from the existing level-100 entry, so the
+ * curve is continuous at the 99/100 seam (no discontinuity for anyone near it).
  *
  * <p>This deliberately outgrows every known monster's xpOnDeath scaling (verified against the
- * highest-XP legacy content, the ArenaMobXP family, which itself grows roughly as level^4 —
- * see docs/design notes) well before level 500, and by a wide margin by level 1000, the new
- * cap. All accumulation here is in {@code long} — the previous generator
- * (XpCurveExtender, since removed) accumulated totalXp in an {@code int} and silently wrapped
- * negative starting at level 541; that bug is why this class exists.
+ * highest-XP legacy content, the ArenaMobXP family, which itself grows roughly as level^4 — see
+ * docs/design notes) well before level 500, and by a wide margin by level 1000, the new cap. All
+ * accumulation here is in {@code long} — the previous generator (XpCurveExtender, since removed)
+ * accumulated totalXp in an {@code int} and silently wrapped negative starting at level 541; that
+ * bug is why this class exists.
  */
 public final class XpCurveHardener {
   private XpCurveHardener() {}
@@ -86,7 +86,12 @@ public final class XpCurveHardener {
 
     Files.writeString(Path.of(outputPath), sb.toString(), StandardCharsets.UTF_8);
     System.out.println(
-        "Wrote " + result.size() + " XP curve entries (levels 1-" + NEW_MAX_LEVEL + ") to " + outputPath);
+        "Wrote "
+            + result.size()
+            + " XP curve entries (levels 1-"
+            + NEW_MAX_LEVEL
+            + ") to "
+            + outputPath);
   }
 
   private static long xpToNextLevel(int level, long base) {

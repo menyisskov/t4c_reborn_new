@@ -7,6 +7,7 @@ import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.quest.AllianceQuest;
 import java.util.List;
 
 @Spawn(
@@ -207,6 +208,37 @@ public final class BaldricSilverknife extends ScriptedNpc {
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        if (k.contains("PIG")) {
+          if (c.player().getLevel() < AllianceQuest.MINIMUM_LEVEL) {
+            c.sayKey("npc.alliance.baldric.level");
+          } else if (AllianceQuest.stage(c.player()) == AllianceQuest.NOT_STARTED) {
+            AllianceQuest.start(c.player());
+            c.sayKey("npc.topic.baldricsilverknife.8");
+          } else if (AllianceQuest.reportPigs(c.player())) {
+            c.sayKey("npc.alliance.baldric.pigs_done");
+          } else if (AllianceQuest.stage(c.player()) == AllianceQuest.KILL_PIGS) {
+            c.sayKey("npc.alliance.baldric.pigs_remaining", AllianceQuest.REQUIRED_PIG_KILLS - AllianceQuest.pigKills(c.player()));
+          } else c.sayKey("npc.alliance.baldric.assignment_prompt");
+          return true;
+        }
+        if (k.contains("ASSIGNMENT")) {
+          if (AllianceQuest.stage(c.player()) == AllianceQuest.REPORT_PIGS) {
+            AllianceQuest.stage(c.player(), AllianceQuest.SEE_DOREMAS);
+            c.sayKey("npc.topic.baldricsilverknife.12");
+          } else if (AllianceQuest.stage(c.player()) < AllianceQuest.REPORT_PIGS)
+            c.sayKey("npc.alliance.baldric.pigs_first");
+          else c.sayKey("npc.topic.baldricsilverknife.12");
+          return true;
+        }
+        if (k.contains("ALLIANCE IS RENEWED")) {
+          if (AllianceQuest.stage(c.player()) == AllianceQuest.TELL_BALDRIC_CODE) {
+            AllianceQuest.stage(c.player(), AllianceQuest.COMPLETE);
+            c.giveXp(AllianceQuest.REWARD_XP);
+            c.sayKey("npc.alliance.baldric.reward");
+          } else c.sayKey("npc.topic.baldricsilverknife.15");
+          return true;
+        }
 
         if (k.contains("SOMETHING")) {
 

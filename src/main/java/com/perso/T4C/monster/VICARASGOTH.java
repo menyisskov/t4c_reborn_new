@@ -36,7 +36,8 @@ public final class VICARASGOTH extends DataMonster {
         SOUND_HIT,
         107,
         330,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("armband_of_vigor", 0.01f)),
         false,
         0.0f,
         75,

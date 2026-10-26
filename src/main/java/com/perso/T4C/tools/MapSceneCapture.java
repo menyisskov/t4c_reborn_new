@@ -23,9 +23,9 @@ public final class MapSceneCapture {
   private MapSceneCapture() {}
 
   public static void main(String[] args) {
-    if (args.length != 6) {
+    if (args.length != 6 && (args.length != 7 || !args[6].equals("--hunting"))) {
       throw new IllegalArgumentException(
-          "Usage: MapSceneCapture x y width height scale output.png");
+          "Usage: MapSceneCapture x y width height scale output.png [--hunting]");
     }
     int x = Integer.parseInt(args[0]), y = Integer.parseInt(args[1]);
     int width = Integer.parseInt(args[2]), height = Integer.parseInt(args[3]);
@@ -73,7 +73,32 @@ public final class MapSceneCapture {
               int maxX = Math.min(map.getWidth() - 1, x + width + 32);
               int maxY = Math.min(map.getHeight() - 1, y + height + 32);
               renderer.renderGroundOnly(camera, minX, maxX, minY, maxY);
-              renderer.renderEntitiesWithDecors(camera, -1, -1, minX, maxX, minY, maxY, List.of());
+              List<com.perso.T4C.render.ObjectRenderer.RenderItem> actors =
+                  new java.util.ArrayList<>();
+              if (args.length == 7) {
+                for (var spawn : com.perso.T4C.spawn.SpawnRegistry.monsters()) {
+                  if (spawn.z() != 0
+                      || spawn.x() < x
+                      || spawn.x() >= x + width
+                      || spawn.y() < y
+                      || spawn.y() >= y + height
+                      || (com.perso.T4C.spawn.HuntingGrounds.at(spawn.type(), spawn.x(), spawn.y())
+                              == null
+                          && !spawn.type().startsWith("Training "))) continue;
+                  var monster =
+                      com.perso.T4C.monster.core.MonsterRegistry.create(
+                          com.perso.T4C.monster.core.MonsterRegistry.findByName(spawn.type()),
+                          spawn.x() * 32f,
+                          spawn.y() * 16f);
+                  var item = new com.perso.T4C.render.ObjectRenderer.RenderItem();
+                  item.y = spawn.y();
+                  item.renderAction = () -> monster.render(decor, null);
+                  actors.add(item);
+                }
+                System.out.println(
+                    "Rendering " + actors.size() + " authored hunting/training creatures");
+              }
+              renderer.renderEntitiesWithDecors(camera, -1, -1, minX, maxX, minY, maxY, actors);
               Pixmap pixels = Pixmap.createFromFrameBuffer(0, 0, pixelsX, pixelsY);
               var output = Gdx.files.absolute(new File(args[5]).getAbsolutePath());
               output.parent().mkdirs();

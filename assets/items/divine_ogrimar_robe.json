@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_robe",
+  "name": "${item.divine_ogrimar_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal91",
+  "appearanceInventory": "64kInvWhiteRobe__pal91",
+  "numId": 55901,
+  "appearanceId": 55901,
+  "weight": 4,
+  "armorClass": 24.8,
+  "requirements": {
+    "endurance": 100,
+    "intelligence": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50689,
+      "statId": 1,
+      "expression": "18"
+    },
+    {
+      "boostId": 50690,
+      "statId": 24,
+      "expression": "18"
+    },
+    {
+      "boostId": 50691,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50692,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50693,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50694,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50695,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

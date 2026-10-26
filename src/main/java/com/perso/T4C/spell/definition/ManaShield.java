@@ -27,7 +27,7 @@ public final class ManaShield {
         0,
         "1200000",
         "0",
-        39246,
+        33553,
         null,
         10146,
         4,

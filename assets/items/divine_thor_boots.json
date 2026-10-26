@@ -1,0 +1,59 @@
+{
+  "key": "divine_thor_boots",
+  "name": "${item.divine_thor_boots}",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot__pal95",
+  "appearanceInventory": "64kInvPlateArmorFeet__pal95",
+  "numId": 55702,
+  "appearanceId": 55702,
+  "weight": 1,
+  "armorClass": 33.4,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50506,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 50507,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 50508,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 50509,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50510,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50511,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50512,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50513,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

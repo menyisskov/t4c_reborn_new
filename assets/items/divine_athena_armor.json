@@ -1,0 +1,53 @@
+{
+  "key": "divine_athena_armor",
+  "name": "${item.divine_athena_armor}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody__pal95",
+  "appearanceInventory": "64kInvPlateArmorSleeves__pal95",
+  "numId": 55401,
+  "appearanceId": 55401,
+  "weight": 4,
+  "armorClass": 136.4,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50287,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 50288,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 50289,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 50290,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 50291,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 50292,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 50293,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

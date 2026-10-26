@@ -1,0 +1,52 @@
+{
+  "key": "concord_tide_bracelet_light",
+  "name": "${item.concord_tide_bracelet_light}",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "numId": 59014,
+  "appearanceId": 59014,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61100,
+      "statId": 4,
+      "expression": "13"
+    },
+    {
+      "boostId": 61101,
+      "statId": 23,
+      "expression": "16"
+    },
+    {
+      "boostId": 61102,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 61103,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 61104,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 61105,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 61106,
+      "statId": 22,
+      "expression": "6"
+    }
+  ],
+  "armorClass": 4.0,
+  "requirements": {
+    "wisdom": 160,
+    "endurance": 80
+  }
+}

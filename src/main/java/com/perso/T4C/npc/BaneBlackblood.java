@@ -230,6 +230,17 @@ public final class BaneBlackblood extends ScriptedNpc {
         }
 
         @Override
+        public void onDeath(NpcBehaviorContext c) {
+          if (Math.random() < 0.01) c.giveItem("onyx_ring");
+          if (Math.random() < 0.005) c.giveItem("wristband_of_ogre_strength");
+          if (Math.random() < 0.05) c.giveItem("manastone");
+          if (Math.random() < 0.01) c.giveItem("polished_hand_axe");
+          if (Math.random() < 0.05) c.giveItem("potion_of_fury");
+          if (Math.random() < 0.01) c.giveItem("red_cape");
+          if (Math.random() < 0.005) c.giveItem("necklace_of_the_black_heart");
+        }
+
+        @Override
         public void onConversationStart(NpcBehaviorContext c) {
 
           if (c.flag("__QUEST_DWARTHON_STONEFACE") != 5) c.sayKey("npc.bane.unavailable");

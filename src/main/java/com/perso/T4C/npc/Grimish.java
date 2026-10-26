@@ -6,9 +6,10 @@ import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.quest.AllianceQuest;
 import java.util.List;
 
-@Spawn(type = "Grimish", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Grimish", x = 1400, y = 1827, z = 0, stationary = false, aggressive = false)
 public final class Grimish extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 2.wav";
   public static final String SOUND_DEATH = "Goblin Dying.wav";
@@ -126,6 +127,28 @@ public final class Grimish extends ScriptedNpc {
   protected NpcBehavior javaBehavior() {
 
     return new NpcBehavior() {
+
+      @Override
+      public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
+        String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+        int stage = AllianceQuest.stage(c.player());
+        if (k.contains("DOREMAS")) {
+          if (stage == AllianceQuest.SEE_GRIMISH) {
+            AllianceQuest.stage(c.player(), AllianceQuest.RETURN_TO_DOREMAS);
+            c.sayKey("npc.alliance.grimish.first");
+          } else if (stage == AllianceQuest.RETURN_TO_GRIMISH) {
+            AllianceQuest.stage(c.player(), AllianceQuest.ANSWER_RIDDLE);
+            c.sayKey("npc.alliance.grimish.riddle");
+          } else c.sayKey("npc.topic.grimish.11");
+          return true;
+        }
+        if (k.contains("NOTHING") && stage == AllianceQuest.ANSWER_RIDDLE) {
+          AllianceQuest.stage(c.player(), AllianceQuest.TELL_DOREMAS_CODE);
+          c.sayKey("npc.alliance.grimish.code");
+          return true;
+        }
+        return false;
+      }
 
       @Override
       public void onAttacked(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {

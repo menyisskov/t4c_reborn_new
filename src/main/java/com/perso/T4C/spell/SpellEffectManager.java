@@ -61,6 +61,11 @@ public final class SpellEffectManager {
     return new Impact(delta, List.copyOf(summons), drainedHealth, vaporize);
   }
 
+  /** Damage-only splash must not execute dispels or other primary-target effects. */
+  public int resolveResidualDamage(SpellData spell, Player caster, BaseMonster target) {
+    return SpellAreaTargeting.residualDamage(resolveHealthDelta(spell, caster, target, 0d));
+  }
+
   public boolean hasVaporizeEffect(SpellData spell) {
     return spell != null
         && spell.getT4cEffects().stream()
@@ -97,7 +102,8 @@ public final class SpellEffectManager {
                       elementalPower(caster, "water"),
                       elementalPower(caster, "light"),
                       elementalPower(caster, "dark"))
-                  .withSelfTrue(base.selfTrue);
+                  .withSelfTrue(base.selfTrue)
+                  .withEquippedItems(base.equippedItems);
           int delta = DiceFormula.of(formula).evaluate(context);
           if (delta != 0) return delta;
         }
@@ -409,7 +415,8 @@ public final class SpellEffectManager {
                 elementalPower(caster, "water"),
                 elementalPower(caster, "light"),
                 elementalPower(caster, "dark"))
-            .withSelfTrue(SpellCastingService.selfTrue(caster));
+            .withSelfTrue(SpellCastingService.selfTrue(caster))
+            .withEquippedItems(SpellCastingService.equippedItems(caster));
     String withRange =
         formula.replaceAll("(?<![A-Za-z_.])r(?![A-Za-z_])", Double.toString(Math.max(0d, range)));
     return DiceFormula.of(withRange).evaluate(context);
@@ -487,7 +494,8 @@ public final class SpellEffectManager {
             elementalPower(caster, "water"),
             elementalPower(caster, "light"),
             elementalPower(caster, "dark"))
-        .withSelfTrue(base.selfTrue);
+        .withSelfTrue(base.selfTrue)
+        .withEquippedItems(base.equippedItems);
   }
 
   /**
@@ -529,11 +537,11 @@ public final class SpellEffectManager {
   }
 
   /**
-   * The {@code self.true_*} readings for an external caster: the casting statistics are the caster's,
-   * because a formula like Tranquility's {@code self.true_wis/2} means whoever is casting, while the
-   * elemental readings stay with {@code blessed}, matching the positional fields above. Set
-   * explicitly rather than left to {@code DiceFormula}'s fallback, so the blessing's strength does
-   * not depend on what that fallback happens to do.
+   * The {@code self.true_*} readings for an external caster: the casting statistics are the
+   * caster's, because a formula like Tranquility's {@code self.true_wis/2} means whoever is
+   * casting, while the elemental readings stay with {@code blessed}, matching the positional fields
+   * above. Set explicitly rather than left to {@code DiceFormula}'s fallback, so the blessing's
+   * strength does not depend on what that fallback happens to do.
    */
   private static java.util.Map<String, Integer> externalSelfTrue(
       Player blessed, int intelligence, int wisdom) {
@@ -557,6 +565,8 @@ public final class SpellEffectManager {
       case "int", "intelligence" -> "int";
       case "wis", "wisdom" -> "wis";
       case "ac", "armor class" -> "armorClass";
+      case "ac percent" -> "armorClassPercent";
+      case "healing received" -> "healingReceivedPercent";
       case "max hp", "maxhp" -> "maxHp";
       case "attack" -> "skill:attack";
       case "dodge" -> "skill:dodge";

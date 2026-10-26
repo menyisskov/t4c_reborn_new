@@ -75,8 +75,8 @@ public final class TempleBlessingService {
    */
   public static final List<Shrine> SHRINES =
       List.of(
-          // Lighthaven - outside the temple Kilhiam and Brother Kiran keep (2955,1048).
-          townShrine(2954, 1050, 0),
+          // Lighthaven - the requested gathering spot near the temple.
+          townShrine(2940, 1056, 0),
           // Silversky - outside the temple Aquinos serves in (1557,2405).
           townShrine(1556, 2407, 0),
           // Windhowl - beside the sentry post at the town gate (1816,1297).

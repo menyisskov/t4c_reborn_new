@@ -27,7 +27,7 @@ public final class MinorCombatSense {
         0,
         "60000",
         "0",
-        28346,
+        23808,
         null,
         10125,
         0,

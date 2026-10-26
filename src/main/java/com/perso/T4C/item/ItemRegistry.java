@@ -73,7 +73,12 @@ public final class ItemRegistry {
   }
 
   private static void rebuild(List<ItemDefinition> defs) {
-    cache = List.copyOf(defs == null ? List.of() : defs);
+    cache =
+        defs == null
+            ? List.of()
+            : defs.stream()
+                .filter(def -> def != null && !RetiredItems.isRetired(def.getKey()))
+                .toList();
     Map<String, ItemDefinition> map = new LinkedHashMap<>();
     Map<Integer, ItemDefinition> numeric = new LinkedHashMap<>();
     for (ItemDefinition def : cache) {

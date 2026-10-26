@@ -31,13 +31,16 @@ public final class SpellDefinitions {
         Class<?> type = Class.forName(className);
         if (type == SpellDefinitions.class || type.isInterface() || type.isEnum()) continue;
         Method definition = type.getDeclaredMethod("definition");
-        if (!Modifier.isStatic(definition.getModifiers()) || definition.getParameterCount() != 0
+        if (!Modifier.isStatic(definition.getModifiers())
+            || definition.getParameterCount() != 0
             || !SpellData.class.isAssignableFrom(definition.getReturnType())) continue;
         SpellData spell = (SpellData) definition.invoke(null);
         if (spell != null) definitions.add(spell);
       } catch (ReflectiveOperationException | RuntimeException ignored) {
       }
     }
+    definitions.addAll(com.perso.T4C.divine.DivineSpells.all());
+    definitions.addAll(com.perso.T4C.spawn.TrainingGroundContent.spells());
     definitions.sort(Comparator.comparingInt(SpellData::getSpellId));
     return List.copyOf(definitions);
   }
@@ -45,7 +48,8 @@ public final class SpellDefinitions {
   private static Set<String> findClassNames() {
     Set<String> classNames = new LinkedHashSet<>();
     try {
-      Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(PACKAGE_PATH);
+      Enumeration<URL> resources =
+          Thread.currentThread().getContextClassLoader().getResources(PACKAGE_PATH);
       while (resources.hasMoreElements()) {
         URL resource = resources.nextElement();
         if ("file".equals(resource.getProtocol())) {
@@ -61,7 +65,8 @@ public final class SpellDefinitions {
 
   private static void scanDirectory(Path directory, Set<String> classNames) throws IOException {
     try (var files = Files.list(directory)) {
-      files.filter(path -> path.getFileName().toString().endsWith(".class"))
+      files
+          .filter(path -> path.getFileName().toString().endsWith(".class"))
           .map(path -> path.getFileName().toString().replaceFirst("\\.class$", ""))
           .filter(name -> !name.contains("$"))
           .sorted()

@@ -27,7 +27,7 @@ public final class Healing {
         0,
         "0",
         "0",
-        115014,
+        110825,
         null,
         10137,
         5,

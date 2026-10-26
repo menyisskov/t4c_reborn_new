@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_boots",
+  "name": "${item.divine_ogrimar_boots}",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot__pal91",
+  "appearanceInventory": "64kInvPlateArmorFeet__pal91",
+  "numId": 55902,
+  "appearanceId": 55902,
+  "weight": 1,
+  "armorClass": 7.4,
+  "requirements": {
+    "endurance": 100,
+    "intelligence": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50696,
+      "statId": 1,
+      "expression": "18"
+    },
+    {
+      "boostId": 50697,
+      "statId": 24,
+      "expression": "18"
+    },
+    {
+      "boostId": 50698,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50699,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50700,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50701,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50702,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

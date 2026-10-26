@@ -1,0 +1,57 @@
+{
+  "key": "skybreaker_longbow",
+  "name": "${item.skybreaker_longbow}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 4500000,
+  "weight": 6,
+  "requirements": {
+    "strength": 200,
+    "agility": 1250
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59922,
+  "structure": 9,
+  "appearanceId": 448,
+  "dmgFormula": "1d451+1299+4*arrow_dmg",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "atkDelay": "850",
+  "boosts": [
+    {
+      "boostId": 732020,
+      "statId": 6,
+      "expression": "104"
+    },
+    {
+      "boostId": 732021,
+      "statId": 10035,
+      "expression": "true_skill(35)*50/100"
+    },
+    {
+      "boostId": 732022,
+      "statId": 12,
+      "expression": "31"
+    },
+    {
+      "boostId": 732023,
+      "statId": 13,
+      "expression": "31"
+    },
+    {
+      "boostId": 732024,
+      "statId": 14,
+      "expression": "31"
+    },
+    {
+      "boostId": 732025,
+      "statId": 15,
+      "expression": "31"
+    },
+    {
+      "boostId": 732026,
+      "statId": 22,
+      "expression": "31"
+    }
+  ]
+}

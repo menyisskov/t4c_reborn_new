@@ -1,0 +1,41 @@
+{
+  "key": "hickory_compound_bow_4",
+  "name": "${item.hickory_compound_bow_4}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 92000,
+  "weight": 10,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 49,
+    "agility": 184,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 850.0,
+  "unique": false,
+  "isBow": true,
+  "unlimitedUse": false,
+  "numId": 59806,
+  "structure": 9,
+  "appearanceId": 448,
+  "undroppable": false,
+  "dmgFormula": "1d53+117+5*arrow_dmg/2",
+  "atkDelay": "850",
+  "boosts": [
+    {
+      "boostId": 720060,
+      "statId": 6,
+      "expression": "15"
+    },
+    {
+      "boostId": 720061,
+      "statId": 10035,
+      "expression": "true_skill(35)*75/100"
+    }
+  ]
+}

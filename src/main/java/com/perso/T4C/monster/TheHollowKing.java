@@ -6,6 +6,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "The Hollow King", x = 2500, y = 2700, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class TheHollowKing extends DataMonster {
   // Reuses the "Black Warrior" puppet family — a tall, armored fallen-knight silhouette,
   // distinct from the "Skeleton King" rig already used by Mordrenn.
@@ -45,8 +46,6 @@ public final class TheHollowKing extends DataMonster {
         1400,
         java.util.List.of(
             new MonsterDef.LootDrop("crown_of_the_hollow_king", 0.008f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0028: an undead king guarding a hollow, deathly barrow drops a dark-flavor
             // armor set alongside his signature crown, matching the multi-drop pattern used by
             // the other boss-tier monsters.

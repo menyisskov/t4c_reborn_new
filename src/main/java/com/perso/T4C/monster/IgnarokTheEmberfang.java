@@ -6,6 +6,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Ignarok", x = 1900, y = 1600, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class IgnarokTheEmberfang extends DataMonster {
   // Reuses the "Agmorkian"/Kraanian drake puppet+sound family already used by
   // Lesser/Greater/Arch Drake — a distinct, lower-tier young drake, not a recolor of them.
@@ -46,8 +47,6 @@ public final class IgnarokTheEmberfang extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("ignaroks_emberfang_claw", 0.008f),
             new MonsterDef.LootDrop("item.wyrmforged_ember", 0.05f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0021: Ignarok as the fire-flavor source for the Ancient Celestial/Empyrean
             // armor sets (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_fire_armor", 0.025f),

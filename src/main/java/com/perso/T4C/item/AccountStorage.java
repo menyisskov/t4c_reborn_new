@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The account-wide storage vault: one shared stash and one shared gold pile for every character
- * on this local roster (see {@code characters.json}), so gear and gold can move between a
- * player's own characters without a mule run. Persisted to its own file, independent of any one
- * character's save file, and loaded once per game session.
+ * The account-wide storage vault: one shared stash and one shared gold pile for every character on
+ * this local roster (see {@code characters.json}), so gear and gold can move between a player's own
+ * characters without a mule run. Persisted to its own file, independent of any one character's save
+ * file, and loaded once per game session.
  */
 public final class AccountStorage {
   private static final class Dto {
@@ -32,6 +32,7 @@ public final class AccountStorage {
     this.storage = dto.storage != null ? dto.storage : new ArrayList<>();
     this.storageCharges = dto.storageCharges != null ? dto.storageCharges : new ArrayList<>();
     this.storageGold = dto.storageGold;
+    RetiredItems.removeFromStorage(storage, storageCharges);
   }
 
   public static synchronized AccountStorage get() {

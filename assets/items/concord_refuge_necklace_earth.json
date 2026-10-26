@@ -1,0 +1,52 @@
+{
+  "key": "concord_refuge_necklace_earth",
+  "name": "${item.concord_refuge_necklace_earth}",
+  "bodyPart": "NECK",
+  "appearanceInventory": "64kInvNecklace 2",
+  "numId": 59020,
+  "appearanceId": 59020,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61142,
+      "statId": 4,
+      "expression": "25"
+    },
+    {
+      "boostId": 61143,
+      "statId": 19,
+      "expression": "30"
+    },
+    {
+      "boostId": 61144,
+      "statId": 12,
+      "expression": "12"
+    },
+    {
+      "boostId": 61145,
+      "statId": 13,
+      "expression": "12"
+    },
+    {
+      "boostId": 61146,
+      "statId": 14,
+      "expression": "12"
+    },
+    {
+      "boostId": 61147,
+      "statId": 15,
+      "expression": "12"
+    },
+    {
+      "boostId": 61148,
+      "statId": 22,
+      "expression": "12"
+    }
+  ],
+  "armorClass": 6.0,
+  "requirements": {
+    "wisdom": 300,
+    "endurance": 120
+  }
+}

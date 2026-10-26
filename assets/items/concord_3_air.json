@@ -1,0 +1,35 @@
+{
+  "key": "concord_3_air",
+  "name": "${item.concord_3_air}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvWoodenStaff__pal95",
+  "numId": 59061,
+  "appearanceId": 59061,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61329,
+      "statId": 1,
+      "expression": "22"
+    },
+    {
+      "boostId": 61330,
+      "statId": 16,
+      "expression": "52"
+    },
+    {
+      "boostId": 61331,
+      "statId": 4,
+      "expression": "22"
+    }
+  ],
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal95",
+  "requirements": {
+    "intelligence": 325,
+    "wisdom": 325
+  },
+  "dmgFormula": "1d80+60",
+  "atkDelay": "1300",
+  "isBow": false
+}

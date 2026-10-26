@@ -1,0 +1,53 @@
+{
+  "key": "divine_ra_necklace",
+  "name": "${item.divine_ra_necklace}",
+  "bodyPart": "NECK",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvNecklace 2__pal94",
+  "numId": 55207,
+  "appearanceId": 55207,
+  "weight": 1,
+  "armorClass": 8.8,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50189,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50190,
+      "statId": 17,
+      "expression": "38"
+    },
+    {
+      "boostId": 50191,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50192,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50193,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50194,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50195,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

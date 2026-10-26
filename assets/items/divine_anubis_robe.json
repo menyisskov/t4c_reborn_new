@@ -1,0 +1,53 @@
+{
+  "key": "divine_anubis_robe",
+  "name": "${item.divine_anubis_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal96",
+  "appearanceInventory": "64kInvWhiteRobe__pal96",
+  "numId": 55601,
+  "appearanceId": 55601,
+  "weight": 4,
+  "armorClass": 99.2,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50427,
+      "statId": 1,
+      "expression": "65"
+    },
+    {
+      "boostId": 50428,
+      "statId": 24,
+      "expression": "65"
+    },
+    {
+      "boostId": 50429,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50430,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50431,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50432,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50433,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

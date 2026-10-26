@@ -1,0 +1,53 @@
+{
+  "key": "divine_artherk_bracelet",
+  "name": "${item.divine_artherk_bracelet}",
+  "bodyPart": "BRACER",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvBelt__pal90",
+  "numId": 55809,
+  "appearanceId": 55809,
+  "weight": 1,
+  "armorClass": 5.0,
+  "requirements": {
+    "endurance": 100,
+    "wisdom": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50633,
+      "statId": 4,
+      "expression": "15"
+    },
+    {
+      "boostId": 50634,
+      "statId": 23,
+      "expression": "18"
+    },
+    {
+      "boostId": 50635,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50636,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50637,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50638,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50639,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

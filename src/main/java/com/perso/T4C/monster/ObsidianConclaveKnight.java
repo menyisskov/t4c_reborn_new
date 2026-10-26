@@ -4,6 +4,10 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
+import static com.perso.T4C.config.GameConstants.GRID_H;
+import static com.perso.T4C.config.GameConstants.GRID_W;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(
@@ -42,6 +46,19 @@ public final class ObsidianConclaveKnight extends NamedEventMonster {
   public ObsidianConclaveKnight(MonsterDef d, float x, float y) throws GameException {
 
     super(d, x, y);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null && player.getQuestFlag("ADDON_SERAPH_ARMOR_QUEST") == 1) {
+      String kills = "ADDON_OBSIDIAN_KNIGHTS_KILLED";
+      int count = Math.min(10, player.getQuestFlag(kills) + 1);
+      player.setQuestFlag(kills, count);
+      if (count == 10 && player.getQuestFlag("ADDON_OBSIDIAN_MORDRED_SPAWNED") == 0
+          && NpcScriptRuntime.summon("MOBMORDRED", 575 * GRID_W, 765 * GRID_H, 0))
+        player.setQuestFlag("ADDON_OBSIDIAN_MORDRED_SPAWNED", 1);
+    }
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

@@ -1,0 +1,64 @@
+{
+  "key": "event_silkfall_archer",
+  "name": "${item.event_silkfall_archer}",
+  "bodyPart": "NECK",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvNecklace 2",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 4.3,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 100,
+    "strength": 0,
+    "agility": 200,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59609,
+  "structure": 2,
+  "appearanceId": 59609,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 690090,
+      "statId": 6,
+      "expression": "17"
+    },
+    {
+      "boostId": 690091,
+      "statId": 10035,
+      "expression": "40"
+    },
+    {
+      "boostId": 690092,
+      "statId": 12,
+      "expression": "5"
+    },
+    {
+      "boostId": 690093,
+      "statId": 13,
+      "expression": "5"
+    },
+    {
+      "boostId": 690094,
+      "statId": 14,
+      "expression": "5"
+    },
+    {
+      "boostId": 690095,
+      "statId": 15,
+      "expression": "5"
+    },
+    {
+      "boostId": 690096,
+      "statId": 22,
+      "expression": "5"
+    }
+  ]
+}

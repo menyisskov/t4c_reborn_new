@@ -1,0 +1,64 @@
+{
+  "key": "event_iron_bell_archer",
+  "name": "${item.event_iron_bell_archer}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal92",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal92",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 11.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 150,
+    "strength": 0,
+    "agility": 300,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59617,
+  "structure": 2,
+  "appearanceId": 59617,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 690170,
+      "statId": 6,
+      "expression": "25"
+    },
+    {
+      "boostId": 690171,
+      "statId": 10035,
+      "expression": "60"
+    },
+    {
+      "boostId": 690172,
+      "statId": 12,
+      "expression": "8"
+    },
+    {
+      "boostId": 690173,
+      "statId": 13,
+      "expression": "8"
+    },
+    {
+      "boostId": 690174,
+      "statId": 14,
+      "expression": "8"
+    },
+    {
+      "boostId": 690175,
+      "statId": 15,
+      "expression": "8"
+    },
+    {
+      "boostId": 690176,
+      "statId": 22,
+      "expression": "8"
+    }
+  ]
+}

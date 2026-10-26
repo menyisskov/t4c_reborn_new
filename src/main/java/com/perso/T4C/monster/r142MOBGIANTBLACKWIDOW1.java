@@ -35,7 +35,9 @@ public final class r142MOBGIANTBLACKWIDOW1 extends DataMonster {
         SOUND_HIT,
         134,
         412,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("Spider venom", 0.03f),
+            new MonsterDef.LootDrop("Rough amethyst", 0.02f)),
         false,
         0.0f,
         90,

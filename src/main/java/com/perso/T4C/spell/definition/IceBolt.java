@@ -27,7 +27,7 @@ public final class IceBolt {
         0,
         "0",
         "0",
-        30418,
+        25625,
         null,
         10026,
         4,

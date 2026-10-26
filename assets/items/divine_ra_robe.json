@@ -1,0 +1,53 @@
+{
+  "key": "divine_ra_robe",
+  "name": "${item.divine_ra_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal94",
+  "appearanceInventory": "64kInvWhiteRobe__pal94",
+  "numId": 55201,
+  "appearanceId": 55201,
+  "weight": 4,
+  "armorClass": 54.6,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50147,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50148,
+      "statId": 17,
+      "expression": "38"
+    },
+    {
+      "boostId": 50149,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50150,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50151,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50152,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50153,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

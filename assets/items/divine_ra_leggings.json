@@ -1,0 +1,53 @@
+{
+  "key": "divine_ra_leggings",
+  "name": "${item.divine_ra_leggings}",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs__pal94",
+  "appearanceInventory": "64kInvPlateArmorLegs__pal94",
+  "numId": 55205,
+  "appearanceId": 55205,
+  "weight": 1,
+  "armorClass": 18.2,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50175,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50176,
+      "statId": 17,
+      "expression": "38"
+    },
+    {
+      "boostId": 50177,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50178,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50179,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50180,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50181,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

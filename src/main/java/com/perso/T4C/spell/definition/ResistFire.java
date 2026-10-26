@@ -27,7 +27,7 @@ public final class ResistFire {
         0,
         "60000",
         "0",
-        76350,
+        69617,
         null,
         10154,
         4,

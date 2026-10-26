@@ -1,0 +1,52 @@
+{
+  "key": "concord_tide_bracelet_water",
+  "name": "${item.concord_tide_bracelet_water}",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "numId": 59011,
+  "appearanceId": 59011,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61078,
+      "statId": 1,
+      "expression": "16"
+    },
+    {
+      "boostId": 61079,
+      "statId": 18,
+      "expression": "16"
+    },
+    {
+      "boostId": 61080,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 61081,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 61082,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 61083,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 61084,
+      "statId": 22,
+      "expression": "6"
+    }
+  ],
+  "armorClass": 3.2,
+  "requirements": {
+    "intelligence": 160,
+    "endurance": 80
+  }
+}

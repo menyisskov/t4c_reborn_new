@@ -174,6 +174,11 @@ public final class RenegadeOrcLeader extends ScriptedNpc {
       @Override
       public void onDeath(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
+        if (Math.random() < 0.01) c.giveItem("golden_bracelet");
+        if (Math.random() < 0.01) c.giveItem("golden_ring");
+        if (Math.random() < 0.02) c.giveItem("round_shield");
+        if (Math.random() < 0.05) c.giveItem("light_healing_potion");
+
         int access = c.flag("QUEST_ISLAND_ACCESS");
 
         if (c.karma() >= -100 * (access + 1)) {

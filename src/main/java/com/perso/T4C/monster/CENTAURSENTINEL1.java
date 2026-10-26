@@ -42,7 +42,11 @@ public final class CENTAURSENTINEL1 extends DataMonster {
         SOUND_HIT,
         98,
         302,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("hickory_recurve_bow", 0.01f),
+            new MonsterDef.LootDrop("rough_carnelian", 0.01f),
+            new MonsterDef.LootDrop("rough_ruby", 0.01f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.05f)),
         false,
         0.0f,
         70,

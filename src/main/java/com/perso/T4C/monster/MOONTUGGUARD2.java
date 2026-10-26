@@ -41,7 +41,12 @@ public final class MOONTUGGUARD2 extends DataMonster {
         SOUND_HIT,
         189,
         550,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("finely_cut_carnelian", 0.005f),
+            new MonsterDef.LootDrop("finely_cut_ruby", 0.005f),
+            new MonsterDef.LootDrop("rough_carnelian", 0.01f),
+            new MonsterDef.LootDrop("rough_ruby", 0.01f),
+            new MonsterDef.LootDrop("tower_shield", 0.01f)),
         false,
         0.0f,
         115,

@@ -4,13 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.perso.T4C.audio.SoundManager;
-import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiClickZone;
 import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.gui.widget.GuiAnimatedSprite;
 import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.helper.PlayerStateStore;
-import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
@@ -23,10 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 public class LearnScreen extends GuiListScreen {
-  private static final float[] SKILL_LBL_BOX = {457f, 233f, 94f, 17f};
-  private static final float[] SKILL_VAL_BOX = {457f, 253f, 94f, 15f};
-  private static final Color BLOCKED = Color.valueOf("E33300");
+  private static final float[] SKILL_LBL_BOX = {596f, 254f, 180f, 18f};
+  private static final float[] SKILL_VAL_BOX = {596f, 276f, 180f, 24f};
+  private static final Color BLOCKED = Color.valueOf("E4A29B");
   private final Player player;
+  private final boolean trainingMode;
+  private final boolean formulaMode;
   private final List<LearnEntry> entries = new ArrayList<>();
   private LearnEntry selected = null;
   private static final Map<String, String> SKILL_ICONS =
@@ -79,15 +79,13 @@ public class LearnScreen extends GuiListScreen {
       List<TrainingOffer> trainingOffers,
       List<FormulaOffer> formulaOffers) {
     this.player = player;
-    try {
-      background = SpriteLoader.getInstance().getRegionFromSpriteName("GUIBackSkill");
-    } catch (GameException ignored) {
-      background = null;
-    }
-    centerOnScreen();
-    addCloseButton();
+    this.formulaMode = formulaOffers != null;
+    this.trainingMode =
+        skillIds != null
+            || (trainingOffers != null
+                && trainingOffers.stream().anyMatch(o -> o != null && !o.teaching()));
+    initList();
     addStaticLabels();
-    addLearnButton();
     loadEntries(spellIds);
     loadSkillEntries(skillIds);
     loadTrainingOffers(trainingOffers);
@@ -98,44 +96,57 @@ public class LearnScreen extends GuiListScreen {
     rebuildList();
   }
 
-  private void addCloseButton() {
-    addCloseButton(CLOSE_X, CLOSE_Y);
-  }
-
   private void addStaticLabels() {
     if (background == null) {
       return;
     }
-    BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
-    labels.add(boxed(chewy, TITLE_BOX, 0f, () -> I18n.key("ui.learn"), GOLD).shrinkToFit());
-    labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.key("ui.gold"), GOLD).shrinkToFit());
-    BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
+    BitmapFont chewy = FontManager.getInstance().getT4CBeaulieuFont(22, GOLD);
+    labels.add(
+        boxed(
+                chewy,
+                TITLE_BOX,
+                0f,
+                () ->
+                    I18n.key(
+                        formulaMode
+                            ? "ui.formula_lessons"
+                            : trainingMode ? "ui.training" : "ui.learn"),
+                GOLD)
+            .shrinkToFit());
+    labels.add(
+        boxed(
+                FontManager.getInstance().getTahomaFont(12, GOLD, false),
+                GOLD_HDR_BOX,
+                0f,
+                () -> I18n.key("ui.gold"),
+                GOLD)
+            .shrinkToFit());
+    BitmapFont sm = FontManager.getInstance().getTahomaFont(12, GOLD, false);
     labels.add(boxed(sm, HDR_NAME_BOX, 0f, () -> I18n.key("ui.skill_name"), GOLD));
     labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.key("ui.price"), GOLD));
     labels.add(boxed(sm, HDR_THIRD_BOX, 0f, () -> I18n.key("ui.pts_short"), GOLD));
     labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.key("ui.on_hand"), GOLD));
     labels.add(boxed(sm, COST_LBL_BOX, 0f, () -> I18n.key("ui.cost"), GOLD));
-    labels.add(boxed(sm, TOTAL_LBL_BOX, 0f, () -> I18n.key("ui.total"), GOLD));
+    labels.add(boxed(sm, TOTAL_LBL_BOX, 0f, () -> I18n.key("ui.balance_after"), GOLD));
     labels.add(boxed(sm, SKILL_LBL_BOX, 0f, () -> I18n.key("ui.skill_points"), GOLD).shrinkToFit());
   }
 
   private void addLearnButton() {
-    var normal = GuiSprites.load("GUI_ButtonDisabled");
-    var hover = GuiSprites.load("GUI_ButtonHUp");
-    var pressed = GuiSprites.load("GUI_ButtonDown");
-    if (normal == null) {
-      return;
-    }
-    BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(14, GOLD);
-    buttons.add(
-        new GuiButton(
-                normal,
-                hover != null ? hover : normal,
-                pressed != null ? pressed : normal,
-                x + ACTION_BTN_X,
-                y + ACTION_BTN_Y,
-                this::learnBasket)
-            .withLabel(chewy, () -> I18n.key("ui.learn")));
+    GuiButton learn =
+        theme.button(
+            x + ACTION_BTN_X,
+            y + ACTION_BTN_Y,
+            180,
+            34,
+            () -> I18n.key(trainingMode ? "ui.training" : "ui.learn"),
+            this::learnBasket,
+            true);
+    learn.setEnabled(
+        basketCount() > 0
+            && basketGoldCost() <= (player == null ? 0 : player.getGold())
+            && basketSkillPoints() <= (player == null ? 0 : player.getSkillPoints()));
+    buttons.add(learn);
+    dynButtons.add(learn);
   }
 
   private void loadEntries(List<String> spellIds) {
@@ -192,23 +203,23 @@ public class LearnScreen extends GuiListScreen {
     page = Math.min(page, pages - 1);
     int start = page * ROWS_VISIBLE;
     int end = Math.min(start + ROWS_VISIBLE, total);
-    BitmapFont fontWh = FontManager.getInstance().getJetBrainsMonoFont(12, WHITE);
-    BitmapFont fontBl = FontManager.getInstance().getJetBrainsMonoFont(12, BLOCKED);
-    BitmapFont fontDm = FontManager.getInstance().getJetBrainsMonoFont(12, DIM);
-    BitmapFont fontGo = FontManager.getInstance().getJetBrainsMonoFont(12, GOLD);
+    BitmapFont fontWh = FontManager.getInstance().getTahomaFont(12, WHITE, false);
+    BitmapFont fontBl = FontManager.getInstance().getTahomaFont(12, BLOCKED, false);
+    BitmapFont fontDm = FontManager.getInstance().getTahomaFont(12, DIM, false);
+    BitmapFont fontGo = FontManager.getInstance().getTahomaFont(12, GOLD, false);
     for (int i = start; i < end; i++) {
       LearnEntry entry = entries.get(i);
       float rowY = ROW_0_Y + (i - start) * ROW_H_PITCH;
       boolean known = isMaxed(entry);
       boolean blocked = !known && blockReason(entry) != null;
-      BitmapFont font = known || blocked ? fontBl : fontWh;
-      Color col = known || blocked ? BLOCKED : WHITE;
+      BitmapFont font = known ? fontDm : blocked ? fontBl : fontWh;
+      Color col = known ? DIM : blocked ? BLOCKED : WHITE;
       SpellData displaySpell = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
       final String name =
           displaySpell != null
               ? I18n.key(displaySpell.getKey(), I18n.resolve(displaySpell.getName()))
               : skillName(entry);
-      final String price = String.valueOf(priceOf(entry));
+      final String price = String.format(java.util.Locale.ROOT, "%,d", priceOf(entry));
       final String pts =
           displaySpell != null
               ? String.valueOf(entry.count * SpellPurchaseCost.skillPoints(displaySpell))
@@ -227,7 +238,7 @@ public class LearnScreen extends GuiListScreen {
       }
       final LearnEntry e = entry;
       zones.add(
-          new GuiClickZone(x + 10f, y + rowY - 4f, 370f, ROW_H_PITCH - 4f, () -> onRowClick(e)));
+          new GuiClickZone(x + 18f, y + rowY - 4f, 450f, ROW_H_PITCH - 4f, () -> onRowClick(e)));
       addRowSpinButtons(rowY, e);
     }
     if (page > 0) {
@@ -240,21 +251,28 @@ public class LearnScreen extends GuiListScreen {
           new GuiClickZone(
               x + SCROLL_X, y + SCROLL_DN_Y, SCROLL_W, SCROLL_BTN_H, () -> scrollPages(1)));
     }
+    addScrollThumb(pages);
+    addLearnButton();
     final long onHand = player != null ? player.getGold() : 0L;
     final long cost = basketGoldCost();
     final long left = onHand - cost;
-    addDyn(fontGo, ONHAND_VAL_BOX, 0f, () -> String.valueOf(onHand), GOLD);
+    addDyn(
+        fontGo,
+        ONHAND_VAL_BOX,
+        0f,
+        () -> String.format(java.util.Locale.ROOT, "%,d", onHand),
+        GOLD);
     addDyn(
         cost > 0 ? fontGo : fontDm,
         COST_VAL_BOX,
         0f,
-        () -> String.valueOf(cost),
+        () -> String.format(java.util.Locale.ROOT, "%,d", cost),
         cost > 0 ? GOLD : DIM);
     addDyn(
         left >= 0 ? fontGo : fontBl,
         TOTAL_VAL_BOX,
         0f,
-        () -> String.valueOf(left),
+        () -> String.format(java.util.Locale.ROOT, "%,d", left),
         left >= 0 ? GOLD : BLOCKED);
     final int skillPts = (player != null ? player.getSkillPoints() : 0) - basketSkillPoints();
     addDyn(
@@ -281,7 +299,8 @@ public class LearnScreen extends GuiListScreen {
             e -> {
               SpellData granted = e.isSkill() ? spellGrantedBy(e) : null;
               if (granted != null) return e.count * SpellPurchaseCost.skillPoints(granted);
-              return e.count * (e.isSkill() ? e.skillPointCost : SpellPurchaseCost.skillPoints(e.spell));
+              return e.count
+                  * (e.isSkill() ? e.skillPointCost : SpellPurchaseCost.skillPoints(e.spell));
             })
         .sum();
   }
@@ -453,15 +472,9 @@ public class LearnScreen extends GuiListScreen {
           : null;
     }
     SpellData spell = entry.isSkill() ? spellGrantedBy(entry) : entry.spell;
-    if (player.getLevel() < spell.getMinLevel()) {
-      return I18n.message("message.learn_need_level", spell.getMinLevel());
-    }
-    if (player.getIntelligence() < spell.getMinInt()) {
-      return I18n.message("message.learn_need_intelligence", spell.getMinInt());
-    }
-    if (player.getWisdom() < spell.getMinWis()) {
-      return I18n.message("message.learn_need_wisdom", spell.getMinWis());
-    }
+    String attributeReason =
+        com.perso.T4C.spell.SpellLearningRules.attributeBlockReason(player, spell);
+    if (attributeReason != null) return attributeReason;
     SpellData prerequisite = SpellRegistry.offensiveChainPredecessor(spell);
     if (prerequisite != null && !isKnown(prerequisite)) {
       return I18n.message(
@@ -513,6 +526,20 @@ public class LearnScreen extends GuiListScreen {
   }
 
   @Override
+  protected ListRow selectedRow() {
+    return selected;
+  }
+
+  @Override
+  protected boolean canIncrement(ListRow row) {
+    LearnEntry entry = (LearnEntry) row;
+    if (isMaxed(entry) || blockedReason(row) != null) return false;
+    if (!entry.isSkill() || spellGrantedBy(entry) != null || entry.teaching)
+      return entry.count == 0;
+    return currentSkillLevel(entry) + entry.count < entry.maxLevel;
+  }
+
+  @Override
   protected List<? extends ListRow> rows() {
     return entries;
   }
@@ -534,7 +561,7 @@ public class LearnScreen extends GuiListScreen {
 
   @Override
   protected float rowZoneWidth() {
-    return 370f;
+    return 450f;
   }
 
   @Override
@@ -608,7 +635,7 @@ public class LearnScreen extends GuiListScreen {
           Integer.toString(offer.formulaId()),
           null,
           true,
-          "Profession formula " + offer.formulaId(),
+          I18n.message("ui.profession_formula", offer.formulaId()),
           1,
           Math.max(0, offer.goldCost()),
           0,

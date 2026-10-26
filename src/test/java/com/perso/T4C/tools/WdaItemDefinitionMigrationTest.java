@@ -29,16 +29,10 @@ class WdaItemDefinitionMigrationTest {
   }
 
   @Test
-  void allWdaEquipmentBoostsAreStoredInTheBinaryRegistry() {
-    // 929 before T4C-0030 removed the two light-resist boosts on Empyrean Earth Sceptre and
-    // Focus of the Earth (Empyrean) - no item may grant light resistance (see
-    // DESIGN_GUIDELINES.md "Resistance never includes light").
-    // This counts the binary registry alone. Other tests register the JSON-authored items on top
-    // of it and several never unregister them, so drop those first rather than counting whatever
-    // happened to run before this class (T4C-0059).
+  void migratedWeaponRetainsItsFormulaBoostInTheRegistry() {
+    // The catalogue grows with new equipment. Verify the migrated behavior, not a total count;
+    // ItemBalanceGuidelinesTest separately checks boost uniqueness and forbidden light resistance.
     ItemRegistry.resetAdditionalDefinitions();
-    int count = ItemRegistry.load().stream().mapToInt(item -> item.getBoosts().size()).sum();
-    assertEquals(927, count);
     ItemDefinition sword = require("Fine steel short sword 2");
     assertEquals(1, sword.getBoosts().size());
     assertEquals(296, sword.getBoosts().get(0).getBoostId());

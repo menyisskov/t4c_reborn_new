@@ -1,0 +1,53 @@
+{
+  "key": "divine_athena_leggings",
+  "name": "${item.divine_athena_leggings}",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs__pal95",
+  "appearanceInventory": "64kInvPlateArmorLegs__pal95",
+  "numId": 55405,
+  "appearanceId": 55405,
+  "weight": 1,
+  "armorClass": 45.4,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50315,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 50316,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 50317,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 50318,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 50319,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 50320,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 50321,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

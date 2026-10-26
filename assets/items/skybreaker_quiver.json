@@ -1,0 +1,60 @@
+{
+  "key": "skybreaker_quiver",
+  "name": "${item.skybreaker_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 2000000,
+  "weight": 2,
+  "requirements": {
+    "strength": 200,
+    "agility": 1250
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59923,
+  "structure": 8,
+  "appearanceId": 454,
+  "dmgFormula": "1d551+1799",
+  "quiverSplash": {
+    "radius": 2.5,
+    "targets": 8,
+    "damagePercent": 45
+  },
+  "boosts": [
+    {
+      "boostId": 732030,
+      "statId": 6,
+      "expression": "104"
+    },
+    {
+      "boostId": 732031,
+      "statId": 10035,
+      "expression": "250"
+    },
+    {
+      "boostId": 732032,
+      "statId": 12,
+      "expression": "31"
+    },
+    {
+      "boostId": 732033,
+      "statId": 13,
+      "expression": "31"
+    },
+    {
+      "boostId": 732034,
+      "statId": 14,
+      "expression": "31"
+    },
+    {
+      "boostId": 732035,
+      "statId": 15,
+      "expression": "31"
+    },
+    {
+      "boostId": 732036,
+      "statId": 22,
+      "expression": "31"
+    }
+  ]
+}

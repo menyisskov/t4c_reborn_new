@@ -27,7 +27,7 @@ public final class PoisonArrow {
         0,
         "501",
         "100",
-        15466,
+        12937,
         null,
         10023,
         4,

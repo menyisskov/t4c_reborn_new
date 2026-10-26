@@ -1,0 +1,52 @@
+{
+  "key": "concord_refuge_necklace_water",
+  "name": "${item.concord_refuge_necklace_water}",
+  "bodyPart": "NECK",
+  "appearanceInventory": "64kInvNecklace 2",
+  "numId": 59019,
+  "appearanceId": 59019,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61135,
+      "statId": 1,
+      "expression": "30"
+    },
+    {
+      "boostId": 61136,
+      "statId": 18,
+      "expression": "30"
+    },
+    {
+      "boostId": 61137,
+      "statId": 12,
+      "expression": "12"
+    },
+    {
+      "boostId": 61138,
+      "statId": 13,
+      "expression": "12"
+    },
+    {
+      "boostId": 61139,
+      "statId": 14,
+      "expression": "12"
+    },
+    {
+      "boostId": 61140,
+      "statId": 15,
+      "expression": "12"
+    },
+    {
+      "boostId": 61141,
+      "statId": 22,
+      "expression": "12"
+    }
+  ],
+  "armorClass": 4.8,
+  "requirements": {
+    "intelligence": 300,
+    "endurance": 120
+  }
+}

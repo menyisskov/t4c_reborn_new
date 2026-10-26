@@ -12,6 +12,7 @@ import com.perso.T4C.spawn.Spawn;
     z = 0,
     stationary = false,
     aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class CinderMarshal extends DataMonster {
   public static final String CANONICAL_NAME = "The Cinder Marshal";
 

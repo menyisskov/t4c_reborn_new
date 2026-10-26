@@ -4,8 +4,13 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.item.InventoryService;
+import com.perso.T4C.player.Player;
+import com.perso.T4C.helper.XpCurve;
 
-public final class r279Zzartgax extends DataMonster {
+public final class r279Zzartgax extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = "Atrocity Attack.wav";
   public static final String SOUND_DEATH = "Atrocity Dying.wav";
   public static final String SOUND_HIT = "Atrocity Hit.wav";
@@ -13,6 +18,17 @@ public final class r279Zzartgax extends DataMonster {
   public r279Zzartgax(MonsterDef definition, float worldX, float worldY) throws GameException {
 
     super(definition, worldX, worldY);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null && player.getQuestFlag("__QUEST_KRAANIAN_EGG_STAGE") == 6) {
+      InventoryService.add(player, "ethereal_amulet");
+      player.addXpExact(75000, XpCurve.loadDefault());
+      player.setQuestFlag("__QUEST_KRAANIAN_EGG_STAGE", 7);
+      player.setQuestFlag("__QUEST_KRAANIAN_EGG_DONE", 1);
+    }
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

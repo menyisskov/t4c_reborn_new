@@ -3,11 +3,12 @@
   "maxLevel": 400,
   "firstRebirthLevel": 75,
   "levelPerPreviousRebirth": 5,
+  "weaponSkillPerRebirth": 15,
   "energyShop": [
     {
       "npc": "Betran",
       "buys": "Attributes",
-      "details": "Raises strength, endurance, agility, intelligence or wisdom by 1, up to 10 above your new starting value. Each attribute costs more the higher you push it: the 1st point costs 1, the 2nd-4th cost 2, the 5th-7th cost 3, the 8th costs 4 and the 9th-10th cost 5 (30 points to max one attribute)."
+      "details": "Raises strength, endurance, agility, intelligence or wisdom by 1, up to 100 above the rebirth starting value. Every increase costs 1 seraph point. Reaching the limit in one attribute costs 100 seraph points in total."
     },
     {
       "npc": "Caplan",
@@ -31,6 +32,8 @@
       "requiredLevel": 75,
       "startingAttributes": 25,
       "energyPoints": 10,
+      "startingAttack": 15,
+      "startingArchery": 15,
       "auraHealChance": 5.9,
       "auraRetaliationChance": 5.9,
       "auraBurstChance": 2.0
@@ -40,6 +43,8 @@
       "requiredLevel": 80,
       "startingAttributes": 30,
       "energyPoints": 15,
+      "startingAttack": 30,
+      "startingArchery": 30,
       "auraHealChance": 6.9,
       "auraRetaliationChance": 10.9,
       "auraBurstChance": 3.0
@@ -49,6 +54,8 @@
       "requiredLevel": 85,
       "startingAttributes": 35,
       "energyPoints": 20,
+      "startingAttack": 45,
+      "startingArchery": 45,
       "auraHealChance": 7.9,
       "auraRetaliationChance": 15.8,
       "auraBurstChance": 4.0
@@ -58,6 +65,8 @@
       "requiredLevel": 90,
       "startingAttributes": 40,
       "energyPoints": 25,
+      "startingAttack": 60,
+      "startingArchery": 60,
       "auraHealChance": 8.9,
       "auraRetaliationChance": 20.8,
       "auraBurstChance": 5.0
@@ -67,6 +76,8 @@
       "requiredLevel": 95,
       "startingAttributes": 45,
       "energyPoints": 30,
+      "startingAttack": 75,
+      "startingArchery": 75,
       "auraHealChance": 9.9,
       "auraRetaliationChance": 25.7,
       "auraBurstChance": 5.9
@@ -76,6 +87,8 @@
       "requiredLevel": 100,
       "startingAttributes": 50,
       "energyPoints": 35,
+      "startingAttack": 90,
+      "startingArchery": 90,
       "auraHealChance": 10.9,
       "auraRetaliationChance": 30.7,
       "auraBurstChance": 6.9
@@ -85,6 +98,8 @@
       "requiredLevel": 105,
       "startingAttributes": 55,
       "energyPoints": 40,
+      "startingAttack": 105,
+      "startingArchery": 105,
       "auraHealChance": 11.9,
       "auraRetaliationChance": 35.6,
       "auraBurstChance": 7.9
@@ -94,6 +109,8 @@
       "requiredLevel": 110,
       "startingAttributes": 60,
       "energyPoints": 45,
+      "startingAttack": 120,
+      "startingArchery": 120,
       "auraHealChance": 12.9,
       "auraRetaliationChance": 40.6,
       "auraBurstChance": 8.9
@@ -103,6 +120,8 @@
       "requiredLevel": 115,
       "startingAttributes": 65,
       "energyPoints": 50,
+      "startingAttack": 135,
+      "startingArchery": 135,
       "auraHealChance": 13.9,
       "auraRetaliationChance": 45.5,
       "auraBurstChance": 9.9
@@ -112,6 +131,8 @@
       "requiredLevel": 120,
       "startingAttributes": 70,
       "energyPoints": 55,
+      "startingAttack": 150,
+      "startingArchery": 150,
       "auraHealChance": 14.9,
       "auraRetaliationChance": 50.5,
       "auraBurstChance": 10.9
@@ -121,6 +142,8 @@
       "requiredLevel": 125,
       "startingAttributes": 75,
       "energyPoints": 60,
+      "startingAttack": 165,
+      "startingArchery": 165,
       "auraHealChance": 15.8,
       "auraRetaliationChance": 55.4,
       "auraBurstChance": 11.9
@@ -130,6 +153,8 @@
       "requiredLevel": 130,
       "startingAttributes": 80,
       "energyPoints": 65,
+      "startingAttack": 180,
+      "startingArchery": 180,
       "auraHealChance": 16.8,
       "auraRetaliationChance": 60.4,
       "auraBurstChance": 12.9
@@ -139,6 +164,8 @@
       "requiredLevel": 135,
       "startingAttributes": 85,
       "energyPoints": 70,
+      "startingAttack": 195,
+      "startingArchery": 195,
       "auraHealChance": 17.8,
       "auraRetaliationChance": 65.3,
       "auraBurstChance": 13.9
@@ -148,6 +175,8 @@
       "requiredLevel": 140,
       "startingAttributes": 90,
       "energyPoints": 75,
+      "startingAttack": 210,
+      "startingArchery": 210,
       "auraHealChance": 18.8,
       "auraRetaliationChance": 70.3,
       "auraBurstChance": 14.9
@@ -157,6 +186,8 @@
       "requiredLevel": 145,
       "startingAttributes": 95,
       "energyPoints": 80,
+      "startingAttack": 225,
+      "startingArchery": 225,
       "auraHealChance": 19.8,
       "auraRetaliationChance": 75.2,
       "auraBurstChance": 15.8
@@ -166,6 +197,8 @@
       "requiredLevel": 150,
       "startingAttributes": 100,
       "energyPoints": 85,
+      "startingAttack": 240,
+      "startingArchery": 240,
       "auraHealChance": 20.8,
       "auraRetaliationChance": 80.2,
       "auraBurstChance": 16.8
@@ -175,6 +208,8 @@
       "requiredLevel": 155,
       "startingAttributes": 105,
       "energyPoints": 90,
+      "startingAttack": 255,
+      "startingArchery": 255,
       "auraHealChance": 21.8,
       "auraRetaliationChance": 85.1,
       "auraBurstChance": 17.8
@@ -184,6 +219,8 @@
       "requiredLevel": 160,
       "startingAttributes": 110,
       "energyPoints": 95,
+      "startingAttack": 270,
+      "startingArchery": 270,
       "auraHealChance": 22.8,
       "auraRetaliationChance": 90.1,
       "auraBurstChance": 18.8
@@ -193,6 +230,8 @@
       "requiredLevel": 165,
       "startingAttributes": 115,
       "energyPoints": 100,
+      "startingAttack": 285,
+      "startingArchery": 285,
       "auraHealChance": 23.8,
       "auraRetaliationChance": 95.0,
       "auraBurstChance": 19.8
@@ -202,6 +241,8 @@
       "requiredLevel": 170,
       "startingAttributes": 120,
       "energyPoints": 105,
+      "startingAttack": 300,
+      "startingArchery": 300,
       "auraHealChance": 24.8,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 20.8
@@ -211,6 +252,8 @@
       "requiredLevel": 175,
       "startingAttributes": 125,
       "energyPoints": 110,
+      "startingAttack": 315,
+      "startingArchery": 315,
       "auraHealChance": 25.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 21.8
@@ -220,6 +263,8 @@
       "requiredLevel": 180,
       "startingAttributes": 130,
       "energyPoints": 115,
+      "startingAttack": 330,
+      "startingArchery": 330,
       "auraHealChance": 26.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 22.8
@@ -229,6 +274,8 @@
       "requiredLevel": 185,
       "startingAttributes": 135,
       "energyPoints": 120,
+      "startingAttack": 345,
+      "startingArchery": 345,
       "auraHealChance": 27.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 23.8
@@ -238,6 +285,8 @@
       "requiredLevel": 190,
       "startingAttributes": 140,
       "energyPoints": 125,
+      "startingAttack": 360,
+      "startingArchery": 360,
       "auraHealChance": 28.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 24.8
@@ -247,6 +296,8 @@
       "requiredLevel": 195,
       "startingAttributes": 145,
       "energyPoints": 130,
+      "startingAttack": 375,
+      "startingArchery": 375,
       "auraHealChance": 29.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 25.7
@@ -256,6 +307,8 @@
       "requiredLevel": 200,
       "startingAttributes": 150,
       "energyPoints": 135,
+      "startingAttack": 390,
+      "startingArchery": 390,
       "auraHealChance": 30.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 26.7
@@ -265,6 +318,8 @@
       "requiredLevel": 205,
       "startingAttributes": 155,
       "energyPoints": 140,
+      "startingAttack": 405,
+      "startingArchery": 405,
       "auraHealChance": 31.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 27.7
@@ -274,6 +329,8 @@
       "requiredLevel": 210,
       "startingAttributes": 160,
       "energyPoints": 145,
+      "startingAttack": 420,
+      "startingArchery": 420,
       "auraHealChance": 32.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 28.7
@@ -283,6 +340,8 @@
       "requiredLevel": 215,
       "startingAttributes": 165,
       "energyPoints": 150,
+      "startingAttack": 435,
+      "startingArchery": 435,
       "auraHealChance": 33.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 29.7
@@ -292,6 +351,8 @@
       "requiredLevel": 220,
       "startingAttributes": 170,
       "energyPoints": 155,
+      "startingAttack": 450,
+      "startingArchery": 450,
       "auraHealChance": 34.7,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 30.7
@@ -301,6 +362,8 @@
       "requiredLevel": 225,
       "startingAttributes": 175,
       "energyPoints": 160,
+      "startingAttack": 465,
+      "startingArchery": 465,
       "auraHealChance": 35.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 31.7
@@ -310,6 +373,8 @@
       "requiredLevel": 230,
       "startingAttributes": 180,
       "energyPoints": 165,
+      "startingAttack": 480,
+      "startingArchery": 480,
       "auraHealChance": 36.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 32.7
@@ -319,6 +384,8 @@
       "requiredLevel": 235,
       "startingAttributes": 185,
       "energyPoints": 170,
+      "startingAttack": 495,
+      "startingArchery": 495,
       "auraHealChance": 37.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 33.7
@@ -328,6 +395,8 @@
       "requiredLevel": 240,
       "startingAttributes": 190,
       "energyPoints": 175,
+      "startingAttack": 510,
+      "startingArchery": 510,
       "auraHealChance": 38.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 34.7
@@ -337,6 +406,8 @@
       "requiredLevel": 245,
       "startingAttributes": 195,
       "energyPoints": 180,
+      "startingAttack": 525,
+      "startingArchery": 525,
       "auraHealChance": 39.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 35.6
@@ -346,6 +417,8 @@
       "requiredLevel": 250,
       "startingAttributes": 200,
       "energyPoints": 185,
+      "startingAttack": 540,
+      "startingArchery": 540,
       "auraHealChance": 40.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 36.6
@@ -355,6 +428,8 @@
       "requiredLevel": 255,
       "startingAttributes": 205,
       "energyPoints": 190,
+      "startingAttack": 555,
+      "startingArchery": 555,
       "auraHealChance": 41.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 37.6
@@ -364,6 +439,8 @@
       "requiredLevel": 260,
       "startingAttributes": 210,
       "energyPoints": 195,
+      "startingAttack": 570,
+      "startingArchery": 570,
       "auraHealChance": 42.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 38.6
@@ -373,6 +450,8 @@
       "requiredLevel": 265,
       "startingAttributes": 215,
       "energyPoints": 200,
+      "startingAttack": 585,
+      "startingArchery": 585,
       "auraHealChance": 43.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 39.6
@@ -382,6 +461,8 @@
       "requiredLevel": 270,
       "startingAttributes": 220,
       "energyPoints": 205,
+      "startingAttack": 600,
+      "startingArchery": 600,
       "auraHealChance": 44.6,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 40.6
@@ -391,6 +472,8 @@
       "requiredLevel": 275,
       "startingAttributes": 225,
       "energyPoints": 210,
+      "startingAttack": 615,
+      "startingArchery": 615,
       "auraHealChance": 45.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 41.6
@@ -400,6 +483,8 @@
       "requiredLevel": 280,
       "startingAttributes": 230,
       "energyPoints": 215,
+      "startingAttack": 630,
+      "startingArchery": 630,
       "auraHealChance": 46.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 42.6
@@ -409,6 +494,8 @@
       "requiredLevel": 285,
       "startingAttributes": 235,
       "energyPoints": 220,
+      "startingAttack": 645,
+      "startingArchery": 645,
       "auraHealChance": 47.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 43.6
@@ -418,6 +505,8 @@
       "requiredLevel": 290,
       "startingAttributes": 240,
       "energyPoints": 225,
+      "startingAttack": 660,
+      "startingArchery": 660,
       "auraHealChance": 48.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 44.6
@@ -427,6 +516,8 @@
       "requiredLevel": 295,
       "startingAttributes": 245,
       "energyPoints": 230,
+      "startingAttack": 675,
+      "startingArchery": 675,
       "auraHealChance": 49.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 45.5
@@ -436,6 +527,8 @@
       "requiredLevel": 300,
       "startingAttributes": 250,
       "energyPoints": 235,
+      "startingAttack": 690,
+      "startingArchery": 690,
       "auraHealChance": 50.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 46.5
@@ -445,6 +538,8 @@
       "requiredLevel": 305,
       "startingAttributes": 255,
       "energyPoints": 240,
+      "startingAttack": 705,
+      "startingArchery": 705,
       "auraHealChance": 51.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 47.5
@@ -454,6 +549,8 @@
       "requiredLevel": 310,
       "startingAttributes": 260,
       "energyPoints": 245,
+      "startingAttack": 720,
+      "startingArchery": 720,
       "auraHealChance": 52.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 48.5
@@ -463,6 +560,8 @@
       "requiredLevel": 315,
       "startingAttributes": 265,
       "energyPoints": 250,
+      "startingAttack": 735,
+      "startingArchery": 735,
       "auraHealChance": 53.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 49.5
@@ -472,6 +571,8 @@
       "requiredLevel": 320,
       "startingAttributes": 270,
       "energyPoints": 255,
+      "startingAttack": 750,
+      "startingArchery": 750,
       "auraHealChance": 54.5,
       "auraRetaliationChance": 100.0,
       "auraBurstChance": 50.5

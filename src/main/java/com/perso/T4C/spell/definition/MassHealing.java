@@ -27,7 +27,7 @@ public final class MassHealing {
         0,
         "0",
         "0",
-        143966,
+        143557,
         null,
         10138,
         5,

@@ -1,0 +1,52 @@
+{
+  "key": "concord_refuge_necklace_warrior",
+  "name": "${item.concord_refuge_necklace_warrior}",
+  "bodyPart": "NECK",
+  "appearanceInventory": "64kInvNecklace 2",
+  "numId": 59016,
+  "appearanceId": 59016,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61114,
+      "statId": 3,
+      "expression": "25"
+    },
+    {
+      "boostId": 61115,
+      "statId": 8,
+      "expression": "60"
+    },
+    {
+      "boostId": 61116,
+      "statId": 12,
+      "expression": "8"
+    },
+    {
+      "boostId": 61117,
+      "statId": 13,
+      "expression": "8"
+    },
+    {
+      "boostId": 61118,
+      "statId": 14,
+      "expression": "8"
+    },
+    {
+      "boostId": 61119,
+      "statId": 15,
+      "expression": "8"
+    },
+    {
+      "boostId": 61120,
+      "statId": 22,
+      "expression": "8"
+    }
+  ],
+  "armorClass": 6.6,
+  "requirements": {
+    "strength": 300,
+    "endurance": 120
+  }
+}

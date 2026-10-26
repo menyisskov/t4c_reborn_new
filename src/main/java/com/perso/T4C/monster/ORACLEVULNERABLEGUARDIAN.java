@@ -50,7 +50,7 @@ public final class ORACLEVULNERABLEGUARDIAN extends DataMonster {
         SOUND_HIT,
         233,
         715,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("gleaming_orichalcum_key", 1.0f)),
         false,
         0.0f,
         145,

@@ -33,6 +33,7 @@ public class ItemJsonDef {
   public String dmgFormula;
   public String atkDelay;
   public List<BoostJson> boosts = List.of();
+  public com.perso.T4C.combat.QuiverSplash quiverSplash;
 
   public ItemDefinition toItemDefinition() {
     if (key == null || key.isBlank()) {
@@ -91,6 +92,9 @@ public class ItemJsonDef {
             boostDefs,
             List.of(),
             undroppable);
+    if (quiverSplash != null && (structure != 8 || definition.getBodyPart() != BodyPart.WEAPON2))
+      throw new IllegalArgumentException("Area-arrow effects require an off-hand quiver");
+    definition.setQuiverSplash(quiverSplash);
     definition.setRarityPriced(true);
     return definition;
   }

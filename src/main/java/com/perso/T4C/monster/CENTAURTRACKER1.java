@@ -42,7 +42,11 @@ public final class CENTAURTRACKER1 extends DataMonster {
         SOUND_HIT,
         71,
         220,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("rough_agate", 0.01f),
+            new MonsterDef.LootDrop("rough_carnelian", 0.01f),
+            new MonsterDef.LootDrop("rough_moonstone", 0.01f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.05f)),
         false,
         0.0f,
         55,

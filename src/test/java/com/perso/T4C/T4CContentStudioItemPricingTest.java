@@ -15,6 +15,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class T4CContentStudioItemPricingTest {
+  @Test
+  void generatedCatalogCannotReintroduceRetiredPrototypes() throws Exception {
+    Path dir = output.resolve("retired");
+    ItemJavaExporter.export(
+        List.of(
+            com.perso.T4C.item.definition.ItemItemArcTest.definition(),
+            com.perso.T4C.item.definition.ItemItemDagger.definition()),
+        dir);
+    String registry = Files.readString(dir.resolve("ItemDefinitions.java"));
+    assertFalse(registry.contains("ItemItemArcTest_"));
+    assertTrue(registry.contains("ItemItemDagger_"));
+    try (var files = Files.list(dir)) {
+      assertFalse(files.anyMatch(p -> p.getFileName().toString().startsWith("ItemItemArcTest_")));
+    }
+  }
+
   @TempDir Path output;
 
   @Test

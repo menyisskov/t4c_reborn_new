@@ -1,0 +1,60 @@
+{
+  "key": "starweaver_quiver",
+  "name": "${item.starweaver_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 4500000,
+  "weight": 2,
+  "requirements": {
+    "strength": 250,
+    "agility": 1650
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59927,
+  "structure": 8,
+  "appearanceId": 454,
+  "dmgFormula": "1d701+2299",
+  "quiverSplash": {
+    "radius": 2.5,
+    "targets": 8,
+    "damagePercent": 45
+  },
+  "boosts": [
+    {
+      "boostId": 732070,
+      "statId": 6,
+      "expression": "138"
+    },
+    {
+      "boostId": 732071,
+      "statId": 10035,
+      "expression": "330"
+    },
+    {
+      "boostId": 732072,
+      "statId": 12,
+      "expression": "41"
+    },
+    {
+      "boostId": 732073,
+      "statId": 13,
+      "expression": "41"
+    },
+    {
+      "boostId": 732074,
+      "statId": 14,
+      "expression": "41"
+    },
+    {
+      "boostId": 732075,
+      "statId": 15,
+      "expression": "41"
+    },
+    {
+      "boostId": 732076,
+      "statId": 22,
+      "expression": "41"
+    }
+  ]
+}

@@ -20,7 +20,7 @@ public class PlayerCoordsHud {
     this.font.setColor(Color.WHITE);
   }
 
-  public void render(SpriteBatch batch, float offsetX, float offsetY) {
+  public void render(SpriteBatch batch, float rightEdge, float offsetY) {
     com.perso.T4C.model.Coordinates coords = player.getCoordinates();
     float px = coords.getX();
     float py = coords.getY();
@@ -33,6 +33,7 @@ public class PlayerCoordsHud {
     GlyphLayout g1 = new GlyphLayout(font, line1);
     GlyphLayout g2 = new GlyphLayout(font, line2);
     GlyphLayout g3 = new GlyphLayout(font, line3);
+    float offsetX = Math.max(8f, rightEdge - Math.max(g1.width, Math.max(g2.width, g3.width)));
     font.draw(batch, line1, offsetX, offsetY + g1.height);
     font.draw(batch, line2, offsetX, offsetY + g1.height + g2.height + 4);
     font.draw(batch, line3, offsetX, offsetY + g1.height + g2.height + g3.height + 8);

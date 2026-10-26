@@ -1,0 +1,53 @@
+{
+  "key": "divine_anubis_boots",
+  "name": "${item.divine_anubis_boots}",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot__pal96",
+  "appearanceInventory": "64kInvPlateArmorFeet__pal96",
+  "numId": 55602,
+  "appearanceId": 55602,
+  "weight": 1,
+  "armorClass": 29.7,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50434,
+      "statId": 1,
+      "expression": "65"
+    },
+    {
+      "boostId": 50435,
+      "statId": 24,
+      "expression": "65"
+    },
+    {
+      "boostId": 50436,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50437,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50438,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50439,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50440,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

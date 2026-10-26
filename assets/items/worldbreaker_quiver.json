@@ -1,0 +1,60 @@
+{
+  "key": "worldbreaker_quiver",
+  "name": "${item.worldbreaker_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 3000000,
+  "weight": 2,
+  "requirements": {
+    "strength": 250,
+    "agility": 1000
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59909,
+  "structure": 8,
+  "appearanceId": 59909,
+  "dmgFormula": "1d501+1499",
+  "quiverSplash": {
+    "radius": 2.5,
+    "targets": 8,
+    "damagePercent": 45
+  },
+  "boosts": [
+    {
+      "boostId": 730090,
+      "statId": 6,
+      "expression": "83"
+    },
+    {
+      "boostId": 730091,
+      "statId": 10035,
+      "expression": "200"
+    },
+    {
+      "boostId": 730092,
+      "statId": 12,
+      "expression": "25"
+    },
+    {
+      "boostId": 730093,
+      "statId": 13,
+      "expression": "25"
+    },
+    {
+      "boostId": 730094,
+      "statId": 14,
+      "expression": "25"
+    },
+    {
+      "boostId": 730095,
+      "statId": 15,
+      "expression": "25"
+    },
+    {
+      "boostId": 730096,
+      "statId": 22,
+      "expression": "25"
+    }
+  ]
+}

@@ -1,0 +1,1804 @@
+{
+  "Cities": [
+    {
+      "id": "base.lighthaven",
+      "name": "Lighthaven",
+      "x": 2941,
+      "y": 1062,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.windhowl",
+      "name": "Windhowl",
+      "x": 1723,
+      "y": 1237,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.silversky",
+      "name": "Silversky",
+      "x": 1495,
+      "y": 2470,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.stonecrest",
+      "name": "Stonecrest",
+      "x": 144,
+      "y": 737,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    }
+  ],
+  "Hunting Areas": [
+    {
+      "id": "base.hunting_fey_warden",
+      "name": "Hunt: Fey Warden",
+      "x": 3901,
+      "y": 1386,
+      "z": 0,
+      "note": "A connected hunting field with 40 fey warden enemies."
+    },
+    {
+      "id": "base.hunting_moonlit_stalker",
+      "name": "Hunt: Moonlit Stalker",
+      "x": 3974,
+      "y": 1331,
+      "z": 0,
+      "note": "A connected hunting field with 40 moonlit stalker enemies."
+    },
+    {
+      "id": "base.hunting_veilbound_wraith",
+      "name": "Hunt: Veilbound Wraith",
+      "x": 4194,
+      "y": 1523,
+      "z": 0,
+      "note": "A connected hunting field with 40 veilbound wraith enemies."
+    },
+    {
+      "id": "base.hunting_sundered_sentinel",
+      "name": "Hunt: Sundered Sentinel",
+      "x": 4374,
+      "y": 1789,
+      "z": 0,
+      "note": "A connected hunting field with 40 sundered sentinel enemies."
+    },
+    {
+      "id": "base.hunting_moonwake_revenant",
+      "name": "Hunt: Moonwake Revenant",
+      "x": 3873,
+      "y": 890,
+      "z": 0,
+      "note": "A connected hunting field with 40 moonwake revenant enemies."
+    },
+    {
+      "id": "base.hunting_emberglass_ashguard",
+      "name": "Hunt: Emberglass Ashguard",
+      "x": 4237,
+      "y": 2545,
+      "z": 0,
+      "note": "A connected hunting field with 40 emberglass ashguard enemies."
+    },
+    {
+      "id": "base.hunting_ashbound_exile",
+      "name": "Hunt: Ashbound Exile",
+      "x": 5849,
+      "y": 1313,
+      "z": 0,
+      "note": "A connected hunting field with 40 ashbound exile enemies."
+    },
+    {
+      "id": "base.hunting_nullguard",
+      "name": "Hunt: Nullguard",
+      "x": 5450,
+      "y": 1674,
+      "z": 0,
+      "note": "A connected hunting field with 40 nullguard enemies."
+    },
+    {
+      "id": "base.hunting_rift_wraith",
+      "name": "Hunt: Rift Wraith",
+      "x": 5606,
+      "y": 2082,
+      "z": 0,
+      "note": "A connected hunting field with 40 rift wraith enemies."
+    },
+    {
+      "id": "base.hunting_barrow_wight",
+      "name": "Hunt: Barrow Wight",
+      "x": 2583,
+      "y": 2676,
+      "z": 0,
+      "note": "A connected hunting field with 40 barrow wight enemies."
+    },
+    {
+      "id": "base.hunting_lesser_drake",
+      "name": "Hunt: Lesser Drake",
+      "x": 2453,
+      "y": 2853,
+      "z": 0,
+      "note": "A connected hunting field with 40 lesser drake enemies."
+    },
+    {
+      "id": "base.hunting_greater_drake",
+      "name": "Hunt: Greater Drake",
+      "x": 2735,
+      "y": 2950,
+      "z": 0,
+      "note": "A connected hunting field with 40 greater drake enemies."
+    },
+    {
+      "id": "base.hunting_ashfang_stalker",
+      "name": "Hunt: Ashfang Stalker",
+      "x": 1918,
+      "y": 1544,
+      "z": 0,
+      "note": "A connected hunting field with 40 ashfang stalker enemies."
+    },
+    {
+      "id": "base.hunting_cinder_whelp",
+      "name": "Hunt: Cinder Whelp",
+      "x": 1836,
+      "y": 1582,
+      "z": 0,
+      "note": "A connected hunting field with 40 cinder whelp enemies."
+    },
+    {
+      "id": "base.hunting_centaur_warrior",
+      "name": "Hunt: Centaur Warrior",
+      "x": 2338,
+      "y": 2388,
+      "z": 0,
+      "note": "A connected hunting field with 40 centaur warrior enemies."
+    },
+    {
+      "id": "base.hunting_deep_one",
+      "name": "Hunt: Deep One",
+      "x": 362,
+      "y": 2197,
+      "z": 0,
+      "note": "A connected hunting field with 40 deep one enemies."
+    },
+    {
+      "id": "base.hunting_drowned_acolyte",
+      "name": "Hunt: Drowned Acolyte",
+      "x": 1703,
+      "y": 2239,
+      "z": 0,
+      "note": "A connected hunting field with 40 drowned acolyte enemies."
+    },
+    {
+      "id": "base.hunting_kraanian_dragonguard",
+      "name": "Hunt: Kraanian Dragonguard",
+      "x": 2844,
+      "y": 2714,
+      "z": 0,
+      "note": "A connected hunting field with 40 kraanian dragonguard enemies."
+    },
+    {
+      "id": "base.hunting_kraanian_wyrmling",
+      "name": "Hunt: Kraanian Wyrmling",
+      "x": 2332,
+      "y": 2834,
+      "z": 0,
+      "note": "A connected hunting field with 40 kraanian wyrmling enemies."
+    },
+    {
+      "id": "base.hunting_tideclaw_crab",
+      "name": "Hunt: Tideclaw Crab",
+      "x": 1645,
+      "y": 2470,
+      "z": 0,
+      "note": "A connected hunting field with 40 tideclaw crab enemies."
+    },
+    {
+      "id": "base.hunting_tideworn_reaver",
+      "name": "Hunt: Tideworn Reaver",
+      "x": 390,
+      "y": 680,
+      "z": 0,
+      "note": "A connected hunting field with 40 tideworn reaver enemies."
+    },
+    {
+      "id": "hunt.arch_drake",
+      "name": "Arch Drake · Drake\u0027s Lair",
+      "x": 2850,
+      "y": 2780,
+      "z": 0,
+      "note": "Dense hunting field."
+    }
+  ],
+  "Training Fields": [
+    {
+      "id": "base.hunting_witness_tarantula",
+      "name": "Train: Witness Tarantula",
+      "x": 3805,
+      "y": 1580,
+      "z": 0,
+      "note": "40 normal tarantulas and one larger tarantula boss. About 150 AC is sufficient for the intended training tier. The boss guarantees a return scroll, 100,000–125,000 gold and 5 million base XP."
+    },
+    {
+      "id": "base.hunting_witness_skraug",
+      "name": "Train: Witness Skraug",
+      "x": 3700,
+      "y": 1580,
+      "z": 0,
+      "note": "40 normal skraugs and one larger skraug boss. About 150 AC is sufficient for the intended training tier. The boss guarantees a return scroll, 100,000–125,000 gold and 5 million base XP."
+    },
+    {
+      "id": "base.hunting_witness_skeleton",
+      "name": "Train: Witness Skeleton",
+      "x": 3700,
+      "y": 1450,
+      "z": 0,
+      "note": "40 normal skeletons and one larger skeleton boss. About 150 AC is sufficient for the intended training tier. The boss guarantees a return scroll, 100,000–125,000 gold and 5 million base XP."
+    },
+    {
+      "id": "base.hunting_threnody_tarantula",
+      "name": "Train: Threnody Tarantula",
+      "x": 5385,
+      "y": 1220,
+      "z": 0,
+      "note": "40 normal tarantulas and one larger tarantula boss. About 250 AC is sufficient for the intended training tier. The boss guarantees a return scroll, 200,000–250,000 gold and 15 million base XP."
+    },
+    {
+      "id": "base.hunting_threnody_skraug",
+      "name": "Train: Threnody Skraug",
+      "x": 5280,
+      "y": 1290,
+      "z": 0,
+      "note": "40 normal skraugs and one larger skraug boss. About 250 AC is sufficient for the intended training tier. The boss guarantees a return scroll, 200,000–250,000 gold and 15 million base XP."
+    },
+    {
+      "id": "base.hunting_threnody_skeleton",
+      "name": "Train: Threnody Skeleton",
+      "x": 5373,
+      "y": 1328,
+      "z": 0,
+      "note": "40 normal skeletons and one larger skeleton boss. About 250 AC is sufficient for the intended training tier. The boss guarantees a return scroll, 200,000–250,000 gold and 15 million base XP."
+    }
+  ],
+  "Good Seraph Quest": [
+    {
+      "id": "good.nissushaloseeker",
+      "name": "Nissus Haloseeker",
+      "x": 210,
+      "y": 675,
+      "z": 0,
+      "note": "Begin the good path\n\nGuidance, Soul of Artherk and Fangs of True Resolve."
+    },
+    {
+      "id": "good.beltiganwhitesword",
+      "name": "Sir Beltigan",
+      "x": 395,
+      "y": 1265,
+      "z": 0,
+      "note": "Begin the good path\n\nLightbringer allegiance, Will instructions and final Key of Artherk."
+    },
+    {
+      "id": "good.theoranironfaith",
+      "name": "Theoran Ironfaith",
+      "x": 565,
+      "y": 925,
+      "z": 0,
+      "note": "Soul · Rings of Pure Faith\n\nRing of Pure Faith and Holy Water crafting."
+    },
+    {
+      "id": "good.brotherthorkas",
+      "name": "Brother Thorkas",
+      "x": 1565,
+      "y": 2398,
+      "z": 0,
+      "note": "Soul · Rings of Pure Faith\n\nRing of Faith and Holy Water crafting."
+    },
+    {
+      "id": "good.dionysussilverstream",
+      "name": "Dionysus Silverstream",
+      "x": 1025,
+      "y": 1000,
+      "z": 0,
+      "note": "Soul · Staves of Hope\n\nStaff of Hope crafting."
+    },
+    {
+      "id": "good.chryseidayolangda",
+      "name": "Chryseida Yolangda",
+      "x": 255,
+      "y": 740,
+      "z": 0,
+      "note": "Soul · Staves of Hope\n\nSymbols of Hope and Mandrakes vendor."
+    },
+    {
+      "id": "good.annithaeteardrop",
+      "name": "Annithae Teardrop",
+      "x": 300,
+      "y": 830,
+      "z": 0,
+      "note": "Soul · Pearls of Wisdom\n\nTear-Shaped Pearls vendor."
+    },
+    {
+      "id": "good.moonrock",
+      "name": "Moonrock",
+      "x": 2947,
+      "y": 1043,
+      "z": 0,
+      "note": "Soul · Pearls of Wisdom\n\nPearl of Wisdom crafting using the Lost Psalms."
+    },
+    {
+      "id": "good.mithannasnowraven",
+      "name": "Mithanna Snowraven",
+      "x": 120,
+      "y": 795,
+      "z": 0,
+      "note": "Heart · Gems, Tomes and Swords\n\nHeart of Artherk hand-in and Fang referral."
+    },
+    {
+      "id": "good.omarhald",
+      "name": "Omar Hald",
+      "x": 305,
+      "y": 840,
+      "z": 0,
+      "note": "Heart · Gems, Tomes and Swords\n\nGems of Courage from Raw Crystals."
+    },
+    {
+      "id": "good.eldantor",
+      "name": "A wandering mage",
+      "x": 343,
+      "y": 766,
+      "z": 0,
+      "note": "Heart · Gems, Tomes and Swords\n\nMagic Scripting Kits vendor."
+    },
+    {
+      "id": "good.liurnclar",
+      "name": "Liurn Clar",
+      "x": 1599,
+      "y": 1250,
+      "z": 0,
+      "note": "Heart · Gems, Tomes and Swords\n\nTomes of Valor crafting."
+    },
+    {
+      "id": "good.lancesilversmith",
+      "name": "Lance Silversmith",
+      "x": 2580,
+      "y": 690,
+      "z": 0,
+      "note": "Heart · Gems, Tomes and Swords\n\nSword of Majesty referral and Hammers of Finality crafting."
+    },
+    {
+      "id": "good.thorglarefire",
+      "name": "A busy blacksmith",
+      "x": 900,
+      "y": 1070,
+      "z": 0,
+      "note": "Heart · Gems, Tomes and Swords\n\nSwords of Majesty crafting and Hammer referral."
+    },
+    {
+      "id": "good.kingaedenasgravesoul",
+      "name": "King Aedenas Gravesoul",
+      "x": 1050,
+      "y": 1090,
+      "z": 0,
+      "note": "Will · Fangs and Hammers\n\nWill of Artherk sequence and Red-Eyed Centaurs task."
+    },
+    {
+      "id": "good.dragon",
+      "name": "DarkFang",
+      "x": 2835,
+      "y": 1113,
+      "z": 0,
+      "note": "Will · Fangs and Hammers\n\nDark Fang: Tomb Raider prerequisite and Ruby Dragon Fangs."
+    },
+    {
+      "id": "good.samuel",
+      "name": "Samuel",
+      "x": null,
+      "y": null,
+      "z": null,
+      "note": "Will · Fangs and Hammers\n\nCandles of Eternity crafting."
+    },
+    {
+      "id": "good.ttayhmark",
+      "name": "Ttayh Mark",
+      "x": 1734,
+      "y": 1194,
+      "z": 0,
+      "note": "Will · Fangs and Hammers\n\nFine Steel Warhammers vendor."
+    },
+    {
+      "id": "good.araknor",
+      "name": "Araknor",
+      "x": 2981,
+      "y": 1035,
+      "z": 0,
+      "note": "Will · Fangs and Hammers\n\nScroll of Enchantment prerequisite."
+    },
+    {
+      "id": "good.iraltok",
+      "name": "Iraltok",
+      "x": 2998,
+      "y": 952,
+      "z": 0,
+      "note": "Will · Fangs and Hammers\n\nRunic Scripting Kits vendor."
+    },
+    {
+      "id": "good.marsaccred",
+      "name": "Marsac Cred",
+      "x": 1608,
+      "y": 1253,
+      "z": 0,
+      "note": "Will · Fangs and Hammers\n\nScrolls of Enchantment crafting."
+    },
+    {
+      "id": "good.rylethcth",
+      "name": "R\u0027yleth Cth",
+      "x": 1604,
+      "y": 1244,
+      "z": 0,
+      "note": "Will · Fangs and Hammers\n\nPlain Blank Scrolls vendor."
+    },
+    {
+      "id": "good.roengreenleaf",
+      "name": "Roen Greenleaf",
+      "x": 800,
+      "y": 1110,
+      "z": 0,
+      "note": "Will · Fangs and Hammers\n\nOptional Ring of the Seraph."
+    },
+    {
+      "id": "good.anrakbrownbark",
+      "name": "Anrak",
+      "x": 1270,
+      "y": 1621,
+      "z": 0,
+      "note": "Will · Drums and Nether Isles\n\nDrums of Fate crafting."
+    },
+    {
+      "id": "good.menark",
+      "name": "Menark",
+      "x": null,
+      "y": null,
+      "z": null,
+      "note": "Will · Drums and Nether Isles\n\nHourglasses of Essence exchange."
+    },
+    {
+      "id": "good.bastienmilandra",
+      "name": "Bastien Milandra",
+      "x": 420,
+      "y": 1255,
+      "z": 0,
+      "note": "Will · Drums and Nether Isles\n\nEthereal Key repair if required."
+    },
+    {
+      "id": "good.etherealportal",
+      "name": "An ethereal portal beckons for you to enter.",
+      "x": 790,
+      "y": 495,
+      "z": 0,
+      "note": "Will · Drums and Nether Isles\n\nNether Isles entrance; use the quest portal normally."
+    },
+    {
+      "id": "good.glaenshenmilandira",
+      "name": "Glaenshenmilandira",
+      "x": 1965,
+      "y": 2815,
+      "z": 0,
+      "note": "Will · Drums and Nether Isles\n\nWill of Artherk hand-in in the Nether Isles."
+    },
+    {
+      "id": "good.r184pilferer",
+      "name": "Pilferers",
+      "x": 269,
+      "y": 519,
+      "z": 0,
+      "note": "Quest material farming\n\nLost Psalms pages and other quest materials.\n\nLegacy spawn-group anchor only. The live SpawnRegistry does not load these groups; this monster needs an active spawn before travel is enabled."
+    },
+    {
+      "id": "good.centauravenger",
+      "name": "Centaur Avengers",
+      "x": 1064,
+      "y": 1265,
+      "z": 0,
+      "note": "Quest material farming\n\nGrails of Purity."
+    },
+    {
+      "id": "good.demontree",
+      "name": "Demon Trees",
+      "x": 1000,
+      "y": 2520,
+      "z": 0,
+      "note": "Quest material farming\n\nDemon Tree Wood."
+    },
+    {
+      "id": "good.skrauggrubbringah",
+      "name": "Kahp Leth Skraugs",
+      "x": 1757,
+      "y": 1048,
+      "z": 2,
+      "note": "Quest material farming\n\nRaw Crystals, Blades of Heroism and Human Bones."
+    },
+    {
+      "id": "good.skraugmoonfiredansah",
+      "name": "Skraug Mages · Moon Tug",
+      "x": 1822,
+      "y": 1115,
+      "z": 2,
+      "note": "Quest material farming\n\nBlank Magical Tomes and Red Spellbooks."
+    },
+    {
+      "id": "good.skraugtotemherbdoktor",
+      "name": "Skraug Mages · Kahp Leth",
+      "x": 1018,
+      "y": 518,
+      "z": 0,
+      "note": "Quest material farming\n\nBlank Magical Tomes and Red Spellbooks."
+    },
+    {
+      "id": "good.chaosspawn",
+      "name": "Chaos Spawns",
+      "x": 620,
+      "y": 512,
+      "z": 0,
+      "note": "Quest material farming\n\nChaos Keys."
+    },
+    {
+      "id": "good.r237tarantula",
+      "name": "Tarantulas",
+      "x": 1000,
+      "y": 2333,
+      "z": 0,
+      "note": "Quest material farming\n\nTarantula Eyes."
+    },
+    {
+      "id": "good.grott",
+      "name": "Grott",
+      "x": 1058,
+      "y": 2431,
+      "z": 0,
+      "note": "Quest material farming\n\nJade Ring of Sorcery."
+    },
+    {
+      "id": "good.deathstinger",
+      "name": "Death Stingers",
+      "x": 1013,
+      "y": 1892,
+      "z": 0,
+      "note": "Quest material farming\n\nWasp Wax."
+    },
+    {
+      "id": "good.colonysentinel",
+      "name": "Colony Sentinels",
+      "x": 162,
+      "y": 1074,
+      "z": 0,
+      "note": "Quest material farming\n\nWasp Wax."
+    },
+    {
+      "id": "good.r269waspdrone",
+      "name": "Wasp Drones",
+      "x": 162,
+      "y": 1088,
+      "z": 0,
+      "note": "Quest material farming\n\nWasp Wax."
+    },
+    {
+      "id": "good.giantwasp",
+      "name": "Giant Wasps",
+      "x": 2371,
+      "y": 127,
+      "z": 0,
+      "note": "Quest material farming\n\nWasp Wax.\n\nLegacy spawn-group anchor only. The live SpawnRegistry does not load these groups; this monster needs an active spawn before travel is enabled."
+    },
+    {
+      "id": "good.darkwarlord",
+      "name": "Dark Warlords",
+      "x": 448,
+      "y": 536,
+      "z": 1,
+      "note": "Quest material farming\n\nGems of the Immortal."
+    },
+    {
+      "id": "good.brigand",
+      "name": "Brigands",
+      "x": 145,
+      "y": 1029,
+      "z": 2,
+      "note": "Quest material farming\n\nFinely Crafted Drums: current game monster source."
+    },
+    {
+      "id": "good.r248tombraider",
+      "name": "Tomb Raiders",
+      "x": 1121,
+      "y": 129,
+      "z": 1,
+      "note": "Quest material farming\n\nDark Fang\u0027s prerequisite quest."
+    },
+    {
+      "id": "good.redeyedcentaur",
+      "name": "Red-Eyed Centaurs",
+      "x": 1089,
+      "y": 1014,
+      "z": 0,
+      "note": "Quest material farming\n\nMind-Control Talismans; use the Staff of Submission."
+    },
+    {
+      "id": "good.chamber_of_providence",
+      "name": "Chamber of Providence",
+      "x": null,
+      "y": null,
+      "z": null,
+      "note": "Shared finale · Oracle approach\n\nEntrance on the Sunken Woods route.\n\nEntrance coordinates are not yet verified. Use Oracle access after obtaining the key."
+    },
+    {
+      "id": "good.oracle_access",
+      "name": "Oracle access · Ivory Chest",
+      "x": 2660,
+      "y": 2610,
+      "z": 2,
+      "note": "Shared finale · Oracle approach\n\nRequires Key of Artherk or Key of Ogrimar."
+    },
+    {
+      "id": "good.oracle",
+      "name": "The Oracle",
+      "x": 2724,
+      "y": 2192,
+      "z": 2,
+      "note": "Shared finale · Oracle approach\n\nFinal Oracle conversation; keep the quest and key requirements."
+    },
+    {
+      "id": "good.gabrielarchonis",
+      "name": "Gabriel Archonis",
+      "x": 2628,
+      "y": 2448,
+      "z": 2,
+      "note": "Shared finale · Oracle approach\n\nAlignment-specific final test; keep its normal quest requirements."
+    }
+  ],
+  "Evil Seraph Quest": [
+    {
+      "id": "evil.julian",
+      "name": "Julian",
+      "x": 210,
+      "y": 735,
+      "z": 0,
+      "note": "Begin the evil path\n\nMordenthal referral, Blood instructions and Spider Venom crafting."
+    },
+    {
+      "id": "evil.mordenthal",
+      "name": "Sir Mordenthal",
+      "x": 342,
+      "y": 248,
+      "z": 0,
+      "note": "Begin the evil path\n\nDark Knight allegiance, Bones investigation and final Key of Ogrimar."
+    },
+    {
+      "id": "evil.zionthunderheart",
+      "name": "Zion Thunderheart",
+      "x": 935,
+      "y": 1150,
+      "z": 0,
+      "note": "Skull · Crafting and temple chest\n\nSkull of Ogrimar hand-in."
+    },
+    {
+      "id": "evil.trackerooglathraaglurh",
+      "name": "Oogla Thraaglurh",
+      "x": 2235,
+      "y": 95,
+      "z": 2,
+      "note": "Skull · Crafting and temple chest\n\nSkull of Evil crafting."
+    },
+    {
+      "id": "evil.shamanweethgwotha",
+      "name": "Shaman Weethgwotha",
+      "x": 1190,
+      "y": 500,
+      "z": 0,
+      "note": "Skull · Crafting and temple chest\n\nScrolls of Hate and Alchemy Kits vendor."
+    },
+    {
+      "id": "evil.chryseidayolangda",
+      "name": "Chryseida Yolangda",
+      "x": 255,
+      "y": 740,
+      "z": 0,
+      "note": "Skull · Crafting and temple chest\n\nMandrakes vendor."
+    },
+    {
+      "id": "evil.meltarwinterstorm",
+      "name": "Meltar Winterstorm",
+      "x": 190,
+      "y": 1545,
+      "z": 1,
+      "note": "Skull · Crafting and temple chest\n\nGem donations and Crown of Corruption."
+    },
+    {
+      "id": "evil.zhakar",
+      "name": "Zhakar",
+      "x": 55,
+      "y": 1769,
+      "z": 0,
+      "note": "Skull · Crafting and temple chest\n\nSummon Sweepers for Arcane Scrolls; craft Arcane Spellbooks."
+    },
+    {
+      "id": "evil.varguschest",
+      "name": "A chest",
+      "x": 610,
+      "y": 224,
+      "z": 0,
+      "note": "Skull · Crafting and temple chest\n\nSkull of Ogrimar chest; approach the chest before speaking to Vargus."
+    },
+    {
+      "id": "evil.vargus",
+      "name": "Vargus",
+      "x": 582,
+      "y": 233,
+      "z": 0,
+      "note": "Blood · Crafting\n\nBlood of Ogrimar hand-in."
+    },
+    {
+      "id": "evil.witchdoctorkwarlgloth",
+      "name": "Kwarlgloth",
+      "x": 2150,
+      "y": 105,
+      "z": 2,
+      "note": "Blood · Crafting\n\nDemonic Blood crafting."
+    },
+    {
+      "id": "evil.xanth",
+      "name": "A blind man",
+      "x": 690,
+      "y": 1610,
+      "z": 2,
+      "note": "Blood · Crafting\n\nFoul Potions and Ancient Ring identification."
+    },
+    {
+      "id": "evil.araknor",
+      "name": "Araknor",
+      "x": 2981,
+      "y": 1035,
+      "z": 0,
+      "note": "Blood · Crafting\n\nNecromantic Scrolls crafting."
+    },
+    {
+      "id": "evil.khimtesar",
+      "name": "A healthy-looking old man",
+      "x": 1105,
+      "y": 265,
+      "z": 0,
+      "note": "Bones · Ancient Ring investigation\n\nGateway teacher landmark for the cavern approach."
+    },
+    {
+      "id": "evil.khimtesarwell",
+      "name": "An ordinary well",
+      "x": 1099,
+      "y": 277,
+      "z": 0,
+      "note": "Bones · Ancient Ring investigation\n\nWell giving directions toward the Bones cavern."
+    },
+    {
+      "id": "evil.drardos",
+      "name": "Drardos",
+      "x": 1598,
+      "y": 2575,
+      "z": 0,
+      "note": "Bones · Ancient Ring investigation\n\nAncient Ring investigation."
+    },
+    {
+      "id": "evil.brotherthorkas",
+      "name": "Brother Thorkas",
+      "x": 1565,
+      "y": 2398,
+      "z": 0,
+      "note": "Bones · Ancient Ring investigation\n\nAncient Ring identification."
+    },
+    {
+      "id": "evil.greyleaf",
+      "name": "GreyLeaf the daemon tree",
+      "x": 849,
+      "y": 2086,
+      "z": 0,
+      "note": "Bones · Ancient Ring investigation\n\nOptional Bloodstone Ring source."
+    },
+    {
+      "id": "evil.venadar",
+      "name": "Venadar · A Frightening Beast",
+      "x": 2345,
+      "y": 545,
+      "z": 2,
+      "note": "Bones · Ancient Ring investigation\n\nFrightening Beast encounter and Ancient Ring.\n\nThe monster location is verified; the scripted NPC still has an unplaced spawn. Quest behavior needs repair before this stop can be enabled."
+    },
+    {
+      "id": "evil.r184pilferer",
+      "name": "Pilferers",
+      "x": 269,
+      "y": 519,
+      "z": 0,
+      "note": "Quest material farming\n\nVillain Skulls and Sacrificial Daggers.\n\nLegacy spawn-group anchor only. The live SpawnRegistry does not load these groups; this monster needs an active spawn before travel is enabled."
+    },
+    {
+      "id": "evil.r160nightcreeper",
+      "name": "Nightcreepers",
+      "x": 106,
+      "y": 667,
+      "z": 0,
+      "note": "Quest material farming\n\nVillain Skulls and Sacrificial Daggers."
+    },
+    {
+      "id": "evil.bloodlust",
+      "name": "Bloodlust",
+      "x": 691,
+      "y": 1610,
+      "z": 2,
+      "note": "Quest material farming\n\nEssence of Bloodlust and Bloodstone Rings."
+    },
+    {
+      "id": "evil.arachnofiend",
+      "name": "Arachnofiends",
+      "x": 1786,
+      "y": 199,
+      "z": 2,
+      "note": "Quest material farming\n\nTarantula Fangs."
+    },
+    {
+      "id": "evil.giantblackwidow",
+      "name": "Giant Black Widows",
+      "x": 1725,
+      "y": 253,
+      "z": 2,
+      "note": "Quest material farming\n\nSpider Venom."
+    },
+    {
+      "id": "evil.r155necrospider",
+      "name": "Necrospiders",
+      "x": 813,
+      "y": 593,
+      "z": 0,
+      "note": "Quest material farming\n\nSpider Venom.\n\nLegacy spawn-group anchor only. The live SpawnRegistry does not load these groups; this monster needs an active spawn before travel is enabled."
+    },
+    {
+      "id": "evil.chamber_of_providence",
+      "name": "Chamber of Providence",
+      "x": null,
+      "y": null,
+      "z": null,
+      "note": "Shared finale · Oracle approach\n\nEntrance on the Sunken Woods route.\n\nEntrance coordinates are not yet verified. Use Oracle access after obtaining the key."
+    },
+    {
+      "id": "evil.oracle_access",
+      "name": "Oracle access · Ivory Chest",
+      "x": 2660,
+      "y": 2610,
+      "z": 2,
+      "note": "Shared finale · Oracle approach\n\nRequires Key of Artherk or Key of Ogrimar."
+    },
+    {
+      "id": "evil.oracle",
+      "name": "The Oracle",
+      "x": 2724,
+      "y": 2192,
+      "z": 2,
+      "note": "Shared finale · Oracle approach\n\nFinal Oracle conversation; keep the quest and key requirements."
+    },
+    {
+      "id": "evil.gaenenelthorn",
+      "name": "Gaenen Elthorn",
+      "x": 2660,
+      "y": 2416,
+      "z": 2,
+      "note": "Shared finale · Oracle approach\n\nAlignment-specific final test; keep its normal quest requirements."
+    }
+  ],
+  "Olin Haad Quest": [
+    {
+      "id": "olin.kilhiam",
+      "name": "Kilhiam",
+      "x": 2961,
+      "y": 1058,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nCrimsonscale Letter: begin the storyline."
+    },
+    {
+      "id": "olin.efnisien",
+      "name": "Efnisien",
+      "x": 2628,
+      "y": 1450,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nAssassins, Olin Haad investigation and final temple access."
+    },
+    {
+      "id": "olin.doorolinhaad1",
+      "name": "Wooden Door",
+      "x": 2955,
+      "y": 1364,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nOlin Haad castle entrance."
+    },
+    {
+      "id": "olin.olinhaad1",
+      "name": "Olin Haad",
+      "x": 2973,
+      "y": 1346,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nCastle dialogue and scripted encounters; return here when instructed."
+    },
+    {
+      "id": "olin.highpriestgunthar",
+      "name": "High Priest Gunthar",
+      "x": 910,
+      "y": 2765,
+      "z": 1,
+      "note": "Arakas · Letter and merchant investigation\n\nHeartstone investigation and Caledbolg instructions."
+    },
+    {
+      "id": "olin.guildleaderethan",
+      "name": "Guild Leader Ethan",
+      "x": 1710,
+      "y": 1198,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nNomad investigation and house key."
+    },
+    {
+      "id": "olin.urik",
+      "name": "Urik",
+      "x": 2622,
+      "y": 1498,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nMerchant debt encounter."
+    },
+    {
+      "id": "olin.doornomad1",
+      "name": "Wooden Door",
+      "x": 1672,
+      "y": 1330,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nNomad house entrance."
+    },
+    {
+      "id": "olin.metalchestnomad1",
+      "name": "Chest",
+      "x": 2576,
+      "y": 1472,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nNomad house search."
+    },
+    {
+      "id": "olin.metalchestnomad2",
+      "name": "Chest",
+      "x": 2582,
+      "y": 1456,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nNomad house search."
+    },
+    {
+      "id": "olin.metalchestnomad3",
+      "name": "Chest",
+      "x": 2565,
+      "y": 1499,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nOwain Letter search."
+    },
+    {
+      "id": "olin.yrian",
+      "name": "Yrian Earthsong",
+      "x": 2877,
+      "y": 169,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nDruid camp: stolen staff and crypt directions."
+    },
+    {
+      "id": "olin.gypsy",
+      "name": "Gypsy",
+      "x": 2370,
+      "y": 360,
+      "z": 0,
+      "note": "Arakas · Letter and merchant investigation\n\nNomad directions, Darkstone investigation and final rewards."
+    },
+    {
+      "id": "olin.offeringaltar",
+      "name": "An altar",
+      "x": 1095,
+      "y": 1504,
+      "z": 1,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nNomad crypt altar: use the heart and blood normally."
+    },
+    {
+      "id": "olin.snakefountain",
+      "name": "A well filled with snakes",
+      "x": 826,
+      "y": 1907,
+      "z": 1,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nCave of Corruption: Blood of Gluriurl."
+    },
+    {
+      "id": "olin.ribcage",
+      "name": "A ribcage",
+      "x": 852,
+      "y": 1737,
+      "z": 1,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nDarkstone Crypt: Darkstone objective."
+    },
+    {
+      "id": "olin.brotherkiran",
+      "name": "Brother Kiran",
+      "x": 2955,
+      "y": 1048,
+      "z": 0,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nMissing Gunthar investigation."
+    },
+    {
+      "id": "olin.kirlordhul",
+      "name": "Kirlor Dhul",
+      "x": 2967,
+      "y": 1111,
+      "z": 0,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nBank witness for Gunthar investigation."
+    },
+    {
+      "id": "olin.amelia",
+      "name": "Amelia",
+      "x": 2953,
+      "y": 1093,
+      "z": 0,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nWitness directing you to Gunthar\u0027s captors."
+    },
+    {
+      "id": "olin.tarnian",
+      "name": "Tarnian",
+      "x": 2780,
+      "y": 1205,
+      "z": 0,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nRuned Stone Tablet."
+    },
+    {
+      "id": "olin.antonian",
+      "name": "Hermit Antonian",
+      "x": 2372,
+      "y": 733,
+      "z": 0,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nHermit: Nexus directions and tablet activation."
+    },
+    {
+      "id": "olin.nexusstone1",
+      "name": "Nexus Index 1",
+      "x": 2473,
+      "y": 557,
+      "z": 0,
+      "note": "Nexus indexes · Arakas\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone2",
+      "name": "Nexus Index 2",
+      "x": 2195,
+      "y": 751,
+      "z": 0,
+      "note": "Nexus indexes · Arakas\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone3",
+      "name": "Nexus Index 3",
+      "x": 2117,
+      "y": 1144,
+      "z": 0,
+      "note": "Nexus indexes · Arakas\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone4",
+      "name": "Nexus Index 4",
+      "x": 1679,
+      "y": 968,
+      "z": 0,
+      "note": "Nexus indexes · Arakas\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone5",
+      "name": "Nexus Index 5",
+      "x": 2150,
+      "y": 1695,
+      "z": 0,
+      "note": "Nexus indexes · Arakas\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone6",
+      "name": "Nexus Index 6",
+      "x": 1430,
+      "y": 1747,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone7",
+      "name": "Nexus Index 7",
+      "x": 268,
+      "y": 2519,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone8",
+      "name": "Nexus Index 8",
+      "x": 894,
+      "y": 2752,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone9",
+      "name": "Nexus Index 9",
+      "x": 1572,
+      "y": 2913,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone10",
+      "name": "Nexus Index 10",
+      "x": 1027,
+      "y": 1962,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone11",
+      "name": "Nexus Index 11",
+      "x": 780,
+      "y": 2054,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone12",
+      "name": "Nexus Index 12",
+      "x": 560,
+      "y": 1987,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone13",
+      "name": "Nexus Index 13",
+      "x": 843,
+      "y": 1412,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone14",
+      "name": "Nexus Index 14",
+      "x": 236,
+      "y": 2212,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.nexusstone15",
+      "name": "Nexus Index 15",
+      "x": 1013,
+      "y": 1766,
+      "z": 0,
+      "note": "Nexus indexes · Raven\u0027s Dust\n\nInteract with the stone using the Runed Stone Tablet."
+    },
+    {
+      "id": "olin.aquinos",
+      "name": "Scholar Aquinos",
+      "x": 1557,
+      "y": 2405,
+      "z": 0,
+      "note": "Raven\u0027s Dust · Bard and Mausoleum\n\nScholar in Silversky: Nameless Bard directions."
+    },
+    {
+      "id": "olin.namelessbard",
+      "name": "Nameless Bard",
+      "x": 1656,
+      "y": 2574,
+      "z": 1,
+      "note": "Raven\u0027s Dust · Bard and Mausoleum\n\nBard cave: word-of-power investigation."
+    },
+    {
+      "id": "olin.treeofwisdom",
+      "name": "Tree of Wisdom",
+      "x": 1791,
+      "y": 2617,
+      "z": 1,
+      "note": "Raven\u0027s Dust · Bard and Mausoleum\n\nBranch of Wisdom."
+    },
+    {
+      "id": "olin.fountainofknowledge",
+      "name": "Fountain of Knowledge",
+      "x": 1553,
+      "y": 2478,
+      "z": 1,
+      "note": "Raven\u0027s Dust · Bard and Mausoleum\n\nWaters of Knowledge."
+    },
+    {
+      "id": "olin.sanctuaryguardian",
+      "name": "A gate keeper",
+      "x": 695,
+      "y": 1323,
+      "z": 0,
+      "note": "Raven\u0027s Dust · Bard and Mausoleum\n\nMausoleum gatekeeper; speak the word of power normally."
+    },
+    {
+      "id": "olin.crimsonscale",
+      "name": "Crimsonscale",
+      "x": 842,
+      "y": 2220,
+      "z": 1,
+      "note": "Raven\u0027s Dust · Bard and Mausoleum\n\nDragon: Council of Eight and Great Library instructions."
+    },
+    {
+      "id": "olin.filandrius",
+      "name": "Filandrius",
+      "x": 985,
+      "y": 1465,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nGreat Library landmark and associated lore."
+    },
+    {
+      "id": "olin.custodian",
+      "name": "Custodian",
+      "x": 1080,
+      "y": 1400,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nRite of Passage riddle and top-floor access."
+    },
+    {
+      "id": "olin.scholar1",
+      "name": "Scholar",
+      "x": 1143,
+      "y": 1447,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nLibrary scholar: riddle translation."
+    },
+    {
+      "id": "olin.scholar2",
+      "name": "Scholar",
+      "x": 1165,
+      "y": 1469,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nLibrary scholar: riddle translation."
+    },
+    {
+      "id": "olin.scholar3",
+      "name": "Scholar",
+      "x": 1175,
+      "y": 1435,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nLibrary scholar: riddle translation."
+    },
+    {
+      "id": "olin.scholar4",
+      "name": "Scholar",
+      "x": 1190,
+      "y": 1460,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nLibrary scholar: riddle translation."
+    },
+    {
+      "id": "olin.librarian1",
+      "name": "Librarian",
+      "x": 1081,
+      "y": 1470,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nTop-floor librarian: Olin Haad revelations."
+    },
+    {
+      "id": "olin.librarian2",
+      "name": "Librarian",
+      "x": 1078,
+      "y": 1452,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nTop-floor librarian: Darkstone and history."
+    },
+    {
+      "id": "olin.librarian3",
+      "name": "Librarian",
+      "x": 1066,
+      "y": 1464,
+      "z": 0,
+      "note": "Great Library · Riddle and revelations\n\nTop-floor librarian: Gluriurl revelations."
+    },
+    {
+      "id": "olin.ramirgo",
+      "name": "Ramirgo",
+      "x": 402,
+      "y": 2613,
+      "z": 0,
+      "note": "Caledbolg · Desert shrine\n\nShrine guardian: enter through the normal quest conversation."
+    },
+    {
+      "id": "olin.lothar",
+      "name": "Lothar",
+      "x": 1631,
+      "y": 1644,
+      "z": 1,
+      "note": "Caledbolg · Desert shrine\n\nCaledbolg hand-in."
+    },
+    {
+      "id": "olin.doorgluriurl1",
+      "name": "Wooden Door",
+      "x": 2527,
+      "y": 1656,
+      "z": 0,
+      "note": "Final temple · Shards and Burial Chamber\n\nSacred Temple entrance."
+    },
+    {
+      "id": "olin.doorgluriurl2",
+      "name": "Wooden Door",
+      "x": 2531,
+      "y": 1660,
+      "z": 0,
+      "note": "Final temple · Shards and Burial Chamber\n\nSacred Temple doorway."
+    },
+    {
+      "id": "olin.draconisguardian",
+      "name": "Draconis guardian",
+      "x": 1910,
+      "y": 2170,
+      "z": 1,
+      "note": "Final temple · Shards and Burial Chamber\n\nBurial Chamber instructions and central temple landmark."
+    },
+    {
+      "id": "olin.blueshardchest",
+      "name": "wooden chest",
+      "x": 1993,
+      "y": 1937,
+      "z": 1,
+      "note": "Final temple · Shards and Burial Chamber\n\nBlue Shard objective."
+    },
+    {
+      "id": "olin.greenshardchest",
+      "name": "wooden chest",
+      "x": 2076,
+      "y": 2435,
+      "z": 1,
+      "note": "Final temple · Shards and Burial Chamber\n\nGreen Shard objective."
+    },
+    {
+      "id": "olin.redshardchest",
+      "name": "wooden chest",
+      "x": 1572,
+      "y": 2052,
+      "z": 1,
+      "note": "Final temple · Shards and Burial Chamber\n\nRed Shard objective."
+    },
+    {
+      "id": "olin.strongholdrandomchest1",
+      "name": "Violet Shard Chest 1",
+      "x": 1685,
+      "y": 1966,
+      "z": 1,
+      "note": "Final temple · Violet Shard search\n\nOne of the seven possible Violet Shard chests."
+    },
+    {
+      "id": "olin.strongholdrandomchest2",
+      "name": "Violet Shard Chest 2",
+      "x": 1700,
+      "y": 1952,
+      "z": 1,
+      "note": "Final temple · Violet Shard search\n\nOne of the seven possible Violet Shard chests."
+    },
+    {
+      "id": "olin.strongholdrandomchest3",
+      "name": "Violet Shard Chest 3",
+      "x": 1695,
+      "y": 1992,
+      "z": 1,
+      "note": "Final temple · Violet Shard search\n\nOne of the seven possible Violet Shard chests."
+    },
+    {
+      "id": "olin.strongholdrandomchest4",
+      "name": "Violet Shard Chest 4",
+      "x": 1735,
+      "y": 1987,
+      "z": 1,
+      "note": "Final temple · Violet Shard search\n\nOne of the seven possible Violet Shard chests."
+    },
+    {
+      "id": "olin.strongholdrandomchest5",
+      "name": "Violet Shard Chest 5",
+      "x": 1725,
+      "y": 1962,
+      "z": 1,
+      "note": "Final temple · Violet Shard search\n\nOne of the seven possible Violet Shard chests."
+    },
+    {
+      "id": "olin.strongholdrandomchest6",
+      "name": "Violet Shard Chest 6",
+      "x": 1710,
+      "y": 1978,
+      "z": 1,
+      "note": "Final temple · Violet Shard search\n\nOne of the seven possible Violet Shard chests."
+    },
+    {
+      "id": "olin.strongholdrandomchest7",
+      "name": "Violet Shard Chest 7",
+      "x": 1720,
+      "y": 2002,
+      "z": 1,
+      "note": "Final temple · Violet Shard search\n\nOne of the seven possible Violet Shard chests."
+    },
+    {
+      "id": "olin.strongholdtoolinportal",
+      "name": "Burial Chamber entrance",
+      "x": 1897,
+      "y": 2151,
+      "z": 1,
+      "note": "Final temple · Shards and Burial Chamber\n\nBurial Chamber portal: collect the shards and use the portal normally."
+    },
+    {
+      "id": "olin.olinhaadcommander",
+      "name": "Commander Owain\u0027s camp",
+      "x": 2973,
+      "y": 246,
+      "z": 0,
+      "note": "Arakas · Stolen staff\n\nStolen Solinae Staff encounter; current monster type is Olin Haad Commander."
+    },
+    {
+      "id": "olin.fallenwarrior",
+      "name": "Tomb of the Fallen",
+      "x": 810,
+      "y": 1495,
+      "z": 1,
+      "note": "Arakas · Nomad crypt and Darkstone\n\nCorrupted Heart objective."
+    },
+    {
+      "id": "olin.gorlokbloodaxe",
+      "name": "Gorlok Bloodaxe",
+      "x": 2605,
+      "y": 1200,
+      "z": 0,
+      "note": "Arakas · Gunthar rescue\n\nGunthar rescue encounter."
+    },
+    {
+      "id": "olin.vicarkervian",
+      "name": "Vicar Kervian",
+      "x": 1470,
+      "y": 2594,
+      "z": 1,
+      "note": "Raven\u0027s Dust · Mausoleum keys\n\nPurple Crystal Key."
+    },
+    {
+      "id": "olin.vicarramiel",
+      "name": "Vicar Ramiel",
+      "x": 1421,
+      "y": 2223,
+      "z": 1,
+      "note": "Raven\u0027s Dust · Mausoleum keys\n\nGreen Crystal Key."
+    },
+    {
+      "id": "olin.vicarvharmes",
+      "name": "Vicar Vharmes",
+      "x": 1115,
+      "y": 2545,
+      "z": 1,
+      "note": "Raven\u0027s Dust · Mausoleum keys\n\nBlue Crystal Key."
+    },
+    {
+      "id": "olin.vicarasgoth",
+      "name": "Vicar Asgoth",
+      "x": 1004,
+      "y": 2278,
+      "z": 1,
+      "note": "Raven\u0027s Dust · Mausoleum keys\n\nRed Crystal Key."
+    },
+    {
+      "id": "olin.r241terrordemon",
+      "name": "Terror Demon",
+      "x": 1477,
+      "y": 1793,
+      "z": 1,
+      "note": "Caledbolg · Desert shrine\n\nCaledbolg shrine encounter."
+    },
+    {
+      "id": "olin.chaosdemon",
+      "name": "Chaos Demon",
+      "x": 1755,
+      "y": 1794,
+      "z": 1,
+      "note": "Caledbolg · Desert shrine\n\nCaledbolg shrine encounter."
+    },
+    {
+      "id": "olin.darknessdemon",
+      "name": "Darkness Demon",
+      "x": 1475,
+      "y": 1514,
+      "z": 1,
+      "note": "Caledbolg · Desert shrine\n\nCaledbolg shrine encounter."
+    },
+    {
+      "id": "olin.kraanianstomper",
+      "name": "Yellow Shard hunting",
+      "x": 2047,
+      "y": 2235,
+      "z": 1,
+      "note": "Final temple · Shards and Burial Chamber\n\nYellow Shard objective."
+    },
+    {
+      "id": "olin.olinhaad3",
+      "name": "Olin Haad · final encounter",
+      "x": 1776,
+      "y": 2380,
+      "z": 1,
+      "note": "Final temple · Olin Haad and Gluriurl\n\nUse Caledbolg at the appropriate quest stage; Gluriurl follows."
+    },
+    {
+      "id": "olin.highpriestgunthar2",
+      "name": "Rescued High Priest Gunthar",
+      "x": null,
+      "y": null,
+      "z": null,
+      "note": "Arakas · Gunthar rescue\n\nGunthar appears after the rescue encounter; use the Gorlok waypoint.\n\nTriggered rescue NPC, not a permanent destination. Travel to Gorlok Bloodaxe and complete the encounter normally."
+    },
+    {
+      "id": "olin.gluriurl",
+      "name": "Gluriurl · God of Corruption",
+      "x": null,
+      "y": null,
+      "z": null,
+      "note": "Final temple · Olin Haad and Gluriurl\n\nSpawned by the final scripted Olin Haad encounter; use the Burial Chamber entrance.\n\nTriggered boss, not a permanent spawn. The scripted Olin Haad currently has an unplaced spawn; repair that encounter before enabling a direct boss stop."
+    }
+  ],
+  "Gods": [
+    {
+      "id": "god.demeter",
+      "name": "Demeter",
+      "x": 3835,
+      "y": 1440,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.njord",
+      "name": "Njord",
+      "x": 3738,
+      "y": 780,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.ra",
+      "name": "Ra",
+      "x": 4080,
+      "y": 2530,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.artemis",
+      "name": "Artemis",
+      "x": 4050,
+      "y": 675,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.athena",
+      "name": "Athena",
+      "x": 4140,
+      "y": 1432,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.apollo",
+      "name": "Apollo",
+      "x": 3888,
+      "y": 720,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.anubis",
+      "name": "Anubis",
+      "x": 4465,
+      "y": 2060,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.thor",
+      "name": "Thor",
+      "x": 5540,
+      "y": 1320,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.artherk",
+      "name": "Artherk",
+      "x": 5370,
+      "y": 1660,
+      "z": 0,
+      "note": "Divine shrine."
+    },
+    {
+      "id": "god.ogrimar",
+      "name": "Ogrimar",
+      "x": 5880,
+      "y": 2000,
+      "z": 0,
+      "note": "Divine shrine."
+    }
+  ],
+  "New Islands": [
+    {
+      "id": "base.sunken_chancel",
+      "name": "The Sunken Chancel",
+      "x": 1703,
+      "y": 2239,
+      "z": 0,
+      "note": "A flooded cult shrine on the coast east of Silversky. A drowned priesthood has been dragging locals under since the tide woke their chancel."
+    },
+    {
+      "id": "base.cinderreach_hills",
+      "name": "Cinderreach Hills",
+      "x": 1900,
+      "y": 1600,
+      "z": 0,
+      "note": "Smoldering foothills southeast of Windhowl, home to a fire-wolf pack and the young drake they answer to."
+    },
+    {
+      "id": "base.windhowl_marches",
+      "name": "Windhowl Marches",
+      "x": 2380,
+      "y": 2430,
+      "z": 0,
+      "note": "Open marchland held by a centaur warband - the gateway province of Kraanhold, across the sea from the mainland."
+    },
+    {
+      "id": "base.hollow_march",
+      "name": "The Hollow March",
+      "x": 2500,
+      "y": 2700,
+      "z": 0,
+      "note": "A barrow-field of restless dead, ruled by a wight king who never let go of his crown. The heart of Kraanhold."
+    },
+    {
+      "id": "base.lesser_drakes_aerie",
+      "name": "Lesser Drake\u0027s Aerie",
+      "x": 2350,
+      "y": 2900,
+      "z": 0,
+      "note": "Kraanhold\u0027s western peaks, where wyrmlings roost around a Lesser Drake. The first rung of the Drake ladder."
+    },
+    {
+      "id": "base.greater_drakes_bastion",
+      "name": "Greater Drake\u0027s Bastion",
+      "x": 2650,
+      "y": 2880,
+      "z": 0,
+      "note": "A stone bastion in Kraanhold\u0027s high country, held by Bastion Wardens around a Greater Drake."
+    },
+    {
+      "id": "base.drakes_lair",
+      "name": "Drake\u0027s Lair",
+      "x": 2850,
+      "y": 2780,
+      "z": 0,
+      "note": "Kraanhold\u0027s highest peak. Dragonguards hold the approach to the Arch Drake, and the Elder Wyrms sleep in its depths."
+    },
+    {
+      "id": "base.deep_ones_cave",
+      "name": "Deep Ones Cave",
+      "x": 330,
+      "y": 2246,
+      "z": 0,
+      "note": "A sea cave on the Raven\u0027s Dust coast, crawling with Deep Ones."
+    },
+    {
+      "id": "base.avalon_sanctuary",
+      "name": "Witness Isles Sanctuary",
+      "x": 4040,
+      "y": 1477,
+      "z": 0,
+      "note": "The protected temple and gathering place between the Wilds and the Veil. Elder Ophira receives travelers here after the mainland crossing."
+    },
+    {
+      "id": "base.avalon_wilds",
+      "name": "The Witness Wilds",
+      "x": 3965,
+      "y": 1400,
+      "z": 0,
+      "note": "The northern Stalker clearings and Caradoc\u0027s fallen border glade. The Hollow Dawn story begins after Ophira\u0027s Veil reckoning."
+    },
+    {
+      "id": "base.fading_veil",
+      "name": "The Fading Veil",
+      "x": 4120,
+      "y": 1560,
+      "z": 0,
+      "note": "Ysolde\u0027s blighted woodland and the road to the Witness Isles\u0027 Moonwake and Emberglass campaign sites."
+    },
+    {
+      "id": "base.threnody_reach",
+      "name": "Threnody Reach",
+      "x": 5505,
+      "y": 1150,
+      "z": 0,
+      "note": "A distant ward island beyond the Witness Isles. The northern refuge, middle court, and southern seal are held by Rhunor\u0027s servants. Unlocked by Maelin\u0027s Cinder Marshal account."
+    },
+    {
+      "id": "base.hollow_dawn",
+      "name": "The Hollow Dawn",
+      "x": 5650,
+      "y": 2290,
+      "z": 0,
+      "note": "The isolated inner court of Threnody Reach. Its water ring opens only after Keeper Vael\u0027s rift anchor account."
+    }
+  ],
+  "Other Landmarks": [
+    {
+      "id": "base.colosseum",
+      "name": "Colosseum",
+      "x": 1725,
+      "y": 1825,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.home",
+      "name": "Home",
+      "x": 2951,
+      "y": 1038,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.tarantula_pond",
+      "name": "Tarantula Pond",
+      "x": 773,
+      "y": 1831,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.skraug_camp",
+      "name": "Skraug Camp",
+      "x": 601,
+      "y": 172,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.makrsh_ptangh",
+      "name": "Makrsh Ptangh",
+      "x": 2265,
+      "y": 295,
+      "z": 1,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.lord_sunrock",
+      "name": "Lord Sunrock",
+      "x": 1609,
+      "y": 1181,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.asarr",
+      "name": "Asarr",
+      "x": 2139,
+      "y": 1226,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.elysana_blackrose",
+      "name": "Elysana Blackrose",
+      "x": 1561,
+      "y": 2471,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    },
+    {
+      "id": "base.grant_hornkeep",
+      "name": "Grant Hornkeep",
+      "x": 315,
+      "y": 740,
+      "z": 0,
+      "note": "Visit this landmark to discover its fast-travel destination."
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "key": "concord_refuge_necklace_archer",
+  "name": "${item.concord_refuge_necklace_archer}",
+  "bodyPart": "NECK",
+  "appearanceInventory": "64kInvNecklace 2",
+  "numId": 59017,
+  "appearanceId": 59017,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61121,
+      "statId": 6,
+      "expression": "25"
+    },
+    {
+      "boostId": 61122,
+      "statId": 10035,
+      "expression": "60"
+    },
+    {
+      "boostId": 61123,
+      "statId": 12,
+      "expression": "8"
+    },
+    {
+      "boostId": 61124,
+      "statId": 13,
+      "expression": "8"
+    },
+    {
+      "boostId": 61125,
+      "statId": 14,
+      "expression": "8"
+    },
+    {
+      "boostId": 61126,
+      "statId": 15,
+      "expression": "8"
+    },
+    {
+      "boostId": 61127,
+      "statId": 22,
+      "expression": "8"
+    }
+  ],
+  "armorClass": 5.1,
+  "requirements": {
+    "agility": 300,
+    "endurance": 120
+  }
+}

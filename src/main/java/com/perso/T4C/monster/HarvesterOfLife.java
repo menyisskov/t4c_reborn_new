@@ -4,6 +4,8 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "HARVESTEROFLIFE", x = 2710, y = 1040, z = 1, stationary = false, aggressive = true)
@@ -15,6 +17,12 @@ public final class HarvesterOfLife extends NamedEventMonster {
   public HarvesterOfLife(MonsterDef d, float x, float y) throws GameException {
 
     super(d, x, y);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null) player.setQuestFlag("ADDON_FILANDRIUS_QUEST_PROGRESS", 5);
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {
@@ -36,7 +44,7 @@ public final class HarvesterOfLife extends NamedEventMonster {
         SOUND_HIT,
         0,
         0,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("crystal_of_providence", 1.0f)),
         false,
         0.0f,
         165,

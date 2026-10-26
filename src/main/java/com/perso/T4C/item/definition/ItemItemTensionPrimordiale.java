@@ -33,7 +33,7 @@ public final class ItemItemTensionPrimordiale {
         3581,
         9,
         448,
-        "1d1200+2600+3*arrow_dmg",
+        "1d401+399+3*arrow_dmg",
         "750",
         0,
         0,
@@ -45,7 +45,7 @@ public final class ItemItemTensionPrimordiale {
         0,
         0,
         List.of(),
-        List.of(),
+        List.of(new ItemDefinition.ItemBoost(730102, 10035, "true_skill(35)*50/100", 0, 0)),
         List.of(),
         false);
   }

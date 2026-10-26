@@ -228,7 +228,10 @@ public final class SKRAUGCLANGBANGAH extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("blade_of_heroism", 0.3f),
             new MonsterDef.LootDrop("moon_tug_scalp", 0.3f),
-            new MonsterDef.LootDrop("raw_crystal", 0.3f)),
+            new MonsterDef.LootDrop("raw_crystal", 0.3f),
+            new MonsterDef.LootDrop("rough_carnelian", 0.01f),
+            new MonsterDef.LootDrop("rough_ruby", 0.01f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.05f)),
         false,
         0.0f,
         81,

@@ -6,6 +6,307 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Single-player integration (T4C-0156)
+
+### Changed
+- Consolidated the pending single-player improvements and content into one release baseline before multiplayer development. Personal characters and settings remain local.
+- Single-player remains independently playable offline; future multiplayer work must preserve its existing gameplay and saved progress.
+
+## 2026-10-26 — Shattered Isle passage (T4C-0155)
+
+### Added
+- Shattered Isle, a separate native-terrain island east of Drake's Lair, has three connected boss clearings for the Obsidian Dragon, Bronze Griffin and Swamp Hydra.
+- Outrider Kaelis offers a short quest to defeat three Kraanian Dragonguards. Turning it in permanently unlocks Shattered Isle travel and the return stop at Drake's Lair, including after save/load and rebirth.
+- The Locations panel, compendium zone and map now show the island and its encounters.
+
+## 2026-10-26 — Approved dragon, griffin and hydra bosses (T4C-0154)
+
+### Added
+- Obsidian Dragon (level 1250), Bronze Griffin (1325), and Swamp Hydra (1400) now occupy reachable, separate Drake's Lair clearings with stronger melee attacks, armor, resistance, signature equipment and fifteen-minute respawns.
+- Approved creature art now includes front and rear walk/attack animations and death frames in the packed sprite database. The source strips and their asset checksums are retained for future edits.
+
+## 2026-10-26 — Mythic monster encounters (T4C-0153)
+
+### Added
+- Ironhorn Centaur (level 1050), Stormbound Pegasus (1125), and Galehorn Unicorn (1200) now guard separate parts of Drake's Lair. They use previously unused complete monster animation sets and drop high-tier equipment with a medium-rarity potion tier.
+
+### Changed
+- Arch Drake's fireball now has a dedicated 1,800 raw-damage boss limit. The ordinary drake fireball limit remains unchanged.
+
+## 2026-10-26 — Current compendium publication (T4C-0152)
+
+### Changed
+- Published the approved map atlas together with current equipment, monster, XP, quest, shop and rebirth reference data from the local game.
+- The website shows when its reference snapshot was updated. Website-only releases preserve their prepared data instead of replacing it with an older game revision.
+
+### Fixed
+- Reference updates are checked for missing map images and mismatches between downloadable data and the pages players see.
+- Corrected garbled punctuation in map level ranges and zone descriptions.
+
+## 2026-10-26 — Senior gods and stronger divine trials (T4C-0151)
+
+### Added
+- Zeus (level 380), Odin (390), and Osiris (400) now have reachable world shrines, their own judgment and return spells, bound return scrolls, and divine equipment drops.
+
+### Changed
+- Existing gods have roughly 10–15% more health and damage, and 15% more armor. Senior gods have 1.2–1.6 million health, stronger attacks, armor, dodge and resistances, with a longer respawn timer.
+- Divine trials remain peaceful until challenged and are accessible regardless of character level.
+
+## 2026-10-26 — Single god shrine spawns (T4C-0150)
+
+### Fixed
+- Each shrine now spawns one god. The ordinary monster population multiplier no longer creates a second embodiment beside it.
+
+## 2026-10-26 — Divine judgment balance (T4C-0149)
+
+### Changed
+- Divine judgments now use their own boss damage ranges. Lesser and elder caster gods apply moderate pressure through elemental resistance, making occasional healing and attention to their debuffs useful.
+- Artherk and Ogrimar retain their lower Seraph-trial damage. Ordinary hunting spells, including drake fireballs, keep their reduced damage; physical god attacks, health, loot and shrine timers are unchanged.
+
+## 2026-10-26 — Hunting and training teleport order (T4C-0148)
+
+### Changed
+- The Locations panel orders Hunting Areas and Training Fields by their regular monsters' current levels, lowest first. Destinations with equal-level monsters sort by name. Other chapters and destination unlocks keep their existing behavior.
+
+## 2026-10-26 — Drake spell visuals and aura reactions (T4C-0147)
+
+### Fixed
+- Lesser and Greater Drakes' legacy fireball now launches with the existing Fireball projectile and explosion, and their self-heal displays the existing healing effect on the caster.
+- Monster spell casts play a brief attack gesture and return to idle. Ranged drakes still stop when they have line of sight and are within their 20-tile spell range.
+- Elemental spell impacts now fire the same on-hit monster event and Seraph healing and retaliation rolls as physical hits. Those reactions occur on impact after the sanctuary check.
+
+## 2026-10-26 — Playable item catalog cleanup (T4C-0146)
+
+### Changed
+- Retired 315 unreferenced imported test, numeric and V2 prototype items from the runtime item registry, summon lookup and in-game wiki. The named White Wings cosmetic remains available.
+- Old character and account-vault saves drop retired item references while keeping surviving storage charges aligned. Future item exports skip the retired keys so the prototypes cannot return to the playable catalog.
+
+## 2026-10-26 — Monster elemental spell damage (T4C-0145)
+
+### Changed
+- Reduced elemental spell damage from every monster caster, including Lesser Drakes, legacy creatures, bosses and reflections. Elemental resistance still reduces these attacks; Armor Class handles physical attacks.
+- Lesser Drake fireballs now deal 63–125 damage before Fire resistance, instead of 250–499. Healing and physical projectile attacks retain their own rules.
+- Monster pages distinguish physical damage limits from spell damage limits before resistance. Pack sizes, XP, health and aura strength remain unchanged.
+
+## 2026-10-26 — Item activation failure messages (T4C-0144)
+
+### Fixed
+- Item macros, quickbar use and inventory activation now show the spell's actual rejection reason, including insufficient mana, cooldown and exhaustion, instead of a generic cannot-use message or no message.
+- The Gem of Unstable Protection tooltip and effect description explain that each activation costs mana equal to the character's level. Repeated rolls retain the existing mana cost and refresh one protection effect; running out of mana does not consume the gem or remove the current protection.
+
+## 2026-10-26 — Damage budget for all new regular monsters (T4C-0143)
+
+### Changed
+- Extended the gentler damage curve to all new regular monsters, including early-level creatures, camp enemies, drakes and creatures outside the named hunting fields.
+- The same damage limit covers melee and offensive spells. Monster self-healing, named bosses and training champions retain their separate values.
+- Monster pages now show their damage limit before your defenses apply. Pack sizes, XP and health remain unchanged.
+
+## 2026-10-26 — Dense-pack hunting damage (T4C-0142)
+
+### Changed
+- Reduced excessive melee damage in ordinary level-150-to-400 hunting fields, including Fey Wardens, Moonlit Stalkers, Veilbound Wraiths and Sundered Sentinels. Dense monster packs, health and XP rewards stay the same.
+- The healing aura keeps its current strength; lower-rebirth characters face smaller incoming bursts in those fields. Bosses and specialized drake encounters retain their challenge.
+
+## 2026-10-26 — Protection macros and interface input (T4C-0141)
+
+### Changed
+- From level 200, Unstable Protection always grants between 80% of your level (rounded) and your full level in bonus AC. Below level 200, it rolls from 1 to your level.
+
+### Fixed
+- Usable-item macros work while the character sheet is open, allowing protection bonuses to be checked as they are applied. Typing and key-binding prompts still block macros.
+- Binding Ctrl+Shift+R to a macro stops that key from also reloading graphics and leaving black squares over the interface.
+- Ctrl and Shift no longer accidentally move or resize interface elements during normal play.
+
+## 2026-10-26 — Item macros and longer protection (T4C-0140)
+
+### Added
+- Select a usable item in your inventory and choose Add macro, then bind its key in Ctrl+M. Item macros stay with their character and follow the same requirements, charges and cooldowns as normal item use.
+
+### Changed
+- The Belt and Gem of Unstable Protection effect now lasts thirty minutes instead of ten when activated.
+
+### Fixed
+- Protection gems now recognize their required equipped belt when activated.
+
+## 2026-10-26 — Live hunting XP calibration (T4C-0139)
+
+### Changed
+- Toned down the recent hunting XP increase after a player gained forty levels in about ten minutes. The added reward scale is now roughly one eighteenth of its first version, aiming for five to ten hours per hundred levels at a similar hunting pace.
+- Rewards still increase through Threnody to level 400. Previously earned levels and progress remain intact.
+
+## 2026-10-26 — Drake spells and hunting guidance (T4C-0138)
+
+### Fixed
+- Drake healing spells restore the drake's health instead of hurting their opponent.
+- Drake fireballs use Fire resistance instead of Water resistance.
+- The leveling guide no longer presents Greater Drakes as a routine mid-level farm. Above-cap hunting fields carry a challenge warning, and the guide stops giving ordinary leveling kill estimates for those encounters.
+
+## 2026-10-26 — Website map atlas refresh (T4C-0137)
+
+### Added
+- Nine maps for Witness training, Moonwake, Emberglass, the Sundered Approach, Threnody's arrival and training grounds, the Ashbound and Nullguard courts, and the Hollow Dawn. All 20 maps use current native terrain and runtime spawn positions, covering every authored hunting anchor.
+- Training creature and return-scroll reference entries needed by the new map links, plus a Threnody chapter in the Maps index.
+- A maps-only compendium rebundle command that preserves existing exports and integer precision.
+
+### Fixed
+- Map crops stop at the native world boundary. Labels no longer displace pin coordinates, overlapping occupants share a pin with separate links, and tooltips include tile coordinates.
+
+### Validation
+- Seven focused exporter tests pass. All 20 map routes were checked at desktop and phone widths, with no horizontal overflow or browser warnings. A repeat export produces byte-identical images and map data.
+
+## 2026-10-26 — Warrior equipment progression (T4C-0136)
+
+### Added
+- Six warrior equipment tiers at 1100, 1250, 1450, 1650, 1850 and 2000 strength: Ironwarden, Dreadguard, Titanforged, Siegebreaker, Oathsteel and Worldguard. Each includes six plate armor pieces, a shield, a one-handed warblade and a two-handed greatsword, all sold by Quartermaster Elenna.
+- The six armor pieces share three single-item bonus budgets, distributed by AC slot weight with exact rounding. Shields and weapons retain separate single-item budgets.
+- Armor and shields require 450-600 endurance and carry strength, flat Attack, flat Dodge and resistance to air/fire/water/earth/dark. They use a 1.5 tier multiplier for AC and bonus budgets, have no dodge penalty, and grant no light resistance. Shields also grant Parry.
+- Weapons grant +50% of trained Attack and +20% of trained Dodge. Warblades deal 900-1300 through 1800-2600 base damage; greatswords deal 1200-1700 through 2400-3400. These ranges extend the standard weapon curve rather than the oversized legacy damage outliers.
+- Rebalanced legacy Dragon Blades, Scarlet Cleavers and the Boxer's Gloves progression against the standard sub-600-attribute weapon curve. Dragon Blades now deal 650-900 (Ultimate 750-1050), Scarlet Cleavers 700-1000 (Ultimate 800-1150), and the top Boxer's Gloves 600-850 (Ultimate 700-950); their existing requirements and attack-delay formulas are preserved.
+- All requirements are attribute-based; no character-level or class-selection gates were added. Existing native equipment appearances are reused unchanged.
+
+### Fixed
+- Switching between sword-and-shield and two-handed weapons now clears both occupied hand slots, returns displaced equipment once, and preserves valid loadouts through save/load.
+- Native equipment exports its bonuses, equipped appearances and attack delay to the compendium.
+
+## 2026-10-26 — In-game leveling guide (T4C-0135)
+
+### Added
+- The World Wiki now opens on a searchable leveling guide, with chapters for levels 1-150, 150-250, 250-350 and 350-400.
+- Players can follow links from recommended farms to their monster, hunting field, quest and NPC articles. The guide includes travel unlocks, class advice, rebirth considerations and safer training alternatives.
+- Farm rewards, populations and approximate kills needed for the next level reflect the current game balance when an article is opened.
+
+## 2026-10-26 — Hunting experience through level 400 (T4C-0134)
+
+### Changed
+- Monsters from level 150 through 400 now give substantially more experience on defeat, with rewards increasing through Witness Isles and Threnody instead of falling behind late-game leveling needs.
+- Tougher creatures earn larger rewards for their extra health. Existing higher rewards remain available, and unrewarding encounters still give no kill experience.
+- Hunting descriptions and the compendium show the updated rewards. The pacing target is five to ten hours of appropriate solo hunting per hundred levels; actual time depends on your equipment and hunting pace.
+
+## 2026-10-25 — Quiver damage progression (T4C-0133)
+
+### Changed
+- Rebalanced the first ten splash quivers from Flintspark through Worldbreaker so damage rises with their agility requirements and flows into the 1100-2000 agility tiers. Stormfront now adds 700-1000 arrow damage, Starfall 1100-1550, Dawnstorm 1400-1900 and Worldbreaker 1500-2000, before the equipped bow's quiver multiplier.
+- Raised Frost, Trueshot, Stability, Brutality, Electroshock and Drowned quiver damage to match their attribute bands. Trueshot keeps its existing level-scaled contribution on top of its new base damage.
+- Quiver of Centaur Slaying now contributes 1000-1400 arrow damage in addition to its existing +15 flat attack damage.
+
+## 2026-10-25 — Island hunting expansion (T4C-0132)
+
+### Changed
+- Monsters now award twice as much experience for damage dealt and kills. Personal XP bonuses still apply; quest rewards retain their existing values.
+- All 15 hunting and training fields on Witness Isles and Threnody now contain 100 regular monsters instead of 40, for 1,500 total. Their expanded grounds preserve the original spawns and avoid quest witnesses, travel arrivals, shrines and blocked terrain.
+- Each training field retains one family champion. Their kill rewards now grant 10 million XP on Witness Isles and 30 million on Threnody before personal bonuses. Locations and the hunting guide show the new populations and rewards.
+
+### Fixed
+- Large experience rewards now pay their full amount instead of stopping at roughly 2.1 billion XP.
+
+## 2026-10-25 — Divine trial debuffs (T4C-0131)
+
+### Changed
+- Artherk and Ogrimar now each have 60,000 HP.
+- Athena, Apollo, Anubis and Thor can cast Divine Armor Melt, reducing total AC by 25%, and Divine Curse, reducing healing from spells, potions and regeneration by 40%.
+- Athena can also weaken Attack, Archery and Dodge by 20% of their unbuffed values. Apollo, Anubis and Thor can instead reduce elemental resistances by 20% of their unbuffed values.
+- These debuffs last 20 seconds, refresh without stacking, and appear among your active effects with names and remaining durations. Each god waits at least 10 seconds between debuff casts.
+
+### Fixed
+- Loading a character now rebuilds timed effects using the character's restored skills, equipment and permanent bonuses.
+
+## 2026-10-25 — Bow damage and quiver scaling (T4C-0130)
+
+### Changed
+- Primordial Tension and both Ultimate variants now deal 400-800 base damage; Moonsteel Moonbow deals 600-850, Mistwing Wyrm's Farsight Longbow 800-1200, and Godsforged Stormbow 1000-1400. Existing quiver multipliers remain in place.
+- All playable unenchanted and named bows grant +50% of trained Archery. Enchanted bows grant +15% at +1, +30% at +2, +50% at +3, +75% at +4 and +100% at +5.
+- Witness, Artemis's, Oathbreaker and Dawnkeeper longbows now include 1.25 times quiver damage in every shot, matching the existing longbow family.
+- Corrected Black Locust Composite Bow +4/+5 to require 590 agility and 138 strength, matching earlier tiers.
+
+### Added
+- Six obtainable bow/quiver pairs at 1100, 1250, 1450, 1650, 1850 and 2000 agility: Windpiercer, Skybreaker, Eclipse, Starweaver, Dawnforged and Horizon. Quartermaster Elenna sells every tier; strength requirements rise from 175 to 300, without character-level gates. New quivers begin at 1600-2100 arrow damage and reach 2900-3800, with 45% splash to up to eight total targets.
+
+### Removed
+- P'Tangh's Boneshard Longbow and its Makrsh P'Tangh loot entry.
+
+## 2026-10-25 — Unified game menus (T4C-0129)
+
+### Changed
+- Shops, teaching and training, storage, travel, maps, settings, controls, the kill log, NPC speech, character selection and loading, and confirmation windows now share the character journal's shaded surfaces and bronze accents.
+- Shop and teaching windows show clearer balances, costs and remaining gold, with readable item rows, quantity controls and unavailable actions.
+- Controls help now wraps long descriptions and scrolls within its panel. Quit and switch-character confirmations use matching compact windows.
+
+## 2026-10-25 — Flat seraph attribute cost (T4C-0128)
+
+### Changed
+- Each attribute increase from Betran now costs exactly 1 seraph point, including bulk purchases. The limit remains +100 per attribute above its rebirth starting value.
+
+## 2026-10-25 — Rebirth weapon skills (T4C-0127)
+
+### Changed
+- After rebirth, Attack and Archery each start at 15 times your rebirth count: 15 at x1, 30 at x2 and 750 at x50. Existing reborn characters receive this minimum when loaded, keeping any higher trained skill levels and unspent points.
+
+## 2026-10-25 — Seraph attribute training (T4C-0126)
+
+### Changed
+- Betran can now raise each attribute up to 100 above its rebirth starting value, instead of 10. Existing energy prices remain the same, and his explanations now show the higher limit.
+
+## 2026-10-25 — Character preview equipping (T4C-0125)
+
+### Changed
+- Drop equipment onto your character in the inventory window to equip it in the correct slot. Normal requirements still apply; replaced gear returns to your backpack, and rings prefer an empty ring slot.
+
+## 2026-10-25 — Level-up resource restoration (T4C-0124)
+
+### Changed
+- Gaining a level now fully restores health and mana to their new maximums, including when a single XP reward grants several levels.
+
+## 2026-10-25 — Continuous weapon auto-attack (T4C-0123)
+
+### Added
+- Ctrl+C toggles weapon auto-attack for melee fighters and archers. It attacks a nearby monster, keeps that target while it remains reachable, then chooses the closest available replacement. If no enemy is in reach, it waits for one.
+- Auto-attack respects weapon range, walls, sanctuaries and normal attack speed. Archers need a quiver. Movement, chat and open menus pause attacks; Ctrl+C, Escape or right-click stops them. Clicking the ground, changing maps, dying or pausing the game also turns the mode off.
+
+## 2026-10-25 — Storage stack transfers (T4C-0122)
+
+### Changed
+- Personal storage and the Bloodline Vault now use the approved journal design, including their item grids, category controls, gold totals and quantity prompts.
+
+### Fixed
+- Dragging a stack into or out of personal storage or the Bloodline Vault now asks how many copies to transfer. Choose a number, use Max, or cancel to leave the items where they are.
+
+## 2026-10-24 — Live quest journal (T4C-0121)
+
+### Changed
+- The quest journal shares the character panels’ shaded design and tabs, with filters for main story, side quests, active quests and completed quests.
+- Each entry shows its current stage, next action and live objectives, including required items, levels, testimony and reward choices. Completed chain entries point to the next quest where applicable.
+- The journal also includes the alliance, royal audience, unsigned letter, missing-names investigation and mercenary camp tasks tracked by older saves.
+
+## 2026-10-24 — Horseshoe mana and health orb (T4C-0120)
+
+### Changed
+- Mana now wraps around the red health orb as a blue horseshoe, with its value in the opening at the bottom. The separate mana bar and rectangular resource panel have been removed. Active spell icons remain above the orb.
+
+## 2026-10-24 — Unified vitals and HUD layout (T4C-0119)
+
+### Changed
+- Health and mana share a single panel at the bottom center, showing their values without text labels. The character name and level now sit above the menu icons at the top left; the icons keep their previous size.
+- The radar has moved to the bottom-right corner. Gold remains in the inventory rather than taking space on the main screen.
+
+## 2026-10-24 — Spell hover details and macros journal (T4C-0118)
+
+### Changed
+- Keyboard Macros now shares the journal's tabs, shaded panels and bronze accents, with clearer selection and key binding controls.
+
+### Fixed
+- Hovering over an active spell shows its name and a live remaining-time countdown. The details stay visible while you hover and disappear when you leave the icon.
+- Your own chat messages now use an English speaker label.
+
+## 2026-10-24 — Character journal and combat HUD (T4C-0117)
+
+### Changed
+- Character, inventory, spell and elemental windows share a shaded journal with tabs and bronze accents. Armor class and gold are easier to find; the backpack uses compact square cells with visible stack counts.
+- Health and mana now sit at the bottom center, with smaller effect icons above them. Chat has a taller panel at the lower left, and the old quick-slot area has been removed. Spell macros still work through assigned keyboard shortcuts.
+- The spell book shows ten spells per page and can filter by school.
+
+### Fixed
+- Dropping or destroying stacked items opens a readable quantity prompt with number entry, + / - and All controls. Cancelling returns to a working inventory.
+
 ## 2026-09-30 — Merge review timing (T4C-0116)
 
 ### Changed

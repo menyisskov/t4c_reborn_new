@@ -174,6 +174,193 @@
     }
   },
   {
+    "id": "CelestialChronicler",
+    "origin": "new",
+    "displayName": "Celestial Chronicler",
+    "spawns": [
+      {
+        "x": 4048,
+        "y": 1488,
+        "worldZ": 0
+      }
+    ],
+    "welcomeText": "The bells have drawn the winged gods to these shores. Ask about the \"Concord\", the \"gods\", their \"tiers\", their \"scrolls\", or the new \"settlements\". For a progressing campaign, visit Archivist Aveline nearby (4044, 1480) and ask \"story\": The Names We Choose. Ask \"hunting\" for dense leveling fields and training champions.",
+    "topics": [
+      {
+        "keywords": [
+          "concord"
+        ],
+        "response": "When Rhunor began erasing divine names, Artherk called a Concord of Witnesses. Greek, Norse and Egyptian gods sent winged human embodiments to keep their names alive. Even Ogrimar accepted the truce: a nameless world offers nothing to conquer. They guard separate shrines and fight only those who challenge them. Their bodies reform after defeat, leaving gifts for a worthy challenger.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "gods"
+        ],
+        "response": "The lesser shrines belong to \"Demeter\", \"Njord\", \"Ra\" and \"Artemis\". The elder shrines belong to \"Athena\", \"Apollo\", \"Anubis\" and \"Thor\". The sovereign trials belong to \"Artherk\" and \"Ogrimar\". Name a god for the shrine, story and rewards.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "tiers"
+        ],
+        "response": "Lesser gods are level 240-270 and offer equipment requiring about 380 in its main attribute. Elder gods are level 340-370 and offer equipment requiring about 650. Artherk and Ogrimar offer repeatable Seraph trials at levels 100 and 110, with equipment requiring about 180. Every defeat grants exactly one good or evil Seraph quest component, with an independent 50% chance for one equipment piece and 1% chance for a return scroll. Each has a weapon, outfit, wings and jewelry. Lesser and sovereign embodiments return five minutes after death; elders return after seven and a half minutes. Artherk and Ogrimar also offer a full warrior plate outfit and warblade.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "scrolls"
+        ],
+        "response": "Every god has a one-in-one-hundred chance to leave its own Bound Return Scroll. Use it from your backpack to return beside that god's shrine. It is reusable, cannot be dropped, destroyed, sold or stored, and stays with you through death and rebirth. It grants no protection from other enemies at the shrine.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "settlements"
+        ],
+        "response": "Oathwood Castle and the outlying farms shelter the Witness Isles. Moonwake Castle watches the northern shoals, while Emberglass Citadel holds the southern roads. The Sable Fen Watch guards the old marsh route. Across Threnody, the Gatehouse leads toward Bellward Castle, Black Oath Keep and the Regent's Bastion; their courtyards hold the enemy's garrisons. Hollow Crown stands beyond the sealed final crossing. In Kraanhold, Marchwarden Castle and Drakewatch Bastion overlook the marches and the drake country. Follow the roads between settlements; hunting clearings lie beyond them. The gods remain at their own shrines.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "demeter"
+        ],
+        "response": "Demeter keeps the last living oath-seeds at Oathstone Grove in the Witness Isles. Her green wings and earth magic shelter the memories rooted there. Find Demeter at (3835, 1440), level 240. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "njord"
+        ],
+        "response": "Njord watches the western harbor of Moonwake Shoals. His blue wings and water magic preserve the sea-road that carried the first witnesses. Find Njord at (3738, 780), level 250. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "ra"
+        ],
+        "response": "Ra burns false names from the western clearing of Emberglass Crown. His crimson wings and fire magic keep its oath-flame from turning hollow. Find Ra at (4080, 2530), level 260. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "artemis"
+        ],
+        "response": "Artemis hunts stolen echoes in the eastern clearing of Moonwake Shoals. Her green wings and longbow defend the paths used by the living witnesses. Find Artemis at (4050, 675), level 270. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "athena"
+        ],
+        "response": "Athena holds the eastern approach to the Witness Isles sanctuary. Her plated angelic form tests warriors in disciplined close combat, beyond the sanctuary's protection. Find Athena at (4140, 1432), level 340. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "apollo"
+        ],
+        "response": "Apollo tends the temple court of Moonwake Shoals. His radiant wings and light magic restore the names once sung at its altar. Find Apollo at (3888, 720), level 350. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "anubis"
+        ],
+        "response": "Anubis weighs the forgotten dead at Sable Fen. His dark wings and death magic keep Rhunor from claiming souls whose names have faded. Find Anubis at (4465, 2060), level 360. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "thor"
+        ],
+        "response": "Thor stands at the northern approaches of Threnody Reach. His golden storm-wings and air magic carry the warning bells across the broken courts. Find Thor at (5540, 1320), level 370. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "zeus"
+        ],
+        "response": "${npc.celestial_chronicler.zeus}",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "odin"
+        ],
+        "response": "${npc.celestial_chronicler.odin}",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "osiris"
+        ],
+        "response": "${npc.celestial_chronicler.osiris}",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "artherk"
+        ],
+        "response": "Artherk guards the western outer court of Threnody Reach in white armor and wings. His light trial rewards white robes, plate, weapons and jewelry, and exactly one randomly selected Heart, Soul or Will of Artherk used by the good-path quests. There is a 50% chance for one equipment piece and an independent 1% chance for his return scroll. Find Artherk at (5370, 1660), level 100. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "ogrimar"
+        ],
+        "response": "Ogrimar claims the southeastern outer court of Threnody Reach in black armor and wings. He honors the Concord until challenged. His dark trial rewards black robes, plate, weapons and jewelry, and exactly one randomly selected Blood, Bones or Skull of Ogrimar used by the evil-path quests. There is a 50% chance for one equipment piece and an independent 1% chance for his return scroll. Find Ogrimar at (5880, 2000), level 110. Ask about \"tiers\" or \"scrolls\" for the trial rules.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "hunting"
+        ],
+        "response": "Every hunting field appears in Locations. New-island fields contain 100 normal enemies, with one larger family boss in each training field. Witness training fields need about 150 AC; Threnody training fields need about 250 AC. Bosses are peaceful until attacked, award at least 100,000 gold and substantial kill XP, and guarantee a reusable bound return scroll for their own field. Training opens with the island, without an additional quest.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "witness hunts"
+        ],
+        "response": "Dense hunting clearings, each with 100 regular enemies: Fey Warden: (3901, 1386); Moonlit Stalker: (3974, 1331); Veilbound Wraith: (4194, 1523); Sundered Sentinel: (4374, 1789); Moonwake Revenant: (3873, 890); Emberglass Ashguard: (4237, 2545); Witness Tarantula: (3805, 1580); Witness Skraug: (3700, 1580); Witness Skeleton: (3700, 1450). The clearing guards pursue within their hunting district; towns and shrines remain protected.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "threnody hunts"
+        ],
+        "response": "Dense hunting clearings, each with 100 regular enemies: Ashbound Exile: (5849, 1313); Nullguard: (5450, 1674); Rift Wraith: (5606, 2082); Threnody Tarantula: (5385, 1220); Threnody Skraug: (5280, 1290); Threnody Skeleton: (5373, 1328). The clearing guards pursue within their hunting district; towns and shrines remain protected.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "kraanhold hunts"
+        ],
+        "response": "Dense hunting clearings, each with 40 regular enemies: Barrow Wight: (2583, 2676); Lesser Drake: (2453, 2853); Greater Drake: (2735, 2950); Centaur Warrior: (2338, 2388); Kraanian Dragonguard: (2844, 2714); Kraanian Wyrmling: (2332, 2834). The clearing guards pursue within their hunting district; towns and shrines remain protected.",
+        "actions": []
+      },
+      {
+        "keywords": [
+          "mainland hunts"
+        ],
+        "response": "Dense hunting clearings, each with 40 regular enemies: Ashfang Stalker: (1918, 1544); Cinder Whelp: (1836, 1582); Deep One: (362, 2197); Drowned Acolyte: (1703, 2239); Tideclaw Crab: (1645, 2470); Tideworn Reaver: (390, 680). The clearing guards pursue within their hunting district; towns and shrines remain protected.",
+        "actions": []
+      }
+    ],
+    "combatProfile": {
+      "level": 1,
+      "maxHp": 1,
+      "strength": 10,
+      "endurance": 10,
+      "dexterity": 10,
+      "armorClass": 0,
+      "attackSkill": 1,
+      "dodge": 1,
+      "damageFormula": "1d3"
+    }
+  },
+  {
     "id": "ChroniclerMaelin",
     "origin": "new",
     "displayName": "Chronicler Maelin",
@@ -1244,6 +1431,15 @@
         ],
         "response": "Something older than the Greater Drake sleeps past the guard line. The maps just call it the Arch Drake. I hope they're wrong.",
         "actions": []
+      },
+      {
+        "keywords": [
+          "island"
+        ],
+        "response": "There's an island beyond the eastern water. Clear three Dragonguards from this approach and I'll trust you with the crossing. Ask about the island again when you're ready.",
+        "actions": [
+          "GIVE_QUEST:shattered_isle_passage"
+        ]
       },
       {
         "keywords": [

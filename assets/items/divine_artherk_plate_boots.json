@@ -1,0 +1,53 @@
+{
+  "key": "divine_artherk_plate_boots",
+  "name": "${item.divine_artherk_plate_boots}",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot__pal90",
+  "appearanceInventory": "64kInvPlateArmorFeet__pal90",
+  "numId": 55812,
+  "appearanceId": 55812,
+  "weight": 1,
+  "armorClass": 10.2,
+  "requirements": {
+    "strength": 180,
+    "endurance": 100
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50654,
+      "statId": 3,
+      "expression": "15"
+    },
+    {
+      "boostId": 50655,
+      "statId": 8,
+      "expression": "36"
+    },
+    {
+      "boostId": 50656,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 50657,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 50658,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 50659,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 50660,
+      "statId": 22,
+      "expression": "4"
+    }
+  ]
+}

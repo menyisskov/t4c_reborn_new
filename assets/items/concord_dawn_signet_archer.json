@@ -1,0 +1,52 @@
+{
+  "key": "concord_dawn_signet_archer",
+  "name": "${item.concord_dawn_signet_archer}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 4",
+  "numId": 59033,
+  "appearanceId": 59033,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61235,
+      "statId": 6,
+      "expression": "46"
+    },
+    {
+      "boostId": 61236,
+      "statId": 10035,
+      "expression": "110"
+    },
+    {
+      "boostId": 61237,
+      "statId": 12,
+      "expression": "14"
+    },
+    {
+      "boostId": 61238,
+      "statId": 13,
+      "expression": "14"
+    },
+    {
+      "boostId": 61239,
+      "statId": 14,
+      "expression": "14"
+    },
+    {
+      "boostId": 61240,
+      "statId": 15,
+      "expression": "14"
+    },
+    {
+      "boostId": 61241,
+      "statId": 22,
+      "expression": "14"
+    }
+  ],
+  "armorClass": 8.5,
+  "requirements": {
+    "agility": 550,
+    "endurance": 200
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "key": "divine_ogrimar_warblade",
+  "name": "${item.divine_ogrimar_warblade}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupNormalSword__pal91",
+  "appearanceInventory": "64kInvShortSword__pal91",
+  "numId": 55911,
+  "appearanceId": 55911,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "strength": 180,
+    "endurance": 0
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50759,
+      "statId": 3,
+      "expression": "15"
+    },
+    {
+      "boostId": 50760,
+      "statId": 8,
+      "expression": "36"
+    },
+    {
+      "boostId": 50761,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 50762,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 50763,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 50764,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 50765,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "dmgFormula": "1d90+60",
+  "atkDelay": "1300"
+}

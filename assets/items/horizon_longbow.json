@@ -1,0 +1,57 @@
+{
+  "key": "horizon_longbow",
+  "name": "${item.horizon_longbow}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 22000000,
+  "weight": 6,
+  "requirements": {
+    "strength": 300,
+    "agility": 2000
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59930,
+  "structure": 9,
+  "appearanceId": 448,
+  "dmgFormula": "1d801+2399+4*arrow_dmg",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "atkDelay": "850",
+  "boosts": [
+    {
+      "boostId": 732100,
+      "statId": 6,
+      "expression": "167"
+    },
+    {
+      "boostId": 732101,
+      "statId": 10035,
+      "expression": "true_skill(35)*50/100"
+    },
+    {
+      "boostId": 732102,
+      "statId": 12,
+      "expression": "50"
+    },
+    {
+      "boostId": 732103,
+      "statId": 13,
+      "expression": "50"
+    },
+    {
+      "boostId": 732104,
+      "statId": 14,
+      "expression": "50"
+    },
+    {
+      "boostId": 732105,
+      "statId": 15,
+      "expression": "50"
+    },
+    {
+      "boostId": 732106,
+      "statId": 22,
+      "expression": "50"
+    }
+  ]
+}

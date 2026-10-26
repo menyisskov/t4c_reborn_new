@@ -1,0 +1,42 @@
+[
+  {
+    "asset_id": "3136a6a8-5878-4ff0-8755-ff0131f09107",
+    "label": "MythicFire revised concept",
+    "sha12": "914cd272770b"
+  },
+  {
+    "asset_id": "b3a3ffa7-0e45-410c-ac42-4497a24b8812",
+    "label": "MythicFire revised animation",
+    "sha12": "ad0f80b73274"
+  },
+  {
+    "asset_id": "49a311f3-0391-4f8f-b23c-e5aaf599f950",
+    "label": "MythicEarth revised concept",
+    "sha12": "0825ea592399"
+  },
+  {
+    "asset_id": "a46ab558-fb63-4cf6-8d19-a9d3ad6cb4b6",
+    "label": "MythicEarth revised animation",
+    "sha12": "09052a70b5aa"
+  },
+  {
+    "asset_id": "eb051f12-b1a0-4169-bb22-089ddb311419",
+    "label": "MythicWater revised concept",
+    "sha12": "1a3d5417e25f"
+  },
+  {
+    "asset_id": "b3957a49-4b3c-4094-ac46-01566a156ec6",
+    "label": "MythicWater revised animation",
+    "sha12": "c268376ef629"
+  },
+  {
+    "asset_id": "65c59f7f-b06a-4345-b582-3cfd8c8f5830",
+    "label": "MythicLight revised concept",
+    "sha12": "1d91ecffeeb0"
+  },
+  {
+    "asset_id": "b90d2ef8-abcf-4091-bf63-e059697e62d4",
+    "label": "MythicLight revised animation",
+    "sha12": "5123feff2055"
+  }
+]

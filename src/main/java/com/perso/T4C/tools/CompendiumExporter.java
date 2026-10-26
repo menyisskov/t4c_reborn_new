@@ -122,6 +122,7 @@ public final class CompendiumExporter {
           "bastion_warden_siege",
           "deep_ones_cave_purge",
           "drakes_lair_vigil",
+          "shattered_isle_passage",
           "avalon_wilds_vigil",
           "fading_veil_reckoning",
           "moonwake_missing",
@@ -222,6 +223,11 @@ public final class CompendiumExporter {
     Path outDir = Path.of(args.length > 0 ? args[0] : "compendium/data");
     Files.createDirectories(outDir);
 
+    if (args.length > 1 && "--bundle-only".equals(args[1])) {
+      bundleExistingData(outDir);
+      return;
+    }
+
     ItemJsonLoader.loadAndRegister();
     MonsterJsonLoader.loadAndRegister();
 
@@ -246,21 +252,27 @@ public final class CompendiumExporter {
     writeJson(outDir.resolve("xpcurve.json"), exportXpCurve());
     writeJson(outDir.resolve("rebirths.json"), exportRebirths());
 
+    bundleExistingData(outDir);
+    System.out.println("Compendium data written to " + outDir.toAbsolutePath());
+  }
+
+  // Rebundle existing exports after a maps-only refresh without rewriting unrelated game data.
+  static void bundleExistingData(Path outDir) throws IOException {
     // Bundle everything (generated + the hand-authored zones/statids/meta files, if present)
     // into a single data.js so the site works by opening index.html directly, no local server
     // or fetch()-over-file:// CORS workaround required.
     Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     Map<String, Object> bundle = new LinkedHashMap<>();
-    bundle.put("monsters", exportMonsters(monsterSprites));
-    bundle.put("spells", exportSpells());
-    bundle.put("quests", exportQuests());
-    bundle.put("npcs", exportNpcs());
-    bundle.put("landmarks", exportLandmarks());
-    bundle.put("items", items);
-    bundle.put("shops", shops);
-    bundle.put("lootSources", lootSources);
-    bundle.put("xpCurve", exportXpCurve());
-    bundle.put("rebirths", exportRebirths());
+    bundle.put("monsters", readHandAuthored(outDir.resolve("monsters.json")));
+    bundle.put("spells", readHandAuthored(outDir.resolve("spells.json")));
+    bundle.put("quests", readHandAuthored(outDir.resolve("quests.json")));
+    bundle.put("npcs", readHandAuthored(outDir.resolve("npcs.json")));
+    bundle.put("landmarks", readHandAuthored(outDir.resolve("landmarks.json")));
+    bundle.put("items", readHandAuthored(outDir.resolve("items.json")));
+    bundle.put("shops", readHandAuthored(outDir.resolve("shops.json")));
+    bundle.put("lootSources", readHandAuthored(outDir.resolve("lootSources.json")));
+    bundle.put("xpCurve", readHandAuthored(outDir.resolve("xpcurve.json")));
+    bundle.put("rebirths", readHandAuthored(outDir.resolve("rebirths.json")));
     bundle.put("zones", readHandAuthored(outDir.resolve("zones.json")));
     bundle.put("statIds", readHandAuthored(outDir.resolve("statids.json")));
     bundle.put("meta", readHandAuthored(outDir.resolve("meta.json")));
@@ -274,8 +286,6 @@ public final class CompendiumExporter {
     js.append("window.T4C_DATA = ").append(gson.toJson(bundle)).append(";\n");
     Files.writeString(outDir.getParent().resolve("data.js"), js, StandardCharsets.UTF_8);
     System.out.println("Wrote " + outDir.getParent().resolve("data.js"));
-
-    System.out.println("Compendium data written to " + outDir.toAbsolutePath());
   }
 
   // ---------------------------------------------------------------- monsters
@@ -301,14 +311,43 @@ public final class CompendiumExporter {
       m.put("name", def.getName());
       m.put("displayName", resolveOrFallback(def.getDisplayName(), def.getName()));
       m.put("origin", origin);
+      Integer rawDamageLimit =
+          com.perso.T4C.monster.core.HuntingDamageCurve.appliesTo(def)
+              ? com.perso.T4C.monster.core.HuntingDamageCurve.maximumRawDamage(def.getLevel())
+              : null;
+      m.put("rawDamageLimit", rawDamageLimit);
+      int elementalLimit =
+          def.getAttacks() == null
+              ? 0
+              : def.getAttacks().stream()
+                  .filter(
+                      attack ->
+                          attack.isSpell()
+                              && com.perso.T4C.monster.core.MonsterSpellRules
+                                  .isElementalDamageSpell(attack.getSpellId()))
+                  .mapToInt(
+                      attack ->
+                          com.perso.T4C.monster.core.MonsterSpellRules.elementalDamageLimit(
+                              attack.getSpellId(), def.getLevel(), def.getName()))
+                  .max()
+                  .orElse(0);
+      m.put("elementalSpellDamageLimit", elementalLimit == 0 ? null : elementalLimit);
       m.put("sprite", spriteByMonster.get(def.getName()));
       m.put("level", def.getLevel());
       m.put("health", def.getHealth());
       m.put("mana", def.getMana());
-      m.put("xpPerHit", def.getXpPerHit());
-      m.put("xpOnDeath", def.getXpOnDeath());
-      m.put("hitDamageMin", def.getHitDamageMin());
-      m.put("hitDamageMax", def.getHitDamageMax());
+      m.put("xpPerHit", com.perso.T4C.monster.core.MonsterExperience.reward(def.getXpPerHit()));
+      m.put("xpOnDeath", com.perso.T4C.monster.core.MonsterExperience.reward(def.getXpOnDeath()));
+      m.put(
+          "hitDamageMin",
+          rawDamageLimit == null
+              ? def.getHitDamageMin()
+              : Math.min(def.getHitDamageMin(), rawDamageLimit));
+      m.put(
+          "hitDamageMax",
+          rawDamageLimit == null
+              ? def.getHitDamageMax()
+              : Math.min(def.getHitDamageMax(), rawDamageLimit));
       m.put("respawnTimeMs", def.getRespawnTime());
       if (MonsterManager.hasHuntingRespawn(def.getName())) {
         m.put("respawnMinMs", MonsterManager.huntingRespawnMinMillis());
@@ -841,6 +880,14 @@ public final class CompendiumExporter {
             .map(item -> ItemDefinition.normalizeKey((String) item.get("key")))
             .collect(java.util.stream.Collectors.toSet());
     List<String> utilityKeys = new ArrayList<>(NEW_UTILITY_ITEM_KEYS);
+    for (var god : com.perso.T4C.divine.DivinePantheon.all()) {
+      List<String> divineKeys =
+          new ArrayList<>(com.perso.T4C.divine.DivinePantheon.seraphQuestKeys(god));
+      divineKeys.add(god.scrollKey());
+      for (String key : divineKeys) {
+        if (!exportedKeys.contains(key) && !utilityKeys.contains(key)) utilityKeys.add(key);
+      }
+    }
     ItemRegistry.allByKey().values().stream()
         .filter(ItemDefinition::isRarityPriced)
         .map(ItemDefinition::getKey)
@@ -869,7 +916,13 @@ public final class CompendiumExporter {
       item.put("unique", d.isUnique());
       item.put("isBow", d.isBow());
       item.put("dmgFormula", d.getDmgFormula());
-      item.put("boosts", List.of());
+      item.put("atkDelay", d.getAtkDelay());
+      item.put("secondaryBodyPart", d.getSecondaryBodyPart());
+      item.put("appearanceEquippedPrimary", d.getAppearanceEquippedPrimary());
+      item.put("appearanceEquippedSecondary", d.getAppearanceEquippedSecondary());
+      item.put("appearanceInventory", d.getAppearanceInventory());
+      item.put("numId", d.getNumId());
+      item.put("boosts", d.getBoosts());
       // T4C-0036: this loop previously left every utility item looking effectless (no
       // unlimitedUse, no use-effect text) - harmless for the four crafting materials this list
       // originally covered (no ItemSpell entries to show), but item.mana_prism and
@@ -928,6 +981,8 @@ public final class CompendiumExporter {
       row.put("requiredLevel", RebirthBehavior.requiredLevelFor(n));
       row.put("startingAttributes", RebirthBehavior.startingAttributeFor(n));
       row.put("energyPoints", RebirthBehavior.energyPointsFor(n));
+      row.put("startingAttack", RebirthBehavior.startingWeaponSkillFor(n));
+      row.put("startingArchery", RebirthBehavior.startingWeaponSkillFor(n));
       row.put(
           "auraHealChance", SeraphAuraService.effectivePercent(SeraphAuraService.healingChance(n)));
       row.put(
@@ -943,10 +998,12 @@ public final class CompendiumExporter {
         energyVendor(
             "Betran",
             "Attributes",
-            "Raises strength, endurance, agility, intelligence or wisdom by 1, up to 10 above your"
-                + " new starting value. Each attribute costs more the higher you push it: the 1st"
-                + " point costs 1, the 2nd-4th cost 2, the 5th-7th cost 3, the 8th costs 4 and the"
-                + " 9th-10th cost 5 (30 points to max one attribute)."));
+            I18n.message(
+                "rebirth.attribute_training_description",
+                RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS,
+                RebirthBehavior.ATTRIBUTE_TRAINING_COST,
+                RebirthBehavior.totalAttributeTrainingCost(
+                    RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS))));
     energyShop.add(
         energyVendor(
             "Caplan",
@@ -969,6 +1026,7 @@ public final class CompendiumExporter {
     out.put("maxLevel", GameConstants.MAX_PLAYER_LEVEL);
     out.put("firstRebirthLevel", RebirthBehavior.FIRST_REBIRTH_LEVEL);
     out.put("levelPerPreviousRebirth", RebirthBehavior.LEVEL_PER_PREVIOUS_REBIRTH);
+    out.put("weaponSkillPerRebirth", RebirthBehavior.WEAPON_SKILL_PER_REBIRTH);
     out.put("energyShop", energyShop);
     out.put("rows", rows);
     return out;
@@ -998,7 +1056,7 @@ public final class CompendiumExporter {
   private static Object readHandAuthored(Path path) throws IOException {
     if (!Files.exists(path)) return List.of();
     try (FileReader reader = new FileReader(path.toFile(), StandardCharsets.UTF_8)) {
-      return new Gson().fromJson(reader, Object.class);
+      return JsonParser.parseReader(reader);
     }
   }
 

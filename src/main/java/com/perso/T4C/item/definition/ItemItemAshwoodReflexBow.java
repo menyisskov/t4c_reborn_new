@@ -45,7 +45,7 @@ public final class ItemItemAshwoodReflexBow {
         0,
         0,
         List.of(),
-        List.of(),
+        List.of(new ItemDefinition.ItemBoost(731006, 10035, "true_skill(35)*50/100", 0, 0)),
         List.of(),
         false);
   }

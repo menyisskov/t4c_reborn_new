@@ -1,0 +1,52 @@
+{
+  "key": "concord_dawn_signet_warrior",
+  "name": "${item.concord_dawn_signet_warrior}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 4",
+  "numId": 59032,
+  "appearanceId": 59032,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61228,
+      "statId": 3,
+      "expression": "46"
+    },
+    {
+      "boostId": 61229,
+      "statId": 8,
+      "expression": "110"
+    },
+    {
+      "boostId": 61230,
+      "statId": 12,
+      "expression": "14"
+    },
+    {
+      "boostId": 61231,
+      "statId": 13,
+      "expression": "14"
+    },
+    {
+      "boostId": 61232,
+      "statId": 14,
+      "expression": "14"
+    },
+    {
+      "boostId": 61233,
+      "statId": 15,
+      "expression": "14"
+    },
+    {
+      "boostId": 61234,
+      "statId": 22,
+      "expression": "14"
+    }
+  ],
+  "armorClass": 11.0,
+  "requirements": {
+    "strength": 550,
+    "endurance": 200
+  }
+}

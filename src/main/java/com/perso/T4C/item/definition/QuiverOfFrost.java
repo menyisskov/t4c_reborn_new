@@ -33,7 +33,7 @@ public final class QuiverOfFrost {
         3290,
         8,
         451,
-        "1d12",
+        "1d31+39",
         "0",
         0,
         -1,

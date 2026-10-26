@@ -1,0 +1,53 @@
+{
+  "key": "divine_anubis_helm",
+  "name": "${item.divine_anubis_helm}",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm__pal96",
+  "appearanceInventory": "64kInvPlateArmorHelm__pal96",
+  "numId": 55604,
+  "appearanceId": 55604,
+  "weight": 1,
+  "armorClass": 28.6,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50448,
+      "statId": 1,
+      "expression": "65"
+    },
+    {
+      "boostId": 50449,
+      "statId": 24,
+      "expression": "65"
+    },
+    {
+      "boostId": 50450,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50451,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50452,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50453,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50454,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

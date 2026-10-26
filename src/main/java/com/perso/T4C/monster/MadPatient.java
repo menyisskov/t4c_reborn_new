@@ -67,7 +67,9 @@ public final class MadPatient extends NamedEventMonster {
         0,
         0,
         java.util.List.of(
-            new MonsterDef.LootDrop("A3 Permit", 0.1f), new MonsterDef.LootDrop("E5 Permit", 0.2f)),
+            new MonsterDef.LootDrop("A3 Permit", 0.1f), new MonsterDef.LootDrop("E5 Permit", 0.2f),
+            new MonsterDef.LootDrop("light_healing_potion", 0.05f),
+            new MonsterDef.LootDrop("straight_jacket_1", 0.01f)),
         false,
         0.0f,
         30,

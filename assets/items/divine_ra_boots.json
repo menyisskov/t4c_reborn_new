@@ -1,0 +1,53 @@
+{
+  "key": "divine_ra_boots",
+  "name": "${item.divine_ra_boots}",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot__pal94",
+  "appearanceInventory": "64kInvPlateArmorFeet__pal94",
+  "numId": 55202,
+  "appearanceId": 55202,
+  "weight": 1,
+  "armorClass": 16.3,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50154,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50155,
+      "statId": 17,
+      "expression": "38"
+    },
+    {
+      "boostId": 50156,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50157,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50158,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50159,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50160,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

@@ -33,7 +33,7 @@ public final class ItemItemQuiverOfWaterfall {
         3435,
         8,
         451,
-        "1d50+100",
+        "1d351+899",
         "0",
         0,
         -1,

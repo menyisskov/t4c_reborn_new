@@ -14,7 +14,7 @@ public final class SpawnGroup0037 {
         60,
         1,
         7,
-        List.of("MOBCELESTIALCOBRA", "MOBGAUZECORPSE"),
+        List.of("MOBCELESTIALCOBRA", "MOBGAUZECORPSE1"),
         List.of(
             new SpawnGroup.SpawnPoint(1988, 2694, 0),
             new SpawnGroup.SpawnPoint(1865, 2697, 0),

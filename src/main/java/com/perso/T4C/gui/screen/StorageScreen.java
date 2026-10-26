@@ -11,8 +11,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiManager;
-import com.perso.T4C.gui.core.GuiScreenBase;
-import com.perso.T4C.gui.core.GuiSprites;
+import com.perso.T4C.gui.core.JournalTheme;
+import com.perso.T4C.gui.core.JournalWindow;
 import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.ItemTooltipText;
 import com.perso.T4C.helper.PlayerStateStore;
@@ -37,12 +37,13 @@ import java.util.Map;
 
 /**
  * Personal storage chest: the stash on the left, the backpack on the right, both as item grids in
- * the style of the original trade window. Items move by drag and drop, right-click (one),
- * shift-click (the whole stack) or ctrl-click (choose an amount).
+ * the common journal theme. Items move by drag and drop, right-click (one), shift-click (the whole
+ * stack) or ctrl-click (choose an amount). Dragged stacks always ask for an amount before
+ * transferring.
  */
-public class StorageScreen extends GuiScreenBase {
-  private static final Color GOLD = Color.valueOf("F2B705");
-  private static final Color DIM = Color.valueOf("A09880");
+public class StorageScreen extends JournalWindow {
+  private static final Color GOLD = JournalTheme.GOLD;
+  private static final Color DIM = JournalTheme.DIM;
 
   static final float WIDTH = 600f;
   static final float HEIGHT = 456f;
@@ -51,27 +52,10 @@ public class StorageScreen extends GuiScreenBase {
   static final int PACK_COLS = 6;
   static final int ROWS = 7;
 
-  // Pieces cut from the original trade window art (GUI_BackTrade, 552x260).
-  private static final int[] SRC_TOP_BAR = {30, 0, 180, 24};
-  private static final int[] SRC_TITLE_PILL = {222, 0, 106, 24};
-  private static final int[] SRC_BORDER_LEFT = {0, 100, 6, 60};
-  private static final int[] SRC_BORDER_RIGHT = {546, 100, 6, 60};
-  private static final int[] SRC_BORDER_BOTTOM = {30, 1, 180, 5};
-  private static final int[] SRC_STONE = {478, 96, 64, 150};
-  private static final int[] SRC_PILL = {25, 45, 173, 23};
   private static final float GRID_LEFT = 13f;
   private static final float GRID_TOP = 11f;
   private static final float GRID_RIGHT = 37f;
   private static final float GRID_BOTTOM = 12f;
-  private static final int[] SRC_GRID_TL = {11, 68, 13, 11};
-  private static final int[] SRC_GRID_TOP = {24, 68, 29, 11};
-  private static final int[] SRC_GRID_TR = {197, 68, 37, 11};
-  private static final int[] SRC_GRID_LEFT = {11, 79, 13, 29};
-  private static final int[] SRC_GRID_CELL = {24, 79, 29, 29};
-  private static final int[] SRC_GRID_SCROLL = {197, 79, 37, 115};
-  private static final int[] SRC_GRID_BL = {11, 194, 13, 12};
-  private static final int[] SRC_GRID_BOTTOM = {24, 194, 29, 12};
-  private static final int[] SRC_GRID_BR = {197, 194, 37, 12};
 
   private static final float MARGIN = 12f;
   private static final float TITLE_H = 24f;
@@ -152,13 +136,8 @@ public class StorageScreen extends GuiScreenBase {
   private final Player player;
   private StorageBackend backend;
   private final Rectangle sourceToggleBounds = new Rectangle();
-  private final TextureRegion trade;
-  private final TextureRegion popup;
   private final TextureRegion cellHighlight;
   private final TextureRegion scrollTick;
-  private final TextureRegion[] button = new TextureRegion[3];
-  private final TextureRegion[] tabButton = new TextureRegion[3];
-  private final TextureRegion scratch = new TextureRegion();
   private final HudTooltip tooltip = new HudTooltip();
   private final GlyphLayout layout = new GlyphLayout();
   private final List<Button> controls = new ArrayList<>();
@@ -188,20 +167,11 @@ public class StorageScreen extends GuiScreenBase {
   public StorageScreen(Player player) {
     this.player = player;
     this.backend = new CharacterStorageBackend(player);
-    this.trade = load("GUI_BackTrade");
-    this.popup = GuiSprites.load("GUI_PopupBack");
-    this.cellHighlight = load("GUI_BackInvGridSelect");
-    this.scrollTick = load("GUI_ScrollTick");
-    button[0] = GuiSprites.load("GUI_ButtonUp");
-    button[1] = GuiSprites.load("GUI_ButtonHUp");
-    button[2] = GuiSprites.load("GUI_ButtonDown");
-    tabButton[0] = GuiSprites.load("GUI_ButtonTUp");
-    tabButton[1] = GuiSprites.load("GUI_ButtonTHUp");
-    tabButton[2] = GuiSprites.load("GUI_ButtonTDown");
-    x = Math.round((Gdx.graphics.getWidth() - WIDTH) / 2f);
-    y = Math.round((Gdx.graphics.getHeight() - HEIGHT) / 2f);
+    this.cellHighlight = theme.control((int) CELL - 1, (int) CELL - 1, true);
+    this.scrollTick = theme.control(5, 24, true);
+    initJournal((int) WIDTH, (int) HEIGHT, null);
+    journalValue(() -> backend.label(), 26, -46, WIDTH - 100, 28, 22, GOLD);
     layoutPanes();
-    addCloseButton();
     addTabs();
     addControls();
     rebuild();
@@ -220,8 +190,7 @@ public class StorageScreen extends GuiScreenBase {
   private void layoutPanes() {
     float stashX = x + MARGIN;
     float packX = stashX + gridBoxWidth(STASH_COLS) + 10f;
-    stashCells.set(
-        stashX + GRID_LEFT, y + GRID_Y + GRID_TOP, STASH_COLS * CELL, ROWS * CELL);
+    stashCells.set(stashX + GRID_LEFT, y + GRID_Y + GRID_TOP, STASH_COLS * CELL, ROWS * CELL);
     packCells.set(packX + GRID_LEFT, y + GRID_Y + GRID_TOP, PACK_COLS * CELL, ROWS * CELL);
     stashScroll.set(stashCells.x + stashCells.width, stashCells.y, GRID_RIGHT, stashCells.height);
     packScroll.set(packCells.x + packCells.width, packCells.y, GRID_RIGHT, packCells.height);
@@ -230,9 +199,10 @@ public class StorageScreen extends GuiScreenBase {
 
   /** Swaps the stash pane between the character's own storage and the shared account vault. */
   private void toggleSource() {
-    backend = backend instanceof AccountStorageBackend
-        ? new CharacterStorageBackend(player)
-        : new AccountStorageBackend(player);
+    backend =
+        backend instanceof AccountStorageBackend
+            ? new CharacterStorageBackend(player)
+            : new AccountStorageBackend(player);
     selectedCategory = null;
     selectedKey = null;
     stashScrollRow = 0;
@@ -247,19 +217,12 @@ public class StorageScreen extends GuiScreenBase {
     return packCells.x - GRID_LEFT;
   }
 
-  private void addCloseButton() {
-    TextureRegion normal = GuiSprites.load("GUI_X_ButtonDown");
-    TextureRegion hover = GuiSprites.load("GUI_X_ButtonHUp");
-    TextureRegion pressed = GuiSprites.load("GUI_X_ButtonUp");
-    if (normal == null || hover == null || pressed == null) return;
-    buttons.add(new GuiButton(normal, hover, pressed, x + WIDTH - 28f, y, GuiManager::close));
-  }
-
   private void addTabs() {
     tabOrder.add(null);
-    for (StorageService.Category category : StorageService.Category.values()) tabOrder.add(category);
+    for (StorageService.Category category : StorageService.Category.values())
+      tabOrder.add(category);
     // Each tab gets the width of its label plus equal padding, so long names never clip.
-    BitmapFont font = FontManager.getInstance().getTahomaFont(11, Color.BLACK, true);
+    BitmapFont font = FontManager.getInstance().getTahomaFont(11, JournalTheme.TEXT, false);
     float[] widths = new float[tabOrder.size()];
     float textTotal = 0f;
     for (int i = 0; i < tabOrder.size(); i++) {
@@ -390,14 +353,16 @@ public class StorageScreen extends GuiScreenBase {
 
   private Stack findStack(Pane pane, String key) {
     if (pane == null || key == null) return null;
-    for (Stack s : pane == Pane.STASH ? stashStacks : packStacks) if (s.itemKey.equals(key)) return s;
+    for (Stack s : pane == Pane.STASH ? stashStacks : packStacks)
+      if (s.itemKey.equals(key)) return s;
     return null;
   }
 
   private boolean hasGearInPack() {
     if (player == null) return false;
     for (String key : player.getInventory())
-      if (key != null && StorageService.categoryOf(key) != StorageService.Category.MISC) return true;
+      if (key != null && StorageService.categoryOf(key) != StorageService.Category.MISC)
+        return true;
     return false;
   }
 
@@ -406,12 +371,15 @@ public class StorageScreen extends GuiScreenBase {
   private void deposit(Stack stack, int amount) {
     if (player == null || stack == null || amount <= 0) return;
     int moved = 0;
+    InventoryService.Result last = null;
     for (int i = 0; i < amount; i++) {
       int index = player.getInventory().indexOf(stack.itemKey);
       if (index < 0) break;
-      if (!backend.deposit(index, stack.itemKey).success()) break;
+      last = backend.deposit(index, stack.itemKey);
+      if (!last.success()) break;
       moved++;
     }
+    if (last != null && !last.success()) explainFailure(last, stack.itemKey);
     if (moved > 0) persist();
   }
 
@@ -467,9 +435,9 @@ public class StorageScreen extends GuiScreenBase {
     String name = displayName(itemKey);
     String message =
         switch (result.failure()) {
+          case BOUND_ITEM -> I18n.message("message.bound_return_scroll_backpack");
           case TOO_HEAVY -> I18n.message("message.storage_too_heavy", name);
-          case UNIQUE_ITEM ->
-              I18n.message("message.storage_unique_owned", name);
+          case UNIQUE_ITEM -> I18n.message("message.storage_unique_owned", name);
           default -> null;
         };
     if (message != null) SystemMessage.showShared(message);
@@ -500,15 +468,50 @@ public class StorageScreen extends GuiScreenBase {
     p.bounds.set(x + (WIDTH - pw) / 2f, y + (HEIGHT - ph) / 2f, pw, ph);
     float by = p.bounds.y + ph - 40f;
     p.buttons.add(
-        new Button(p.bounds.x + 18f, by, 60f, BUTTON_H, () -> I18n.key("ui.accept", "Accept"), () -> true, this::applyPrompt));
+        new Button(
+            p.bounds.x + 18f,
+            by,
+            60f,
+            BUTTON_H,
+            () -> I18n.key("ui.accept", "Accept"),
+            () -> true,
+            this::applyPrompt));
     p.buttons.add(
-        new Button(p.bounds.x + 90f, by, 60f, BUTTON_H, () -> I18n.key("ui.storage_max", "Max"), () -> true, () -> prompt.value = String.valueOf(prompt.max)));
+        new Button(
+            p.bounds.x + 90f,
+            by,
+            60f,
+            BUTTON_H,
+            () -> I18n.key("ui.storage_max", "Max"),
+            () -> true,
+            () -> prompt.value = String.valueOf(prompt.max)));
     p.buttons.add(
-        new Button(p.bounds.x + 162f, by, 60f, BUTTON_H, () -> I18n.key("ui.cancel", "Cancel"), () -> true, () -> prompt = null));
+        new Button(
+            p.bounds.x + 162f,
+            by,
+            60f,
+            BUTTON_H,
+            () -> I18n.key("ui.cancel", "Cancel"),
+            () -> true,
+            () -> prompt = null));
     p.buttons.add(
-        new Button(p.bounds.x + 30f, p.bounds.y + 56f, 24f, 22f, () -> "-", () -> true, () -> setPromptValue(promptValue() - 1)));
+        new Button(
+            p.bounds.x + 30f,
+            p.bounds.y + 56f,
+            24f,
+            22f,
+            () -> "-",
+            () -> true,
+            () -> setPromptValue(promptValue() - 1)));
     p.buttons.add(
-        new Button(p.bounds.x + pw - 54f, p.bounds.y + 56f, 24f, 22f, () -> "+", () -> true, () -> setPromptValue(promptValue() + 1)));
+        new Button(
+            p.bounds.x + pw - 54f,
+            p.bounds.y + 56f,
+            24f,
+            22f,
+            () -> "+",
+            () -> true,
+            () -> setPromptValue(promptValue() + 1)));
     prompt = p;
   }
 
@@ -552,11 +555,7 @@ public class StorageScreen extends GuiScreenBase {
 
   @Override
   public void render(SpriteBatch batch) {
-    if (trade == null) {
-      super.render(batch);
-      return;
-    }
-    GuiDraw.withOverlayAlpha(batch, () -> drawFrame(batch));
+    super.render(batch);
     drawHeaders(batch);
     drawTabs(batch);
     drawGridBox(batch, stashCells, STASH_COLS, stashScrollRow, stashStacks);
@@ -564,38 +563,24 @@ public class StorageScreen extends GuiScreenBase {
     drawItems(batch, Pane.STASH, stashCells, STASH_COLS, stashScrollRow, stashStacks);
     drawItems(batch, Pane.PACK, packCells, PACK_COLS, packScrollRow, packStacks);
     drawControls(batch);
-    super.render(batch);
     drawDrag(batch);
     if (prompt != null) drawPrompt(batch);
     else tooltip.render(batch);
   }
 
-  private void drawFrame(SpriteBatch batch) {
-    tile(batch, SRC_STONE, x, y + TITLE_H, WIDTH, HEIGHT - TITLE_H);
-    tile(batch, SRC_TOP_BAR, x, y, WIDTH, TITLE_H);
-    tile(batch, SRC_BORDER_LEFT, x, y + TITLE_H, 6f, HEIGHT - TITLE_H);
-    tile(batch, SRC_BORDER_RIGHT, x + WIDTH - 6f, y + TITLE_H, 6f, HEIGHT - TITLE_H);
-    tile(batch, SRC_BORDER_BOTTOM, x, y + HEIGHT - 5f, WIDTH, 5f);
-    float pillW = 150f;
-    drawThreeSlice(batch, SRC_TITLE_PILL, 12, x + (WIDTH - pillW) / 2f, y, pillW, TITLE_H);
-  }
-
   private void drawHeaders(SpriteBatch batch) {
-    BitmapFont title = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
-    centered(batch, title, backend.label(), x, y + 4f, WIDTH);
     boolean account = backend instanceof AccountStorageBackend;
     GuiDraw.withOverlayAlpha(
         batch,
         () ->
             drawThreeSlice(
                 batch,
-                SRC_PILL,
-                12,
                 sourceToggleBounds.x,
                 sourceToggleBounds.y,
                 sourceToggleBounds.width,
                 sourceToggleBounds.height));
-    BitmapFont toggleFont = FontManager.getInstance().getJetBrainsMonoFont(10, account ? DIM : GOLD);
+    BitmapFont toggleFont =
+        FontManager.getInstance().getJetBrainsMonoFont(10, account ? DIM : GOLD);
     centered(
         batch,
         toggleFont,
@@ -611,8 +596,8 @@ public class StorageScreen extends GuiScreenBase {
     GuiDraw.withOverlayAlpha(
         batch,
         () -> {
-          drawThreeSlice(batch, SRC_PILL, 12, x + MARGIN, y + PILL_Y, stashW, 23f);
-          drawThreeSlice(batch, SRC_PILL, 12, packBoxX(), y + PILL_Y, packW, 23f);
+          drawThreeSlice(batch, x + MARGIN, y + PILL_Y, stashW, 23f);
+          drawThreeSlice(batch, packBoxX(), y + PILL_Y, packW, 23f);
         });
     int stored = player == null ? 0 : backend.items().size();
     centered(
@@ -627,23 +612,23 @@ public class StorageScreen extends GuiScreenBase {
     centered(
         batch,
         font,
-        I18n.message("ui.storage_backpack_header",
-            String.valueOf(weight),
-            String.valueOf(maxWeight)),
+        I18n.message(
+            "ui.storage_backpack_header", String.valueOf(weight), String.valueOf(maxWeight)),
         packBoxX(),
         y + PILL_Y + 5f,
         packW);
   }
 
   private void drawTabs(SpriteBatch batch) {
-    BitmapFont font = FontManager.getInstance().getTahomaFont(11, Color.BLACK, true);
-    BitmapFont active = FontManager.getInstance().getTahomaFont(11, Color.WHITE, true);
+    BitmapFont font = FontManager.getInstance().getTahomaFont(11, JournalTheme.TEXT, false);
+    BitmapFont active = FontManager.getInstance().getTahomaFont(11, JournalTheme.GOLD, false);
     for (int i = 0; i < tabOrder.size(); i++) {
       StorageService.Category category = tabOrder.get(i);
       Rectangle r = tabBounds.get(i);
       boolean selected = category == selectedCategory;
       boolean hover = r.contains(mouseX, mouseY);
-      TextureRegion bg = selected ? tabButton[2] : hover ? tabButton[1] : tabButton[0];
+      TextureRegion bg =
+          theme.control(Math.round(r.width), Math.round(r.height), selected || hover);
       if (bg != null) GuiDraw.drawRegionFlipped(batch, bg, r.x, r.y, r.width, r.height);
       String label = tabLabel(category);
       centered(batch, selected ? active : font, label, r.x, r.y + 5f, r.width);
@@ -652,32 +637,18 @@ public class StorageScreen extends GuiScreenBase {
 
   private void drawGridBox(
       SpriteBatch batch, Rectangle cells, int cols, int scrollRow, List<Stack> stacks) {
-    float bx = cells.x - GRID_LEFT;
-    float by = cells.y - GRID_TOP;
-    float right = cells.x + cells.width;
-    float bottom = cells.y + cells.height;
-    GuiDraw.withOverlayAlpha(
-        batch,
-        () -> {
-          draw(batch, SRC_GRID_TL, bx, by, GRID_LEFT, GRID_TOP);
-          tile(batch, SRC_GRID_TOP, cells.x, by, cells.width, GRID_TOP);
-          draw(batch, SRC_GRID_TR, right, by, GRID_RIGHT, GRID_TOP);
-          tile(batch, SRC_GRID_LEFT, bx, cells.y, GRID_LEFT, cells.height);
-          tile(batch, SRC_GRID_CELL, cells.x, cells.y, cells.width, cells.height);
-          draw(batch, SRC_GRID_SCROLL, right, cells.y, GRID_RIGHT, cells.height);
-          draw(batch, SRC_GRID_BL, bx, bottom, GRID_LEFT, GRID_BOTTOM);
-          tile(batch, SRC_GRID_BOTTOM, cells.x, bottom, cells.width, GRID_BOTTOM);
-          draw(batch, SRC_GRID_BR, right, bottom, GRID_RIGHT, GRID_BOTTOM);
-        });
+    theme.well(batch, cells.x - 6, cells.y - 6, cells.width + 36, cells.height + 12);
+    for (int row = 0; row < ROWS; row++)
+      for (int col = 0; col < cols; col++)
+        theme.well(batch, cells.x + col * CELL, cells.y + row * CELL, CELL - 1, CELL - 1);
     int totalRows = (stacks.size() + cols - 1) / cols;
-    if (scrollTick != null && totalRows > ROWS) {
-      float travel = cells.height - 44f - scrollTick.getRegionHeight();
-      float t = scrollRow / (float) (totalRows - ROWS);
+    if (totalRows > ROWS) {
+      float travel = cells.height - 44 - scrollTick.getRegionHeight();
       GuiDraw.drawRegionFlipped(
           batch,
           scrollTick,
-          right + (GRID_RIGHT - 7f - scrollTick.getRegionWidth()) / 2f,
-          cells.y + 22f + travel * t);
+          cells.x + cells.width + 12,
+          cells.y + 22 + travel * scrollRow / (totalRows - ROWS));
     }
   }
 
@@ -691,7 +662,10 @@ public class StorageScreen extends GuiScreenBase {
       int slot = i - first;
       float cx = cells.x + (slot % cols) * CELL;
       float cy = cells.y + (slot / cols) * CELL;
-      boolean hovered = drag == null && prompt == null && new Rectangle(cx, cy, CELL, CELL).contains(mouseX, mouseY);
+      boolean hovered =
+          drag == null
+              && prompt == null
+              && new Rectangle(cx, cy, CELL, CELL).contains(mouseX, mouseY);
       boolean selected = pane == selectedPane && stack.itemKey.equals(selectedKey);
       if ((hovered || selected) && cellHighlight != null) {
         GuiDraw.drawRegionFlipped(batch, cellHighlight, cx, cy, CELL - 1f, CELL - 1f);
@@ -717,25 +691,28 @@ public class StorageScreen extends GuiScreenBase {
     // Search box.
     GuiDraw.withOverlayAlpha(
         batch,
-        () ->
-            drawThreeSlice(
-                batch, SRC_PILL, 12, searchBounds.x, searchBounds.y + 1f, searchBounds.width, 23f));
+        () -> drawThreeSlice(batch, searchBounds.x, searchBounds.y + 1f, searchBounds.width, 23f));
     String shown =
         searchQuery.isEmpty() && !searchFocused
             ? I18n.key("ui.storage_search_hint", "Search... (click to type)")
-            : searchQuery + (searchFocused && (System.currentTimeMillis() / 500L) % 2 == 0 ? "_" : "");
+            : searchQuery
+                + (searchFocused && (System.currentTimeMillis() / 500L) % 2 == 0 ? "_" : "");
     (searchQuery.isEmpty() && !searchFocused ? dim : white)
         .draw(batch, shown, searchBounds.x + 12f, searchBounds.y + 6f);
     // Gold readouts.
     float stashX = x + MARGIN;
     gold.draw(
         batch,
-        I18n.key("ui.storage_banked_gold", "Banked gold") + ": " + formatGold(player == null ? 0 : backend.gold()),
+        I18n.key("ui.storage_banked_gold", "Banked gold")
+            + ": "
+            + formatGold(player == null ? 0 : backend.gold()),
         stashX + 4f,
         y + GOLD_Y + 7f);
     gold.draw(
         batch,
-        I18n.key("ui.storage_carried_gold", "Gold") + ": " + formatGold(player == null ? 0 : player.getGold()),
+        I18n.key("ui.storage_carried_gold", "Gold")
+            + ": "
+            + formatGold(player == null ? 0 : player.getGold()),
         packBoxX() + 4f,
         y + GOLD_Y + 7f);
     for (Button b : controls) drawButton(batch, b);
@@ -756,7 +733,8 @@ public class StorageScreen extends GuiScreenBase {
     boolean enabled = b.enabled.getAsBoolean();
     boolean hover = enabled && b.bounds.contains(mouseX, mouseY);
     boolean down = hover && Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-    TextureRegion bg = down ? button[2] : hover ? button[1] : button[0];
+    TextureRegion bg =
+        theme.control(Math.round(b.bounds.width), Math.round(b.bounds.height), down || hover);
     if (bg != null) {
       Color previous = new Color(batch.getColor());
       if (!enabled) batch.setColor(0.55f, 0.55f, 0.55f, previous.a);
@@ -765,8 +743,14 @@ public class StorageScreen extends GuiScreenBase {
     }
     BitmapFont font =
         FontManager.getInstance()
-            .getTahomaFont(12, enabled ? Color.BLACK : Color.valueOf("5A5040"), true);
-    centered(batch, font, b.label.get(), b.bounds.x, b.bounds.y + (b.bounds.height - 12f) / 2f, b.bounds.width);
+            .getTahomaFont(12, enabled ? JournalTheme.TEXT : JournalTheme.DIM, false);
+    centered(
+        batch,
+        font,
+        b.label.get(),
+        b.bounds.x,
+        b.bounds.y + (b.bounds.height - 12f) / 2f,
+        b.bounds.width);
   }
 
   private void drawDrag(SpriteBatch batch) {
@@ -781,23 +765,26 @@ public class StorageScreen extends GuiScreenBase {
     batch.setColor(0f, 0f, 0f, 0.45f);
     batch.draw(tooltip.getBackground(), x, y + TITLE_H, WIDTH, HEIGHT - TITLE_H);
     batch.setColor(previous);
-    if (popup != null) {
-      // Top of the popup art without its chain band, then its bottom edge.
-      draw(batch, popup, 0, 0, 240, 120, r.x, r.y, r.width, r.height - 6f);
-      draw(batch, popup, 0, 158, 240, 6, r.x, r.y + r.height - 6f, r.width, 6f);
-    }
+    theme.well(batch, r.x, r.y, r.width, r.height);
     BitmapFont header = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
     BitmapFont white = FontManager.getInstance().getJetBrainsMonoFont(11, Color.WHITE);
     centered(batch, header, I18n.key("ui.how_many", "How many?"), r.x, r.y + 8f, r.width);
     String what = p.gold ? I18n.key("ui.gold", "Gold") : displayName(p.itemKey);
-    centered(batch, white, what + " (" + I18n.key("ui.max", "max") + " " + formatGold(p.max) + ")", r.x, r.y + 34f, r.width);
+    centered(
+        batch,
+        white,
+        what + " (" + I18n.key("ui.max", "max") + " " + formatGold(p.max) + ")",
+        r.x,
+        r.y + 34f,
+        r.width);
     GuiDraw.withOverlayAlpha(
-        batch, () -> drawThreeSlice(batch, SRC_PILL, 12, r.x + 60f, r.y + 55f, r.width - 120f, 23f));
+        batch, () -> drawThreeSlice(batch, r.x + 60f, r.y + 55f, r.width - 120f, 23f));
     centered(batch, white, p.value, r.x + 60f, r.y + 60f, r.width - 120f);
     for (Button b : p.buttons) drawButton(batch, b);
   }
 
-  private void centered(SpriteBatch batch, BitmapFont font, String text, float bx, float by, float bw) {
+  private void centered(
+      SpriteBatch batch, BitmapFont font, String text, float bx, float by, float bw) {
     layout.setText(font, text);
     font.draw(batch, text, bx + Math.round((bw - layout.width) / 2f), by);
   }
@@ -818,55 +805,18 @@ public class StorageScreen extends GuiScreenBase {
     GuiDraw.drawRegionFlipped(batch, region, bx + (bw - dw) / 2f, by + (bh - dh) / 2f, dw, dh);
   }
 
-  private void draw(SpriteBatch batch, int[] src, float dx, float dy, float dw, float dh) {
-    draw(batch, trade, src[0], src[1], src[2], src[3], dx, dy, dw, dh);
-  }
-
-  private void draw(
-      SpriteBatch batch,
-      TextureRegion source,
-      int sx,
-      int sy,
-      int sw,
-      int sh,
-      float dx,
-      float dy,
-      float dw,
-      float dh) {
-    if (source == null || sw <= 0 || sh <= 0) return;
-    scratch.setRegion(source, sx, sy, sw, sh);
-    GuiDraw.drawRegionFlipped(batch, scratch, dx, dy, dw, dh);
-  }
-
   /** Repeats a source piece at native size to fill the area, cropping the last row/column. */
-  private void tile(SpriteBatch batch, int[] src, float dx, float dy, float dw, float dh) {
-    for (float ty = 0; ty < dh; ty += src[3]) {
-      int h = (int) Math.min(src[3], Math.ceil(dh - ty));
-      for (float tx = 0; tx < dw; tx += src[2]) {
-        int w = (int) Math.min(src[2], Math.ceil(dw - tx));
-        draw(batch, trade, src[0], src[1], w, h, dx + tx, dy + ty, w, h);
-      }
-    }
-  }
 
   /** Draws a horizontally stretchable piece: fixed end caps, repeated middle. */
-  private void drawThreeSlice(
-      SpriteBatch batch, int[] src, int cap, float dx, float dy, float dw, float dh) {
-    draw(batch, trade, src[0], src[1], cap, src[3], dx, dy, cap, dh);
-    int midW = src[2] - 2 * cap;
-    float mid = dw - 2 * cap;
-    for (float tx = 0; tx < mid; tx += midW) {
-      int w = (int) Math.min(midW, Math.ceil(mid - tx));
-      draw(batch, trade, src[0] + cap, src[1], w, src[3], dx + cap + tx, dy, w, dh);
-    }
-    draw(batch, trade, src[0] + src[2] - cap, src[1], cap, src[3], dx + dw - cap, dy, cap, dh);
+  private void drawThreeSlice(SpriteBatch batch, float dx, float dy, float dw, float dh) {
+    theme.well(batch, dx, dy, dw, dh);
   }
 
   // ---------------------------------------------------------------- input
 
   @Override
   protected boolean isBackgroundHit(float screenX, float screenY) {
-    return screenX >= x && screenX <= x + WIDTH && screenY >= y && screenY <= y + HEIGHT;
+    return super.isBackgroundHit(screenX, screenY);
   }
 
   private Stack stackAt(Pane pane, float sx, float sy) {
@@ -883,8 +833,18 @@ public class StorageScreen extends GuiScreenBase {
   }
 
   private Pane paneAt(float sx, float sy) {
-    if (new Rectangle(stashCells.x - GRID_LEFT, stashCells.y - GRID_TOP, gridBoxWidth(STASH_COLS), stashCells.height + GRID_TOP + GRID_BOTTOM).contains(sx, sy)) return Pane.STASH;
-    if (new Rectangle(packCells.x - GRID_LEFT, packCells.y - GRID_TOP, gridBoxWidth(PACK_COLS), packCells.height + GRID_TOP + GRID_BOTTOM).contains(sx, sy)) return Pane.PACK;
+    if (new Rectangle(
+            stashCells.x - GRID_LEFT,
+            stashCells.y - GRID_TOP,
+            gridBoxWidth(STASH_COLS),
+            stashCells.height + GRID_TOP + GRID_BOTTOM)
+        .contains(sx, sy)) return Pane.STASH;
+    if (new Rectangle(
+            packCells.x - GRID_LEFT,
+            packCells.y - GRID_TOP,
+            gridBoxWidth(PACK_COLS),
+            packCells.height + GRID_TOP + GRID_BOTTOM)
+        .contains(sx, sy)) return Pane.PACK;
     return null;
   }
 
@@ -1019,8 +979,12 @@ public class StorageScreen extends GuiScreenBase {
     if (d == null || !d.moved) return;
     Pane target = paneAt(screenX, screenY);
     if (target != null && target != d.source) {
-      boolean shift = isDown(Input.Keys.SHIFT_LEFT, Input.Keys.SHIFT_RIGHT);
-      moveStack(d.source, d.stack, shift ? d.stack.count : 1);
+      if (d.stack.count > 1) {
+        openPrompt(d.stack.itemKey, d.stack.count, false, d.source == Pane.STASH);
+        prompt.stack = d.stack;
+      } else {
+        moveStack(d.source, d.stack, 1);
+      }
     }
   }
 
@@ -1044,7 +1008,8 @@ public class StorageScreen extends GuiScreenBase {
       if (keycode == Input.Keys.ESCAPE) prompt = null;
       else if (keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER) applyPrompt();
       else if (keycode == Input.Keys.BACKSPACE)
-        prompt.value = prompt.value.length() > 1 ? prompt.value.substring(0, prompt.value.length() - 1) : "0";
+        prompt.value =
+            prompt.value.length() > 1 ? prompt.value.substring(0, prompt.value.length() - 1) : "0";
       else if (keycode == Input.Keys.UP) setPromptValue(promptValue() + 1);
       else if (keycode == Input.Keys.DOWN) setPromptValue(promptValue() - 1);
       return true;
@@ -1079,12 +1044,16 @@ public class StorageScreen extends GuiScreenBase {
       if (Character.isDigit(character)) {
         String base = (!prompt.edited || prompt.value.equals("0")) ? "" : prompt.value;
         String candidate = base + character;
-        if (candidate.length() <= 10) setPromptValue((int) Math.min(Integer.MAX_VALUE, Long.parseLong(candidate)));
+        if (candidate.length() <= 10)
+          setPromptValue((int) Math.min(Integer.MAX_VALUE, Long.parseLong(candidate)));
       }
       return true;
     }
     if (!searchFocused) return false;
-    if ((Character.isLetterOrDigit(character) || character == ' ' || character == '\'' || character == '+')
+    if ((Character.isLetterOrDigit(character)
+            || character == ' '
+            || character == '\''
+            || character == '+')
         && searchQuery.length() < 24) {
       searchQuery += character;
       stashScrollRow = 0;
@@ -1101,6 +1070,7 @@ public class StorageScreen extends GuiScreenBase {
   @Override
   public void dispose() {
     tooltip.dispose();
+    super.dispose();
   }
 
   // Visible for tests.

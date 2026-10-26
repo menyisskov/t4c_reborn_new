@@ -1,0 +1,52 @@
+{
+  "key": "concord_dawn_signet_earth",
+  "name": "${item.concord_dawn_signet_earth}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 4",
+  "numId": 59036,
+  "appearanceId": 59036,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61256,
+      "statId": 4,
+      "expression": "46"
+    },
+    {
+      "boostId": 61257,
+      "statId": 19,
+      "expression": "55"
+    },
+    {
+      "boostId": 61258,
+      "statId": 12,
+      "expression": "22"
+    },
+    {
+      "boostId": 61259,
+      "statId": 13,
+      "expression": "22"
+    },
+    {
+      "boostId": 61260,
+      "statId": 14,
+      "expression": "22"
+    },
+    {
+      "boostId": 61261,
+      "statId": 15,
+      "expression": "22"
+    },
+    {
+      "boostId": 61262,
+      "statId": 22,
+      "expression": "22"
+    }
+  ],
+  "armorClass": 10.0,
+  "requirements": {
+    "wisdom": 550,
+    "endurance": 200
+  }
+}

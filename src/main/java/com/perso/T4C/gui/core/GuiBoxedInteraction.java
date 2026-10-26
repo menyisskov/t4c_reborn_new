@@ -13,6 +13,7 @@ public final class GuiBoxedInteraction {
   private float grabX, grabY, fixedRight, fixedBottom;
 
   public boolean touchDown(List<? extends GuiElement> elements, float sx, float sy) {
+    if (!GuiLayoutEditing.enabled()) return false;
     boolean shift =
         Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
             || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);

@@ -1,0 +1,53 @@
+{
+  "key": "divine_odin_wings",
+  "name": "${item.divine_odin_wings}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal95",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal95",
+  "numId": 56106,
+  "appearanceId": 56106,
+  "weight": 1,
+  "armorClass": 39.6,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 801096,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 801097,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 801098,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 801099,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 801100,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 801101,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 801102,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

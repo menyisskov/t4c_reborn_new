@@ -1,0 +1,64 @@
+{
+  "key": "moonsteel_armor",
+  "name": "${item.moonsteel_armor}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody__silver300",
+  "appearanceInventory": "64kInvPlateArmorSleeves__silver300",
+  "price": 1000000,
+  "weight": 8,
+  "armorClass": 119.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 350,
+    "strength": 700,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59700,
+  "structure": 2,
+  "appearanceId": 59700,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 710000,
+      "statId": 3,
+      "expression": "58"
+    },
+    {
+      "boostId": 710001,
+      "statId": 8,
+      "expression": "140"
+    },
+    {
+      "boostId": 710002,
+      "statId": 12,
+      "expression": "18"
+    },
+    {
+      "boostId": 710003,
+      "statId": 13,
+      "expression": "18"
+    },
+    {
+      "boostId": 710004,
+      "statId": 14,
+      "expression": "18"
+    },
+    {
+      "boostId": 710005,
+      "statId": 15,
+      "expression": "18"
+    },
+    {
+      "boostId": 710006,
+      "statId": 22,
+      "expression": "18"
+    }
+  ]
+}

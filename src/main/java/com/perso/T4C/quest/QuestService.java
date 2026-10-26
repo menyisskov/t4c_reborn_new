@@ -83,6 +83,12 @@ public final class QuestService {
           Math.min(
               definition.getRequiredItemQty(),
               Collections.frequency(player.getInventory(), itemKey));
+      if (definition.getRequiredKills() == 0)
+        return I18n.message(
+            "quest.objective.evidence",
+            itemDisplayName(itemKey),
+            have,
+            definition.getRequiredItemQty());
       return I18n.message(
           "message.quest_progress_dialog_item",
           kills,
@@ -97,6 +103,11 @@ public final class QuestService {
         kills,
         definition.getRequiredKills(),
         definition.getRequiredKills() - kills);
+  }
+
+  /** Persist a durable investigation or dialogue checkpoint between quest turn-ins. */
+  public void saveProgress() {
+    persist.run();
   }
 
   /** Report exactly one accepted quest; never starts an unaccepted quest or pays another one. */

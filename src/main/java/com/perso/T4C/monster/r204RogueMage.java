@@ -4,6 +4,10 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.AudienceToKingQuest;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Rogue Mage", x = 1001, y = 2410, z = 0, stationary = false, aggressive = true)
@@ -287,7 +291,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Rogue Mage", x = 994, y = 2391, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Rogue Mage", x = 997, y = 2388, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Rogue Mage", x = 998, y = 2401, z = 0, stationary = false, aggressive = true)
-public final class r204RogueMage extends DataMonster {
+public final class r204RogueMage extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";
@@ -295,6 +299,12 @@ public final class r204RogueMage extends DataMonster {
   public r204RogueMage(MonsterDef definition, float worldX, float worldY) throws GameException {
 
     super(definition, worldX, worldY);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    AudienceToKingQuest.recordRogueMageKill(player, AudienceToKingQuest.nowSeconds());
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

@@ -115,7 +115,8 @@ public final class JagarKar extends ScriptedNpc {
         true,
         List.of(
             new LearnScreen.TrainingOffer("stun_blow", 1, 150, true),
-            new LearnScreen.TrainingOffer("powerful_blow", 1, 2500, true)));
+            new LearnScreen.TrainingOffer("powerful_blow", 1, 2500, true),
+            new LearnScreen.TrainingOffer("armor_penetration", 1, 7500, true)));
   }
 
   public JagarKar(NpcContext context) throws GameException {

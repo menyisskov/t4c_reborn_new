@@ -1,0 +1,53 @@
+{
+  "key": "divine_athena_wings",
+  "name": "${item.divine_athena_wings}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal95",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal95",
+  "numId": 55406,
+  "appearanceId": 55406,
+  "weight": 1,
+  "armorClass": 39.6,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50322,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 50323,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 50324,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 50325,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 50326,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 50327,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 50328,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

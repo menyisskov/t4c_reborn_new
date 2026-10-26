@@ -1,0 +1,1421 @@
+{
+  "status": "applied",
+  "source": "https://t4cfantasy.com/Bible/classic/Questions.php",
+  "anchors": {
+    "200": 248292513235,
+    "215": 543954839026,
+    "234": 1222647191025,
+    "320": 2002088069939
+  },
+  "method": "Linear interpolation of cumulative XP between anchors; continue the 234\u2013320 average XP per level above 320.",
+  "caveat": "Matching these totals requires XP per level to fall after 200 and again after 234. This is a mathematical reconstruction, not a verified historical XP curve or an approved balance change.",
+  "rows": [
+    {
+      "level": 200,
+      "toReach": 26314400362,
+      "toNext": 19710821719,
+      "total": 248292513235,
+      "basis": "Published classic total"
+    },
+    {
+      "level": 201,
+      "toReach": 19710821719,
+      "toNext": 19710821720,
+      "total": 268003334954,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 202,
+      "toReach": 19710821720,
+      "toNext": 19710821719,
+      "total": 287714156674,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 203,
+      "toReach": 19710821719,
+      "toNext": 19710821720,
+      "total": 307424978393,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 204,
+      "toReach": 19710821720,
+      "toNext": 19710821719,
+      "total": 327135800113,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 205,
+      "toReach": 19710821719,
+      "toNext": 19710821719,
+      "total": 346846621832,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 206,
+      "toReach": 19710821719,
+      "toNext": 19710821720,
+      "total": 366557443551,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 207,
+      "toReach": 19710821720,
+      "toNext": 19710821719,
+      "total": 386268265271,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 208,
+      "toReach": 19710821719,
+      "toNext": 19710821720,
+      "total": 405979086990,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 209,
+      "toReach": 19710821720,
+      "toNext": 19710821719,
+      "total": 425689908710,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 210,
+      "toReach": 19710821719,
+      "toNext": 19710821719,
+      "total": 445400730429,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 211,
+      "toReach": 19710821719,
+      "toNext": 19710821720,
+      "total": 465111552148,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 212,
+      "toReach": 19710821720,
+      "toNext": 19710821719,
+      "total": 484822373868,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 213,
+      "toReach": 19710821719,
+      "toNext": 19710821720,
+      "total": 504533195587,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 214,
+      "toReach": 19710821720,
+      "toNext": 19710821719,
+      "total": 524244017307,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 215,
+      "toReach": 19710821719,
+      "toNext": 35720650105,
+      "total": 543954839026,
+      "basis": "User-supplied anchor"
+    },
+    {
+      "level": 216,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 579675489131,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 217,
+      "toReach": 35720650105,
+      "toNext": 35720650106,
+      "total": 615396139236,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 218,
+      "toReach": 35720650106,
+      "toNext": 35720650105,
+      "total": 651116789342,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 219,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 686837439447,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 220,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 722558089552,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 221,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 758278739657,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 222,
+      "toReach": 35720650105,
+      "toNext": 35720650106,
+      "total": 793999389762,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 223,
+      "toReach": 35720650106,
+      "toNext": 35720650105,
+      "total": 829720039868,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 224,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 865440689973,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 225,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 901161340078,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 226,
+      "toReach": 35720650105,
+      "toNext": 35720650106,
+      "total": 936881990183,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 227,
+      "toReach": 35720650106,
+      "toNext": 35720650105,
+      "total": 972602640289,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 228,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 1008323290394,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 229,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 1044043940499,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 230,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 1079764590604,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 231,
+      "toReach": 35720650105,
+      "toNext": 35720650106,
+      "total": 1115485240709,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 232,
+      "toReach": 35720650106,
+      "toNext": 35720650105,
+      "total": 1151205890815,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 233,
+      "toReach": 35720650105,
+      "toNext": 35720650105,
+      "total": 1186926540920,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 234,
+      "toReach": 35720650105,
+      "toNext": 9063266034,
+      "total": 1222647191025,
+      "basis": "User-supplied anchor"
+    },
+    {
+      "level": 235,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1231710457059,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 236,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1240773723093,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 237,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1249836989127,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 238,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1258900255161,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 239,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1267963521194,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 240,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1277026787228,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 241,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1286090053262,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 242,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1295153319296,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 243,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1304216585330,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 244,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1313279851364,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 245,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1322343117398,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 246,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1331406383432,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 247,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1340469649465,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 248,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1349532915499,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 249,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1358596181533,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 250,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1367659447567,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 251,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1376722713601,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 252,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1385785979635,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 253,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1394849245669,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 254,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1403912511703,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 255,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1412975777737,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 256,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1422039043770,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 257,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1431102309804,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 258,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1440165575838,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 259,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1449228841872,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 260,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1458292107906,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 261,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1467355373940,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 262,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1476418639974,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 263,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1485481906008,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 264,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1494545172042,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 265,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1503608438075,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 266,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1512671704109,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 267,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1521734970143,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 268,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1530798236177,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 269,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1539861502211,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 270,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1548924768245,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 271,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1557988034279,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 272,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1567051300313,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 273,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1576114566346,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 274,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1585177832380,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 275,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1594241098414,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 276,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1603304364448,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 277,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1612367630482,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 278,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1621430896516,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 279,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1630494162550,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 280,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1639557428584,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 281,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1648620694618,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 282,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1657683960651,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 283,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1666747226685,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 284,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1675810492719,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 285,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1684873758753,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 286,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1693937024787,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 287,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1703000290821,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 288,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1712063556855,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 289,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1721126822889,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 290,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1730190088922,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 291,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1739253354956,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 292,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1748316620990,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 293,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1757379887024,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 294,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1766443153058,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 295,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1775506419092,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 296,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1784569685126,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 297,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1793632951160,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 298,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1802696217194,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 299,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1811759483227,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 300,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1820822749261,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 301,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1829886015295,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 302,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1838949281329,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 303,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1848012547363,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 304,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1857075813397,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 305,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1866139079431,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 306,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1875202345465,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 307,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1884265611499,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 308,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1893328877532,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 309,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1902392143566,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 310,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1911455409600,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 311,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1920518675634,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 312,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1929581941668,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 313,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1938645207702,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 314,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1947708473736,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 315,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 1956771739770,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 316,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 1965835005803,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 317,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1974898271837,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 318,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1983961537871,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 319,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 1993024803905,
+      "basis": "Interpolated"
+    },
+    {
+      "level": 320,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2002088069939,
+      "basis": "User-supplied anchor"
+    },
+    {
+      "level": 321,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2011151335973,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 322,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2020214602007,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 323,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2029277868041,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 324,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2038341134075,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 325,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2047404400108,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 326,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2056467666142,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 327,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2065530932176,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 328,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2074594198210,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 329,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2083657464244,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 330,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2092720730278,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 331,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2101783996312,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 332,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2110847262346,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 333,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2119910528379,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 334,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2128973794413,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 335,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2138037060447,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 336,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2147100326481,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 337,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2156163592515,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 338,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2165226858549,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 339,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2174290124583,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 340,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2183353390617,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 341,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2192416656651,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 342,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2201479922684,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 343,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2210543188718,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 344,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2219606454752,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 345,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2228669720786,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 346,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2237732986820,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 347,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2246796252854,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 348,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2255859518888,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 349,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2264922784922,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 350,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2273986050956,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 351,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2283049316989,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 352,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2292112583023,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 353,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2301175849057,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 354,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2310239115091,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 355,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2319302381125,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 356,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2328365647159,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 357,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2337428913193,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 358,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2346492179227,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 359,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2355555445260,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 360,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2364618711294,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 361,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2373681977328,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 362,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2382745243362,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 363,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2391808509396,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 364,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2400871775430,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 365,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2409935041464,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 366,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2418998307498,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 367,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2428061573532,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 368,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2437124839565,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 369,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2446188105599,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 370,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2455251371633,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 371,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2464314637667,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 372,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2473377903701,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 373,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2482441169735,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 374,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2491504435769,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 375,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2500567701803,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 376,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2509630967836,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 377,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2518694233870,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 378,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2527757499904,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 379,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2536820765938,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 380,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2545884031972,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 381,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2554947298006,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 382,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2564010564040,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 383,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2573073830074,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 384,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2582137096108,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 385,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2591200362141,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 386,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2600263628175,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 387,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2609326894209,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 388,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2618390160243,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 389,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2627453426277,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 390,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2636516692311,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 391,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2645579958345,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 392,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2654643224379,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 393,
+      "toReach": 9063266034,
+      "toNext": 9063266033,
+      "total": 2663706490413,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 394,
+      "toReach": 9063266033,
+      "toNext": 9063266034,
+      "total": 2672769756446,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 395,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2681833022480,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 396,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2690896288514,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 397,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2699959554548,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 398,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2709022820582,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 399,
+      "toReach": 9063266034,
+      "toNext": 9063266034,
+      "total": 2718086086616,
+      "basis": "Extrapolated"
+    },
+    {
+      "level": 400,
+      "toReach": 9063266034,
+      "toNext": 0,
+      "total": 2727149352650,
+      "basis": "Extrapolated"
+    }
+  ]
+}

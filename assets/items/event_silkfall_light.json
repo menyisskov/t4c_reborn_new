@@ -1,0 +1,64 @@
+{
+  "key": "event_silkfall_light",
+  "name": "${item.event_silkfall_light}",
+  "bodyPart": "NECK",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvNecklace 2",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 5.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 100,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 200,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59614,
+  "structure": 2,
+  "appearanceId": 59614,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 690140,
+      "statId": 4,
+      "expression": "17"
+    },
+    {
+      "boostId": 690141,
+      "statId": 23,
+      "expression": "20"
+    },
+    {
+      "boostId": 690142,
+      "statId": 12,
+      "expression": "8"
+    },
+    {
+      "boostId": 690143,
+      "statId": 13,
+      "expression": "8"
+    },
+    {
+      "boostId": 690144,
+      "statId": 14,
+      "expression": "8"
+    },
+    {
+      "boostId": 690145,
+      "statId": 15,
+      "expression": "8"
+    },
+    {
+      "boostId": 690146,
+      "statId": 22,
+      "expression": "8"
+    }
+  ]
+}

@@ -27,7 +27,7 @@ public final class ElectricShield {
         0,
         "120000",
         "0",
-        94941,
+        89033,
         null,
         10081,
         3,

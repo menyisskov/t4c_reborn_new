@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.player.Player;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +19,19 @@ import org.junit.jupiter.api.io.TempDir;
  * {@code account_storage.json} or leaking state between tests.
  */
 class AccountStorageServiceTest {
+  @Test
+  void legacyVaultDropsRetiredItemsAndKeepsSurvivingCharges() throws Exception {
+    Files.writeString(
+        tempDir.resolve(com.perso.T4C.config.Paths.ACCOUNT_STORAGE_FILE),
+        "{\"storage\":[\"item.dagger\",\"item.arc_test\",\"item.wings_test\"],"
+            + "\"storageCharges\":[4,5,6],\"storageGold\":73}");
+    resetSingleton();
+    var vault = AccountStorage.get();
+    assertEquals(List.of("item.dagger", "item.wings_test"), vault.storage());
+    assertEquals(List.of(4, 6), vault.storageCharges());
+    assertEquals(73, vault.storageGold());
+  }
+
   private static final String DAGGER = "item.dagger";
   private String originalUserDir;
 

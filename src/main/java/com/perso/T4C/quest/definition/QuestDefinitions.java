@@ -22,6 +22,7 @@ public final class QuestDefinitions {
             BastionWardenSiege.definition(),
             DeepOnesCavePurge.definition(),
             DrakesLairVigil.definition(),
+            ShatteredIslePassage.definition(),
             TidewornShoreScouts.definition(),
             PassageToAvalon.definition(),
             AvalonWildsVigil.definition(),
@@ -35,7 +36,8 @@ public final class QuestDefinitions {
             ForgeGodsforgedTorc.definition(),
             TheWakingRite.definition(),
             RenewedWards.definition());
-    return java.util.stream.Stream.concat(base.stream(), HollowDawnCampaign.all().stream())
+    return java.util.stream.Stream.of(base, HollowDawnCampaign.all(), ConcordCampaign.all())
+        .flatMap(List::stream)
         .toList();
   }
 }

@@ -26,10 +26,15 @@ public final class SpellTooltipText {
         spell.getAttackType() == SpellData.ATTACK_MENTAL
             ? I18n.key("tooltip.cast_type.mental")
             : I18n.key("tooltip.cast_type.physical"));
-    appendLine(text, "req_level", spell.getMinLevel() > 0 ? String.valueOf(spell.getMinLevel()) : null);
     appendLine(text, "req_int", spell.getMinInt() > 0 ? String.valueOf(spell.getMinInt()) : null);
     appendLine(text, "req_wis", spell.getMinWis() > 0 ? String.valueOf(spell.getMinWis()) : null);
     appendLine(text, "mana_cost", nonZero(spell.getManaCost()));
+    if (spell.isAttack())
+      appendLine(
+          text,
+          "attack_targets",
+          I18n.key(
+              spell.getRadius() > 0 ? "tooltip.attack_area_rule" : "tooltip.attack_residual_rule"));
     return text.toString();
   }
 

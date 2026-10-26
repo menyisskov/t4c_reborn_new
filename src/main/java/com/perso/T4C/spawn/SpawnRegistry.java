@@ -52,6 +52,20 @@ public final class SpawnRegistry {
     List<SpawnDefinition> result = new ArrayList<>();
     result.addAll(scan("com.perso.T4C.monster", Set.of(SpawnKind.AUTO, SpawnKind.MONSTER)));
     result.addAll(scan("com.perso.T4C.npc", Set.of(SpawnKind.MONSTER)));
+    result.addAll(HuntingGrounds.spawns());
+    for (var camp : HuntingGrounds.camps()) {
+      for (int i = 0; i < camp.bosses().size(); i++) {
+        var p = camp.bosses().get(i);
+        result.add(
+            new SpawnDefinition(
+                "Training " + camp.tier() + " " + List.of("Tarantula", "Skraug", "Skeleton").get(i),
+                p.x(),
+                p.y(),
+                0,
+                false,
+                false));
+      }
+    }
     return unique(result);
   }
 

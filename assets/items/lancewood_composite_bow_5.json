@@ -1,0 +1,41 @@
+{
+  "key": "lancewood_composite_bow_5",
+  "name": "${item.lancewood_composite_bow_5}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "V2_Bow05",
+  "appearanceInventory": "Inv_V2_Bow05",
+  "price": 445000,
+  "weight": 11,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 109,
+    "agility": 445,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 750.0,
+  "unique": false,
+  "isBow": true,
+  "unlimitedUse": false,
+  "numId": 59809,
+  "structure": 9,
+  "appearanceId": 448,
+  "undroppable": false,
+  "dmgFormula": "1d141+297+3*arrow_dmg",
+  "atkDelay": "750",
+  "boosts": [
+    {
+      "boostId": 720090,
+      "statId": 6,
+      "expression": "37"
+    },
+    {
+      "boostId": 720091,
+      "statId": 10035,
+      "expression": "true_skill(35)*100/100"
+    }
+  ]
+}

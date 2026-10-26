@@ -14,7 +14,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "MOBMERCENARYC", x = 2815, y = 964, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "MOBMERCENARYC", x = 2821, y = 965, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "MOBMERCENARYC", x = 2831, y = 965, z = 0, stationary = false, aggressive = true)
-public final class r280MOBMERCENARYC extends DataMonster {
+public final class r280MOBMERCENARYC extends MercenaryA {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";

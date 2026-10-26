@@ -1,0 +1,52 @@
+{
+  "key": "concord_oath_ring_warrior",
+  "name": "${item.concord_oath_ring_warrior}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 1",
+  "numId": 59000,
+  "appearanceId": 59000,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61000,
+      "statId": 3,
+      "expression": "8"
+    },
+    {
+      "boostId": 61001,
+      "statId": 8,
+      "expression": "20"
+    },
+    {
+      "boostId": 61002,
+      "statId": 12,
+      "expression": "3"
+    },
+    {
+      "boostId": 61003,
+      "statId": 13,
+      "expression": "3"
+    },
+    {
+      "boostId": 61004,
+      "statId": 14,
+      "expression": "3"
+    },
+    {
+      "boostId": 61005,
+      "statId": 15,
+      "expression": "3"
+    },
+    {
+      "boostId": 61006,
+      "statId": 22,
+      "expression": "3"
+    }
+  ],
+  "armorClass": 2.8,
+  "requirements": {
+    "strength": 100,
+    "endurance": 50
+  }
+}

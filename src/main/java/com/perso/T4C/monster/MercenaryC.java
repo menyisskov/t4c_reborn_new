@@ -5,7 +5,7 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 
-public final class MercenaryC extends DataMonster {
+public final class MercenaryC extends MercenaryA {
 
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

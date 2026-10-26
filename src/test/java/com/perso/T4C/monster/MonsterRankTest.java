@@ -10,7 +10,10 @@ import org.junit.jupiter.api.Test;
 class MonsterRankTest {
 
   @Test
-  void uniqueNamedMonstersAreBosses() {
+  void uniqueNamedMonstersAreBosses() throws Exception {
+    assertTrue(
+        MonsterRank.isBoss(
+            MonsterRegistry.create(MonsterRegistry.findByName("Training 1 Skeleton"), 0, 0)));
     assertTrue(MonsterRank.isBoss(CentaurKing.CANONICAL_NAME));
     assertTrue(MonsterRank.isBoss(MonsterRegistry.findByName("Arch Drake").getName()));
   }

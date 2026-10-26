@@ -36,7 +36,8 @@ public final class VICARKERVIAN extends DataMonster {
         SOUND_HIT,
         107,
         330,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("girdle_of_insight", 0.01f)),
         false,
         0.0f,
         75,

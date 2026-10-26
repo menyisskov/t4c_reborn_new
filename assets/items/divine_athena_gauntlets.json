@@ -1,0 +1,55 @@
+{
+  "key": "divine_athena_gauntlets",
+  "name": "${item.divine_athena_gauntlets}",
+  "bodyPart": "LEFT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL__pal95",
+  "appearanceInventory": "64kInvPlateGlove__pal95",
+  "numId": 55403,
+  "appearanceId": 55403,
+  "weight": 1,
+  "armorClass": 40.8,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50301,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 50302,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 50303,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 50304,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 50305,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 50306,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 50307,
+      "statId": 22,
+      "expression": "16"
+    }
+  ],
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedSecondary": "PupPlateGloveR__pal95"
+}

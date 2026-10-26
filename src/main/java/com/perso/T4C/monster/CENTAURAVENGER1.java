@@ -42,7 +42,11 @@ public final class CENTAURAVENGER1 extends DataMonster {
         SOUND_HIT,
         107,
         330,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("hickory_compound_bow", 0.01f),
+            new MonsterDef.LootDrop("rough_amethyst", 0.01f),
+            new MonsterDef.LootDrop("rough_aquamarine", 0.01f),
+            new MonsterDef.LootDrop("rough_sapphire", 0.01f)),
         false,
         0.0f,
         75,

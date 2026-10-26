@@ -46,6 +46,7 @@ public final class ItemItemCrudeSkraugBow {
         0,
         List.of(),
         List.of(
+            new ItemDefinition.ItemBoost(731038, 10035, "true_skill(35)*50/100", 0, 0),
             new ItemDefinition.ItemBoost(778, 10029, "10", 0, 0),
             new ItemDefinition.ItemBoost(779, 3, "10", 0, 0)),
         List.of(),

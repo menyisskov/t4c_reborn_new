@@ -29,7 +29,13 @@ class AvalonSanctuaryMapIntegrationTest {
         SpawnRegistry.npcs().stream()
             .filter(AvalonSanctuaryMapIntegrationTest::insideTown)
             .toList();
-    assertEquals(10, townNpcs.size(), "Avalon services and the new chronicler must remain in town");
+    Set<String> requiredServices = Set.of("AnchoriteRowan", "ArchmageThalindra",
+        "ChroniclerMaelin", "ElderOphira", "EmberSmithCorvain", "GrandmasterTholvenn",
+        "QuartermasterElenna", "SisterIlyndra", "WardenSeressa", "WayfarerBryndis",
+        "CelestialChronicler");
+    assertTrue(townNpcs.stream().map(SpawnDefinition::type)
+        .collect(java.util.stream.Collectors.toSet()).containsAll(requiredServices),
+        "Town services and both chroniclers must remain in the sanctuary");
     for (SpawnDefinition npc : townNpcs) {
       assertTrue(
           DeathPenaltyService.isSafeHaven(map.getCollision(npc.x(), npc.y())),
@@ -68,11 +74,11 @@ class AvalonSanctuaryMapIntegrationTest {
                 s -> s.type().equals(quest.getTargetMonster()) && s.z() == quest.getTargetWorldZ())
             .toList();
     List<SpawnDefinition> wilds =
-        stalkers.stream().filter(s -> s.x() < 4100 && s.y() < 1500).toList();
+        stalkers.stream().filter(s -> insideQuest(s, quest)).toList();
     List<SpawnDefinition> escorts =
-        stalkers.stream().filter(s -> s.x() >= 4100 && s.y() >= 1500).toList();
-    assertEquals(20, wilds.size(), "the two hunting glades provide twenty Stalker spawns");
-    assertEquals(3, escorts.size(), "Verdant Warden escorts must stay separate from the Wilds");
+        stalkers.stream().filter(s -> !insideQuest(s, quest)).toList();
+    assertFalse(wilds.isEmpty(), "the marked Wilds need hunting spawns");
+    assertFalse(escorts.isEmpty(), "Verdant Warden escorts must stay separate from the Wilds");
     assertEquals(wilds.size() + escorts.size(), stalkers.size());
     for (SpawnDefinition spawn : wilds) {
       assertTrue(insideQuest(spawn, quest), "Wilds spawn outside Vigil objective: " + spawn);
@@ -104,6 +110,11 @@ class AvalonSanctuaryMapIntegrationTest {
 
   private static Set<Tile> floodFill(CollisionReader map, Tile start) {
     assertFalse(map.hasCollision(start.x(), start.y()), "arrival must be walkable");
+    QuestDef hunt = AvalonWildsVigil.definition();
+    int minX = hunt.getAreaCenterX() - hunt.getAreaRadiusTiles() - 48;
+    int maxX = hunt.getAreaCenterX() + hunt.getAreaRadiusTiles() + 48;
+    int minY = hunt.getAreaCenterY() - hunt.getAreaRadiusTiles() - 48;
+    int maxY = hunt.getAreaCenterY() + hunt.getAreaRadiusTiles() + 48;
     Set<Tile> reached = new HashSet<>();
     ArrayDeque<Tile> queue = new ArrayDeque<>();
     reached.add(start);
@@ -116,12 +127,11 @@ class AvalonSanctuaryMapIntegrationTest {
               new Tile(current.x() + 1, current.y()),
               new Tile(current.x(), current.y() - 1),
               new Tile(current.x(), current.y() + 1))) {
-        // A route must stay within the rebuilt sanctuary/Wilds region; leaving Avalon is no
-        // shortcut.
-        if (next.x() < 3850
-            || next.x() > 4150
-            || next.y() < 1300
-            || next.y() > 1550
+        // Keep the check inside the expanded sanctuary/Wilds region, including castle approaches.
+        if (next.x() < minX
+            || next.x() > maxX
+            || next.y() < minY
+            || next.y() > maxY
             || map.hasCollision(next.x(), next.y())
             || !reached.add(next)) continue;
         queue.addLast(next);

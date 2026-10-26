@@ -7,6 +7,15 @@ public final class SpellVisualResolver {
 
   private SpellVisualResolver() {}
 
+  /** Bespoke level-350 effects already animate the complete area from one ground anchor. */
+  public static boolean hasUnifiedAreaImpact(SpellData spell) {
+    if (spell == null) return false;
+    return switch (spell.getKey()) {
+      case "spell.worldroot_upheaval", "spell.drowning_deep", "spell.hallowed_nova" -> true;
+      default -> false;
+    };
+  }
+
   public static Visuals resolve(SpellData spell) {
     if (spell == null) {
       return new Visuals(null, "Flak1-", "Explosion.wav", "Explosion.wav");
@@ -34,6 +43,9 @@ public final class SpellVisualResolver {
     if (isBlank(impactSound)) {
       impactSound = defaultImpactSound(spell, blob, launch);
     }
+    // The comet descends from the sky in its impact frames; a caster-to-target fireball
+    // would obscure that silhouette and contradict the spell's motion.
+    if (key.equals("spell.emberqueens_wrath")) projectile = null;
     return new Visuals(projectile, impact, launch, impactSound);
   }
 

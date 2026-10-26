@@ -27,7 +27,7 @@ public final class Avalanche {
         0,
         "0",
         "0",
-        222039,
+        238292,
         null,
         10135,
         4,

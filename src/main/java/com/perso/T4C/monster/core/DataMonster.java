@@ -2,8 +2,10 @@ package com.perso.T4C.monster.core;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Rectangle;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.loot.LootTable;
@@ -20,7 +22,9 @@ public class DataMonster extends BaseMonster {
   private final String translationIdentity;
   private final String untranslatedDisplayName;
   private final NPCAnimations humanoidAnimations;
+  private final boolean humanoidBow;
   private final MonsterDef definition;
+  private final Rectangle mouseOverBounds = new Rectangle();
 
   public DataMonster(MonsterDef def, float initialX, float initialY) throws GameException {
     super(
@@ -48,6 +52,11 @@ public class DataMonster extends BaseMonster {
             : def.getDisplayName();
     setDisplayName(untranslatedDisplayName);
     humanoidAnimations = hasMonsterAnimation(def) ? null : buildHumanoidAnimations(def);
+    ItemDefinition weapon =
+        humanoidAnimations == null ? null : MonsterPuppetDress.find(def.getItemWeapon());
+    humanoidBow = weapon != null && weapon.isBow();
+    if (humanoidAnimations != null)
+      humanoidAnimations.getPlayerAnimations().setBowEquipped(humanoidBow);
     applyCombatDefinition(def);
     LootTable.Builder builder = LootTable.builder().gold(def.getGoldMin(), def.getGoldMax());
     if (def.getLoot() != null) {
@@ -118,18 +127,34 @@ public class DataMonster extends BaseMonster {
         isHovered || selected,
         outlineShader,
         null,
-        false);
+        false,
+        maxHealth > 0 ? (float) health / maxHealth : 0f);
   }
 
   public boolean usesHumanoidAnimations() {
     return humanoidAnimations != null;
   }
 
+  public Rectangle getRenderBounds(Rectangle out) {
+    if (humanoidAnimations == null) return out.set(0f, 0f, 0f, 0f);
+    return humanoidAnimations.getRenderBounds(
+        position, movement.getCurrentAngle(), movement.isFlipX(), movement.isMoving(), out);
+  }
+
+  @Override
+  public boolean isMouseOver(float mouseX, float mouseY) {
+    if (humanoidAnimations != null) {
+      Rectangle bounds = getRenderBounds(mouseOverBounds);
+      if (bounds.width > 0f && bounds.height > 0f) return bounds.contains(mouseX, mouseY);
+    }
+    return super.isMouseOver(mouseX, mouseY);
+  }
+
   @Override
   protected void startAttackAnimation() {
     super.startAttackAnimation();
     if (humanoidAnimations != null) {
-      humanoidAnimations.startAttack(movement.getCurrentAngle());
+      humanoidAnimations.startAttack(movement.getCurrentAngle(), humanoidBow);
     }
   }
 
@@ -176,9 +201,8 @@ public class DataMonster extends BaseMonster {
     for (int id : ids) {
       ItemDefinition item = MonsterPuppetDress.find(id);
       if (item == null) continue;
-      MonsterPuppetDress.addPart(parts, item.getBodyPart(), item.getAppearanceEquippedPrimary());
-      MonsterPuppetDress.addPart(
-          parts, item.getSecondaryBodyPart(), item.getAppearanceEquippedSecondary());
+      addHumanoidPart(parts, def, item.getBodyPart(), item.getAppearanceEquippedPrimary());
+      addHumanoidPart(parts, def, item.getSecondaryBodyPart(), item.getAppearanceEquippedSecondary());
     }
     if (def.getAppearance() == APPEAR_FEMALE_PUPPET) {
       MonsterPuppetDress.addPart(parts, BodyPart.HAIR, "WoHairPonyTail");
@@ -187,6 +211,13 @@ public class DataMonster extends BaseMonster {
       return null;
     }
     return new NPCAnimations(null, parts.toArray());
+  }
+
+  private static void addHumanoidPart(List<Object> parts, MonsterDef def, BodyPart slot, String sprite) {
+    if (def.getAppearance() == APPEAR_FEMALE_PUPPET) {
+      var appearance = AppearanceDefaultsCatalog.equippedAppearance("FEMALE", slot, sprite);
+      MonsterPuppetDress.addPart(parts, appearance.bodyPart(), appearance.sprite());
+    } else MonsterPuppetDress.addPart(parts, slot, sprite);
   }
 
   @Override

@@ -17,7 +17,9 @@ public final class ItemIconRegistry {
   }
 
   public static String iconFor(ItemDefinition def) {
-    return def == null ? null : iconFor(def.getAppearanceId());
+    if (def == null) return null;
+    String icon = iconFor(def.getAppearanceId());
+    return icon != null ? icon : def.getAppearanceInventory();
   }
 
   public static synchronized void invalidate() {

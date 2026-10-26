@@ -1,0 +1,67 @@
+{
+  "key": "moonsteel_halberd",
+  "name": "${item.moonsteel_halberd}",
+  "bodyPart": "WEAPON",
+  "secondaryBodyPart": "WEAPON2",
+  "appearanceEquippedPrimary": "PupHalberd__silver300",
+  "appearanceInventory": "64kInvHalberd__silver300",
+  "price": 2200000,
+  "weight": 12,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 750,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59706,
+  "structure": 2,
+  "appearanceId": 59706,
+  "undroppable": false,
+  "dmgFormula": "1d320+340",
+  "atkDelay": "1500",
+  "boosts": [
+    {
+      "boostId": 710060,
+      "statId": 3,
+      "expression": "63"
+    },
+    {
+      "boostId": 710061,
+      "statId": 8,
+      "expression": "150"
+    },
+    {
+      "boostId": 710062,
+      "statId": 12,
+      "expression": "19"
+    },
+    {
+      "boostId": 710063,
+      "statId": 13,
+      "expression": "19"
+    },
+    {
+      "boostId": 710064,
+      "statId": 14,
+      "expression": "19"
+    },
+    {
+      "boostId": 710065,
+      "statId": 15,
+      "expression": "19"
+    },
+    {
+      "boostId": 710066,
+      "statId": 22,
+      "expression": "19"
+    }
+  ]
+}

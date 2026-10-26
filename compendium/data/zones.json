@@ -41,7 +41,7 @@
     "worldmapCenter": {
       "x": 1750,
       "y": 2300,
-      "radius": 140
+      "radius": 160
     },
     "monsters": [
       "Drowned Acolyte",
@@ -368,9 +368,9 @@
     "name": "Drake's Lair",
     "chapter": "last_peak",
     "chapterOrder": 1,
-    "levelRange": "750–1000",
+    "levelRange": "750-1200",
     "biome": "Mountain lair",
-    "summary": "Kraanhold's easternmost and highest peak, and the end of the road. Arch Drake has held this lair since long before anyone thought to map it, and the Kraanian Dragonguard on the approach exist to make sure nobody reaches him. The five Elder Wyrms den here too, one for each way of fighting. Come at the very top of your power or do not come at all — there is nothing past this.",
+    "summary": "Kraanhold's easternmost and highest peak. Dragonguards guard Arch Drake and the five Elder Wyrms, while the Ironhorn Centaur, Stormbound Pegasus and Galehorn Unicorn roam separate clearings. Outrider Kaelis knows a passage across the eastern water to Shattered Isle.",
     "worldmapCenter": {
       "x": 2850,
       "y": 2780,
@@ -383,7 +383,10 @@
       "The Pyreclaw Wyrm",
       "The Mistwing Wyrm",
       "The Duskmaw Wyrm",
-      "The Galecrest Wyrm"
+      "The Galecrest Wyrm",
+      "Ironhorn Centaur",
+      "Stormbound Pegasus",
+      "Galehorn Unicorn"
     ],
     "items": [
       "dragonguards_scale_bracer",
@@ -411,5 +414,259 @@
     "npcs": [
       "OutriderKaelis"
     ]
+  },
+  {
+    "id": "shattered_isle",
+    "name": "Shattered Isle",
+    "chapter": "last_peak",
+    "chapterOrder": 2,
+    "levelRange": "1250-1400",
+    "biome": "Volcanic ridge, dry uplands and marsh",
+    "summary": "An isolated island east of Drake's Lair. Outrider Kaelis opens the crossing after a short Dragonguard trial. The Obsidian Dragon, Bronze Griffin and Swamp Hydra occupy separate clearings around a central landing.",
+    "worldmapCenter": {
+      "x": 3450,
+      "y": 2705,
+      "radius": 225
+    },
+    "monsters": [
+      "Obsidian Dragon",
+      "Bronze Griffin",
+      "Swamp Hydra"
+    ],
+    "items": [
+      "duskmaw_wyrms_eclipsed_crown",
+      "skybreaker_longbow",
+      "skybreaker_quiver",
+      "rootcrown_wyrms_ageless_mantle"
+    ],
+    "spells": [],
+    "quests": [
+      "shattered_isle_passage"
+    ],
+    "npcs": []
+  },
+  {
+    "id": "witness_training",
+    "name": "Witness Training Grounds",
+    "chapter": "avalon",
+    "chapterOrder": 3,
+    "levelRange": "150-250",
+    "biome": "Training clearings",
+    "summary": "Three dense training fields west of the sanctuary: tarantulas, skraugs and skeletons. Each field has its own training boss. These are hunting alternatives, rather than steps in the main story.",
+    "worldmapCenter": {
+      "x": 3760,
+      "y": 1530,
+      "radius": 150
+    },
+    "monsters": [
+      "Witness Tarantula",
+      "Witness Skraug",
+      "Witness Skeleton",
+      "Training 1 Tarantula",
+      "Training 1 Skraug",
+      "Training 1 Skeleton"
+    ],
+    "items": [],
+    "spells": [],
+    "quests": [],
+    "npcs": []
+  },
+  {
+    "id": "moonwake_shoals",
+    "name": "Moonwake Shoals",
+    "chapter": "avalon",
+    "chapterOrder": 4,
+    "levelRange": "225-300",
+    "biome": "Northern shoals",
+    "summary": "The northern Witness Isles branch of Maelin's account. Hunt revenants, speak with Ilyra, then confront the Pale Cantor. The map also marks the nearby divine shrines; those trials are separate encounters.",
+    "worldmapCenter": {
+      "x": 3940,
+      "y": 810,
+      "radius": 210
+    },
+    "monsters": [
+      "Moonwake Revenant",
+      "The Pale Cantor"
+    ],
+    "items": [],
+    "spells": [],
+    "quests": [
+      "moonwake_missing",
+      "pale_cantor"
+    ],
+    "npcs": [
+      "MoonwakeWitnessIlyra"
+    ]
+  },
+  {
+    "id": "emberglass_crown",
+    "name": "Emberglass Crown",
+    "chapter": "avalon",
+    "chapterOrder": 5,
+    "levelRange": "250-300",
+    "biome": "Southern volcanic crown",
+    "summary": "The southern Witness Isles branch of Maelin's account. Ashguard fields surround the approach to the Cinder Marshal, while Soren preserves the warders' testimony.",
+    "worldmapCenter": {
+      "x": 4330,
+      "y": 2580,
+      "radius": 220
+    },
+    "monsters": [
+      "Emberglass Ashguard",
+      "The Cinder Marshal"
+    ],
+    "items": [],
+    "spells": [],
+    "quests": [
+      "emberglass_oath",
+      "cinder_marshal"
+    ],
+    "npcs": [
+      "EmberglassWarderSoren"
+    ]
+  },
+  {
+    "id": "sundered_approach",
+    "name": "The Sundered Approach",
+    "chapter": "unmaking",
+    "chapterOrder": 3,
+    "levelRange": "250-300",
+    "biome": "Eastern Witness woodland",
+    "summary": "The eastern woodland contains the expanded Sundered Sentinel hunting field and the approach to the Verdant Warden. Prepare for these encounters separately from the sanctuary's safer wilds.",
+    "worldmapCenter": {
+      "x": 4390,
+      "y": 1840,
+      "radius": 220
+    },
+    "monsters": [
+      "Sundered Sentinel",
+      "The Verdant Warden"
+    ],
+    "items": [],
+    "spells": [],
+    "quests": [],
+    "npcs": []
+  },
+  {
+    "id": "threnody_reach",
+    "name": "Threnody Reach",
+    "chapter": "threnody",
+    "chapterOrder": 1,
+    "levelRange": "300-400",
+    "biome": "Sheltered arrival camp",
+    "summary": "Complete either Maelin branch to unlock the Threnody crossing. Keeper Vael at the arrival camp gives the next story stages and directions to the courts.",
+    "worldmapCenter": {
+      "x": 5505,
+      "y": 1150,
+      "radius": 140
+    },
+    "monsters": [],
+    "items": [],
+    "spells": [],
+    "quests": [],
+    "npcs": [
+      "KeeperVael"
+    ]
+  },
+  {
+    "id": "threnody_training",
+    "name": "Threnody Training Grounds",
+    "chapter": "threnody",
+    "chapterOrder": 2,
+    "levelRange": "250-400",
+    "biome": "Training clearings",
+    "summary": "Three dense training fields near Threnody's arrival region, with tarantula, skraug and skeleton bosses. These repeatable hunting fields are separate from Vael's story objectives.",
+    "worldmapCenter": {
+      "x": 5350,
+      "y": 1280,
+      "radius": 160
+    },
+    "monsters": [
+      "Threnody Tarantula",
+      "Threnody Skraug",
+      "Threnody Skeleton",
+      "Training 2 Tarantula",
+      "Training 2 Skraug",
+      "Training 2 Skeleton"
+    ],
+    "items": [],
+    "spells": [],
+    "quests": [],
+    "npcs": []
+  },
+  {
+    "id": "ashbound_court",
+    "name": "The Ashbound Court",
+    "chapter": "threnody",
+    "chapterOrder": 3,
+    "levelRange": "300-350",
+    "biome": "Northern bell court",
+    "summary": "The northern court contains the expanded Ashbound Exile hunting field and the Hush Cantor. Return to Vael between story stages; the live spawn pins also show creatures outside each quest objective circle.",
+    "worldmapCenter": {
+      "x": 5770,
+      "y": 1370,
+      "radius": 210
+    },
+    "monsters": [
+      "Ashbound Exile",
+      "The Hush Cantor"
+    ],
+    "items": [],
+    "spells": [],
+    "quests": [
+      "ashbound_exiles",
+      "hush_cantor"
+    ],
+    "npcs": []
+  },
+  {
+    "id": "nullguard_court",
+    "name": "The Nullguard Court",
+    "chapter": "threnody",
+    "chapterOrder": 4,
+    "levelRange": "350-400",
+    "biome": "Middle bell court",
+    "summary": "Nullguard patrol the middle court on the road to the Dusk Regent. Follow Vael's account and recover the Regent's seal before continuing toward the southern rift.",
+    "worldmapCenter": {
+      "x": 5480,
+      "y": 1780,
+      "radius": 220
+    },
+    "monsters": [
+      "Nullguard",
+      "The Dusk Regent"
+    ],
+    "items": [],
+    "spells": [],
+    "quests": [
+      "nullguard_watch",
+      "dusk_regent"
+    ],
+    "npcs": []
+  },
+  {
+    "id": "hollow_dawn",
+    "name": "The Hollow Dawn",
+    "chapter": "threnody",
+    "chapterOrder": 5,
+    "levelRange": "390-400+",
+    "biome": "Southern rift and inner court",
+    "summary": "Rift Wraith fields lead toward Rhunor's inner court. Vael's rift objective opens the final travel destination. Nearby divine trials remain separate from the Hollow Dawn story encounter.",
+    "worldmapCenter": {
+      "x": 5650,
+      "y": 2200,
+      "radius": 240
+    },
+    "monsters": [
+      "Rift Wraith",
+      "Rhunor, the Hollow Dawn"
+    ],
+    "items": [],
+    "spells": [],
+    "quests": [
+      "rift_unbinding",
+      "rhunor_hollow_dawn"
+    ],
+    "npcs": []
   }
 ]

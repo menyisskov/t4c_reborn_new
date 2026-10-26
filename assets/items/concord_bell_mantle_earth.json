@@ -1,0 +1,53 @@
+{
+  "key": "concord_bell_mantle_earth",
+  "name": "${item.concord_bell_mantle_earth}",
+  "bodyPart": "BACK",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal92",
+  "numId": 59028,
+  "appearanceId": 59028,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61199,
+      "statId": 4,
+      "expression": "33"
+    },
+    {
+      "boostId": 61200,
+      "statId": 19,
+      "expression": "40"
+    },
+    {
+      "boostId": 61201,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 61202,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 61203,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 61204,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 61205,
+      "statId": 22,
+      "expression": "16"
+    }
+  ],
+  "armorClass": 14.4,
+  "requirements": {
+    "wisdom": 400,
+    "endurance": 160
+  },
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal92"
+}

@@ -6,6 +6,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "The Dusk Regent", x = 5860, y = 2040, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class DuskRegent extends DataMonster {
   public static final String CANONICAL_NAME = "The Dusk Regent";
 
@@ -31,8 +32,7 @@ public final class DuskRegent extends DataMonster {
                 true)
             .withLoot(
                 java.util.List.of(
-                    new MonsterDef.LootDrop("item.last_witness_seal", 1.0f),
-                    new MonsterDef.LootDrop("mana_elixir", .5f))),
+                    new MonsterDef.LootDrop("item.last_witness_seal", 1.0f))),
         true,
         "witness_light_plate",
         "witness_light_robe",

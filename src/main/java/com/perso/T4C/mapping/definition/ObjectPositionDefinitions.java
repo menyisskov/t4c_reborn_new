@@ -1580,7 +1580,7 @@ public final class ObjectPositionDefinitions {
         // not
         // affect what is drawn or what is clickable. The tiles must match
         // TempleBlessingService.SHRINES exactly; TempleBlessingChestTest holds the two in step.
-        new ObjectPos("TEMPLE BLESSING CHEST", 2954, 1050, 0, false),
+        new ObjectPos("TEMPLE BLESSING CHEST", 2940, 1056, 0, false),
         new ObjectPos("TEMPLE BLESSING CHEST", 1556, 2407, 0, false),
         new ObjectPos("TEMPLE BLESSING CHEST", 1815, 1299, 0, false),
         new ObjectPos("TEMPLE BLESSING CHEST", 209, 737, 0, false),

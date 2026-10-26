@@ -1,0 +1,55 @@
+{
+  "key": "divine_apollo_weapon",
+  "name": "${item.divine_apollo_weapon}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal97",
+  "appearanceInventory": "64kInvWoodenStaff__pal97",
+  "numId": 55500,
+  "appearanceId": 55500,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "endurance": 0,
+    "wisdom": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50350,
+      "statId": 4,
+      "expression": "54"
+    },
+    {
+      "boostId": 50351,
+      "statId": 23,
+      "expression": "65"
+    },
+    {
+      "boostId": 50352,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50353,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50354,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50355,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50356,
+      "statId": 22,
+      "expression": "26"
+    }
+  ],
+  "dmgFormula": "1d54+65",
+  "atkDelay": "1300"
+}

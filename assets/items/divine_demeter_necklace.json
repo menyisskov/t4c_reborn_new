@@ -1,0 +1,53 @@
+{
+  "key": "divine_demeter_necklace",
+  "name": "${item.divine_demeter_necklace}",
+  "bodyPart": "NECK",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvNecklace 2__pal92",
+  "numId": 55007,
+  "appearanceId": 55007,
+  "weight": 1,
+  "armorClass": 11.0,
+  "requirements": {
+    "endurance": 220,
+    "wisdom": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50049,
+      "statId": 4,
+      "expression": "32"
+    },
+    {
+      "boostId": 50050,
+      "statId": 19,
+      "expression": "38"
+    },
+    {
+      "boostId": 50051,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50052,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50053,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50054,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50055,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

@@ -482,7 +482,10 @@ footer#pagefoot p { max-width: 640px; margin: 0 auto; font-size: 12px; color: va
 .map-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
 
 .map-pin {
+  --pin-size: 7px;
   position: absolute;
+  width: var(--pin-size);
+  height: var(--pin-size);
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
@@ -491,33 +494,44 @@ footer#pagefoot p { max-width: 640px; margin: 0 auto; font-size: 12px; color: va
 }
 .map-pin .pin-dot {
   display: block;
-  width: 7px;
-  height: 7px;
+  flex-shrink: 0;
+  width: var(--pin-size);
+  height: var(--pin-size);
   border-radius: 50%;
   background: var(--text-dim);
   border: 1px solid rgba(0,0,0,0.4);
   box-shadow: 0 0 0 2px rgba(18,20,28,0.55);
 }
 .map-pin .pin-label {
+  position: absolute;
+  left: calc(100% + 5px);
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 11px;
   color: var(--text);
   background: rgba(18,20,28,0.85);
   border: 1px solid var(--border);
   border-radius: 5px;
   padding: 1px 6px;
-  white-space: nowrap;
+  width: max-content;
+  max-width: min(220px, 65vw);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.1s ease;
 }
 .map-pin:hover { z-index: 4; }
 .map-pin:hover .pin-label { opacity: 1; pointer-events: auto; }
+.map-pin.label-left .pin-label { left: auto; right: calc(100% + 5px); }
+.map-pin .pin-label::before { content: ""; position: absolute; right: 100%; top: 0; width: 6px; height: 100%; }
+.map-pin.label-left .pin-label::before { right: auto; left: 100%; }
 
-.map-pin.pin-boss .pin-dot { width: 11px; height: 11px; background: var(--accent); box-shadow: 0 0 0 4px rgba(216,166,72,0.28); }
-.map-pin.pin-boss .pin-label { opacity: 1; font-weight: 600; }
+.map-pin.pin-boss { --pin-size: 11px; }
+.map-pin.pin-boss .pin-dot { background: var(--accent); box-shadow: 0 0 0 4px rgba(216,166,72,0.28); }
+.map-pin.pin-boss .pin-label { opacity: 1; pointer-events: auto; font-weight: 600; }
 .map-pin.pin-npc .pin-dot { background: #6fb3e0; box-shadow: 0 0 0 3px rgba(111,179,224,0.25); }
-.map-pin.pin-npc .pin-label { opacity: 1; }
-.map-pin.pin-trash .pin-dot { width: 5px; height: 5px; background: var(--text-faint); }
+.map-pin.pin-npc .pin-label { opacity: 1; pointer-events: auto; }
+.map-pin.pin-trash { --pin-size: 5px; }
+.map-pin.pin-trash .pin-dot { background: var(--text-faint); }
 
 .map-area-label {
   position: absolute;

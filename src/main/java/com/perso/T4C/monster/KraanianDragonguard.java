@@ -9,6 +9,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Kraanian Dragonguard", x = 2880, y = 2810, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Kraanian Dragonguard", x = 2810, y = 2820, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Kraanian Dragonguard", x = 2890, y = 2740, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class KraanianDragonguard extends DataMonster {
   // Reuses the "KraanianFlying" sprite/sound family already used by Kraanian Wyrmling — an
   // elite evolution of the same Kraanian stock, now guarding the true Drakes' lair.

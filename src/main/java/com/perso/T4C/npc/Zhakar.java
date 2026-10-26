@@ -2,6 +2,7 @@ package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.npc.behavior.NpcBehavior;
+import com.perso.T4C.npc.behavior.NpcBehaviorContext;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
@@ -9,7 +10,7 @@ import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "Zhakar", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Zhakar", x = 55, y = 1769, z = 0, stationary = false, aggressive = false)
 public final class Zhakar extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -213,6 +214,37 @@ public final class Zhakar extends ScriptedNpc {
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 
+        if (k.equals("EGG")) {
+          int stage = c.flag("__QUEST_KRAANIAN_EGG_STAGE");
+          if (stage == 0) {
+            if (c.hasItem("kraanian_egg")) {
+              c.sayKey("npc.zhakar.egg.offer");
+              c.askYesNo("kraanian_egg");
+            } else c.sayKey("npc.zhakar.egg.need");
+          } else if (stage == 1) {
+            if (c.player().getLevel() > c.flag("__QUEST_KRAANIAN_EGG_FIRST_LEVEL")) {
+              c.flag("__QUEST_KRAANIAN_EGG_STAGE", 2);
+              c.sayKey("npc.zhakar.egg.rod");
+            } else c.sayKey("npc.zhakar.egg.level");
+          } else if (stage == 2 || stage == 3) c.sayKey("npc.zhakar.egg.rod");
+          else if (stage == 4) {
+            if (c.hasItem("mana_rod")) {
+              c.takeItem("mana_rod");
+              c.flag("__QUEST_KRAANIAN_EGG_STAGE", 5);
+              c.flag("__QUEST_KRAANIAN_EGG_SECOND_LEVEL", c.player().getLevel());
+              c.sayKey("npc.zhakar.egg.second_level");
+            } else c.sayKey("npc.zhakar.egg.rod");
+          } else if (stage == 5) {
+            if (c.player().getLevel() > c.flag("__QUEST_KRAANIAN_EGG_SECOND_LEVEL")) {
+              if (c.summon("Zzartgax", 56, 1770, 0)) {
+                c.flag("__QUEST_KRAANIAN_EGG_STAGE", 6);
+                c.sayKey("npc.zhakar.egg.summoned");
+              } else c.sayKey("npc.zhakar.egg.summon_failed");
+            } else c.sayKey("npc.zhakar.egg.level");
+          } else c.sayKey(stage == 6 ? "npc.zhakar.egg.fight" : "npc.zhakar.egg.complete");
+          return true;
+        }
+
         if (k.contains("SPELLBOOK")) {
 
           if (c.flag("__FLAG_FOLLOWER_OF_OGRIMAR") != 1) c.sayKey("npc.zhakar.spellbook.no");
@@ -233,6 +265,18 @@ public final class Zhakar extends ScriptedNpc {
         }
 
         return com.perso.T4C.npc.behavior.StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
+      }
+
+      @Override
+      public boolean onYesNo(NpcBehaviorContext c, String state, boolean yes) {
+        if (!"kraanian_egg".equals(state)) return false;
+        if (yes && c.flag("__QUEST_KRAANIAN_EGG_STAGE") == 0 && c.hasItem("kraanian_egg")) {
+          c.takeItem("kraanian_egg");
+          c.flag("__QUEST_KRAANIAN_EGG_STAGE", 1);
+          c.flag("__QUEST_KRAANIAN_EGG_FIRST_LEVEL", c.player().getLevel());
+          c.sayKey("npc.zhakar.egg.accepted");
+        } else c.sayKey("npc.zhakar.egg.declined");
+        return true;
       }
     };
   }

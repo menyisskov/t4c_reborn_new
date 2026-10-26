@@ -23,6 +23,7 @@
   "structure": 8,
   "appearanceId": 0,
   "undroppable": false,
+  "dmgFormula": "1d401+999",
   "boosts": [
     {
       "boostId": 20756,

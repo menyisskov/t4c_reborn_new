@@ -23,12 +23,14 @@ public final class MonsterRegistry {
   }
 
   private static final Map<String, MonsterFactory> SPECIALIZED_FACTORIES = new LinkedHashMap<>();
+  private static final java.util.Set<String> NO_RECOVERY_LOOT_NAMES = new java.util.HashSet<>();
   private static final Map<String, MonsterDef> SPAWN_TYPE_ALIASES = new LinkedHashMap<>();
   private static List<MonsterDef> cache;
   private static Map<String, MonsterDef> byName;
   private static Map<String, MonsterDef> byNormalizedName;
   private static Map<String, MonsterDef> byAlias;
   private static List<MonsterDef> javaDefinitions = List.of();
+  private static final java.util.Set<String> ADDITIONAL_DEFINITION_NAMES = new java.util.HashSet<>();
 
   private MonsterRegistry() {}
 
@@ -44,6 +46,7 @@ public final class MonsterRegistry {
   }
 
   public static synchronized void registerDefinitions(List<MonsterDef> definitions) {
+    ADDITIONAL_DEFINITION_NAMES.clear();
     javaDefinitions = definitions == null ? List.of() : List.copyOf(definitions);
     cache = null;
     byName = null;
@@ -61,11 +64,16 @@ public final class MonsterRegistry {
     }
     List<MonsterDef> merged = new java.util.ArrayList<>(javaDefinitions);
     merged.addAll(extra);
+    for (MonsterDef definition : extra) ADDITIONAL_DEFINITION_NAMES.add(definition.getName());
     javaDefinitions = List.copyOf(merged);
     cache = null;
     byName = null;
     byNormalizedName = null;
     byAlias = null;
+  }
+
+  public static synchronized boolean isAdditionalDefinition(String name) {
+    return ADDITIONAL_DEFINITION_NAMES.contains(name);
   }
 
   /** Reverts to the classpath-scanned Java definitions, undoing any {@code registerAdditionalDefinitions} calls. Test-only. */
@@ -116,6 +124,9 @@ public final class MonsterRegistry {
     try {
       Class<?> type = Class.forName(className, true, MonsterRegistry.class.getClassLoader());
       MonsterDef definition = (MonsterDef) type.getMethod("definition").invoke(null);
+      if (type.isAnnotationPresent(NoRecoveryLoot.class)) {
+        NO_RECOVERY_LOOT_NAMES.add(definition.getName());
+      }
       definitions.add(definition);
       indexIdentity(type.getSimpleName(), definition);
       indexSpawnTypes(type, definition);
@@ -245,6 +256,10 @@ public final class MonsterRegistry {
       List.of("item.mana_prism", "item.critical_healing_potion");
 
   private static MonsterDef withEndgameUtilityLoot(MonsterDef def) {
+    if (def != null && NO_RECOVERY_LOOT_NAMES.contains(def.getName())) {
+      return def.withLoot(def.getLoot().stream()
+          .filter(drop -> !isRecoveryLoot(drop.getItem())).toList());
+    }
     if (def == null || def.getLevel() < ENDGAME_UTILITY_DROP_MIN_LEVEL) {
       return def;
     }
@@ -262,11 +277,28 @@ public final class MonsterRegistry {
     return def.withLoot(augmented);
   }
 
+  private static boolean isRecoveryLoot(String key) {
+    String normalized = com.perso.T4C.item.ItemDefinition.normalizeKey(key);
+    return normalized != null && (normalized.endsWith("healing_potion")
+        || normalized.equals("item.health_potion")
+        || normalized.equals("item.mana_elixir")
+        || normalized.equals("item.potion_of_mana")
+        || normalized.equals("item.mana_prism"));
+  }
+
+  public static boolean excludesRecoveryLoot(MonsterDef def) {
+    return def != null && NO_RECOVERY_LOOT_NAMES.contains(def.getName());
+  }
+
   private static void rebuild(List<MonsterDef> defs) {
     cache =
         defs == null
             ? List.of()
-            : defs.stream().map(MonsterRegistry::withEndgameUtilityLoot).toList();
+            : defs.stream()
+                .map(HuntingExperienceCurve::apply)
+                .map(HuntingDamageCurve::apply)
+                .map(MonsterRegistry::withEndgameUtilityLoot)
+                .toList();
     Map<String, MonsterDef> map = new LinkedHashMap<>();
     Map<String, MonsterDef> normalized = new LinkedHashMap<>();
     Map<String, MonsterDef> aliases = new LinkedHashMap<>();
@@ -291,7 +323,7 @@ public final class MonsterRegistry {
       }
     }
     for (Map.Entry<String, MonsterDef> extra : SPAWN_TYPE_ALIASES.entrySet()) {
-      aliases.putIfAbsent(extra.getKey(), extra.getValue());
+      aliases.putIfAbsent(extra.getKey(), map.getOrDefault(extra.getValue().getName(), extra.getValue()));
     }
     byName = map;
     byNormalizedName = normalized;

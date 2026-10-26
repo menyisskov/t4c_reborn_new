@@ -232,6 +232,15 @@ public final class BeltiganWhitesword extends ScriptedNpc {
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 
+        if (k.contains("RING") && k.contains("LION")) {
+          if (c.karma() < 100) c.sayKey("npc.beltigan.ring.good");
+          else if (c.itemCount("ring_of_the_lion") >= 2) {
+            c.sayKey("npc.beltigan.ring.ask");
+            c.askYesNo("beltigan_rings");
+          } else c.sayKey("npc.beltigan.ring.need");
+          return true;
+        }
+
         if (k.contains("KEY") && k.contains("ARTHERK")) {
 
           if (c.hasItem("key_of_artherk")) c.sayKey("npc.beltiganwhitesword.key.already");
@@ -255,6 +264,21 @@ public final class BeltiganWhitesword extends ScriptedNpc {
         }
 
         return false;
+      }
+
+      @Override
+      public boolean onYesNo(
+          com.perso.T4C.npc.behavior.NpcBehaviorContext c, String subject, boolean yes) {
+        if (!"beltigan_rings".equals(subject)) return false;
+        if (yes && c.karma() >= 100 && c.itemCount("ring_of_the_lion") >= 2) {
+          c.takeItem("ring_of_the_lion");
+          c.takeItem("ring_of_the_lion");
+          c.giveItem(
+              Math.random() < .5 ? "eye_of_the_tiger" : "crystal_sword_of_might");
+          c.giveXp(c.player().getLevel() * 4000);
+          c.sayKey("npc.beltigan.ring.done");
+        }
+        return true;
       }
     };
   }

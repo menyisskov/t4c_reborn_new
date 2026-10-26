@@ -35,6 +35,11 @@ public class GameInputHandler {
   private Runnable mapToggle;
   private BooleanSupplier textInputActiveSupplier;
   private final Vector2 movementInput = new Vector2();
+  private Supplier<Vector2> mouseMovementSupplier;
+
+  public void setMouseMovementSupplier(Supplier<Vector2> supplier) {
+    mouseMovementSupplier = supplier;
+  }
 
   public GameInputHandler(Logger log, MapRenderer mapRenderer, Player player) {
     this.log = log;
@@ -69,6 +74,13 @@ public class GameInputHandler {
       handleGlobalKeys();
     }
     projectGridDirection(gridDx, gridDy, movementInput);
+    Vector2 mouseMovement = mouseMovementSupplier == null ? null : mouseMovementSupplier.get();
+    if (gridDx == 0
+        && gridDy == 0
+        && !isTextInputActive()
+        && !isCtrlDown()
+        && !GuiManager.isOpen()
+        && mouseMovement != null) movementInput.set(mouseMovement);
     player.move(movementInput.x, movementInput.y, delta);
   }
 
@@ -177,14 +189,35 @@ public class GameInputHandler {
         GuiManager.open(new ControlsScreen());
       }
     }
-    // Developer shortcut; was a bare R, which players hit by accident (it stalls the game while
-    // every map texture reloads).
+    int modifiers = isCtrlDown() ? com.perso.T4C.config.MacroBinding.MOD_CTRL : 0;
+    if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+        || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))
+      modifiers |= com.perso.T4C.config.MacroBinding.MOD_SHIFT;
+    if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT))
+      modifiers |= com.perso.T4C.config.MacroBinding.MOD_ALT;
+    // A bound macro owns this chord. Reloading would invalidate the journal's cached textures.
     if (Gdx.input.isKeyJustPressed(Input.Keys.R)
-        && isCtrlDown()
-        && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
-            || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))) {
+        && resourceReloadAllowed(player, modifiers, GuiManager.isOpen())) {
       reloadResources();
     }
+  }
+
+  static boolean resourceReloadAllowed(Player player, int modifiers, boolean journalOpen) {
+    int reloadModifiers =
+        com.perso.T4C.config.MacroBinding.MOD_CTRL | com.perso.T4C.config.MacroBinding.MOD_SHIFT;
+    if (journalOpen || modifiers != reloadModifiers) return false;
+    return player == null
+        || player.getMacros().stream().noneMatch(macro -> macro.matches(Input.Keys.R, modifiers));
+  }
+
+  public static com.perso.T4C.config.MacroBinding resolveMacro(
+      Player player, int keycode, int modifiers, boolean journalOpen, boolean keyboardCaptured) {
+    if (player == null || keyboardCaptured) return null;
+    return player.getMacros().stream()
+        .filter(macro -> macro.matches(keycode, modifiers))
+        .filter(macro -> !journalOpen || macro.isItem())
+        .findFirst()
+        .orElse(null);
   }
 
   private static boolean isCtrlDown() {

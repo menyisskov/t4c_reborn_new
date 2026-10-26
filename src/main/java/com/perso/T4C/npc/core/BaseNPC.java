@@ -817,7 +817,8 @@ public abstract class BaseNPC extends Stats implements Nameable {
         isHovered,
         outlineShader,
         null,
-        false);
+        false,
+        maxHp > 0 ? (float) currentHp / maxHp : 0f);
   }
 
   public void renderNameOverlay(SpriteBatch batch) {

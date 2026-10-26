@@ -9,9 +9,9 @@
   "armorClass": 0.0,
   "dodgeLost": 0,
   "requirements": {
-    "endurance": 138,
-    "strength": 590,
-    "agility": 0,
+    "endurance": 0,
+    "strength": 138,
+    "agility": 590,
     "intelligence": 0,
     "wisdom": 0,
     "attack": 0
@@ -30,7 +30,7 @@
     {
       "boostId": 35004,
       "statId": 10035,
-      "expression": "true_skill(35)*65/100"
+      "expression": "true_skill(35)*75/100"
     },
     {
       "boostId": 36395,

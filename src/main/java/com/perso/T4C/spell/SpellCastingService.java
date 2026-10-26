@@ -197,7 +197,17 @@ public final class SpellCastingService {
             caster.getEffectiveWisdom(),
             0,
             caster.getLevel())
-        .withSelfTrue(selfTrue(caster));
+        .withSelfTrue(selfTrue(caster))
+        .withEquippedItems(equippedItems(caster));
+  }
+
+  static Map<Integer, Integer> equippedItems(Player caster) {
+    Map<Integer, Integer> counts = new LinkedHashMap<>();
+    for (String key : caster.getEquippedItems().values()) {
+      var item = com.perso.T4C.item.ItemRegistry.findByKey(key);
+      if (item != null && item.getNumId() > 0) counts.merge(item.getNumId(), 1, Integer::sum);
+    }
+    return counts;
   }
 
   /** The caster's own true readings, for the {@code self.true_*} formula variables. */
@@ -210,6 +220,7 @@ public final class SpellCastingService {
     readings.put("wis", caster.getTrueWisdom());
     readings.put("level", caster.getLevel());
     readings.put("attack", caster.getTrueSkillLevel("attack"));
+    readings.put("archery", caster.getTrueSkillLevel("archery"));
     readings.put("dodge", caster.getTrueSkillLevel("dodge"));
     for (String element : List.of("fire", "earth", "air", "water", "light", "dark")) {
       readings.put(element, caster.getTrueElementPower(element));

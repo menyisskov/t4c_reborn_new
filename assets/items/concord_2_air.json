@@ -1,0 +1,35 @@
+{
+  "key": "concord_2_air",
+  "name": "${item.concord_2_air}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvWoodenStaff__pal95",
+  "numId": 59053,
+  "appearanceId": 59053,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61312,
+      "statId": 1,
+      "expression": "15"
+    },
+    {
+      "boostId": 61313,
+      "statId": 16,
+      "expression": "36"
+    },
+    {
+      "boostId": 61314,
+      "statId": 4,
+      "expression": "15"
+    }
+  ],
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal95",
+  "requirements": {
+    "intelligence": 225,
+    "wisdom": 225
+  },
+  "dmgFormula": "1d60+45",
+  "atkDelay": "1300",
+  "isBow": false
+}

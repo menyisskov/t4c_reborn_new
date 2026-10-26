@@ -1,0 +1,36 @@
+{
+  "name": "Lord Stonecrest",
+  "displayName": "${npc.lordstonecrest}",
+  "health": 2761,
+  "xpPerHit": 12,
+  "xpOnDeath": 12153,
+  "hitDamageMin": 66,
+  "hitDamageMax": 128,
+  "respawnTime": 30000,
+  "walkPattern": "64kSkeletonServant1#m",
+  "attackPattern": "64kSkeletonServant1A#m",
+  "deathPattern": "64kSkeletonServant1C!p",
+  "soundAttack": "Whooshh 1.wav",
+  "soundDeath": "Skeleton Dying.wav",
+  "soundHit": "Skeleton Hit.wav",
+  "loot": [
+    { "item": "item.gleaming_bluestone_chestplate", "chance": 0.02 },
+    { "item": "item.gleaming_bluestone_gauntlets", "chance": 0.02 },
+    { "item": "item.gleaming_bluestone_headgear", "chance": 0.02 },
+    { "item": "item.gleaming_bluestone_legplates", "chance": 0.02 },
+    { "item": "item.gleaming_bluestone_protector", "chance": 0.02 },
+    { "item": "item.gleaming_bluestone_sabatons", "chance": 0.02 },
+    { "item": "item.bluestone_talisman", "chance": 0.1 },
+    { "item": "item.heros_amulet", "chance": 0.01 }
+  ],
+  "stats": { "str": 112, "end": 96, "agi": 90, "intel": 130, "will": 0, "wis": 120, "luck": 0 },
+  "resists": [58, 58, 78, 39, 5025, 39, 100, 100, 100, 100, 100, 100],
+  "level": 90,
+  "dodge": 370,
+  "aggro": 100,
+  "canAttack": true,
+  "attacks": [
+    { "formula": "1d63+65", "combatAttack": 1040, "percentage": 100 }
+  ],
+  "spawnAliases": ["LORDSTONECREST"]
+}

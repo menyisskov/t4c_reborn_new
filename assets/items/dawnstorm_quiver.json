@@ -1,0 +1,60 @@
+{
+  "key": "dawnstorm_quiver",
+  "name": "${item.dawnstorm_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 1500000,
+  "weight": 2,
+  "requirements": {
+    "strength": 195,
+    "agility": 800
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59908,
+  "structure": 8,
+  "appearanceId": 59908,
+  "dmgFormula": "1d501+1399",
+  "quiverSplash": {
+    "radius": 2.5,
+    "targets": 8,
+    "damagePercent": 40
+  },
+  "boosts": [
+    {
+      "boostId": 730080,
+      "statId": 6,
+      "expression": "67"
+    },
+    {
+      "boostId": 730081,
+      "statId": 10035,
+      "expression": "160"
+    },
+    {
+      "boostId": 730082,
+      "statId": 12,
+      "expression": "20"
+    },
+    {
+      "boostId": 730083,
+      "statId": 13,
+      "expression": "20"
+    },
+    {
+      "boostId": 730084,
+      "statId": 14,
+      "expression": "20"
+    },
+    {
+      "boostId": 730085,
+      "statId": 15,
+      "expression": "20"
+    },
+    {
+      "boostId": 730086,
+      "statId": 22,
+      "expression": "20"
+    }
+  ]
+}

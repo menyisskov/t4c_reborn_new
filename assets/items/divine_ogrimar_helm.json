@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_helm",
+  "name": "${item.divine_ogrimar_helm}",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm__pal91",
+  "appearanceInventory": "64kInvPlateArmorHelm__pal91",
+  "numId": 55904,
+  "appearanceId": 55904,
+  "weight": 1,
+  "armorClass": 7.2,
+  "requirements": {
+    "endurance": 100,
+    "intelligence": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50710,
+      "statId": 1,
+      "expression": "18"
+    },
+    {
+      "boostId": 50711,
+      "statId": 24,
+      "expression": "18"
+    },
+    {
+      "boostId": 50712,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50713,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50714,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50715,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50716,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

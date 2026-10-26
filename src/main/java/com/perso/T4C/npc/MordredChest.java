@@ -46,6 +46,8 @@ public final class MordredChest extends ScriptedNpc {
           while (c.hasItem("mordred_key")) c.takeItem("mordred_key");
 
           c.giveItem("seraph_plate");
+          if (c.flag("ADDON_SERAPH_ARMOR_QUEST") == 2)
+            c.flag("ADDON_SERAPH_ARMOR_QUEST", 3);
 
           c.sayKey("npc.mordredchest.opened");
 

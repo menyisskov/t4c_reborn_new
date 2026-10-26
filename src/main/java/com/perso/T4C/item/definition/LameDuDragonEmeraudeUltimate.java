@@ -33,7 +33,7 @@ public final class LameDuDragonEmeraudeUltimate {
         4012,
         1,
         1085,
-        "1d1560+3360",
+        "1d301+749",
         "if(750-self.agi/250*750/2<600?600:750-self.agi/250*750/2)+1d469",
         0,
         -1,

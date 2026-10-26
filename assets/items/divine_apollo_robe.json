@@ -1,0 +1,53 @@
+{
+  "key": "divine_apollo_robe",
+  "name": "${item.divine_apollo_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal97",
+  "appearanceInventory": "64kInvWhiteRobe__pal97",
+  "numId": 55501,
+  "appearanceId": 55501,
+  "weight": 4,
+  "armorClass": 124.0,
+  "requirements": {
+    "endurance": 400,
+    "wisdom": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50357,
+      "statId": 4,
+      "expression": "54"
+    },
+    {
+      "boostId": 50358,
+      "statId": 23,
+      "expression": "65"
+    },
+    {
+      "boostId": 50359,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50360,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50361,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50362,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50363,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

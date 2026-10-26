@@ -1,0 +1,53 @@
+{
+  "key": "divine_odin_ring",
+  "name": "${item.divine_odin_ring}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 4__pal95",
+  "numId": 56108,
+  "appearanceId": 56108,
+  "weight": 1,
+  "armorClass": 22.0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 801128,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 801129,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 801130,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 801131,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 801132,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 801133,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 801134,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

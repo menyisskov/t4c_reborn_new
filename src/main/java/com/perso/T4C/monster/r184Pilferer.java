@@ -4,8 +4,11 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 
-public final class r184Pilferer extends DataMonster {
+public final class r184Pilferer extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";
@@ -13,6 +16,15 @@ public final class r184Pilferer extends DataMonster {
   public r184Pilferer(MonsterDef definition, float worldX, float worldY) throws GameException {
 
     super(definition, worldX, worldY);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null) {
+      String flag = "__FLAG_PILFERERS_KILLED";
+      player.setQuestFlag(flag, Math.min(8, player.getQuestFlag(flag) + 1));
+    }
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

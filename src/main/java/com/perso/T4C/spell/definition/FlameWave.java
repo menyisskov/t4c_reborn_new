@@ -27,7 +27,7 @@ public final class FlameWave {
         0,
         "0",
         "0",
-        67637,
+        60800,
         null,
         10076,
         1,

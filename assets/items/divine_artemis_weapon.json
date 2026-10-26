@@ -1,0 +1,56 @@
+{
+  "key": "divine_artemis_weapon",
+  "name": "${item.divine_artemis_weapon}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow__pal92",
+  "appearanceInventory": "64kInvLongBow__pal92",
+  "numId": 55300,
+  "appearanceId": 55300,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "endurance": 0,
+    "agility": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50210,
+      "statId": 6,
+      "expression": "32"
+    },
+    {
+      "boostId": 50211,
+      "statId": 10035,
+      "expression": "true_skill(35)*50/100"
+    },
+    {
+      "boostId": 50212,
+      "statId": 12,
+      "expression": "10"
+    },
+    {
+      "boostId": 50213,
+      "statId": 13,
+      "expression": "10"
+    },
+    {
+      "boostId": 50214,
+      "statId": 14,
+      "expression": "10"
+    },
+    {
+      "boostId": 50215,
+      "statId": 15,
+      "expression": "10"
+    },
+    {
+      "boostId": 50216,
+      "statId": 22,
+      "expression": "10"
+    }
+  ],
+  "dmgFormula": "1d190+126+5*arrow_dmg/4",
+  "atkDelay": "1300",
+  "isBow": true
+}

@@ -1,0 +1,52 @@
+{
+  "key": "concord_oath_ring_earth",
+  "name": "${item.concord_oath_ring_earth}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 1",
+  "numId": 59004,
+  "appearanceId": 59004,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61028,
+      "statId": 4,
+      "expression": "8"
+    },
+    {
+      "boostId": 61029,
+      "statId": 19,
+      "expression": "10"
+    },
+    {
+      "boostId": 61030,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 61031,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 61032,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 61033,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 61034,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "armorClass": 2.5,
+  "requirements": {
+    "wisdom": 100,
+    "endurance": 50
+  }
+}

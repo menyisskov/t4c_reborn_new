@@ -17,6 +17,7 @@ import com.perso.T4C.spawn.Spawn;
     z = 0,
     stationary = false,
     aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class YsoldeTheVeiledMatriarch extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Skeleton Dying.wav";
@@ -55,8 +56,6 @@ public final class YsoldeTheVeiledMatriarch extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("ysoldes_veiled_circlet", 0.02f),
             new MonsterDef.LootDrop("item.veiled_aether_shard", 0.05f),
-            new MonsterDef.LootDrop("mana_elixir", 0.3f),
-            new MonsterDef.LootDrop("potion_of_mana", 0.3f),
             // T4C-0021: dark-flavor source for the Ancient Celestial/Empyrean armor sets
             // (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_dark_armor", 0.025f),

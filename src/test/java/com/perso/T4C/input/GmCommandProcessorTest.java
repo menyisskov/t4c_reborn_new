@@ -1,20 +1,20 @@
 package com.perso.T4C.input;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.npc.core.NpcWorldFlags;
 import com.perso.T4C.player.GmRank;
 import com.perso.T4C.player.GmSeed;
 import com.perso.T4C.player.Player;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import com.perso.T4C.spawn.SpawnDefinition;
 import com.perso.T4C.spawn.SpawnRegistry;
 import com.perso.T4C.world.DayNightCycle;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +50,103 @@ class GmCommandProcessorTest {
     commands.handleChatMessage(".setIntelligence 43", player);
     assertEquals(43, player.getIntelligence());
     assertEquals(4, saves.get());
+  }
+
+  @Test
+  void rerollRestoresAllocationBudgetsAndReopensAlphanWithoutRepeatingRebirthRewards()
+      throws Exception {
+    com.perso.T4C.item.json.ItemJsonLoader.loadAndRegister();
+    try {
+      player.setGmRank(GmRank.PLAYER);
+      player.setLevel(100);
+      player.setCurrentXp(12345);
+      player.setGold(42000);
+      player.setRebirthCount(3);
+      player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", 3);
+      player.setQuestFlag("__FLAG_REMORT_PROCESS", 2);
+      player.setQuestFlag("quest:keep", 7);
+      player.setQuestFlag("legacy:power:fire", 30);
+      player.setQuestFlag("legacy:resist:earth", 40);
+      player.setStrength(900);
+      player.setEndurance(800);
+      player.setSkillLevel("attack", 400);
+      player.setSkillLevel("armor_penetration", 100);
+      player.setSpells(new java.util.ArrayList<>(java.util.List.of("Fireball")));
+      player.setStatPoints(10);
+      player.setSkillPoints(20);
+      player.setMaxHp(5000);
+      player.setMaxMana(3000);
+      String weapon = ItemRegistry.findByKey("moonsteel_halberd").getKey();
+      player.getEquippedItems().put(com.perso.T4C.player.BodyPart.WEAPON, weapon);
+      player.getEquippedItems().put(com.perso.T4C.player.BodyPart.WEAPON2, weapon);
+      player.getInventory().add("item.torch");
+      commands.handleChatMessage(".reroll", player);
+      assertEquals(100, player.getLevel());
+      assertEquals(12345, player.getCurrentXp());
+      assertEquals(3, player.getRebirthCount());
+      assertEquals(35, player.getStrength());
+      assertEquals(35, player.getDexterity());
+      assertEquals(35, player.getEndurance());
+      assertEquals(35, player.getIntelligence());
+      assertEquals(35, player.getWisdom());
+      assertEquals(495, player.getStatPoints());
+      assertEquals(1485, player.getSkillPoints());
+      assertEquals(45, player.getSkillLevel("attack"));
+      assertEquals(45, player.getSkillLevel("archery"));
+      assertEquals(0, player.getSkillLevel("armor_penetration"));
+      assertTrue(player.getSpells().isEmpty());
+      assertTrue(player.getEquippedItems().isEmpty());
+      assertEquals(1, player.getInventory().stream().filter(weapon::equals).count());
+      assertTrue(player.getInventory().contains("item.torch"));
+      assertEquals(42000, player.getGold());
+      assertEquals(7, player.getQuestFlag("quest:keep"));
+      assertEquals(0, player.getQuestFlag("legacy:power:fire"));
+      assertEquals(0, player.getQuestFlag("legacy:resist:earth"));
+      assertEquals(20, player.getQuestFlag("__FLAG_REMORT_POINTS"));
+      assertEquals(0, player.getQuestFlag("__FLAG_REMORT_PROCESS"));
+      assertEquals(1315 * GRID_W, player.getCoordinates().getX());
+      assertEquals(920 * GRID_H, player.getCoordinates().getY());
+      assertEquals(1, player.getCoordinates().getZ());
+      assertEquals(5000, player.getMaxHp());
+      assertEquals(3000, player.getMaxMana());
+      assertEquals(1, saves.get());
+      var restored = new Player();
+      com.perso.T4C.helper.PlayerStateMapper.applyToPlayer(
+          com.perso.T4C.helper.PlayerStateMapper.fromPlayer(player), restored);
+      var alphan = new com.perso.T4C.npc.RemortNPC1(new com.perso.T4C.npc.core.NpcContext(null));
+      var context = new com.perso.T4C.npc.behavior.NpcBehaviorContext(alphan, restored);
+      alphan.publicBehavior().onKeyword(context, "assist");
+      assertEquals(1, restored.getQuestFlag("__FLAG_REMORT_PROCESS"));
+      restored.setQuestFlag("__FLAG_REMORT_POINTS", 0);
+      alphan.publicBehavior().onConversationStart(context);
+      assertEquals(2, restored.getQuestFlag("__FLAG_REMORT_PROCESS"));
+      alphan.publicBehavior().onKeyword(context, "ready");
+      assertEquals(
+          com.perso.T4C.config.GameConstants.REBIRTH_RETURN_Z, restored.getCoordinates().getZ());
+      commands.handleChatMessage(".reroll", player);
+      assertEquals(495, player.getStatPoints());
+      assertEquals(1485, player.getSkillPoints());
+      assertEquals(20, player.getQuestFlag("__FLAG_REMORT_POINTS"));
+      assertEquals(1, player.getInventory().stream().filter(weapon::equals).count());
+      assertEquals(2, saves.get());
+    } finally {
+      ItemRegistry.resetAdditionalDefinitions();
+    }
+  }
+
+  @Test
+  void rerollAtHumanLevelOneHasNoFreePointsAndRejectsArgumentsWithoutSaving() {
+    player.setGmRank(GmRank.PLAYER);
+    player.setLevel(1);
+    commands.handleChatMessage(".reroll someone_else", player);
+    assertEquals(0, saves.get());
+    commands.handleChatMessage(".reroll", player);
+    assertEquals(20, player.getStrength());
+    assertEquals(0, player.getStatPoints());
+    assertEquals(0, player.getSkillPoints());
+    assertEquals(0, player.getQuestFlag("__FLAG_REMORT_POINTS"));
+    assertEquals(0, player.getRebirthCount());
+    assertEquals(1, saves.get());
   }
 
   @Test
@@ -180,6 +277,60 @@ class GmCommandProcessorTest {
     int before = player.getInventory().size();
     commands.handleChatMessage(".summon item " + key + " 3", player);
     assertEquals(before + 3, player.getInventory().size());
+  }
+
+  @Test
+  void summonBundlesResolveCanonicalKeysKeepQuantitiesAndSaveOncePerCommand() {
+    commands.handleChatMessage(".summon AZURE_ARMOR_SET", player);
+    assertEquals(6, player.getInventory().size());
+    for (String suffix :
+        java.util.List.of("armor", "boots", "gauntlets", "helm", "leggings", "protector")) {
+      assertEquals(1, com.perso.T4C.item.InventoryService.count(player, "azure_plate_" + suffix));
+    }
+    commands.handleChatMessage(".summon good_seraph_quest", player);
+    assertEquals(1, com.perso.T4C.item.InventoryService.count(player, "soul_of_artherk"));
+    assertEquals(3, com.perso.T4C.item.InventoryService.count(player, "ring_of_pure_faith"));
+    assertEquals(3, com.perso.T4C.item.InventoryService.count(player, "hammer_of_finality"));
+    commands.handleChatMessage(".summon evil_seraph_quest", player);
+    assertEquals(1, com.perso.T4C.item.InventoryService.count(player, "bones_of_ogrimar"));
+    assertEquals(5, com.perso.T4C.item.InventoryService.count(player, "black_widow_venom"));
+    assertEquals(3, saves.get());
+    assertTrue(player.getQuestFlags().isEmpty());
+    for (String key : player.getInventory()) {
+      assertEquals(key, ItemRegistry.findByKey(key).getKey());
+    }
+  }
+
+  @Test
+  void empyreanBundlesResolveEveryVariantAndRejectMissingOrInvalidVariants() {
+    com.perso.T4C.item.json.ItemJsonLoader.loadAndRegister();
+    try {
+      commands.handleChatMessage(".summon empyrean_armor_set", player);
+      commands.handleChatMessage(".summon empyrean_armor_set unknown", player);
+      assertTrue(player.getInventory().isEmpty());
+      assertEquals(0, saves.get());
+      // Every variant is a separate content join: all six registry references must resolve.
+      for (String variant :
+          java.util.List.of(
+              "warrior", "archer", "fire", "water", "air", "earth", "light", "dark")) {
+        player.getInventory().clear();
+        commands.handleChatMessage(".summon empyrean_armor_set " + variant, player);
+        assertEquals(6, player.getInventory().size(), variant);
+        for (String piece :
+            java.util.List.of("armor", "boots", "gauntlets", "helmet", "leggings", "protector"))
+          assertEquals(
+              1,
+              com.perso.T4C.item.InventoryService.count(
+                  player, "empyrean_" + variant + "_" + piece));
+      }
+      assertEquals(8, saves.get());
+      player.getInventory().clear();
+      commands.handleChatMessage(".summon ephymeral_armor_set ARCHER", player);
+      assertEquals(6, player.getInventory().size());
+      assertEquals(9, saves.get());
+    } finally {
+      ItemRegistry.resetAdditionalDefinitions();
+    }
   }
 
   @Test

@@ -1,0 +1,55 @@
+{
+  "key": "divine_ra_weapon",
+  "name": "${item.divine_ra_weapon}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal94",
+  "appearanceInventory": "64kInvWoodenStaff__pal94",
+  "numId": 55200,
+  "appearanceId": 55200,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "endurance": 0,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50140,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50141,
+      "statId": 17,
+      "expression": "38"
+    },
+    {
+      "boostId": 50142,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50143,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50144,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50145,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50146,
+      "statId": 22,
+      "expression": "15"
+    }
+  ],
+  "dmgFormula": "1d31+38",
+  "atkDelay": "1300"
+}

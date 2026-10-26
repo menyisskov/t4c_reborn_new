@@ -1,22 +1,58 @@
 package com.perso.T4C.teleport;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.item.InventoryService;
+import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestDef;
 import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.quest.definition.QuestDefinitions;
+import com.perso.T4C.spawn.HuntingGrounds;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
-/** T4C-0019: fast travel to a fork zone is granted only once its unlock quest is completed, and
- * every zone id referenced from either side (NamedLocations / QuestDef.unlockZoneId) must match
- * the other exactly - a typo here would silently and permanently hide a location. */
+/**
+ * T4C-0019: fast travel to a fork zone is granted only once its unlock quest is completed, and
+ * every zone id referenced from either side (NamedLocations / QuestDef.unlockZoneId) must match the
+ * other exactly - a typo here would silently and permanently hide a location.
+ */
 class NamedLocationsTest {
+  @Test
+  void huntingAndTrainingTeleportsAscendByTheirRegularMonstersLevel() {
+    for (String category : List.of("hunting", "training")) {
+      List<TravelCatalogue.Destination> destinations = TravelCatalogue.forCategory(category);
+      assertFalse(destinations.isEmpty());
+      var expectedIds =
+          HuntingGrounds.all().stream()
+              .filter(ground -> (ground.trainingTier() > 0) == "training".equals(category))
+              .map(ground -> "base." + ground.locationKey())
+              .collect(Collectors.toSet());
+      if ("hunting".equals(category)) expectedIds.add("hunt.arch_drake");
+      assertEquals(
+          expectedIds,
+          destinations.stream().map(TravelCatalogue.Destination::id).collect(Collectors.toSet()));
+      int previousLevel = -1;
+      for (var destination : destinations) {
+        String monster =
+            "hunt.arch_drake".equals(destination.id())
+                ? "Arch Drake"
+                : HuntingGrounds.all().stream()
+                    .filter(ground -> ("base." + ground.locationKey()).equals(destination.id()))
+                    .findFirst()
+                    .orElseThrow()
+                    .monster();
+        int level = MonsterRegistry.findByName(monster).getLevel();
+        assertTrue(level >= previousLevel, destination.name() + " is out of level order");
+        previousLevel = level;
+      }
+    }
+  }
+
   @Test
   void unconditionalLocationsAreAlwaysVisible() {
     List<NamedLocation> visible = NamedLocations.forPlayer(new Player());
@@ -27,16 +63,20 @@ class NamedLocationsTest {
   void oracleEntriesAreHiddenUntilTheCharacterHoldsEitherKey() {
     Player player = new Player();
     assertFalse(
-        NamedLocations.forPlayer(player).stream().anyMatch(l -> "Oracle access".equals(l.displayName())));
+        NamedLocations.forPlayer(player).stream()
+            .anyMatch(l -> "Oracle access".equals(l.displayName())));
     assertFalse(
-        NamedLocations.forPlayer(player).stream().anyMatch(l -> "The Oracle".equals(l.displayName())));
+        NamedLocations.forPlayer(player).stream()
+            .anyMatch(l -> "The Oracle".equals(l.displayName())));
 
     InventoryService.add(player, "key_of_artherk");
 
     assertTrue(
-        NamedLocations.forPlayer(player).stream().anyMatch(l -> "Oracle access".equals(l.displayName())));
+        NamedLocations.forPlayer(player).stream()
+            .anyMatch(l -> "Oracle access".equals(l.displayName())));
     assertTrue(
-        NamedLocations.forPlayer(player).stream().anyMatch(l -> "The Oracle".equals(l.displayName())));
+        NamedLocations.forPlayer(player).stream()
+            .anyMatch(l -> "The Oracle".equals(l.displayName())));
   }
 
   @Test
@@ -45,7 +85,8 @@ class NamedLocationsTest {
     InventoryService.add(player, "key_of_ogrimar");
 
     assertTrue(
-        NamedLocations.forPlayer(player).stream().anyMatch(l -> "Oracle access".equals(l.displayName())));
+        NamedLocations.forPlayer(player).stream()
+            .anyMatch(l -> "Oracle access".equals(l.displayName())));
   }
 
   @Test
@@ -74,8 +115,11 @@ class NamedLocationsTest {
       if (location.unlockZoneId() != null) {
         assertTrue(
             unlockedByQuests.contains(location.unlockZoneId()),
-            "No quest unlocks zone id '" + location.unlockZoneId() + "' ("
-                + location.displayName() + ")");
+            "No quest unlocks zone id '"
+                + location.unlockZoneId()
+                + "' ("
+                + location.displayName()
+                + ")");
       }
     }
 

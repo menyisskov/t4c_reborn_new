@@ -22,6 +22,7 @@ import com.perso.T4C.spawn.Spawn;
     z = 0,
     stationary = false,
     aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class TheMistwingWyrm extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";
@@ -62,8 +63,6 @@ public final class TheMistwingWyrm extends DataMonster {
             new MonsterDef.LootDrop("item.mistwing_wyrm_scale", 0.12f),
             new MonsterDef.LootDrop("mistwing_wyrms_rainveil_mantle", 0.015f),
             new MonsterDef.LootDrop("mistwing_wyrms_fogstride_boots", 0.015f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             new MonsterDef.LootDrop("ancient_celestial_archer_armor", 0.025f),
             new MonsterDef.LootDrop("ancient_celestial_archer_boots", 0.025f),
             new MonsterDef.LootDrop("ancient_celestial_archer_gauntlets", 0.025f),

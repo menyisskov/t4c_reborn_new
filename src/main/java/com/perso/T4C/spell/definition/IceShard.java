@@ -27,7 +27,7 @@ public final class IceShard {
         0,
         "0",
         "0",
-        17200,
+        4473,
         null,
         10022,
         4,

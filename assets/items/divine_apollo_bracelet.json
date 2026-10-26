@@ -1,0 +1,53 @@
+{
+  "key": "divine_apollo_bracelet",
+  "name": "${item.divine_apollo_bracelet}",
+  "bodyPart": "BRACER",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvBelt__pal97",
+  "numId": 55509,
+  "appearanceId": 55509,
+  "weight": 1,
+  "armorClass": 20.0,
+  "requirements": {
+    "endurance": 400,
+    "wisdom": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50413,
+      "statId": 4,
+      "expression": "54"
+    },
+    {
+      "boostId": 50414,
+      "statId": 23,
+      "expression": "65"
+    },
+    {
+      "boostId": 50415,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50416,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50417,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50418,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50419,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

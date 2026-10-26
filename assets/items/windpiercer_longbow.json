@@ -1,0 +1,57 @@
+{
+  "key": "windpiercer_longbow",
+  "name": "${item.windpiercer_longbow}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 3000000,
+  "weight": 6,
+  "requirements": {
+    "strength": 175,
+    "agility": 1100
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59920,
+  "structure": 9,
+  "appearanceId": 448,
+  "dmgFormula": "1d401+1099+4*arrow_dmg",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "atkDelay": "850",
+  "boosts": [
+    {
+      "boostId": 732000,
+      "statId": 6,
+      "expression": "92"
+    },
+    {
+      "boostId": 732001,
+      "statId": 10035,
+      "expression": "true_skill(35)*50/100"
+    },
+    {
+      "boostId": 732002,
+      "statId": 12,
+      "expression": "28"
+    },
+    {
+      "boostId": 732003,
+      "statId": 13,
+      "expression": "28"
+    },
+    {
+      "boostId": 732004,
+      "statId": 14,
+      "expression": "28"
+    },
+    {
+      "boostId": 732005,
+      "statId": 15,
+      "expression": "28"
+    },
+    {
+      "boostId": 732006,
+      "statId": 22,
+      "expression": "28"
+    }
+  ]
+}

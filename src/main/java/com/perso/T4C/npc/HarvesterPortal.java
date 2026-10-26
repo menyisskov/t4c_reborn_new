@@ -2,7 +2,7 @@ package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.npc.behavior.NpcBehavior;
-import com.perso.T4C.npc.behavior.StaticDialogueBehavior;
+import com.perso.T4C.npc.behavior.NpcBehaviorContext;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
@@ -36,8 +36,34 @@ public final class HarvesterPortal extends ScriptedNpc {
 
   @Override
   protected NpcBehavior javaBehavior() {
-
-    return StaticDialogueBehavior.STATIONARY;
+    return new NpcBehavior() {
+      @Override
+      public void onConversationStart(NpcBehaviorContext c) {
+        if (c.player().getLevel() < 50) {
+          c.sayKey("npc.harvesterportal.level");
+          return;
+        }
+        if (!c.hasItem("hel_soulstone")
+            || !c.hasItem("jormungand_soulstone")
+            || !c.hasItem("fenrir_soulstone")) {
+          c.sayKey("npc.harvesterportal.missing");
+          return;
+        }
+        float previousX = c.player().getPositionVector().x;
+        float previousY = c.player().getPositionVector().y;
+        int previousZ = c.player().getCoordinates().getZ();
+        c.teleport(2710, 1040, 1);
+        if (!c.summon("HARVESTEROFLIFE", 2710, 1040, 1)) {
+          c.player().setWorldPosition(previousX, previousY, previousZ);
+          c.sayKey("npc.harvesterportal.unavailable");
+          return;
+        }
+        c.takeItem("hel_soulstone");
+        c.takeItem("jormungand_soulstone");
+        c.takeItem("fenrir_soulstone");
+        c.sayKey("npc.welcome.harvesterportal");
+      }
+    };
   }
 
   public HarvesterPortal(NpcContext context) throws GameException {

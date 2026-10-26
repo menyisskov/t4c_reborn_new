@@ -11,13 +11,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.perso.T4C.config.MacroBinding;
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.gui.core.CharacterPanel;
 import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiManager;
-import com.perso.T4C.gui.core.GuiScreenBase;
-import com.perso.T4C.gui.core.GuiSprites;
+import com.perso.T4C.gui.core.JournalTheme;
+import com.perso.T4C.gui.widget.GuiButton;
+import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
-import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
@@ -26,46 +27,30 @@ import com.perso.T4C.ui.PlayerHUD;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Macro list (Ctrl+M) on the original macro window art: one row per macro with the spell's icon,
- * name and key. Select a row, then Bind (or click its key box) and press the key to use; the
- * arrows reorder, Clear unbinds, Remove deletes. Macros are added from the spell book's "+".
- */
-public class MacrosScreen extends GuiScreenBase {
+/** Character journal page for binding and reordering keyboard spell and item macros. */
+public class MacrosScreen extends CharacterPanel {
   static final int ROWS_VISIBLE = 6;
-  // Window-relative geometry of GUI_BackMacro (576x368).
-  private static final float ROW_PITCH = 46f;
-  private static final float ROW_Y = 60f;
-  private static final float ROW_H = 18f;
-  private static final float ICON_CX = 42f;
-  private static final float ICON_CY = 68f;
-  private static final float NAME_X = 78f;
-  private static final float NAME_W = 180f;
-  private static final float KEY_X = 265f;
-  private static final float KEY_W = 108f;
-  private static final Rectangle SCROLL = new Rectangle(380f, 38f, 26f, 270f);
-  private static final Rectangle BOOK_ICON = new Rectangle(420f, 40f, 38f, 40f);
-  private static final Rectangle HELP_ICON = new Rectangle(518f, 40f, 38f, 40f);
-  private static final Rectangle MOVE_DOWN = new Rectangle(446f, 146f, 38f, 38f);
-  private static final Rectangle MOVE_UP = new Rectangle(494f, 146f, 38f, 38f);
-  private static final Rectangle BIND = new Rectangle(420f, 96f, 72f, 26f);
-  private static final Rectangle CLEAR = new Rectangle(496f, 96f, 72f, 26f);
-  private static final Rectangle REMOVE = new Rectangle(420f, 188f, 148f, 22f);
-  private static final Rectangle HINT_PANEL = new Rectangle(418f, 214f, 152f, 112f);
-  private static final Color GOLD = Color.valueOf("F2B705");
-  private static final Color TEXT = Color.valueOf("E6D8BC");
-  private static final Color DIM = Color.valueOf("A89E86");
-
+  private static final float ROW_PITCH = 54;
+  private static final float ROW_Y = 136;
+  private static final float ROW_H = 46;
+  private static final float NAME_X = 84;
+  private static final float NAME_W = 230;
+  private static final float KEY_X = 324;
+  private static final float KEY_W = 160;
+  private static final Rectangle SCROLL = new Rectangle(502, 136, 12, 316);
   private final Player player;
   private final PlayerHUD hud;
   private final GlyphLayout layout = new GlyphLayout();
-  private final TextureRegion[] button = new TextureRegion[3];
-  private final TextureRegion scrollTick;
+  private final GuiButton bindButton;
+  private final GuiButton clearButton;
+  private final GuiButton removeButton;
+  private final GuiButton upButton;
+  private final GuiButton downButton;
   private int firstVisible;
   private int selected;
   private int listeningIndex = -1;
-  private float mouseX = -1f;
-  private float mouseY = -1f;
+  private float mouseX = -1;
+  private float mouseY = -1;
 
   public MacrosScreen() {
     this(null);
@@ -76,20 +61,58 @@ public class MacrosScreen extends GuiScreenBase {
   }
 
   public MacrosScreen(Player player, PlayerHUD hud) {
+    super(player, hud, "ui.journal.macros", "macros");
     this.player = player;
     this.hud = hud;
-    background = GuiSprites.load("GUI_BackMacro");
-    scrollTick = GuiSprites.load("GUI_ScrollTick");
-    button[0] = GuiSprites.load("GUI_ButtonUp");
-    button[1] = GuiSprites.load("GUI_ButtonHUp");
-    button[2] = GuiSprites.load("GUI_ButtonDown");
-    centerOnScreen();
-    if (background == null) return;
-    addCloseButton(548f, 5f);
+    text("ui.macros.spell", 84, 108, 220, 20, 12, JournalTheme.DIM);
+    text("ui.macros.key", 324, 108, 160, 20, 12, JournalTheme.DIM);
+    text("ui.macros.selected", 534, 108, 154, 20, 12, JournalTheme.DIM);
+    value(
+        () ->
+            hasSelection()
+                ? displayName(macros().get(selected))
+                : I18n.key("ui.macros.no_selection"),
+        532,
+        138,
+        158,
+        46,
+        14,
+        JournalTheme.GOLD);
+    bindButton = addAction("ui.macros.bind", 530, 200, 160, 32, () -> listeningIndex = selected);
+    clearButton = addAction("ui.macros.clear", 530, 242, 160, 30, () -> clearKey(selected));
+    upButton = addAction("ui.macros.move_up", 530, 284, 76, 30, () -> move(-1));
+    downButton = addAction("ui.macros.move_down", 614, 284, 76, 30, () -> move(1));
+    removeButton = addAction("ui.macros.remove", 530, 326, 160, 30, () -> removeEntry(selected));
+    addAction(
+        "ui.macros.open_spells",
+        530,
+        370,
+        160,
+        30,
+        () -> GuiManager.open(new SpellBook(player, hud)));
+    addAction("ui.macros.controls", 530, 412, 160, 30, () -> GuiManager.open(new ControlsScreen()));
+    value(
+        () -> I18n.key(listeningIndex >= 0 ? "ui.macros.hint_listening" : "ui.macros.hint"),
+        28,
+        485,
+        664,
+        24,
+        11,
+        JournalTheme.DIM);
+  }
+
+  private GuiButton addAction(String key, int dx, int dy, int width, int height, Runnable action) {
+    GuiButton button = theme.button(x + dx, y + dy, width, height, () -> I18n.key(key), action);
+    buttons.add(button);
+    return button;
   }
 
   private List<MacroBinding> macros() {
-    return player.getMacros();
+    return player == null ? List.of() : player.getMacros();
+  }
+
+  private boolean hasSelection() {
+    return selected >= 0 && selected < macros().size();
   }
 
   private Rectangle abs(Rectangle r) {
@@ -100,141 +123,131 @@ public class MacrosScreen extends GuiScreenBase {
     return new Rectangle(x + cellX, y + ROW_Y + row * ROW_PITCH, cellW, ROW_H);
   }
 
-  // ---------------------------------------------------------------- rendering
-
   @Override
   public void render(SpriteBatch batch) {
-    if (background == null) {
-      super.render(batch);
-      return;
-    }
-    TextureRegion art = background;
-    background = null;
-    GuiDraw.drawOverlayWithPatch(batch, art, x, y, 419, 215, 149, 113, 420, 88, 140, 52);
-    super.render(batch);
-    background = art;
-
-    BitmapFont title = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
-    centered(batch, title, I18n.key("ui.macros"), x + 237f, y + 3f, 101f);
-    BitmapFont header = FontManager.getInstance().getTahomaFont(12, GOLD, true);
-    centered(batch, header, I18n.key("ui.macros.spell"), x + 116f, y + 40f, 103f);
-    centered(batch, header, I18n.key("ui.macros.key"), x + 282f, y + 40f, 72f);
-
+    renderPanelBackground(batch);
+    boolean active = hasSelection() && listeningIndex < 0;
+    bindButton.setEnabled(active);
+    clearButton.setEnabled(active && macros().get(selected).getKeycode() != MacroBinding.UNBOUND);
+    removeButton.setEnabled(active);
+    upButton.setEnabled(active && selected > 0);
+    downButton.setEnabled(active && selected < macros().size() - 1);
+    well(batch, 526, 133, 168, 54);
     drawRows(batch);
     drawScrollTick(batch);
-    boolean hasSelection = selected >= 0 && selected < macros().size();
-    MacroBinding current = hasSelection ? macros().get(selected) : null;
-    drawButton(batch, BIND, I18n.key("ui.macros.bind"), hasSelection);
-    drawButton(
-        batch,
-        CLEAR,
-        I18n.key("ui.macros.clear"),
-        current != null && current.getKeycode() != MacroBinding.UNBOUND);
-    drawButton(batch, REMOVE, I18n.key("ui.macros.remove"), hasSelection);
-
-    BitmapFont hint = FontManager.getInstance().getJetBrainsMonoFont(10, DIM);
-    hint.draw(
-        batch,
-        I18n.key(hoverHintKey()),
-        x + HINT_PANEL.x + 6f,
-        y + HINT_PANEL.y + 6f,
-        HINT_PANEL.width - 12f,
-        Align.left,
-        true);
+    for (var element : orderedElements()) element.render(batch);
   }
 
   private void drawRows(SpriteBatch batch) {
-    List<MacroBinding> macros = macros();
-    BitmapFont name = FontManager.getInstance().getTahomaFont(12, TEXT, true);
-    BitmapFont hovered = FontManager.getInstance().getTahomaFont(12, Color.WHITE, true);
-    BitmapFont active = FontManager.getInstance().getTahomaFont(12, GOLD, true);
-    BitmapFont key = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
-    BitmapFont unbound = FontManager.getInstance().getJetBrainsMonoFont(11, DIM);
-    if (macros.isEmpty()) {
-      BitmapFont dim = FontManager.getInstance().getJetBrainsMonoFont(11, DIM);
-      dim.draw(
-          batch, I18n.key("ui.macros.empty"), x + NAME_X, y + ROW_Y + 2f, 290f, Align.left, true);
+    var fonts = FontManager.getInstance();
+    if (macros().isEmpty()) {
+      well(batch, 28, ROW_Y, 466, 316);
+      fonts
+          .getTahomaFont(14, JournalTheme.DIM, false)
+          .draw(batch, I18n.key("ui.macros.empty"), x + 60, y + 230, 400, Align.center, true);
       return;
     }
     for (int row = 0; row < ROWS_VISIBLE; row++) {
       int index = firstVisible + row;
-      if (index >= macros.size()) break;
-      MacroBinding macro = macros.get(index);
+      if (index >= macros().size()) break;
+      MacroBinding macro = macros().get(index);
+      Rectangle r = rowCell(row, 28, 466);
+      boolean hover = r.contains(mouseX, mouseY);
+      if (index == selected) {
+        theme.accentWell(batch, r.x, r.y, r.width, r.height);
+        theme.rect(batch, r.x + 2, r.y + 9, 2, r.height - 18, JournalTheme.GOLD);
+      } else theme.well(batch, r.x, r.y, r.width, r.height);
       TextureRegion icon = icon(macro);
-      if (icon != null) {
-        float size = 30f;
-        float scale = Math.min(size / icon.getRegionWidth(), size / icon.getRegionHeight());
-        float w = icon.getRegionWidth() * scale;
-        float h = icon.getRegionHeight() * scale;
-        GuiDraw.drawRegionFlipped(
-            batch, icon, x + ICON_CX - w / 2f, y + ICON_CY + row * ROW_PITCH - h / 2f, w, h);
-      }
-      Rectangle nameCell = rowCell(row, NAME_X, NAME_W);
-      boolean hover = nameCell.contains(mouseX, mouseY) || rowCell(row, KEY_X, KEY_W).contains(mouseX, mouseY);
-      BitmapFont nameFont = index == selected ? active : hover ? hovered : name;
-      layout.setText(nameFont, displayName(macro), nameFont.getColor(), NAME_W - 10f, Align.left, false);
-      nameFont.draw(batch, layout, nameCell.x + 6f, nameCell.y + 3f);
-      String keyText = keyDisplay(macro, index);
-      boolean isUnbound = macro.getKeycode() == MacroBinding.UNBOUND && listeningIndex != index;
-      BitmapFont keyFont = isUnbound ? unbound : key;
-      if (listeningIndex == index && (System.currentTimeMillis() / 400L) % 2 == 1) keyText = "";
-      Rectangle keyCell = rowCell(row, KEY_X, KEY_W);
-      centered(batch, keyFont, keyText, keyCell.x, keyCell.y + 3f, keyCell.width);
+      if (icon != null) GuiDraw.drawRegionFlipped(batch, icon, r.x + 10, r.y + 7, 32, 32);
+      drawFitted(
+          batch,
+          fonts.getTahomaFont(
+              13,
+              index == selected ? JournalTheme.GOLD : hover ? Color.WHITE : JournalTheme.TEXT,
+              false),
+          displayName(macro),
+          x + NAME_X,
+          r.y + 5,
+          NAME_W,
+          36,
+          false);
+      Rectangle key = rowCell(row, KEY_X, KEY_W);
+      theme.well(batch, key.x, key.y + 7, key.width, 32);
+      drawFitted(
+          batch,
+          fonts.getTahomaFont(
+              12,
+              listeningIndex == index
+                  ? JournalTheme.ACCENT
+                  : macro.getKeycode() == MacroBinding.UNBOUND
+                      ? JournalTheme.DIM
+                      : JournalTheme.TEXT,
+              false),
+          keyDisplay(macro, index),
+          key.x + 4,
+          key.y + 7,
+          key.width - 8,
+          32,
+          true);
     }
   }
 
   private void drawScrollTick(SpriteBatch batch) {
-    int maxFirst = Math.max(0, macros().size() - ROWS_VISIBLE);
-    if (scrollTick == null || maxFirst == 0) return;
-    float travel = SCROLL.height - 60f - scrollTick.getRegionHeight();
-    GuiDraw.drawRegionFlipped(
-        batch,
-        scrollTick,
-        x + SCROLL.x + (SCROLL.width - scrollTick.getRegionWidth()) / 2f,
-        y + SCROLL.y + 30f + travel * firstVisible / maxFirst);
+    int total = macros().size();
+    if (total <= ROWS_VISIBLE) return;
+    Rectangle track = abs(SCROLL);
+    theme.well(batch, track.x, track.y, track.width, track.height);
+    float height = Math.max(20, track.height * ROWS_VISIBLE / total);
+    float offset = (track.height - height) * firstVisible / (total - ROWS_VISIBLE);
+    theme.rect(batch, track.x + 4, track.y + offset, 4, height, JournalTheme.DIM);
   }
 
-  private void drawButton(SpriteBatch batch, Rectangle rel, String label, boolean enabled) {
-    Rectangle r = abs(rel);
-    boolean hover = enabled && r.contains(mouseX, mouseY);
-    TextureRegion bg = hover ? button[1] : button[0];
-    if (bg != null) {
-      Color previous = new Color(batch.getColor());
-      if (!enabled) batch.setColor(0.55f, 0.55f, 0.55f, previous.a);
-      GuiDraw.drawRegionFlipped(batch, bg, r.x, r.y, r.width, r.height);
-      batch.setColor(previous);
-    }
-    BitmapFont font =
-        FontManager.getInstance()
-            .getTahomaFont(12, enabled ? Color.BLACK : Color.valueOf("5A5040"), true);
-    centered(batch, font, label, r.x, r.y + (r.height - 13f) / 2f, r.width);
-  }
-
-  private String hoverHintKey() {
-    if (listeningIndex >= 0) return "ui.macros.hint_listening";
-    if (abs(BOOK_ICON).contains(mouseX, mouseY)) return "ui.macros.hint_book";
-    if (abs(HELP_ICON).contains(mouseX, mouseY)) return "ui.macros.hint_help";
-    if (abs(MOVE_UP).contains(mouseX, mouseY)) return "ui.macros.hint_up";
-    if (abs(MOVE_DOWN).contains(mouseX, mouseY)) return "ui.macros.hint_down";
-    return "ui.macros.hint";
-  }
-
-  private void centered(SpriteBatch batch, BitmapFont font, String text, float bx, float by, float bw) {
+  private void drawFitted(
+      SpriteBatch batch,
+      BitmapFont font,
+      String text,
+      float bx,
+      float by,
+      float width,
+      float height,
+      boolean centered) {
+    float sx = font.getData().scaleX, sy = font.getData().scaleY;
     layout.setText(font, text);
-    font.draw(batch, layout, bx + Math.round((bw - layout.width) / 2f), by);
+    if (layout.width > width) {
+      float scale = width / layout.width;
+      font.getData().setScale(sx * scale, sy * scale);
+      layout.setText(font, text);
+    }
+    font.draw(
+        batch,
+        layout,
+        bx + (centered ? (width - layout.width) / 2 : 0),
+        by + (height - layout.height) / 2);
+    font.getData().setScale(sx, sy);
   }
 
   private static TextureRegion icon(MacroBinding macro) {
-    SpellData spell = SpellRegistry.findByName(macro.getSpellName());
-    if (spell == null || spell.getIconId() == null || spell.getIconId().isEmpty()) return null;
+    String icon;
+    if (macro.isItem()) {
+      var item = com.perso.T4C.item.ItemRegistry.findByKey(macro.getItemKey());
+      icon = item == null ? null : item.getAppearanceInventory();
+    } else {
+      SpellData spell = SpellRegistry.findByName(macro.getSpellName());
+      icon = spell == null ? null : spell.getIconId();
+    }
+    if (icon == null || icon.isEmpty()) return null;
     try {
-      return SpriteLoader.getInstance().getRegionFromSpriteName(spell.getIconId());
+      return SpriteLoader.getInstance().getRegionFromSpriteName(icon);
     } catch (GameException e) {
       return null;
     }
   }
 
   private String displayName(MacroBinding macro) {
+    if (macro.isItem()) {
+      var item = com.perso.T4C.item.ItemRegistry.findByKey(macro.getItemKey());
+      return item == null ? macro.getItemKey() : I18n.resolve(item.getName());
+    }
     SpellData spell = SpellRegistry.findByName(macro.getSpellName());
     return spell != null ? I18n.resolve(spell.getName()) : macro.getSpellName();
   }
@@ -347,46 +360,27 @@ public class MacrosScreen extends GuiScreenBase {
     mouseX = screenX;
     mouseY = screenY;
     if (listeningIndex >= 0) {
-      // Clicking anywhere cancels a pending key capture.
       listeningIndex = -1;
       return;
     }
-    List<MacroBinding> macros = macros();
     for (int row = 0; row < ROWS_VISIBLE; row++) {
       int index = firstVisible + row;
-      if (index >= macros.size()) break;
+      if (index >= macros().size()) break;
       if (rowCell(row, KEY_X, KEY_W).contains(screenX, screenY)) {
         selected = index;
         listeningIndex = index;
         return;
       }
-      Rectangle wholeRow =
-          new Rectangle(x + 20f, y + ICON_CY + row * ROW_PITCH - 22f, KEY_X + KEY_W - 20f, 44f);
-      if (wholeRow.contains(screenX, screenY)) {
+      if (rowCell(row, 28, 466).contains(screenX, screenY)) {
         selected = index;
         return;
       }
     }
-    boolean hasSelection = selected >= 0 && selected < macros.size();
-    if (hasSelection && abs(BIND).contains(screenX, screenY)) {
-      listeningIndex = selected;
-    } else if (hasSelection && abs(CLEAR).contains(screenX, screenY)) {
-      clearKey(selected);
-    } else if (hasSelection && abs(REMOVE).contains(screenX, screenY)) {
-      removeEntry(selected);
-    } else if (abs(MOVE_UP).contains(screenX, screenY)) {
-      move(-1);
-    } else if (abs(MOVE_DOWN).contains(screenX, screenY)) {
-      move(1);
-    } else if (abs(BOOK_ICON).contains(screenX, screenY)) {
-      if (player != null) GuiManager.open(new SpellBook(player, hud));
-    } else if (abs(HELP_ICON).contains(screenX, screenY)) {
-      GuiManager.open(new ControlsScreen());
-    } else if (abs(SCROLL).contains(screenX, screenY)) {
-      scroll(screenY < y + SCROLL.y + SCROLL.height / 2f ? -1 : 1);
-    } else {
-      super.onTouchDown(screenX, screenY);
+    if (abs(SCROLL).contains(screenX, screenY)) {
+      scroll(screenY < y + SCROLL.y + SCROLL.height / 2 ? -1 : 1);
+      return;
     }
+    super.onTouchDown(screenX, screenY);
   }
 
   @Override

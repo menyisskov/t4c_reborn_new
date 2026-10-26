@@ -1,0 +1,53 @@
+{
+  "key": "divine_artemis_leggings",
+  "name": "${item.divine_artemis_leggings}",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs__pal92",
+  "appearanceInventory": "64kInvPlateArmorLegs__pal92",
+  "numId": 55305,
+  "appearanceId": 55305,
+  "weight": 1,
+  "armorClass": 19.3,
+  "requirements": {
+    "endurance": 220,
+    "agility": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50245,
+      "statId": 6,
+      "expression": "32"
+    },
+    {
+      "boostId": 50246,
+      "statId": 10035,
+      "expression": "76"
+    },
+    {
+      "boostId": 50247,
+      "statId": 12,
+      "expression": "10"
+    },
+    {
+      "boostId": 50248,
+      "statId": 13,
+      "expression": "10"
+    },
+    {
+      "boostId": 50249,
+      "statId": 14,
+      "expression": "10"
+    },
+    {
+      "boostId": 50250,
+      "statId": 15,
+      "expression": "10"
+    },
+    {
+      "boostId": 50251,
+      "statId": 22,
+      "expression": "10"
+    }
+  ]
+}

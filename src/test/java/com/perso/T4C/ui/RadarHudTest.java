@@ -32,4 +32,16 @@ class RadarHudTest {
     assertEquals(RadarHud.MONSTER_COLOR, RadarHud.Kind.MONSTER.color());
     assertEquals(RadarHud.BOSS_COLOR, RadarHud.Kind.BOSS.color());
   }
+
+  @Test
+  void radarAndItsHitAreaFollowTheLowerRightCornerWhenTheWindowChanges() {
+    float width = 1280, height = 768;
+    float cx = RadarHud.left(width) + RadarHud.DIAMETER / 2;
+    float cy = RadarHud.top(height) + RadarHud.DIAMETER / 2;
+    assertTrue(cx > width / 2 && cy > height / 2);
+    assertTrue(RadarHud.contains(cx, cy, width, height));
+    assertFalse(RadarHud.contains(cx, RadarHud.DIAMETER / 2, width, height));
+    assertEquals(120, RadarHud.top(height + 120) - RadarHud.top(height), .001f);
+    assertTrue(RadarHud.contains(cx + 160, cy + 120, width + 160, height + 120));
+  }
 }

@@ -2,11 +2,13 @@ package com.perso.T4C.input;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
+
 import com.badlogic.gdx.math.Vector2;
+import com.perso.T4C.combat.ArmorClassRules;
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.XpCurve;
-import com.perso.T4C.combat.ArmorClassRules;
+import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.npc.behavior.RebirthBehavior;
@@ -74,7 +76,7 @@ public final class GmCommandProcessor {
    */
   static GmRank requiredRank(String cmd) {
     return switch (cmd) {
-      case "help", "commands" -> GmRank.PLAYER;
+      case "help", "commands", "reroll" -> GmRank.PLAYER;
       case "gm", "time", "day", "night", "gflag", "globalflag" -> GmRank.SUPER_GM;
       default -> GmRank.GM;
     };
@@ -222,6 +224,16 @@ public final class GmCommandProcessor {
         case "rebirth":
           rebirth(player, arg);
           break;
+        case "reroll":
+          if (!arg.isBlank()) {
+            SystemMessage.showShared(I18n.key("command.reroll_usage"));
+            break;
+          }
+          com.perso.T4C.player.PlayerReroll.perform(player);
+          SystemMessage.showShared(
+              I18n.message("command.reroll_done", player.getStatPoints(), player.getSkillPoints()));
+          saveHandler.accept(player);
+          break;
         case "setpower", "power":
           setElementPower(player, arg);
           break;
@@ -306,6 +318,25 @@ public final class GmCommandProcessor {
   }
 
   private void summon(Player player, String arg) {
+    String[] bundleArgs =
+        arg == null ? new String[0] : arg.trim().toLowerCase(Locale.ROOT).split("\\s+", 2);
+    if (bundleArgs.length > 0 && EMPYREAN_BUNDLE_ALIASES.contains(bundleArgs[0])) {
+      if (bundleArgs.length != 2 || !EMPYREAN_VARIANTS.contains(bundleArgs[1])) {
+        SystemMessage.showShared(I18n.key("gm.empyrean_bundle_usage"));
+        return;
+      }
+      String variant = bundleArgs[1];
+      Map<String, Integer> armor = new TreeMap<>();
+      for (String piece : List.of("armor", "boots", "gauntlets", "helmet", "leggings", "protector"))
+        armor.put("empyrean_" + variant + "_" + piece, 1);
+      summonBundle(player, "empyrean_armor_set " + variant, armor);
+      return;
+    }
+    Map<String, Integer> bundle = summonBundle(arg);
+    if (bundle != null) {
+      summonBundle(player, arg.trim().toLowerCase(Locale.ROOT), bundle);
+      return;
+    }
     String[] parts = arg == null ? new String[0] : arg.trim().split("\\s+", 2);
     if (parts.length < 2 || parts[0].isBlank() || parts[1].isBlank()) {
       SystemMessage.showShared(
@@ -331,6 +362,108 @@ public final class GmCommandProcessor {
   }
 
   private static final int SUMMON_ITEM_MAX_COUNT = 50;
+  private static final List<String> EMPYREAN_VARIANTS =
+      List.of("warrior", "archer", "fire", "water", "air", "earth", "light", "dark");
+  private static final List<String> EMPYREAN_BUNDLE_ALIASES =
+      List.of("empyrean_armor_set", "ephemeral_armor_set", "ephymeral_armor_set");
+
+  /** Quest bundles include crafting ingredients and completed hand-ins for GM testing. */
+  private static Map<String, Integer> summonBundle(String arg) {
+    if (arg == null) return null;
+    return switch (arg.trim().toLowerCase(Locale.ROOT)) {
+      case "azure_armor_set" ->
+          Map.of(
+              "azure_plate_armor",
+              1,
+              "azure_plate_boots",
+              1,
+              "azure_plate_gauntlets",
+              1,
+              "azure_plate_helm",
+              1,
+              "azure_plate_leggings",
+              1,
+              "azure_plate_protector",
+              1);
+      case "good_seraph_quest" ->
+          Map.ofEntries(
+              Map.entry("will_of_artherk", 1),
+              Map.entry("heart_of_artherk", 1),
+              Map.entry("soul_of_artherk", 1),
+              Map.entry("fang_of_true_resolve", 1),
+              Map.entry("hammer_of_finality", 3),
+              Map.entry("drum_of_fate", 2),
+              Map.entry("fine_steel_warhammer", 3),
+              Map.entry("scroll_of_enchantment", 3),
+              Map.entry("finely_crafted_drum", 2),
+              Map.entry("gem_of_the_immortal", 8),
+              Map.entry("hourglass_of_essence", 8),
+              Map.entry("gem_of_courage", 2),
+              Map.entry("tome_of_valor", 4),
+              Map.entry("sword_of_majesty", 3),
+              Map.entry("raw_crystal", 18),
+              Map.entry("red_spellbook", 15),
+              Map.entry("magic_scripting_kit", 4),
+              Map.entry("chaos_key", 4),
+              Map.entry("blank_magical_tome", 4),
+              Map.entry("blade_of_heroism", 9),
+              Map.entry("ring_of_pure_faith", 3),
+              Map.entry("staff_of_hope", 2),
+              Map.entry("pearl_of_wisdom", 2),
+              Map.entry("ring_of_faith", 3),
+              Map.entry("grail_of_purity", 3),
+              Map.entry("flask_of_holy_water", 6),
+              Map.entry("flask_of_crystal_water", 6),
+              Map.entry("symbol_of_hope", 10),
+              Map.entry("demon_tree_wood", 4));
+      case "evil_seraph_quest" ->
+          Map.of(
+              "skull_of_ogrimar",
+              1,
+              "blood_of_ogrimar",
+              1,
+              "bones_of_ogrimar",
+              1,
+              "demonic_blood",
+              3,
+              "foul_potion",
+              2,
+              "black_widow_venom",
+              5,
+              "essence_of_bloodlust",
+              2,
+              "necromantic_scroll",
+              4);
+      default -> null;
+    };
+  }
+
+  private void summonBundle(Player player, String alias, Map<String, Integer> bundle) {
+    if (player.getInventory() == null) {
+      SystemMessage.showShared(I18n.key("gm.bundle_inventory_unavailable"));
+      return;
+    }
+    // Resolve every key before changing inventory so a broken reference cannot grant half a set.
+    Map<String, Integer> resolved = new TreeMap<>();
+    for (var entry : bundle.entrySet()) {
+      var definition = ItemRegistry.findByKey(entry.getKey());
+      if (definition == null) {
+        SystemMessage.showShared(I18n.message("gm.bundle_unknown_item", entry.getKey()));
+        return;
+      }
+      resolved.merge(definition.getKey(), entry.getValue(), Integer::sum);
+    }
+    resolved.forEach(
+        (key, count) -> {
+          for (int i = 0; i < count; i++) player.getInventory().add(key);
+        });
+    ok(
+        I18n.message(
+            "gm.bundle_summoned",
+            alias,
+            resolved.values().stream().mapToInt(Integer::intValue).sum()),
+        player);
+  }
 
   private void summonItem(Player player, String arg) {
     String key = arg;
@@ -523,7 +656,14 @@ public final class GmCommandProcessor {
       if (spawn.type() != null && spawn.type().equalsIgnoreCase(id)) {
         player.setWorldPosition(spawn.x() * GRID_W, spawn.y() * GRID_H, spawn.z());
         ok(
-            "Teleported to " + spawn.type() + " at " + spawn.x() + "," + spawn.y() + "," + spawn.z(),
+            "Teleported to "
+                + spawn.type()
+                + " at "
+                + spawn.x()
+                + ","
+                + spawn.y()
+                + ","
+                + spawn.z(),
             player);
         return;
       }
@@ -753,7 +893,8 @@ public final class GmCommandProcessor {
     ok("Rebirth performed (remort " + player.getRebirthCount() + ")", player);
   }
 
-  private static final List<String> ELEMENTS = List.of("fire", "water", "air", "earth", "light", "dark");
+  private static final List<String> ELEMENTS =
+      List.of("fire", "water", "air", "earth", "light", "dark");
 
   private void setElementPower(Player player, String arg) {
     String[] parts = arg.split("\\s+", 2);
@@ -763,7 +904,8 @@ public final class GmCommandProcessor {
     }
     String element = parts[0].toLowerCase(Locale.ROOT);
     if (!ELEMENTS.contains(element)) {
-      SystemMessage.showShared("GM: unknown element \"" + element + "\" (fire/water/air/earth/light/dark)");
+      SystemMessage.showShared(
+          "GM: unknown element \"" + element + "\" (fire/water/air/earth/light/dark)");
       return;
     }
     int value = parseInt(parts[1].trim());
@@ -839,8 +981,8 @@ public final class GmCommandProcessor {
   }
 
   private void help(GmRank rank) {
+    SystemMessage.showShared(I18n.key("command.reroll_help"));
     if (rank == GmRank.PLAYER) {
-      SystemMessage.showShared("No chat commands are available yet.");
       return;
     }
     if (rank.atLeast(GmRank.SUPER_GM)) {
@@ -858,6 +1000,7 @@ public final class GmCommandProcessor {
         "GM: .setStatPoints/.setSkillPoints X | .summon item|npc|monster NAME [count] | .rebirth | .setpower ELEMENT X");
     SystemMessage.showShared(
         "GM: .learn/.unlearn SPELL | .flag KEY [X] | .unflag KEY | .flags [TEXT]");
+    SystemMessage.showShared(I18n.key("gm.summon_help"));
   }
 
   /** Bad arguments: reported to the player, nothing changed or saved. */

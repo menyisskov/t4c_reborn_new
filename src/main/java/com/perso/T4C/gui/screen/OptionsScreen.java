@@ -7,10 +7,9 @@ import com.perso.T4C.config.GamePreferences;
 import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.gui.core.GuiElement;
 import com.perso.T4C.gui.core.GuiManager;
-import com.perso.T4C.gui.core.GuiScreenBase;
-import com.perso.T4C.gui.core.GuiSprites;
+import com.perso.T4C.gui.core.JournalTheme;
+import com.perso.T4C.gui.core.JournalWindow;
 import com.perso.T4C.gui.widget.GuiBoxedText;
-import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiOptionList;
 import com.perso.T4C.gui.widget.GuiSlider;
 import com.perso.T4C.i18n.I18n;
@@ -18,8 +17,8 @@ import com.perso.T4C.ui.FontManager;
 import java.util.*;
 import java.util.function.*;
 
-public class OptionsScreen extends GuiScreenBase {
-  private static final Color GOLD = Color.valueOf("DF9D00");
+public class OptionsScreen extends JournalWindow {
+  private static final Color GOLD = JournalTheme.GOLD;
   private final GamePreferences preferences = GamePreferencesStore.get();
   private final List<GuiElement> controls = new ArrayList<>();
   private final Runnable switchCharacterAction;
@@ -31,14 +30,7 @@ public class OptionsScreen extends GuiScreenBase {
 
   public OptionsScreen(Runnable switchCharacterAction) {
     this.switchCharacterAction = switchCharacterAction;
-    background = GuiSprites.load("GUI_BackOption");
-    centerOnScreen();
-    if (background == null) return;
-    y =
-        Math.max(
-            0f,
-            (com.badlogic.gdx.Gdx.graphics.getHeight() - 150f - background.getRegionHeight()) / 2f);
-    addCloseButton(484f, 0f);
+    initJournal(720, 460, "options.title");
     addLabels();
     addSliders();
     addOptionLists();
@@ -48,84 +40,75 @@ public class OptionsScreen extends GuiScreenBase {
   }
 
   private void addLabels() {
-    var header = FontManager.getInstance().getHaettenschweilerFont(17, GOLD);
-    var text = FontManager.getInstance().getT4CBeaulieuFont(15, GOLD);
-    addCentered(header, "options.title", 207f, 2f, 101f);
-    addCentered(header, "options.audio", 83f, 39f, 99f);
-    addCentered(header, "options.video", 295f, 39f, 116f);
-    addCentered(header, "options.logs", 50f, 165f, 116f);
-    addCentered(text, "options.music", 22f, 65f, 74f);
-    addCentered(text, "options.effects", 22f, 96f, 74f);
-    addCentered(text, "options.music_source", 104f, 130f, 122f);
-    addCentered(text, "options.log_filename", 21f, 270f, 116f);
-    addCentered(text, "options.brightness", 266f, 267f, 98f);
-    labels.add(
-        new GuiBoxedText(
-                text,
-                x + 144f,
-                y + 270f,
-                100f,
-                18f,
-                preferences::getChatLogFilename,
-                () -> Color.LIGHT_GRAY)
-            .shrinkToFit());
+    var header = FontManager.getInstance().getTahomaFont(14, GOLD, false);
+    var text = FontManager.getInstance().getTahomaFont(12, JournalTheme.TEXT, false);
+    addCentered(header, "options.audio", 26, 8, 290);
+    addCentered(header, "options.video", 384, 8, 290);
+    addCentered(header, "options.logs", 26, 188, 290);
+    addCentered(text, "options.music", 26, 50, 115);
+    addCentered(text, "options.effects", 26, 92, 115);
+    addCentered(text, "options.music_source", 130, 139, 190);
+    addCentered(text, "options.log_filename", 26, 342, 120);
+    addCentered(text, "options.brightness", 384, 342, 120);
+    journalValue(preferences::getChatLogFilename, 150, 342, 174, 20, 12, JournalTheme.TEXT);
   }
 
   private void addCentered(
       com.badlogic.gdx.graphics.g2d.BitmapFont font, String key, float dx, float dy, float width) {
     labels.add(
-        new GuiBoxedText(font, x + dx, y + dy, width, 18f, () -> I18n.key(key), () -> GOLD)
+        new GuiBoxedText(
+                font, x + dx, y + dy, width, 18f, () -> I18n.key(key), () -> JournalTheme.TEXT)
             .shrinkToFit());
   }
 
   private void addSliders() {
-    var track = GuiSprites.load("OptionSlider");
-    var thumb = GuiSprites.load("GeneralSlider");
+    var track = theme.control(140, 6, false);
+    var thumb = theme.control(14, 18, true);
     controls.add(
         new GuiSlider(
                 track,
                 thumb,
-                x + 127f,
-                y + 65f,
-                84f,
+                x + 174,
+                y + 48,
+                146,
                 preferences::getMusicVolume,
                 v -> update(p -> p.setMusicVolume((float) v)))
-            .boxed(84f, 20f));
+            .boxed(146, 24));
     controls.add(
         new GuiSlider(
                 track,
                 thumb,
-                x + 127f,
-                y + 96f,
-                84f,
+                x + 174,
+                y + 90,
+                146,
                 preferences::getEffectsVolume,
                 v -> update(p -> p.setEffectsVolume((float) v)))
-            .boxed(84f, 20f));
+            .boxed(146, 24));
     controls.add(
         new GuiSlider(
                 track,
                 thumb,
-                x + 395f,
-                y + 267f,
-                62f,
+                x + 528,
+                y + 338,
+                146,
                 () -> (preferences.getBrightness() - .5f) / .75f,
                 v -> update(p -> p.setBrightness(.5f + (float) v * .75f)))
-            .boxed(62f, 20f));
+            .boxed(146, 24));
   }
 
   private void addOptionLists() {
-    var font = FontManager.getInstance().getT4CBeaulieuFont(14, Color.LIGHT_GRAY);
-    var selection = GuiSprites.load("GUI_OptionGraphSelect");
-    var on = GuiSprites.load("CheckONLightUP");
-    var onHover = GuiSprites.load("CheckONLightHUP");
-    var off = GuiSprites.load("CheckOFFLightUP");
-    var offHover = GuiSprites.load("CheckOFFLightHUP");
+    var font = FontManager.getInstance().getTahomaFont(12, JournalTheme.TEXT, false);
+    var selection = theme.control(294, 24, true);
+    var on = theme.checkbox(true, false);
+    var onHover = theme.checkbox(true, true);
+    var off = theme.checkbox(false, false);
+    var offHover = theme.checkbox(false, true);
     graphicsList =
         new GuiOptionList(
-            x + 267f,
-            y + 62f,
-            227f,
-            183f,
+            x + 384f,
+            y + 46f,
+            294f,
+            273f,
             font,
             selection,
             on,
@@ -136,10 +119,10 @@ public class OptionsScreen extends GuiScreenBase {
     controls.add(graphicsList);
     controls.add(
         new GuiOptionList(
-            x + 22f,
-            y + 188f,
-            189f,
-            78f,
+            x + 26f,
+            y + 224f,
+            294f,
+            100f,
             font,
             selection,
             on,
@@ -219,22 +202,11 @@ public class OptionsScreen extends GuiScreenBase {
   }
 
   private void addOriginalButtons() {
-    addButton(177f, "options.quit", () -> GuiManager.open(new ExitGameConfirmScreen(this)));
-    addButton(253f, "options.cancel", GuiManager::close);
-    addButton(361f, "options.low_cpu", () -> applyGraphicsPreset(false));
-    addButton(437f, "options.normal_cpu", () -> applyGraphicsPreset(true));
-  }
-
-  private void addButton(float dx, String key, Runnable action) {
-    var normal = GuiSprites.load("GUI_ButtonUp");
-    var hover = GuiSprites.load("GUI_ButtonHUp");
-    var pressed = GuiSprites.load("GUI_ButtonDown");
-    if (normal == null || hover == null || pressed == null) return;
-    var font = FontManager.getInstance().getT4CBeaulieuFont(17, Color.BLACK);
-    buttons.add(
-        new GuiButton(normal, hover, pressed, x + dx, y + 300f, action)
-            .setSize(60f, 32f)
-            .withLabel(font, () -> I18n.key(key)));
+    journalButton(
+        180, 410, 88, 32, "options.quit", () -> GuiManager.open(new ExitGameConfirmScreen(this)));
+    journalButton(280, 410, 88, 32, "options.cancel", GuiManager::close);
+    journalButton(432, 410, 104, 32, "options.low_cpu", () -> applyGraphicsPreset(false));
+    journalButton(548, 410, 146, 32, "options.normal_cpu", () -> applyGraphicsPreset(true));
   }
 
   private void applyGraphicsPreset(boolean normal) {
@@ -247,36 +219,28 @@ public class OptionsScreen extends GuiScreenBase {
   }
 
   private void addSwitchCharacterButton() {
-    if (switchCharacterAction == null) return;
-    var normal = GuiSprites.load("GUI_ButtonUp");
-    var hover = GuiSprites.load("GUI_ButtonHUp");
-    var pressed = GuiSprites.load("GUI_ButtonDown");
-    if (normal == null || hover == null || pressed == null) return;
-    var font = FontManager.getInstance().getT4CBeaulieuFont(15, Color.BLACK);
-    buttons.add(
-        new GuiButton(
-                normal,
-                hover,
-                pressed,
-                x + 22f,
-                y + 300f,
-                () -> GuiManager.open(new SwitchCharacterConfirmScreen(switchCharacterAction)))
-            .setSize(130f, 32f)
-            .withLabelVerticalOffset(-1f)
-            .withLabel(font, () -> I18n.key("options.switch_character")));
+    if (switchCharacterAction != null)
+      journalButton(
+          26,
+          410,
+          142,
+          32,
+          "options.switch_character",
+          () -> GuiManager.open(new SwitchCharacterConfirmScreen(switchCharacterAction)));
+  }
+
+  OptionsScreen reopened() {
+    return new OptionsScreen(switchCharacterAction);
   }
 
   private void addControlsButton() {
-    var normal = GuiSprites.load("GUI_ButtonTUp");
-    var hover = GuiSprites.load("GUI_ButtonTHUp");
-    var pressed = GuiSprites.load("GUI_ButtonTDown");
-    if (normal == null || hover == null || pressed == null) return;
-    var font = FontManager.getInstance().getT4CBeaulieuFont(15, Color.BLACK);
-    buttons.add(
-        new GuiButton(
-                normal, hover, pressed, x + 22f, y + 130f, () -> GuiManager.open(new ControlsScreen()))
-            .setSize(74f, 20f)
-            .withLabel(font, () -> I18n.key("options.controls")));
+    journalButton(26, 132, 94, 30, "options.controls", () -> GuiManager.open(new ControlsScreen()));
+  }
+
+  @Override
+  protected void renderBody(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
+    theme.well(batch, x + 18, y, 316, 382);
+    theme.well(batch, x + 368, y, 326, 382);
   }
 
   private void update(Consumer<GamePreferences> change) {

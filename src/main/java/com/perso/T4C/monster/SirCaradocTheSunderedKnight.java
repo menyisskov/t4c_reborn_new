@@ -16,6 +16,7 @@ import com.perso.T4C.spawn.Spawn;
     z = 0,
     stationary = false,
     aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class SirCaradocTheSunderedKnight extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Skeleton Dying.wav";
@@ -53,8 +54,6 @@ public final class SirCaradocTheSunderedKnight extends DataMonster {
         2750,
         java.util.List.of(
             new MonsterDef.LootDrop("caradocs_sundered_blade", 0.02f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0028: a fallen knight in full plate drops a warrior-flavor armor set
             // alongside his signature blade, matching the multi-drop pattern used by the
             // other boss-tier monsters.

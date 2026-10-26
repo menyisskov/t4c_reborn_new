@@ -9,6 +9,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Cinder Whelp", x = 1920, y = 1630, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Cinder Whelp", x = 1932, y = 1599, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Cinder Whelp", x = 1860, y = 1640, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class CinderWhelp extends DataMonster {
   // Reuses the Wolf animation/sound family (same precedent as FenrisWolf/GreatWolf) —
   // fire theme carried by name/stats/resists, not by a dedicated sprite.

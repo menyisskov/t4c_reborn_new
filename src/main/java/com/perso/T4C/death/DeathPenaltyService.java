@@ -78,6 +78,8 @@ public final class DeathPenaltyService {
     List<String> destroyed = new ArrayList<>();
     List<Integer> droppedCharges = new ArrayList<>();
     for (int i = player.getInventory().size() - 1; i >= 0; i--) {
+      ItemDefinition backpackItem = ItemRegistry.findByKey(player.getInventory().get(i));
+      if (backpackItem != null && backpackItem.isUndroppable()) continue;
       if (rollPercent(random, rates.backpackPercent())) {
         String item = player.getInventory().get(i);
         int charges = InventoryService.chargesForNextInstance(player, item);
@@ -90,6 +92,7 @@ public final class DeathPenaltyService {
         new ArrayList<>(player.getEquippedItems().entrySet());
     for (Map.Entry<BodyPart, String> entry : equipment) {
       ItemDefinition definition = ItemRegistry.findByKey(entry.getValue());
+      if (definition != null && definition.isUndroppable()) continue;
       if (definition != null
           && definition.getSecondaryBodyPart() == entry.getKey()
           && entry.getValue().equals(player.getEquippedItems().get(definition.getBodyPart()))) {

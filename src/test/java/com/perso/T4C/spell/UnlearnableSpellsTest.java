@@ -47,12 +47,12 @@ class UnlearnableSpellsTest {
     }
   }
 
-  /** Light is a real spell anyone can learn; it carries a level requirement so it survives. */
+  /** Light remains teachable with the Bible's level-two requirement. */
   @Test
   void lightKeepsItsPlaceInTheSpellbook() {
     SpellData light = SpellRegistry.findByName("spell.light");
     assertNotNull(light);
-    assertEquals(1, light.getMinLevel());
+    assertEquals(2, light.getMinLevel());
     assertTrue(
         SpellRegistry.playerCastableSpells().stream()
             .anyMatch(spell -> "spell.light".equals(spell.getKey())),

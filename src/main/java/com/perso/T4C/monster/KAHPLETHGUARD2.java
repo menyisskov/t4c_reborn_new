@@ -41,7 +41,9 @@ public final class KAHPLETHGUARD2 extends DataMonster {
         SOUND_HIT,
         179,
         550,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("rough_malachite", 0.01f),
+            new MonsterDef.LootDrop("tower_shield", 0.01f)),
         false,
         0.0f,
         115,

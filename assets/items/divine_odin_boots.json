@@ -1,0 +1,53 @@
+{
+  "key": "divine_odin_boots",
+  "name": "${item.divine_odin_boots}",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot__pal95",
+  "appearanceInventory": "64kInvPlateArmorFeet__pal95",
+  "numId": 56102,
+  "appearanceId": 56102,
+  "weight": 1,
+  "armorClass": 40.8,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 801032,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 801033,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 801034,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 801035,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 801036,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 801037,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 801038,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

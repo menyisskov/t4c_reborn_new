@@ -1,0 +1,53 @@
+{
+  "key": "divine_anubis_leggings",
+  "name": "${item.divine_anubis_leggings}",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs__pal96",
+  "appearanceInventory": "64kInvPlateArmorLegs__pal96",
+  "numId": 55605,
+  "appearanceId": 55605,
+  "weight": 1,
+  "armorClass": 33.0,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50455,
+      "statId": 1,
+      "expression": "65"
+    },
+    {
+      "boostId": 50456,
+      "statId": 24,
+      "expression": "65"
+    },
+    {
+      "boostId": 50457,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50458,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50459,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50460,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50461,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

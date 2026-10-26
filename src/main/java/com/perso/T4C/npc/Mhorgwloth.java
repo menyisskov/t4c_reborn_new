@@ -166,6 +166,9 @@ public final class Mhorgwloth extends ScriptedNpc {
       @Override
       public void onDeath(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
+        if (Math.random() < 0.05) c.giveItem("troll_club");
+        if (Math.random() < 0.05) c.giveItem("potion_of_mana");
+
         if (c.globalFlag("TROLL_QUEST_DONE") == 1) c.globalFlag("TROLL_QUEST_DONE", 2);
 
         int access = c.flag("__QUEST_ISLAND_ACCESS");

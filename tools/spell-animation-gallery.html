@@ -1,0 +1,94 @@
+<!doctype html>
+
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T4C — New spell animations</title>
+
+<style>
+
+:root{color-scheme:dark;font:15px/1.5 'Segoe UI',sans-serif;background:#10161b;color:#eee9df}*{box-sizing:border-box}body{margin:0}main{max-width:1280px;margin:auto;padding:30px 24px 60px}h1{font-size:30px;font-weight:600;margin:0 0 5px;color:#e5c792}p{margin:6px 0;color:#b8c1c7}button,input,select,a{font:inherit}button,input,select{border:1px solid #42525c;border-radius:6px;background:#1b252d;color:inherit;padding:8px 12px}button{cursor:pointer}button:hover{background:#2a3943}button[aria-pressed=true]{background:#d9c094;color:#111820;border-color:#d9c094}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #8bd9e1;outline-offset:3px}nav,.controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;align-items:center}input[type=search]{min-width:190px;flex:1}label{display:flex;align-items:center;gap:7px;color:#b8c1c7}a{color:#a4d9dc}h2{margin:26px 0 10px;font-size:18px;font-weight:500}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.spell{display:flex;flex-direction:column;text-align:left;padding:0;overflow:hidden;background:#151e25;min-width:0}.spell canvas{display:block;width:100%;height:auto;aspect-ratio:1;background:#090b0e}.caption{display:block;padding:10px 11px 12px;flex:1}.name{display:block;color:#ead5af;font-size:14px;font-weight:600;min-height:40px}.meta{display:block;font-size:12px;color:#b3c4d0}.warning{color:#ebbf80}.count{margin-left:auto;font-size:13px}.empty{padding:40px 0}.note{font-size:13px;margin-top:14px}dialog{background:#151e25;color:#eee9df;border:1px solid #51616a;border-radius:12px;width:min(700px,calc(100% - 24px));max-height:95vh;padding:20px}dialog::backdrop{background:#000b}.dialog-head{display:flex;gap:16px;align-items:start;justify-content:space-between}dialog h2{margin:0}dialog canvas{display:block;width:min(440px,100%);aspect-ratio:1;margin:12px auto;background:#090b0e}.timeline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.timeline input{flex:1;min-width:100px;padding:0}#details{font-size:13px}.bottom{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:13px}@media(max-width:540px){main{padding:20px 12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.name{font-size:13px;min-height:40px}.caption{padding:8px}.controls label{flex:1}h1{font-size:24px}.count{margin-left:0}dialog{padding:14px}}
+
+</style></head><body><main>
+
+<p><a href="designs.html">Equipment design previews</a></p><h1>New spell animations</h1><p id="summary"></p>
+
+<nav aria-label="Spell groups" id="categories"></nav>
+
+<div class="controls"><input type="search" id="search" placeholder="Find a spell…" aria-label="Find a spell"><label>School <select id="school"><option value="all">All schools</option><option value="1">Fire</option><option value="2">Earth</option><option value="3">Air</option><option value="4">Water</option><option value="5">Light</option><option value="6">Dark</option><option value="0">Utility / physical</option></select></label><label>Targets <select id="target-type"><option value="all">All types</option><option value="area">Area attacks</option><option value="single">Single-target attacks</option><option value="self">Self buffs / heals</option><option value="teleport">Teleports</option></select></label><label>Preview <select id="mode"><option value="impact">Impact / cast effect</option><option value="projectile">Projectile</option></select></label><label>Size <select id="size-mode"><option value="native">Shared game scale</option><option value="fit">Fit each effect</option></select></label><button id="pause" type="button">Pause</button><label>Speed <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label><span class="count" id="count" aria-live="polite"></span></div>
+
+<p class="note">Click a spell to enlarge it, step through its frames or open its sprite sheet. Previews use the game's actual frames and rendering masks. Shared game scale preserves size differences; choose Fit each effect to inspect small details. Area casts may place multiple copies of an effect across the ground.</p>
+
+<div id="gallery"></div>
+
+<dialog id="viewer"><div class="dialog-head"><div><h2 id="spell-name"></h2><p id="details"></p></div><button id="close" type="button" aria-label="Close spell preview">Close</button></div><p id="target-info"></p><canvas id="large" width="512" height="512" aria-label="Enlarged spell animation"></canvas><div class="timeline"><button id="previous" type="button" aria-label="Previous frame">Previous</button><button id="play" type="button">Pause</button><button id="next" type="button" aria-label="Next frame">Next</button><input id="scrub" type="range" min="0" max="1" value="0" aria-label="Animation frame"><span id="frame"></span></div><p id="description"></p><div class="bottom"><span id="asset-name"></span><a id="sheet" target="_blank" rel="noopener">Open PNG sprite sheet</a></div></dialog>
+
+<script id="data" type="application/json">__MANIFEST__</script>
+
+<script>
+
+(()=>{'use strict';
+
+const data=JSON.parse(document.getElementById('data').textContent),$=id=>document.getElementById(id),names=['Utility / physical','Fire','Earth','Air','Water','Light','Dark'];
+
+const groups=['Combat ladder','Other player spells','Divine attacks','Return scrolls'];
+
+let category='Combat ladder',paused=matchMedia('(prefers-reduced-motion: reduce)').matches,mode='impact',speed=1,cards=[],selected=null,modalPaused=false,manualFrame=0,offset=0,last=performance.now();
+
+const images=new Map();function load(a){if(!a?.file)return null;if(!images.has(a.file)){const image=new Image();image.src=a.file+(a.version?'?v='+a.version:'');images.set(a.file,image)}return images.get(a.file)}
+
+function asset(s){let a=data.assets[s[mode]],label=mode==='impact'?'Impact':'Projectile',missing='';if(!a?.count){missing=mode==='impact'?'No packed impact frames':'No packed projectile frames';const other=mode==='impact'?'projectile':'impact';a=data.assets[s[other]];label=other==='impact'?'Impact':'Projectile'}return {a,label,missing}}
+
+function draw(canvas,a,frame){const c=canvas.getContext('2d');c.fillStyle='#090b0e';c.fillRect(0,0,canvas.width,canvas.height);if(!a?.count)return;const image=load(a);if(!image?.complete||!image.naturalWidth)return;c.imageSmoothingEnabled=true;let x=0,y=0,w=canvas.width,h=canvas.height;if($('size-mode').value==='native'){const span=a.previewSpan||Math.max(a.nativeWidth||a.cell,a.nativeHeight||a.cell)+16,scale=canvas.width/512;w=h=span*scale;x=canvas.width/2+((a.nativeLeft||0)+(a.nativeWidth||0)/2-span/2)*scale;y=canvas.height*.8+((a.nativeTop||0)+(a.nativeHeight||0)/2-span/2)*scale}c.drawImage(image,(frame%a.columns)*a.cell,Math.floor(frame/a.columns)*a.cell,a.cell,a.cell,x,y,w,h)}
+
+function currentFrame(a){return a?.count?Math.min(a.count-1,Math.floor(offset*data.fps)%(a.count+9)):0}
+
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>entry.target.dataset.visible=entry.isIntersecting?'1':'0'),{rootMargin:'160px'});
+
+function render(){observer.disconnect();cards=[];$('gallery').replaceChildren();const query=$('search').value.trim().toLowerCase(),school=$('school').value;
+
+const targetType=$('target-type').value;
+
+const filtered=data.spells.filter(s=>(category==='All spells'||s.category===category)&&(school==='all'||s.element===Number(school))&&s.name.toLowerCase().includes(query)&&(targetType==='all'||targetType==='area'&&s.targeting==='Area attack'||targetType==='single'&&s.targeting.startsWith('Single target')||targetType==='teleport'&&s.targeting==='Self teleport'||targetType==='self'&&s.targeting.startsWith('Self')&&s.targeting!=='Self teleport'));
+
+$('count').textContent=filtered.length+' spells';
+
+for(const group of groups){const spells=filtered.filter(s=>s.category===group).sort((a,b)=>group==='Combat ladder'?a.level-b.level||a.element-b.element:a.element-b.element||a.level-b.level||a.name.localeCompare(b.name));if(!spells.length)continue;
+
+const h=document.createElement('h2');h.textContent=group+' · '+spells.length;$('gallery').append(h);const grid=document.createElement('div');grid.className='grid';$('gallery').append(grid);
+
+for(const s of spells){const chosen=asset(s),button=document.createElement('button');button.type='button';button.className='spell';button.setAttribute('aria-label',s.name+', '+chosen.label+' animation');const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;button.append(canvas);
+
+const caption=document.createElement('span');caption.className='caption';const name=document.createElement('span');name.className='name';name.textContent=s.name;caption.append(name);
+
+const meta=document.createElement('span');meta.className='meta';meta.textContent=names[s.element]+(s.level?' · Tier '+s.level:'')+' · '+(chosen.a?.count||0)+' frames'+(chosen.a?.nativeWidth?' · '+chosen.a.nativeWidth+'×'+chosen.a.nativeHeight+' px':'');caption.append(meta);
+
+const targets=document.createElement('span');targets.className='meta target-info';targets.textContent=s.targeting+' · '+(s.targeting==='Area attack'?'Up to 8 targets':s.targets);caption.append(targets);
+
+if(chosen.missing){const warning=document.createElement('span');warning.className='meta warning';warning.textContent=chosen.missing+'; showing '+chosen.label.toLowerCase();caption.append(warning)}
+
+button.append(caption);grid.append(button);cards.push({button,canvas,s,a:chosen.a});load(chosen.a);observer.observe(button);button.addEventListener('click',()=>open(s));}}
+
+if(!filtered.length){const p=document.createElement('p');p.className='empty';p.textContent='No matching spells.';$('gallery').append(p)}
+
+for(const b of $('categories').children)b.setAttribute('aria-pressed',String(b.textContent===category));}
+
+function open(s){selected=s;modalPaused=false;manualFrame=0;const chosen=asset(s);$('spell-name').textContent=s.name;$('details').textContent=names[s.element]+(s.level?' · Tier '+s.level:'')+' · '+chosen.label+' · '+(chosen.a?.count||0)+' frames'+(chosen.missing?' · '+chosen.missing:'');$('target-info').textContent=s.targeting+' — '+s.targets+(s.targetNote?'. '+s.targetNote:'');$('description').textContent=s.description||'';$('asset-name').textContent=chosen.a?.family||'No packed animation';$('sheet').href=chosen.a?.file||'#';$('sheet').hidden=!chosen.a?.file;$('scrub').max=Math.max(0,(chosen.a?.count||1)-1);$('play').textContent='Pause';$('viewer').showModal();}
+
+for(const group of ['All spells',...groups]){const b=document.createElement('button');b.type='button';b.textContent=group;b.addEventListener('click',()=>{category=group;render()});$('categories').append(b)}
+
+$('summary').textContent=data.spells.length+' spells · 30 combat-ladder spells · cast effects, divine attacks and return scrolls. Some spells share artwork.';
+
+$('target-type').addEventListener('change',render);$('search').addEventListener('input',render);$('school').addEventListener('change',render);$('mode').addEventListener('change',()=>{mode=$('mode').value;render();if(selected&&$('viewer').open){$('viewer').close();open(selected)}});
+
+$('pause').textContent=paused?'Play':'Pause';$('pause').addEventListener('click',()=>{paused=!paused;$('pause').textContent=paused?'Play':'Pause'});$('speed').addEventListener('change',()=>speed=Number($('speed').value));$('close').addEventListener('click',()=>$('viewer').close());
+
+function seek(n){modalPaused=true;manualFrame=Math.max(0,Math.min(Number($('scrub').max),n));$('play').textContent='Play'}
+
+$('scrub').addEventListener('input',()=>seek(Number($('scrub').value)));$('previous').addEventListener('click',()=>seek(Number($('scrub').value)-1));$('next').addEventListener('click',()=>seek(Number($('scrub').value)+1));$('play').addEventListener('click',()=>{modalPaused=!modalPaused;$('play').textContent=modalPaused?'Play':'Pause'});
+
+function animate(now){if(!paused)offset+=Math.min(.1,(now-last)/1000)*speed;last=now;for(const card of cards)if(card.button.dataset.visible==='1')draw(card.canvas,card.a,currentFrame(card.a));if($('viewer').open&&selected){const a=asset(selected).a,index=modalPaused?manualFrame:currentFrame(a);draw($('large'),a,index);$('scrub').value=index;$('frame').textContent=(index+1)+' / '+(a?.count||0)}requestAnimationFrame(animate)}
+
+render();requestAnimationFrame(animate);
+
+})();
+
+</script></main></body></html>
+

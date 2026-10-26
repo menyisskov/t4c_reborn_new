@@ -1,0 +1,53 @@
+{
+  "key": "divine_artemis_ring",
+  "name": "${item.divine_artemis_ring}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 4__pal92",
+  "numId": 55308,
+  "appearanceId": 55308,
+  "weight": 1,
+  "armorClass": 9.3,
+  "requirements": {
+    "endurance": 220,
+    "agility": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50266,
+      "statId": 6,
+      "expression": "32"
+    },
+    {
+      "boostId": 50267,
+      "statId": 10035,
+      "expression": "76"
+    },
+    {
+      "boostId": 50268,
+      "statId": 12,
+      "expression": "10"
+    },
+    {
+      "boostId": 50269,
+      "statId": 13,
+      "expression": "10"
+    },
+    {
+      "boostId": 50270,
+      "statId": 14,
+      "expression": "10"
+    },
+    {
+      "boostId": 50271,
+      "statId": 15,
+      "expression": "10"
+    },
+    {
+      "boostId": 50272,
+      "statId": 22,
+      "expression": "10"
+    }
+  ]
+}

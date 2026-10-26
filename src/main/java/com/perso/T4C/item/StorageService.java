@@ -29,19 +29,19 @@ public final class StorageService {
       case LEFT_HAND, RIGHT_HAND -> Category.GLOVES;
       case RING1, RING2 -> Category.RINGS;
       case BODY,
-          HEAD,
-          BELT,
-          NECK,
-          BRACER,
-          BACK,
-          SHIELD,
-          ROBELEGS,
-          HAIR,
-          HAT,
-          MASK,
-          CAPE,
-          LEFT_ARM,
-          RIGHT_ARM ->
+              HEAD,
+              BELT,
+              NECK,
+              BRACER,
+              BACK,
+              SHIELD,
+              ROBELEGS,
+              HAIR,
+              HAT,
+              MASK,
+              CAPE,
+              LEFT_ARM,
+              RIGHT_ARM ->
           Category.ARMOR;
     };
   }
@@ -59,14 +59,18 @@ public final class StorageService {
   }
 
   public static InventoryService.Result deposit(Player player, int inventoryIndex, String itemKey) {
-    if (player == null) return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
+    if (com.perso.T4C.divine.DivineReturnScrolls.isBoundReturnScroll(itemKey))
+      return InventoryService.Result.failure(InventoryService.Failure.BOUND_ITEM, itemKey);
+    if (player == null)
+      return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
     int resolved = inventoryIndex;
     if (resolved < 0
         || resolved >= player.getInventory().size()
         || !Objects.equals(itemKey, player.getInventory().get(resolved))) {
       resolved = player.getInventory().indexOf(itemKey);
     }
-    if (resolved < 0) return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
+    if (resolved < 0)
+      return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
     int charges = InventoryService.chargesForNextInstance(player, itemKey);
     InventoryService.Result removed = InventoryService.remove(player, resolved, itemKey);
     if (!removed.success()) return removed;
@@ -86,7 +90,8 @@ public final class StorageService {
         || !Objects.equals(itemKey, player.getStorage().get(resolved))) {
       resolved = player.getStorage().indexOf(itemKey);
     }
-    if (resolved < 0) return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
+    if (resolved < 0)
+      return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
     synchronize(player);
     int charges = player.getStorageCharges().get(resolved);
     InventoryService.Result added = InventoryService.add(player, itemKey, charges);
@@ -109,9 +114,9 @@ public final class StorageService {
   }
 
   /**
-   * Withdraws up to {@code count} copies of {@code itemKey}. Stops at the first failure and
-   * returns it (or success with the number moved), so the caller can tell the player why the rest
-   * stayed behind (too heavy, unique item already owned).
+   * Withdraws up to {@code count} copies of {@code itemKey}. Stops at the first failure and returns
+   * it (or success with the number moved), so the caller can tell the player why the rest stayed
+   * behind (for example, too heavy).
    */
   public static Transfer withdrawMany(Player player, String itemKey, int count) {
     int moved = 0;
@@ -127,8 +132,8 @@ public final class StorageService {
   }
 
   /**
-   * Deposits every item in the backpack, optionally limited to one category. Equipped gear is
-   * never touched (it isn't in the backpack), so this is safe to use as a one-click "stash loot".
+   * Deposits every item in the backpack, optionally limited to one category. Equipped gear is never
+   * touched (it isn't in the backpack), so this is safe to use as a one-click "stash loot".
    */
   public static int depositAll(Player player, Category category) {
     if (player == null) return 0;

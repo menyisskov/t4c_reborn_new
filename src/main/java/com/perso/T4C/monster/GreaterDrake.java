@@ -6,7 +6,27 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Greater Drake", x = 2650, y = 2880, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2735, y = 2950, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2736, y = 2892, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2642, y = 2832, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2592, y = 2833, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2582, y = 2942, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2623, y = 2939, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2714, y = 2966, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2569, y = 2893, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2556, y = 2924, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2757, y = 2881, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2552, y = 2831, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2666, y = 2846, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2538, y = 2880, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2702, y = 2977, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2684, y = 2847, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2700, y = 2872, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2603, y = 2950, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2647, y = 2907, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2649, y = 2889, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Greater Drake", x = 2677, y = 2883, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class GreaterDrake extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";

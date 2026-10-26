@@ -1,0 +1,55 @@
+{
+  "key": "divine_odin_gauntlets",
+  "name": "${item.divine_odin_gauntlets}",
+  "bodyPart": "LEFT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL__pal95",
+  "appearanceInventory": "64kInvPlateGlove__pal95",
+  "numId": 56103,
+  "appearanceId": 56103,
+  "weight": 1,
+  "armorClass": 40.8,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 801048,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 801049,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 801050,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 801051,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 801052,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 801053,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 801054,
+      "statId": 22,
+      "expression": "16"
+    }
+  ],
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedSecondary": "PupPlateGloveR__pal95"
+}

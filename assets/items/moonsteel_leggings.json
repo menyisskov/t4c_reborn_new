@@ -1,0 +1,64 @@
+{
+  "key": "moonsteel_leggings",
+  "name": "${item.moonsteel_leggings}",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs__silver300",
+  "appearanceInventory": "64kInvPlateArmorLegs__silver300",
+  "price": 650000,
+  "weight": 6,
+  "armorClass": 39.7,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 350,
+    "strength": 700,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59704,
+  "structure": 2,
+  "appearanceId": 59704,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 710040,
+      "statId": 3,
+      "expression": "58"
+    },
+    {
+      "boostId": 710041,
+      "statId": 8,
+      "expression": "140"
+    },
+    {
+      "boostId": 710042,
+      "statId": 12,
+      "expression": "18"
+    },
+    {
+      "boostId": 710043,
+      "statId": 13,
+      "expression": "18"
+    },
+    {
+      "boostId": 710044,
+      "statId": 14,
+      "expression": "18"
+    },
+    {
+      "boostId": 710045,
+      "statId": 15,
+      "expression": "18"
+    },
+    {
+      "boostId": 710046,
+      "statId": 22,
+      "expression": "18"
+    }
+  ]
+}

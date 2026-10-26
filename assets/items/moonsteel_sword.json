@@ -1,0 +1,67 @@
+{
+  "key": "moonsteel_sword",
+  "name": "${item.moonsteel_sword}",
+  "bodyPart": "WEAPON",
+  "secondaryBodyPart": "WEAPON2",
+  "appearanceEquippedPrimary": "PupBattleSword__silver300",
+  "appearanceInventory": "64kInvGlinting Sword__silver300",
+  "price": 1800000,
+  "weight": 10,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 700,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59707,
+  "structure": 2,
+  "appearanceId": 59707,
+  "undroppable": false,
+  "dmgFormula": "1d300+310",
+  "atkDelay": "1150",
+  "boosts": [
+    {
+      "boostId": 710070,
+      "statId": 3,
+      "expression": "58"
+    },
+    {
+      "boostId": 710071,
+      "statId": 8,
+      "expression": "140"
+    },
+    {
+      "boostId": 710072,
+      "statId": 12,
+      "expression": "18"
+    },
+    {
+      "boostId": 710073,
+      "statId": 13,
+      "expression": "18"
+    },
+    {
+      "boostId": 710074,
+      "statId": 14,
+      "expression": "18"
+    },
+    {
+      "boostId": 710075,
+      "statId": 15,
+      "expression": "18"
+    },
+    {
+      "boostId": 710076,
+      "statId": 22,
+      "expression": "18"
+    }
+  ]
+}

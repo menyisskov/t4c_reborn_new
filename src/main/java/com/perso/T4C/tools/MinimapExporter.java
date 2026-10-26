@@ -42,11 +42,11 @@ import javax.imageio.ImageIO;
  * invented), plus a JSON sidecar with every NPC/monster spawn and nearby named landmark inside each
  * zone's cropped area - the compendium website overlays these as clickable pins.
  *
- * <p>Deliberately scoped down from "the whole worldmap": the populated area of {@code
- * worldmap.mapbin} is ~2800x2500 tiles, which at real pixel resolution is several gigapixels - far
- * too large to ship as a web image. Cropping to a padded box around each zone's own {@code
- * worldmapCenter} keeps each output image small (a few hundred KB) while still being accurately
- * colored from the game's real tile art, not a schematic placeholder.
+ * <p>Deliberately scoped down from "the whole worldmap": {@code worldmap.mapbin} includes the
+ * mainland and eastern islands, which at real pixel resolution are far too large to ship as one web
+ * image. Cropping to a padded, world-bounded box around each zone's own {@code worldmapCenter}
+ * keeps each output image small (a few hundred KB) while still being accurately colored from the
+ * game's real tile art, not a schematic placeholder.
  *
  * <p>Ground layer only (no decor overlay) - a deliberate simplification, see class javadoc above;
  * still gives real color variation (grass/water/stone/sand are different sprites with different
@@ -72,13 +72,14 @@ public final class MinimapExporter {
     Path mapsDir = outDir.resolve("maps");
     Files.createDirectories(mapsDir);
 
-    List<ZoneCrop> zones = loadZoneCrops(outDir.resolve("zones.json"));
-    if (zones.isEmpty()) {
-      System.out.println("No zones with a worldmapCenter found in zones.json; nothing to render");
-      return;
-    }
+    List<ZoneCrop> zones;
+    try (MapReader map = MapReader.spriteNamesOnly(new File(Paths.MAP))) {
+      zones = loadZoneCrops(outDir.resolve("zones.json"), map.getWidth(), map.getHeight());
+      if (zones.isEmpty()) {
+        System.out.println("No zones with a worldmapCenter found in zones.json; nothing to render");
+        return;
+      }
 
-    try (MapReader map = new MapReader(new File(Paths.MAP))) {
       Map<String, String[]> tileGridsByZone = new LinkedHashMap<>();
       Set<String> neededSpriteKeys = new HashSet<>();
       for (ZoneCrop z : zones) {
@@ -244,7 +245,8 @@ public final class MinimapExporter {
     return new int[] {(int) (r / count), (int) (g / count), (int) (b / count)};
   }
 
-  private static List<ZoneCrop> loadZoneCrops(Path zonesJsonPath) throws Exception {
+  static List<ZoneCrop> loadZoneCrops(Path zonesJsonPath, int worldWidth, int worldHeight)
+      throws Exception {
     List<ZoneCrop> crops = new ArrayList<>();
     if (!Files.exists(zonesJsonPath)) return crops;
     try (FileReader reader = new FileReader(zonesJsonPath.toFile(), StandardCharsets.UTF_8)) {
@@ -258,26 +260,26 @@ public final class MinimapExporter {
         int cx = center.get("x").getAsInt();
         int cy = center.get("y").getAsInt();
         int radius = center.get("radius").getAsInt();
-        crops.add(new ZoneCrop(id, cx, cy, radius));
+        crops.add(new ZoneCrop(id, cx, cy, radius, worldWidth, worldHeight));
       }
     }
     return crops;
   }
 
-  private static final class ZoneCrop {
+  static final class ZoneCrop {
     final String id;
     final int minX;
     final int minY;
     final int w;
     final int h;
 
-    ZoneCrop(String id, int centerX, int centerY, int radius) {
+    ZoneCrop(String id, int centerX, int centerY, int radius, int worldWidth, int worldHeight) {
       this.id = id;
       int reach = radius + PADDING_TILES;
       int rawMinX = centerX - reach;
       int rawMinY = centerY - reach;
-      int rawMaxX = centerX + reach;
-      int rawMaxY = centerY + reach;
+      int rawMaxX = Math.min(worldWidth, centerX + reach);
+      int rawMaxY = Math.min(worldHeight, centerY + reach);
       this.minX = Math.max(0, rawMinX);
       this.minY = Math.max(0, rawMinY);
       this.w = Math.max(1, rawMaxX - this.minX);

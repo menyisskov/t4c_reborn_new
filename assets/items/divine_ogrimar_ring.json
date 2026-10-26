@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_ring",
+  "name": "${item.divine_ogrimar_ring}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 4__pal91",
+  "numId": 55908,
+  "appearanceId": 55908,
+  "weight": 1,
+  "armorClass": 4.0,
+  "requirements": {
+    "endurance": 100,
+    "intelligence": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50738,
+      "statId": 1,
+      "expression": "18"
+    },
+    {
+      "boostId": 50739,
+      "statId": 24,
+      "expression": "18"
+    },
+    {
+      "boostId": 50740,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50741,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50742,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50743,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50744,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

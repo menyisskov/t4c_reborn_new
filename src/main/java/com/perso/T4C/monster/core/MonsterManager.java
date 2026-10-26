@@ -47,7 +47,9 @@ public class MonsterManager {
 
   /** Runtime hunting policy shared with the compendium exporter. */
   public static boolean hasHuntingRespawn(String canonicalName) {
-    return canonicalName != null && HUNTING_TYPES.contains(canonicalName);
+    return canonicalName != null
+        && (HUNTING_TYPES.contains(canonicalName)
+            || com.perso.T4C.spawn.HuntingGrounds.isHuntingType(canonicalName));
   }
 
   public static long huntingRespawnMinMillis() {
@@ -230,6 +232,20 @@ public class MonsterManager {
   }
 
   private boolean canRespawn(BaseMonster monster) {
+    var field =
+        com.perso.T4C.spawn.HuntingGrounds.at(
+            monster.getCanonicalName(), monster.getSpawnTileX(), monster.getSpawnTileY());
+    if (field != null) {
+      return monsters.stream()
+              .filter(
+                  m ->
+                      !m.isDead()
+                          && com.perso.T4C.spawn.HuntingGrounds.at(
+                                  m.getCanonicalName(), m.getSpawnTileX(), m.getSpawnTileY())
+                              == field)
+              .count()
+          < field.points().size();
+    }
     int nearby = 0;
     int x = monster.getSpawnTileX(), y = monster.getSpawnTileY();
     for (BaseMonster candidate : monsters) {
@@ -246,6 +262,10 @@ public class MonsterManager {
   }
 
   private void scheduleNextRespawn(BaseMonster monster) {
+    if (monster.getCanonicalName().startsWith("Training ") && monster instanceof DataMonster data) {
+      monster.setRespawnDelayMillis(data.getDefinition().getRespawnTime());
+      return;
+    }
     long min = isHuntingMonster(monster) ? HUNTING_RESPAWN_MIN_MILLIS : RESPAWN_MIN_MILLIS;
     long max = isHuntingMonster(monster) ? HUNTING_RESPAWN_MAX_MILLIS : RESPAWN_MAX_MILLIS;
     monster.setRespawnDelayMillis(ThreadLocalRandom.current().nextLong(min, max + 1));
@@ -416,7 +436,7 @@ public class MonsterManager {
     Vector2 playerPos = player.getPositionVector();
     if (!SanctuaryCombatRules.canFight(playerPos, monster.getPosition())) return false;
     float distance = playerPos.dst(monster.getPosition());
-    float maxMeleeRange = 2f * Math.max(GRID_W, GRID_H);
+    float maxMeleeRange = com.perso.T4C.config.GameConstants.PLAYER_MELEE_ATTACK_RANGE;
     if (distance > maxMeleeRange) {
       log.info(
           "Player is too far to attack {} (distance: {} pixels, max: {})",
@@ -506,6 +526,20 @@ public class MonsterManager {
     return readonlyMonsters;
   }
 
+  /** Remove owned transient encounters without death callbacks, loot or respawning. */
+  public void discardMonsters(java.util.Collection<BaseMonster> owned) {
+    for (var monster : owned) {
+      monster.disableRespawn();
+      monster.setDeathCallback(null);
+      monster.takeDamage(monster.getHealth());
+    }
+    monsters.removeAll(owned);
+    previouslyVisible.removeAll(owned);
+    visibleNow.removeAll(owned);
+    notifiedSpawns.removeAll(owned);
+    notifiedPlayerKills.removeAll(owned);
+  }
+
   public void clear() {
     monsters.clear();
     pendingSpawns.clear();
@@ -552,7 +586,9 @@ public class MonsterManager {
               entry.z);
           continue;
         }
-        for (int i = 0; i < com.perso.T4C.config.GameConstants.SPAWN_COUNT_MULTIPLIER; i++) {
+        int copies = com.perso.T4C.divine.DivinePantheon.isEmbodiment(def.getName())
+            ? 1 : com.perso.T4C.spawn.HuntingGrounds.copies(entry.type, entry.x, entry.y, entry.z);
+        for (int i = 0; i < copies; i++) {
           pendingSpawns.add(
               new PendingSpawn(def, entry.x, entry.y, entry.stationary, entry.aggressive));
           queued++;

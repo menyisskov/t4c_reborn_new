@@ -7,18 +7,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-/** T4C-0081 (owner's call): every monster level 300+ has a 5% shot each at the two general-vendor
- * gold sinks, mana_prism and critical_healing_potion, on top of whatever else it drops. */
+/**
+ * Classic endgame utility drops remain available; campaign monsters and gods exclude recovery loot.
+ */
 class EndgameUtilityLootTest {
   @Test
   void everyMonsterAtOrAboveLevel300DropsBothUtilityItemsAtFivePercent() {
     List<MonsterDef> level300Plus =
-        MonsterRegistry.load().stream().filter(def -> def.getLevel() >= 300).toList();
+        MonsterRegistry.load().stream()
+            .filter(def -> def.getLevel() >= 300)
+            .filter(def -> !MonsterRegistry.excludesRecoveryLoot(def))
+            .toList();
     assertFalse(level300Plus.isEmpty(), "expected at least one level-300+ monster to check");
     for (MonsterDef def : level300Plus) {
       assertTrue(
           hasDrop(def, "item.mana_prism", 0.05f),
-          () -> def.getName() + " (level " + def.getLevel() + ") should drop item.mana_prism at 5%");
+          () ->
+              def.getName() + " (level " + def.getLevel() + ") should drop item.mana_prism at 5%");
       assertTrue(
           hasDrop(def, "item.critical_healing_potion", 0.05f),
           () ->
@@ -30,9 +35,36 @@ class EndgameUtilityLootTest {
   }
 
   @Test
+  void campaignMonstersAndGodsNeverReceiveRecoveryLootIncludingAutomaticUtilityDrops()
+      throws Exception {
+    var campaign =
+        MonsterRegistry.load().stream().filter(MonsterRegistry::excludesRecoveryLoot).toList();
+    assertFalse(campaign.isEmpty());
+    assertTrue(campaign.stream().anyMatch(d -> d.getName().equals("Divine Anubis")));
+    assertTrue(campaign.stream().anyMatch(d -> d.getName().equals("Fey Warden")));
+    assertTrue(campaign.stream().anyMatch(d -> d.getName().equals("The Pale Cantor")));
+    for (var def : campaign) {
+      assertTrue(def.getLoot().stream().noneMatch(drop -> recovery(drop.getItem())), def.getName());
+    }
+    var god = MonsterRegistry.create(MonsterRegistry.findByName("Divine Anubis"), 0, 0);
+    assertTrue(
+        god.getLootTable().getEntries().stream().noneMatch(drop -> recovery(drop.itemName())));
+  }
+
+  private static boolean recovery(String key) {
+    String normalized = com.perso.T4C.item.ItemDefinition.normalizeKey(key);
+    return normalized.endsWith("healing_potion")
+        || java.util.Set.of(
+                "item.health_potion", "item.mana_elixir", "item.potion_of_mana", "item.mana_prism")
+            .contains(normalized);
+  }
+
+  @Test
   void monstersBelowLevel300DoNotGetTheEndgameUtilityDrops() {
     List<MonsterDef> underLevel300 =
-        MonsterRegistry.load().stream().filter(def -> def.getLevel() > 0 && def.getLevel() < 300).toList();
+        MonsterRegistry.load().stream()
+            .filter(def -> def.getLevel() > 0 && def.getLevel() < 300)
+            .toList();
     assertFalse(underLevel300.isEmpty(), "expected at least one sub-300 monster to check");
     for (MonsterDef def : underLevel300) {
       assertFalse(hasDrop(def, "item.mana_prism", 0.05f), def.getName() + " is under level 300");

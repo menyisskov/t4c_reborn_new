@@ -1,0 +1,59 @@
+{
+  "key": "divine_thor_helm",
+  "name": "${item.divine_thor_helm}",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm__pal95",
+  "appearanceInventory": "64kInvPlateArmorHelm__pal95",
+  "numId": 55704,
+  "appearanceId": 55704,
+  "weight": 1,
+  "armorClass": 32.2,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50522,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 50523,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 50524,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 50525,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50526,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50527,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50528,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50529,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

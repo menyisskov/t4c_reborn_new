@@ -49,7 +49,12 @@ public final class QuestChainInfo {
               new Stage("${quest.chain.hollow_dawn}", 2, 8, List.of("emberglass_oath"))),
           Map.entry(
               "ashbound_exiles",
-              new Stage("${quest.chain.hollow_dawn}", 3, 8, List.of("pale_cantor", "cinder_marshal"), true)),
+              new Stage(
+                  "${quest.chain.hollow_dawn}",
+                  3,
+                  8,
+                  List.of("pale_cantor", "cinder_marshal"),
+                  true)),
           Map.entry(
               "hush_cantor",
               new Stage("${quest.chain.hollow_dawn}", 4, 8, List.of("ashbound_exiles"))),
@@ -86,6 +91,15 @@ public final class QuestChainInfo {
 
   /** {@code null} for the majority of quests, which aren't part of any multi-stage chain. */
   public static Stage stageFor(String questId) {
+    var concord = com.perso.T4C.quest.definition.ConcordCampaign.all();
+    for (int i = 0; i < concord.size(); i++) {
+      if (concord.get(i).getId().equals(questId))
+        return new Stage(
+            "${quest.chain.concord}",
+            i + 1,
+            concord.size(),
+            i == 0 ? List.of() : List.of(concord.get(i - 1).getId()));
+    }
     return questId == null ? null : STAGES.get(questId);
   }
 }

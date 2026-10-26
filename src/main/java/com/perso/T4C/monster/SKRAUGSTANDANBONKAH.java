@@ -1218,7 +1218,12 @@ public final class SKRAUGSTANDANBONKAH extends DataMonster {
         330,
         java.util.List.of(
             new MonsterDef.LootDrop("moon_tug_scalp", 0.3f),
-            new MonsterDef.LootDrop("raw_crystal", 0.3f)),
+            new MonsterDef.LootDrop("raw_crystal", 0.3f),
+            new MonsterDef.LootDrop("blade_of_heroism", 0.3f),
+            new MonsterDef.LootDrop("crude_skraug_bow", 0.01f),
+            new MonsterDef.LootDrop("finely_cut_moonstone", 0.005f),
+            new MonsterDef.LootDrop("human_bone", 0.02f),
+            new MonsterDef.LootDrop("rough_agate", 0.01f)),
         false,
         0.0f,
         75,

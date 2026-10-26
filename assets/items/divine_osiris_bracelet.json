@@ -1,0 +1,53 @@
+{
+  "key": "divine_osiris_bracelet",
+  "name": "${item.divine_osiris_bracelet}",
+  "bodyPart": "BRACER",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvBelt__pal97",
+  "numId": 56209,
+  "appearanceId": 56209,
+  "weight": 1,
+  "armorClass": 20.0,
+  "requirements": {
+    "endurance": 400,
+    "wisdom": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 802144,
+      "statId": 4,
+      "expression": "54"
+    },
+    {
+      "boostId": 802145,
+      "statId": 23,
+      "expression": "65"
+    },
+    {
+      "boostId": 802146,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 802147,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 802148,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 802149,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 802150,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

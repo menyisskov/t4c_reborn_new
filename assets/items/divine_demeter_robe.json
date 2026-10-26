@@ -1,0 +1,53 @@
+{
+  "key": "divine_demeter_robe",
+  "name": "${item.divine_demeter_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal92",
+  "appearanceInventory": "64kInvWhiteRobe__pal92",
+  "numId": 55001,
+  "appearanceId": 55001,
+  "weight": 4,
+  "armorClass": 68.2,
+  "requirements": {
+    "endurance": 220,
+    "wisdom": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50007,
+      "statId": 4,
+      "expression": "32"
+    },
+    {
+      "boostId": 50008,
+      "statId": 19,
+      "expression": "38"
+    },
+    {
+      "boostId": 50009,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50010,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50011,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50012,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50013,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

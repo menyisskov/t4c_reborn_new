@@ -36,7 +36,10 @@ public final class DOKTORSPINE extends DataMonster {
         SOUND_HIT,
         53,
         165,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("backbreaker", 0.01f),
+            new MonsterDef.LootDrop("light_healing_potion", 0.05f),
+            new MonsterDef.LootDrop("manastone", 0.05f)),
         false,
         0.0f,
         45,

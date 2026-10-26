@@ -1,0 +1,53 @@
+{
+  "key": "divine_artemis_armor",
+  "name": "${item.divine_artemis_armor}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody__pal92",
+  "appearanceInventory": "64kInvPlateArmorSleeves__pal92",
+  "numId": 55301,
+  "appearanceId": 55301,
+  "weight": 4,
+  "armorClass": 58.0,
+  "requirements": {
+    "endurance": 220,
+    "agility": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50217,
+      "statId": 6,
+      "expression": "32"
+    },
+    {
+      "boostId": 50218,
+      "statId": 10035,
+      "expression": "76"
+    },
+    {
+      "boostId": 50219,
+      "statId": 12,
+      "expression": "10"
+    },
+    {
+      "boostId": 50220,
+      "statId": 13,
+      "expression": "10"
+    },
+    {
+      "boostId": 50221,
+      "statId": 14,
+      "expression": "10"
+    },
+    {
+      "boostId": 50222,
+      "statId": 15,
+      "expression": "10"
+    },
+    {
+      "boostId": 50223,
+      "statId": 22,
+      "expression": "10"
+    }
+  ]
+}

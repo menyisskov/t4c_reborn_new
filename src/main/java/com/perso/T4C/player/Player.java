@@ -36,7 +36,7 @@ public class Player extends Stats {
     meditating = value;
   }
 
-  private String name = "Personnage";
+  private String name = I18n.key("player.default_name");
   private String gender = com.perso.T4C.helper.AppearanceDefaultsCatalog.MALE;
 
   @FunctionalInterface
@@ -335,6 +335,7 @@ public class Player extends Stats {
   }
 
   public void update(float delta) {
+    com.perso.T4C.teleport.LocationDiscovery.discoverNearby(this);
     if (isStunned() || isPhysicallyExhausted()) {
       movement.stop();
     }
@@ -372,8 +373,13 @@ public class Player extends Stats {
             getEffectiveSkillLevel("rapid_healing"),
             random);
     if (healedHp != currentHp) {
-      int gained = healedHp - currentHp;
-      currentHp = healedHp;
+      int before = currentHp;
+      if (healedHp > currentHp) {
+        applyHeal(healedHp - currentHp, healedHp - currentHp);
+      } else {
+        currentHp = healedHp;
+      }
+      int gained = currentHp - before;
       if (gained > 0 && healingCallback != null) healingCallback.onHealing(gained);
     }
     int restoredMana =
@@ -456,6 +462,13 @@ public class Player extends Stats {
   }
 
   public boolean dropInventoryItem(int inventoryIndex, String itemKey) {
+    com.perso.T4C.item.ItemDefinition definition =
+        com.perso.T4C.item.ItemRegistry.findByKey(itemKey);
+    if (definition != null && definition.isUndroppable()) {
+      if (messageCallback != null)
+        messageCallback.showMessage(I18n.key("message.gem_of_destiny_undroppable"));
+      return false;
+    }
     return itemDropCallback != null && itemDropCallback.drop(inventoryIndex, itemKey);
   }
 
@@ -554,10 +567,18 @@ public class Player extends Stats {
     }
     low = Math.max(1, low);
     int amount = (low == high) ? low : ThreadLocalRandom.current().nextInt(low, high + 1);
-    currentHp = Math.min(maxHp, currentHp + amount);
+    long scaled =
+        (long) amount
+            * Math.max(0, 100 + buffStatBonuses.getOrDefault("healingReceivedPercent", 0))
+            / 100;
+    currentHp = (int) Math.min(maxHp, currentHp + scaled);
   }
 
   public void addXp(int amount, XpCurve xpCurve) {
+    addXp((long) amount, xpCurve);
+  }
+
+  public void addXp(long amount, XpCurve xpCurve) {
     progression.addXp(this, amount, xpCurve, true);
   }
 
@@ -788,6 +809,10 @@ public class Player extends Stats {
 
   public int getArmorClassBoost() {
     return buffStatBonuses.getOrDefault("armorClass", 0) + EquipmentBonusRules.bonus(this, 20);
+  }
+
+  public double getArmorClassMultiplier() {
+    return Math.max(0, 100 + buffStatBonuses.getOrDefault("armorClassPercent", 0)) / 100d;
   }
 
   public int getElementResistance(String element) {
@@ -1142,6 +1167,8 @@ public class Player extends Stats {
       case "int", "intelligence" -> "int";
       case "wis", "wisdom" -> "wis";
       case "ac", "armorclass", "armorClass" -> "armorClass";
+      case "armorclasspercent" -> "armorClassPercent";
+      case "healingreceivedpercent" -> "healingReceivedPercent";
       case "max hp", "maxhp" -> "maxHp";
       case "attack", "skill:attack" -> "skill:attack";
       case "archery", "skill 35", "skill:archery" -> "skill:archery";
@@ -1195,7 +1222,7 @@ public class Player extends Stats {
   private void tickRegenBuffs(float delta) {
     for (ActiveBuff buff : activeBuffs) {
       int[] gains = buff.tickRegen(delta);
-      if (gains[0] > 0) currentHp = Math.min(maxHp, currentHp + gains[0]);
+      if (gains[0] > 0) applyHeal(gains[0], gains[0]);
       if (gains[1] > 0) mana = Math.min(maxMana, mana + gains[1]);
     }
   }

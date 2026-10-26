@@ -6,6 +6,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Mordrenn", x = 1697, y = 2247, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class MordrennTheDrownedInquisitor extends DataMonster {
   // Reuses the "Skeleton King" boss puppet/sound family (see VICARRAMIEL for the same
   // precedent) — the tallest, most ornate undead humanoid rig already in the sprite set.
@@ -46,8 +47,6 @@ public final class MordrennTheDrownedInquisitor extends DataMonster {
         600,
         java.util.List.of(
             new MonsterDef.LootDrop("mordrenns_drowned_cowl", 0.01f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0021: water-flavor source for the Ancient Celestial/Empyrean armor sets
             // (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_water_armor", 0.025f),

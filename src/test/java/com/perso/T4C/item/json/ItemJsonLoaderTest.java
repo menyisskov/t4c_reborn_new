@@ -34,7 +34,8 @@ class ItemJsonLoaderTest {
             .filter(b -> b.getStatId() == 17)
             .mapToLong(b -> Long.parseLong(b.getExpression()))
             .sum();
-    assertTrue(firePowerBoost > 0, "Body piece should carry a share of the themed fire power bonus");
+    assertTrue(
+        firePowerBoost > 0, "Body piece should carry a share of the themed fire power bonus");
   }
 
   @Test
@@ -57,5 +58,33 @@ class ItemJsonLoaderTest {
     assertTrue(hasStrBoost, "Warrior armor should grant a strength boost");
     assertTrue(hasAttackBoost, "Warrior armor should grant an attack boost");
     assertTrue(hasEnduranceBoost, "Warrior armor should grant an endurance boost");
+  }
+
+  @Test
+  void everyPlusThreeBowHasBothHigherVariantsAndNewUpgradesKeepTheirRequirements() {
+    ItemJsonLoader.loadAndRegister("assets/items");
+    for (ItemDefinition parent : ItemRegistry.load()) {
+      if (!parent.isBow()
+          || parent.getBodyPart() != com.perso.T4C.player.BodyPart.WEAPON
+          || !parent.getKey().endsWith("_3")) continue;
+      String root = parent.getKey().substring(0, parent.getKey().length() - 2);
+      assertNotNull(ItemRegistry.findByKey(root + "_4"), root);
+      assertNotNull(ItemRegistry.findByKey(root + "_5"), root);
+    }
+    var parent = ItemRegistry.findByKey("elm_recurve_bow_3");
+    var plus4 = ItemRegistry.findByKey("elm_recurve_bow_4");
+    var plus5 = ItemRegistry.findByKey("elm_recurve_bow_5");
+    assertEquals(parent.getReqStr(), plus4.getReqStr());
+    assertEquals(parent.getReqAgi(), plus5.getReqAgi());
+    assertEquals(parent.getAtkDelay(), plus5.getAtkDelay());
+    assertEquals(parent.getAppearanceEquippedPrimary(), plus4.getAppearanceEquippedPrimary());
+    assertTrue(!parent.getDmgFormula().equals(plus4.getDmgFormula()));
+    assertTrue(!plus4.getDmgFormula().equals(plus5.getDmgFormula()));
+    var stock =
+        ((com.perso.T4C.npc.behavior.ShopBehavior)
+                com.perso.T4C.npc.catalog.ShopCatalog.get("QuartermasterElenna"))
+            .items();
+    assertTrue(stock.contains("elm_recurve_bow_4"));
+    assertTrue(stock.contains("elm_recurve_bow_5"));
   }
 }

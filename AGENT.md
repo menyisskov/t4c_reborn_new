@@ -2,6 +2,12 @@
 
 ## 🎯 Purpose
 
+### Visual design review
+
+Show the user design previews before applying visual changes to the game. Prepare new
+art and UI designs in staging first, present them for review, and incorporate the user's
+feedback before installing them in the live assets or restarting with the new visuals.
+
 This project uses an AI agent as a **technical assistant** to accelerate development while enforcing strict architectural and coding rules.
 
 The agent is expected to:
@@ -14,6 +20,12 @@ The agent is expected to:
 This file is **authoritative** and applies to **every agent request**.
 
 ---
+
+## Equipment and spell requirements
+
+Equipment and spells use attribute requirements, not minimum character levels. Do not
+add level gates to equipping, buying or learning them. Existing spell tier metadata may
+remain for balance, purchase costs and ordering; it is not a character-level requirement.
 
 ## 🧠 Agent Role
 

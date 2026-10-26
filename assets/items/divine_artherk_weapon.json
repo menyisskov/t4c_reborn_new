@@ -1,0 +1,55 @@
+{
+  "key": "divine_artherk_weapon",
+  "name": "${item.divine_artherk_weapon}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal90",
+  "appearanceInventory": "64kInvWoodenStaff__pal90",
+  "numId": 55800,
+  "appearanceId": 55800,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "endurance": 0,
+    "wisdom": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50570,
+      "statId": 4,
+      "expression": "15"
+    },
+    {
+      "boostId": 50571,
+      "statId": 23,
+      "expression": "18"
+    },
+    {
+      "boostId": 50572,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50573,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50574,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50575,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50576,
+      "statId": 22,
+      "expression": "7"
+    }
+  ],
+  "dmgFormula": "1d15+18",
+  "atkDelay": "1300"
+}

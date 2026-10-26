@@ -21,6 +21,7 @@ public final class PlayerStateMapper {
   }
 
   public static PlayerStateDto fromPlayer(Player player, float dayNightHour) {
+    com.perso.T4C.teleport.LocationDiscovery.discoverNearby(player);
     PlayerStateDto state = new PlayerStateDto();
     state.worldLayoutVersion = AvalonWorldLayout.WORLD_LAYOUT_VERSION;
     state.name = player.getName();
@@ -85,16 +86,8 @@ public final class PlayerStateMapper {
     player.setCurrentHp(state.currentHp);
     player.setMaxMana(state.maxMana);
     player.setMana(state.mana);
-    if (state.level >= GameConstants.MAX_PLAYER_LEVEL) {
-      // Characters saved above the level cap (from before it existed) are brought down to it.
-      player.setLevel(GameConstants.MAX_PLAYER_LEVEL);
-      player.setCurrentXp(0);
-      player.setXpToNextLevel(0);
-    } else {
-      player.setLevel(state.level);
-      player.setCurrentXp(state.currentXp);
-      player.setXpToNextLevel(state.xpToNextLevel);
-    }
+    player.setLevel(state.level);
+    XpCurve.loadDefault().applySavedProgress(player, state.currentXp, state.xpToNextLevel);
     player.setStatPoints(state.statPoints);
     player.setSkillPoints(state.skillPoints);
     // Saves from before the rebirth limit can hold more; the Seraph aura scales with this count,
@@ -125,7 +118,6 @@ public final class PlayerStateMapper {
                     .filter(m -> m == null || !RemovedSpells.isRemoved(m.getSpellName()))
                     .toList())
             : new ArrayList<>());
-    applyActiveBuffs(state, player);
     player.setInventory(state.inventory);
     player.setEquippedItems(toEquippedItems(state));
     if (state.skills != null) {
@@ -135,8 +127,13 @@ public final class PlayerStateMapper {
     player.setStorage(state.storage);
     player.setStorageCharges(state.storageCharges);
     com.perso.T4C.item.StorageService.synchronize(player);
+    com.perso.T4C.item.RetiredItems.synchronize(player);
     player.setStorageGold(state.storageGold);
     player.setQuestFlags(state.questFlags);
+    com.perso.T4C.npc.behavior.RebirthBehavior.ensureStartingWeaponSkills(player);
+    // Percentage effects need the restored skills, gear and permanent quest bonuses.
+    applyActiveBuffs(state, player);
+    com.perso.T4C.adventure.CollectionBook.synchronize(player);
     if (state.respawnPointDefined) {
       player.setRespawnPoint(state.respawnWorldX, state.respawnWorldY, state.respawnWorldZ);
     }

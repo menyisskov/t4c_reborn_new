@@ -1,0 +1,64 @@
+{
+  "key": "event_boneward_water",
+  "name": "${item.event_boneward_water}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 1",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 2.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 50,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 100,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59603,
+  "structure": 2,
+  "appearanceId": 59603,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 690030,
+      "statId": 1,
+      "expression": "10"
+    },
+    {
+      "boostId": 690031,
+      "statId": 18,
+      "expression": "10"
+    },
+    {
+      "boostId": 690032,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 690033,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 690034,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 690035,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 690036,
+      "statId": 22,
+      "expression": "4"
+    }
+  ]
+}

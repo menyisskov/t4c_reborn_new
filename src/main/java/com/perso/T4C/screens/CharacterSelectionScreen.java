@@ -21,6 +21,7 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.gui.core.GuiDraw;
+import com.perso.T4C.gui.core.JournalTheme;
 import com.perso.T4C.helper.CharacterClass;
 import com.perso.T4C.helper.CharacterCreationRules;
 import com.perso.T4C.helper.LocalCharacterStore;
@@ -63,8 +64,10 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private static final float BUTTON_WIDTH = 116f;
   private static final float BUTTON_HEIGHT = 27f;
   private static final float PANEL_INSET = 14f;
+
   /** hintBand is only 60% opaque; stacking it hides the panel art underneath. */
   private static final int SCRIM_PASSES = 3;
+
   private final MyGame game;
   private final SpriteBatch batch;
   private final OrthographicCamera camera = new OrthographicCamera();
@@ -72,6 +75,8 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private final Vector2 pointer = new Vector2();
   private final GlyphLayout layout = new GlyphLayout();
   private final Random random = new Random();
+  private final JournalTheme theme = new JournalTheme();
+  private final java.util.Map<Integer, TextureRegion> selectionFrames = new java.util.HashMap<>();
   private final TextureRegion background;
   private final TextureRegion title;
   private final TextureRegion panel;
@@ -122,26 +127,26 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     title = loadSprite("Connect_Title2");
     panel = loadSprite("PS_Back");
     panelExtension = loadSprite("PS_BackDown");
-    largeNormal = loadSprite("PS_BtnN");
-    largeHover = loadSprite("PS_BtnH");
-    largeDisabled = loadSprite("PS_BtnD");
-    smallNormal = loadSprite("PS_SmallBtnN");
-    smallHover = loadSprite("PS_SmallBtnH");
-    rowHighlight = loadSprite("PS_Over");
-    upNormal = loadSprite("PS_SBtnUPN");
-    upHover = loadSprite("PS_SBtnUPH");
-    downNormal = loadSprite("PS_SBtnDNN");
-    downHover = loadSprite("PS_SBtnDNH");
-    questionPanel = loadSprite("Q_Back");
+    largeNormal = styledSprite("PS_BtnN", false);
+    largeHover = styledSprite("PS_BtnH", true);
+    largeDisabled = styledSprite("PS_BtnD", false);
+    smallNormal = styledSprite("PS_SmallBtnN", false);
+    smallHover = styledSprite("PS_SmallBtnH", true);
+    rowHighlight = styledSprite("PS_Over", true);
+    upNormal = styledSprite("PS_SBtnUPN", false);
+    upHover = styledSprite("PS_SBtnUPH", true);
+    downNormal = styledSprite("PS_SBtnDNN", false);
+    downHover = styledSprite("PS_SBtnDNH", true);
+    questionPanel = theme.windowFrame(628, 384);
     FontManager fonts = FontManager.getInstance();
-    buttonFont = fonts.getT4CBeaulieuFont(17, Color.BLACK);
-    smallButtonFont = fonts.getT4CBeaulieuFont(15, Color.BLACK);
-    listFont = fonts.getT4CBeaulieuFont(17, Color.WHITE);
-    goldFont = fonts.getT4CBeaulieuFont(17, new Color(222 / 255f, 158 / 255f, 0f, 1f));
-    whiteFont = fonts.getT4CBeaulieuFont(17, Color.WHITE);
-    redFont = fonts.getT4CBeaulieuFont(17, new Color(0.63f, 0.08f, 0.08f, 1f));
-    grayFont = fonts.getT4CBeaulieuFont(17, Color.GRAY);
-    questionFont = fonts.getT4CBeaulieuFont(19, new Color(222 / 255f, 158 / 255f, 0f, 1f));
+    buttonFont = fonts.getTahomaFont(12, JournalTheme.TEXT, false);
+    smallButtonFont = fonts.getTahomaFont(12, JournalTheme.TEXT, false);
+    listFont = fonts.getTahomaFont(14, JournalTheme.TEXT, false);
+    goldFont = fonts.getTahomaFont(14, JournalTheme.GOLD, false);
+    whiteFont = fonts.getTahomaFont(14, JournalTheme.TEXT, false);
+    redFont = fonts.getTahomaFont(13, Color.valueOf("E4A29B"), false);
+    grayFont = fonts.getTahomaFont(13, JournalTheme.DIM, false);
+    questionFont = fonts.getT4CBeaulieuFont(22, JournalTheme.GOLD);
     hintFont = fonts.getT4CBeaulieuFont(15, Color.LIGHT_GRAY);
     hintBand = createHintBand();
     refreshCharacters();
@@ -149,6 +154,11 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     if (characters.isEmpty() && errorMessage == null) {
       startCreation();
     }
+  }
+
+  private TextureRegion styledSprite(String name, boolean active) {
+    TextureRegion source = loadSprite(name);
+    return theme.control(source.getRegionWidth(), source.getRegionHeight(), active);
   }
 
   private static TextureRegion loadSprite(String name) {
@@ -187,21 +197,17 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   private void drawCharacterPanel() {
     float x = panelX();
     float y = panelY();
-    drawTranslucent(panel, x, y);
     boolean hasDetails = mode == Mode.SELECT && !characters.isEmpty();
     boolean selectError = mode == Mode.SELECT && errorMessage != null;
-    if (mode == Mode.NAME
-        || mode == Mode.SEX
-        || mode == Mode.ALIGNMENT
-        || mode == Mode.DELETE_CONFIRM
-        || hasDetails
-        || selectError) {
-      drawTranslucent(panelExtension, x, y + panel.getRegionHeight());
-    }
-    if ((mode == Mode.NAME || (selectError && hasDetails)) && errorMessage != null) {
-      drawTranslucent(
-          panelExtension, x, y + panel.getRegionHeight() + panelExtension.getRegionHeight());
-    }
+    int height = panel.getRegionHeight();
+    if (mode != Mode.SELECT || hasDetails || selectError)
+      height += panelExtension.getRegionHeight();
+    if ((mode == Mode.NAME || (selectError && hasDetails)) && errorMessage != null)
+      height += panelExtension.getRegionHeight();
+    TextureRegion frame =
+        selectionFrames.computeIfAbsent(height, h -> theme.plainFrame(panel.getRegionWidth(), h));
+    drawTranslucent(frame, x, y);
+    drawCentered(questionFont, I18n.key("ui.character_selection"), x + 16, y + 12, 285);
     drawCentered(goldFont, I18n.key("character.column.name"), x + 16f, y + 44f, 191f);
     drawCentered(goldFont, I18n.key("character.column.level"), x + 215f, y + 44f, 55f);
     float rowY = y + 76f;
@@ -209,6 +215,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     for (int row = 0; row < VISIBLE_ROWS; row++) {
       int index = firstVisible + row;
       if (index >= characters.size()) break;
+      theme.well(batch, x + 16, rowY, 255, 26);
       if (index == selected) {
         GuiDraw.drawRegionFlipped(batch, rowHighlight, x + 16f, rowY);
       } else if (index == hovered) {
@@ -284,26 +291,17 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     float upX = x + 278f;
     float upY = y + 76f;
     GuiDraw.drawRegionFlipped(batch, contains(upX, upY, 20f, 21f) ? upHover : upNormal, upX, upY);
+    drawButtonTextCentered(buttonFont, "↑", upX, upY, 20, 21);
     float downY = y + 170f;
     GuiDraw.drawRegionFlipped(
         batch, contains(upX, downY, 20f, 21f) ? downHover : downNormal, upX, downY);
+    drawButtonTextCentered(buttonFont, "↓", upX, downY, 20, 21);
   }
 
   private void drawClassPanel(float preferredY) {
     float x = classPanelX();
     float y = classPanelY(preferredY);
     drawTranslucent(questionPanel, x, y);
-    // Q_Back's art carries the old questionnaire's five answer-row dividers. They cut straight
-    // across this two-column layout, so black the panel's interior out and draw on a clean slate;
-    // the ornate frame around the edge is what we actually want from the sprite.
-    for (int pass = 0; pass < SCRIM_PASSES; pass++) {
-      batch.draw(
-          hintBand,
-          x + PANEL_INSET,
-          y + PANEL_INSET,
-          questionPanel.getRegionWidth() - PANEL_INSET * 2f,
-          questionPanel.getRegionHeight() - PANEL_INSET * 2f);
-    }
     drawCentered(
         questionFont,
         I18n.key("character.class.title"),
@@ -315,6 +313,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
     int hovered = classRowAtPointer(x, y);
     for (int row = 0; row < classes.length; row++) {
       float rowY = y + CLASS_LIST_Y + row * CLASS_ROW_PITCH;
+      theme.well(batch, x + CLASS_LIST_X, rowY, CLASS_ROW_WIDTH, CLASS_ROW_HEIGHT);
       if (row == selectedClass) {
         GuiDraw.drawRegionFlipped(batch, rowHighlight, x + CLASS_LIST_X, rowY);
       } else if (row == hovered) {
@@ -423,7 +422,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   }
 
   private void drawTranslucent(TextureRegion region, float x, float y) {
-    drawWithAlpha(region, x, y, PANEL_ALPHA);
+    drawWithAlpha(region, x, y, 1f);
   }
 
   private void drawWithAlpha(TextureRegion region, float x, float y, float alpha) {
@@ -934,6 +933,7 @@ public final class CharacterSelectionScreen extends InputAdapter implements Scre
   @Override
   public void dispose() {
     hintBand.dispose();
+    theme.dispose();
     preview.dispose();
   }
 

@@ -46,7 +46,11 @@ public final class DrVonPyre extends NamedEventMonster {
         SOUND_HIT,
         53,
         165,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("blood_drinker", 0.01f),
+            new MonsterDef.LootDrop("garb_of_the_dead", 0.01f),
+            new MonsterDef.LootDrop("manastone", 0.05f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.05f)),
         false,
         0.0f,
         45,

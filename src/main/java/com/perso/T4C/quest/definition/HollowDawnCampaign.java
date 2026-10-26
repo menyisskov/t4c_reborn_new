@@ -21,7 +21,7 @@ public final class HollowDawnCampaign {
             25,
             3930,
             750,
-            100,
+            220,
             240,
             30000000,
             null),
@@ -44,7 +44,7 @@ public final class HollowDawnCampaign {
             30,
             4360,
             2620,
-            110,
+            270,
             240,
             30000000,
             null),
@@ -101,9 +101,9 @@ public final class HollowDawnCampaign {
   public static List<QuestDef> threnody() {
     return List.of(
         stage(
-            "ashbound_exiles", KEEPER, "Ashbound Exile", 35, 5690, 1410, 100, 315, 45000000, null),
+            "ashbound_exiles", KEEPER, "Ashbound Exile", 35, 5690, 1410, 240, 315, 45000000, null),
         stage("hush_cantor", KEEPER, "The Hush Cantor", 1, 5750, 1500, 80, 340, 55000000, null),
-        stage("nullguard_watch", KEEPER, "Nullguard", 40, 5470, 1760, 115, 355, 65000000, null),
+        stage("nullguard_watch", KEEPER, "Nullguard", 40, 5470, 1760, 260, 355, 65000000, null),
         stage(
             "dusk_regent",
             KEEPER,
@@ -123,7 +123,7 @@ public final class HollowDawnCampaign {
             45,
             5630,
             2100,
-            100,
+            230,
             390,
             85000000,
             "hollow_dawn"),

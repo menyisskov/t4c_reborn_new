@@ -1,7 +1,7 @@
 {
   "name": "ArenaMobXP700",
   "displayName": "${monster.arenamobxp700}",
-  "health": 87399,
+  "health": 300000,
   "xpPerHit": 0,
   "xpOnDeath": 26927362,
   "hitDamageMin": 1,

@@ -3,13 +3,13 @@ package com.perso.T4C.gui.screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiClickZone;
 import com.perso.T4C.gui.core.GuiManager;
-import com.perso.T4C.gui.core.GuiScreenBase;
+import com.perso.T4C.gui.core.JournalTheme;
+import com.perso.T4C.gui.core.JournalWindow;
+import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiText;
 import com.perso.T4C.helper.PlayerStateStore;
-import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.FontManager;
@@ -21,16 +21,16 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.ToIntFunction;
 
-public class TrainScreen extends GuiScreenBase {
-  private static final float ROW_HEIGHT = 36f;
-  private static final float ROW_START_Y = 40f;
-  private static final float STAT_X = 10f;
-  private static final float VALUE_X = 220f;
-  private static final float COST_X = 290f;
-  private static final float PLUS_X = 420f;
-  private static final float GOLD_LABEL_Y = 340f;
-  private static final Color ELIGIBLE_COLOR = Color.valueOf("F2B705");
-  private static final Color BLOCKED_COLOR = Color.valueOf("B03030");
+public class TrainScreen extends JournalWindow {
+  private static final float ROW_HEIGHT = 52f;
+  private static final float ROW_START_Y = 26f;
+  private static final float STAT_X = 30f;
+  private static final float VALUE_X = 248f;
+  private static final float COST_X = 330f;
+  private static final float PLUS_X = 520f;
+  private static final float GOLD_LABEL_Y = 320f;
+  private static final Color ELIGIBLE_COLOR = JournalTheme.GOLD;
+  private static final Color BLOCKED_COLOR = Color.valueOf("E4A29B");
   private static final Map<String, StatAccessor> STAT_ACCESSORS = new HashMap<>();
 
   static {
@@ -46,6 +46,7 @@ public class TrainScreen extends GuiScreenBase {
   }
 
   private final Player player;
+  private final List<GuiButton> rowButtons = new ArrayList<>();
   private final List<TrainEntry> entries = new ArrayList<>();
   private final List<GuiText> rowLabels = new ArrayList<>();
   private final List<GuiClickZone> plusZones = new ArrayList<>();
@@ -54,25 +55,9 @@ public class TrainScreen extends GuiScreenBase {
 
   public TrainScreen(Player player, List<TrainableStat> trainableStats) {
     this.player = player;
-    try {
-      background = SpriteLoader.getInstance().getRegionFromSpriteName("GUI_BackSpell");
-    } catch (GameException ignored) {
-      background = null;
-    }
-    centerOnScreen();
-    addCloseButton();
-    addHeader();
+    initJournal(600, 355, "ui.training");
     loadEntries(trainableStats);
     rebuildList();
-  }
-
-  private void addCloseButton() {
-    addCloseButton(550f, 1f);
-  }
-
-  private void addHeader() {
-    if (background == null) return;
-    labels.add(GuiText.translatedHeader("ui.training", "TRAINING", x + 250f, y + 5f));
   }
 
   private void loadEntries(List<TrainableStat> trainableStats) {
@@ -103,10 +88,12 @@ public class TrainScreen extends GuiScreenBase {
   }
 
   private void rebuildList() {
+    buttons.removeAll(rowButtons);
+    rowButtons.clear();
     labels.removeAll(rowLabels);
     rowLabels.clear();
     plusZones.clear();
-    BitmapFont font = FontManager.getInstance().getJetBrainsMonoFont(12, Color.WHITE);
+    BitmapFont font = FontManager.getInstance().getTahomaFont(13, JournalTheme.TEXT, false);
     for (int i = 0; i < entries.size(); i++) {
       TrainEntry entry = entries.get(i);
       float ry = y + ROW_START_Y + i * ROW_HEIGHT;
@@ -119,22 +106,37 @@ public class TrainScreen extends GuiScreenBase {
       addRow(font, x + VALUE_X, ry, () -> valueStr, null);
       final String costStr = entry.stat.costPerPoint() + I18n.key("ui.gold_per_point");
       addRow(font, x + COST_X, ry, () -> costStr, canAfford ? ELIGIBLE_COLOR : BLOCKED_COLOR);
-      Color plusColor = capped ? Color.WHITE : (canAfford ? ELIGIBLE_COLOR : BLOCKED_COLOR);
-      final String plusLabel = capped ? "[MAX]" : "[+1]";
-      addRow(font, x + PLUS_X, ry, () -> plusLabel, plusColor);
-      if (!capped) {
-        plusZones.add(new GuiClickZone(x + PLUS_X, ry, 50f, 20f, () -> tryTrain(entry)));
-      }
+      GuiButton increment =
+          theme.button(
+              x + PLUS_X,
+              ry - 5,
+              44,
+              30,
+              () -> capped ? I18n.key("ui.max") : "+1",
+              () -> tryTrain(entry));
+      increment.setEnabled(!capped && canAfford);
+      buttons.add(increment);
+      rowButtons.add(increment);
     }
     BitmapFont goldFont = FontManager.getInstance().getJetBrainsMonoFont(12, ELIGIBLE_COLOR);
     GuiText goldLabel =
         new GuiText(
             goldFont,
-            x + 10f,
+            x + 30f,
             y + GOLD_LABEL_Y,
-            () -> I18n.key("ui.gold_label") + " " + player.getGold());
+            () ->
+                I18n.key("ui.gold_label")
+                    + " "
+                    + String.format(java.util.Locale.ROOT, "%,d", player.getGold()));
     labels.add(goldLabel);
     rowLabels.add(goldLabel);
+  }
+
+  @Override
+  protected void renderBody(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
+    for (int i = 0; i < entries.size(); i++)
+      theme.well(batch, x + 18, y + ROW_START_Y + i * ROW_HEIGHT - 12, 564, 44);
+    theme.well(batch, x + 18, y + 307, 564, 37);
   }
 
   private int getCurrent(TrainEntry entry) {

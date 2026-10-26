@@ -25,6 +25,7 @@ public final class PlayerAppearanceDefaults {
       ensureDefaultPart(partMap, entry.getKey(), entry.getValue());
     }
     applyEquippedAppearances(player, partMap);
+    com.perso.T4C.player.RobeWardrobe.apply(player, partMap);
     ConcealmentResolver.applyConcealment(partMap);
     player.getAnimations().setBowEquipped(hasBowEquipped(player));
   }

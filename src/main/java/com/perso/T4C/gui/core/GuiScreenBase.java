@@ -171,13 +171,15 @@ public abstract class GuiScreenBase {
   }
 
   private boolean isDragModifierDown() {
-    return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
-        || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
+    return GuiLayoutEditing.enabled()
+        && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+            || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT));
   }
 
   private boolean isResizeModifierDown() {
-    return Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
-        || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+    return GuiLayoutEditing.enabled()
+        && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+            || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
   }
 
   protected boolean releaseDraggedElement() {

@@ -1,0 +1,53 @@
+{
+  "key": "divine_artemis_wings",
+  "name": "${item.divine_artemis_wings}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal92",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal92",
+  "numId": 55306,
+  "appearanceId": 55306,
+  "weight": 1,
+  "armorClass": 16.8,
+  "requirements": {
+    "endurance": 220,
+    "agility": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50252,
+      "statId": 6,
+      "expression": "32"
+    },
+    {
+      "boostId": 50253,
+      "statId": 10035,
+      "expression": "76"
+    },
+    {
+      "boostId": 50254,
+      "statId": 12,
+      "expression": "10"
+    },
+    {
+      "boostId": 50255,
+      "statId": 13,
+      "expression": "10"
+    },
+    {
+      "boostId": 50256,
+      "statId": 14,
+      "expression": "10"
+    },
+    {
+      "boostId": 50257,
+      "statId": 15,
+      "expression": "10"
+    },
+    {
+      "boostId": 50258,
+      "statId": 22,
+      "expression": "10"
+    }
+  ]
+}

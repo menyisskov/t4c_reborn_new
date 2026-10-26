@@ -1,0 +1,52 @@
+{
+  "key": "concord_oath_ring_water",
+  "name": "${item.concord_oath_ring_water}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 1",
+  "numId": 59003,
+  "appearanceId": 59003,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61021,
+      "statId": 1,
+      "expression": "10"
+    },
+    {
+      "boostId": 61022,
+      "statId": 18,
+      "expression": "10"
+    },
+    {
+      "boostId": 61023,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 61024,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 61025,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 61026,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 61027,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "armorClass": 2.0,
+  "requirements": {
+    "intelligence": 100,
+    "endurance": 50
+  }
+}

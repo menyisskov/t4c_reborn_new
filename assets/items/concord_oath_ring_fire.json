@@ -1,0 +1,52 @@
+{
+  "key": "concord_oath_ring_fire",
+  "name": "${item.concord_oath_ring_fire}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 1",
+  "numId": 59002,
+  "appearanceId": 59002,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61014,
+      "statId": 1,
+      "expression": "10"
+    },
+    {
+      "boostId": 61015,
+      "statId": 17,
+      "expression": "10"
+    },
+    {
+      "boostId": 61016,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 61017,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 61018,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 61019,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 61020,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "armorClass": 2.0,
+  "requirements": {
+    "intelligence": 100,
+    "endurance": 50
+  }
+}

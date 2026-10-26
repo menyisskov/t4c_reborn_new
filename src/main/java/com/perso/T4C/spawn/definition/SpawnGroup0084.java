@@ -14,7 +14,7 @@ public final class SpawnGroup0084 {
         80,
         2,
         5,
-        List.of("MOBMADPATIENT", "MOBLOON"),
+        List.of("MOBMADPATIENT", "Loon"),
         List.of(
             new SpawnGroup.SpawnPoint(2724, 2206, 0),
             new SpawnGroup.SpawnPoint(2711, 2217, 0),

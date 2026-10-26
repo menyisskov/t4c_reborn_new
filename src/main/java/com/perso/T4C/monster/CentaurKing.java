@@ -7,6 +7,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Centaur King", x = 2380, y = 2430, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class CentaurKing extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
   public static final String SOUND_DEATH = "Taunting Hit.wav";
@@ -50,8 +51,6 @@ public final class CentaurKing extends DataMonster {
             // T4C-0021: pre-existing item from the original content pipeline (T4C-0001) that
             // never got a source - fits this boss's existing archer theme.
             new MonsterDef.LootDrop("ring_of_the_archer", 0.02f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0021: physical/archer-flavor source for the Ancient Celestial/Empyrean armor
             // sets (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_archer_armor", 0.025f),

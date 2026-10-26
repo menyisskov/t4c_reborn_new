@@ -27,7 +27,7 @@ public final class IceShield {
         0,
         "300000",
         "0",
-        230978,
+        249648,
         null,
         10812,
         4,

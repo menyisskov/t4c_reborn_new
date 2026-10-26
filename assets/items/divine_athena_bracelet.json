@@ -1,0 +1,53 @@
+{
+  "key": "divine_athena_bracelet",
+  "name": "${item.divine_athena_bracelet}",
+  "bodyPart": "BRACER",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvBelt__pal95",
+  "numId": 55409,
+  "appearanceId": 55409,
+  "weight": 1,
+  "armorClass": 22.0,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50343,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 50344,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 50345,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 50346,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 50347,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 50348,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 50349,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

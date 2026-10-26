@@ -27,7 +27,7 @@ public final class Blizzard {
         0,
         "0",
         "0",
-        187630,
+        195508,
         null,
         10134,
         4,

@@ -4,6 +4,9 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Nightcreeper", x = 106, y = 667, z = 0, stationary = false, aggressive = true)
@@ -79,7 +82,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Nightcreeper", x = 504, y = 731, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Nightcreeper", x = 506, y = 744, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Nightcreeper", x = 89, y = 681, z = 0, stationary = false, aggressive = true)
-public final class r160Nightcreeper extends DataMonster {
+public final class r160Nightcreeper extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";
@@ -87,6 +90,15 @@ public final class r160Nightcreeper extends DataMonster {
   public r160Nightcreeper(MonsterDef definition, float worldX, float worldY) throws GameException {
 
     super(definition, worldX, worldY);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null) {
+      String flag = "__FLAG_NIGHTCREEPERS_KILLED";
+      player.setQuestFlag(flag, Math.min(9, player.getQuestFlag(flag) + 1));
+    }
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

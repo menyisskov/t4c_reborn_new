@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Round radar in the top-right corner of the game view. The local player sits in the centre;
+ * Round radar in the bottom-right corner of the game view. The local player sits in the centre;
  * everything within {@link #RANGE} world pixels shows as a dot, oriented like the screen: other
  * players blue, NPCs green, monsters yellow, bosses red (bigger, drawn on top).
  */
@@ -29,7 +29,6 @@ public final class RadarHud {
   private static final int DOT = 7;
   private static final int BOSS_DOT = 10;
   private static final float MARGIN = 10f;
-  private static final float TOP = 36f;
 
   public enum Kind {
     PLAYER,
@@ -84,13 +83,14 @@ public final class RadarHud {
   public void render(
       SpriteBatch batch,
       float viewportWidth,
+      float viewportHeight,
       Vector2 center,
       List<BaseMonster> monsters,
       List<BaseNPC> npcs,
       List<Vector2> otherPlayers) {
     if (center == null) return;
-    float x = viewportWidth - DIAMETER - MARGIN;
-    float y = TOP;
+    float x = left(viewportWidth);
+    float y = top(viewportHeight);
     float cx = x + DIAMETER / 2f;
     float cy = y + DIAMETER / 2f;
     Color previous = new Color(batch.getColor());
@@ -109,6 +109,21 @@ public final class RadarHud {
     }
     drawDot(batch, cx, cy, 6, Color.WHITE);
     batch.setColor(previous);
+  }
+
+  static float left(float width) {
+    return Math.max(MARGIN, width - DIAMETER - MARGIN);
+  }
+
+  static float top(float height) {
+    return Math.max(MARGIN, height - DIAMETER - MARGIN);
+  }
+
+  /** Hit the same disc that render draws, so clicks cannot move the player behind it. */
+  public static boolean contains(float x, float y, float width, float height) {
+    float dx = x - left(width) - DIAMETER / 2;
+    float dy = y - top(height) - DIAMETER / 2;
+    return dx * dx + dy * dy <= DIAMETER * DIAMETER / 4;
   }
 
   private void drawMonsters(

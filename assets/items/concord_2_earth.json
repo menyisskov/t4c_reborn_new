@@ -1,0 +1,29 @@
+{
+  "key": "concord_2_earth",
+  "name": "${item.concord_2_earth}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvWoodenStaff__pal92",
+  "numId": 59052,
+  "appearanceId": 59052,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61310,
+      "statId": 4,
+      "expression": "38"
+    },
+    {
+      "boostId": 61311,
+      "statId": 19,
+      "expression": "45"
+    }
+  ],
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal92",
+  "requirements": {
+    "wisdom": 450
+  },
+  "dmgFormula": "1d60+45",
+  "atkDelay": "1300",
+  "isBow": false
+}

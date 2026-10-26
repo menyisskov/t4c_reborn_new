@@ -6,13 +6,53 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0117`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0157`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0156 | Consolidate pending single-player work before multiplayer development | Process / Integration | In Progress | Pending | [2026-10-26](CHANGELOG.md#2026-10-26--single-player-integration-t4c-0156) |
+| T4C-0155 | Move mythic bosses to a quest-gated island | World / Quest | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--shattered-isle-passage-t4c-0155) |
+| T4C-0154 | Design dragon, griffin and hydra sprites and add their mobs after visual review | Art / Content | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--approved-dragon-griffin-and-hydra-bosses-t4c-0154) |
+| T4C-0153 | Raise Arch Drake's spell threat and add level-1000+ monsters using available art | Content / Balance | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--mythic-monster-encounters-t4c-0153) |
+| T4C-0152 | Publish the current compendium and show when reference data was refreshed | Website / Delivery | Done | `1e40c6ac`, PR #79 | [2026-10-26](CHANGELOG.md#2026-10-26--current-compendium-publication-t4c-0152) |
+| T4C-0151 | Add senior divine encounters and modestly strengthen existing gods | Content / Balance | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--senior-gods-and-stronger-divine-trials-t4c-0151) |
+| T4C-0150 | Load exactly one god per shrine instead of applying the ordinary spawn multiplier | Fix / Gods | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--single-god-shrine-spawns-t4c-0150) |
+| T4C-0149 | Give divine judgments a moderate boss damage budget without restoring dense-pack spell bursts | Balance / Gods | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--divine-judgment-balance-t4c-0149) |
+| T4C-0148 | Order hunting and training travel destinations by monster level | UI / Travel | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--hunting-and-training-teleport-order-t4c-0148) |
+| T4C-0147 | Restore drake spell visuals, casting poses and elemental on-hit aura reactions | Fix / Combat | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--drake-spell-visuals-and-aura-reactions-t4c-0147) |
+| T4C-0146 | Remove test and numeric placeholder items from the playable catalog | Cleanup / Items | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--playable-item-catalog-cleanup-t4c-0146) |
+| T4C-0145 | Reduce elemental spell bursts for every monster caster and verify drake packs at 652 Fire resistance | Balance | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--monster-elemental-spell-damage-t4c-0145) |
+| T4C-0144 | Explain item activation failures and expose the protection gem mana cost | Fix / Items | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--item-activation-failure-messages-t4c-0144) |
+| T4C-0143 | Extend the damage budget to all new regular monsters and every outgoing attack path | Balance | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--damage-budget-for-all-new-regular-monsters-t4c-0143) |
+| T4C-0142 | Lower dense hunting-field melee bursts without relying on a fifty-rebirth healing aura | Balance | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--dense-pack-hunting-damage-t4c-0142) |
+| T4C-0141 | Strengthen high-level protection rolls, fix item macros with the journal open, and prevent accidental graphics reload/layout editing | Balance / Controls | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--protection-macros-and-interface-input-t4c-0141) |
+| T4C-0140 | Add item macros and extend unstable protection to thirty minutes | Items / Controls | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--item-macros-and-longer-protection-t4c-0140) |
+| T4C-0139 | Calibrate hunting XP against the observed 234-274 leveling pace | Balance | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--live-hunting-xp-calibration-t4c-0139) |
+| T4C-0138 | Correct drake healing targets and distinguish above-cap challenges from leveling farms | Fix / Guides | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--drake-spells-and-hunting-guidance-t4c-0138) |
+| T4C-0137 | Refresh website maps and cover the Witness and Threnody campaign | Wiki / Maps | Done | `1e40c6ac`, PR #79 | [2026-10-26](CHANGELOG.md#2026-10-26--website-map-atlas-refresh-t4c-0137) |
+| T4C-0136 | Warrior armor, shields and weapons through 2000 strength with Attack and Dodge bonuses | Content / Balance | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--warrior-equipment-progression-t4c-0136) |
+| T4C-0135 | Searchable leveling guide in the in-game Wiki | Wiki / Content | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--in-game-leveling-guide-t4c-0135) |
+| T4C-0134 | Scale hunting experience from level 150 through the level-400 endgame | Balance | Done | Local changes | [2026-10-26](CHANGELOG.md#2026-10-26--hunting-experience-through-level-400-t4c-0134) |
+| T4C-0133 | Align early and mid-tier quiver damage with the full archer progression | Balance | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--quiver-damage-progression-t4c-0133) |
+| T4C-0132 | Double monster experience and expand new-island hunting populations | Balance / Spawns | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--island-hunting-expansion-t4c-0132) |
+| T4C-0131 | Stronger Seraph trial HP and elder god combat debuffs | Balance / Combat | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--divine-trial-debuffs-t4c-0131) |
+| T4C-0130 | Archer bow and quiver progression through 2000 agility, bow rebalance and tiered Archery bonuses | Balance | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--bow-damage-and-quiver-scaling-t4c-0130) |
+| T4C-0129 | Unified journal style for every player menu | UI | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--unified-game-menus-t4c-0129) |
+| T4C-0128 | Flat seraph attribute training cost | Balance | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--flat-seraph-attribute-cost-t4c-0128) |
+| T4C-0127 | Rebirth-scaled starting Attack and Archery | Progression | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--rebirth-weapon-skills-t4c-0127) |
+| T4C-0126 | Raise seraph attribute training limit to +100 | Balance | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--seraph-attribute-training-t4c-0126) |
+| T4C-0125 | Equip armor by dropping it onto the inventory character preview | Inventory | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--character-preview-equipping-t4c-0125) |
+| T4C-0124 | Fully restore health and mana on level-up | Progression | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--level-up-resource-restoration-t4c-0124) |
+| T4C-0123 | Ctrl+C continuous warrior and archer auto-attack | Combat/Input | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--continuous-weapon-auto-attack-t4c-0123) |
+| T4C-0122 | Storage journal design and quantity selection for dragged stacks | UI/Storage | Done | Local changes | [2026-10-25](CHANGELOG.md#2026-10-25--storage-stack-transfers-t4c-0122) |
+| T4C-0121 | Live quest journal with story categories, stages and next steps | UI/Quests | Done | Local changes | [2026-10-24](CHANGELOG.md#2026-10-24--live-quest-journal-t4c-0121) |
+| T4C-0120 | Approved horseshoe mana and health orb | UI | In Progress | Local changes | [2026-10-24](CHANGELOG.md#2026-10-24--horseshoe-mana-and-health-orb-t4c-0120) |
+| T4C-0119 | Unified vitals and HUD layout | UI | Done | Local changes | [2026-10-24](CHANGELOG.md#2026-10-24--unified-vitals-and-hud-layout-t4c-0119) |
+| T4C-0118 | Active spell hover details and journal macros page | UI/Fix | Done | Local changes | [2026-10-24](CHANGELOG.md#2026-10-24--spell-hover-details-and-macros-journal-t4c-0118) |
+| T4C-0117 | Character journal and combat HUD | UI | Done | Local changes | [2026-10-24](CHANGELOG.md#2026-10-24--character-journal-and-combat-hud-t4c-0117) |
 | T4C-0001 | JSON content pipeline, armor sets, level cap 500 | Content/Systems | Done | `a7e7247` | [2026-09-16](CHANGELOG.md#2026-09-16--json-content-pipeline-armor-sets-level-cap-500-t4c-0001) |
 | T4C-0002 | Rebirth economy, storage, spell vendor, macros | Content/Systems | Done | `0404411` | [2026-09-17](CHANGELOG.md#2026-09-17--rebirth-economy-storage-and-quality-of-life-pass-t4c-0002) |
 | T4C-0003 | Content-authoring Claude skills | Process/Tooling | Done | `0f2cba7`, `2bfcd38`, `99e6f39`, `1758ed7` | [2026-09-17](CHANGELOG.md#2026-09-17--content-authoring-skills-t4c-0003-processtooling) |

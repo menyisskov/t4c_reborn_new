@@ -1,7 +1,7 @@
 package com.perso.T4C.spell;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,12 +9,13 @@ class SpellRegistryParityTest {
   @Test
   void registryContainsEveryMigratedSpellOnce() {
     var registry = SpellRegistry.load();
-    // T4C-0067 added 6 spells: the Ultra tier of the 5 protection spells, plus Renew Armor.
-    // T4C-0084: 334 minus the seven removed level-400 spells (six attacks and Sanctum Ward).
-    assertEquals(327, registry.size());
+    // Numeric identity must remain unique as item-only and monster-only spells are added.
+    java.util.Set<Integer> ids = new java.util.HashSet<>();
     registry.forEach(
         spell -> {
           assertNotNull(spell.getName());
+          if (spell.getSpellId() > 0)
+            assertTrue(ids.add(spell.getSpellId()), "Duplicate spell ID " + spell.getSpellId());
         });
   }
 }

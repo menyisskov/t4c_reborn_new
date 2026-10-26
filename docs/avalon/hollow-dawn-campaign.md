@@ -66,7 +66,7 @@ Ordinary campaign monsters have multiple spread spawn points. Local hunting pack
 eight live monsters of the same type within twelve tiles, with staggered short respawns. Leaving
 and re-entering a visible hunting area can refill dead spawns sooner. Story bosses keep their
 separate, slower behavior. These are initial settings for one or two players; XP per hour and
-the requested **10-30 hours from level 200 to 300** still need an in-game playtest.
+the requested **5-10 hours per 100 levels from 200 through 400** still need an in-game playtest.
 
 ## Equipment hunt
 

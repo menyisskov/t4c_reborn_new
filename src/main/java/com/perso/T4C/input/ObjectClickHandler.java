@@ -108,6 +108,8 @@ public class ObjectClickHandler extends InputAdapter {
           if (chest.opened()) {
             PlayerStateStore.save(player);
             systemMessage.show(chestService.message(chest));
+          } else if (chest.failure() == ChestService.Failure.LOCKED) {
+            systemMessage.show(I18n.message("message.chest_locked"));
           } else if (chest.failure() == ChestService.Failure.EMPTY
               || chest.failure() == ChestService.Failure.COOLDOWN) {
             systemMessage.show(I18n.message("message.chest_empty"));

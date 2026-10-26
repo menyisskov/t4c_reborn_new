@@ -46,7 +46,9 @@ public final class RunawayPatient extends NamedEventMonster {
         SOUND_HIT,
         39,
         121,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("j4_permit", 1.0f),
+            new MonsterDef.LootDrop("mana_elixir", 0.05f)),
         false,
         0.0f,
         37,

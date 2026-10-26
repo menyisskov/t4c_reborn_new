@@ -1004,7 +1004,10 @@ public final class SKRAUGMEANHEADDRUMMAH extends DataMonster {
         418,
         java.util.List.of(
             new MonsterDef.LootDrop("moon_tug_scalp", 0.3f),
-            new MonsterDef.LootDrop("raw_crystal", 0.3f)),
+            new MonsterDef.LootDrop("raw_crystal", 0.3f),
+            new MonsterDef.LootDrop("plate_protector", 0.01f),
+            new MonsterDef.LootDrop("rough_agate", 0.01f),
+            new MonsterDef.LootDrop("serious_healing_potion", 0.05f)),
         false,
         0.0f,
         91,

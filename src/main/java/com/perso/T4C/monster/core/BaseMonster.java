@@ -57,6 +57,7 @@ public abstract class BaseMonster implements Nameable {
   protected int combatAgility = 1;
   protected int combatIntelligence = 1;
   protected int combatAttack = 1;
+  private int outgoingDamageLimit = Integer.MAX_VALUE;
   protected int combatDodge = 1;
   private int temporaryDodgeModifier = 0;
   private long temporaryDodgeModifierUntilMs = 0L;
@@ -241,6 +242,19 @@ public abstract class BaseMonster implements Nameable {
       updateStationaryAnimation(delta);
       return;
     }
+    var huntingField =
+        com.perso.T4C.spawn.HuntingGrounds.at(getCanonicalName(), getSpawnTileX(), getSpawnTileY());
+    if (huntingField != null
+        && playerPosition != null
+        && Math.max(
+                Math.abs(playerPosition.x / GRID_W - huntingField.x()),
+                Math.abs(playerPosition.y / GRID_H - huntingField.y()))
+            > huntingField.leashRadiusTiles()) {
+      if (isAggro) loseAggroAndReturnHome();
+      updatePatrol(delta);
+      animations.update(delta, movement.isMoving());
+      return;
+    }
     if (attackCooldownTimer > 0) {
       attackCooldownTimer -= delta;
     }
@@ -279,7 +293,7 @@ public abstract class BaseMonster implements Nameable {
       aggroOnMonster(enemyTarget);
       updateMonsterCombat(delta, enemyTarget);
     } else if (aggressive
-        && distanceToPlayer <= MONSTER_AGGRO_RANGE
+        && distanceToPlayer <= (huntingField == null ? MONSTER_AGGRO_RANGE : 12f * GRID_W)
         && hasLineOfSight(playerPosition)) {
       if (!isAggro) {
         resetChaseNavigation();
@@ -760,13 +774,14 @@ public abstract class BaseMonster implements Nameable {
     float targetDistance = playerPosition == null ? Float.MAX_VALUE : position.dst(playerPosition);
     int damage = rollDamage(targetDistance);
     if (damage < 0) return;
+    if (resolveSelfSpell(damage)) return;
     if (isFightingCompanion()) {
       performCompanionAttack(damage);
       return;
     }
     if (damageCallback != null) {
       if (lastAttackSpellId > 0) {
-        clearAttackAnimationPose();
+        startCastAnimation();
         damageCallback.applySpell(this, lastAttackSpellId, damage);
       } else {
         startAttackAnimation();
@@ -799,12 +814,22 @@ public abstract class BaseMonster implements Nameable {
     }
   }
 
+  private boolean resolveSelfSpell(int amount) {
+    if (!MonsterSpellRules.healsCaster(lastAttackSpellId)) return false;
+    startCastAnimation();
+    heal(amount);
+    com.perso.T4C.spell.NpcCastVfxHook.playOnSelf(
+        MonsterSpellRules.visualSpell(lastAttackSpellId), position.cpy());
+    return true;
+  }
+
   protected void performAttack(BaseMonster target) {
     if (target == null || target.isDead || !animations.hasAttackAnimation()) {
       return;
     }
     startAttackAnimation();
     int rawDamage = rollDamage();
+    if (resolveSelfSpell(rawDamage)) return;
     com.perso.T4C.combat.CombatResult result =
         com.perso.T4C.combat.CombatResolver.resolve(
             new com.perso.T4C.combat.PhysicalAttackRequest(
@@ -830,6 +855,11 @@ public abstract class BaseMonster implements Nameable {
     animations.startAttack();
   }
 
+  protected void startCastAnimation() {
+    clearAttackAnimationPose();
+    animations.startCast();
+  }
+
   protected void clearAttackAnimationPose() {
     animations.clearAttackPose();
   }
@@ -841,15 +871,23 @@ public abstract class BaseMonster implements Nameable {
         combatAttack = Math.max(1, chosen.getValue1());
         lastAttackRanged = chosen.isSpell() || chosen.getMaxRangeTiles() > 1;
         lastAttackSpellId = chosen.getSpellId();
-        if (lastAttackSpellId > 0) return rollMonsterSpellDamage(lastAttackSpellId);
-        return parseDiceRoll(chosen.getName());
+        if (lastAttackSpellId > 0) {
+          int amount = rollMonsterSpellDamage(lastAttackSpellId);
+          if (MonsterSpellRules.healsCaster(lastAttackSpellId)) return amount;
+          if (MonsterSpellRules.usesArmor(lastAttackSpellId))
+            return Math.min(amount, outgoingDamageLimit);
+          return MonsterSpellRules.balanceRawDamage(
+              lastAttackSpellId, combatLevel, amount, getCanonicalName());
+        }
+        return Math.min(parseDiceRoll(chosen.getName()), outgoingDamageLimit);
       }
     }
     if (tileRange(targetDistance) >= 2) return -1;
     lastAttackRanged = false;
     lastAttackSpellId = 0;
     int range = hitDamageMax - hitDamageMin;
-    return hitDamageMin + (range > 0 ? random.nextInt(range + 1) : 0);
+    return Math.min(
+        hitDamageMin + (range > 0 ? random.nextInt(range + 1) : 0), outgoingDamageLimit);
   }
 
   private int tileRange(float worldDistance) {
@@ -862,6 +900,7 @@ public abstract class BaseMonster implements Nameable {
     for (MonsterDef.Attack attack : attacks) {
       if (attack == null || !attack.isInRange(tiles)) continue;
       if (isMentallyExhausted() && attack.isSpell()) continue;
+      if (attack.isSpell() && !canCastMonsterSpell(attack.getSpellId())) continue;
       eligible.add(attack);
     }
     if (eligible.isEmpty()) return null;
@@ -877,7 +916,11 @@ public abstract class BaseMonster implements Nameable {
     return eligible.get(eligible.size() - 1);
   }
 
-  private int rollMonsterSpellDamage(int spellId) {
+  protected boolean canCastMonsterSpell(int spellId) {
+    return true;
+  }
+
+  protected int rollMonsterSpellDamage(int spellId) {
     int intelligence = Math.max(15, combatIntelligence);
     int scale = Math.max(1, intelligence - 14);
     int damage =
@@ -923,6 +966,10 @@ public abstract class BaseMonster implements Nameable {
 
   public void applyCombatDefinition(MonsterDef definition) {
     if (definition == null) return;
+    outgoingDamageLimit =
+        HuntingDamageCurve.appliesTo(definition)
+            ? HuntingDamageCurve.maximumRawDamage(definition.getLevel())
+            : Integer.MAX_VALUE;
     combatLevel = Math.max(1, definition.getLevel());
     combatStrength = Math.max(1, definition.getStr());
     combatEndurance = Math.max(1, definition.getEnd());
@@ -1033,10 +1080,10 @@ public abstract class BaseMonster implements Nameable {
     takeDamage(damage);
     emitPlayerDamageLifecycle(player);
     if (player != null && xpPerHit > 0 && effectiveDamage > 0) {
-      player.addXp(xpPerHit * effectiveDamage, xpCurve);
+      player.addXp(MonsterExperience.damageReward(xpPerHit, effectiveDamage), xpCurve);
     }
     if (!wasDead && isDead && player != null && xpOnDeath > 0) {
-      player.addXp(xpOnDeath, xpCurve);
+      player.addXp(MonsterExperience.reward(xpOnDeath), xpCurve);
     }
   }
 

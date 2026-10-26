@@ -1,0 +1,52 @@
+{
+  "key": "concord_tide_bracelet_fire",
+  "name": "${item.concord_tide_bracelet_fire}",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "numId": 59010,
+  "appearanceId": 59010,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61071,
+      "statId": 1,
+      "expression": "16"
+    },
+    {
+      "boostId": 61072,
+      "statId": 17,
+      "expression": "16"
+    },
+    {
+      "boostId": 61073,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 61074,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 61075,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 61076,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 61077,
+      "statId": 22,
+      "expression": "6"
+    }
+  ],
+  "armorClass": 3.2,
+  "requirements": {
+    "intelligence": 160,
+    "endurance": 80
+  }
+}

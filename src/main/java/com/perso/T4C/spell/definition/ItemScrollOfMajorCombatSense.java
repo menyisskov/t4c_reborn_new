@@ -25,7 +25,7 @@ public final class ItemScrollOfMajorCombatSense {
         "Curse.wav",
         null,
         0,
-        "30000",
+        "300000",
         "0",
         233,
         null,

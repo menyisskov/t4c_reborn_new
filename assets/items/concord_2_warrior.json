@@ -1,0 +1,29 @@
+{
+  "key": "concord_2_warrior",
+  "name": "${item.concord_2_warrior}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvShortSword__pal95",
+  "numId": 59048,
+  "appearanceId": 59048,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61302,
+      "statId": 3,
+      "expression": "38"
+    },
+    {
+      "boostId": 61303,
+      "statId": 8,
+      "expression": "90"
+    }
+  ],
+  "appearanceEquippedPrimary": "PupNormalSword__pal95",
+  "requirements": {
+    "strength": 450
+  },
+  "dmgFormula": "1d250+150",
+  "atkDelay": "1300",
+  "isBow": false
+}
