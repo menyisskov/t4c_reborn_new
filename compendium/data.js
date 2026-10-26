@@ -101002,62 +101002,6 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4242,
-          "y": 1571,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4146,
-          "y": 1487,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4186,
-          "y": 1475,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4206,
-          "y": 1567,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4218,
-          "y": 1479,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4242,
-          "y": 1539,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4170,
-          "y": 1495,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4150,
-          "y": 1511,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
           "x": 4238,
           "y": 1515,
           "tier": "trash"
@@ -101065,78 +101009,8 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4226,
-          "y": 1555,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4198,
-          "y": 1495,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
           "x": 4230,
           "y": 1495,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4198,
-          "y": 1551,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1571,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4202,
-          "y": 1475,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4170,
-          "y": 1479,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4214,
-          "y": 1495,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4166,
-          "y": 1511,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4242,
-          "y": 1555,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4182,
-          "y": 1503,
           "tier": "trash"
         },
         {
@@ -101149,27 +101023,6 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4214,
-          "y": 1547,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4182,
-          "y": 1487,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4158,
-          "y": 1491,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
           "x": 4226,
           "y": 1507,
           "tier": "trash"
@@ -101177,154 +101030,91 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4162,
-          "y": 1523,
+          "x": 4242,
+          "y": 1527,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4226,
-          "y": 1539,
+          "x": 4222,
+          "y": 1499,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1503,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1515,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4178,
-          "y": 1547,
+          "y": 1543,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4146,
-          "y": 1499,
+          "x": 4230,
+          "y": 1515,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1531,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4242,
-          "y": 1527,
+          "y": 1535,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4194,
-          "y": 1483,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4206,
-          "y": 1487,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4158,
-          "y": 1503,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4206,
-          "y": 1503,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4234,
-          "y": 1547,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4214,
-          "y": 1559,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4234,
-          "y": 1563,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4162,
-          "y": 1483,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1487,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4190,
+          "x": 4226,
           "y": 1491,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1499,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4194,
-          "y": 1503,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4234,
-          "y": 1503,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4174,
+          "x": 4218,
           "y": 1507,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4158,
-          "y": 1515,
+          "x": 4234,
+          "y": 1511,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1515,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4170,
+          "x": 4226,
           "y": 1519,
           "tier": "trash"
         },
@@ -101332,91 +101122,301 @@ window.T4C_DATA = {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4234,
-          "y": 1535,
+          "y": 1519,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4206,
-          "y": 1539,
+          "x": 4242,
+          "y": 1519,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4194,
-          "y": 1543,
+          "x": 4238,
+          "y": 1523,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4186,
-          "y": 1551,
+          "x": 4218,
+          "y": 1527,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4202,
-          "y": 1559,
+          "x": 4234,
+          "y": 1531,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4178,
-          "y": 1475,
+          "x": 4226,
+          "y": 1495,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4194,
-          "y": 1475,
+          "x": 4226,
+          "y": 1499,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4210,
-          "y": 1475,
+          "x": 4230,
+          "y": 1499,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4170,
-          "y": 1487,
+          "x": 4222,
+          "y": 1503,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1503,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1503,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1507,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1507,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1507,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4218,
+          "y": 1511,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1511,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1511,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1511,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4238,
+          "y": 1511,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4214,
-          "y": 1487,
+          "y": 1515,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4178,
-          "y": 1495,
+          "x": 4218,
+          "y": 1515,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1515,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1515,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4194,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4210,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4218,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4238,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4190,
+          "y": 1523,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4206,
-          "y": 1495,
+          "y": 1523,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4166,
-          "y": 1503,
+          "x": 4218,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4242,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4178,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4198,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4214,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4238,
+          "y": 1527,
           "tier": "trash"
         },
         {
@@ -108268,13 +108268,6 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 4422,
-          "y": 1837,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
           "x": 4326,
           "y": 1741,
           "tier": "trash"
@@ -108317,13 +108310,6 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 4390,
-          "y": 1837,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
           "x": 4330,
           "y": 1765,
           "tier": "trash"
@@ -108352,13 +108338,6 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 4406,
-          "y": 1825,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
           "x": 4342,
           "y": 1749,
           "tier": "trash"
@@ -108368,13 +108347,6 @@ window.T4C_DATA = {
           "displayName": "Sundered Sentinel",
           "x": 4374,
           "y": 1749,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 4422,
-          "y": 1765,
           "tier": "trash"
         },
         {
@@ -108478,13 +108450,6 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 4422,
-          "y": 1821,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
           "x": 4326,
           "y": 1753,
           "tier": "trash"
@@ -108515,13 +108480,6 @@ window.T4C_DATA = {
           "displayName": "Sundered Sentinel",
           "x": 4326,
           "y": 1821,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 4402,
-          "y": 1837,
           "tier": "trash"
         },
         {
@@ -108669,6 +108627,48 @@ window.T4C_DATA = {
           "displayName": "Sundered Sentinel",
           "x": 4418,
           "y": 1777,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4330,
+          "y": 1785,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4402,
+          "y": 1797,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4414,
+          "y": 1801,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4398,
+          "y": 1813,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4378,
+          "y": 1817,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4334,
+          "y": 1825,
           "tier": "trash"
         },
         {
@@ -108830,20 +108830,6 @@ window.T4C_DATA = {
           "displayName": "Veilbound Wraith",
           "x": 4250,
           "y": 1670,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4242,
-          "y": 1571,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1571,
           "tier": "trash"
         }
       ],
@@ -110227,6 +110213,76 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5401,
           "y": 1328,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5417,
+          "y": 1328,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5349,
+          "y": 1332,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5409,
+          "y": 1336,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5393,
+          "y": 1336,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5361,
+          "y": 1288,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5421,
+          "y": 1288,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5369,
+          "y": 1292,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5401,
+          "y": 1296,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5345,
+          "y": 1300,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5337,
+          "y": 1308,
           "tier": "trash"
         },
         {
@@ -112017,29 +112073,8 @@ window.T4C_DATA = {
         {
           "name": "Threnody Skeleton",
           "displayName": "Threnody Skeleton",
-          "x": 5325,
-          "y": 1376,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5421,
-          "y": 1372,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
           "x": 5421,
           "y": 1280,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5373,
-          "y": 1376,
           "tier": "trash"
         },
         {
@@ -112080,20 +112115,6 @@ window.T4C_DATA = {
         {
           "name": "Threnody Skeleton",
           "displayName": "Threnody Skeleton",
-          "x": 5397,
-          "y": 1356,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5349,
-          "y": 1360,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
           "x": 5393,
           "y": 1284,
           "tier": "trash"
@@ -112110,13 +112131,6 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5373,
           "y": 1352,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5401,
-          "y": 1376,
           "tier": "trash"
         },
         {
@@ -112164,20 +112178,6 @@ window.T4C_DATA = {
         {
           "name": "Threnody Skeleton",
           "displayName": "Threnody Skeleton",
-          "x": 5417,
-          "y": 1356,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5345,
-          "y": 1376,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
           "x": 5401,
           "y": 1340,
           "tier": "trash"
@@ -112187,20 +112187,6 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5337,
           "y": 1300,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5365,
-          "y": 1364,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5381,
-          "y": 1364,
           "tier": "trash"
         },
         {
@@ -112290,20 +112276,6 @@ window.T4C_DATA = {
         {
           "name": "Threnody Skeleton",
           "displayName": "Threnody Skeleton",
-          "x": 5357,
-          "y": 1376,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5385,
-          "y": 1376,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
           "x": 5401,
           "y": 1316,
           "tier": "trash"
@@ -112320,27 +112292,6 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5409,
           "y": 1348,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5337,
-          "y": 1364,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5405,
-          "y": 1364,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5393,
-          "y": 1368,
           "tier": "trash"
         },
         {
@@ -112432,6 +112383,111 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5401,
           "y": 1328,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5397,
+          "y": 1352,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5421,
+          "y": 1352,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5417,
+          "y": 1328,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5349,
+          "y": 1332,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5409,
+          "y": 1336,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5333,
+          "y": 1344,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5349,
+          "y": 1344,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5381,
+          "y": 1356,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5393,
+          "y": 1336,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5361,
+          "y": 1288,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5421,
+          "y": 1288,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5369,
+          "y": 1292,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5401,
+          "y": 1296,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5345,
+          "y": 1300,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5337,
+          "y": 1308,
           "tier": "trash"
         },
         {
@@ -113025,20 +113081,6 @@ window.T4C_DATA = {
           "name": "Ashbound Exile",
           "displayName": "Ashbound Exile",
           "x": 5801,
-          "y": 1361,
-          "tier": "trash"
-        },
-        {
-          "name": "Ashbound Exile",
-          "displayName": "Ashbound Exile",
-          "x": 5897,
-          "y": 1361,
-          "tier": "trash"
-        },
-        {
-          "name": "Ashbound Exile",
-          "displayName": "Ashbound Exile",
-          "x": 5801,
           "y": 1265,
           "tier": "trash"
         },
@@ -113081,13 +113123,6 @@ window.T4C_DATA = {
           "name": "Ashbound Exile",
           "displayName": "Ashbound Exile",
           "x": 5833,
-          "y": 1361,
-          "tier": "trash"
-        },
-        {
-          "name": "Ashbound Exile",
-          "displayName": "Ashbound Exile",
-          "x": 5865,
           "y": 1361,
           "tier": "trash"
         },
@@ -113159,13 +113194,6 @@ window.T4C_DATA = {
           "displayName": "Ashbound Exile",
           "x": 5813,
           "y": 1305,
-          "tier": "trash"
-        },
-        {
-          "name": "Ashbound Exile",
-          "displayName": "Ashbound Exile",
-          "x": 5881,
-          "y": 1357,
           "tier": "trash"
         },
         {
@@ -113439,6 +113467,34 @@ window.T4C_DATA = {
           "displayName": "Ashbound Exile",
           "x": 5893,
           "y": 1313,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashbound Exile",
+          "displayName": "Ashbound Exile",
+          "x": 5881,
+          "y": 1353,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashbound Exile",
+          "displayName": "Ashbound Exile",
+          "x": 5805,
+          "y": 1361,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashbound Exile",
+          "displayName": "Ashbound Exile",
+          "x": 5805,
+          "y": 1329,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashbound Exile",
+          "displayName": "Ashbound Exile",
+          "x": 5885,
+          "y": 1329,
           "tier": "trash"
         },
         {
@@ -114114,71 +114170,8 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5414,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5402,
-          "y": 1722,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5498,
           "y": 1722,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5454,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5414,
-          "y": 1694,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5434,
-          "y": 1722,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5426,
-          "y": 1654,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1658,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1686,
           "tier": "trash"
         },
         {
@@ -114186,27 +114179,6 @@ window.T4C_DATA = {
           "displayName": "Nullguard",
           "x": 5462,
           "y": 1722,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5474,
-          "y": 1638,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5434,
-          "y": 1634,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5450,
-          "y": 1646,
           "tier": "trash"
         },
         {
@@ -114226,36 +114198,8 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5430,
-          "y": 1702,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5418,
-          "y": 1714,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5490,
-          "y": 1642,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5486,
           "y": 1670,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5402,
-          "y": 1706,
           "tier": "trash"
         },
         {
@@ -114275,43 +114219,8 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5482,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5482,
-          "y": 1654,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5442,
-          "y": 1658,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5470,
           "y": 1710,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5422,
-          "y": 1638,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5462,
-          "y": 1642,
           "tier": "trash"
         },
         {
@@ -114338,34 +114247,6 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5466,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5438,
-          "y": 1646,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5438,
-          "y": 1670,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1670,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5458,
           "y": 1706,
           "tier": "trash"
@@ -114380,99 +114261,8 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5426,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5442,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5470,
-          "y": 1650,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5490,
           "y": 1694,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5490,
-          "y": 1630,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5446,
-          "y": 1634,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5458,
-          "y": 1634,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1638,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5430,
-          "y": 1642,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5478,
-          "y": 1646,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5458,
-          "y": 1650,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5494,
-          "y": 1650,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5454,
-          "y": 1658,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5430,
-          "y": 1662,
           "tier": "trash"
         },
         {
@@ -114513,13 +114303,6 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5426,
-          "y": 1694,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5478,
           "y": 1694,
           "tier": "trash"
@@ -114527,8 +114310,281 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5410,
+          "x": 5418,
+          "y": 1626,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5438,
           "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5494,
+          "y": 1686,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5474,
+          "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5494,
+          "y": 1710,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5438,
+          "y": 1714,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5454,
+          "y": 1714,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5482,
+          "y": 1714,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5490,
+          "y": 1718,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5478,
+          "y": 1662,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5498,
+          "y": 1662,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5478,
+          "y": 1670,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5494,
+          "y": 1670,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5442,
+          "y": 1674,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5430,
+          "y": 1694,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5498,
+          "y": 1694,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5446,
+          "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5466,
+          "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5462,
+          "y": 1714,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5470,
+          "y": 1718,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5438,
+          "y": 1722,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5454,
+          "y": 1722,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5482,
+          "y": 1666,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5430,
+          "y": 1670,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5482,
+          "y": 1674,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5478,
+          "y": 1678,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5438,
+          "y": 1682,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5474,
+          "y": 1682,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5478,
+          "y": 1686,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5486,
+          "y": 1686,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5426,
+          "y": 1690,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5482,
+          "y": 1690,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5434,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5442,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5454,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5470,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5494,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5490,
+          "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5442,
+          "y": 1706,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5450,
+          "y": 1706,
           "tier": "trash"
         },
         {

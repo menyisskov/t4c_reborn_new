@@ -12,6 +12,9 @@ commit links, and finer-grained notes.
 - Consolidated the pending single-player improvements and content into one release baseline before multiplayer development. Personal characters and settings remain local.
 - Single-player remains independently playable offline; future multiplayer work must preserve its existing gameplay and saved progress.
 
+### Fixed
+- Moved obscured hunting-pack spawn points into clear terrain within their existing fields, preserving their populations and the surrounding scenery.
+
 ## 2026-10-26 — Shattered Isle passage (T4C-0155)
 
 ### Added
