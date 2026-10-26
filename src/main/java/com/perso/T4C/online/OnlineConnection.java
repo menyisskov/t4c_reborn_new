@@ -2,6 +2,7 @@ package com.perso.T4C.online;
 
 import com.google.gson.Gson;
 import com.perso.T4C.online.model.OnlineCharacterView;
+import com.perso.T4C.online.model.CreatureView;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -28,7 +29,7 @@ public final class OnlineConnection implements AutoCloseable {
 
   public record Actor(long id, double x, double y, long sequence, long appearance) {}
 
-  public record Snapshot(long tick, List<Actor> players, Long characterRevision) {}
+  public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures) {}
 
   public record View(long ownId, MapInfo map, Snapshot snapshot, OnlineCharacterView character) {}
 
@@ -134,6 +135,14 @@ public final class OnlineConnection implements AutoCloseable {
             hasSelf |= actor.id() == joined.id();
           }
           if (!hasSelf) throw new IllegalStateException("Session missing from snapshot");
+          var creatures = snapshot.creatures() == null ? List.<CreatureView>of() : snapshot.creatures();
+          if (creatures.size() > 256) throw new IllegalStateException("Invalid creature count");
+          var creatureIds = new java.util.HashSet<Long>();
+          for (var creature : creatures) {
+            if (creature == null || creature.x() >= map.width() || creature.y() >= map.height()
+                || !creatureIds.add(creature.id()))
+              throw new IllegalStateException("Invalid creature snapshot");
+          }
           if (map.persistent()) {
             if (snapshot.characterRevision() == null || snapshot.characterRevision() < 0)
               throw new IllegalStateException("Missing committed character revision");
@@ -149,7 +158,7 @@ public final class OnlineConnection implements AutoCloseable {
           view =
               new View(
                   joined.id(), map,
-                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision()),
+                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures)),
                   character);
           status = "connected";
           Thread.sleep(75);

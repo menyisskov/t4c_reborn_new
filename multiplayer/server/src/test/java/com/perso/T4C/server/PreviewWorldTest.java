@@ -5,6 +5,22 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class PreviewWorldTest {
+  @Test void bothPlayersSeeTheSameAuthoredCreaturesAndInputsCannotMoveThem() throws Exception {
+    var map = PreviewMap.load(java.nio.file.Path.of("../../assets/maps/worldmap/worldmap.colbin"));
+    var world = new PreviewWorld(map, MonsterCatalog.loadBundled());
+    var one = world.join();
+    var two = world.join();
+    var creatures = world.snapshot(one.token()).creatures();
+    assertFalse(creatures.isEmpty());
+    assertEquals(creatures, world.snapshot(two.token()).creatures());
+    assertThrows(UnsupportedOperationException.class, creatures::clear);
+    world.input(one.token(), 0, 1, 0);
+    world.step();
+    assertEquals(creatures, world.snapshot(two.token()).creatures());
+    var replacement = new PreviewWorld(map, MonsterCatalog.loadBundled());
+    assertEquals(creatures, replacement.snapshot(replacement.join().token()).creatures());
+  }
+
   private PreviewWorld openWorld() { return new PreviewWorld(new PreviewMap(new boolean[60][80], 0, 0, 30, 30)); }
 
   @Test void packetFloodCannotAddSpeedAndOldInputCannotReplaceNewInput() {

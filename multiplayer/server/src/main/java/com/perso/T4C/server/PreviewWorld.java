@@ -9,6 +9,8 @@ import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import com.perso.T4C.online.model.CreatureView;
+import com.perso.T4C.online.model.MonsterContent;
 
 /** Owned exclusively by the simulation thread. Network clients supply directions, never positions. */
 public final class PreviewWorld {
@@ -18,7 +20,7 @@ public final class PreviewWorld {
   public static final long SESSION_TIMEOUT_TICKS = TICK_RATE * 30;
   public record Joined(String token, long id) {}
   public record PlayerView(long id, double x, double y, long sequence, long appearance) {}
-  public record Snapshot(long tick, List<PlayerView> players) {}
+  public record Snapshot(long tick, List<PlayerView> players, List<CreatureView> creatures) {}
   public static final class Rejected extends RuntimeException {
     public final int status;
     Rejected(int status, String code) { super(code); this.status = status; }
@@ -29,11 +31,32 @@ public final class PreviewWorld {
     double x, y;
   }
   private final PreviewMap map;
+  private final List<CreatureView> creatures;
   private final Map<String, Player> players = new LinkedHashMap<>();
   private final SecureRandom random = new SecureRandom();
   private long tick, nextId = 1;
 
-  public PreviewWorld(PreviewMap map) { this.map = map; }
+  public PreviewWorld(PreviewMap map) { this(map,null); }
+
+  public PreviewWorld(PreviewMap map, MonsterContent content) {
+    this.map = map;
+    var residents=new ArrayList<CreatureView>();
+    if (content!=null) {
+      var spawns=content.region(0,map.originX,map.originY,map.width,map.height);
+      if (spawns.size()>256) throw new IllegalArgumentException("Creature preview capacity exceeded");
+      for (var spawn:spawns) {
+        var definition=spawn.definition()==null ? null : content.monsters().get(spawn.definition());
+        if (definition==null || definition.getWalkPattern()==null || definition.getWalkPattern().isBlank())
+          throw new IllegalArgumentException("Unsupported creature in online starting area: "+spawn.type());
+        // Preserve authored tile anchors, as MonsterManager does. These actors are stationary:
+        // monster movement/footprints, density rules, AI and respawn are separate integration work.
+        residents.add(new CreatureView(residents.size()+1L,definition.getName(),
+            spawn.x()-map.originX,spawn.y()-map.originY,definition.getHealth(),definition.getHealth(),
+            definition.getWalkPattern(),definition.getAttackPattern(),definition.getDeathPattern()));
+      }
+    }
+    creatures=List.copyOf(residents);
+  }
 
   public Joined join() {
     return joinAt(map.spawnX, map.spawnY);
@@ -82,7 +105,7 @@ public final class PreviewWorld {
     authenticate(token);
     List<PlayerView> result = new ArrayList<>(players.size());
     for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance));
-    return new Snapshot(tick, List.copyOf(result));
+    return new Snapshot(tick, List.copyOf(result),creatures);
   }
 
   public void leave(String token) { authenticate(token); players.remove(token); }

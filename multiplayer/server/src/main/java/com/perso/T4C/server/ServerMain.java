@@ -40,7 +40,6 @@ public final class ServerMain {
     }
     if (args.length > 0 && ("--preview".equals(args[0]) || "--online".equals(args[0]))) {
       if (args.length != 3) throw new IllegalArgumentException("Expected --preview COLLISION_FILE PORT");
-      MonsterCatalog.loadBundled(); // Fail before accepting sessions if the packaged content is invalid.
       // JDK HTTP implementation limits are set before its first use. This listener is loopback-only.
       System.setProperty("jdk.httpserver.maxConnections", "128");
       System.setProperty("sun.net.httpserver.maxReqHeaders", "32");

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** Loopback-only QA transport with optional persistent sessions and no desktop dependencies. */
 public final class PreviewServer implements AutoCloseable {
   private record PersistentSnapshot(long tick, java.util.List<PreviewWorld.PlayerView> players,
-      long characterRevision) {}
+      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures) {}
   private static final Gson JSON = new Gson();
   private final HttpServer http;
   private final ThreadPoolExecutor requests = new ThreadPoolExecutor(
@@ -49,7 +49,7 @@ public final class PreviewServer implements AutoCloseable {
     this.controlToken=controlToken;
     this.store=store;
     strings = loadStrings();
-    world = new PreviewWorld(map);
+    world = new PreviewWorld(map,MonsterCatalog.loadBundled());
     persistent=store==null ? null : new PersistentSessions(store,map,world);
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
         "originX", map.originX, "originY", map.originY, "blocked", map.cells(),
@@ -193,7 +193,7 @@ public final class PreviewServer implements AutoCloseable {
             json(exchange, 200, onWorld(() -> {
               var snapshot=world.snapshot(token);
               return persistent==null ? snapshot : new PersistentSnapshot(snapshot.tick(),snapshot.players(),
-                  persistent.character(token).revision());
+                  persistent.character(token).revision(),snapshot.creatures());
             }));
           }
           case "/character" -> {

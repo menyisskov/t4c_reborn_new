@@ -20,6 +20,8 @@ import com.perso.T4C.helper.MapReader;
 import com.perso.T4C.helper.ModifSprites;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.monster.core.MonsterAnimations;
+import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.player.PlayerAnimations;
 import com.perso.T4C.player.PlayerMovement;
 import com.perso.T4C.render.ObjectRenderer;
@@ -47,8 +49,20 @@ public final class OnlineClient extends ApplicationAdapter {
   private final OrthographicCamera camera = new OrthographicCamera();
   private final OrthographicCamera hudCamera = new OrthographicCamera();
   private final Map<Long, Avatar> avatars = new HashMap<>();
+  private final Map<Long, CreatureAvatar> creatures = new HashMap<>();
   private long lastTick = -1;
   private String error;
+
+  private static final class CreatureAvatar {
+    final Vector2 position = new Vector2();
+    final MonsterAnimations animation;
+    CreatureView state;
+
+    CreatureAvatar(CreatureView state) throws com.perso.T4C.exception.GameException {
+      this.state = state;
+      animation = new MonsterAnimations(state.walkPattern(), state.attackPattern(), state.deathPattern(), null, null);
+    }
+  }
 
   private static final class Avatar {
     final Vector2 position = new Vector2();
@@ -178,6 +192,8 @@ public final class OnlineClient extends ApplicationAdapter {
     if (connection != null) connection.close();
     avatars.values().forEach(a -> a.animation.dispose());
     avatars.clear();
+    creatures.clear(); // Textures belong to the shared SpriteLoader.
+    error = null;
     lastTick = -1;
     connection = new OnlineConnection(endpoint, credentials);
   }
@@ -222,6 +238,26 @@ public final class OnlineClient extends ApplicationAdapter {
               });
       var own = avatars.get(view.ownId());
       if (own != null) camera.position.set(own.position.x, own.position.y, 0);
+      var presentCreatures = new HashSet<Long>();
+      try {
+        for (var actor : view.snapshot().creatures()) {
+          presentCreatures.add(actor.id());
+          var creature = creatures.get(actor.id());
+          if (creature == null) {
+            creature = new CreatureAvatar(actor);
+            creatures.put(actor.id(), creature);
+          }
+          creature.state = actor;
+          creature.position.set((float) (view.map().originX() + actor.x()) * GRID_W,
+              (float) (view.map().originY() + actor.y()) * GRID_H);
+        }
+        creatures.keySet().retainAll(presentCreatures);
+      } catch (Exception failure) {
+        error = I18n.key("online.client.load_error");
+        Gdx.app.error("online", "Could not load online creature", failure);
+        connection.close();
+        creatures.clear();
+      }
     }
     if (view == null) avatars.values().forEach(a -> a.moving = false);
     camera.update();
@@ -246,6 +282,14 @@ public final class OnlineClient extends ApplicationAdapter {
                     avatar.facing.getCurrentAngle(),
                     avatar.facing.isFlipX(),
                     avatar.moving);
+        actors.add(item);
+      }
+      for (var creature : creatures.values()) {
+        creature.animation.update(Math.min(Gdx.graphics.getDeltaTime(), 0.1f), false);
+        var item = new ObjectRenderer.RenderItem();
+        item.y = (float) Math.floor(creature.position.y / GRID_H) + 2f;
+        item.renderAction = () -> creature.animation.render(decor, creature.position, "000", false,
+            false, false, null, (float) creature.state.health() / creature.state.maxHealth());
         actors.add(item);
       }
       renderer.renderEntitiesWithDecors(camera, -1, -1, x0, x1, y0, y1, actors);
@@ -286,6 +330,7 @@ public final class OnlineClient extends ApplicationAdapter {
     if (connection != null) connection.close();
     avatars.values().forEach(a -> a.animation.dispose());
     if (renderer != null) renderer.dispose();
+    creatures.clear();
     if (map != null)
       try {
         map.close();
