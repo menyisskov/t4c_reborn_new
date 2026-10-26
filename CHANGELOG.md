@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Online character creation (T4C-0165)
+
+### Added
+- Newly provisioned online test characters can choose an existing class, gender and alignment. Their starting attributes, health, mana, gear, supplies, spells and gold are saved once and retained across reconnects. The online client still exposes movement only; combat and inventory controls are next.
+
 ## 2026-10-26 — Online gameplay state (T4C-0164)
 
 ### Added

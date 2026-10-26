@@ -92,7 +92,8 @@ class PreviewServerTest {
   void persistentPlayersSaveOnLogoutAndAdminShutdownThenRestoreOnRestart() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate();
     var key=store.provisionAccount(); var other=store.provisionAccount();
-    var character=store.create(key.accountId(),"HTTP saved player",0,30.5,30.5);
+    var prepared=OnlineCharacterCreator.prepare(com.perso.T4C.helper.CharacterClass.PALADIN,"female",false,new java.util.Random(1));
+    var character=store.create(key.accountId(),"HTTP saved player",0,30.5,30.5,prepared.progress(),prepared.gold());
     var second=store.create(other.accountId(),"HTTP second player",0,32.5,30.5);
     var map=new PreviewMap(new boolean[60][80],0,0,30,30);
     String admin="c".repeat(64);
@@ -118,6 +119,7 @@ class PreviewServerTest {
         var stopped=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString()));
         savedX=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble();
         savedAppearance=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("appearance").getAsLong();
+        assertEquals(0,savedAppearance,"Saved female appearance must override temporary player ID");
         assertEquals(200,client.send(request(url,"/leave",token,""),HttpResponse.BodyHandlers.ofString()).statusCode());
         assertEquals(savedX,store.load(key.accountId(),character.id()).x());
         assertEquals(200,client.send(request(url,"/admin/shutdown",admin,""),HttpResponse.BodyHandlers.ofString()).statusCode());
@@ -130,6 +132,9 @@ class PreviewServerTest {
         var snapshot=object(client.send(request(restarted.url(),"/state",token,null),HttpResponse.BodyHandlers.ofString()));
         assertEquals(savedX,snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble());
         assertEquals(savedAppearance,snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("appearance").getAsLong());
+        var restored=store.load(key.accountId(),character.id());
+        assertEquals(prepared.progress(),restored.progress());
+        assertEquals(prepared.gold(),restored.gold(),"Reconnect must not grant the starter kit twice");
       }
     }
   }

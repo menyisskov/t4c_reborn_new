@@ -187,14 +187,22 @@ public final class OnlineStore {
   }
 
   public CharacterState create(UUID account, String name, int world, double x, double y) throws SQLException {
+    return create(account,name,world,x,y,null,0);
+  }
+
+  /** Trusted creation only; initial kit and gold are inserted together, never granted on login. */
+  public CharacterState create(UUID account, String name, int world, double x, double y,
+      CharacterProgress progress, long startingGold) throws SQLException {
     Objects.requireNonNull(account);
     if (name == null || name.isBlank() || name.length() > 32) throw new IllegalArgumentException("Invalid character name");
     position(world, x, y);
+    if (startingGold<0 || (progress==null && startingGold!=0)) throw new IllegalArgumentException("Invalid starting balance");
     try (var c = connections.open(); var s = c.prepareStatement("""
-        INSERT INTO online_characters(id, account_id, name, world, x, y) VALUES (?, ?, ?, ?, ?, ?) RETURNING *
+        INSERT INTO online_characters(id, account_id, name, world, x, y, progress, gold) VALUES (?, ?, ?, ?, ?, ?, ?::jsonb, ?) RETURNING *
         """)) {
       s.setObject(1, UUID.randomUUID()); s.setObject(2, account); s.setString(3, name);
       s.setInt(4, world); s.setDouble(5, x); s.setDouble(6, y);
+      s.setString(7,progress==null ? null : JSON.toJson(progress)); s.setLong(8,startingGold);
       try (var rows = s.executeQuery()) { rows.next(); return read(rows); }
     }
   }

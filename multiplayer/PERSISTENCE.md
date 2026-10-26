@@ -14,8 +14,9 @@ inventory/equipment, skills/spells, quest flags, storage, respawn, buffs, cooldo
 and revision. Ordinary movement and reward writes preserve it. Unknown versions or invalid references
 fail closed; equipment must reference an owned item instance and containers cannot duplicate an ID.
 Existing movement-only rows have a null payload. Migration does not invent a class, stats or items.
-Authoritative creation, content-registry validation and gameplay consumers must be connected before
-this becomes playable character persistence. Cross-character trade and currency/storage transfers
+New operator-provisioned characters use shared class rolls and starter kits; their payload and gold
+are inserted together. Native creation, runtime content-registry validation and gameplay consumers
+remain unfinished. Cross-character trade and currency/storage transfers
 need their own atomic transactions; the payload alone does not implement those operations.
 
 Position checkpoints compare the expected revision before writing. A stale save fails instead
@@ -104,6 +105,12 @@ java -jar multiplayer/server/target/t4c-server.jar --provision-online assets/map
 .\multiplayer\start-preview.ps1 -Persistent
 .\multiplayer\start-client.ps1 -Profile multiplayer/local/player-one.json
 ```
+
+The optional final arguments select an existing class, gender and alignment, for example
+`paladin female good`. Without them, provisioning creates a male, good-aligned warrior. Values
+must match class IDs and `male`/`female`, `good`/`evil`; invalid choices are rejected. Operator test
+names still use the storage name limit. The public/native creation flow will apply the shared
+player-name rules. Initial gear is stored but not yet rendered or usable in the movement client.
 
 Provision a different profile for the second player; one character cannot connect twice. Profiles
 are ignored by Git and restricted to their filesystem owner before a credential is written. The

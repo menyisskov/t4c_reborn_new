@@ -21,7 +21,12 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
   the current movement slice, not crash-safe combat/rewards/transfers or a complete playthrough.
 - Versioned gameplay state round-trips through PostgreSQL with position under one revision fence.
   Movement/reward updates preserve it. Unknown versions fail closed, and legacy movement-only
-  records remain uninitialized. Character creation and gameplay consumers are not connected yet.
+  records remain uninitialized. New operator-provisioned characters now receive their shared class
+  roll and kit in one database insert; reconnect preserves that state without regranting it. Native
+  creation and gameplay consumers are not connected yet.
+- Native creation smoke: an operator-provisioned female paladin connected in the actual renderer
+  with its saved gender. Existing offline creation/class tests pass against the shared supply data.
+  Equipment is persisted but the movement renderer still uses the default body appearance.
 - Real-map local transport check: 20 simulated clients, 120 seconds, 16,214 input/snapshot cycles;
   no failed requests or invalid coordinates; cycle latency p50 73.5 ms, p95 96.7 ms, max 155.2 ms.
   This is not 20 rendered windows or a sustained Beta benchmark. Raw local report:

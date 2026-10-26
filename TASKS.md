@@ -6,13 +6,14 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0165`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0166`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0165 | Create online characters from shared class rules and starter kits | Multiplayer / Alpha | In Progress | — | [2026-10-26](CHANGELOG.md#2026-10-26--online-character-creation-t4c-0165) |
 | T4C-0164 | Preserve online gameplay state and validate crash and backup recovery | Multiplayer / Alpha | Done | `5d45f5bb` | [2026-10-26](CHANGELOG.md#2026-10-26--online-gameplay-state-t4c-0164) |
 | T4C-0163 | Persist native online movement across reconnects and server restarts | Multiplayer / Alpha | Done | `b494516a` | [2026-10-26](CHANGELOG.md#2026-10-26--persistent-native-sessions-t4c-0163) |
 | T4C-0162 | Bind online characters to authenticated accounts and expiring writer sessions | Multiplayer / Alpha | Done | `860bc046` | [2026-10-26](CHANGELOG.md#2026-10-26--online-session-ownership-t4c-0162) |

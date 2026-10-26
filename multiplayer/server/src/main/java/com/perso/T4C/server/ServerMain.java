@@ -5,10 +5,22 @@ public final class ServerMain {
   private ServerMain() {}
 
   public static void main(String[] args) throws Exception {
-    if (args.length==4 && "--provision-online".equals(args[0])) {
+    if ((args.length==4 || args.length==7) && "--provision-online".equals(args[0])) {
+      var type=com.perso.T4C.helper.CharacterClass.WARRIOR;
+      String gender="male";
+      boolean evil=false;
+      if (args.length==7) {
+        type=java.util.Arrays.stream(com.perso.T4C.helper.CharacterClass.values())
+            .filter(candidate -> candidate.id().equals(args[4])).findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Unknown character class"));
+        gender=args[5];
+        if (!java.util.Set.of("male","female").contains(gender)) throw new IllegalArgumentException("Expected male or female");
+        if (!java.util.Set.of("good","evil").contains(args[6])) throw new IllegalArgumentException("Expected good or evil");
+        evil="evil".equals(args[6]);
+      }
       var store=com.perso.T4C.server.persistence.OnlineStore.fromEnvironment();
       store.migrate();
-      OnlineProvisioner.provision(store,PreviewMap.load(java.nio.file.Path.of(args[1])),java.nio.file.Path.of(args[2]),args[3]);
+      OnlineProvisioner.provision(store,PreviewMap.load(java.nio.file.Path.of(args[1])),java.nio.file.Path.of(args[2]),args[3],type,gender,evil);
       System.out.println("Private online profile created. Keep it local and do not share its contents.");
       return;
     }
@@ -50,7 +62,7 @@ public final class ServerMain {
       System.out.println("Usage: java -jar t4c-server.jar [--ticks NON_NEGATIVE_COUNT]");
       System.out.println("       java -jar t4c-server.jar --preview COLLISION_FILE PORT");
       System.out.println("       java -jar t4c-server.jar --online COLLISION_FILE PORT");
-      System.out.println("       java -jar t4c-server.jar --provision-online COLLISION_FILE PRIVATE_PROFILE_FILE NAME");
+      System.out.println("       java -jar t4c-server.jar --provision-online COLLISION_FILE PRIVATE_PROFILE_FILE NAME [CLASS male|female good|evil]");
       System.out.println("       java -jar t4c-server.jar --migrate-online (T4C_DB_URL, T4C_DB_USER, T4C_DB_PASSWORD)");
       return;
     }
