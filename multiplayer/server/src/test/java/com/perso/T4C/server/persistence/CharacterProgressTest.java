@@ -15,8 +15,8 @@ class CharacterProgressTest {
       List<CharacterProgress.Item> storage) {
     return new CharacterProgress(1,"warrior","male",
         new CharacterProgress.Attributes(95,85,75,75,75),new CharacterProgress.Vitals(41,60,17,25),
-        new CharacterProgress.Advancement(2,3,5,0,100),items,equipment,Map.of("attack",15),
-        Set.of("spell.heal_light"),Map.of("quest.started",1),storage,7,
+        new CharacterProgress.Advancement(2,3,5,0,100),items,equipment,Map.of("attack",15,"dodge",12),
+        Set.of("spell.heal_light","spell.stone_shard"),Map.of("quest.started",1),storage,7,
         new CharacterProgress.Respawn(0,20,30),List.of(new CharacterProgress.Buff("spell.heal_light",1900000000000L,75,75)),
         Map.of("attack",1900000000000L),0,new CharacterProgress.Companion("Wolf",true,2,12,"follow"));
   }

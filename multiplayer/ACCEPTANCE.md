@@ -27,6 +27,13 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 - Native creation smoke: an operator-provisioned female paladin connected in the actual renderer
   with its saved gender. Existing offline creation/class tests pass against the shared supply data.
   Equipment is persisted but the movement renderer still uses the default body appearance.
+- PostgreSQL gameplay-result contracts cover atomic payload/balance/receipt updates, concurrent
+  retry deduplication, stale-result rejection, changed-result conflicts and rollback on overflow.
+  A committed result can be retried after a new session and later movement without regranting.
+  Separate writer JVMs are forcibly terminated immediately before commit and after commit/before
+  acknowledgement; recovery yields either no award or the complete award, and retry grants once.
+  These tests advance the dead writer's lease deterministically; real-time expiry has separate QA.
+  Combat/quest producers and durable world-event recovery remain unbuilt.
 - Real-map local transport check: 20 simulated clients, 120 seconds, 16,214 input/snapshot cycles;
   no failed requests or invalid coordinates; cycle latency p50 73.5 ms, p95 96.7 ms, max 155.2 ms.
   This is not 20 rendered windows or a sustained Beta benchmark. Raw local report:
