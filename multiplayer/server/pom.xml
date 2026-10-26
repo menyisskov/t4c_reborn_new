@@ -10,6 +10,11 @@
     <artifactId>game-server</artifactId>
     <dependencies>
         <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.perso.t4c</groupId>
             <artifactId>game-domain</artifactId>
             <version>${project.version}</version>
@@ -21,6 +26,14 @@
         </dependency>
     </dependencies>
     <build>
+        <resources>
+            <resource><directory>src/main/resources</directory></resource>
+            <resource>
+                <directory>../../assets/i18n</directory>
+                <targetPath>i18n</targetPath>
+                <includes><include>lang.json</include></includes>
+            </resource>
+        </resources>
         <finalName>t4c-server</finalName>
         <plugins>
             <plugin>

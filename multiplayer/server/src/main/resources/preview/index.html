@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4C</title><link rel="stylesheet" href="/style.css"><script defer src="/client.js"></script></head>
+<body>
+<main>
+  <header><div><p class="eyebrow" data-i18n="eyebrow"></p><h1 data-i18n="title"></h1></div>
+  <span class="badge" data-i18n="local"></span></header>
+  <p class="intro" data-i18n="intro"></p>
+  <section class="toolbar"><button id="join" disabled data-i18n="join"></button>
+    <button id="leave" disabled data-i18n="leave"></button>
+    <a href="/" target="_blank" rel="noopener" data-i18n="second"></a>
+    <output id="status" aria-live="polite"></output></section>
+  <div class="world"><canvas id="map" width="1120" height="840" tabindex="0"></canvas></div>
+  <section class="details"><p id="identity"></p><p id="telemetry"></p></section>
+  <p data-i18n="controls"></p><p class="muted" data-i18n="legend"></p>
+  <aside><strong data-i18n="scopeTitle"></strong><p data-i18n="scope"></p></aside>
+</main>
+</body></html>
