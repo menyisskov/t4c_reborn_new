@@ -34,6 +34,11 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
   acknowledgement; recovery yields either no award or the complete award, and retry grants once.
   These tests advance the dead writer's lease deterministically; real-time expiry has separate QA.
   Combat/quest producers and durable world-event recovery remain unbuilt.
+- Live sessions now serialize accepted server-authored gameplay results with movement checkpoints
+  and final logout saves, exposing only committed state. Real PostgreSQL tests gate an in-flight
+  checkpoint while accepting a result and moving the actor, then verify logout preserves both.
+  Movement checkpoint deadlines survive frequent gameplay writes. Lost commit acknowledgement disconnects without publishing success; rejoin/retry grants once.
+  No network reward command or combat/quest producer is exposed by this integration.
 - The server crop now preserves raw terrain for combat sight and sanctuary checks, separately from
   movement clearance. Tests cover force fields, corner/edge shots, both participants, PvP-only
   sanctuaries and real starting-temple loading. These checks are not yet called by an attack service.
