@@ -43,7 +43,9 @@ final class PersistentSessions {
     if (bindings.size()>=PreviewWorld.MAX_PLAYERS) throw new PreviewWorld.Rejected(409,"full");
     var saved=session.character();
     if (saved.world()!=0) throw new PreviewWorld.Rejected(409,"world");
-    var joined=world.joinAt(saved.x()-map.originX,saved.y()-map.originY,session.characterId().getLeastSignificantBits() & 1L);
+    long appearance=saved.progress()==null ? session.characterId().getLeastSignificantBits() & 1L
+        : "female".equals(saved.progress().gender()) ? 0 : 1;
+    var joined=world.joinAt(saved.x()-map.originX,saved.y()-map.originY,appearance);
     var binding=new Binding(joined.token(),session,world.position(joined.token()));
     binding.submitted=tick;
     binding.allowedUntil=acquisitionStarted+AUTHORITY_NANOS;

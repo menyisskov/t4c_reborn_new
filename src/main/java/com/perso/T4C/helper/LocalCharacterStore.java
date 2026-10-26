@@ -24,8 +24,8 @@ public final class LocalCharacterStore {
   public static final String MALE = AppearanceDefaultsCatalog.MALE;
   public static final String FEMALE = AppearanceDefaultsCatalog.FEMALE;
   public enum Alignment {
-    GOOD(100),
-    EVIL(-100);
+    GOOD(CharacterStartingKit.GOOD_KARMA),
+    EVIL(CharacterStartingKit.EVIL_KARMA);
 
     private final int startingKarma;
 
@@ -38,18 +38,13 @@ public final class LocalCharacterStore {
     }
   }
 
-  public static final int MIN_STARTING_GOLD = 201;
-  public static final int MAX_STARTING_GOLD = 250;
-  private static final String STARTING_TORCH = "item.torch";
-  private static final int STARTING_TORCH_COUNT = 3;
-  private static final int STARTING_POTION_COUNT = 3;
-  private static final List<String> STARTING_POTIONS =
-      List.of("item.light_healing_potion", "item.potion_of_mana");
-  private static final Map<String, Integer> STARTING_SKILLS =
-      Map.of(
-          "attack", 15,
-          "dodge", 15,
-          "archery", 15);
+  public static final int MIN_STARTING_GOLD = CharacterStartingKit.MIN_GOLD;
+  public static final int MAX_STARTING_GOLD = CharacterStartingKit.MAX_GOLD;
+  private static final String STARTING_TORCH = CharacterStartingKit.TORCH;
+  private static final int STARTING_TORCH_COUNT = CharacterStartingKit.TORCH_COUNT;
+  private static final int STARTING_POTION_COUNT = CharacterStartingKit.POTION_COUNT;
+  private static final List<String> STARTING_POTIONS = CharacterStartingKit.POTIONS;
+  private static final Map<String, Integer> STARTING_SKILLS = CharacterStartingKit.SKILLS;
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
   private static volatile CharacterSlot activeCharacter;
 

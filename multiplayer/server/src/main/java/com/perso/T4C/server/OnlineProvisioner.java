@@ -10,12 +10,15 @@ import java.util.Map;
 
 /** Local operator command. Creates a private profile without exposing keys in arguments or logs. */
 final class OnlineProvisioner {
-  static void provision(OnlineStore store, PreviewMap map, Path profile, String name) throws Exception {
+  static void provision(OnlineStore store, PreviewMap map, Path profile, String name,
+      com.perso.T4C.helper.CharacterClass type, String gender, boolean evil) throws Exception {
+    var prepared=OnlineCharacterCreator.prepare(type,gender,evil,new java.security.SecureRandom());
     privateFile(profile);
     boolean complete=false;
     try {
       var key=store.provisionAccount();
-      var character=store.create(key.accountId(),name,0,map.originX+map.spawnX,map.originY+map.spawnY);
+      var character=store.create(key.accountId(),name,0,map.originX+map.spawnX,map.originY+map.spawnY,
+          prepared.progress(),prepared.gold());
       String json=new Gson().toJson(Map.of("accountId",key.accountId(),"characterId",character.id(),"secret",key.secret()));
       Files.writeString(profile,json,StandardOpenOption.WRITE,StandardOpenOption.TRUNCATE_EXISTING);
       complete=true;

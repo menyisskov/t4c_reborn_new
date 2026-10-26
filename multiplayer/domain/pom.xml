@@ -10,6 +10,12 @@
     <artifactId>game-domain</artifactId>
     <dependencies>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.38</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
@@ -34,9 +40,14 @@
                         <include>com/perso/T4C/world/CollisionRules.java</include>
                         <include>com/perso/T4C/config/GameConstants.java</include>
                         <include>com/perso/T4C/helper/BinaryIOUtils.java</include>
+                        <include>com/perso/T4C/helper/CharacterCreationRules.java</include>
+                        <include>com/perso/T4C/helper/CharacterClass.java</include>
+                        <include>com/perso/T4C/helper/CharacterStartingKit.java</include>
+                        <include>com/perso/T4C/player/BodyPart.java</include>
                     </includes>
                     <testIncludes>
                         <testInclude>com/perso/T4C/combat/CombatResolverTest.java</testInclude>
+                        <testInclude>com/perso/T4C/helper/CharacterCreationRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/world/WorldCollisionTest.java</testInclude>
                     </testIncludes>
                 </configuration>
