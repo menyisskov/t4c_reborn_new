@@ -6,6 +6,7 @@ on:
     paths:
       - 'multiplayer/**'
       - 'src/main/java/com/perso/T4C/online/model/**'
+      - 'src/main/java/com/perso/T4C/monster/core/MonsterDef.java'
       - 'src/main/java/com/perso/T4C/combat/**'
       - 'src/main/java/com/perso/T4C/world/**'
       - 'src/main/java/com/perso/T4C/config/GameConstants.java'
@@ -22,6 +23,7 @@ on:
     paths:
       - 'multiplayer/**'
       - 'src/main/java/com/perso/T4C/online/model/**'
+      - 'src/main/java/com/perso/T4C/monster/core/MonsterDef.java'
       - 'src/main/java/com/perso/T4C/combat/**'
       - 'src/main/java/com/perso/T4C/world/**'
       - 'src/main/java/com/perso/T4C/config/GameConstants.java'

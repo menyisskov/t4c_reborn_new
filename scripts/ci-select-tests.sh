@@ -73,10 +73,9 @@ if [[ -z "$CHANGED_FILES" ]]; then
 fi
 
 # --- 2. Does anything build-relevant even touch this diff? ----------------
-# Anything outside src/, assets/, pom.xml, or this script/workflow is docs/
-# process only (CHANGELOG.md, TASKS.md, CLAUDE.md, docs/, *.md, etc.) and
-# needs neither a compile nor a test run.
-BUILD_RELEVANT="$(grep -E '^(src/|assets/|pom\.xml$|\.github/workflows/ci\.yml$|scripts/ci-select-tests\.sh$)' <<<"$CHANGED_FILES" || true)"
+# Source, assets and packaged online content need compilation/freshness checks. Other
+# files are docs/process only unless they change this script, the workflow or pom.xml.
+BUILD_RELEVANT="$(grep -E '^(src/|assets/|multiplayer/server/src/main/resources/content/|pom\.xml$|\.github/workflows/ci\.yml$|scripts/ci-select-tests\.sh$)' <<<"$CHANGED_FILES" || true)"
 
 if [[ -z "$BUILD_RELEVANT" ]]; then
   emit skip true
@@ -96,6 +95,10 @@ elif grep -qE '^\.github/workflows/ci\.yml$' <<<"$CHANGED_FILES"; then
   FULL_REASON="CI workflow itself changed"
 elif grep -qE '^assets/' <<<"$CHANGED_FILES"; then
   FULL_REASON="assets/ changed (data several tests load directly)"
+elif grep -qE '^multiplayer/server/src/main/resources/content/' <<<"$CHANGED_FILES"; then
+  FULL_REASON="packaged online content changed (verify registry freshness)"
+elif grep -qE '^src/main/java/com/perso/T4C/online/model/MonsterContent\.java$' <<<"$CHANGED_FILES"; then
+  FULL_REASON="online monster content schema changed (verify registry freshness)"
 fi
 
 # Root-level main classes (no subpackage: MyGame, T4CContentStudio,
@@ -110,7 +113,7 @@ fi
 # cross-cutting tests scan from unrelated packages (see the module
 # docstring above for why a narrower heuristic isn't safe here) - both
 # groups always get the full suite.
-FOUNDATIONAL_PACKAGES="helper entity model world mapping config content exception"
+FOUNDATIONAL_PACKAGES="helper entity model world mapping config content exception spawn"
 CONTENT_PACKAGES="item monster spell npc quest tools"
 ALWAYS_FULL_PACKAGES="$FOUNDATIONAL_PACKAGES $CONTENT_PACKAGES"
 TOUCHED_PACKAGES="$( { grep -oE '^src/(main|test)/java/com/perso/T4C/[^/]+/' <<<"$CHANGED_FILES" || true; } | sed -E 's#^src/(main|test)/java/com/perso/T4C/##;s#/$##' | sort -u)"
