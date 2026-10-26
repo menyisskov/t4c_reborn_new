@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0170 | Package authoritative monster definitions and authored spawns for the headless server | Multiplayer / Alpha | Done | pending | [2026-10-27](CHANGELOG.md#2026-10-27--online-monster-content-t4c-0170) |
+| T4C-0170 | Package authoritative monster definitions and authored spawns for the headless server | Multiplayer / Alpha | Done | `70c92d20` | [2026-10-27](CHANGELOG.md#2026-10-27--online-monster-content-t4c-0170) |
 | T4C-0169 | Deliver private committed character state to the native network adapter | Multiplayer / Alpha | Done | `8196b924` | [2026-10-26](CHANGELOG.md#2026-10-26--private-online-character-state-t4c-0169) |
 | T4C-0168 | Serialize live gameplay results with movement checkpoints and logout | Multiplayer / Alpha | Done | `b887009b` | [2026-10-26](CHANGELOG.md#2026-10-26--online-reward-save-ordering-t4c-0168) |
 | T4C-0167 | Preserve authoritative terrain for combat sight and sanctuary checks | Multiplayer / Alpha | Done | `bc5fc898` | [2026-10-26](CHANGELOG.md#2026-10-26--online-combat-terrain-t4c-0167) |
