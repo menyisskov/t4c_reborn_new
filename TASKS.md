@@ -6,13 +6,14 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0168`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0169`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0168 | Serialize live gameplay results with movement checkpoints and logout | Multiplayer / Alpha | Done | pending | [2026-10-26](CHANGELOG.md#2026-10-26--online-reward-save-ordering-t4c-0168) |
 | T4C-0167 | Preserve authoritative terrain for combat sight and sanctuary checks | Multiplayer / Alpha | Done | `bc5fc898` | [2026-10-26](CHANGELOG.md#2026-10-26--online-combat-terrain-t4c-0167) |
 | T4C-0166 | Commit gameplay rewards and character changes atomically with retry protection | Multiplayer / Alpha | Done | `e7450202` | [2026-10-26](CHANGELOG.md#2026-10-26--atomic-gameplay-rewards-t4c-0166) |
 | T4C-0165 | Create online characters from shared class rules and starter kits | Multiplayer / Alpha | Done | `96abcfdf` | [2026-10-26](CHANGELOG.md#2026-10-26--online-character-creation-t4c-0165) |
