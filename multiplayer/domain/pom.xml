@@ -37,6 +37,7 @@
                         <include>com/perso/T4C/combat/CombatResult.java</include>
                         <include>com/perso/T4C/combat/PhysicalAttackRequest.java</include>
                         <include>com/perso/T4C/combat/WeaponDamageRules.java</include>
+                        <include>com/perso/T4C/combat/EquipmentBoostRules.java</include>
                         <include>com/perso/T4C/helper/DiceFormula.java</include>
                         <include>com/perso/T4C/world/WorldCollision.java</include>
                         <include>com/perso/T4C/world/CollisionRules.java</include>
@@ -52,6 +53,7 @@
                     <testIncludes>
                         <testInclude>com/perso/T4C/combat/CombatResolverTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/WeaponDamageRulesTest.java</testInclude>
+                        <testInclude>com/perso/T4C/combat/EquipmentBoostRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/DiceFormulaTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/CharacterCreationRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/world/WorldCollisionTest.java</testInclude>

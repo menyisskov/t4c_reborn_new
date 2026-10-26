@@ -6,13 +6,14 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0174`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0175`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0174 | Share equipment boost evaluation with headless gameplay | Multiplayer / Alpha | Done | `0bacdab7` | [2026-10-27](CHANGELOG.md#2026-10-27--shared-equipment-bonuses-t4c-0174) |
 | T4C-0173 | Package authoritative equipment definitions for online combat | Multiplayer / Alpha | Done | `f4b95edc` | [2026-10-27](CHANGELOG.md#2026-10-27--online-equipment-content-t4c-0173) |
 | T4C-0172 | Share weapon damage and dice formulas with the headless server | Multiplayer / Alpha | Done | `9fa59ff2` | [2026-10-27](CHANGELOG.md#2026-10-27--shared-online-weapon-rules-t4c-0172) |
 | T4C-0171 | Replicate starting-area creatures into the native online client | Multiplayer / Alpha | Done | `f365c53b` | [2026-10-27](CHANGELOG.md#2026-10-27--shared-online-creatures-t4c-0171) |

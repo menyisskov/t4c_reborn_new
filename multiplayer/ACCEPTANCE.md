@@ -7,6 +7,11 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 ## Verified foundation (2026-10-26)
 
 - Separate headless reactor and server lifecycle; shared pure combat and static collision rules.
+- Equipment boost evaluation is shared with offline play, retaining base-stat/skill expressions,
+  eligibility gates, boost-ID replacement and saturated totals. The server derivation adapter uses
+  saved owned instances and packaged definitions, rejecting unknown equipment/slots. Pure tests,
+  existing offline equipment tests and a catalog/state integration test pass. This is not an equip
+  authorization service, full effective-stat calculation or playable online combat.
 - Packaged immutable equipment definitions now come from actual runtime item lookup winners after
   JSON overrides. Freshness checks cover requirements, formulas, boosts and appearances; every
   provisioned class kit resolves against the headless catalog. Startup rejects invalid schema/key
