@@ -105,6 +105,19 @@ class PreviewServerTest {
         server.start(); String url=server.url(); port=URI.create(url).getPort();
         String token=login(client,url,key,character.id());
         String secondToken=login(client,url,other,second.id());
+        assertEquals(401,client.send(request(url,"/character",null,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+        var privateResponse=client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString());
+        assertEquals(200,privateResponse.statusCode());
+        var privateState=object(privateResponse);
+        assertEquals(character.id().toString(),privateState.get("id").getAsString());
+        assertEquals(prepared.gold(),privateState.get("gold").getAsLong());
+        assertEquals(prepared.progress(),new com.google.gson.Gson().fromJson(privateState.get("progress"),
+            com.perso.T4C.online.model.CharacterProgress.class));
+        assertFalse(privateResponse.body().contains(key.secret()));
+        assertFalse(privateResponse.body().contains(key.accountId().toString()));
+        var secondState=object(client.send(request(url,"/character",secondToken,null),HttpResponse.BodyHandlers.ofString()));
+        assertEquals(second.id().toString(),secondState.get("id").getAsString());
+        assertFalse(secondState.has("progress"),"Legacy profiles remain uninitialized");
         assertEquals(409,client.send(request(url,"/join",null,key.secret()+" "+character.id()),HttpResponse.BodyHandlers.ofString()).statusCode());
         assertEquals(403,client.send(request(url,"/admin/shutdown",token,""),HttpResponse.BodyHandlers.ofString()).statusCode());
         assertEquals(200,client.send(request(url,"/input",token,"0 1 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
@@ -114,6 +127,9 @@ class PreviewServerTest {
           snapshot=object(client.send(request(url,"/state",secondToken,null),HttpResponse.BodyHandlers.ofString()));
         } while (snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble()<=character.x() && System.nanoTime()<deadline);
         assertEquals(2,snapshot.getAsJsonArray("players").size());
+        assertFalse(snapshot.toString().contains("inventory"));
+        assertFalse(snapshot.toString().contains(character.id().toString()));
+        assertTrue(snapshot.has("characterRevision"));
         assertTrue(snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble()>character.x());
         assertEquals(200,client.send(request(url,"/input",token,"1 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
         var stopped=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString()));

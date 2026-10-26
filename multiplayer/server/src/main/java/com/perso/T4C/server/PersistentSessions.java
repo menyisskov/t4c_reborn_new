@@ -1,7 +1,7 @@
 package com.perso.T4C.server;
 
 import com.perso.T4C.server.persistence.OnlineStore;
-import com.perso.T4C.server.persistence.CharacterProgress;
+import com.perso.T4C.online.model.CharacterProgress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

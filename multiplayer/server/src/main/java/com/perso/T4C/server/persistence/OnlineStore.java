@@ -1,5 +1,7 @@
 package com.perso.T4C.server.persistence;
 
+import com.perso.T4C.online.model.CharacterProgress;
+
 import java.sql.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

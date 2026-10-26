@@ -1,5 +1,7 @@
 package com.perso.T4C.server.persistence;
 
+import com.perso.T4C.online.model.CharacterProgress;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;

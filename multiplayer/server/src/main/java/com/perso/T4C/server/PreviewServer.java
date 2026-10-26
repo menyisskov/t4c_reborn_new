@@ -3,6 +3,7 @@ package com.perso.T4C.server;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.perso.T4C.server.persistence.OnlineStore;
+import com.perso.T4C.online.model.OnlineCharacterView;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Loopback-only QA transport with optional persistent sessions and no desktop dependencies. */
 public final class PreviewServer implements AutoCloseable {
+  private record PersistentSnapshot(long tick, java.util.List<PreviewWorld.PlayerView> players,
+      long characterRevision) {}
   private static final Gson JSON = new Gson();
   private final HttpServer http;
   private final ThreadPoolExecutor requests = new ThreadPoolExecutor(
@@ -187,7 +190,20 @@ public final class PreviewServer implements AutoCloseable {
           case "/map" -> send(exchange, 200, "application/json", mapJson.getBytes(StandardCharsets.UTF_8));
           case "/state" -> {
             String token = token(exchange);
-            json(exchange, 200, onWorld(() -> world.snapshot(token)));
+            json(exchange, 200, onWorld(() -> {
+              var snapshot=world.snapshot(token);
+              return persistent==null ? snapshot : new PersistentSnapshot(snapshot.tick(),snapshot.players(),
+                  persistent.character(token).revision());
+            }));
+          }
+          case "/character" -> {
+            String token=token(exchange);
+            if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            json(exchange,200,onWorld(() -> {
+              var saved=persistent.character(token);
+              return new OnlineCharacterView(saved.id(),saved.name(),saved.gold(),saved.experience(),
+                  saved.revision(),saved.progress());
+            }));
           }
           case "/health" -> json(exchange, 200,
               Map.of("tick", loop.completedTicks(), "mode", store==null ? "local-preview" : "local-persistent", "capacity", PreviewWorld.MAX_PLAYERS));
