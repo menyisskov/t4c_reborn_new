@@ -1,0 +1,23 @@
+name: Compendium integrity
+
+on:
+  pull_request:
+    paths:
+      - 'compendium/**'
+      - 'scripts/compendium_freshness.py'
+      - 'scripts/test_compendium_freshness.py'
+      - '.github/workflows/compendium*.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    name: Verify reference snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test publication checks
+        run: python3 -m unittest discover -s scripts -p test_compendium_freshness.py
+      - name: Verify bundled data and map images
+        run: python3 scripts/compendium_freshness.py compendium --check

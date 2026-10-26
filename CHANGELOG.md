@@ -6,6 +6,28 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+
+## 2026-10-26 — Current compendium publication (T4C-0152)
+
+### Changed
+- Published the approved map atlas together with current equipment, monster, XP, quest, shop and rebirth reference data from the local game.
+- The website shows when its reference snapshot was updated. Website-only releases preserve their prepared data instead of replacing it with an older game revision.
+
+### Fixed
+- Reference updates are checked for missing map images and mismatches between downloadable data and the pages players see.
+- Corrected garbled punctuation in map level ranges and zone descriptions.
+
+## 2026-10-26 — Website map atlas refresh (T4C-0137)
+
+### Added
+- Nine maps for Witness training, Moonwake, Emberglass, the Sundered Approach, Threnody's arrival and training grounds, the Ashbound and Nullguard courts, and the Hollow Dawn. All 20 maps use current native terrain and runtime spawn positions, covering every authored hunting anchor.
+- Training creature and return-scroll reference entries needed by the new map links, plus a Threnody chapter in the Maps index.
+- Map-only website refreshes preserve the other reference entries.
+
+### Fixed
+- Map crops stop at the native world boundary. Labels no longer displace pin coordinates, overlapping occupants share a pin with separate links, and tooltips include tile coordinates.
+
+
 ## 2026-09-30 — Merge review timing (T4C-0116)
 
 ### Changed

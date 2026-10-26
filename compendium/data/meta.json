@@ -66,15 +66,21 @@
     },
     {
       "id": "avalon",
-      "name": "The road to Avalon",
-      "levels": "Levels 260-420",
-      "intro": "Avalon is an island, and the only way onto it runs through Coastwarden Ithrak's reavers on the mainland beach. What waits on the other side is a pact that has held for centuries and is now, visibly, failing."
+      "name": "The Witness Isles",
+      "levels": "Levels 200-300",
+      "intro": "Earn passage from Stonecrest, investigate the Wilds and Fading Veil, then follow either the Moonwake or Emberglass account to open Threnody. The western training fields offer another place to hunt."
     },
     {
       "id": "unmaking",
       "name": "The world coming apart",
       "levels": "Levels 400-650",
       "intro": "Two places where something old is being unmade: a drake's ruin whose wards are being kept up on purpose, and a blight eating Avalon outward from its centre. This is where the materials for the Godsforged weapons come from."
+    },
+    {
+      "id": "threnody",
+      "name": "Threnody and the Hollow Dawn",
+      "levels": "Levels 300-400+",
+      "intro": "Keeper Vael guides the road from the sheltered arrival camp through the northern and middle bell courts to Rhunor's prison. The nearby training grounds offer repeatable hunting between story stages."
     },
     {
       "id": "last_peak",

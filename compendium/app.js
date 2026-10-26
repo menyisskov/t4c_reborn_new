@@ -2,6 +2,17 @@
   "use strict";
 
   var DATA = window.T4C_DATA || {};
+  var publication = window.T4C_PUBLICATION;
+  var updatedLabel = document.getElementById("dataUpdated");
+  if (updatedLabel && publication && publication.generatedAt) {
+    var updatedDate = new Date(publication.generatedAt);
+    if (!isNaN(updatedDate.getTime())) {
+      updatedLabel.textContent = "Updated " + updatedDate.toLocaleDateString("en-US", {
+        year: "numeric", month: "long", day: "numeric", timeZone: "UTC"
+      }) + ".";
+      updatedLabel.title = "Reference snapshot: " + publication.generatedAt;
+    }
+  }
   var MONSTERS = DATA.monsters || [];
   var SPELLS = DATA.spells || [];
   var QUESTS = DATA.quests || [];
@@ -486,10 +497,10 @@
     if (!it) return esc(key);
     return link("items/" + slug(it.key), esc(it.name || key));
   }
-  function npcLink(id) {
+  function npcLink(id, label) {
     var n = byKey.npc[id];
-    if (!n) return esc(id);
-    return link("npcs/" + slug(id), esc(n.displayName || id));
+    if (!n) return esc(label || id);
+    return link("npcs/" + slug(id), esc(label || n.displayName || id));
   }
   function spellLink(key) {
     var s = byKey.spell[key];
@@ -774,13 +785,16 @@
         top: Math.min(100, Math.max(0, ((worldY - m.originY) / tilesHigh) * 100))
       };
     }
-    function pin(kind, x, y, linkHtml, title) {
-      var p = pct(x, y);
-      return (
-        '<div class="map-pin pin-' + kind + '" style="left:' + p.left + "%;top:" + p.top + '%">' +
-        '<span class="pin-dot" title="' + esc(title) + '"></span>' +
-        '<span class="pin-label">' + linkHtml + "</span></div>"
-      );
+    var pinGroups = {};
+    function addPin(kind, x, y, linkHtml, title) {
+      var key = x + ":" + y;
+      var group = pinGroups[key];
+      if (!group) group = pinGroups[key] = { kind: kind, x: x, y: y, links: [], names: [] };
+      if (kind === "boss" || (kind === "npc" && group.kind === "trash")) group.kind = kind;
+      if (group.names.indexOf(title) < 0) {
+        group.links.push(linkHtml);
+        group.names.push(title);
+      }
     }
 
     var pins = "";
@@ -789,13 +803,21 @@
       pins += '<div class="map-area-label" style="left:' + p.left + "%;top:" + p.top + '%">' + esc(loc.name) + "</div>";
     });
     (m.monsters || []).filter(function (mo) { return mo.tier === "trash"; }).forEach(function (mo) {
-      pins += pin("trash", mo.x, mo.y, monsterLink(mo.name, mo.displayName), mo.displayName);
+      addPin("trash", mo.x, mo.y, monsterLink(mo.name, mo.displayName), mo.displayName);
     });
     (m.monsters || []).filter(function (mo) { return mo.tier === "boss"; }).forEach(function (mo) {
-      pins += pin("boss", mo.x, mo.y, monsterLink(mo.name, mo.displayName), mo.displayName);
+      addPin("boss", mo.x, mo.y, monsterLink(mo.name, mo.displayName), mo.displayName);
     });
     (m.npcs || []).forEach(function (n) {
-      pins += pin("npc", n.x, n.y, npcLink(n.id), n.displayName);
+      addPin("npc", n.x, n.y, npcLink(n.id, n.displayName), n.displayName);
+    });
+    Object.keys(pinGroups).forEach(function (key) {
+      var group = pinGroups[key];
+      var p = pct(group.x, group.y);
+      pins += '<div class="map-pin pin-' + group.kind + (p.left > 60 ? ' label-left' : '') +
+        '" style="left:' + p.left + '%;top:' + p.top + '%">' +
+        '<span class="pin-dot" title="' + esc(group.names.join(" / ") + " (" + group.x + ", " + group.y + ")") + '"></span>' +
+        '<span class="pin-label">' + group.links.join("<br>") + '</span></div>';
     });
 
     return (
@@ -903,6 +925,8 @@
       panel("What you're up against", '<div class="kv-grid">' +
         kv("Health", fmtNum(m.health)) + kv("Mana", fmtNum(m.mana)) +
         kv("Damage a hit", fmtNum(m.hitDamageMin) + "–" + fmtNum(m.hitDamageMax)) +
+        (m.rawDamageLimit != null ? kv("Physical damage limit before AC", fmtNum(m.rawDamageLimit)) : "") +
+        (m.elementalSpellDamageLimit != null ? kv("Spell damage limit before resistance", fmtNum(m.elementalSpellDamageLimit)) : "") +
         kv("Dodge", fmtNum(m.dodge)) + kv("Armor", fmtNum(m.acMin) + "–" + fmtNum(m.acMax)) +
         kv("How readily it attacks", fmtNum(m.aggro)) + kv("Speed", fmtNum(m.speed)) +
         kv("XP per hit you land", fmtNum(m.xpPerHit)) + kv("XP for the kill", fmtNum(m.xpOnDeath)) +
@@ -1551,7 +1575,7 @@
       "<ol class=\"rebirth-steps\">" +
       "<li>Defeat Gabriel Archonis in the Oracle's trial duel (once - it stays done for every later rebirth).</li>" +
       "<li>Reach the level in the table below for your next rebirth, then tell the Oracle you are <em>ready to be reborn</em>.</li>" +
-      "<li>You return to level 1 with every attribute reset to the starting value shown, your spells and skills cleared, and the Seraph wings and ring equipped.</li>" +
+      "<li>You return to level 1 with every attribute reset to the starting value shown, your spells and other skills cleared, and the Seraph wings and ring equipped. Attack and Archery each start at " + R.weaponSkillPerRebirth + " times your rebirth count (" + last.startingAttack + " at rebirth " + last.rebirth + ").</li>" +
       "<li>Speak with Alphan, then spend all of your energy points with his associates (below). Alphan sends you back to Lighthaven once every point is spent.</li>" +
       "</ol>" +
       '<p class="lead">You can be reborn at most ' + R.maxRebirths + " times. The level cap is " + R.maxLevel +
