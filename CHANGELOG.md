@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Atomic gameplay rewards (T4C-0166)
+
+### Added
+- Online saving groundwork keeps reward gold, experience, belongings and quest progress together, with protection against granting the same result twice after a retry. Playable combat and quest delivery are still being connected.
+
 ## 2026-10-26 — Online character creation (T4C-0165)
 
 ### Added

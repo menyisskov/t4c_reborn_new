@@ -44,17 +44,28 @@ class OnlineStoreTest {
     UUID account = key.accountId(), event = UUID.randomUUID();
     var created = store.create(account, "Reward test", 0, 10, 20);
     var session = store.acquire(key.secret(), created.id());
+    var progress=CharacterProgressTest.sample();
     try (var executor = Executors.newFixedThreadPool(8)) {
       var actions = new ArrayList<Callable<OnlineStore.RewardResult>>();
-      for (int i=0; i<8; i++) actions.add(() -> store.reward(session, event, 7, 11));
+      for (int i=0; i<8; i++) actions.add(() -> store.commitGameplayEvent(session,created.revision(),event,7,11,progress));
       int applied=0;
       for (var result : executor.invokeAll(actions)) if (result.get().applied()) applied++;
       assertEquals(1, applied);
     }
     var state=store.load(account, created.id());
     assertEquals(7, state.gold()); assertEquals(11, state.experience());
-    assertThrows(OnlineStore.Conflict.class, () -> store.reward(session, event, 8, 11));
+    assertEquals(progress,state.progress());
+    assertThrows(OnlineStore.Conflict.class, () -> store.commitGameplayEvent(session,state.revision(),event,8,11,progress));
+    assertThrows(OnlineStore.Conflict.class, () -> store.commitGameplayEvent(session,state.revision(),event,7,11,CharacterProgressTest.sample()));
+    assertThrows(OnlineStore.Conflict.class, () -> store.reward(session,event,7,11));
     assertEquals(state, store.load(account, created.id()));
+    store.release(session);
+    var restarted=OnlineStore.fromEnvironment();
+    var replacement=restarted.acquire(key.secret(),created.id());
+    var moved=restarted.checkpoint(replacement,state.revision(),0,11,20);
+    // A lost success response can be retried after reload and later movement without regranting.
+    var retried=restarted.commitGameplayEvent(replacement,created.revision(),event,7,11,moved.progress());
+    assertFalse(retried.applied()); assertEquals(moved,retried.character());
   }
 
   @Test void unknownGameplayVersionFailsClosedWithoutReplacingSavedState() throws Exception {
@@ -78,12 +89,24 @@ class OnlineStoreTest {
     UUID account=key.accountId(), failedEvent=UUID.randomUUID();
     var created=store.create(account, "Rollback test", 0, 10, 20);
     var session = store.acquire(key.secret(), created.id());
-    store.reward(session, UUID.randomUUID(), Long.MAX_VALUE, 0);
-    assertThrows(SQLException.class, () -> store.reward(session, failedEvent, 1, 0));
+    var before=store.reward(session, UUID.randomUUID(), Long.MAX_VALUE, 0).character();
+    var progress=CharacterProgressTest.sample();
+    assertThrows(SQLException.class, () -> store.commitGameplayEvent(session,before.revision(),failedEvent,1,0,progress));
+    assertEquals(before,store.load(account,created.id()),"Failed balance update must not publish items or quest progress");
     // If the failed transaction left its receipt behind, this retry would conflict or be ignored.
-    assertTrue(store.reward(session, failedEvent, 0, 3).applied());
+    assertTrue(store.commitGameplayEvent(session,before.revision(),failedEvent,0,3,progress).applied());
     var state=store.load(account, created.id());
     assertEquals(Long.MAX_VALUE, state.gold()); assertEquals(3, state.experience());
+    assertEquals(progress,state.progress());
+  }
+
+  @Test void staleGameplayEventCannotOverwriteProgressOrConsumeItsReceipt() throws Exception {
+    var key=store.provisionAccount(); var created=store.create(key.accountId(),"Stale event",0,10,20);
+    var session=store.acquire(key.secret(),created.id()); var progress=CharacterProgressTest.sample();
+    var moved=store.checkpoint(session,created.revision(),0,11,20); UUID event=UUID.randomUUID();
+    assertThrows(OnlineStore.Conflict.class,() -> store.commitGameplayEvent(session,created.revision(),event,2,3,progress));
+    assertEquals(moved,store.load(key.accountId(),created.id()));
+    assertTrue(store.commitGameplayEvent(session,moved.revision(),event,2,3,progress).applied());
   }
 
   @Test void concurrentLoginsAcquireOnlyOneWriterAndReleaseAllowsReconnect() throws Exception {

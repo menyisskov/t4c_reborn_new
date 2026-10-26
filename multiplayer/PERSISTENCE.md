@@ -26,6 +26,22 @@ once; changing its amounts is rejected. Numeric overflow rolls back both balance
 These guarantees use PostgreSQL's [row locks and transactions](https://www.postgresql.org/docs/current/explicit-locking.html),
 with [JDBC prepared statements](https://jdbc.postgresql.org/documentation/query/) for data values.
 
+Schema version four extends receipts with an optional gameplay-result fingerprint.
+`commitGameplayEvent` atomically applies an immutable character payload and nonnegative gold/XP
+award. The expected revision rejects stale new events; a matching existing receipt is returned
+without reapplying its result, even after later movement or a new session. Changed amounts or
+payloads conflict. Map keys and spell sets are canonicalized before hashing, preserving identity
+through reload. Legacy balance-only receipts retain their original retry behavior. Failed updates
+roll back the payload, balances and receipt together. Callers must retain the original event ID
+and result across uncertain outcomes, serialize events with checkpoints, and wait for commit before
+showing durable rewards. No client API accepts this payload. Combat/quest integration, spending
+and cross-character trade transactions remain separate work.
+
+The PostgreSQL CI job kills separate test writer JVMs at both commit boundaries: before commit
+and after commit but before acknowledgement. It checks all-or-nothing state and exactly-once retry
+under a replacement lease. This validates the database contract, not recovery of a lost world event
+that the simulation has not yet durably recorded.
+
 The simulation must own reward amounts, checkpoint coordinates and stable event IDs. Never
 expose these storage calls directly as client commands. A successful database write must precede
 acknowledging a durable reward to a player. Retry uncertain outcomes with the same event ID.

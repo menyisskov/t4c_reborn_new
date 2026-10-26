@@ -57,7 +57,7 @@ public final class OnlineStore {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 3) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 4) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -102,6 +102,10 @@ public final class OnlineStore {
           // Existing movement-only characters remain explicitly uninitialized, never rerolled.
           s.execute("ALTER TABLE online_characters ADD COLUMN progress jsonb CHECK (progress IS NULL OR (jsonb_typeof(progress)='object' AND progress ? 'version'))");
           s.execute("INSERT INTO online_schema(version) VALUES (3)");
+        }
+        if (version < 4) {
+          s.execute("ALTER TABLE online_rewards ADD COLUMN payload_hash varchar(64) CHECK (payload_hash IS NULL OR payload_hash ~ '^[0-9a-f]{64}$')");
+          s.execute("INSERT INTO online_schema(version) VALUES (4)");
         }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
@@ -202,7 +206,7 @@ public final class OnlineStore {
         """)) {
       s.setObject(1, UUID.randomUUID()); s.setObject(2, account); s.setString(3, name);
       s.setInt(4, world); s.setDouble(5, x); s.setDouble(6, y);
-      s.setString(7,progress==null ? null : JSON.toJson(progress)); s.setLong(8,startingGold);
+      s.setString(7,progress==null ? null : encodeProgress(progress)); s.setLong(8,startingGold);
       try (var rows = s.executeQuery()) { rows.next(); return read(rows); }
     }
   }
@@ -231,8 +235,7 @@ public final class OnlineStore {
   public CharacterState checkpointCharacter(Session session, long revision, int world, double x, double y,
       CharacterProgress progress) throws SQLException {
     position(world,x,y);
-    String encoded=JSON.toJson(Objects.requireNonNull(progress));
-    if (encoded.getBytes(StandardCharsets.UTF_8).length>1024*1024) throw new IllegalArgumentException("Character state too large");
+    String encoded=encodeProgress(progress);
     try (var c=connections.open(); var s=c.prepareStatement("""
         UPDATE online_characters SET world=?, x=?, y=?, progress=?::jsonb, revision=revision+1, updated_at=now()
         WHERE id=? AND account_id=? AND session_id=? AND session_until>clock_timestamp() AND revision=? RETURNING *
@@ -248,8 +251,22 @@ public final class OnlineStore {
 
   /** Event IDs and amounts must originate from authoritative gameplay, never a client request. */
   public RewardResult reward(Session session, UUID event, long gold, long experience) throws SQLException {
+    return applyReward(session,event,gold,experience,null,null);
+  }
+
+  /** Server-owned quest/loot/progression result; receipt, balances and gameplay state commit once. */
+  public RewardResult commitGameplayEvent(Session session, long revision, UUID event, long gold,
+      long experience, CharacterProgress progress) throws SQLException {
+    if (revision<0) throw new IllegalArgumentException("Invalid revision");
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress));
+  }
+
+  private RewardResult applyReward(Session session, UUID event, long gold, long experience,
+      Long revision, CharacterProgress progress) throws SQLException {
     Objects.requireNonNull(event);
     if (gold < 0 || experience < 0) throw new IllegalArgumentException("Negative reward");
+    String encoded=progress==null ? null : encodeProgress(progress);
+    String fingerprint=encoded==null ? null : fingerprint(encoded);
     UUID account = session.accountId(), character = session.characterId();
     try (var c = connections.open()) {
       c.setAutoCommit(false);
@@ -265,25 +282,59 @@ public final class OnlineStore {
             state = read(rows);
           }
         }
-        try (var s = c.prepareStatement("SELECT gold, experience FROM online_rewards WHERE character_id=? AND event_id=?")) {
+        try (var s = c.prepareStatement("SELECT gold, experience, payload_hash FROM online_rewards WHERE character_id=? AND event_id=?")) {
           s.setObject(1, character); s.setObject(2, event);
           try (var rows = s.executeQuery()) {
             if (rows.next()) {
-              if (rows.getLong(1) != gold || rows.getLong(2) != experience) throw new Conflict("Reward event payload mismatch");
+              if (rows.getLong(1) != gold || rows.getLong(2) != experience
+                  || !Objects.equals(fingerprint,rows.getString(3))) throw new Conflict("Reward event payload mismatch");
               c.commit(); return new RewardResult(false, state);
             }
           }
         }
-        try (var s = c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience) VALUES (?,?,?,?)")) {
-          s.setObject(1, character); s.setObject(2, event); s.setLong(3, gold); s.setLong(4, experience); s.executeUpdate();
+        if (revision!=null && state.revision()!=revision) throw new Conflict("Stale gameplay event");
+        try (var s = c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES (?,?,?,?,?)")) {
+          s.setObject(1, character); s.setObject(2, event); s.setLong(3, gold); s.setLong(4, experience);
+          s.setString(5,fingerprint); s.executeUpdate();
         }
-        try (var s = c.prepareStatement("UPDATE online_characters SET gold=gold+?, experience=experience+?, revision=revision+1, updated_at=now() WHERE id=?")) {
-          s.setLong(1, gold); s.setLong(2, experience); s.setObject(3, character); s.executeUpdate();
+        try (var s = c.prepareStatement("UPDATE online_characters SET gold=gold+?, experience=experience+?, progress=COALESCE(?::jsonb,progress), revision=revision+1, updated_at=now() WHERE id=?")) {
+          s.setLong(1, gold); s.setLong(2, experience); s.setString(3,encoded); s.setObject(4, character); s.executeUpdate();
         }
         state = load(c, account, character, false);
         c.commit(); return new RewardResult(true, state);
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
+  }
+
+  private static String encodeProgress(CharacterProgress progress) {
+    var tree=JSON.toJsonTree(Objects.requireNonNull(progress)).getAsJsonObject();
+    // Sets and maps must hash identically after a JVM restart or a PostgreSQL JSONB round trip.
+    var spells=new com.google.gson.JsonArray();
+    progress.spells().stream().sorted().forEach(spells::add);
+    tree.add("spells",spells);
+    String encoded=JSON.toJson(canonical(tree));
+    if (encoded.getBytes(StandardCharsets.UTF_8).length>1024*1024) throw new IllegalArgumentException("Character state too large");
+    return encoded;
+  }
+
+  private static com.google.gson.JsonElement canonical(com.google.gson.JsonElement value) {
+    if (value.isJsonObject()) {
+      var sorted=new com.google.gson.JsonObject();
+      value.getAsJsonObject().keySet().stream().sorted()
+          .forEach(key -> sorted.add(key,canonical(value.getAsJsonObject().get(key))));
+      return sorted;
+    }
+    if (value.isJsonArray()) {
+      var array=new com.google.gson.JsonArray();
+      value.getAsJsonArray().forEach(element -> array.add(canonical(element)));
+      return array;
+    }
+    return value;
+  }
+
+  private static String fingerprint(String encoded) {
+    try { return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(encoded.getBytes(StandardCharsets.UTF_8))); }
+    catch (java.security.NoSuchAlgorithmException error) { throw new AssertionError(error); }
   }
 
   private static void bindSession(PreparedStatement s, Session session, int first) throws SQLException {
