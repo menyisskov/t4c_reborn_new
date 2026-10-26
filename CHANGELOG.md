@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Online gameplay state (T4C-0164)
+
+### Added
+- Online saving groundwork can preserve character attributes, health, equipment, belongings, abilities and quest progress together. Movement-only test characters keep their existing progress; playable combat and inventory are still being connected.
+
 ## 2026-10-26 — Persistent native sessions (T4C-0163)
 
 ### Added

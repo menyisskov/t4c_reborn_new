@@ -23,13 +23,20 @@ class OnlineStoreTest {
     UUID account = key.accountId();
     var created = store.create(account, "Checkpoint test", 0, 10, 20);
     var session = store.acquire(key.secret(), created.id());
-    var saved = store.checkpoint(session, created.revision(), 1, 30, 40);
+    var progress=CharacterProgressTest.sample();
+    var saved = store.checkpointCharacter(session, created.revision(), 1, 30, 40, progress);
     var restarted = OnlineStore.fromEnvironment();
     restarted.migrate();
     assertEquals(saved, restarted.load(account, created.id()));
+    assertEquals(progress,restarted.load(account,created.id()).progress());
     assertThrows(OnlineStore.Conflict.class, () -> restarted.load(UUID.randomUUID(), created.id()));
     assertThrows(OnlineStore.Conflict.class, () -> restarted.checkpoint(session, created.revision(), 0, 1, 2));
     assertEquals(saved, restarted.load(account, created.id()));
+    var reward=restarted.reward(session,UUID.randomUUID(),7,11).character();
+    var moved=restarted.checkpoint(session,reward.revision(),1,31,40);
+    assertEquals(progress,moved.progress(),"Movement and reward writes must preserve gameplay state");
+    assertEquals(7,moved.gold()); assertEquals(11,moved.experience());
+    assertThrows(OnlineStore.Conflict.class,() -> restarted.checkpointCharacter(session,saved.revision(),1,0,0,progress));
   }
 
   @Test void concurrentRetriesGrantOneRewardAndRejectChangedPayload() throws Exception {
@@ -48,6 +55,22 @@ class OnlineStoreTest {
     assertEquals(7, state.gold()); assertEquals(11, state.experience());
     assertThrows(OnlineStore.Conflict.class, () -> store.reward(session, event, 8, 11));
     assertEquals(state, store.load(account, created.id()));
+  }
+
+  @Test void unknownGameplayVersionFailsClosedWithoutReplacingSavedState() throws Exception {
+    var key=store.provisionAccount();
+    var created=store.create(key.accountId(),"Future state",0,10,20);
+    var session=store.acquire(key.secret(),created.id());
+    store.checkpointCharacter(session,created.revision(),0,10,20,CharacterProgressTest.sample());
+    try (var c=testConnection(); var s=c.prepareStatement(
+        "UPDATE online_characters SET progress=jsonb_set(progress,'{version}','999') WHERE id=?")) {
+      s.setObject(1,created.id()); s.executeUpdate();
+    }
+    assertThrows(SQLException.class,() -> store.load(key.accountId(),created.id()));
+    try (var c=testConnection(); var s=c.prepareStatement("SELECT progress->>'version' FROM online_characters WHERE id=?")) {
+      s.setObject(1,created.id());
+      try (var rows=s.executeQuery()) { assertTrue(rows.next()); assertEquals("999",rows.getString(1)); }
+    }
   }
 
   @Test void failedBalanceUpdateRollsBackRewardReceiptSoRetryCanSucceed() throws Exception {
@@ -141,7 +164,7 @@ class OnlineStoreTest {
     }
     var upgraded=new OnlineStore(() -> { var c=testConnection(); c.setSchema(schema); return c; });
     upgraded.migrate(); upgraded.migrate();
-    var expected=new OnlineStore.CharacterState(character,account,"Existing",0,10,20,7,11,1);
+    var expected=new OnlineStore.CharacterState(character,account,"Existing",0,10,20,7,11,1,null);
     assertEquals(expected,upgraded.load(account,character));
     var key=upgraded.rotateAccountKey(account);
     var session=upgraded.acquire(key.secret(),character);

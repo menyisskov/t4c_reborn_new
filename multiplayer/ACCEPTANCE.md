@@ -15,6 +15,13 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
   on shutdown. Integration tests also verify two-player persistence, stable provisional appearance,
   unauthorized shutdown rejection and continued world ticks during a blocked storage worker.
 - Network adapter tests cover direction-only commands, authoritative snapshots and session cleanup.
+- Forced process termination recovered the last committed movement after lease expiry; an early
+  reconnect was rejected. A PostgreSQL custom-format backup restored into a new database with all
+  four tables matching, then passed authenticated movement, logout and rejoin. These checks cover
+  the current movement slice, not crash-safe combat/rewards/transfers or a complete playthrough.
+- Versioned gameplay state round-trips through PostgreSQL with position under one revision fence.
+  Movement/reward updates preserve it. Unknown versions fail closed, and legacy movement-only
+  records remain uninitialized. Character creation and gameplay consumers are not connected yet.
 - Real-map local transport check: 20 simulated clients, 120 seconds, 16,214 input/snapshot cycles;
   no failed requests or invalid coordinates; cycle latency p50 73.5 ms, p95 96.7 ms, max 155.2 ms.
   This is not 20 rendered windows or a sustained Beta benchmark. Raw local report:

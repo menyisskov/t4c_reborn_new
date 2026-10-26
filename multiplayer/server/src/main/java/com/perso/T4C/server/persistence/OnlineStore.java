@@ -10,9 +10,10 @@ import java.util.UUID;
 
 /** Server-only PostgreSQL persistence. Call from a bounded persistence worker, never the tick thread. */
 public final class OnlineStore {
+  private static final com.google.gson.Gson JSON = new com.google.gson.Gson();
   @FunctionalInterface public interface Connections { Connection open() throws SQLException; }
   public record CharacterState(UUID id, UUID accountId, String name, int world, double x, double y,
-      long gold, long experience, long revision) {}
+      long gold, long experience, long revision, CharacterProgress progress) {}
   public record RewardResult(boolean applied, CharacterState character) {}
   /** One-time delivery to an operator; never log or serialize this record into world snapshots. */
   public record AccountKey(UUID accountId, String secret) {
@@ -56,7 +57,7 @@ public final class OnlineStore {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 2) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 3) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -96,6 +97,11 @@ public final class OnlineStore {
           s.execute("ALTER TABLE online_characters ADD COLUMN session_id uuid, ADD COLUMN session_until timestamptz");
           s.execute("ALTER TABLE online_characters ADD CONSTRAINT online_session_pair CHECK ((session_id IS NULL) = (session_until IS NULL))");
           s.execute("INSERT INTO online_schema(version) VALUES (2)");
+        }
+        if (version < 3) {
+          // Existing movement-only characters remain explicitly uninitialized, never rerolled.
+          s.execute("ALTER TABLE online_characters ADD COLUMN progress jsonb CHECK (progress IS NULL OR (jsonb_typeof(progress)='object' AND progress ? 'version'))");
+          s.execute("INSERT INTO online_schema(version) VALUES (3)");
         }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
@@ -213,6 +219,25 @@ public final class OnlineStore {
     }
   }
 
+  /** Atomic gameplay/location checkpoint. Does not overwrite the character's gold or experience. */
+  public CharacterState checkpointCharacter(Session session, long revision, int world, double x, double y,
+      CharacterProgress progress) throws SQLException {
+    position(world,x,y);
+    String encoded=JSON.toJson(Objects.requireNonNull(progress));
+    if (encoded.getBytes(StandardCharsets.UTF_8).length>1024*1024) throw new IllegalArgumentException("Character state too large");
+    try (var c=connections.open(); var s=c.prepareStatement("""
+        UPDATE online_characters SET world=?, x=?, y=?, progress=?::jsonb, revision=revision+1, updated_at=now()
+        WHERE id=? AND account_id=? AND session_id=? AND session_until>clock_timestamp() AND revision=? RETURNING *
+        """)) {
+      s.setInt(1,world); s.setDouble(2,x); s.setDouble(3,y); s.setString(4,encoded);
+      bindSession(s,session,5); s.setLong(8,revision);
+      try (var rows=s.executeQuery()) {
+        if (!rows.next()) throw new Conflict("Character unavailable or stale checkpoint");
+        return read(rows);
+      }
+    }
+  }
+
   /** Event IDs and amounts must originate from authoritative gameplay, never a client request. */
   public RewardResult reward(Session session, UUID event, long gold, long experience) throws SQLException {
     Objects.requireNonNull(event);
@@ -278,9 +303,20 @@ public final class OnlineStore {
   }
 
   private static CharacterState read(ResultSet row) throws SQLException {
+    CharacterProgress progress=null;
+    String encoded=row.getString("progress");
+    if (encoded!=null) {
+      try {
+        progress=JSON.fromJson(encoded,CharacterProgress.class);
+        if (progress==null) throw new IllegalArgumentException();
+      } catch (RuntimeException invalid) {
+        // Fail closed without logging the player's inventory, credentials or raw database row.
+        throw new SQLException("Unsupported or invalid online character state");
+      }
+    }
     return new CharacterState(row.getObject("id", UUID.class), row.getObject("account_id", UUID.class),
         row.getString("name"), row.getInt("world"), row.getDouble("x"), row.getDouble("y"),
-        row.getLong("gold"), row.getLong("experience"), row.getLong("revision"));
+        row.getLong("gold"), row.getLong("experience"), row.getLong("revision"),progress);
   }
 
   private static void position(int world, double x, double y) {

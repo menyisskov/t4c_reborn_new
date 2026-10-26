@@ -7,8 +7,16 @@ No desktop save, preference, account-storage or character file is read or writte
 
 The adapter stores account ownership, a character's name and world position, gold, experience,
 and a monotonically increasing revision. Operator-issued random access keys authenticate through `acquire`; claiming an account ID
-is not authentication. Administrative creation and read APIs must stay inside trusted server code. Inventory, quests, equipment, abilities and full
-player-state serialization must be added before this is a complete online save format.
+is not authentication. Administrative creation and read APIs must stay inside trusted server code.
+Schema version three adds an optional versioned gameplay payload: attributes, vitals, advancement,
+inventory/equipment, skills/spells, quest flags, storage, respawn, buffs, cooldowns and companion state.
+`checkpointCharacter` saves that immutable payload and location atomically under the writer lease
+and revision. Ordinary movement and reward writes preserve it. Unknown versions or invalid references
+fail closed; equipment must reference an owned item instance and containers cannot duplicate an ID.
+Existing movement-only rows have a null payload. Migration does not invent a class, stats or items.
+Authoritative creation, content-registry validation and gameplay consumers must be connected before
+this becomes playable character persistence. Cross-character trade and currency/storage transfers
+need their own atomic transactions; the payload alone does not implement those operations.
 
 Position checkpoints compare the expected revision before writing. A stale save fails instead
 of overwriting newer state. Reward grants lock the character row and record an event receipt
@@ -125,3 +133,32 @@ installation because Docker Desktop could not start. Data and private database c
 under that user's `.local/share/t4c-online-pg`, outside desktop game saves. The Windows Java server
 connects over loopback port 55432. This local test runtime is separate from the checked-in Docker
 recipe and CI's PostgreSQL 18 service; do not assume it exists on another developer's machine.
+
+## Backup and recovery check
+
+Use PostgreSQL client tools matching the server major version, with `PGHOST`, `PGPORT`, `PGUSER`
+and private password-file/environment authentication already configured. Keep backup files outside
+the repository in an owner-only directory. A custom-format archive supports a consistent database
+snapshot; cluster roles need separate provisioning. See PostgreSQL's
+[pg_dump documentation](https://www.postgresql.org/docs/16/app-pgdump.html).
+
+```sh
+pg_dump -Fc -d t4c_online -f /private/backups/online.dump
+createdb t4c_restore_check
+pg_restore --exit-on-error --no-owner --no-privileges -d t4c_restore_check /private/backups/online.dump
+```
+
+Choose a fresh destination name on each run. Do not use `--clean` or `--create` for this drill:
+the destination must be the explicitly created test database. The latter flag can restore into
+the database name recorded in the archive. See
+[pg_restore documentation](https://www.postgresql.org/docs/16/app-pgrestore.html).
+Use an isolated server process/port with `T4C_DB_URL` pointing to that destination. Confirm table
+contents, authenticate a test character, move, log out and reconnect. Never run this drill against
+the source database. Existing copied leases may require expiry before login.
+
+Local evidence on 2026-10-26: all four restored tables matched the source, followed by successful
+authenticated movement/logout/rejoin in the restored database. Separately, forced server termination
+rejected immediate takeover and recovered the last committed position after lease expiry. Local
+reports remain under ignored `server/target`; these are movement-slice recovery checks, not the
+full-game recovery gate. Production retention, off-machine backup storage, scheduled verification,
+reward/transfer crash recovery and database-outage testing remain outstanding.
