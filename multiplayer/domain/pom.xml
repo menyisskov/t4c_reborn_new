@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.perso.t4c</groupId>
+        <artifactId>multiplayer</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>game-domain</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <!-- Transitional boundary: compile the same source and tests as offline play, without
+             moving files or depending on the desktop artifact. No copied gameplay formulas. -->
+        <sourceDirectory>${project.basedir}/../../src/main/java</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/../../src/test/java</testSourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>com/perso/T4C/combat/CombatProfile.java</include>
+                        <include>com/perso/T4C/combat/CombatResolver.java</include>
+                        <include>com/perso/T4C/combat/CombatResult.java</include>
+                        <include>com/perso/T4C/combat/PhysicalAttackRequest.java</include>
+                    </includes>
+                    <testIncludes>
+                        <testInclude>com/perso/T4C/combat/CombatResolverTest.java</testInclude>
+                    </testIncludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

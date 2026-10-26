@@ -6,13 +6,14 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0157`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0158`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0157 | Establish an isolated headless multiplayer build and server lifecycle | Architecture / Alpha | Done | Pending | [2026-10-26](CHANGELOG.md#2026-10-26--multiplayer-alpha-foundation-t4c-0157) |
 | T4C-0156 | Consolidate pending single-player work before multiplayer development | Process / Integration | Done | `f25803b0` | [2026-10-26](CHANGELOG.md#2026-10-26--single-player-integration-t4c-0156) |
 | T4C-0155 | Move mythic bosses to a quest-gated island | World / Quest | Done | `f25803b0` | [2026-10-26](CHANGELOG.md#2026-10-26--shattered-isle-passage-t4c-0155) |
 | T4C-0154 | Design dragon, griffin and hydra sprites and add their mobs after visual review | Art / Content | Done | `f25803b0` | [2026-10-26](CHANGELOG.md#2026-10-26--approved-dragon-griffin-and-hydra-bosses-t4c-0154) |
