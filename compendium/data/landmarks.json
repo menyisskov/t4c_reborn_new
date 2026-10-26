@@ -36,6 +36,189 @@
     "worldZ": 0
   },
   {
+    "name": "Hunt: Fey Warden",
+    "x": 3901,
+    "y": 1386,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Hunt: Moonlit Stalker",
+    "x": 3974,
+    "y": 1331,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Hunt: Veilbound Wraith",
+    "x": 4194,
+    "y": 1523,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Hunt: Sundered Sentinel",
+    "x": 4374,
+    "y": 1789,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Hunt: Moonwake Revenant",
+    "x": 3873,
+    "y": 890,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Hunt: Emberglass Ashguard",
+    "x": 4237,
+    "y": 2545,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Hunt: Ashbound Exile",
+    "x": 5849,
+    "y": 1313,
+    "worldZ": 0,
+    "unlockZoneId": "threnody_reach"
+  },
+  {
+    "name": "Hunt: Nullguard",
+    "x": 5450,
+    "y": 1674,
+    "worldZ": 0,
+    "unlockZoneId": "threnody_reach"
+  },
+  {
+    "name": "Hunt: Rift Wraith",
+    "x": 5606,
+    "y": 2082,
+    "worldZ": 0,
+    "unlockZoneId": "threnody_reach"
+  },
+  {
+    "name": "Hunt: Barrow Wight",
+    "x": 2583,
+    "y": 2676,
+    "worldZ": 0,
+    "unlockZoneId": "windhowl_marches"
+  },
+  {
+    "name": "Hunt: Lesser Drake",
+    "x": 2453,
+    "y": 2853,
+    "worldZ": 0,
+    "unlockZoneId": "windhowl_marches"
+  },
+  {
+    "name": "Hunt: Greater Drake",
+    "x": 2735,
+    "y": 2950,
+    "worldZ": 0,
+    "unlockZoneId": "windhowl_marches"
+  },
+  {
+    "name": "Hunt: Ashfang Stalker",
+    "x": 1918,
+    "y": 1544,
+    "worldZ": 0
+  },
+  {
+    "name": "Hunt: Cinder Whelp",
+    "x": 1836,
+    "y": 1582,
+    "worldZ": 0
+  },
+  {
+    "name": "Hunt: Centaur Warrior",
+    "x": 2338,
+    "y": 2388,
+    "worldZ": 0,
+    "unlockZoneId": "windhowl_marches"
+  },
+  {
+    "name": "Hunt: Deep One",
+    "x": 362,
+    "y": 2197,
+    "worldZ": 0
+  },
+  {
+    "name": "Hunt: Drowned Acolyte",
+    "x": 1703,
+    "y": 2239,
+    "worldZ": 0
+  },
+  {
+    "name": "Hunt: Kraanian Dragonguard",
+    "x": 2844,
+    "y": 2714,
+    "worldZ": 0,
+    "unlockZoneId": "windhowl_marches"
+  },
+  {
+    "name": "Hunt: Kraanian Wyrmling",
+    "x": 2332,
+    "y": 2834,
+    "worldZ": 0,
+    "unlockZoneId": "windhowl_marches"
+  },
+  {
+    "name": "Hunt: Tideclaw Crab",
+    "x": 1645,
+    "y": 2470,
+    "worldZ": 0
+  },
+  {
+    "name": "Hunt: Tideworn Reaver",
+    "x": 390,
+    "y": 680,
+    "worldZ": 0
+  },
+  {
+    "name": "Train: Witness Tarantula",
+    "x": 3805,
+    "y": 1580,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Train: Witness Skraug",
+    "x": 3700,
+    "y": 1580,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Train: Witness Skeleton",
+    "x": 3700,
+    "y": 1450,
+    "worldZ": 0,
+    "unlockZoneId": "avalon_sanctuary"
+  },
+  {
+    "name": "Train: Threnody Tarantula",
+    "x": 5385,
+    "y": 1220,
+    "worldZ": 0,
+    "unlockZoneId": "threnody_reach"
+  },
+  {
+    "name": "Train: Threnody Skraug",
+    "x": 5280,
+    "y": 1290,
+    "worldZ": 0,
+    "unlockZoneId": "threnody_reach"
+  },
+  {
+    "name": "Train: Threnody Skeleton",
+    "x": 5373,
+    "y": 1328,
+    "worldZ": 0,
+    "unlockZoneId": "threnody_reach"
+  },
+  {
     "name": "Silversky",
     "x": 1495,
     "y": 2470,

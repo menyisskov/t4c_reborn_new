@@ -2,7 +2,7 @@
   {
     "item": "aeries_drakeheart_signet",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.012
   },
   {
@@ -320,7 +320,7 @@
   {
     "item": "ancient_celestial_fire_armor",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.025
   },
   {
@@ -332,7 +332,7 @@
   {
     "item": "ancient_celestial_fire_boots",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.025
   },
   {
@@ -344,7 +344,7 @@
   {
     "item": "ancient_celestial_fire_gauntlets",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.025
   },
   {
@@ -362,7 +362,7 @@
   {
     "item": "ancient_celestial_fire_helmet",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.025
   },
   {
@@ -374,7 +374,7 @@
   {
     "item": "ancient_celestial_fire_leggings",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.025
   },
   {
@@ -386,7 +386,7 @@
   {
     "item": "ancient_celestial_fire_protector",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.025
   },
   {
@@ -440,7 +440,7 @@
   {
     "item": "ancient_celestial_warrior_armor",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.025
   },
   {
@@ -464,7 +464,7 @@
   {
     "item": "ancient_celestial_warrior_boots",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.025
   },
   {
@@ -488,7 +488,7 @@
   {
     "item": "ancient_celestial_warrior_gauntlets",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.025
   },
   {
@@ -512,7 +512,7 @@
   {
     "item": "ancient_celestial_warrior_helmet",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.025
   },
   {
@@ -536,7 +536,7 @@
   {
     "item": "ancient_celestial_warrior_leggings",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.025
   },
   {
@@ -560,7 +560,7 @@
   {
     "item": "ancient_celestial_warrior_protector",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.025
   },
   {
@@ -916,6 +916,858 @@
     "monster": "DEEPONEBOSS",
     "monsterDisplayName": "Deep One (Boss)",
     "chance": 0.015
+  },
+  {
+    "item": "divine_anubis_boots",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_bracelet",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_gauntlets",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_helm",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_leggings",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_necklace",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_ring",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_robe",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_weapon",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_anubis_wings",
+    "monster": "Divine Anubis",
+    "monsterDisplayName": "Anubis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_boots",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_bracelet",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_gauntlets",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_helm",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_leggings",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_necklace",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_ring",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_robe",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_weapon",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_apollo_wings",
+    "monster": "Divine Apollo",
+    "monsterDisplayName": "Apollo",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_armor",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_boots",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_bracelet",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_gauntlets",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_helm",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_leggings",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_necklace",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_ring",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_weapon",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artemis_wings",
+    "monster": "Divine Artemis",
+    "monsterDisplayName": "Artemis",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_artherk_boots",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_bracelet",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_gauntlets",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_helm",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_leggings",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_necklace",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_plate",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_plate_boots",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_plate_gauntlets",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_plate_helm",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_plate_leggings",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_ring",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_robe",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_warblade",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_weapon",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_artherk_wings",
+    "monster": "Divine Artherk",
+    "monsterDisplayName": "Artherk",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_athena_armor",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_boots",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_bracelet",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_gauntlets",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_helm",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_leggings",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_necklace",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_ring",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_weapon",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_athena_wings",
+    "monster": "Divine Athena",
+    "monsterDisplayName": "Athena",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_boots",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_bracelet",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_gauntlets",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_helm",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_leggings",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_necklace",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_ring",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_robe",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_weapon",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_demeter_wings",
+    "monster": "Divine Demeter",
+    "monsterDisplayName": "Demeter",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_boots",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_bracelet",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_gauntlets",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_helm",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_leggings",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_necklace",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_ring",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_robe",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_weapon",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_njord_wings",
+    "monster": "Divine Njord",
+    "monsterDisplayName": "Njord",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_armor",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_boots",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_bracelet",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_gauntlets",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_helm",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_leggings",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_necklace",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_ring",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_weapon",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_odin_wings",
+    "monster": "Divine Odin",
+    "monsterDisplayName": "Odin",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ogrimar_boots",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_bracelet",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_gauntlets",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_helm",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_leggings",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_necklace",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_plate",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_plate_boots",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_plate_gauntlets",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_plate_helm",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_plate_leggings",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_ring",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_robe",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_warblade",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_weapon",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_ogrimar_wings",
+    "monster": "Divine Ogrimar",
+    "monsterDisplayName": "Ogrimar",
+    "chance": 0.03125
+  },
+  {
+    "item": "divine_osiris_boots",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_bracelet",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_gauntlets",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_helm",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_leggings",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_necklace",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_ring",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_robe",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_weapon",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_osiris_wings",
+    "monster": "Divine Osiris",
+    "monsterDisplayName": "Osiris",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_boots",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_bracelet",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_gauntlets",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_helm",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_leggings",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_necklace",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_ring",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_robe",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_weapon",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_ra_wings",
+    "monster": "Divine Ra",
+    "monsterDisplayName": "Ra",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_boots",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_bracelet",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_gauntlets",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_helm",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_leggings",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_necklace",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_ring",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_robe",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_weapon",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_thor_wings",
+    "monster": "Divine Thor",
+    "monsterDisplayName": "Thor",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_boots",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_bracelet",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_gauntlets",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_helm",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_leggings",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_necklace",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_ring",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_robe",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_weapon",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
+  },
+  {
+    "item": "divine_zeus_wings",
+    "monster": "Divine Zeus",
+    "monsterDisplayName": "Zeus",
+    "chance": 0.02
   },
   {
     "item": "dragonguards_scale_bracer",
@@ -1310,7 +2162,7 @@
   {
     "item": "empyrean_fire_armor",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.012
   },
   {
@@ -1322,7 +2174,7 @@
   {
     "item": "empyrean_fire_boots",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.012
   },
   {
@@ -1334,7 +2186,7 @@
   {
     "item": "empyrean_fire_gauntlets",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.012
   },
   {
@@ -1346,7 +2198,7 @@
   {
     "item": "empyrean_fire_helmet",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.012
   },
   {
@@ -1358,7 +2210,7 @@
   {
     "item": "empyrean_fire_leggings",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.012
   },
   {
@@ -1370,7 +2222,7 @@
   {
     "item": "empyrean_fire_protector",
     "monster": "Lesser Drake",
-    "monsterDisplayName": "Petit Drake",
+    "monsterDisplayName": "Lesser Drake",
     "chance": 0.012
   },
   {
@@ -1418,7 +2270,7 @@
   {
     "item": "empyrean_warrior_armor",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.012
   },
   {
@@ -1442,7 +2294,7 @@
   {
     "item": "empyrean_warrior_boots",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.012
   },
   {
@@ -1466,7 +2318,7 @@
   {
     "item": "empyrean_warrior_gauntlets",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.012
   },
   {
@@ -1490,7 +2342,7 @@
   {
     "item": "empyrean_warrior_helmet",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.012
   },
   {
@@ -1514,7 +2366,7 @@
   {
     "item": "empyrean_warrior_leggings",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.012
   },
   {
@@ -1538,7 +2390,7 @@
   {
     "item": "empyrean_warrior_protector",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.012
   },
   {
@@ -1646,7 +2498,7 @@
   {
     "item": "heartfire_of_the_greater_drake",
     "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
+    "monsterDisplayName": "Greater Drake",
     "chance": 0.01
   },
   {
@@ -1659,12 +2511,6 @@
     "item": "item.banner_bearers_key",
     "monster": "Warband Banner-Bearer",
     "monsterDisplayName": "Warband Banner-Bearer",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Arch Drake",
-    "monsterDisplayName": "Arch Drake",
     "chance": 0.05
   },
   {
@@ -1783,54 +2629,6 @@
   },
   {
     "item": "item.critical_healing_potion",
-    "monster": "Ashbound Exile",
-    "monsterDisplayName": "Ashbound Exile",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Bastion Warden",
-    "monsterDisplayName": "Bastion Warden",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Coastwarden Ithrak",
-    "monsterDisplayName": "Coastwarden Ithrak",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Kraanian Dragonguard",
-    "monsterDisplayName": "Kraanian Dragonguard",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Nullguard",
-    "monsterDisplayName": "Nullguard",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Rhunor, the Hollow Dawn",
-    "monsterDisplayName": "Rhunor, the Hollow Dawn",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "Rift Wraith",
-    "monsterDisplayName": "Rift Wraith",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
     "monster": "Sandglass Sentinel II",
     "monsterDisplayName": "Sandglass Sentinel II",
     "chance": 0.05
@@ -1863,48 +2661,6 @@
     "item": "item.critical_healing_potion",
     "monster": "The Convergent Wyrm",
     "monsterDisplayName": "The Convergent Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "The Dusk Regent",
-    "monsterDisplayName": "The Dusk Regent",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "The Duskmaw Wyrm",
-    "monsterDisplayName": "The Duskmaw Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "The Galecrest Wyrm",
-    "monsterDisplayName": "The Galecrest Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "The Hush Cantor",
-    "monsterDisplayName": "The Hush Cantor",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "The Mistwing Wyrm",
-    "monsterDisplayName": "The Mistwing Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "The Pyreclaw Wyrm",
-    "monsterDisplayName": "The Pyreclaw Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.critical_healing_potion",
-    "monster": "The Rootcrown Wyrm",
-    "monsterDisplayName": "The Rootcrown Wyrm",
     "chance": 0.05
   },
   {
@@ -1939,12 +2695,6 @@
   },
   {
     "item": "item.mana_prism",
-    "monster": "Arch Drake",
-    "monsterDisplayName": "Arch Drake",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
     "monster": "ArenaMobXP300",
     "monsterDisplayName": "Arena experience monster (level 300)",
     "chance": 0.05
@@ -2059,54 +2809,6 @@
   },
   {
     "item": "item.mana_prism",
-    "monster": "Ashbound Exile",
-    "monsterDisplayName": "Ashbound Exile",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Bastion Warden",
-    "monsterDisplayName": "Bastion Warden",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Coastwarden Ithrak",
-    "monsterDisplayName": "Coastwarden Ithrak",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Greater Drake",
-    "monsterDisplayName": "Grand Drake",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Kraanian Dragonguard",
-    "monsterDisplayName": "Kraanian Dragonguard",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Nullguard",
-    "monsterDisplayName": "Nullguard",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Rhunor, the Hollow Dawn",
-    "monsterDisplayName": "Rhunor, the Hollow Dawn",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "Rift Wraith",
-    "monsterDisplayName": "Rift Wraith",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
     "monster": "Sandglass Sentinel II",
     "monsterDisplayName": "Sandglass Sentinel II",
     "chance": 0.05
@@ -2139,48 +2841,6 @@
     "item": "item.mana_prism",
     "monster": "The Convergent Wyrm",
     "monsterDisplayName": "The Convergent Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "The Dusk Regent",
-    "monsterDisplayName": "The Dusk Regent",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "The Duskmaw Wyrm",
-    "monsterDisplayName": "The Duskmaw Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "The Galecrest Wyrm",
-    "monsterDisplayName": "The Galecrest Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "The Hush Cantor",
-    "monsterDisplayName": "The Hush Cantor",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "The Mistwing Wyrm",
-    "monsterDisplayName": "The Mistwing Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "The Pyreclaw Wyrm",
-    "monsterDisplayName": "The Pyreclaw Wyrm",
-    "chance": 0.05
-  },
-  {
-    "item": "item.mana_prism",
-    "monster": "The Rootcrown Wyrm",
-    "monsterDisplayName": "The Rootcrown Wyrm",
     "chance": 0.05
   },
   {
@@ -2242,6 +2902,42 @@
     "monster": "Toll Troll",
     "monsterDisplayName": "Toll Troll",
     "chance": 0.02
+  },
+  {
+    "item": "item.training_ground_1_return_scroll",
+    "monster": "Training 1 Tarantula",
+    "monsterDisplayName": "Silkbrood Matriarch",
+    "chance": 1.0
+  },
+  {
+    "item": "item.training_ground_1_skeleton_return_scroll",
+    "monster": "Training 1 Skeleton",
+    "monsterDisplayName": "Boneguard Sentinel",
+    "chance": 1.0
+  },
+  {
+    "item": "item.training_ground_1_skraug_return_scroll",
+    "monster": "Training 1 Skraug",
+    "monsterDisplayName": "Skraug Pitfighter",
+    "chance": 1.0
+  },
+  {
+    "item": "item.training_ground_2_return_scroll",
+    "monster": "Training 2 Tarantula",
+    "monsterDisplayName": "Ancient Silkbrood",
+    "chance": 1.0
+  },
+  {
+    "item": "item.training_ground_2_skeleton_return_scroll",
+    "monster": "Training 2 Skeleton",
+    "monsterDisplayName": "Ossuary Champion",
+    "chance": 1.0
+  },
+  {
+    "item": "item.training_ground_2_skraug_return_scroll",
+    "monster": "Training 2 Skraug",
+    "monsterDisplayName": "Skraug Ironhide",
+    "chance": 1.0
   },
   {
     "item": "item.veiled_aether_shard",
@@ -2319,12 +3015,6 @@
     "item": "mordrenns_drowned_cowl",
     "monster": "Mordrenn the Drowned Inquisitor",
     "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
-    "chance": 0.01
-  },
-  {
-    "item": "ptanghs_boneshard_longbow",
-    "monster": "MakrshPtangh2",
-    "monsterDisplayName": "Makrsh P'Tangh",
     "chance": 0.01
   },
   {

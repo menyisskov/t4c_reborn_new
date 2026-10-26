@@ -1,5 +1,19 @@
 # Design Guidelines
 
+## Website map atlas (T4C-0137)
+
+- Publication (T4C-0152): publish a current runtime export, with a stable content fingerprint
+  and a visible update date. Preserve prepared snapshots on website-only pushes; regenerate
+  from GitHub game inputs when those inputs change. Local gameplay changes remain local until
+  separately shipped. Validate JSON/browser bundle agreement and referenced image files in CI.
+
+- Generate map terrain and pins from the current native world and runtime spawn registry,
+  including dense hunting fields. Keep every authored hunting anchor covered by a zone map.
+- Clamp crops to native world bounds. Position each dot by its tile coordinate independently
+  of label width; combine occupants of the same tile into one pin with separate links.
+- Keep new-island campaign and training maps discoverable from the Maps index and related
+  zone/quest pages. Rebundle maps without rewriting unrelated exports for maps-only updates.
+
 Balance and design rules for T4C Reborn, collected from the project owner's instructions. This
 file is written **for Claude (and any other agent) working on this repo**: read it before
 adding or changing content that touches progression, spells, items, monsters or the reference

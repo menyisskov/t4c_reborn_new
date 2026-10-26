@@ -6,13 +6,15 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0117`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0153`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0152 | Publish the current compendium and show when reference data was refreshed | Website / Delivery | Done | `1e40c6ac` | [2026-10-26](CHANGELOG.md#2026-10-26--current-compendium-publication-t4c-0152) |
+| T4C-0137 | Refresh website maps and cover the Witness and Threnody campaign | Wiki / Maps | Done | `1e40c6ac` | [2026-10-26](CHANGELOG.md#2026-10-26--website-map-atlas-refresh-t4c-0137) |
 | T4C-0001 | JSON content pipeline, armor sets, level cap 500 | Content/Systems | Done | `a7e7247` | [2026-09-16](CHANGELOG.md#2026-09-16--json-content-pipeline-armor-sets-level-cap-500-t4c-0001) |
 | T4C-0002 | Rebirth economy, storage, spell vendor, macros | Content/Systems | Done | `0404411` | [2026-09-17](CHANGELOG.md#2026-09-17--rebirth-economy-storage-and-quality-of-life-pass-t4c-0002) |
 | T4C-0003 | Content-authoring Claude skills | Process/Tooling | Done | `0f2cba7`, `2bfcd38`, `99e6f39`, `1758ed7` | [2026-09-17](CHANGELOG.md#2026-09-17--content-authoring-skills-t4c-0003-processtooling) |

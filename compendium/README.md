@@ -61,8 +61,18 @@ This overwrites `compendium/data/*.json`, `compendium/data/maps/*.png` and
 
 ## Zone map images
 
+The footer shows the reference snapshot's refresh date. After exporting data, run
+`python scripts/compendium_freshness.py compendium`, then add `--check` to verify the bundled
+JSON, map dimensions and portrait files. An unchanged snapshot keeps its original date.
+The check also runs on website pull requests.
+
+Production deploys from `main`. Website-only pushes publish their prepared snapshot;
+the update workflow regenerates data when game sources, assets or the Maven build change.
+This allows a local game snapshot to be published without also shipping unrelated local
+gameplay work. A later game-source push exports the game revision committed on GitHub.
+
 `tools/MinimapExporter.java` renders a stylized top-down PNG for every zone listed in
-`data/zones.json` (i.e. new-since-fork zones only — not the whole 3072x3072 worldmap, which
+`data/zones.json` (i.e. new-since-fork zones only — not the whole 6144x3072 worldmap, which
 at real pixel resolution would be several gigapixels, far too large for a web page): a
 padded crop around the zone's own `worldmapCenter`, colored tile-by-tile from the *real*
 game art (`assets/maps/worldmap/worldmap.mapbin` for which ground sprite sits on each tile,
@@ -77,6 +87,21 @@ crop), since `MonsterDef` has no explicit boss/unique flag to key off instead.
 Re-run it whenever a zone's `worldmapCenter`/radius changes in `zones.json`, or a new
 zone/NPC/monster spawn is added — same "needs a local run before merging" caveat as
 `CompendiumExporter` above; `compendium.yml` also re-runs it on every push to `main`.
+
+The atlas includes Moonwake, Emberglass, the eastern Sentinel field, both islands' training
+grounds and the Threnody campaign through the Hollow Dawn. Crops stop at the native world's
+boundaries. Pins come from `SpawnRegistry`, including the expanded `HuntingGrounds` anchors;
+hover a dot for its name and tile coordinates. Creatures sharing a tile share a pin with
+separate links, and labels never move the dot away from its coordinate.
+
+For a maps-only update, regenerate images as above, then rebundle the existing JSON exports:
+
+```bash
+java -cp "target/classes:$(cat /tmp/cp.txt)" com.perso.T4C.tools.CompendiumExporter compendium/data --bundle-only
+```
+
+This preserves the other JSON exports. Run the full exporter when adding monster, NPC or
+item definitions as well, so new pins have corresponding reference pages.
 
 ## Scope
 
