@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0162 | Bind online characters to authenticated accounts and expiring writer sessions | Multiplayer / Alpha | In Progress | — | [2026-10-26](CHANGELOG.md#2026-10-26--online-session-ownership-t4c-0162) |
+| T4C-0162 | Bind online characters to authenticated accounts and expiring writer sessions | Multiplayer / Alpha | Done | `860bc046` | [2026-10-26](CHANGELOG.md#2026-10-26--online-session-ownership-t4c-0162) |
 | T4C-0161 | Establish transactional PostgreSQL online character storage | Multiplayer / Alpha | Done | `99dd47ca` | [2026-10-26](CHANGELOG.md#2026-10-26--online-persistence-foundation-t4c-0161) |
 | T4C-0160 | Connect the native game renderer and characters to the Alpha server | Multiplayer / Alpha | Done | `865a2bbc` | [2026-10-26](CHANGELOG.md#2026-10-26--native-online-client-t4c-0160) |
 | T4C-0159 | Deliver a local two-client movement preview with server-owned positions | Multiplayer / Alpha | Done | `1e9178b5` | [2026-10-26](CHANGELOG.md#2026-10-26--local-multiplayer-movement-preview-t4c-0159) |
