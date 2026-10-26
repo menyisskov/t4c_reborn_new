@@ -6,6 +6,14 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Persistent native sessions (T4C-0163)
+
+### Added
+- An optional saved-character online mode remembers movement when reconnecting or restarting the server. Private test profiles identify each character, and server shutdown saves connected players. This remains a movement-only Alpha slice; offline characters and progress remain separate.
+
+### Fixed
+- Very short movement key taps register in the online client, and normal client exit waits briefly for logout to finish.
+
 ## 2026-10-26 — Online session ownership (T4C-0162)
 
 ### Added

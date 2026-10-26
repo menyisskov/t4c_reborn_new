@@ -58,3 +58,4 @@ editor_build_preferences.json.tmp
 
 # Online development database credentials; never share with desktop saves.
 /multiplayer/.env
+/multiplayer/local/

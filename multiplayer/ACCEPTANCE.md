@@ -10,6 +10,10 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 - Server-owned movement, bounded input queues, input/session expiry and a 20-session cap.
 - Real native renderer and sprites; owner confirmed downward/diagonal facing and two players
   connected to the same server. Native client PR: #84.
+- Persistent native QA: two private profiles connected against local PostgreSQL; a moved character
+  retained its position after graceful server stop/start and reconnect. Database leases were released
+  on shutdown. Integration tests also verify two-player persistence, stable provisional appearance,
+  unauthorized shutdown rejection and continued world ticks during a blocked storage worker.
 - Network adapter tests cover direction-only commands, authoritative snapshots and session cleanup.
 - Real-map local transport check: 20 simulated clients, 120 seconds, 16,214 input/snapshot cycles;
   no failed requests or invalid coordinates; cycle latency p50 73.5 ms, p95 96.7 ms, max 155.2 ms.
@@ -20,7 +24,8 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 
 - [ ] Authenticated accounts and online character selection without importing desktop saves.
 - [ ] Encrypted remote transport, protocol/version validation, bounded messages and abuse controls.
-- [ ] PostgreSQL character storage integrated asynchronously with session fencing and recovery.
+- [x] PostgreSQL movement storage integrated asynchronously with session fencing and clean recovery.
+  Full character gameplay state and crash/backup recovery gates below remain incomplete.
 - [ ] Full required character state: stats, equipment, inventory, abilities, quests and map location.
 - [ ] Server-owned combat, NPC/monster behavior, loot, death and progression using shared rules.
 - [ ] A playable quest/reward loop with transactional, retry-safe item and currency changes.
@@ -46,8 +51,14 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 
 ## Next integration order
 
-The PostgreSQL storage and account/session ownership foundations are implemented; database
-CI verifies their contracts. Next add the asynchronous checkpoint path using those writer leases. Connect that path to native character entry/reconnect before
-expanding authoritative combat, inventory/quests and map transfer. Validate each consequential
+Open reliability issue: during automated focus switching between two native clients on Windows,
+one process crashed in GLFW's Win32 event polling (`glfw.dll+0x101ab`, LWJGL 3.3.3).
+The second client survived and restored its saved position after restart. The cause is not yet
+confirmed; native multi-client stability remains an unmet Beta gate. The local JVM crash report
+is intentionally excluded from version control because it contains machine details.
+
+Native authenticated movement now uses the asynchronous checkpoint path and writer leases.
+Next verify crash/database/backup recovery, then expand authoritative combat, inventory/quests
+and map transfer. Validate each consequential
 join against actual PostgreSQL and the real native client. Optional utilities and polish do not
 take precedence over these release gates.

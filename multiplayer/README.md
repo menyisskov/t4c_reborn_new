@@ -1,5 +1,7 @@
 # Multiplayer Alpha work
 
+For optional saved native characters, follow [persistent-mode setup](PERSISTENCE.md#running-persistent-native-clients).
+
 Release evidence and remaining gates are tracked in [ACCEPTANCE.md](ACCEPTANCE.md).
 The PostgreSQL groundwork and its current integration limits are in [PERSISTENCE.md](PERSISTENCE.md).
 
@@ -18,7 +20,7 @@ input from the previous window. Close one window to disconnect. If the server is
 press R to reconnect. Escape closes only that online client. The normal `launch.bat` still
 starts single-player.
 
-This is the first native movement slice, not complete Alpha. Characters are temporary and
+This is a native movement slice, not complete Alpha. In the default preview, characters are temporary and
 use default appearances (male/female alternating by temporary ID). No saved character is
 imported. The native entry point shares the actual game renderer and animations, but does
 not initialize the offline gameplay screen, combat, inventory, quests or saving. It inherits

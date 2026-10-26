@@ -2,6 +2,7 @@ package com.perso.T4C.server;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import com.perso.T4C.server.persistence.OnlineStore;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.TreeMap;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** Loopback-only QA transport. No public hosting, accounts, persistence or desktop dependencies. */
+/** Loopback-only QA transport with optional persistent sessions and no desktop dependencies. */
 public final class PreviewServer implements AutoCloseable {
   private static final Gson JSON = new Gson();
   private final HttpServer http;
@@ -22,6 +23,9 @@ public final class PreviewServer implements AutoCloseable {
       Thread.ofPlatform().name("preview-http-", 0).factory(), new ThreadPoolExecutor.AbortPolicy());
   private final ArrayBlockingQueue<Runnable> commands = new ArrayBlockingQueue<>(128);
   private final PreviewWorld world;
+  private final OnlineStore store;
+  private final PersistentSessions persistent;
+  private final String controlToken;
   private final SimulationLoop loop;
   private final Thread simulation;
   private final AtomicBoolean closed = new AtomicBoolean();
@@ -30,11 +34,23 @@ public final class PreviewServer implements AutoCloseable {
   private volatile Throwable failure;
 
   public PreviewServer(PreviewMap map, int port) throws IOException {
+    this(map,port,null);
+  }
+
+  public PreviewServer(PreviewMap map, int port, OnlineStore store) throws IOException {
+    this(map,port,store,null);
+  }
+
+  public PreviewServer(PreviewMap map, int port, OnlineStore store, String controlToken) throws IOException {
+    if (controlToken!=null && !controlToken.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("Invalid control token");
+    this.controlToken=controlToken;
+    this.store=store;
     strings = loadStrings();
     world = new PreviewWorld(map);
+    persistent=store==null ? null : new PersistentSessions(store,map,world);
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
         "originX", map.originX, "originY", map.originY, "blocked", map.cells(),
-        "maxPlayers", PreviewWorld.MAX_PLAYERS));
+        "maxPlayers", PreviewWorld.MAX_PLAYERS,"persistent",store!=null));
     http = HttpServer.create(new InetSocketAddress("127.0.0.1", port), 32);
     loop = new SimulationLoop(PreviewWorld.TICK_RATE, tick -> {
       for (int i = 0; i < 128; i++) {
@@ -43,11 +59,15 @@ public final class PreviewServer implements AutoCloseable {
         command.run();
       }
       world.step();
+      if (persistent!=null) persistent.step();
     });
     simulation = new Thread(() -> {
       try { loop.run(Long.MAX_VALUE); }
       catch (Throwable error) { failure = error; }
-      finally { close(); }
+      finally {
+        close();
+        if (persistent!=null) persistent.shutdown();
+      }
     }, "preview-world");
     http.setExecutor(requests);
     http.createContext("/", this::handle);
@@ -65,12 +85,26 @@ public final class PreviewServer implements AutoCloseable {
   private <T> T onWorld(Callable<T> action) throws Exception {
     var result = new CompletableFuture<T>();
     if (closed.get() || !commands.offer(() -> {
-      if (result.isCancelled()) return;
-      try { result.complete(action.call()); }
-      catch (Exception error) { result.completeExceptionally(error); }
+      synchronized (result) {
+        if (result.isCancelled()) return;
+        try { result.complete(action.call()); }
+        catch (Exception error) { result.completeExceptionally(error); }
+      }
     })) throw new PreviewWorld.Rejected(503, "busy");
     try { return result.get(2, TimeUnit.SECONDS); }
-    catch (TimeoutException error) { result.cancel(false); throw new PreviewWorld.Rejected(503, "busy"); }
+    catch (TimeoutException | InterruptedException error) {
+      // Cancellation and the short, nonblocking world mutation must be atomic. Otherwise a
+      // timed-out join could attach an actor while the HTTP handler releases its database lease.
+      synchronized (result) {
+        if (error instanceof InterruptedException) Thread.currentThread().interrupt();
+        if (!result.isDone()) { result.cancel(false); throw new PreviewWorld.Rejected(503,"busy"); }
+        try { return result.join(); }
+        catch (CompletionException failed) {
+          if (failed.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected;
+          throw failed;
+        }
+      }
+    }
     catch (ExecutionException error) {
       if (error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected;
       throw error;
@@ -92,13 +126,36 @@ public final class PreviewServer implements AutoCloseable {
         String type = exchange.getRequestHeaders().getFirst("Content-Type");
         if (type == null || !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain"))
           throw new PreviewWorld.Rejected(415, "input");
-        byte[] bytes = exchange.getRequestBody().readNBytes(65);
-        if (bytes.length > 64) throw new PreviewWorld.Rejected(413, "input");
+        int limit=store!=null && "/join".equals(path) ? 101 : 64;
+        byte[] bytes = exchange.getRequestBody().readNBytes(limit+1);
+        if (bytes.length > limit) throw new PreviewWorld.Rejected(413, "input");
         String body = new String(bytes, StandardCharsets.US_ASCII);
         switch (path) {
+          case "/admin/shutdown" -> {
+            if (controlToken==null || !java.security.MessageDigest.isEqual(
+                controlToken.getBytes(StandardCharsets.US_ASCII),token(exchange).getBytes(StandardCharsets.US_ASCII)))
+              throw new PreviewWorld.Rejected(403,"admin");
+            if (!body.isEmpty()) throw new PreviewWorld.Rejected(400,"input");
+            json(exchange,200,Map.of("stopping",true));
+            new Thread(this::close,"online-admin-stop").start();
+          }
           case "/join" -> {
-            if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
-            json(exchange, 200, onWorld(world::join));
+            if (store==null) {
+              if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
+              json(exchange, 200, onWorld(world::join));
+            } else {
+              if (!body.matches("[0-9a-f]{64} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+                throw new PreviewWorld.Rejected(400,"input");
+              String[] credentials=body.split(" ");
+              long started=System.nanoTime();
+              var session=store.acquire(credentials[0],java.util.UUID.fromString(credentials[1]));
+              boolean attached=false;
+              try {
+                var joined=onWorld(() -> persistent.join(session,started));
+                attached=true;
+                json(exchange,200,joined);
+              } finally { if (!attached) store.release(session); }
+            }
           }
           case "/input" -> {
             String token = token(exchange);
@@ -115,7 +172,8 @@ public final class PreviewServer implements AutoCloseable {
           case "/leave" -> {
             if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
             String token = token(exchange);
-            onWorld(() -> { world.leave(token); return null; });
+            if (persistent==null) onWorld(() -> { world.leave(token); return null; });
+            else onWorld(() -> persistent.leave(token)).get(2,TimeUnit.SECONDS);
             json(exchange, 200, Map.of("ok", true));
           }
           default -> throw new PreviewWorld.Rejected(404, "route");
@@ -132,12 +190,14 @@ public final class PreviewServer implements AutoCloseable {
             json(exchange, 200, onWorld(() -> world.snapshot(token)));
           }
           case "/health" -> json(exchange, 200,
-              Map.of("tick", loop.completedTicks(), "mode", "local-preview", "capacity", PreviewWorld.MAX_PLAYERS));
+              Map.of("tick", loop.completedTicks(), "mode", store==null ? "local-preview" : "local-persistent", "capacity", PreviewWorld.MAX_PLAYERS));
           default -> throw new PreviewWorld.Rejected(404, "route");
         }
       } else throw new PreviewWorld.Rejected(405, "method");
     } catch (PreviewWorld.Rejected rejected) {
       json(exchange, rejected.status, Map.of("error", rejected.getMessage()));
+    } catch (OnlineStore.Conflict rejected) {
+      json(exchange,409,Map.of("error","account_or_session"));
     } catch (Exception error) {
       if (error instanceof InterruptedException) Thread.currentThread().interrupt();
       json(exchange, 503, Map.of("error", "busy"));
@@ -190,7 +250,7 @@ public final class PreviewServer implements AutoCloseable {
     http.stop(0);
     requests.shutdownNow();
     if (Thread.currentThread() != simulation) {
-      try { simulation.join(5000); }
+      try { simulation.join(15000); }
       catch (InterruptedException e) { Thread.currentThread().interrupt(); }
     }
   }

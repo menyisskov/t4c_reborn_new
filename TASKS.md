@@ -6,13 +6,14 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0163`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0164`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0163 | Persist native online movement across reconnects and server restarts | Multiplayer / Alpha | Done | `b494516a` | [2026-10-26](CHANGELOG.md#2026-10-26--persistent-native-sessions-t4c-0163) |
 | T4C-0162 | Bind online characters to authenticated accounts and expiring writer sessions | Multiplayer / Alpha | Done | `860bc046` | [2026-10-26](CHANGELOG.md#2026-10-26--online-session-ownership-t4c-0162) |
 | T4C-0161 | Establish transactional PostgreSQL online character storage | Multiplayer / Alpha | Done | `99dd47ca` | [2026-10-26](CHANGELOG.md#2026-10-26--online-persistence-foundation-t4c-0161) |
 | T4C-0160 | Connect the native game renderer and characters to the Alpha server | Multiplayer / Alpha | Done | `865a2bbc` | [2026-10-26](CHANGELOG.md#2026-10-26--native-online-client-t4c-0160) |
