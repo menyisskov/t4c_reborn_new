@@ -55,3 +55,6 @@ gm_seed.json
 # Local editor browser preferences
 editor_build_preferences.json
 editor_build_preferences.json.tmp
+
+# Online development database credentials; never share with desktop saves.
+/multiplayer/.env

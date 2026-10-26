@@ -5,6 +5,11 @@ public final class ServerMain {
   private ServerMain() {}
 
   public static void main(String[] args) throws Exception {
+    if (args.length == 1 && "--migrate-online".equals(args[0])) {
+      com.perso.T4C.server.persistence.OnlineStore.fromEnvironment().migrate();
+      System.out.println("Online PostgreSQL schema is ready. Preview characters remain temporary.");
+      return;
+    }
     if (args.length > 0 && "--preview".equals(args[0])) {
       if (args.length != 3) throw new IllegalArgumentException("Expected --preview COLLISION_FILE PORT");
       // JDK HTTP implementation limits are set before its first use. This listener is loopback-only.
@@ -31,6 +36,7 @@ public final class ServerMain {
     if (args.length == 1 && "--help".equals(args[0])) {
       System.out.println("Usage: java -jar t4c-server.jar [--ticks NON_NEGATIVE_COUNT]");
       System.out.println("       java -jar t4c-server.jar --preview COLLISION_FILE PORT");
+      System.out.println("       java -jar t4c-server.jar --migrate-online (T4C_DB_URL, T4C_DB_USER, T4C_DB_PASSWORD)");
       return;
     }
     long maximumTicks = Long.MAX_VALUE;

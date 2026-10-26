@@ -2,6 +2,7 @@
 
 ## Multiplayer delivery and single-player compatibility (T4C-0156)
 
+- Online persistence uses PostgreSQL, separate from desktop files. Ownership must come from authenticated server state; clients never supply reward amounts or checkpoint coordinates. Save updates use optimistic revisions; reward receipts and balances commit atomically with stable server-generated event IDs. The storage foundation is not active in the temporary movement preview. Account authentication, single-session fencing and the asynchronous simulation-to-storage integration remain required before persistent play.
 - Owner direction: consolidate pending game work before beginning multiplayer implementation; keep personal character saves, account storage and preferences local rather than publishing them.
 - Owner direction (2026-10-26 evening): continue autonomous implementation and self-testing toward full Beta while the owner is away; do not request owner QA before 2026-10-27. Do not label partial Alpha slices as Beta.
 - Owner direction: the next Alpha QA must use the actual native game client and existing game world/character rendering, starting with one connected player if needed and progressing to two; browser diagnostics alone are no longer the QA milestone. Keep the offline launch path unchanged. The online entry point reuses rendering and animation components without constructing the save-backed single-player screen or local gameplay model.

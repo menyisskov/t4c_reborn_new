@@ -1,5 +1,8 @@
 # Multiplayer Alpha work
 
+Release evidence and remaining gates are tracked in [ACCEPTANCE.md](ACCEPTANCE.md).
+The PostgreSQL groundwork and its current integration limits are in [PERSISTENCE.md](PERSISTENCE.md).
+
 ## Native game client QA
 
 The next test uses the existing desktop game's map renderer, scenery and layered character
