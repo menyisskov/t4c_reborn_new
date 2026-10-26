@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Multiplayer Alpha foundation (T4C-0157)
+
+### Added
+- Began a separate multiplayer foundation. Online play is not available yet; the current offline game and local characters remain independent of this work.
+
 ## 2026-10-26 — Single-player integration (T4C-0156)
 
 ### Changed

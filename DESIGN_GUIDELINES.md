@@ -4,6 +4,7 @@
 
 - Owner direction: consolidate pending game work before beginning multiplayer implementation; keep personal character saves, account storage and preferences local rather than publishing them.
 - Multiplayer must preserve the existing offline single-player game, including its launcher, gameplay and saved progress. Online services must not become a requirement for offline play, and online persistence must remain separate from local saves.
+- Alpha implementation starts in an opt-in `multiplayer/` Maven reactor with separate build outputs. Share verified pure rule source rather than copying formulas or depending on the desktop runtime. The initial executable is only a lifecycle foundation; networking and world persistence remain explicitly unimplemented.
 - The agreed delivery milestones are Alpha (authoritative persistent gameplay), Beta (complete launch gameplay for 20 concurrent players), GA (essential end-to-end gameplay, security and recovery), then Post-GA (optional additions, utilities and improvements). Anti-cheat and economic integrity are launch requirements, not optional later improvements.
 - Integration-test maintenance: Avalon canopy checks apply to the relocated Avalon footprint, while terrain/passability checks still cover all eastern encounters. Equipment migration tests retain representative formula checks; boost uniqueness and forbidden light resistance remain covered by ItemBalanceGuidelinesTest. Resale tests use controlled loot sources for rarity ordering because later regions may change the easiest real source.
 

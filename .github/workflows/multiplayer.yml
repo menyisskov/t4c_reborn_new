@@ -1,0 +1,38 @@
+name: Multiplayer foundation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'multiplayer/**'
+      - 'src/main/java/com/perso/T4C/combat/**'
+      - 'src/test/java/com/perso/T4C/combat/CombatResolverTest.java'
+      - '.github/workflows/multiplayer.yml'
+  pull_request:
+    paths:
+      - 'multiplayer/**'
+      - 'src/main/java/com/perso/T4C/combat/**'
+      - 'src/test/java/com/perso/T4C/combat/CombatResolverTest.java'
+      - '.github/workflows/multiplayer.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  headless:
+    name: Headless build and lifecycle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Verify shared combat and server lifecycle
+        run: mvn -B -f multiplayer/pom.xml verify
+      - name: Run without game assets or a display
+        shell: bash
+        run: |
+          cd "$RUNNER_TEMP"
+          java -Djava.awt.headless=true -jar "$GITHUB_WORKSPACE/multiplayer/server/target/t4c-server.jar" --ticks 5
