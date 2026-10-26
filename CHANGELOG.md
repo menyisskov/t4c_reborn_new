@@ -6,6 +6,14 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online monster content (T4C-0170)
+
+### Added
+- Online combat preparation now uses the game's existing monster stats, attacks, loot and spawn locations. Special encounters that still need custom online behavior are reported explicitly. Monster combat is not yet enabled.
+
+### Fixed
+- Duplicate legacy monster entries now resolve consistently across server operating systems, preserving the versions selected by the Windows client.
+
 ## 2026-10-26 — Private online character state (T4C-0169)
 
 ### Added

@@ -45,6 +45,7 @@
                         <include>com/perso/T4C/helper/CharacterStartingKit.java</include>
                         <include>com/perso/T4C/player/BodyPart.java</include>
                         <include>com/perso/T4C/online/model/*.java</include>
+                        <include>com/perso/T4C/monster/core/MonsterDef.java</include>
                     </includes>
                     <testIncludes>
                         <testInclude>com/perso/T4C/combat/CombatResolverTest.java</testInclude>

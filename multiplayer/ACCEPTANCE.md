@@ -34,6 +34,10 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
   acknowledgement; recovery yields either no award or the complete award, and retry grants once.
   These tests advance the dead writer's lease deterministically; real-time expiry has separate QA.
   Combat/quest producers and durable world-event recovery remain unbuilt.
+- The headless artifact packages real monster definitions and authored spawns, including runtime
+  overrides, balance adjustments and aliases. Registry-freshness and starting-area reference checks
+  pass; startup rejects invalid schema/references, and the content diagnostic lists unresolved custom
+  spawn types. Data availability does not implement monster AI, custom scripts or combat.
 - Native networking now receives owner-only committed character state and refreshes it by revision.
   HTTP/PostgreSQL checks verify account isolation and absence of private payloads from world snapshots;
   adapter checks cover caching, revision refresh and oversized/stalled reply rejection. A real native

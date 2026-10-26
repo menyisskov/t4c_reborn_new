@@ -142,3 +142,30 @@ authentication and remote encrypted transport; persist online characters and tra
 rewards separately from offline files; verify reconnect, restart and recovery.
 Beta completes launch gameplay and validates sustained play with 20 users. GA requires
 essential end-to-end gameplay, security and operations. Optional tooling and content follow GA.
+
+## Authoritative monster content
+
+The server packages monster definitions and authored spawn locations exported from the native
+runtime registries. It validates the bundle before starting preview/persistent listeners. Inspect
+it without a display or desktop assets:
+
+```powershell
+java -jar multiplayer/server/target/t4c-server.jar --check-content
+```
+
+This reports unresolved custom spawn types explicitly. It does not start monster AI, execute source
+events, or turn specialized encounters into generic enemies. The data is preparation for those
+services. Per-actor health, targets, cooldowns and respawn timers must remain separate from definitions.
+
+After changing monster/spawn sources, regenerate from the repository root:
+
+```powershell
+mvn -q '-DskipTests' package dependency:build-classpath '-Dmdep.outputFile=target/classpath.txt'
+$contentClasspath = 'target/classes;' + (Get-Content target/classpath.txt -Raw).Trim()
+java -cp $contentClasspath com.perso.T4C.tools.OnlineMonsterContentExporter multiplayer/server/src/main/resources/content/monsters-v1.json
+mvn -B -f multiplayer/pom.xml verify
+```
+
+Commit the generated bundle with its sources. The root freshness test compares it with the runtime
+export, and CI runs it for monster, spawn, schema and bundle changes. Data ordering is deterministic;
+no generation timestamp or desktop save information is included.

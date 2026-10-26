@@ -5,6 +5,15 @@ public final class ServerMain {
   private ServerMain() {}
 
   public static void main(String[] args) throws Exception {
+    if (args.length==1 && "--check-content".equals(args[0])) {
+      var content=MonsterCatalog.loadBundled();
+      System.out.println("Monster definitions: "+content.monsters().size()+"; authored spawns: "+content.spawns().size());
+      System.out.println("Custom spawns without registry definitions: "+content.spawns().stream()
+          .filter(spawn -> spawn.definition()==null).map(com.perso.T4C.online.model.MonsterContent.Spawn::type)
+          .distinct().sorted().toList());
+      System.out.println("Data validation only; monster AI and specialized behaviors are not enabled.");
+      return;
+    }
     if ((args.length==4 || args.length==7) && "--provision-online".equals(args[0])) {
       var type=com.perso.T4C.helper.CharacterClass.WARRIOR;
       String gender="male";
@@ -31,6 +40,7 @@ public final class ServerMain {
     }
     if (args.length > 0 && ("--preview".equals(args[0]) || "--online".equals(args[0]))) {
       if (args.length != 3) throw new IllegalArgumentException("Expected --preview COLLISION_FILE PORT");
+      MonsterCatalog.loadBundled(); // Fail before accepting sessions if the packaged content is invalid.
       // JDK HTTP implementation limits are set before its first use. This listener is loopback-only.
       System.setProperty("jdk.httpserver.maxConnections", "128");
       System.setProperty("sun.net.httpserver.maxReqHeaders", "32");
@@ -64,6 +74,7 @@ public final class ServerMain {
       System.out.println("       java -jar t4c-server.jar --online COLLISION_FILE PORT");
       System.out.println("       java -jar t4c-server.jar --provision-online COLLISION_FILE PRIVATE_PROFILE_FILE NAME [CLASS male|female good|evil]");
       System.out.println("       java -jar t4c-server.jar --migrate-online (T4C_DB_URL, T4C_DB_USER, T4C_DB_PASSWORD)");
+      System.out.println("       java -jar t4c-server.jar --check-content");
       return;
     }
     long maximumTicks = Long.MAX_VALUE;
