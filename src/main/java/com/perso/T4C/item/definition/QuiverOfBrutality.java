@@ -33,7 +33,7 @@ public final class QuiverOfBrutality {
         3311,
         8,
         454,
-        "1d50+80",
+        "1d201+299",
         "0",
         0,
         -1,

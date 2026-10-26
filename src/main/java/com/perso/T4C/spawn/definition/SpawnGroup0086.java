@@ -14,7 +14,7 @@ public final class SpawnGroup0086 {
         80,
         2,
         5,
-        List.of("MOBMADMAN", "MOBRAVINGLUNATIC", "MOBDERANGEDORDERLY"),
+        List.of("MOBMADMAN", "Raving Lunatic", "Deranged Orderly"),
         List.of(
             new SpawnGroup.SpawnPoint(2792, 2222, 0),
             new SpawnGroup.SpawnPoint(2796, 2227, 0),

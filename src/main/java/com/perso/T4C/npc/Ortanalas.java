@@ -98,7 +98,8 @@ public final class Ortanalas extends ScriptedNpc {
             new LearnScreen.TrainingOffer("attack", 5000, 10, false),
             new LearnScreen.TrainingOffer("archery", 5000, 15, false),
             new LearnScreen.TrainingOffer("stun_blow", 100, 20, false),
-            new LearnScreen.TrainingOffer("powerful_blow", 100, 50, false)),
+            new LearnScreen.TrainingOffer("powerful_blow", 100, 50, false),
+            new LearnScreen.TrainingOffer("armor_penetration", 100, 300, false)),
         "npc.markam.attacked.");
   }
 

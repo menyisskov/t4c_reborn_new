@@ -33,7 +33,7 @@ public final class TrueshotQuiver {
         41856,
         8,
         455,
-        "self.level*0.1",
+        "1d41+39+self.level*0.1",
         "0",
         0,
         0,

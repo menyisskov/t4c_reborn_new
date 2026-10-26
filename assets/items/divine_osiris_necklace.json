@@ -1,0 +1,53 @@
+{
+  "key": "divine_osiris_necklace",
+  "name": "${item.divine_osiris_necklace}",
+  "bodyPart": "NECK",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvNecklace 2__pal97",
+  "numId": 56207,
+  "appearanceId": 56207,
+  "weight": 1,
+  "armorClass": 20.0,
+  "requirements": {
+    "endurance": 400,
+    "wisdom": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 802112,
+      "statId": 4,
+      "expression": "54"
+    },
+    {
+      "boostId": 802113,
+      "statId": 23,
+      "expression": "65"
+    },
+    {
+      "boostId": 802114,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 802115,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 802116,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 802117,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 802118,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

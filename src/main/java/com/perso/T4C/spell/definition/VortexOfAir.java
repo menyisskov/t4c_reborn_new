@@ -27,7 +27,7 @@ public final class VortexOfAir {
         0,
         "0",
         "0",
-        67637,
+        60800,
         null,
         10080,
         3,

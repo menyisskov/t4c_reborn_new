@@ -7,6 +7,7 @@ import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
 import com.perso.T4C.spawn.SpawnDefinition;
 import com.perso.T4C.spawn.SpawnRegistry;
+import com.perso.T4C.spawn.definition.SpawnGroups;
 import java.util.TreeSet;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,18 @@ class MonsterSpawnTypeResolutionTest {
       }
       if (MonsterRegistry.findByName(type) == null && NpcFactoryRegistry.find(type) == null) {
         unresolved.add(type);
+      }
+    }
+    assertEquals(new TreeSet<>(), unresolved);
+  }
+
+  @Test
+  void everySpawnGroupCreatureResolvesToADefinitionOrNpc() {
+    TreeSet<String> unresolved = new TreeSet<>();
+    for (var group : SpawnGroups.all()) {
+      for (String type : group.creatures()) {
+        if (MonsterRegistry.findByName(type) == null && NpcFactoryRegistry.find(type) == null)
+          unresolved.add(type + " in " + group.name());
       }
     }
     assertEquals(new TreeSet<>(), unresolved);

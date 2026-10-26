@@ -27,7 +27,7 @@ public final class ChainLightning {
         0,
         "100",
         "100",
-        41584,
+        35700,
         null,
         10078,
         3,

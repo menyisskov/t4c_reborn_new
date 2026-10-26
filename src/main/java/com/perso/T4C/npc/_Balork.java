@@ -149,6 +149,9 @@ public final class _Balork extends ScriptedNpc {
       @Override
       public void onDeath(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
+        if (Math.random() < 0.01) c.giveItem("flowing_black_robe");
+        if (Math.random() < 0.05) c.giveItem("light_healing_potion");
+
         if (c.flag("__QUEST_ISLAND_ACCESS") == 0 && c.flag("__QUEST_FIXED_ALIGNMENT") != -1) {
 
           c.flag("__BALORK_BRAND", 1);

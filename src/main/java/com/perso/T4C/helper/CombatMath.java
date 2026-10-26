@@ -56,6 +56,24 @@ public final class CombatMath {
     if (formula == null || formula.isEmpty() || "0".equals(formula)) {
       return fallback(player.getEffectiveStrength(), player.getEffectiveDexterity());
     }
+    int arrowDamage = 0;
+    if (def.isBow() && def.getBodyPart() == BodyPart.WEAPON) {
+      ItemDefinition quiver =
+          ItemRegistry.findByKey(player.getEquippedItems().get(BodyPart.WEAPON2));
+      if (quiver != null && quiver.getStructure() == 8 && quiver.getDmgFormula() != null) {
+        DiceFormula.Context arrowContext =
+            new DiceFormula.Context(
+                player.getEffectiveStrength(),
+                player.getEffectiveEndurance(),
+                player.getEffectiveDexterity(),
+                player.getEffectiveIntelligence(),
+                0,
+                player.getEffectiveWisdom(),
+                0,
+                player.getLevel());
+        arrowDamage = Math.max(0, DiceFormula.of(quiver.getDmgFormula()).roll(arrowContext));
+      }
+    }
     DiceFormula.Context ctx =
         new DiceFormula.Context(
             player.getEffectiveStrength(),
@@ -65,7 +83,10 @@ public final class CombatMath {
             0,
             player.getEffectiveWisdom(),
             0,
-            player.getLevel());
+            player.getLevel(),
+            arrowDamage,
+            100,
+            100);
     return DiceFormula.of(formula).roll(ctx);
   }
 

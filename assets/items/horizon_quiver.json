@@ -1,0 +1,60 @@
+{
+  "key": "horizon_quiver",
+  "name": "${item.horizon_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 9000000,
+  "weight": 2,
+  "requirements": {
+    "strength": 300,
+    "agility": 2000
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59931,
+  "structure": 8,
+  "appearanceId": 454,
+  "dmgFormula": "1d901+2899",
+  "quiverSplash": {
+    "radius": 2.5,
+    "targets": 8,
+    "damagePercent": 45
+  },
+  "boosts": [
+    {
+      "boostId": 732110,
+      "statId": 6,
+      "expression": "167"
+    },
+    {
+      "boostId": 732111,
+      "statId": 10035,
+      "expression": "400"
+    },
+    {
+      "boostId": 732112,
+      "statId": 12,
+      "expression": "50"
+    },
+    {
+      "boostId": 732113,
+      "statId": 13,
+      "expression": "50"
+    },
+    {
+      "boostId": 732114,
+      "statId": 14,
+      "expression": "50"
+    },
+    {
+      "boostId": 732115,
+      "statId": 15,
+      "expression": "50"
+    },
+    {
+      "boostId": 732116,
+      "statId": 22,
+      "expression": "50"
+    }
+  ]
+}

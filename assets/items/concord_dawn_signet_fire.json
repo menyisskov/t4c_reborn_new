@@ -1,0 +1,52 @@
+{
+  "key": "concord_dawn_signet_fire",
+  "name": "${item.concord_dawn_signet_fire}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 4",
+  "numId": 59034,
+  "appearanceId": 59034,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61242,
+      "statId": 1,
+      "expression": "55"
+    },
+    {
+      "boostId": 61243,
+      "statId": 17,
+      "expression": "55"
+    },
+    {
+      "boostId": 61244,
+      "statId": 12,
+      "expression": "22"
+    },
+    {
+      "boostId": 61245,
+      "statId": 13,
+      "expression": "22"
+    },
+    {
+      "boostId": 61246,
+      "statId": 14,
+      "expression": "22"
+    },
+    {
+      "boostId": 61247,
+      "statId": 15,
+      "expression": "22"
+    },
+    {
+      "boostId": 61248,
+      "statId": 22,
+      "expression": "22"
+    }
+  ],
+  "armorClass": 8.0,
+  "requirements": {
+    "intelligence": 550,
+    "endurance": 200
+  }
+}

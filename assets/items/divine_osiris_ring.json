@@ -1,0 +1,53 @@
+{
+  "key": "divine_osiris_ring",
+  "name": "${item.divine_osiris_ring}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 4__pal97",
+  "numId": 56208,
+  "appearanceId": 56208,
+  "weight": 1,
+  "armorClass": 20.0,
+  "requirements": {
+    "endurance": 400,
+    "wisdom": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 802128,
+      "statId": 4,
+      "expression": "54"
+    },
+    {
+      "boostId": 802129,
+      "statId": 23,
+      "expression": "65"
+    },
+    {
+      "boostId": 802130,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 802131,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 802132,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 802133,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 802134,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

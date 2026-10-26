@@ -27,7 +27,7 @@ public final class Hurricane {
         0,
         "0",
         "0",
-        249249,
+        273152,
         null,
         10143,
         3,

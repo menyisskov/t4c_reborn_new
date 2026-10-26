@@ -25,7 +25,7 @@ public final class ItemBeltOfUnstableProtection {
         "Mind Shield.wav",
         null,
         0,
-        "600000",
+        "1800000",
         "0",
         233,
         null,
@@ -48,6 +48,6 @@ public final class ItemBeltOfUnstableProtection {
                     new SpellData.T4cEffect.EffectParam(2, "AC"),
                     new SpellData.T4cEffect.EffectParam(
                         3,
-                        "(1d(self.level)/5)+(1d(self.level)/5)+(1d(self.level)/5)+(1d(self.level)/5)+(1d(self.level)/5)")))));
+                        "if(self.level>=200?round(self.level*0.8)-1+1d(self.level-round(self.level*0.8)+1):1d(self.level))")))));
   }
 }

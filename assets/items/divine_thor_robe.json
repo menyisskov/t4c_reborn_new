@@ -1,0 +1,59 @@
+{
+  "key": "divine_thor_robe",
+  "name": "${item.divine_thor_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal95",
+  "appearanceInventory": "64kInvWhiteRobe__pal95",
+  "numId": 55701,
+  "appearanceId": 55701,
+  "weight": 4,
+  "armorClass": 111.6,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50498,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 50499,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 50500,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 50501,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50502,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50503,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50504,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50505,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

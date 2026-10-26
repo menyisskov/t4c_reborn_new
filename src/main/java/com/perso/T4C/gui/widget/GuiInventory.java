@@ -26,6 +26,15 @@ public class GuiInventory extends AbstractGuiElement {
   private float width;
   private float height;
   private float scrollOffset;
+  private int gridCellSize;
+  private com.perso.T4C.gui.core.JournalTheme gridTheme;
+
+  /** Fixed cells are opt-in; shops and storage retain their natural-size item layout. */
+  public GuiInventory withGrid(int cellSize, com.perso.T4C.gui.core.JournalTheme theme) {
+    gridCellSize = Math.max(24, cellSize);
+    gridTheme = theme;
+    return this;
+  }
 
   @Getter
   @AllArgsConstructor
@@ -43,7 +52,8 @@ public class GuiInventory extends AbstractGuiElement {
     this(player, player == null ? List::of : player::getInventory, x, y, width, height);
   }
 
-  public GuiInventory(Supplier<List<String>> itemsSupplier, float x, float y, float width, float height) {
+  public GuiInventory(
+      Supplier<List<String>> itemsSupplier, float x, float y, float width, float height) {
     this(null, itemsSupplier, x, y, width, height);
   }
 
@@ -67,6 +77,30 @@ public class GuiInventory extends AbstractGuiElement {
   }
 
   public ItemHit hitTest(float screenX, float screenY) {
+    if (gridCellSize > 0) {
+      if (!contains(screenX, screenY)) return null;
+      List<String> items = itemsSupplier.get();
+      if (items == null) return null;
+      List<StackEntry> entries = stacks(items);
+      int columns = gridColumns();
+      int col = (int) Math.floor((screenX - x - PADDING) / gridCellSize);
+      int row = (int) Math.floor((screenY - y - PADDING + scrollOffset) / gridCellSize);
+      if (col < 0 || col >= columns || row < 0) return null;
+      int index = row * columns + col;
+      if (index >= entries.size()) return null;
+      StackEntry entry = entries.get(index);
+      TextureRegion region = resolveInventoryRegion(entry.itemName);
+      return region == null
+          ? null
+          : new ItemHit(
+              entry.firstIndex,
+              entry.itemName,
+              x + PADDING + col * gridCellSize,
+              y + PADDING + row * gridCellSize - scrollOffset,
+              gridCellSize,
+              gridCellSize,
+              region);
+    }
     List<String> items = itemsSupplier.get();
     if (items == null || items.isEmpty()) {
       return null;
@@ -159,6 +193,10 @@ public class GuiInventory extends AbstractGuiElement {
   }
 
   private void drawItems(SpriteBatch batch) {
+    if (gridCellSize > 0) {
+      drawGrid(batch);
+      return;
+    }
     List<String> items = itemsSupplier.get();
     if (items == null || items.isEmpty()) {
       return;
@@ -216,6 +254,9 @@ public class GuiInventory extends AbstractGuiElement {
     if (items == null) {
       return 0f;
     }
+    if (gridCellSize > 0) {
+      return (float) Math.ceil(stacks(items).size() / (double) gridColumns()) * gridCellSize;
+    }
     float innerW = width - 2f * PADDING;
     if (innerW <= 0f) {
       return 0f;
@@ -241,6 +282,56 @@ public class GuiInventory extends AbstractGuiElement {
     }
     totalHeight += rowHeight;
     return totalHeight;
+  }
+
+  private int gridColumns() {
+    return Math.max(1, (int) ((width - PADDING * 2) / gridCellSize));
+  }
+
+  private void drawGrid(SpriteBatch batch) {
+    List<String> items = itemsSupplier.get();
+    List<StackEntry> entries = items == null ? List.of() : stacks(items);
+    int columns = gridColumns();
+    // Re-clamp after items are removed, so the remaining bag cannot be scrolled out of view.
+    float contentHeight = (float) Math.ceil(entries.size() / (double) columns) * gridCellSize;
+    scrollOffset = Math.min(scrollOffset, Math.max(0, contentHeight - height + PADDING * 2));
+    int rows =
+        Math.max(
+            (int) Math.ceil((height - PADDING * 2 + scrollOffset) / gridCellSize),
+            (entries.size() + columns - 1) / columns);
+    for (int row = 0; row < rows; row++) {
+      float cy = y + PADDING + row * gridCellSize - scrollOffset;
+      if (cy + gridCellSize < y || cy > y + height) continue;
+      for (int col = 0; col < columns; col++) {
+        float cx = x + PADDING + col * gridCellSize;
+        gridTheme.well(batch, cx, cy, gridCellSize - 2, gridCellSize - 2);
+        int index = row * columns + col;
+        if (index >= entries.size()) continue;
+        StackEntry entry = entries.get(index);
+        TextureRegion icon = resolveInventoryRegion(entry.itemName);
+        if (icon == null) continue;
+        float scale =
+            Math.min(
+                1f,
+                Math.min(
+                    (gridCellSize - 8f) / icon.getRegionWidth(),
+                    (gridCellSize - 8f) / icon.getRegionHeight()));
+        float w = icon.getRegionWidth() * scale;
+        float h = icon.getRegionHeight() * scale;
+        GuiDraw.drawRegionFlipped(
+            batch, icon, cx + (gridCellSize - w) / 2, cy + (gridCellSize - h) / 2, w, h);
+        if (entry.count > 1) {
+          var font =
+              com.perso
+                  .T4C
+                  .ui
+                  .FontManager
+                  .getInstance()
+                  .getTahomaFont(10, com.badlogic.gdx.graphics.Color.valueOf("E6DECA"), true);
+          font.draw(batch, String.valueOf(entry.count), cx + 3, cy + gridCellSize - 13);
+        }
+      }
+    }
   }
 
   private static final class StackEntry {

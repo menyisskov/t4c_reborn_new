@@ -1,0 +1,29 @@
+{
+  "key": "concord_1_archer",
+  "name": "${item.concord_1_archer}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvLongBow__pal92",
+  "numId": 59041,
+  "appearanceId": 59041,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61287,
+      "statId": 6,
+      "expression": "21"
+    },
+    {
+      "boostId": 61288,
+      "statId": 10035,
+      "expression": "true_skill(35)*50/100"
+    }
+  ],
+  "appearanceEquippedPrimary": "PupLongBow__pal92",
+  "requirements": {
+    "agility": 250
+  },
+  "dmgFormula": "1d150+90+5*arrow_dmg/4",
+  "atkDelay": "1300",
+  "isBow": true
+}

@@ -1,0 +1,53 @@
+{
+  "key": "divine_anubis_wings",
+  "name": "${item.divine_anubis_wings}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal96",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal96",
+  "numId": 55606,
+  "appearanceId": 55606,
+  "weight": 1,
+  "armorClass": 28.8,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50462,
+      "statId": 1,
+      "expression": "65"
+    },
+    {
+      "boostId": 50463,
+      "statId": 24,
+      "expression": "65"
+    },
+    {
+      "boostId": 50464,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50465,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50466,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50467,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50468,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

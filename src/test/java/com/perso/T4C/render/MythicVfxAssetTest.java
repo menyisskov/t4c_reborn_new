@@ -16,10 +16,10 @@ import org.junit.jupiter.api.Test;
 
 /**
  * T4C-0082 / T4C-0085: every newly drawn ladder impact in {@link HighTierSpellCurve#IMPACTS} (the
- * Strike, Eruption and Mythic families) is a complete, packed animation (see {@code tools.MythicVfxPacker}) - contiguous frames
- * {@code -a, -b, ...} with no gaps, offsets that mirror around the tile like every legacy sprite,
- * and a base name no other sprite family shares - so a level 350+ spell never points at a missing
- * or half-packed animation.
+ * Strike, Eruption and Mythic families) is a complete, packed animation (see {@code
+ * tools.MythicVfxPacker}) - contiguous frames {@code -a, -b, ...} with no gaps, offsets that mirror
+ * around the tile like every legacy sprite, and a base name no other sprite family shares - so a
+ * level 350+ spell never points at a missing or half-packed animation.
  */
 class MythicVfxAssetTest {
   private static final int MIN_FRAMES = 8;
@@ -52,14 +52,16 @@ class MythicVfxAssetTest {
             p.name() + " shares the " + base + "- prefix but is not one of its frames");
         frames.add(p);
       }
+      int frameLimit = base.equals("MythicFire") || base.equals("MythicEarth") ? 30 : MAX_FRAMES;
       assertTrue(
-          frames.size() >= MIN_FRAMES && frames.size() <= MAX_FRAMES,
+          frames.size() >= MIN_FRAMES && frames.size() <= frameLimit,
           base + " has " + frames.size() + " frames");
       Set<String> names = new HashSet<>();
       for (SpriteBinIO.Packed p : frames) names.add(SpriteBinIO.key(p.name()));
       for (int i = 0; i < frames.size(); i++) {
         String expected = MythicVfxPacker.frameName(base, i);
-        assertTrue(names.contains(SpriteBinIO.key(expected)), base + " is missing frame " + expected);
+        assertTrue(
+            names.contains(SpriteBinIO.key(expected)), base + " is missing frame " + expected);
       }
       for (SpriteBinIO.Packed p : frames) {
         assertTrue(

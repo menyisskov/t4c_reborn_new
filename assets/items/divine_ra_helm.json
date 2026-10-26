@@ -1,0 +1,53 @@
+{
+  "key": "divine_ra_helm",
+  "name": "${item.divine_ra_helm}",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm__pal94",
+  "appearanceInventory": "64kInvPlateArmorHelm__pal94",
+  "numId": 55204,
+  "appearanceId": 55204,
+  "weight": 1,
+  "armorClass": 15.7,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50168,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50169,
+      "statId": 17,
+      "expression": "38"
+    },
+    {
+      "boostId": 50170,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50171,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50172,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50173,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50174,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

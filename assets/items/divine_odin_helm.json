@@ -1,0 +1,53 @@
+{
+  "key": "divine_odin_helm",
+  "name": "${item.divine_odin_helm}",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm__pal95",
+  "appearanceInventory": "64kInvPlateArmorHelm__pal95",
+  "numId": 56104,
+  "appearanceId": 56104,
+  "weight": 1,
+  "armorClass": 39.3,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 801064,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 801065,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 801066,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 801067,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 801068,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 801069,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 801070,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

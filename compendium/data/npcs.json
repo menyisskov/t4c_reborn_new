@@ -1434,6 +1434,15 @@
       },
       {
         "keywords": [
+          "island"
+        ],
+        "response": "There's an island beyond the eastern water. Clear three Dragonguards from this approach and I'll trust you with the crossing. Ask about the island again when you're ready.",
+        "actions": [
+          "GIVE_QUEST:shattered_isle_passage"
+        ]
+      },
+      {
+        "keywords": [
           "bye"
         ],
         "response": "Don't go past the guard line alone. I mean that as a warning, not a dare.",

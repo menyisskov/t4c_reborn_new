@@ -27,7 +27,7 @@ public final class Meteor {
         0,
         "0",
         "0",
-        307129,
+        350000,
         null,
         10126,
         1,

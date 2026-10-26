@@ -10,17 +10,26 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LootTable {
-  private static final LootTable EMPTY = new LootTable(0, 0, Collections.emptyList());
+  private static final LootTable EMPTY = new LootTable(0, 0, Collections.emptyList(), List.of());
   @Getter private final int goldMin;
   @Getter private final int goldMax;
   private final List<LootEntry> entries;
+  private final List<Choice> choices;
+
+  private record Choice(float chance, List<String> items) {}
 
   public static LootTable empty() {
     return EMPTY;
   }
 
   public List<LootEntry> getEntries() {
-    return Collections.unmodifiableList(entries);
+    List<LootEntry> all = new ArrayList<>(entries);
+    for (Choice choice : choices) {
+      for (String item : choice.items()) {
+        all.add(new LootEntry(item, choice.chance() / choice.items().size()));
+      }
+    }
+    return Collections.unmodifiableList(all);
   }
 
   public static Builder builder() {
@@ -39,6 +48,11 @@ public final class LootTable {
         items.add(entry.itemName());
       }
     }
+    for (Choice choice : choices) {
+      if (choice.chance() >= 1f || rng.nextFloat() < choice.chance()) {
+        items.add(choice.items().get(rng.nextInt(choice.items().size())));
+      }
+    }
     return new LootResult(Math.max(0, gold), items);
   }
 
@@ -46,6 +60,15 @@ public final class LootTable {
     private int goldMin = 0;
     private int goldMax = 0;
     private final List<LootEntry> entries = new ArrayList<>();
+    private final List<Choice> choices = new ArrayList<>();
+
+    /** One roll for the group; success awards exactly one uniformly selected item. */
+    public Builder oneOf(float chance, List<String> items) {
+      List<String> valid =
+          items.stream().filter(s -> s != null && !s.isEmpty()).distinct().toList();
+      if (!valid.isEmpty()) choices.add(new Choice(Math.max(0f, Math.min(1f, chance)), valid));
+      return this;
+    }
 
     public Builder gold(int min, int max) {
       this.goldMin = Math.max(0, Math.min(min, max));
@@ -61,10 +84,10 @@ public final class LootTable {
     }
 
     public LootTable build() {
-      if (goldMin == 0 && goldMax == 0 && entries.isEmpty()) {
+      if (goldMin == 0 && goldMax == 0 && entries.isEmpty() && choices.isEmpty()) {
         return EMPTY;
       }
-      return new LootTable(goldMin, goldMax, List.copyOf(entries));
+      return new LootTable(goldMin, goldMax, List.copyOf(entries), List.copyOf(choices));
     }
   }
 }

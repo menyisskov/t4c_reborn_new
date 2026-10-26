@@ -66,10 +66,14 @@ public class NPCAnimations extends EntityAnimationsBase {
   }
 
   public void startAttack(String angle) {
+    startAttack(angle, false);
+  }
+
+  public void startAttack(String angle, boolean bow) {
 
     if (playerAnimations != null) {
 
-      playerAnimations.startAttack(angle);
+      playerAnimations.startAttack(angle, bow);
     }
 
     if (soundAttack != null && !soundAttack.isBlank()) {
@@ -273,7 +277,7 @@ public class NPCAnimations extends EntityAnimationsBase {
     }
 
     if (spriteBase != null) {
-      renderSingleSprite(batch, pos, angle, flipX, moving, false, null, null, false);
+      renderSingleSprite(batch, pos, angle, flipX, moving, false, null, null, false, 1f);
     }
   }
 
@@ -368,17 +372,25 @@ public class NPCAnimations extends EntityAnimationsBase {
       String entityName,
       boolean showName) {
 
+    render(batch, pos, angle, flipX, moving, isHovered, outlineShader, entityName, showName, 1f);
+  }
+
+  public void render(
+      SpriteBatch batch, Vector2 pos, String angle, boolean flipX, boolean moving,
+      boolean isHovered, ShaderProgram outlineShader, String entityName, boolean showName,
+      float healthPercent) {
+
     refreshIfNeeded();
 
     if (spriteBase != null) {
 
       renderSingleSprite(
-          batch, pos, angle, flipX, moving, isHovered, outlineShader, entityName, showName);
+          batch, pos, angle, flipX, moving, isHovered, outlineShader, entityName, showName, healthPercent);
 
       return;
     }
 
-    playerAnimations.render(batch, pos, angle, flipX, moving, outlineShader, isHovered, 1f, 1f, 0f);
+    playerAnimations.render(batch, pos, angle, flipX, moving, outlineShader, isHovered, healthPercent);
 
     if (showName && entityName != null && !entityName.isEmpty()) {
 
@@ -455,7 +467,8 @@ public class NPCAnimations extends EntityAnimationsBase {
       boolean isHovered,
       ShaderProgram outlineShader,
       String entityName,
-      boolean showName) {
+      boolean showName,
+      float healthPercent) {
 
     List<TextureRegion> frames = getFrames(spriteBase, angle);
 
@@ -486,7 +499,8 @@ public class NPCAnimations extends EntityAnimationsBase {
 
       outlineShader.setUniformf("u_texelSize", 1f / w, 1f / h);
 
-      outlineShader.setUniformf("u_outlineColor", 1f, 1f, 0f, 1f);
+      float hp = Math.max(0f, Math.min(1f, healthPercent));
+      outlineShader.setUniformf("u_outlineColor", 1f - hp, hp, 0f, 1f);
     }
 
     if (flipX) {

@@ -1,0 +1,55 @@
+{
+  "key": "divine_athena_weapon",
+  "name": "${item.divine_athena_weapon}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupNormalSword__pal95",
+  "appearanceInventory": "64kInvShortSword__pal95",
+  "numId": 55400,
+  "appearanceId": 55400,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50280,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 50281,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 50282,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 50283,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 50284,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 50285,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 50286,
+      "statId": 22,
+      "expression": "16"
+    }
+  ],
+  "dmgFormula": "1d325+216",
+  "atkDelay": "1300"
+}

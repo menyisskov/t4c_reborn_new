@@ -37,7 +37,7 @@ public final class ORACLEGUARDIAN1D extends DataMonster {
         SOUND_HIT,
         224,
         687,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("oddly_shaped_shard_of_stone", 1.0f)),
         false,
         0.0f,
         140,

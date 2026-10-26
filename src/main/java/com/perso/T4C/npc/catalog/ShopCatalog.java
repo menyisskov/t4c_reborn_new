@@ -523,7 +523,33 @@ public final class ShopCatalog {
                   "oak_composite_bow",
                   "cedar_composite_bow",
                   "large_shield",
-                  "tower_shield")),
+                  "tower_shield",
+                  "ashwood_reflex_bow_4",
+                  "ashwood_reflex_bow_5",
+                  "cedar_composite_bow_4",
+                  "cedar_composite_bow_5",
+                  "elm_recurve_bow_4",
+                  "elm_recurve_bow_5",
+                  "hickory_compound_bow_4",
+                  "hickory_compound_bow_5",
+                  "lancewood_composite_bow_4",
+                  "lancewood_composite_bow_5",
+                  "oak_composite_bow_4",
+                  "oak_composite_bow_5",
+                  "moonsteel_armor",
+                  "moonsteel_boots",
+                  "moonsteel_gauntlets",
+                  "moonsteel_helm",
+                  "moonsteel_leggings",
+                  "moonsteel_bow",
+                  "windpiercer_longbow",
+                  "skybreaker_longbow",
+                  "eclipse_longbow",
+                  "starweaver_longbow",
+                  "dawnforged_longbow",
+                  "horizon_longbow",
+                  "moonsteel_halberd",
+                  "moonsteel_sword")),
           Map.entry(
               "WayfarerBryndis",
               List.of(
@@ -553,6 +579,21 @@ public final class ShopCatalog {
 
     List<String> i =
         "Fali".equals(id) ? FALI : "ChryseidaYolangda".equals(id) ? CHRYSEIDA : M.get(id);
+    int quiverTiers =
+        switch (id) {
+          case "Fali" -> 3;
+          case "Rawlin" -> 6;
+          case "QuartermasterElenna" -> QUIVERS.size();
+          default -> 0;
+        };
+    if (i != null && quiverTiers > 0) {
+      i = new java.util.ArrayList<>(i);
+      i.addAll(QUIVERS.subList(0, quiverTiers));
+    }
+    if (i != null && "QuartermasterElenna".equals(id)) {
+      i = new java.util.ArrayList<>(i);
+      i.addAll(com.perso.T4C.item.WarriorEquipment.itemKeys());
+    }
 
     if ("Boreas".equals(id)
         || "Yolak".equals(id)
@@ -563,4 +604,23 @@ public final class ShopCatalog {
 
     return i == null ? null : new ShopBehavior(i);
   }
+
+  private static final List<String> QUIVERS =
+      List.of(
+          "flintspark_quiver",
+          "cinderburst_quiver",
+          "splinterstorm_quiver",
+          "thunderburst_quiver",
+          "frostshatter_quiver",
+          "faultline_quiver",
+          "stormfront_quiver",
+          "starfall_quiver",
+          "dawnstorm_quiver",
+          "worldbreaker_quiver",
+          "windpiercer_quiver",
+          "skybreaker_quiver",
+          "eclipse_quiver",
+          "starweaver_quiver",
+          "dawnforged_quiver",
+          "horizon_quiver");
 }

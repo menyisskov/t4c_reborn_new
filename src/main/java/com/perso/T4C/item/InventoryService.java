@@ -3,6 +3,7 @@ package com.perso.T4C.item;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -13,6 +14,7 @@ public final class InventoryService {
     UNKNOWN_ITEM,
     TOO_HEAVY,
     UNIQUE_ITEM,
+    BOUND_ITEM,
     WRONG_SLOT,
     REQUIREMENTS_NOT_MET,
     INCOMPATIBLE_EQUIPMENT,
@@ -73,15 +75,16 @@ public final class InventoryService {
     return add(player, itemKey, -1);
   }
 
-  /** True if {@link #add(Player, String)} would succeed for this item right now - the same
-   * unique-already-owned and carry-weight checks {@code add} itself makes, without mutating
-   * anything. Lets a caller that's about to consume other items/state as part of granting this
-   * one (e.g. a quest completion) verify the grant will succeed *first*, so a doomed grant never
-   * leaves the caller having already paid an irreversible cost for nothing. */
+  /**
+   * True if {@link #add(Player, String)} would succeed for this item right now - the same
+   * carry-weight checks {@code add} itself makes, without mutating anything. Lets a caller that's
+   * about to consume other items/state as part of granting this one (e.g. a quest completion)
+   * verify the grant will succeed *first*, so a doomed grant never leaves the caller having already
+   * paid an irreversible cost for nothing.
+   */
   public static boolean canAdd(Player player, String itemKey) {
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
     if (player == null || definition == null) return false;
-    if (definition.isUnique() && count(player, definition.getKey()) > 0) return false;
     return currentWeight(player) + Math.max(0L, definition.getWeight()) <= maximumWeight(player);
   }
 
@@ -89,12 +92,11 @@ public final class InventoryService {
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
     if (player == null || definition == null) return Result.failure(Failure.UNKNOWN_ITEM, itemKey);
     String canonicalKey = definition.getKey();
-    if (definition.isUnique() && count(player, canonicalKey) > 0)
-      return Result.failure(Failure.UNIQUE_ITEM, canonicalKey);
     if (currentWeight(player) + Math.max(0L, definition.getWeight()) > maximumWeight(player)) {
       return Result.failure(Failure.TOO_HEAVY, canonicalKey);
     }
     player.getInventory().add(canonicalKey);
+    com.perso.T4C.adventure.CollectionBook.record(player, canonicalKey);
     if (!definition.isUnlimitedUse() && definition.getNbCharges() > 0) {
       int charges =
           remainingCharges < 0
@@ -126,25 +128,27 @@ public final class InventoryService {
     if (!validation.success()) return validation;
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
     requestedSlot = definition.getBodyPart() == BodyPart.WEAPON2 ? BodyPart.WEAPON2 : requestedSlot;
-    String previous = offHandOccupant(player, requestedSlot);
-    ItemDefinition previousDefinition = ItemRegistry.findByKey(previous);
     int itemIndex = player.getInventory().indexOf(itemKey);
     player.getInventory().remove(itemIndex);
-    if (previous != null) {
-      player.getInventory().add(previous);
-      if (previousDefinition != null && previousDefinition.getBodyPart() != null) {
-        player.getEquippedItems().remove(previousDefinition.getBodyPart(), previous);
-      }
-      if (previousDefinition != null && previousDefinition.getSecondaryBodyPart() != null) {
-        player.getEquippedItems().remove(previousDefinition.getSecondaryBodyPart(), previous);
+    Set<BodyPart> occupiedSlots = new LinkedHashSet<>();
+    occupiedSlots.add(requestedSlot);
+    if (definition.getSecondaryBodyPart() != null)
+      occupiedSlots.add(definition.getSecondaryBodyPart());
+    if (occupiedSlots.contains(BodyPart.WEAPON2) || occupiedSlots.contains(BodyPart.SHIELD)) {
+      occupiedSlots.add(BodyPart.WEAPON2);
+      occupiedSlots.add(BodyPart.SHIELD);
+    }
+    Set<String> displaced = new HashSet<>();
+    for (BodyPart slot : occupiedSlots) {
+      String previous = player.getEquippedItems().get(slot);
+      if (previous != null && displaced.add(previous)) {
+        unequipWithoutTransfer(player, slot, previous);
+        player.getInventory().add(previous);
       }
     }
     player.getEquippedItems().put(requestedSlot, itemKey);
     if (definition.getSecondaryBodyPart() != null) {
-      String displaced = player.getEquippedItems().put(definition.getSecondaryBodyPart(), itemKey);
-      if (displaced != null && !displaced.equals(previous) && !displaced.equals(itemKey)) {
-        player.getInventory().add(displaced);
-      }
+      player.getEquippedItems().put(definition.getSecondaryBodyPart(), itemKey);
     }
     return Result.success(itemKey);
   }

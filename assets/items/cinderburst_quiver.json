@@ -1,0 +1,60 @@
+{
+  "key": "cinderburst_quiver",
+  "name": "${item.cinderburst_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 1500,
+  "weight": 2,
+  "requirements": {
+    "strength": 17,
+    "agility": 35
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59901,
+  "structure": 8,
+  "appearanceId": 59901,
+  "dmgFormula": "1d8+4",
+  "quiverSplash": {
+    "radius": 1,
+    "targets": 4,
+    "damagePercent": 18
+  },
+  "boosts": [
+    {
+      "boostId": 730010,
+      "statId": 6,
+      "expression": "3"
+    },
+    {
+      "boostId": 730011,
+      "statId": 10035,
+      "expression": "7"
+    },
+    {
+      "boostId": 730012,
+      "statId": 12,
+      "expression": "1"
+    },
+    {
+      "boostId": 730013,
+      "statId": 13,
+      "expression": "1"
+    },
+    {
+      "boostId": 730014,
+      "statId": 14,
+      "expression": "1"
+    },
+    {
+      "boostId": 730015,
+      "statId": 15,
+      "expression": "1"
+    },
+    {
+      "boostId": 730016,
+      "statId": 22,
+      "expression": "1"
+    }
+  ]
+}

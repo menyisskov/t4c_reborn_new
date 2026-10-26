@@ -22,6 +22,8 @@ public final class AccountStorageService {
   }
 
   public static InventoryService.Result deposit(Player player, int inventoryIndex, String itemKey) {
+    if (com.perso.T4C.divine.DivineReturnScrolls.isBoundReturnScroll(itemKey))
+      return InventoryService.Result.failure(InventoryService.Failure.BOUND_ITEM, itemKey);
     if (player == null) {
       return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
     }
@@ -70,8 +72,8 @@ public final class AccountStorageService {
   }
 
   /**
-   * Deposits every item in the backpack, optionally limited to one category. Equipped gear is
-   * never touched (it isn't in the backpack), so this is safe to use as a one-click "stash loot".
+   * Deposits every item in the backpack, optionally limited to one category. Equipped gear is never
+   * touched (it isn't in the backpack), so this is safe to use as a one-click "stash loot".
    */
   public static int depositAll(Player player, StorageService.Category category) {
     if (player == null) return 0;

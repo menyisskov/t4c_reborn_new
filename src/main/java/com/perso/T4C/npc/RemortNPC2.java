@@ -2,6 +2,7 @@ package com.perso.T4C.npc;
 
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.npc.behavior.NpcBehavior;
+import com.perso.T4C.npc.behavior.RebirthBehavior;
 import com.perso.T4C.npc.behavior.StaticDialogueBehavior;
 import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
@@ -92,7 +93,11 @@ public final class RemortNPC2 extends ScriptedNpc {
 
         if (c.flag("__FLAG_REMORT_PROCESS") == 0) c.sayKey("npc.remort.betran.need_alphan");
         else if (c.flag("__FLAG_REMORT_POINTS") > 0)
-          c.sayKey("npc.remort.betran.welcome", c.flag("__FLAG_REMORT_POINTS"));
+          c.sayKey(
+              "npc.remort.betran.welcome",
+              c.flag("__FLAG_REMORT_POINTS"),
+              RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS,
+              RebirthBehavior.ATTRIBUTE_TRAINING_COST);
         else c.sayKey("npc.remort.betran.empty");
       }
 
@@ -120,11 +125,6 @@ public final class RemortNPC2 extends ScriptedNpc {
         else c.player().setWisdom(v);
       }
 
-      private int costFor(int delta) {
-
-        return delta == 0 ? 1 : delta <= 3 ? 2 : delta <= 6 ? 3 : delta == 7 ? 4 : 5;
-      }
-
       private void spendBulk(
           com.perso.T4C.npc.behavior.NpcBehaviorContext c, String a, int budget) {
 
@@ -134,11 +134,12 @@ public final class RemortNPC2 extends ScriptedNpc {
 
           int current = currentValue(c, a);
 
-          int delta = current - (20 + c.flag("__FLAG_NUMBER_OF_REMORTS") * 5);
+          int delta =
+              RebirthBehavior.attributeTrainingBonus(current, c.flag("__FLAG_NUMBER_OF_REMORTS"));
 
-          if (delta > 9) break;
+          if (delta >= RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS) break;
 
-          int cost = costFor(delta);
+          int cost = RebirthBehavior.ATTRIBUTE_TRAINING_COST;
 
           if (spent + cost > budget || c.flag("__FLAG_REMORT_POINTS") < cost) break;
 
@@ -153,8 +154,7 @@ public final class RemortNPC2 extends ScriptedNpc {
 
         if (purchased == 0) c.sayKey("npc.remort.betran.not_enough");
         else
-          c.sayKey(
-              "npc.remort.betran.bulk_done", purchased, spent, c.flag("__FLAG_REMORT_POINTS"));
+          c.sayKey("npc.remort.betran.bulk_done", purchased, spent, c.flag("__FLAG_REMORT_POINTS"));
       }
 
       @Override
@@ -169,7 +169,9 @@ public final class RemortNPC2 extends ScriptedNpc {
           c.sayKey(
               c.flag("__FLAG_REMORT_POINTS") > 0
                   ? "npc.remort.betran.attributes"
-                  : "npc.remort.betran.empty");
+                  : "npc.remort.betran.empty",
+              RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS,
+              RebirthBehavior.ATTRIBUTE_TRAINING_COST);
 
           return true;
         }
@@ -210,12 +212,14 @@ public final class RemortNPC2 extends ScriptedNpc {
 
           int current = currentValue(c, a);
 
-          int delta = current - (20 + c.flag("__FLAG_NUMBER_OF_REMORTS") * 5);
+          int delta =
+              RebirthBehavior.attributeTrainingBonus(current, c.flag("__FLAG_NUMBER_OF_REMORTS"));
 
-          if (delta > 9) c.sayKey("npc.remort.betran.cap");
+          if (delta >= RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS)
+            c.sayKey("npc.remort.betran.cap", RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS);
           else {
 
-            int cost = costFor(delta);
+            int cost = RebirthBehavior.ATTRIBUTE_TRAINING_COST;
 
             c.sayKey("npc.remort.betran.cost", cost);
 
@@ -240,10 +244,13 @@ public final class RemortNPC2 extends ScriptedNpc {
 
         int current = currentValue(c, a);
 
-        int delta = current - (20 + c.flag("__FLAG_NUMBER_OF_REMORTS") * 5),
-            cost = costFor(delta);
+        int
+            delta =
+                RebirthBehavior.attributeTrainingBonus(current, c.flag("__FLAG_NUMBER_OF_REMORTS")),
+            cost = RebirthBehavior.ATTRIBUTE_TRAINING_COST;
 
-        if (delta > 9 || c.flag("__FLAG_REMORT_POINTS") < cost) {
+        if (delta >= RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS
+            || c.flag("__FLAG_REMORT_POINTS") < cost) {
 
           c.sayKey("npc.remort.betran.not_enough");
 

@@ -12,6 +12,14 @@ import java.util.List;
 
 @Spawn(type = "DelnarSteelblade", x = 315, y = 700, z = 0, stationary = false, aggressive = false)
 public final class DelnarSteelblade extends ScriptedNpc {
+  private static final String SKULL_TOTAL_FLAG = "__QUEST_DELNAR_SKULLS_TURNED_IN";
+  private static final List<String> CHAINMAIL_REWARDS =
+      List.of(
+          "chainmail_armor",
+          "chainmail_boots",
+          "chainmail_gauntlets",
+          "chainmail_helmet",
+          "chainmail_leggings");
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";
@@ -81,7 +89,40 @@ public final class DelnarSteelblade extends ScriptedNpc {
       @Override
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
+        String keyword = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+        if (keyword.contains("VILLAIN") && keyword.contains("SKULL")) {
+          if (c.itemCount("villain_skull") > 0) {
+            c.sayKey("npc.delnar.skulls.ask");
+            c.askYesNo("delnar_skulls");
+          } else c.sayKey("npc.topic.delnarsteelblade.1");
+          return true;
+        }
         return StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
+      }
+
+      @Override
+      public boolean onYesNo(
+          com.perso.T4C.npc.behavior.NpcBehaviorContext c, String subject, boolean yes) {
+        if (!"delnar_skulls".equals(subject)) return false;
+        if (!yes) return true;
+
+        int count = c.itemCount("villain_skull");
+        int total = c.flag(SKULL_TOTAL_FLAG);
+        int xp = 0;
+        for (int i = 0; i < count; i++) {
+          c.takeItem("villain_skull");
+          total++;
+          xp += total == 100 ? 500_000 : total == 25 ? 100_000 : total == 10 ? 25_000 : 10_000;
+        }
+        c.flag(SKULL_TOTAL_FLAG, total);
+        if (xp > 0) {
+          c.giveXp(xp);
+          c.giveItem(
+              CHAINMAIL_REWARDS.get(
+                  java.util.concurrent.ThreadLocalRandom.current().nextInt(CHAINMAIL_REWARDS.size())));
+        }
+        c.sayKey(count > 0 ? "npc.delnar.skulls.done" : "npc.delnar.skulls.none");
+        return true;
       }
 
       @Override

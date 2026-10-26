@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiClickZone;
 import com.perso.T4C.gui.core.GuiManager;
+import com.perso.T4C.gui.core.CharacterPanel;
+import com.perso.T4C.gui.core.JournalTheme;
+import com.perso.T4C.gui.core.GuiElement;
+import com.perso.T4C.ui.PlayerHUD;
 import com.perso.T4C.gui.core.GuiScreenBase;
 import com.perso.T4C.gui.widget.GuiText;
 import com.perso.T4C.helper.SpriteLoader;
@@ -15,51 +19,25 @@ import com.perso.T4C.ui.FontManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ElementalStats extends GuiScreenBase {
+public class ElementalStats extends CharacterPanel {
   private static final String[] ELEMENTS = {"fire", "water", "air", "earth", "light", "dark"};
-  private static final float ROW_HEIGHT = 36f;
-  private static final float ROW_START_Y = 60f;
-  private static final float ELEMENT_X = 10f;
-  private static final float POWER_X = 220f;
-  private static final float RESISTANCE_X = 350f;
-  private static final Color GOLD = Color.valueOf("F2B705");
+  private static final float ROW_HEIGHT = 48f;
+  private static final float ROW_START_Y = 123f;
+  private static final float ELEMENT_X = 40f;
+  private static final float POWER_X = 320f;
+  private static final float RESISTANCE_X = 520f;
+  private static final Color GOLD = JournalTheme.GOLD;
   private final Player player;
   private final List<GuiClickZone> tabZones = new ArrayList<>();
 
   public ElementalStats(Player player) {
+    this(player, null);
+  }
+
+  public ElementalStats(Player player, PlayerHUD hud) {
+    super(player, hud, "ui.journal.elements", "elements");
     this.player = player;
-    try {
-      background = SpriteLoader.getInstance().getRegionFromSpriteName("GUI_BackSpell");
-    } catch (GameException ignored) {
-      background = null;
-    }
-    centerOnScreen();
-    addCloseButton();
-    addHeader();
-    addTabs();
     addRows();
-  }
-
-  private void addCloseButton() {
-    addCloseButton(550f, 1f);
-  }
-
-  private void addHeader() {
-    if (background == null) return;
-    labels.add(GuiText.translatedHeader("ui.elemental_stats", "ELEMENTAL", x + 220f, y + 5f));
-  }
-
-  private void addTabs() {
-    if (background == null || player == null) return;
-    BitmapFont tabFont = FontManager.getInstance().getJetBrainsMonoFont(12, Color.WHITE);
-    BitmapFont activeTabFont = FontManager.getInstance().getJetBrainsMonoFont(12, GOLD);
-
-    labels.add(new GuiText(tabFont, x + 10f, y + 30f, () -> "[ " + I18n.key("ui.character_sheet") + " ]"));
-    tabZones.add(
-        new GuiClickZone(
-            x + 10f, y + 20f, 130f, 16f, () -> GuiManager.open(new Statistics(player))));
-
-    labels.add(new GuiText(activeTabFont, x + 150f, y + 30f, () -> "[ " + I18n.key("ui.elemental_stats") + " ]"));
   }
 
   private void addRows() {
@@ -84,14 +62,10 @@ public class ElementalStats extends GuiScreenBase {
   }
 
   @Override
-  public void onTouchUp(float screenX, float screenY) {
-    for (GuiClickZone zone : new ArrayList<>(tabZones)) {
-      if (zone.contains(screenX, screenY)) {
-        zone.run();
-        return;
-      }
-    }
-    super.onTouchUp(screenX, screenY);
+  public void render(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
+    renderPanelBackground(batch);
+    for (int i = 0; i < ELEMENTS.length; i++) well(batch, 28, 158 + i * ROW_HEIGHT, 664, 42);
+    for (GuiElement element : orderedElements()) element.render(batch);
   }
 
   @Override

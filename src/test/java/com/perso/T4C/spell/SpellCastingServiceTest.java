@@ -8,6 +8,27 @@ import org.junit.jupiter.api.Test;
 
 class SpellCastingServiceTest {
   @Test
+  void learningUsesIntelligenceAndWisdomRatherThanCharacterLevel() throws Exception {
+    Player player = new Player();
+    player.setLevel(1);
+    SpellData spell =
+        new SpellData(
+            "Barrier", "", "10", 0, 240, 210, 350, false, true, "", "", "", 0, 0, "", "", 0,
+            "120000", 0, null);
+    player.setIntelligence(spell.getMinInt());
+    player.setWisdom(spell.getMinWis());
+    org.junit.jupiter.api.Assertions.assertNull(
+        SpellLearningRules.attributeBlockReason(player, spell));
+    player.setIntelligence(spell.getMinInt() - 1);
+    org.junit.jupiter.api.Assertions.assertNotNull(
+        SpellLearningRules.attributeBlockReason(player, spell));
+    player.setIntelligence(spell.getMinInt());
+    player.setWisdom(spell.getMinWis() - 1);
+    org.junit.jupiter.api.Assertions.assertNotNull(
+        SpellLearningRules.attributeBlockReason(player, spell));
+  }
+
+  @Test
   void castingDoesNotRecheckLearningRequirements() throws Exception {
     Player caster = new Player();
     caster.setMana(100);

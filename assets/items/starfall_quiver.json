@@ -1,0 +1,60 @@
+{
+  "key": "starfall_quiver",
+  "name": "${item.starfall_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 750000,
+  "weight": 2,
+  "requirements": {
+    "strength": 155,
+    "agility": 650
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59907,
+  "structure": 8,
+  "appearanceId": 59907,
+  "dmgFormula": "1d451+1099",
+  "quiverSplash": {
+    "radius": 2.25,
+    "targets": 8,
+    "damagePercent": 36
+  },
+  "boosts": [
+    {
+      "boostId": 730070,
+      "statId": 6,
+      "expression": "54"
+    },
+    {
+      "boostId": 730071,
+      "statId": 10035,
+      "expression": "130"
+    },
+    {
+      "boostId": 730072,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 730073,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 730074,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 730075,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 730076,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

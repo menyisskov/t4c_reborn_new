@@ -7,6 +7,7 @@ import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.quest.MercenaryCampQuest;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
@@ -100,8 +101,11 @@ public final class VincentSwiftblade extends ScriptedNpc {
         @Override
         public void onConversationStart(NpcBehaviorContext c) {
 
-          if (c.flag("ADDON_MERCENARY_LEADER_DEFEAT") == 1) c.sayKey("npc.vincent.reward.ready");
-          else if (c.flag("ADDON_CAMP_ASSAULT") == 1) c.sayKey("npc.vincent.progress.assault");
+          if (c.flag(MercenaryCampQuest.LEADER_DEFEATED) == 1)
+            c.sayKey("npc.vincent.reward.ready");
+          else if (c.flag(MercenaryCampQuest.STAGE) > 0)
+            c.sayKey("npc.vincent.progress.assault");
+          else if (c.player().getLevel() < 8) c.sayKey("npc.vincent.level.required");
           else {
 
             c.sayKey("npc.vincent.welcome");
@@ -115,9 +119,15 @@ public final class VincentSwiftblade extends ScriptedNpc {
 
           if (!"mission".equals(s)) return false;
 
+          if (c.player().getLevel() < 8) {
+            c.sayKey("npc.vincent.level.required");
+            return true;
+          }
+
           c.sayKey(yes ? "npc.vincent.accept" : "npc.vincent.decline");
 
-          if (yes) c.flag("ADDON_CAMP_ASSAULT", 1);
+          if (yes && c.flag(MercenaryCampQuest.STAGE) == 0)
+            c.flag(MercenaryCampQuest.STAGE, 1);
 
           return true;
         }
@@ -131,18 +141,21 @@ public final class VincentSwiftblade extends ScriptedNpc {
 
             c.sayKey("npc.vincent.details");
 
-            if (c.flag("ADDON_CAMP_ASSAULT") == 1) c.flag("ADDON_CAMP_ASSAULT", 2);
+            if (c.flag(MercenaryCampQuest.STAGE) == 1)
+              c.flag(MercenaryCampQuest.STAGE, 2);
 
             return true;
           }
 
           if (k.equals("REWARD")) {
 
-            if (c.flag("ADDON_MERCENARY_LEADER_DEFEAT") == 1) {
+            if (c.flag(MercenaryCampQuest.LEADER_DEFEATED) == 1
+                && c.flag(MercenaryCampQuest.STAGE) == 6) {
 
-              c.player().addGold(500);
+              c.giveGold(500);
+              c.giveXp(c.player().getLevel() * 750);
 
-              c.flag("ADDON_MERCENARY_LEADER_DEFEAT", 0);
+              MercenaryCampQuest.reset(c.player());
 
               c.sayKey("npc.vincent.reward.given");
 

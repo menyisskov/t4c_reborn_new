@@ -33,7 +33,7 @@ public final class TranchoirEcarlate {
         3578,
         1,
         1602,
-        "1d1800+6600",
+        "1d301+699",
         "if(750-self.agi/250*750/2<600?600:750-self.agi/250*750/2)+1d469",
         0,
         0,

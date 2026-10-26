@@ -9,6 +9,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Bastion Warden", x = 2680, y = 2910, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Bastion Warden", x = 2610, y = 2920, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Bastion Warden", x = 2690, y = 2840, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class BastionWarden extends DataMonster {
   // Reuses the "Green Troll" animation/sound family already used by Grott/Toll Troll — a
   // hulking guardian, distinct from the Agmorkian drake-kin sprite reserved for the Drakes.
@@ -48,8 +49,6 @@ public final class BastionWarden extends DataMonster {
         1750,
         java.util.List.of(
             new MonsterDef.LootDrop("bastion_sentinels_mantle", 0.03f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             new MonsterDef.LootDrop("ancient_celestial_warrior_armor", 0.025f),
             new MonsterDef.LootDrop("ancient_celestial_warrior_boots", 0.025f),
             new MonsterDef.LootDrop("ancient_celestial_warrior_gauntlets", 0.025f),

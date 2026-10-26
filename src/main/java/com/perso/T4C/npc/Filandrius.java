@@ -157,6 +157,20 @@ public final class Filandrius extends ScriptedNpc {
 
           boolean veteran = c.player().getLevel() >= 50;
 
+          if (k.equals("BURDEN")) {
+            if (c.flag("__QUEST_HARVESTER_REWARDED") != 0) {
+              c.sayKey("npc.filandrius.harvester.already");
+            } else if (c.hasItem("crystal_of_providence")) {
+              c.takeItem("crystal_of_providence");
+              c.giveItem("bracer_of_the_immortal");
+              c.giveItem("gem_of_the_immortals");
+              c.flag("__QUEST_HARVESTER_REWARDED", 1);
+              c.flag("ADDON_FILANDRIUS_QUEST_PROGRESS", 6);
+              c.sayKey("npc.filandrius.harvester.reward");
+            } else c.sayKey("npc.filandrius.harvester.missing");
+            return true;
+          }
+
           if ((k.contains("GET") && k.contains("IT")) && p == 0 && veteran) {
 
             c.sayKey("npc.filandrius.get");

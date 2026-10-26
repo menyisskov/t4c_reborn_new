@@ -1,0 +1,53 @@
+{
+  "key": "concord_bell_mantle_water",
+  "name": "${item.concord_bell_mantle_water}",
+  "bodyPart": "BACK",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal93",
+  "numId": 59027,
+  "appearanceId": 59027,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61192,
+      "statId": 1,
+      "expression": "40"
+    },
+    {
+      "boostId": 61193,
+      "statId": 18,
+      "expression": "40"
+    },
+    {
+      "boostId": 61194,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 61195,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 61196,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 61197,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 61198,
+      "statId": 22,
+      "expression": "16"
+    }
+  ],
+  "armorClass": 11.5,
+  "requirements": {
+    "intelligence": 400,
+    "endurance": 160
+  },
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal93"
+}

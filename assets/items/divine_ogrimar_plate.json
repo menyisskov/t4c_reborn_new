@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_plate",
+  "name": "${item.divine_ogrimar_plate}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody__pal91",
+  "appearanceInventory": "64kInvPlateArmorSleeves__pal91",
+  "numId": 55910,
+  "appearanceId": 55910,
+  "weight": 4,
+  "armorClass": 34.1,
+  "requirements": {
+    "strength": 180,
+    "endurance": 100
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50752,
+      "statId": 3,
+      "expression": "15"
+    },
+    {
+      "boostId": 50753,
+      "statId": 8,
+      "expression": "36"
+    },
+    {
+      "boostId": 50754,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 50755,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 50756,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 50757,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 50758,
+      "statId": 22,
+      "expression": "4"
+    }
+  ]
+}

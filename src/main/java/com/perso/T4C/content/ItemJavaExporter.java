@@ -1,6 +1,7 @@
 package com.perso.T4C.content;
 
 import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.RetiredItems;
 import com.perso.T4C.player.BodyPart;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +21,12 @@ public final class ItemJavaExporter {
 
   public static void export(List<ItemDefinition> items, Path output) throws IOException {
     Files.createDirectories(output);
+    items =
+        items == null
+            ? List.of()
+            : items.stream()
+                .filter(item -> item != null && !RetiredItems.isRetired(item.getKey()))
+                .toList();
     for (ItemDefinition item : items == null ? List.<ItemDefinition>of() : items) {
       if (item == null || item.getKey() == null) continue;
       String className = className(item.getKey(), item.getNumId());

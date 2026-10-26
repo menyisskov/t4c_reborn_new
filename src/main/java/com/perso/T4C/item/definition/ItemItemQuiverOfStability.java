@@ -33,7 +33,7 @@ public final class ItemItemQuiverOfStability {
         41861,
         8,
         454,
-        "10",
+        "1d81+149",
         "0",
         0,
         0,

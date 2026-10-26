@@ -19,6 +19,7 @@ public class ItemDefinition {
   private final long price;
   /** New content opts into resale based on loot rarity; legacy definitions keep their prices. */
   @lombok.Setter private boolean rarityPriced;
+  @lombok.Setter private com.perso.T4C.combat.QuiverSplash quiverSplash;
   private final long weight;
   private final double armorClass;
   private final long dodgeLost;

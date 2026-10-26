@@ -1,0 +1,53 @@
+{
+  "key": "divine_ra_bracelet",
+  "name": "${item.divine_ra_bracelet}",
+  "bodyPart": "BRACER",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvBelt__pal94",
+  "numId": 55209,
+  "appearanceId": 55209,
+  "weight": 1,
+  "armorClass": 8.8,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50203,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50204,
+      "statId": 17,
+      "expression": "38"
+    },
+    {
+      "boostId": 50205,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50206,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50207,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50208,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50209,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

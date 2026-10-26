@@ -39,6 +39,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
   private float deathTimer = 0f;
   private boolean isAttacking = false;
   private boolean holdingAttackPose = false;
+  private boolean holdAfterAttack = true;
   private boolean isDying = false;
   private boolean isDeadComplete = false;
   private float attackDuration = MIN_ATTACK_DURATION;
@@ -73,7 +74,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
       attackTimer += delta;
       if (attackTimer >= attackDuration) {
         isAttacking = false;
-        holdingAttackPose = true;
+        holdingAttackPose = holdAfterAttack;
         attackTimer = attackDuration;
       }
       return false;
@@ -92,6 +93,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
   public void startAttack() {
     if (isDying || isAttacking) return;
     isAttacking = true;
+    holdAfterAttack = true;
     holdingAttackPose = false;
     attackTimer = 0f;
     if (soundAttack != null && !soundAttack.isEmpty()) {
@@ -103,6 +105,12 @@ public class MonsterAnimations extends EntityAnimationsBase {
     isAttacking = false;
     holdingAttackPose = false;
     attackTimer = 0f;
+  }
+
+  /** Spell gestures return to idle instead of keeping the final melee attack frame. */
+  public void startCast() {
+    startAttack();
+    holdAfterAttack = false;
   }
 
   public boolean hasAttackAnimation() {
@@ -173,13 +181,19 @@ public class MonsterAnimations extends EntityAnimationsBase {
       frameIndex =
           holdingAttackPose
               ? Math.max(0, frames.size() - 1)
-              : Math.min((int) (attackTimer / NativeTimingProfile.current().frameDurationSeconds()), Math.max(0, frames.size() - 1));
+              : Math.min(
+                  (int) (attackTimer / NativeTimingProfile.current().frameDurationSeconds()),
+                  Math.max(0, frames.size() - 1));
       patternBase = attackParts.baseName;
       appendAngle = !attackParts.angleless;
       activeParts = attackParts;
     } else {
       frames = getWalkFrames(angle);
-      frameIndex = moving ? (int) (animTimer / NativeTimingProfile.current().frameDurationSeconds()) % Math.max(1, frames.size()) : 0;
+      frameIndex =
+          moving
+              ? (int) (animTimer / NativeTimingProfile.current().frameDurationSeconds())
+                  % Math.max(1, frames.size())
+              : 0;
       patternBase = walkParts.baseName;
       appendAngle = !walkParts.angleless;
       activeParts = walkParts;
@@ -241,7 +255,8 @@ public class MonsterAnimations extends EntityAnimationsBase {
       }
     }
     return maxFrames > 0
-        ? Math.max(MIN_ATTACK_DURATION, maxFrames * NativeTimingProfile.current().frameDurationSeconds())
+        ? Math.max(
+            MIN_ATTACK_DURATION, maxFrames * NativeTimingProfile.current().frameDurationSeconds())
         : MIN_ATTACK_DURATION;
   }
 

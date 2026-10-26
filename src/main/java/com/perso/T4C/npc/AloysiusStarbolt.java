@@ -219,6 +219,10 @@ public final class AloysiusStarbolt extends ScriptedNpc {
             return;
           }
 
+          if (c.globalFlag("__GLOBAL_FLAG_ORC_QUEST") == 0
+              && java.util.concurrent.ThreadLocalRandom.current().nextInt(5) == 0)
+            c.globalFlag("__GLOBAL_FLAG_ORC_QUEST", 1);
+
           c.sayKey(
               c.globalFlag("__GLOBAL_FLAG_ORC_QUEST") == 1
                   ? "npc.aloysius.disturbance"
@@ -244,13 +248,9 @@ public final class AloysiusStarbolt extends ScriptedNpc {
           }
 
           if (k.equals("SCROLL") || k.equals("DEEP ONE")) {
-
-            if (c.flag("__FLAG_USER_KNOWS_ABOUT_ALOYSIUS") == 0 && c.hasItem("note_deepone")) {
-
-              c.takeItem("note_deepone");
-
-              c.sayKey("npc.aloysius.scroll.destroyed");
-
+            if (c.flag("__QUEST_KRAANIAN_EGG_STAGE") == 3 && c.hasItem("note_deepone")) {
+              c.sayKey("npc.aloysius.rod.offer");
+              c.askYesNo("mana_rod_sale");
             } else c.sayKey("npc.aloysius.scroll");
 
             return true;
@@ -261,6 +261,21 @@ public final class AloysiusStarbolt extends ScriptedNpc {
 
         @Override
         public boolean onYesNo(NpcBehaviorContext c, String state, boolean yes) {
+
+          if ("mana_rod_sale".equals(state)) {
+            if (!yes) c.sayKey("npc.aloysius.rod.declined");
+            else if (c.flag("__QUEST_KRAANIAN_EGG_STAGE") != 3
+                || !c.hasItem("note_deepone")) c.sayKey("npc.aloysius.rod.need_note");
+            else if (c.player().getGold() < 32000) c.sayKey("npc.aloysius.rod.gold");
+            else {
+              c.takeItem("note_deepone");
+              c.player().addGold(-32000);
+              c.giveItem("mana_rod");
+              c.flag("__QUEST_KRAANIAN_EGG_STAGE", 4);
+              c.sayKey("npc.aloysius.rod.sold");
+            }
+            return true;
+          }
 
           if (!"ring".equals(state)) return false;
 

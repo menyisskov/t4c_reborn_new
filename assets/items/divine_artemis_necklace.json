@@ -1,0 +1,53 @@
+{
+  "key": "divine_artemis_necklace",
+  "name": "${item.divine_artemis_necklace}",
+  "bodyPart": "NECK",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvNecklace 2__pal92",
+  "numId": 55307,
+  "appearanceId": 55307,
+  "weight": 1,
+  "armorClass": 9.3,
+  "requirements": {
+    "endurance": 220,
+    "agility": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50259,
+      "statId": 6,
+      "expression": "32"
+    },
+    {
+      "boostId": 50260,
+      "statId": 10035,
+      "expression": "76"
+    },
+    {
+      "boostId": 50261,
+      "statId": 12,
+      "expression": "10"
+    },
+    {
+      "boostId": 50262,
+      "statId": 13,
+      "expression": "10"
+    },
+    {
+      "boostId": 50263,
+      "statId": 14,
+      "expression": "10"
+    },
+    {
+      "boostId": 50264,
+      "statId": 15,
+      "expression": "10"
+    },
+    {
+      "boostId": 50265,
+      "statId": 22,
+      "expression": "10"
+    }
+  ]
+}

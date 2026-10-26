@@ -1,0 +1,60 @@
+{
+  "key": "dawnforged_quiver",
+  "name": "${item.dawnforged_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 6500000,
+  "weight": 2,
+  "requirements": {
+    "strength": 275,
+    "agility": 1850
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59929,
+  "structure": 8,
+  "appearanceId": 454,
+  "dmgFormula": "1d801+2599",
+  "quiverSplash": {
+    "radius": 2.5,
+    "targets": 8,
+    "damagePercent": 45
+  },
+  "boosts": [
+    {
+      "boostId": 732090,
+      "statId": 6,
+      "expression": "154"
+    },
+    {
+      "boostId": 732091,
+      "statId": 10035,
+      "expression": "370"
+    },
+    {
+      "boostId": 732092,
+      "statId": 12,
+      "expression": "46"
+    },
+    {
+      "boostId": 732093,
+      "statId": 13,
+      "expression": "46"
+    },
+    {
+      "boostId": 732094,
+      "statId": 14,
+      "expression": "46"
+    },
+    {
+      "boostId": 732095,
+      "statId": 15,
+      "expression": "46"
+    },
+    {
+      "boostId": 732096,
+      "statId": 22,
+      "expression": "46"
+    }
+  ]
+}

@@ -66,11 +66,30 @@ public final class XpCurve {
     }
   }
 
+  /** Preserve level progress when a save's threshold belongs to an older XP curve. */
+  public void applySavedProgress(Player player, long savedXp, long savedThreshold) {
+    applyToPlayer(player);
+    long threshold = player.getXpToNextLevel();
+    if (threshold <= 0) {
+      player.setCurrentXp(0);
+      return;
+    }
+    long progress = Math.max(0L, savedXp);
+    if (savedThreshold > 0 && savedThreshold != threshold) {
+      progress =
+          java.math.BigInteger.valueOf(Math.min(progress, savedThreshold))
+              .multiply(java.math.BigInteger.valueOf(threshold))
+              .divide(java.math.BigInteger.valueOf(savedThreshold))
+              .longValueExact();
+    }
+    player.setCurrentXp(Math.min(progress, threshold - 1));
+  }
+
   /**
-   * Builds the curve, truncated at {@link GameConstants#MAX_PLAYER_LEVEL}: levels above the cap
-   * are dropped and the cap level itself needs no more XP (xpToNextLevel 0), which is what stops
-   * leveling there. The source definitions still run to level 1000 so the cap can be raised later
-   * without regenerating them.
+   * Builds the curve, truncated at {@link GameConstants#MAX_PLAYER_LEVEL}: levels above the cap are
+   * dropped and the cap level itself needs no more XP (xpToNextLevel 0), which is what stops
+   * leveling there. The approved source table ends at level 400; raising the cap also requires
+   * authoring its additional XP thresholds.
    */
   private static XpCurve fromEntries(List<Entry> entries) {
     Map<Integer, Entry> map = new HashMap<>();

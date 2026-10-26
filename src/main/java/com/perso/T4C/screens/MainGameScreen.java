@@ -29,6 +29,7 @@ import com.perso.T4C.combat.CombatResult;
 import com.perso.T4C.combat.PhysicalAttackRequest;
 import com.perso.T4C.combat.SeraphArrivalAnimation;
 import com.perso.T4C.combat.SeraphAuraService;
+import com.perso.T4C.input.WeaponAutoAttack;
 import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.NativeTimingProfile;
@@ -166,6 +167,8 @@ public class MainGameScreen implements Screen {
   private MonsterManager monsterManager;
   private CompanionManager companionManager;
   private QuestService questService;
+  private com.perso.T4C.adventure.WorldEventRuntime worldEvents;
+  private com.perso.T4C.input.MouseMovementHandler mouseMovementHandler;
   private final com.perso.T4C.objects.GroundItemManager groundItemManager =
       new com.perso.T4C.objects.GroundItemManager();
   private final HerbManager herbManager = new HerbManager();
@@ -219,6 +222,8 @@ public class MainGameScreen implements Screen {
   private SpellData currentAttackSpell = null;
   private long nextAutoSpellAttemptAtMs = 0L;
   private static final long AUTO_SPELL_RETRY_DELAY_MS = 100L;
+  private long nextAutoWeaponTargetAtMs;
+  private static final long AUTO_WEAPON_TARGET_INTERVAL_MS = 250L;
   private BaseMonster selectedMonster = null;
   private java.util.function.BooleanSupplier textInputActiveSupplier;
   private static final float TAB_TARGET_RANGE_TILES = 12f;
@@ -323,6 +328,9 @@ public class MainGameScreen implements Screen {
   private void initializePlayerAndServices() throws GameException {
     initializePlayer();
     questService = new QuestService(xpCurve, this::savePlayerState, this::showSystemMessage);
+    worldEvents =
+        new com.perso.T4C.adventure.WorldEventRuntime(
+            player, questService, this::savePlayerState, this::showSystemMessage);
   }
 
   private void initializeMapRendering() throws GameException {
@@ -610,6 +618,7 @@ public class MainGameScreen implements Screen {
   }
 
   private void teleportPlayer(TeleportEntry teleport) {
+    clearCurrentAttackTarget();
     lastTeleportSourceKey = packTeleportKey(teleport.sourceZ, teleport.sourceX, teleport.sourceY);
     teleportCooldownUntilMs = System.currentTimeMillis() + 350L;
     float x = teleport.targetX * GRID_W;
@@ -864,7 +873,7 @@ public class MainGameScreen implements Screen {
     configurePlayerTeleportCallback();
     configurePlayerDeathCallback();
     configurePlayerLevelUpCallback();
-    player.setActionInterruptedCallback(this::clearCurrentAttackTarget);
+    player.setActionInterruptedCallback(this::resetCurrentAttackTarget);
     player.setHealingCallback(
         amount -> {
           Vector2 position = player.getPositionVector();
@@ -1082,19 +1091,48 @@ public class MainGameScreen implements Screen {
               return;
             }
             SpellData spell = SpellRegistry.findById(spellId);
+            if (com.perso.T4C.divine.DivineAfflictions.isAffliction(spellId)) {
+              playNpcCastVfx(
+                  spell,
+                  player,
+                  attacker.getPosition().cpy(),
+                  () -> {
+                    if (SanctuaryCombatRules.canFight(
+                        attacker.getPosition(), player.getPositionVector())) {
+                      com.perso.T4C.divine.DivineAfflictions.apply(spell, player);
+                    }
+                  });
+              return;
+            }
+            if (com.perso.T4C.monster.core.MonsterSpellRules.usesArmor(spellId)) {
+              // A summoned projectile can carry a physical bow attack (Artemis's trial).
+              playNpcCastVfx(
+                  spell,
+                  player,
+                  attacker.getPosition().cpy(),
+                  () -> applyDamage(attacker, rawDamage));
+              return;
+            }
             String element =
                 spell == null
-                    ? (spellId == 10120 ? "air" : "water")
+                    ? com.perso.T4C.monster.core.MonsterSpellRules.fallbackElement(spellId)
                     : elementName(spell.getElement());
             int resistance = Math.max(1, player.getElementResistance(element));
-            int damage = Math.max(0, rawDamage * 100 / resistance);
             Runnable impact =
                 () -> {
                   if (!SanctuaryCombatRules.canFight(
                       attacker.getPosition(), player.getPositionVector())) return;
                   Vector2 impactPosition = player.getPositionVector().cpy();
-                  player.takeCombatDamage(damage);
-                  int appliedDamage = player.getLastDamageTaken();
+                  int appliedDamage =
+                      com.perso.T4C.monster.core.MonsterSpellRules.applyElementalHit(
+                          player,
+                          rawDamage,
+                          resistance,
+                          () -> {
+                            monsterManager.notifyMonsterAttackHit(attacker, player);
+                            handleSeraphAuraOnHit(
+                                attacker, CombatProfiles.fromMonster(attacker).armorClass());
+                          });
                   if (appliedDamage > 0) {
                     playRandomPlayerHitSound();
                     floatingDamage.spawn(
@@ -1111,8 +1149,10 @@ public class MainGameScreen implements Screen {
                       element,
                       resistance);
                 };
-            if (spell != null) {
-              playNpcCastVfx(spell, player, attacker.getPosition().cpy(), impact);
+            SpellData visualSpell =
+                com.perso.T4C.monster.core.MonsterSpellRules.visualSpell(spellId);
+            if (visualSpell != null) {
+              playNpcCastVfx(visualSpell, player, attacker.getPosition().cpy(), impact);
               return;
             }
             String legacyProjectile =
@@ -1166,6 +1206,7 @@ public class MainGameScreen implements Screen {
               currentMap.getZ(),
               monster.getTileX(),
               monster.getTileY());
+          if (worldEvents != null) worldEvents.killed(monster);
           trackGoblinTrustProgress(monster);
           awardKraanholdFavorBonus(monster);
         });
@@ -1355,6 +1396,7 @@ public class MainGameScreen implements Screen {
   private void configurePlayerTeleportCallback() {
     player.setPositionCallback(
         (x, y, z) -> {
+          clearCurrentAttackTarget();
           switchMapForZ(z);
           camera.position.set(x, y, 0);
           camera.update();
@@ -1480,6 +1522,7 @@ public class MainGameScreen implements Screen {
     section("autosave", () -> updateAutosave(delta));
     section("teleport", this::updateTeleportForPlayer);
     section("entities", () -> updateEntities(delta));
+    if (worldEvents != null) worldEvents.tick(monsterManager);
     section(
         "camera",
         () -> {
@@ -1537,6 +1580,7 @@ public class MainGameScreen implements Screen {
           batchDecor.begin();
           spellRenderer.render(batchDecor);
           renderNameOverlay(batchDecor);
+          if (worldEvents != null) worldEvents.renderWorld(batchDecor);
           floatingDamage.render(batchDecor);
           batchDecor.end();
         });
@@ -1558,7 +1602,26 @@ public class MainGameScreen implements Screen {
           batch.begin();
           if (gameChat != null) gameChat.render(batch, hudCamera);
           hud.render(batch, 20, 20);
-          if (coordsHudVisible && coordsHud != null) coordsHud.render(batch, 10, 20);
+          if (worldEvents != null && !GuiManager.isOpen()) {
+            String eventText = worldEvents.hudText();
+            if (!eventText.isEmpty())
+              com.perso
+                  .T4C
+                  .ui
+                  .FontManager
+                  .getInstance()
+                  .getTahomaFont(13, com.badlogic.gdx.graphics.Color.GOLD, false)
+                  .draw(
+                      batch,
+                      eventText,
+                      Math.max(260, (hudCamera.viewportWidth - 540) / 2),
+                      70,
+                      540,
+                      com.badlogic.gdx.utils.Align.center,
+                      true);
+          }
+          if (coordsHudVisible && coordsHud != null)
+            coordsHud.render(batch, hudCamera.viewportWidth - 14, 14);
           renderRadar();
           if (mapZoneDisplay != null) {
             if (!mapZoneDisplay.render(batch, delta)) mapZoneDisplay = null;
@@ -1731,22 +1794,24 @@ public class MainGameScreen implements Screen {
         || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT)) {
       heldModifiers |= com.perso.T4C.config.MacroBinding.MOD_ALT;
     }
-    for (com.perso.T4C.config.MacroBinding macro : player.getMacros()) {
-      if (macro.getKeycode() != keycode || macro.getModifiers() != heldModifiers) {
-        continue;
-      }
-      SpellData spell = SpellRegistry.findByName(macro.getSpellName());
-      if (spell == null
-          || player.getSpells() == null
-          || !player.getSpells().contains(macro.getSpellName())) {
-        showSystemMessage(
-            I18n.message("message.macro_spell_unknown", I18n.resolve(macro.getSpellName())));
-        return true;
-      }
-      handleQuickbarSpell(spell, -1);
+    var macro =
+        GameInputHandler.resolveMacro(
+            player, keycode, heldModifiers, GuiManager.isOpen(), isTextInputActive());
+    if (macro == null) return false;
+    if (macro.isItem()) {
+      handleQuickbarItem(macro.getItemKey(), -1);
       return true;
     }
-    return false;
+    SpellData spell = SpellRegistry.findByName(macro.getSpellName());
+    if (spell == null
+        || player.getSpells() == null
+        || !player.getSpells().contains(macro.getSpellName())) {
+      showSystemMessage(
+          I18n.message("message.macro_spell_unknown", I18n.resolve(macro.getSpellName())));
+      return true;
+    }
+    handleQuickbarSpell(spell, -1);
+    return true;
   }
 
   private void handleQuickbarItem(String itemName, int slotNumber) {
@@ -1757,15 +1822,7 @@ public class MainGameScreen implements Screen {
       savePlayerState();
       return;
     }
-    if (result.failure() == com.perso.T4C.item.ItemUseService.Failure.NO_HEALING_NEEDED) {
-      showSystemMessage(I18n.message("message.no_healing_needed"));
-    } else if (result.failure() == com.perso.T4C.item.ItemUseService.Failure.NO_MANA_NEEDED) {
-      showSystemMessage(I18n.message("message.no_mana_needed"));
-    } else if (result.failure() == com.perso.T4C.item.ItemUseService.Failure.NOT_OWNED) {
-      showSystemMessage(I18n.message("message.item_not_owned"));
-    } else {
-      showSystemMessage(I18n.message("message.item_cannot_use", I18n.resolve(itemName)));
-    }
+    showSystemMessage(com.perso.T4C.item.ItemUseService.failureMessage(result, itemName));
   }
 
   private boolean isPositionTargetSpell(SpellData spell) {
@@ -1923,13 +1980,8 @@ public class MainGameScreen implements Screen {
     SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
     spellRenderer.playLaunchSound(visuals.launchSound());
     if (monsterManager != null) {
-      for (BaseMonster candidate : monsterManager.getMonsters()) {
+      for (BaseMonster candidate : spellAreaTargets(spell, center, null, true, false)) {
         Vector2 target = candidate.getPosition();
-        if (candidate.isDead()
-            || !candidate.canBeAttackedByPlayer()
-            || !SpellAreaTargeting.contains(spell, center.x, center.y, target.x, target.y))
-          continue;
-        if (spell.isLineOfSight() && !hasLineOfSight(center, target)) continue;
         double range = SpellAreaTargeting.distanceInTiles(center.x, center.y, target.x, target.y);
         applyResolvedSpellImpact(spell, candidate, range, true, false);
       }
@@ -2280,6 +2332,13 @@ public class MainGameScreen implements Screen {
                 false,
                 true));
     if (!cast.success()) {
+      log.info(
+          "Cannot cast {} on {}: {} (mentally exhausted={}, stunned={})",
+          spell.getKey(),
+          monster.getCanonicalName(),
+          cast.failure(),
+          player.isMentallyExhausted(),
+          player.isStunned());
       return cast;
     }
     Vector2 playerPos = player.getPositionVector();
@@ -2426,6 +2485,12 @@ public class MainGameScreen implements Screen {
     if (spell == null || npc == null) {
       return;
     }
+    Vector2 center = npc.getPosition().cpy();
+    boolean residual = spell.isAttack() && spell.getRadius() <= 0;
+    List<BaseMonster> secondary =
+        monsterManager == null || (!residual && spell.getRadius() <= 0)
+            ? List.of()
+            : spellAreaTargets(spell, center, npc, false, residual);
     if (npcManager != null) {
       npcManager.onNpcAttacked(npc, player);
     }
@@ -2449,6 +2514,16 @@ public class MainGameScreen implements Screen {
     if (impact != null && !impact.isEmpty()) {
       Vector2 position = npc.getPosition();
       spellRenderer.triggerImpactSpell(impact, position.x, position.y, visuals.impactSound());
+    }
+    for (BaseMonster candidate : secondary) {
+      if (residual) applyResidualSpellImpact(spell, candidate);
+      else
+        applyResolvedSpellImpact(
+            spell,
+            candidate,
+            center.dst(candidate.getPosition()) / Math.max(GRID_W, GRID_H),
+            true,
+            false);
     }
   }
 
@@ -2493,6 +2568,9 @@ public class MainGameScreen implements Screen {
     if (!canFireBowAt(monster, announce)) {
       return false;
     }
+    ItemDefinition quiver = ItemDefinition.get(player.getEquippedItems().get(BodyPart.WEAPON2));
+    com.perso.T4C.combat.QuiverSplash splash = quiver == null ? null : quiver.getQuiverSplash();
+    int shotDamage = com.perso.T4C.helper.CombatMath.computeBowDamage(player);
     Vector2 playerPos = player.getPositionVector();
     Vector2 monsterPos = monster.getPosition();
     player.getMovement().faceToward(playerPos.x, playerPos.y, monsterPos.x, monsterPos.y);
@@ -2503,7 +2581,12 @@ public class MainGameScreen implements Screen {
     String fallbackProjectileName = BOW_PROJECTILE_SPRITE + "000";
     boolean launched =
         spellRenderer.launchProjectile(
-            projectileName, monster, startX, startY, dir.flipX, () -> applyBowImpact(monster));
+            projectileName,
+            monster,
+            startX,
+            startY,
+            dir.flipX,
+            () -> applyBowImpact(monster, shotDamage, splash));
     if (!launched) {
       launched =
           spellRenderer.launchProjectile(
@@ -2512,7 +2595,7 @@ public class MainGameScreen implements Screen {
               startX,
               startY,
               false,
-              () -> applyBowImpact(monster));
+              () -> applyBowImpact(monster, shotDamage, splash));
     }
     if (!launched) return false;
     player.attack(player.getMovement(), true);
@@ -2580,6 +2663,26 @@ public class MainGameScreen implements Screen {
     if (player == null) {
       return;
     }
+    if (player.isCombatMode() && currentAttackSpell == null && currentAttackNpcTarget == null) {
+      boolean interacting =
+          GuiManager.isOpen()
+              || isTextInputActive()
+              || selectedTargetedSpell != null
+              || tameChannel != null
+              || harvestChannel != null;
+      if (!WeaponAutoAttack.canRun(player, interacting)) return;
+      long now = System.currentTimeMillis();
+      if (now >= nextAutoWeaponTargetAtMs) {
+        BaseMonster next =
+            WeaponAutoAttack.selectTarget(
+                player,
+                currentAttackTarget,
+                monsterManager == null ? List.of() : monsterManager.getMonsters());
+        if (next != currentAttackTarget) setSelectedMonster(next);
+        currentAttackTarget = next;
+        nextAutoWeaponTargetAtMs = now + AUTO_WEAPON_TARGET_INTERVAL_MS;
+      }
+    }
     if (currentAttackNpcTarget != null) {
       if (currentAttackSpell == null) {
         clearCurrentAttackTarget();
@@ -2590,7 +2693,8 @@ public class MainGameScreen implements Screen {
     }
     if (currentAttackTarget == null) return;
     if (currentAttackTarget.isDead() || !currentAttackTarget.canBeAttackedByPlayer()) {
-      clearCurrentAttackTarget();
+      if (player.isCombatMode() && currentAttackSpell == null) resetCurrentAttackTarget();
+      else clearCurrentAttackTarget();
       return;
     }
     if (companionManager != null) {
@@ -2683,6 +2787,7 @@ public class MainGameScreen implements Screen {
       return;
     }
     currentAttackTarget = monster;
+    if (player.isCombatMode()) setSelectedMonster(monster);
     currentAttackNpcTarget = null;
     currentAttackSpell = null;
     nextAutoSpellAttemptAtMs = 0L;
@@ -2744,6 +2849,9 @@ public class MainGameScreen implements Screen {
       return;
     }
     float maxDistance = TAB_TARGET_RANGE_TILES * Math.max(GRID_W, GRID_H);
+    if (player.isCombatMode() && PlayerAppearanceDefaults.hasBowEquipped(player)) {
+      maxDistance = BOW_ATTACK_RANGE;
+    }
     if (selectedMonster.isDead()
         || player.getPositionVector().dst(selectedMonster.getPosition()) > maxDistance) {
       clearSelectedMonster();
@@ -2758,20 +2866,26 @@ public class MainGameScreen implements Screen {
   }
 
   private void clearCurrentAttackTarget() {
+    if (player != null && player.isCombatMode()) player.setCombatMode(false);
+    resetCurrentAttackTarget();
+  }
+
+  private void resetCurrentAttackTarget() {
     currentAttackTarget = null;
     currentAttackNpcTarget = null;
     currentAttackSpell = null;
     nextAutoSpellAttemptAtMs = 0L;
+    nextAutoWeaponTargetAtMs = 0L;
   }
 
-  private void applyBowImpact(BaseMonster monster) {
+  private void applyBowImpact(
+      BaseMonster monster, int rawDamage, com.perso.T4C.combat.QuiverSplash splash) {
     if (monster != null
         && !SanctuaryCombatRules.canFight(player.getPositionVector(), monster.getPosition()))
       return;
     if (monster == null || monster.isDead()) {
       return;
     }
-    int rawDamage = com.perso.T4C.helper.CombatMath.computeBowDamage(player);
     CombatResult result =
         CombatResolver.resolve(
             new PhysicalAttackRequest(
@@ -2784,6 +2898,25 @@ public class MainGameScreen implements Screen {
     player.setHidden(false);
     monster.aggroOn(player.getPositionVector());
     int dmg = result.damage();
+    Vector2 burstCenter = monster.getPosition().cpy();
+    List<BaseMonster> splashTargets =
+        splash == null || monsterManager == null
+            ? List.of()
+            : splash.select(
+                result.hit(),
+                dmg,
+                monsterManager.getMonsters(),
+                monster,
+                candidate ->
+                    spellTargetEligible(candidate)
+                        && !CombatResolver.isInvulnerableArmor(candidate.rollCombatArmorClass())
+                        && hasLineOfSight(burstCenter, candidate.getPosition()),
+                candidate ->
+                    SpellAreaTargeting.distanceInTiles(
+                        burstCenter.x,
+                        burstCenter.y,
+                        candidate.getPosition().x,
+                        candidate.getPosition().y));
     boolean wasDead = monster.isDead();
     int appliedPrimaryDamage = 0;
     if (result.hit()) {
@@ -2806,6 +2939,19 @@ public class MainGameScreen implements Screen {
     if (appliedPrimaryDamage > 0) {
       floatingDamage.spawn(
           appliedPrimaryDamage, pos.x, pos.y, FloatingDamage.Type.MONSTER_RECEIVED);
+      if (splash != null) {
+        spellRenderer.triggerImpactSpell("ArrowBurst-", burstCenter.x, burstCenter.y);
+        int areaDamage = splash.damage(appliedPrimaryDamage);
+        for (BaseMonster secondary : splashTargets) {
+          if (!spellTargetEligible(secondary)) continue;
+          secondary.aggroOn(player.getPositionVector());
+          secondary.applyPlayerDamage(areaDamage, player, xpCurve);
+          if (secondary.isDead()) monsterManager.notifyKilledByPlayer(secondary);
+          Vector2 location = secondary.getPosition();
+          floatingDamage.spawn(
+              areaDamage, location.x, location.y, FloatingDamage.Type.MONSTER_RECEIVED);
+        }
+      }
     } else if (!result.hit()) {
       showMissFeedback(result, pos);
     }
@@ -2900,17 +3046,18 @@ public class MainGameScreen implements Screen {
           center.x,
           center.y,
           SeraphAuraService.EXPLOSION_SOUND);
-    for (BaseMonster candidate : monsterManager.getMonsters()) {
-      if (candidate == null || candidate.isDead()) {
-        continue;
-      }
+    for (BaseMonster candidate :
+        SpellAreaTargeting.nearest(
+            monsterManager.getMonsters(),
+            target ->
+                spellTargetEligible(target)
+                    && SpellAreaTargeting.distanceInTiles(
+                            center.x, center.y, target.getPosition().x, target.getPosition().y)
+                        < proc.radius()
+                    && hasLineOfSight(center, target.getPosition()),
+            target -> center.dst2(target.getPosition()),
+            0)) {
       Vector2 targetPosition = candidate.getPosition();
-      double dxTiles = (targetPosition.x - center.x) / GRID_W;
-      double dyTiles = (targetPosition.y - center.y) / GRID_H;
-      if (Math.hypot(dxTiles, dyTiles) >= proc.radius()
-          || !hasLineOfSight(center, targetPosition)) {
-        continue;
-      }
       int damage =
           SeraphAuraService.rollAreaDamage(
               player,
@@ -2982,17 +3129,64 @@ public class MainGameScreen implements Screen {
     if (spell == null || monster == null || monster.isDead()) {
       return;
     }
+    if (!spellTargetEligible(monster)) return;
+    Vector2 center = monster.getPosition().cpy();
+    boolean residual = spell.isAttack() && spell.getRadius() <= 0;
+    List<BaseMonster> secondary =
+        monsterManager == null || (!residual && spell.getRadius() <= 0)
+            ? List.of()
+            : spellAreaTargets(spell, center, monster, false, residual);
     applyResolvedSpellImpact(spell, monster, 0d, true, true);
-    if (spell.getRadius() > 0 && monsterManager != null) {
-      Vector2 center = monster.getPosition();
-      for (BaseMonster candidate : monsterManager.getMonsters()) {
-        if (candidate == monster || candidate.isDead()) continue;
-        double distanceTiles = center.dst(candidate.getPosition()) / Math.max(GRID_W, GRID_H);
-        if (distanceTiles >= spell.getRadius()) continue;
-        if (spell.isLineOfSight() && !hasLineOfSight(center, candidate.getPosition())) continue;
-        applyResolvedSpellImpact(spell, candidate, distanceTiles, true, false);
+    for (BaseMonster candidate : secondary) {
+      if (residual) {
+        applyResidualSpellImpact(spell, candidate);
+      } else {
+        double range = center.dst(candidate.getPosition()) / Math.max(GRID_W, GRID_H);
+        applyResolvedSpellImpact(spell, candidate, range, true, false);
       }
     }
+  }
+
+  private boolean spellTargetEligible(BaseMonster monster) {
+    return monster != null
+        && !monster.isDead()
+        && monster.canBeAttackedByPlayer()
+        && SanctuaryCombatRules.canFight(player.getPositionVector(), monster.getPosition());
+  }
+
+  private List<BaseMonster> spellAreaTargets(
+      SpellData spell, Vector2 center, Object primary, boolean tileRadius, boolean residual) {
+    return SpellAreaTargeting.nearest(
+        monsterManager.getMonsters(),
+        candidate -> {
+          if (candidate == primary || !spellTargetEligible(candidate)) return false;
+          Vector2 pos = candidate.getPosition();
+          boolean inRange =
+              residual
+                  ? SpellAreaTargeting.isAdjacent(center.x, center.y, pos.x, pos.y)
+                  : tileRadius
+                      ? SpellAreaTargeting.contains(spell, center.x, center.y, pos.x, pos.y)
+                      : center.dst(pos) / Math.max(GRID_W, GRID_H) < spell.getRadius();
+          return inRange && (!(residual || spell.isLineOfSight()) || hasLineOfSight(center, pos));
+        },
+        candidate -> center.dst2(candidate.getPosition()),
+        primary == null ? 0 : 1);
+  }
+
+  /** Residual hits deal damage only; they do not repeat summons, drains, control or timed hooks. */
+  private void applyResidualSpellImpact(SpellData spell, BaseMonster monster) {
+    if (!spellTargetEligible(monster)) return;
+    int damage = spellEffectManager.resolveResidualDamage(spell, player, monster);
+    if (damage <= 0) return;
+    monster.applyPlayerDamage(damage, player, xpCurve);
+    if (monster.isDead()) monsterManager.notifyKilledByPlayer(monster);
+    Vector2 pos = monster.getPosition();
+    floatingDamage.spawn(damage, pos.x, pos.y, FloatingDamage.Type.MONSTER_RECEIVED);
+    SpellVisualResolver.Visuals visuals = SpellVisualResolver.resolve(spell);
+    String impact =
+        "spell.emberqueens_wrath".equals(spell.getKey()) ? "SmallExplosion-" : visuals.impact();
+    if (impact != null && !impact.isEmpty())
+      spellRenderer.triggerImpactSpell(impact, pos.x, pos.y, visuals.impactSound());
   }
 
   private void applyResolvedSpellImpact(
@@ -3012,7 +3206,7 @@ public class MainGameScreen implements Screen {
       double range,
       boolean installHooks,
       boolean grandEligible) {
-    if (!SanctuaryCombatRules.canFight(player.getPositionVector(), monster.getPosition())) return;
+    if (!spellTargetEligible(monster)) return;
     SpellEffectManager.Impact impactResult =
         spellEffectManager.resolve(spell, player, monster, range);
     SpellEffectManager.TargetExhaustion explicitExhaustion =
@@ -3052,7 +3246,7 @@ public class MainGameScreen implements Screen {
       Vector2 pos = monster.getPosition();
       if (grandEligible) {
         triggerAreaImpactShower(spell, visuals, pos);
-      } else {
+      } else if (!SpellVisualResolver.hasUnifiedAreaImpact(spell)) {
         spellRenderer.triggerImpactSpell(impact, pos.x, pos.y, visuals.impactSound());
       }
     }
@@ -3113,12 +3307,8 @@ public class MainGameScreen implements Screen {
     applySummons(
         spellEffectManager.resolvePositionSummons(spell), targetPosition.x, targetPosition.y);
     if (spell.getRadius() > 0 && monsterManager != null) {
-      for (BaseMonster candidate : monsterManager.getMonsters()) {
-        if (candidate.isDead()) continue;
+      for (BaseMonster candidate : spellAreaTargets(spell, targetPosition, null, false, false)) {
         double range = targetPosition.dst(candidate.getPosition()) / Math.max(GRID_W, GRID_H);
-        if (range >= spell.getRadius()) continue;
-        if (spell.isLineOfSight() && !hasLineOfSight(targetPosition, candidate.getPosition()))
-          continue;
         applyResolvedSpellImpact(spell, candidate, range, true, false);
       }
     }
@@ -3134,6 +3324,11 @@ public class MainGameScreen implements Screen {
    */
   private void triggerAreaImpactShower(
       SpellData spell, SpellVisualResolver.Visuals visuals, Vector2 targetPosition) {
+    if (SpellVisualResolver.hasUnifiedAreaImpact(spell)) {
+      spellRenderer.triggerImpactSpell(
+          visuals.impact(), targetPosition.x, targetPosition.y, visuals.impactSound());
+      return;
+    }
     float radiusPixels = spell.getRadius() * Math.max(GRID_W, GRID_H);
     boolean firstBurst = true;
     for (GrandImpactShower.Burst burst : GrandImpactShower.bursts(spell)) {
@@ -4021,6 +4216,7 @@ public class MainGameScreen implements Screen {
     radarHud.render(
         batch,
         hudCamera.viewportWidth,
+        hudCamera.viewportHeight,
         player.getPositionVector(),
         monsterManager == null ? null : monsterManager.getMonsters(),
         npcManager == null ? null : npcManager.getNPCs(),
@@ -4109,7 +4305,7 @@ public class MainGameScreen implements Screen {
           if (GuiManager.isCurrent(Statistics.class)) {
             GuiManager.close();
           } else {
-            GuiManager.open(new Statistics(player));
+            GuiManager.open(new Statistics(player, hud));
           }
         });
     hud.setSpellBookAction(
@@ -4125,7 +4321,7 @@ public class MainGameScreen implements Screen {
           if (GuiManager.isCurrent(QuestScreen.class)) {
             GuiManager.close();
           } else {
-            GuiManager.open(new QuestScreen(player));
+            GuiManager.open(new QuestScreen(player, hud));
           }
         });
     hud.setMapAction(this::toggleMapScreen);
@@ -4426,6 +4622,27 @@ public class MainGameScreen implements Screen {
             if (GuiManager.isOpen() && GuiManager.onKeyDown(keycode)) {
               return true;
             }
+            if (keycode == Input.Keys.J
+                && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                    || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+                && !isTextInputActive()) {
+              GuiManager.open(new com.perso.T4C.gui.screen.AdventureScreen(player, hud));
+              return true;
+            }
+            if (keycode == Input.Keys.E
+                && !GuiManager.isOpen()
+                && !isTextInputActive()
+                && worldEvents != null
+                && worldEvents.interact()) return true;
+            if (keycode == Input.Keys.B
+                && (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                    || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+                && (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+                    || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT))
+                && !isTextInputActive()) {
+              GuiManager.open(new com.perso.T4C.gui.screen.WikiScreen(player, hud));
+              return true;
+            }
             if (keycode == Input.Keys.TAB && !GuiManager.isOpen() && !isTextInputActive()) {
               targetNearestMonster();
               return true;
@@ -4444,14 +4661,23 @@ public class MainGameScreen implements Screen {
                 && !GuiManager.isOpen()
                 && !isTextInputActive()
                 && player != null) {
-              player.toggleCombatMode();
+              boolean enable = !player.isCombatMode();
+              clearCurrentAttackTarget();
+              clearSelectedMonster();
+              cancelActiveTargetedSpell();
+              if (enable) {
+                if (PlayerAppearanceDefaults.hasBowEquipped(player) && !hasQuiverEquipped())
+                  showSystemMessage(I18n.message("message.no_quiver_equipped"));
+                else player.setCombatMode(true);
+              }
               return true;
             }
-            if (!GuiManager.isOpen() && !isTextInputActive() && tryFireMacro(keycode)) {
+            if (!isTextInputActive() && tryFireMacro(keycode)) {
               return true;
             }
             if (keycode == Input.Keys.ESCAPE
-                && (currentAttackTarget != null
+                && (player.isCombatMode()
+                    || currentAttackTarget != null
                     || selectedMonster != null
                     || selectedTargetedSpell != null)) {
               clearCurrentAttackTarget();
@@ -4535,14 +4761,19 @@ public class MainGameScreen implements Screen {
               return true;
             }
             if (button == Input.Buttons.RIGHT && cancelActiveTargetedSpell()) {
+              if (player.isCombatMode()) clearCurrentAttackTarget();
               return true;
             }
-            if (button == Input.Buttons.RIGHT && currentAttackTarget != null) {
+            if (button == Input.Buttons.RIGHT
+                && (player.isCombatMode() || currentAttackTarget != null)) {
               clearCurrentAttackTarget();
               return true;
             }
             if (GuiManager.isOpen()) {
               GuiManager.onTouchDown(screenX, screenY, button);
+              return true;
+            }
+            if (hud != null && hud.isHudHit(screenX, screenY)) {
               return true;
             }
             if (button == Input.Buttons.LEFT && tryCastSelectedHealOnPlayer(screenX, screenY)) {
@@ -4632,12 +4863,31 @@ public class MainGameScreen implements Screen {
     multiplexer.addProcessor(groundItemClickHandler);
     multiplexer.addProcessor(objectClickHandler);
     multiplexer.addProcessor(positionSpellHandler);
+    mouseMovementHandler =
+        new com.perso.T4C.input.MouseMovementHandler(
+            camera,
+            player,
+            () ->
+                GuiManager.isOpen()
+                    || isTextInputActive()
+                    || Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                    || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)
+                    || (hud != null && hud.isHudHit(Gdx.input.getX(), Gdx.input.getY())),
+            () -> {
+              clearCurrentAttackTarget();
+              cancelActiveTargetedSpell();
+            });
+    inputHandler.setMouseMovementSupplier(mouseMovementHandler::direction);
+    multiplexer.addProcessor(mouseMovementHandler);
     multiplexer.addProcessor(new TileClickHandler(reader, camera));
     Gdx.input.setInputProcessor(multiplexer);
   }
 
   @Override
-  public void hide() {}
+  public void hide() {
+    clearCurrentAttackTarget();
+    if (mouseMovementHandler != null) mouseMovementHandler.cancel();
+  }
 
   /**
    * LibGDX calls this when the window is minimised/loses focus and once more on the way out, so it
@@ -4645,6 +4895,8 @@ public class MainGameScreen implements Screen {
    */
   @Override
   public void pause() {
+    clearCurrentAttackTarget();
+    if (mouseMovementHandler != null) mouseMovementHandler.cancel();
     if (!playerStateSaved && !disposed && player != null && displayInitialized) savePlayerState();
   }
 
@@ -4662,6 +4914,7 @@ public class MainGameScreen implements Screen {
 
   @Override
   public void dispose() {
+    com.perso.T4C.entity.NameRenderer.disposeDialogs();
     if (disposed) return;
     disposed = true;
     NpcScriptRuntime.setSummonCallback(null);

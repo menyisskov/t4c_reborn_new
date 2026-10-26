@@ -1,0 +1,53 @@
+{
+  "key": "divine_demeter_ring",
+  "name": "${item.divine_demeter_ring}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 4__pal92",
+  "numId": 55008,
+  "appearanceId": 55008,
+  "weight": 1,
+  "armorClass": 11.0,
+  "requirements": {
+    "endurance": 220,
+    "wisdom": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50056,
+      "statId": 4,
+      "expression": "32"
+    },
+    {
+      "boostId": 50057,
+      "statId": 19,
+      "expression": "38"
+    },
+    {
+      "boostId": 50058,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50059,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50060,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50061,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50062,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

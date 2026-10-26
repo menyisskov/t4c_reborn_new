@@ -1,0 +1,59 @@
+{
+  "key": "divine_zeus_robe",
+  "name": "${item.divine_zeus_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal95",
+  "appearanceInventory": "64kInvWhiteRobe__pal95",
+  "numId": 56001,
+  "appearanceId": 56001,
+  "weight": 4,
+  "armorClass": 111.6,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 800016,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 800017,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 800018,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 800019,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 800020,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 800021,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 800022,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 800023,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Centaur Warrior", x = 2410, y = 2460, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Centaur Warrior", x = 2340, y = 2470, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Centaur Warrior", x = 2420, y = 2390, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class CentaurWarrior extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshm 7.wav";
   public static final String SOUND_DEATH = "Taunting Hit.wav";

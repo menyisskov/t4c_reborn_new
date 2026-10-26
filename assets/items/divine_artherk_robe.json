@@ -1,0 +1,53 @@
+{
+  "key": "divine_artherk_robe",
+  "name": "${item.divine_artherk_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal90",
+  "appearanceInventory": "64kInvWhiteRobe__pal90",
+  "numId": 55801,
+  "appearanceId": 55801,
+  "weight": 4,
+  "armorClass": 31.0,
+  "requirements": {
+    "endurance": 100,
+    "wisdom": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50577,
+      "statId": 4,
+      "expression": "15"
+    },
+    {
+      "boostId": 50578,
+      "statId": 23,
+      "expression": "18"
+    },
+    {
+      "boostId": 50579,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50580,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50581,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50582,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50583,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

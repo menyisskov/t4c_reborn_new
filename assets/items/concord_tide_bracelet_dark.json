@@ -1,0 +1,52 @@
+{
+  "key": "concord_tide_bracelet_dark",
+  "name": "${item.concord_tide_bracelet_dark}",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "numId": 59015,
+  "appearanceId": 59015,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61107,
+      "statId": 1,
+      "expression": "16"
+    },
+    {
+      "boostId": 61108,
+      "statId": 24,
+      "expression": "16"
+    },
+    {
+      "boostId": 61109,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 61110,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 61111,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 61112,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 61113,
+      "statId": 22,
+      "expression": "6"
+    }
+  ],
+  "armorClass": 3.2,
+  "requirements": {
+    "intelligence": 160,
+    "endurance": 80
+  }
+}

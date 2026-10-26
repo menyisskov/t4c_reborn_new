@@ -1,0 +1,69 @@
+{
+  "key": "event_iron_bell_air",
+  "name": "${item.event_iron_bell_air}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal92",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal92",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 12.2,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 150,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 300,
+    "wisdom": 300,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59621,
+  "structure": 2,
+  "appearanceId": 59621,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 690210,
+      "statId": 1,
+      "expression": "20"
+    },
+    {
+      "boostId": 690211,
+      "statId": 4,
+      "expression": "20"
+    },
+    {
+      "boostId": 690212,
+      "statId": 16,
+      "expression": "48"
+    },
+    {
+      "boostId": 690213,
+      "statId": 12,
+      "expression": "19"
+    },
+    {
+      "boostId": 690214,
+      "statId": 13,
+      "expression": "19"
+    },
+    {
+      "boostId": 690215,
+      "statId": 14,
+      "expression": "19"
+    },
+    {
+      "boostId": 690216,
+      "statId": 15,
+      "expression": "19"
+    },
+    {
+      "boostId": 690217,
+      "statId": 22,
+      "expression": "19"
+    }
+  ]
+}

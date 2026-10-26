@@ -1,0 +1,55 @@
+{
+  "key": "divine_njord_gauntlets",
+  "name": "${item.divine_njord_gauntlets}",
+  "bodyPart": "LEFT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL__pal93",
+  "appearanceInventory": "64kInvPlateGlove__pal93",
+  "numId": 55103,
+  "appearanceId": 55103,
+  "weight": 1,
+  "armorClass": 16.3,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50091,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50092,
+      "statId": 18,
+      "expression": "38"
+    },
+    {
+      "boostId": 50093,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50094,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50095,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50096,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50097,
+      "statId": 22,
+      "expression": "15"
+    }
+  ],
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedSecondary": "PupPlateGloveR__pal93"
+}

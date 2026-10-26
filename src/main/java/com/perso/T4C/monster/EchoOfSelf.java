@@ -306,7 +306,9 @@ public final class EchoOfSelf extends DataMonster {
       callback.applySpell(
           this,
           signatureSpell.getSpellId(),
-          MirrorTrials.spellRawDamage(wanted, signatureSpell.getElement()));
+          com.perso.T4C.monster.core.MonsterSpellRules.balanceRawDamage(
+              signatureSpell.getSpellId(), combatLevel,
+              MirrorTrials.spellRawDamage(wanted, signatureSpell.getElement())));
     } else {
       lastAttackRanged = bowAttacks;
       lastAttackSpellId = 0;

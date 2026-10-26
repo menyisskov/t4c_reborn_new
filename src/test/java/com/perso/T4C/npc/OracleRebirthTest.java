@@ -105,10 +105,16 @@ class OracleRebirthTest {
     player.setLevel(400);
     int limit = com.perso.T4C.config.GameConstants.REBIRTH_MAX_REMORTS;
     player.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", limit - 1);
+    player.setSkillLevel("attack", 1);
+    player.setSkillLevel("archery", 1);
+    player.setSkillLevel("dodge", 100);
     NpcBehaviorContext context = context(player);
     Oracle.behavior().onYesNo(context, "REBIRTH", true);
     assertEquals(limit, player.getRebirthCount());
     assertEquals(270, player.getIntelligence());
     assertEquals(270, player.getWisdom());
+    assertEquals(750, player.getSkillLevel("attack"));
+    assertEquals(750, player.getSkillLevel("archery"));
+    assertEquals(0, player.getSkillLevel("dodge"));
   }
 }

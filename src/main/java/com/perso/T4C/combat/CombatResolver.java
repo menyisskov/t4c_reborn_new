@@ -8,6 +8,10 @@ public final class CombatResolver {
 
   private CombatResolver() {}
 
+  public static boolean isInvulnerableArmor(double armorClass) {
+    return armorClass >= INVULNERABLE_ARMOR_CLASS;
+  }
+
   public static CombatResult resolve(PhysicalAttackRequest request, RandomGenerator random) {
     if (request == null || random == null) {
       throw new IllegalArgumentException("Request and random generator are required");
@@ -24,7 +28,7 @@ public final class CombatResolver {
     if (precision <= 0 && !target.stunned()) {
       return CombatResult.miss(precision, rawDamage);
     }
-    if (target.armorClass() >= INVULNERABLE_ARMOR_CLASS) {
+    if (isInvulnerableArmor(target.armorClass())) {
       return new CombatResult(true, precision, rawDamage, 0, false, false, false, false, 0L);
     }
     double strike = rawDamage;

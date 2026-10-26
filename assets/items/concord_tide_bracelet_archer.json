@@ -1,0 +1,52 @@
+{
+  "key": "concord_tide_bracelet_archer",
+  "name": "${item.concord_tide_bracelet_archer}",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "numId": 59009,
+  "appearanceId": 59009,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61064,
+      "statId": 6,
+      "expression": "13"
+    },
+    {
+      "boostId": 61065,
+      "statId": 10035,
+      "expression": "32"
+    },
+    {
+      "boostId": 61066,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 61067,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 61068,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 61069,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 61070,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "armorClass": 3.4,
+  "requirements": {
+    "agility": 160,
+    "endurance": 80
+  }
+}

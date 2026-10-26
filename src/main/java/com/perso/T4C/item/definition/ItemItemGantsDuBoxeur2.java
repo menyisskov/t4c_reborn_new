@@ -33,7 +33,7 @@ public final class ItemItemGantsDuBoxeur2 {
         3867,
         1,
         263,
-        "1d42+164",
+        "1d31+44",
         "(if(750-self.agi/250*750/2<600?600:750-self.agi/250*750/2)) * (50-self.viewflag(10097)) / 50 + self.viewflag(10097) * 5 + 1d469",
         0,
         -1,

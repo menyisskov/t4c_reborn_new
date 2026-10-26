@@ -1,0 +1,22 @@
+[
+  {
+    "asset_id": "4fd8de84-1bfe-401d-881a-1f9f036bdc0e",
+    "label": "MythicFire destructive concept",
+    "sha12": "350ff585f0cd"
+  },
+  {
+    "asset_id": "50eec7d8-11c8-40a4-abc8-957e92de80d6",
+    "label": "MythicFire destructive source animation",
+    "sha12": "9ddc0c315f14"
+  },
+  {
+    "asset_id": "9f7b41ac-a300-48c2-8f17-65a82bb20641",
+    "label": "MythicEarth destructive concept",
+    "sha12": "c091165534cd"
+  },
+  {
+    "asset_id": "99e6e961-147f-45de-849f-e20bfe23218b",
+    "label": "MythicEarth destructive source animation",
+    "sha12": "e3f0cfa4bb8a"
+  }
+]

@@ -17,7 +17,7 @@ public final class AvalonWildsVigil {
         0,
         3965,
         1400,
-        110,
+        250,
         800000,
         40000000,
         "${quest.avalon_wilds_vigil.offer}",

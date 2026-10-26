@@ -1,0 +1,60 @@
+{
+  "key": "frostshatter_quiver",
+  "name": "${item.frostshatter_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 50000,
+  "weight": 2,
+  "requirements": {
+    "strength": 42,
+    "agility": 240
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59904,
+  "structure": 8,
+  "appearanceId": 59904,
+  "dmgFormula": "1d121+179",
+  "quiverSplash": {
+    "radius": 1.75,
+    "targets": 6,
+    "damagePercent": 28
+  },
+  "boosts": [
+    {
+      "boostId": 730040,
+      "statId": 6,
+      "expression": "20"
+    },
+    {
+      "boostId": 730041,
+      "statId": 10035,
+      "expression": "48"
+    },
+    {
+      "boostId": 730042,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 730043,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 730044,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 730045,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 730046,
+      "statId": 22,
+      "expression": "6"
+    }
+  ]
+}

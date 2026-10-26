@@ -27,7 +27,7 @@ public final class TurnUndead {
         0,
         "0",
         "0",
-        18843,
+        15713,
         null,
         10145,
         5,

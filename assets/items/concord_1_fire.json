@@ -1,0 +1,29 @@
+{
+  "key": "concord_1_fire",
+  "name": "${item.concord_1_fire}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvWoodenStaff__pal94",
+  "numId": 59042,
+  "appearanceId": 59042,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61289,
+      "statId": 1,
+      "expression": "25"
+    },
+    {
+      "boostId": 61290,
+      "statId": 17,
+      "expression": "25"
+    }
+  ],
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal94",
+  "requirements": {
+    "intelligence": 250
+  },
+  "dmgFormula": "1d40+30",
+  "atkDelay": "1300",
+  "isBow": false
+}

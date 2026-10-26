@@ -1,0 +1,60 @@
+{
+  "key": "eclipse_quiver",
+  "name": "${item.eclipse_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 3000000,
+  "weight": 2,
+  "requirements": {
+    "strength": 225,
+    "agility": 1450
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59925,
+  "structure": 8,
+  "appearanceId": 454,
+  "dmgFormula": "1d601+2049",
+  "quiverSplash": {
+    "radius": 2.5,
+    "targets": 8,
+    "damagePercent": 45
+  },
+  "boosts": [
+    {
+      "boostId": 732050,
+      "statId": 6,
+      "expression": "121"
+    },
+    {
+      "boostId": 732051,
+      "statId": 10035,
+      "expression": "290"
+    },
+    {
+      "boostId": 732052,
+      "statId": 12,
+      "expression": "36"
+    },
+    {
+      "boostId": 732053,
+      "statId": 13,
+      "expression": "36"
+    },
+    {
+      "boostId": 732054,
+      "statId": 14,
+      "expression": "36"
+    },
+    {
+      "boostId": 732055,
+      "statId": 15,
+      "expression": "36"
+    },
+    {
+      "boostId": 732056,
+      "statId": 22,
+      "expression": "36"
+    }
+  ]
+}

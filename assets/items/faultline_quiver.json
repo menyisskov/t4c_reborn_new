@@ -1,0 +1,60 @@
+{
+  "key": "faultline_quiver",
+  "name": "${item.faultline_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 150000,
+  "weight": 2,
+  "requirements": {
+    "strength": 80,
+    "agility": 360
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59905,
+  "structure": 8,
+  "appearanceId": 59905,
+  "dmgFormula": "1d251+399",
+  "quiverSplash": {
+    "radius": 2,
+    "targets": 6,
+    "damagePercent": 30
+  },
+  "boosts": [
+    {
+      "boostId": 730050,
+      "statId": 6,
+      "expression": "30"
+    },
+    {
+      "boostId": 730051,
+      "statId": 10035,
+      "expression": "72"
+    },
+    {
+      "boostId": 730052,
+      "statId": 12,
+      "expression": "9"
+    },
+    {
+      "boostId": 730053,
+      "statId": 13,
+      "expression": "9"
+    },
+    {
+      "boostId": 730054,
+      "statId": 14,
+      "expression": "9"
+    },
+    {
+      "boostId": 730055,
+      "statId": 15,
+      "expression": "9"
+    },
+    {
+      "boostId": 730056,
+      "statId": 22,
+      "expression": "9"
+    }
+  ]
+}

@@ -35,7 +35,11 @@ public final class r146MOBSHRIEKERRODENT1 extends DataMonster {
         SOUND_HIT,
         158,
         484,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("potion_of_nimbleness", 0.02f),
+            new MonsterDef.LootDrop("key_of_ascension", 0.005f),
+            new MonsterDef.LootDrop("rough_malachite", 0.02f),
+            new MonsterDef.LootDrop("rough_emerald", 0.02f)),
         false,
         0.0f,
         103,

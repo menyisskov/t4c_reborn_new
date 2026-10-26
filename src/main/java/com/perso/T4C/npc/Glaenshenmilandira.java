@@ -111,6 +111,12 @@ public final class Glaenshenmilandira extends ScriptedNpc {
       @Override
       public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
+        if (c.flag("__FLAG_COUNTER_PURIFIER_KILLED")
+            > c.flag("__FLAG_COUNTER_NEOFLARE_KILLED")) {
+          c.sayKey("npc.glaen.will.atone");
+          return;
+        }
+
         int q = c.flag("__QUEST_FLAG_WILL_OF_ARTHERK_QUEST");
 
         if (q == 16
@@ -130,6 +136,13 @@ public final class Glaenshenmilandira extends ScriptedNpc {
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
         String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+
+        if (!k.equals("RETURN")
+            && c.flag("__FLAG_COUNTER_PURIFIER_KILLED")
+                > c.flag("__FLAG_COUNTER_NEOFLARE_KILLED")) {
+          c.sayKey("npc.glaen.will.atone");
+          return true;
+        }
 
         if (k.contains("LUTE") && k.contains("PEACE")) {
 
@@ -164,6 +177,13 @@ public final class Glaenshenmilandira extends ScriptedNpc {
       @Override
       public boolean onYesNo(
           com.perso.T4C.npc.behavior.NpcBehaviorContext c, String state, boolean yes) {
+
+        if (yes
+            && c.flag("__FLAG_COUNTER_PURIFIER_KILLED")
+                > c.flag("__FLAG_COUNTER_NEOFLARE_KILLED")) {
+          c.sayKey("npc.glaen.will.atone");
+          return true;
+        }
 
         if ("glaen_will".equals(state)) {
 

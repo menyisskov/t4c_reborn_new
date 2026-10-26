@@ -1,0 +1,55 @@
+{
+  "key": "divine_ra_gauntlets",
+  "name": "${item.divine_ra_gauntlets}",
+  "bodyPart": "LEFT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL__pal94",
+  "appearanceInventory": "64kInvPlateGlove__pal94",
+  "numId": 55203,
+  "appearanceId": 55203,
+  "weight": 1,
+  "armorClass": 16.3,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50161,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50162,
+      "statId": 17,
+      "expression": "38"
+    },
+    {
+      "boostId": 50163,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50164,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50165,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50166,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50167,
+      "statId": 22,
+      "expression": "15"
+    }
+  ],
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedSecondary": "PupPlateGloveR__pal94"
+}

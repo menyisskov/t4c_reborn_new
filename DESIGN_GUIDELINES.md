@@ -1,5 +1,29 @@
 # Design Guidelines
 
+## Multiplayer delivery and single-player compatibility (T4C-0156)
+
+- Owner direction: consolidate pending game work before beginning multiplayer implementation; keep personal character saves, account storage and preferences local rather than publishing them.
+- Multiplayer must preserve the existing offline single-player game, including its launcher, gameplay and saved progress. Online services must not become a requirement for offline play, and online persistence must remain separate from local saves.
+- The agreed delivery milestones are Alpha (authoritative persistent gameplay), Beta (complete launch gameplay for 20 concurrent players), GA (essential end-to-end gameplay, security and recovery), then Post-GA (optional additions, utilities and improvements). Anti-cheat and economic integrity are launch requirements, not optional later improvements.
+- Integration-test maintenance: Avalon canopy checks apply to the relocated Avalon footprint, while terrain/passability checks still cover all eastern encounters. Equipment migration tests retain representative formula checks; boost uniqueness and forbidden light resistance remain covered by ItemBalanceGuidelinesTest. Resale tests use controlled loot sources for rarity ordering because later regions may change the easiest real source.
+
+## Mythic monster encounters (T4C-0153)
+
+- The owner wants new monsters at level 1000 and above that feel substantially tougher than Arch Drake. They remain optional challenge content above the level-400 player cap; their level does not raise that cap.
+- Arch Drake's fireball has its own boss damage limit. Keep the ordinary drake fireball limit intact, since dense drake packs use the same spell ID.
+- Reuse complete, unused monster animation families before creating sprites. The Centaur, Pegasus and Unicorn families include idle, attack and death frames; the apparent Dragon family has a blank sample frame and should not be treated as finished art.
+- The Ironhorn Centaur, Stormbound Pegasus and Galehorn Unicorn use the existing Drake's Lair route. Their current health, defense, attack and loot are an initial tuning choice based on being beyond Arch Drake, subject to play feedback.
+
+## Senior divine encounters (T4C-0151)
+
+- Place senior gods above the elder divine trials, around levels 380–400, so characters below roughly level 350 face a serious challenge. Do not impose a character-level gate; let combat stats determine whether an unusually strong character can win.
+- Senior gods should gain a substantial durability step through health, armor, dodge and elemental resistance, with attack pressure above the elder tier. The current Zeus, Odin and Osiris values are an initial tuning choice and can be adjusted from play feedback.
+- Existing gods should receive only a modest health, armor and damage increase when the divine roster expands. Preserve their passive-until-challenged behavior and individual judgment damage rules.
+
+## Hunting and training travel order (T4C-0148)
+
+- In the Locations panel, order Hunting Areas and Training Fields by the current level of each field's regular monster, lowest to highest. Use the destination name to break equal-level ties. Keep other travel chapters in their authored order and leave travel unlocks unchanged.
+
 ## Website map atlas (T4C-0137)
 
 - Publication (T4C-0152): publish a current runtime export, with a stable content fingerprint
@@ -62,13 +86,13 @@ owner can strike it.
 | Max rebirths | **50**. The Oracle refuses after that; saves above 50 count as 50 for the Seraph aura. | `GameConstants.REBIRTH_MAX_REMORTS`, `RebirthBehavior.canRebirth` |
 | Starting attributes at creation | **20 in all five**, plus a fixed **30-point class spread** (130 total). No dice: every class spends the same 30 points, only in different places. | `CharacterCreationRules.BASE_ATTRIBUTE`, `CharacterCreationRules.CLASS_BONUS_POINTS`, `CharacterClass` |
 | Starting attributes after rebirth *n* | 20 + 5n in all five attributes (270 at 50) | `RebirthBehavior.startingAttributeFor` |
-| Level needed for rebirth *n* | 75 + 5(n − 1) (320 for the 50th) | `RebirthBehavior.requiredLevelFor` |
-| Energy points from rebirth *n* | 10 + 5(n − 1) (255 at 50) | `RebirthBehavior.energyPointsFor` |
+| Level needed for rebirth *n* | 75 + 5(n âˆ’ 1) (320 for the 50th) | `RebirthBehavior.requiredLevelFor` |
+| Energy points from rebirth *n* | 10 + 5(n âˆ’ 1) (255 at 50) | `RebirthBehavior.energyPointsFor` |
 
 **Stat budget.** Size every requirement against what a character can actually have.
 - A never-reborn character at level L has 130 starting attribute points (20 in each of the five
-  plus their class's 30-point spread) plus 5(L − 1) more.
-- A 50-rebirth character has 1350 (270 in each) plus 5(L − 1).
+  plus their class's 30-point spread) plus 5(L âˆ’ 1) more.
+- A 50-rebirth character has 1350 (270 in each) plus 5(L âˆ’ 1).
 - At the level-400 cap, a well-built caster has about **1000** in their main casting stat.
 - Nothing may ask for more than a character at that level can reach. Tests enforce this for
   spells and items.
@@ -78,8 +102,8 @@ constant. Monsters above level 400 (up to Arch Drake at 1000) currently remain a
 challenge content. Rescaling them is an open follow-up, not a decision.
 
 **Carry capacity keeps scaling with strength well past 1000 (T4C-0054).**
-`InventoryService.maximumWeight` is `2000 × str / (550 + str)`, not a substitute for a real
-inventory-slot limit - just a soft weight gate. It was `500 × str / (100 + str)`, which had
+`InventoryService.maximumWeight` is `2000 Ã— str / (550 + str)`, not a substitute for a real
+inventory-slot limit - just a soft weight gate. It was `500 Ã— str / (100 + str)`, which had
 already reached ~91% of its 500 ceiling by str 1000 and was effectively flat above that; gear
 alone hands out up to +600 strength per item (section 3), so a heavily-equipped or high-rebirth
 character routinely clears 1000-3000+ strength and the old curve made that entirely invisible.
@@ -92,19 +116,19 @@ Guarded by `InventoryServiceTest`.
 ### `self.true_*` formula variables (T4C-0060)
 
 Formulas like `self.true_r_fire`, `self.true_dodge`, `self.true_str` read the caster's own
-**true** stat — base + gear + permanent quest bonuses, *excluding* any of the caster's own
-currently-active spell buffs — via `DiceFormula.Context.selfTrue` (populated in
+**true** stat â€” base + gear + permanent quest bonuses, *excluding* any of the caster's own
+currently-active spell buffs â€” via `DiceFormula.Context.selfTrue` (populated in
 `SpellCastingService.selfTrue`). Reading the true value rather than the live/buffed one means
 re-casting a buff before it expires refreshes it to the same size instead of compounding forever.
 `DiceFormula` answers 0 for anything it can't parse rather than throwing, so a variable with no
-substitution rule silently becomes 0 — this is why Resist Fire, Resist Ice, Nimbleness's dodge
+substitution rule silently becomes 0 â€” this is why Resist Fire, Resist Ice, Nimbleness's dodge
 half, Tranquility and Clear Thought did nothing for a while; check this file's mistakes log and
 `SelfReferentialBuffFormulaTest` before assuming a new formula variable "just works" the same way.
 
-- **Owner's ruling on Resist Fire / Resist Ice:** ship as written — `self.true_r_fire`/
+- **Owner's ruling on Resist Fire / Resist Ice:** ship as written â€” `self.true_r_fire`/
   `self.true_r_water` add 100% of your own resistance for 60 seconds. Elemental damage is
   `raw * 100 / resistance`, so doubling a base-100 resistance is exactly a 50% damage cut,
-  regardless of how much gear has already raised that resistance — the formula is self-limiting,
+  regardless of how much gear has already raised that resistance â€” the formula is self-limiting,
   not an uncapped multiplier. Light (base 5000) is never boosted by a spell, so it isn't a
   consideration here. The existing "greater" resistance potions use the same `self.true_r_*`
   formula and are intentionally left at parity with these spells; "lesser" (`/4`) and "partial"
@@ -236,10 +260,10 @@ quiz is gone; its i18n strings were deleted with it.
 - Enforced by `spell/HighTierSpellCurve.java` (the single source for the numbers) and
   `HighTierSpellLadderTest`.
 - **Requirements at level L:**
-  - Main stat 2.5 × L; other casting stat 0.6 × L.
-  - Air needs 1.55 × L in each of intelligence and wisdom.
+  - Main stat 2.5 Ã— L; other casting stat 0.6 Ã— L.
+  - Air needs 1.55 Ã— L in each of intelligence and wisdom.
   - So 375 at level 150, and 875 at level 350 (the top rung).
-- **Damage** is `(1d(L/5) + L/2 + stat/4) × power/resist`.
+- **Damage** is `(1d(L/5) + L/2 + stat/4) Ã— power/resist`.
   - Single-target bolts multiply by 6; area spells by 5.
   - Air uses `(int + wis)/5` as its stat term.
 - **Shapes per level:** 150 bolt, 200 area, 250 bolt, 300 bolt, 350 area.
@@ -257,7 +281,7 @@ quiz is gone; its i18n strings were deleted with it.
   every rung reaches the floor exactly at the level cap. See `HighTierSpellCurve.attack`.
 - **Every element's offensive spells form one prerequisite chain (T4C-0054).** You must already
   know the previous rung (by ascending `minLevel`, ties broken by `spellId`) to learn the next one
-  of the same element - e.g. Earth's `stone_shard → shatter → earthquake → boulders → ...`.
+  of the same element - e.g. Earth's `stone_shard â†’ shatter â†’ earthquake â†’ boulders â†’ ...`.
   Built dynamically in `SpellRegistry.offensiveChainPredecessor` from `playerCastableSpells()`, so
   a newly added attack spell slots into its element's chain automatically; don't hardcode a chain
   list elsewhere. Non-elemental attacks (element 0, e.g. `tame_beast`/`mana_burst`) aren't chained.
@@ -325,11 +349,11 @@ quiz is gone; its i18n strings were deleted with it.
   Barrier gets the sum of both AC bonuses from one cast of each. This falls out of the existing buff
   system for free; no new stacking logic was needed or added.
 - **minInt/minWis for the Ultra tier (Claude's call, flag for the owner to overrule):** the five base
-  protection spells don't follow the level-150+ curve (`HighTierSpellCurve`, main stat 2.5×L / other
-  stat 0.6×L) themselves - they're much lower-level and don't share one consistent int/wis ratio.
+  protection spells don't follow the level-150+ curve (`HighTierSpellCurve`, main stat 2.5Ã—L / other
+  stat 0.6Ã—L) themselves - they're much lower-level and don't share one consistent int/wis ratio.
   Since minLevel 150 puts the Ultra tier inside that curve's range, and section 2's "support spells
   above level 150 take their stat gate from the same curve" rule, each Ultra spell uses 375/90
-  (2.5×150 / 0.6×150), split main-vs-secondary by whichever stat its own *base* spell already leans
+  (2.5Ã—150 / 0.6Ã—150), split main-vs-secondary by whichever stat its own *base* spell already leans
   on more heavily: Ultra Barrier and Ultra Mana Shield/Mana Surge (int-leaning bases) get
   `minInt=375, minWis=90`; Ultra Protection and Ultra Stone Skin (wis-leaning bases) get
   `minInt=90, minWis=375`. Note `SpellCastingService.begin()` doesn't actually gate casting on
@@ -365,7 +389,7 @@ quiz is gone; its i18n strings were deleted with it.
   (Lighthaven, Silversky, Windhowl, Stonecrest, the Oracle) are all served by a **200
   intelligence / 200 wisdom** journeyman and give an identical blessing; **Avalon Sanctuary** alone
   has an archmage at **500 intelligence / 1500 wisdom**. An earlier 3-tier version
-  (500 int, 500 × tier wis) was rejected as far too strong for the ordinary towns - it handed out
+  (500 int, 500 Ã— tier wis) was rejected as far too strong for the ordinary towns - it handed out
   +121 and +189 AC for a free click. Current numbers, measured not estimated:
 
   | | Ordinary town | Avalon Sanctuary |
@@ -414,7 +438,8 @@ from the same rules; re-run it after changing them.
 
 ### Requirements
 - **No item may require more than 600 endurance.**
-- No single requirement may exceed 1000 (the level-cap main stat).
+- No single requirement may exceed 1000 (the level-cap main stat). Bows and quivers may require up to 2000 agility for reborn archers, with strength requirements capped at 300.
+- Reborn warrior equipment may require up to 2000 strength. The `warrior_` progression uses a 1.5 tier multiplier for AC, strength and resistance/flat combat bonuses, with up to 600 endurance on armor and shields. The six armor pieces share three single-item bonus budgets by AC slot weight; shields and weapons use their own single-item budgets. Each tier has six armor pieces, a shield, a one-handed warblade and a two-handed greatsword; the same endurance formula still controls AC. Attack and Dodge bonuses apply to every piece. Weapons grant +50% of trained Attack and +20% of trained Dodge; armor and shields grant flat bonuses. No character-level gates are added.
 - Every item must have a class requirement (strength, agility, intelligence or wisdom).
   Its class comes from its requirements:
   - **Warrior:** strength is the main requirement.
@@ -457,7 +482,7 @@ from the same rules; re-run it after changing them.
   just didn't get a replacement.
 
 ### Armor Class follows the endurance requirement
-`AC = slot AC × endurance requirement / 100 × class multiplier`.
+`AC = slot AC Ã— endurance requirement / 100 Ã— class multiplier`.
 
 AC per 100 endurance requirement, by slot:
 
@@ -485,7 +510,7 @@ carry real AC. For example, Aerie's Drakeheart Signet (600 strength, 600 enduran
 
 ### Bonus budget
 The budget for a single, hand-made item scales with P, its main requirement. For a hybrid,
-P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
+P = 0.8 Ã— (intelligence + wisdom), so 375/375 counts as 600.
 
 | Bonus | Budget |
 |---|---|
@@ -498,12 +523,12 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 | Warrior/archer resistance (each of five non-light schools) | P / 40 (a theme element may double it) |
 
 - A full 6-piece armor set carries three single items' worth, split across pieces by AC share.
-- Weapons carry their class stat (P / 12) and their skill (attack or archery). The damage
+- Weapons carry their class stat (P / 12) and their skill (attack or archery). Playable bows use percentage Archery bonuses: +50% of trained skill on unenchanted/named bows; +15%/+30%/+50%/+75%/+100% on +1/+2/+3/+4/+5. Every playable bow includes quiver damage in its weapon formula. The damage
   formula and any legacy enchant-line percentage boost are kept.
 
 ### Boost IDs
 - Every boost needs a unique `boostId`. A shared ID silently drops one item's bonus.
-- `20000`–`29999` is reserved for the armor-set generator; hand-made items use `30000`+.
+- `20000`â€“`29999` is reserved for the armor-set generator; hand-made items use `30000`+.
 - The test enforces both.
 
 ### Slots, colors and sprites
@@ -517,38 +542,38 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   mage gear should require about **600** in its main casting stat.
 
 ### Legendary weapon coverage
-- "Legendary" has no separate tier field — an item becomes legendary purely by setting
+- "Legendary" has no separate tier field â€” an item becomes legendary purely by setting
   `"unique": true` (see `compendium/app.js`'s `rarityOf()`). There's no cap on how many
   legendary items may exist, and no fixed ratio between weapon types.
 - Every weapon archetype should have at least one legendary/unique option for endgame players:
   a strength-classed melee weapon, an archer weapon (bow), and an intelligence- or
   wisdom/hybrid-classed caster weapon. Before T4C-0028 there were three unique melee weapons and
   zero unique bows or caster weapons. Check this coverage whenever "not enough legendary
-  weapons" comes up again — add the missing weapon type, don't just add another melee option.
+  weapons" comes up again â€” add the missing weapon type, don't just add another melee option.
 - A caster weapon (`bodyPart: WEAPON`, intelligence/wisdom/hybrid archetype) follows the same
   class rules as armor (own-school power plus matching resistance, main stat via the P/10 or
   P/12 budget), but like every weapon it is exempt from the AC and skill/power/resistance
-  *budget* checks in `ItemBalanceGuidelinesTest` — only its main-stat bonus is checked exactly.
+  *budget* checks in `ItemBalanceGuidelinesTest` â€” only its main-stat bonus is checked exactly.
   Keep the power/resistance amounts in line with the budget anyway (as if they were checked) for
   internal consistency with the rest of the item's numbers.
 
 ### The Elder Wyrms (a new legendary content line)
 - The owner wants legendary/endgame content to keep expanding beyond one-off drops, and
   specifically asked for it to draw on a "pantheon" structure (as the community `t4cfantasy.com`
-  Addon reference does — different named figures gating gear for different classes/levels) —
+  Addon reference does â€” different named figures gating gear for different classes/levels) â€”
   but reflavored into this game's own fiction, not real-world deity names.
 - **The Elder Wyrms**: proto-drakes that predate the named Drake line (Ignarok, Mordrenn, Greater
   Drake, Arch Drake, Lesser Drake). Where the named Drakes each embody one *element*, the Elder
-  Wyrms each embody one *class archetype* instead — a deliberately different axis from the
+  Wyrms each embody one *class archetype* instead â€” a deliberately different axis from the
   Ancient Celestial/Empyrean sets (which already cover all 8 element/class flavors) and from the
   named Drakes (which already cover the 6 elements). This keeps the two mythologies distinct
   instead of overlapping.
-- **Pilot shipped (T4C-0029): The Rootcrown Wyrm**, the wisdom-mage exemplar — a new boss in
+- **Pilot shipped (T4C-0029): The Rootcrown Wyrm**, the wisdom-mage exemplar â€” a new boss in
   Drake's Lair dropping its own unique weapon (a staff/sceptre) and 1-2 unique earth/light-themed
   armor pieces, all balanced per the rules above and *not* reusing the existing
-  `ancient_celestial_earth_*`/`empyrean_earth_*`/`*_light_*` generated sets — the Elder Wyrms need
+  `ancient_celestial_earth_*`/`empyrean_earth_*`/`*_light_*` generated sets â€” the Elder Wyrms need
   their own distinct item identity, separate from the armor-set generator's output.
-- **All five shipped (T4C-0038)** — the pantheon is complete, one Elder Wyrm per class archetype,
+- **All five shipped (T4C-0038)** â€” the pantheon is complete, one Elder Wyrm per class archetype,
   all level 700 in Drake's Lair (inside its 180-radius around 2850,2780, clear of Arch Drake, the
   Dragonguards and each other):
 
@@ -569,7 +594,7 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   (the balance test requires equal resists on single mage items).
 - **Wyrm loot** (the four new ones): own weapon 1%, each own armor piece 1.5%, the class-matching
   Ancient Celestial set 2.5% per piece and Empyrean set 1.2% per piece, serious healing potion
-  30%, mana elixir 20%. Rootcrown's older six-entry table was left as it was — **open:** it could
+  30%, mana elixir 20%. Rootcrown's older six-entry table was left as it was â€” **open:** it could
   be aligned by adding the earth sets. The new wyrms deliberately don't drop quest crafting
   materials (Rootcrown drops a veiled aether shard for the Godsforged chain) so no quest economy
   shifts.
@@ -623,14 +648,14 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - **A new tier above Legendary** (T4C-0033), earned only through a multi-NPC crafting chain, not
   a boss drop. Reflavored into this session's own lore rather than invented from nothing: the
   **Forgewrights of the First Pact** are the last three survivors of the order that helped bind
-  Avalon's original fey pact (see "Passage to Avalon" in `## 6. Quests` below) — now working
+  Avalon's original fey pact (see "Passage to Avalon" in `## 6. Quests` below) â€” now working
   within the Avalon Wilds, trying to reinforce what's fraying by forging relics from materials
   torn from the world's other apex threats.
 - **Mechanically it's a bonus-formula multiplier, not a higher requirement.** Legendary items
-  already sit at `MAX_SINGLE_REQUIREMENT` (1000) — the level-cap main stat — so there's no
+  already sit at `MAX_SINGLE_REQUIREMENT` (1000) â€” the level-cap main stat â€” so there's no
   requirement headroom left to express "stronger than Legendary." `ItemBalance.
   GODSFORGED_TIER_MULTIPLIER` (1.2) is applied on top of every bonus formula (main stat, combat
-  skill, magic power, magic resistance, AC) via a tier-aware overload of each — every formula's
+  skill, magic power, magic resistance, AC) via a tier-aware overload of each â€” every formula's
   no-tier overload still defaults to 1.0, so no existing item's expected value changes.
   `ItemBalanceGuidelinesTest` detects the tier by key prefix (`godsforged_`, the same convention
   `ancient_celestial_`/`empyrean_` already use) and applies the multiplier when checking that
@@ -639,24 +664,24 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   `BindTheGodsigil.java`, `ForgeGodsforgedWarblade.java` and its four siblings,
   `npc/EmberSmithCorvain.java`, `npc/WardenSeressa.java`, `npc/GrandmasterTholvenn.java`):
   1. Two gathering NPCs each turn a rare material (a boss drop from existing endgame bosses, not
-     a new one) into an intermediate component — an ordinary single-item `QuestDef` turn-in, using
+     a new one) into an intermediate component â€” an ordinary single-item `QuestDef` turn-in, using
      the new `rewardItemKey` field (T4C-0033) to hand back the component instead of just gold/XP.
   2. A third NPC combines both components into the finished item. A single `QuestDef` can only
      natively track one required item, so this final step's "extra" component is checked and
      consumed by the NPC's own `javaBehavior()` *before* it calls the new
-     `QuestService.completeCraftingQuest()` — which then checks/consumes the quest's own natively-
+     `QuestService.completeCraftingQuest()` â€” which then checks/consumes the quest's own natively-
      tracked item and grants the reward in the same step. This skips the normal accept-then-
      return-later flow entirely: once a player has both components, naming the item finishes the
      forge in one conversation.
 - **Raw materials are legacy Java items, not `assets/items/*.json`.** A pure crafting
   material/component has no stat requirements and isn't meant to be worn, but every file in
   `assets/items/` is assumed to be real gear and gets the full `ItemBalanceGuidelinesTest`
-  treatment (a valid class, a matching AC, etc.) — a zero-requirement item fails
+  treatment (a valid class, a matching AC, etc.) â€” a zero-requirement item fails
   `requirementsStayReachable`'s "has no class requirement" check. Author non-equippable
   materials/components the same way `item/definition/AbyssOrb.java` does (a legacy
   `ItemDefinition` with `bodyPart: null`), and remember they're invisible to the compendium unless
   explicitly added to `CompendiumExporter`'s `NEW_UTILITY_ITEM_KEYS` (its own allowlist, separate
-  from `NEW_QUEST_IDS`/`NEW_NPC_IDS`) — `exportItems()` otherwise only scans `assets/items/`.
+  from `NEW_QUEST_IDS`/`NEW_NPC_IDS`) â€” `exportItems()` otherwise only scans `assets/items/`.
 - **One item per class archetype**, following the same "one per archetype" shape as the Elder
   Wyrms line (warrior, archer, intelligence mage, wisdom mage, hybrid mage) - see the five
   `ForgeGodsforged*.java` quests for the pattern to extend if the owner asks for more Godsforged
@@ -666,20 +691,20 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - A boss should drop **multiple different items**, not one signature item plus a couple of
   potions. The established pattern (Ignarok, Mordrenn, Arch Drake, Greater Drake, Centaur King,
   The Verdant Warden, Ysolde the Veiled Matriarch) is: the boss's own unique/legendary item at a
-  low chance (0.008–0.02), plus a full themed 6-piece Ancient Celestial set (~0.025 each) and its
-  matching 6-piece Empyrean set (~0.012 each) — 13 drop entries in total.
+  low chance (0.008â€“0.02), plus a full themed 6-piece Ancient Celestial set (~0.025 each) and its
+  matching 6-piece Empyrean set (~0.012 each) â€” 13 drop entries in total.
 - All eight `ArmorSetGenerator` flavors (fire, water, air, earth, light, dark, warrior, archer)
   are already claimed by a boss. Reusing a flavor for another thematically-fitting boss is fine
-  — there's no rule against two bosses sharing a set flavor.
-- When adding a new boss, or noticing an existing one with a thin (1–3 entry) loot table, bring
+  â€” there's no rule against two bosses sharing a set flavor.
+- When adding a new boss, or noticing an existing one with a thin (1â€“3 entry) loot table, bring
   it in line with this pattern instead of leaving it as a near-single-item drop (T4C-0028).
 - A single named/event boss can drop more than one unique/legendary item of its own (e.g. Makrsh
   P'Tangh drops both a legendary bow and a legendary staff) when its established loot theme
   plausibly supports more than one signature weapon type.
 - **Every boss also needs a "medium-rarity" tier, not just rare-or-nothing (T4C-0034).** The
-  13-entry pattern above packs everything into the 0.008–0.025 band — a kill that whiffs all 13
+  13-entry pattern above packs everything into the 0.008â€“0.025 band â€” a kill that whiffs all 13
   rolls gets nothing at all, which doesn't feel like a reward. Every boss should also drop 1-2
-  items in the 0.2–0.3 range (a potion pair - `serious_healing_potion`/`mana_elixir` or
+  items in the 0.2â€“0.3 range (a potion pair - `serious_healing_potion`/`mana_elixir` or
   `healing_potion`/`mana_elixir` is the established default, see Ignarok/Arch Drake/Greater
   Drake/Mordrenn/Centaur King/The Hollow King/Coastwarden Ithrak/Makrsh P'Tangh) so a kill is
   never a total whiff. A boss whose own drop theme calls for something more specific (a quest
@@ -704,17 +729,17 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - When adding a genuinely new spell, item, NPC or quest class, add it to the exporter's "new
   content" lists. Monsters are the exception (T4C-0089): every monster is exported and gets its
   own page, original-game creatures included, tagged with an `origin` of `new`/`activated`/
-  `legacy` rather than being filtered by an allow-list — a player looking up an original
+  `legacy` rather than being filtered by an allow-list â€” a player looking up an original
   monster's drops or gold needs a page too.
 - Show numbers the way the game really uses them. Publish computed values from the game's own
-  helpers, not hand-typed copies. For example, the Seraph aura rolls 0–100 inclusive, so the
+  helpers, not hand-typed copies. For example, the Seraph aura rolls 0â€“100 inclusive, so the
   Rebirths page shows (c + 1)/101, not c%.
 - "Is the website up to date?" means the live Vercel production deployment is the current `main`
   commit, and re-running the exporter on `main` changes nothing. Check both before answering.
 - Pages that exist for rules: Systems (XP curve), Rebirths (per-rebirth requirements and
   rewards), Spells, Items.
-- List pages show every important stat as its own column in a flat table — for Items that's
-  slot, class, requirements, AC, damage, boosts, price, rarity and source — so a player can
+- List pages show every important stat as its own column in a flat table â€” for Items that's
+  slot, class, requirements, AC, damage, boosts, price, rarity and source â€” so a player can
   compare items without clicking through. A row can still open the detail page for anything not
   worth a column (full element-colored boost breakdown, lore text, etc.), but the table itself
   must answer the basic "what does this do" questions on its own (T4C-0028).
@@ -724,7 +749,7 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
 - Never show a generic "monster drop" label for where an item comes from. Name the actual
   monster/boss (every one of them, if more than one drops it) via `lootSources.json`'s
   `monsterDisplayName`, the same way an item's own detail page already does.
-- Every quest page must show a location — a map wherever one exists (T4C-0053). A quest with no
+- Every quest page must show a location â€” a map wherever one exists (T4C-0053). A quest with no
   zone match still gets a schematic worldmap dot from its own `areaCenterX/Y`/`areaRadiusTiles`
   rather than showing nothing. Since T4C-0055 the map carries the location and the prose does
   not: walkthroughs no longer recite coordinates or tile radii, they say "the marked area".
@@ -738,7 +763,7 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
     opens it at or before this point on the road. Elder Ophira stands in the Avalon Wilds, but
     the Wilds entry is her own quest's reward, so her page routes via Avalon Sanctuary instead.
   - **Only name a landmark you could walk from.** Past ~800 tiles the claim stops being a
-    shortcut and becomes a lie — two dungeon-level containers sit that far from the only landmark
+    shortcut and becomes a lie â€” two dungeon-level containers sit that far from the only landmark
     on their level, with no route between. Those get their coordinates and no directions.
   - **Only link a map that really pins them.** Being listed under a zone is not the same as being
     inside that zone map's cropped box; four quest-givers are stationed back in town, outside it.
@@ -752,7 +777,7 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   paper-doll composites of body-part sprites, so this needs a new headless exporter compositing
   them out of the sprite bins. **Partially superseded by T4C-0089**, which added monster
   portraits (`MonsterSpriteExporter`, single-sprite-sheet monsters only, no compositing needed)
-  — the same approach does not extend to NPCs' multi-layer paper-doll rendering, so this NPC
+  â€” the same approach does not extend to NPCs' multi-layer paper-doll rendering, so this NPC
   half of the gap is still open.
 
 - **Monster portraits (T4C-0089):** `MonsterSpriteExporter` writes one PNG per monster (its
@@ -761,7 +786,7 @@ P = 0.8 × (intelligence + wisdom), so 375/375 counts as 600.
   a `monsterSprites.json` sidecar `CompendiumExporter` merges in as each monster's `sprite`
   field. Run it before `CompendiumExporter`, same ordering as `MinimapExporter` for zone maps.
   Only covers monsters with a named walk-cycle sprite sheet; monsters drawn through the
-  appearance/item-layered puppet system (no `walkPattern` of their own) get no portrait — this
+  appearance/item-layered puppet system (no `walkPattern` of their own) get no portrait â€” this
   is most named creatures but not humanoid mobs wearing generic equipment layers.
 - **Inline row expansion (T4C-0089):** the Monsters/Items/Spells/NPCs tables expand a row's
   detail panel directly beneath it on click (accordion, one row open at a time) instead of
@@ -795,14 +820,14 @@ before changing any player-facing string, and its leak scan must be clean. The r
   values" above, applied to prose.
 - **What you hand over and what you receive are never conflated.** `requiredItemKey` and
   `alsoRequiresItemKey` are consumed on turn-in; `rewardItemKey` is granted. They render in
-  separate, verb-labelled blocks. Ten walkthroughs got this backwards before T4C-0055 — several
+  separate, verb-labelled blocks. Ten walkthroughs got this backwards before T4C-0055 â€” several
   also told the player a boss was optional when that boss was the only source of the item they
-  had to bring — so check new quest prose against the definition, not against the other
+  had to bring â€” so check new quest prose against the definition, not against the other
   walkthroughs.
 
-**Open question for the owner (T4C-0055):** ten quests require a rare boss drop (0.8–2%) to
+**Open question for the owner (T4C-0055):** ten quests require a rare boss drop (0.8â€“2%) to
 turn in, while their text had long described that item as the reward. The text now matches the
-code — you bring it. If the intent was the opposite (the drop is the prize, and the turn-in
+code â€” you bring it. If the intent was the opposite (the drop is the prize, and the turn-in
 should not consume it), that is a content change, not an editorial one, and needs its own pass.
 
 ## 5. Process
@@ -820,7 +845,7 @@ should not consume it), that is a content change, not an editorial one, and need
   them as follow-ups.
 - Every rule in this file that can be checked automatically should have an invariant test,
   named next to the rule. A rule that exists only as prose will drift. (Recommended after the
-  T4C-0025–0027 review findings; the owner may revise.)
+  T4C-0025â€“0027 review findings; the owner may revise.)
 - A new or tightened limit always comes with a decision about saves already past it: clamp what
   the game derives, keep what the player chose or spent, and cover it with a load test.
 - Use the workflow skills: `balance-change` for any rule or number change, `ship-pr` to land
@@ -830,7 +855,7 @@ should not consume it), that is a content change, not an editorial one, and need
 - **A coordinate is not a placement (T4C-0063).** Anything given a `@Spawn` has to stand on
   ground a player can walk to, and picking coordinates off a map picture does not establish
   that: deep *and* shallow water both block movement, as does scenery. Thirty-three of this
-  fork's own spawns were unreachable before anyone noticed — Harbormaster Rangor in the sea
+  fork's own spawns were unreachable before anyone noticed â€” Harbormaster Rangor in the sea
   west of Windhowl, and every Sunken Chancel creature including its boss, which made that
   zone's quest impossible to finish. Two rules, both enforced by
   `spawn/SpawnPlacementTest`:
@@ -846,6 +871,160 @@ should not consume it), that is a content change, not an editorial one, and need
   so it stays green and meaningful rather than being switched off.
 
 ## 6. Quests
+
+### Dense hunting and accessible training bosses (October 2026)
+
+- **Owner direction (T4C-0140):** usable items such as the protection gem can be
+  assigned to keyboard macros, alongside spells. Select the item in Inventory,
+  toggle Add/Remove macro in its existing action row, then bind it in Ctrl+M.
+  Persist an optional canonical `MacroBinding.itemKey`; old three-field spell
+  bindings remain valid and character-specific. Item shortcuts call the normal
+  `ItemUseService`, retaining ownership, equipment requirements, charges and
+  cooldowns. A passive belt is not itself a usable gem. Extend the shared
+  `ItemBeltOfUnstableProtection` effect to 30 minutes for new activations; existing
+  active/save timers keep their remaining time until reactivated. Covered by
+  `InventoryAutoEquipTest`, `PlayerStateMapperTest` and `ItemSpellIntegrityTest`.
+  Item/spell formula contexts carry equipped item counts by legacy numeric ID;
+  `DiceFormula` resolves `equipcount(id)` from equipment, not backpack ownership.
+  Keep those counts when deriving spell-effect contexts. The gem's activation
+  test covers both missing-belt rejection and successful thirty-minute use.
+
+- **Elemental spell correction (owner, T4C-0145):** apply the spell reduction to
+  every monster caster, including legacy types, named bosses and the Mirror Echo.
+  The owner reported an eight-second Lesser Drake death despite 707 AC and 652 Fire
+  resistance. The log recorded 123 fireball impacts and 6,986 post-resistance damage
+  in one eight-second window; this establishes damaging spell volume, not the exact
+  fatal sequence or starting HP. AC does not mitigate these elemental attacks, and
+  the existing melee-hit aura is not triggered by their impacts. Do not compensate
+  by increasing the aura or telling the owner to add already-present resistance.
+  Implementation choice: `MonsterSpellRules.balanceRawDamage` quarters positive
+  elemental raw damage (rounding up) and caps it at `round(monsterLevel * 0.5)`.
+  Apply once in the shared monster roll path and the Echo's custom spell path,
+  then use `damageAfterResistance` at player impact. Preserve healing, teleport,
+  status effects and elementless physical projectiles; those projectiles still use
+  AC. Spell budgets now apply independently of the new-regular-monster predicate
+  and supersede T4C-0143's shared physical/spell limit. Export the spell budget for
+  every elemental caster, including bosses. No save migration is needed: monster
+  rolls are derived; player progress and permanent defenses are untouched.
+
+- **Scope correction (owner, T4C-0143):** the reduced damage budget applies to all
+  new regular monsters, not only the eight over-budget creatures in named level-150-to-400
+  fields. Use fork-authored identities and additional registered content as provenance;
+  retain the previously covered hunting types. There is no minimum or maximum monster
+  level for this rule. Above-cap creatures still have their original levels and guide
+  warnings, but regular creatures now share the damage budget. Explicit encounter roles
+  in `ForkContent.BOSS_MONSTER_NAMES` exclude named bosses and training champions;
+  do not infer rank from field membership or load `MonsterRank` during registry rebuild.
+  `HuntingDamageCurve` remains the single source for `round(monsterLevel * 2.5)`.
+  Normalize ordinary dice rolls and fallback ranges in the registry; cap actual outgoing
+  melee and offensive spell rolls in `BaseMonster`, including special formulas. Never
+  rewrite special mechanics into a plain roll or cap caster healing. Additional-definition
+  provenance is cleared when the registry resets. Export the runtime limit and show it
+  in the compendium. Save data, XP, aura strength, monster health and pack density stay
+  unchanged. This supersedes T4C-0142's level-band and mixed-spell exclusions.
+
+- **Dense-pack survivability (owner, T4C-0142):** preserve 12-14-monster fights and
+  hunting-field populations; lower damage rather than thinning packs. Ordinary
+  leveling must not depend on a fifty-rebirth healing aura. Audit without aura and
+  account for the much lower healing frequency at 10-15 rebirths. The live log showed
+  14,586 post-mitigation damage in two seconds against 10,465 HP while fighting
+  Veilbound Wraiths; aura healing masked that burst. Keep XP, monster HP, attack
+  cooldowns, rebirth benefits and saved progression unchanged.
+  Implementation choice: `HuntingDamageCurve` limits raw melee maxima to
+  `round(monsterLevel * 2.5)` for ordinary catalogued level-150-to-400 hunting
+  creatures. Reduce the minimum proportionally and retain a uniform inclusive roll;
+  never raise weaker attacks. Apply in the registry so the game, wiki and compendium
+  agree. Mixed spell/drake encounters, non-field bosses and above-cap challenges are
+  excluded. This supersedes the earlier damage increase for these ordinary farms.
+  `HuntingDamageCurveTest` checks a 14-Wraith two-volley burst against the reported
+  9,000 HP / 432 AC baseline without aura; this is a reaction-window check, not a
+  promise of indefinite survival or measured leveling pace for every build.
+  The original XP pace observation was a fifty-rebirth character, whose healing,
+  retaliation and area-burst frequency exceed those at 10-15 rebirths. Do not claim
+  its kill-rate projection validates the 5-10-hour target for lower-rebirth builds.
+
+- **Live pacing correction (T4C-0139):** the owner reported leveling from 234 to 274
+  in about ten minutes on Fey Wardens and Moonlit Stalkers after T4C-0134. This
+  supersedes the earlier speculative DPS budget as the calibration evidence. Keep the
+  target at 5-10 hours per 100 levels. `HuntingExperienceCurve.HUNTING_PACE_DIVISOR`
+  reduces the added XP floor by 18 before its int clamp and higher-authored-award
+  comparison, targeting the 7.5-hour midpoint at a comparable kill rate. This is an
+  implementation choice based on that observation, not a claim of measured pacing
+  for every build or later region. Keep the increasing level/health ladder through
+  400, the existing damage XP and 2x combat multiplier, stronger original rewards,
+  and all earned levels and saved progress. `HuntingExperienceReport` records the
+  observation and recomputes its conditional projection from runtime rewards.
+
+- **Player feedback and correction (T4C-0138):** a level-243 archer with about 432 AC
+  and 9,000 HP reported a four-second death to two Greater Drakes. Greater Drakes remain
+  level-500 above-cap challenges; this report does not authorize treating them as a
+  level-200 farm or imply that higher XP made them survivable. Remove them from that
+  guide's farming examples, label all above-cap fields from runtime level metadata,
+  and omit ordinary leveling kill estimates for above-cap encounters. AC mitigates
+  physical damage; elemental resistance handles spells. The original drake heal
+  (`10616`, `__SPELL_MOB_ARENA_HEAL_SERIOUS_SPELL`) targets the caster, never its opponent;
+  preserve the existing rolled amount and cap healing at maximum HP. Its fireball
+  (`10095`, `__SPELL_MOB_FIREBALL_SPELL`) uses Fire resistance when registered spell
+  metadata is absent. Keep these imported target/element rules in `MonsterSpellRules`. Guarded by
+  `MonsterSpellTargetingTest` and `WikiCatalogTest`. The exact fatal damage sequence
+  remains unconfirmed; do not attribute that death to a
+  single cause without evidence.
+
+- **Owner direction (T4C-0134):** use T4C Fantasy's addon XP scale as the reference,
+  extended for our level-400 cap rather than stopping at the reference's level-320 player
+  cap. Hunting after level 150 must support progression; the current target is **5-10
+  hours per 100 levels** for an appropriately equipped solo character, including 300-400.
+  This supersedes the older 10-30-hour Avalon target. Treat it as a playtest target,
+  not a promise independent of build, defenses, pack size and travel.
+- **Implementation (T4C-0134):** `HuntingExperienceCurve` supplies a level-and-health
+  kill-XP floor for reward-bearing, attack-capable level-150-to-400 creatures when the
+  registry loads. XP per HP continues growing through 400; bosses scale with their
+  additional health. Higher authored awards are preserved. The existing combat multiplier
+  applies once after the floor, with long runtime awards and saturation of the authored
+  int field. Zero-kill-XP encounters, lower levels, above-cap challenges, quests and saved
+  progress retain their existing rules. Java definitions, JSON additions and spawn aliases
+  must share the same registered result; the compendium and wiki read that result.
+  `HuntingExperienceCurveTest` guards growth, exclusions and integer boundaries. Generate
+  `docs/hunting-experience.md` with `HuntingExperienceReport` for current rewards and the
+  DPS required by the pacing target; that budget is not an observed combat benchmark.
+
+- **Owner correction (T4C-0132):** double monster damage and kill XP through
+  `MonsterExperience.MULTIPLIER`, without changing quest rewards or saved progress.
+  Carry awards through the player progression path as longs so a doubled Arch Drake
+  reward pays the full 4.2 billion before personal bonuses. Exported monster XP includes
+  the combat multiplier; the in-game wiki shows the combined combat/server rate.
+  The 15 Witness Isles and Threnody fields increase from 40 to 100 distinct anchors
+  each (600 to 1,500 creatures), spreading over connected native terrain. Preserve
+  original anchors, quest areas, NPC/travel/shrine buffers, one champion per training
+  field, and existing respawn times. Mainland and Kraanhold fields retain 40.
+
+- Owner direction: each new regular monster type needs a leveling area where moving
+  around can gather a large pack. `HuntingGrounds` supplies 100 distinct anchors per type
+  on Witness Isles and Threnody (T4C-0132), and 40 in mainland/Kraanhold fields,
+  with one runtime creature per anchor rather than multiplying the pack globally. Whole-pack
+  respawning must not be throttled by the legacy four/eight-creature local caps.
+- Dense packs remain inside their hunting district, outside quest-NPC, travel and shrine buffers.
+  Existing god/boss encounters remain separate. Use connected native terrain, not walkable water
+  or sealed castle rooms. Current 27 clearings are recorded in `hunting-grounds.json`.
+- Owner direction: early-island minor bosses should have substantial HP, modest damage, and be
+  accessible with about 150 AC at the first training ground and 250 AC at the second. They must
+  drop a return scroll and be reachable early on the new islands.
+- Implementation choices: separate tarantula, skraug and skeleton fields per island, each with
+  100 normal enemies and one larger matching-family champion,
+  peaceful until attacked; 100k/250k HP, 5m/15m base kill XP, 30s/45s respawn. Their pure melee
+  damage leaves 5–25/10–40 damage per landed hit at the target AC, with no penetration or spells.
+  No repeatable per-hit XP. All six training entries open with the island's existing arrival unlock.
+- Every champion guarantees a unique, weightless, reusable return scroll to its own field.
+  It stays in the backpack through death/rebirth and uses the same storage/drop restrictions
+  as divine return scrolls. These bosses and all new hunting creatures drop no recovery supplies.
+
+**High-level story checkpoint XP must be substantial relative to its intended level's XP curve**
+(owner direction, October 2026). Small million-XP payouts are insufficient for major late-game
+milestones. The Names We Choose now pays 30/50/75/100/150/200/175/250 million base XP;
+the Regent confrontation pays more than the following non-combat ritual, and the finale pays most.
+These are implementation choices, adjustable after playtesting. The configured server rate applies
+once; the separate monster combat multiplier does not apply to quest turn-ins. Its final turn-in opens at level 395 so the reward can help reach 400; do not require the XP
+cap before offering an XP-bearing finale. Existing level-400 players still respect the cap.
 - **T4C-0038's "don't touch the original quests" default is superseded for this content specifically**
   (owner, in chat, T4C-0066): the owner has asked to audit the original game's own quests against
   the real reference data and fill in what's genuinely missing or broken - the Dragon's Crypt tomb
@@ -1037,7 +1216,7 @@ should not consume it), that is a content change, not an editorial one, and need
 - **The `killlog.<canonical monster name>` quest-flag namespace is reserved** for the global,
   per-monster-type kill tally (`QuestService.killLogFlag()`/`killLog()`, backing the Monster Kill
   Log screen, Ctrl+K). It's written on *every* recognized kill, independent of any quest, using
-  `MonsterRegistry.findByName()`'s canonical name so aliased spawns (e.g. `"Rat"` → `Brown Rat`)
+  `MonsterRegistry.findByName()`'s canonical name so aliased spawns (e.g. `"Rat"` â†’ `Brown Rat`)
   share one counter. Don't reuse the `killlog.` prefix for a quest-specific flag - use `quest.<id>.*`
   for those, as every quest already does.
 
@@ -1178,7 +1357,7 @@ should not consume it), that is a content change, not an editorial one, and need
 - **Progress is saved on a timer, not only on the way out.** `MainGameScreen` autosaves every
   `AUTOSAVE_INTERVAL_SECONDS` (**15 s**, owner's number), on level-up, and on `pause()` (window
   minimise/close), on top of the event-driven `savePlayerState()` calls. Before T4C-0064 plain
-  play — XP, levels, kills, loot, walking — only reached disk if the client got to `dispose()`,
+  play â€” XP, levels, kills, loot, walking â€” only reached disk if the client got to `dispose()`,
   so a crash or a force-closed window threw the session away. Event-driven saves are still worth
   adding for anything expensive or irreversible; the timer is the floor, not the plan.
 - **A quest-giver that isn't a `ScriptedNpc` needs its turn-in wired by hand.**
@@ -1192,8 +1371,24 @@ should not consume it), that is a content change, not an editorial one, and need
   Options). When you add or change a key binding, add or update its `controls.<topic>.<n>`
   lines in `lang.json`. `ControlsScreenTest` checks that each line is complete.
 - **Debug keys need a modifier.** A bare letter key must never trigger a developer action; the
-  old bare-R "reload map graphics" is now Ctrl+Shift+R. Holding Ctrl suppresses walking, so
+  old bare-R "reload map graphics" is now Ctrl+Shift+R, only when that exact chord is
+  unbound and no journal is open (T4C-0141). Configured macros own their chord; the
+  polling input path must not also execute a developer action for it. Holding Ctrl suppresses walking, so
   Ctrl+letter window shortcuts never also move the character.
+- **Normal modifier keys are not layout-edit permission (T4C-0141).** UI movement and
+  resizing require explicit `-Dt4c.gui.layoutEditing=true` via `GuiLayoutEditing`.
+  Gate generic boxed controls, screen drag/resize handlers, HUD buttons and quick-slot
+  positioning consistently. Keep normal UI clicks and text-editor Ctrl/Shift behavior.
+  `GuiLayoutEditingTest` covers default safety and explicit developer opt-in.
+- **Item macros can be used with a passive journal open (T4C-0141).** Resolve through
+  `GameInputHandler.resolveMacro`, retaining text/key-binding capture protection and
+  keeping targeted spell macros blocked by the journal. The protection regression
+  must assert actual effective AC equals base AC plus the rolled bonus, not just that
+  a buff timer appears. Owner direction: roll uniformly from 1 through player level
+  below level 200; at level 200 and above, roll uniformly from `round(level * 0.8)`
+  through player level, both endpoints included. Require the equipped belt and retain
+  the thirty-minute duration. Existing active rolls remain until renewed. `ItemSpellIntegrityTest` and
+  `GameInputHandlerTest` cover the item, key ownership and character-sheet path.
 - **Hide unused decorations in the original art at the window's own transparency.** A screen
   that doesn't use some part of the original art (the quest journal's three reward squares, the
   macro window's six circles) must hide it with `GuiDraw.drawOverlayWithPatch`. That helper draws
@@ -1261,18 +1456,18 @@ the owner asked for an unprompted "surprise"; the owner can overrule any of them
   tinted pale blue), name ("Echo of <name>"), level, attack or archery skill, agility, dodge.
   Casters (by dominant stat) throw their highest-level known attack spell at range; bow users
   shoot at range; everyone else melees. It has no AC and no kill XP.
-- **Scale to the player, not to a tier table.** A hit lands for 6–10% of the maker's max HP
-  times the trial multiplier `1 + 0.12 × (trial − 1)` (2.08 at trial 10). Physical hits add the
+- **Scale to the player, not to a tier table.** A hit lands for 6â€“10% of the maker's max HP
+  times the trial multiplier `1 + 0.12 Ã— (trial âˆ’ 1)` (2.08 at trial 10). Physical hits add the
   maker's AC to the raw roll so armor can't erase them; light spells are pre-scaled by the
   5000 light-resist baseline. Its health is the strongest of the maker's first five blows times
-  `14 + 2 × trial` (provisional 4 × maker max HP before the first blow). Keep any future
+  `14 + 2 Ã— trial` (provisional 4 Ã— maker max HP before the first blow). Keep any future
   "fight yourself" content on this rule: difficulty must not depend on how extreme a character's
   numbers are.
-- **Rewards (first win of each trial only):** XP = `(0.25 + 0.05 × (trial − 1))` × the XP the
+- **Rewards (first win of each trial only):** XP = `(0.25 + 0.05 Ã— (trial âˆ’ 1))` Ã— the XP the
   current level still needs (threshold minus current XP; none at the cap). It is fed into
   progression pre-divided by `SERVER_XP_RATE`, so the amount shown is the amount credited -
-  any reward that is already "a share of real XP" must do the same; gold = `level × 250 × trial`, capped at the
-  1,500,000 endgame quest ceiling (section 7). Rematches after all ten pay `level × 100` gold.
+  any reward that is already "a share of real XP" must do the same; gold = `level Ã— 250 Ã— trial`, capped at the
+  1,500,000 endgame quest ceiling (section 7). Rematches after all ten pay `level Ã— 100` gold.
   Winning trial 10 binds the Echo companion (id `mirror_echo`, rebuilt from the player's current
   look on every call and on load, since the companion save only stores the id).
 - **Falling to an Echo is free:** no XP/item loss or corpse; the player wakes in place at half
@@ -1307,7 +1502,7 @@ best time actually measures something, not how strong the character happened to 
   ten trials use, just on a coarser axis since there's no player-scaling to lean on here.
 - **Repeatable by design, but not a farm spot.** Every Sandglass Sentinel's own `xpOnDeath` is 0
   and its gold is small - the reward for winning isn't the kill, it's the clock. A **new best**
-  at a tier pays a one-time bonus (`tier × 5,000` gold, `MainGameScreen.hourglassNewBestReward`);
+  at a tier pays a one-time bonus (`tier Ã— 5,000` gold, `MainGameScreen.hourglassNewBestReward`);
   clearing a tier again without beating your own record pays nothing from the trial itself
   (only whatever the Sentinel's own small loot table drops). **My call, flag for the owner to
   overrule:** this trades "risk of becoming an efficient repeatable grind spot" for "the record
@@ -1453,6 +1648,15 @@ only real friendly-clickable entity today is the player's own companion
   with quest targets inside the objective area and required bosses reachable from the giver.
   Current monster tiers above the player cap remain challenge content; do not present them as
   attainable player levels. Damage/reward balancing is a separate follow-up.
+- **Approved mythic creatures (T4C-0154):** Obsidian Dragon, Bronze Griffin and Swamp Hydra
+  use their reviewed designs as distinct level-1250-to-1400 bosses on Shattered Isle. Keep their
+  eight-frame front/rear walk and attack strips and death strips in the source art folder;
+  pack all five directional animation keys so turning and targeting work with the existing
+  monster renderer. Their spawns stay in separate walkable clearings.
+- **Shattered Isle access (T4C-0155):** the island is separate from Kraanhold land and reachable
+  through Kaelis's three-Dragonguard passage quest. Completion opens both the central island
+  landing and the Drake's Lair return stop in Locations. Keep the central arrival clear of boss
+  aggro and preserve the ocean gap, connected habitat paths and permanent save/rebirth unlock.
 - **Verification:** inspect map changes with the actual terrain/decor renderer as well as
   collision connectivity checks. Sparse screenshots, ground-only minimaps or raw template
   masks do not establish that a playable scene renders correctly.
@@ -1462,7 +1666,7 @@ only real friendly-clickable entity today is the player's own companion
 
 - **Owner direction:** new continents must not overlap existing interiors. Check historic terrain,
   entrances and both endpoints of travel links before claiming apparently empty world space.
-- **Implementation decision:** extend the world eastward from 3072×3072 to 5120×3072 and move
+- **Implementation decision:** extend the world eastward from 3072Ã—3072 to 5120Ã—3072 and move
   Avalon +2700 X. Keep the original origin, Y coordinates and layer IDs. Existing islands,
   Library rooms, cave/stair links and dungeon/cavern/underworld dimensions remain in place.
 - **Save compatibility:** migrate only identifiable old Avalon tiles, using a versioned ownership
@@ -1514,13 +1718,13 @@ The pricing opt-in must survive Content Studio editing and Java catalogue export
 
 ## Avalon outer islands and landmarks (T4C-0105)
 
-- The 5120×3072 world contains exactly two new Avalon islands in this pass: Moonwake Shoals north of the Wilds and Emberglass Crown south of the blighted mainland. Both are joined to existing land by narrow walkable causeways. The mainland gains Crescent Pools, Oathstone Grove and Sable Fen. Keep the region's names and stories original; the Realmud and T4C Fantasy map layouts are structural references only.
+- The 5120Ã—3072 world contains exactly two new Avalon islands in this pass: Moonwake Shoals north of the Wilds and Emberglass Crown south of the blighted mainland. Both are joined to existing land by narrow walkable causeways. The mainland gains Crescent Pools, Oathstone Grove and Sable Fen. Keep the region's names and stories original; the Realmud and T4C Fantasy map layouts are structural references only.
 - These are terrain and scenery destinations. Do not treat the copied building art as functional stairs, chests or teleports. Spawn groups, level bands, bosses, quest dialogue and travel services are separate follow-ups. Preserve existing NPC/monster/quest coordinates and island origins when adding those systems.
-- Preserve the user's current handmade Avalon scenery at (3790–3818, 1228–1265). New island terrain must claim untouched ocean; detail on existing land must leave decorated, blocked and safe-zone tiles intact. Keep road and encounter centers visible rather than introducing dense tree canopies. Validate reachability from the Avalon sanctuary and inspect runtime ground/decor rendering after map changes.
+- Preserve the user's current handmade Avalon scenery at (3790â€“3818, 1228â€“1265). New island terrain must claim untouched ocean; detail on existing land must leave decorated, blocked and safe-zone tiles intact. Keep road and encounter centers visible rather than introducing dense tree canopies. Validate reachability from the Avalon sanctuary and inspect runtime ground/decor rendering after map changes.
 - `docs/avalon-region-expansion.md` records the site dimensions, coordinates and future encounter clearings. `AvalonRegionBuilder` is a one-time authoring tool, intentionally guarded against repainting an already edited island.
 ## Avalon and the Hollow Dawn campaign (T4C-0106)
 
-- **Owner direction:** Avalon is the self-sufficient level 200-300 region. A distinct third eastern land, Threnody Reach, serves levels 300-400. Avalon 200-300 should take roughly 10-30 hours; treat that as a playtest target, not a guarantee from quest XP alone.
+- **Owner direction:** Avalon is the self-sufficient level 200-300 region. A distinct third eastern land, Threnody Reach, serves levels 300-400. Each hundred-level region targets roughly 5-10 hours of appropriate solo hunting (T4C-0134); treat that as a playtest target, not a guarantee from quest XP alone.
 - **Story direction:** an original ancient evil god with minions and lieutenants, revealed through a multi-stage NPC-led quest. The tone may draw on broad epic-fantasy themes, but names, places, characters and plot must be original. The Hollow Dawn lore and route are in `docs/avalon/hollow-dawn-campaign.md`.
 - **Implementation choice:** the first two Ophira quests remain save-compatible and use kill objectives; the 2% unique equipment drops are optional. The later route offers two alternative two-stage accounts and six shared Threnody stages. Active stages require acceptance, marked kills, a report and a level floor before progressing. The Pale Cantor and Dusk Regent stages also require guaranteed quest relics consumed at turn-in. Quest completion flags unlock both Threnody travel and the final court.
 - **World-map safety:** the world now has 6144x3072 tiles. Old 5120-column coordinates, stair links and cave links stay fixed. Threnody's camp is safe, outer courts are connected, and the inner arena is physically separated by water until its gated travel destination opens. The one-time builder must preserve the previous world rows.
@@ -1537,5 +1741,105 @@ The pricing opt-in must survive Content Studio editing and Java catalogue export
 - **Lore continuity:** Oberon became Makrsh P'Tangh; Lothar's heart imprisons Gluriurl; the Harbinger's judgments remain their own history. Rhunor is a separate threat exploiting erasure of mortal testimony. Neither Makrsh's defeat nor rebirth is retroactively made a prerequisite for the new investigation.
 - **Branch and objective contract:** Moonwake/Ilyra/Pale Cantor and Emberglass/Soren/Cinder Marshal are alternatives, not cumulative requirements. Their witness must be heard before the clue is granted on new playthroughs. Existing accepted lieutenant stages continue. Maelin and Vael's chapter-specific lines state the next speaker, objective and keyword, and Vael's epilogue follows Rhunor's completed stage. Existing travel and quest flags survive rebirth.
 - **Future content boundary:** The current route reuses the established maps, enemies and rewards. Extra rooms, bosses or item-delivery steps can expand it later only with corresponding reachable dialogue and save-compatible gates.
-- **Owner direction:** leveling is primarily monster hunting. Spread enough ordinary enemies around each level band for one or two players, with quick refill when players move between clearings. Keep bosses on their own slower cadence. Density and XP per hour need live playtesting before treating the 10-30 hour target as achieved.
+- **Owner direction:** leveling is primarily monster hunting. Spread enough ordinary enemies around each level band for one or two players, with quick refill when players move between clearings. Keep bosses on their own slower cadence. Density and XP per hour need live playtesting before treating the 5-10-hour-per-100-level target as achieved.
 - **Owner direction:** high-level items should offer build choices in armor, robes, wings, jewelry and several weapon types, with coherent elemental colors. New droppable items must have an obtainable source and sell for more than one gold; rarity should increase resale. The first equipment families use six elements. Existing palette sprites color robes and wings, but matching colored plate sprites are not in the shipped pack, so distinct plate visuals remain open work.
+
+## Divine Concord angelic gods
+
+- **Owner correction (T4C-0150):** each divine shrine loads exactly one embodiment.
+  `MonsterManager` must bypass the ordinary spawn multiplier for canonical identities
+  in `DivinePantheon`, after resolving spawn aliases through the registry. Keep
+  ordinary multiplier behavior, authored hunting populations and divine respawn
+  timers intact. Extend the existing shrine integrity test to load each shrine
+  through the real manager and assert one live instance; one annotation alone does
+  not prove one runtime creature. Monsters are reconstructed at map load, so existing
+  duplicates are cleared by reloading/restarting without editing player saves.
+
+- **Owner correction (T4C-0149):** gods should require active healing and tactical play
+  to a moderate degree. Thor doing roughly 34 damage after resistance exposed the
+  ordinary caster cap being inappropriate for divine trials. Give divine judgment
+  spells their own tier budget; keep the ordinary pack-caster reduction intact.
+  Implementation choice: caster judgments use twice the authored melee band for
+  lesser gods and three times for elders; elemental Seraph trials retain their
+  original lower band, and physical Artemis/Athena attacks are unchanged. Store
+  judgment bounds on `DivinePantheon.God`, use them in `DivineAvatar` and spell
+  definitions, and bypass ordinary quartering only for those registered judgment
+  IDs. Preserve elemental resistance, the existing debuffs, aura benefits, HP,
+  loot and respawn rules. A representative Thor check at 652 Air resistance must
+  exert more average pressure than a cursed fifty-rebirth aura while leaving a
+  normal hit below a tenth of the reported 9,000-HP baseline. This is a tuning
+  benchmark, not a promise about every build or a damage floor that ignores gear.
+  Export each caster's actual spell-specific limit, including divine exceptions.
+
+- **Owner correction (T4C-0131):** Artherk and Ogrimar each have 60,000 HP. The elder gods (Athena, Apollo, Anubis and Thor) use timed combat debuffs: Armor Melt reduces total AC by 25%; Curse reduces all received healing by 40%, including potions and regeneration. Athena also reduces Attack, Archery and Dodge by 20% of true values; the three casters instead reduce all elemental resistances by 20% of true values. Effects last 20 seconds, refresh without stacking, and share a 10-second cast interval per god. Use existing status visuals and active-effect tooltips. Keep direct level-up/rebirth restoration intact. Lesser gods and Seraph trials retain their normal attacks.
+
+- **Owner direction:** add Artherk and Ogrimar as good/evil human angels with white/black equipment and existing good/evil quest-item drops. Add a selection of mythological gods covering every caster school, warriors and archers. The explicit request for Greek, Norse and Egyptian names supersedes the older fiction-only preference for this content line.
+- **Implementation:** ten peaceful-until-challenged embodiments occupy reachable shrine sites across the Witness Isles and Threnody, with three power/equipment tiers. Artherk and Ogrimar respawn after five minutes; other gods use five or seven and a half minutes. Their authored timers persist through every respawn cycle. The Celestial Chronicler near the Isles arrival point explains the story, locations and rewards. See `docs/divine-concord.md`.
+- **Equipment:** each god has a full outfit, wings, weapon and jewelry. Artherk and Ogrimar have separate caster and warrior body equipment. Eight newly packed palette families include white/black plate, robes, weapons and wings, with male/female shapes and matching inventory icons. Existing balance formulas and reserved numeric IDs apply.
+- **Return scroll contract:** an independent 1% drop per god grants a reusable scroll to that shrine. It is bound to the backpack, cannot be dropped/junked/sold/stored, and survives death, save/load and rebirth. The normal item-spell path handles use and cooldown. Death penalties now honor undroppable items.
+
+- **Owner correction (Divine Concord):** Artherk and Ogrimar are repeatable lower-level Seraph trials (levels 100/110), with reduced combat stats and matching equipment requirements. Each kill guarantees exactly one uniformly selected good/evil Seraph component, independently rolls 50% for exactly one wearable, and independently rolls 1% for its bound return scroll. Both retain five-minute respawns. The remaining gods keep their existing tiers.
+
+- **Owner correction (recovery loot):** New campaign monsters and gods do not drop health potions or mana recovery supplies. Mark campaign enemy classes with `@NoRecoveryLoot` (inherited by divine avatars); the registry enforces the exclusion after authored loot and before automatic endgame utility additions, including spawn aliases. Quest items, equipment and bound-scroll rules retain their own rolls.
+
+## New-world settlements and hunting layout
+
+- **Owner direction:** the new islands and terrain need castles, buildings, meaningful settlement structure and a broader distribution of monsters.
+- **Implementation:** native stone castles and building templates form fortified districts and outlying settlements across the Witness Isles, Moonwake, Emberglass, Threnody and Kraanhold. The shipped map and `assets/maps/worldmap/world-detail-layout.json` are the authored result; see `docs/world-detail-pass.md`. Preserve that detail when making later terrain edits.
+- **Gameplay contract:** protect travel arrivals, shrine landings, sanctuary services and quest witnesses. Keep solid walls and visibly open entrances, preserve the Hollow Dawn moat, and keep hunting spawns readable outside dense ghost canopies. Hunting geofences follow the broader placements; original Verdant Warden escorts stay outside the Vigil objective.
+
+## Interface direction (owner, 2026-10-24)
+
+- Reference screenshots guide the interface; do not copy another game's interface exactly. Use shaded, layered surfaces and restrained bronze accents rather than plain yellow rectangles.
+- Health and mana belong at the bottom center. Chat has its own taller panel at the lower left. Remove the former quick-slot area while retaining keyboard spell macros. Show active effects as compact icons near the vitals, with duration information available.
+- Gold must be prominent and legible in inventory, and armor class must stand out on the character sheet.
+- Dropping or junking a stacked inventory item must ask for a quantity; support direct number entry and an All option. Cancelling must preserve the items and return to the inventory.
+
+- Active self-spell icons show the spell name and a live remaining duration on hover; keep the tooltip visible while hovered and clear it when the pointer leaves. Permanent effects show an unlimited duration.
+- The macros page uses the same journal frame, tabs and shaded controls as the inventory and character pages, preserving keyboard binding and reorder behavior.
+
+- Main-screen HUD arrangement (owner, 2026-10-24): combine health and mana in one bottom-center panel without Health/Mana labels. Put the character name, level and menu icons at the top left; keep the menu icons at their existing size. Put the radar at the bottom right and remove the main-screen gold panel; inventory remains the place to read gold.
+
+- Approved vitals design (owner, 2026-10-24): the blue mana indicator encases the red health orb as a 300-degree horseshoe, with the mana number in its bottom gap. Use the selected Horseshoe arc preview as the reference; remove the separate horizontal mana bar and rectangular vitals frame. Keep resource words out of the HUD. The owner prefers seeing alternative HUD mockups in chat before a new design is implemented.
+
+- Quest journal direction (owner, 2026-10-24): match the other redesigned panels, identify main story versus side quests, and show the current saved stage and next useful action. Refresh open entries from live state, including inventory and level gates; opening the journal must never change quest progress.
+- Journal classification: the Witness Isles passage, Avalon pact, Hollow Dawn and Concord routes, plus the classic alliance and royal audience, are main story. Crafting, bounties, optional rebirth shortcuts and the optional mainland missing-names investigation are side quests. Preserve existing quest IDs and saved flags; older accepted stages remain valid.
+
+### Family training fields and repeatable unique drops
+
+Training fields contain 100 normal creatures and exactly one larger matching-family boss. Witness targets about 150 AC, Threnody about 250 AC. Bosses award at least 100,000 gold and 2 million base XP, with a guaranteed bound reusable scroll back to their own field. All hunting fields appear in Locations with existing regional unlocks. Unique item metadata describes rarity and does not limit duplicate ownership or pickup; carry capacity and explicit one-time quest guards still apply.
+
+### In-game World Wiki
+
+The leveling guide (T4C-0135) is the default Wiki landing page in the Guides
+category, using the existing journal controls. Keep its overview and four
+chapters (1-150, 150-250, 250-350 and 350-400) searchable and linked to the
+actual monsters, hunting fields, NPCs and quests. Author advice in English i18n
+text, but compute displayed rewards, field populations, quest turn-in levels and
+next-level kill estimates from the loaded registries and XP curve when opened.
+Full-kill estimates include damage XP and combat/server rates, exclude personal
+bonuses, and assume full credit from zero progress. Guide browsing is read-only
+and cannot bypass story or travel gates. Existing links into item/quest articles
+must still select their requested category, and Back must return to the guide.
+
+The Wiki journal tab and Ctrl+Shift+B expose the loaded item, spell, monster, NPC, quest and area registries. Search and links are read-only. Resolve definitions through runtime registry lookups so JSON overrides match gameplay. Drop percentages are individual per-kill odds; explain grouped seraph rewards separately. Show effect-driven spell formulas rather than misleading zero fixed damage. Keyboard capture must prevent movement and macros while searching.
+
+### Adventure collections, progression and repeating world events
+
+Ctrl+J / Adventure exposes permanent equipment discovery, read-only goal suggestions and repeating local world-event chains. Successful inventory grants record discovery; old carried, equipped and personal-storage gear migrates on load. Rebirth and sale never erase history. Event chains must include world interaction and timed defense, not only kill counters. Persist deadlines and pending rewards, reject expired/offline completions, and retain claims on capacity failure. Cleanup must remove only owned transient creatures and bypass death rewards. Event equipment uses the existing ItemBalance budget; source metadata and journal links must resolve. See docs/adventure-journal.md.
+
+### Compact vitals and mouse steering
+
+Health/mana uses a compact bottom-center orb; active spell icons wrap beside it on the right and share their render/hit-test layout. Left-button dragging may steer only after an unclaimed ground press, with a small drag threshold. Actor, drop, object, spell-target, quickbar and menu interactions retain priority. Mouse direction uses the same eight-way projected grid movement, speed and collision rules as keyboard movement; keyboard input takes priority. Release, UI focus and window pause cancel steering.
+
+- Storage direction (owner, 2026-10-25): personal storage and the Bloodline Vault should match the new journal panels. Dragging a stack in either direction must ask how many to transfer before moving any items; cancelling leaves the stack unchanged. A single item transfers directly. Explicit Shift-click remains the whole-stack shortcut.
+- Storage visual update approved and installed (owner, 2026-10-25): use the current journal colors and typography. Keep personal storage and the Bloodline Vault in one window, with the backpack beside them, a title that follows the selected storage source and separate readable gold totals.
+
+- Weapon auto-attack (owner, 2026-10-25): Ctrl+C enables continuous physical attacks for warriors/archers and continues with the closest enemy when the previous attack ends. Keep an eligible current target, then acquire the closest attackable monster within the weapon’s normal reach and line of sight; wait if none is available. This does not walk the player or automate spells/NPC attacks. Preserve normal cooldowns and sanctuary protection. Chat, menus, movement, stun, meditation and channels pause the mode. Ctrl+C, Escape, right-click, ground clicks, death, map transitions and window pause cancel it. The existing combat-mode indicator and localized chat messages show the toggle; no new visual design is introduced.
+
+- Level-up restoration (owner, 2026-10-25): each gained level fully restores HP and mana after applying the existing permanent maximum-resource gains, before level-up effects and saves run. Ordinary XP gains without a level-up, including XP at the level cap, do not refill resources.
+
+- Inventory equip shortcut (owner, 2026-10-25): dropping backpack equipment onto the central character preview equips its declared slot without requiring a precise slot drop. Use the normal validation, replacement and ring-slot rules; non-equipment stays in the backpack and is not consumed by this gesture.
+- Seraph attribute training (owner, 2026-10-25): Betran’s per-attribute ceiling is +100 above the rebirth starting value. Every +1 attribute costs exactly 1 seraph point, including repeated and bulk purchases; there is no escalating cost. Reaching +100 in one attribute costs 100 seraph points. Derive NPC and reference-site limits/costs from the shared rebirth rules. Existing allocated attributes and remaining energy are preserved; the new price applies to future purchases.
+- Complete menu consistency (owner, 2026-10-25): extend the current shaded obsidian journal surfaces, ivory text, restrained bronze accents and inset controls to every player-facing menu, including buying/selling, teaching/training, quests, NPC speech/prompts, personal/account storage, map/travel, options/controls, kill log, character selection/creation and confirmations. Preserve current transactions, quantities, requirements, keyboard capture, tooltips, scrolling and cancellation behavior. Already themed journal pages remain the visual reference. Stage representative previews and obtain review under AGENT.md before installing the remaining visual changes; track the complete coverage in docs/ui-menu-rollout.md.
+- Rebirth weapon proficiency (owner, 2026-10-25): both base Attack and base Archery begin at 15 times the rebirth count, reaching 750 at x50. Other skills still reset through normal rebirth. Older reborn saves receive this minimum on load without reducing higher trained values or spending/refunding skill points. Loading repeatedly must not stack the bonus; never-reborn characters receive no new minimum.

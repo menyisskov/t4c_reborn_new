@@ -1,0 +1,53 @@
+{
+  "key": "divine_apollo_leggings",
+  "name": "${item.divine_apollo_leggings}",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs__pal97",
+  "appearanceInventory": "64kInvPlateArmorLegs__pal97",
+  "numId": 55505,
+  "appearanceId": 55505,
+  "weight": 1,
+  "armorClass": 41.3,
+  "requirements": {
+    "endurance": 400,
+    "wisdom": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50385,
+      "statId": 4,
+      "expression": "54"
+    },
+    {
+      "boostId": 50386,
+      "statId": 23,
+      "expression": "65"
+    },
+    {
+      "boostId": 50387,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50388,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50389,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50390,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50391,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

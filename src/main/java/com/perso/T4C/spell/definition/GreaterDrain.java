@@ -27,7 +27,7 @@ public final class GreaterDrain {
         0,
         "0",
         "0",
-        70497,
+        63673,
         null,
         10169,
         6,

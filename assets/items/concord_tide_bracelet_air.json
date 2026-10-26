@@ -1,0 +1,58 @@
+{
+  "key": "concord_tide_bracelet_air",
+  "name": "${item.concord_tide_bracelet_air}",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "numId": 59013,
+  "appearanceId": 59013,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61092,
+      "statId": 1,
+      "expression": "5"
+    },
+    {
+      "boostId": 61093,
+      "statId": 16,
+      "expression": "13"
+    },
+    {
+      "boostId": 61094,
+      "statId": 4,
+      "expression": "5"
+    },
+    {
+      "boostId": 61095,
+      "statId": 12,
+      "expression": "5"
+    },
+    {
+      "boostId": 61096,
+      "statId": 13,
+      "expression": "5"
+    },
+    {
+      "boostId": 61097,
+      "statId": 14,
+      "expression": "5"
+    },
+    {
+      "boostId": 61098,
+      "statId": 15,
+      "expression": "5"
+    },
+    {
+      "boostId": 61099,
+      "statId": 22,
+      "expression": "5"
+    }
+  ],
+  "armorClass": 3.6,
+  "requirements": {
+    "intelligence": 80,
+    "wisdom": 80,
+    "endurance": 80
+  }
+}

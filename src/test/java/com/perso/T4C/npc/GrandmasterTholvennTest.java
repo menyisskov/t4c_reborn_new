@@ -18,9 +18,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** T4C-0033: Grandmaster Tholvenn forges a Godsforged item only once the player holds both a
- * Tempered Godcore and a Bound Godsigil at once - a check a single QuestDef can't express
- * natively (see GrandmasterTholvenn.javaBehavior()). */
+/**
+ * T4C-0033: Grandmaster Tholvenn forges a Godsforged item only once the player holds both a
+ * Tempered Godcore and a Bound Godsigil at once - a check a single QuestDef can't express natively
+ * (see GrandmasterTholvenn.javaBehavior()).
+ */
 class GrandmasterTholvennTest {
   private static final String CORE = "item.tempered_godcore";
   private static final String SIGIL = "item.bound_godsigil";
@@ -101,11 +103,8 @@ class GrandmasterTholvennTest {
     QuestService quests = new QuestService(XpCurve.loadDefault(), null, null);
     GrandmasterTholvenn npc = new GrandmasterTholvenn(new NpcContext(quests));
     Player player = new Player();
-    player.setStrength(500);
-    // Already owns the target item by some other means - InventoryService.add() would refuse a
-    // second unique copy, so the forge must refuse up front rather than spend the core/sigil for
-    // a reward that can never actually be granted (the bug Codex flagged on this PR).
-    player.getInventory().add("godsforged_zephyr_wand");
+    player.setStrength(0);
+    // A carry-weight failure must preserve both crafting components.
     player.getInventory().add(CORE);
     player.getInventory().add(SIGIL);
     NpcBehavior behavior = npc.javaBehavior();
@@ -115,7 +114,7 @@ class GrandmasterTholvennTest {
 
     assertEquals(1, InventoryService.count(player, CORE));
     assertEquals(1, InventoryService.count(player, SIGIL));
-    assertEquals(1, InventoryService.count(player, "godsforged_zephyr_wand"));
+    assertEquals(0, InventoryService.count(player, "godsforged_zephyr_wand"));
     assertEquals(
         QuestService.STATUS_NOT_STARTED,
         player.getQuestFlag(

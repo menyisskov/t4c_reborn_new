@@ -33,7 +33,7 @@ public final class LameDuDragonRubis {
         3579,
         1,
         1087,
-        "1d1200+3000",
+        "1d251+649",
         "if(750-self.agi/250*750/2<600?600:750-self.agi/250*750/2)+1d469",
         0,
         -1,

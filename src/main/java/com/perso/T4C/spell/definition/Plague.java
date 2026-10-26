@@ -27,7 +27,7 @@ public final class Plague {
         0,
         "300000",
         "6000",
-        48897,
+        42537,
         null,
         10107,
         6,

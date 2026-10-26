@@ -1,0 +1,55 @@
+{
+  "key": "divine_ogrimar_gauntlets",
+  "name": "${item.divine_ogrimar_gauntlets}",
+  "bodyPart": "LEFT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL__pal91",
+  "appearanceInventory": "64kInvPlateGlove__pal91",
+  "numId": 55903,
+  "appearanceId": 55903,
+  "weight": 1,
+  "armorClass": 7.4,
+  "requirements": {
+    "endurance": 100,
+    "intelligence": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50703,
+      "statId": 1,
+      "expression": "18"
+    },
+    {
+      "boostId": 50704,
+      "statId": 24,
+      "expression": "18"
+    },
+    {
+      "boostId": 50705,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50706,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50707,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50708,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50709,
+      "statId": 22,
+      "expression": "7"
+    }
+  ],
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedSecondary": "PupPlateGloveR__pal91"
+}

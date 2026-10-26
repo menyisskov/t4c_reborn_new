@@ -1,0 +1,52 @@
+{
+  "key": "concord_oath_ring_light",
+  "name": "${item.concord_oath_ring_light}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 1",
+  "numId": 59006,
+  "appearanceId": 59006,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61043,
+      "statId": 4,
+      "expression": "8"
+    },
+    {
+      "boostId": 61044,
+      "statId": 23,
+      "expression": "10"
+    },
+    {
+      "boostId": 61045,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 61046,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 61047,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 61048,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 61049,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "armorClass": 2.5,
+  "requirements": {
+    "wisdom": 100,
+    "endurance": 50
+  }
+}

@@ -27,7 +27,7 @@ public final class Fireball {
         0,
         "0",
         "0",
-        34726,
+        29457,
         null,
         10018,
         1,

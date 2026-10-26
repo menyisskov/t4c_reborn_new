@@ -14,13 +14,13 @@ public final class PlayerProgression {
     this.random = random;
   }
 
-  void addXp(Player player, int amount, XpCurve xpCurve, boolean applyMultiplier) {
+  void addXp(Player player, long amount, XpCurve xpCurve, boolean applyMultiplier) {
     if (player == null || amount <= 0) {
       return;
     }
-    amount = Math.round(amount * com.perso.T4C.config.GameConstants.SERVER_XP_RATE);
+    amount = Math.round(amount * (double) com.perso.T4C.config.GameConstants.SERVER_XP_RATE);
     if (applyMultiplier) {
-      amount = Math.round(amount * (1f + player.getBuffXpMultiplier()));
+      amount = Math.round(amount * (1d + player.getBuffXpMultiplier()));
     }
     player.setCurrentXp(player.getCurrentXp() + amount);
     if (xpCurve == null) {
@@ -57,9 +57,9 @@ public final class PlayerProgression {
     int hpGain = hitPointGainBase(player.getEndurance()) + random.nextInt(3);
     int manaGain = manaGainBase(player.getIntelligence(), player.getWisdom()) + random.nextInt(3);
     player.setMaxHp(player.getMaxHp() + hpGain);
-    player.setCurrentHp(player.getCurrentHp() + hpGain);
+    player.setCurrentHp(player.getMaxHp());
     player.setMaxMana(player.getMaxMana() + manaGain);
-    player.setMana(player.getMana() + manaGain);
+    player.setMana(player.getMaxMana());
     return new int[] {hpGain, manaGain};
   }
 

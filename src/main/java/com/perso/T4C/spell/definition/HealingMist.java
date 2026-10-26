@@ -27,7 +27,7 @@ public final class HealingMist {
         0,
         "0",
         "0",
-        191811,
+        200625,
         null,
         10140,
         5,

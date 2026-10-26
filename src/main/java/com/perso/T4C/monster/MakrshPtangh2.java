@@ -34,7 +34,6 @@ public final class MakrshPtangh2 extends NamedEventMonster {
         400,
         1500,
         java.util.List.of(
-            new MonsterDef.LootDrop("ptanghs_boneshard_longbow", 0.01f),
             new MonsterDef.LootDrop("ptanghs_lichbone_staff", 0.01f),
             new MonsterDef.LootDrop("item.wyrmforged_ember", 0.05f),
             new MonsterDef.LootDrop("serious_healing_potion", 0.3f),

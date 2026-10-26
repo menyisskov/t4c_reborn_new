@@ -1,0 +1,57 @@
+{
+  "key": "eclipse_longbow",
+  "name": "${item.eclipse_longbow}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 7000000,
+  "weight": 6,
+  "requirements": {
+    "strength": 225,
+    "agility": 1450
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59924,
+  "structure": 9,
+  "appearanceId": 448,
+  "dmgFormula": "1d501+1549+4*arrow_dmg",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "atkDelay": "850",
+  "boosts": [
+    {
+      "boostId": 732040,
+      "statId": 6,
+      "expression": "121"
+    },
+    {
+      "boostId": 732041,
+      "statId": 10035,
+      "expression": "true_skill(35)*50/100"
+    },
+    {
+      "boostId": 732042,
+      "statId": 12,
+      "expression": "36"
+    },
+    {
+      "boostId": 732043,
+      "statId": 13,
+      "expression": "36"
+    },
+    {
+      "boostId": 732044,
+      "statId": 14,
+      "expression": "36"
+    },
+    {
+      "boostId": 732045,
+      "statId": 15,
+      "expression": "36"
+    },
+    {
+      "boostId": 732046,
+      "statId": 22,
+      "expression": "36"
+    }
+  ]
+}

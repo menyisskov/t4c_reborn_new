@@ -1,0 +1,53 @@
+{
+  "key": "divine_artherk_leggings",
+  "name": "${item.divine_artherk_leggings}",
+  "bodyPart": "LEGS",
+  "appearanceEquippedPrimary": "PupPlateLegs__pal90",
+  "appearanceInventory": "64kInvPlateArmorLegs__pal90",
+  "numId": 55805,
+  "appearanceId": 55805,
+  "weight": 1,
+  "armorClass": 10.3,
+  "requirements": {
+    "endurance": 100,
+    "wisdom": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50605,
+      "statId": 4,
+      "expression": "15"
+    },
+    {
+      "boostId": 50606,
+      "statId": 23,
+      "expression": "18"
+    },
+    {
+      "boostId": 50607,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50608,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50609,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50610,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50611,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

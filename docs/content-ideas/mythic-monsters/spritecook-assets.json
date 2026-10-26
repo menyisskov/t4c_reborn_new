@@ -1,0 +1,107 @@
+{
+  "obsidian_dragon.png": {
+    "asset_id": "7020347b-d4e0-45cc-95a0-43fe08dfe9f3",
+    "sha12": "bda2d617e086",
+    "label": "Obsidian Dragon"
+  },
+  "griffin.png": {
+    "asset_id": "959cd2d5-3cc8-447f-878d-2613cc63281b",
+    "sha12": "8253ddd72838",
+    "label": "Bronze Griffin"
+  },
+  "hydra.png": {
+    "asset_id": "0c02cbec-ecce-412d-83a3-5ef62809d90c",
+    "sha12": "9c6d0f997f11",
+    "label": "Swamp Hydra"
+  },
+  "assets/sprites/source/mythic/dragon_walk.png": {
+    "asset_id": "14400210-1663-4889-baf2-57ea3ab5dc2f",
+    "sha12": "bf9ccd788a5d",
+    "label": "Dragon Walk"
+  },
+  "assets/sprites/source/mythic/griffin_walk.png": {
+    "asset_id": "d9783199-0671-4d91-b723-75fa2be622ed",
+    "sha12": "5f2f357d3b75",
+    "label": "Griffin Walk"
+  },
+  "assets/sprites/source/mythic/hydra_walk.png": {
+    "asset_id": "e8d3c433-121d-4ad1-b304-4d38f8a5a2c3",
+    "sha12": "b490d95c21f9",
+    "label": "Hydra Walk"
+  },
+  "assets/sprites/source/mythic/dragon_attack.png": {
+    "asset_id": "3f88993c-6064-4c0a-9bed-8a261d31d9d4",
+    "sha12": "49b7b5325e42",
+    "label": "Dragon Attack"
+  },
+  "assets/sprites/source/mythic/griffin_attack.png": {
+    "asset_id": "473eb09c-3ffc-406a-8604-ea8bb7d170ed",
+    "sha12": "dc10eaf8b87f",
+    "label": "Griffin Attack"
+  },
+  "assets/sprites/source/mythic/hydra_attack.png": {
+    "asset_id": "4033a2db-0087-4188-b63b-00f0434f3bd6",
+    "sha12": "bc5b73c8f373",
+    "label": "Hydra Attack"
+  },
+  "assets/sprites/source/mythic/dragon_death.png": {
+    "asset_id": "e4a19857-50d7-4fc6-9afc-cd63a2ad2403",
+    "sha12": "0843ce6cce91",
+    "label": "Dragon Death"
+  },
+  "assets/sprites/source/mythic/griffin_death.png": {
+    "asset_id": "95cf6f58-d119-483d-b9ff-beaa5b48079d",
+    "sha12": "d23e4983bb58",
+    "label": "Griffin Death"
+  },
+  "assets/sprites/source/mythic/hydra_death.png": {
+    "asset_id": "4ea84972-3e0e-4339-84c8-b92efb3bac2d",
+    "sha12": "032086e4a7c5",
+    "label": "Hydra Death"
+  },
+  "assets/sprites/source/mythic/dragon_back.png": {
+    "asset_id": "7fbedecc-7a7f-4f3a-9107-4ac5e9f18e25",
+    "sha12": "2c759c852ee0",
+    "label": "Dragon Back"
+  },
+  "assets/sprites/source/mythic/griffin_back.png": {
+    "asset_id": "03c89547-8243-43ca-ae99-116e4731b033",
+    "sha12": "6f5523c1dc37",
+    "label": "Griffin Back"
+  },
+  "assets/sprites/source/mythic/hydra_back.png": {
+    "asset_id": "bab6736d-e3d1-42c5-9419-c871f033f068",
+    "sha12": "8a003ffb4685",
+    "label": "Hydra Back"
+  },
+  "assets/sprites/source/mythic/dragon_back_walk.png": {
+    "asset_id": "6c141070-29b7-4c81-9687-42414fce1be5",
+    "sha12": "eb863fe159fc",
+    "label": "Dragon Back Walk"
+  },
+  "assets/sprites/source/mythic/griffin_back_walk.png": {
+    "asset_id": "3b817992-7aa4-4367-afab-8faa50764659",
+    "sha12": "7a56ace15f29",
+    "label": "Griffin Back Walk"
+  },
+  "assets/sprites/source/mythic/hydra_back_walk.png": {
+    "asset_id": "5144d3ec-4fcb-4e02-90b3-c20982d4937b",
+    "sha12": "271e1c59c618",
+    "label": "Hydra Back Walk"
+  },
+  "assets/sprites/source/mythic/dragon_back_attack.png": {
+    "asset_id": "1cd40874-25a7-466a-8eb6-0b9d6c46d491",
+    "sha12": "aa364685d280",
+    "label": "Dragon Back Attack"
+  },
+  "assets/sprites/source/mythic/griffin_back_attack.png": {
+    "asset_id": "e2eb0dca-d538-4c03-832e-279a6f5fe99b",
+    "sha12": "6a9fa683e365",
+    "label": "Griffin Back Attack"
+  },
+  "assets/sprites/source/mythic/hydra_back_attack.png": {
+    "asset_id": "6e9ac117-feb9-4f0f-8a65-32d0f27b4a2d",
+    "sha12": "663dd6013f35",
+    "label": "Hydra Back Attack"
+  }
+}

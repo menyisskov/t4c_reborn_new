@@ -1,0 +1,55 @@
+{
+  "key": "divine_artherk_plate_gauntlets",
+  "name": "${item.divine_artherk_plate_gauntlets}",
+  "bodyPart": "LEFT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL__pal90",
+  "appearanceInventory": "64kInvPlateGlove__pal90",
+  "numId": 55813,
+  "appearanceId": 55813,
+  "weight": 1,
+  "armorClass": 10.2,
+  "requirements": {
+    "strength": 180,
+    "endurance": 100
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50661,
+      "statId": 3,
+      "expression": "15"
+    },
+    {
+      "boostId": 50662,
+      "statId": 8,
+      "expression": "36"
+    },
+    {
+      "boostId": 50663,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 50664,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 50665,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 50666,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 50667,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedSecondary": "PupPlateGloveR__pal90"
+}

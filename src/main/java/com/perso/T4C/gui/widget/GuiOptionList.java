@@ -15,13 +15,15 @@ import java.util.function.Supplier;
 public final class GuiOptionList extends AbstractGuiElement {
   public record Entry(Supplier<String> label, BooleanSupplier value, Consumer<Boolean> setter) {}
 
-  private static final float SLOT_HEIGHT = 16f;
-  private static final float ROW_PITCH = 21f;
-  private static final float TOGGLE_X = 174f;
-  private static final float TOGGLE_DRAW_X = 175f;
-  private static final float TOGGLE_SLOT_SIZE = 16f;
+  private static final float SLOT_HEIGHT = 18f;
+  private static final float ROW_PITCH = 28f;
+  private static final float TOGGLE_SLOT_SIZE = 18f;
   private static final float LABEL_X = 0f;
-  private static final float LABEL_MAX_WIDTH = 167f;
+
+  private float labelMaxWidth() {
+    return width - 32f;
+  }
+
   private final float width;
   private final float height;
   private final BitmapFont font;
@@ -67,18 +69,18 @@ public final class GuiOptionList extends AbstractGuiElement {
       int index = firstVisible + row;
       float rowY = y + row * ROW_PITCH;
       if (index == hovered && selection != null) {
-        GuiDraw.drawRegionFlipped(batch, selection, x - 2f, rowY);
+        GuiDraw.drawRegionFlipped(batch, selection, x - 2f, rowY - 3f, width, 25f);
       }
       Entry entry = entries.get(index);
       Color previous = new Color(font.getColor());
-      font.setColor(Color.valueOf("DCDCDC"));
+      font.setColor(com.perso.T4C.gui.core.JournalTheme.TEXT);
       String label = entry.label().get();
       float previousScaleX = font.getData().scaleX;
       float previousScaleY = font.getData().scaleY;
       labelLayout.setText(font, label);
       boolean scaledToFit = false;
-      if (labelLayout.width > LABEL_MAX_WIDTH) {
-        float scale = LABEL_MAX_WIDTH / labelLayout.width;
+      if (labelLayout.width > labelMaxWidth()) {
+        float scale = labelMaxWidth() / labelLayout.width;
         font.getData().setScale(previousScaleX * scale, previousScaleY * scale);
         labelLayout.setText(font, label);
         scaledToFit = true;
@@ -91,7 +93,7 @@ public final class GuiOptionList extends AbstractGuiElement {
               ? (index == hovered ? onHover : on)
               : (index == hovered ? offHover : off);
       if (toggle != null) {
-        float toggleX = x + TOGGLE_DRAW_X;
+        float toggleX = x + width - 20f;
         GuiDraw.drawRegionFlipped(batch, toggle, toggleX, rowY);
       }
     }
@@ -132,7 +134,7 @@ public final class GuiOptionList extends AbstractGuiElement {
   }
 
   private int toggleRowAt(float screenX, float screenY) {
-    if (screenX < x + TOGGLE_X || screenX > x + TOGGLE_X + TOGGLE_SLOT_SIZE) return -1;
+    if (screenX < x + (width - 20f) || screenX > x + (width - 20f) + TOGGLE_SLOT_SIZE) return -1;
     return rowAt(screenX, screenY);
   }
 

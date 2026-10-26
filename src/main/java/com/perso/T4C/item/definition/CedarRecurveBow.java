@@ -45,7 +45,7 @@ public final class CedarRecurveBow {
         0,
         0,
         List.of(),
-        List.of(),
+        List.of(new ItemDefinition.ItemBoost(731032, 10035, "true_skill(35)*50/100", 0, 0)),
         List.of(),
         false);
   }

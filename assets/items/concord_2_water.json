@@ -1,0 +1,29 @@
+{
+  "key": "concord_2_water",
+  "name": "${item.concord_2_water}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvWoodenStaff__pal93",
+  "numId": 59051,
+  "appearanceId": 59051,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61308,
+      "statId": 1,
+      "expression": "45"
+    },
+    {
+      "boostId": 61309,
+      "statId": 18,
+      "expression": "45"
+    }
+  ],
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal93",
+  "requirements": {
+    "intelligence": 450
+  },
+  "dmgFormula": "1d60+45",
+  "atkDelay": "1300",
+  "isBow": false
+}

@@ -27,7 +27,7 @@ public final class FlamingArrow {
         0,
         "0",
         "0",
-        20372,
+        5300,
         null,
         10016,
         1,

@@ -27,7 +27,7 @@ public final class FireBolt {
         0,
         "0",
         "0",
-        24370,
+        20372,
         null,
         10017,
         1,

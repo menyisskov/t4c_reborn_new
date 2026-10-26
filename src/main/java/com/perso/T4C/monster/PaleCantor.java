@@ -6,6 +6,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "The Pale Cantor", x = 4050, y = 675, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class PaleCantor extends DataMonster {
   public static final String CANONICAL_NAME = "The Pale Cantor";
 
@@ -31,8 +32,7 @@ public final class PaleCantor extends DataMonster {
                 true)
             .withLoot(
                 java.util.List.of(
-                    new MonsterDef.LootDrop("item.moonwake_bell_shard", 1.0f),
-                    new MonsterDef.LootDrop("serious_healing_potion", .5f))),
+                    new MonsterDef.LootDrop("item.moonwake_bell_shard", 1.0f))),
         true,
         "witness_fire_plate",
         "witness_fire_robe",

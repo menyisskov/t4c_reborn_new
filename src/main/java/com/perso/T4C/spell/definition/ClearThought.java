@@ -27,7 +27,7 @@ public final class ClearThought {
         0,
         "180000",
         "0",
-        36960,
+        31472,
         null,
         10149,
         4,

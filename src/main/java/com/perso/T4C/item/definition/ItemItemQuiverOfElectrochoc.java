@@ -33,7 +33,7 @@ public final class ItemItemQuiverOfElectrochoc {
         3437,
         8,
         452,
-        "1d50+100",
+        "1d351+899",
         "0",
         0,
         -1,

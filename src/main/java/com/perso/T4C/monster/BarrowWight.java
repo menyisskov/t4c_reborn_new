@@ -5,10 +5,27 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "Barrow Wight", x = 2470, y = 2670, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Barrow Wight", x = 2530, y = 2730, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Barrow Wight", x = 2460, y = 2740, z = 0, stationary = false, aggressive = true)
-@Spawn(type = "Barrow Wight", x = 2540, y = 2660, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2583, y = 2676, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2497, y = 2744, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2520, y = 2718, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2577, y = 2647, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2536, y = 2691, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2416, y = 2641, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2553, y = 2671, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2500, y = 2722, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2534, y = 2600, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2464, y = 2610, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2443, y = 2768, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2510, y = 2594, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2604, y = 2722, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2537, y = 2717, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2494, y = 2777, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2439, y = 2622, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2490, y = 2707, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2478, y = 2783, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2438, y = 2747, z = 0, stationary = false, aggressive = true)
+@Spawn(type = "Barrow Wight", x = 2455, y = 2744, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class BarrowWight extends DataMonster {
   // Reuses the Mummy animation/sound family — a dry, land-bound undead, distinct from the
   // Zombie-family Drowned Acolytes of the Sunken Chancel.

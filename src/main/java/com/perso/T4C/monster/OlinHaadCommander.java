@@ -36,7 +36,8 @@ public final class OlinHaadCommander extends NamedEventMonster {
         SOUND_HIT,
         0,
         0,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("solinae_staff", 0.01f)),
         false,
         0.0f,
         30,

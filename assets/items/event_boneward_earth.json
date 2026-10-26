@@ -1,0 +1,64 @@
+{
+  "key": "event_boneward_earth",
+  "name": "${item.event_boneward_earth}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 1",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 2.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 50,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 100,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59604,
+  "structure": 2,
+  "appearanceId": 59604,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 690040,
+      "statId": 4,
+      "expression": "8"
+    },
+    {
+      "boostId": 690041,
+      "statId": 19,
+      "expression": "10"
+    },
+    {
+      "boostId": 690042,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 690043,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 690044,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 690045,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 690046,
+      "statId": 22,
+      "expression": "4"
+    }
+  ]
+}

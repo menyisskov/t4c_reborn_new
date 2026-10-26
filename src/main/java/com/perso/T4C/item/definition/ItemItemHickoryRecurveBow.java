@@ -45,7 +45,7 @@ public final class ItemItemHickoryRecurveBow {
         0,
         0,
         List.of(),
-        List.of(),
+        List.of(new ItemDefinition.ItemBoost(731062, 10035, "true_skill(35)*50/100", 0, 0)),
         List.of(),
         false);
   }

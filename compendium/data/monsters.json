@@ -33050,7 +33050,7 @@
   {
     "name": "Divine Zeus",
     "displayName": "Zeus",
-    "origin": "legacy",
+    "origin": "new",
     "elementalSpellDamageLimit": 9000,
     "level": 380,
     "health": 1200000,
@@ -33184,7 +33184,7 @@
   {
     "name": "Divine Odin",
     "displayName": "Odin",
-    "origin": "legacy",
+    "origin": "new",
     "level": 390,
     "health": 1400000,
     "mana": 11700,
@@ -33444,7 +33444,7 @@
   {
     "name": "Divine Osiris",
     "displayName": "Osiris",
-    "origin": "legacy",
+    "origin": "new",
     "elementalSpellDamageLimit": 10800,
     "level": 400,
     "health": 1600000,
@@ -35698,7 +35698,7 @@
     "name": "Arch Drake",
     "displayName": "Arch Drake",
     "origin": "activated",
-    "elementalSpellDamageLimit": 500,
+    "elementalSpellDamageLimit": 1800,
     "sprite": "sprites/monsters/arch_drake.png",
     "level": 1000,
     "health": 206623,
@@ -35864,6 +35864,702 @@
       {
         "formula": "1d10+10",
         "combatAttack": 300,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Ironhorn Centaur",
+    "displayName": "Ironhorn Centaur",
+    "origin": "new",
+    "sprite": "sprites/monsters/ironhorn_centaur.png",
+    "level": 1050,
+    "health": 300000,
+    "mana": 0,
+    "xpPerHit": 24,
+    "xpOnDeath": 4200000000,
+    "hitDamageMin": 2500,
+    "hitDamageMax": 4000,
+    "respawnTimeMs": 600000,
+    "goldMin": 3000,
+    "goldMax": 9000,
+    "dodge": 4400,
+    "acMin": 450,
+    "acMax": 600,
+    "aggro": 1,
+    "speed": 125,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 2100,
+      "end": 1050,
+      "agi": 2100,
+      "intel": 1050,
+      "will": 0,
+      "wis": 1050,
+      "luck": 0
+    },
+    "resists": {
+      "air": 110,
+      "earth": 110,
+      "water": 110,
+      "fire": 110,
+      "dark": 110,
+      "light": 110
+    },
+    "loot": [
+      {
+        "item": "moonsteel_halberd",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_warrior_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_warrior_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_warrior_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_warrior_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_warrior_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_warrior_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_warrior_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1501+2499",
+        "combatAttack": 10500,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Stormbound Pegasus",
+    "displayName": "Stormbound Pegasus",
+    "origin": "new",
+    "sprite": "sprites/monsters/stormbound_pegasus.png",
+    "level": 1125,
+    "health": 375000,
+    "mana": 0,
+    "xpPerHit": 24,
+    "xpOnDeath": 4200000000,
+    "hitDamageMin": 3000,
+    "hitDamageMax": 4700,
+    "respawnTimeMs": 600000,
+    "goldMin": 3000,
+    "goldMax": 9000,
+    "dodge": 5100,
+    "acMin": 520,
+    "acMax": 680,
+    "aggro": 1,
+    "speed": 125,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 2250,
+      "end": 1125,
+      "agi": 2250,
+      "intel": 1125,
+      "will": 0,
+      "wis": 1125,
+      "luck": 0
+    },
+    "resists": {
+      "air": 110,
+      "earth": 110,
+      "water": 110,
+      "fire": 110,
+      "dark": 110,
+      "light": 110
+    },
+    "loot": [
+      {
+        "item": "skybreaker_longbow",
+        "chance": 0.015
+      },
+      {
+        "item": "skybreaker_quiver",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_air_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_air_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_air_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_air_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_air_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_air_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_air_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_air_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_air_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_air_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_air_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_air_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d1701+2999",
+        "combatAttack": 11250,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Galehorn Unicorn",
+    "displayName": "Galehorn Unicorn",
+    "origin": "new",
+    "sprite": "sprites/monsters/galehorn_unicorn.png",
+    "level": 1200,
+    "health": 450000,
+    "mana": 0,
+    "xpPerHit": 24,
+    "xpOnDeath": 4200000000,
+    "hitDamageMin": 3500,
+    "hitDamageMax": 5500,
+    "respawnTimeMs": 600000,
+    "goldMin": 3000,
+    "goldMax": 9000,
+    "dodge": 5800,
+    "acMin": 600,
+    "acMax": 780,
+    "aggro": 1,
+    "speed": 125,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 2400,
+      "end": 1200,
+      "agi": 2400,
+      "intel": 1200,
+      "will": 0,
+      "wis": 1200,
+      "luck": 0
+    },
+    "resists": {
+      "air": 110,
+      "earth": 110,
+      "water": 110,
+      "fire": 110,
+      "dark": 110,
+      "light": 110
+    },
+    "loot": [
+      {
+        "item": "windpiercer_longbow",
+        "chance": 0.015
+      },
+      {
+        "item": "windpiercer_quiver",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_light_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_light_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_light_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_light_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_light_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_light_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_light_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_light_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_light_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_light_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_light_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_light_protector",
+        "chance": 0.012
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d2001+3499",
+        "combatAttack": 12000,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Obsidian Dragon",
+    "displayName": "Obsidian Dragon",
+    "origin": "new",
+    "sprite": "sprites/monsters/obsidian_dragon.png",
+    "level": 1250,
+    "health": 600000,
+    "mana": 0,
+    "xpPerHit": 28,
+    "xpOnDeath": 4200000000,
+    "hitDamageMin": 4200,
+    "hitDamageMax": 6800,
+    "respawnTimeMs": 900000,
+    "goldMin": 5000,
+    "goldMax": 12000,
+    "dodge": 6200,
+    "acMin": 700,
+    "acMax": 900,
+    "aggro": 1,
+    "speed": 125,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 2500,
+      "end": 2500,
+      "agi": 2500,
+      "intel": 1250,
+      "will": 0,
+      "wis": 1250,
+      "luck": 0
+    },
+    "resists": {
+      "air": 120,
+      "earth": 120,
+      "water": 120,
+      "fire": 120,
+      "dark": 120,
+      "light": 220
+    },
+    "loot": [
+      {
+        "item": "duskmaw_wyrms_eclipsed_crown",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_dark_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_dark_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_dark_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_dark_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_dark_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_dark_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_dark_protector",
+        "chance": 0.012
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.25
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.25
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d2601+4199",
+        "combatAttack": 12500,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Bronze Griffin",
+    "displayName": "Bronze Griffin",
+    "origin": "new",
+    "sprite": "sprites/monsters/bronze_griffin.png",
+    "level": 1325,
+    "health": 550000,
+    "mana": 0,
+    "xpPerHit": 28,
+    "xpOnDeath": 4200000000,
+    "hitDamageMin": 4800,
+    "hitDamageMax": 7200,
+    "respawnTimeMs": 900000,
+    "goldMin": 5000,
+    "goldMax": 12000,
+    "dodge": 7100,
+    "acMin": 650,
+    "acMax": 850,
+    "aggro": 1,
+    "speed": 150,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 2650,
+      "end": 2650,
+      "agi": 2650,
+      "intel": 1325,
+      "will": 0,
+      "wis": 1325,
+      "luck": 0
+    },
+    "resists": {
+      "air": 220,
+      "earth": 120,
+      "water": 120,
+      "fire": 120,
+      "dark": 120,
+      "light": 120
+    },
+    "loot": [
+      {
+        "item": "skybreaker_longbow",
+        "chance": 0.015
+      },
+      {
+        "item": "skybreaker_quiver",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_archer_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_archer_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_archer_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_archer_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_archer_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_archer_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_archer_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_archer_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_archer_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_archer_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_archer_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_archer_protector",
+        "chance": 0.012
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.25
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.25
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d2401+4799",
+        "combatAttack": 13250,
+        "selectionWeight": 100,
+        "isSpell": false,
+        "spellId": 0,
+        "rangeMinTiles": 0,
+        "rangeMaxTiles": 0
+      }
+    ]
+  },
+  {
+    "name": "Swamp Hydra",
+    "displayName": "Swamp Hydra",
+    "origin": "new",
+    "sprite": "sprites/monsters/swamp_hydra.png",
+    "level": 1400,
+    "health": 850000,
+    "mana": 0,
+    "xpPerHit": 28,
+    "xpOnDeath": 4200000000,
+    "hitDamageMin": 5200,
+    "hitDamageMax": 8200,
+    "respawnTimeMs": 900000,
+    "goldMin": 5000,
+    "goldMax": 12000,
+    "dodge": 6300,
+    "acMin": 800,
+    "acMax": 1050,
+    "aggro": 1,
+    "speed": 110,
+    "canAttack": true,
+    "tameable": false,
+    "tameMaxLevel": 0,
+    "stats": {
+      "str": 2800,
+      "end": 2800,
+      "agi": 2800,
+      "intel": 1400,
+      "will": 0,
+      "wis": 1400,
+      "luck": 0
+    },
+    "resists": {
+      "air": 120,
+      "earth": 120,
+      "water": 120,
+      "fire": 220,
+      "dark": 120,
+      "light": 120
+    },
+    "loot": [
+      {
+        "item": "rootcrown_wyrms_ageless_mantle",
+        "chance": 0.015
+      },
+      {
+        "item": "ancient_celestial_earth_armor",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_earth_armor",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_earth_boots",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_earth_boots",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_earth_gauntlets",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_earth_gauntlets",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_earth_helmet",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_earth_helmet",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_earth_leggings",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_earth_leggings",
+        "chance": 0.012
+      },
+      {
+        "item": "ancient_celestial_earth_protector",
+        "chance": 0.025
+      },
+      {
+        "item": "empyrean_earth_protector",
+        "chance": 0.012
+      },
+      {
+        "item": "serious_healing_potion",
+        "chance": 0.25
+      },
+      {
+        "item": "mana_elixir",
+        "chance": 0.25
+      },
+      {
+        "item": "item.mana_prism",
+        "chance": 0.05
+      },
+      {
+        "item": "item.critical_healing_potion",
+        "chance": 0.05
+      }
+    ],
+    "attacks": [
+      {
+        "formula": "1d3001+5199",
+        "combatAttack": 14000,
         "selectionWeight": 100,
         "isSpell": false,
         "spellId": 0,

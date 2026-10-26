@@ -48,11 +48,10 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
   }
 
   /**
-   * Carries an in-progress hold-and-repeat over from a button this one replaces at the same
-   * screen slot (e.g. a spin button recreated by rebuildList() while the mouse is still held) -
-   * otherwise the new instance's press/timing state starts blank and the hold silently stops
-   * after the first repeat, since the replaced button never received the touch-up that would
-   * normally end it.
+   * Carries an in-progress hold-and-repeat over from a button this one replaces at the same screen
+   * slot (e.g. a spin button recreated by rebuildList() while the mouse is still held) - otherwise
+   * the new instance's press/timing state starts blank and the hold silently stops after the first
+   * repeat, since the replaced button never received the touch-up that would normally end it.
    */
   public void adoptHoldStateFrom(GuiButton previous) {
     if (previous == null || !repeatable) {
@@ -116,6 +115,13 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
     }
   }
 
+  private boolean dimWhenDisabled = true;
+
+  public GuiButton dimWhenDisabled(boolean dim) {
+    dimWhenDisabled = dim;
+    return this;
+  }
+
   public void render(SpriteBatch batch) {
     fireHeldRepeat();
     if (!visible) {
@@ -130,6 +136,11 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
       region = hover;
     } else {
       region = normal;
+    }
+    float packed = batch.getPackedColor();
+    if (!enabled && dimWhenDisabled) {
+      var color = batch.getColor();
+      batch.setColor(color.r * .55f, color.g * .55f, color.b * .55f, color.a);
     }
     GuiDraw.drawRegionFlipped(batch, region, x, y, renderedWidth, renderedHeight);
     if (labelFont != null && labelText != null) {
@@ -156,6 +167,7 @@ public class GuiButton extends AbstractGuiElement implements GuiResizable {
         labelFont.getData().setScale(prevScaleX, prevScaleY);
       }
     }
+    batch.setPackedColor(packed);
     GuiBoxedItem.drawDebugBorder(batch, x, y, renderedWidth, renderedHeight);
   }
 

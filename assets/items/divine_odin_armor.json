@@ -1,0 +1,53 @@
+{
+  "key": "divine_odin_armor",
+  "name": "${item.divine_odin_armor}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupPlateBody__pal95",
+  "appearanceInventory": "64kInvPlateArmorSleeves__pal95",
+  "numId": 56101,
+  "appearanceId": 56101,
+  "weight": 4,
+  "armorClass": 136.4,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 801016,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 801017,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 801018,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 801019,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 801020,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 801021,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 801022,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

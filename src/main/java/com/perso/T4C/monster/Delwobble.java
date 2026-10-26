@@ -51,7 +51,7 @@ public final class Delwobble extends NamedEventMonster {
         SOUND_HIT,
         124,
         384,
-        java.util.List.of(),
+        java.util.List.of(new MonsterDef.LootDrop("ring_of_light", 0.01f)),
         false,
         0.0f,
         50,

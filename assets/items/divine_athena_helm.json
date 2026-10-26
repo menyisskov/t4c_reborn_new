@@ -1,0 +1,53 @@
+{
+  "key": "divine_athena_helm",
+  "name": "${item.divine_athena_helm}",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm__pal95",
+  "appearanceInventory": "64kInvPlateArmorHelm__pal95",
+  "numId": 55404,
+  "appearanceId": 55404,
+  "weight": 1,
+  "armorClass": 39.3,
+  "requirements": {
+    "endurance": 400,
+    "strength": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50308,
+      "statId": 3,
+      "expression": "54"
+    },
+    {
+      "boostId": 50309,
+      "statId": 8,
+      "expression": "130"
+    },
+    {
+      "boostId": 50310,
+      "statId": 12,
+      "expression": "16"
+    },
+    {
+      "boostId": 50311,
+      "statId": 13,
+      "expression": "16"
+    },
+    {
+      "boostId": 50312,
+      "statId": 14,
+      "expression": "16"
+    },
+    {
+      "boostId": 50313,
+      "statId": 15,
+      "expression": "16"
+    },
+    {
+      "boostId": 50314,
+      "statId": 22,
+      "expression": "16"
+    }
+  ]
+}

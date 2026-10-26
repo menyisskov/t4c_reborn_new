@@ -66,7 +66,11 @@ public final class CentaurAvenger extends NamedEventMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("blade_of_heroism", 0.3f),
             new MonsterDef.LootDrop("grail_of_purity", 0.24f),
-            new MonsterDef.LootDrop("sword_of_might", 0.15f)),
+            new MonsterDef.LootDrop("sword_of_might", 0.15f),
+            new MonsterDef.LootDrop("hickory_compound_bow", 0.01f),
+            new MonsterDef.LootDrop("rough_amethyst", 0.01f),
+            new MonsterDef.LootDrop("rough_aquamarine", 0.01f),
+            new MonsterDef.LootDrop("rough_sapphire", 0.01f)),
         false,
         0.0f,
         75,

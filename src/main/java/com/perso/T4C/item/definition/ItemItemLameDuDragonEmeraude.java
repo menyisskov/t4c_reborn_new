@@ -33,7 +33,7 @@ public final class ItemItemLameDuDragonEmeraude {
         3580,
         1,
         1085,
-        "1d1200+3000",
+        "1d251+649",
         "if(750-self.agi/250*750/2<600?600:750-self.agi/250*750/2)+1d469",
         0,
         -1,

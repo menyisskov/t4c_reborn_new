@@ -1,0 +1,53 @@
+{
+  "key": "divine_njord_wings",
+  "name": "${item.divine_njord_wings}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal93",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal93",
+  "numId": 55106,
+  "appearanceId": 55106,
+  "weight": 1,
+  "armorClass": 15.8,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50112,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50113,
+      "statId": 18,
+      "expression": "38"
+    },
+    {
+      "boostId": 50114,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50115,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50116,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50117,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50118,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "key": "event_boneward_archer",
+  "name": "${item.event_boneward_archer}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 1",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 2.1,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 50,
+    "strength": 0,
+    "agility": 100,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59601,
+  "structure": 2,
+  "appearanceId": 59601,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 690010,
+      "statId": 6,
+      "expression": "8"
+    },
+    {
+      "boostId": 690011,
+      "statId": 10035,
+      "expression": "20"
+    },
+    {
+      "boostId": 690012,
+      "statId": 12,
+      "expression": "3"
+    },
+    {
+      "boostId": 690013,
+      "statId": 13,
+      "expression": "3"
+    },
+    {
+      "boostId": 690014,
+      "statId": 14,
+      "expression": "3"
+    },
+    {
+      "boostId": 690015,
+      "statId": 15,
+      "expression": "3"
+    },
+    {
+      "boostId": 690016,
+      "statId": 22,
+      "expression": "3"
+    }
+  ]
+}

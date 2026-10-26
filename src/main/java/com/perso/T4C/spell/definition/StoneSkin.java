@@ -27,7 +27,7 @@ public final class StoneSkin {
         0,
         "1200000",
         "0",
-        59326,
+        52577,
         null,
         10147,
         2,

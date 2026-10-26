@@ -11,6 +11,7 @@ import com.perso.T4C.spawn.Spawn;
 // "MonsDraconianPlate" armored-knight puppet family (Sir Caradoc precedent) for a lone
 // knight-errant bound to the crossing, distinct from Caradoc's own undead-bound version of it.
 @Spawn(type = "Coastwarden Ithrak", x = 455, y = 745, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class CoastwardenIthrak extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -48,7 +49,6 @@ public final class CoastwardenIthrak extends DataMonster {
         1800,
         java.util.List.of(
             new MonsterDef.LootDrop("tideworn_avalon_chart", 1.0f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0028: the coastal guardian of the crossing to Avalon drops a water-flavor
             // armor set alongside his chart and potions, matching the multi-drop pattern used
             // by the other boss-tier monsters.

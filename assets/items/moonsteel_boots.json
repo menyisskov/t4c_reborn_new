@@ -1,0 +1,64 @@
+{
+  "key": "moonsteel_boots",
+  "name": "${item.moonsteel_boots}",
+  "bodyPart": "FEET",
+  "appearanceEquippedPrimary": "PupPlateFoot__silver300",
+  "appearanceInventory": "64kInvPlateArmorFeet__silver300",
+  "price": 350000,
+  "weight": 4,
+  "armorClass": 35.7,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 350,
+    "strength": 700,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59701,
+  "structure": 2,
+  "appearanceId": 59701,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 710010,
+      "statId": 3,
+      "expression": "58"
+    },
+    {
+      "boostId": 710011,
+      "statId": 8,
+      "expression": "140"
+    },
+    {
+      "boostId": 710012,
+      "statId": 12,
+      "expression": "18"
+    },
+    {
+      "boostId": 710013,
+      "statId": 13,
+      "expression": "18"
+    },
+    {
+      "boostId": 710014,
+      "statId": 14,
+      "expression": "18"
+    },
+    {
+      "boostId": 710015,
+      "statId": 15,
+      "expression": "18"
+    },
+    {
+      "boostId": 710016,
+      "statId": 22,
+      "expression": "18"
+    }
+  ]
+}

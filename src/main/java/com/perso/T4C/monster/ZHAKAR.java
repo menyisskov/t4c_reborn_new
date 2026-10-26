@@ -6,7 +6,6 @@ import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
-@Spawn(type = "ZHAKAR", x = 55, y = 1769, z = 0, stationary = false, aggressive = false)
 public final class ZHAKAR extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";

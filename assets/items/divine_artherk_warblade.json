@@ -1,0 +1,55 @@
+{
+  "key": "divine_artherk_warblade",
+  "name": "${item.divine_artherk_warblade}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupNormalSword__pal90",
+  "appearanceInventory": "64kInvShortSword__pal90",
+  "numId": 55811,
+  "appearanceId": 55811,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "strength": 180,
+    "endurance": 0
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50647,
+      "statId": 3,
+      "expression": "15"
+    },
+    {
+      "boostId": 50648,
+      "statId": 8,
+      "expression": "36"
+    },
+    {
+      "boostId": 50649,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 50650,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 50651,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 50652,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 50653,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "dmgFormula": "1d90+60",
+  "atkDelay": "1300"
+}

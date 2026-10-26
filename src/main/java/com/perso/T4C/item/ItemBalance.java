@@ -11,16 +11,16 @@ import java.util.Map;
  * them, so a new item that ignores them fails the build.
  *
  * <ul>
- *   <li><b>Warrior</b> (strength is the main requirement): AC, resistance to five elements
- *       (never light), strength and attack.
+ *   <li><b>Warrior</b> (strength is the main requirement): AC, resistance to five elements (never
+ *       light), strength and attack.
  *   <li><b>Archer</b> (agility is the main requirement, or any bow): AC, resistance to five
  *       elements (never light), agility and archery.
- *   <li><b>Intelligence mage</b>: fire/water/dark power, extra intelligence, less AC than a
- *       wisdom item, and resistance to five elements (never light).
+ *   <li><b>Intelligence mage</b>: fire/water/dark power, extra intelligence, less AC than a wisdom
+ *       item, and resistance to five elements (never light).
  *   <li><b>Wisdom mage</b>: earth/light power, wisdom, more AC, and resistance to five elements
  *       (never light - light power is fine, light resistance never is).
- *   <li><b>Hybrid</b> (intelligence and wisdom within 20% of each other): air power,
- *       intelligence and wisdom, and resistance to five elements (never light).
+ *   <li><b>Hybrid</b> (intelligence and wisdom within 20% of each other): air power, intelligence
+ *       and wisdom, and resistance to five elements (never light).
  * </ul>
  *
  * <p>No item, of any class, may ever grant light resistance (statId 21) - positive or negative.
@@ -36,17 +36,35 @@ public final class ItemBalance {
   /** No item may ask for more than this in any single attribute (the level-cap main stat). */
   public static final int MAX_SINGLE_REQUIREMENT = 1000;
 
+  /** Reborn archers can progress beyond the ordinary equipment stat budget. */
+  public static final int MAX_ARCHERY_AGILITY_REQUIREMENT = 2000;
+
+  /** Bows and quivers remain agility gear, with a limited strength investment. */
+  public static final int MAX_ARCHERY_STRENGTH_REQUIREMENT = 300;
+
+  /** Reborn warriors have the same main-attribute progression ceiling as reborn archers. */
+  public static final int MAX_WARRIOR_STRENGTH_REQUIREMENT = 2000;
+
+  /** The new high-strength line carries heavier defenses than ordinary warrior equipment. */
+  public static final double WARRIOR_PROGRESSION_TIER_MULTIPLIER = 1.5;
+
+  public static boolean isWarriorProgressionKey(String key) {
+    return key != null && ItemDefinition.normalizeKey(key).startsWith("item.warrior_");
+  }
+
   /** No item may ever grant this - see the class doc's "never light resistance" rule. */
   public static final int LIGHT_RESIST_STAT_ID = 21;
 
-  /** Bonus-formula multiplier for "Godsforged" tier items (T4C-0033, see DESIGN_GUIDELINES.md
+  /**
+   * Bonus-formula multiplier for "Godsforged" tier items (T4C-0033, see DESIGN_GUIDELINES.md
    * "Godsforged: a tier above Legendary") - a step above Legendary, earned only by completing the
    * multi-NPC crafting chain in {@code quest/definition/Godsforged*}. Legendary items already sit
    * at {@link #MAX_SINGLE_REQUIREMENT}, so there's no headroom left to raise P further; instead
    * every bonus formula below takes an optional tier multiplier, applied on top of its normal P-
    * based output. Every formula overload without a multiplier argument defaults to 1.0 (ordinary
    * items and Legendary items alike), so this is purely additive - no existing item's expected
-   * value changes. */
+   * value changes.
+   */
   public static final double GODSFORGED_TIER_MULTIPLIER = 1.2;
 
   /** The five schools every class resists (all elemental resist stat ids except light). */
@@ -55,10 +73,9 @@ public final class ItemBalance {
 
   /**
    * Key prefixes of every armor-set piece written by {@code tools/ArmorSetGenerator}: the two
-   * 8-flavor tiers plus the themed sets (Centaur Slaying, Drowned Inquisition, Cinderforged).
-   * A set piece carries only its AC share of a whole set's budget, so it is exempt from the
-   * single-item budget check, and its boost ids come from the generator's reserved 20000-29999
-   * block.
+   * 8-flavor tiers plus the themed sets (Centaur Slaying, Drowned Inquisition, Cinderforged). A set
+   * piece carries only its AC share of a whole set's budget, so it is exempt from the single-item
+   * budget check, and its boost ids come from the generator's reserved 20000-29999 block.
    */
   public static final java.util.List<String> GENERATED_SET_PREFIXES =
       java.util.List.of(
@@ -66,12 +83,16 @@ public final class ItemBalance {
           "empyrean_",
           "centaur_slaying_",
           "drowned_inquisition_",
-          "cinderforged_");
+          "cinderforged_",
+          "warrior_");
 
   /** Whether {@code key} (with or without the {@code item.} prefix) is a generated set piece. */
   public static boolean isGeneratedSetPiece(String key) {
     if (key == null) return false;
     String bare = key.startsWith("item.") ? key.substring("item.".length()) : key;
+    if (isWarriorProgressionKey(key)
+        && (bare.endsWith("_shield") || bare.endsWith("_warblade") || bare.endsWith("_greatsword")))
+      return false;
     return GENERATED_SET_PREFIXES.stream().anyMatch(bare::startsWith);
   }
 
@@ -97,8 +118,10 @@ public final class ItemBalance {
     }
   }
 
-  /** AC per 100 points of endurance requirement, by slot (armor-set slots keep the legacy
-   * platemail proportions: body 31, legs 10.32, feet/hands 9.28, head 8.94, belt 6.88). */
+  /**
+   * AC per 100 points of endurance requirement, by slot (armor-set slots keep the legacy platemail
+   * proportions: body 31, legs 10.32, feet/hands 9.28, head 8.94, belt 6.88).
+   */
   private static final Map<BodyPart, Double> SLOT_AC =
       Map.ofEntries(
           Map.entry(BodyPart.BODY, 31.0),
@@ -126,8 +149,10 @@ public final class ItemBalance {
     return expectedArmorClass(slot, endurance, archetype, 1.0);
   }
 
-  /** As {@link #expectedArmorClass(BodyPart, long, Archetype)}, with a tier multiplier applied on
-   * top (see {@link #GODSFORGED_TIER_MULTIPLIER}). */
+  /**
+   * As {@link #expectedArmorClass(BodyPart, long, Archetype)}, with a tier multiplier applied on
+   * top (see {@link #GODSFORGED_TIER_MULTIPLIER}).
+   */
   public static double expectedArmorClass(
       BodyPart slot, long endurance, Archetype archetype, double tierMultiplier) {
     return Math.round(
@@ -148,13 +173,15 @@ public final class ItemBalance {
   }
 
   public static Archetype archetype(ItemDefinition def) {
-    return archetype(def.getReqStr(), def.getReqAgi(), def.getMinInt(), def.getMinWis(), def.isBow());
+    return archetype(
+        def.getReqStr(), def.getReqAgi(), def.getMinInt(), def.getMinWis(), def.isBow());
   }
 
-  /** The requirement bonuses scale from: the class's main stat (a hybrid counts 80% of its
-   * intelligence + wisdom, so 375/375 matches a 600 single-stat item). */
-  public static double primaryRequirement(
-      Archetype a, long str, long agi, long intel, long wis) {
+  /**
+   * The requirement bonuses scale from: the class's main stat (a hybrid counts 80% of its
+   * intelligence + wisdom, so 375/375 matches a 600 single-stat item).
+   */
+  public static double primaryRequirement(Archetype a, long str, long agi, long intel, long wis) {
     return switch (a) {
       case WARRIOR -> str;
       case ARCHER -> Math.max(agi, str);
@@ -170,8 +197,10 @@ public final class ItemBalance {
     return mainStatBonus(a, p, 1.0);
   }
 
-  /** As {@link #mainStatBonus(Archetype, double)}, with a tier multiplier applied on top (see
-   * {@link #GODSFORGED_TIER_MULTIPLIER}). */
+  /**
+   * As {@link #mainStatBonus(Archetype, double)}, with a tier multiplier applied on top (see {@link
+   * #GODSFORGED_TIER_MULTIPLIER}).
+   */
   public static int mainStatBonus(Archetype a, double p, double tierMultiplier) {
     return (int)
         Math.round(
@@ -203,10 +232,11 @@ public final class ItemBalance {
     return (int) Math.round(tierMultiplier * p / 10);
   }
 
-  /** Mage resistance to each of the five non-light elements (never light - see
-   * DESIGN_GUIDELINES.md "Resistance never includes light"): P/25. Spread across five schools
-   * instead of concentrated in the item's own one, since a caster takes damage of every type,
-   * not just their own. */
+  /**
+   * Mage resistance to each of the five non-light elements (never light - see DESIGN_GUIDELINES.md
+   * "Resistance never includes light"): P/25. Spread across five schools instead of concentrated in
+   * the item's own one, since a caster takes damage of every type, not just their own.
+   */
   public static int magicResistBonus(double p) {
     return magicResistBonus(p, 1.0);
   }

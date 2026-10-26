@@ -27,7 +27,7 @@ public final class ManaBurst {
         0,
         "0",
         "0",
-        46410,
+        40192,
         null,
         10131,
         0,

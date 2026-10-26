@@ -39,7 +39,9 @@ public final class RedEyedCentaur extends NamedEventMonster {
         SOUND_HIT,
         0,
         0,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("mind_control_talisman", 0.01f),
+            new MonsterDef.LootDrop("rough_amethyst", 0.01f)),
         false,
         0.0f,
         70,

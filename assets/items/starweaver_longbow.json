@@ -1,0 +1,57 @@
+{
+  "key": "starweaver_longbow",
+  "name": "${item.starweaver_longbow}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvLongBow2",
+  "price": 10000000,
+  "weight": 6,
+  "requirements": {
+    "strength": 250,
+    "agility": 1650
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59926,
+  "structure": 9,
+  "appearanceId": 448,
+  "dmgFormula": "1d601+1799+4*arrow_dmg",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "atkDelay": "850",
+  "boosts": [
+    {
+      "boostId": 732060,
+      "statId": 6,
+      "expression": "138"
+    },
+    {
+      "boostId": 732061,
+      "statId": 10035,
+      "expression": "true_skill(35)*50/100"
+    },
+    {
+      "boostId": 732062,
+      "statId": 12,
+      "expression": "41"
+    },
+    {
+      "boostId": 732063,
+      "statId": 13,
+      "expression": "41"
+    },
+    {
+      "boostId": 732064,
+      "statId": 14,
+      "expression": "41"
+    },
+    {
+      "boostId": 732065,
+      "statId": 15,
+      "expression": "41"
+    },
+    {
+      "boostId": 732066,
+      "statId": 22,
+      "expression": "41"
+    }
+  ]
+}

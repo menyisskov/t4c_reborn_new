@@ -1,0 +1,53 @@
+{
+  "key": "divine_njord_robe",
+  "name": "${item.divine_njord_robe}",
+  "bodyPart": "BODY",
+  "appearanceEquippedPrimary": "PupWhiteRobe__pal93",
+  "appearanceInventory": "64kInvWhiteRobe__pal93",
+  "numId": 55101,
+  "appearanceId": 55101,
+  "weight": 4,
+  "armorClass": 54.6,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50077,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50078,
+      "statId": 18,
+      "expression": "38"
+    },
+    {
+      "boostId": 50079,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50080,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50081,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50082,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50083,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.quest.AudienceToKingQuest;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
@@ -190,6 +191,21 @@ public final class KingTheodore extends ScriptedNpc {
   protected NpcBehavior javaBehavior() {
 
     return new NpcBehavior() {
+
+      @Override
+      public void onConversationStart(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
+        if (!AudienceToKingQuest.isComplete(c.player())) c.sayKey("npc.kingtheodore.audience.required");
+      }
+
+      @Override
+      public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
+        if (AudienceToKingQuest.isComplete(c.player()) || text == null) return false;
+        String keyword = text.trim().toUpperCase(java.util.Locale.ROOT);
+        if (keyword.equals("BYE") || keyword.equals("LEAVE") || keyword.equals("QUIT")
+            || keyword.equals("FAREWELL") || keyword.equals("EXIT")) return false;
+        c.sayKey("npc.kingtheodore.audience.required");
+        return true;
+      }
 
       @Override
       public void onInitialise(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {

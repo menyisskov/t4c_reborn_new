@@ -1,0 +1,41 @@
+{
+  "key": "elm_recurve_bow_4",
+  "name": "${item.elm_recurve_bow_4}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow",
+  "appearanceInventory": "64kInvLongBow",
+  "price": 48500,
+  "weight": 8,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 29,
+    "agility": 97,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 900.0,
+  "unique": false,
+  "isBow": true,
+  "unlimitedUse": false,
+  "numId": 59804,
+  "structure": 9,
+  "appearanceId": 421,
+  "undroppable": false,
+  "dmgFormula": "1d28+55+2*arrow_dmg",
+  "atkDelay": "900",
+  "boosts": [
+    {
+      "boostId": 720040,
+      "statId": 6,
+      "expression": "8"
+    },
+    {
+      "boostId": 720041,
+      "statId": 10035,
+      "expression": "true_skill(35)*75/100"
+    }
+  ]
+}

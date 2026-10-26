@@ -50,13 +50,7 @@ final class EndgameMonsterFactory {
         art.getSoundHit(),
         MonsterGoldCurve.goldMin(level),
         MonsterGoldCurve.goldMax(level),
-        boss
-            ? List.of(
-                new MonsterDef.LootDrop("serious_healing_potion", .5f),
-                new MonsterDef.LootDrop("mana_elixir", .4f))
-            : List.of(
-                new MonsterDef.LootDrop("serious_healing_potion", .08f),
-                new MonsterDef.LootDrop("potion_of_mana", .08f)),
+        List.of(),
         false,
         0f,
         level,

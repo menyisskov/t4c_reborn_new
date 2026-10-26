@@ -17,6 +17,7 @@ import com.perso.T4C.spawn.Spawn;
     z = 0,
     stationary = false,
     aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class TheVerdantWarden extends DataMonster {
   public static final String SOUND_ATTACK = "Electrik.wav";
   public static final String SOUND_DEATH = "Tree Ent Dying.wav";
@@ -54,7 +55,6 @@ public final class TheVerdantWarden extends DataMonster {
         3250,
         java.util.List.of(
             new MonsterDef.LootDrop("verdant_wardens_bulwark", 0.015f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
             // T4C-0021: earth-flavor source for the Ancient Celestial/Empyrean armor sets
             // (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_earth_armor", 0.025f),

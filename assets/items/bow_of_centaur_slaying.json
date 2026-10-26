@@ -35,7 +35,7 @@
     {
       "boostId": 33001,
       "statId": 10035,
-      "expression": "50"
+      "expression": "true_skill(35)*50/100"
     },
     {
       "boostId": 33002,

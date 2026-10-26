@@ -1,0 +1,60 @@
+{
+  "key": "windpiercer_quiver",
+  "name": "${item.windpiercer_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 1500000,
+  "weight": 2,
+  "requirements": {
+    "strength": 175,
+    "agility": 1100
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59921,
+  "structure": 8,
+  "appearanceId": 454,
+  "dmgFormula": "1d501+1599",
+  "quiverSplash": {
+    "radius": 2.5,
+    "targets": 8,
+    "damagePercent": 45
+  },
+  "boosts": [
+    {
+      "boostId": 732010,
+      "statId": 6,
+      "expression": "92"
+    },
+    {
+      "boostId": 732011,
+      "statId": 10035,
+      "expression": "220"
+    },
+    {
+      "boostId": 732012,
+      "statId": 12,
+      "expression": "28"
+    },
+    {
+      "boostId": 732013,
+      "statId": 13,
+      "expression": "28"
+    },
+    {
+      "boostId": 732014,
+      "statId": 14,
+      "expression": "28"
+    },
+    {
+      "boostId": 732015,
+      "statId": 15,
+      "expression": "28"
+    },
+    {
+      "boostId": 732016,
+      "statId": 22,
+      "expression": "28"
+    }
+  ]
+}

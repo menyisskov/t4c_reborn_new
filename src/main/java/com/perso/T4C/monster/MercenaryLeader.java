@@ -6,6 +6,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
 import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.MercenaryCampQuest;
 
 public final class MercenaryLeader extends NamedEventMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
@@ -28,20 +29,21 @@ public final class MercenaryLeader extends NamedEventMonster {
   @Override
   public NpcScriptRuntime.Effects onDeath(Player p) {
 
-    return messageAndSpell(
-        "npc.mercenary.leader.death", "spell.mercenary_leader_defeat_flag_spell");
+    MercenaryCampQuest.recordDeath(p, getDefinition().getName());
+
+    return message("npc.mercenary.leader.death");
   }
 
   public static MonsterDef definition() {
     return new MonsterDef(
         "MOBMERCENARYLEADER",
         "${monster.mobmercenaryleader}",
-        100,
+        450,
         0,
         1,
         100,
-        1,
-        2,
+        24,
+        132,
         30000L,
         "",
         "",
@@ -62,7 +64,7 @@ public final class MercenaryLeader extends NamedEventMonster {
         10,
         10,
         new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        1,
+        15,
         0,
         0,
         0,

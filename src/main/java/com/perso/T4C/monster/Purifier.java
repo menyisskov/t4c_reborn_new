@@ -35,16 +35,23 @@ public final class Purifier extends NamedEventMonster {
         : NpcScriptRuntime.Effects.empty();
   }
 
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player p) {
+    p.setQuestFlag(
+        "__FLAG_COUNTER_PURIFIER_KILLED", p.getQuestFlag("__FLAG_COUNTER_PURIFIER_KILLED") + 1);
+    return super.onDeath(p);
+  }
+
   public static MonsterDef definition() {
     return new MonsterDef(
         "MOBPURIFIER",
         "${monster.mobpurifier}",
-        100,
+        3259,
         0,
-        1,
-        100,
-        1,
-        2,
+        9,
+        14831,
+        85,
+        160,
         30000L,
         "",
         "",
@@ -54,7 +61,17 @@ public final class Purifier extends NamedEventMonster {
         SOUND_HIT,
         0,
         0,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("Talisman of Protection from Evil", 0.002f),
+            new MonsterDef.LootDrop("morningstar_of_the_sun", 0.002f),
+            new MonsterDef.LootDrop("Critical Healing Potion", 0.05f),
+            new MonsterDef.LootDrop("Key of Ascension", 0.005f),
+            new MonsterDef.LootDrop("Rough Amethyst", 0.02f),
+            new MonsterDef.LootDrop("Potion of Tranquility", 0.01f),
+            new MonsterDef.LootDrop("Mana Prism", 0.01f),
+            new MonsterDef.LootDrop("Rough Aquamarine", 0.01f),
+            new MonsterDef.LootDrop("Scroll of Recall", 0.01f),
+            new MonsterDef.LootDrop("Robe of the Purified Souls", 0.001f)),
         false,
         0.0f,
         10,
@@ -65,7 +82,7 @@ public final class Purifier extends NamedEventMonster {
         10,
         10,
         new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        1,
+        100,
         0,
         0,
         0,

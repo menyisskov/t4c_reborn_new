@@ -1,0 +1,53 @@
+{
+  "key": "divine_njord_ring",
+  "name": "${item.divine_njord_ring}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 4__pal93",
+  "numId": 55108,
+  "appearanceId": 55108,
+  "weight": 1,
+  "armorClass": 8.8,
+  "requirements": {
+    "endurance": 220,
+    "intelligence": 380
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50126,
+      "statId": 1,
+      "expression": "38"
+    },
+    {
+      "boostId": 50127,
+      "statId": 18,
+      "expression": "38"
+    },
+    {
+      "boostId": 50128,
+      "statId": 12,
+      "expression": "15"
+    },
+    {
+      "boostId": 50129,
+      "statId": 13,
+      "expression": "15"
+    },
+    {
+      "boostId": 50130,
+      "statId": 14,
+      "expression": "15"
+    },
+    {
+      "boostId": 50131,
+      "statId": 15,
+      "expression": "15"
+    },
+    {
+      "boostId": 50132,
+      "statId": 22,
+      "expression": "15"
+    }
+  ]
+}

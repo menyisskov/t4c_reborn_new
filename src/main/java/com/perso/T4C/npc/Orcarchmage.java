@@ -8,7 +8,7 @@ import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
-@Spawn(type = "Orcarchmage", x = 0, y = 0, z = 0, stationary = false, aggressive = false)
+@Spawn(type = "Orcarchmage", x = 1406, y = 1827, z = 0, stationary = false, aggressive = true)
 public final class Orcarchmage extends ScriptedNpc {
   public static final String SOUND_ATTACK = "Whooshm 8.wav";
   public static final String SOUND_DEATH = "Orc Dying.wav";
@@ -43,9 +43,9 @@ public final class Orcarchmage extends ScriptedNpc {
 
         c.shoutKey("npc.orcarchmage.death");
 
-        c.flag("QUEST_KILLED_ORC_MAGUS", 1);
+        c.flag("__QUEST_KILLED_ORC_MAGUS", 1);
 
-        c.globalFlag("GLOBAL_FLAG_ORC_QUEST", 0);
+        c.globalFlag("__GLOBAL_FLAG_ORC_QUEST", 0);
       }
     };
   }

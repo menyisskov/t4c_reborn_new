@@ -4,6 +4,9 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Skeletal Centaur", x = 423, y = 503, z = 1, stationary = false, aggressive = true)
@@ -23,7 +26,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Skeletal Centaur", x = 563, y = 490, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Skeletal Centaur", x = 569, y = 537, z = 1, stationary = false, aggressive = true)
 @Spawn(type = "Skeletal Centaur", x = 577, y = 549, z = 1, stationary = false, aggressive = true)
-public final class r214SkeletalCentaur extends DataMonster {
+public final class r214SkeletalCentaur extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Skeleton Dying.wav";
   public static final String SOUND_HIT = "Skeleton Hit.wav";
@@ -32,6 +35,15 @@ public final class r214SkeletalCentaur extends DataMonster {
       throws GameException {
 
     super(definition, worldX, worldY);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null) {
+      String flag = "__FLAG_SKELETAL_CENTAURS_KILLED";
+      player.setQuestFlag(flag, Math.min(12, player.getQuestFlag(flag) + 1));
+    }
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

@@ -1,0 +1,53 @@
+{
+  "key": "divine_anubis_bracelet",
+  "name": "${item.divine_anubis_bracelet}",
+  "bodyPart": "BRACER",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvBelt__pal96",
+  "numId": 55609,
+  "appearanceId": 55609,
+  "weight": 1,
+  "armorClass": 16.0,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50483,
+      "statId": 1,
+      "expression": "65"
+    },
+    {
+      "boostId": 50484,
+      "statId": 24,
+      "expression": "65"
+    },
+    {
+      "boostId": 50485,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50486,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50487,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50488,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50489,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

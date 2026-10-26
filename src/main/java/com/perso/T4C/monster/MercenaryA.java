@@ -4,6 +4,10 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.MercenaryCampQuest;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "MOBMERCENARYA", x = 2664, y = 1072, z = 0, stationary = false, aggressive = true)
@@ -14,7 +18,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "MOBMERCENARYA", x = 2682, y = 1066, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "MOBMERCENARYA", x = 2688, y = 1066, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "MOBMERCENARYA", x = 2694, y = 1062, z = 0, stationary = false, aggressive = true)
-public class MercenaryA extends DataMonster {
+public class MercenaryA extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";
@@ -22,6 +26,11 @@ public class MercenaryA extends DataMonster {
   public MercenaryA(MonsterDef definition, float x, float y) throws GameException {
 
     super(definition, x, y);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    return MercenaryCampQuest.recordDeath(player, getDefinition().getName());
   }
 
   public static MonsterDef definition() {

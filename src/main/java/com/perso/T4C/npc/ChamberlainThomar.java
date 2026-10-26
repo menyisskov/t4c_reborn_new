@@ -7,6 +7,7 @@ import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.quest.AudienceToKingQuest;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
@@ -161,7 +162,33 @@ public final class ChamberlainThomar extends ScriptedNpc {
         @Override
         public boolean onKeyword(NpcBehaviorContext c, String text) {
 
-          String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
+          String k = text == null ? "" : text.trim().toUpperCase(java.util.Locale.ROOT);
+
+          if (k.equals("AUDIENCE")) {
+            c.sayKey(
+                AudienceToKingQuest.isComplete(c.player())
+                    ? "npc.thomar.audience.granted"
+                    : "npc.thomar.audience.offer");
+            return true;
+          }
+
+          if (k.equals("QUEST")) {
+            int now = AudienceToKingQuest.nowSeconds();
+            if (AudienceToKingQuest.isComplete(c.player())) {
+              c.sayKey("npc.thomar.audience.granted");
+            } else if (AudienceToKingQuest.turnIn(c.player(), now)) {
+              c.sayKey("npc.thomar.audience.complete");
+            } else if (AudienceToKingQuest.isActive(c.player(), now)) {
+              c.sayKey("npc.thomar.audience.progress", AudienceToKingQuest.kills(c.player()));
+            } else {
+              c.sayKey(
+                  AudienceToKingQuest.isExpired(c.player(), now)
+                      ? "npc.thomar.audience.expired"
+                      : "npc.thomar.audience.offer");
+              c.askYesNo("king_audience");
+            }
+            return true;
+          }
 
           if (k.contains("NOBLE GESTURE")) {
 
@@ -212,6 +239,14 @@ public final class ChamberlainThomar extends ScriptedNpc {
 
         @Override
         public boolean onYesNo(NpcBehaviorContext c, String state, boolean yes) {
+
+          if ("king_audience".equals(state)) {
+            if (yes) {
+              AudienceToKingQuest.accept(c.player(), AudienceToKingQuest.nowSeconds());
+              c.sayKey("npc.thomar.audience.accept");
+            } else c.sayKey("npc.thomar.no");
+            return true;
+          }
 
           if ("cuthana".equals(state)) {
 

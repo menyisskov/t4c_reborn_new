@@ -14,11 +14,24 @@ class RebirthBehaviorTableTest {
     assertEquals(75, RebirthBehavior.requiredLevelFor(1));
     assertEquals(25, RebirthBehavior.startingAttributeFor(1));
     assertEquals(10, RebirthBehavior.energyPointsFor(1));
+    assertEquals(15, RebirthBehavior.startingWeaponSkillFor(1));
+    assertEquals(30, RebirthBehavior.startingWeaponSkillFor(2));
 
     int last = GameConstants.REBIRTH_MAX_REMORTS;
     assertEquals(320, RebirthBehavior.requiredLevelFor(last));
     assertEquals(270, RebirthBehavior.startingAttributeFor(last));
     assertEquals(255, RebirthBehavior.energyPointsFor(last));
+    assertEquals(750, RebirthBehavior.startingWeaponSkillFor(last));
+  }
+
+  @Test
+  void attributeTrainingCostsOneEnergyPerIncreaseUpToTheCap() {
+    assertEquals(100, RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS);
+    assertEquals(1, RebirthBehavior.ATTRIBUTE_TRAINING_COST);
+    assertEquals(10, RebirthBehavior.totalAttributeTrainingCost(10));
+    assertEquals(
+        100,
+        RebirthBehavior.totalAttributeTrainingCost(RebirthBehavior.MAX_ATTRIBUTE_TRAINING_BONUS));
   }
 
   @Test

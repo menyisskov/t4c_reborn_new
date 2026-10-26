@@ -54,6 +54,12 @@ public final class OutriderKaelis extends ScriptedNpc {
               new NpcSpec.DialogueTopic(
                   List.of("${npc.topic_keyword.outriderkaelis.2.0}"),
                   "${npc.topic.outriderkaelis.2}",
+                  List.of(
+                      new NpcSpec.Action(
+                          ActionType.GIVE_QUEST, List.of("shattered_isle_passage")))),
+              new NpcSpec.DialogueTopic(
+                  List.of("${npc.topic_keyword.outriderkaelis.3.0}"),
+                  "${npc.topic.outriderkaelis.3}",
                   List.of())),
           "OutriderKaelisNPC",
           new NpcSpec.CombatProfile(100, 1000000, 65, 67, 63, 1000000, 250, 65535, "1d23+16"));

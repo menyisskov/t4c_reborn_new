@@ -1,0 +1,59 @@
+{
+  "key": "divine_zeus_helm",
+  "name": "${item.divine_zeus_helm}",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm__pal95",
+  "appearanceInventory": "64kInvPlateArmorHelm__pal95",
+  "numId": 56004,
+  "appearanceId": 56004,
+  "weight": 1,
+  "armorClass": 32.2,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 800064,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 800065,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 800066,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 800067,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 800068,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 800069,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 800070,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 800071,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package com.perso.T4C.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.perso.T4C.gui.core.JournalTheme;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ public class HudTooltip {
   private static final float CURSOR_OFFSET_X = 18f;
   private static final float CURSOR_OFFSET_Y = 18f;
   private final BitmapFont font;
+  private final JournalTheme theme = new JournalTheme();
   private final Texture background;
   private final GlyphLayout layout = new GlyphLayout();
   private String text;
@@ -25,11 +27,7 @@ public class HudTooltip {
   private long untilMillis;
 
   public HudTooltip() {
-    this.font = new BitmapFont();
-    this.font.getData().setScale(1f, -1f);
-    this.font.setUseIntegerPositions(false);
-    this.font.setColor(Color.WHITE);
-    FontManager.getInstance().registerExternalFont(this.font);
+    this.font = FontManager.getInstance().getTahomaFont(12, JournalTheme.TEXT, false);
     Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
     pixmap.setColor(Color.WHITE);
     pixmap.fill();
@@ -78,7 +76,7 @@ public class HudTooltip {
       clear();
       return;
     }
-    layout.setText(font, overrideText, Color.WHITE, MAX_TEXT_WIDTH, Align.left, true);
+    layout.setText(font, overrideText, JournalTheme.TEXT, MAX_TEXT_WIDTH, Align.left, true);
     float boxW = layout.width + PADDING * 2f;
     float textH =
         Math.max(
@@ -87,16 +85,12 @@ public class HudTooltip {
     float boxH = textH + PADDING * 2f;
     float boxX = Math.min(x, Gdx.graphics.getWidth() - boxW - 2f);
     float boxY = Math.min(y, Gdx.graphics.getHeight() - boxH - 2f);
-    Color previousBatchColor = new Color(batch.getColor());
-    batch.setColor(0f, 0f, 0f, 1f);
-    batch.draw(background, boxX, boxY, boxW, boxH);
-    batch.setColor(previousBatchColor);
+    theme.well(batch, boxX, boxY, boxW, boxH);
     font.draw(batch, layout, boxX + PADDING, boxY + PADDING);
   }
 
   public void dispose() {
-    FontManager.getInstance().unregisterExternalFont(font);
-    font.dispose();
+    theme.dispose();
     background.dispose();
   }
 }

@@ -45,6 +45,10 @@ class ItemBalanceGuidelinesTest {
       assertNotNull(def, key + " should load");
       items.add(def);
     }
+    items.addAll(
+        ItemRegistry.allByKey().values().stream()
+            .filter(d -> ItemBalance.isWarriorProgressionKey(d.getKey()))
+            .toList());
   }
 
   @AfterEach
@@ -58,15 +62,33 @@ class ItemBalanceGuidelinesTest {
       assertTrue(
           d.getMinEnd() <= ItemBalance.MAX_ENDURANCE_REQUIREMENT,
           d.getKey() + " asks for " + d.getMinEnd() + " endurance");
-      for (long req : new long[] {d.getReqStr(), d.getReqAgi(), d.getMinInt(), d.getMinWis()})
+      for (long req : new long[] {d.getMinInt(), d.getMinWis()})
+        assertTrue(req <= ItemBalance.MAX_SINGLE_REQUIREMENT, d.getKey() + " asks for " + req);
+      assertTrue(
+          d.getReqStr()
+              <= (ItemBalance.archetype(d) == Archetype.WARRIOR
+                  ? ItemBalance.MAX_WARRIOR_STRENGTH_REQUIREMENT
+                  : ItemBalance.MAX_SINGLE_REQUIREMENT),
+          d.getKey() + " strength requirement");
+      boolean archeryGear = d.isBow() || d.getStructure() == 8;
+      assertTrue(
+          d.getReqAgi()
+              <= (archeryGear
+                  ? ItemBalance.MAX_ARCHERY_AGILITY_REQUIREMENT
+                  : ItemBalance.MAX_SINGLE_REQUIREMENT),
+          d.getKey() + " agility requirement");
+      if (archeryGear)
         assertTrue(
-            req <= ItemBalance.MAX_SINGLE_REQUIREMENT, d.getKey() + " asks for " + req);
+            d.getReqStr() <= ItemBalance.MAX_ARCHERY_STRENGTH_REQUIREMENT,
+            d.getKey() + " strength requirement");
       assertNotNull(ItemBalance.archetype(d), d.getKey() + " has no class requirement");
     }
   }
 
-  /** EquipmentBonusRules keys active boosts by boostId, so a shared id silently drops one
-   * item's bonus. Generated armor-set pieces own 20000-29999; hand-made items use 30000+. */
+  /**
+   * EquipmentBonusRules keys active boosts by boostId, so a shared id silently drops one item's
+   * bonus. Generated armor-set pieces own 20000-29999; hand-made items use 30000+.
+   */
   @Test
   void boostIdsAreUniqueAndInTheirReservedRange() {
     Map<Integer, String> owner = new HashMap<>();
@@ -76,7 +98,12 @@ class ItemBalanceGuidelinesTest {
         String previous = owner.putIfAbsent(boost.getBoostId(), d.getKey());
         assertTrue(
             previous == null,
-            "boostId " + boost.getBoostId() + " is used by both " + previous + " and " + d.getKey());
+            "boostId "
+                + boost.getBoostId()
+                + " is used by both "
+                + previous
+                + " and "
+                + d.getKey());
         int id = boost.getBoostId();
         assertTrue(
             generated ? id >= 20000 && id < 30000 : id >= 30000,
@@ -105,7 +132,8 @@ class ItemBalanceGuidelinesTest {
       String k = d.getKey();
       if (a.isMage()) {
         for (int forbidden : new int[] {STR, AGI, ATK, ARCHERY})
-          assertTrue(!b.containsKey(forbidden), k + " is mage gear with physical stat " + forbidden);
+          assertTrue(
+              !b.containsKey(forbidden), k + " is mage gear with physical stat " + forbidden);
         Set<Integer> allowedPowers =
             a == Archetype.INT_MAGE
                 ? INT_POWERS
@@ -117,24 +145,30 @@ class ItemBalanceGuidelinesTest {
           powers++;
         }
         assertTrue(powers > 0, k + " is mage gear without elemental power");
-        if (a != Archetype.WIS_MAGE) assertTrue(b.getOrDefault(INT, 0d) > 0, k + " needs intelligence");
+        if (a != Archetype.WIS_MAGE)
+          assertTrue(b.getOrDefault(INT, 0d) > 0, k + " needs intelligence");
         if (a != Archetype.INT_MAGE) assertTrue(b.getOrDefault(WIS, 0d) > 0, k + " needs wisdom");
         // Resistance is never confined to the item's own school (and never includes light,
         // checked separately) - every mage item resists all five non-light schools alike.
         if (!weapon)
           for (int r : RESISTS)
-            assertTrue(b.getOrDefault(r, 0d) > 0, k + " needs resistance to all five non-light elements");
+            assertTrue(
+                b.getOrDefault(r, 0d) > 0, k + " needs resistance to all five non-light elements");
       } else {
         boolean warrior = a == Archetype.WARRIOR;
         for (int stat : b.keySet())
           assertTrue(
               !POWER_TO_RESIST.containsKey(stat) && stat != INT && stat != WIS,
               k + " is " + a + " gear with mage stat " + stat);
-        assertTrue(b.containsKey(warrior ? STR : AGI), k + " needs " + (warrior ? "strength" : "agility"));
-        assertTrue(b.containsKey(warrior ? ATK : ARCHERY), k + " needs " + (warrior ? "attack" : "archery"));
+        assertTrue(
+            b.containsKey(warrior ? STR : AGI), k + " needs " + (warrior ? "strength" : "agility"));
+        assertTrue(
+            b.containsKey(warrior ? ATK : ARCHERY),
+            k + " needs " + (warrior ? "attack" : "archery"));
         if (!weapon)
           for (int r : RESISTS)
-            assertTrue(b.getOrDefault(r, 0d) > 0, k + " needs resistance to all five non-light elements");
+            assertTrue(
+                b.getOrDefault(r, 0d) > 0, k + " needs resistance to all five non-light elements");
       }
     }
   }
@@ -146,7 +180,8 @@ class ItemBalanceGuidelinesTest {
       if (ItemBalance.isGeneratedSetPiece(k)) continue;
       Archetype a = ItemBalance.archetype(d);
       double p =
-          ItemBalance.primaryRequirement(a, d.getReqStr(), d.getReqAgi(), d.getMinInt(), d.getMinWis());
+          ItemBalance.primaryRequirement(
+              a, d.getReqStr(), d.getReqAgi(), d.getMinInt(), d.getMinWis());
       double tier = tierMultiplierOf(d);
       Map<Integer, Double> b = boosts(d);
       int main = ItemBalance.mainStatBonus(a, p, tier);
@@ -171,7 +206,10 @@ class ItemBalanceGuidelinesTest {
         // just never light itself).
         for (int r : RESISTS)
           assertEquals(
-              ItemBalance.magicResistBonus(p, tier), b.getOrDefault(r, 0d), 1, k + " resistance " + r);
+              ItemBalance.magicResistBonus(p, tier),
+              b.getOrDefault(r, 0d),
+              1,
+              k + " resistance " + r);
       } else {
         int skill = a == Archetype.WARRIOR ? ATK : ARCHERY;
         assertEquals(ItemBalance.combatSkillBonus(p, tier), b.get(skill), 1, k + " attack/archery");
@@ -182,18 +220,24 @@ class ItemBalanceGuidelinesTest {
     }
   }
 
-  /** "Godsforged" tier items (T4C-0033, key-prefixed the same way "ancient_celestial_"/
-   * "empyrean_" mark generated set pieces) use a higher bonus-formula multiplier than every other
-   * item - see {@link ItemBalance#GODSFORGED_TIER_MULTIPLIER}. */
+  /**
+   * "Godsforged" tier items (T4C-0033, key-prefixed the same way "ancient_celestial_"/ "empyrean_"
+   * mark generated set pieces) use a higher bonus-formula multiplier than every other item - see
+   * {@link ItemBalance#GODSFORGED_TIER_MULTIPLIER}.
+   */
   private static double tierMultiplierOf(ItemDefinition d) {
+    if (ItemBalance.isWarriorProgressionKey(d.getKey()))
+      return ItemBalance.WARRIOR_PROGRESSION_TIER_MULTIPLIER;
     String k = d.getKey();
     String bare = k.startsWith("item.") ? k.substring("item.".length()) : k;
     return bare.startsWith("godsforged_") ? ItemBalance.GODSFORGED_TIER_MULTIPLIER : 1.0;
   }
 
-  /** No item, of any class, ever grants light resistance - positive or negative. Scans the
-   * *whole* registry (legacy Java catalog included via {@link ItemRegistry#load()}), not just
-   * the JSON-authored {@link #items}, so a pre-existing legacy item can't quietly keep it. */
+  /**
+   * No item, of any class, ever grants light resistance - positive or negative. Scans the *whole*
+   * registry (legacy Java catalog included via {@link ItemRegistry#load()}), not just the
+   * JSON-authored {@link #items}, so a pre-existing legacy item can't quietly keep it.
+   */
   @Test
   void neverGrantsLightResist() {
     for (ItemDefinition d : ItemRegistry.load()) {

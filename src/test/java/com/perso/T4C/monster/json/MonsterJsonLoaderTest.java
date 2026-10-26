@@ -1,6 +1,7 @@
 package com.perso.T4C.monster.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.monster.core.MonsterDef;
@@ -26,6 +27,18 @@ class MonsterJsonLoaderTest {
     assertEquals(1, def.getAttacks().size());
     assertEquals("1d6+2", def.getAttacks().get(0).getName());
     assertTrue(def.canBeTamedBy(12));
+  }
+
+  @Test
+  void questSummonNamesResolveToBibleMonsters() {
+    MonsterJsonLoader.loadAndRegister("assets/monsters");
+
+    MonsterDef lordStonecrest = MonsterRegistry.findByName("LORDSTONECREST");
+    MonsterDef maskedAssassin = MonsterRegistry.findByName("SHADEENMASKEDASSASSIN");
+    assertNotNull(lordStonecrest, "Crypt coffin must summon Lord Stonecrest");
+    assertNotNull(maskedAssassin, "Monsignor Damien must summon a masked assassin");
+    assertEquals("Lord Stonecrest", lordStonecrest.getName());
+    assertEquals("Shadeen's Masked Assassin", maskedAssassin.getName());
   }
 
   @Test

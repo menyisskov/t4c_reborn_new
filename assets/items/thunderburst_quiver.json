@@ -1,0 +1,60 @@
+{
+  "key": "thunderburst_quiver",
+  "name": "${item.thunderburst_quiver}",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 15000,
+  "weight": 2,
+  "requirements": {
+    "strength": 27,
+    "agility": 140
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59903,
+  "structure": 8,
+  "appearanceId": 59903,
+  "dmgFormula": "1d41+59",
+  "quiverSplash": {
+    "radius": 1.5,
+    "targets": 5,
+    "damagePercent": 25
+  },
+  "boosts": [
+    {
+      "boostId": 730030,
+      "statId": 6,
+      "expression": "12"
+    },
+    {
+      "boostId": 730031,
+      "statId": 10035,
+      "expression": "28"
+    },
+    {
+      "boostId": 730032,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 730033,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 730034,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 730035,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 730036,
+      "statId": 22,
+      "expression": "4"
+    }
+  ]
+}

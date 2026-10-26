@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_wings",
+  "name": "${item.divine_ogrimar_wings}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal91",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal91",
+  "numId": 55906,
+  "appearanceId": 55906,
+  "weight": 1,
+  "armorClass": 7.2,
+  "requirements": {
+    "endurance": 100,
+    "intelligence": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50724,
+      "statId": 1,
+      "expression": "18"
+    },
+    {
+      "boostId": 50725,
+      "statId": 24,
+      "expression": "18"
+    },
+    {
+      "boostId": 50726,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50727,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50728,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50729,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50730,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

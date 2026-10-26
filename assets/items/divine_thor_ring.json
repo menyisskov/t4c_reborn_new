@@ -1,0 +1,59 @@
+{
+  "key": "divine_thor_ring",
+  "name": "${item.divine_thor_ring}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 4__pal95",
+  "numId": 55708,
+  "appearanceId": 55708,
+  "weight": 1,
+  "armorClass": 18.0,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50554,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 50555,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 50556,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 50557,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50558,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50559,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50560,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50561,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

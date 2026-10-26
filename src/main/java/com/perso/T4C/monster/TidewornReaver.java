@@ -20,6 +20,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Tideworn Reaver", x = 365, y = 760, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Tideworn Reaver", x = 425, y = 735, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Tideworn Reaver", x = 400, y = 720, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class TidewornReaver extends DataMonster {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
@@ -55,7 +56,7 @@ public final class TidewornReaver extends DataMonster {
         SOUND_HIT,
         MonsterGoldCurve.goldMin(280),
         MonsterGoldCurve.goldMax(280),
-        java.util.List.of(new MonsterDef.LootDrop("mana_potion", 0.06f)),
+        java.util.List.of(),
         false,
         0.0f,
         250,

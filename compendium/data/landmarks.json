@@ -298,6 +298,13 @@
     "unlockZoneId": "drakes_lair"
   },
   {
+    "name": "Shattered Isle",
+    "x": 3450,
+    "y": 2705,
+    "worldZ": 0,
+    "unlockZoneId": "shattered_isle"
+  },
+  {
     "name": "Deep Ones Cave",
     "x": 330,
     "y": 2246,

@@ -27,7 +27,7 @@ public final class EarthenStrength {
         0,
         "1200000",
         "0",
-        26329,
+        22057,
         null,
         10124,
         2,

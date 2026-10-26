@@ -6,6 +6,7 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "The Hush Cantor", x = 5750, y = 1500, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class HushCantor extends DataMonster {
   public static final String CANONICAL_NAME = "The Hush Cantor";
 

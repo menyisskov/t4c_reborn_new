@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_necklace",
+  "name": "${item.divine_ogrimar_necklace}",
+  "bodyPart": "NECK",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvNecklace 2__pal91",
+  "numId": 55907,
+  "appearanceId": 55907,
+  "weight": 1,
+  "armorClass": 4.0,
+  "requirements": {
+    "endurance": 100,
+    "intelligence": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50731,
+      "statId": 1,
+      "expression": "18"
+    },
+    {
+      "boostId": 50732,
+      "statId": 24,
+      "expression": "18"
+    },
+    {
+      "boostId": 50733,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50734,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50735,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50736,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50737,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

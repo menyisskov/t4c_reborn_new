@@ -7,6 +7,7 @@ import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.quest.AllianceQuest;
 import java.util.List;
 
 @Spawn(type = "Doremas", x = 1448, y = 2503, z = 0, stationary = false, aggressive = false)
@@ -121,6 +122,21 @@ public final class Doremas extends ScriptedNpc {
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String keyword) {
 
         String k = keyword == null ? "" : keyword.toUpperCase(java.util.Locale.ROOT);
+
+        if (k.contains("GRIMISH")) {
+          int stage = AllianceQuest.stage(c.player());
+          if (stage == AllianceQuest.SEE_DOREMAS) {
+            AllianceQuest.stage(c.player(), AllianceQuest.SEE_GRIMISH);
+            c.sayKey("npc.alliance.doremas.find");
+          } else if (stage == AllianceQuest.RETURN_TO_DOREMAS) {
+            AllianceQuest.stage(c.player(), AllianceQuest.RETURN_TO_GRIMISH);
+            c.sayKey("npc.alliance.doremas.return");
+          } else if (stage == AllianceQuest.TELL_DOREMAS_CODE) {
+            AllianceQuest.stage(c.player(), AllianceQuest.TELL_BALDRIC_CODE);
+            c.sayKey("npc.alliance.doremas.code");
+          } else c.sayKey("npc.topic.doremas.6");
+          return true;
+        }
 
         if (k.contains("ABORT") && c.flag("__FLAG_SHADEEN_PLAYER_B") != 0) {
 

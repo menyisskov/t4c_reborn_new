@@ -1,0 +1,64 @@
+{
+  "key": "moonsteel_helm",
+  "name": "${item.moonsteel_helm}",
+  "bodyPart": "HEAD",
+  "appearanceEquippedPrimary": "PupPlateHelm__silver300",
+  "appearanceInventory": "64kInvPlateArmorHelm__silver300",
+  "price": 450000,
+  "weight": 4,
+  "armorClass": 34.4,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 350,
+    "strength": 700,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59703,
+  "structure": 2,
+  "appearanceId": 59703,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 710030,
+      "statId": 3,
+      "expression": "58"
+    },
+    {
+      "boostId": 710031,
+      "statId": 8,
+      "expression": "140"
+    },
+    {
+      "boostId": 710032,
+      "statId": 12,
+      "expression": "18"
+    },
+    {
+      "boostId": 710033,
+      "statId": 13,
+      "expression": "18"
+    },
+    {
+      "boostId": 710034,
+      "statId": 14,
+      "expression": "18"
+    },
+    {
+      "boostId": 710035,
+      "statId": 15,
+      "expression": "18"
+    },
+    {
+      "boostId": 710036,
+      "statId": 22,
+      "expression": "18"
+    }
+  ]
+}

@@ -27,7 +27,7 @@ public final class Freeze {
         0,
         "0",
         "0",
-        20625,
+        17200,
         null,
         10025,
         4,

@@ -1,0 +1,61 @@
+{
+  "key": "divine_zeus_weapon",
+  "name": "${item.divine_zeus_weapon}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal95",
+  "appearanceInventory": "64kInvWoodenStaff__pal95",
+  "numId": 56000,
+  "appearanceId": 56000,
+  "weight": 1,
+  "armorClass": 0.0,
+  "requirements": {
+    "endurance": 0,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 800000,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 800001,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 800002,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 800003,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 800004,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 800005,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 800006,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 800007,
+      "statId": 22,
+      "expression": "26"
+    }
+  ],
+  "dmgFormula": "1d54+65",
+  "atkDelay": "1300"
+}

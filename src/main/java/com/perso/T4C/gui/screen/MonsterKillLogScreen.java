@@ -4,11 +4,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.perso.T4C.gui.core.GuiDraw;
-import com.perso.T4C.gui.core.GuiElement;
 import com.perso.T4C.gui.core.GuiManager;
-import com.perso.T4C.gui.core.GuiScreenBase;
-import com.perso.T4C.gui.core.GuiSprites;
+import com.perso.T4C.gui.core.JournalTheme;
+import com.perso.T4C.gui.core.JournalWindow;
 import com.perso.T4C.gui.widget.GuiBoxedText;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.core.MonsterDef;
@@ -26,7 +24,7 @@ import java.util.Map;
  * Journal (see QuestScreen.addKillLogButton()). Purely a read-only view: nothing here writes any
  * player state.
  */
-public final class MonsterKillLogScreen extends GuiScreenBase {
+public final class MonsterKillLogScreen extends JournalWindow {
   private static final int VISIBLE_ROWS = 11;
   private static final float LIST_X = 29f;
   private static final float LIST_Y = 50f;
@@ -34,8 +32,8 @@ public final class MonsterKillLogScreen extends GuiScreenBase {
   private static final float COUNT_X = 400f;
   private static final float COUNT_W = 120f;
   private static final float ROW_H = 25f;
-  private static final Color GOLD = Color.valueOf("F2B705");
-  private static final Color WHITE = Color.valueOf("E6D8BC");
+  private static final Color GOLD = JournalTheme.GOLD;
+  private static final Color WHITE = JournalTheme.TEXT;
 
   private final List<Map.Entry<String, Integer>> entries = new ArrayList<>();
   private final BitmapFont listFont;
@@ -44,10 +42,8 @@ public final class MonsterKillLogScreen extends GuiScreenBase {
   private int firstVisible;
 
   public MonsterKillLogScreen(Player player) {
-    background = GuiSprites.load("GUI_BackQuest");
+    initJournal(600, 350, "killlog.title");
     listFont = FontManager.getInstance().getTahomaFont(13, GOLD, false);
-    centerOnScreen();
-    addCloseButton(548f, 1f);
     entries.addAll(QuestService.killLog(player).entrySet());
     addStaticLabels();
     addRows();
@@ -55,11 +51,6 @@ public final class MonsterKillLogScreen extends GuiScreenBase {
 
   private void addStaticLabels() {
     if (background == null) return;
-    var titleFont = FontManager.getInstance().getHaettenschweilerFont(17, GOLD);
-    labels.add(
-        new GuiBoxedText(
-                titleFont, x + 200f, y + 2f, 176f, 19f, () -> I18n.key("killlog.title"), () -> GOLD)
-            .shrinkToFit());
     totalLabel =
         new GuiBoxedText(
                 FontManager.getInstance().getTahomaFont(12, WHITE, false),
@@ -140,9 +131,8 @@ public final class MonsterKillLogScreen extends GuiScreenBase {
   }
 
   @Override
-  public void render(SpriteBatch batch) {
-    if (background != null) GuiDraw.drawOverlayRegionFlipped(batch, background, x, y);
-    for (GuiElement element : orderedElements()) element.render(batch);
+  protected void renderBody(SpriteBatch batch) {
+    theme.well(batch, x + 20, y + 42, 554, 282);
   }
 
   @Override

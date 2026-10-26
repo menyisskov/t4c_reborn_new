@@ -133,6 +133,15 @@ public final class Jarko extends ScriptedNpc {
     return new NpcBehavior() {
 
       @Override
+      public void onDeath(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
+        if (Math.random() < 0.05) c.giveItem("jarko_amulet");
+        c.giveItem("jarko_spellbook");
+        if (Math.random() < 0.01) c.giveItem("warlock_ring");
+        if (Math.random() < 0.02) c.giveItem("iron_staff");
+        if (Math.random() < 0.01) c.giveItem("cloak_of_deceit");
+      }
+
+      @Override
       public boolean onKeyword(com.perso.T4C.npc.behavior.NpcBehaviorContext c, String text) {
 
         boolean handled = StaticDialogueBehavior.INSTANCE.onKeyword(c, text);

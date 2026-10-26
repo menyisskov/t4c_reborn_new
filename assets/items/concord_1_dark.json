@@ -1,0 +1,29 @@
+{
+  "key": "concord_1_dark",
+  "name": "${item.concord_1_dark}",
+  "bodyPart": "WEAPON",
+  "appearanceInventory": "64kInvWoodenStaff__pal96",
+  "numId": 59047,
+  "appearanceId": 59047,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61300,
+      "statId": 1,
+      "expression": "25"
+    },
+    {
+      "boostId": 61301,
+      "statId": 24,
+      "expression": "25"
+    }
+  ],
+  "appearanceEquippedPrimary": "PupWoodenStaff__pal96",
+  "requirements": {
+    "intelligence": 250
+  },
+  "dmgFormula": "1d40+30",
+  "atkDelay": "1300",
+  "isBow": false
+}

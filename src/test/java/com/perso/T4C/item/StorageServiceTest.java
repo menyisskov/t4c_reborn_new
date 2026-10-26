@@ -38,6 +38,20 @@ class StorageServiceTest {
   }
 
   @Test
+  void selectedQuantityLeavesOtherCopiesInBothContainers() throws Exception {
+    Player player = strongPlayer();
+    player.setInventory(List.of(DAGGER, DAGGER, DAGGER, DAGGER, DAGGER));
+
+    assertEquals(3, StorageService.depositMany(player, DAGGER, 3));
+    assertEquals(2, player.getInventory().size());
+    assertEquals(3, player.getStorage().size());
+
+    assertEquals(2, StorageService.withdrawMany(player, DAGGER, 2).moved());
+    assertEquals(4, player.getInventory().size());
+    assertEquals(List.of(DAGGER), player.getStorage());
+  }
+
+  @Test
   void depositingAndWithdrawingKeepsRemainingCharges() throws Exception {
     Player player = strongPlayer();
     assertTrue(InventoryService.add(player, BOOK, 5).success());

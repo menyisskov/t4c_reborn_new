@@ -43,7 +43,12 @@ public final class GHUNDARGRUMBLEFOOT extends DataMonster {
         SOUND_HIT,
         222,
         682,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("crude_orcish_necklace", 0.01f),
+            new MonsterDef.LootDrop("orcish_shield", 0.01f),
+            new MonsterDef.LootDrop("red_cape", 0.01f),
+            new MonsterDef.LootDrop("ring_of_confidence", 0.01f),
+            new MonsterDef.LootDrop("shaman_mantle", 0.01f)),
         false,
         0.0f,
         77,

@@ -29,7 +29,37 @@ class MonsterManagerPlayerKillNotificationTest {
 
   private static final class TestMonster extends BaseMonster {
     private TestMonster() throws GameException {
-      super("Brown Rat", 0f, 0f, 10, 0, 0, 0, 1, 1, 1_000L, null, null, null, null, null);
+      this(0, 0);
     }
+
+    private TestMonster(int xpPerHit, int xpOnDeath) throws GameException {
+      super(
+          "Brown Rat",
+          0f,
+          0f,
+          10,
+          0,
+          xpPerHit,
+          xpOnDeath,
+          1,
+          1,
+          1_000L,
+          null,
+          null,
+          null,
+          null,
+          null);
+    }
+  }
+
+  @Test
+  void combatExperienceDoublesDamageAndLargeKillAwardsExactlyOnce() throws Exception {
+    com.perso.T4C.helper.CollisionManager.getInstance().clear();
+    var player = new com.perso.T4C.player.Player();
+    var monster = new TestMonster(7, 2100000000);
+    monster.applyPlayerDamage(1000, player, null);
+    assertEquals(4200000140L, player.getCurrentXp(), "Only ten effective damage earns hit XP");
+    monster.applyPlayerDamage(1000, player, null);
+    assertEquals(4200000140L, player.getCurrentXp(), "A corpse cannot award XP again");
   }
 }

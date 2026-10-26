@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.With;
 
 @Getter
 @AllArgsConstructor
@@ -13,9 +14,9 @@ public class MonsterDef {
   private final int health;
   private final int mana;
   private final int xpPerHit;
-  private final int xpOnDeath;
-  private final int hitDamageMin;
-  private final int hitDamageMax;
+  @With private final int xpOnDeath;
+  @With private final int hitDamageMin;
+  @With private final int hitDamageMax;
   private final long respawnTime;
   private final String walkPattern;
   private final String attackPattern;
@@ -53,7 +54,7 @@ public class MonsterDef {
   private final int clan;
   private final int speed;
   private final boolean canAttack;
-  private final List<Attack> attacks;
+  @With private final List<Attack> attacks;
   private final boolean tameable;
   private final int tameMaxLevel;
   private final List<String> spawnAliases;

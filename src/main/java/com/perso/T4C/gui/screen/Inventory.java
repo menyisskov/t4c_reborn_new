@@ -1,19 +1,16 @@
 package com.perso.T4C.gui.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.perso.T4C.combat.ArmorClassRules;
-import com.perso.T4C.exception.GameException;
+import com.perso.T4C.gui.core.CharacterPanel;
 import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiManager;
-import com.perso.T4C.gui.core.GuiScreenBase;
 import com.perso.T4C.gui.core.GuiSprites;
+import com.perso.T4C.gui.core.JournalTheme;
 import com.perso.T4C.gui.widget.GuiAnimatedSprite;
-import com.perso.T4C.gui.widget.GuiBoxedText;
 import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiInventory;
 import com.perso.T4C.gui.widget.GuiPlayerPart;
@@ -22,26 +19,24 @@ import com.perso.T4C.gui.widget.GuiText;
 import com.perso.T4C.gui.widget.ItemTooltipText;
 import com.perso.T4C.helper.PlayerAppearanceDefaults;
 import com.perso.T4C.helper.PlayerStateStore;
-import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemUseService;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
-import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.HudTooltip;
 import com.perso.T4C.ui.PlayerHUD;
 import com.perso.T4C.ui.SystemMessage;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Inventory extends GuiScreenBase {
+public class Inventory extends CharacterPanel {
   private static final boolean DEBUG_HOVER_TEXT = false;
   private static final String DEBUG_HOVER_PLACEHOLDER = "ITEM HOVER TEXT x100";
+  private static final Rectangle CHARACTER_PREVIEW = new Rectangle(123, 176, 120, 168);
 
   private enum DragSource {
     INVENTORY,
@@ -63,10 +58,6 @@ public class Inventory extends GuiScreenBase {
 
   private final Player player;
   private final PlayerHUD hud;
-  private TextureRegion backgroundTop;
-  private TextureRegion backgroundBottom;
-  private float totalWidth;
-  private float totalHeight;
   private GuiPlayerPreview playerPreview;
   private DragState dragState;
   private long lastClickTimeMs = 0;
@@ -75,103 +66,46 @@ public class Inventory extends GuiScreenBase {
   private String hoverItemText = DEBUG_HOVER_TEXT ? DEBUG_HOVER_PLACEHOLDER : "";
   private int selectedInventoryIndex = -1;
   private String selectedItemName;
+  private GuiButton macroButton;
 
   public Inventory(Player player) {
     this(player, null);
   }
 
   public Inventory(Player player, PlayerHUD hud) {
+    super(player, hud, "ui.journal.inventory", "inventory");
     this.player = player;
     this.hud = hud;
-    loadBackgrounds();
-    centerOnScreen();
-    addCloseButton();
-    addHeader();
     addPlayerPreview();
     addPlayerParts();
     addStatLabels();
     addInventoryActionButtons();
   }
 
-  private void loadBackgrounds() {
-    backgroundTop =
-        loadFirstExisting("GUI_InvBackT", "GUI_InvBackTop", "GUI_BackInvT", "GUI_BackInventoryTop");
-    backgroundBottom =
-        loadFirstExisting(
-            "GUI_InvBackB", "GUI_InvBackBottom", "GUI_BackInvB", "GUI_BackInventoryBottom");
-    if (backgroundTop == null && backgroundBottom == null) {
-      backgroundTop = loadFirstExisting("GUI_BackInv", "GUI_BackInventory", "GUI_InventoryBack");
-    }
-    if (backgroundTop == null && backgroundBottom == null) {
-      log.warn(
-          "Inventory background not found. Tried known sprite names: {}",
-          Arrays.asList(
-              "GUI_InvBackT",
-              "GUI_InvBackTop",
-              "GUI_BackInvT",
-              "GUI_BackInventoryTop",
-              "GUI_InvBackB",
-              "GUI_InvBackBottom",
-              "GUI_BackInvB",
-              "GUI_BackInventoryBottom",
-              "GUI_BackInv",
-              "GUI_BackInventory",
-              "GUI_InventoryBack"));
-    }
-    background = backgroundTop != null ? backgroundTop : backgroundBottom;
-    float widthTop = backgroundTop == null ? 0f : backgroundTop.getRegionWidth();
-    float widthBottom = backgroundBottom == null ? 0f : backgroundBottom.getRegionWidth();
-    float heightTop = backgroundTop == null ? 0f : backgroundTop.getRegionHeight();
-    float heightBottom = backgroundBottom == null ? 0f : backgroundBottom.getRegionHeight();
-    totalWidth = Math.max(widthTop, widthBottom);
-    totalHeight = heightTop + heightBottom;
-  }
-
-  private TextureRegion loadFirstExisting(String... names) {
-    try {
-      var loader = SpriteLoader.getInstance();
-      for (String name : names) {
-        TextureRegion region = loader.getRegionFromSpriteName(name);
-        if (region != null) {
-          return region;
-        }
-      }
-      return null;
-    } catch (GameException e) {
-      log.warn("Failed to load inventory background sprite", e);
-      return null;
-    }
-  }
-
   @Override
-  protected void centerOnScreen() {
-    if (totalWidth <= 0f || totalHeight <= 0f) {
-      return;
-    }
-    x = (Gdx.graphics.getWidth() - totalWidth) / 2f;
-    y = (Gdx.graphics.getHeight() - totalHeight) / 2f;
-  }
-
-  @Override
-  protected boolean isBackgroundHit(float screenX, float screenY) {
-    return totalWidth > 0f
-        && totalHeight > 0f
-        && screenX >= x
-        && screenX <= x + totalWidth
-        && screenY >= y
-        && screenY <= y + totalHeight;
+  public void dispose() {
+    tooltip.dispose();
+    super.dispose();
   }
 
   @Override
   public void render(SpriteBatch batch) {
     refreshSelection();
-    if (backgroundTop != null) {
-      GuiDraw.drawOverlayRegionFlipped(batch, backgroundTop, x, y);
+    macroButton.setEnabled(canMacroItem(player, selectedItemName));
+    renderPanelBackground(batch);
+    theme.accentWell(batch, x + 24, y + 481, 272, 31);
+    well(batch, 24, 104, 318, 340);
+    well(batch, 356, 130, 340, 288);
+    for (GuiPlayerPart part : playerParts) {
+      theme.well(batch, part.getX(), part.getY(), part.getWidth(), part.getHeight());
     }
-    if (backgroundBottom != null) {
-      float topHeight = backgroundTop == null ? 0f : backgroundTop.getRegionHeight();
-      GuiDraw.drawOverlayRegionFlipped(batch, backgroundBottom, x, y + topHeight);
-    }
+    // A quiet inset behind the rotating character keeps the silhouette readable.
+    well(
+        batch,
+        CHARACTER_PREVIEW.x,
+        CHARACTER_PREVIEW.y,
+        CHARACTER_PREVIEW.width,
+        CHARACTER_PREVIEW.height);
     for (GuiAnimatedSprite sprite : animatedSprites) {
       sprite.render(batch);
     }
@@ -245,22 +179,10 @@ public class Inventory extends GuiScreenBase {
           ItemUseService.useOnSelf(
               player, drag.itemName, java.util.concurrent.ThreadLocalRandom.current());
       if (use.success()) PlayerStateStore.save(player);
-      else if (use.failure() == ItemUseService.Failure.NO_HEALING_NEEDED) {
-        SystemMessage.showShared(I18n.message("message.no_healing_needed"));
-      } else if (use.failure() == ItemUseService.Failure.NO_MANA_NEEDED) {
-        SystemMessage.showShared(I18n.message("message.no_mana_needed"));
-      }
+      else SystemMessage.showShared(ItemUseService.failureMessage(use, drag.itemName));
       return;
     }
-    if (target == BodyPart.RING1 && player.getEquippedItems().get(BodyPart.RING1) != null) {
-      if (player.getEquippedItems().get(BodyPart.RING2) == null) {
-        target = BodyPart.RING2;
-      }
-    }
-    if (!canEquip(target, drag.itemName)) {
-      return;
-    }
-    InventoryService.Result result = InventoryService.equip(player, target, drag.itemName);
+    InventoryService.Result result = equipAutomatically(player, drag.itemName);
     if (!result.success()) {
       showEquipFailure(result, drag.itemName);
       return;
@@ -270,6 +192,17 @@ public class Inventory extends GuiScreenBase {
       player.getAnimations().refresh();
     }
     PlayerStateStore.save(player);
+  }
+
+  /** Equipment dragged onto the preview uses its declared slot and the normal equip rules. */
+  static InventoryService.Result equipAutomatically(Player player, String itemKey) {
+    ItemDefinition definition = ItemDefinition.get(itemKey);
+    BodyPart target = definition == null ? null : definition.getBodyPart();
+    if (player != null
+        && target == BodyPart.RING1
+        && player.getEquippedItems().get(BodyPart.RING1) != null
+        && player.getEquippedItems().get(BodyPart.RING2) == null) target = BodyPart.RING2;
+    return InventoryService.equip(player, target, itemKey);
   }
 
   @Override
@@ -346,32 +279,63 @@ public class Inventory extends GuiScreenBase {
   }
 
   private void addInventoryActionButtons() {
-    var normal = GuiSprites.load("GUI_ButtonUp");
-    var hover = GuiSprites.load("GUI_ButtonHUp");
-    var pressed = GuiSprites.load("GUI_ButtonDown");
-    if (normal == null || hover == null || pressed == null) {
-      return;
+    macroButton =
+        theme.button(
+            x + 358,
+            y + 428,
+            164,
+            26,
+            () ->
+                I18n.key(
+                    hasItemMacro(player, selectedItemName)
+                        ? "ui.inventory.macro_remove"
+                        : "ui.inventory.macro_add"),
+            () -> {
+              if (toggleItemMacro(player, selectedItemName)) PlayerStateStore.save(player);
+            });
+    buttons.add(macroButton);
+    buttons.add(
+        theme.button(
+            x + 114,
+            y + 300,
+            132,
+            26,
+            () -> I18n.key("wardrobe.open"),
+            () -> GuiManager.open(new RobeWardrobeScreen(player, hud))));
+    buttons.add(
+        theme.button(x + 532, y + 428, 76, 26, () -> I18n.key("ui.drop"), this::dropSelectedItem));
+    buttons.add(
+        theme.button(x + 616, y + 428, 76, 26, () -> I18n.key("ui.junk"), this::junkSelectedItem));
+    value(this::selectedItemLabel, 358, 455, 336, 18, 11, JournalTheme.GOLD);
+  }
+
+  private static boolean canMacroItem(Player player, String itemKey) {
+    var item = com.perso.T4C.item.ItemRegistry.findByKey(itemKey);
+    return player != null
+        && item != null
+        && !item.getSpells().isEmpty()
+        && InventoryService.count(player, itemKey) > 0;
+  }
+
+  private static boolean hasItemMacro(Player player, String itemKey) {
+    if (player == null || itemKey == null) return false;
+    String key = ItemDefinition.normalizeKey(itemKey);
+    return player.getMacros().stream()
+        .anyMatch(
+            macro -> macro.isItem() && key.equals(ItemDefinition.normalizeKey(macro.getItemKey())));
+  }
+
+  static boolean toggleItemMacro(Player player, String itemKey) {
+    if (!canMacroItem(player, itemKey)) return false;
+    String key = ItemDefinition.normalizeKey(itemKey);
+    if (!player
+        .getMacros()
+        .removeIf(
+            macro ->
+                macro.isItem() && key.equals(ItemDefinition.normalizeKey(macro.getItemKey())))) {
+      player.getMacros().add(com.perso.T4C.config.MacroBinding.forItem(key));
     }
-    var buttonFont = FontManager.getInstance().getJetBrainsMonoFont(10, Color.BLACK);
-    var gold = Color.valueOf("F2B705");
-    buttons.add(
-        new GuiButton(normal, hover, pressed, x + 454f, y + 375f, this::dropSelectedItem)
-            .setSize(46f, 18f)
-            .withLabel(buttonFont, () -> I18n.key("ui.drop")));
-    buttons.add(
-        new GuiButton(normal, hover, pressed, x + 502f, y + 375f, this::junkSelectedItem)
-            .setSize(46f, 18f)
-            .withLabel(buttonFont, () -> I18n.key("ui.junk")));
-    labels.add(
-        new GuiBoxedText(
-                FontManager.getInstance().getJetBrainsMonoFont(10, gold),
-                x + 454f,
-                y + 396f,
-                94f,
-                16f,
-                this::selectedItemLabel,
-                () -> gold)
-            .shrinkToFit());
+    return true;
   }
 
   private int countOwned(String itemName) {
@@ -460,7 +424,7 @@ public class Inventory extends GuiScreenBase {
   }
 
   private void reopen() {
-    GuiManager.open(this);
+    GuiManager.open(new Inventory(player, hud));
   }
 
   @Override
@@ -472,144 +436,93 @@ public class Inventory extends GuiScreenBase {
     return super.onKeyDown(keycode);
   }
 
-  private void addCloseButton() {
-    addCloseButton(525f, 0f);
-  }
-
-  private void addHeader() {
-    if (backgroundTop == null && backgroundBottom == null) {
-      return;
-    }
-    var gold = Color.valueOf("F2B705");
-    labels.add(
-        new GuiBoxedText(
-                FontManager.getInstance().getHaettenschweilerFont(18, gold),
-                x + 224f,
-                y + 2f,
-                102f,
-                19f,
-                () -> I18n.key("ui.inventory"),
-                () -> gold)
-            .shrinkToFit());
-  }
-
   private void addStatLabels() {
-    if (player == null) {
-      return;
+    text("ui.journal.equipment", 36, 110, 170, 20, 13, JournalTheme.GOLD);
+    value(player::getName, 128, 338, 110, 23, 14, JournalTheme.TEXT);
+    text("ui.journal.bag", 358, 105, 130, 20, 13, JournalTheme.GOLD);
+    value(
+        () ->
+            InventoryService.currentWeight(player) + " / " + InventoryService.maximumWeight(player),
+        520,
+        105,
+        174,
+        20,
+        12,
+        JournalTheme.DIM);
+    value(
+        () ->
+            I18n.key("ui.armor_class")
+                + "  "
+                + (int) Math.floor(ArmorClassRules.effectiveArmorClass(player)),
+        356,
+        430,
+        170,
+        20,
+        12,
+        JournalTheme.TEXT);
+    text("ui.gold", 34, 487, 60, 20, 11, JournalTheme.GOLD);
+    value(
+        () -> String.format(java.util.Locale.ROOT, "%,d", player.getGold()),
+        98,
+        483,
+        192,
+        27,
+        20,
+        JournalTheme.GOLD);
+    value(
+        () -> hoverItemText.isEmpty() ? I18n.key("ui.journal.inventory_hint") : hoverItemText,
+        306,
+        487,
+        386,
+        20,
+        10,
+        JournalTheme.DIM);
+    java.util.function.IntSupplier[] stats = {
+      player::getEffectiveStrength,
+      player::getEffectiveEndurance,
+      player::getEffectiveDexterity,
+      player::getEffectiveWisdom,
+      player::getEffectiveIntelligence
+    };
+    String[] keys = {"str", "end", "dex", "wis", "int"};
+    for (int i = 0; i < keys.length; i++) {
+      int index = i;
+      text("ui.journal.short." + keys[i], 32 + i * 62, 447, 60, 13, 10, JournalTheme.DIM);
+      value(
+          () -> String.valueOf(stats[index].getAsInt()),
+          32 + i * 62,
+          461,
+          60,
+          16,
+          12,
+          JournalTheme.TEXT);
     }
-    BitmapFont font = FontManager.getInstance().getJetBrainsMonoFont(14, Color.WHITE);
-    var gold = Color.valueOf("F2B705");
-    labels.add(
-        new GuiBoxedText(
-            font,
-            x + 352f,
-            y + 96f,
-            48f,
-            17f,
-            () -> String.valueOf(player.getStrength()),
-            () -> Color.WHITE));
-    labels.add(
-        new GuiBoxedText(
-            font,
-            x + 352f,
-            y + 130f,
-            48f,
-            17f,
-            () -> String.valueOf(player.getEndurance()),
-            () -> Color.WHITE));
-    labels.add(
-        new GuiBoxedText(
-            font,
-            x + 352f,
-            y + 164f,
-            48f,
-            17f,
-            () -> String.valueOf(player.getDexterity()),
-            () -> Color.WHITE));
-    labels.add(
-        new GuiBoxedText(
-            font,
-            x + 352f,
-            y + 198f,
-            48f,
-            17f,
-            () -> String.valueOf(player.getWisdom()),
-            () -> Color.WHITE));
-    labels.add(
-        new GuiBoxedText(
-            font,
-            x + 352f,
-            y + 232f,
-            48f,
-            17f,
-            () -> String.valueOf(player.getIntelligence()),
-            () -> Color.WHITE));
-    labels.add(
-        new GuiBoxedText(
-            font,
-            x + 352f,
-            y + 51f,
-            48f,
-            17f,
-            () -> String.valueOf((int) Math.floor(ArmorClassRules.effectiveArmorClass(player))),
-            () ->
-                ArmorClassRules.effectiveArmorClass(player) > ArmorClassRules.trueArmorClass(player)
-                    ? Color.GREEN
-                    : Color.WHITE));
-    labels.add(
-        new GuiBoxedText(font, x + 424f, y + 51f, 101f, 16f, player::getName, () -> Color.WHITE)
-            .shrinkToFit());
-    labels.add(
-        new GuiBoxedText(
-                FontManager.getInstance().getHaettenschweilerFont(18, gold),
-                x + 28f,
-                y + 397f,
-                55f,
-                18f,
-                () -> I18n.key("ui.gold"),
-                () -> gold)
-            .shrinkToFit());
-    BitmapFont infoFont = FontManager.getInstance().getJetBrainsMonoFont(11, gold);
-    labels.add(
-        new GuiBoxedText(
-            infoFont,
-            x + 87f,
-            y + 397f,
-            89f,
-            18f,
-            () -> String.valueOf(player.getGold()),
-            () -> gold));
-    labels.add(
-        new GuiBoxedText(infoFont, x + 206f, y + 397f, 248f, 18f, () -> hoverItemText, () -> gold));
   }
 
   private void addPlayerPreview() {
-    if (player == null) {
-      return;
-    }
-    playerPreview = new GuiPlayerPreview(player, x + 456f, y + 197f);
+    playerPreview = new GuiPlayerPreview(player, x + 179, y + 257);
     previews.add(playerPreview);
   }
 
   private void addPlayerParts() {
-    if (player == null) {
-      return;
-    }
-    inventories.add(new GuiInventory(player, x + 25f, y + 272f, 402f, 113f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.BACK, x + 227f, y + 97f, 60f, 88f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.HEAD, x + 85f, y + 40f, 60f, 50f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.RING1, x + 204f, y + 46f, 36f, 36f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.RING2, x + 254f, y + 46f, 36f, 36f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.BELT, x + 156f, y + 205f, 36f, 36f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.NECK, x + 40f, y + 46f, 36f, 36f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.BRACER, x + 156f, y + 46f, 36f, 36f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.LEGS, x + 85f, y + 193f, 60f, 58f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.BODY, x + 85f, y + 97f, 60f, 88f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.FEET, x + 14f, y + 193f, 60f, 58f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.SHIELD, x + 156f, y + 97f, 60f, 88f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.LEFT_HAND, x + 200f, y + 200f, 40f, 40f));
-    playerParts.add(new GuiPlayerPart(player, BodyPart.WEAPON, x + 14f, y + 97f, 60f, 88f));
-    System.out.println("Inventory: GuiPlayerPart count=" + playerParts.size());
+    inventories.add(new GuiInventory(player, x + 361, y + 135, 330, 278).withGrid(40, theme));
+    addPart(BodyPart.HEAD, 155, 134, 56, 40);
+    addPart(BodyPart.NECK, 95, 134, 42, 40);
+    addPart(BodyPart.BRACER, 229, 134, 42, 40);
+    addPart(BodyPart.RING1, 41, 134, 42, 40);
+    addPart(BodyPart.RING2, 285, 134, 42, 40);
+    addPart(BodyPart.BODY, 41, 186, 66, 90);
+    addPart(BodyPart.BACK, 257, 186, 66, 90);
+    addPart(BodyPart.WEAPON, 41, 287, 66, 90);
+    addPart(BodyPart.SHIELD, 257, 287, 66, 90);
+    addPart(BodyPart.FEET, 41, 389, 58, 45);
+    addPart(BodyPart.LEFT_HAND, 108, 389, 42, 45);
+    addPart(BodyPart.LEGS, 157, 369, 54, 65);
+    addPart(BodyPart.BELT, 220, 389, 42, 45);
+  }
+
+  private void addPart(BodyPart part, float dx, float dy, float w, float h) {
+    playerParts.add(new GuiPlayerPart(player, part, x + dx, y + dy, w, h));
   }
 
   private DragState tryStartDrag(float screenX, float screenY) {
@@ -693,6 +606,13 @@ public class Inventory extends GuiScreenBase {
       PlayerStateStore.save(player);
       return;
     }
+    if (CHARACTER_PREVIEW.contains(screenX - x, screenY - y)) {
+      ItemDefinition definition = ItemDefinition.get(drag.itemName);
+      if (drag.source == DragSource.INVENTORY
+          && definition != null
+          && definition.getBodyPart() != null) autoEquipItem(drag);
+      return;
+    }
     GuiPlayerPart targetPart = findPlayerPartDropTarget(screenX, screenY, fallbackW, fallbackH);
     boolean appearanceChanged = false;
     if (targetPart != null) {
@@ -745,7 +665,9 @@ public class Inventory extends GuiScreenBase {
       return;
     }
     if (drag.source == DragSource.INVENTORY) {
-      player.dropInventoryItem(drag.inventoryIndex, drag.itemName);
+      selectedInventoryIndex = drag.inventoryIndex;
+      selectedItemName = drag.itemName;
+      dropSelectedItem();
     } else if (drag.source == DragSource.EQUIPPED
         && InventoryService.unequip(player, drag.sourcePart).success()) {
       int index = player.getInventory().lastIndexOf(drag.itemName);
@@ -786,12 +708,7 @@ public class Inventory extends GuiScreenBase {
   }
 
   private boolean isInsideInventoryWindow(float screenX, float screenY) {
-    return totalWidth > 0f
-        && totalHeight > 0f
-        && screenX >= x
-        && screenX <= x + totalWidth
-        && screenY >= y
-        && screenY <= y + totalHeight;
+    return isBackgroundHit(screenX, screenY);
   }
 
   private boolean showItemTooltipAt(float screenX, float screenY) {
@@ -875,7 +792,7 @@ public class Inventory extends GuiScreenBase {
 
   private boolean showArmorClassTooltipAt(float screenX, float screenY) {
     if (player == null) return false;
-    if (screenX < x + 340f || screenX > x + 415f || screenY < y + 35f || screenY > y + 78f) {
+    if (screenX < x + 356f || screenX > x + 526f || screenY < y + 428f || screenY > y + 454f) {
       return false;
     }
     tooltip.show(buildArmorClassTooltipText(), screenX, screenY);

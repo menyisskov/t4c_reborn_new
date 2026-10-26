@@ -1,0 +1,59 @@
+{
+  "key": "divine_thor_bracelet",
+  "name": "${item.divine_thor_bracelet}",
+  "bodyPart": "BRACER",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvBelt__pal95",
+  "numId": 55709,
+  "appearanceId": 55709,
+  "weight": 1,
+  "armorClass": 18.0,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50562,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 50563,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 50564,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 50565,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50566,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50567,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50568,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50569,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

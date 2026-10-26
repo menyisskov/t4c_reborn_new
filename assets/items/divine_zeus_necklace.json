@@ -1,0 +1,59 @@
+{
+  "key": "divine_zeus_necklace",
+  "name": "${item.divine_zeus_necklace}",
+  "bodyPart": "NECK",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvNecklace 2__pal95",
+  "numId": 56007,
+  "appearanceId": 56007,
+  "weight": 1,
+  "armorClass": 18.0,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 800112,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 800113,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 800114,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 800115,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 800116,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 800117,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 800118,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 800119,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

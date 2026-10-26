@@ -12,6 +12,11 @@ public final class ArmorClassRules {
 
   public static double effectiveArmorClass(Player player) {
     if (player == null) return 0d;
-    return Math.max(0d, trueArmorClass(player) + player.getArmorClassBoost());
+    return Math.max(
+        0d,
+        (trueArmorClass(player)
+                + player.getArmorClassBoost()
+                + com.perso.T4C.adventure.WorldEvents.wardBonus(player, System.currentTimeMillis()))
+            * player.getArmorClassMultiplier());
   }
 }

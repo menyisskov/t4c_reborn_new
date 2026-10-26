@@ -9,6 +9,19 @@ import org.junit.jupiter.api.Test;
 
 class MonsterAnimationsAttackPoseTest {
   @Test
+  void castingPlaysAGestureAndReturnsToIdleWithoutMovement() throws GameException {
+    MonsterAnimations animations = new MonsterAnimations(null, null, null, null, null);
+    animations.startCast();
+    assertTrue(animations.isAttacking());
+    animations.update(animations.getAttackDuration(), false);
+    assertFalse(animations.isAttacking());
+    assertFalse(animations.isHoldingAttackPose());
+    animations.startAttack();
+    animations.update(animations.getAttackDuration(), false);
+    assertTrue(animations.isHoldingAttackPose(), "Melee keeps its existing final-pose behavior");
+  }
+
+  @Test
   void holdsLastAttackPoseUntilMovementOrNextAttack() throws GameException {
     MonsterAnimations animations = new MonsterAnimations(null, null, null, null, null);
     animations.startAttack();

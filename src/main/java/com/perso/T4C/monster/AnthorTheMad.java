@@ -4,6 +4,8 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.NamedEventMonster;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "ANTHORTHEMAD", x = 881, y = 653, z = 0, stationary = false, aggressive = true)
@@ -15,6 +17,13 @@ public final class AnthorTheMad extends NamedEventMonster {
   public AnthorTheMad(MonsterDef d, float x, float y) throws GameException {
 
     super(d, x, y);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null && player.getQuestFlag("ADDON_FILANDRIUS_QUEST_PROGRESS") == 1)
+      player.setQuestFlag("ADDON_FILANDRIUS_QUEST_PROGRESS", 2);
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {
@@ -37,7 +46,7 @@ public final class AnthorTheMad extends NamedEventMonster {
         0,
         0,
         java.util.List.of(
-            new MonsterDef.LootDrop("tome_of_arcane_knowledge", 0.1f),
+            new MonsterDef.LootDrop("tome_of_arcane_knowledge", 1.0f),
             new MonsterDef.LootDrop("book_of_feylor", 0.08f)),
         false,
         0.0f,

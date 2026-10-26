@@ -27,7 +27,7 @@ public final class SoulSteal {
         0,
         "0",
         "0",
-        163275,
+        166192,
         null,
         10264,
         6,

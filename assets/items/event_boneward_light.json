@@ -1,0 +1,64 @@
+{
+  "key": "event_boneward_light",
+  "name": "${item.event_boneward_light}",
+  "bodyPart": "RING1",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvRings 1",
+  "price": 0,
+  "weight": 1,
+  "armorClass": 2.5,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 50,
+    "strength": 0,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 100,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": true,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59606,
+  "structure": 2,
+  "appearanceId": 59606,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 690060,
+      "statId": 4,
+      "expression": "8"
+    },
+    {
+      "boostId": 690061,
+      "statId": 23,
+      "expression": "10"
+    },
+    {
+      "boostId": 690062,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 690063,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 690064,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 690065,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 690066,
+      "statId": 22,
+      "expression": "4"
+    }
+  ]
+}

@@ -35,16 +35,23 @@ public final class Neoflare extends NamedEventMonster {
     return selfSpell("spell.npc_cantrip_red_wipe");
   }
 
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player p) {
+    p.setQuestFlag(
+        "__FLAG_COUNTER_NEOFLARE_KILLED", p.getQuestFlag("__FLAG_COUNTER_NEOFLARE_KILLED") + 1);
+    return super.onDeath(p);
+  }
+
   public static MonsterDef definition() {
     return new MonsterDef(
         "MOBNEOFLARE",
         "${monster.mobneoflare}",
-        100,
+        3797,
         0,
-        1,
-        100,
-        1,
-        2,
+        47,
+        90380,
+        94,
+        234,
         30000L,
         "",
         "",
@@ -54,7 +61,15 @@ public final class Neoflare extends NamedEventMonster {
         SOUND_HIT,
         0,
         0,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("Key of Ascension", 0.005f),
+            new MonsterDef.LootDrop("Fiery Armband", 0.002f),
+            new MonsterDef.LootDrop("Mana Prism", 0.01f),
+            new MonsterDef.LootDrop("Mithril Bastard Sword", 0.002f),
+            new MonsterDef.LootDrop("Potion of Fury", 0.01f),
+            new MonsterDef.LootDrop("Rough Carnelian", 0.02f),
+            new MonsterDef.LootDrop("Scroll of Recall", 0.01f),
+            new MonsterDef.LootDrop("Rough Ruby", 0.02f)),
         false,
         0.0f,
         10,
@@ -65,7 +80,7 @@ public final class Neoflare extends NamedEventMonster {
         10,
         10,
         new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        1,
+        110,
         0,
         0,
         0,

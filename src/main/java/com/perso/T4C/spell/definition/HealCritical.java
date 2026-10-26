@@ -27,7 +27,7 @@ public final class HealCritical {
         0,
         "0",
         "0",
-        110825,
+        29457,
         null,
         10034,
         5,

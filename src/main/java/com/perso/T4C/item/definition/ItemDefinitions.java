@@ -2736,7 +2736,12 @@ public final class ItemDefinitions {
         WyrmScales.duskmaw(),
         WyrmScales.galecrest()));
     all.addAll(LostKeysOfKraanhold.all());
+    all.addAll(ConcordEvidence.all());
     all.add(UnsignedLetter.definition());
+    all.add(ManaRod.definition());
+    all.addAll(com.perso.T4C.divine.DivineReturnScrolls.all());
+    all.addAll(com.perso.T4C.spawn.TrainingGroundContent.scrolls());
+    all.addAll(com.perso.T4C.item.WarriorEquipment.definitions());
     return all;
   }
 }

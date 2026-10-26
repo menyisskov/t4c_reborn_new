@@ -110,5 +110,7 @@ final class CharacterLoadingScreen implements Screen {
   public void resume() {}
 
   @Override
-  public void dispose() {}
+  public void dispose() {
+    loadingBar.dispose();
+  }
 }

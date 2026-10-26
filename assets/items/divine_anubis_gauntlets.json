@@ -1,0 +1,55 @@
+{
+  "key": "divine_anubis_gauntlets",
+  "name": "${item.divine_anubis_gauntlets}",
+  "bodyPart": "LEFT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL__pal96",
+  "appearanceInventory": "64kInvPlateGlove__pal96",
+  "numId": 55603,
+  "appearanceId": 55603,
+  "weight": 1,
+  "armorClass": 29.7,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 650
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50441,
+      "statId": 1,
+      "expression": "65"
+    },
+    {
+      "boostId": 50442,
+      "statId": 24,
+      "expression": "65"
+    },
+    {
+      "boostId": 50443,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50444,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50445,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50446,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50447,
+      "statId": 22,
+      "expression": "26"
+    }
+  ],
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedSecondary": "PupPlateGloveR__pal96"
+}

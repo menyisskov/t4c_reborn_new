@@ -51,6 +51,10 @@ class AvalonWorldExpansionTest {
         assertTrue(
             ground != null && !ground.equals("Black Tile") && !ground.startsWith("Ground_Water"),
             "missing encounter ground: " + spawn);
+        // The canopy-clearing contract belongs to the relocated Avalon land. Later islands
+        // have their own scenery; all eastern spawns still receive the terrain checks above.
+        if (!AvalonWorldLayout.isLegacyAvalonTile(
+            spawn.x() - AvalonWorldLayout.SHIFT_X, spawn.y())) continue;
         for (int dy = -23; dy <= 23; dy++) {
           for (int dx = -23; dx <= 23; dx++) {
             if (dx * dx + dy * dy >= 24 * 24) continue;

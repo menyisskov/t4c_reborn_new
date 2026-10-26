@@ -27,7 +27,7 @@ public final class Earthquake {
         0,
         "0",
         "0",
-        88576,
+        82297,
         null,
         10082,
         2,

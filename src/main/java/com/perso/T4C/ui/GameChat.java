@@ -16,6 +16,7 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiBoxedInteraction;
 import com.perso.T4C.gui.core.GuiBoxedItem;
 import com.perso.T4C.gui.core.GuiDraw;
+import com.perso.T4C.gui.core.JournalTheme;
 import com.perso.T4C.gui.core.GuiResizable;
 import com.perso.T4C.helper.SpriteLoader;
 import java.nio.charset.StandardCharsets;
@@ -33,23 +34,21 @@ public final class GameChat extends InputAdapter {
   private static final int MAX_ENTRIES = 500;
   private static final int MAX_HISTORY = 50;
   private static final int MAX_TEXT_LENGTH = 256;
-  private static final float BAR_WIDTH = 934f;
-  private static final float BAR_HEIGHT = 166f;
-  private static final String GENERATED_BACKGROUND_PATH = "assets/ui/bottom-hud-frame-v9.png";
-  private static final float LEFT_CAP_WIDTH = 8f;
-  private static final float LOG_X = 16f;
-  private static final float LOG_Y = 9f;
-  private static final float LOG_WIDTH = 569f;
-  private static final float LOG_HEIGHT = 77f;
+  private static final float BAR_WIDTH = 440f;
+  private static final float BAR_HEIGHT = 190f;
+  private static final float LOG_X = 14f;
+  private static final float LOG_Y = 14f;
+  private static final float LOG_WIDTH = 398f;
+  private static final float LOG_HEIGHT = 134f;
   private static final float LOG_TEXT_INSET_Y = 4f;
-  private static final float INPUT_X = 21f;
-  private static final float INPUT_Y = 97f;
-  private static final float INPUT_WIDTH = 557f;
-  private static final float INPUT_HEIGHT = 17f;
+  private static final float INPUT_X = 14f;
+  private static final float INPUT_Y = 158f;
+  private static final float INPUT_WIDTH = 410f;
+  private static final float INPUT_HEIGHT = 22f;
   private static final float LINE_HEIGHT = 16f;
-  private static final float SCROLL_THUMB_X = 639f;
-  private static final float SCROLL_THUMB_TOP_Y = 44f;
-  private static final float SCROLL_THUMB_BOTTOM_Y = 82f;
+  private static final float SCROLL_THUMB_X = 418f;
+  private static final float SCROLL_THUMB_TOP_Y = 16f;
+  private static final float SCROLL_THUMB_BOTTOM_Y = 129f;
   private static final int WHEEL_SCROLL_LINES = 3;
   private static final Color SYSTEM = SystemMessage.MESSAGE_COLOR;
   private static final Color LOCAL = Color.valueOf("E6D8BC");
@@ -90,7 +89,8 @@ public final class GameChat extends InputAdapter {
   private final GuiBoxedInteraction boxedInteraction = new GuiBoxedInteraction();
   private final ChatZone chatZone = new ChatZone();
   private final ChatZone inputZone = new ChatZone();
-  private Texture generatedBackground;
+  private final JournalTheme journalTheme = new JournalTheme();
+  private final TextureRegion journalBackground = journalTheme.frame(440, 190);
   private final Texture selectionTexture;
   private float inputScrollX;
   private int repeatedHorizontalKey = -1;
@@ -105,10 +105,7 @@ public final class GameChat extends InputAdapter {
     selectionTexture = new Texture(pixel);
     pixel.dispose();
     historyIndex = history.size();
-    if (Gdx.files.internal(GENERATED_BACKGROUND_PATH).exists()) {
-      generatedBackground = new Texture(Gdx.files.internal(GENERATED_BACKGROUND_PATH));
-      generatedBackground.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-    }
+
   }
 
   public void setAutocompleteProvider(Function<String, List<String>> provider) {
@@ -195,8 +192,8 @@ public final class GameChat extends InputAdapter {
     if (!visible || batch == null || hudCamera == null) return;
     float scale = Math.min(1f, hudCamera.viewportWidth / BAR_WIDTH);
     float barWidth = BAR_WIDTH * scale;
-    float x = (hudCamera.viewportWidth - barWidth) * 0.5f;
-    float y = hudCamera.viewportHeight - BAR_HEIGHT * scale;
+    float x = 12f;
+    float y = hudCamera.viewportHeight - BAR_HEIGHT * scale - 12f;
     chatZone.setPosition(x + LOG_X * scale, y + LOG_Y * scale);
     chatZone.setSize(LOG_WIDTH * scale, LOG_HEIGHT * scale);
     inputZone.setPosition(x + INPUT_X * scale, y + INPUT_Y * scale);
@@ -417,45 +414,15 @@ public final class GameChat extends InputAdapter {
   }
 
   private void drawBackground(SpriteBatch batch, float x, float y, float scale) {
-    if (generatedBackground != null) {
-      GuiDraw.withOverlayAlpha(
-          batch,
-          () ->
-              batch.draw(
-                  generatedBackground,
-                  x,
-                  y,
-                  BAR_WIDTH * scale,
-                  BAR_HEIGHT * scale,
-                  0,
-                  0,
-                  generatedBackground.getWidth(),
-                  generatedBackground.getHeight(),
-                  false,
-                  true));
-      return;
-    }
-    SpriteLoader loader = SpriteLoader.getInstance();
-    TextureRegion left = null;
-    TextureRegion background = null;
-    try {
-      left = loader.getRegionFromSpriteName("GUI_backChatLeft");
-      background = loader.getRegionFromSpriteName("GUI_backChat");
-    } catch (GameException ignored) {
-    }
-    if (left != null) {
-      GuiDraw.drawOverlayRegionFlipped(
-          batch, left, x, y, LEFT_CAP_WIDTH * scale, BAR_HEIGHT * scale);
-    }
-    if (background != null) {
-      GuiDraw.drawOverlayRegionFlipped(
-          batch,
-          background,
-          x + LEFT_CAP_WIDTH * scale,
-          y,
-          (BAR_WIDTH - LEFT_CAP_WIDTH) * scale,
-          BAR_HEIGHT * scale);
-    }
+    GuiDraw.drawRegionFlipped(batch, journalBackground, x, y, BAR_WIDTH * scale, BAR_HEIGHT * scale);
+    journalTheme.well(batch, inputZone.getX() - 3, inputZone.getY() - 2,
+        inputZone.getWidth() + 6, inputZone.getHeight() + 4);
+  }
+
+  public static boolean isPanelHit(float sx, float sy) {
+    float scale = Math.min(1f, Gdx.graphics.getWidth() / BAR_WIDTH);
+    float top = Gdx.graphics.getHeight() - BAR_HEIGHT * scale - 12;
+    return sx >= 12 && sx <= 12 + BAR_WIDTH * scale && sy >= top && sy <= Gdx.graphics.getHeight() - 12;
   }
 
   private void drawScrollThumb(SpriteBatch batch, float x, float y, float scale) {
@@ -617,6 +584,10 @@ public final class GameChat extends InputAdapter {
 
   @Override
   public boolean keyDown(int keycode) {
+    if (com.perso.T4C.gui.core.GuiManager.capturesKeyboard()) {
+      if (isEnter(keycode)) suppressNextTypedEnter = true;
+      return com.perso.T4C.gui.core.GuiManager.onKeyDown(keycode);
+    }
     if (!active) {
       // Chat sits ahead of the GUI in the input chain; an open window that uses Enter or
       // Page Up/Down itself (fast travel, spell book, storage search) gets those keys first.
@@ -817,6 +788,13 @@ public final class GameChat extends InputAdapter {
 
   @Override
   public boolean keyTyped(char character) {
+    if ((character == '\r' || character == '\n') && suppressNextTypedEnter) {
+      suppressNextTypedEnter = false;
+      return true;
+    }
+    if (com.perso.T4C.gui.core.GuiManager.capturesKeyboard()) {
+      return com.perso.T4C.gui.core.GuiManager.onKeyTyped(character);
+    }
     if (character == '\r' || character == '\n') {
       if (suppressNextTypedEnter) {
         suppressNextTypedEnter = false;
@@ -845,8 +823,8 @@ public final class GameChat extends InputAdapter {
     float width = Gdx.graphics.getWidth();
     float height = Gdx.graphics.getHeight();
     float scale = Math.min(1f, width / BAR_WIDTH);
-    float x = (width - BAR_WIDTH * scale) * 0.5f;
-    float y = height - BAR_HEIGHT * scale;
+    float x = 12f;
+    float y = height - BAR_HEIGHT * scale - 12f;
     float mouseX = Gdx.input.getX();
     float mouseY = Gdx.input.getY();
     if (mouseX < x + LOG_X * scale
@@ -871,7 +849,7 @@ public final class GameChat extends InputAdapter {
     if (!text.isEmpty()) {
       boolean consumed = submitHandler.test(text);
       if (!consumed) {
-        addLocalMessage("Vous", text);
+        addLocalMessage(com.perso.T4C.i18n.I18n.key("ui.chat.you"), text);
       }
       if (history.isEmpty() || !history.get(history.size() - 1).equals(text)) {
         history.add(text);
@@ -948,7 +926,7 @@ public final class GameChat extends InputAdapter {
   }
 
   public void dispose() {
-    if (generatedBackground != null) generatedBackground.dispose();
     selectionTexture.dispose();
+    journalTheme.dispose();
   }
 }

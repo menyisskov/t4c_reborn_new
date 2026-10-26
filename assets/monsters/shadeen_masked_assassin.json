@@ -1,0 +1,27 @@
+{
+  "name": "Shadeen's Masked Assassin",
+  "displayName": "${npc.shadeenmaskedassassin}",
+  "health": 581,
+  "xpPerHit": 4,
+  "xpOnDeath": 1153,
+  "hitDamageMin": 29,
+  "hitDamageMax": 61,
+  "respawnTime": 30000,
+  "walkPattern": "Thief#m",
+  "attackPattern": "ThiefA#i",
+  "deathPattern": "ThiefC!l",
+  "soundAttack": "Whooshh 1.wav",
+  "soundDeath": "Male Dying 1.wav",
+  "soundHit": "Male Hit 1.wav",
+  "gold": { "min": 50, "max": 154 },
+  "stats": { "str": 42, "end": 38, "agi": 41, "intel": 30, "will": 0, "wis": 28, "luck": 0 },
+  "resists": [87, 87, 87, 87, 58, 5000, 100, 100, 100, 100, 100, 100],
+  "level": 30,
+  "dodge": 105,
+  "aggro": 100,
+  "canAttack": true,
+  "attacks": [
+    { "formula": "1d32+28", "combatAttack": 300, "percentage": 100 }
+  ],
+  "spawnAliases": ["SHADEENMASKEDASSASSIN"]
+}

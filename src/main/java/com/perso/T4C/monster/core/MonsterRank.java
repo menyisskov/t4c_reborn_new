@@ -20,7 +20,7 @@ public final class MonsterRank {
   private MonsterRank() {}
 
   public static boolean isBoss(BaseMonster monster) {
-    return monster != null && isBoss(monster.getName());
+    return monster != null && isBoss(monster.getCanonicalName());
   }
 
   public static boolean isBoss(String monsterName) {

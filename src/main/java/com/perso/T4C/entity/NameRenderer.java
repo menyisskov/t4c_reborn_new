@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.perso.T4C.gui.core.JournalTheme;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.ui.FontManager;
 import java.util.ArrayList;
@@ -17,9 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 public class NameRenderer {
   private static final int FONT_SIZE = 14;
   private static final Color NAME_TEXT_COLOR = new Color(0.92f, 0.72f, 0.30f, 1f);
-  private static final Color DIALOG_TEXT_COLOR =
-      new Color(230f / 255f, 230f / 255f, 230f / 255f, 1f);
-  private static final Color KEYWORD_COLOR = new Color(180f / 255f, 1f, 0f, 1f);
+  private static final Color DIALOG_TEXT_COLOR = JournalTheme.TEXT;
+  private static final Color KEYWORD_COLOR = JournalTheme.ACCENT;
   private static final Color SHADOW_COLOR = Color.BLACK;
   private static final int SHADOW_OFFSET_X = 1;
   private static final int SHADOW_OFFSET_Y = -1;
@@ -30,6 +30,7 @@ public class NameRenderer {
   private static final float DIALOG_MAX_TEXT_WIDTH = 389f;
   private static final int DIALOG_MAX_LINES = 14;
   private static final int DIALOG_BORDER_SIZE = 4;
+  private static JournalTheme dialogTheme;
   private static TextureRegion dialogBack;
   private static TextureRegion dialogBottom;
   private static TextureRegion dialogRight;
@@ -175,26 +176,13 @@ public class NameRenderer {
 
   private static void drawDialogBox(
       SpriteBatch batch, float x, float y, float width, float height) {
-    loadDialogSprites();
-    if (dialogBack == null) return;
-    batch.setColor(Color.WHITE);
-    int innerWidth =
-        Math.max(0, Math.min(Math.round(width) - DIALOG_BORDER_SIZE, dialogBack.getRegionWidth()));
-    int innerHeight =
-        Math.max(
-            0, Math.min(Math.round(height) - DIALOG_BORDER_SIZE, dialogBack.getRegionHeight()));
-    drawCropped(batch, dialogBack, x, y, innerWidth, innerHeight);
-    drawCropped(
-        batch, dialogBottom, x, y + height - DIALOG_BORDER_SIZE, innerWidth, DIALOG_BORDER_SIZE);
-    drawCropped(
-        batch, dialogRight, x + width - DIALOG_BORDER_SIZE, y, DIALOG_BORDER_SIZE, innerHeight);
-    drawCropped(
-        batch,
-        dialogBottomRight,
-        x + width - DIALOG_BORDER_SIZE,
-        y + height - DIALOG_BORDER_SIZE,
-        DIALOG_BORDER_SIZE,
-        DIALOG_BORDER_SIZE);
+    if (dialogTheme == null) dialogTheme = new JournalTheme();
+    dialogTheme.well(batch, x, y, width, height);
+  }
+
+  public static void disposeDialogs() {
+    if (dialogTheme != null) dialogTheme.dispose();
+    dialogTheme = null;
   }
 
   private static void drawCropped(

@@ -21,6 +21,7 @@ import com.perso.T4C.spawn.Spawn;
     z = 0,
     stationary = false,
     aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class TheDuskmawWyrm extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";
@@ -61,8 +62,6 @@ public final class TheDuskmawWyrm extends DataMonster {
             new MonsterDef.LootDrop("item.duskmaw_wyrm_scale", 0.12f),
             new MonsterDef.LootDrop("duskmaw_wyrms_nightshroud_mantle", 0.015f),
             new MonsterDef.LootDrop("duskmaw_wyrms_eclipsed_crown", 0.015f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             new MonsterDef.LootDrop("ancient_celestial_dark_armor", 0.025f),
             new MonsterDef.LootDrop("ancient_celestial_dark_boots", 0.025f),
             new MonsterDef.LootDrop("ancient_celestial_dark_gauntlets", 0.025f),

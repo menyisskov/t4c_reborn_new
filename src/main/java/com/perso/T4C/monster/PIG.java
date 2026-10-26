@@ -4,7 +4,11 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
 import com.perso.T4C.spawn.Spawn;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.AllianceQuest;
 
 @Spawn(type = "PIG", x = 1379, y = 167, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "PIG", x = 1380, y = 168, z = 0, stationary = false, aggressive = false)
@@ -33,7 +37,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "PIG", x = 2847, y = 1207, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "PIG", x = 2850, y = 1205, z = 0, stationary = false, aggressive = false)
 @Spawn(type = "PIG", x = 2850, y = 1207, z = 0, stationary = false, aggressive = false)
-public final class PIG extends DataMonster {
+public final class PIG extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = null;
   public static final String SOUND_DEATH = "Pig Dying.wav";
   public static final String SOUND_HIT = "Pig Hit.wav";
@@ -41,6 +45,12 @@ public final class PIG extends DataMonster {
   public PIG(MonsterDef definition, float worldX, float worldY) throws GameException {
 
     super(definition, worldX, worldY);
+  }
+
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    AllianceQuest.recordPigKill(player);
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

@@ -11,6 +11,23 @@ import java.util.List;
 
 @Spawn(type = "MeltarWinterstorm", x = 190, y = 1545, z = 1, stationary = false, aggressive = false)
 public final class MeltarWinterstorm extends ScriptedNpc {
+  private record GemReward(String name, int roughXp, int cutXp, String potion) {}
+
+  private static final List<GemReward> GEMS =
+      List.of(
+          new GemReward("agate", 5_000, 20_000, "potion_of_lesser_air_resistance"),
+          new GemReward("amethyst", 5_000, 20_000, "potion_of_lesser_water_resistance"),
+          new GemReward("aquamarine", 15_000, 30_000, "potion_of_greater_water_resistance"),
+          new GemReward("carnelian", 5_000, 20_000, "potion_of_lesser_fire_resistance"),
+          new GemReward("diamond", 10_000, 25_000, "potion_of_partial_air_resistance"),
+          new GemReward("emerald", 10_000, 25_000, "potion_of_partial_earth_resistance"),
+          new GemReward("garnet", 15_000, 30_000, "potion_of_greater_fire_resistance"),
+          new GemReward("limestone", 15_000, 30_000, "potion_of_greater_earth_resistance"),
+          new GemReward("malachite", 5_000, 20_000, "potion_of_lesser_earth_resistance"),
+          new GemReward("moonstone", 15_000, 30_000, "potion_of_greater_air_resistance"),
+          new GemReward("ruby", 10_000, 25_000, "potion_of_partial_fire_resistance"),
+          new GemReward("sapphire", 10_000, 25_000, "potion_of_partial_water_resistance"));
+
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";
@@ -167,7 +184,44 @@ public final class MeltarWinterstorm extends ScriptedNpc {
           return true;
         }
 
+        if (k.contains("GEMS") || k.contains("PRECIOUS STONES")) {
+          boolean hasGem =
+              GEMS.stream()
+                  .anyMatch(
+                      gem ->
+                          c.hasItem("rough_" + gem.name())
+                              || c.hasItem("finely_cut_" + gem.name()));
+          if (hasGem) {
+            c.sayKey("npc.meltar.gems.ask");
+            c.askYesNo("meltar_gems");
+          } else c.sayKey("npc.meltar.gems.none");
+          return true;
+        }
+
         return com.perso.T4C.npc.behavior.StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
+      }
+
+      @Override
+      public boolean onYesNo(
+          com.perso.T4C.npc.behavior.NpcBehaviorContext c, String subject, boolean yes) {
+        if (!"meltar_gems".equals(subject)) return false;
+        if (!yes) return true;
+
+        int turnedIn = 0;
+        for (GemReward gem : GEMS) {
+          for (boolean cut : new boolean[] {false, true}) {
+            String item = (cut ? "finely_cut_" : "rough_") + gem.name();
+            while (c.hasItem(item)) {
+              c.takeItem(item);
+              c.giveXp(cut ? gem.cutXp() : gem.roughXp());
+              if (java.util.concurrent.ThreadLocalRandom.current().nextBoolean())
+                c.giveItem(gem.potion());
+              turnedIn++;
+            }
+          }
+        }
+        c.sayKey(turnedIn > 0 ? "npc.meltar.gems.done" : "npc.meltar.gems.none");
+        return true;
       }
     };
   }

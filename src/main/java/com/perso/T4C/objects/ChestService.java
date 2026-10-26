@@ -6,6 +6,7 @@ import static com.perso.T4C.config.GameConstants.GRID_W;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.monster.loot.LootResult;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public final class ChestService {
     NONE,
     NOT_A_CHEST,
     EMPTY,
+    LOCKED,
     COOLDOWN
   }
 
@@ -30,6 +32,9 @@ public final class ChestService {
     ItemDefinition definition = chest == null ? null : ItemRegistry.findByKey(chest.name());
     if (definition == null || definition.getStructure() != 3)
       return new Result(false, Failure.NOT_A_CHEST, null, 0);
+    String lockName = definition.getLockName();
+    if (lockName != null && !lockName.isBlank() && InventoryService.count(player, lockName) == 0)
+      return new Result(false, Failure.LOCKED, List.of(), 0);
     long now = System.currentTimeMillis();
     if (now < nextAvailableAt.getOrDefault(chest, 0L))
       return new Result(false, Failure.COOLDOWN, null, 0);

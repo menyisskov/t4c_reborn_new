@@ -1,0 +1,66 @@
+{
+  "key": "moonsteel_bow",
+  "name": "${item.moonsteel_bow}",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupLongBow__silver300",
+  "appearanceInventory": "64kInvLongBow__silver300",
+  "price": 2000000,
+  "weight": 6,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 0,
+    "agility": 700,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 59705,
+  "structure": 2,
+  "appearanceId": 59705,
+  "undroppable": false,
+  "dmgFormula": "1d251+599+3*arrow_dmg",
+  "atkDelay": "1000",
+  "boosts": [
+    {
+      "boostId": 710050,
+      "statId": 6,
+      "expression": "58"
+    },
+    {
+      "boostId": 710051,
+      "statId": 10035,
+      "expression": "true_skill(35)*50/100"
+    },
+    {
+      "boostId": 710052,
+      "statId": 12,
+      "expression": "18"
+    },
+    {
+      "boostId": 710053,
+      "statId": 13,
+      "expression": "18"
+    },
+    {
+      "boostId": 710054,
+      "statId": 14,
+      "expression": "18"
+    },
+    {
+      "boostId": 710055,
+      "statId": 15,
+      "expression": "18"
+    },
+    {
+      "boostId": 710056,
+      "statId": 22,
+      "expression": "18"
+    }
+  ]
+}

@@ -3,13 +3,11 @@ package com.perso.T4C.gui.screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.perso.T4C.exception.GameException;
 import com.perso.T4C.gui.core.GuiClickZone;
 import com.perso.T4C.gui.core.GuiSprites;
 import com.perso.T4C.gui.widget.GuiAnimatedSprite;
 import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.helper.PlayerStateStore;
-import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
@@ -25,12 +23,12 @@ import java.util.List;
 
 public class ShopScreen extends GuiListScreen {
   private static final float[] LIST_BOX = {
-    10f, ROW_0_Y - 12f, 420f, ROWS_VISIBLE * ROW_H_PITCH + 12f
+    18f, ROW_0_Y - 12f, 556f, ROWS_VISIBLE * ROW_H_PITCH + 12f
   };
   private static final float THUMB_X = 407f;
   private static final float THUMB_TOP_Y = 60f;
   private static final float THUMB_BOTTOM_Y = 261f;
-  private static final Color BLOCKED = Color.valueOf("B03030");
+  private static final Color BLOCKED = Color.valueOf("E4A29B");
   private final Player player;
   private final boolean selling;
   private final List<ShopEntry> entries = new ArrayList<>();
@@ -43,13 +41,7 @@ public class ShopScreen extends GuiListScreen {
   private ShopScreen(Player player, List<String> itemKeys, boolean selling) {
     this.player = player;
     this.selling = selling;
-    try {
-      background = SpriteLoader.getInstance().getRegionFromSpriteName("GUIBackBuy");
-    } catch (GameException ignored) {
-      background = null;
-    }
-    centerOnScreen();
-    addCloseButton();
+    initList();
     addStaticLabels();
     loadEntries(itemKeys);
     rebuildList();
@@ -59,24 +51,29 @@ public class ShopScreen extends GuiListScreen {
     return new ShopScreen(player, itemKeys, true);
   }
 
-  private void addCloseButton() {
-    addCloseButton(CLOSE_X, CLOSE_Y);
-  }
-
   private void addStaticLabels() {
     if (background == null) return;
-    BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(18, GOLD);
+    BitmapFont chewy = FontManager.getInstance().getT4CBeaulieuFont(22, GOLD);
     labels.add(
         boxed(chewy, TITLE_BOX, 0f, () -> selling ? I18n.key("ui.sell") : I18n.key("ui.buy"), GOLD)
             .shrinkToFit());
-    labels.add(boxed(chewy, GOLD_HDR_BOX, 0f, () -> I18n.key("ui.gold"), GOLD).shrinkToFit());
-    BitmapFont sm = FontManager.getInstance().getJetBrainsMonoFont(11, GOLD);
+    labels.add(
+        boxed(
+                FontManager.getInstance().getTahomaFont(12, GOLD, false),
+                GOLD_HDR_BOX,
+                0f,
+                () -> I18n.key("ui.gold"),
+                GOLD)
+            .shrinkToFit());
+    BitmapFont sm = FontManager.getInstance().getTahomaFont(12, GOLD, false);
     labels.add(boxed(sm, HDR_NAME_BOX, 0f, () -> I18n.key("ui.item_name"), GOLD));
     labels.add(boxed(sm, HDR_PRICE_BOX, 0f, () -> I18n.key("ui.price"), GOLD));
     labels.add(boxed(sm, HDR_THIRD_BOX, 0f, () -> I18n.key("ui.quantity_short"), GOLD));
     labels.add(boxed(sm, ONHAND_LBL_BOX, 0f, () -> I18n.key("ui.on_hand"), GOLD));
-    labels.add(boxed(sm, COST_LBL_BOX, 0f, () -> I18n.key("ui.cost"), GOLD));
-    labels.add(boxed(sm, TOTAL_LBL_BOX, 0f, () -> I18n.key("ui.total"), GOLD));
+    labels.add(
+        boxed(
+            sm, COST_LBL_BOX, 0f, () -> I18n.key(selling ? "ui.sale_proceeds" : "ui.cost"), GOLD));
+    labels.add(boxed(sm, TOTAL_LBL_BOX, 0f, () -> I18n.key("ui.balance_after"), GOLD));
   }
 
   private void loadEntries(List<String> itemKeys) {
@@ -104,10 +101,10 @@ public class ShopScreen extends GuiListScreen {
     page = Math.min(page, pages - 1);
     int start = page * ROWS_VISIBLE;
     int end = Math.min(start + ROWS_VISIBLE, total);
-    BitmapFont fontWh = FontManager.getInstance().getJetBrainsMonoFont(12, WHITE);
-    BitmapFont fontBl = FontManager.getInstance().getJetBrainsMonoFont(12, BLOCKED);
-    BitmapFont fontDm = FontManager.getInstance().getJetBrainsMonoFont(12, DIM);
-    BitmapFont fontGo = FontManager.getInstance().getJetBrainsMonoFont(12, GOLD);
+    BitmapFont fontWh = FontManager.getInstance().getTahomaFont(12, WHITE, false);
+    BitmapFont fontBl = FontManager.getInstance().getTahomaFont(12, BLOCKED, false);
+    BitmapFont fontDm = FontManager.getInstance().getTahomaFont(12, DIM, false);
+    BitmapFont fontGo = FontManager.getInstance().getTahomaFont(12, GOLD, false);
     for (int i = start; i < end; i++) {
       ShopEntry entry = entries.get(i);
       float rowY = ROW_0_Y + (i - start) * ROW_H_PITCH;
@@ -123,7 +120,7 @@ public class ShopScreen extends GuiListScreen {
                 .boxed(ICON_BOX[2], ICON_BOX[3]));
       }
       final String name = I18n.resolve(entry.def.getName());
-      final String price = String.valueOf(entry.effectivePrice);
+      final String price = String.format(java.util.Locale.ROOT, "%,d", entry.effectivePrice);
       final String qty = String.valueOf(entry.count);
       addDyn(isSelected ? fontGo : fontWh, CELL_NAME, rowY, () -> name, isSelected ? GOLD : WHITE);
       addDyn(
@@ -137,9 +134,9 @@ public class ShopScreen extends GuiListScreen {
       final ShopEntry e = entry;
       zones.add(
           new GuiClickZone(
-              x + 10f,
+              x + 18f,
               y + rowY - 4f,
-              360f,
+              450f,
               ROW_H_PITCH - 4f,
               () -> {
                 selected = e;
@@ -161,56 +158,40 @@ public class ShopScreen extends GuiListScreen {
     final long onHand = player.getGold();
     final long cost = basketCost();
     final long left = selling ? Math.min(Integer.MAX_VALUE, onHand + cost) : onHand - cost;
-    addDyn(fontGo, ONHAND_VAL_BOX, 0f, () -> String.valueOf(onHand), GOLD);
+    addDyn(
+        fontGo,
+        ONHAND_VAL_BOX,
+        0f,
+        () -> String.format(java.util.Locale.ROOT, "%,d", onHand),
+        GOLD);
     addDyn(
         cost > 0 ? fontGo : fontDm,
         COST_VAL_BOX,
         0f,
-        () -> String.valueOf(cost),
+        () -> String.format(java.util.Locale.ROOT, "%,d", cost),
         cost > 0 ? GOLD : DIM);
     addDyn(
         left >= 0 ? fontGo : fontBl,
         TOTAL_VAL_BOX,
         0f,
-        () -> String.valueOf(left),
+        () -> String.format(java.util.Locale.ROOT, "%,d", left),
         left >= 0 ? GOLD : BLOCKED);
     addBuyButton(basketCount() > 0 && (selling || onHand >= cost));
   }
 
   private void addBuyButton(boolean canBuy) {
-    var normal = GuiSprites.load(canBuy ? "GUI_ButtonUp" : "GUI_ButtonDisabled");
-    var hover = GuiSprites.load("GUI_ButtonHUp");
-    var pressed = GuiSprites.load("GUI_ButtonDown");
-    if (normal == null) {
-      return;
-    }
-    BitmapFont chewy = FontManager.getInstance().getHaettenschweilerFont(14, canBuy ? GOLD : DIM);
     GuiButton buy =
-        new GuiButton(
-                normal,
-                canBuy && hover != null ? hover : normal,
-                canBuy && pressed != null ? pressed : normal,
-                x + ACTION_BTN_X,
-                y + ACTION_BTN_Y,
-                canBuy ? this::buyBasket : null)
-            .withLabel(
-                chewy, () -> selling ? I18n.key("ui.sell_action") : I18n.key("ui.buy_action"));
+        theme.button(
+            x + ACTION_BTN_X,
+            y + ACTION_BTN_Y,
+            180,
+            34,
+            () -> selling ? I18n.key("ui.sell_action") : I18n.key("ui.buy_action"),
+            this::buyBasket,
+            true);
+    buy.setEnabled(canBuy);
     buttons.add(buy);
     dynButtons.add(buy);
-  }
-
-  @Override
-  protected void addScrollThumb(int pages) {
-    var tick = GuiSprites.load("GUI_ScrollTick");
-    if (tick == null) {
-      return;
-    }
-    float travel = THUMB_BOTTOM_Y - THUMB_TOP_Y;
-    float ratio = pages > 1 ? (float) page / (pages - 1) : 0f;
-    float thumbY = THUMB_TOP_Y + travel * ratio;
-    GuiButton thumb = new GuiButton(tick, tick, tick, x + THUMB_X, y + thumbY, () -> {});
-    buttons.add(thumb);
-    dynButtons.add(thumb);
   }
 
   private int basketCount() {
@@ -304,6 +285,11 @@ public class ShopScreen extends GuiListScreen {
       return;
     }
     super.onScroll(amountY, screenX, screenY);
+  }
+
+  @Override
+  protected ListRow selectedRow() {
+    return selected;
   }
 
   @Override

@@ -1,0 +1,53 @@
+{
+  "key": "concord_bell_mantle_warrior",
+  "name": "${item.concord_bell_mantle_warrior}",
+  "bodyPart": "BACK",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal95",
+  "numId": 59024,
+  "appearanceId": 59024,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61171,
+      "statId": 3,
+      "expression": "33"
+    },
+    {
+      "boostId": 61172,
+      "statId": 8,
+      "expression": "80"
+    },
+    {
+      "boostId": 61173,
+      "statId": 12,
+      "expression": "10"
+    },
+    {
+      "boostId": 61174,
+      "statId": 13,
+      "expression": "10"
+    },
+    {
+      "boostId": 61175,
+      "statId": 14,
+      "expression": "10"
+    },
+    {
+      "boostId": 61176,
+      "statId": 15,
+      "expression": "10"
+    },
+    {
+      "boostId": 61177,
+      "statId": 22,
+      "expression": "10"
+    }
+  ],
+  "armorClass": 15.8,
+  "requirements": {
+    "strength": 400,
+    "endurance": 160
+  },
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal95"
+}

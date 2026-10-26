@@ -24,6 +24,8 @@ public final class DiceFormula {
      */
     public final Map<String, Integer> selfTrue;
 
+    public final Map<Integer, Integer> equippedItems;
+
     public Context(int str, int end, int agi, int intel, int wil, int wis, int luck, int level) {
       this(str, end, agi, intel, wil, wis, luck, level, 0, 0, 0, 100);
     }
@@ -136,9 +138,11 @@ public final class DiceFormula {
       this.selfLight = selfLight;
       this.selfDark = selfDark;
       this.selfTrue = Map.of();
+      this.equippedItems = Map.of();
     }
 
-    private Context(Context base, Map<String, Integer> selfTrue) {
+    private Context(
+        Context base, Map<String, Integer> selfTrue, Map<Integer, Integer> equippedItems) {
       this.str = base.str;
       this.end = base.end;
       this.agi = base.agi;
@@ -161,6 +165,7 @@ public final class DiceFormula {
       this.selfLight = base.selfLight;
       this.selfDark = base.selfDark;
       this.selfTrue = selfTrue;
+      this.equippedItems = equippedItems;
     }
 
     /** Returns a copy of this context carrying the given true readings. */
@@ -168,7 +173,11 @@ public final class DiceFormula {
       if (readings == null || readings.isEmpty()) return this;
       Map<String, Integer> canonical = new LinkedHashMap<>();
       readings.forEach((key, value) -> canonical.put(canonicalSelfTrueKey(key), value));
-      return new Context(this, Collections.unmodifiableMap(canonical));
+      return new Context(this, Collections.unmodifiableMap(canonical), equippedItems);
+    }
+
+    public Context withEquippedItems(Map<Integer, Integer> counts) {
+      return new Context(this, selfTrue, counts == null ? Map.of() : Map.copyOf(counts));
     }
 
     public static final Context ZERO = new Context(0, 0, 0, 0, 0, 0, 0, 0);
@@ -251,6 +260,13 @@ public final class DiceFormula {
   }
 
   private static String substituteVars(String s, Context ctx) {
+    s =
+        EQUIP_COUNT
+            .matcher(s)
+            .replaceAll(
+                match ->
+                    Integer.toString(
+                        ctx.equippedItems.getOrDefault(Integer.parseInt(match.group(1)), 0)));
     s = s.replace("target.true_r_dark", String.valueOf(ctx.targetResistDark));
     s = s.replace("target.true_r_light", String.valueOf(ctx.targetResistLight));
     s = s.replace("target.true_r_fire", String.valueOf(ctx.targetResistFire));
@@ -290,6 +306,7 @@ public final class DiceFormula {
   }
 
   private static final Pattern SELF_TRUE = Pattern.compile("self\\.true_([A-Za-z0-9_]+)");
+  private static final Pattern EQUIP_COUNT = Pattern.compile("(?i)\\bequipcount\\((\\d+)\\)");
 
   private static String substituteSelfTrue(String s, Context ctx) {
     Matcher matcher = SELF_TRUE.matcher(s);
@@ -400,6 +417,12 @@ public final class DiceFormula {
     }
 
     double parseFactor() {
+      if (s.startsWith("round(", pos)) {
+        pos += 6;
+        double value = parseExpr();
+        if (pos < s.length() && s.charAt(pos) == ')') pos++;
+        return Math.round(value);
+      }
       if (pos < s.length() && s.startsWith("if(", pos)) {
         return parseIf();
       }

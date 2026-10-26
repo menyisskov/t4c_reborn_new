@@ -36,7 +36,9 @@ public final class EDGAR extends DataMonster {
         SOUND_HIT,
         8,
         27,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("iron_key", 1.0f),
+            new MonsterDef.LootDrop("torch", 0.02f)),
         false,
         0.0f,
         20,

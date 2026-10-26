@@ -6,10 +6,89 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.combat.SeraphAuraService;
+import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.RetiredItems;
 import com.perso.T4C.player.Player;
 import org.junit.jupiter.api.Test;
 
 class PlayerStateMapperTest {
+  @Test
+  void retiredImportedItemsLeaveOldSavesWithoutShiftingSurvivingCharges() throws Exception {
+    var state = PlayerStateMapper.fromPlayer(new Player());
+    state.inventory =
+        new java.util.ArrayList<>(
+            java.util.List.of("item.arc_test", "item.dagger", "item.v2_bow01"));
+    state.storage =
+        new java.util.ArrayList<>(java.util.List.of("item.dagger", "item.100", "item.wings_test"));
+    state.storageCharges = new java.util.ArrayList<>(java.util.List.of(7, 8, 9));
+    state.quickSlots =
+        new java.util.ArrayList<>(
+            java.util.List.of(
+                new com.perso.T4C.model.QuickSlotEntry(0, null, "item.arc_test"),
+                new com.perso.T4C.model.QuickSlotEntry(1, null, "item.dagger")));
+    state.macros =
+        new java.util.ArrayList<>(
+            java.util.List.of(
+                com.perso.T4C.config.MacroBinding.forItem("item.v2_bow01"),
+                com.perso.T4C.config.MacroBinding.forItem("item.dagger")));
+    Player player = new Player();
+    PlayerStateMapper.applyToPlayer(state, player);
+    assertEquals(java.util.List.of("item.dagger"), player.getInventory());
+    assertEquals(java.util.List.of("item.dagger", "item.wings_test"), player.getStorage());
+    assertEquals(java.util.List.of(7, 9), player.getStorageCharges());
+    assertEquals(1, player.getQuickSlots().size());
+    assertEquals("item.dagger", player.getQuickSlots().get(0).getItem());
+    assertEquals(1, player.getMacros().size());
+    assertEquals("item.dagger", player.getMacros().get(0).getItemKey());
+    assertTrue(RetiredItems.isRetired("item.arc_test"));
+    assertEquals(null, ItemRegistry.findByKey("item.arc_test"));
+    assertTrue(ItemRegistry.findByKey("item.wings_test") != null);
+  }
+
+  @Test
+  void oldXpThresholdMigratesLevelProgressOnceAndKeepsAllocationPoints() {
+    var state = PlayerStateMapper.fromPlayer(new Player());
+    state.level = 200;
+    state.currentXp = 2_004_748L;
+    state.xpToNextLevel = 4_009_496L;
+    state.statPoints = 17;
+    state.skillPoints = 23;
+    var restored = new Player();
+    PlayerStateMapper.applyToPlayer(state, restored);
+    long threshold = XpCurve.loadDefault().getXpToNextLevel(200);
+    assertEquals(19_710_821_719L, threshold);
+    assertEquals(200, restored.getLevel());
+    assertEquals(threshold, restored.getXpToNextLevel());
+    assertEquals(threshold / 2, restored.getCurrentXp());
+    assertEquals(17, restored.getStatPoints());
+    assertEquals(23, restored.getSkillPoints());
+    var reloaded = new Player();
+    PlayerStateMapper.applyToPlayer(PlayerStateMapper.fromPlayer(restored), reloaded);
+    assertEquals(restored.getCurrentXp(), reloaded.getCurrentXp());
+    assertEquals(restored.getLevel(), reloaded.getLevel());
+  }
+
+  @Test
+  void oldRebornCharactersReceiveWeaponSkillMinimumsWithoutLosingTrainingOrPoints() {
+    Player old = new Player();
+    old.setQuestFlag("__FLAG_NUMBER_OF_REMORTS", 50);
+    old.setSkillLevel("attack", 900);
+    old.setSkillLevel("archery", 0);
+    old.setSkillLevel("dodge", 123);
+    old.setSkillPoints(42);
+    PlayerStateDto state = PlayerStateMapper.fromPlayer(old);
+    Player restored = new Player();
+    PlayerStateMapper.applyToPlayer(state, restored);
+    assertEquals(900, restored.getSkillLevel("attack"));
+    assertEquals(750, restored.getSkillLevel("archery"));
+    assertEquals(123, restored.getSkillLevel("dodge"));
+    assertEquals(42, restored.getSkillPoints());
+    Player twiceLoaded = new Player();
+    PlayerStateMapper.applyToPlayer(PlayerStateMapper.fromPlayer(restored), twiceLoaded);
+    assertEquals(
+        restored.getSkills(), twiceLoaded.getSkills(), "loading again must not add another bonus");
+  }
+
   @Test
   void preservesHalfTilePlayerCoordinates() throws Exception {
     Player player = new Player();
@@ -31,7 +110,8 @@ class PlayerStateMapperTest {
     assertEquals(com.perso.T4C.config.GameConstants.MAX_PLAYER_LEVEL, restored.getLevel());
     assertEquals(0, restored.getCurrentXp());
     assertEquals(0, restored.getXpToNextLevel());
-    assertEquals(com.perso.T4C.config.GameConstants.REBIRTH_MAX_REMORTS, restored.getRebirthCount());
+    assertEquals(
+        com.perso.T4C.config.GameConstants.REBIRTH_MAX_REMORTS, restored.getRebirthCount());
   }
 
   /**
@@ -138,13 +218,23 @@ class PlayerStateMapperTest {
   void macrosBelongToTheCharacterNotTheInstall() throws Exception {
     Player caster = new Player();
     caster.getMacros().add(new com.perso.T4C.config.MacroBinding("Fire Dart", 34, 0));
+    var itemMacro = com.perso.T4C.config.MacroBinding.forItem("item.gem_of_unstable_protection");
+    itemMacro.setKeycode(35);
+    itemMacro.setModifiers(com.perso.T4C.config.MacroBinding.MOD_CTRL);
+    caster.getMacros().add(itemMacro);
     PlayerStateDto casterState = PlayerStateMapper.fromPlayer(caster);
-    assertEquals(1, casterState.macros.size());
+    assertEquals(2, casterState.macros.size());
+    var gson = new com.google.gson.Gson();
+    casterState = gson.fromJson(gson.toJson(casterState), PlayerStateDto.class);
 
     Player restored = new Player();
     PlayerStateMapper.applyToPlayer(casterState, restored);
-    assertEquals(1, restored.getMacros().size());
+    assertEquals(2, restored.getMacros().size());
     assertEquals("Fire Dart", restored.getMacros().get(0).getSpellName());
+    assertTrue(restored.getMacros().get(1).isItem());
+    assertEquals(itemMacro.getItemKey(), restored.getMacros().get(1).getItemKey());
+    assertEquals(35, restored.getMacros().get(1).getKeycode());
+    assertEquals(itemMacro.getModifiers(), restored.getMacros().get(1).getModifiers());
 
     // A second character loaded from its own save must not see the first one's bindings, and a
     // save written before T4C-0059 has no macros at all rather than inheriting the shared list.

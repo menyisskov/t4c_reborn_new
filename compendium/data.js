@@ -33052,7 +33052,7 @@ window.T4C_DATA = {
     {
       "name": "Divine Zeus",
       "displayName": "Zeus",
-      "origin": "legacy",
+      "origin": "new",
       "elementalSpellDamageLimit": 9000,
       "level": 380,
       "health": 1200000,
@@ -33186,7 +33186,7 @@ window.T4C_DATA = {
     {
       "name": "Divine Odin",
       "displayName": "Odin",
-      "origin": "legacy",
+      "origin": "new",
       "level": 390,
       "health": 1400000,
       "mana": 11700,
@@ -33446,7 +33446,7 @@ window.T4C_DATA = {
     {
       "name": "Divine Osiris",
       "displayName": "Osiris",
-      "origin": "legacy",
+      "origin": "new",
       "elementalSpellDamageLimit": 10800,
       "level": 400,
       "health": 1600000,
@@ -35700,7 +35700,7 @@ window.T4C_DATA = {
       "name": "Arch Drake",
       "displayName": "Arch Drake",
       "origin": "activated",
-      "elementalSpellDamageLimit": 500,
+      "elementalSpellDamageLimit": 1800,
       "sprite": "sprites/monsters/arch_drake.png",
       "level": 1000,
       "health": 206623,
@@ -35866,6 +35866,702 @@ window.T4C_DATA = {
         {
           "formula": "1d10+10",
           "combatAttack": 300,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Ironhorn Centaur",
+      "displayName": "Ironhorn Centaur",
+      "origin": "new",
+      "sprite": "sprites/monsters/ironhorn_centaur.png",
+      "level": 1050,
+      "health": 300000,
+      "mana": 0,
+      "xpPerHit": 24,
+      "xpOnDeath": 4200000000,
+      "hitDamageMin": 2500,
+      "hitDamageMax": 4000,
+      "respawnTimeMs": 600000,
+      "goldMin": 3000,
+      "goldMax": 9000,
+      "dodge": 4400,
+      "acMin": 450,
+      "acMax": 600,
+      "aggro": 1,
+      "speed": 125,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 2100,
+        "end": 1050,
+        "agi": 2100,
+        "intel": 1050,
+        "will": 0,
+        "wis": 1050,
+        "luck": 0
+      },
+      "resists": {
+        "air": 110,
+        "earth": 110,
+        "water": 110,
+        "fire": 110,
+        "dark": 110,
+        "light": 110
+      },
+      "loot": [
+        {
+          "item": "moonsteel_halberd",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_warrior_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_warrior_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_warrior_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_warrior_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_warrior_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_warrior_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_warrior_protector",
+          "chance": 0.012
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d1501+2499",
+          "combatAttack": 10500,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Stormbound Pegasus",
+      "displayName": "Stormbound Pegasus",
+      "origin": "new",
+      "sprite": "sprites/monsters/stormbound_pegasus.png",
+      "level": 1125,
+      "health": 375000,
+      "mana": 0,
+      "xpPerHit": 24,
+      "xpOnDeath": 4200000000,
+      "hitDamageMin": 3000,
+      "hitDamageMax": 4700,
+      "respawnTimeMs": 600000,
+      "goldMin": 3000,
+      "goldMax": 9000,
+      "dodge": 5100,
+      "acMin": 520,
+      "acMax": 680,
+      "aggro": 1,
+      "speed": 125,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 2250,
+        "end": 1125,
+        "agi": 2250,
+        "intel": 1125,
+        "will": 0,
+        "wis": 1125,
+        "luck": 0
+      },
+      "resists": {
+        "air": 110,
+        "earth": 110,
+        "water": 110,
+        "fire": 110,
+        "dark": 110,
+        "light": 110
+      },
+      "loot": [
+        {
+          "item": "skybreaker_longbow",
+          "chance": 0.015
+        },
+        {
+          "item": "skybreaker_quiver",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_air_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_air_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_air_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_air_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_air_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_air_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_air_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_air_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_air_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_air_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_air_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_air_protector",
+          "chance": 0.012
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d1701+2999",
+          "combatAttack": 11250,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Galehorn Unicorn",
+      "displayName": "Galehorn Unicorn",
+      "origin": "new",
+      "sprite": "sprites/monsters/galehorn_unicorn.png",
+      "level": 1200,
+      "health": 450000,
+      "mana": 0,
+      "xpPerHit": 24,
+      "xpOnDeath": 4200000000,
+      "hitDamageMin": 3500,
+      "hitDamageMax": 5500,
+      "respawnTimeMs": 600000,
+      "goldMin": 3000,
+      "goldMax": 9000,
+      "dodge": 5800,
+      "acMin": 600,
+      "acMax": 780,
+      "aggro": 1,
+      "speed": 125,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 2400,
+        "end": 1200,
+        "agi": 2400,
+        "intel": 1200,
+        "will": 0,
+        "wis": 1200,
+        "luck": 0
+      },
+      "resists": {
+        "air": 110,
+        "earth": 110,
+        "water": 110,
+        "fire": 110,
+        "dark": 110,
+        "light": 110
+      },
+      "loot": [
+        {
+          "item": "windpiercer_longbow",
+          "chance": 0.015
+        },
+        {
+          "item": "windpiercer_quiver",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_light_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_light_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_light_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_light_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_light_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_light_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_light_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_light_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_light_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_light_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_light_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_light_protector",
+          "chance": 0.012
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d2001+3499",
+          "combatAttack": 12000,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Obsidian Dragon",
+      "displayName": "Obsidian Dragon",
+      "origin": "new",
+      "sprite": "sprites/monsters/obsidian_dragon.png",
+      "level": 1250,
+      "health": 600000,
+      "mana": 0,
+      "xpPerHit": 28,
+      "xpOnDeath": 4200000000,
+      "hitDamageMin": 4200,
+      "hitDamageMax": 6800,
+      "respawnTimeMs": 900000,
+      "goldMin": 5000,
+      "goldMax": 12000,
+      "dodge": 6200,
+      "acMin": 700,
+      "acMax": 900,
+      "aggro": 1,
+      "speed": 125,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 2500,
+        "end": 2500,
+        "agi": 2500,
+        "intel": 1250,
+        "will": 0,
+        "wis": 1250,
+        "luck": 0
+      },
+      "resists": {
+        "air": 120,
+        "earth": 120,
+        "water": 120,
+        "fire": 120,
+        "dark": 120,
+        "light": 220
+      },
+      "loot": [
+        {
+          "item": "duskmaw_wyrms_eclipsed_crown",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_dark_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_dark_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_dark_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_dark_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_dark_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_dark_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_dark_protector",
+          "chance": 0.012
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.25
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.25
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d2601+4199",
+          "combatAttack": 12500,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Bronze Griffin",
+      "displayName": "Bronze Griffin",
+      "origin": "new",
+      "sprite": "sprites/monsters/bronze_griffin.png",
+      "level": 1325,
+      "health": 550000,
+      "mana": 0,
+      "xpPerHit": 28,
+      "xpOnDeath": 4200000000,
+      "hitDamageMin": 4800,
+      "hitDamageMax": 7200,
+      "respawnTimeMs": 900000,
+      "goldMin": 5000,
+      "goldMax": 12000,
+      "dodge": 7100,
+      "acMin": 650,
+      "acMax": 850,
+      "aggro": 1,
+      "speed": 150,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 2650,
+        "end": 2650,
+        "agi": 2650,
+        "intel": 1325,
+        "will": 0,
+        "wis": 1325,
+        "luck": 0
+      },
+      "resists": {
+        "air": 220,
+        "earth": 120,
+        "water": 120,
+        "fire": 120,
+        "dark": 120,
+        "light": 120
+      },
+      "loot": [
+        {
+          "item": "skybreaker_longbow",
+          "chance": 0.015
+        },
+        {
+          "item": "skybreaker_quiver",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_archer_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_archer_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_archer_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_archer_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_archer_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_archer_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_archer_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_archer_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_archer_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_archer_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_archer_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_archer_protector",
+          "chance": 0.012
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.25
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.25
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d2401+4799",
+          "combatAttack": 13250,
+          "selectionWeight": 100,
+          "isSpell": false,
+          "spellId": 0,
+          "rangeMinTiles": 0,
+          "rangeMaxTiles": 0
+        }
+      ]
+    },
+    {
+      "name": "Swamp Hydra",
+      "displayName": "Swamp Hydra",
+      "origin": "new",
+      "sprite": "sprites/monsters/swamp_hydra.png",
+      "level": 1400,
+      "health": 850000,
+      "mana": 0,
+      "xpPerHit": 28,
+      "xpOnDeath": 4200000000,
+      "hitDamageMin": 5200,
+      "hitDamageMax": 8200,
+      "respawnTimeMs": 900000,
+      "goldMin": 5000,
+      "goldMax": 12000,
+      "dodge": 6300,
+      "acMin": 800,
+      "acMax": 1050,
+      "aggro": 1,
+      "speed": 110,
+      "canAttack": true,
+      "tameable": false,
+      "tameMaxLevel": 0,
+      "stats": {
+        "str": 2800,
+        "end": 2800,
+        "agi": 2800,
+        "intel": 1400,
+        "will": 0,
+        "wis": 1400,
+        "luck": 0
+      },
+      "resists": {
+        "air": 120,
+        "earth": 120,
+        "water": 120,
+        "fire": 220,
+        "dark": 120,
+        "light": 120
+      },
+      "loot": [
+        {
+          "item": "rootcrown_wyrms_ageless_mantle",
+          "chance": 0.015
+        },
+        {
+          "item": "ancient_celestial_earth_armor",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_earth_armor",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_earth_boots",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_earth_boots",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_earth_gauntlets",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_earth_gauntlets",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_earth_helmet",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_earth_helmet",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_earth_leggings",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_earth_leggings",
+          "chance": 0.012
+        },
+        {
+          "item": "ancient_celestial_earth_protector",
+          "chance": 0.025
+        },
+        {
+          "item": "empyrean_earth_protector",
+          "chance": 0.012
+        },
+        {
+          "item": "serious_healing_potion",
+          "chance": 0.25
+        },
+        {
+          "item": "mana_elixir",
+          "chance": 0.25
+        },
+        {
+          "item": "item.mana_prism",
+          "chance": 0.05
+        },
+        {
+          "item": "item.critical_healing_potion",
+          "chance": 0.05
+        }
+      ],
+      "attacks": [
+        {
+          "formula": "1d3001+5199",
+          "combatAttack": 14000,
           "selectionWeight": 100,
           "isSpell": false,
           "spellId": 0,
@@ -43198,6 +43894,26 @@ window.T4C_DATA = {
       "walkthroughText": "Outrider Kaelis stands at the last mapped point before the drakes' lair and does not expect most people who pass him to come back. Kill Kraanian Dragonguard inside the marked approach. To turn it in you also need the Archdrake's Molten Heart, which means killing Arch Drake himself - the hardest fight in the world, and the real content of this quest. The reward is the largest anywhere, and it opens the fast road to the Lair. Do not come here underlevelled; the Dragonguard alone will end an unprepared character."
     },
     {
+      "id": "shattered_isle_passage",
+      "title": "Passage to Shattered Isle",
+      "giverNpc": "OutriderKaelis",
+      "targetMonster": "Kraanian Dragonguard",
+      "requiredKills": 3,
+      "targetWorldZ": 0,
+      "areaCenterX": 2850,
+      "areaCenterY": 2780,
+      "areaRadiusTiles": 180,
+      "rewardGold": 25000,
+      "rewardXp": 5000000,
+      "requiredItemQty": 0,
+      "minLevel": 0,
+      "unlockZoneId": "shattered_isle",
+      "offerText": "An isolated island lies across the eastern water. Defeat three Kraanian Dragonguards on this approach, then return to me. I'll open the passage for you.",
+      "completionText": "You've cleared the guard line. Shattered Isle is open to you now. The three creatures there are far more dangerous; use the Locations panel to make the crossing when you're ready.",
+      "completedText": "The passage to Shattered Isle remains open. You can travel there from the Locations panel and return to Drake's Lair the same way.",
+      "walkthroughText": "Speak with Outrider Kaelis near Drake's Lair and ask about the island. Defeat three Kraanian Dragonguards within the marked approach, then return to Kaelis. There is no item or level requirement. Completion permanently unlocks Shattered Isle and the return stop at Drake's Lair in the Locations panel. The central island arrival is separated from the Obsidian Dragon, Bronze Griffin and Swamp Hydra clearings."
+    },
+    {
       "id": "tideworn_shore_scouts",
       "title": "Stoneheim Shore Scouts",
       "giverNpc": "HarbormasterRangor",
@@ -45098,6 +45814,15 @@ window.T4C_DATA = {
         },
         {
           "keywords": [
+            "island"
+          ],
+          "response": "There's an island beyond the eastern water. Clear three Dragonguards from this approach and I'll trust you with the crossing. Ask about the island again when you're ready.",
+          "actions": [
+            "GIVE_QUEST:shattered_isle_passage"
+          ]
+        },
+        {
+          "keywords": [
             "bye"
           ],
           "response": "Don't go past the guard line alone. I mean that as a warning, not a dare.",
@@ -46384,6 +47109,13 @@ window.T4C_DATA = {
       "y": 2780,
       "worldZ": 0,
       "unlockZoneId": "drakes_lair"
+    },
+    {
+      "name": "Shattered Isle",
+      "x": 3450,
+      "y": 2705,
+      "worldZ": 0,
+      "unlockZoneId": "shattered_isle"
     },
     {
       "name": "Deep Ones Cave",
@@ -49137,7 +49869,7 @@ window.T4C_DATA = {
           "expression": "31"
         }
       ],
-      "sellPrice": 833350
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_light_boots",
@@ -49202,7 +49934,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 833350
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_light_gauntlets",
@@ -49269,7 +50001,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 833350
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_light_helmet",
@@ -49334,7 +50066,7 @@ window.T4C_DATA = {
           "expression": "9"
         }
       ],
-      "sellPrice": 833350
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_light_leggings",
@@ -49399,7 +50131,7 @@ window.T4C_DATA = {
           "expression": "10"
         }
       ],
-      "sellPrice": 333350
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_light_protector",
@@ -49463,7 +50195,7 @@ window.T4C_DATA = {
           "expression": "7"
         }
       ],
-      "sellPrice": 833350
+      "sellPrice": 200000
     },
     {
       "key": "ancient_celestial_warrior_armor",
@@ -66227,7 +66959,7 @@ window.T4C_DATA = {
           "expression": "47"
         }
       ],
-      "sellPrice": 1666650
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_light_boots",
@@ -66292,7 +67024,7 @@ window.T4C_DATA = {
           "expression": "14"
         }
       ],
-      "sellPrice": 1666650
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_light_gauntlets",
@@ -66359,7 +67091,7 @@ window.T4C_DATA = {
           "expression": "14"
         }
       ],
-      "sellPrice": 1666650
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_light_helmet",
@@ -66424,7 +67156,7 @@ window.T4C_DATA = {
           "expression": "13"
         }
       ],
-      "sellPrice": 1666650
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_light_leggings",
@@ -66489,7 +67221,7 @@ window.T4C_DATA = {
           "expression": "16"
         }
       ],
-      "sellPrice": 1666650
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_light_protector",
@@ -66553,7 +67285,7 @@ window.T4C_DATA = {
           "expression": "10"
         }
       ],
-      "sellPrice": 1666650
+      "sellPrice": 416650
     },
     {
       "key": "empyrean_warrior_armor",
@@ -82792,6 +83524,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_air_armor",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_armor",
       "monster": "The Convergent Wyrm",
       "monsterDisplayName": "The Convergent Wyrm",
       "chance": 0.015
@@ -82810,6 +83548,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_air_boots",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_boots",
       "monster": "The Galecrest Wyrm",
       "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.025
@@ -82818,6 +83562,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_air_gauntlets",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_gauntlets",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
       "chance": 0.025
     },
     {
@@ -82834,6 +83584,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_air_helmet",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_helmet",
       "monster": "The Galecrest Wyrm",
       "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.025
@@ -82842,6 +83598,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_air_leggings",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_leggings",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
       "chance": 0.025
     },
     {
@@ -82858,12 +83620,24 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_air_protector",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_air_protector",
       "monster": "The Galecrest Wyrm",
       "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.025
     },
     {
       "item": "ancient_celestial_archer_armor",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_armor",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.025
@@ -82876,6 +83650,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_archer_boots",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_boots",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.025
@@ -82888,6 +83668,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_archer_gauntlets",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_gauntlets",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.025
@@ -82900,6 +83686,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_archer_helmet",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_helmet",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.025
@@ -82912,6 +83704,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_archer_leggings",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_leggings",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.025
@@ -82924,6 +83722,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_archer_protector",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_archer_protector",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.025
@@ -82936,6 +83740,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_armor",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_armor",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.025
@@ -82954,6 +83764,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_boots",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_boots",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.025
@@ -82972,6 +83788,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_gauntlets",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_gauntlets",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.025
@@ -82986,6 +83808,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_dark_gauntlets",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_helmet",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
       "chance": 0.025
     },
     {
@@ -83014,6 +83842,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_dark_leggings",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_leggings",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.025
@@ -83028,6 +83862,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_dark_leggings",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_dark_protector",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
       "chance": 0.025
     },
     {
@@ -83050,8 +83890,20 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_earth_armor",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_armor",
       "monster": "The Verdant Warden",
       "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_boots",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
       "chance": 0.025
     },
     {
@@ -83068,8 +83920,20 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_earth_gauntlets",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_gauntlets",
       "monster": "The Verdant Warden",
       "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_helmet",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
       "chance": 0.025
     },
     {
@@ -83080,8 +83944,20 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_earth_leggings",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_leggings",
       "monster": "The Verdant Warden",
       "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_earth_protector",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
       "chance": 0.025
     },
     {
@@ -83175,10 +84051,22 @@ window.T4C_DATA = {
       "chance": 0.006
     },
     {
+      "item": "ancient_celestial_light_armor",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_light_boots",
       "monster": "Fey Warden",
       "monsterDisplayName": "Fey Warden",
       "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_boots",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.025
     },
     {
       "item": "ancient_celestial_light_gauntlets",
@@ -83187,16 +84075,34 @@ window.T4C_DATA = {
       "chance": 0.006
     },
     {
+      "item": "ancient_celestial_light_gauntlets",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_light_helmet",
       "monster": "Fey Warden",
       "monsterDisplayName": "Fey Warden",
       "chance": 0.006
     },
     {
+      "item": "ancient_celestial_light_helmet",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_light_leggings",
       "monster": "Fey Warden",
       "monsterDisplayName": "Fey Warden",
       "chance": 0.006
+    },
+    {
+      "item": "ancient_celestial_light_leggings",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.025
     },
     {
       "item": "ancient_celestial_light_leggings",
@@ -83211,6 +84117,12 @@ window.T4C_DATA = {
       "chance": 0.006
     },
     {
+      "item": "ancient_celestial_light_protector",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.025
+    },
+    {
       "item": "ancient_celestial_warrior_armor",
       "monster": "Bastion Warden",
       "monsterDisplayName": "Bastion Warden",
@@ -83220,6 +84132,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_armor",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_armor",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.025
     },
     {
@@ -83248,6 +84166,12 @@ window.T4C_DATA = {
     },
     {
       "item": "ancient_celestial_warrior_boots",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_boots",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
       "chance": 0.025
@@ -83268,6 +84192,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_gauntlets",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_gauntlets",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.025
     },
     {
@@ -83292,6 +84222,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_helmet",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_helmet",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.025
     },
     {
@@ -83316,6 +84252,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_leggings",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_leggings",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.025
     },
     {
@@ -83340,6 +84282,12 @@ window.T4C_DATA = {
       "item": "ancient_celestial_warrior_protector",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.025
+    },
+    {
+      "item": "ancient_celestial_warrior_protector",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.025
     },
     {
@@ -84628,6 +85576,12 @@ window.T4C_DATA = {
     },
     {
       "item": "duskmaw_wyrms_eclipsed_crown",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.015
+    },
+    {
+      "item": "duskmaw_wyrms_eclipsed_crown",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.015
@@ -84652,6 +85606,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_air_armor",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_armor",
       "monster": "The Galecrest Wyrm",
       "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.012
@@ -84660,6 +85620,12 @@ window.T4C_DATA = {
       "item": "empyrean_air_boots",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_boots",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
       "chance": 0.012
     },
     {
@@ -84676,6 +85642,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_air_gauntlets",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_gauntlets",
       "monster": "The Galecrest Wyrm",
       "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.012
@@ -84684,6 +85656,12 @@ window.T4C_DATA = {
       "item": "empyrean_air_helmet",
       "monster": "Arch Drake",
       "monsterDisplayName": "Arch Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_helmet",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
       "chance": 0.012
     },
     {
@@ -84700,6 +85678,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_air_leggings",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_leggings",
       "monster": "The Galecrest Wyrm",
       "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.012
@@ -84712,12 +85696,24 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_air_protector",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_air_protector",
       "monster": "The Galecrest Wyrm",
       "monsterDisplayName": "The Galecrest Wyrm",
       "chance": 0.012
     },
     {
       "item": "empyrean_archer_armor",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_armor",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.012
@@ -84730,6 +85726,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_archer_boots",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_boots",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.012
@@ -84742,6 +85744,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_archer_gauntlets",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_gauntlets",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.012
@@ -84754,6 +85762,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_archer_helmet",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_helmet",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.012
@@ -84766,6 +85780,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_archer_leggings",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_leggings",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.012
@@ -84778,6 +85798,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_archer_protector",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_archer_protector",
       "monster": "Centaur King",
       "monsterDisplayName": "Centaur King",
       "chance": 0.012
@@ -84790,6 +85816,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_armor",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_armor",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.012
@@ -84808,6 +85840,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_boots",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_boots",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.012
@@ -84826,6 +85864,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_gauntlets",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_gauntlets",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.012
@@ -84844,6 +85888,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_helmet",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_helmet",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.012
@@ -84862,6 +85912,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_dark_leggings",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_leggings",
       "monster": "The Duskmaw Wyrm",
       "monsterDisplayName": "The Duskmaw Wyrm",
       "chance": 0.012
@@ -84876,6 +85932,12 @@ window.T4C_DATA = {
       "item": "empyrean_dark_leggings",
       "monster": "Ysolde, the Veiled Matriarch",
       "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_dark_protector",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
       "chance": 0.012
     },
     {
@@ -84898,8 +85960,20 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_earth_armor",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_armor",
       "monster": "The Verdant Warden",
       "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_boots",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
       "chance": 0.012
     },
     {
@@ -84910,8 +85984,20 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_earth_gauntlets",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_gauntlets",
       "monster": "The Verdant Warden",
       "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_helmet",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
       "chance": 0.012
     },
     {
@@ -84922,8 +86008,20 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_earth_leggings",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_leggings",
       "monster": "The Verdant Warden",
       "monsterDisplayName": "The Verdant Warden",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_earth_protector",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
       "chance": 0.012
     },
     {
@@ -85011,10 +86109,22 @@ window.T4C_DATA = {
       "chance": 0.003
     },
     {
+      "item": "empyrean_light_armor",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_light_boots",
       "monster": "Fey Warden",
       "monsterDisplayName": "Fey Warden",
       "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_boots",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.012
     },
     {
       "item": "empyrean_light_gauntlets",
@@ -85023,10 +86133,22 @@ window.T4C_DATA = {
       "chance": 0.003
     },
     {
+      "item": "empyrean_light_gauntlets",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_light_helmet",
       "monster": "Fey Warden",
       "monsterDisplayName": "Fey Warden",
       "chance": 0.003
+    },
+    {
+      "item": "empyrean_light_helmet",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.012
     },
     {
       "item": "empyrean_light_leggings",
@@ -85035,12 +86157,24 @@ window.T4C_DATA = {
       "chance": 0.003
     },
     {
+      "item": "empyrean_light_leggings",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_light_protector",
       "monster": "Fey Warden",
       "monsterDisplayName": "Fey Warden",
       "chance": 0.003
     },
     {
+      "item": "empyrean_light_protector",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.012
+    },
+    {
       "item": "empyrean_warrior_armor",
       "monster": "Bastion Warden",
       "monsterDisplayName": "Bastion Warden",
@@ -85050,6 +86184,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_armor",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_armor",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.012
     },
     {
@@ -85078,6 +86218,12 @@ window.T4C_DATA = {
     },
     {
       "item": "empyrean_warrior_boots",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_boots",
       "monster": "Sir Caradoc, the Sundered Knight",
       "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
       "chance": 0.012
@@ -85098,6 +86244,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_gauntlets",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_gauntlets",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.012
     },
     {
@@ -85122,6 +86274,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_helmet",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_helmet",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.012
     },
     {
@@ -85146,6 +86304,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_leggings",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_leggings",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.012
     },
     {
@@ -85170,6 +86334,12 @@ window.T4C_DATA = {
       "item": "empyrean_warrior_protector",
       "monster": "Greater Drake",
       "monsterDisplayName": "Greater Drake",
+      "chance": 0.012
+    },
+    {
+      "item": "empyrean_warrior_protector",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
       "chance": 0.012
     },
     {
@@ -85408,6 +86578,18 @@ window.T4C_DATA = {
     },
     {
       "item": "item.critical_healing_potion",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
       "monster": "Sandglass Sentinel II",
       "monsterDisplayName": "Sandglass Sentinel II",
       "chance": 0.05
@@ -85428,6 +86610,12 @@ window.T4C_DATA = {
       "item": "item.critical_healing_potion",
       "monster": "Sandglass Sentinel V",
       "monsterDisplayName": "Sandglass Sentinel V",
+      "chance": 0.05
+    },
+    {
+      "item": "item.critical_healing_potion",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
       "chance": 0.05
     },
     {
@@ -85588,6 +86776,18 @@ window.T4C_DATA = {
     },
     {
       "item": "item.mana_prism",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Obsidian Dragon",
+      "monsterDisplayName": "Obsidian Dragon",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
       "monster": "Sandglass Sentinel II",
       "monsterDisplayName": "Sandglass Sentinel II",
       "chance": 0.05
@@ -85608,6 +86808,12 @@ window.T4C_DATA = {
       "item": "item.mana_prism",
       "monster": "Sandglass Sentinel V",
       "monsterDisplayName": "Sandglass Sentinel V",
+      "chance": 0.05
+    },
+    {
+      "item": "item.mana_prism",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
       "chance": 0.05
     },
     {
@@ -85791,6 +86997,12 @@ window.T4C_DATA = {
       "chance": 0.015
     },
     {
+      "item": "moonsteel_halberd",
+      "monster": "Ironhorn Centaur",
+      "monsterDisplayName": "Ironhorn Centaur",
+      "chance": 0.015
+    },
+    {
       "item": "mordrenns_drowned_cowl",
       "monster": "Mordrenn the Drowned Inquisitor",
       "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
@@ -85834,6 +87046,12 @@ window.T4C_DATA = {
     },
     {
       "item": "rootcrown_wyrms_ageless_mantle",
+      "monster": "Swamp Hydra",
+      "monsterDisplayName": "Swamp Hydra",
+      "chance": 0.015
+    },
+    {
+      "item": "rootcrown_wyrms_ageless_mantle",
       "monster": "The Rootcrown Wyrm",
       "monsterDisplayName": "The Rootcrown Wyrm",
       "chance": 0.015
@@ -85849,6 +87067,30 @@ window.T4C_DATA = {
       "monster": "The Rootcrown Wyrm",
       "monsterDisplayName": "The Rootcrown Wyrm",
       "chance": 0.01
+    },
+    {
+      "item": "skybreaker_longbow",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.015
+    },
+    {
+      "item": "skybreaker_longbow",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.015
+    },
+    {
+      "item": "skybreaker_quiver",
+      "monster": "Bronze Griffin",
+      "monsterDisplayName": "Bronze Griffin",
+      "chance": 0.015
+    },
+    {
+      "item": "skybreaker_quiver",
+      "monster": "Stormbound Pegasus",
+      "monsterDisplayName": "Stormbound Pegasus",
+      "chance": 0.015
     },
     {
       "item": "tideclaw_band",
@@ -85873,6 +87115,18 @@ window.T4C_DATA = {
       "monster": "Barrow Wight",
       "monsterDisplayName": "Barrow Wight",
       "chance": 0.03
+    },
+    {
+      "item": "windpiercer_longbow",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.015
+    },
+    {
+      "item": "windpiercer_quiver",
+      "monster": "Galehorn Unicorn",
+      "monsterDisplayName": "Galehorn Unicorn",
+      "chance": 0.015
     },
     {
       "item": "witness_air_amulet",
@@ -89149,9 +90403,9 @@ window.T4C_DATA = {
       "name": "Drake's Lair",
       "chapter": "last_peak",
       "chapterOrder": 1,
-      "levelRange": "750–1000",
+      "levelRange": "750-1200",
       "biome": "Mountain lair",
-      "summary": "Kraanhold's easternmost and highest peak, and the end of the road. Arch Drake has held this lair since long before anyone thought to map it, and the Kraanian Dragonguard on the approach exist to make sure nobody reaches him. The five Elder Wyrms den here too, one for each way of fighting. Come at the very top of your power or do not come at all — there is nothing past this.",
+      "summary": "Kraanhold's easternmost and highest peak. Dragonguards guard Arch Drake and the five Elder Wyrms, while the Ironhorn Centaur, Stormbound Pegasus and Galehorn Unicorn roam separate clearings. Outrider Kaelis knows a passage across the eastern water to Shattered Isle.",
       "worldmapCenter": {
         "x": 2850,
         "y": 2780,
@@ -89164,7 +90418,10 @@ window.T4C_DATA = {
         "The Pyreclaw Wyrm",
         "The Mistwing Wyrm",
         "The Duskmaw Wyrm",
-        "The Galecrest Wyrm"
+        "The Galecrest Wyrm",
+        "Ironhorn Centaur",
+        "Stormbound Pegasus",
+        "Galehorn Unicorn"
       ],
       "items": [
         "dragonguards_scale_bracer",
@@ -89192,6 +90449,36 @@ window.T4C_DATA = {
       "npcs": [
         "OutriderKaelis"
       ]
+    },
+    {
+      "id": "shattered_isle",
+      "name": "Shattered Isle",
+      "chapter": "last_peak",
+      "chapterOrder": 2,
+      "levelRange": "1250-1400",
+      "biome": "Volcanic ridge, dry uplands and marsh",
+      "summary": "An isolated island east of Drake's Lair. Outrider Kaelis opens the crossing after a short Dragonguard trial. The Obsidian Dragon, Bronze Griffin and Swamp Hydra occupy separate clearings around a central landing.",
+      "worldmapCenter": {
+        "x": 3450,
+        "y": 2705,
+        "radius": 225
+      },
+      "monsters": [
+        "Obsidian Dragon",
+        "Bronze Griffin",
+        "Swamp Hydra"
+      ],
+      "items": [
+        "duskmaw_wyrms_eclipsed_crown",
+        "skybreaker_longbow",
+        "skybreaker_quiver",
+        "rootcrown_wyrms_ageless_mantle"
+      ],
+      "spells": [],
+      "quests": [
+        "shattered_isle_passage"
+      ],
+      "npcs": []
     },
     {
       "id": "witness_training",
@@ -98429,6 +99716,13 @@ window.T4C_DATA = {
           "tier": "trash"
         },
         {
+          "name": "Ironhorn Centaur",
+          "displayName": "Ironhorn Centaur",
+          "x": 2700,
+          "y": 2800,
+          "tier": "boss"
+        },
+        {
           "name": "Kraanian Dragonguard",
           "displayName": "Kraanian Dragonguard",
           "x": 2820,
@@ -99708,62 +101002,6 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4242,
-          "y": 1571,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4146,
-          "y": 1487,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4186,
-          "y": 1475,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4206,
-          "y": 1567,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4218,
-          "y": 1479,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4242,
-          "y": 1539,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4170,
-          "y": 1495,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4150,
-          "y": 1511,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
           "x": 4238,
           "y": 1515,
           "tier": "trash"
@@ -99771,78 +101009,8 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4226,
-          "y": 1555,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4198,
-          "y": 1495,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
           "x": 4230,
           "y": 1495,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4198,
-          "y": 1551,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1571,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4202,
-          "y": 1475,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4170,
-          "y": 1479,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4214,
-          "y": 1495,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4166,
-          "y": 1511,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4242,
-          "y": 1555,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4182,
-          "y": 1503,
           "tier": "trash"
         },
         {
@@ -99855,27 +101023,6 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4214,
-          "y": 1547,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4182,
-          "y": 1487,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4158,
-          "y": 1491,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
           "x": 4226,
           "y": 1507,
           "tier": "trash"
@@ -99883,154 +101030,91 @@ window.T4C_DATA = {
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4162,
-          "y": 1523,
+          "x": 4242,
+          "y": 1527,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4226,
-          "y": 1539,
+          "x": 4222,
+          "y": 1499,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1503,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1515,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4178,
-          "y": 1547,
+          "y": 1543,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4146,
-          "y": 1499,
+          "x": 4230,
+          "y": 1515,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1531,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4242,
-          "y": 1527,
+          "y": 1535,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4194,
-          "y": 1483,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4206,
-          "y": 1487,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4158,
-          "y": 1503,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4206,
-          "y": 1503,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4234,
-          "y": 1547,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4214,
-          "y": 1559,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4234,
-          "y": 1563,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4162,
-          "y": 1483,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1487,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4190,
+          "x": 4226,
           "y": 1491,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1499,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4194,
-          "y": 1503,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4234,
-          "y": 1503,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4174,
+          "x": 4218,
           "y": 1507,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4158,
-          "y": 1515,
+          "x": 4234,
+          "y": 1511,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1515,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4170,
+          "x": 4226,
           "y": 1519,
           "tier": "trash"
         },
@@ -100038,91 +101122,301 @@ window.T4C_DATA = {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4234,
-          "y": 1535,
+          "y": 1519,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4206,
-          "y": 1539,
+          "x": 4242,
+          "y": 1519,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4194,
-          "y": 1543,
+          "x": 4238,
+          "y": 1523,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4186,
-          "y": 1551,
+          "x": 4218,
+          "y": 1527,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4202,
-          "y": 1559,
+          "x": 4234,
+          "y": 1531,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4178,
-          "y": 1475,
+          "x": 4226,
+          "y": 1495,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4194,
-          "y": 1475,
+          "x": 4226,
+          "y": 1499,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4210,
-          "y": 1475,
+          "x": 4230,
+          "y": 1499,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4170,
-          "y": 1487,
+          "x": 4222,
+          "y": 1503,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1503,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1503,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1507,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1507,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1507,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4218,
+          "y": 1511,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1511,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1511,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1511,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4238,
+          "y": 1511,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4214,
-          "y": 1487,
+          "y": 1515,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4178,
-          "y": 1495,
+          "x": 4218,
+          "y": 1515,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1515,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1515,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4194,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4210,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4218,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4238,
+          "y": 1519,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4190,
+          "y": 1523,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
           "x": 4206,
-          "y": 1495,
+          "y": 1523,
           "tier": "trash"
         },
         {
           "name": "Veilbound Wraith",
           "displayName": "Veilbound Wraith",
-          "x": 4166,
-          "y": 1503,
+          "x": 4218,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4230,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4242,
+          "y": 1523,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4178,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4198,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4214,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4222,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4226,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4234,
+          "y": 1527,
+          "tier": "trash"
+        },
+        {
+          "name": "Veilbound Wraith",
+          "displayName": "Veilbound Wraith",
+          "x": 4238,
+          "y": 1527,
           "tier": "trash"
         },
         {
@@ -100260,6 +101554,13 @@ window.T4C_DATA = {
           "x": 2749,
           "y": 2581,
           "tier": "trash"
+        },
+        {
+          "name": "Galehorn Unicorn",
+          "displayName": "Galehorn Unicorn",
+          "x": 3050,
+          "y": 2900,
+          "tier": "boss"
         },
         {
           "name": "Greater Drake",
@@ -100631,6 +101932,13 @@ window.T4C_DATA = {
           "x": 2747,
           "y": 2970,
           "tier": "trash"
+        },
+        {
+          "name": "Ironhorn Centaur",
+          "displayName": "Ironhorn Centaur",
+          "x": 2700,
+          "y": 2800,
+          "tier": "boss"
         },
         {
           "name": "Kraanian Dragonguard",
@@ -101011,6 +102319,13 @@ window.T4C_DATA = {
           "tier": "boss"
         },
         {
+          "name": "Stormbound Pegasus",
+          "displayName": "Stormbound Pegasus",
+          "x": 2900,
+          "y": 2960,
+          "tier": "boss"
+        },
+        {
           "name": "The Duskmaw Wyrm",
           "displayName": "The Duskmaw Wyrm",
           "x": 2770,
@@ -101066,6 +102381,46 @@ window.T4C_DATA = {
           "name": "Drake's Lair",
           "x": 2850,
           "y": 2780
+        }
+      ]
+    },
+    {
+      "zoneId": "shattered_isle",
+      "image": "maps/shattered_isle.png",
+      "imageWidth": 2200,
+      "imageHeight": 2200,
+      "originX": 3175,
+      "originY": 2430,
+      "pxPerTile": 4,
+      "npcs": [],
+      "monsters": [
+        {
+          "name": "Bronze Griffin",
+          "displayName": "Bronze Griffin",
+          "x": 3540,
+          "y": 2635,
+          "tier": "boss"
+        },
+        {
+          "name": "Obsidian Dragon",
+          "displayName": "Obsidian Dragon",
+          "x": 3360,
+          "y": 2635,
+          "tier": "boss"
+        },
+        {
+          "name": "Swamp Hydra",
+          "displayName": "Swamp Hydra",
+          "x": 3450,
+          "y": 2790,
+          "tier": "boss"
+        }
+      ],
+      "namedLocations": [
+        {
+          "name": "Shattered Isle",
+          "x": 3450,
+          "y": 2705
         }
       ]
     },
@@ -106913,13 +108268,6 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 4422,
-          "y": 1837,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
           "x": 4326,
           "y": 1741,
           "tier": "trash"
@@ -106962,13 +108310,6 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 4390,
-          "y": 1837,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
           "x": 4330,
           "y": 1765,
           "tier": "trash"
@@ -106997,13 +108338,6 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 4406,
-          "y": 1825,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
           "x": 4342,
           "y": 1749,
           "tier": "trash"
@@ -107013,13 +108347,6 @@ window.T4C_DATA = {
           "displayName": "Sundered Sentinel",
           "x": 4374,
           "y": 1749,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 4422,
-          "y": 1765,
           "tier": "trash"
         },
         {
@@ -107123,13 +108450,6 @@ window.T4C_DATA = {
         {
           "name": "Sundered Sentinel",
           "displayName": "Sundered Sentinel",
-          "x": 4422,
-          "y": 1821,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
           "x": 4326,
           "y": 1753,
           "tier": "trash"
@@ -107160,13 +108480,6 @@ window.T4C_DATA = {
           "displayName": "Sundered Sentinel",
           "x": 4326,
           "y": 1821,
-          "tier": "trash"
-        },
-        {
-          "name": "Sundered Sentinel",
-          "displayName": "Sundered Sentinel",
-          "x": 4402,
-          "y": 1837,
           "tier": "trash"
         },
         {
@@ -107314,6 +108627,48 @@ window.T4C_DATA = {
           "displayName": "Sundered Sentinel",
           "x": 4418,
           "y": 1777,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4330,
+          "y": 1785,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4402,
+          "y": 1797,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4414,
+          "y": 1801,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4398,
+          "y": 1813,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4378,
+          "y": 1817,
+          "tier": "trash"
+        },
+        {
+          "name": "Sundered Sentinel",
+          "displayName": "Sundered Sentinel",
+          "x": 4334,
+          "y": 1825,
           "tier": "trash"
         },
         {
@@ -107475,20 +108830,6 @@ window.T4C_DATA = {
           "displayName": "Veilbound Wraith",
           "x": 4250,
           "y": 1670,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4242,
-          "y": 1571,
-          "tier": "trash"
-        },
-        {
-          "name": "Veilbound Wraith",
-          "displayName": "Veilbound Wraith",
-          "x": 4222,
-          "y": 1571,
           "tier": "trash"
         }
       ],
@@ -108872,6 +110213,76 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5401,
           "y": 1328,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5417,
+          "y": 1328,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5349,
+          "y": 1332,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5409,
+          "y": 1336,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5393,
+          "y": 1336,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5361,
+          "y": 1288,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5421,
+          "y": 1288,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5369,
+          "y": 1292,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5401,
+          "y": 1296,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5345,
+          "y": 1300,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5337,
+          "y": 1308,
           "tier": "trash"
         },
         {
@@ -110662,29 +112073,8 @@ window.T4C_DATA = {
         {
           "name": "Threnody Skeleton",
           "displayName": "Threnody Skeleton",
-          "x": 5325,
-          "y": 1376,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5421,
-          "y": 1372,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
           "x": 5421,
           "y": 1280,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5373,
-          "y": 1376,
           "tier": "trash"
         },
         {
@@ -110725,20 +112115,6 @@ window.T4C_DATA = {
         {
           "name": "Threnody Skeleton",
           "displayName": "Threnody Skeleton",
-          "x": 5397,
-          "y": 1356,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5349,
-          "y": 1360,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
           "x": 5393,
           "y": 1284,
           "tier": "trash"
@@ -110755,13 +112131,6 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5373,
           "y": 1352,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5401,
-          "y": 1376,
           "tier": "trash"
         },
         {
@@ -110809,20 +112178,6 @@ window.T4C_DATA = {
         {
           "name": "Threnody Skeleton",
           "displayName": "Threnody Skeleton",
-          "x": 5417,
-          "y": 1356,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5345,
-          "y": 1376,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
           "x": 5401,
           "y": 1340,
           "tier": "trash"
@@ -110832,20 +112187,6 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5337,
           "y": 1300,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5365,
-          "y": 1364,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5381,
-          "y": 1364,
           "tier": "trash"
         },
         {
@@ -110935,20 +112276,6 @@ window.T4C_DATA = {
         {
           "name": "Threnody Skeleton",
           "displayName": "Threnody Skeleton",
-          "x": 5357,
-          "y": 1376,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5385,
-          "y": 1376,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
           "x": 5401,
           "y": 1316,
           "tier": "trash"
@@ -110965,27 +112292,6 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5409,
           "y": 1348,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5337,
-          "y": 1364,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5405,
-          "y": 1364,
-          "tier": "trash"
-        },
-        {
-          "name": "Threnody Skeleton",
-          "displayName": "Threnody Skeleton",
-          "x": 5393,
-          "y": 1368,
           "tier": "trash"
         },
         {
@@ -111077,6 +112383,111 @@ window.T4C_DATA = {
           "displayName": "Threnody Skeleton",
           "x": 5401,
           "y": 1328,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5397,
+          "y": 1352,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5421,
+          "y": 1352,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5417,
+          "y": 1328,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5349,
+          "y": 1332,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5409,
+          "y": 1336,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5333,
+          "y": 1344,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5349,
+          "y": 1344,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5381,
+          "y": 1356,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5393,
+          "y": 1336,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5361,
+          "y": 1288,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5421,
+          "y": 1288,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5369,
+          "y": 1292,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5401,
+          "y": 1296,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5345,
+          "y": 1300,
+          "tier": "trash"
+        },
+        {
+          "name": "Threnody Skeleton",
+          "displayName": "Threnody Skeleton",
+          "x": 5337,
+          "y": 1308,
           "tier": "trash"
         },
         {
@@ -111670,20 +113081,6 @@ window.T4C_DATA = {
           "name": "Ashbound Exile",
           "displayName": "Ashbound Exile",
           "x": 5801,
-          "y": 1361,
-          "tier": "trash"
-        },
-        {
-          "name": "Ashbound Exile",
-          "displayName": "Ashbound Exile",
-          "x": 5897,
-          "y": 1361,
-          "tier": "trash"
-        },
-        {
-          "name": "Ashbound Exile",
-          "displayName": "Ashbound Exile",
-          "x": 5801,
           "y": 1265,
           "tier": "trash"
         },
@@ -111726,13 +113123,6 @@ window.T4C_DATA = {
           "name": "Ashbound Exile",
           "displayName": "Ashbound Exile",
           "x": 5833,
-          "y": 1361,
-          "tier": "trash"
-        },
-        {
-          "name": "Ashbound Exile",
-          "displayName": "Ashbound Exile",
-          "x": 5865,
           "y": 1361,
           "tier": "trash"
         },
@@ -111804,13 +113194,6 @@ window.T4C_DATA = {
           "displayName": "Ashbound Exile",
           "x": 5813,
           "y": 1305,
-          "tier": "trash"
-        },
-        {
-          "name": "Ashbound Exile",
-          "displayName": "Ashbound Exile",
-          "x": 5881,
-          "y": 1357,
           "tier": "trash"
         },
         {
@@ -112084,6 +113467,34 @@ window.T4C_DATA = {
           "displayName": "Ashbound Exile",
           "x": 5893,
           "y": 1313,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashbound Exile",
+          "displayName": "Ashbound Exile",
+          "x": 5881,
+          "y": 1353,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashbound Exile",
+          "displayName": "Ashbound Exile",
+          "x": 5805,
+          "y": 1361,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashbound Exile",
+          "displayName": "Ashbound Exile",
+          "x": 5805,
+          "y": 1329,
+          "tier": "trash"
+        },
+        {
+          "name": "Ashbound Exile",
+          "displayName": "Ashbound Exile",
+          "x": 5885,
+          "y": 1329,
           "tier": "trash"
         },
         {
@@ -112759,71 +114170,8 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5414,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5402,
-          "y": 1722,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5498,
           "y": 1722,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5454,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5414,
-          "y": 1694,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5434,
-          "y": 1722,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5426,
-          "y": 1654,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1658,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1686,
           "tier": "trash"
         },
         {
@@ -112831,27 +114179,6 @@ window.T4C_DATA = {
           "displayName": "Nullguard",
           "x": 5462,
           "y": 1722,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5474,
-          "y": 1638,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5434,
-          "y": 1634,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5450,
-          "y": 1646,
           "tier": "trash"
         },
         {
@@ -112871,36 +114198,8 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5430,
-          "y": 1702,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5418,
-          "y": 1714,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5490,
-          "y": 1642,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5486,
           "y": 1670,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5402,
-          "y": 1706,
           "tier": "trash"
         },
         {
@@ -112920,43 +114219,8 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5482,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5482,
-          "y": 1654,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5442,
-          "y": 1658,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5470,
           "y": 1710,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5422,
-          "y": 1638,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5462,
-          "y": 1642,
           "tier": "trash"
         },
         {
@@ -112983,34 +114247,6 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5466,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5438,
-          "y": 1646,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5438,
-          "y": 1670,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1670,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5458,
           "y": 1706,
           "tier": "trash"
@@ -113025,99 +114261,8 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5426,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5442,
-          "y": 1626,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5470,
-          "y": 1650,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5490,
           "y": 1694,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5490,
-          "y": 1630,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5446,
-          "y": 1634,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5458,
-          "y": 1634,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5498,
-          "y": 1638,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5430,
-          "y": 1642,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5478,
-          "y": 1646,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5458,
-          "y": 1650,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5494,
-          "y": 1650,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5454,
-          "y": 1658,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
-          "x": 5430,
-          "y": 1662,
           "tier": "trash"
         },
         {
@@ -113158,13 +114303,6 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5426,
-          "y": 1694,
-          "tier": "trash"
-        },
-        {
-          "name": "Nullguard",
-          "displayName": "Nullguard",
           "x": 5478,
           "y": 1694,
           "tier": "trash"
@@ -113172,8 +114310,281 @@ window.T4C_DATA = {
         {
           "name": "Nullguard",
           "displayName": "Nullguard",
-          "x": 5410,
+          "x": 5418,
+          "y": 1626,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5438,
           "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5494,
+          "y": 1686,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5474,
+          "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5494,
+          "y": 1710,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5438,
+          "y": 1714,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5454,
+          "y": 1714,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5482,
+          "y": 1714,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5490,
+          "y": 1718,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5478,
+          "y": 1662,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5498,
+          "y": 1662,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5478,
+          "y": 1670,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5494,
+          "y": 1670,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5442,
+          "y": 1674,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5430,
+          "y": 1694,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5498,
+          "y": 1694,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5446,
+          "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5466,
+          "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5462,
+          "y": 1714,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5470,
+          "y": 1718,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5438,
+          "y": 1722,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5454,
+          "y": 1722,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5482,
+          "y": 1666,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5430,
+          "y": 1670,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5482,
+          "y": 1674,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5478,
+          "y": 1678,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5438,
+          "y": 1682,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5474,
+          "y": 1682,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5478,
+          "y": 1686,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5486,
+          "y": 1686,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5426,
+          "y": 1690,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5482,
+          "y": 1690,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5434,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5442,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5454,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5470,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5494,
+          "y": 1698,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5490,
+          "y": 1702,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5442,
+          "y": 1706,
+          "tier": "trash"
+        },
+        {
+          "name": "Nullguard",
+          "displayName": "Nullguard",
+          "x": 5450,
+          "y": 1706,
           "tier": "trash"
         },
         {

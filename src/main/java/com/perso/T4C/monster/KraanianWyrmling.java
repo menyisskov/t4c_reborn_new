@@ -9,6 +9,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Kraanian Wyrmling", x = 2380, y = 2930, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Kraanian Wyrmling", x = 2310, y = 2940, z = 0, stationary = false, aggressive = true)
 @Spawn(type = "Kraanian Wyrmling", x = 2390, y = 2860, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class KraanianWyrmling extends DataMonster {
   // Reuses the "KraanianFlying" sprite/sound family already used by the low-level Kraanian
   // Flyer, but authored as a distinct, much higher-level monster guarding the Lesser Drake's

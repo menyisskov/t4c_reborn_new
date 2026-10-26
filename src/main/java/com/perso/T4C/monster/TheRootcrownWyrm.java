@@ -19,6 +19,7 @@ import com.perso.T4C.spawn.Spawn;
     z = 0,
     stationary = false,
     aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class TheRootcrownWyrm extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";
@@ -59,9 +60,8 @@ public final class TheRootcrownWyrm extends DataMonster {
             new MonsterDef.LootDrop("item.rootcrown_wyrm_scale", 0.12f),
             new MonsterDef.LootDrop("item.veiled_aether_shard", 0.05f),
             new MonsterDef.LootDrop("rootcrown_wyrms_ageless_mantle", 0.015f),
-            new MonsterDef.LootDrop("rootcrown_wyrms_timeless_circlet", 0.015f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f)),
+            new MonsterDef.LootDrop("rootcrown_wyrms_timeless_circlet", 0.015f)
+            ),
         false,
         0.0f,
         700,

@@ -33,7 +33,7 @@ public final class GantsDuBoxeur7Ultimate {
         3999,
         1,
         1128,
-        "1d11140+8900",
+        "1d251+699",
         "(if(750-self.agi/250*750/2<600?600:750-self.agi/250*750/2)) * (50-self.viewflag(10097)) / 50 + self.viewflag(10097) * 5 + 1d469",
         0,
         -1,

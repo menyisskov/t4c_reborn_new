@@ -368,9 +368,9 @@
     "name": "Drake's Lair",
     "chapter": "last_peak",
     "chapterOrder": 1,
-    "levelRange": "750–1000",
+    "levelRange": "750-1200",
     "biome": "Mountain lair",
-    "summary": "Kraanhold's easternmost and highest peak, and the end of the road. Arch Drake has held this lair since long before anyone thought to map it, and the Kraanian Dragonguard on the approach exist to make sure nobody reaches him. The five Elder Wyrms den here too, one for each way of fighting. Come at the very top of your power or do not come at all — there is nothing past this.",
+    "summary": "Kraanhold's easternmost and highest peak. Dragonguards guard Arch Drake and the five Elder Wyrms, while the Ironhorn Centaur, Stormbound Pegasus and Galehorn Unicorn roam separate clearings. Outrider Kaelis knows a passage across the eastern water to Shattered Isle.",
     "worldmapCenter": {
       "x": 2850,
       "y": 2780,
@@ -383,7 +383,10 @@
       "The Pyreclaw Wyrm",
       "The Mistwing Wyrm",
       "The Duskmaw Wyrm",
-      "The Galecrest Wyrm"
+      "The Galecrest Wyrm",
+      "Ironhorn Centaur",
+      "Stormbound Pegasus",
+      "Galehorn Unicorn"
     ],
     "items": [
       "dragonguards_scale_bracer",
@@ -411,6 +414,36 @@
     "npcs": [
       "OutriderKaelis"
     ]
+  },
+  {
+    "id": "shattered_isle",
+    "name": "Shattered Isle",
+    "chapter": "last_peak",
+    "chapterOrder": 2,
+    "levelRange": "1250-1400",
+    "biome": "Volcanic ridge, dry uplands and marsh",
+    "summary": "An isolated island east of Drake's Lair. Outrider Kaelis opens the crossing after a short Dragonguard trial. The Obsidian Dragon, Bronze Griffin and Swamp Hydra occupy separate clearings around a central landing.",
+    "worldmapCenter": {
+      "x": 3450,
+      "y": 2705,
+      "radius": 225
+    },
+    "monsters": [
+      "Obsidian Dragon",
+      "Bronze Griffin",
+      "Swamp Hydra"
+    ],
+    "items": [
+      "duskmaw_wyrms_eclipsed_crown",
+      "skybreaker_longbow",
+      "skybreaker_quiver",
+      "rootcrown_wyrms_ageless_mantle"
+    ],
+    "spells": [],
+    "quests": [
+      "shattered_isle_passage"
+    ],
+    "npcs": []
   },
   {
     "id": "witness_training",

@@ -1,0 +1,53 @@
+{
+  "key": "concord_bell_mantle_archer",
+  "name": "${item.concord_bell_mantle_archer}",
+  "bodyPart": "BACK",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal92",
+  "numId": 59025,
+  "appearanceId": 59025,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61178,
+      "statId": 6,
+      "expression": "33"
+    },
+    {
+      "boostId": 61179,
+      "statId": 10035,
+      "expression": "80"
+    },
+    {
+      "boostId": 61180,
+      "statId": 12,
+      "expression": "10"
+    },
+    {
+      "boostId": 61181,
+      "statId": 13,
+      "expression": "10"
+    },
+    {
+      "boostId": 61182,
+      "statId": 14,
+      "expression": "10"
+    },
+    {
+      "boostId": 61183,
+      "statId": 15,
+      "expression": "10"
+    },
+    {
+      "boostId": 61184,
+      "statId": 22,
+      "expression": "10"
+    }
+  ],
+  "armorClass": 12.2,
+  "requirements": {
+    "agility": 400,
+    "endurance": 160
+  },
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal92"
+}

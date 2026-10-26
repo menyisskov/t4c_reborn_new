@@ -47,6 +47,7 @@ import com.perso.T4C.spawn.Spawn;
 @Spawn(type = "Deep One", x = 946, y = 165, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "Deep One", x = 965, y = 398, z = 2, stationary = false, aggressive = true)
 @Spawn(type = "Deep One", x = 977, y = 213, z = 2, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class DeepOne extends DataMonster {
   public static final String SOUND_ATTACK = "Beast Attack.wav";
   public static final String SOUND_DEATH = "Beast Dying.wav";
@@ -87,8 +88,7 @@ public final class DeepOne extends DataMonster {
         java.util.List.of(
             new MonsterDef.LootDrop("Light healing potion", 0.02f),
             new MonsterDef.LootDrop("Potion of fury", 0.05f),
-            new MonsterDef.LootDrop("barnacled_gauntlets", 0.03f),
-            new MonsterDef.LootDrop("note_deepone", 0.05f)),
+            new MonsterDef.LootDrop("barnacled_gauntlets", 0.03f)),
         false,
         0.0f,
         47,

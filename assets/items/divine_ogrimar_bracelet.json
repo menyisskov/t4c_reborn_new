@@ -1,0 +1,53 @@
+{
+  "key": "divine_ogrimar_bracelet",
+  "name": "${item.divine_ogrimar_bracelet}",
+  "bodyPart": "BRACER",
+  "appearanceEquippedPrimary": "",
+  "appearanceInventory": "64kInvBelt__pal91",
+  "numId": 55909,
+  "appearanceId": 55909,
+  "weight": 1,
+  "armorClass": 4.0,
+  "requirements": {
+    "endurance": 100,
+    "intelligence": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50745,
+      "statId": 1,
+      "expression": "18"
+    },
+    {
+      "boostId": 50746,
+      "statId": 24,
+      "expression": "18"
+    },
+    {
+      "boostId": 50747,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50748,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50749,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50750,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50751,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

@@ -13,6 +13,12 @@
   },
   {
     "item": "ancient_celestial_air_armor",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_armor",
     "monster": "The Convergent Wyrm",
     "monsterDisplayName": "The Convergent Wyrm",
     "chance": 0.015
@@ -31,6 +37,12 @@
   },
   {
     "item": "ancient_celestial_air_boots",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_boots",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.025
@@ -39,6 +51,12 @@
     "item": "ancient_celestial_air_gauntlets",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_gauntlets",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
     "chance": 0.025
   },
   {
@@ -55,6 +73,12 @@
   },
   {
     "item": "ancient_celestial_air_helmet",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_helmet",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.025
@@ -63,6 +87,12 @@
     "item": "ancient_celestial_air_leggings",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_leggings",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
     "chance": 0.025
   },
   {
@@ -79,12 +109,24 @@
   },
   {
     "item": "ancient_celestial_air_protector",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_air_protector",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.025
   },
   {
     "item": "ancient_celestial_archer_armor",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_armor",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.025
@@ -97,6 +139,12 @@
   },
   {
     "item": "ancient_celestial_archer_boots",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_boots",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.025
@@ -109,6 +157,12 @@
   },
   {
     "item": "ancient_celestial_archer_gauntlets",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_gauntlets",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.025
@@ -121,6 +175,12 @@
   },
   {
     "item": "ancient_celestial_archer_helmet",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_helmet",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.025
@@ -133,6 +193,12 @@
   },
   {
     "item": "ancient_celestial_archer_leggings",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_leggings",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.025
@@ -145,6 +211,12 @@
   },
   {
     "item": "ancient_celestial_archer_protector",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_archer_protector",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.025
@@ -157,6 +229,12 @@
   },
   {
     "item": "ancient_celestial_dark_armor",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_armor",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.025
@@ -175,6 +253,12 @@
   },
   {
     "item": "ancient_celestial_dark_boots",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_boots",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.025
@@ -193,6 +277,12 @@
   },
   {
     "item": "ancient_celestial_dark_gauntlets",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_gauntlets",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.025
@@ -207,6 +297,12 @@
     "item": "ancient_celestial_dark_gauntlets",
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_helmet",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
     "chance": 0.025
   },
   {
@@ -235,6 +331,12 @@
   },
   {
     "item": "ancient_celestial_dark_leggings",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_leggings",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.025
@@ -249,6 +351,12 @@
     "item": "ancient_celestial_dark_leggings",
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_dark_protector",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
     "chance": 0.025
   },
   {
@@ -271,8 +379,20 @@
   },
   {
     "item": "ancient_celestial_earth_armor",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_armor",
     "monster": "The Verdant Warden",
     "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_boots",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
     "chance": 0.025
   },
   {
@@ -289,8 +409,20 @@
   },
   {
     "item": "ancient_celestial_earth_gauntlets",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_gauntlets",
     "monster": "The Verdant Warden",
     "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_helmet",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
     "chance": 0.025
   },
   {
@@ -301,8 +433,20 @@
   },
   {
     "item": "ancient_celestial_earth_leggings",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_leggings",
     "monster": "The Verdant Warden",
     "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_earth_protector",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
     "chance": 0.025
   },
   {
@@ -396,10 +540,22 @@
     "chance": 0.006
   },
   {
+    "item": "ancient_celestial_light_armor",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_light_boots",
     "monster": "Fey Warden",
     "monsterDisplayName": "Fey Warden",
     "chance": 0.006
+  },
+  {
+    "item": "ancient_celestial_light_boots",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.025
   },
   {
     "item": "ancient_celestial_light_gauntlets",
@@ -408,16 +564,34 @@
     "chance": 0.006
   },
   {
+    "item": "ancient_celestial_light_gauntlets",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_light_helmet",
     "monster": "Fey Warden",
     "monsterDisplayName": "Fey Warden",
     "chance": 0.006
   },
   {
+    "item": "ancient_celestial_light_helmet",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_light_leggings",
     "monster": "Fey Warden",
     "monsterDisplayName": "Fey Warden",
     "chance": 0.006
+  },
+  {
+    "item": "ancient_celestial_light_leggings",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.025
   },
   {
     "item": "ancient_celestial_light_leggings",
@@ -432,6 +606,12 @@
     "chance": 0.006
   },
   {
+    "item": "ancient_celestial_light_protector",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.025
+  },
+  {
     "item": "ancient_celestial_warrior_armor",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
@@ -441,6 +621,12 @@
     "item": "ancient_celestial_warrior_armor",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_armor",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.025
   },
   {
@@ -469,6 +655,12 @@
   },
   {
     "item": "ancient_celestial_warrior_boots",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_boots",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
     "chance": 0.025
@@ -489,6 +681,12 @@
     "item": "ancient_celestial_warrior_gauntlets",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_gauntlets",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.025
   },
   {
@@ -513,6 +711,12 @@
     "item": "ancient_celestial_warrior_helmet",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_helmet",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.025
   },
   {
@@ -537,6 +741,12 @@
     "item": "ancient_celestial_warrior_leggings",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_leggings",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.025
   },
   {
@@ -561,6 +771,12 @@
     "item": "ancient_celestial_warrior_protector",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.025
+  },
+  {
+    "item": "ancient_celestial_warrior_protector",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.025
   },
   {
@@ -1849,6 +2065,12 @@
   },
   {
     "item": "duskmaw_wyrms_eclipsed_crown",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.015
+  },
+  {
+    "item": "duskmaw_wyrms_eclipsed_crown",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.015
@@ -1873,6 +2095,12 @@
   },
   {
     "item": "empyrean_air_armor",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_armor",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.012
@@ -1881,6 +2109,12 @@
     "item": "empyrean_air_boots",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_boots",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
     "chance": 0.012
   },
   {
@@ -1897,6 +2131,12 @@
   },
   {
     "item": "empyrean_air_gauntlets",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_gauntlets",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.012
@@ -1905,6 +2145,12 @@
     "item": "empyrean_air_helmet",
     "monster": "Arch Drake",
     "monsterDisplayName": "Arch Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_helmet",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
     "chance": 0.012
   },
   {
@@ -1921,6 +2167,12 @@
   },
   {
     "item": "empyrean_air_leggings",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_leggings",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.012
@@ -1933,12 +2185,24 @@
   },
   {
     "item": "empyrean_air_protector",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_air_protector",
     "monster": "The Galecrest Wyrm",
     "monsterDisplayName": "The Galecrest Wyrm",
     "chance": 0.012
   },
   {
     "item": "empyrean_archer_armor",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_armor",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.012
@@ -1951,6 +2215,12 @@
   },
   {
     "item": "empyrean_archer_boots",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_boots",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.012
@@ -1963,6 +2233,12 @@
   },
   {
     "item": "empyrean_archer_gauntlets",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_gauntlets",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.012
@@ -1975,6 +2251,12 @@
   },
   {
     "item": "empyrean_archer_helmet",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_helmet",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.012
@@ -1987,6 +2269,12 @@
   },
   {
     "item": "empyrean_archer_leggings",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_leggings",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.012
@@ -1999,6 +2287,12 @@
   },
   {
     "item": "empyrean_archer_protector",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_archer_protector",
     "monster": "Centaur King",
     "monsterDisplayName": "Centaur King",
     "chance": 0.012
@@ -2011,6 +2305,12 @@
   },
   {
     "item": "empyrean_dark_armor",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_armor",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.012
@@ -2029,6 +2329,12 @@
   },
   {
     "item": "empyrean_dark_boots",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_boots",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.012
@@ -2047,6 +2353,12 @@
   },
   {
     "item": "empyrean_dark_gauntlets",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_gauntlets",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.012
@@ -2065,6 +2377,12 @@
   },
   {
     "item": "empyrean_dark_helmet",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_helmet",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.012
@@ -2083,6 +2401,12 @@
   },
   {
     "item": "empyrean_dark_leggings",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_leggings",
     "monster": "The Duskmaw Wyrm",
     "monsterDisplayName": "The Duskmaw Wyrm",
     "chance": 0.012
@@ -2097,6 +2421,12 @@
     "item": "empyrean_dark_leggings",
     "monster": "Ysolde, the Veiled Matriarch",
     "monsterDisplayName": "Ysolde, the Veiled Matriarch",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_dark_protector",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
     "chance": 0.012
   },
   {
@@ -2119,8 +2449,20 @@
   },
   {
     "item": "empyrean_earth_armor",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_armor",
     "monster": "The Verdant Warden",
     "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_boots",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
     "chance": 0.012
   },
   {
@@ -2131,8 +2473,20 @@
   },
   {
     "item": "empyrean_earth_gauntlets",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_gauntlets",
     "monster": "The Verdant Warden",
     "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_helmet",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
     "chance": 0.012
   },
   {
@@ -2143,8 +2497,20 @@
   },
   {
     "item": "empyrean_earth_leggings",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_leggings",
     "monster": "The Verdant Warden",
     "monsterDisplayName": "The Verdant Warden",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_earth_protector",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
     "chance": 0.012
   },
   {
@@ -2232,10 +2598,22 @@
     "chance": 0.003
   },
   {
+    "item": "empyrean_light_armor",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_light_boots",
     "monster": "Fey Warden",
     "monsterDisplayName": "Fey Warden",
     "chance": 0.003
+  },
+  {
+    "item": "empyrean_light_boots",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.012
   },
   {
     "item": "empyrean_light_gauntlets",
@@ -2244,10 +2622,22 @@
     "chance": 0.003
   },
   {
+    "item": "empyrean_light_gauntlets",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_light_helmet",
     "monster": "Fey Warden",
     "monsterDisplayName": "Fey Warden",
     "chance": 0.003
+  },
+  {
+    "item": "empyrean_light_helmet",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.012
   },
   {
     "item": "empyrean_light_leggings",
@@ -2256,12 +2646,24 @@
     "chance": 0.003
   },
   {
+    "item": "empyrean_light_leggings",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_light_protector",
     "monster": "Fey Warden",
     "monsterDisplayName": "Fey Warden",
     "chance": 0.003
   },
   {
+    "item": "empyrean_light_protector",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.012
+  },
+  {
     "item": "empyrean_warrior_armor",
     "monster": "Bastion Warden",
     "monsterDisplayName": "Bastion Warden",
@@ -2271,6 +2673,12 @@
     "item": "empyrean_warrior_armor",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_armor",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.012
   },
   {
@@ -2299,6 +2707,12 @@
   },
   {
     "item": "empyrean_warrior_boots",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_boots",
     "monster": "Sir Caradoc, the Sundered Knight",
     "monsterDisplayName": "Sir Caradoc, the Sundered Knight",
     "chance": 0.012
@@ -2319,6 +2733,12 @@
     "item": "empyrean_warrior_gauntlets",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_gauntlets",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.012
   },
   {
@@ -2343,6 +2763,12 @@
     "item": "empyrean_warrior_helmet",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_helmet",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.012
   },
   {
@@ -2367,6 +2793,12 @@
     "item": "empyrean_warrior_leggings",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_leggings",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.012
   },
   {
@@ -2391,6 +2823,12 @@
     "item": "empyrean_warrior_protector",
     "monster": "Greater Drake",
     "monsterDisplayName": "Greater Drake",
+    "chance": 0.012
+  },
+  {
+    "item": "empyrean_warrior_protector",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
     "chance": 0.012
   },
   {
@@ -2629,6 +3067,18 @@
   },
   {
     "item": "item.critical_healing_potion",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
     "monster": "Sandglass Sentinel II",
     "monsterDisplayName": "Sandglass Sentinel II",
     "chance": 0.05
@@ -2649,6 +3099,12 @@
     "item": "item.critical_healing_potion",
     "monster": "Sandglass Sentinel V",
     "monsterDisplayName": "Sandglass Sentinel V",
+    "chance": 0.05
+  },
+  {
+    "item": "item.critical_healing_potion",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
     "chance": 0.05
   },
   {
@@ -2809,6 +3265,18 @@
   },
   {
     "item": "item.mana_prism",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Obsidian Dragon",
+    "monsterDisplayName": "Obsidian Dragon",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
     "monster": "Sandglass Sentinel II",
     "monsterDisplayName": "Sandglass Sentinel II",
     "chance": 0.05
@@ -2829,6 +3297,12 @@
     "item": "item.mana_prism",
     "monster": "Sandglass Sentinel V",
     "monsterDisplayName": "Sandglass Sentinel V",
+    "chance": 0.05
+  },
+  {
+    "item": "item.mana_prism",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
     "chance": 0.05
   },
   {
@@ -3012,6 +3486,12 @@
     "chance": 0.015
   },
   {
+    "item": "moonsteel_halberd",
+    "monster": "Ironhorn Centaur",
+    "monsterDisplayName": "Ironhorn Centaur",
+    "chance": 0.015
+  },
+  {
     "item": "mordrenns_drowned_cowl",
     "monster": "Mordrenn the Drowned Inquisitor",
     "monsterDisplayName": "Mordrenn the Drowned Inquisitor",
@@ -3055,6 +3535,12 @@
   },
   {
     "item": "rootcrown_wyrms_ageless_mantle",
+    "monster": "Swamp Hydra",
+    "monsterDisplayName": "Swamp Hydra",
+    "chance": 0.015
+  },
+  {
+    "item": "rootcrown_wyrms_ageless_mantle",
     "monster": "The Rootcrown Wyrm",
     "monsterDisplayName": "The Rootcrown Wyrm",
     "chance": 0.015
@@ -3070,6 +3556,30 @@
     "monster": "The Rootcrown Wyrm",
     "monsterDisplayName": "The Rootcrown Wyrm",
     "chance": 0.01
+  },
+  {
+    "item": "skybreaker_longbow",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.015
+  },
+  {
+    "item": "skybreaker_longbow",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.015
+  },
+  {
+    "item": "skybreaker_quiver",
+    "monster": "Bronze Griffin",
+    "monsterDisplayName": "Bronze Griffin",
+    "chance": 0.015
+  },
+  {
+    "item": "skybreaker_quiver",
+    "monster": "Stormbound Pegasus",
+    "monsterDisplayName": "Stormbound Pegasus",
+    "chance": 0.015
   },
   {
     "item": "tideclaw_band",
@@ -3094,6 +3604,18 @@
     "monster": "Barrow Wight",
     "monsterDisplayName": "Barrow Wight",
     "chance": 0.03
+  },
+  {
+    "item": "windpiercer_longbow",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.015
+  },
+  {
+    "item": "windpiercer_quiver",
+    "monster": "Galehorn Unicorn",
+    "monsterDisplayName": "Galehorn Unicorn",
+    "chance": 0.015
   },
   {
     "item": "witness_air_amulet",

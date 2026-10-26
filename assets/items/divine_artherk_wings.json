@@ -1,0 +1,53 @@
+{
+  "key": "divine_artherk_wings",
+  "name": "${item.divine_artherk_wings}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal90",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal90",
+  "numId": 55806,
+  "appearanceId": 55806,
+  "weight": 1,
+  "armorClass": 9.0,
+  "requirements": {
+    "endurance": 100,
+    "wisdom": 180
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50612,
+      "statId": 4,
+      "expression": "15"
+    },
+    {
+      "boostId": 50613,
+      "statId": 23,
+      "expression": "18"
+    },
+    {
+      "boostId": 50614,
+      "statId": 12,
+      "expression": "7"
+    },
+    {
+      "boostId": 50615,
+      "statId": 13,
+      "expression": "7"
+    },
+    {
+      "boostId": 50616,
+      "statId": 14,
+      "expression": "7"
+    },
+    {
+      "boostId": 50617,
+      "statId": 15,
+      "expression": "7"
+    },
+    {
+      "boostId": 50618,
+      "statId": 22,
+      "expression": "7"
+    }
+  ]
+}

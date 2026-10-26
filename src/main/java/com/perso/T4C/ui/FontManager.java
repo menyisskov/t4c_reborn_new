@@ -118,6 +118,7 @@ public class FontManager {
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Paths.FONT));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
+    parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "↑↓−▸◂";
     parameter.size = size * FONT_SUPERSAMPLING;
     parameter.color = color;
     parameter.flip = true;
@@ -137,6 +138,7 @@ public class FontManager {
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Paths.FONT));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
+    parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "↑↓−▸◂";
     parameter.size = size * FONT_SUPERSAMPLING;
     parameter.color = color;
     parameter.borderWidth = borderWidth * FONT_SUPERSAMPLING;
@@ -156,6 +158,7 @@ public class FontManager {
             Gdx.files.internal(com.perso.T4C.config.Paths.FONT_JETBRAINS_MONO));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
+    parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "↑↓−▸◂";
     parameter.size = size * FONT_SUPERSAMPLING;
     parameter.color = color;
     parameter.flip = true;
@@ -199,6 +202,7 @@ public class FontManager {
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(tahoma);
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
+    parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "↑↓−▸◂";
     parameter.size = size * FONT_SUPERSAMPLING;
     parameter.color = color;
     parameter.flip = true;
@@ -212,6 +216,7 @@ public class FontManager {
         new FreeTypeFontGenerator(Gdx.files.internal(com.perso.T4C.config.Paths.FONT_CHEWY));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
+    parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "↑↓−▸◂";
     parameter.size = size * FONT_SUPERSAMPLING;
     parameter.color = color;
     parameter.flip = true;
@@ -234,6 +239,7 @@ public class FontManager {
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(hatten);
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
+    parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "↑↓−▸◂";
     parameter.size = size * FONT_SUPERSAMPLING;
     parameter.color = color;
     parameter.flip = true;

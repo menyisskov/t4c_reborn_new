@@ -1,0 +1,66 @@
+{
+  "key": "moonsteel_gauntlets",
+  "name": "${item.moonsteel_gauntlets}",
+  "bodyPart": "LEFT_HAND",
+  "secondaryBodyPart": "RIGHT_HAND",
+  "appearanceEquippedPrimary": "PupPlateGloveL__silver300",
+  "appearanceEquippedSecondary": "PupPlateGloveR__silver300",
+  "appearanceInventory": "64kInvPlateGlove__silver300",
+  "price": 400000,
+  "weight": 3,
+  "armorClass": 35.7,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 350,
+    "strength": 700,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 0.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 59702,
+  "structure": 2,
+  "appearanceId": 59702,
+  "undroppable": false,
+  "boosts": [
+    {
+      "boostId": 710020,
+      "statId": 3,
+      "expression": "58"
+    },
+    {
+      "boostId": 710021,
+      "statId": 8,
+      "expression": "140"
+    },
+    {
+      "boostId": 710022,
+      "statId": 12,
+      "expression": "18"
+    },
+    {
+      "boostId": 710023,
+      "statId": 13,
+      "expression": "18"
+    },
+    {
+      "boostId": 710024,
+      "statId": 14,
+      "expression": "18"
+    },
+    {
+      "boostId": 710025,
+      "statId": 15,
+      "expression": "18"
+    },
+    {
+      "boostId": 710026,
+      "statId": 22,
+      "expression": "18"
+    }
+  ]
+}

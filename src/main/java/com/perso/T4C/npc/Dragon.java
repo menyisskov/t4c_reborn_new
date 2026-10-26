@@ -158,6 +158,17 @@ public final class Dragon extends ScriptedNpc {
 
           String k = text == null ? "" : text.toUpperCase(java.util.Locale.ROOT);
 
+          if (k.contains("RUBY DRAGON FANGS")) {
+            if (c.flag("__QUEST_DRAGON_QUEST_COMPLETED") != 2)
+              c.sayKey("npc.dragon.fang.require_quest");
+            else if (c.hasItem("ruby_dragon_fang")) c.sayKey("npc.dragon.fang.already");
+            else {
+              c.giveItem("ruby_dragon_fang");
+              c.sayKey("npc.dragon.fang.give");
+            }
+            return true;
+          }
+
           if (k.contains("CRYPT") || k.contains("TOMB RAIDER")) {
 
             int q = c.flag("__QUEST_DRAGON_QUEST_COMPLETED");

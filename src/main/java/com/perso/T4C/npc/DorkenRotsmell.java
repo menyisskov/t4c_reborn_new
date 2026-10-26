@@ -42,6 +42,11 @@ public final class DorkenRotsmell extends ScriptedNpc {
       @Override
       public void onDeath(com.perso.T4C.npc.behavior.NpcBehaviorContext c) {
 
+        if (Math.random() < 0.05) c.giveItem("healing_potion");
+        if (Math.random() < 0.02) c.giveItem("round_shield");
+        if (Math.random() < 0.01) c.giveItem("golden_bracelet");
+        if (Math.random() < 0.01) c.giveItem("golden_ring");
+
         c.globalFlag("GLOBAL_FLAG_GOBLIN_QUEST", 0);
 
         c.globalFlag(

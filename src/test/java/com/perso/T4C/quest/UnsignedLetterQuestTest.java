@@ -17,9 +17,11 @@ class UnsignedLetterQuestTest {
     ItemJsonLoader.loadAndRegister("assets/items");
   }
 
-  /** A fresh {@code new Player()} has near-zero carry weight, which would make
-   * {@code InventoryService.canAdd} silently refuse the letter - not what these tests are
-   * about, so give every player enough strength to actually carry a one-weight token. */
+  /**
+   * A fresh {@code new Player()} has near-zero carry weight, which would make {@code
+   * InventoryService.canAdd} silently refuse the letter - not what these tests are about, so give
+   * every player enough strength to actually carry a one-weight token.
+   */
   private static Player playerAbleToCarryTheLetter() {
     Player player = new Player();
     player.setStrength(400);
@@ -42,9 +44,7 @@ class UnsignedLetterQuestTest {
 
   @Test
   void aFailedGrantNeverAdvancesTheStage() throws Exception {
-    // The letter is unique, so if the player somehow already holds one (any means), canAdd()
-    // refuses a second copy - onRebirth must leave the stage at NONE in that case rather than
-    // advancing it anyway, since this trigger only ever fires once per character.
+    // The one-time story trigger must not grant another letter to an existing holder.
     Player player = playerAbleToCarryTheLetter();
     player.getInventory().add(UnsignedLetterQuest.LETTER_ITEM_KEY);
     player.setRebirthCount(1);

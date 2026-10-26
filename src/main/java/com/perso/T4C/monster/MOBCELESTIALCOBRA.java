@@ -71,7 +71,12 @@ public final class MOBCELESTIALCOBRA extends DataMonster {
         SOUND_HIT,
         161,
         495,
-        java.util.List.of(),
+        java.util.List.of(
+            new MonsterDef.LootDrop("key_of_ascension", 0.005f),
+            new MonsterDef.LootDrop("rough_malachite", 0.01f),
+            new MonsterDef.LootDrop("potion_of_tranquility", 0.02f),
+            new MonsterDef.LootDrop("rough_limestone", 0.01f),
+            new MonsterDef.LootDrop("rough_emerald", 0.01f)),
         false,
         0.0f,
         105,

@@ -13,6 +13,7 @@ import com.perso.T4C.spawn.Spawn;
 // docs/content-ideas/2026-09-canon-verified-additions.md for the "Drake's Lair" zone this
 // activation is part of.
 @Spawn(type = "Arch Drake", x = 2850, y = 2780, z = 0, stationary = false, aggressive = true)
+@com.perso.T4C.monster.core.NoRecoveryLoot
 public final class ArchDrake extends DataMonster {
   public static final String SOUND_ATTACK = "Kraanian Attack.wav";
   public static final String SOUND_DEATH = "Kraanian Dying.wav";
@@ -58,8 +59,6 @@ public final class ArchDrake extends DataMonster {
         5500,
         java.util.List.of(
             new MonsterDef.LootDrop("archdrakes_molten_heart", 0.008f),
-            new MonsterDef.LootDrop("serious_healing_potion", 0.3f),
-            new MonsterDef.LootDrop("mana_elixir", 0.2f),
             // T4C-0021: air-flavor source for the Ancient Celestial/Empyrean armor sets
             // (ArmorSetGenerator) - previously generated with zero acquisition path.
             new MonsterDef.LootDrop("ancient_celestial_air_armor", 0.025f),

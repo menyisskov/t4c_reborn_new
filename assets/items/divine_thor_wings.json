@@ -1,0 +1,59 @@
+{
+  "key": "divine_thor_wings",
+  "name": "${item.divine_thor_wings}",
+  "bodyPart": "BACK",
+  "appearanceEquippedPrimary": "PupSeraphWhiteWings__pal95",
+  "appearanceInventory": "64kInvSeraphWhiteWings__pal95",
+  "numId": 55706,
+  "appearanceId": 55706,
+  "weight": 1,
+  "armorClass": 32.4,
+  "requirements": {
+    "endurance": 400,
+    "intelligence": 406,
+    "wisdom": 406
+  },
+  "unique": false,
+  "boosts": [
+    {
+      "boostId": 50538,
+      "statId": 1,
+      "expression": "27"
+    },
+    {
+      "boostId": 50539,
+      "statId": 4,
+      "expression": "27"
+    },
+    {
+      "boostId": 50540,
+      "statId": 16,
+      "expression": "65"
+    },
+    {
+      "boostId": 50541,
+      "statId": 12,
+      "expression": "26"
+    },
+    {
+      "boostId": 50542,
+      "statId": 13,
+      "expression": "26"
+    },
+    {
+      "boostId": 50543,
+      "statId": 14,
+      "expression": "26"
+    },
+    {
+      "boostId": 50544,
+      "statId": 15,
+      "expression": "26"
+    },
+    {
+      "boostId": 50545,
+      "statId": 22,
+      "expression": "26"
+    }
+  ]
+}

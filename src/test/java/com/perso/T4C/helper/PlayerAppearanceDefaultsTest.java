@@ -105,4 +105,30 @@ class PlayerAppearanceDefaultsTest {
     assertEquals("PupPlateBody", male.getAnimations().getPartMap().get(BodyPart.BODY));
     assertEquals("WoPlateBody", female.getAnimations().getPartMap().get(BodyPart.BODY));
   }
+
+  @Test
+  void cosmeticRobeSurvivesSaveAndGenderChangesWithoutChangingEquipmentOrStats() throws Exception {
+    Player player = new Player();
+    player.getEquippedItems().put(BodyPart.BODY, "item.ancient_platemail_armor");
+    var equipment = Map.copyOf(player.getEquippedItems());
+    int strength = player.getEffectiveStrength();
+    double armor = com.perso.T4C.combat.ArmorClassRules.effectiveArmorClass(player);
+    com.perso.T4C.player.RobeWardrobe.select(player, 2);
+    PlayerAppearanceDefaults.applyDefaults(player);
+    assertEquals(
+        "PupWhiteRobe__robe_rootwarden", player.getAnimations().getPartMap().get(BodyPart.BODY));
+    assertEquals(equipment, player.getEquippedItems());
+    assertEquals(strength, player.getEffectiveStrength());
+    assertEquals(armor, com.perso.T4C.combat.ArmorClassRules.effectiveArmorClass(player));
+    Player restored = new Player();
+    PlayerStateMapper.applyToPlayer(PlayerStateMapper.fromPlayer(player), restored);
+    restored.setGender(AppearanceDefaultsCatalog.FEMALE);
+    PlayerAppearanceDefaults.applyDefaults(restored);
+    assertEquals(
+        "WoWhiteRobe__robe_rootwarden", restored.getAnimations().getPartMap().get(BodyPart.BODY));
+    com.perso.T4C.player.RobeWardrobe.select(restored, 0);
+    PlayerAppearanceDefaults.applyDefaults(restored);
+    assertEquals("WoPlateBody", restored.getAnimations().getPartMap().get(BodyPart.BODY));
+    assertEquals(equipment, restored.getEquippedItems());
+  }
 }

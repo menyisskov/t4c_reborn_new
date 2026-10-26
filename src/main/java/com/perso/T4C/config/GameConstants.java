@@ -2,7 +2,7 @@ package com.perso.T4C.config;
 
 public class GameConstants {
   public static final int SPAWN_COUNT_MULTIPLIER = 2;
-  public static final float SERVER_XP_RATE = 5f;
+  public static final float SERVER_XP_RATE = 1f;
   public static final int WINDOW_WIDTH = 1280;
   public static final int WINDOW_HEIGHT = 768;
   public static final boolean FULLSCREEN = false;
@@ -25,6 +25,7 @@ public class GameConstants {
   public static final float MONSTER_AGGRO_LEASH_RANGE = 30f * GRID_W;
   public static final float MONSTER_RETALIATION_LEASH_RANGE = 60f * GRID_W;
   public static final float MONSTER_ATTACK_RANGE = 2f * GRID_W;
+  public static final float PLAYER_MELEE_ATTACK_RANGE = 2f * Math.max(GRID_W, GRID_H);
   public static final float MONSTER_ATTACK_COOLDOWN = 1.5f;
   public static final float NPC_PATROL_RADIUS = 15f * GRID_W;
   public static final float NPC_SPEED = 45f;

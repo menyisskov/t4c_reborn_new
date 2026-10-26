@@ -1,0 +1,52 @@
+{
+  "key": "concord_oath_ring_dark",
+  "name": "${item.concord_oath_ring_dark}",
+  "bodyPart": "RING1",
+  "appearanceInventory": "64kInvRings 1",
+  "numId": 59007,
+  "appearanceId": 59007,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61050,
+      "statId": 1,
+      "expression": "10"
+    },
+    {
+      "boostId": 61051,
+      "statId": 24,
+      "expression": "10"
+    },
+    {
+      "boostId": 61052,
+      "statId": 12,
+      "expression": "4"
+    },
+    {
+      "boostId": 61053,
+      "statId": 13,
+      "expression": "4"
+    },
+    {
+      "boostId": 61054,
+      "statId": 14,
+      "expression": "4"
+    },
+    {
+      "boostId": 61055,
+      "statId": 15,
+      "expression": "4"
+    },
+    {
+      "boostId": 61056,
+      "statId": 22,
+      "expression": "4"
+    }
+  ],
+  "armorClass": 2.0,
+  "requirements": {
+    "intelligence": 100,
+    "endurance": 50
+  }
+}

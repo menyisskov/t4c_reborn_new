@@ -1,0 +1,52 @@
+{
+  "key": "concord_tide_bracelet_earth",
+  "name": "${item.concord_tide_bracelet_earth}",
+  "bodyPart": "BRACER",
+  "appearanceInventory": "64kInvBelt",
+  "numId": 59012,
+  "appearanceId": 59012,
+  "weight": 1,
+  "price": 0,
+  "boosts": [
+    {
+      "boostId": 61085,
+      "statId": 4,
+      "expression": "13"
+    },
+    {
+      "boostId": 61086,
+      "statId": 19,
+      "expression": "16"
+    },
+    {
+      "boostId": 61087,
+      "statId": 12,
+      "expression": "6"
+    },
+    {
+      "boostId": 61088,
+      "statId": 13,
+      "expression": "6"
+    },
+    {
+      "boostId": 61089,
+      "statId": 14,
+      "expression": "6"
+    },
+    {
+      "boostId": 61090,
+      "statId": 15,
+      "expression": "6"
+    },
+    {
+      "boostId": 61091,
+      "statId": 22,
+      "expression": "6"
+    }
+  ],
+  "armorClass": 4.0,
+  "requirements": {
+    "wisdom": 160,
+    "endurance": 80
+  }
+}

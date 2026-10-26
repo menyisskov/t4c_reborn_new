@@ -93,6 +93,17 @@ class ItemSalePricingTest {
 
   @Test
   void celestialAndEmpyreanArmorKeepTheirEndgameResaleValue() {
+    // Actual loot sources change as regions are added. Every item retains its floor, while
+    // controlled sources below exercise the rarity premium independently of world content.
+    for (String key : List.of("item.ancient_celestial_fire_armor", "item.empyrean_fire_armor",
+        "item.empyrean_light_armor", "item.empyrean_earth_sceptre")) {
+      assertTrue(ItemSalePricing.sellPrice(ItemRegistry.findByKey(key)) >= 200_000, key);
+    }
+    var source = MonsterRegistry.load().getFirst();
+    MonsterRegistry.registerDefinitions(List.of(source.withLoot(List.of(
+        new MonsterDef.LootDrop("ancient_celestial_fire_armor", .025f),
+        new MonsterDef.LootDrop("empyrean_fire_armor", .012f),
+        new MonsterDef.LootDrop("empyrean_light_armor", .003f)))));
     long ancient =
         ItemSalePricing.sellPrice(ItemRegistry.findByKey("item.ancient_celestial_fire_armor"));
     long empyrean =

@@ -3,6 +3,7 @@ package com.perso.T4C.item;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
+import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellCastingService;
 import com.perso.T4C.spell.SpellData;
@@ -21,17 +22,39 @@ public final class ItemUseService {
     CHANCE_FAILED
   }
 
-  public record Result(boolean success, Failure failure, String spellName) {
+  public record Result(
+      boolean success, Failure failure, String spellName, SpellCastingService.Failure castFailure) {
     private static Result failure(Failure failure) {
-      return new Result(false, failure, null);
+      return new Result(false, failure, null, SpellCastingService.Failure.NONE);
     }
 
     private static Result success(String spell) {
-      return new Result(true, Failure.NONE, spell);
+      return new Result(true, Failure.NONE, spell, SpellCastingService.Failure.NONE);
     }
   }
 
   private ItemUseService() {}
+
+  public static String failureMessage(Result result, String itemKey) {
+    return switch (result.failure()) {
+      case NONE -> "";
+      case NO_HEALING_NEEDED -> I18n.message("message.no_healing_needed");
+      case NO_MANA_NEEDED -> I18n.message("message.no_mana_needed");
+      case NOT_OWNED -> I18n.message("message.item_not_owned");
+      case SPELL_FAILED ->
+          result.castFailure() != SpellCastingService.Failure.NONE
+              ? SpellCastingService.message(result.castFailure())
+              : cannotUseMessage(itemKey);
+      default -> cannotUseMessage(itemKey);
+    };
+  }
+
+  private static String cannotUseMessage(String itemKey) {
+    var definition = ItemRegistry.findByKey(itemKey);
+    return I18n.message(
+        "message.item_cannot_use",
+        I18n.resolve(definition == null ? itemKey : definition.getName()));
+  }
 
   public static Result useOnSelf(Player player, String itemKey, RandomGenerator random) {
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
@@ -61,7 +84,8 @@ public final class ItemUseService {
         SpellCastingService.beginItemUse(
             new SpellCastingService.Request(
                 spell, player, SpellCastingService.TargetKind.SELF, 0f, true, false, false));
-    if (!cast.success()) return Result.failure(Failure.SPELL_FAILED);
+    if (!cast.success())
+      return new Result(false, Failure.SPELL_FAILED, spell.getName(), cast.failure());
     if (healthDelta > 0) {
       int healthBefore = player.getCurrentHp();
       player.applyHeal(healthDelta, healthDelta);
