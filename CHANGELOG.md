@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Local multiplayer movement preview (T4C-0159)
+
+### Added
+- A separate local movement preview lets temporary players connect in two browser windows and see each other move around the starting area. Movement and walls are controlled by the server. This preview has no combat, quests or saved progress; the single-player game and characters remain independent.
+
 ## 2026-10-26 — Shared world collision (T4C-0158)
 
 ### Changed
