@@ -58,7 +58,7 @@ jobs:
           java-version: '21'
           cache: maven
       - name: Verify persistence against real PostgreSQL
-        run: mvn -B -f multiplayer/pom.xml -Dtest=OnlineStoreTest -Dsurefire.failIfNoSpecifiedTests=false test
+        run: mvn -B -f multiplayer/pom.xml -Dtest=OnlineStoreTest,PreviewServerTest -Dsurefire.failIfNoSpecifiedTests=false test
   headless:
     name: Headless build and lifecycle
     runs-on: ubuntu-latest

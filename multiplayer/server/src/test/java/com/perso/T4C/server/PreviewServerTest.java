@@ -10,6 +10,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import com.perso.T4C.server.persistence.OnlineStore;
 
 class PreviewServerTest {
   private HttpRequest request(String url, String path, String token, String body) {
@@ -84,5 +86,84 @@ class PreviewServerTest {
         assertEquals(200, client.send(request(restarted.url(), "/health", null, null), HttpResponse.BodyHandlers.ofString()).statusCode());
       }
     }
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void persistentPlayersSaveOnLogoutAndAdminShutdownThenRestoreOnRestart() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var key=store.provisionAccount(); var other=store.provisionAccount();
+    var character=store.create(key.accountId(),"HTTP saved player",0,30.5,30.5);
+    var second=store.create(other.accountId(),"HTTP second player",0,32.5,30.5);
+    var map=new PreviewMap(new boolean[60][80],0,0,30,30);
+    String admin="c".repeat(64);
+    double savedX;
+    long savedAppearance;
+    int port;
+    try (var client=HttpClient.newHttpClient()) {
+      try (var server=new PreviewServer(map,0,store,admin)) {
+        server.start(); String url=server.url(); port=URI.create(url).getPort();
+        String token=login(client,url,key,character.id());
+        String secondToken=login(client,url,other,second.id());
+        assertEquals(409,client.send(request(url,"/join",null,key.secret()+" "+character.id()),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(403,client.send(request(url,"/admin/shutdown",token,""),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",token,"0 1 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        long deadline=System.nanoTime()+Duration.ofSeconds(3).toNanos();
+        JsonObject snapshot;
+        do {
+          snapshot=object(client.send(request(url,"/state",secondToken,null),HttpResponse.BodyHandlers.ofString()));
+        } while (snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble()<=character.x() && System.nanoTime()<deadline);
+        assertEquals(2,snapshot.getAsJsonArray("players").size());
+        assertTrue(snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble()>character.x());
+        assertEquals(200,client.send(request(url,"/input",token,"1 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        var stopped=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString()));
+        savedX=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble();
+        savedAppearance=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("appearance").getAsLong();
+        assertEquals(200,client.send(request(url,"/leave",token,""),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(savedX,store.load(key.accountId(),character.id()).x());
+        assertEquals(200,client.send(request(url,"/admin/shutdown",admin,""),HttpResponse.BodyHandlers.ofString()).statusCode());
+        server.await();
+      }
+      try (var restarted=new PreviewServer(map,port,store)) {
+        restarted.start();
+        String token=login(client,restarted.url(),key,character.id());
+        login(client,restarted.url(),other,second.id()); // Shutdown released the second player's lease.
+        var snapshot=object(client.send(request(restarted.url(),"/state",token,null),HttpResponse.BodyHandlers.ofString()));
+        assertEquals(savedX,snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble());
+        assertEquals(savedAppearance,snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("appearance").getAsLong());
+      }
+    }
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void databaseWorkerStallDoesNotBlockSimulationOrSnapshots() throws Exception {
+    var pause=new java.util.concurrent.atomic.AtomicBoolean();
+    var entered=new java.util.concurrent.CountDownLatch(1);
+    var release=new java.util.concurrent.CountDownLatch(1);
+    var store=new OnlineStore(() -> {
+      if (pause.get()) {
+        entered.countDown();
+        try { if (!release.await(5,java.util.concurrent.TimeUnit.SECONDS)) throw new java.sql.SQLException("Test gate timeout"); }
+        catch (InterruptedException e) { Thread.currentThread().interrupt(); throw new java.sql.SQLException(e); }
+      }
+      return java.sql.DriverManager.getConnection(System.getenv("T4C_DB_URL"),System.getenv("T4C_DB_USER"),System.getenv("T4C_DB_PASSWORD"));
+    });
+    store.migrate(); var key=store.provisionAccount();
+    var character=store.create(key.accountId(),"Worker isolation",0,3.5,3.5);
+    try (var server=new PreviewServer(new PreviewMap(new boolean[8][8],0,0,3,3),0,store); var client=HttpClient.newHttpClient()) {
+      server.start(); String token=login(client,server.url(),key,character.id()); pause.set(true);
+      try {
+        assertTrue(entered.await(8,java.util.concurrent.TimeUnit.SECONDS));
+        var start=object(client.send(request(server.url(),"/state",token,null),HttpResponse.BodyHandlers.ofString())).get("tick").getAsLong();
+        long end=start;
+        for (int i=0;i<5;i++) end=object(client.send(request(server.url(),"/state",token,null),HttpResponse.BodyHandlers.ofString())).get("tick").getAsLong();
+        assertTrue(end>start,"World must continue while storage is blocked");
+      } finally { release.countDown(); }
+    }
+  }
+
+  private String login(HttpClient client,String url,OnlineStore.AccountKey key,java.util.UUID character) throws Exception {
+    var response=client.send(request(url,"/join",null,key.secret()+" "+character),HttpResponse.BodyHandlers.ofString());
+    assertEquals(200,response.statusCode());
+    return object(response).get("token").getAsString();
   }
 }

@@ -1,4 +1,4 @@
-param([ValidateRange(1024,65535)][int]$Port = 18765, [switch]$Build)
+param([ValidateRange(1024,65535)][int]$Port = 18765, [switch]$Build, [switch]$Persistent)
 $ErrorActionPreference = 'Stop'
 $previewRoot = Split-Path $PSScriptRoot -Parent
 $previewTarget = Join-Path $PSScriptRoot 'server/target'
@@ -20,20 +20,25 @@ if ($Build -or !(Test-Path -LiteralPath $previewJar)) {
 }
 $previewJava = (Get-Command java -ErrorAction Stop).Source
 $previewMap = Join-Path $previewRoot 'assets/maps/worldmap/worldmap.colbin'
+$previewMode = if ($Persistent) { '--online' } else { '--preview' }
+$previewHealthMode = if ($Persistent) { 'local-persistent' } else { 'local-preview' }
+$previewControlName = if ($Persistent) { 'online-control-' + [guid]::NewGuid().ToString('N') + '.token' } else { '' }
+$previewEnvironment = @{ T4C_CONTROL_FILE = '' }
+if ($Persistent) { $previewEnvironment.T4C_CONTROL_FILE = Join-Path $previewTarget $previewControlName }
 $stdoutPath = Join-Path $previewTarget 'preview.log'
 $stderrPath = Join-Path $previewTarget 'preview-error.log'
 $previewProcess = Start-Process -FilePath $previewJava -ArgumentList @(
-    '-Djava.awt.headless=true', '-jar', ('"' + $previewJar + '"'), '--preview', ('"' + $previewMap + '"'), $Port
-) -WindowStyle Hidden -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
-@{ processId = $previewProcess.Id; started = $previewProcess.StartTime.ToUniversalTime().ToString('o'); port = $Port } |
+    '-Djava.awt.headless=true', '-jar', ('"' + $previewJar + '"'), $previewMode, ('"' + $previewMap + '"'), $Port
+) -WindowStyle Hidden -Environment $previewEnvironment -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+@{ processId = $previewProcess.Id; started = $previewProcess.StartTime.ToUniversalTime().ToString('o'); port = $Port; persistent = [bool]$Persistent; controlFile = $previewControlName } |
     ConvertTo-Json | Set-Content -LiteralPath $previewSession
 for ($attempt = 0; $attempt -lt 30; $attempt++) {
     if ($previewProcess.HasExited) { throw "Preview startup failed. See $stderrPath" }
     try {
         $health = Invoke-RestMethod "http://127.0.0.1:$Port/health" -TimeoutSec 1
-        if ($health.mode -eq 'local-preview') {
+        if ($health.mode -eq $previewHealthMode) {
             Write-Host "Preview ready: http://127.0.0.1:$Port"
-            Write-Host "Open in two browser windows. Stop with multiplayer/stop-preview.ps1. Logs: $stdoutPath"
+            Write-Host "Start native clients with multiplayer/start-client.ps1. Persistent mode requires -Profile. Stop with multiplayer/stop-preview.ps1. Logs: $stdoutPath"
             return
         }
     } catch { }

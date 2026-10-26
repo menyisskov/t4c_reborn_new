@@ -1,7 +1,8 @@
 # Online persistence foundation
 
-The server now has a PostgreSQL storage adapter, schema installation command and real-database
-CI coverage. **The movement preview does not use it yet.** Its characters are still temporary.
+The server has PostgreSQL storage, account/session ownership, background checkpoints and real-database
+CI coverage. The default movement preview remains temporary. **Opt-in persistent mode now saves
+native-client movement across reconnects and server restarts.** It is still movement-only Alpha.
 No desktop save, preference, account-storage or character file is read or written by this adapter.
 
 The adapter stores account ownership, a character's name and world position, gold, experience,
@@ -19,9 +20,10 @@ with [JDBC prepared statements](https://jdbc.postgresql.org/documentation/query/
 The simulation must own reward amounts, checkpoint coordinates and stable event IDs. Never
 expose these storage calls directly as client commands. A successful database write must precede
 acknowledging a durable reward to a player. Retry uncertain outcomes with the same event ID.
-Do not call the blocking adapter from the simulation tick thread. A bounded persistence worker,
-checkpoint scheduling and recovery reconciliation are still required. Every gameplay save and
-reward now requires a valid internal session lease; there is no unfenced write overload.
+The simulation coordinator sends immutable position checkpoints to a bounded worker pool; the
+tick thread never performs database I/O. Each character has at most one checkpoint in flight.
+Every gameplay save and reward requires a valid internal session lease; there is no unfenced write
+overload. Authoritative combat/quest reward delivery is not connected yet.
 
 ## Local development database
 
@@ -81,5 +83,45 @@ Already-committed rewards remain recorded; retry them under the new lease with t
 Version-two migration preserves existing characters and receipts. Legacy account IDs receive
 no usable credentials automatically; an operator must explicitly provision a replacement key.
 
-These are database-level guarantees, not yet a claim that the native client reconnects into a
-persistent character. The simulation-to-storage worker and native credential path are next.
+The native client now uses a private profile to reacquire its character and load the last committed
+position. Full gameplay state, public account flows and remote encrypted connections remain work.
+
+## Running persistent native clients
+
+Use PowerShell 7.4 or newer for the launch scripts. Configure the database environment above,
+then provision each test player once (create `multiplayer/local` first):
+
+```powershell
+java -jar multiplayer/server/target/t4c-server.jar --provision-online assets/maps/worldmap/worldmap.colbin multiplayer/local/player-one.json "Player One"
+.\multiplayer\start-preview.ps1 -Persistent
+.\multiplayer\start-client.ps1 -Profile multiplayer/local/player-one.json
+```
+
+Provision a different profile for the second player; one character cannot connect twice. Profiles
+are ignored by Git and restricted to their filesystem owner before a credential is written. The
+provisioning command never overwrites an existing profile or prints its secret. Do not upload
+these files, paste them into chat, or use them as command-line credential values. The launcher
+passes only the profile path to the client through its environment.
+
+The server uses world-space tile coordinates in PostgreSQL and validates the loaded position
+against the current starting-area collision map. Unsupported maps or blocked saved positions
+are rejected rather than silently teleporting or overwriting progress. A character's provisional
+appearance is stable across reconnects; full appearance selection remains future work.
+
+Movement checkpoints are periodic. Clean logout waits for a final checkpoint and lease release.
+`stop-preview.ps1` authenticates through a separate, owner-only server control token and requests
+a bounded graceful flush. Player tokens cannot shut down the server. `stop-preview.ps1 -Force`
+is reserved for intentional crash testing: uncommitted movement may be lost, and reconnection
+must wait for the previous database lease to expire. Startup never imports local single-player saves.
+
+On storage failure, the actor disconnects and the server fails closed. The coordinator also stops
+the actor before its last confirmed lease can expire, even if storage workers are still waiting.
+Recovery loads committed database state; it never invents a successful save. Server logs report
+persistence failure without logging credentials. Reconnect with R after the database/server recovers;
+if a lease remains active after a crash, retry once it has expired.
+
+Local QA on 2026-10-26 used a user-owned PostgreSQL 16.15 runtime inside the existing Ubuntu WSL
+installation because Docker Desktop could not start. Data and private database credentials live
+under that user's `.local/share/t4c-online-pg`, outside desktop game saves. The Windows Java server
+connects over loopback port 55432. This local test runtime is separate from the checked-in Docker
+recipe and CI's PostgreSQL 18 service; do not assume it exists on another developer's machine.

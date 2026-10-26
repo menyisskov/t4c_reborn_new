@@ -36,7 +36,9 @@ import java.util.Map;
  */
 public final class OnlineClient extends ApplicationAdapter {
   private final URI endpoint;
+  private OnlineConnection.Credentials credentials;
   private volatile boolean focused = true;
+  private final java.util.Set<Integer> inputKeys = new HashSet<>();
   private OnlineConnection connection;
   private MapReader map;
   private MapRenderer renderer;
@@ -80,6 +82,20 @@ public final class OnlineClient extends ApplicationAdapter {
   public static void main(String[] args) {
     URI endpoint = URI.create(args.length == 0 ? "http://127.0.0.1:18765" : args[0]);
     var client = new OnlineClient(endpoint);
+    String profile = System.getenv("T4C_ONLINE_PROFILE");
+    if (profile != null && !profile.isBlank()) {
+      try {
+        var path = java.nio.file.Path.of(profile);
+        if (java.nio.file.Files.size(path) > 4096) throw new IllegalArgumentException();
+        try (var reader = java.nio.file.Files.newBufferedReader(path)) {
+          client.credentials =
+              new com.google.gson.Gson().fromJson(reader, OnlineConnection.Credentials.class);
+          if (client.credentials == null) throw new IllegalArgumentException();
+        }
+      } catch (Exception failure) {
+        throw new IllegalArgumentException("Could not read valid online profile");
+      }
+    }
     var config = new Lwjgl3ApplicationConfiguration();
     config.setTitle(I18n.key("online.client.title"));
     config.setWindowedMode(960, 640);
@@ -91,7 +107,8 @@ public final class OnlineClient extends ApplicationAdapter {
           @Override
           public void focusLost() {
             client.focused = false;
-            if (client.connection != null) client.connection.direction(0, 0);
+            client.inputKeys.clear();
+            if (client.connection != null) client.connection.stopInput();
           }
 
           @Override
@@ -118,6 +135,39 @@ public final class OnlineClient extends ApplicationAdapter {
           NEW_CHARACTER_START_TILE_X * GRID_W, NEW_CHARACTER_START_TILE_Y * GRID_H, 0);
       camera.update();
       reconnect();
+      Gdx.input.setInputProcessor(
+          new com.badlogic.gdx.InputAdapter() {
+            @Override
+            public boolean keyDown(int code) {
+              if (!focused || connection == null) return false;
+              if (code != Input.Keys.W
+                  && code != Input.Keys.A
+                  && code != Input.Keys.S
+                  && code != Input.Keys.D
+                  && code != Input.Keys.UP
+                  && code != Input.Keys.DOWN
+                  && code != Input.Keys.LEFT
+                  && code != Input.Keys.RIGHT) return false;
+              inputKeys.add(code);
+              int dx =
+                  (inputKeys.contains(Input.Keys.D) || inputKeys.contains(Input.Keys.RIGHT) ? 1 : 0)
+                      - (inputKeys.contains(Input.Keys.A) || inputKeys.contains(Input.Keys.LEFT)
+                          ? 1
+                          : 0);
+              int dy =
+                  (inputKeys.contains(Input.Keys.S) || inputKeys.contains(Input.Keys.DOWN) ? 1 : 0)
+                      - (inputKeys.contains(Input.Keys.W) || inputKeys.contains(Input.Keys.UP)
+                          ? 1
+                          : 0);
+              connection.tap(dx, dy);
+              return true;
+            }
+
+            @Override
+            public boolean keyUp(int code) {
+              return inputKeys.remove(code);
+            }
+          });
     } catch (Exception failure) {
       error = I18n.key("online.client.load_error");
       Gdx.app.error("online", "Could not load online client", failure);
@@ -129,7 +179,7 @@ public final class OnlineClient extends ApplicationAdapter {
     avatars.values().forEach(a -> a.animation.dispose());
     avatars.clear();
     lastTick = -1;
-    connection = new OnlineConnection(endpoint);
+    connection = new OnlineConnection(endpoint, credentials);
   }
 
   private int key(int positive, int alternatePositive, int negative, int alternateNegative) {
@@ -156,7 +206,7 @@ public final class OnlineClient extends ApplicationAdapter {
       for (var actor : view.snapshot().players()) {
         present.add(actor.id());
         boolean first = !avatars.containsKey(actor.id());
-        var avatar = avatars.computeIfAbsent(actor.id(), Avatar::new);
+        var avatar = avatars.computeIfAbsent(actor.id(), ignored -> new Avatar(actor.appearance()));
         avatar.position(
             (float) (view.map().originX() + actor.x()) * GRID_W,
             (float) (view.map().originY() + actor.y()) * GRID_H,
@@ -209,6 +259,10 @@ public final class OnlineClient extends ApplicationAdapter {
             ? error
             : I18n.key(
                 "online.client." + (connection == null ? "connecting" : connection.status()));
+    if (error == null
+        && view != null
+        && view.map().persistent()
+        && "connected".equals(connection.status())) state = I18n.key("online.client.persistent");
     font.draw(hud, state, 16, Gdx.graphics.getHeight() - 16);
     font.draw(hud, I18n.key("online.client.controls"), 16, 24);
     if (view != null)

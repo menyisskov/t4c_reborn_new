@@ -17,14 +17,14 @@ public final class PreviewWorld {
   public static final long INPUT_TIMEOUT_TICKS = 12;
   public static final long SESSION_TIMEOUT_TICKS = TICK_RATE * 30;
   public record Joined(String token, long id) {}
-  public record PlayerView(long id, double x, double y, long sequence) {}
+  public record PlayerView(long id, double x, double y, long sequence, long appearance) {}
   public record Snapshot(long tick, List<PlayerView> players) {}
   public static final class Rejected extends RuntimeException {
     public final int status;
     Rejected(int status, String code) { super(code); this.status = status; }
   }
   private static final class Player {
-    long id, sequence = -1, lastSeen, lastInput;
+    long id, sequence = -1, lastSeen, lastInput, appearance;
     int dx, dy;
     double x, y;
   }
@@ -36,14 +36,25 @@ public final class PreviewWorld {
   public PreviewWorld(PreviewMap map) { this.map = map; }
 
   public Joined join() {
+    return joinAt(map.spawnX, map.spawnY);
+  }
+
+  /** Server-loaded position only; never expose this as a client coordinate command. */
+  Joined joinAt(double x, double y) {
+    return joinAt(x,y,nextId);
+  }
+
+  Joined joinAt(double x, double y, long appearance) {
     if (players.size() >= MAX_PLAYERS) throw new Rejected(409, "full");
+    if (!map.canStand(x,y)) throw new Rejected(409,"position");
     byte[] secret = new byte[32];
     random.nextBytes(secret);
     String token = HexFormat.of().formatHex(secret);
     var player = new Player();
     player.id = nextId++;
-    player.x = map.spawnX;
-    player.y = map.spawnY;
+    player.appearance=appearance;
+    player.x = x;
+    player.y = y;
     player.lastSeen = tick;
     players.put(token, player);
     return new Joined(token, player.id);
@@ -70,11 +81,18 @@ public final class PreviewWorld {
   public Snapshot snapshot(String token) {
     authenticate(token);
     List<PlayerView> result = new ArrayList<>(players.size());
-    for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence));
+    for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance));
     return new Snapshot(tick, List.copyOf(result));
   }
 
   public void leave(String token) { authenticate(token); players.remove(token); }
+
+  PlayerView position(String token) {
+    var p = players.get(token);
+    return p == null ? null : new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance);
+  }
+
+  void remove(String token) { players.remove(token); }
 
   public void step() {
     tick++;

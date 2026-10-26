@@ -11,9 +11,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** Network-only adapter for the local Alpha server; never touches graphics or character files. */
 public final class OnlineConnection implements AutoCloseable {
-  public record MapInfo(int originX, int originY, int width, int height) {}
+  public record MapInfo(int originX, int originY, int width, int height, boolean persistent) {}
 
-  public record Actor(long id, double x, double y, long sequence) {}
+  public record Credentials(String secret, java.util.UUID characterId) {
+    public Credentials {
+      if (secret == null || !secret.matches("[0-9a-f]{64}") || characterId == null)
+        throw new IllegalArgumentException("Invalid online credentials");
+    }
+
+    @Override
+    public String toString() {
+      return "Credentials[characterId=" + characterId + ", secret=REDACTED]";
+    }
+  }
+
+  public record Actor(long id, double x, double y, long sequence, long appearance) {}
 
   public record Snapshot(long tick, List<Actor> players) {}
 
@@ -23,13 +35,19 @@ public final class OnlineConnection implements AutoCloseable {
 
   private static final Gson JSON = new Gson();
   private final URI endpoint;
+  private final Credentials credentials;
   private final AtomicInteger direction = new AtomicInteger(4);
+  private final AtomicInteger pendingTap = new AtomicInteger(-1);
   private final Thread worker;
   private volatile boolean closed;
   private volatile View view;
   private volatile String status = "connecting";
 
   public OnlineConnection(URI endpoint) {
+    this(endpoint, null);
+  }
+
+  public OnlineConnection(URI endpoint, Credentials credentials) {
     if (!"http".equals(endpoint.getScheme())
         || !"127.0.0.1".equals(endpoint.getHost())
         || endpoint.getPort() < 1
@@ -40,8 +58,9 @@ public final class OnlineConnection implements AutoCloseable {
         || !(endpoint.getPath().isEmpty() || "/".equals(endpoint.getPath())))
       throw new IllegalArgumentException("Local Alpha requires http://127.0.0.1:PORT");
     this.endpoint = URI.create("http://127.0.0.1:" + endpoint.getPort());
+    this.credentials = credentials;
     worker = new Thread(this::run, "online-client-network");
-    worker.setDaemon(true);
+    // Keep the process alive for the bounded logout request after the render window closes.
     worker.start();
   }
 
@@ -49,6 +68,18 @@ public final class OnlineConnection implements AutoCloseable {
     if (dx < -1 || dx > 1 || dy < -1 || dy > 1)
       throw new IllegalArgumentException("Invalid direction");
     direction.set((dx + 1) * 3 + dy + 1);
+  }
+
+  /** Preserve a brief key press even if press/release both happen between rendered frames. */
+  public void tap(int dx, int dy) {
+    if (dx < -1 || dx > 1 || dy < -1 || dy > 1)
+      throw new IllegalArgumentException("Invalid direction");
+    pendingTap.set((dx + 1) * 3 + dy + 1);
+  }
+
+  public void stopInput() {
+    direction.set(4);
+    pendingTap.set(-1);
   }
 
   public View view() {
@@ -66,13 +97,19 @@ public final class OnlineConnection implements AutoCloseable {
         MapInfo map = JSON.fromJson(send(client, "/map", null, null), MapInfo.class);
         if (map.width() <= 0 || map.height() <= 0 || map.width() > 1024 || map.height() > 1024)
           throw new IllegalStateException("Invalid server map");
-        Joined joined = JSON.fromJson(send(client, "/join", "", null), Joined.class);
+        if (map.persistent() != (credentials != null))
+          throw new IllegalStateException("Profile and server mode do not match");
+        String login =
+            credentials == null ? "" : credentials.secret() + " " + credentials.characterId();
+        Joined joined = JSON.fromJson(send(client, "/join", login, null), Joined.class);
         if (joined.id() <= 0 || joined.token() == null || !joined.token().matches("[0-9a-f]{64}"))
           throw new IllegalStateException("Invalid server session");
         token = joined.token();
         long sequence = 0;
         while (!closed) {
           int intent = direction.get();
+          int tap = pendingTap.getAndSet(-1);
+          if (intent == 4 && tap >= 0) intent = tap;
           send(
               client,
               "/input",
@@ -137,7 +174,7 @@ public final class OnlineConnection implements AutoCloseable {
   @Override
   public void close() {
     closed = true;
-    direction.set(4);
+    stopInput();
     status = "disconnected";
     view = null;
     worker.interrupt();

@@ -1,6 +1,7 @@
 {
   "online.client.title": "T4C Reborn - Online Alpha",
   "online.client.connecting": "Connecting to the local Alpha server...",
+  "online.client.persistent": "Online Alpha - saved character; movement only",
   "online.client.connected": "Online Alpha - temporary character; movement only",
   "online.client.disconnected": "Disconnected. Press R to reconnect.",
   "online.client.load_error": "Could not load game assets. See the online client log.",
