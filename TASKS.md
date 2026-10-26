@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0167 | Preserve authoritative terrain for combat sight and sanctuary checks | Multiplayer / Alpha | Done | pending | [2026-10-26](CHANGELOG.md#2026-10-26--online-combat-terrain-t4c-0167) |
+| T4C-0167 | Preserve authoritative terrain for combat sight and sanctuary checks | Multiplayer / Alpha | Done | `bc5fc898` | [2026-10-26](CHANGELOG.md#2026-10-26--online-combat-terrain-t4c-0167) |
 | T4C-0166 | Commit gameplay rewards and character changes atomically with retry protection | Multiplayer / Alpha | Done | `e7450202` | [2026-10-26](CHANGELOG.md#2026-10-26--atomic-gameplay-rewards-t4c-0166) |
 | T4C-0165 | Create online characters from shared class rules and starter kits | Multiplayer / Alpha | Done | `96abcfdf` | [2026-10-26](CHANGELOG.md#2026-10-26--online-character-creation-t4c-0165) |
 | T4C-0164 | Preserve online gameplay state and validate crash and backup recovery | Multiplayer / Alpha | Done | `5d45f5bb` | [2026-10-26](CHANGELOG.md#2026-10-26--online-gameplay-state-t4c-0164) |
