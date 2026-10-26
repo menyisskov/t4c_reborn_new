@@ -3,6 +3,7 @@ package com.perso.T4C.helper;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
+import com.perso.T4C.world.WorldCollision;
 import java.util.function.BiPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,38 +13,14 @@ public class CollisionManager {
   private static CollisionManager instance;
   private static final long DYNAMIC_LOG_COOLDOWN_MS = 500L;
   private CollisionReader collisionReader;
+  private WorldCollision worldCollision;
   private DynamicCollisionProvider dynamicProvider;
   private BiPredicate<Integer, Integer> playerPassabilityProvider;
   private BiPredicate<Integer, Integer> talkVisibilityProvider;
   private long lastDynamicLogAt = 0L;
 
-  private boolean isWalkableWallFoot(int gridX, int gridY) {
-    return isWallFootColumn(gridX, gridY)
-        && (continuesWallFront(gridX - 1, gridY) || continuesWallFront(gridX + 1, gridY));
-  }
-
-  private boolean continuesWallFront(int gridX, int gridY) {
-    return isWallFootColumn(gridX, gridY)
-        || isWallFootColumn(gridX, gridY - 1)
-        || isWallFootColumn(gridX, gridY + 1);
-  }
-
-  private boolean isWallFootColumn(int gridX, int gridY) {
-    return rawBlocks(gridX, gridY) && rawBlocks(gridX, gridY + 1) && !rawBlocks(gridX, gridY - 1);
-  }
-
-  private boolean rawBlocks(int gridX, int gridY) {
-    if (collisionReader == null) {
-      return false;
-    }
-    if (!isWithinCollisionMap(gridX, gridY)) {
-      return true;
-    }
-    return collisionReader.hasCollision(gridX, gridY);
-  }
-
   private boolean staticBlocksAtGrid(int gridX, int gridY) {
-    return rawBlocks(gridX, gridY) && !isWalkableWallFoot(gridX, gridY);
+    return worldCollision != null && worldCollision.blocksMovement(gridX, gridY);
   }
 
   @FunctionalInterface
@@ -61,12 +38,16 @@ public class CollisionManager {
   }
 
   public void initialize(CollisionReader reader) {
+    this.worldCollision =
+        new WorldCollision(
+            reader.getWidth(), reader.getHeight(), reader::hasCollision, reader::blocksLineOfSight);
     this.collisionReader = reader;
     log.info("CollisionManager initialized with {}x{} map", reader.getWidth(), reader.getHeight());
   }
 
   public void clear() {
     this.collisionReader = null;
+    this.worldCollision = null;
     this.dynamicProvider = null;
     this.playerPassabilityProvider = null;
     this.talkVisibilityProvider = null;
@@ -192,7 +173,7 @@ public class CollisionManager {
     }
     int gridX = (int) (worldX / GRID_W);
     int gridY = (int) (worldY / GRID_H);
-    return !isWithinCollisionMap(gridX, gridY) || collisionReader.blocksLineOfSight(gridX, gridY);
+    return worldCollision.blocksLineOfSight(gridX, gridY);
   }
 
   public boolean canMove(float fromX, float fromY, float toX, float toY) {

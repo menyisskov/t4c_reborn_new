@@ -10,8 +10,8 @@ The root Maven project and `launch.bat` retain the existing offline game. This r
 opt-in: it does not modify or read local saves, account storage, preferences or GM seeds.
 Build outputs stay below `multiplayer/*/target`, separate from the desktop build.
 
-`game-domain` compiles four existing combat source files directly from the desktop source
-tree, along with their existing regression tests. No rules are copied, moved or rewritten.
+`game-domain` compiles shared combat and world collision source directly from the desktop
+source tree, along with their regression tests. Gameplay formulas are not duplicated.
 It has no runtime dependencies: an accidental graphics dependency fails compilation.
 This explicit source allowlist is a transitional boundary; expand it only after extracting
 and checking another headless rule. Do not add the desktop JAR or LibGDX as a server dependency.
@@ -36,7 +36,13 @@ This scheduling policy needs load validation before a production world uses it.
 
 ## Next Alpha increments
 
-1. Extract world-scoped collision and authoritative movement, keeping offline behavior covered.
+Static collision and line-of-sight rules now live in `WorldCollision`, used by both the
+offline collision adapter and the headless domain. Each instance binds its own stable
+terrain sources. The desktop's wall-foot exceptions are preserved. This is not yet a
+server world loader or an authoritative movement validator: map bounds must be checked
+separately, and occupancy and portal permissions are still handled by the offline adapter.
+
+1. Load server-owned world data and add authoritative movement, keeping offline behavior covered.
 2. Separate entity state from animation/audio; run one representative encounter headlessly.
 3. Add authenticated commands, two-client replication and server-side action validation.
 4. Add separate online persistence with transactional rewards and unique item ownership.
