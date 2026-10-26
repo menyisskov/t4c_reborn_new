@@ -11,4 +11,12 @@ public final class CollisionRules {
   public static boolean blocksLineOfSight(int code) {
     return code < 0 || code > 16 || code == 1 || code == 2 || code == 9;
   }
+
+  public static boolean isSafeHaven(int code) {
+    return code == 6 || code == 7;
+  }
+
+  public static boolean isPvpSafeHaven(int code) {
+    return isSafeHaven(code) || code == 16;
+  }
 }

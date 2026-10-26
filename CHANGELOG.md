@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Online combat terrain (T4C-0167)
+
+### Added
+- Online combat groundwork now retains real walls, force fields and sanctuary boundaries, including protection against attacks through wall corners. Playable online attacks remain in development; single-player targeting is unchanged.
+
 ## 2026-10-26 — Atomic gameplay rewards (T4C-0166)
 
 ### Added

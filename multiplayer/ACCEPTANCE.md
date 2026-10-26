@@ -34,6 +34,9 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
   acknowledgement; recovery yields either no award or the complete award, and retry grants once.
   These tests advance the dead writer's lease deterministically; real-time expiry has separate QA.
   Combat/quest producers and durable world-event recovery remain unbuilt.
+- The server crop now preserves raw terrain for combat sight and sanctuary checks, separately from
+  movement clearance. Tests cover force fields, corner/edge shots, both participants, PvP-only
+  sanctuaries and real starting-temple loading. These checks are not yet called by an attack service.
 - Real-map local transport check: 20 simulated clients, 120 seconds, 16,214 input/snapshot cycles;
   no failed requests or invalid coordinates; cycle latency p50 73.5 ms, p95 96.7 ms, max 155.2 ms.
   This is not 20 rendered windows or a sustained Beta benchmark. Raw local report:
