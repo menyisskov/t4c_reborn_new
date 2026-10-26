@@ -97,8 +97,8 @@ elif grep -qE '^assets/' <<<"$CHANGED_FILES"; then
   FULL_REASON="assets/ changed (data several tests load directly)"
 elif grep -qE '^multiplayer/server/src/main/resources/content/' <<<"$CHANGED_FILES"; then
   FULL_REASON="packaged online content changed (verify registry freshness)"
-elif grep -qE '^src/main/java/com/perso/T4C/online/model/MonsterContent\.java$' <<<"$CHANGED_FILES"; then
-  FULL_REASON="online monster content schema changed (verify registry freshness)"
+elif grep -qE '^src/main/java/com/perso/T4C/online/model/(Monster|Item)Content\.java$' <<<"$CHANGED_FILES"; then
+  FULL_REASON="online content schema changed (verify registry freshness)"
 fi
 
 # Root-level main classes (no subpackage: MyGame, T4CContentStudio,

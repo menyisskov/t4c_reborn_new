@@ -6,6 +6,7 @@ public final class ServerMain {
 
   public static void main(String[] args) throws Exception {
     if (args.length==1 && "--check-content".equals(args[0])) {
+      System.out.println("Equipment definitions: " + ItemCatalog.loadBundled().items().size());
       var content=MonsterCatalog.loadBundled();
       System.out.println("Monster definitions: "+content.monsters().size()+"; authored spawns: "+content.spawns().size());
       System.out.println("Custom spawns without registry definitions: "+content.spawns().stream()

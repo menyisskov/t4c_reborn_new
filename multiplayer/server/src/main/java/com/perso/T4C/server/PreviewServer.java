@@ -49,6 +49,7 @@ public final class PreviewServer implements AutoCloseable {
     this.controlToken=controlToken;
     this.store=store;
     strings = loadStrings();
+    ItemCatalog.loadBundled(); // Validate packaged equipment before accepting sessions.
     world = new PreviewWorld(map,MonsterCatalog.loadBundled());
     persistent=store==null ? null : new PersistentSessions(store,map,world);
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
