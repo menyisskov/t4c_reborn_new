@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Shared online weapon rules (T4C-0172)
+
+### Changed
+- Online combat preparation now shares single-player weapon damage rules, including strength bonuses, bows and quivers, and off-hand weapons. Single-player damage rules are unchanged; online attacks are not enabled yet.
+
 ## 2026-10-27 — Shared online creatures (T4C-0171)
 
 ### Added

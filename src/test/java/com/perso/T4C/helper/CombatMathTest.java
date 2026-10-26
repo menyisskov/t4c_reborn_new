@@ -11,6 +11,25 @@ import org.junit.jupiter.api.Test;
 
 class CombatMathTest {
   @Test
+  void offlineMeleeRetainsStrengthScalingAndMirroredOffHandSuppression() throws Exception {
+    var sword = new ItemJsonDef();
+    sword.key = "test_shared_sword";
+    sword.bodyPart = "WEAPON";
+    sword.dmgFormula = "self.str/2";
+    ItemRegistry.registerAdditionalDefinitions(List.of(sword.toItemDefinition()));
+    try {
+      Player player = new Player();
+      player.setStrength(40);
+      player.getEquippedItems().put(BodyPart.WEAPON, "item.test_shared_sword");
+      assertEquals(24, CombatMath.computeMeleeDamage(player));
+      player.getEquippedItems().put(BodyPart.WEAPON2, "item.test_shared_sword");
+      assertEquals(0, CombatMath.computeOffHandDamage(player));
+      player.getEquippedItems().remove(BodyPart.WEAPON);
+      assertEquals(24, CombatMath.computeOffHandDamage(player));
+    } finally { ItemRegistry.resetAdditionalDefinitions(); }
+  }
+
+  @Test
   void equippedQuiverFeedsArrowDamageIntoBowFormulaOnly() throws Exception {
     var bow = new ItemJsonDef();
     bow.key = "test_arrow_bow";

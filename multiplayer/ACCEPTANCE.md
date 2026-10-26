@@ -7,6 +7,10 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 ## Verified foundation (2026-10-26)
 
 - Separate headless reactor and server lifecycle; shared pure combat and static collision rules.
+- Headless weapon damage now shares the offline dice evaluator, melee/bow attribute contributions,
+  quiver formula input and mirrored off-hand suppression. Focused pure and offline adapter checks
+  cover these contracts. Authoritative equipment/effective-stat resolution and attack commands are
+  still required before this can become playable online combat.
 - Server-owned movement, bounded input queues, input/session expiry and a 20-session cap.
 - Real native renderer and sprites; owner confirmed downward/diagonal facing and two players
   connected to the same server. Native client PR: #84.

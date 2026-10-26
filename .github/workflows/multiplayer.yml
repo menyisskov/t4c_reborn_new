@@ -11,13 +11,15 @@ on:
       - 'src/main/java/com/perso/T4C/world/**'
       - 'src/main/java/com/perso/T4C/config/GameConstants.java'
       - 'src/main/java/com/perso/T4C/helper/BinaryIOUtils.java'
+      - 'src/main/java/com/perso/T4C/helper/DiceFormula.java'
+      - 'src/test/java/com/perso/T4C/helper/DiceFormulaTest.java'
       - 'src/main/java/com/perso/T4C/helper/Character*.java'
       - 'src/main/java/com/perso/T4C/player/BodyPart.java'
       - 'src/test/java/com/perso/T4C/helper/CharacterCreationRulesTest.java'
       - 'assets/maps/worldmap/worldmap.colbin'
       - 'assets/i18n/lang.json'
       - 'src/test/java/com/perso/T4C/world/**'
-      - 'src/test/java/com/perso/T4C/combat/CombatResolverTest.java'
+      - 'src/test/java/com/perso/T4C/combat/**'
       - '.github/workflows/multiplayer.yml'
   pull_request:
     paths:
@@ -28,13 +30,15 @@ on:
       - 'src/main/java/com/perso/T4C/world/**'
       - 'src/main/java/com/perso/T4C/config/GameConstants.java'
       - 'src/main/java/com/perso/T4C/helper/BinaryIOUtils.java'
+      - 'src/main/java/com/perso/T4C/helper/DiceFormula.java'
+      - 'src/test/java/com/perso/T4C/helper/DiceFormulaTest.java'
       - 'src/main/java/com/perso/T4C/helper/Character*.java'
       - 'src/main/java/com/perso/T4C/player/BodyPart.java'
       - 'src/test/java/com/perso/T4C/helper/CharacterCreationRulesTest.java'
       - 'assets/maps/worldmap/worldmap.colbin'
       - 'assets/i18n/lang.json'
       - 'src/test/java/com/perso/T4C/world/**'
-      - 'src/test/java/com/perso/T4C/combat/CombatResolverTest.java'
+      - 'src/test/java/com/perso/T4C/combat/**'
       - '.github/workflows/multiplayer.yml'
 
 permissions:

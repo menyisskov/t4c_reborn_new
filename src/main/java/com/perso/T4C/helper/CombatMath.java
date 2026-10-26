@@ -1,96 +1,42 @@
 package com.perso.T4C.helper;
 
+import com.perso.T4C.combat.WeaponDamageRules;
 import com.perso.T4C.item.EquipmentBonusRules;
-import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 
+/** Offline adapter; the headless server uses the same rules with its own resolved state. */
 public final class CombatMath {
   private CombatMath() {}
 
   public static int computeMeleeDamage(Player player) {
-    int str = player == null ? 0 : player.getEffectiveStrength();
-    int weaponDmg = rollWeaponDamage(player, false);
-    int natural = str >= 20 ? (str - 20) / 5 : 0;
-    return Math.max(1, weaponDmg + natural + EquipmentBonusRules.bonus(player, 10));
+    return WeaponDamageRules.melee(stats(player), weapon(player, BodyPart.WEAPON),
+        weapon(player, BodyPart.WEAPON2), EquipmentBonusRules.bonus(player, 10));
   }
 
   public static int computeBowDamage(Player player) {
-    int str = player == null ? 0 : player.getEffectiveStrength();
-    int agi = player == null ? 0 : player.getEffectiveDexterity();
-    int weaponDmg = rollWeaponDamage(player, true);
-    int natural = (str >= 20 ? (str - 20) / 20 : 0) + (agi >= 20 ? (agi - 20) / 10 : 0);
-    return Math.max(1, weaponDmg + natural + EquipmentBonusRules.bonus(player, 10));
+    return WeaponDamageRules.bow(stats(player), weapon(player, BodyPart.WEAPON),
+        weapon(player, BodyPart.WEAPON2), EquipmentBonusRules.bonus(player, 10));
   }
 
   public static int computeOffHandDamage(Player player) {
     if (player == null) return 0;
-    String itemKey = player.getEquippedItems().get(BodyPart.WEAPON2);
-    if (itemKey == null || itemKey.equals(player.getEquippedItems().get(BodyPart.WEAPON))) return 0;
-    ItemDefinition definition = ItemRegistry.findByKey(itemKey);
-    if (definition == null || definition.isBow()) return 0;
-    int weapon = rollDefinitionDamage(player, definition);
-    int strength = player.getEffectiveStrength();
-    int natural = strength >= 20 ? (strength - 20) / 5 : 0;
-    return Math.max(1, weapon + natural + EquipmentBonusRules.bonus(player, 10));
+    return WeaponDamageRules.offHand(stats(player), weapon(player, BodyPart.WEAPON),
+        weapon(player, BodyPart.WEAPON2), EquipmentBonusRules.bonus(player, 10));
   }
 
-  private static int rollWeaponDamage(Player player, boolean bow) {
-    if (player == null) return fallback(0, 0);
-    String itemKey = player.getEquippedItems().get(BodyPart.WEAPON);
-    if (bow) {
-      ItemDefinition primary = ItemRegistry.findByKey(itemKey);
-      if (primary == null || !primary.isBow())
-        itemKey = player.getEquippedItems().get(BodyPart.WEAPON2);
-    }
-    if (itemKey == null)
-      return fallback(player.getEffectiveStrength(), player.getEffectiveDexterity());
-    ItemDefinition def = ItemRegistry.findByKey(itemKey);
-    if (def == null) return fallback(player.getEffectiveStrength(), player.getEffectiveDexterity());
-    return rollDefinitionDamage(player, def);
+  private static WeaponDamageRules.Stats stats(Player player) {
+    return player == null ? new WeaponDamageRules.Stats(0, 0, 0, 0, 0, 0)
+        : new WeaponDamageRules.Stats(player.getEffectiveStrength(), player.getEffectiveEndurance(),
+            player.getEffectiveDexterity(), player.getEffectiveIntelligence(), player.getEffectiveWisdom(), player.getLevel());
   }
 
-  private static int rollDefinitionDamage(Player player, ItemDefinition def) {
-    String formula = def.getDmgFormula();
-    if (formula == null || formula.isEmpty() || "0".equals(formula)) {
-      return fallback(player.getEffectiveStrength(), player.getEffectiveDexterity());
-    }
-    int arrowDamage = 0;
-    if (def.isBow() && def.getBodyPart() == BodyPart.WEAPON) {
-      ItemDefinition quiver =
-          ItemRegistry.findByKey(player.getEquippedItems().get(BodyPart.WEAPON2));
-      if (quiver != null && quiver.getStructure() == 8 && quiver.getDmgFormula() != null) {
-        DiceFormula.Context arrowContext =
-            new DiceFormula.Context(
-                player.getEffectiveStrength(),
-                player.getEffectiveEndurance(),
-                player.getEffectiveDexterity(),
-                player.getEffectiveIntelligence(),
-                0,
-                player.getEffectiveWisdom(),
-                0,
-                player.getLevel());
-        arrowDamage = Math.max(0, DiceFormula.of(quiver.getDmgFormula()).roll(arrowContext));
-      }
-    }
-    DiceFormula.Context ctx =
-        new DiceFormula.Context(
-            player.getEffectiveStrength(),
-            player.getEffectiveEndurance(),
-            player.getEffectiveDexterity(),
-            player.getEffectiveIntelligence(),
-            0,
-            player.getEffectiveWisdom(),
-            0,
-            player.getLevel(),
-            arrowDamage,
-            100,
-            100);
-    return DiceFormula.of(formula).roll(ctx);
-  }
-
-  private static int fallback(int str, int agi) {
-    return (int) (Math.random() * 4) + 1;
+  private static WeaponDamageRules.Weapon weapon(Player player, BodyPart slot) {
+    if (player == null) return null;
+    String key = player.getEquippedItems().get(slot);
+    var definition = ItemRegistry.findByKey(key);
+    return definition == null ? null : new WeaponDamageRules.Weapon(key, definition.getBodyPart(),
+        definition.isBow(), definition.getStructure(), definition.getDmgFormula());
   }
 }
