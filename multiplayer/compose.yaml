@@ -1,0 +1,19 @@
+name: t4c-online
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: t4c_online
+      POSTGRES_USER: t4c_online
+      POSTGRES_PASSWORD: ${T4C_DB_PASSWORD:?Set a private local database password}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - online-postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U t4c_online -d t4c_online"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  online-postgres:

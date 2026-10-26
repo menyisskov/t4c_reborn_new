@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Online persistence foundation (T4C-0161)
+
+### Added
+- Server groundwork for separate online character storage protects against stale saves and duplicate rewards. The playable preview still uses temporary characters until account and recovery integration is complete.
+
 ## 2026-10-26 — Native online client (T4C-0160)
 
 ### Added

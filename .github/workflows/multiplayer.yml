@@ -31,6 +31,34 @@ permissions:
   contents: read
 
 jobs:
+  persistence:
+    name: PostgreSQL persistence contracts
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: t4c_test
+          POSTGRES_USER: t4c_test
+          POSTGRES_PASSWORD: ephemeral-ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U t4c_test -d t4c_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      T4C_DB_URL: jdbc:postgresql://127.0.0.1:5432/t4c_test?connectTimeout=5&socketTimeout=10
+      T4C_DB_USER: t4c_test
+      T4C_DB_PASSWORD: ephemeral-ci-only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Verify persistence against real PostgreSQL
+        run: mvn -B -f multiplayer/pom.xml -Dtest=OnlineStoreTest -Dsurefire.failIfNoSpecifiedTests=false test
   headless:
     name: Headless build and lifecycle
     runs-on: ubuntu-latest
