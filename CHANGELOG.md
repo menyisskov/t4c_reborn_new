@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-26 — Online session ownership (T4C-0162)
+
+### Added
+- Online account groundwork now protects characters from simultaneous writers and stale connections after reconnect. Replacing an account access key revokes existing sessions. Persistent gameplay is still being connected to the native client; single-player is unchanged.
+
 ## 2026-10-26 — Online persistence foundation (T4C-0161)
 
 ### Added

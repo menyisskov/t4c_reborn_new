@@ -5,8 +5,8 @@ CI coverage. **The movement preview does not use it yet.** Its characters are st
 No desktop save, preference, account-storage or character file is read or written by this adapter.
 
 The adapter stores account ownership, a character's name and world position, gold, experience,
-and a monotonically increasing revision. Authentication must supply the account ID; a client
-claiming an account ID is not authentication. Inventory, quests, equipment, abilities and full
+and a monotonically increasing revision. Operator-issued random access keys authenticate through `acquire`; claiming an account ID
+is not authentication. Administrative creation and read APIs must stay inside trusted server code. Inventory, quests, equipment, abilities and full
 player-state serialization must be added before this is a complete online save format.
 
 Position checkpoints compare the expected revision before writing. A stale save fails instead
@@ -20,7 +20,8 @@ The simulation must own reward amounts, checkpoint coordinates and stable event 
 expose these storage calls directly as client commands. A successful database write must precede
 acknowledging a durable reward to a player. Retry uncertain outcomes with the same event ID.
 Do not call the blocking adapter from the simulation tick thread. A bounded persistence worker,
-single-session fencing, checkpoint scheduling and recovery reconciliation are still required.
+checkpoint scheduling and recovery reconciliation are still required. Every gameplay save and
+reward now requires a valid internal session lease; there is no unfenced write overload.
 
 ## Local development database
 
@@ -46,12 +47,39 @@ remote connections. It is not a production deployment recipe.
 ## Verification
 
 `OnlineStoreTest` uses a real PostgreSQL database when `T4C_DB_URL` is configured. CI provisions
-an isolated PostgreSQL service and requires all three tests. Without the environment variables,
+an isolated PostgreSQL service and requires the integration tests to run without skips. Without the environment variables,
 the local headless suite skips this integration class explicitly; a skipped run is not database
 verification. The tests create randomly identified records and never truncate existing tables.
 Use a dedicated test database because the records remain after the run.
 
 Coverage: store restart/reload and owner isolation; stale checkpoint rejection; concurrent
 duplicate rewards and changed-payload rejection; rollback of an overflowing balance update.
+Additional coverage checks concurrent login exclusion, expired-writer fencing, credential
+rotation and version-one schema upgrade with existing reward receipts intact.
 Database-process restart, backup/restore and game-session recovery remain acceptance checks
 for the integrated persistent server.
+
+## Account ownership and writer leases
+
+Closed-Alpha provisioning creates a 256-bit random access key and returns it once to trusted
+operator code. PostgreSQL stores its SHA-256 verifier. This follows the distinction between
+random bearer credentials and user passwords in the [OWASP session guidance](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html).
+Do not log the raw key, put it in a URL, or send it over an unencrypted remote connection.
+Record string representations redact credentials and lease identifiers, but explicit serialization
+still requires care. There is not yet a key-distribution UI or public registration endpoint.
+
+`acquire(key, characterId)` checks account ownership and creates one database-timed writer
+lease. Concurrent acquisition fails while the lease is active. The server must renew before
+expiry and stop authoritative actions if renewal fails. A replacement receives a new lease ID;
+the old writer cannot save, award rewards, renew or release the replacement's lease. On a clean
+logout, persist the final checkpoint before releasing. After a crash, wait for lease expiry before
+rejoining; load the database state rather than replaying an old in-memory snapshot.
+
+Key rotation locks the account before its characters, changes the verifier, and clears all its
+leases in one transaction. Session acquisition uses the same lock order to serialize with rotation.
+Already-committed rewards remain recorded; retry them under the new lease with the same event ID.
+Version-two migration preserves existing characters and receipts. Legacy account IDs receive
+no usable credentials automatically; an operator must explicitly provision a replacement key.
+
+These are database-level guarantees, not yet a claim that the native client reconnects into a
+persistent character. The simulation-to-storage worker and native credential path are next.
