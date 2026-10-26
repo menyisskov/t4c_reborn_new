@@ -15,6 +15,14 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
   on shutdown. Integration tests also verify two-player persistence, stable provisional appearance,
   unauthorized shutdown rejection and continued world ticks during a blocked storage worker.
 - Network adapter tests cover direction-only commands, authoritative snapshots and session cleanup.
+- Starting-area creatures now replicate as immutable public actors to the native renderer. Server
+  checks cover identical state for two players, restart reconstruction and immunity to movement
+  input. Both native windows showed a guard using existing sprites and two connected player avatars;
+  reconnect after the crashed session expired and peer logout also passed. QA used private local
+  PostgreSQL profiles, with no differences in the protected single-player file backup.
+  This is stationary replication only: no creature AI, attacks, rewards or respawn. Automated
+  activation of a second native window reproduced the pre-existing GLFW crash (native poll-events
+  access violation); multi-client focus stability remains an open gate, not a passing soak test.
 - Forced process termination recovered the last committed movement after lease expiry; an early
   reconnect was rejected. A PostgreSQL custom-format backup restored into a new database with all
   four tables matching, then passed authenticated movement, logout and rejoin. These checks cover

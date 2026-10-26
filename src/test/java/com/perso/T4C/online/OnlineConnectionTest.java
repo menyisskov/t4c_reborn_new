@@ -56,7 +56,9 @@ class OnlineConnectionTest {
                 case "/join" -> "{\"token\":\"" + token + "\",\"id\":7}";
                 case "/state" ->
                     "{\"tick\":8,\"characterRevision\":" + revision.get()
-                        + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0}]}";
+                        + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0}],"
+                        + "\"creatures\":[{\"id\":1,\"definition\":\"Guard\",\"x\":21,\"y\":37,"
+                        + "\"health\":55,\"maxHealth\":55,\"walkPattern\":\"Warrio#l\"}]}";
                 case "/character" ->
                     "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Online tester\",\"gold\":"
                         + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + "}";
@@ -83,6 +85,9 @@ class OnlineConnectionTest {
         assertEquals(7, connection.view().ownId());
         assertEquals(2904, connection.view().map().originX());
         assertEquals(40.5, connection.view().snapshot().players().getFirst().x());
+        assertEquals(21, connection.view().snapshot().creatures().getFirst().x());
+        assertEquals("Warrio#l", connection.view().snapshot().creatures().getFirst().walkPattern());
+        assertThrows(UnsupportedOperationException.class, () -> connection.view().snapshot().creatures().clear());
         assertTrue(input.get().matches("[0-9]+ 1 -1"));
         assertThrows(
             UnsupportedOperationException.class,

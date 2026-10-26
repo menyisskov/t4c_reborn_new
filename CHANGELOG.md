@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Shared online creatures (T4C-0171)
+
+### Added
+- Starting-area guards now appear in the native online world for connected players, using their existing locations and sprites. They remain stationary while online creature movement and combat are being built.
+
 ## 2026-10-27 — Online monster content (T4C-0170)
 
 ### Added
