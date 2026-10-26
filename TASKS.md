@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0164 | Preserve online gameplay state and validate crash and backup recovery | Multiplayer / Alpha | In Progress | — | [2026-10-26](CHANGELOG.md#2026-10-26--online-gameplay-state-t4c-0164) |
+| T4C-0164 | Preserve online gameplay state and validate crash and backup recovery | Multiplayer / Alpha | Done | `5d45f5bb` | [2026-10-26](CHANGELOG.md#2026-10-26--online-gameplay-state-t4c-0164) |
 | T4C-0163 | Persist native online movement across reconnects and server restarts | Multiplayer / Alpha | Done | `b494516a` | [2026-10-26](CHANGELOG.md#2026-10-26--persistent-native-sessions-t4c-0163) |
 | T4C-0162 | Bind online characters to authenticated accounts and expiring writer sessions | Multiplayer / Alpha | Done | `860bc046` | [2026-10-26](CHANGELOG.md#2026-10-26--online-session-ownership-t4c-0162) |
 | T4C-0161 | Establish transactional PostgreSQL online character storage | Multiplayer / Alpha | Done | `99dd47ca` | [2026-10-26](CHANGELOG.md#2026-10-26--online-persistence-foundation-t4c-0161) |
