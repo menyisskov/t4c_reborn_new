@@ -7,6 +7,10 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 ## Verified foundation (2026-10-26)
 
 - Separate headless reactor and server lifecycle; shared pure combat and static collision rules.
+- Packaged immutable equipment definitions now come from actual runtime item lookup winners after
+  JSON overrides. Freshness checks cover requirements, formulas, boosts and appearances; every
+  provisioned class kit resolves against the headless catalog. Startup rejects invalid schema/key
+  mappings. This does not yet implement equip/use commands, effective stats or item spell execution.
 - Headless weapon damage now shares the offline dice evaluator, melee/bow attribute contributions,
   quiver formula input and mirrored off-hand suppression. Focused pure and offline adapter checks
   cover these contracts. Authoritative equipment/effective-stat resolution and attack commands are

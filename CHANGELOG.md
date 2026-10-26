@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online equipment content (T4C-0173)
+
+### Added
+- Online combat preparation now includes the game's existing equipment requirements, damage formulas, bonuses and appearances, including starting kits. Online equipment controls and attacks are still being built.
+
 ## 2026-10-27 — Shared online weapon rules (T4C-0172)
 
 ### Changed
