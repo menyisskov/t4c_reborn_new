@@ -1,4 +1,11 @@
 {
+  "online.client.title": "T4C Reborn - Online Alpha",
+  "online.client.connecting": "Connecting to the local Alpha server...",
+  "online.client.connected": "Online Alpha - temporary character; movement only",
+  "online.client.disconnected": "Disconnected. Press R to reconnect.",
+  "online.client.load_error": "Could not load game assets. See the online client log.",
+  "online.client.controls": "WASD / arrows: move | R: reconnect when disconnected | Esc: close | No local saves are used",
+  "online.client.players": "Player %d | Connected players: %d",
   "multiplayer.preview.eyebrow": "T4C REBORN · ALPHA PREVIEW",
   "multiplayer.preview.title": "Multiplayer movement preview",
   "multiplayer.preview.local": "This computer only",
