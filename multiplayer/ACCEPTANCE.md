@@ -6,6 +6,7 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 
 ## Verified foundation (2026-10-26)
 
+- Authenticated equipment commands commit reference-only equip/unequip transitions through the gameplay save queue. Tests cover owned-instance checks, base requirements, wrong slots, two-hand displacement, shield/quiver alias conflicts, stale commands, private committed publication and logout/server restart recovery with unchanged inventory/currency. Existing offline equip and class kit tests pass with shared eligibility rules. Native controls and equipped rendering remain absent.
 - Separate headless reactor and server lifecycle; shared pure combat and static collision rules.
 - Equipment boost evaluation is shared with offline play, retaining base-stat/skill expressions,
   eligibility gates, boost-ID replacement and saturated totals. The server derivation adapter uses

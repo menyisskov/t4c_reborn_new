@@ -115,6 +115,19 @@ class PreviewServerTest {
             com.perso.T4C.online.model.CharacterProgress.class));
         assertFalse(privateResponse.body().contains(key.secret()));
         assertFalse(privateResponse.body().contains(key.accountId().toString()));
+        long revision = privateState.get("revision").getAsLong();
+        var headItem = prepared.progress().equipment().get("HEAD");
+        assertEquals(401, client.send(request(url, "/unequip", null, revision + " HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode());
+        var unequipped = client.send(request(url, "/unequip", token, revision + " HEAD"), HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, unequipped.statusCode());
+        assertEquals(409, client.send(request(url, "/equip", token, revision + " " + headItem + " HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode(), "A stale command must not overwrite committed gear");
+        long afterUnequip = object(unequipped).get("revision").getAsLong();
+        var equipped = client.send(request(url, "/equip", token, afterUnequip + " " + headItem + " HEAD"), HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, equipped.statusCode());
+        assertEquals(200, client.send(request(url, "/unequip", token, object(equipped).get("revision").getAsLong() + " HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode());
+        var committedGear = store.load(key.accountId(), character.id()).progress();
+        assertFalse(committedGear.equipment().containsKey("HEAD"));
+        assertEquals(prepared.progress().inventory(), committedGear.inventory(), "Equipment commands must never add or remove owned instances");
         var secondState=object(client.send(request(url,"/character",secondToken,null),HttpResponse.BodyHandlers.ofString()));
         assertEquals(second.id().toString(),secondState.get("id").getAsString());
         assertFalse(secondState.has("progress"),"Legacy profiles remain uninitialized");
@@ -149,7 +162,9 @@ class PreviewServerTest {
         assertEquals(savedX,snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble());
         assertEquals(savedAppearance,snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("appearance").getAsLong());
         var restored=store.load(key.accountId(),character.id());
-        assertEquals(prepared.progress(),restored.progress());
+        var expected = new com.google.gson.Gson().toJsonTree(prepared.progress()).getAsJsonObject();
+        expected.getAsJsonObject("equipment").remove("HEAD");
+        assertEquals(new com.google.gson.Gson().fromJson(expected, com.perso.T4C.online.model.CharacterProgress.class),restored.progress());
         assertEquals(prepared.gold(),restored.gold(),"Reconnect must not grant the starter kit twice");
       }
     }
