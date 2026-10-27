@@ -10,14 +10,14 @@ import java.util.UUID;
  * Pickup decisions for ground loot. Pure: inputs are the trusted server state. The database
  * re-checks the same rules inside the claim transaction.
  */
-final class OnlinePickupRules {
+public final class OnlinePickupRules {
   /** Matches the offline OBJECT_MAX_INTERACTION_DISTANCE, in tiles (Chebyshev). */
-  static final double MAX_TILE_DISTANCE = 8d;
+  public static final double MAX_TILE_DISTANCE = 8d;
   private static final int STRENGTH_STAT_ID = 3;
 
   private OnlinePickupRules() {}
 
-  enum Refusal {
+  public enum Refusal {
     LOOT_UNAVAILABLE("loot_unavailable"),
     LOOT_RESERVED("loot_reserved"),
     OUT_OF_RANGE("out_of_range"),
@@ -30,18 +30,18 @@ final class OnlinePickupRules {
       this.code = code;
     }
 
-    String code() {
+    public String code() {
       return code;
     }
   }
 
-  record Loot(UUID id, String key, int world, double x, double y, UUID ownerCharacter, long ownerUntil,
+  public record Loot(UUID id, String key, int world, double x, double y, UUID ownerCharacter, long ownerUntil,
       long expiresAt) {}
 
-  record Pickup(UUID character, int world, double x, double y, long now) {}
+  public record Pickup(UUID character, int world, double x, double y, long now) {}
 
   /** Empty when the pickup may proceed. Checks run in the same order as the database claim. */
-  static Optional<Refusal> refusal(Loot loot, Pickup pickup, CharacterProgress progress, ItemContent content) {
+  public static Optional<Refusal> refusal(Loot loot, Pickup pickup, CharacterProgress progress, ItemContent content) {
     if (pickup.now() >= loot.expiresAt() || loot.world() != pickup.world()) {
       return Optional.of(Refusal.LOOT_UNAVAILABLE);
     }
