@@ -39,6 +39,9 @@
                         <include>com/perso/T4C/monster/loot/LootTable.java</include>
                         <include>com/perso/T4C/monster/loot/LootEntry.java</include>
                         <include>com/perso/T4C/monster/loot/LootResult.java</include>
+                        <include>com/perso/T4C/monster/loot/MonsterLootTables.java</include>
+                        <include>com/perso/T4C/item/ItemKeys.java</include>
+                        <include>com/perso/T4C/item/CarryCapacityRules.java</include>
                         <include>com/perso/T4C/combat/CombatResolver.java</include>
                         <include>com/perso/T4C/combat/CombatResult.java</include>
                         <include>com/perso/T4C/combat/PhysicalAttackRequest.java</include>
@@ -72,6 +75,8 @@
                         <testInclude>com/perso/T4C/helper/DiceFormulaTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/CharacterCreationRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/world/WorldCollisionTest.java</testInclude>
+                        <testInclude>com/perso/T4C/item/CarryCapacityRulesTest.java</testInclude>
+                        <testInclude>com/perso/T4C/online/model/GroundLootModelsTest.java</testInclude>
                     </testIncludes>
                 </configuration>
             </plugin>
