@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0239`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0240`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0239 | Gate native cast/use command headers to the negotiated protocol and preserve single-flight command behavior | Multiplayer / M4 native protocol | In Progress (implementation and focused test verified; PR pending) | this PR; OnlineConnectionTest 11/11 | deferred |
 | T4C-0238 | Credit authored online kill quests atomically on an authoritative lethal monster hit | Multiplayer / M3 quest combat | In Progress (implementation and PostgreSQL test verified; PR pending) | this PR; OnlineMeleeTest 3/3 PostgreSQL | deferred |
 | T4C-0237 | Native online client controls for spell casting and potion use: C opens a spell list, U a potion list (plain HUD text, no new art), digits 1-9 choose, results and refusals show as messages; spell allowlist shipped as a checked client copy | Multiplayer / M4 abilities | Done (owner approved the rendered text lists; not yet run against a live server) | PR177; OnlineAbilityMenuTest, OnlineSpellAllowlistFreshnessTest, rendered preview in multiplayer/design | [2026-10-27](CHANGELOG.md#2026-10-27--online-character-lobby-and-spell-controls-t4c-0233-t4c-0234-t4c-0236-t4c-0237) |
 | T4C-0236 | Native client adapter for online spell casting and potion use: cast and use calls with readable refusals, plus a pure list of castable spells and usable potions for a later selection control (no key bindings yet) | Multiplayer / M4 abilities | Done (controls shipped in T4C-0237) | PR176; focused OnlineConnection, OnlineCommandRefusals and OnlineAbilityChoices tests | [2026-10-27](CHANGELOG.md#2026-10-27--online-character-lobby-and-spell-controls-t4c-0233-t4c-0234-t4c-0236-t4c-0237) |

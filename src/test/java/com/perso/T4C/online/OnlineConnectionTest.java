@@ -413,7 +413,12 @@ class OnlineConnectionTest {
       String request = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
       int status = 200;
       String reply = "{}";
-      switch (path) {
+      if (java.util.Set.of("/join", "/pickup", "/cast", "/use").contains(path)
+          && !Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION).equals(
+              exchange.getRequestHeaders().getFirst(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER))) {
+        status = 426;
+        reply = "{\"error\":\"protocol\"}";
+      } else switch (path) {
         case "/map" -> reply = "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
             + ",\"persistent\":true," + regionJson(0).substring(1);
         case "/join" -> reply = "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
@@ -431,6 +436,10 @@ class OnlineConnectionTest {
           bodies.add("use " + request);
           reply = "{\"revision\":" + revision.incrementAndGet()
               + ",\"healthGained\":9,\"manaSpent\":2,\"manaGained\":5}";
+        }
+        case "/pickup" -> {
+          bodies.add("pickup " + request);
+          reply = "{\"revision\":" + revision.incrementAndGet() + "}";
         }
         default -> { }
       }
@@ -459,6 +468,10 @@ class OnlineConnectionTest {
       assertEquals(2, used.character().revision());
       assertEquals("use 1 0 " + potion, bodies.getLast());
       assertEquals(2, bodies.size());
+      var picked = connection.pickUp(UUID.randomUUID()).toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertTrue(picked.accepted(), "The version-gated pickup also stays usable through this adapter");
+      assertEquals(3, picked.character().revision());
+      assertEquals(3, bodies.size());
     } finally {
       server.stop(0);
     }
