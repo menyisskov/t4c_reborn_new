@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0232`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0233`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0232 | Online-only lobby model: bounded roster paging, preferred/first default selection, clamped selection, and a return-from-game lease hold before rejoin (pure logic, no screen wiring) | Multiplayer / Beta native client | In Progress | this PR; focused OnlineLobbyModelTest | none (groundwork, no player-visible change) |
 | T4C-0231 | Host the renewed_wards kill circle as one larger world-0 online region (Q10): authored NPC appearances including Sundial, portals 12-14 and 947 refused, walkability proven | Multiplayer / M3 hosted route | Done (backend region and appearance support; native/rendered still unverified) | PR168; NPC follow-up checkpoint 19f49be1, integrated with T4C-0225 | [2026-10-27](CHANGELOG.md#2026-10-27--online-skeleton-hunting-ground-t4c-0231) |
 | T4C-0230 | Online `/cast` and `/use` routes, regeneration at checkpoint, movement refused while exhausted (A7) | Multiplayer / M4 abilities | Done (server routes; native client controls follow in A8) | this PR (stacked on T4C-0229); offline server suite, PostgreSQL tests written for CI | [2026-10-27](CHANGELOG.md#2026-10-27--online-spells-and-potions-t4c-0230) |
 | T4C-0229 | Server-side natural health and mana regeneration settle for online characters (A5) | Multiplayer / M4 abilities | Done (rule only; routes follow in A7) | this PR; focused offline tests | [2026-10-27](CHANGELOG.md#2026-10-27--online-natural-regeneration-t4c-0229) |
