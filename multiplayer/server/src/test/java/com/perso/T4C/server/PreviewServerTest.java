@@ -359,7 +359,7 @@ class PreviewServerTest {
       assertFalse(state.toString().contains(owner.accountId().toString()));
       var seenByStranger=object(client.send(request(url,"/state",foreign,null),HttpResponse.BodyHandlers.ofString()))
           .getAsJsonArray("loot").get(0).getAsJsonObject();
-      assertTrue(seenByStranger.get("ownerPlayerId").isJsonNull(),"Other owners are never named");
+      assertTrue(!seenByStranger.has("ownerPlayerId") || seenByStranger.get("ownerPlayerId").isJsonNull(),"Other owners are never named");
       assertTrue(seenByStranger.get("ownerRemainingMs").getAsLong()>0);
       long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
       var uuid=drop.id();
