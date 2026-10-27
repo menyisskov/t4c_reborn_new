@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — New starting gear and first spell (T4C-0213)
+
+### Added
+- Arcane Spark, a small non-elemental bolt of magic. Mages and Battle Mages now start knowing it, and Iraltok teaches it from level 1. It hits a little softer and recovers a little slower than Fire Dart, and no creature is weak or resistant to it.
+- The Recruit's Mace and the Recruit's Quiver, both on sale in the starting town.
+
+### Changed
+- Paladins now start with a Recruit's Mace (and their shield) instead of a rusted long sword.
+- Archers now start with a quiver alongside their bow and arrows.
+
 ## 2026-10-27 — Online monster drops and quest turn-in groundwork (T4C-0204, T4C-0206)
 
 ### Added

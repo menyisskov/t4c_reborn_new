@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0213`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0214`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -25,6 +25,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0208 | Isolated PostgreSQL crash/recovery through two native clients | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--isolated-postgresql-recovery-probe-t4c-0208) |
 | T4C-0207 | Two-native-adapter graceful and forced server restart recovery probe | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--two-adapter-server-restart-probe-t4c-0207) |
 | T4C-0206 | M3/M4 shared quest, spell-cast and heal rules plus quest/ability design (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-quest-and-spell-rules-t4c-0206) |
+| T4C-0213 | Owner-approved starter kits: Paladin mace, Arcane Spark for mages, Archer quiver; checkpoint scope approval recorded | Content / Multiplayer | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--new-starting-gear-and-first-spell-t4c-0213) |
 | T4C-0205 | Package the online client without developer checkout dependencies | Multiplayer / Beta | Done | `cd9e2a44` | [2026-10-27](CHANGELOG.md#2026-10-27--online-client-test-package-t4c-0205) |
 | T4C-0204 | M2 server loot wiring L6-L12, with owner-approved L11 individual corpse-item recovery (Claude lane) | Multiplayer / Beta | In Progress | PR128, PR130, PR142, PR144, PR145 partial | pending |
 | T4C-0203 | Coordinate Codex and Claude task/file/resource ownership | Process/Tooling | Done | `0e258e40` | [2026-10-27](CHANGELOG.md#2026-10-27--peer-agent-coordination-t4c-0203) |

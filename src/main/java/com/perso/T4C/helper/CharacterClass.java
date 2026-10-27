@@ -49,6 +49,7 @@ public enum CharacterClass {
       0,
       equipment(
           BodyPart.WEAPON, "item.ashwood_reflex_bow_1",
+          BodyPart.WEAPON2, "item.recruits_quiver",
           BodyPart.BODY, "item.leather_armor",
           BodyPart.LEGS, "item.leather_pants",
           BodyPart.FEET, "item.leather_boots",
@@ -57,7 +58,7 @@ public enum CharacterClass {
       List.of("item.wooden_arrow"),
       List.of()),
 
-  /** Sword-and-board hybrid: warrior-grade strength with enough wisdom to keep itself standing. */
+  /** Mace-and-board hybrid: warrior-grade strength with enough wisdom to keep itself standing. */
   PALADIN(
       "paladin",
       10,
@@ -66,7 +67,7 @@ public enum CharacterClass {
       10,
       0,
       equipment(
-          BodyPart.WEAPON, "item.rusted_long_sword_3",
+          BodyPart.WEAPON, "item.recruits_mace",
           BodyPart.SHIELD, "item.newbi_set_shield",
           BodyPart.BODY, "item.leather_armor",
           BodyPart.LEGS, "item.leather_pants",
@@ -119,7 +120,7 @@ public enum CharacterClass {
           BodyPart.WEAPON, "item.staff_of_thorns_1",
           BodyPart.BODY, "item.flowing_black_robe"),
       List.of(),
-      List.of("spell.fire_dart")),
+      List.of("spell.arcane_spark", "spell.fire_dart")),
 
   /** Melee-capable caster: as hardy as a Paladin, with intelligence where the Paladin has
    * wisdom. Trades the Mage's raw power for the ability to survive being reached. */
@@ -136,7 +137,7 @@ public enum CharacterClass {
           BodyPart.FEET, "item.leather_boots",
           BodyPart.LEFT_HAND, "item.leather_gloves"),
       List.of(),
-      List.of("spell.fire_dart"));
+      List.of("spell.arcane_spark", "spell.fire_dart"));
 
   /** How many of each stacking starting item (arrows) a kit grants. */
   public static final int STACKED_KIT_ITEM_COUNT = 30;

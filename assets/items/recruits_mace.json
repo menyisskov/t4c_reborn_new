@@ -1,0 +1,33 @@
+{
+  "key": "recruits_mace",
+  "name": "Recruit's Mace",
+  "bodyPart": "WEAPON",
+  "appearanceEquippedPrimary": "PupOgreClub",
+  "appearanceInventory": "64kInvMace",
+  "price": 800,
+  "weight": 10,
+  "armorClass": 0.0,
+  "dodgeLost": 0,
+  "requirements": {
+    "endurance": 0,
+    "strength": 30,
+    "agility": 0,
+    "intelligence": 0,
+    "wisdom": 0,
+    "attack": 0
+  },
+  "attackSpeed": 1.0,
+  "unique": false,
+  "isBow": false,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 2,
+  "appearanceId": 0,
+  "undroppable": false,
+  "dmgFormula": "1d10+12",
+  "atkDelay": "if(950-self.agi/250*950/2<600?600:950-self.agi/250*950/2)+1d480",
+  "boosts": [
+    { "boostId": 36800, "statId": 3, "expression": "3" },
+    { "boostId": 36801, "statId": 8, "expression": "6" }
+  ]
+}
