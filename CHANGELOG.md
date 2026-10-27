@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Corpse recovery respects carry weight (T4C-0228)
+
+### Changed
+- In online play, you can now pick up the items on your own corpse one at a time, and recovery follows the same carry-weight limit as every other pickup. If you ask for everything, you take what you can carry and the rest stays on the corpse for later; if you ask for one item that is too heavy, you are told it is too heavy and nothing changes. Your corpse gold comes with your first successful recovery, and the corpse disappears once it is empty. Single-player is unchanged.
+
 ## 2026-10-27 — Bounded HTTP application metrics (T4C-0227)
 
 ### Added

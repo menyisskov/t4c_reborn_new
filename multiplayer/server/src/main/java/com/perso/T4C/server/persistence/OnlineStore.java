@@ -887,9 +887,25 @@ public final class OnlineStore implements AutoCloseable {
     }
   }
 
-  /** Trusted simulation position is frozen while this command runs; never accept client coordinates. */
-  public RewardResult recoverCorpse(Session session,long revision,UUID corpseId,int world,double x,double y) throws SQLException {
-    Objects.requireNonNull(corpseId);position(world,x,y);
+  /** Server-owned carry limits for corpse recovery. Weight is per single unit; unknown keys weigh nothing. */
+  public interface CarryRules {
+    long maximumWeight(CharacterProgress progress);
+    long unitWeight(String key);
+  }
+  public static final String CORPSE_TOO_HEAVY="too_heavy";
+  public static final String CORPSE_ITEM_UNAVAILABLE="item_unavailable";
+
+  /**
+   * Trusted simulation position is frozen while this command runs; never accept client coordinates.
+   * Items are taken under the shared carry-weight rule. With {@code itemId} the one named stack is taken
+   * or the call is refused with the corpse unchanged. Without it, every stack that fits is taken in
+   * order and the rest stays on the corpse; only a call that moves nothing is refused. The first
+   * successful call also takes the corpse gold, which weighs nothing. The corpse is marked recovered
+   * once it is empty. A repeat of an already-applied request fails the revision fence instead of
+   * taking more.
+   */
+  public RewardResult recoverCorpse(Session session,long revision,UUID corpseId,UUID itemId,int world,double x,double y,CarryRules rules) throws SQLException {
+    Objects.requireNonNull(corpseId);Objects.requireNonNull(rules);position(world,x,y);
     if(revision<0) throw new IllegalArgumentException("Invalid revision");
     try(var c=connections.open()) {
       c.setAutoCommit(false);
@@ -901,13 +917,27 @@ public final class OnlineStore implements AutoCloseable {
         if(corpse.recovered()) { c.commit();return new RewardResult(false,state); }
         if(state.revision()!=revision) throw new Conflict("Stale corpse recovery");
         if(corpse.world()!=world || Math.hypot((x-corpse.x())*com.perso.T4C.config.GameConstants.GRID_W,(y-corpse.y())*com.perso.T4C.config.GameConstants.GRID_H)>com.perso.T4C.config.GameConstants.PLAYER_MELEE_ATTACK_RANGE) throw new Conflict("Corpse out of reach");
-        var p=Objects.requireNonNull(state.progress());var inventory=new java.util.ArrayList<>(p.inventory());inventory.addAll(corpse.items());
+        var p=Objects.requireNonNull(state.progress());var inventory=new java.util.ArrayList<>(p.inventory());
+        var candidates=new java.util.ArrayList<CharacterProgress.Item>();
+        if(itemId==null) candidates.addAll(corpse.items());
+        else corpse.items().stream().filter(item -> item.id().equals(itemId)).findFirst().ifPresent(candidates::add);
+        if(itemId!=null && candidates.isEmpty()) throw new Conflict(CORPSE_ITEM_UNAVAILABLE);
+        long carried=0L;
+        for(var item:inventory) carried=Math.addExact(carried,Math.multiplyExact(Math.max(0L,rules.unitWeight(item.key())),(long)item.quantity()));
+        long maximum=rules.maximumWeight(p);
+        var remaining=new java.util.ArrayList<>(corpse.items());int taken=0;
+        for(var item:candidates) {
+          long weight=Math.multiplyExact(Math.max(0L,rules.unitWeight(item.key())),(long)item.quantity());
+          if(!com.perso.T4C.item.CarryCapacityRules.canAdd(carried,weight,maximum)) continue;
+          carried+=weight;inventory.add(item);remaining.remove(item);taken++;
+        }
+        if(taken==0 && !candidates.isEmpty() && (itemId!=null || corpse.gold()==0)) throw new Conflict(CORPSE_TOO_HEAVY);
         var progress=new CharacterProgress(p.version(),p.characterClass(),p.gender(),p.attributes(),p.vitals(),p.advancement(),inventory,p.equipment(),p.skills(),p.spells(),p.questFlags(),p.storage(),p.storageGold(),p.respawn(),p.buffs(),p.cooldowns(),p.hiddenUntil(),p.companion());
         long gold=Math.addExact(state.gold(),corpse.gold());
         try(var q=c.prepareStatement("UPDATE online_characters SET gold=?,progress=?::jsonb,revision=revision+1,updated_at=now() WHERE id=?")) {
           q.setLong(1,gold);q.setString(2,encodeProgress(progress));q.setObject(3,session.characterId());q.executeUpdate();
         }
-        try(var q=c.prepareStatement("UPDATE online_corpses SET recovered=true WHERE id=?")) { q.setObject(1,corpseId);q.executeUpdate(); }
+        try(var q=c.prepareStatement("UPDATE online_corpses SET items=?::jsonb,gold=0,recovered=? WHERE id=?")) { q.setString(1,JSON.toJson(remaining));q.setBoolean(2,remaining.isEmpty());q.setObject(3,corpseId);q.executeUpdate(); }
         state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
     }

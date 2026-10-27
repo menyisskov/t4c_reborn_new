@@ -58,17 +58,17 @@ class OnlineDeathTest {
     assertFalse(restarted.commitMonsterAttack(rejoined,revision,event,death.progress(),attack,death.transition()).applied());
     var corpse=restarted.listCorpses(rejoined).getFirst();
     assertEquals(death.transition().droppedItems(),corpse.items());assertEquals(event,corpse.id());
-    assertThrows(OnlineStore.Conflict.class,()->restarted.recoverCorpse(rejoined,committed.character().revision(),event,0,1000,1000));
+    assertThrows(OnlineStore.Conflict.class,()->restarted.recoverCorpse(rejoined,committed.character().revision(),event,null,0,1000,1000,UNLIMITED));
     assertEquals(committed.character(),restarted.load(account.accountId(),created.id()));
     var otherAccount=store.provisionAccount();var other=store.create(otherAccount.accountId(),"Other owner",0,10,20,fixture(),0);
     var otherSession=store.acquire(otherAccount.secret(),other.id());
     assertTrue(store.listCorpses(otherSession).isEmpty());
-    assertThrows(OnlineStore.Conflict.class,()->store.recoverCorpse(otherSession,0,event,0,10,20));
-    var recovered=restarted.recoverCorpse(rejoined,committed.character().revision(),event,0,10,20);
+    assertThrows(OnlineStore.Conflict.class,()->store.recoverCorpse(otherSession,0,event,null,0,10,20,UNLIMITED));
+    var recovered=restarted.recoverCorpse(rejoined,committed.character().revision(),event,null,0,10,20,UNLIMITED);
     assertEquals(new HashSet<>(created.progress().inventory()),new HashSet<>(recovered.character().progress().inventory()));
     assertEquals(95,recovered.character().experience());assertEquals(created.gold(),recovered.character().gold());
     assertTrue(restarted.listCorpses(rejoined).isEmpty());
-    assertFalse(restarted.recoverCorpse(rejoined,committed.character().revision(),event,0,10,20).applied());
+    assertFalse(restarted.recoverCorpse(rejoined,committed.character().revision(),event,null,0,10,20,UNLIMITED).applied());
     store.release(otherSession);restarted.release(rejoined);
   }
 
@@ -85,6 +85,66 @@ class OnlineDeathTest {
     assertNotEquals(original.id(),dropped.id());assertEquals(original.charges(),retained.charges());
     assertEquals(Integer.MAX_VALUE,(long)retained.quantity()+dropped.quantity());
     assertTrue(dropped.quantity()>0 && retained.quantity()>0);
+  }
+
+  private static final OnlineStore.CarryRules UNLIMITED = rules(Long.MAX_VALUE/4);
+
+  /** One weight unit per item so the limit is exact: capacity is whatever the test says. */
+  private static OnlineStore.CarryRules rules(long maximum) {
+    return new OnlineStore.CarryRules() {
+      public long maximumWeight(CharacterProgress progress) { return maximum; }
+      public long unitWeight(String key) { return 1; }
+    };
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void corpseItemsAreRecoveredIndividuallyUnderCarryWeightWithPartialTakes() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
+    var created=store.create(account.accountId(),"Corpse weight",0,10,20,fixture(),0);
+    var session=store.acquire(account.secret(),created.id());
+    var saved=created;
+    var life=store.loadOrCreateSpawn("weight:"+UUID.randomUUID());
+    saved=store.commitGameplayEvent(session,saved.revision(),UUID.randomUUID(),0,0,saved.progress(),
+        new OnlineStore.CreatureProvocation(life.key(),life.eventId(),created.id(),0)).character();
+    var death=OnlineDeath.prepare(saved,ItemCatalog.loadBundled(),new CharacterProgress.Respawn(0,10,20),new CharacterProgress.Respawn(0,10,20),DROP);
+    var attack=new OnlineStore.MonsterAttack(life.key(),life.eventId(),created.id(),0,System.currentTimeMillis()+1500);
+    var event=UUID.randomUUID();
+    var dead=store.commitMonsterAttack(session,saved.revision(),event,death.progress(),attack,death.transition()).character();
+    var dropped=death.transition().droppedItems();assertTrue(dropped.size()>=2,"fixture must drop at least two stacks");
+    long carried=dead.progress().inventory().stream().mapToLong(i->i.quantity()).sum();
+    // Wrong owner never sees or touches the corpse.
+    var otherAccount=store.provisionAccount();var other=store.create(otherAccount.accountId(),"Not owner",0,10,20,fixture(),0);
+    var otherSession=store.acquire(otherAccount.secret(),other.id());
+    assertThrows(OnlineStore.Conflict.class,()->store.recoverCorpse(otherSession,0,event,null,0,10,20,UNLIMITED));
+    // Room for the first stack only: it moves, the rest stays on the corpse.
+    var tight=rules(carried+dropped.getFirst().quantity());
+    var partial=store.recoverCorpse(session,dead.revision(),event,null,0,10,20,tight);
+    assertTrue(partial.applied());
+    assertTrue(partial.character().progress().inventory().contains(dropped.getFirst()));
+    assertFalse(partial.character().progress().inventory().contains(dropped.get(1)));
+    var left=store.listCorpses(session);assertEquals(1,left.size());
+    assertEquals(dropped.subList(1,dropped.size()),left.getFirst().items());
+    // A request that was already applied cannot take more by retrying with the old revision.
+    assertThrows(OnlineStore.Conflict.class,()->store.recoverCorpse(session,dead.revision(),event,null,0,10,20,UNLIMITED));
+    // A selected stack that does not fit is refused and nothing at all changes.
+    var before=store.load(account.accountId(),created.id());
+    var heavy=dropped.get(1);
+    var refused=assertThrows(OnlineStore.Conflict.class,()->store.recoverCorpse(session,partial.character().revision(),event,heavy.id(),0,10,20,tight));
+    assertEquals(OnlineStore.CORPSE_TOO_HEAVY,refused.getMessage());
+    assertEquals(before,store.load(account.accountId(),created.id()));
+    assertEquals(dropped.subList(1,dropped.size()),store.listCorpses(session).getFirst().items());
+    // An item that is not on the corpse is unavailable, and the corpse is untouched.
+    var missing=assertThrows(OnlineStore.Conflict.class,()->store.recoverCorpse(session,partial.character().revision(),event,UUID.randomUUID(),0,10,20,UNLIMITED));
+    assertEquals(OnlineStore.CORPSE_ITEM_UNAVAILABLE,missing.getMessage());
+    // With room, the selected stack moves alone.
+    var one=store.recoverCorpse(session,partial.character().revision(),event,heavy.id(),0,10,20,UNLIMITED);
+    assertTrue(one.character().progress().inventory().contains(heavy));
+    if(dropped.size()>2) assertEquals(dropped.subList(2,dropped.size()),store.listCorpses(session).getFirst().items());
+    // Taking the rest empties and closes the corpse; a repeat is acknowledged without applying.
+    var rest=store.recoverCorpse(session,one.character().revision(),event,null,0,10,20,UNLIMITED);
+    assertTrue(store.listCorpses(session).isEmpty());
+    assertFalse(store.recoverCorpse(session,rest.character().revision(),event,null,0,10,20,UNLIMITED).applied());
+    store.release(otherSession);store.release(session);
   }
 
   private static CharacterProgress fixture() throws Exception {

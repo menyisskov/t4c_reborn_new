@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0228`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0229`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -19,6 +19,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
 | T4C-0227 | Measure bounded HTTP application traffic for Beta stability evidence | Multiplayer / Beta reliability | Done (operator groundwork) | this PR; isolated focused and no-DB checks | [2026-10-27](CHANGELOG.md#2026-10-27--bounded-http-application-metrics-t4c-0227) |
+| T4C-0228 | Online corpse recovery follows carry weight and allows per-item and partial pickup (L11) | Multiplayer / M2 loot | Done | this PR; compile and no-DB checks, PostgreSQL tests written but not run locally | [2026-10-27](CHANGELOG.md#2026-10-27--corpse-recovery-respects-carry-weight-t4c-0228) |
 | T4C-0226 | Verify two native sessions stay live during hostile HTTP traffic | Multiplayer / Beta security acceptance | Done (local native adapter check) | this PR; immutable `f6175cc7`, final report `FFD24BFC` | [2026-10-27](CHANGELOG.md#2026-10-27--native-sessions-during-hostile-http-t4c-0226) |
 | T4C-0225 | Integrate durable authored creature-clan combat after peer handoff | Multiplayer / Beta gameplay | Planned | pending Claude handoff | pending |
 | T4C-0224 | Classify authored NPC-owned spawns for online content | Multiplayer / Beta content authority | Done (staged content only) | this PR; corrected 23 focused checks, v1 runtime unchanged | [2026-10-27](CHANGELOG.md#2026-10-27--classify-authored-online-actors-t4c-0224) |
