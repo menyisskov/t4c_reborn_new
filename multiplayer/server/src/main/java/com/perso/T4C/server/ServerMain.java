@@ -5,6 +5,13 @@ public final class ServerMain {
   private ServerMain() {}
 
   public static void main(String[] args) throws Exception {
+    if(args.length==2 && "--provision-online-account".equals(args[0])) {
+      var store=com.perso.T4C.server.persistence.OnlineStore.fromEnvironment();
+      store.migrate();
+      OnlineProvisioner.provisionAccount(store,java.nio.file.Path.of(args[1]));
+      System.out.println("Private account-only profile created. Keep it local and do not share its contents.");
+      return;
+    }
     if (args.length==1 && "--check-content".equals(args[0])) {
       System.out.println("Equipment definitions: " + ItemCatalog.loadBundled().items().size());
       var content=MonsterCatalog.loadBundled();
@@ -81,6 +88,7 @@ public final class ServerMain {
       System.out.println("       java -jar t4c-server.jar --preview COLLISION_FILE PORT");
       System.out.println("       java -jar t4c-server.jar --online COLLISION_FILE PORT");
       System.out.println("       java -jar t4c-server.jar --provision-online COLLISION_FILE PRIVATE_PROFILE_FILE NAME [CLASS male|female good|evil]");
+      System.out.println("       java -jar t4c-server.jar --provision-online-account PRIVATE_PROFILE_FILE");
       System.out.println("       java -jar t4c-server.jar --migrate-online (T4C_DB_URL, T4C_DB_USER, T4C_DB_PASSWORD)");
       System.out.println("       java -jar t4c-server.jar --check-content");
       return;

@@ -8,6 +8,13 @@ import com.google.gson.JsonParser;
 import com.perso.T4C.server.persistence.OnlineStore;
 import com.perso.T4C.online.model.OnlineCharacterView;
 import com.perso.T4C.online.model.OnlineProtocol;
+import com.perso.T4C.online.model.OnlineCharacterCreation;
+import com.perso.T4C.helper.CharacterCreationRules;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import java.io.StringReader;
+import java.nio.ByteBuffer;
+import java.nio.charset.CodingErrorAction;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
@@ -17,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,7 +35,8 @@ public final class PreviewServer implements AutoCloseable {
   /** Ground loot shown in one snapshot: at most this many drops, nearest the viewer first. */
   static final int GROUND_LOOT_VIEW_LIMIT = 128;
   private static final Set<String> POST_ROUTES=Set.of("/join","/admin/shutdown","/input","/attack",
-      "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/region-ready","/leave");
+      "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/region-ready","/leave",
+      "/account/characters");
   private static final Set<String> GET_ROUTES=Set.of("/","/client.js","/style.css","/strings",
       "/account/characters","/map","/state","/character","/corpses","/health","/admin/metrics");
   private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
@@ -196,6 +205,20 @@ public final class PreviewServer implements AutoCloseable {
 
   private HttpRequestAdmission.Permit admitPost(HttpExchange exchange,String path) throws Exception {
     if("/join".equals(path)) return admission.publicRequest();
+    if("/account/characters".equals(path)) {
+      if(accounts==null) throw new PreviewWorld.Rejected(404,"route");
+      requireAccountProtocol(exchange);
+      String secret=accountKey(exchange);
+      var permit=admission.rosterRequest();
+      try {
+        var pending=accounts.authenticate(peer(exchange),secret);
+        awaitAccount(pending);
+        return permit;
+      } catch(Exception|Error failure) {
+        permit.close();
+        throw failure;
+      }
+    }
     if("/admin/shutdown".equals(path)) {
       requireLocalAdmin(exchange);
       return admission.session(controlToken);
@@ -217,12 +240,8 @@ public final class PreviewServer implements AutoCloseable {
           ? admission.publicRequest() : knownSession(exchange);
       case "/account/characters" -> {
         if(accounts==null) throw new PreviewWorld.Rejected(404,"route");
-        var versions=exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
-        if(versions==null || versions.size()!=1 || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
-          throw new PreviewWorld.Rejected(426,"protocol");
-        var authorization=exchange.getRequestHeaders().get("Authorization");
-        if(authorization==null || authorization.size()!=1 || !authorization.getFirst().matches("Bearer [0-9a-f]{64}"))
-          throw new PreviewWorld.Rejected(401,"account");
+        requireAccountProtocol(exchange);
+        accountKey(exchange);
         yield admission.rosterRequest();
       }
       case "/admin/metrics" -> {
@@ -248,16 +267,21 @@ public final class PreviewServer implements AutoCloseable {
         if (!POST_ROUTES.contains(path)) throw new PreviewWorld.Rejected(404, "route");
         if (!transport.acceptsOrigin(exchange.getRequestHeaders().getFirst("Origin"),http.getAddress().getPort()))
           throw new PreviewWorld.Rejected(403, "origin");
-        String type = exchange.getRequestHeaders().getFirst("Content-Type");
-        if (type == null || !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain"))
+        var types=exchange.getRequestHeaders().get("Content-Type");
+        String type = types==null || types.isEmpty() ? null : types.getFirst();
+        if (type == null || ("/account/characters".equals(path)
+            ? types.size()!=1 || !type.equalsIgnoreCase("application/json")
+            : !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain")))
           throw new PreviewWorld.Rejected(415, "input");
-        if ("/join".equals(path) || "/pickup".equals(path) || "/cast".equals(path) || "/use".equals(path)) {
+        if ("/join".equals(path) || "/pickup".equals(path) || "/cast".equals(path) || "/use".equals(path)
+            || "/account/characters".equals(path)) {
           var versions = exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
           if (versions == null || versions.size() != 1
               || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
             throw new PreviewWorld.Rejected(426, "protocol");
         }
-        int limit=store!=null && "/join".equals(path) ? 101
+        int limit="/account/characters".equals(path) ? 512
+            : store!=null && "/join".equals(path) ? 101
             : "/interact".equals(path) ? 128
             : "/recover".equals(path) || "/cast".equals(path) ? 128
             : ("/equip".equals(path) || "/unequip".equals(path) || "/pickup".equals(path) || "/use".equals(path)) ? 96 : 64;
@@ -279,8 +303,21 @@ public final class PreviewServer implements AutoCloseable {
           }
         } catch(IOException failedRead) { observation.readFailed();throw failedRead; }
         if (count > limit) throw new PreviewWorld.Rejected(413, "input");
-        String body = new String(bytes,0,count,StandardCharsets.US_ASCII);
+        String body;
+        if("/account/characters".equals(path)) {
+          try {
+            body=StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(bytes,0,count)).toString();
+          } catch(java.nio.charset.CharacterCodingException invalid) {
+            throw new PreviewWorld.Rejected(400,"creation_input");
+          }
+        } else body=new String(bytes,0,count,StandardCharsets.US_ASCII);
         switch (path) {
+          case "/account/characters" -> {
+            var request=parseCreation(body);
+            var pending=accounts.create(peer(exchange),accountKey(exchange),request);
+            json(exchange,observation,200,awaitAccount(pending));
+          }
           case "/admin/shutdown" -> {
             requireLocalAdmin(exchange);
             if (!body.isEmpty()) throw new PreviewWorld.Rejected(400,"input");
@@ -452,21 +489,14 @@ public final class PreviewServer implements AutoCloseable {
           case "/strings" -> json(exchange,observation, 200, strings);
           case "/account/characters" -> {
             if(accounts==null) throw new PreviewWorld.Rejected(404,"route");
-            var versions=exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
-            if(versions==null || versions.size()!=1 || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
-              throw new PreviewWorld.Rejected(426,"protocol");
+            requireAccountProtocol(exchange);
             String query=exchange.getRequestURI().getRawQuery();java.util.UUID after=null;
             if(query!=null) {
               if(!query.matches("after=[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) throw new PreviewWorld.Rejected(400,"input");
               after=java.util.UUID.fromString(query.substring(6));
             }
-            var authorization=exchange.getRequestHeaders().get("Authorization");
-            if(authorization==null || authorization.size()!=1 || !authorization.getFirst().matches("Bearer [0-9a-f]{64}"))
-              throw new PreviewWorld.Rejected(401,"account");
-            var pending=accounts.request(exchange.getRemoteAddress().getAddress().getHostAddress(),authorization.getFirst().substring(7),after);
-            try { json(exchange,observation,200,pending.get(3,TimeUnit.SECONDS)); }
-            catch(ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected;throw error; }
-            catch(TimeoutException timeout) { pending.cancel(false);throw new PreviewWorld.Rejected(503,"account_busy"); }
+            var pending=accounts.request(peer(exchange),accountKey(exchange),after);
+            json(exchange,observation,200,awaitAccount(pending));
           }
           case "/map" -> {
             String authorization=exchange.getRequestHeaders().getFirst("Authorization");
@@ -559,6 +589,70 @@ public final class PreviewServer implements AutoCloseable {
     if (value == null || !value.matches("Bearer [0-9a-f]{64}"))
       throw new PreviewWorld.Rejected(401, "session");
     return value.substring(7);
+  }
+
+  private static String peer(HttpExchange exchange) {
+    return exchange.getRemoteAddress().getAddress().getHostAddress();
+  }
+
+  private static void requireAccountProtocol(HttpExchange exchange) {
+    var versions=exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
+    if(versions==null || versions.size()!=1 || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
+      throw new PreviewWorld.Rejected(426,"protocol");
+  }
+
+  private static String accountKey(HttpExchange exchange) {
+    var authorization=exchange.getRequestHeaders().get("Authorization");
+    if(authorization==null || authorization.size()!=1 || !authorization.getFirst().matches("Bearer [0-9a-f]{64}"))
+      throw new PreviewWorld.Rejected(401,"account");
+    return authorization.getFirst().substring(7);
+  }
+
+  private static <T> T awaitAccount(CompletableFuture<T> pending) throws Exception {
+    try { return pending.get(3,TimeUnit.SECONDS); }
+    catch(ExecutionException error) {
+      if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected;
+      throw error;
+    }
+    catch(TimeoutException timeout) {
+      pending.cancel(false);throw new PreviewWorld.Rejected(503,"account_busy");
+    }
+  }
+
+  private static OnlineCharacterCreation.Request parseCreation(String body) {
+    try(var reader=new JsonReader(new StringReader(body))) {
+      reader.setLenient(false);
+      reader.beginObject();
+      var seen=new java.util.HashSet<String>();
+      String requestId=null,name=null,characterClass=null,gender=null;
+      Boolean evil=null;
+      while(reader.hasNext()) {
+        String key=reader.nextName();
+        if(!seen.add(key)) throw new IllegalArgumentException("Duplicate field");
+        switch(key) {
+          case "requestId" -> { if(reader.peek()!=JsonToken.STRING) throw new IllegalArgumentException();requestId=reader.nextString(); }
+          case "name" -> { if(reader.peek()!=JsonToken.STRING) throw new IllegalArgumentException();name=reader.nextString(); }
+          case "characterClass" -> { if(reader.peek()!=JsonToken.STRING) throw new IllegalArgumentException();characterClass=reader.nextString(); }
+          case "gender" -> { if(reader.peek()!=JsonToken.STRING) throw new IllegalArgumentException();gender=reader.nextString(); }
+          case "evil" -> { if(reader.peek()!=JsonToken.BOOLEAN) throw new IllegalArgumentException();evil=reader.nextBoolean(); }
+          default -> throw new IllegalArgumentException("Unknown field");
+        }
+      }
+      reader.endObject();
+      if(reader.peek()!=JsonToken.END_DOCUMENT || seen.size()!=5 || requestId==null || name==null
+          || characterClass==null || gender==null || evil==null
+          || !requestId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+        throw new IllegalArgumentException("Incomplete creation");
+      UUID id=UUID.fromString(requestId);
+      if(!id.toString().equals(requestId)) throw new IllegalArgumentException("Noncanonical UUID");
+      name=CharacterCreationRules.normalizeName(name);
+      if(!CharacterCreationRules.isValidName(name) || !Set.of("male","female").contains(gender))
+        throw new IllegalArgumentException("Invalid creation");
+      if(!Set.of("warrior","paladin").contains(characterClass))
+        throw new PreviewWorld.Rejected(400,"unsupported_class");
+      return new OnlineCharacterCreation.Request(id,name,characterClass,gender,evil);
+    } catch(PreviewWorld.Rejected rejected) { throw rejected; }
+      catch(Exception malformed) { throw new PreviewWorld.Rejected(400,"creation_input"); }
   }
 
   private void requireLocalAdmin(HttpExchange exchange) {

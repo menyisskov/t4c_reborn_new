@@ -50,9 +50,11 @@ class AccountRosterTest {
     try(var service=new AccountRosterService(store,HostedRegionPlan.single(new PreviewMap(new boolean[8][8],0,0,3,3)))) {
     var reads=new ArrayList<CompletableFuture<OnlineRoster>>();
     for(int i=0;i<4;i++) reads.add(service.request("peer","0".repeat(64),null));
+    var auth=service.authenticate("peer","0".repeat(64));
     assertTrue(entered.await(1,TimeUnit.SECONDS));service.close();service.close();
     assertEquals(0,exited.getCount());
     for(var read:reads) assertTrue(read.isCompletedExceptionally());
+    assertTrue(auth.isCompletedExceptionally());
     assertEquals(503,assertThrows(PreviewWorld.Rejected.class,()->service.request("peer","0".repeat(64),null)).status);
     }
   }
