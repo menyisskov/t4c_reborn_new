@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Backup CHECK verification on schema 10 (T4C-0213)
+
+### Fixed
+- Backup verification now lets PostgreSQL reparse differing CHECK definitions on temporary restore-database tables before comparison. All other schema definitions, table row counts and hashes remain strict; no source database DDL is used.
+- A fresh backup of the running schema-10 twenty-adapter realm restored into a new database with all eleven online tables matching. Ground-loot and loot-claim tables were empty in that snapshot. Native gameplay from the restore remains unverified.
+
 ## 2026-10-27 — Online monster drops and quest turn-in groundwork (T4C-0204, T4C-0206)
 
 ### Added

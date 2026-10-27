@@ -172,11 +172,64 @@ def table_digests(postgres, database, tables, snapshot):
     return result
 
 
-def compare(source_tables, restored_tables, source_data, restored_data):
+def checks_match_after_postgres_parse(postgres, database, source_tables, restored_tables):
+    """Reparse only differing CHECKs on empty temporary clones in the restore DB."""
+    if len(source_tables) != len(restored_tables):
+        return False
+    differences = []
+    for source, restored in zip(source_tables, restored_tables):
+        if ({key: value for key, value in source.items() if key != "constraints"} !=
+                {key: value for key, value in restored.items() if key != "constraints"}):
+            return False
+        source_constraints, restored_constraints = source["constraints"], restored["constraints"]
+        if len(source_constraints) != len(restored_constraints):
+            return False
+        for original, recovered in zip(source_constraints, restored_constraints):
+            if original == recovered:
+                continue
+            if not original.startswith("CHECK (") or not recovered.startswith("CHECK ("):
+                return False
+            differences.append((restored["name"], original, recovered))
+    if not differences:
+        return True
+    if len(differences) > 128:
+        raise VerificationError("Too many differing CHECK constraints to validate safely")
+
+    statements = ["BEGIN;"]
+    expressions = []
+    for index, (table, original, recovered) in enumerate(differences):
+        for side, definition in (("source", original), ("restore", recovered)):
+            if len(definition) > 8192:
+                raise VerificationError("CHECK constraint too large to validate safely")
+            clone = identifier(f"backup_check_{side}_{index}")
+            statements.append(f"CREATE TEMP TABLE {clone} (LIKE public.{identifier(table)});")
+            statements.append(f"ALTER TABLE pg_temp.{clone} ADD CONSTRAINT backup_check {definition};")
+            expressions.append(
+                "(SELECT pg_get_constraintdef(oid) FROM pg_constraint "
+                f"WHERE conrelid = 'pg_temp.{clone}'::regclass AND conname = 'backup_check')"
+            )
+    statements.append("SELECT json_build_array(" + ", ".join(expressions) + ");")
+    statements.append("ROLLBACK;")
+    try:
+        canonical = json.loads(postgres.query(database, "\n".join(statements)))
+    except (ValueError, UnicodeError):
+        raise VerificationError("Invalid PostgreSQL CHECK comparison result") from None
+    if len(canonical) != len(expressions) or any(value is None for value in canonical):
+        raise VerificationError("Incomplete PostgreSQL CHECK comparison result")
+    return all(canonical[index] == canonical[index + 1]
+               for index in range(0, len(canonical), 2))
+
+
+def compare(source_tables, restored_tables, source_data, restored_data, postgres=None, database=None):
+    schema_comparison = "exact"
     if source_tables != restored_tables:
-        raise VerificationError("Restored online table definitions do not match the exported snapshot")
+        if postgres is None or database is None or not checks_match_after_postgres_parse(
+                postgres, database, source_tables, restored_tables):
+            raise VerificationError("Restored online table definitions do not match the exported snapshot")
+        schema_comparison = "postgresql_temporary_check_parse"
     if source_data != restored_data:
         raise VerificationError("Restored online row counts or hashes do not match the exported snapshot")
+    return schema_comparison
 
 
 def verify(postgres, source, target, output):
@@ -204,12 +257,14 @@ def verify(postgres, source, target, output):
     with ExportedSnapshot(postgres, target) as restored_snapshot:
         restored_tables = catalog(postgres, target, restored_snapshot)
         restored_data = table_digests(postgres, target, restored_tables, restored_snapshot)
-    compare(source_tables, restored_tables, source_data, restored_data)
+    schema_comparison = compare(source_tables, restored_tables, source_data, restored_data,
+                                postgres, target)
     with archive.open("rb") as stream:
         archive_hash = hashlib.file_digest(stream, "sha256").hexdigest()
     report = {"verified": True, "source_database": source, "restore_database": target,
               "source_snapshot": snapshot, "archive_sha256": archive_hash,
               "elapsed_seconds": round(time.monotonic() - started, 3),
+              "schema_comparison": schema_comparison,
               "tables": source_data, "native_playthrough_verified": False}
     report_path = output / "verification.json"
     report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
