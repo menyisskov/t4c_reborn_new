@@ -2,6 +2,7 @@ package com.perso.T4C.online;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.google.gson.Gson;
+import com.perso.T4C.online.model.OnlineCharacterCreation;
 import com.perso.T4C.online.model.OnlineProtocol;
 import com.perso.T4C.online.model.OnlineRoster;
 import com.sun.net.httpserver.HttpServer;
@@ -61,14 +62,65 @@ class OnlineAccountClientTest {
     }
   }
 
+  @Test void createsWithAuthenticatedJsonAfterAnonymousGateAndValidatesReply() throws Exception {
+    var request=new OnlineCharacterCreation.Request(UUID.randomUUID(),"Paladin","paladin","female",false);
+    try(var fixture=new Fixture();var client=new OnlineAccountClient(fixture.uri(),KEY)) {
+      fixture.version=999;
+      assertThrows(IOException.class,()->client.create(request));
+      assertEquals(0,fixture.creationRequests.get(),"Incompatible map must not receive the account key or mutation");
+      assertEquals(0,fixture.credentialedHandshakes.get());
+      fixture.version=OnlineProtocol.VERSION;fixture.persistent=false;
+      assertThrows(IOException.class,()->client.create(request));
+      assertEquals(0,fixture.creationRequests.get());
+      fixture.persistent=true;
+      var created=client.create(request);
+      assertEquals(request.requestId(),created.requestId());
+      assertEquals(fixture.createdId,created.character().id());
+      assertEquals("paladin",created.character().characterClass());
+      assertEquals(1,fixture.creationRequests.get());
+      var posted=com.google.gson.JsonParser.parseString(fixture.creationBodies.getFirst()).getAsJsonObject();
+      assertEquals(Set.of("requestId","name","characterClass","gender","evil"),posted.keySet());
+      assertEquals(request.requestId().toString(),posted.get("requestId").getAsString());
+      assertEquals("Paladin",posted.get("name").getAsString());
+      assertEquals("paladin",posted.get("characterClass").getAsString());
+      assertEquals("female",posted.get("gender").getAsString());
+      assertFalse(posted.get("evil").getAsBoolean());
+      fixture.createMode="wrongId";
+      assertThrows(IOException.class,()->client.create(new OnlineCharacterCreation.Request(
+          UUID.randomUUID(),"Other","warrior","male",false)));
+      fixture.createMode="reject";
+      var refused=assertThrows(OnlineAccountClient.Rejected.class,()->client.create(new OnlineCharacterCreation.Request(
+          UUID.randomUUID(),"Other","warrior","male",false)));
+      assertEquals(409,refused.statusCode());assertFalse(refused.getMessage().contains(KEY));
+    }
+  }
+
+  @Test void uncertainCreateNeverRetriesUntilCallerReusesTheSameRequest() throws Exception {
+    var request=new OnlineCharacterCreation.Request(UUID.randomUUID(),"Warrior","warrior","male",false);
+    try(var fixture=new Fixture();var client=new OnlineAccountClient(fixture.uri(),KEY)) {
+      fixture.createMode="lost";
+      assertTimeoutPreemptively(java.time.Duration.ofSeconds(5),
+          ()->assertThrows(IOException.class,()->client.create(request)));
+      assertEquals(1,fixture.creationRequests.get(),"An uncertain mutation must not be sent again automatically");
+      fixture.createMode="normal";
+      var retried=client.create(request); // Explicit user retry retains the same idempotency identity.
+      assertEquals(request.requestId(),retried.requestId());
+      assertEquals(fixture.createdId,retried.character().id());
+      assertEquals(2,fixture.creationRequests.get());
+      assertEquals(fixture.creationBodies.getFirst(),fixture.creationBodies.getLast());
+    }
+  }
+
   private static final class Fixture implements AutoCloseable {
     final HttpServer server;
     final AtomicInteger accountRequests=new AtomicInteger(),credentialedHandshakes=new AtomicInteger(),
-        unexpectedPaths=new AtomicInteger(),redirectRequests=new AtomicInteger();
-    final List<String> queries=new CopyOnWriteArrayList<>();
+        unexpectedPaths=new AtomicInteger(),redirectRequests=new AtomicInteger(),creationRequests=new AtomicInteger();
+    final List<String> queries=new CopyOnWriteArrayList<>(),creationBodies=new CopyOnWriteArrayList<>();
+    final UUID createdId=UUID.randomUUID();
     volatile int version=OnlineProtocol.VERSION;
     volatile boolean persistent=true;
     volatile String mode="normal";
+    volatile String createMode="normal";
     Fixture() throws IOException {
       server=HttpServer.create(new InetSocketAddress("127.0.0.1",0),0);
       server.createContext("/",exchange->{
@@ -76,6 +128,29 @@ class OnlineAccountClientTest {
         if(path.equals("/map")) {
           if(exchange.getRequestHeaders().getFirst("Authorization")!=null) credentialedHandshakes.incrementAndGet();
           body="{\"protocolVersion\":"+version+",\"persistent\":"+persistent+"}";
+        } else if(path.equals("/account/characters") && exchange.getRequestMethod().equals("POST")) {
+          creationRequests.incrementAndGet();
+          String requestBody=new String(exchange.getRequestBody().readAllBytes(),StandardCharsets.UTF_8);
+          creationBodies.add(requestBody);
+          if(!("Bearer "+KEY).equals(exchange.getRequestHeaders().getFirst("Authorization"))
+              || !Integer.toString(OnlineProtocol.VERSION).equals(exchange.getRequestHeaders().getFirst(OnlineProtocol.VERSION_HEADER))
+              || !"application/json".equals(exchange.getRequestHeaders().getFirst("Content-Type"))
+              || !uri().toString().equals(exchange.getRequestHeaders().getFirst("Origin"))) {
+            status=401;body="bad auth";
+          } else if(createMode.equals("reject")) {status=409;body=KEY;}
+          else {
+            var request=new Gson().fromJson(requestBody,OnlineCharacterCreation.Request.class);
+            UUID replyId=createMode.equals("wrongId") ? UUID.randomUUID() : request.requestId();
+            var summary=new OnlineRoster.CharacterSummary(createdId,request.name(),request.characterClass(),
+                request.gender(),1,0,"ready");
+            body=new Gson().toJson(new OnlineCharacterCreation.Result(replyId,summary));
+            if(createMode.equals("lost")) {
+              exchange.sendResponseHeaders(200,100);
+              try(var output=exchange.getResponseBody()) {output.write('{');output.flush();}
+              catch(IOException expected) { /* Deliberately incomplete response after a committed request. */ }
+              return;
+            }
+          }
         } else if(path.equals("/account/characters")) {
           accountRequests.incrementAndGet();
           if(!("Bearer "+KEY).equals(exchange.getRequestHeaders().getFirst("Authorization"))

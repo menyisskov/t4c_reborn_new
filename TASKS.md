@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0245`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0246`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,10 +18,11 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0245 | Keep the native loot probe starter kit equipped while adding its overweight fixture, then run one isolated local probe | Multiplayer / M2 native acceptance tooling | In Progress (scope reserved; implementation and run pending) | pending | deferred |
 | T4C-0244 | Stage native online character-creation form in the existing lobby for owner visual review | Multiplayer / M1 native UI | In Progress (draft design staging only; owner approval pending) | pending | deferred |
 | T4C-0243 | Authoritative online character creation from a fresh account through bounded server validation and durable roster insertion | Multiplayer / M1 backend | In Progress (backend/schema13 verified; PR pending) | this PR; private PG domain55/server175 | deferred |
 | T4C-0242 | Allow an account-only private online profile to bootstrap the existing opt-in lobby without a character ID | Multiplayer / M1 native bootstrap | In Progress (focused implementation verified; PR pending) | this PR; OnlineAccountProfileTest 3/3 and OnlineLobbyLaunchTest 5/5 | deferred |
-| T4C-0241 | Native authenticated character-creation adapter for a fresh online account, pending backend T4C-0243 | Multiplayer / M1 native adapter | In Progress (scope reserved; implementation pending) | pending | deferred |
+| T4C-0241 | Native authenticated character-creation adapter for a fresh online account, using backend T4C-0243 | Multiplayer / M1 native adapter | In Progress (focused HTTP adapter verified; PR pending) | this PR; OnlineAccountClientTest 5/5 | deferred |
 | T4C-0240 | Native online HUD shows current and maximum mana on the existing status line (server-owned vitals; tested helper, no new art) | Multiplayer / M4 abilities | In Progress (draft PR185 awaiting owner approval of rendered screenshots; not live server tested) | PR185 draft; OnlineHudTextTest and rendered preview | deferred |
 | T4C-0239 | Gate native cast/use command headers to the negotiated protocol and preserve single-flight command behavior | Multiplayer / M4 native protocol | In Progress (implementation and focused test verified; PR pending) | this PR; OnlineConnectionTest 11/11 | deferred |
 | T4C-0238 | Credit authored online kill quests atomically on an authoritative lethal monster hit | Multiplayer / M3 quest combat | In Progress (implementation and PostgreSQL test verified; PR pending) | this PR; OnlineMeleeTest 3/3 PostgreSQL | deferred |
