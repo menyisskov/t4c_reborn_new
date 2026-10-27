@@ -50,7 +50,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation and brief rendered attack/death check; pure pursuit decisions and snapshot-driven native creature animation prepared, with no server pursuit | T4C-0189, 0190, 0209, 0210, 0211 | Server pursuit/AI and the declared classes' required abilities and state |
 | M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, short operator-metrics checks, isolated two-adapter server restart and schema-9/schema-10 database-crash probes, and brief rendered reconnect pass; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208 | Broader gameplay recovery, rendered restart, failure drills, sustained measured stability and abuse checks |
-| M6 — Package and native acceptance | Create-only package, headless integrity checks and brief two-window local bundle smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
+| M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
 Independent implementation can proceed in parallel; acceptance must use an integrated build.
@@ -195,6 +195,8 @@ are not real packet-loss or rendered-client evidence. See [BACKUP.md](BACKUP.md)
 [NATIVE_NETWORK_FAULTS.md](tools/NATIVE_NETWORK_FAULTS.md) and [LOAD_METRICS.md](LOAD_METRICS.md).
 
 ## M6 — Distribute and accept the real game
+
+T4C-0215 supplies a checked, create-only **local loopback server QA package** alongside the earlier client package. Its generated operator scripts passed preview and persistent schema-10 start/health/private graceful stop on a fresh isolated database, including a copied path with spaces and PowerShell 5/7 checks. This is partial operational evidence; clean-machine, trusted remote deployment, full rendered playthrough and owner acceptance remain unchecked.
 
 Required behavior:
 
