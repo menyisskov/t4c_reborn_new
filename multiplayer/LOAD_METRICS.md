@@ -131,6 +131,14 @@ histograms retain no request history. These numbers support local interval delta
 between snapshots of one server process, not a bandwidth or latency percentile
 claim across restarts.
 
+The optional native soak sampler keeps a finite 1 MiB whole-response cap and
+two-second deadline. A measured dense upper schema of all 897 fixed
+route/method/status rows with `Long.MAX_VALUE` numeric values serialized to
+434,724 bytes; a representative dense valid snapshot was 433,111 bytes.
+Both exceed the old 64 KiB consumer cap, which could have marked metrics
+unavailable during a long varied run. The larger cap is still bounded and
+does not turn these application counters into wire-bandwidth measurements.
+
 Keep all player, account, session, host, and credential identifiers out of this
 snapshot. This is operator data, not public gameplay state.
 

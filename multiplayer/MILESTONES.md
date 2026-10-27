@@ -227,7 +227,9 @@ Required behavior:
   follow-up evidence, not a release gate. T4C-0221 repaired only Windows report replacement
   under a focused file-lock fixture; the earlier 66-second schema-11 smoke remains failed and
   no new sustained result is claimed. T4C-0227 adds bounded private operator
-  counters for application body bytes and handler lifetime; wire bandwidth,
+  counters for application body bytes and handler lifetime. The native soak
+  consumer's finite 1 MiB cap covers the measured dense fixed-label schema
+  while retaining its two-second whole-response deadline; wire bandwidth,
   database latency and a sustained integrated candidate run remain unmeasured.
 
 Done evidence: reproducible fault/abuse scripts, separate restored-database playthrough, and the

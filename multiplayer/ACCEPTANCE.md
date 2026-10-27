@@ -35,6 +35,19 @@ test run; a real overlapping slow-POST regression verifies request-local
 attribution through explicit observation arguments. No live load, renderer,
 database latency, wire bandwidth or mixed two-hour M5/Beta result is claimed.
 
+Premerge review found that the existing native soak sampler's 64 KiB response
+cap could reject a valid accumulated `httpTraffic` snapshot. Read-only fixed
+label cardinality proof measured 897 possible rows and 434,724 bytes for a
+dense all-`Long.MAX_VALUE` schema; a plausible 273-row case measured 65,745
+bytes. Three additional consumer files now use a finite 1 MiB cap while
+retaining the two-second whole-body deadline. Their exact manifest SHA-256 is
+`19C68CA670681504E77510016B616D2A5E41E7CFCA42A935D992E722E8A9C2AB`.
+An owned ephemeral-loopback probe passed a 2,013 ms stalled-body failure,
+accepted a valid 433,111-byte/897-row snapshot with intact `initial` and
+`latest`, and refused a 1,048,590-byte response. Probe log SHA-256
+`ACBBE924AB75141E2B1C2A3F6BDC85591C9F975430F0B8D207FFD7F8B61B2319`.
+The first green PR163 head preceded this consumer fix; new-head CI is required.
+
 T4C-0226's [native HTTP resilience probe](tools/NATIVE_HTTP_RESILIENCE_PROBE.md)
 passed with two actual `OnlineConnection` adapters on a private archive of
 immutable `f6175cc78a6738f73700cfdaf014a6f44ab3219d` (protocol 5/schema 11),
