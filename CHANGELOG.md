@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Local online server QA package (T4C-0215)
+
+### Added
+- Operators can build a versioned local server package, check its contents, and start and gracefully stop a private loopback QA session from a copied folder. The package includes its runtime libraries and starting-area maps while keeping credentials, database and logs outside it.
+- This local operator path was checked with a fresh database. Clean-machine and remote deployment, a complete rendered playthrough, M6 and Beta remain open.
+
 ## 2026-10-27 — Authored starter-route hosting design (T4C-0214)
 
 ### Documented
