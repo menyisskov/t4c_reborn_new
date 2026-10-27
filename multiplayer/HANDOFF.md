@@ -236,7 +236,7 @@ PID52688 runs the matching persistent build; verify current metadata before acti
 
 ## Loot groundwork checkpoint (T4C-0201/0202, Claude lane)
 
-Delivered: SCOPE_PROPOSAL.md (all PROPOSED, awaiting owner approval) and LOOT_DESIGN.md; loot tasks L1–L5 (shared MonsterLootTables, CarryCapacityRules, ItemKeys, GroundLootView/LootDropDraft, server OnlineLootDrafts and OnlinePickupRules). Verified by unit tests only (root targeted + multiplayer reactor; PostgreSQL tests skipped); no server wiring, no rendered or native evidence. Remaining: L6 schema, L7 server loot handling, L8 melee wiring, L9 pickup endpoint, L10 native client, L11 corpse weight (needs owner decision), L12 acceptance — L6/L7/L9/L11 wait for the Codex lane's pending OnlineStore/PersistentSessions/PreviewServer changes to merge. OnlinePickupRules.effectiveStrength throws on active buffs; L7 must map to a refusal.
+Delivered: SCOPE_PROPOSAL.md (all PROPOSED, awaiting owner approval) and LOOT_DESIGN.md; loot tasks L1–L5 (shared MonsterLootTables, CarryCapacityRules, ItemKeys, GroundLootView/LootDropDraft, server OnlineLootDrafts and OnlinePickupRules). Verified by unit tests only (root targeted + multiplayer reactor; PostgreSQL tests skipped); no server wiring, no rendered or native evidence. At this earlier checkpoint, remaining work was L6 schema, L7 server loot handling, L8 melee wiring, L9 pickup endpoint, L10 native client, L11 corpse-item recovery and L12 acceptance. The later owner L11 decision and current file holds are recorded below. OnlinePickupRules.effectiveStrength throws on active buffs; L7 must map to a refusal.
 
 Peer task-ID correction: remotePR125 had already reserved0204 for Claude loot wiring. Keep that
 claim; independent Codex distribution packaging is0205 and nextID0206. Root missed the fresh
@@ -385,3 +385,13 @@ The live owner-controlled source-`8da43482`/schema-9 clients were not replaced.
 No server pursuit is active or rendered movement verified. T4C-0212 reserves a separate
 new server controller/test slice; existing moving core files remain conditional on
 explicit Claude handoff, so neither task completes M4.
+
+## Current peer coordination after PR145 (T4C-0203 follow-up)
+
+Claude PR144 released PreviewServer, PreviewServerTest and OnlineProtocol after the shared HTTP/protocol work; PR145 delivered native loot controls, but its OnlineClient hold has no recorded release. Claude still holds OnlineStore, PersistentSessions, HostedWorlds and OnlineMelee. PersistentCreatures is reserved for Codex but not edited.
+
+T4C-0212 has six WIP runtime files held by client_package and two new WIP acceptance tools held by restart_recovery; no functional server-pursuit merge or behavioral native probe pass exists. The owner-controlled QA18765/source-8da/schema-9 two-client session remains untouched. Independently, the retained T4C-0198 pooled baseline is running on server18770 and a dedicated t4c_soak_0198_4e09eaef1c6a database; its 7200-second report is pending, not a passing Beta result. The T4C-0208 isolated cluster ports55433/18768 are stopped and available. T4C-0212 future port18771/new database is reserved but not started.
+
+The coordinator's A5 regeneration default follows the existing offline Player.java behavior: regenerate only while a connected living authoritative player is actively updated, use shared RegenerationRules cadence, re-anchor on join, and do not catch up logged-out time. This routine parity choice does not approve proposed starter classes/content or alter the separate owner-approved corpse-item pickup decision.
+
+Owner L11 decision (superseding earlier pending language): online corpse items use individual pickup within normal carry limits and may be recovered partially per item; single-player behavior stays unchanged. The current priority is cohesive moving server pursuit. Codex requests a temporary exact-commit loan of Claude-held OnlineStore, PersistentSessions, HostedWorlds and OnlineMelee before L11 mutates them, with return after P2; Claude has not yet acknowledged the loan. The coordinator A5 regeneration default remains technical offline parity, not a new owner class/content approval.
