@@ -16,6 +16,15 @@ public record MonsterContent(int version, Map<String, MonsterDef> monsters, List
         throw new IllegalArgumentException("Invalid monster spawn");
       // Null records an authored spawn with custom behavior but no registry definition.
     }
+
+    /** Stable across enumeration/balance changes; moving or renaming a spawn requires migration. */
+    public String persistenceKey() {
+      String identity = world + "\u0000" + x + "\u0000" + y + "\u0000" + type;
+      try {
+        return "authored-v1:" + java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256")
+            .digest(identity.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+      } catch (java.security.NoSuchAlgorithmException impossible) { throw new AssertionError(impossible); }
+    }
   }
 
   public MonsterContent {

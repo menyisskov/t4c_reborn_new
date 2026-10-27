@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Live creature recovery (T4C-0184)
+
+### Added
+- Persistent servers now restore creature lives before players join, keep rewarded lives absent, and return creatures only after a saved respawn. Connected clients receive the same creature state while movement continues during database work. Player attacks are not connected yet.
+
 ## 2026-10-27 — Persistent creature life tracking (T4C-0183)
 
 ### Added

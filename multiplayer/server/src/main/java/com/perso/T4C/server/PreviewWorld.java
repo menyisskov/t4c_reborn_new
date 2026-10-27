@@ -36,6 +36,9 @@ public final class PreviewWorld {
   }
   private final PreviewMap map;
   private final List<CreatureView> creatures;
+  record CreatureSpawn(long id, MonsterContent.Spawn spawn, com.perso.T4C.monster.core.MonsterDef definition) {}
+  private final List<CreatureSpawn> creatureSpawns;
+  private final java.util.Set<Long> inactiveCreatures = new java.util.HashSet<>();
   private final Map<String, Player> players = new LinkedHashMap<>();
   private final SecureRandom random = new SecureRandom();
   private long tick, nextId = 1;
@@ -45,21 +48,31 @@ public final class PreviewWorld {
   public PreviewWorld(PreviewMap map, MonsterContent content) {
     this.map = map;
     var residents=new ArrayList<CreatureView>();
+    var authored=new ArrayList<CreatureSpawn>();
+    var keys=new java.util.HashSet<String>();
     if (content!=null) {
       var spawns=content.region(0,map.originX,map.originY,map.width,map.height);
       if (spawns.size()>256) throw new IllegalArgumentException("Creature preview capacity exceeded");
       for (var spawn:spawns) {
+        if (!keys.add(spawn.persistenceKey())) throw new IllegalArgumentException("Duplicate authored spawn identity");
         var definition=spawn.definition()==null ? null : content.monsters().get(spawn.definition());
         if (definition==null || definition.getWalkPattern()==null || definition.getWalkPattern().isBlank())
           throw new IllegalArgumentException("Unsupported creature in online starting area: "+spawn.type());
         // Preserve authored tile anchors, as MonsterManager does. These actors are stationary:
-        // monster movement/footprints, density rules, AI and respawn are separate integration work.
+        // monster movement/footprints, density rules and AI remain separate integration work.
         residents.add(new CreatureView(residents.size()+1L,definition.getName(),
             spawn.x()-map.originX,spawn.y()-map.originY,definition.getHealth(),definition.getHealth(),
             definition.getWalkPattern(),definition.getAttackPattern(),definition.getDeathPattern()));
+        authored.add(new CreatureSpawn(residents.size(),spawn,definition));
       }
     }
     creatures=List.copyOf(residents);
+    creatureSpawns=List.copyOf(authored);
+  }
+
+  List<CreatureSpawn> creatureSpawns() { return creatureSpawns; }
+  void creatureActive(long id, boolean active) {
+    if (active) inactiveCreatures.remove(id); else inactiveCreatures.add(id);
   }
 
   public Joined join() {
@@ -121,7 +134,7 @@ public final class PreviewWorld {
     authenticate(token);
     List<PlayerView> result = new ArrayList<>(players.size());
     for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance));
-    return new Snapshot(tick, List.copyOf(result),creatures);
+    return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id())).toList());
   }
 
   public void leave(String token) { authenticate(token); players.remove(token); }
