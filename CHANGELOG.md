@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Monster pursuit architecture (T4C-0209)
+
+### Added
+- Documented how authored monster acquisition, movement, leash, reach and durable combat should join the online server, with explicit future file handoffs and acceptance checks. This is a design checkpoint; online pursuit is not implemented.
+
 ## 2026-10-27 — Two-adapter server restart probe (T4C-0207)
 
 ### Added

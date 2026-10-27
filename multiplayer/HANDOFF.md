@@ -307,3 +307,20 @@ reports for inspection. The tool also compiled against the later combined schema
 isolated build snapshot, but that runtime was not played through. No shared QA server, rendered
 clients or PostgreSQL outage was involved. M5 still needs the wider recovery, anti-cheat and
 sustained-load gates.
+
+## T4C-0209 pursuit design checkpoint
+
+`MONSTER_PURSUIT_DESIGN.md` is the reviewed architecture-only plan for authored monster
+acquisition, pursuit, leash, reach, path budgets, durable moving combat and peer handoffs.
+It was prepared against source through PR132/PR130 and distinguishes that schema-10 source
+from the live owner-controlled source-`8da43482`/schema-9 two-client QA realm. No online
+pursuit code or runtime test was delivered. M4 remains open.
+
+T4C-0210 is separately reserved for the small offline-preserving `BaseMonster`/pure
+`MonsterPursuitRules` extraction and focused test. Its proposed `multiplayer/domain/pom.xml`
+inclusion awaits an explicit narrow Claude handoff; do not assume ownership or change it
+before acknowledgement. The later moving physical AI phase requires explicit latest-commit
+handoffs for `OnlineStore`, `PersistentCreatures`, `PreviewWorld`, `HostedWorlds`,
+`OnlineMelee`, `OnlineRetaliation`, `PersistentSessions` and snapshot/protocol interfaces
+after Claude's T4C-0204 loot and T4C-0206 quest hooks are ready. Do not start that core
+phase from this design alone.
