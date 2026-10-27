@@ -18,6 +18,12 @@ import org.junit.jupiter.api.Test;
 class OnlineAbilityChoicesTest {
   private static final SpellContent ALLOWLIST = OnlineSpellContentExporter.snapshot();
 
+  /** The exporter registers JSON items globally; leave the shared registry as other tests expect it. */
+  @org.junit.jupiter.api.AfterAll
+  static void resetSharedItemRegistry() {
+    ItemRegistry.resetAdditionalDefinitions();
+  }
+
   private static CharacterProgress progress(Set<String> spells, List<Item> inventory, Map<String, UUID> equipment) {
     return new CharacterProgress(
         1, "warrior", "male", new CharacterProgress.Attributes(10, 10, 10, 10, 10),
