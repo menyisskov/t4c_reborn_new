@@ -35,7 +35,7 @@ public final class DeathPenaltyService {
 
   public record Config(Rates pve, Rates pvp) {
     public static Config originalDefaults() {
-      return new Config(new Rates(5, 0, 5, 0, 0), new Rates(1, 0, 1, 0, 0));
+      return new Config(new Rates(DeathRules.backpackPercent(false), 0, DeathRules.experiencePercent(false), 0, 0), new Rates(DeathRules.backpackPercent(true), 0, DeathRules.experiencePercent(true), 0, 0));
     }
   }
 
@@ -124,7 +124,7 @@ public final class DeathPenaltyService {
   }
 
   private static boolean rollPercent(RandomGenerator random, int percent) {
-    return percent > 0 && random.nextInt(100) < percent;
+    return DeathRules.rollPercent(random, percent);
   }
 
   private static int percentage(int value, int percent) {
@@ -132,6 +132,6 @@ public final class DeathPenaltyService {
   }
 
   private static long percentageLong(long value, int percent) {
-    return Math.max(0, value) * percent / 100L;
+    return DeathRules.percentage(value, percent);
   }
 }

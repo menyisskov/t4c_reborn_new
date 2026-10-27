@@ -18,7 +18,24 @@ public final class OnlineStore {
       long gold, long experience, long revision, CharacterProgress progress) {}
   public record RewardResult(boolean applied, CharacterState character) {}
   public record SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt,
-      Integer health) {}
+      Integer health, UUID targetCharacter, long nextAttackAt) {}
+  public record CreatureProvocation(String key, UUID life, UUID targetCharacter, long nextAttackAt) {
+    public CreatureProvocation { spawnKey(key); Objects.requireNonNull(life); Objects.requireNonNull(targetCharacter); if(nextAttackAt<0) throw new IllegalArgumentException("Invalid attack deadline"); }
+  }
+  public record MonsterAttack(String key, UUID life, UUID targetCharacter, long expectedNext, long nextNext) {
+    public MonsterAttack { spawnKey(key); Objects.requireNonNull(life); Objects.requireNonNull(targetCharacter); if(expectedNext<0 || nextNext<=expectedNext) throw new IllegalArgumentException("Invalid attack deadline"); }
+  }
+  public record DeathTransition(long experienceLost, CharacterProgress.Respawn destination,
+      CharacterProgress.Respawn corpsePosition, java.util.List<CharacterProgress.Item> droppedItems,
+      long goldLost, long goldDropped) {
+    public DeathTransition { Objects.requireNonNull(destination); Objects.requireNonNull(corpsePosition);
+      droppedItems=java.util.List.copyOf(droppedItems);
+      if(experienceLost<0 || goldLost<0 || goldDropped<0 || goldDropped>goldLost) throw new IllegalArgumentException("Invalid death penalty"); }
+  }
+  public record CorpseState(UUID id, UUID characterId, int world, double x, double y,
+      java.util.List<CharacterProgress.Item> items, long gold, boolean recovered) {
+    public CorpseState { items=java.util.List.copyOf(items); }
+  }
   /** Trusted resolved damage, never a network payload. Null stored health means untouched authored health. */
   public record CreatureStrike(String key, UUID life, int maximumHealth, int before, int after) {
     public CreatureStrike {
@@ -69,7 +86,7 @@ public final class OnlineStore {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 7) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 8) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -142,6 +159,14 @@ public final class OnlineStore {
           s.execute("ALTER TABLE online_spawns ADD COLUMN health integer CHECK (health>=0)");
           s.execute("INSERT INTO online_schema(version) VALUES (7)");
         }
+        if (version < 8) {
+          s.execute("ALTER TABLE online_spawns ADD COLUMN target_character uuid REFERENCES online_characters(id), ADD COLUMN next_attack_at bigint NOT NULL DEFAULT 0 CHECK(next_attack_at>=0)");
+          s.execute("CREATE INDEX online_spawns_target ON online_spawns(target_character) WHERE target_character IS NOT NULL");
+          s.execute("CREATE TABLE online_combat_events (event_id uuid PRIMARY KEY, character_id uuid NOT NULL REFERENCES online_characters(id), payload_hash varchar(64) NOT NULL, created_at timestamptz NOT NULL DEFAULT now())");
+          s.execute("CREATE TABLE online_corpses (id uuid PRIMARY KEY REFERENCES online_combat_events(event_id), character_id uuid NOT NULL REFERENCES online_characters(id), world integer NOT NULL CHECK(world>=0), x double precision NOT NULL, y double precision NOT NULL, items jsonb NOT NULL CHECK(jsonb_typeof(items)='array'), gold bigint NOT NULL CHECK(gold>=0), recovered boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now())");
+          s.execute("CREATE INDEX online_corpses_owner ON online_corpses(character_id) WHERE NOT recovered");
+          s.execute("INSERT INTO online_schema(version) VALUES (8)");
+        }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
@@ -155,7 +180,7 @@ public final class OnlineStore {
         s.setString(1,key); s.setObject(2,UUID.randomUUID()); s.executeUpdate();
       }
       try (var s=c.prepareStatement("""
-          SELECT s.generation,s.event_id,r.character_id,r.claimed_at,s.health
+          SELECT s.generation,s.event_id,r.character_id,r.claimed_at,s.health,s.target_character,s.next_attack_at
           FROM online_spawns s LEFT JOIN online_world_rewards r ON r.event_id=s.event_id
           WHERE s.spawn_key=?
           """)) {
@@ -164,7 +189,7 @@ public final class OnlineStore {
           if (!rows.next()) throw new Conflict("Spawn unavailable");
           var claimedAt=rows.getTimestamp(4);
           return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),rows.getObject(3,UUID.class),
-              claimedAt==null ? null : claimedAt.toInstant(),rows.getObject(5,Integer.class));
+              claimedAt==null ? null : claimedAt.toInstant(),rows.getObject(5,Integer.class),rows.getObject(6,UUID.class),rows.getLong(7));
         }
       }
     }
@@ -175,7 +200,7 @@ public final class OnlineStore {
     spawnKey(key); Objects.requireNonNull(expectedEvent);
     if (delayMillis<0) throw new IllegalArgumentException("Negative respawn delay");
     try (var c=connections.open(); var s=c.prepareStatement("""
-        UPDATE online_spawns s SET generation=s.generation+1,event_id=?,health=NULL
+        UPDATE online_spawns s SET generation=s.generation+1,event_id=?,health=NULL,target_character=NULL,next_attack_at=0
         FROM online_world_rewards r
         WHERE s.spawn_key=? AND s.event_id=? AND r.event_id=s.event_id
           AND r.claimed_at<=clock_timestamp()-(? * interval '1 millisecond')
@@ -184,7 +209,7 @@ public final class OnlineStore {
       s.setObject(1,UUID.randomUUID()); s.setString(2,key); s.setObject(3,expectedEvent); s.setLong(4,delayMillis);
       try (var rows=s.executeQuery()) {
         if (!rows.next()) throw new Conflict("Spawn life changed or respawn not ready");
-        return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),null,null,null);
+        return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),null,null,null,null,0);
       }
     }
   }
@@ -361,11 +386,35 @@ public final class OnlineStore {
 
   private RewardResult applyReward(Session session, UUID event, long gold, long experience,
       Long revision, CharacterProgress progress, boolean worldReward, CreatureStrike strike) throws SQLException {
+    return applyReward(session,event,gold,experience,revision,progress,worldReward,strike,null);
+  }
+
+  public RewardResult commitGameplayEvent(Session session, long revision, UUID event, long gold,
+      long experience, CharacterProgress progress, CreatureProvocation provocation) throws SQLException {
+    if(revision<0) throw new IllegalArgumentException("Invalid revision");
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),false,null,provocation);
+  }
+
+  public RewardResult commitCreatureStrike(Session session, long revision, UUID event, long gold,
+      long experience, CharacterProgress progress, CreatureStrike strike, CreatureProvocation provocation) throws SQLException {
+    if(revision<0) throw new IllegalArgumentException("Invalid revision");
+    Objects.requireNonNull(strike); Objects.requireNonNull(event);
+    boolean lethal=strike.after()==0;
+    if(lethal!=event.equals(strike.life())) throw new IllegalArgumentException("Invalid strike event identity");
+    if(provocation!=null && (!provocation.key().equals(strike.key()) || !provocation.life().equals(strike.life()))) throw new IllegalArgumentException("Different provoked life");
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),lethal,strike,provocation);
+  }
+
+  private RewardResult applyReward(Session session, UUID event, long gold, long experience,
+      Long revision, CharacterProgress progress, boolean worldReward, CreatureStrike strike,
+      CreatureProvocation provocation) throws SQLException {
     Objects.requireNonNull(event);
+    if(provocation!=null && !provocation.targetCharacter().equals(session.characterId())) throw new IllegalArgumentException("Invalid provocation owner");
     if (gold < 0 || experience < 0) throw new IllegalArgumentException("Negative reward");
     String encoded=progress==null ? null : encodeProgress(progress);
     String fingerprint=encoded==null ? null : fingerprint(strike==null ? encoded
         : encoded+"\ncreature-strike-v1\n"+JSON.toJson(canonical(JSON.toJsonTree(strike))));
+    if(provocation!=null) fingerprint=fingerprint(fingerprint+"\nprovocation-v1\n"+JSON.toJson(provocation));
     UUID account = session.accountId(), character = session.characterId();
     try (var c = connections.open()) {
       c.setAutoCommit(false);
@@ -405,6 +454,12 @@ public final class OnlineStore {
           }
         }
         if (revision!=null && state.revision()!=revision) throw new Conflict("Stale gameplay event");
+        if(provocation!=null) {
+          try(var s=c.prepareStatement("UPDATE online_spawns SET target_character=?,next_attack_at=CASE WHEN target_character IS NULL THEN ? ELSE next_attack_at END WHERE spawn_key=? AND event_id=? AND COALESCE(health,1)>0 AND NOT EXISTS (SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)")) {
+            s.setObject(1,provocation.targetCharacter()); s.setLong(2,provocation.nextAttackAt()); s.setString(3,provocation.key()); s.setObject(4,provocation.life());
+            if(s.executeUpdate()!=1) throw new Conflict("Creature life unavailable");
+          }
+        }
         if (strike!=null) {
           // Character lock precedes spawn lock. CAS prevents two attackers rewarding the same damage.
           try (var s=c.prepareStatement("""
@@ -434,6 +489,117 @@ public final class OnlineStore {
         c.commit(); return new RewardResult(true, state);
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
+  }
+
+  /** Persist one server-resolved retaliation, including a fatal move/penalty/corpse, exactly once. */
+  public RewardResult commitMonsterAttack(Session session, long revision, UUID event,
+      CharacterProgress progress, MonsterAttack attack, DeathTransition death) throws SQLException {
+    Objects.requireNonNull(event); Objects.requireNonNull(attack);
+    if(revision<0 || !attack.targetCharacter().equals(session.characterId())) throw new IllegalArgumentException("Invalid attack owner");
+    String encoded=encodeProgress(progress);
+    String digest=fingerprint(encoded+"\nmonster-attack-v1\n"+JSON.toJson(attack)+"\n"+JSON.toJson(death));
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        var state=lockSession(c,session);
+        try(var q=c.prepareStatement("SELECT character_id,payload_hash FROM online_combat_events WHERE event_id=?")) {
+          q.setObject(1,event);
+          try(var rows=q.executeQuery()) { if(rows.next()) {
+            if(!session.characterId().equals(rows.getObject(1,UUID.class)) || !digest.equals(rows.getString(2))) throw new Conflict("Combat event payload mismatch");
+            c.commit(); return new RewardResult(false,state);
+          } }
+        }
+        if(state.revision()!=revision) throw new Conflict("Stale combat event");
+        try(var q=c.prepareStatement("UPDATE online_spawns SET next_attack_at=? WHERE spawn_key=? AND event_id=? AND target_character=? AND next_attack_at=? AND next_attack_at<=floor(extract(epoch FROM clock_timestamp())*1000) AND COALESCE(health,1)>0 AND NOT EXISTS(SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)")) {
+          q.setLong(1,attack.nextNext());q.setString(2,attack.key());q.setObject(3,attack.life());q.setObject(4,attack.targetCharacter());q.setLong(5,attack.expectedNext());
+          if(q.executeUpdate()!=1) throw new Conflict("Creature attack changed or not due");
+        }
+        long goldLost=death==null ? 0 : death.goldLost(),xpLost=death==null ? 0 : death.experienceLost();
+        if(goldLost>state.gold() || xpLost>state.experience()) throw new Conflict("Invalid death balances");
+        if(death!=null) validateDeathInventory(state.progress(),progress,death.droppedItems());
+        try(var q=c.prepareStatement("INSERT INTO online_combat_events(event_id,character_id,payload_hash) VALUES(?,?,?)")) {
+          q.setObject(1,event);q.setObject(2,session.characterId());q.setString(3,digest);q.executeUpdate();
+        }
+        var destination=death==null ? new CharacterProgress.Respawn(state.world(),state.x(),state.y()) : death.destination();
+        try(var q=c.prepareStatement("UPDATE online_characters SET world=?,x=?,y=?,gold=gold-?,experience=experience-?,progress=?::jsonb,revision=revision+1,updated_at=now() WHERE id=?")) {
+          q.setInt(1,destination.world());q.setDouble(2,destination.x());q.setDouble(3,destination.y());q.setLong(4,goldLost);q.setLong(5,xpLost);q.setString(6,encoded);q.setObject(7,session.characterId());q.executeUpdate();
+        }
+        if(death!=null) {
+          if(!death.droppedItems().isEmpty() || death.goldDropped()>0) {
+            try(var q=c.prepareStatement("INSERT INTO online_corpses(id,character_id,world,x,y,items,gold) VALUES(?,?,?,?,?,?::jsonb,?)")) {
+              q.setObject(1,event);q.setObject(2,session.characterId());q.setInt(3,death.corpsePosition().world());q.setDouble(4,death.corpsePosition().x());q.setDouble(5,death.corpsePosition().y());q.setString(6,JSON.toJson(death.droppedItems()));q.setLong(7,death.goldDropped());q.executeUpdate();
+            }
+          }
+          try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL WHERE target_character=?")) { q.setObject(1,session.characterId());q.executeUpdate(); }
+        }
+        state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  private static CharacterState lockSession(Connection c,Session session) throws SQLException {
+    try(var q=c.prepareStatement("SELECT * FROM online_characters WHERE id=? AND account_id=? AND session_id=? AND session_until>clock_timestamp() FOR UPDATE")) {
+      bindSession(q,session,1);try(var rows=q.executeQuery()) { if(!rows.next()) throw new Conflict("Session expired or replaced");return read(rows); }
+    }
+  }
+
+  private static void validateDeathInventory(CharacterProgress before,CharacterProgress after,java.util.List<CharacterProgress.Item> drops) throws Conflict {
+    if(before==null || !before.equipment().equals(after.equipment()) || !before.storage().equals(after.storage())) throw new Conflict("Invalid death inventory");
+    var actual=new java.util.HashMap<String,Long>();var expected=new java.util.HashMap<String,Long>();
+    for(var item:before.inventory()) expected.merge(item.key()+"\n"+item.charges(),(long)item.quantity(),Math::addExact);
+    var ids=new java.util.HashSet<UUID>();
+    for(var item:after.inventory()) { ids.add(item.id()); actual.merge(item.key()+"\n"+item.charges(),(long)item.quantity(),Math::addExact); }
+    for(var item:after.storage()) ids.add(item.id());
+    for(var item:drops) { if(!ids.add(item.id())) throw new Conflict("Duplicate dropped item");actual.merge(item.key()+"\n"+item.charges(),(long)item.quantity(),Math::addExact); }
+    if(!actual.equals(expected)) throw new Conflict("Death must preserve owned item quantities and charges");
+  }
+
+  /** Bounded owner-only retrieval. No account keys, sessions or other players' inventories leave storage. */
+  public java.util.List<CorpseState> listCorpses(Session session) throws SQLException {
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        lockSession(c,session);
+        var result=new java.util.ArrayList<CorpseState>();
+        try(var q=c.prepareStatement("SELECT * FROM online_corpses WHERE character_id=? AND NOT recovered ORDER BY created_at,id LIMIT 256")) {
+          q.setObject(1,session.characterId());try(var rows=q.executeQuery()) { while(rows.next()) result.add(readCorpse(rows)); }
+        }
+        c.commit();return java.util.List.copyOf(result);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  /** Trusted simulation position is frozen while this command runs; never accept client coordinates. */
+  public RewardResult recoverCorpse(Session session,long revision,UUID corpseId,int world,double x,double y) throws SQLException {
+    Objects.requireNonNull(corpseId);position(world,x,y);
+    if(revision<0) throw new IllegalArgumentException("Invalid revision");
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        var state=lockSession(c,session);CorpseState corpse;
+        try(var q=c.prepareStatement("SELECT * FROM online_corpses WHERE id=? AND character_id=? FOR UPDATE")) {
+          q.setObject(1,corpseId);q.setObject(2,session.characterId());try(var rows=q.executeQuery()) { if(!rows.next()) throw new Conflict("Corpse unavailable");corpse=readCorpse(rows); }
+        }
+        if(corpse.recovered()) { c.commit();return new RewardResult(false,state); }
+        if(state.revision()!=revision) throw new Conflict("Stale corpse recovery");
+        if(corpse.world()!=world || Math.hypot((x-corpse.x())*com.perso.T4C.config.GameConstants.GRID_W,(y-corpse.y())*com.perso.T4C.config.GameConstants.GRID_H)>com.perso.T4C.config.GameConstants.PLAYER_MELEE_ATTACK_RANGE) throw new Conflict("Corpse out of reach");
+        var p=Objects.requireNonNull(state.progress());var inventory=new java.util.ArrayList<>(p.inventory());inventory.addAll(corpse.items());
+        var progress=new CharacterProgress(p.version(),p.characterClass(),p.gender(),p.attributes(),p.vitals(),p.advancement(),inventory,p.equipment(),p.skills(),p.spells(),p.questFlags(),p.storage(),p.storageGold(),p.respawn(),p.buffs(),p.cooldowns(),p.hiddenUntil(),p.companion());
+        long gold=Math.addExact(state.gold(),corpse.gold());
+        try(var q=c.prepareStatement("UPDATE online_characters SET gold=?,progress=?::jsonb,revision=revision+1,updated_at=now() WHERE id=?")) {
+          q.setLong(1,gold);q.setString(2,encodeProgress(progress));q.setObject(3,session.characterId());q.executeUpdate();
+        }
+        try(var q=c.prepareStatement("UPDATE online_corpses SET recovered=true WHERE id=?")) { q.setObject(1,corpseId);q.executeUpdate(); }
+        state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  private static CorpseState readCorpse(ResultSet row) throws SQLException {
+    try {
+      var items=JSON.fromJson(row.getString("items"),CharacterProgress.Item[].class);
+      return new CorpseState(row.getObject("id",UUID.class),row.getObject("character_id",UUID.class),row.getInt("world"),row.getDouble("x"),row.getDouble("y"),java.util.List.of(items),row.getLong("gold"),row.getBoolean("recovered"));
+    } catch(RuntimeException invalid) { throw new SQLException("Invalid corpse state"); }
   }
 
   private static String encodeProgress(CharacterProgress progress) {

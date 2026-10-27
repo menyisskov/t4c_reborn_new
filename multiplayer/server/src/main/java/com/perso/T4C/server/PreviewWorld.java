@@ -21,7 +21,7 @@ public final class PreviewWorld {
   private static final double REQUESTS_PER_SECOND = 60;
   private static final double REQUEST_BURST = 60;
   public record Joined(String token, long id) {}
-  public record PlayerView(long id, double x, double y, long sequence, long appearance) {}
+  public record PlayerView(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {}
   public record Snapshot(long tick, List<PlayerView> players, List<CreatureView> creatures) {}
   public static final class Rejected extends RuntimeException {
     public final int status;
@@ -31,6 +31,8 @@ public final class PreviewWorld {
     long id, sequence = -1, lastSeen, lastInput, appearance;
     int dx, dy;
     double x, y;
+    int hp=1,maxHp=1;
+    boolean frozen;
     double requestCredits = REQUEST_BURST;
     long budgetTick;
   }
@@ -134,15 +136,15 @@ public final class PreviewWorld {
       throw new Rejected(400, "input");
     if (sequence <= player.sequence) throw new Rejected(409, "sequence");
     player.sequence = sequence;
-    player.dx = dx;
-    player.dy = dy;
+    player.dx = player.frozen ? 0 : dx;
+    player.dy = player.frozen ? 0 : dy;
     player.lastInput = tick;
   }
 
   public Snapshot snapshot(String token) {
     authenticate(token);
     List<PlayerView> result = new ArrayList<>(players.size());
-    for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance));
+    for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance,p.hp,p.maxHp));
     return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
         .map(c -> new CreatureView(c.id(),c.definition(),c.x(),c.y(),creatureHealth.getOrDefault(c.id(),c.health()),
             c.maxHealth(),c.walkPattern(),c.attackPattern(),c.deathPattern())).toList());
@@ -152,7 +154,24 @@ public final class PreviewWorld {
 
   PlayerView position(String token) {
     var p = players.get(token);
-    return p == null ? null : new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance);
+    return p == null ? null : new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance,p.hp,p.maxHp);
+  }
+
+  void health(String token,int hp,int maxHp) {
+    if (hp<0 || maxHp<=0 || hp>maxHp) throw new IllegalArgumentException("Invalid player health");
+    var p=players.get(token); if (p!=null) { p.hp=hp; p.maxHp=maxHp; }
+  }
+
+  void freeze(String token,boolean frozen) {
+    var p=players.get(token);
+    if (p!=null) { p.frozen=frozen; if (frozen) { p.dx=0; p.dy=0; } }
+  }
+
+  /** Committed server-owned relocation; never accepts network coordinates. */
+  void relocate(String token,double x,double y) {
+    if (!map.canStand(x,y)) throw new IllegalArgumentException("Blocked relocation");
+    var p=players.get(token);
+    if (p!=null) { p.x=x; p.y=y; p.dx=0; p.dy=0; }
   }
 
   void remove(String token) { players.remove(token); }
@@ -165,6 +184,7 @@ public final class PreviewWorld {
     int steps = (int) Math.ceil(distance / 0.2);
     double amount = distance / steps;
     for (Player p : players.values()) {
+      if (p.frozen || p.hp<=0) continue;
       if (tick - p.lastInput > INPUT_TIMEOUT_TICKS) { p.dx = 0; p.dy = 0; }
       for (int i = 0; i < steps; i++) {
         double x = p.x + p.dx * amount, y = p.y + p.dy * amount;

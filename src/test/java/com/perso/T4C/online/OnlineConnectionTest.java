@@ -32,6 +32,7 @@ class OnlineConnectionTest {
     var equipmentReceived = new CountDownLatch(1);
     var releaseEquipment = new CountDownLatch(1);
     var credentials = new OnlineConnection.Credentials("b".repeat(64), java.util.UUID.randomUUID());
+    var corpseId=java.util.UUID.randomUUID();
     var leave = new CountDownLatch(1);
     var tapReceived = new CountDownLatch(1);
     var stoppedAfterTap = new CountDownLatch(1);
@@ -41,7 +42,7 @@ class OnlineConnectionTest {
         "/",
         exchange -> {
           String path = exchange.getRequestURI().getPath();
-          if (path.equals("/equip") || path.equals("/unequip") || path.equals("/attack")) {
+          if (path.equals("/equip") || path.equals("/unequip") || path.equals("/attack") || path.equals("/recover")) {
             equipmentCalls.incrementAndGet();
             equipmentBody.set(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
             equipmentAuth.set(exchange.getRequestHeaders().getFirst("Authorization"));
@@ -75,17 +76,18 @@ class OnlineConnectionTest {
                 case "/join" -> "{\"token\":\"" + token + "\",\"id\":7}";
                 case "/state" ->
                     "{\"tick\":8,\"characterRevision\":" + revision.get()
-                        + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0}],"
+                        + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],"
                         + "\"creatures\":[{\"id\":1,\"definition\":\"Guard\",\"x\":21,\"y\":37,"
                         + "\"health\":55,\"maxHealth\":55,\"walkPattern\":\"Warrio#l\"}]}";
                 case "/character" ->
                     "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Online tester\",\"gold\":"
                         + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + "}";
-                case "/equip", "/unequip", "/attack" -> "{\"revision\":" + revision.get() + "}";
+                case "/corpses" -> "[{\"id\":\""+corpseId+"\",\"world\":0,\"x\":2944,\"y\":1059,\"itemCount\":1,\"gold\":0}]";
+                case "/equip", "/unequip", "/attack", "/recover" -> "{\"revision\":" + revision.get() + "}";
                 default -> "{}";
               };
           byte[] bytes = result.getBytes(StandardCharsets.UTF_8);
-          exchange.sendResponseHeaders(path.equals("/equip") || path.equals("/unequip") || path.equals("/attack") ? equipmentCode.get() : 200, bytes.length);
+          exchange.sendResponseHeaders(path.equals("/equip") || path.equals("/unequip") || path.equals("/attack") || path.equals("/recover") ? equipmentCode.get() : 200, bytes.length);
           exchange.getResponseBody().write(bytes);
           exchange.close();
         });
@@ -103,6 +105,8 @@ class OnlineConnectionTest {
         assertEquals(
             persistent ? credentials.secret() + " " + credentials.characterId() : "", login.get());
         assertEquals(7, connection.view().ownId());
+        assertEquals(27, connection.view().snapshot().players().getFirst().hp());
+        assertEquals(40, connection.view().snapshot().players().getFirst().maxHp());
         assertEquals(Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION), protocol.get());
         assertEquals(2904, connection.view().map().originX());
         assertEquals(40.5, connection.view().snapshot().players().getFirst().x());
@@ -154,13 +158,18 @@ class OnlineConnectionTest {
           assertEquals("3 1",equipmentBody.get(),"Attack intent cannot contain damage, XP, gold or coordinates");
           assertEquals(4,attack.character().revision());
           assertEquals(attack.character(),connection.view().character());
+          assertEquals(corpseId,connection.view().corpses().getFirst().id());
+          var recovered=connection.recover(corpseId).toCompletableFuture().get(3,TimeUnit.SECONDS);
+          assertTrue(recovered.accepted());
+          assertEquals("4 "+corpseId,equipmentBody.get(),"Recovery accepts only revision and owned corpse identity");
+          assertEquals(5,recovered.character().revision());
 
           equipmentCode.set(503);
           var uncertain = connection.equip(instance, com.perso.T4C.player.BodyPart.HEAD).toCompletableFuture();
           assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(3, TimeUnit.SECONDS));
           assertEquals("disconnected", connection.status());
           assertNull(connection.view());
-          assertEquals(4, equipmentCalls.get(), "An ambiguous mutation must never be automatically replayed");
+          assertEquals(5, equipmentCalls.get(), "An ambiguous mutation must never be automatically replayed");
         } else assertNull(connection.view().character());
       }
       assertTrue(leave.await(3, TimeUnit.SECONDS), "Closing must release the temporary session");

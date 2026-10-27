@@ -157,6 +157,7 @@ public final class OnlineClient extends ApplicationAdapter {
             public boolean keyDown(int code) {
               if (!focused || connection == null) return false;
               if (code == Input.Keys.SPACE) { attackNearest(); return true; }
+              if (code == Input.Keys.E) { recoverNearest(); return true; }
               if (code != Input.Keys.W
                   && code != Input.Keys.A
                   && code != Input.Keys.S
@@ -219,6 +220,27 @@ public final class OnlineClient extends ApplicationAdapter {
   private int key(int positive, int alternatePositive, int negative, int alternateNegative) {
     return (Gdx.input.isKeyPressed(positive) || Gdx.input.isKeyPressed(alternatePositive) ? 1 : 0)
         - (Gdx.input.isKeyPressed(negative) || Gdx.input.isKeyPressed(alternateNegative) ? 1 : 0);
+  }
+
+  private OnlineConnection.Corpse nearestCorpse(OnlineConnection.View view) {
+    var own=view.snapshot().players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElse(null);
+    if (own==null) return null;
+    return view.corpses().stream().filter(c -> c.world()==0)
+        .min(java.util.Comparator.comparingDouble(c -> corpseDistance(view,own,c))).orElse(null);
+  }
+
+  private double corpseDistance(OnlineConnection.View view,OnlineConnection.Actor own,OnlineConnection.Corpse corpse) {
+    return Math.hypot((corpse.x()-view.map().originX()-own.x())*GRID_W,
+        (corpse.y()-view.map().originY()-own.y())*GRID_H);
+  }
+
+  private void recoverNearest() {
+    var view=connection.view();
+    if (view==null || view.character()==null || !"connected".equals(connection.status())) return;
+    var nearest=nearestCorpse(view);
+    if (nearest==null) return;
+    try { connection.recover(nearest.id()).exceptionally(failed -> null); }
+    catch (IllegalStateException pendingOrDisconnected) { /* Single-flight commands stay bounded. */ }
   }
 
   @Override
@@ -335,10 +357,15 @@ public final class OnlineClient extends ApplicationAdapter {
           Gdx.graphics.getHeight() - 38);
     if (view != null && view.character() != null && view.character().progress() != null) {
       var character=view.character();
-      font.draw(hud,I18n.message("online.client.progress",character.progress().advancement().level(),
+      font.draw(hud,I18n.message("online.client.progress",character.progress().vitals().hp(),character.progress().vitals().maxHp(),character.progress().advancement().level(),
           character.experience(),character.gold()),16,Gdx.graphics.getHeight()-60);
       view.snapshot().creatures().stream().filter(c -> c.id()==targetCreature).findFirst().ifPresent(c ->
           font.draw(hud,I18n.message("online.client.target_health",c.health(),c.maxHealth()),16,Gdx.graphics.getHeight()-82));
+      var corpse=nearestCorpse(view);
+      var own=view.snapshot().players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElse(null);
+      if (corpse!=null && own!=null)
+        font.draw(hud,I18n.message("online.client.corpse",Math.round(corpseDistance(view,own,corpse)),corpse.itemCount(),corpse.gold()),
+            16,Gdx.graphics.getHeight()-104);
     }
     hud.end();
   }

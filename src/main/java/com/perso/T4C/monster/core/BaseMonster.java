@@ -903,17 +903,7 @@ public abstract class BaseMonster implements Nameable {
       if (attack.isSpell() && !canCastMonsterSpell(attack.getSpellId())) continue;
       eligible.add(attack);
     }
-    if (eligible.isEmpty()) return null;
-    int totalWeight = 0;
-    for (MonsterDef.Attack attack : eligible) totalWeight += Math.max(0, attack.getValue2());
-    if (totalWeight <= 0) return eligible.get(eligible.size() - 1);
-    int roll = random.nextInt(totalWeight) + 1;
-    int cumulative = 0;
-    for (MonsterDef.Attack a : eligible) {
-      cumulative += Math.max(0, a.getValue2());
-      if (roll <= cumulative) return a;
-    }
-    return eligible.get(eligible.size() - 1);
+    return com.perso.T4C.combat.MonsterCombatRules.chooseAttack(eligible,random);
   }
 
   protected boolean canCastMonsterSpell(int spellId) {
@@ -934,18 +924,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   private int parseDiceRoll(String formula) {
-    if (formula == null || formula.isEmpty()) return 0;
-    java.util.regex.Matcher m =
-        java.util.regex.Pattern.compile(
-                "(\\d+)d(\\d+)([+-]\\d+)?", java.util.regex.Pattern.CASE_INSENSITIVE)
-            .matcher(formula.trim());
-    if (!m.find()) return 0;
-    int n = Integer.parseInt(m.group(1));
-    int d = Integer.parseInt(m.group(2));
-    int bonus = m.group(3) != null ? Integer.parseInt(m.group(3)) : 0;
-    int total = bonus;
-    for (int i = 0; i < n; i++) total += random.nextInt(d) + 1;
-    return Math.max(0, total);
+    return com.perso.T4C.combat.MonsterCombatRules.rollDamage(formula,random);
   }
 
   public void takeDamage(int damage) {

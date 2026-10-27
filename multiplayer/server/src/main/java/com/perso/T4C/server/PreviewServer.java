@@ -32,6 +32,7 @@ public final class PreviewServer implements AutoCloseable {
   private final PersistentSessions persistent;
   private final PersistentCreatures persistentCreatures;
   private final OnlineMelee melee;
+  private final OnlineRetaliation retaliation;
   private final String controlToken;
   private final SimulationLoop loop;
   private final Thread simulation;
@@ -63,6 +64,8 @@ public final class PreviewServer implements AutoCloseable {
     }
     melee=persistent==null ? null : new OnlineMelee(map,world,persistent,persistentCreatures,items,
         new java.security.SecureRandom(),System::currentTimeMillis);
+    retaliation=persistent==null ? null : new OnlineRetaliation(map,world,persistent,persistentCreatures,items,
+        new java.security.SecureRandom(),System::currentTimeMillis);
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
         "originX", map.originX, "originY", map.originY, "blocked", map.cells(),
         "maxPlayers", PreviewWorld.MAX_PLAYERS,"persistent",store!=null,"protocolVersion",OnlineProtocol.VERSION));
@@ -76,6 +79,7 @@ public final class PreviewServer implements AutoCloseable {
       world.step();
       if (persistent!=null) persistent.step();
       if (persistentCreatures!=null) persistentCreatures.step();
+      if (retaliation!=null) retaliation.step();
     });
     simulation = new Thread(() -> {
       try { loop.run(Long.MAX_VALUE); }
@@ -204,6 +208,18 @@ public final class PreviewServer implements AutoCloseable {
             var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
             json(exchange,200,Map.of("revision",committed.character().revision()));
           }
+          case "/recover" -> {
+            if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            if (!body.matches("[0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+              throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" "); long revision; java.util.UUID corpse;
+            try { revision=Long.parseLong(parts[0]); corpse=java.util.UUID.fromString(parts[1]); }
+            catch (IllegalArgumentException bad) { throw new PreviewWorld.Rejected(400,"input"); }
+            var pending=onWorld(() -> { world.admitRequest(token); return persistent.recoverCorpse(token,revision,corpse); });
+            var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
+            json(exchange,200,Map.of("revision",committed.character().revision()));
+          }
           case "/equip", "/unequip" -> {
             if (persistent == null) throw new PreviewWorld.Rejected(404, "route");
             String token = token(exchange);
@@ -264,6 +280,14 @@ public final class PreviewServer implements AutoCloseable {
               return new OnlineCharacterView(saved.id(),saved.name(),saved.gold(),saved.experience(),
                   saved.revision(),saved.progress());
             }));
+          }
+          case "/corpses" -> {
+            if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            var pending=onWorld(() -> { world.admitRequest(token); return persistent.corpses(token); });
+            var found=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
+            json(exchange,200,found.stream().map(c -> Map.of("id",c.id(),"world",c.world(),"x",c.x(),"y",c.y(),
+                "itemCount",c.items().size(),"gold",c.gold())).toList());
           }
           case "/health" -> json(exchange, 200,
               Map.of("tick", loop.completedTicks(), "mode", store==null ? "local-preview" : "local-persistent", "capacity", PreviewWorld.MAX_PLAYERS));

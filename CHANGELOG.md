@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online retaliation and recovery (T4C-0190)
+
+### Added
+- Provoked online guards strike back within melee reach. Damage, attack timing and hostility survive reconnects; other players do not take the target's damage.
+- Fatal hits apply the existing death penalties, return the character with half health and preserve dropped items in an owned corpse. Press E nearby to recover its contents once. The HUD shows confirmed health and the nearest owned corpse.
+- A repository handoff explains multiplayer architecture, decisions, verification, unfinished work and how another model can continue.
+
+### Changed
+- The early online combat area still uses creatures at their authored positions. Pursuit, spells and cross-map respawns remain future work.
+
 ## 2026-10-27 — Online window stability (T4C-0189)
 
 ### Fixed

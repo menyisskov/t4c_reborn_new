@@ -208,6 +208,71 @@ class PreviewServerTest {
     }
   }
 
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void corpseHttpRecoveryKeepsOwnershipDistanceAndItemIdentityAcrossRetries() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var owner=store.provisionAccount(); var stranger=store.provisionAccount();
+    var prepared=OnlineCharacterCreator.prepare(com.perso.T4C.helper.CharacterClass.WARRIOR,"male",false,new java.util.Random(3));
+    var catalog=ItemCatalog.loadBundled(); var gson=new com.google.gson.Gson();
+    var tree=gson.toJsonTree(prepared.progress()).getAsJsonObject();
+    String key=catalog.items().values().stream().filter(i->!i.undroppable()).map(i->i.key()).sorted().findFirst().orElseThrow();
+    var ownedItem=new com.perso.T4C.online.model.CharacterProgress.Item(java.util.UUID.randomUUID(),key,1,7);
+    tree.getAsJsonArray("inventory").add(gson.toJsonTree(ownedItem));
+    var progress=gson.fromJson(tree,com.perso.T4C.online.model.CharacterProgress.class);
+    var character=store.create(owner.accountId(),"HTTP corpse owner",0,30.5,30.5,progress,50);
+    var other=store.create(stranger.accountId(),"HTTP corpse stranger",0,30.5,30.5,prepared.progress(),0);
+    var fixture=store.acquire(owner.secret(),character.id());
+    var life=store.loadOrCreateSpawn("http-death:"+java.util.UUID.randomUUID());
+    var saved=store.commitGameplayEvent(fixture,character.revision(),java.util.UUID.randomUUID(),0,0,progress,
+        new OnlineStore.CreatureProvocation(life.key(),life.eventId(),character.id(),0)).character();
+    var death=OnlineDeath.prepare(saved,catalog,
+        new com.perso.T4C.online.model.CharacterProgress.Respawn(0,30.5,30.5),
+        new com.perso.T4C.online.model.CharacterProgress.Respawn(0,3.5,3.5),
+        new java.util.Random() { @Override public double nextDouble() { return 0; } });
+    var corpse=java.util.UUID.randomUUID();
+    store.commitMonsterAttack(fixture,saved.revision(),corpse,death.progress(),
+        new OnlineStore.MonsterAttack(life.key(),life.eventId(),character.id(),0,System.currentTimeMillis()+1500),death.transition());
+    store.release(fixture);
+    try (var server=new PreviewServer(new PreviewMap(new boolean[60][80],0,0,3,3),0,store);
+         var client=HttpClient.newHttpClient()) {
+      server.start(); String url=server.url();
+      String token=login(client,url,owner,character.id()); String foreign=login(client,url,stranger,other.id());
+      assertEquals(401,client.send(request(url,"/corpses",null,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var listed=client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,listed.statusCode());
+      var summaries=JsonParser.parseString(listed.body()).getAsJsonArray();
+      assertEquals(1,summaries.size());
+      var summary=summaries.get(0).getAsJsonObject();
+      assertEquals(corpse.toString(),summary.get("id").getAsString());
+      assertEquals(death.transition().droppedItems().size(),summary.get("itemCount").getAsInt());
+      assertFalse(summary.has("items")); assertFalse(listed.body().contains(character.id().toString()));
+      assertFalse(listed.body().contains(ownedItem.id().toString()));
+      assertTrue(JsonParser.parseString(client.send(request(url,"/corpses",foreign,null),HttpResponse.BodyHandlers.ofString()).body()).getAsJsonArray().isEmpty());
+      assertEquals(409,client.send(request(url,"/recover",foreign,"0 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
+      long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      assertEquals(409,client.send(request(url,"/recover",token,revision+" "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(400,client.send(request(url,"/recover",token,"9223372036854775808 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(200,client.send(request(url,"/leave",token,""),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var reposition=store.acquire(owner.secret(),character.id());
+      store.checkpoint(reposition,reposition.character().revision(),0,30.5,30.5); store.release(reposition);
+      token=login(client,url,owner,character.id());
+      assertEquals(200,client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+      revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      assertEquals(409,client.send(request(url,"/recover",token,"0 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var recovered=client.send(request(url,"/recover",token,revision+" "+corpse),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,recovered.statusCode(),recovered.body());
+      long acknowledged=object(recovered).get("revision").getAsLong(); assertTrue(acknowledged>revision);
+      var committed=store.load(owner.accountId(),character.id());
+      assertTrue(committed.revision()>=acknowledged);
+      assertEquals(new java.util.HashSet<>(progress.inventory()),new java.util.HashSet<>(committed.progress().inventory()));
+      assertEquals(1,committed.progress().inventory().stream().filter(i->i.id().equals(ownedItem.id())).count());
+      var retry=client.send(request(url,"/recover",token,acknowledged+" "+corpse),HttpResponse.BodyHandlers.ofString());
+      assertTrue(retry.statusCode()==200 || retry.statusCode()==409,"Retry may acknowledge or reject an already recovered corpse");
+      assertEquals(committed.progress().inventory(),store.load(owner.accountId(),character.id()).progress().inventory());
+      assertTrue(JsonParser.parseString(client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString()).body()).getAsJsonArray().isEmpty());
+    }
+  }
+
   private String login(HttpClient client,String url,OnlineStore.AccountKey key,java.util.UUID character) throws Exception {
     var response=client.send(request(url,"/join",null,key.secret()+" "+character),HttpResponse.BodyHandlers.ofString());
     assertEquals(200,response.statusCode());

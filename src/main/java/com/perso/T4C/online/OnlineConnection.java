@@ -28,11 +28,14 @@ public final class OnlineConnection implements AutoCloseable {
     }
   }
 
-  public record Actor(long id, double x, double y, long sequence, long appearance) {}
+  public record Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {}
 
   public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures) {}
 
-  public record View(long ownId, MapInfo map, Snapshot snapshot, OnlineCharacterView character) {}
+  public record Corpse(java.util.UUID id, int world, double x, double y, int itemCount, long gold) {}
+
+  public record View(long ownId, MapInfo map, Snapshot snapshot, OnlineCharacterView character,
+      List<Corpse> corpses) {}
 
   private record Joined(String token, long id) {}
 
@@ -123,6 +126,11 @@ public final class OnlineConnection implements AutoCloseable {
     return gameplayCommand("/attack",Long.toString(target));
   }
 
+  /** Reference-only recovery; ownership, range and contents remain server decisions. */
+  public java.util.concurrent.CompletionStage<CommandResult> recover(java.util.UUID corpse) {
+    return gameplayCommand("/recover",java.util.Objects.requireNonNull(corpse).toString());
+  }
+
   private java.util.concurrent.CompletionStage<CommandResult> gameplayCommand(String path, String arguments) {
     View current = view;
     if (closed || current == null || current.character() == null || !status.equals("connected"))
@@ -161,6 +169,7 @@ public final class OnlineConnection implements AutoCloseable {
         token = joined.token();
         long sequence = 0;
         OnlineCharacterView character = null;
+        List<Corpse> corpses = List.of();
         while (!closed) {
           var command = gameplay.get();
           boolean accepted = false;
@@ -196,6 +205,7 @@ public final class OnlineConnection implements AutoCloseable {
                 || !Double.isFinite(actor.y())
                 || actor.x() < 0
                 || actor.y() < 0
+                || actor.maxHp() <= 0 || actor.hp() < 0 || actor.hp() > actor.maxHp()
                 || actor.x() >= map.width()
                 || actor.y() >= map.height())
               throw new IllegalStateException("Invalid server position");
@@ -220,6 +230,16 @@ public final class OnlineConnection implements AutoCloseable {
                   || updated.revision() < Math.max(requiredRevision, snapshot.characterRevision()))
                 throw new IllegalStateException("Invalid private character state");
               character = updated;
+              var found = JSON.fromJson(send(client,"/corpses",null,token),Corpse[].class);
+              if (found==null || found.length>256) throw new IllegalStateException("Invalid corpse list");
+              var identities=new java.util.HashSet<java.util.UUID>();
+              for (var corpse:found) {
+                if (corpse==null || corpse.id()==null || !identities.add(corpse.id()) || corpse.world()<0
+                    || !Double.isFinite(corpse.x()) || !Double.isFinite(corpse.y()) || corpse.x()<0 || corpse.y()<0
+                    || corpse.itemCount()<0 || corpse.gold()<0)
+                  throw new IllegalStateException("Invalid corpse state");
+              }
+              corpses=List.of(found);
             }
           }
           synchronized (this) {
@@ -228,7 +248,7 @@ public final class OnlineConnection implements AutoCloseable {
               new View(
                   joined.id(), map,
                   new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures)),
-                  character);
+                  character,corpses);
             status = "connected";
           }
           if (command != null && gameplay.compareAndSet(command, null))

@@ -48,7 +48,8 @@ final class OnlineMelee {
     // Never silently omit authored script/quest/item-drop behavior from this first combat slice.
     if ((definition.getSourceEvents()!=null && !definition.getSourceEvents().isEmpty())
         || (definition.getLoot()!=null && !definition.getLoot().isEmpty())
-        || !p.questFlags().isEmpty() || p.skills().getOrDefault("stun_blow",0)>0)
+        || !p.questFlags().isEmpty() || p.companion()!=null || p.skills().getOrDefault("stun_blow",0)>0
+        || !OnlineRetaliation.supported(definition))
       throw rejected("unsupported_combat");
     var position=world.position(token);
     double x=spawn.spawn().x()-map.originX,y=spawn.spawn().y()-map.originY;
@@ -79,21 +80,26 @@ final class OnlineMelee {
     var cooldowns=new HashMap<>(progression.progress().cooldowns());
     cooldowns.put("attack",Math.addExact(now,Math.max(1,loadout.attackCooldownMillis())));
     var draft=withAttackState(progression.progress(),cooldowns);
+    var provocation=after>0 && definition.isCanAttack()
+        ? new OnlineStore.CreatureProvocation(life.key(),life.eventId(),saved.id(),
+            life.targetCharacter()==null ? Math.addExact(now,OnlineRetaliation.COOLDOWN_MILLIS) : life.nextAttackAt()) : null;
+    creatures.reserve(target);
     pendingTargets.add(target);
     try {
       CompletionStage<OnlineStore.RewardResult> pending=damage==0
-          ? sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft)
+          ? sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft,provocation)
           : sessions.commitCreatureStrike(token,revision,after==0 ? life.eventId() : UUID.randomUUID(),gold,experience,draft,
-              new OnlineStore.CreatureStrike(life.key(),life.eventId(),definition.getHealth(),before,after));
+              new OnlineStore.CreatureStrike(life.key(),life.eventId(),definition.getHealth(),before,after),provocation);
       return pending.whenComplete((result,error) -> {
         // Session completions run on the simulation owner, including its shutdown drain.
         pendingTargets.remove(target);
-        if (damage>0) {
+        creatures.release(target);
+        if (damage>0 || provocation!=null) {
           if (error!=null || after==0) creatures.rewardCommitted(target); // Hide uncertain outcomes until reload.
           else creatures.damageCommitted(target);
         }
       });
-    } catch (RuntimeException failure) { pendingTargets.remove(target); throw failure; }
+    } catch (RuntimeException failure) { pendingTargets.remove(target); creatures.release(target); throw failure; }
   }
 
   private static CharacterProgress withAttackState(CharacterProgress p,Map<String,Long> cooldowns) {

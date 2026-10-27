@@ -528,7 +528,7 @@ public class Player extends Stats implements ProgressionState {
   }
 
   public void respawnAfterDeath() {
-    currentHp = Math.max(1, maxHp / 2);
+    currentHp = com.perso.T4C.death.DeathRules.respawnHealth(maxHp);
     stunnedUntilMs = 0L;
     deathBeingHandled = false;
   }

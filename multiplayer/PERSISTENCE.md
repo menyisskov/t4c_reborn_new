@@ -1,14 +1,22 @@
-# Online persistence foundation
+# Online persistence
 
-Schema version six adds `online_spawns` and database timestamps on world reward claims. `loadOrCreateSpawn` uses a stable authored key to recover a generation and event UUID, including its committed reward recipient/time. `respawn` advances only the expected rewarded event after the server-authored delay has elapsed according to database time. Concurrent or repeated advances conflict; reload the current generation after an uncertain response. Old receipts remain available for delayed retries. Pre-v6 claims receive migration time as a conservative timestamp. Include spawn rows and claims in the same whole-database backup. These APIs do not yet load or schedule live creatures, and do not represent nonreward deaths.
+Current schema: **8**. See [HANDOFF.md](HANDOFF.md) for model/session continuation and [ACCEPTANCE.md](ACCEPTANCE.md) for verified release gates. Persistent native play currently supports authoritative movement, equipment commands, restricted melee, physical retaliation, death and owned corpse recovery. Native account selection, quests, general loot, spells and map transfer remain unfinished.
+
+Schema 8 adds durable creature aggro/attack deadlines, `online_combat_events` receipts and `online_corpses`. A monster strike commits health, deadline and any fatal XP/item/location change together. Fatal drafts use shared death rules; dropped instance identity/quantity/charges are preserved and recoverable once by the owner within range. Async simulation publication follows commit; logout while a fatal transaction is pending must retain the committed respawn destination. Current cross-map respawns use a validated local fallback pending transfer support.
+
+Schema 7 adds persistent creature HP and atomic creature-strike receipts. Null HP represents untouched authored maximum. Damage and reward commits compare the durable life/previous health; matching event retries do not regrant rewards. Partial-health recovery and live respawn scheduling are connected to the running world.
+
+The older schema notes below explain migration history; later integrations supersede their original foundation limits.
+
+Schema version six adds `online_spawns` and database timestamps on world reward claims. `loadOrCreateSpawn` uses a stable authored key to recover a generation and event UUID, including its committed reward recipient/time. `respawn` advances only the expected rewarded event after the server-authored delay has elapsed according to database time. Concurrent or repeated advances conflict; reload the current generation after an uncertain response. Old receipts remain available for delayed retries. Pre-v6 claims receive migration time as a conservative timestamp. Include spawn rows and claims in the same whole-database backup. Live creature loading and guarded respawn are now integrated; schema 8 also records player deaths caused by retaliation.
 
 Schema version five adds `online_world_rewards`, a unique world-event claim referencing its winning character receipt. `commitWorldReward` commits the claim, receipt, balances and gameplay payload together and uses the existing simulation persistence queue. Competing recipients conflict; matching retries by the winner do not reapply the award. Failed transactions retain neither claim nor receipt. Keep this table in whole-database backups and never expire claims independently of the associated world lifecycle. Earlier servers reject the newer schema; rollback requires a compatible server or restoring a matching backup, not dropping claim data.
 
-World-event identities must come from durable server-owned spawn/generation state and remain stable across recovery. That lifecycle and live combat producers are not implemented yet. Ordinary per-character reward APIs are not substitutes for the world-claim path, and clients must never choose event IDs, recipients or reward values.
+World-event identities must come from durable server-owned spawn/generation state and remain stable across recovery. That lifecycle and restricted melee producers are now integrated; additional quest and scripted reward producers remain unfinished. Ordinary per-character reward APIs are not substitutes for the world-claim path, and clients must never choose event IDs, recipients or reward values.
 
 The server has PostgreSQL storage, account/session ownership, background checkpoints and real-database
 CI coverage. The default movement preview remains temporary. **Opt-in persistent mode now saves
-native-client movement across reconnects and server restarts.** It is still movement-only Alpha.
+native-client movement across reconnects and server restarts.** The current restricted combat slice is not complete Alpha.
 No desktop save, preference, account-storage or character file is read or written by this adapter.
 
 The adapter stores account ownership, a character's name and world position, gold, experience,
@@ -21,7 +29,7 @@ and revision. Ordinary movement and reward writes preserve it. Unknown versions 
 fail closed; equipment must reference an owned item instance and containers cannot duplicate an ID.
 Existing movement-only rows have a null payload. Migration does not invent a class, stats or items.
 New operator-provisioned characters use shared class rolls and starter kits; their payload and gold
-are inserted together. Native creation, runtime content-registry validation and gameplay consumers
+are inserted together. Packaged content is validated against runtime registries. Native account/character selection and remaining gameplay consumers
 remain unfinished. Cross-character trade and currency/storage transfers
 need their own atomic transactions; the payload alone does not implement those operations.
 
@@ -40,7 +48,7 @@ payloads conflict. Map keys and spell sets are canonicalized before hashing, pre
 through reload. Legacy balance-only receipts retain their original retry behavior. Failed updates
 roll back the payload, balances and receipt together. Callers must retain the original event ID
 and result across uncertain outcomes, serialize events with checkpoints, and wait for commit before
-showing durable rewards. No client API accepts this payload. Combat/quest integration, spending
+showing durable rewards. No client API accepts this payload. Restricted combat integration now uses this queue; quests, spending
 and cross-character trade transactions remain separate work.
 
 The PostgreSQL CI job kills separate test writer JVMs at both commit boundaries: before commit
@@ -54,7 +62,7 @@ acknowledging a durable reward to a player. Retry uncertain outcomes with the sa
 The simulation coordinator sends immutable position checkpoints to a bounded worker pool; the
 tick thread never performs database I/O. Each character has at most one checkpoint in flight.
 Every gameplay save and reward requires a valid internal session lease; there is no unfenced write
-overload. Authoritative combat/quest reward delivery is not connected yet.
+overload. Restricted authoritative combat delivery is connected; quest reward delivery remains unfinished.
 
 ## Local development database
 
