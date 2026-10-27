@@ -14,6 +14,30 @@ not automatically a completed milestone.
 
 ## Verified foundation (updated 2026-10-27)
 
+T4C-0226's [native HTTP resilience probe](tools/NATIVE_HTTP_RESILIENCE_PROBE.md)
+passed with two actual `OnlineConnection` adapters on a private archive of
+immutable `f6175cc78a6738f73700cfdaf014a6f44ab3219d` (protocol 5/schema 11),
+server JAR SHA-256 `FBDE9D36752D5E184A9D3D8D4CD5C56691EE5BF3179CFFC5BA324388D97E0CA0`,
+client JAR SHA-256 `4E6BDF6307894B6DE0B3D7227D9AD300F12F16EBB428A00F8EA47FA34AC37C2E`,
+and final probe SHA-256 `3AEC0090D6C458DAE43AD26C2064DEDCF23033AD67D4B3A3F0801B4FA9E1170F`.
+On fresh `t4c_http_native_0226_4e5b08fc0817` at owned loopback 18777,
+eight incomplete valid joins stayed open, eight forged-body requests returned
+401 before body, and `/health` returned 200. Both native adapters stayed
+connected, saw exactly two actors, advanced three ticks and moved over 0.15
+world units each by legal cardinal intent within 200 ms. After attack sockets
+closed, movement and locations committed with private progress, gold and XP
+unchanged; two leases became zero after normal leaves, and the owned server
+shut down with exit 0 and port free. Final sanitized report SHA-256
+`FFD24BFC49993971225E7501CA684D00ADB43BADC54B63649DD82260E54188DF`
+is retained under `%TEMP%/t4c-0226-f617-5ced3338f7354c85b73b1253f2f34aac/evidence-final-e3c5ff7513ed497ca8ab39652fc4f409/report.txt`.
+The first retained run failed a probe assertion because it declared 101 bytes
+on a forged `/input` capped at 64; the second fresh-DB run passed with earlier
+probe SHA `64959051`/report SHA `A55545BD`. Final source generalized only the
+strict local fresh-DB namespace guard; negative no-connection checks rejected
+owner DB, remote host and wrong port. All three DBs/reports are retained.
+This is a short local native adapter check, not a four-second soak, rendered
+client run, remote/general denial-of-service proof or full M5/Beta gate.
+
 T4C-0224 staged two unused generated inventories from immutable source
 `55de14ce` plus its exact 16-file candidate (final manifest SHA-256
 `53531C0DFF3235C47003AB8C732ED619FA0D485B524ED43BB57168A382424643`).

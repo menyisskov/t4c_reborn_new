@@ -549,6 +549,30 @@ hosted crop, protocol, schema, client renderer and single-player behavior stay
 unchanged. The staged inventories are not live actors or an M3/Beta pass.
 Dependent clan/hosted implementation still requires exact Claude handoff.
 
+## T4C-0226 two native sessions under hostile HTTP
+
+The two released new files are [NativeHttpResilienceProbe.java](tools/NativeHttpResilienceProbe.java)
+(SHA-256 `3AEC0090D6C458DAE43AD26C2064DEDCF23033AD67D4B3A3F0801B4FA9E1170F`)
+and [NATIVE_HTTP_RESILIENCE_PROBE.md](tools/NATIVE_HTTP_RESILIENCE_PROBE.md)
+(SHA-256 `160DADC4164B42D088801F682FDC16706D36C6B82724556A6A8CD8A9E6E38852`).
+The guide records reproduction against a fresh, explicitly granted
+`t4c_http_native_0226_*` database at 127.0.0.1:55432 and owned port 18777;
+the tool rejects an owner database, remote host or wrong port before opening
+a connection. The matching immutable `f6175cc7` client/server packages are
+protocol 5/schema 11 (JAR hashes in ACCEPTANCE). Final fresh-DB native PASS
+report SHA-256 `FFD24BFC49993971225E7501CA684D00ADB43BADC54B63649DD82260E54188DF`
+measured eight held joins, eight forged early 401 responses, health 200,
+mutual two-actor native views, three advancing ticks and >0.15 cardinal
+movement for each within 200 ms, postclose committed location/private
+balances intact, normal leaves releasing both leases, exact owned server
+exit 0 and free port. Preserve the first oversize-101 probe failure and
+second fresh-DB PASS (source `64959051`, report `A55545BD`) separately;
+all three databases, logs and reports remain retained. This does not verify
+four seconds of continuous attack, rendered/remote traffic, arbitrary DoS,
+two-hour mixed play or completed M5/Beta. T4C-0225 remains Planned pending
+explicit Claude handoff; next task ID is T4C-0227. Owner QA and GUI remain
+under their own resource claims.
+
 ## T4C-0222 HTTP admission delivery history
 
 PR159 merged at main `50326fe9` after the historical sequence below; current-head
