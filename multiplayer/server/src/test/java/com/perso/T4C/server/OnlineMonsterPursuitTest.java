@@ -171,4 +171,41 @@ class OnlineMonsterPursuitTest {
     assertEquals(OnlineMonsterPursuit.Mode.RETURN, reset.mode());
     assertNull(reset.target());
   }
+
+  @Test void directedGoblinHostilityTracksHorseLifeButAPlayerHitTakesTheTarget() throws Exception {
+    var content=MonsterCatalog.loadBundled();
+    var classified=MonsterCatalog.loadClassifiedBundled(content);
+    var goblin=content.monsters().get("Goblin");
+    var horse=content.monsters().get("Wild Horse");
+    assertNotNull(goblin);assertNotNull(horse);
+    assertTrue(classified.relations().stream().anyMatch(r->r.source()==MonsterContent.Clan.GOBLIN
+        && r.target()==MonsterContent.Clan.HORSE));
+    var map=new PreviewMap(new boolean[10][10],0,0,3,3);
+    UUID goblinLife=UUID.randomUUID(),horseLife=UUID.randomUUID(),player=UUID.randomUUID();
+    var goblinSpawn=new MonsterContent.Spawn("Goblin","Goblin",3,3,0,false,true);
+    var hunter=new OnlineMonsterPursuit(map,goblinSpawn,goblin,"start",
+        new OnlineMonsterPursuit.Seed(goblinLife,3.5,3.5,OnlineMonsterPursuit.Mode.IDLE,null,-1),
+        MonsterContent.Clan.GOBLIN,java.util.Set.of(MonsterContent.Clan.HORSE),true);
+    var prey=new OnlineMonsterPursuit.ClanView("horse-life",horseLife,0,"start",4.5,3.5,true,
+        MonsterContent.Clan.HORSE);
+    var acquired=hunter.step(List.of(),List.of(prey),STEP,false,false);
+    assertEquals(OnlineMonsterPursuit.Mode.CLAN,acquired.mode());
+    assertEquals(prey.key(),acquired.targetSpawnKey());assertEquals(horseLife,acquired.targetLife());
+    assertTrue(acquired.attackReady());
+    var replaced=new OnlineMonsterPursuit.ClanView(prey.key(),UUID.randomUUID(),0,"start",4.5,3.5,true,
+        MonsterContent.Clan.HORSE);
+    var stale=hunter.step(List.of(),List.of(replaced),STEP,false,false);
+    assertEquals(OnlineMonsterPursuit.Mode.RETURN,stale.mode());assertNull(stale.targetSpawnKey());
+    assertFalse(stale.attackReady(),"A respawned target is a different life");
+    hunter.provokeCommitted(goblinLife,target(player,4,2.5,3.5));
+    var retargeted=hunter.step(List.of(target(player,4,2.5,3.5)),List.of(replaced),STEP,false,false);
+    assertEquals(OnlineMonsterPursuit.Mode.RETALIATION,retargeted.mode());
+    assertEquals(player,retargeted.target());assertNull(retargeted.targetSpawnKey());
+    var passive=new OnlineMonsterPursuit(map,new MonsterContent.Spawn("Horse","Wild Horse",4,3,0,false,true),
+        horse,"start",new OnlineMonsterPursuit.Seed(horseLife,4.5,3.5,OnlineMonsterPursuit.Mode.IDLE,null,-1),
+        MonsterContent.Clan.HORSE,java.util.Set.of(MonsterContent.Clan.GOBLIN),false);
+    var horseDecision=passive.step(List.of(),List.of(new OnlineMonsterPursuit.ClanView("goblin-life",goblinLife,
+        0,"start",3.5,3.5,true,MonsterContent.Clan.GOBLIN)),STEP,false,false);
+    assertNull(horseDecision.targetSpawnKey());assertFalse(horseDecision.attackReady());
+  }
 }

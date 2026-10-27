@@ -16,15 +16,13 @@ public final class HostedRegionPlan {
   final boolean transitions;
   /** Authored portal sources inside a hosted region whose route is deliberately not enabled. */
   final List<PortalContent.Portal> refusedPortals;
-  /** Accepted checkpoint exclusion: Goblin-to-Horse hostility is not simulated in this plan. */
-  final boolean clanHostilityNotSimulated;
   private HostedRegionPlan(List<Region> regions,PortalCatalog portals,boolean transitions) {
-    this(regions,portals,transitions,List.of(),false);
+    this(regions,portals,transitions,List.of());
   }
   private HostedRegionPlan(List<Region> regions,PortalCatalog portals,boolean transitions,
-      List<PortalContent.Portal> refusedPortals,boolean clanHostilityNotSimulated) {
+      List<PortalContent.Portal> refusedPortals) {
     this.regions=List.copyOf(regions);this.portals=portals;this.transitions=transitions;
-    this.refusedPortals=List.copyOf(refusedPortals);this.clanHostilityNotSimulated=clanHostilityNotSimulated;
+    this.refusedPortals=List.copyOf(refusedPortals);
     var keys=new HashSet<String>();
     for(var region:regions) if(!keys.add(region.spec().key())) throw new IllegalArgumentException("Duplicate region key");
     for(int i=0;i<regions.size();i++) for(int j=i+1;j<regions.size();j++) {
@@ -74,7 +72,7 @@ public final class HostedRegionPlan {
         .filter(p->specs.stream().anyMatch(s->s.contains(p.sourceWorld(),p.sourceX(),p.sourceY()))).toList();
     for(var portal:refused) if(specs.stream().anyMatch(s->s.contains(portal.targetWorld(),portal.targetX(),portal.targetY())))
       throw new IOException("Refused portal "+portal.id()+" unexpectedly has a hosted destination");
-    return new HostedRegionPlan(regions,new PortalCatalog(new PortalContent(1,enabled)),true,refused,true);
+    return new HostedRegionPlan(regions,new PortalCatalog(new PortalContent(1,enabled)),true,refused);
   }
   /** True when the tile is an authored portal source whose route is deliberately unavailable. */
   public boolean isRefusedPortalSource(int world,double x,double y) {

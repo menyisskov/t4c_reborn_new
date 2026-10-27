@@ -14,6 +14,7 @@ final class HostedWorlds implements AutoCloseable {
     PersistentCreatures creatures;
     OnlineMelee melee;
     OnlineRetaliation retaliation;
+    OnlineClanCombat clanCombat;
     RegionNpcs npcs;
     final RegionGroundLoot loot;
     Region(RegionMapLoader.Spec spec,PreviewMap map,PreviewWorld world) { this.spec=spec;this.map=map;this.world=world;this.loot=new RegionGroundLoot(spec); }
@@ -30,21 +31,25 @@ final class HostedWorlds implements AutoCloseable {
   }
   HostedWorlds(HostedRegionPlan plan,OnlineStore store,ItemContent items,MonsterContent monsters) throws SQLException,java.io.IOException {
     var catalog=NpcInteractionCatalog.loadBundled();
+    var appearances=plan.transitions ? NpcAppearanceCatalog.loadBundled() : null;
     this.plan=plan;this.items=items;
-    var hostedMonsters=withoutNpcOwnedSpawns(monsters);
+    // The v2 inventory is checked against the bundled v1 export. Supplied subsets remain valid
+    // for isolated worlds while their authored definitions and spawn checks stay in PreviewWorld.
+    var classified=monsters==null ? null : MonsterCatalog.loadClassifiedBundled(MonsterCatalog.loadBundled());
+    var hostedMonsters=withoutNpcOwnedSpawns(monsters,classified);
     regions=plan.regions.stream().map(r->new Region(r.spec(),r.map(),new PreviewWorld(r.map(),hostedMonsters,r.spec().world()))).toList();
-    for(var region:regions) region.npcs=new RegionNpcs(catalog,items,region.spec);
+    for(var region:regions) region.npcs=appearances==null
+        ? new RegionNpcs(catalog,items,region.spec)
+        : new RegionNpcs(catalog,items,region.spec,appearances);
     sessions=store==null ? null : new PersistentSessions(store,this);
     try {
       for(var region:regions) if(store!=null) {
-        // The authored Goblin -> Horse hostility needs a separate monster-vs-monster authority.
-        // Refuse a hosted crop containing both until that transaction path exists.
-        boolean goblins=region.world.creatureSpawns().stream().anyMatch(s->s.definition().getName().toLowerCase(Locale.ROOT).contains("goblin"));
-        boolean horses=region.world.creatureSpawns().stream().anyMatch(s->s.definition().getName().toLowerCase(Locale.ROOT).contains("horse"));
-        if(goblins && horses && !plan.clanHostilityNotSimulated) throw new IllegalArgumentException("Unsupported clan combat in hosted region");
-        region.creatures=new PersistentCreatures(store,region.world,region.map,region.spec.key(),sessions,items);
+        validateClanAuthority(region,classifedRequired(classified));
+        region.creatures=new PersistentCreatures(store,region.world,region.map,region.spec.key(),sessions,items,classified);
         region.melee=new OnlineMelee(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         region.retaliation=new OnlineRetaliation(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
+        region.clanCombat=new OnlineClanCombat(region.map,region.world,region.creatures,classified,
+            new java.security.SecureRandom(),System::currentTimeMillis);
         long unsupported=region.world.creatureSpawns().stream().filter(s->s.definition().getSourceEvents()!=null && !s.definition().getSourceEvents().isEmpty()
             || !OnlineLootDrafts.supports(s.definition(),items) || !OnlineRetaliation.supported(s.definition())).count();
         if(unsupported>0) System.out.println("Region "+region.spec.key()+": "+unsupported+" creatures retain unsupported combat/script restrictions.");
@@ -58,23 +63,32 @@ final class HostedWorlds implements AutoCloseable {
    */
   static MonsterContent withoutNpcOwnedSpawns(MonsterContent monsters) throws java.io.IOException {
     if(monsters==null) return null;
-    var npcOwned=npcOwnedKeys();
+    return withoutNpcOwnedSpawns(monsters,MonsterCatalog.loadClassifiedBundled(MonsterCatalog.loadBundled()));
+  }
+  private static MonsterContent withoutNpcOwnedSpawns(MonsterContent monsters,
+      MonsterContent.Classified classified) {
+    if(monsters==null) return null;
+    var npcOwned=classified.spawns().stream().filter(s->s.ownership()==MonsterContent.Ownership.NPC)
+        .map(MonsterContent.ClassifiedSpawn::persistenceKey).collect(java.util.stream.Collectors.toSet());
     var kept=monsters.spawns().stream().filter(s->s.definition()!=null || !npcOwned.contains(s.persistenceKey())).toList();
     return new MonsterContent(monsters.version(),monsters.monsters(),kept);
   }
-  private static volatile Set<String> npcOwned;
-  private static Set<String> npcOwnedKeys() throws java.io.IOException {
-    var cached=npcOwned;if(cached!=null) return cached;
-    synchronized(HostedWorlds.class) {
-      if(npcOwned==null) try(var in=HostedWorlds.class.getResourceAsStream("/content/monsters-v2.json")) {
-        if(in==null) throw new java.io.IOException("Missing classified monster content");
-        var bytes=in.readNBytes(16*1024*1024+1);if(bytes.length>16*1024*1024) throw new java.io.IOException("Classified monster content too large");
-        var classified=new com.google.gson.Gson().fromJson(new String(bytes,java.nio.charset.StandardCharsets.UTF_8),MonsterContent.Classified.class);
-        var keys=new HashSet<String>();
-        for(var spawn:classified.spawns()) if(spawn.ownership()==MonsterContent.Ownership.NPC) keys.add(spawn.persistenceKey());
-        npcOwned=Set.copyOf(keys);
-      } catch(RuntimeException invalid) { throw new java.io.IOException("Invalid classified monster content",invalid); }
-      return npcOwned;
+  private static MonsterContent.Classified classifedRequired(MonsterContent.Classified content) {
+    return Objects.requireNonNull(content,"Missing classified authority");
+  }
+  private static void validateClanAuthority(Region region,MonsterContent.Classified classified) {
+    for(var source:region.world.creatureSpawns()) {
+      var authority=classified.authorities().get(source.definition().getName());
+      if(authority==null) throw new IllegalArgumentException("Missing hosted creature authority");
+      if(!source.spawn().aggressive() || source.spawn().stationary()) continue;
+      boolean hasTarget=region.world.creatureSpawns().stream().anyMatch(target -> {
+        var other=classified.authorities().get(target.definition().getName());
+        return other!=null && classified.relations().stream().anyMatch(r->r.source()==authority.clan()
+            && r.target()==other.clan());
+      });
+      if(hasTarget && (authority.attackFrameEvidence()!=MonsterContent.AttackFrameEvidence.FRAME_NAME_PRESENT
+          || !source.definition().isCanAttack() || !OnlineRetaliation.supported(source.definition())))
+        throw new IllegalArgumentException("Unsupported hosted clan attacker");
     }
   }
   Region require(int world,double x,double y) {
@@ -105,6 +119,7 @@ final class HostedWorlds implements AutoCloseable {
     for(var region:regions) {
       if(region.creatures!=null) region.creatures.step(targets,
           permit!=null && permit.region()==region ? permit.id() : null);
+      if(region.clanCombat!=null) region.clanCombat.step();
       if(region.retaliation!=null) region.retaliation.step();
     }
   }

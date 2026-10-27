@@ -19,6 +19,58 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class PersistentCreaturesTest {
+  @Test void uncertainCommittedClanPairReloadsBothLivesWithoutReplayingTheStrike() throws Exception {
+    var failAfterCommit=new AtomicBoolean();
+    var store=new OnlineStore(() -> {
+      var actual=DriverManager.getConnection(System.getenv("T4C_DB_URL"),System.getenv("T4C_DB_USER"),
+          System.getenv("T4C_DB_PASSWORD"));
+      return (Connection)Proxy.newProxyInstance(Connection.class.getClassLoader(),new Class<?>[]{Connection.class},
+          (proxy,method,args) -> {
+            try {
+              Object result=method.invoke(actual,args);
+              if(method.getName().equals("close") && Thread.currentThread().getName().startsWith("creature-persistence-")
+                  && failAfterCommit.compareAndSet(true,false)) throw new SQLException("Injected ambiguous pair commit");
+              return result;
+            } catch(InvocationTargetException error) { throw error.getCause(); }
+          });
+    });
+    store.migrate();
+    var definition=MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3");
+    var source=new MonsterContent.Spawn("pair-source-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var target=new MonsterContent.Spawn("pair-target-"+UUID.randomUUID(),definition.getName(),4,3,0,false,false);
+    var targetLife=store.loadOrCreateSpawn(target.persistenceKey());
+    var sourceLife=store.loadOrCreateSpawn(source.persistenceKey());
+    sourceLife=store.checkpointSpawn(new OnlineStore.SpawnMotion(sourceLife.key(),sourceLife.eventId(),
+        sourceLife.stateRevision(),3,3,"CLAN",null,null,targetLife.key(),targetLife.eventId()),null);
+    var content=new MonsterContent(MonsterContent.VERSION,Map.of(definition.getName(),definition),List.of(source,target));
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    var world=new PreviewWorld(map,content);
+    try(var creatures=new PersistentCreatures(store,world,map,"start",null,ItemCatalog.loadBundled())) {
+      var capturedSource=creatures.capture(1);var capturedTarget=creatures.capture(2);
+      int maximum=definition.getHealth();
+      long deadline=System.currentTimeMillis()+OnlineRetaliation.COOLDOWN_MILLIS;
+      failAfterCommit.set(true);
+      assertTrue(creatures.submitClanAttack(1,2,new OnlineStore.ClanAttack(capturedSource,capturedTarget,
+          maximum,maximum,maximum-1,0,deadline)));
+      long waitUntil=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+      OnlineStore.SpawnState publishedSource=null,publishedTarget=null;
+      while(System.nanoTime()<waitUntil && (publishedSource==null || publishedTarget==null)) {
+        creatures.step();
+        try {publishedSource=creatures.life(1);publishedTarget=creatures.life(2);}
+        catch(PreviewWorld.Rejected reloading) {publishedSource=null;publishedTarget=null;}
+        Thread.sleep(5);
+      }
+      assertFalse(failAfterCommit.get(),"The worker must encounter the injected post-commit ambiguity");
+      assertNotNull(publishedSource);assertNotNull(publishedTarget);
+      assertEquals(sourceLife.eventId(),publishedSource.eventId());
+      assertEquals(targetLife.eventId(),publishedTarget.eventId());
+      assertEquals(deadline,publishedSource.nextAttackAt());
+      assertEquals(maximum-1,publishedTarget.health());
+      assertEquals(publishedSource,store.loadOrCreateSpawn(source.persistenceKey()));
+      assertEquals(publishedTarget,store.loadOrCreateSpawn(target.persistenceKey()));
+    }
+  }
+
   @Test void gracefulCloseReloadsCommittedStateAfterOneUncertainReadWithoutReplayingIt() throws Exception {
     var failNext=new AtomicBoolean();var failureSeen=new CountDownLatch(1);
     var store=new OnlineStore(() -> {

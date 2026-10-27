@@ -2,6 +2,11 @@ package com.perso.T4C.server;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.perso.T4C.helper.CharacterClass;
+import com.perso.T4C.online.model.MonsterContent;
+import com.perso.T4C.online.model.NpcAppearanceContent;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 
@@ -37,5 +42,115 @@ class RegionNpcsTest {
     assertTrue(temple.views().stream().anyMatch(n->n.id().equals("WardenAelric")));
     var elsewhere=new RegionNpcs(catalog,items,new RegionMapLoader.Spec(0,"elsewhere",0,0,10,10,5,5));
     assertTrue(elsewhere.views().isEmpty());
+  }
+
+  @Test void realHostedAppearancesPreserveSourceInventoryAndSundialWithoutGrantingItsScript()
+      throws Exception {
+    var spec=new RegionMapLoader.Spec(0,"start",2735,1029,249,117,2944,1059);
+    var appearances=NpcAppearanceCatalog.loadBundled();
+    var source=appearances.inRegion(spec);
+    var npcs=new RegionNpcs(NpcInteractionCatalog.loadBundled(),ItemCatalog.loadBundled(),
+        spec,appearances);
+    assertEquals(source.size(),npcs.views().size(),"Every hosted source appearance is published");
+    assertEquals(npcs.views().size(),
+        npcs.views().stream().map(n->n.id()).collect(java.util.stream.Collectors.toSet()).size());
+    for(var spawn:source) {
+      String id=spawn.interactionSupported() ? spawn.canonicalNpcId()
+          : NpcAppearanceCatalog.viewId(spawn);
+      var view=npcs.views().stream().filter(n->n.id().equals(id)).findFirst().orElseThrow();
+      assertEquals(spawn.x()-spec.originX(),view.x());
+      assertEquals(spawn.y()-spec.originY(),view.y());
+      assertEquals(spawn.spriteBase(),view.spriteBase());
+      assertEquals(spawn.parts(),view.parts());
+    }
+    var sundial=source.stream().filter(s->s.canonicalNpcId().equals("Sundial")
+        && s.x()==2881 && s.y()==1070).findFirst().orElseThrow();
+    assertEquals("@static:Horloge Solaire",sundial.spriteBase());
+    assertEquals(NpcAppearanceContent.FrameEvidence.FRAME_NAME_PRESENT,sundial.frameEvidence());
+    assertFalse(sundial.interactionSupported());
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,
+        new Random(1)).progress();
+    var map=new PreviewMap(new boolean[spec.height()][spec.width()],
+        spec.originX(),spec.originY(),2944-spec.originX(),1059-spec.originY());
+    assertThrows(IllegalArgumentException.class,()->talk(npcs,progress,map,
+        NpcAppearanceCatalog.viewId(sundial)));
+    assertTrue(npcs.views().stream().anyMatch(n->n.id().equals("Kilhiam")));
+    assertTrue(npcs.views().stream().anyMatch(n->n.id().equals("WardenAelric")));
+  }
+
+  @Test void duplicateCanonicalNpcKeepsDistinctAppearanceButNoSecondInteraction() throws Exception {
+    var catalog=NpcInteractionCatalog.loadBundled();
+    var interactive=catalog.npcs().stream().filter(n->n.id().equals("Kilhiam"))
+        .findFirst().orElseThrow();
+    var spec=new RegionMapLoader.Spec(interactive.world(),"duplicates",
+        interactive.x()-3,interactive.y()-3,10,10,interactive.x(),interactive.y());
+    var original=NpcAppearanceCatalog.loadBundled().inRegion(spec).stream()
+        .filter(s->s.canonicalNpcId().equals(interactive.id()) && s.x()==interactive.x()
+            && s.y()==interactive.y()).findFirst().orElseThrow();
+    var duplicate=moved(original,interactive.x()+1,false);
+    String sharedKey=new MonsterContent.Spawn("OtherNpc",null,original.x(),original.y(),
+        original.world(),original.stationary(),original.aggressive()).persistenceKey();
+    var sharedAnchor=new NpcAppearanceContent.Spawn(sharedKey,"OtherNpc","OtherNpc",
+        original.world(),original.x(),original.y(),original.stationary(),original.aggressive(),
+        true,"Other NPC",original.spriteBase(),original.parts(),false,
+        original.frameEvidence(),original.appearanceDiagnostic());
+    var appearances=new NpcAppearanceCatalog(new NpcAppearanceContent(
+        NpcAppearanceContent.VERSION,List.of(original,duplicate,sharedAnchor)));
+    var npcs=new RegionNpcs(catalog,ItemCatalog.loadBundled(),spec,appearances);
+    assertEquals(3,npcs.views().size(),"Same-anchor appearances must not be deduplicated");
+    assertTrue(npcs.views().stream().anyMatch(n->n.id().equals(interactive.id())));
+    assertTrue(npcs.views().stream().anyMatch(n->n.id().equals(
+        NpcAppearanceCatalog.viewId(duplicate))));
+    assertTrue(npcs.views().stream().anyMatch(n->n.id().equals(
+        NpcAppearanceCatalog.viewId(sharedAnchor))));
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,
+        new Random(1)).progress();
+    var map=new PreviewMap(new boolean[10][10],spec.originX(),spec.originY(),3,3);
+    assertThrows(IllegalArgumentException.class,()->talk(npcs,progress,map,
+        NpcAppearanceCatalog.viewId(duplicate)));
+    assertEquals("npc.kilhiam.letter",talk(npcs,progress,map,interactive.id()).messageKey());
+  }
+
+  @Test void hostedMissingFrameAndExcessViewsFailRatherThanDisappear() throws Exception {
+    var region=new RegionMapLoader.Spec(0,"sundial",2878,1067,8,8,2881,1070);
+    var source=NpcAppearanceCatalog.loadBundled().inRegion(region).stream()
+        .filter(s->s.canonicalNpcId().equals("Sundial") && s.x()==2881 && s.y()==1070)
+        .findFirst().orElseThrow();
+    var missing=new NpcAppearanceContent.Spawn(source.spawnKey(),source.type(),
+        source.canonicalNpcId(),source.world(),source.x(),source.y(),source.stationary(),
+        source.aggressive(),source.deployable(),source.displayName(),source.spriteBase(),
+        source.parts(),source.interactionSupported(),NpcAppearanceContent.FrameEvidence.NO_FRAME,
+        "static_frame_name_missing");
+    assertThrows(IllegalArgumentException.class,()->new NpcAppearanceCatalog(
+        new NpcAppearanceContent(1,List.of(missing))).inRegion(region));
+    var unknown=new NpcAppearanceContent.Spawn(source.spawnKey(),source.type(),
+        source.canonicalNpcId(),source.world(),source.x(),source.y(),source.stationary(),
+        source.aggressive(),source.deployable(),source.displayName(),"Npc",
+        java.util.Map.of(),source.interactionSupported(),NpcAppearanceContent.FrameEvidence.UNKNOWN,
+        "sprite_metadata_unavailable");
+    assertThrows(IllegalArgumentException.class,()->new NpcAppearanceCatalog(
+        new NpcAppearanceContent(1,List.of(unknown))).inRegion(region));
+    var undeployable=new NpcAppearanceContent.Spawn(source.spawnKey(),source.type(),
+        source.canonicalNpcId(),source.world(),source.x(),source.y(),source.stationary(),
+        source.aggressive(),false,source.displayName(),source.spriteBase(),source.parts(),
+        source.interactionSupported(),source.frameEvidence(),source.appearanceDiagnostic());
+    assertThrows(IllegalArgumentException.class,()->new NpcAppearanceCatalog(
+        new NpcAppearanceContent(1,List.of(undeployable))).inRegion(region));
+    var many=new ArrayList<NpcAppearanceContent.Spawn>();
+    for(int x=0;x<65;x++) many.add(moved(source,x,false));
+    assertEquals(65,new HashSet<>(many.stream().map(NpcAppearanceContent.Spawn::spawnKey).toList()).size());
+    assertThrows(IllegalArgumentException.class,()->new NpcAppearanceCatalog(
+        new NpcAppearanceContent(1,many)).inRegion(
+            new RegionMapLoader.Spec(0,"excess",0,1067,65,8,1,1070)));
+  }
+
+  private static NpcAppearanceContent.Spawn moved(NpcAppearanceContent.Spawn source,int x,
+      boolean supported) {
+    String key=new MonsterContent.Spawn(source.type(),null,x,source.y(),source.world(),
+        source.stationary(),source.aggressive()).persistenceKey();
+    return new NpcAppearanceContent.Spawn(key,source.type(),source.canonicalNpcId(),
+        source.world(),x,source.y(),source.stationary(),source.aggressive(),source.deployable(),
+        source.displayName(),source.spriteBase(),source.parts(),supported,
+        source.frameEvidence(),source.appearanceDiagnostic());
   }
 }
