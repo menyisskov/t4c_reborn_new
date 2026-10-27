@@ -28,6 +28,7 @@ import com.perso.T4C.npc.core.NPCAnimations;
 import com.perso.T4C.objects.GroundItem;
 import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.GroundLootView;
+import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.NpcView;
 import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.PlayerAnimations;
@@ -78,6 +79,8 @@ public final class OnlineClient extends ApplicationAdapter {
   private final ConcurrentLinkedQueue<Staged> staged = new ConcurrentLinkedQueue<>();
   private boolean talkOpen;
   private boolean inventoryOpen;
+  /** Spell and potion lists (C / U); plain HUD text, closed with the other panels. */
+  private final OnlineAbilityMenu abilityMenu = new OnlineAbilityMenu();
   private String talkNpc;
   private String talkName;
   private String talkText;
@@ -260,10 +263,13 @@ public final class OnlineClient extends ApplicationAdapter {
                 return true;
               }
               if (code == Input.Keys.I) { toggleInventory(); return true; }
+              if (code == Input.Keys.C) { toggleAbilityMenu(OnlineAbilityMenu.Kind.SPELLS); return true; }
+              if (code == Input.Keys.U) { toggleAbilityMenu(OnlineAbilityMenu.Kind.POTIONS); return true; }
               // Digits belong to an open panel only; with no panel open they fall through untouched.
               int digit = digitFor(code);
               if (digit > 0 && talkOpen) { chooseTopic(digit); return true; }
               if (digit > 0 && inventoryOpen) { chooseRow(digit); return true; }
+              if (digit > 0 && abilityMenu.isOpen()) { chooseAbility(digit); return true; }
               if (code == Input.Keys.SPACE) { attackNearest(); return true; }
               if (code == Input.Keys.E) { recoverNearest(); return true; }
               if (code == Input.Keys.G) { pickUpNearest(); return true; }
@@ -472,6 +478,7 @@ public final class OnlineClient extends ApplicationAdapter {
   private void closePanels() {
     talkOpen = false;
     inventoryOpen = false;
+    abilityMenu.close();
     talkText = null;
     talkTopics = List.of();
   }
@@ -529,6 +536,37 @@ public final class OnlineClient extends ApplicationAdapter {
     boolean open = !inventoryOpen;
     closePanels();
     inventoryOpen = open;
+  }
+
+  private CharacterProgress ownProgress() {
+    var view = connection == null ? null : connection.view();
+    return view == null || view.character() == null ? null : view.character().progress();
+  }
+
+  /** C / U: open the spell or potion list. Ignored while dead or disconnected. */
+  private void toggleAbilityMenu(OnlineAbilityMenu.Kind kind) {
+    var progress = ownProgress();
+    boolean available = OnlineAbilityMenu.available(connection.status(), progress);
+    if (!available) { abilityMenu.close(); return; }
+    boolean wasOpen = abilityMenu.kind() == kind;
+    closePanels();
+    if (!wasOpen) abilityMenu.toggle(kind, true);
+  }
+
+  /** Digit in an open ability list: cast or use that row. The server decides everything else. */
+  private void chooseAbility(int digit) {
+    var progress = ownProgress();
+    boolean available = OnlineAbilityMenu.available(connection.status(), progress);
+    var action = abilityMenu.choose(digit, progress, OnlineSpellAllowlist.bundled(), available).orElse(null);
+    if (action == null) return;
+    try {
+      var pending = action.kind() == OnlineAbilityMenu.Kind.SPELLS
+          ? connection.cast(action.spellKey())
+          : connection.useItem(action.item());
+      pending.thenAccept(this::stageCommand).exceptionally(failed -> null);
+    } catch (IllegalStateException pendingOrDisconnected) {
+      showMessage("online.ability.busy");
+    }
   }
 
   /** Equip a carried item into its authored slot, or unequip an equipped slot. The server decides both. */
@@ -591,6 +629,9 @@ public final class OnlineClient extends ApplicationAdapter {
         y -= line;
       }
       font.draw(hud, I18n.key("online.talk.close"), 16, y);
+    } else if (abilityMenu.isOpen()) {
+      var progress = view == null || view.character() == null ? null : view.character().progress();
+      OnlineAbilityMenu.draw(hud, font, abilityMenu.lines(progress, OnlineSpellAllowlist.bundled()), width - 360, height - 16);
     } else if (inventoryOpen) {
       float x = width - 360, y = height - 16;
       font.draw(hud, I18n.key("online.inventory.title"), x, y);
@@ -707,7 +748,7 @@ public final class OnlineClient extends ApplicationAdapter {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     // Esc closes an open panel first; with no panel open it exits, or returns to the lobby in lobby mode.
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      if (talkOpen || inventoryOpen) closePanels();
+      if (talkOpen || inventoryOpen || abilityMenu.isOpen()) closePanels();
       else if (lobbyModel != null) { returnToLobby(); return; }
       else Gdx.app.exit();
     }

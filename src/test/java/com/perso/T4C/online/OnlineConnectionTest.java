@@ -430,7 +430,7 @@ class OnlineConnectionTest {
         case "/use" -> {
           bodies.add("use " + request);
           reply = "{\"revision\":" + revision.incrementAndGet()
-              + ",\"healthGained\":9,\"manaSpent\":0,\"manaGained\":0}";
+              + ",\"healthGained\":9,\"manaSpent\":2,\"manaGained\":5}";
         }
         default -> { }
       }
@@ -454,7 +454,8 @@ class OnlineConnectionTest {
 
       var used = connection.useItem(potion).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertTrue(used.accepted());
-      assertNull(used.messageKey());
+      assertEquals("online.ability.result", used.messageKey());
+      assertEquals(java.util.List.of(9, 3), used.args(), "health gained and net mana");
       assertEquals(2, used.character().revision());
       assertEquals("use 1 0 " + potion, bodies.getLast());
       assertEquals(2, bodies.size());
