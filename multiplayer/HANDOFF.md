@@ -35,9 +35,9 @@ Native melee is currently a restricted immediate-impact preview: Space attempts 
 - T4C-0190 / PR #114, merged as beaf80ec: retaliation scheduler, schema-v8 durable aggro/attack deadlines, transactional monster hits, offline-compatible death penalties/half-HP return, durable owner-recoverable corpses, public committed player HP, protocol v3 and native recovery intent. The actual native two-connection adapter probe passed targeted damage, observer isolation and fatal half-HP return. HTTP corpse recovery ownership/range/identity/retry checks passed. A three-minute twenty-adapter smoke completed with zero connection/invariant/health failures, 185 attack attempts/112 accepted, 46 HP changes and ten reconnects; this is not rendered or two-hour evidence. Green CI, scoped self-review and local rebuild passed; rendered retaliation validation remains pending. Do not label this shipped until integrated tests and delivery are complete.
 - T4C-0191, backup verification delivery: consistent-snapshot PostgreSQL backup/restore verification into a new t4c_restore_* database. Tooling restored and matched both schema7 QA and schema8 test databases; merged as f3b76d76 after green CI. Table comparisons alone do not satisfy a restored gameplay playthrough.
 
-- T4C-0192: configurable HTTPS, standard native trust/hostname validation, origin allowlist and local administration are implemented and tested; delivery is being reviewed. See TLS.md for foreground server/client commands and external deployment requirements.
-- T4C-0193: authored portal catalog/export/destination audit and MAP_TRANSFER_DESIGN.md are ready for delivery; no live transfer is connected yet.
-- T4C-0194: two-region portal runtime is beginning in parallel. Native protocol4/map switching and transactional location epochs are planned; inspect actual diff and integration status before building or claiming it works.
+- T4C-0192: configurable HTTPS, standard native trust/hostname validation, origin allowlist and local administration are implemented and tested; merged as 4a453cd5 after green CI. See TLS.md for foreground server/client commands and external deployment requirements.
+- T4C-0193: authored portal catalog/export/destination audit and MAP_TRANSFER_DESIGN.md are being delivered independently of runtime work.
+- T4C-0194: two-region runtime/schema9 transfer receipts/location epochs and server tests are implemented but uncommitted pending combined nativev4 integration. Native map switching and read-only retry on epoch races are in progress. Combined native protocol/map-switch verification is still pending. Never claim rendered travel or merge partial integration.
 
 Root coordinates shared docs, selective commits and GUI QA. Retaliation agent owns scheduler/PreviewWorld/PersistentSessions; death agent owns OnlineStore/death rules and tests; crash agent moved to backup tooling. Inspect actual live agent status rather than assuming these agents remain available after a model switch.
 
@@ -73,6 +73,10 @@ Private QA profiles must never be printed or committed. Existing Rowan/Willow te
 The server's open target/lib JAR can prevent Maven copy-dependencies on Windows. Stop it gracefully, rebuild, then restart; do not kill unrelated Java processes. Metadata under server/target/preview-session.json includes a private control token: never print it. `stop-preview.ps1` validates process identity and flushes checkpoints.
 
 Re-export the compendium after changes as required by ship-pr, check `scripts/compendium_freshness.py --check`, and commit generated changes only if semantic output changed. Current recorded content fingerprint is d8e599c4b4b9d40612fd9750b032f47590061051355908bf0f8e30387b523f18.
+
+## Running isolated stability check
+
+A protocol3/schema8 baseline copied into target/soak-runtime-20261027_082605_f43e4b6d is running independently of mutable main target files against a fresh restored database on port 18766. Its baseline.json/runtime-hashes.json describe exact binaries/hardware; soak-report.json is provisional until the supervisor fences a full 7200-second result. It started 2026-10-27 08:33:13 Asia/Jerusalem, nominal finish 10:33. This tests the current restricted combat workload, not future protocol4 or complete launch content. Never stop this copied server by broad Java-process commands. Main local 18765 server was stopped for packaging and has not yet been restarted for schema9.
 
 ## Native QA and desktop state
 

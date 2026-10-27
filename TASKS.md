@@ -6,14 +6,15 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0194`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0195`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0193 | Export and validate authored portal destinations | Multiplayer / Alpha | In Progress | pending | pending |
+| T4C-0194 | Transfer native players between hosted worlds safely | Multiplayer / Alpha | In Progress | pending | pending |
+| T4C-0193 | Export and validate authored portal destinations | Multiplayer / Alpha | Done | `b7551ab8` | [2026-10-27](CHANGELOG.md#2026-10-27--online-portal-validation-t4c-0193) |
 | T4C-0192 | Configure verified encrypted remote transport | Multiplayer / Alpha | Done | `9a2f70d4` | [2026-10-27](CHANGELOG.md#2026-10-27--encrypted-online-transport-t4c-0192) |
 | T4C-0191 | Verify consistent PostgreSQL backup and fresh restore | Multiplayer / Beta | Done | `d9b44536` | [2026-10-27](CHANGELOG.md#2026-10-27--realm-backup-verification-t4c-0191) |
 | T4C-0190 | Persist monster retaliation, death and owned corpse recovery | Multiplayer / Alpha | Done | `bb002ff2` | [2026-10-27](CHANGELOG.md#2026-10-27--online-retaliation-and-recovery-t4c-0190) |
