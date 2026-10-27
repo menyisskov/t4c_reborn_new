@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online natural regeneration (T4C-0229)
+
+### Added
+- Online characters now have the same slow natural recovery of health and mana as single-player, based on elapsed time. Time spent logged out does not heal you, you do not recover while dead, and a very long wait counts for at most an hour of recovery.
+
 ## 2026-10-27 — Corpse recovery respects carry weight (T4C-0228)
 
 ### Changed
