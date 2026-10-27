@@ -3,6 +3,7 @@ package com.perso.T4C.online;
 import com.google.gson.Gson;
 import com.perso.T4C.online.model.OnlineCharacterView;
 import com.perso.T4C.online.model.CreatureView;
+import com.perso.T4C.online.model.OnlineProtocol;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** Network-only adapter for the local Alpha server; never touches graphics or character files. */
 public final class OnlineConnection implements AutoCloseable {
-  public record MapInfo(int originX, int originY, int width, int height, boolean persistent) {}
+  public record MapInfo(int originX, int originY, int width, int height, boolean persistent, int protocolVersion) {}
 
   public record Credentials(String secret, java.util.UUID characterId) {
     public Credentials {
@@ -140,6 +141,8 @@ public final class OnlineConnection implements AutoCloseable {
     try (var client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()) {
       try {
         MapInfo map = JSON.fromJson(send(client, "/map", null, null), MapInfo.class);
+        if (map == null || map.protocolVersion() != OnlineProtocol.VERSION)
+          throw new IllegalStateException("Incompatible online protocol; update client and server together");
         if (map.width() <= 0 || map.height() <= 0 || map.width() > 1024 || map.height() > 1024)
           throw new IllegalStateException("Invalid server map");
         if (map.persistent() != (credentials != null))
@@ -251,6 +254,7 @@ public final class OnlineConnection implements AutoCloseable {
 
   private String send(HttpClient client, String path, String body, String token) throws Exception {
     var request = HttpRequest.newBuilder(endpoint.resolve(path)).timeout(Duration.ofSeconds(2));
+    if ("/join".equals(path)) request.header(OnlineProtocol.VERSION_HEADER, Integer.toString(OnlineProtocol.VERSION));
     if (token != null) request.header("Authorization", "Bearer " + token);
     if (body != null)
       request

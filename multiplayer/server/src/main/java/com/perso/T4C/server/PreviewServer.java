@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.perso.T4C.server.persistence.OnlineStore;
 import com.perso.T4C.online.model.OnlineCharacterView;
+import com.perso.T4C.online.model.OnlineProtocol;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
@@ -55,7 +56,7 @@ public final class PreviewServer implements AutoCloseable {
     persistent=store==null ? null : new PersistentSessions(store,map,world);
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
         "originX", map.originX, "originY", map.originY, "blocked", map.cells(),
-        "maxPlayers", PreviewWorld.MAX_PLAYERS,"persistent",store!=null));
+        "maxPlayers", PreviewWorld.MAX_PLAYERS,"persistent",store!=null,"protocolVersion",OnlineProtocol.VERSION));
     http = HttpServer.create(new InetSocketAddress("127.0.0.1", port), 32);
     loop = new SimulationLoop(PreviewWorld.TICK_RATE, tick -> {
       for (int i = 0; i < 128; i++) {
@@ -131,6 +132,12 @@ public final class PreviewServer implements AutoCloseable {
         String type = exchange.getRequestHeaders().getFirst("Content-Type");
         if (type == null || !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain"))
           throw new PreviewWorld.Rejected(415, "input");
+        if ("/join".equals(path)) {
+          var versions = exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
+          if (versions == null || versions.size() != 1
+              || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
+            throw new PreviewWorld.Rejected(426, "protocol");
+        }
         int limit=store!=null && "/join".equals(path) ? 101
             : ("/equip".equals(path) || "/unequip".equals(path)) ? 96 : 64;
         byte[] bytes = exchange.getRequestBody().readNBytes(limit+1);

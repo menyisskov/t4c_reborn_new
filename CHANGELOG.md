@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online compatibility checks (T4C-0177)
+
+### Added
+- Online clients and servers now check compatibility before joining. An outdated client cannot take a player slot, and the native client checks the server before sending account credentials. Update both together when the connection format changes.
+
 ## 2026-10-27 — Native equipment commands (T4C-0176)
 
 ### Added
