@@ -39,6 +39,7 @@
                         <include>com/perso/T4C/combat/WeaponDamageRules.java</include>
                         <include>com/perso/T4C/combat/EquipmentBoostRules.java</include>
                         <include>com/perso/T4C/combat/EquipmentEligibilityRules.java</include>
+                        <include>com/perso/T4C/combat/SkillBonusRules.java</include>
                         <include>com/perso/T4C/helper/DiceFormula.java</include>
                         <include>com/perso/T4C/world/WorldCollision.java</include>
                         <include>com/perso/T4C/world/CollisionRules.java</include>
