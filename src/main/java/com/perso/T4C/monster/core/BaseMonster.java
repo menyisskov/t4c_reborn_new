@@ -3,13 +3,11 @@ package com.perso.T4C.monster.core;
 import static com.perso.T4C.config.GameConstants.ENTITY_COLLISION_CLEARANCE_TILES;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
-import static com.perso.T4C.config.GameConstants.MONSTER_AGGRO_LEASH_RANGE;
 import static com.perso.T4C.config.GameConstants.MONSTER_AGGRO_RANGE;
 import static com.perso.T4C.config.GameConstants.MONSTER_ATTACK_COOLDOWN;
 import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_PAUSE_MAX;
 import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_PAUSE_MIN;
 import static com.perso.T4C.config.GameConstants.MONSTER_PATROL_RADIUS;
-import static com.perso.T4C.config.GameConstants.MONSTER_RETALIATION_LEASH_RANGE;
 import static com.perso.T4C.config.GameConstants.MONSTER_SPEED;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -246,10 +244,12 @@ public abstract class BaseMonster implements Nameable {
         com.perso.T4C.spawn.HuntingGrounds.at(getCanonicalName(), getSpawnTileX(), getSpawnTileY());
     if (huntingField != null
         && playerPosition != null
-        && Math.max(
-                Math.abs(playerPosition.x / GRID_W - huntingField.x()),
-                Math.abs(playerPosition.y / GRID_H - huntingField.y()))
-            > huntingField.leashRadiusTiles()) {
+        && MonsterPursuitRules.exceedsHuntingGroundLeash(
+            playerPosition.x,
+            playerPosition.y,
+            huntingField.x(),
+            huntingField.y(),
+            huntingField.leashRadiusTiles())) {
       if (isAggro) loseAggroAndReturnHome();
       updatePatrol(delta);
       animations.update(delta, movement.isMoving());
@@ -269,7 +269,7 @@ public abstract class BaseMonster implements Nameable {
     if (isAggro) {
       if (isValidMonsterTarget(monsterAggroTarget)) {
         float distanceToMonster = position.dst(monsterAggroTarget.position);
-        if (distanceToMonster <= MONSTER_AGGRO_LEASH_RANGE) {
+        if (MonsterPursuitRules.withinNaturalLeash(distanceToMonster)) {
           updateMonsterCombat(delta, monsterAggroTarget);
         } else {
           loseAggroAndReturnHome();
@@ -277,13 +277,15 @@ public abstract class BaseMonster implements Nameable {
         }
       } else if (isFightingCompanion()) {
         Vector2 companionPosition = companionAggroTarget.getPosition();
-        if (position.dst(companionPosition) <= playerAggroLeashRange()) {
+        if (MonsterPursuitRules.withinPlayerLeash(
+            position.dst(companionPosition), retaliatingAgainstPlayer)) {
           updateCombat(delta, companionPosition);
         } else {
           loseAggroAndReturnHome();
           updatePatrol(delta);
         }
-      } else if (aggroTarget != null && distanceToPlayer <= playerAggroLeashRange()) {
+      } else if (aggroTarget != null
+          && MonsterPursuitRules.withinPlayerLeash(distanceToPlayer, retaliatingAgainstPlayer)) {
         updateCombat(delta, playerPosition);
       } else {
         loseAggroAndReturnHome();
@@ -292,8 +294,8 @@ public abstract class BaseMonster implements Nameable {
     } else if (enemyTarget != null) {
       aggroOnMonster(enemyTarget);
       updateMonsterCombat(delta, enemyTarget);
-    } else if (aggressive
-        && distanceToPlayer <= (huntingField == null ? MONSTER_AGGRO_RANGE : 12f * GRID_W)
+    } else if (MonsterPursuitRules.inNaturalAcquisitionRange(
+            aggressive, distanceToPlayer, huntingField != null)
         && hasLineOfSight(playerPosition)) {
       if (!isAggro) {
         resetChaseNavigation();
@@ -362,7 +364,8 @@ public abstract class BaseMonster implements Nameable {
 
   private void updateCombat(float delta, Vector2 playerPosition) {
     float distanceToPlayer = position.dst(playerPosition);
-    if (distanceToPlayer <= resolveAttackRange() && hasLineOfSight(playerPosition)) {
+    if (MonsterPursuitRules.withinAttackReach(distanceToPlayer, attacks)
+        && hasLineOfSight(playerPosition)) {
       unreachableTargetTimer = 0f;
       movement.stop();
       movement.faceToward(position, playerPosition);
@@ -415,7 +418,8 @@ public abstract class BaseMonster implements Nameable {
     }
     Vector2 targetPosition = target.position;
     float distanceToTarget = position.dst(targetPosition);
-    if (distanceToTarget <= resolveAttackRange() && hasLineOfSight(targetPosition)) {
+    if (MonsterPursuitRules.withinAttackReach(distanceToTarget, attacks)
+        && hasLineOfSight(targetPosition)) {
       movement.stop();
       movement.faceToward(position, targetPosition);
       if (attackCooldownTimer <= 0 && !animations.isAttacking() && !isAttackExhausted()) {
@@ -891,7 +895,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   private int tileRange(float worldDistance) {
-    return (int) Math.round(worldDistance / Math.max(GRID_W, GRID_H));
+    return MonsterPursuitRules.tileRange(worldDistance);
   }
 
   private MonsterDef.Attack pickAttack(float targetDistance) {
@@ -978,14 +982,6 @@ public abstract class BaseMonster implements Nameable {
           default -> -1;
         };
     return index < 0 || index >= combatResists.length ? 0 : Math.max(0, combatResists[index]);
-  }
-
-  private float resolveAttackRange() {
-    int maximumTiles = 1;
-    for (MonsterDef.Attack attack : attacks) {
-      if (attack != null) maximumTiles = Math.max(maximumTiles, attack.getMaxRangeTiles());
-    }
-    return maximumTiles * Math.max(GRID_W, GRID_H);
   }
 
   public boolean isStunned() {
@@ -1145,10 +1141,6 @@ public abstract class BaseMonster implements Nameable {
 
   public com.perso.T4C.npc.companion.CompanionNPC getCompanionAggroTarget() {
     return companionAggroTarget;
-  }
-
-  private float playerAggroLeashRange() {
-    return retaliatingAgainstPlayer ? MONSTER_RETALIATION_LEASH_RANGE : MONSTER_AGGRO_LEASH_RANGE;
   }
 
   private void loseAggroAndReturnHome() {

@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0211`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0212`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,7 +18,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0210 | Share authored monster acquisition, leash and reach decisions | Multiplayer / Beta groundwork | In Progress | pending | pending |
+| T4C-0211 | Render authoritative native creature movement and facing | Multiplayer / Beta groundwork | In Progress | pending | pending |
+| T4C-0210 | Share authored monster acquisition, leash and reach decisions | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-monster-pursuit-decisions-t4c-0210) |
 | T4C-0209 | Authoritative monster pursuit architecture and peer handoff | Multiplayer / Beta design only | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--monster-pursuit-architecture-t4c-0209) |
 | T4C-0208 | Isolated PostgreSQL crash/recovery through two native clients | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--isolated-postgresql-recovery-probe-t4c-0208) |
 | T4C-0207 | Two-native-adapter graceful and forced server restart recovery probe | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--two-adapter-server-restart-probe-t4c-0207) |
