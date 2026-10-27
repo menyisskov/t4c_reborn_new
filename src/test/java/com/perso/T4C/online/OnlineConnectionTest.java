@@ -41,7 +41,7 @@ class OnlineConnectionTest {
         "/",
         exchange -> {
           String path = exchange.getRequestURI().getPath();
-          if (path.equals("/equip") || path.equals("/unequip")) {
+          if (path.equals("/equip") || path.equals("/unequip") || path.equals("/attack")) {
             equipmentCalls.incrementAndGet();
             equipmentBody.set(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
             equipmentAuth.set(exchange.getRequestHeaders().getFirst("Authorization"));
@@ -81,11 +81,11 @@ class OnlineConnectionTest {
                 case "/character" ->
                     "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Online tester\",\"gold\":"
                         + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + "}";
-                case "/equip", "/unequip" -> "{\"revision\":" + revision.get() + "}";
+                case "/equip", "/unequip", "/attack" -> "{\"revision\":" + revision.get() + "}";
                 default -> "{}";
               };
           byte[] bytes = result.getBytes(StandardCharsets.UTF_8);
-          exchange.sendResponseHeaders(path.equals("/equip") || path.equals("/unequip") ? equipmentCode.get() : 200, bytes.length);
+          exchange.sendResponseHeaders(path.equals("/equip") || path.equals("/unequip") || path.equals("/attack") ? equipmentCode.get() : 200, bytes.length);
           exchange.getResponseBody().write(bytes);
           exchange.close();
         });
@@ -148,12 +148,19 @@ class OnlineConnectionTest {
           assertEquals("connected", connection.status(), "A stale or ineligible action is not a broken connection");
           assertEquals(4, characterReads.get(), "Conflicts must refresh private state before another action");
 
+          equipmentCode.set(200);
+          var attack=connection.attack(1).toCompletableFuture().get(3,TimeUnit.SECONDS);
+          assertTrue(attack.accepted());
+          assertEquals("3 1",equipmentBody.get(),"Attack intent cannot contain damage, XP, gold or coordinates");
+          assertEquals(4,attack.character().revision());
+          assertEquals(attack.character(),connection.view().character());
+
           equipmentCode.set(503);
           var uncertain = connection.equip(instance, com.perso.T4C.player.BodyPart.HEAD).toCompletableFuture();
           assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(3, TimeUnit.SECONDS));
           assertEquals("disconnected", connection.status());
           assertNull(connection.view());
-          assertEquals(3, equipmentCalls.get(), "An ambiguous mutation must never be automatically replayed");
+          assertEquals(4, equipmentCalls.get(), "An ambiguous mutation must never be automatically replayed");
         } else assertNull(connection.view().character());
       }
       assertTrue(leave.await(3, TimeUnit.SECONDS), "Closing must release the temporary session");

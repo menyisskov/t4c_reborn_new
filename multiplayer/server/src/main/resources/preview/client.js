@@ -1,5 +1,5 @@
 'use strict';
-const protocolVersion = 1;
+const protocolVersion = 2;
 const canvas = document.querySelector('#map');
 const ctx = canvas.getContext('2d');
 const status = document.querySelector('#status');

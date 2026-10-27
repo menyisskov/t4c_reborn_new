@@ -51,6 +51,7 @@ public final class OnlineClient extends ApplicationAdapter {
   private final Map<Long, Avatar> avatars = new HashMap<>();
   private final Map<Long, CreatureAvatar> creatures = new HashMap<>();
   private long lastTick = -1;
+  private long targetCreature;
   private String error;
 
   private static final class CreatureAvatar {
@@ -154,6 +155,7 @@ public final class OnlineClient extends ApplicationAdapter {
             @Override
             public boolean keyDown(int code) {
               if (!focused || connection == null) return false;
+              if (code == Input.Keys.SPACE) { attackNearest(); return true; }
               if (code != Input.Keys.W
                   && code != Input.Keys.A
                   && code != Input.Keys.S
@@ -195,7 +197,22 @@ public final class OnlineClient extends ApplicationAdapter {
     creatures.clear(); // Textures belong to the shared SpriteLoader.
     error = null;
     lastTick = -1;
+    targetCreature = 0;
     connection = new OnlineConnection(endpoint, credentials);
+  }
+
+  private void attackNearest() {
+    var view=connection.view();
+    if (view==null || view.character()==null || !"connected".equals(connection.status())) return;
+    var own=view.snapshot().players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElse(null);
+    if (own==null) return;
+    var nearest=view.snapshot().creatures().stream().filter(c -> c.health()>0)
+        .min(java.util.Comparator.comparingDouble(c -> Math.hypot((c.x()-own.x())*GRID_W,(c.y()-own.y())*GRID_H)))
+        .orElse(null);
+    if (nearest==null) return;
+    targetCreature=nearest.id();
+    try { connection.attack(targetCreature).exceptionally(failed -> null); }
+    catch (IllegalStateException pendingOrDisconnected) { /* Single-flight input is intentionally bounded. */ }
   }
 
   private int key(int positive, int alternatePositive, int negative, int alternateNegative) {
@@ -308,13 +325,20 @@ public final class OnlineClient extends ApplicationAdapter {
         && view.map().persistent()
         && "connected".equals(connection.status())) state = I18n.key("online.client.persistent");
     font.draw(hud, state, 16, Gdx.graphics.getHeight() - 16);
-    font.draw(hud, I18n.key("online.client.controls"), 16, 24);
+    font.draw(hud, I18n.key(view!=null && view.map().persistent() ? "online.client.combat_controls" : "online.client.controls"), 16, 24);
     if (view != null)
       font.draw(
           hud,
           I18n.message("online.client.players", view.ownId(), avatars.size()),
           16,
           Gdx.graphics.getHeight() - 38);
+    if (view != null && view.character() != null && view.character().progress() != null) {
+      var character=view.character();
+      font.draw(hud,I18n.message("online.client.progress",character.progress().advancement().level(),
+          character.experience(),character.gold()),16,Gdx.graphics.getHeight()-60);
+      view.snapshot().creatures().stream().filter(c -> c.id()==targetCreature).findFirst().ifPresent(c ->
+          font.draw(hud,I18n.message("online.client.target_health",c.health(),c.maxHealth()),16,Gdx.graphics.getHeight()-82));
+    }
     hud.end();
   }
 

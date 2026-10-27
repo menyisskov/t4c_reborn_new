@@ -970,21 +970,21 @@ public abstract class BaseMonster implements Nameable {
         HuntingDamageCurve.appliesTo(definition)
             ? HuntingDamageCurve.maximumRawDamage(definition.getLevel())
             : Integer.MAX_VALUE;
-    combatLevel = Math.max(1, definition.getLevel());
-    combatStrength = Math.max(1, definition.getStr());
-    combatEndurance = Math.max(1, definition.getEnd());
-    combatAgility = Math.max(1, definition.getAgi());
-    combatIntelligence = Math.max(1, definition.getIntel());
-    combatAttack = Math.max(1, definition.getAgi() + definition.getLevel());
-    combatDodge = Math.max(1, definition.getDodge());
-    combatArmorMin = decodeArmorValue(definition.getAcMin());
-    combatArmorMax = Math.max(combatArmorMin, decodeArmorValue(definition.getAcMax()));
+    var stats = com.perso.T4C.combat.MonsterCombatRules.resolve(definition);
+    combatLevel = stats.level();
+    combatStrength = stats.strength();
+    combatEndurance = stats.endurance();
+    combatAgility = stats.agility();
+    combatIntelligence = stats.intelligence();
+    combatAttack = stats.attack();
+    combatDodge = stats.dodge();
+    combatArmorMin = stats.armorMin();
+    combatArmorMax = stats.armorMax();
     combatResists = definition.getResists() == null ? new int[12] : definition.getResists().clone();
   }
 
   public double rollCombatArmorClass() {
-    int spread = combatArmorMax - combatArmorMin;
-    return combatArmorMin + (spread > 0 ? random.nextInt(spread + 1) : 0);
+    return com.perso.T4C.combat.MonsterCombatRules.rollArmor(combatArmorMin, combatArmorMax, random);
   }
 
   public int getElementResistance(int element) {
@@ -1058,12 +1058,6 @@ public abstract class BaseMonster implements Nameable {
     if (durationMillis <= 0L) return;
     temporaryDodgeModifier = modifier;
     temporaryDodgeModifierUntilMs = System.currentTimeMillis() + durationMillis;
-  }
-
-  private static int decodeArmorValue(int armor) {
-    if (armor >= 0 && armor < 100_000) return armor;
-    float decoded = Float.intBitsToFloat(armor);
-    return Float.isFinite(decoded) ? Math.max(0, Math.round(decoded)) : 0;
   }
 
   public void applyPlayerDamage(int damage, Player player, XpCurve xpCurve) {

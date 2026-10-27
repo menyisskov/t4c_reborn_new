@@ -36,9 +36,9 @@ public final class OnlineConnection implements AutoCloseable {
 
   private record Joined(String token, long id) {}
 
-  public record EquipmentResult(boolean accepted, OnlineCharacterView character) {}
-  private record EquipmentCommand(String path, String body, long revision,
-      java.util.concurrent.CompletableFuture<EquipmentResult> result) {}
+  public record CommandResult(boolean accepted, OnlineCharacterView character) {}
+  private record GameplayCommand(String path, String body, long revision,
+      java.util.concurrent.CompletableFuture<CommandResult> result) {}
   private record Committed(Long revision) {}
   private static final class Rejected extends IllegalStateException {
     private final int code;
@@ -50,7 +50,7 @@ public final class OnlineConnection implements AutoCloseable {
   private final Credentials credentials;
   private final AtomicInteger direction = new AtomicInteger(4);
   private final AtomicInteger pendingTap = new AtomicInteger(-1);
-  private final java.util.concurrent.atomic.AtomicReference<EquipmentCommand> equipment =
+  private final java.util.concurrent.atomic.AtomicReference<GameplayCommand> gameplay =
       new java.util.concurrent.atomic.AtomicReference<>();
   private final Thread worker;
   private volatile boolean closed;
@@ -105,35 +105,41 @@ public final class OnlineConnection implements AutoCloseable {
   }
 
   /** Nonblocking, single-flight command. No local equipment prediction or automatic replay. */
-  public java.util.concurrent.CompletionStage<EquipmentResult> equip(
+  public java.util.concurrent.CompletionStage<CommandResult> equip(
       java.util.UUID instance, com.perso.T4C.player.BodyPart slot) {
     java.util.Objects.requireNonNull(instance);
     java.util.Objects.requireNonNull(slot);
-    return equipmentCommand("/equip", instance + " " + slot.name());
+    return gameplayCommand("/equip", instance + " " + slot.name());
   }
 
-  public java.util.concurrent.CompletionStage<EquipmentResult> unequip(com.perso.T4C.player.BodyPart slot) {
+  public java.util.concurrent.CompletionStage<CommandResult> unequip(com.perso.T4C.player.BodyPart slot) {
     java.util.Objects.requireNonNull(slot);
-    return equipmentCommand("/unequip", slot.name());
+    return gameplayCommand("/unequip", slot.name());
   }
 
-  private java.util.concurrent.CompletionStage<EquipmentResult> equipmentCommand(String path, String arguments) {
+  /** The client supplies only a target identity and committed revision, never damage or rewards. */
+  public java.util.concurrent.CompletionStage<CommandResult> attack(long target) {
+    if (target<=0) throw new IllegalArgumentException("Invalid target");
+    return gameplayCommand("/attack",Long.toString(target));
+  }
+
+  private java.util.concurrent.CompletionStage<CommandResult> gameplayCommand(String path, String arguments) {
     View current = view;
     if (closed || current == null || current.character() == null || !status.equals("connected"))
       throw new IllegalStateException("Persistent session is not connected");
     long revision = current.character().revision();
-    var command = new EquipmentCommand(path, revision + " " + arguments, revision,
+    var command = new GameplayCommand(path, revision + " " + arguments, revision,
         new java.util.concurrent.CompletableFuture<>());
-    if (!equipment.compareAndSet(null, command)) throw new IllegalStateException("Equipment command pending");
+    if (!gameplay.compareAndSet(null, command)) throw new IllegalStateException("Gameplay command pending");
     // Close/disconnect may race publication of the command after the initial state check.
-    if (closed || !status.equals("connected")) failEquipment();
+    if (closed || !status.equals("connected")) failCommand();
     return command.result().minimalCompletionStage();
   }
 
-  private void failEquipment() {
-    var command = equipment.getAndSet(null);
+  private void failCommand() {
+    var command = gameplay.getAndSet(null);
     if (command != null) command.result().completeExceptionally(
-        new IllegalStateException("Equipment result unavailable; reconnect and reload committed state"));
+        new IllegalStateException("Gameplay result unavailable; reconnect and reload committed state"));
   }
 
   private void run() {
@@ -156,14 +162,14 @@ public final class OnlineConnection implements AutoCloseable {
         long sequence = 0;
         OnlineCharacterView character = null;
         while (!closed) {
-          var command = equipment.get();
+          var command = gameplay.get();
           boolean accepted = false;
           long requiredRevision = character == null ? 0 : character.revision();
           if (command != null) {
             try {
               var committed = JSON.fromJson(send(client, command.path(), command.body(), token), Committed.class);
               if (committed == null || committed.revision() == null || committed.revision() <= command.revision())
-                throw new IllegalStateException("Invalid equipment acknowledgement");
+                throw new IllegalStateException("Invalid gameplay acknowledgement");
               requiredRevision = committed.revision();
               accepted = true;
             } catch (Rejected rejected) {
@@ -225,14 +231,14 @@ public final class OnlineConnection implements AutoCloseable {
                   character);
             status = "connected";
           }
-          if (command != null && equipment.compareAndSet(command, null))
-            command.result().complete(new EquipmentResult(accepted, character));
+          if (command != null && gameplay.compareAndSet(command, null))
+            command.result().complete(new CommandResult(accepted, character));
           Thread.sleep(75);
         }
       } finally {
         status = "disconnected";
         view = null;
-        failEquipment();
+        failCommand();
         // Cleanup stays off the render thread. The server expires the session if it is unavailable.
         Thread.interrupted();
         if (token != null) {
@@ -248,7 +254,7 @@ public final class OnlineConnection implements AutoCloseable {
     } finally {
       if (!closed) status = "disconnected";
       view = null;
-      failEquipment();
+      failCommand();
     }
   }
 
@@ -304,7 +310,7 @@ public final class OnlineConnection implements AutoCloseable {
     stopInput();
     status = "disconnected";
     view = null;
-    failEquipment();
+    failCommand();
     // Requests already have a whole-transfer deadline. Do not interrupt a logout that
     // may be running after a failed command; let the worker finish its bounded cleanup.
   }
