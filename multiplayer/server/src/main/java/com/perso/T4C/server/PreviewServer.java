@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,14 +26,17 @@ public final class PreviewServer implements AutoCloseable {
       long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region,java.util.List<com.perso.T4C.online.model.NpcView> npcs,JsonArray loot) {}
   /** Ground loot shown in one snapshot: at most this many drops, nearest the viewer first. */
   static final int GROUND_LOOT_VIEW_LIMIT = 128;
+  private static final Set<String> POST_ROUTES=Set.of("/join","/admin/shutdown","/input","/attack",
+      "/recover","/equip","/unequip","/interact","/pickup","/region-ready","/leave");
+  private static final Set<String> GET_ROUTES=Set.of("/","/client.js","/style.css","/strings",
+      "/account/characters","/map","/state","/character","/corpses","/health","/admin/metrics");
   private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
   private static final Gson JSON = new Gson();
   private final com.perso.T4C.online.model.ItemContent items;
   private final HttpServer http;
   private final ServerTransport transport;
-  private final ThreadPoolExecutor requests = new ThreadPoolExecutor(
-      8, 8, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(128),
-      Thread.ofPlatform().name("preview-http-", 0).factory(), new ThreadPoolExecutor.AbortPolicy());
+  private final HttpRequestAdmission admission = new HttpRequestAdmission();
+  private final HttpRequestAdmission.ExchangeExecutor requests = new HttpRequestAdmission.ExchangeExecutor();
   private final ArrayBlockingQueue<Runnable> commands = new ArrayBlockingQueue<>(128);
   private final AccountRosterService accounts;
   private final HostedWorlds hosted;
@@ -170,7 +174,66 @@ public final class PreviewServer implements AutoCloseable {
     }
   }
 
+  /** Check header limits before reading; chunked bodies still have the same streaming byte cap. */
+  private static void checkDeclaredBodyLength(HttpExchange exchange,int limit) {
+    var lengths=exchange.getRequestHeaders().get("Content-Length");
+    if(lengths==null) return;
+    if(lengths.size()!=1) throw new PreviewWorld.Rejected(400,"input");
+    try {
+      long length=Long.parseLong(lengths.getFirst());
+      if(length<0) throw new PreviewWorld.Rejected(400,"input");
+      if(length>limit) throw new PreviewWorld.Rejected(413,"input");
+    } catch(NumberFormatException invalid) { throw new PreviewWorld.Rejected(400,"input"); }
+  }
+
+  /** A known session check precedes the blocking body read, without spending its existing tick budget. */
+  private HttpRequestAdmission.Permit knownSession(HttpExchange exchange) throws Exception {
+    String session=token(exchange);
+    onWorld(() -> { hosted.actor(session);return null; });
+    return admission.session(session);
+  }
+
+  private HttpRequestAdmission.Permit admitPost(HttpExchange exchange,String path) throws Exception {
+    if("/join".equals(path)) return admission.publicRequest();
+    if("/admin/shutdown".equals(path)) {
+      requireLocalAdmin(exchange);
+      return admission.session(controlToken);
+    }
+    if(store==null && Set.of("/attack","/recover","/equip","/unequip","/interact","/pickup").contains(path))
+      throw new PreviewWorld.Rejected(404,"route");
+    return knownSession(exchange);
+  }
+
+  private HttpRequestAdmission.Permit admitGet(HttpExchange exchange,String path) throws Exception {
+    return switch(path) {
+      case "/health" -> null; // Cheap local diagnostic must remain available while public bodies wait.
+      case "/state" -> knownSession(exchange);
+      case "/character","/corpses" -> {
+        if(persistent==null) throw new PreviewWorld.Rejected(404,"route");
+        yield knownSession(exchange);
+      }
+      case "/map" -> exchange.getRequestHeaders().getFirst("Authorization")==null
+          ? admission.publicRequest() : knownSession(exchange);
+      case "/account/characters" -> {
+        if(accounts==null) throw new PreviewWorld.Rejected(404,"route");
+        var versions=exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
+        if(versions==null || versions.size()!=1 || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
+          throw new PreviewWorld.Rejected(426,"protocol");
+        var authorization=exchange.getRequestHeaders().get("Authorization");
+        if(authorization==null || authorization.size()!=1 || !authorization.getFirst().matches("Bearer [0-9a-f]{64}"))
+          throw new PreviewWorld.Rejected(401,"account");
+        yield admission.rosterRequest();
+      }
+      case "/admin/metrics" -> {
+        requireLocalAdmin(exchange);
+        yield admission.session(controlToken);
+      }
+      default -> admission.publicRequest();
+    };
+  }
+
   private void handle(HttpExchange exchange) throws IOException {
+    HttpRequestAdmission.Permit permit=null;
     try {
       String host = exchange.getRequestHeaders().getFirst("Host");
       if (!transport.acceptsHost(host,http.getAddress().getPort()))
@@ -180,6 +243,7 @@ public final class PreviewServer implements AutoCloseable {
       if (exchange.getRequestURI().getRawQuery() != null && !("GET".equals(method) && "/account/characters".equals(path)))
         throw new PreviewWorld.Rejected(400, "input");
       if ("POST".equals(method)) {
+        if (!POST_ROUTES.contains(path)) throw new PreviewWorld.Rejected(404, "route");
         if (!transport.acceptsOrigin(exchange.getRequestHeaders().getFirst("Origin"),http.getAddress().getPort()))
           throw new PreviewWorld.Rejected(403, "origin");
         String type = exchange.getRequestHeaders().getFirst("Content-Type");
@@ -194,6 +258,8 @@ public final class PreviewServer implements AutoCloseable {
         int limit=store!=null && "/join".equals(path) ? 101
             : "/interact".equals(path) ? 128
             : ("/equip".equals(path) || "/unequip".equals(path) || "/recover".equals(path) || "/pickup".equals(path)) ? 96 : 64;
+        checkDeclaredBodyLength(exchange,limit);
+        permit=admitPost(exchange,path);
         byte[] bytes = exchange.getRequestBody().readNBytes(limit+1);
         if (bytes.length > limit) throw new PreviewWorld.Rejected(413, "input");
         String body = new String(bytes, StandardCharsets.US_ASCII);
@@ -327,6 +393,8 @@ public final class PreviewServer implements AutoCloseable {
           default -> throw new PreviewWorld.Rejected(404, "route");
         }
       } else if ("GET".equals(method)) {
+        if (!GET_ROUTES.contains(path)) throw new PreviewWorld.Rejected(404,"route");
+        permit=admitGet(exchange,path);
         switch (path) {
           case "/" -> resource(exchange, "index.html", "text/html; charset=utf-8");
           case "/client.js" -> resource(exchange, "client.js", "text/javascript; charset=utf-8");
@@ -399,7 +467,10 @@ public final class PreviewServer implements AutoCloseable {
     } catch (Exception error) {
       if (error instanceof InterruptedException) Thread.currentThread().interrupt();
       json(exchange, 503, Map.of("error", "busy"));
-    } finally { exchange.close(); }
+    } finally {
+      try { exchange.close(); }
+      finally { if(permit!=null) permit.close(); }
+    }
   }
 
   /**

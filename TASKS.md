@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0223`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0225`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,7 +18,9 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0222 | Bound unauthenticated HTTP request abuse and slow-body stalls | Multiplayer / Beta security | In Progress | pending | pending |
+| T4C-0224 | Classify authored NPC-owned spawns for online content | Multiplayer / Beta content authority | In Progress | pending | pending |
+| T4C-0223 | Design remaining authored encounter authority for starter quest hosting | Multiplayer / Beta architecture | In Progress | pending | pending |
+| T4C-0222 | Bound unauthenticated HTTP request abuse and slow-body stalls | Multiplayer / Beta security | Done | PR159; original isolated 186-test PostgreSQL suite passed, platform-worker fix passed Linux code CI; focused health-readiness fix awaiting current-head CI; see [ACCEPTANCE](multiplayer/ACCEPTANCE.md) | [2026-10-27](CHANGELOG.md#2026-10-27--bound-slow-online-requests-t4c-0222) |
 | T4C-0221 | Keep stability reports safe through transient Windows file locks | Multiplayer / Beta tooling | Done | this PR; normal-policy Windows file-lock probe PASS | [2026-10-27](CHANGELOG.md#2026-10-27--safe-stability-report-replacement-t4c-0221) |
 | T4C-0220 | Record owner-approved two-rendered-client Beta/GA concurrency target | Process / Multiplayer milestones | Done | `813dcc17` (this PR) | [2026-10-27](CHANGELOG.md#2026-10-27--two-player-beta-acceptance-target-t4c-0220) |
 | T4C-0219 | Verify live account-key rotation through two native sessions | Multiplayer / Beta security | Done | PR156/main`b475b3f4` | [2026-10-27](CHANGELOG.md#2026-10-27--live-account-key-rotation-check-t4c-0219) |
