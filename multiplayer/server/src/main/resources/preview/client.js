@@ -1,4 +1,5 @@
 'use strict';
+const protocolVersion = 1;
 const canvas = document.querySelector('#map');
 const ctx = canvas.getContext('2d');
 const status = document.querySelector('#status');
@@ -10,6 +11,7 @@ const t = key => words[key] || key;
 function message(key) { status.textContent = t(key); }
 async function api(path, body, token = session?.token) {
   const options = { headers: {}, signal: AbortSignal.timeout(3000), cache: 'no-store' };
+  if (path === '/join') options.headers['X-T4C-Protocol'] = String(protocolVersion);
   if (token) options.headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) {
     options.method = 'POST'; options.body = body;
@@ -30,6 +32,7 @@ function failed(error) { reset(Object.hasOwn(words, error.message) ? error.messa
 joinButton.addEventListener('click', async () => {
   joinButton.disabled = true; message('connecting');
   try {
+    if (map?.protocolVersion !== protocolVersion) throw new Error('connection');
     session = await api('/join', ''); generation++; sequence = 0; lastReceived = performance.now();
     leaveButton.disabled = false; message('connected'); canvas.focus({preventScroll: true});
     document.querySelector('#identity').textContent = `${t('you')} ${session.id}`;

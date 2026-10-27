@@ -16,6 +16,8 @@ import com.perso.T4C.server.persistence.OnlineStore;
 class PreviewServerTest {
   private HttpRequest request(String url, String path, String token, String body) {
     var builder = HttpRequest.newBuilder(URI.create(url + path)).timeout(Duration.ofSeconds(5));
+    if (path.equals("/join")) builder.header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER,
+        Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION));
     if (token != null) builder.header("Authorization", "Bearer " + token);
     if (body != null) builder.header("Origin", url).header("Content-Type", "text/plain")
         .POST(HttpRequest.BodyPublishers.ofString(body));
@@ -29,6 +31,15 @@ class PreviewServerTest {
       server.start();
       String url = server.url();
       var tokens = new ArrayList<String>();
+      assertEquals(com.perso.T4C.online.model.OnlineProtocol.VERSION,
+          object(client.send(request(url, "/map", null, null), HttpResponse.BodyHandlers.ofString())).get("protocolVersion").getAsInt());
+      // Rejected versions must not allocate sessions: all twenty slots remain available below.
+      for (String version : new String[] {"", "999"}) {
+        var incompatible = HttpRequest.newBuilder(URI.create(url + "/join"))
+            .header("Origin", url).header("Content-Type", "text/plain").POST(HttpRequest.BodyPublishers.noBody());
+        if (!version.isEmpty()) incompatible.header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER, version);
+        assertEquals(426, client.send(incompatible.build(), HttpResponse.BodyHandlers.ofString()).statusCode());
+      }
       for (int i = 0; i < PreviewWorld.MAX_PLAYERS; i++) {
         var joined = client.send(request(url, "/join", null, ""), HttpResponse.BodyHandlers.ofString());
         assertEquals(200, joined.statusCode()); tokens.add(object(joined).get("token").getAsString());

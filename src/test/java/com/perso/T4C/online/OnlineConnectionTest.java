@@ -21,6 +21,7 @@ class OnlineConnectionTest {
       throws Exception {
     var input = new AtomicReference<String>();
     var login = new AtomicReference<String>();
+    var protocol = new AtomicReference<String>();
     var revision = new java.util.concurrent.atomic.AtomicLong(1);
     var characterReads = new java.util.concurrent.atomic.AtomicInteger();
     var characterAuth = new AtomicReference<String>();
@@ -49,8 +50,10 @@ class OnlineConnectionTest {
             catch (InterruptedException error) { Thread.currentThread().interrupt(); }
             if (equipmentCode.get() == 200) revision.incrementAndGet();
           }
-          if (path.equals("/join"))
+          if (path.equals("/join")) {
             login.set(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+            protocol.set(exchange.getRequestHeaders().getFirst(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER));
+          }
           if (path.equals("/input")) {
             input.set(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
             if (input.get().endsWith(" -1 1")) tapReceived.countDown();
@@ -65,7 +68,8 @@ class OnlineConnectionTest {
           String result =
               switch (path) {
                 case "/map" ->
-                    "{\"originX\":2904,\"originY\":1029,\"width\":80,\"height\":60,\"persistent\":"
+                    "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
+                        + ",\"originX\":2904,\"originY\":1029,\"width\":80,\"height\":60,\"persistent\":"
                         + persistent
                         + "}";
                 case "/join" -> "{\"token\":\"" + token + "\",\"id\":7}";
@@ -99,6 +103,7 @@ class OnlineConnectionTest {
         assertEquals(
             persistent ? credentials.secret() + " " + credentials.characterId() : "", login.get());
         assertEquals(7, connection.view().ownId());
+        assertEquals(Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION), protocol.get());
         assertEquals(2904, connection.view().map().originX());
         assertEquals(40.5, connection.view().snapshot().players().getFirst().x());
         assertEquals(21, connection.view().snapshot().creatures().getFirst().x());
@@ -166,6 +171,29 @@ class OnlineConnectionTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> new OnlineConnection(URI.create("http://secret@127.0.0.1:18765")));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"", ",\"protocolVersion\":999"})
+  void incompatibleServersNeverReceiveAccountCredentials(String versionField) throws Exception {
+    var requests = new java.util.concurrent.CopyOnWriteArrayList<String>();
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/", exchange -> {
+      requests.add(exchange.getRequestURI().getPath());
+      byte[] reply = ("{\"width\":80,\"height\":60,\"persistent\":true" + versionField + "}").getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(200, reply.length);
+      exchange.getResponseBody().write(reply);
+      exchange.close();
+    });
+    server.start();
+    var credentials = new OnlineConnection.Credentials("b".repeat(64), java.util.UUID.randomUUID());
+    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+      long deadline = System.nanoTime() + Duration.ofSeconds(3).toNanos();
+      while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
+      assertEquals("disconnected", connection.status());
+      assertNull(connection.view());
+      assertEquals(java.util.List.of("/map"), requests, "No login, credentials or gameplay may follow incompatible discovery");
+    } finally { server.stop(0); }
   }
 
   @Test
