@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Shield combat correction (T4C-0179)
+
+### Fixed
+- Online combat preparation no longer treats shields as extra weapons for dual-wield damage. Shields still provide their defensive benefits.
+
 ## 2026-10-27 — Online combat equipment stats (T4C-0178)
 
 ### Added
