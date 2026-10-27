@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online portal validation (T4C-0193)
+
+### Changed
+- Online travel preparation now checks authored portal routes and destination clearance. Invalid destinations are reported for correction instead of choosing an invented arrival point. Native travel integration remains in progress.
+
 ## 2026-10-27 — Encrypted online transport (T4C-0192)
 
 ### Added

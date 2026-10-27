@@ -16,9 +16,13 @@ class OnlineMonsterContentExporterTest {
   @TempDir Path temporary;
 
   @ParameterizedTest
-  @ValueSource(strings = {"monsters", "items"})
+  @ValueSource(strings = {"monsters", "items", "portals"})
   void packagedContentMatchesActualRuntimeDefinitions(String kind) throws Exception {
-    String exporter = kind.equals("monsters") ? OnlineMonsterContentExporter.class.getName() : OnlineItemContentExporter.class.getName();
+    String exporter = switch(kind) {
+      case "monsters" -> OnlineMonsterContentExporter.class.getName();
+      case "items" -> OnlineItemContentExporter.class.getName();
+      default -> OnlinePortalContentExporter.class.getName();
+    };
     String actual=Files.readString(Path.of("multiplayer/server/src/main/resources/content/" + kind + "-v1.json"))
         .replace("\r\n","\n");
     // Other tests customize static registries. Export in a fresh production-classpath JVM so
