@@ -8,13 +8,19 @@ import java.nio.file.Path;
 import com.google.gson.Gson;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.npc.core.NpcSpawnOwnership;
+import com.perso.T4C.npc.core.NPCAnimations;
+import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.helper.SpriteBinIO;
 import com.perso.T4C.online.model.MonsterContent;
 import com.perso.T4C.online.model.NpcAppearanceContent;
 import com.perso.T4C.spawn.SpawnRegistry;
 import java.security.MessageDigest;
 import java.util.HexFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.api.Test;
@@ -23,6 +29,31 @@ import org.junit.jupiter.api.io.TempDir;
 
 class OnlineMonsterContentExporterTest {
   @TempDir Path temporary;
+
+  private static final String[] NPC_ANGLES={"000","045","090","135","180"};
+
+  @Test void npcFrameMetadataMatchesStaticSingleBaseAndCompositeLoaderRules() {
+    assertTrue(NPCAnimations.hasRequiredFrameNames("@static:Horloge Solaire",Map.of(),
+        Set.of(SpriteBinIO.key("Horloge Solaire"))));
+    assertFalse(NPCAnimations.hasRequiredFrameNames("@static:Missing",Map.of(),Set.of()));
+    var single=new HashSet<String>();
+    for(String angle:NPC_ANGLES) single.add(SpriteBinIO.key("Npc"+angle+"-a"));
+    assertTrue(NPCAnimations.hasRequiredFrameNames("Npc",Map.of(),single));
+    single.remove(SpriteBinIO.key("Npc180-a"));
+    assertFalse(NPCAnimations.hasRequiredFrameNames("Npc",Map.of(),single));
+    var composite=new HashSet<String>();
+    var effective=NPCAnimations.effectiveCompositeParts(Map.of(BodyPart.HEAD,"CustomHead"));
+    for(String base:effective.values()) for(String angle:NPC_ANGLES)
+      composite.add(SpriteBinIO.key(base+angle+"-c"));
+    assertTrue(NPCAnimations.hasRequiredFrameNames(null,
+        Map.of(BodyPart.HEAD,"CustomHead"),composite));
+    composite.remove(SpriteBinIO.key("CustomHead180-c"));
+    assertFalse(NPCAnimations.hasRequiredFrameNames(null,
+        Map.of(BodyPart.HEAD,"CustomHead"),composite));
+    composite.add(SpriteBinIO.key("CustomHead180"));
+    assertTrue(NPCAnimations.hasRequiredFrameNames(null,
+        Map.of(BodyPart.HEAD,"CustomHead"),composite));
+  }
 
   @ParameterizedTest
   @ValueSource(strings = {"monsters", "items", "portals", "npc-interactions",
@@ -91,6 +122,13 @@ class OnlineMonsterContentExporterTest {
         s.x(),s.y(),s.z(),s.stationary(),s.aggressive()).persistenceKey()).collect(java.util.stream.Collectors.toSet());
     assertEquals(npcKeys,appearances.spawns().stream().map(NpcAppearanceContent.Spawn::spawnKey)
         .collect(java.util.stream.Collectors.toSet()));
+    var hosted=appearances.spawns().stream().filter(s->s.world()==0
+        && s.x()>=2735 && s.x()<2984 && s.y()>=1029 && s.y()<1146).toList();
+    assertFalse(hosted.isEmpty());
+    assertTrue(hosted.stream().allMatch(s->s.deployable()
+        && ("@invisible".equals(s.spriteBase())
+            || s.frameEvidence()==NpcAppearanceContent.FrameEvidence.FRAME_NAME_PRESENT)),
+        "Hosted authored NPCs need explicit sprite-name evidence");
     var sundial=classified.spawns().stream().filter(s->s.world()==0 && s.x()==2881 && s.y()==1070).findFirst().orElseThrow();
     assertEquals(MonsterContent.Ownership.NPC,sundial.ownership());
     assertEquals("Sundial",sundial.canonicalNpcId());

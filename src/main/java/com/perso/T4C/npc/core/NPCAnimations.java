@@ -14,6 +14,7 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.helper.ConcealmentResolver;
 import com.perso.T4C.helper.SpriteLoader;
+import com.perso.T4C.helper.SpriteBinIO;
 import com.perso.T4C.player.BodyPart;
 import java.nio.IntBuffer;
 import java.util.*;
@@ -307,6 +308,42 @@ public class NPCAnimations extends EntityAnimationsBase {
   }
 
   private static final String STATIC_PREFIX = "@static:";
+  // PlayerMovement uses these five sprite angles and mirrors the other three with flipX.
+  private static final String[] REQUIRED_RENDER_ANGLES = {"000", "045", "090", "135", "180"};
+
+  /** Checks sprite metadata names required by the existing NPC render loaders, without textures. */
+  public static boolean hasRequiredFrameNames(
+      String spriteBase, Map<BodyPart, String> parts, Set<String> spriteNames) {
+    if (spriteNames == null) return false;
+    if (spriteBase != null && !spriteBase.isBlank()) {
+      if ("@invisible".equals(spriteBase)) return false;
+      if (isStaticBase(spriteBase)) {
+        String name = spriteBase.substring(STATIC_PREFIX.length());
+        return containsFrameName(spriteNames, hasFrameSuffix(name)
+            ? name.substring(0, name.length() - 1) + FRAME_START : name);
+      }
+      for (String angle : REQUIRED_RENDER_ANGLES) {
+        if (!containsFrameName(spriteNames, spriteBase + angle + "-" + FRAME_START)) return false;
+      }
+      return true;
+    }
+    var effective = effectiveCompositeParts(parts);
+    if (effective.isEmpty()) return false;
+    for (String base : effective.values()) {
+      for (String angle : REQUIRED_RENDER_ANGLES) {
+        boolean found = containsFrameName(spriteNames, base + angle);
+        for (char frame = FRAME_START; !found && frame <= 'z'; frame++) {
+          found = containsFrameName(spriteNames, base + angle + "-" + frame);
+        }
+        if (!found) return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean containsFrameName(Set<String> spriteNames, String name) {
+    return spriteNames.contains(SpriteBinIO.key(name));
+  }
 
   private static boolean isStaticBase(String base) {
 
