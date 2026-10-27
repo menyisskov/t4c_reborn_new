@@ -28,7 +28,10 @@ class OnlineMeleeTest {
     var map=new PreviewMap(new boolean[10][10],0,0,3,3); var world=new PreviewWorld(map,content);
     var sessions=new PersistentSessions(store,map,world);
     var key=store.provisionAccount(); var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1));
-    var first=store.create(key.accountId(),"Melee one",0,3.5,3.5,prepared.progress(),prepared.gold());
+    var story=gson.toJsonTree(prepared.progress()).getAsJsonObject();
+    story.getAsJsonObject("questFlags").addProperty(com.perso.T4C.quest.CrimsonscaleLetterRules.LETTER_FLAG,1);
+    var firstProgress=gson.fromJson(story,com.perso.T4C.online.model.CharacterProgress.class);
+    var first=store.create(key.accountId(),"Melee one",0,3.5,3.5,firstProgress,prepared.gold());
     var second=store.create(key.accountId(),"Melee two",0,3.5,3.5,prepared.progress(),prepared.gold());
     long started=System.nanoTime(); var firstLease=store.acquire(key.secret(),first.id());
     String one=sessions.join(firstLease,started).token();

@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** Loopback-only QA transport with optional persistent sessions and no desktop dependencies. */
 public final class PreviewServer implements AutoCloseable {
   private record PersistentSnapshot(long tick, java.util.List<PreviewWorld.PlayerView> players,
-      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region) {}
+      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region,java.util.List<com.perso.T4C.online.model.NpcView> npcs) {}
   private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
   private static final Gson JSON = new Gson();
   private final com.perso.T4C.online.model.ItemContent items;
@@ -167,6 +167,7 @@ public final class PreviewServer implements AutoCloseable {
             throw new PreviewWorld.Rejected(426, "protocol");
         }
         int limit=store!=null && "/join".equals(path) ? 101
+            : "/interact".equals(path) ? 128
             : ("/equip".equals(path) || "/unequip".equals(path) || "/recover".equals(path)) ? 96 : 64;
         byte[] bytes = exchange.getRequestBody().readNBytes(limit+1);
         if (bytes.length > limit) throw new PreviewWorld.Rejected(413, "input");
@@ -260,6 +261,17 @@ public final class PreviewServer implements AutoCloseable {
             var committed = pending.toCompletableFuture().get(2, TimeUnit.SECONDS);
             json(exchange, 200, Map.of("revision", committed.character().revision()));
           }
+          case "/interact" -> {
+            if(persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            if(!body.matches("[0-9]{1,19} [0-9]{1,19} [A-Za-z][A-Za-z0-9_]{0,63}"))
+              throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" "); long revision,epoch;
+            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); }
+            catch(NumberFormatException invalid) { throw new PreviewWorld.Rejected(400,"input"); }
+            var pending=onWorld(()->{ admit(token,epoch);return persistent.interact(token,revision,parts[2]); });
+            json(exchange,200,pending.toCompletableFuture().get(2,TimeUnit.SECONDS));
+          }
           case "/region-ready" -> {
             String token=token(exchange);if(!body.matches("[0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");
             long epoch;try { epoch=Long.parseLong(body); } catch(NumberFormatException invalid) { throw new PreviewWorld.Rejected(400,"input"); }
@@ -292,7 +304,7 @@ public final class PreviewServer implements AutoCloseable {
             json(exchange, 200, onWorld(() -> {
               var context=admit(token,null);var snapshot=context.world.snapshot(token);
               return new PersistentSnapshot(snapshot.tick(),snapshot.players(),persistent==null ? 0 : persistent.character(token).revision(),
-                  snapshot.creatures(),context.descriptor(persistent==null ? 0 : persistent.region(token).locationEpoch()));
+                  snapshot.creatures(),context.descriptor(persistent==null ? 0 : persistent.region(token).locationEpoch()),context.npcs.views());
             }));
           }
           case "/character" -> {

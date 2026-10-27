@@ -5,6 +5,8 @@ import com.perso.T4C.online.model.OnlineCharacterView;
 import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.OnlineProtocol;
 import com.perso.T4C.online.model.OnlineRegion;
+import com.perso.T4C.online.model.NpcView;
+import com.perso.T4C.online.model.NpcInteractionReply;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -35,7 +37,7 @@ public final class OnlineConnection implements AutoCloseable {
   public record Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {}
 
   public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures,
-      OnlineRegion region) {}
+      OnlineRegion region, List<NpcView> npcs) {}
 
   public record Corpse(java.util.UUID id, int world, double x, double y, int itemCount, long gold) {}
 
@@ -44,7 +46,9 @@ public final class OnlineConnection implements AutoCloseable {
 
   private record Joined(String token, long id, OnlineRegion region) {}
 
-  public record CommandResult(boolean accepted, OnlineCharacterView character) {}
+  public record CommandResult(boolean accepted, OnlineCharacterView character, String messageKey) {
+    public CommandResult(boolean accepted, OnlineCharacterView character) { this(accepted,character,null); }
+  }
   private record GameplayCommand(String path, String body, long revision,
       java.util.concurrent.CompletableFuture<CommandResult> result) {}
   private record Committed(Long revision) {}
@@ -136,6 +140,13 @@ public final class OnlineConnection implements AutoCloseable {
     return gameplayCommand("/recover",java.util.Objects.requireNonNull(corpse).toString());
   }
 
+  /** Authored identity only; the server resolves dialogue, proximity and any item grant. */
+  public java.util.concurrent.CompletionStage<CommandResult> interact(String npc) {
+    if(npc==null || !npc.matches("[A-Za-z][A-Za-z0-9_]{0,63}"))
+      throw new IllegalArgumentException("Invalid NPC identity");
+    return gameplayCommand("/interact",npc);
+  }
+
   private java.util.concurrent.CompletionStage<CommandResult> gameplayCommand(String path, String arguments) {
     View current = view;
     if (closed || current == null || current.character() == null || !status.equals("connected"))
@@ -187,13 +198,23 @@ public final class OnlineConnection implements AutoCloseable {
           }
           var command = gameplay.get();
           boolean accepted = false;
+          String messageKey=null;
           long requiredRevision = character == null ? 0 : character.revision();
           if (command != null) {
             try {
-              var committed = JSON.fromJson(send(client, command.path(), command.body(), token), Committed.class);
-              if (committed == null || committed.revision() == null || committed.revision() <= command.revision())
-                throw new IllegalStateException("Invalid gameplay acknowledgement");
-              requiredRevision = committed.revision();
+              var reply=send(client, command.path(), command.body(), token);
+              if(command.path().equals("/interact")) {
+                var dialogue=JSON.fromJson(reply,NpcInteractionReply.class);
+                if(dialogue==null || dialogue.revision()<command.revision()
+                    || dialogue.changed() && dialogue.revision()==command.revision())
+                  throw new IllegalStateException("Invalid dialogue acknowledgement");
+                requiredRevision=dialogue.revision();messageKey=dialogue.messageKey();
+              } else {
+                var committed = JSON.fromJson(reply, Committed.class);
+                if (committed == null || committed.revision() == null || committed.revision() <= command.revision())
+                  throw new IllegalStateException("Invalid gameplay acknowledgement");
+                requiredRevision = committed.revision();
+              }
               accepted = true;
             } catch (Rejected rejected) {
               if (rejected.code != 409) throw rejected;
@@ -246,6 +267,12 @@ public final class OnlineConnection implements AutoCloseable {
                 || !creatureIds.add(creature.id()))
               throw new IllegalStateException("Invalid creature snapshot");
           }
+          var npcs=snapshot.npcs()==null ? List.<NpcView>of() : snapshot.npcs();
+          if(npcs.size()>64) throw new IllegalStateException("Invalid NPC count");
+          var npcIds=new java.util.HashSet<String>();
+          for(var npc:npcs)
+            if(npc==null || npc.x()>=map.width() || npc.y()>=map.height() || !npcIds.add(npc.id()))
+              throw new IllegalStateException("Invalid NPC snapshot");
           if (map.persistent()) {
             if (snapshot.characterRevision() == null || snapshot.characterRevision() < 0)
               throw new IllegalStateException("Missing committed character revision");
@@ -280,14 +307,14 @@ public final class OnlineConnection implements AutoCloseable {
             view =
               new View(
                   joined.id(), map,
-                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures),snapshot.region()),
+                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures),snapshot.region(),List.copyOf(npcs)),
                   character,corpses);
             status = "connected";
           }
           break;
           }
           if (command != null && gameplay.compareAndSet(command, null))
-            command.result().complete(new CommandResult(accepted, character));
+            command.result().complete(new CommandResult(accepted, character,messageKey));
           Thread.sleep(75);
         }
       } finally {

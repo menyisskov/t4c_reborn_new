@@ -33,6 +33,7 @@
                 <configuration>
                     <includes>
                         <include>com/perso/T4C/death/DeathRules.java</include>
+                        <include>com/perso/T4C/quest/CrimsonscaleLetterRules.java</include>
                         <include>com/perso/T4C/combat/CombatProfile.java</include>
                         <include>com/perso/T4C/combat/MonsterCombatRules.java</include>
                         <include>com/perso/T4C/monster/loot/LootTable.java</include>

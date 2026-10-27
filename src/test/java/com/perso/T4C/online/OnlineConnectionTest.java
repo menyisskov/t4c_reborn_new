@@ -35,6 +35,8 @@ class OnlineConnectionTest {
     var releaseEquipment = new CountDownLatch(1);
     var credentials = new OnlineConnection.Credentials("b".repeat(64), java.util.UUID.randomUUID());
     var corpseId=java.util.UUID.randomUUID();
+    var interactionBody=new AtomicReference<String>();
+    var letterGiven=new java.util.concurrent.atomic.AtomicBoolean();
     var leave = new CountDownLatch(1);
     var tapReceived = new CountDownLatch(1);
     var stoppedAfterTap = new CountDownLatch(1);
@@ -69,6 +71,12 @@ class OnlineConnectionTest {
             characterAuth.set(exchange.getRequestHeaders().getFirst("Authorization"));
             if (moveOnCharacter.compareAndSet(true,false)) regionEpoch.set(1);
           }
+          boolean newLetter=false;
+          if(path.equals("/interact")) {
+            interactionBody.set(new String(exchange.getRequestBody().readAllBytes(),StandardCharsets.UTF_8));
+            newLetter=letterGiven.compareAndSet(false,true);
+            if(newLetter) revision.incrementAndGet();
+          }
           String region="{\"world\":"+regionEpoch.get()+",\"key\":\"region-"+regionEpoch.get()
               +"\",\"locationEpoch\":"+regionEpoch.get()+",\"originX\":"+(regionEpoch.get()==0 ? 2904 : 264)
               +",\"originY\":"+(regionEpoch.get()==0 ? 1029 : 353)+",\"width\":80,\"height\":60}";
@@ -81,6 +89,7 @@ class OnlineConnectionTest {
                 case "/state" ->
                     "{\"tick\":8,\"region\":"+region+",\"characterRevision\":" + revision.get()
                         + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],"
+                        + "\"npcs\":[{\"id\":\"Kilhiam\",\"displayName\":\"${npc.kilhiam}\",\"x\":57,\"y\":29,\"parts\":{\"BODY\":\"WoWhiteRobe\"}}],"
                         + "\"creatures\":[{\"id\":1,\"definition\":\"Guard\",\"x\":21,\"y\":37,"
                         + "\"health\":55,\"maxHealth\":55,\"walkPattern\":\"Warrio#l\"}]}";
                 case "/character" ->
@@ -88,6 +97,7 @@ class OnlineConnectionTest {
                         + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":"+regionEpoch.get()+"}";
                 case "/corpses" -> "[{\"id\":\""+corpseId+"\",\"world\":0,\"x\":2944,\"y\":1059,\"itemCount\":1,\"gold\":0}]";
                 case "/equip", "/unequip", "/attack", "/recover" -> "{\"revision\":" + revision.get() + "}";
+                case "/interact" -> "{\"revision\":"+revision.get()+",\"messageKey\":\"npc.kilhiam."+(newLetter ? "letter" : "temple")+"\",\"changed\":"+newLetter+"}";
                 default -> "{}";
               };
           byte[] bytes = result.getBytes(StandardCharsets.UTF_8);
@@ -113,6 +123,7 @@ class OnlineConnectionTest {
         assertEquals(7, connection.view().ownId());
         assertEquals(27, connection.view().snapshot().players().getFirst().hp());
         assertEquals(40, connection.view().snapshot().players().getFirst().maxHp());
+        assertEquals("Kilhiam",connection.view().snapshot().npcs().getFirst().id());
         assertEquals(Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION), protocol.get());
         assertEquals(2904, connection.view().map().originX());
         assertEquals(40.5, connection.view().snapshot().players().getFirst().x());
@@ -170,8 +181,17 @@ class OnlineConnectionTest {
           assertEquals("4 0 "+corpseId,equipmentBody.get(),"Recovery accepts only revision, location epoch and owned corpse identity");
           assertEquals(5,recovered.character().revision());
 
+          var letter=connection.interact("Kilhiam").toCompletableFuture().get(3,TimeUnit.SECONDS);
+          assertTrue(letter.accepted());assertEquals("npc.kilhiam.letter",letter.messageKey());
+          assertEquals("5 0 Kilhiam",interactionBody.get(),"Dialogue sends only revision, epoch and authored identity");
+          assertEquals(6,letter.character().revision());
+          var greeting=connection.interact("Kilhiam").toCompletableFuture().get(3,TimeUnit.SECONDS);
+          assertTrue(greeting.accepted());assertEquals("npc.kilhiam.temple",greeting.messageKey());
+          assertEquals(6,greeting.character().revision(),"A read-only greeting may acknowledge the same revision");
+          assertEquals(greeting.character(),connection.view().character());
+
           // Move after the state reply but before its private-state read. Refresh reads only.
-          moveOnCharacter.set(true); revision.set(6);
+          moveOnCharacter.set(true); revision.set(7);
           deadline=System.nanoTime()+Duration.ofSeconds(4).toNanos();
           while ((connection.view()==null || connection.view().map().locationEpoch()!=1) && System.nanoTime()<deadline) Thread.sleep(10);
           assertNotNull(connection.view());

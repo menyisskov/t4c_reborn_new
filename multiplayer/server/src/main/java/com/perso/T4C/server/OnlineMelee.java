@@ -49,7 +49,7 @@ final class OnlineMelee {
     // Never silently omit authored script/quest/item-drop behavior from this first combat slice.
     if ((definition.getSourceEvents()!=null && !definition.getSourceEvents().isEmpty())
         || (definition.getLoot()!=null && !definition.getLoot().isEmpty())
-        || !p.questFlags().isEmpty() || p.companion()!=null || p.skills().getOrDefault("stun_blow",0)>0
+        || com.perso.T4C.quest.CrimsonscaleLetterRules.hasUnsupportedCombatFlags(p.questFlags()) || p.companion()!=null || p.skills().getOrDefault("stun_blow",0)>0
         || !OnlineRetaliation.supported(definition))
       throw rejected("unsupported_combat");
     var position=world.position(token);

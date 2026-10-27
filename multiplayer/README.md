@@ -8,6 +8,8 @@ Encrypted remote configuration is documented in [TLS.md](TLS.md); the local prev
 
 The authored travel graph and implemented two-region runtime are documented in [MAP_TRANSFER_DESIGN.md](MAP_TRANSFER_DESIGN.md).
 
+Kilhiam's first-letter server/native-adapter interaction and its limits are documented in [NPC_INTERACTION_DESIGN.md](NPC_INTERACTION_DESIGN.md); visible NPC dialogue controls remain unfinished.
+
 Release evidence and remaining gates are tracked in [ACCEPTANCE.md](ACCEPTANCE.md).
 The PostgreSQL groundwork and its current integration limits are in [PERSISTENCE.md](PERSISTENCE.md).
 

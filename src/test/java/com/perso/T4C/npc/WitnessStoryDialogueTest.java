@@ -22,6 +22,23 @@ class WitnessStoryDialogueTest {
       new NpcContext(new QuestService(XpCurve.loadDefault(), null, null));
 
   @Test
+  void kilhiamOpeningLetterStillGrantsOnceAndKeepsAuthoredGreetings() throws Exception {
+    Player player=new Player();
+    var npc=new Kilhiam(context);
+    var conversation=new NpcBehaviorContext(npc,player);
+    npc.publicBehavior().onConversationStart(conversation);
+    assertEquals(1,player.getQuestFlag("ADDON_CRIMSONSCALE_LETTER"));
+    assertEquals(1,com.perso.T4C.item.InventoryService.count(player,"item.letter_from_crimsonscale"));
+    npc.publicBehavior().onConversationStart(conversation);
+    assertEquals(1,com.perso.T4C.item.InventoryService.count(player,"item.letter_from_crimsonscale"));
+    assertEquals("npc.kilhiam.letter",com.perso.T4C.quest.CrimsonscaleLetterRules.greeting(0,19));
+    assertEquals("npc.kilhiam.highpriest",com.perso.T4C.quest.CrimsonscaleLetterRules.greeting(1,19));
+    assertEquals("npc.kilhiam.brotherkiran",com.perso.T4C.quest.CrimsonscaleLetterRules.greeting(1,20));
+    assertEquals("npc.kilhiam.temple",com.perso.T4C.quest.CrimsonscaleLetterRules.greeting(1,41));
+    assertEquals("npc.kilhiam.welcome",com.perso.T4C.quest.CrimsonscaleLetterRules.greeting(1,42));
+  }
+
+  @Test
   void evidenceFollowsTheMainlandSpineAndSurvivesAPlayerReload() throws Exception {
     Player player = new Player();
     player.setQuestFlag("ADDON_STORYLINE_PROGRESS", 35);

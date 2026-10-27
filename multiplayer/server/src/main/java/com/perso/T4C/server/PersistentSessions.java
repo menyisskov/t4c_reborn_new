@@ -140,6 +140,24 @@ final class PersistentSessions {
     if(pending!=null) pending.completeExceptionally(new PreviewWorld.Rejected(401,"session"));
   }
 
+  CompletionStage<com.perso.T4C.online.model.NpcInteractionReply> interact(String token,long revision,String npcId) {
+    var binding=active(token);
+    if(binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
+    if(binding.saved.revision()!=revision) throw new PreviewWorld.Rejected(409,"revision");
+    if(binding.saved.progress()==null) throw new PreviewWorld.Rejected(409,"uninitialized_character");
+    var position=binding.region.world.position(token);
+    OnlineNpcInteractions.Result draft;
+    try {
+      if(binding.region.npcs==null) throw new IllegalArgumentException("No NPC catalog");
+      draft=binding.region.npcs.prepare(binding.saved.progress(),binding.region.map,position.x(),position.y(),npcId);
+    } catch(IllegalArgumentException unavailable) { throw new PreviewWorld.Rejected(409,"npc_unavailable"); }
+    if(!draft.changed()) return CompletableFuture.completedFuture(
+        new com.perso.T4C.online.model.NpcInteractionReply(binding.saved.revision(),draft.messageKey(),false));
+    return commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft.progress())
+        .thenApply(committed->new com.perso.T4C.online.model.NpcInteractionReply(
+            committed.character().revision(),draft.messageKey(),true));
+  }
+
   CompletionStage<OnlineStore.RewardResult> recoverCorpse(String token,long revision,UUID corpse) {
     var binding=active(token);
     if (binding.saved.progress()==null || binding.saved.progress().vitals().hp()<=0)

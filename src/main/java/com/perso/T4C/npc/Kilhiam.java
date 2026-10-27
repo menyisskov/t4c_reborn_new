@@ -117,25 +117,14 @@ public final class Kilhiam extends ScriptedNpc {
         @Override
         public void onConversationStart(NpcBehaviorContext c) {
 
-          if (c.flag("ADDON_CRIMSONSCALE_LETTER") == 0) {
-
-            c.sayKey("npc.kilhiam.letter");
-
-            c.giveItem("letter_from_crimsonscale");
-
-            c.flag("ADDON_CRIMSONSCALE_LETTER", 1);
-
-            return;
+          int letter = c.flag(com.perso.T4C.quest.CrimsonscaleLetterRules.LETTER_FLAG);
+          int story = c.flag(com.perso.T4C.quest.CrimsonscaleLetterRules.STORY_FLAG);
+          c.sayKey(com.perso.T4C.quest.CrimsonscaleLetterRules.greeting(letter, story));
+          if (com.perso.T4C.quest.CrimsonscaleLetterRules.grantsLetter(letter)) {
+            c.giveItem(com.perso.T4C.quest.CrimsonscaleLetterRules.ITEM);
+            c.flag(com.perso.T4C.quest.CrimsonscaleLetterRules.LETTER_FLAG, 1);
           }
 
-          int p = c.flag("ADDON_STORYLINE_PROGRESS");
-
-          c.sayKey(
-              p == 19
-                  ? "npc.kilhiam.highpriest"
-                  : p == 20
-                      ? "npc.kilhiam.brotherkiran"
-                      : p < 42 ? "npc.kilhiam.temple" : "npc.kilhiam.welcome");
         }
 
         @Override

@@ -16,11 +16,12 @@ class OnlineMonsterContentExporterTest {
   @TempDir Path temporary;
 
   @ParameterizedTest
-  @ValueSource(strings = {"monsters", "items", "portals"})
+  @ValueSource(strings = {"monsters", "items", "portals", "npc-interactions"})
   void packagedContentMatchesActualRuntimeDefinitions(String kind) throws Exception {
     String exporter = switch(kind) {
       case "monsters" -> OnlineMonsterContentExporter.class.getName();
       case "items" -> OnlineItemContentExporter.class.getName();
+      case "npc-interactions" -> OnlineNpcContentExporter.class.getName();
       default -> OnlinePortalContentExporter.class.getName();
     };
     String actual=Files.readString(Path.of("multiplayer/server/src/main/resources/content/" + kind + "-v1.json"))
