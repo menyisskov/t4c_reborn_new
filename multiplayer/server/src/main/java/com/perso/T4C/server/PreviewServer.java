@@ -179,7 +179,7 @@ public final class PreviewServer implements AutoCloseable {
             try { sequence = Long.parseLong(parts[0]); }
             catch (NumberFormatException e) { throw new PreviewWorld.Rejected(400, "input"); }
             int dx = Integer.parseInt(parts[1]), dy = Integer.parseInt(parts[2]);
-            onWorld(() -> { world.input(token, sequence, dx, dy); return null; });
+            onWorld(() -> { world.admitRequest(token); world.input(token, sequence, dx, dy); return null; });
             json(exchange, 200, Map.of("ok", true));
           }
           case "/equip", "/unequip" -> {
@@ -199,6 +199,7 @@ public final class PreviewServer implements AutoCloseable {
               instance = equip ? java.util.UUID.fromString(parts[1]) : null;
             } catch (IllegalArgumentException error) { throw new PreviewWorld.Rejected(400, "input"); }
             var pending = onWorld(() -> {
+              world.admitRequest(token);
               var saved = persistent.character(token);
               var changed = equip ? OnlineEquipmentCommands.equip(saved.progress(), items, instance, slot)
                   : OnlineEquipmentCommands.unequip(saved.progress(), slot);
@@ -226,6 +227,7 @@ public final class PreviewServer implements AutoCloseable {
           case "/state" -> {
             String token = token(exchange);
             json(exchange, 200, onWorld(() -> {
+              world.admitRequest(token);
               var snapshot=world.snapshot(token);
               return persistent==null ? snapshot : new PersistentSnapshot(snapshot.tick(),snapshot.players(),
                   persistent.character(token).revision(),snapshot.creatures());
@@ -235,6 +237,7 @@ public final class PreviewServer implements AutoCloseable {
             String token=token(exchange);
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
             json(exchange,200,onWorld(() -> {
+              world.admitRequest(token);
               var saved=persistent.character(token);
               return new OnlineCharacterView(saved.id(),saved.name(),saved.gold(),saved.experience(),
                   saved.revision(),saved.progress());

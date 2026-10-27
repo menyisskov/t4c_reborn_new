@@ -6,13 +6,14 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0181`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0182`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0181 | Bound authenticated client command processing per session | Multiplayer / Alpha | In Progress | pending | [2026-10-27](CHANGELOG.md#2026-10-27--online-command-flood-limits-t4c-0181) |
 | T4C-0180 | Share authoritative weapon timing with offline combat | Multiplayer / Alpha | Done | 1264f841 | [2026-10-27](CHANGELOG.md#2026-10-27--shared-online-weapon-timing-t4c-0180) |
 | T4C-0179 | Keep shields out of online off-hand damage | Multiplayer / Alpha | Done | 24062be6 | [2026-10-27](CHANGELOG.md#2026-10-27--shield-combat-correction-t4c-0179) |
 | T4C-0178 | Derive combat loadouts from authoritative equipment | Multiplayer / Alpha | Done | a5b5d457 | [2026-10-27](CHANGELOG.md#2026-10-27--online-combat-equipment-stats-t4c-0178) |

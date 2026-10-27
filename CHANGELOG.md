@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online command flood limits (T4C-0181)
+
+### Added
+- Online sessions now have an individual command allowance to limit repeated requests. One player's allowance does not consume another's, and logging out remains available when requests are throttled.
+
 ## 2026-10-27 — Shared online weapon timing (T4C-0180)
 
 ### Changed
