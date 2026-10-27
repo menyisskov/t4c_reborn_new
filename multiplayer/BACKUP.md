@@ -4,6 +4,13 @@
 new database, then compares every `public.online_*` table's definition, row count,
 and SHA-256 of a primary-key-ordered COPY stream. It discovers tables dynamically,
 including new combat/corpse tables; it does not maintain a stale table allow-list.
+Table names, columns, defaults, primary keys and non-CHECK constraints must match
+exactly. If only CHECK definitions differ, the verifier reparses each differing
+source and restored CHECK on separate empty temporary clones in the **new restore
+database** and compares PostgreSQL's resulting definitions. The clones are made in
+a rolled-back transaction; no source database DDL or persistent restored-table DDL
+is performed. An unsupported CHECK, weakened or missing rule still fails. The JSON
+report records whether exact comparison or PostgreSQL CHECK parsing was needed.
 
 This verifies stored data recovery, **not a complete Beta recovery playthrough**.
 The resulting report explicitly leaves `native_playthrough_verified` false.
@@ -89,3 +96,10 @@ Focused tooling tests:
 ```sh
 python3 -m unittest discover -s multiplayer/tools -p 'test_verify_backup.py'
 ```
+
+To exercise the parser regression against a private PostgreSQL fixture that contains
+the source/restored `varchar[]` CHECK rendering difference, set
+`T4C_BACKUP_TEST_SOURCE`, `T4C_BACKUP_TEST_RESTORE` and optionally
+`T4C_BACKUP_TEST_PG_BIN`, along with the normal private PostgreSQL connection
+environment. That test accepts the equivalent rendered CHECK and rejects a weakened
+or missing one. It is skipped when no private fixture is configured.

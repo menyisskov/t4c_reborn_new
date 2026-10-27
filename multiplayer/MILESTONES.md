@@ -171,7 +171,10 @@ Required behavior:
 - [ ] Account-key rotation/foreign ownership, stale/reordered/duplicate commands, speed/stat/item
   edits, oversized requests and forged targets/rewards are rejected without corrupting valid play.
 - [ ] Restore a backup into a separate database and finish a native gameplay/reconnect check there;
-  matching table hashes alone do not satisfy restored gameplay acceptance.
+  matching table hashes alone do not satisfy restored gameplay acceptance. T4C-0213 verified
+  a live schema-10 exported-snapshot restore across all eleven online tables, including
+  PostgreSQL-reparsed equivalent CHECK definitions; both new loot tables were empty and
+  no native client connected to the restored realm.
 - [ ] Run a two-hour mixed two-player session on the integrated candidate, with zero unexplained
   disconnects, crashes, invariant violations, duplicate value or lost acknowledged progress.
   Include combat, loot, quests, travel and intentional reconnects rather than idle connections.

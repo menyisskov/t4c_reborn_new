@@ -1,4 +1,6 @@
+import copy
 import hashlib
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -46,6 +48,43 @@ class BackupVerificationTest(unittest.TestCase):
         self.assertEqual("createdb", program)
         self.assertEqual("t4c_restore_existing", arguments[-1])
         self.assertNotIn("--clean", arguments)
+
+    @unittest.skipUnless(os.environ.get("T4C_BACKUP_TEST_SOURCE") and
+                         os.environ.get("T4C_BACKUP_TEST_RESTORE"),
+                         "requires private PostgreSQL backup fixture")
+    def test_postgres_reparses_equivalent_checks_but_rejects_weakened_or_missing_check(self):
+        postgres = backup.Postgres(os.environ.get("T4C_BACKUP_TEST_PG_BIN"), 60)
+        source = backup.catalog(postgres, os.environ["T4C_BACKUP_TEST_SOURCE"], None)
+        target_name = os.environ["T4C_BACKUP_TEST_RESTORE"]
+        restored = backup.catalog(postgres, target_name, None)
+        self.assertEqual("postgresql_temporary_check_parse",
+                         backup.compare(source, restored, {}, {}, postgres, target_name))
+
+        weakened = copy.deepcopy(source)
+        loot = next(table for table in weakened if table["name"] == "online_ground_loot")
+        state_check = next(index for index, definition in enumerate(loot["constraints"])
+                           if "ON_GROUND" in definition)
+        loot["constraints"][state_check] = "CHECK (true)"
+        with self.assertRaises(backup.VerificationError):
+            backup.compare(weakened, restored, {}, {}, postgres, target_name)
+
+        missing = copy.deepcopy(source)
+        next(table for table in missing if table["name"] == "online_ground_loot")[
+            "constraints"].pop(state_check)
+        with self.assertRaises(backup.VerificationError):
+            backup.compare(missing, restored, {}, {}, postgres, target_name)
+
+        changed_unique = copy.deepcopy(source)
+        loot = next(table for table in changed_unique if table["name"] == "online_ground_loot")
+        unique_index = next(index for index, definition in enumerate(loot["constraints"])
+                            if definition.startswith("UNIQUE ("))
+        loot["constraints"][unique_index] = "UNIQUE (id)"
+        with self.assertRaises(backup.VerificationError):
+            backup.compare(changed_unique, restored, {}, {}, postgres, target_name)
+
+        with self.assertRaises(backup.VerificationError):
+            backup.compare(source, restored, {"online_x": {"rows": 1, "sha256": "a"}},
+                           {"online_x": {"rows": 1, "sha256": "b"}}, postgres, target_name)
 
 
 if __name__ == "__main__":
