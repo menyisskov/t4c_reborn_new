@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.AppearanceDefaultsCatalog;
@@ -23,6 +24,7 @@ import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterAnimations;
+import com.perso.T4C.npc.core.NPCAnimations;
 import com.perso.T4C.objects.GroundItem;
 import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.GroundLootView;
@@ -42,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -61,6 +64,9 @@ public final class OnlineClient extends ApplicationAdapter {
   private final OrthographicCamera hudCamera = new OrthographicCamera();
   private final Map<Long, Avatar> avatars = new HashMap<>();
   private final Map<Long, CreatureAvatar> creatures = new HashMap<>();
+  private final Map<String, NpcAvatar> npcs = new HashMap<>();
+  private Set<String> npcFrameNames = Set.of();
+  private OnlineConnection.Snapshot lastNpcSnapshot;
   /** Ground drops of the current snapshot, keyed by their server identity. Textures are shared. */
   private final Map<java.util.UUID, GroundItem> groundLoot = new HashMap<>();
   /** Same reach as offline pickup (OBJECT_MAX_INTERACTION_DISTANCE); the server enforces it again. */
@@ -99,6 +105,45 @@ public final class OnlineClient extends ApplicationAdapter {
       this.state = state;
       animation = new MonsterAnimations(state.walkPattern(), state.attackPattern(), state.deathPattern(), null, null);
     }
+  }
+
+  private static final class NpcAvatar {
+    final NPCAnimations animation;
+    final Vector2 position = new Vector2();
+    final PlayerMovement facing = new PlayerMovement();
+    final Rectangle bounds = new Rectangle();
+    final String spriteBase;
+    final Map<String, String> parts;
+    boolean moving;
+
+    NpcAvatar(NpcView view, Set<String> frameNames) throws com.perso.T4C.exception.GameException {
+      spriteBase = view.spriteBase();
+      parts = view.parts();
+      if ("@invisible".equals(spriteBase)) {
+        animation = null;
+        return;
+      }
+      var typed = new java.util.EnumMap<BodyPart, String>(BodyPart.class);
+      parts.forEach((part, base) -> typed.put(BodyPart.valueOf(part), base));
+      if (!NPCAnimations.hasRequiredFrameNames(spriteBase, typed, frameNames))
+        throw new IllegalArgumentException("Missing required online NPC sprite: " + view.id());
+      var arguments = new ArrayList<Object>();
+      typed.forEach((part, base) -> { arguments.add(part); arguments.add(base); });
+      animation = new NPCAnimations(spriteBase, arguments.toArray());
+    }
+
+    boolean sameAppearance(NpcView view) {
+      return java.util.Objects.equals(spriteBase, view.spriteBase()) && parts.equals(view.parts());
+    }
+
+    void position(float x, float y, boolean first) {
+      moving = !first && (x != position.x || y != position.y);
+      if (moving) facing.faceToward(position.x, position.y, x, y);
+      position.set(x, y);
+    }
+
+    boolean objectAppearance() { return spriteBase != null && spriteBase.startsWith("@static:"); }
+    void dispose() { if (animation != null) animation.dispose(); }
   }
 
   private static final class Avatar {
@@ -191,6 +236,13 @@ public final class OnlineClient extends ApplicationAdapter {
     try {
       var sprites = SpriteLoader.getInstance();
       sprites.loadSpriteBin(Paths.SPRITE_BIN);
+      var availableNpcFrames = new HashSet<String>();
+      for (var name : sprites.getNameToId().keySet()) {
+        var metadata = sprites.getMetaByLowerName().get(name);
+        if (metadata != null && metadata.pngData != null && metadata.pngData.length > 0)
+          availableNpcFrames.add(name);
+      }
+      npcFrameNames = Set.copyOf(availableNpcFrames);
       map = new MapReader(new File(Paths.MAP));
       renderer = new MapRenderer(map, sprites, ground, decor, null, ModifSprites.empty(), 0);
       camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -321,6 +373,7 @@ public final class OnlineClient extends ApplicationAdapter {
     avatars.values().forEach(a -> a.animation.dispose());
     avatars.clear();
     creatures.clear(); // Textures belong to the shared SpriteLoader.
+    clearNpcs();
     groundLoot.clear();
     error = null;
     lastTick = -1;
@@ -441,6 +494,7 @@ public final class OnlineClient extends ApplicationAdapter {
     var own = ownActor(view);
     if (own == null) return;
     var nearest = view.snapshot().npcs().stream()
+        .filter(npc -> !"@invisible".equals(npc.spriteBase()))
         .filter(npc -> npcDistanceSquared(own, npc) < NPC_INTERACTION_RANGE_TILES_SQUARED)
         .min(Comparator.comparingDouble(npc -> npcDistanceSquared(own, npc)))
         .orElse(null);
@@ -581,6 +635,37 @@ public final class OnlineClient extends ApplicationAdapter {
     groundLoot.keySet().retainAll(present);
   }
 
+  private void clearNpcs() {
+    npcs.values().forEach(NpcAvatar::dispose);
+    npcs.clear();
+    lastNpcSnapshot = null;
+  }
+
+  /** Prepare authored appearances on the render thread before region readiness is acknowledged. */
+  private void syncNpcs(OnlineConnection.View view) throws com.perso.T4C.exception.GameException {
+    if (lastNpcSnapshot == view.snapshot()) return;
+    var present = new HashSet<String>();
+    for (var state : view.snapshot().npcs()) {
+      present.add(state.id());
+      var npc = npcs.get(state.id());
+      boolean first = npc == null || !npc.sameAppearance(state);
+      if (first) {
+        var replacement = new NpcAvatar(state, npcFrameNames);
+        npcs.put(state.id(), replacement);
+        if (npc != null) npc.dispose();
+        npc = replacement;
+      }
+      npc.position((float) (view.map().originX() + state.x()) * GRID_W,
+          (float) (view.map().originY() + state.y()) * GRID_H, first);
+    }
+    npcs.entrySet().removeIf(entry -> {
+      if (present.contains(entry.getKey())) return false;
+      entry.getValue().dispose();
+      return true;
+    });
+    lastNpcSnapshot = view.snapshot();
+  }
+
   /** Install only allowlisted local assets, on the render thread, before acknowledging a region. */
   private void prepareRegion(OnlineConnection.View view) throws Exception {
     var region=view.map();
@@ -596,11 +681,14 @@ public final class OnlineClient extends ApplicationAdapter {
       if (map!=null) map.close();
       renderer=nextRenderer; map=nextMap;
     }
-    if (renderedWorld!=region.world() || !java.util.Objects.equals(renderedRegion,region.key()) || renderedEpoch!=region.locationEpoch()) {
-      avatars.values().forEach(a -> a.animation.dispose()); avatars.clear(); creatures.clear(); groundLoot.clear();
+    boolean changed = renderedWorld!=region.world() || !java.util.Objects.equals(renderedRegion,region.key()) || renderedEpoch!=region.locationEpoch();
+    if (changed) {
+      avatars.values().forEach(a -> a.animation.dispose()); avatars.clear(); creatures.clear(); groundLoot.clear(); clearNpcs();
       inputKeys.clear(); connection.stopInput(); lastTick=-1; targetCreature=0; closePanels();
       renderedWorld=region.world(); renderedRegion=region.key(); renderedEpoch=region.locationEpoch();
     }
+    syncNpcs(view);
+    if (changed) Gdx.app.log("online", "Prepared " + npcs.size() + " online NPC appearances for region " + region.key());
     connection.confirmRegionReady(region.locationEpoch());
   }
 
@@ -633,6 +721,7 @@ public final class OnlineClient extends ApplicationAdapter {
       catch (Exception failure) {
         error=I18n.key("online.client.load_error");
         Gdx.app.error("online","Could not load online region",failure);
+        clearNpcs();
         connection.close(); return;
       }
     }
@@ -689,6 +778,7 @@ public final class OnlineClient extends ApplicationAdapter {
       avatars.values().forEach(a -> a.moving = false);
       creatures.values().forEach(c -> c.motion.stop());
       groundLoot.clear();
+      clearNpcs();
     }
     camera.update();
     if (renderer != null) {
@@ -721,6 +811,26 @@ public final class OnlineClient extends ApplicationAdapter {
         item.renderAction = () -> creature.animation.render(decor, creature.motion.position(),
             creature.motion.angle(), creature.motion.flipX(), creature.motion.moving(),
             false, null, (float) creature.state.health() / creature.state.maxHealth());
+        actors.add(item);
+      }
+      for (var npc : npcs.values()) {
+        if (npc.animation == null) continue; // Authored invisible NPCs remain non-rendered.
+        npc.animation.update(Math.min(Gdx.graphics.getDeltaTime(), 0.1f), npc.moving);
+        String angle = npc.facing.getCurrentAngle();
+        boolean flipX = npc.facing.isFlipX();
+        npc.animation.getRenderBounds(npc.position, angle, flipX, npc.moving, npc.bounds);
+        var item = new ObjectRenderer.RenderItem();
+        item.y = (float) Math.floor(npc.position.y / GRID_H)
+            + (npc.objectAppearance() ? 0.5f : 2f);
+        item.renderAction = () -> npc.animation.renderComposite(
+            decor, npc.position, angle, flipX, npc.moving);
+        item.revealThroughDecor = true;
+        item.opaqueOcclusionReveal = npc.objectAppearance();
+        item.occlusionRevealAction = item.renderAction;
+        item.revealX = npc.bounds.x;
+        item.revealY = npc.bounds.y;
+        item.revealW = npc.bounds.width;
+        item.revealH = npc.bounds.height;
         actors.add(item);
       }
       for (var drop : groundLoot.values()) {
@@ -783,6 +893,7 @@ public final class OnlineClient extends ApplicationAdapter {
     closeLobby();
     if (connection != null) connection.close();
     avatars.values().forEach(a -> a.animation.dispose());
+    clearNpcs();
     if (renderer != null) renderer.dispose();
     creatures.clear();
     if (map != null)
