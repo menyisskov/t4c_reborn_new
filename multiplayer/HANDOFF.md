@@ -324,3 +324,22 @@ handoffs for `OnlineStore`, `PersistentCreatures`, `PreviewWorld`, `HostedWorlds
 `OnlineMelee`, `OnlineRetaliation`, `PersistentSessions` and snapshot/protocol interfaces
 after Claude's T4C-0204 loot and T4C-0206 quest hooks are ready. Do not start that core
 phase from this design alone.
+
+## T4C-0208 isolated PostgreSQL recovery checkpoint
+
+The four new tools in `tools/NATIVE_DATABASE_RECOVERY.md` create an owned PostgreSQL 16
+cluster on loopback 55433 and a copied server on 18768. The exact final Java SHA-256
+`94099C3B19382BD126F5B51AFD60CFFB4DEB3034F7B8A93B681AA9E22974CDB3` passed
+on preserved source-`8da43482`/protocol-4/schema-9 binaries. A real postmaster crash
+changed its PID/start and PostgreSQL logged automatic recovery; schema 9 was queried
+before and after. Two native adapters rejoined: A kept its original letter/full progress
+and balances; B's one raw outage request returned `503 busy` without replay and B gained
+its distinct letter only from a new explicit action. The owned game server exited 0.
+Final sanitized private report: `%TEMP%/t4c-0208-evidence-t4c_db_0208_dacdb459af35/report.txt`.
+
+The final helper SHA-256 `8CB456589B775A10E0E3975B999E4EC2685559717D67CD8A8266A542638EEDC7`
+also passed a controlled partial-create failure fixture: exit 77 stopped only its
+owned postmaster, left `PG_VERSION` and logs for inspection, and released ports 55433/18768.
+Earlier failed and preliminary runs are retained; see the tool document for their causes.
+The cluster is down and the shared PG55432/QA18765/owner clients were untouched. This
+does not establish current schema-10, rendered, backup-restore or broad M5 acceptance.

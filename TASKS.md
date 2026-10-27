@@ -20,7 +20,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 |---|---|---|---|---|---|
 | T4C-0210 | Share authored monster acquisition, leash and reach decisions | Multiplayer / Beta groundwork | In Progress | pending | pending |
 | T4C-0209 | Authoritative monster pursuit architecture and peer handoff | Multiplayer / Beta design only | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--monster-pursuit-architecture-t4c-0209) |
-| T4C-0208 | Isolated PostgreSQL crash/recovery through two native clients | Multiplayer / Beta | In Progress | pending | pending |
+| T4C-0208 | Isolated PostgreSQL crash/recovery through two native clients | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--isolated-postgresql-recovery-probe-t4c-0208) |
 | T4C-0207 | Two-native-adapter graceful and forced server restart recovery probe | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--two-adapter-server-restart-probe-t4c-0207) |
 | T4C-0206 | M3/M4 shared quest, spell-cast and heal rules plus quest/ability design (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-quest-and-spell-rules-t4c-0206) |
 | T4C-0205 | Package the online client without developer checkout dependencies | Multiplayer / Beta | Done | `cd9e2a44` | [2026-10-27](CHANGELOG.md#2026-10-27--online-client-test-package-t4c-0205) |
