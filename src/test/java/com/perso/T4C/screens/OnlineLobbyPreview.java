@@ -88,6 +88,7 @@ public final class OnlineLobbyPreview extends ApplicationAdapter {
             batch,
             model,
             source,
+            null,
             new OnlineLobbyScreen.Listener() {
               @Override
               public void play(Credentials credentials) {}

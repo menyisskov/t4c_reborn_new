@@ -27,6 +27,7 @@ final class OnlineLobbyLayout {
   static final float BUTTON_HEIGHT = 27f;
   static final float PLAY_Y = 67f;
   static final float REFRESH_Y = 99f;
+  static final float CREATE_Y = 131f;
   static final float BACK_Y = 177f;
 
   /** Column left edges (row-relative text offsets) for name, class, level and availability. */
@@ -42,6 +43,7 @@ final class OnlineLobbyLayout {
   enum Button {
     PLAY,
     REFRESH,
+    CREATE,
     BACK,
     UP,
     DOWN
@@ -66,6 +68,8 @@ final class OnlineLobbyLayout {
       return Button.PLAY;
     if (inside(px, py, panelX + BUTTON_X, panelY + REFRESH_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
       return Button.REFRESH;
+    if (inside(px, py, panelX + BUTTON_X, panelY + CREATE_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
+      return Button.CREATE;
     if (inside(px, py, panelX + BUTTON_X, panelY + BACK_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
       return Button.BACK;
     if (inside(px, py, panelX + ARROW_X, panelY + ARROW_UP_Y, ARROW_WIDTH, ARROW_HEIGHT))
