@@ -1,6 +1,7 @@
 package com.perso.T4C.online;
 
 import com.google.gson.Gson;
+import com.perso.T4C.online.model.OnlineCharacterCreation;
 import com.perso.T4C.online.model.OnlineProtocol;
 import com.perso.T4C.online.model.OnlineRoster;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.*;
 
@@ -40,13 +42,38 @@ public final class OnlineAccountClient implements AutoCloseable {
   /** Explicit bounded page; the caller chooses whether to request the next page. */
   public synchronized OnlineRoster page(UUID after) throws IOException,InterruptedException {
     if(closed) throw new IOException("Account client is closed");
-    // Recheck after every restart/page. Never send the account key before this anonymous gate.
-    var hello=parse(read("/map",false,1024*1024),Hello.class);
-    if(hello==null || hello.protocolVersion()!=OnlineProtocol.VERSION || !hello.persistent())
-      throw new IOException("Incompatible account server; update client and server together");
+    requirePersistentMap();
     var roster=parse(read("/account/characters"+(after==null ? "" : "?after="+after),true,64*1024),OnlineRoster.class);
     validatePage(roster,after);
     return roster;
+  }
+
+  /** One explicit mutation; the caller retains its requestId for any uncertain-result retry. */
+  public synchronized OnlineCharacterCreation.Result create(OnlineCharacterCreation.Request request)
+      throws IOException,InterruptedException {
+    Objects.requireNonNull(request);
+    if(closed) throw new IOException("Account client is closed");
+    requirePersistentMap(); // Never disclose the key to an incompatible or preview-only endpoint.
+    String body=JSON.toJson(request);
+    if(body.getBytes(StandardCharsets.UTF_8).length>512) throw new IllegalArgumentException("Creation request is too large");
+    var received=parse(read("/account/characters",true,64*1024,body),OnlineCharacterCreation.Result.class);
+    if(received==null || !request.requestId().equals(received.requestId()) || received.character()==null)
+      throw new IOException("Invalid account server response");
+    try {
+      var c=received.character();
+      var character=new OnlineRoster.CharacterSummary(c.id(),c.name(),c.characterClass(),c.gender(),
+          c.level(),c.world(),c.availability());
+      if(!request.characterClass().equals(character.characterClass()) || !request.gender().equals(character.gender()))
+        throw new IllegalArgumentException("Unexpected character identity");
+      return new OnlineCharacterCreation.Result(received.requestId(),character);
+    } catch(RuntimeException invalid) { throw new IOException("Invalid account server response"); }
+  }
+
+  private void requirePersistentMap() throws IOException,InterruptedException {
+    // Recheck before each account operation. The anonymous gate never carries the key.
+    var hello=parse(read("/map",false,1024*1024),Hello.class);
+    if(hello==null || hello.protocolVersion()!=OnlineProtocol.VERSION || !hello.persistent())
+      throw new IOException("Incompatible account server; update client and server together");
   }
 
   private static void validatePage(OnlineRoster roster,UUID after) throws IOException {
@@ -69,9 +96,15 @@ public final class OnlineAccountClient implements AutoCloseable {
   }
 
   private String read(String path,boolean authenticated,int limit) throws IOException,InterruptedException {
+    return read(path,authenticated,limit,null);
+  }
+  private String read(String path,boolean authenticated,int limit,String body) throws IOException,InterruptedException {
+    if(closed) throw new IOException("Account client is closed");
     var request=HttpRequest.newBuilder(endpoint.resolve(path)).timeout(Duration.ofSeconds(2));
     if(authenticated) request.header("Authorization","Bearer "+accountKey)
         .header(OnlineProtocol.VERSION_HEADER,Integer.toString(OnlineProtocol.VERSION));
+    if(body!=null) request.header("Origin",endpoint.toString()).header("Content-Type","application/json")
+        .POST(HttpRequest.BodyPublishers.ofString(body,StandardCharsets.UTF_8));
     CompletableFuture<HttpResponse<byte[]>> pending;
     try { pending=client.sendAsync(request.build(),ignored->new BoundedBody(limit)); }
     catch(RuntimeException failed) { throw new IOException("Account request unavailable"); }
