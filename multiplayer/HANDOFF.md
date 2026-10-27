@@ -155,3 +155,11 @@ roster/fault probes against the matching final package; fresh isolated measured 
 CI and merge the pending account/pool delivery. Then wire metrics/reporting, resume the failed
 sustained gate after a verified fix, and implement M1–M4 gameplay/UI/creation/loot/quest/ability work
 with the correct model tiers. Independent work can run in parallel with explicit file ownership.
+
+## Agent lanes (Codex vs Claude) — check before claiming work
+
+Two agent families work in parallel. Claim a TASKS.md ID on main (merge the row first) before starting; do not start work another lane owns. Row prefix "(Claude lane)" / "(Codex lane)" marks the owner.
+
+- **Codex lane:** T4C-0196 roster/native account, T4C-0197 DB pool/shutdown, T4C-0198 runtime metrics, their uncommitted files in the main checkout (all of multiplayer/server persistence, SimulationLoop, HostedWorlds, PersistentSessions, OnlineStore), soak/load gates (M5), operator tooling.
+- **Claude lane:** T4C-0201 scope + loot design docs (new files SCOPE_PROPOSAL.md, LOOT_DESIGN.md), T4C-0202 M2 loot domain rules (new files under multiplayer/domain only). Server-side loot wiring waits until the Codex lane's pending server changes are merged.
+- Unclaimed: M1 native UI, M3 quest service, M4 abilities. Whoever claims first posts the row; ask the owner if both want it.
