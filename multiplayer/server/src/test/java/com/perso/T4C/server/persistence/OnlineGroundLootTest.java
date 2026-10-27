@@ -37,6 +37,8 @@ class OnlineGroundLootTest {
     store.migrate();
     // Recreate the prior version-nine layout in this isolated test schema.
     try (var c = connectionIn(schema); var s = c.createStatement()) {
+      s.execute("ALTER TABLE online_spawns DROP COLUMN target_spawn_key CASCADE, DROP COLUMN target_life CASCADE, DROP COLUMN died_at CASCADE, DROP COLUMN death_kind CASCADE");
+      s.execute("DELETE FROM online_schema WHERE version = 12");
       s.execute("ALTER TABLE online_spawns DROP COLUMN current_x CASCADE, DROP COLUMN current_y CASCADE, DROP COLUMN mode CASCADE, DROP COLUMN target_epoch CASCADE, DROP COLUMN state_revision CASCADE");
       s.execute("DELETE FROM online_schema WHERE version = 11");
       s.execute("DROP TABLE online_loot_claims");
@@ -54,7 +56,7 @@ class OnlineGroundLootTest {
     try (var c = connectionIn(schema); var s = c.createStatement();
         var rows = s.executeQuery("SELECT string_agg(version::text, ',' ORDER BY version) FROM online_schema")) {
       rows.next();
-      assertEquals("1,2,3,4,5,6,7,8,9,10,11", rows.getString(1));
+      assertEquals("1,2,3,4,5,6,7,8,9,10,11,12", rows.getString(1));
     }
     assertEquals(rewarded, store.load(key.accountId(), character.id()), "existing character state is untouched");
     assertFalse(store.reward(session, event, 3, 4).applied(), "existing reward receipts still replay");

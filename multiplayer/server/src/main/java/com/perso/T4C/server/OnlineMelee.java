@@ -44,7 +44,7 @@ final class OnlineMelee {
     // The preview's lack of AI movement does not change this authored flag.
     if (spawn.spawn().stationary()) throw rejected("protected_target");
     var life=creatures.life(target);
-    if (life.recipient()!=null) throw rejected("creature_unavailable");
+    if (life.diedAt()!=null) throw rejected("creature_unavailable");
     var captured=creatures.capture(target);
     var definition=spawn.definition();
     // Never silently omit authored script/quest behavior. Loot is accepted only for tables the online roll can grant.

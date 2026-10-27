@@ -1,9 +1,14 @@
 package com.perso.T4C.server;
 
 import com.perso.T4C.online.model.ItemContent;
+import com.perso.T4C.online.model.NpcAppearanceContent;
 import com.perso.T4C.online.model.NpcView;
 import com.perso.T4C.server.persistence.OnlineStore;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.OptionalInt;
 import java.util.UUID;
 import java.util.random.RandomGenerator;
@@ -13,12 +18,45 @@ final class RegionNpcs {
   private final int world;
   private final OnlineNpcInteractions interactions;
   private final List<NpcView> views;
+  private final Map<String,String> supportedByView;
 
   RegionNpcs(NpcInteractionCatalog catalog, ItemContent items, RegionMapLoader.Spec region) {
+    this(catalog,items,region,null);
+  }
+
+  /** Publish the independent authored appearance inventory without granting its scripts. */
+  RegionNpcs(NpcInteractionCatalog catalog, ItemContent items, RegionMapLoader.Spec region,
+      NpcAppearanceCatalog appearances) {
     world=region.world(); interactions=new OnlineNpcInteractions(catalog,items);
-    views=catalog.npcs().stream().filter(n->region.contains(n.world(),n.x(),n.y()))
-        .map(n->new NpcView(n.id(),n.displayName(),n.x()-region.originX(),n.y()-region.originY(),n.spriteBase(),n.parts()))
-        .toList();
+    if(appearances==null) {
+      views=catalog.npcs().stream().filter(n->region.contains(n.world(),n.x(),n.y()))
+          .map(n->new NpcView(n.id(),n.displayName(),n.x()-region.originX(),n.y()-region.originY(),
+              n.spriteBase(),n.parts())).toList();
+      var supported=new HashMap<String,String>();
+      for(var view:views) supported.put(view.id(),view.id());
+      supportedByView=Map.copyOf(supported);
+      return;
+    }
+    var published=new ArrayList<NpcView>();
+    var supported=new HashMap<String,String>();
+    var ids=new HashSet<String>();
+    List<NpcAppearanceContent.Spawn> inRegion=appearances.inRegion(region);
+    for(var spawn:inRegion) {
+      var registered=catalog.npcs().stream().filter(n->n.id().equals(spawn.canonicalNpcId())
+          && n.world()==spawn.world() && n.x()==spawn.x() && n.y()==spawn.y()).findFirst();
+      if(spawn.interactionSupported()!=registered.isPresent())
+        throw new IllegalArgumentException("NPC interaction registration mismatch");
+      String id=registered.isPresent() ? spawn.canonicalNpcId() : NpcAppearanceCatalog.viewId(spawn);
+      if(!ids.add(id)) throw new IllegalArgumentException("Duplicate public NPC identity");
+      published.add(new NpcView(id,spawn.displayName(),spawn.x()-region.originX(),
+          spawn.y()-region.originY(),spawn.spriteBase(),spawn.parts()));
+      registered.ifPresent(n->supported.put(id,n.id()));
+    }
+    for(var npc:catalog.npcs())
+      if(region.contains(npc.world(),npc.x(),npc.y()) && !supported.containsKey(npc.id()))
+        throw new IllegalArgumentException("Registered NPC missing from appearance inventory");
+    views=List.copyOf(published);
+    supportedByView=Map.copyOf(supported);
   }
 
   List<NpcView> views() { return views; }
@@ -27,7 +65,9 @@ final class RegionNpcs {
       double x, double y, String npcId, OptionalInt topic, long now, RandomGenerator random) {
     var npc=views.stream().filter(n->n.id().equals(npcId)).findFirst()
         .orElseThrow(()->new IllegalArgumentException("NPC is not in this region"));
-    return interactions.prepare(saved,world,map.originX+x,map.originY+y,npcId,
+    String canonical=supportedByView.get(npcId);
+    if(canonical==null) throw new IllegalArgumentException("NPC interaction unavailable");
+    return interactions.prepare(saved,world,map.originX+x,map.originY+y,canonical,
         map.hasLineOfSight(x,y,npc.x(),npc.y()),topic,UUID::randomUUID,now,random);
   }
 }

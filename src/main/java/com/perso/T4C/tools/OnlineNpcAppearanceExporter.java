@@ -2,7 +2,9 @@ package com.perso.T4C.tools;
 
 import com.google.gson.GsonBuilder;
 import com.perso.T4C.npc.core.NpcFactoryRegistry;
+import com.perso.T4C.npc.core.NPCAnimations;
 import com.perso.T4C.npc.core.NpcSpawnOwnership;
+import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.online.model.MonsterContent;
 import com.perso.T4C.online.model.NpcAppearanceContent;
 import com.perso.T4C.spawn.SpawnDefinition;
@@ -12,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,27 +38,26 @@ public final class OnlineNpcAppearanceExporter {
       String display=spec==null ? registration.displayName() : spec.displayName();
       String base=spec==null ? registration.spriteBase() : spec.spriteBase();
       var parts=new TreeMap<String,String>();
-      if(spec!=null) for(var part:spec.parts()) parts.put(part.bodyPart().name(),part.spriteBase());
+      var typedParts=new EnumMap<BodyPart,String>(BodyPart.class);
+      if(spec!=null) for(var part:spec.parts()) {
+        parts.put(part.bodyPart().name(),part.spriteBase());
+        typedParts.put(part.bodyPart(),part.spriteBase());
+      }
       boolean sentinel="SUNDIAL".equalsIgnoreCase(spawn.type())
           && spawn.x()==0 && spawn.y()==0 && spawn.z()==0;
       NpcAppearanceContent.FrameEvidence evidence;
       String diagnostic;
-      if(base!=null && base.startsWith("@static:")) {
-        String name=base.substring("@static:".length());
-        evidence=spriteNames==null ? NpcAppearanceContent.FrameEvidence.UNKNOWN
-            : spriteNames.contains(com.perso.T4C.helper.SpriteBinIO.key(name))
-                ? NpcAppearanceContent.FrameEvidence.FRAME_NAME_PRESENT
-                : NpcAppearanceContent.FrameEvidence.NO_FRAME;
-        diagnostic=evidence==NpcAppearanceContent.FrameEvidence.FRAME_NAME_PRESENT
-            ? "static_frame_name_present_unrendered"
-            : evidence==NpcAppearanceContent.FrameEvidence.NO_FRAME ? "static_frame_name_missing"
-                : "sprite_metadata_unavailable";
-      } else if("@invisible".equals(base)) {
+      if("@invisible".equals(base)) {
         evidence=NpcAppearanceContent.FrameEvidence.NO_FRAME;diagnostic="intentionally_invisible";
       } else {
-        evidence=NpcAppearanceContent.FrameEvidence.UNKNOWN;
-        diagnostic=(base==null || base.isBlank()) && parts.isEmpty()
-            ? "appearance_missing" : "frames_not_verified";
+        evidence=spriteNames==null ? NpcAppearanceContent.FrameEvidence.UNKNOWN
+            : NPCAnimations.hasRequiredFrameNames(base,typedParts,spriteNames)
+                ? NpcAppearanceContent.FrameEvidence.FRAME_NAME_PRESENT
+                : NpcAppearanceContent.FrameEvidence.NO_FRAME;
+        diagnostic=evidence==NpcAppearanceContent.FrameEvidence.UNKNOWN
+            ? "sprite_metadata_unavailable"
+            : evidence==NpcAppearanceContent.FrameEvidence.FRAME_NAME_PRESENT
+                ? "frame_names_present_unrendered" : "required_frame_name_missing";
       }
       if(sentinel) diagnostic="offline_placeholder_"+diagnostic;
       String key=new MonsterContent.Spawn(spawn.type(),null,spawn.x(),spawn.y(),spawn.z(),
