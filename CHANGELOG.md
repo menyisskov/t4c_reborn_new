@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Isolated PostgreSQL recovery probe (T4C-0208)
+
+### Added
+- An owned, create-only PostgreSQL cluster drill verifies a real database process crash, automatic recovery, native adapter rejoin and committed opening-letter state. A bounded outage request is not replayed; failed runs and the schema-9 scope are retained as evidence.
+
 ## 2026-10-27 — Monster pursuit architecture (T4C-0209)
 
 ### Added
