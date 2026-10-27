@@ -38,6 +38,8 @@ class OnlineEquipmentBonusesTest {
     sword.addProperty("secondaryBodyPart", "WEAPON2");
     sword.addProperty("armorClass", 9);
     sword.addProperty("dodgeLost", 6);
+    sword.addProperty("atkDelay", "250");
+    sword.addProperty("attackSpeed", 99);
     sword.add("boosts", gson.toJsonTree(java.util.List.of(
         new ItemContent.Boost(1, 3, "self.str/2", 0, 0),
         new ItemContent.Boost(2, 8, "3", 0, 0), new ItemContent.Boost(3, 10012, "4", 0, 0),
@@ -57,6 +59,7 @@ class OnlineEquipmentBonusesTest {
     assertEquals(15, loadout.profile().archery());
     assertEquals(12, loadout.profile().armorClass());
     assertEquals(5, loadout.damageBonus());
+    assertEquals(250, loadout.attackCooldownMillis(), "Authored main-hand delay overrides attack speed");
     assertTrue(loadout.profile().stunned());
     assertTrue(loadout.profile().hidden());
     assertEquals(progress.skills(), loadout.profile().skills(), "Proc skills retain the offline trained-skill contract");

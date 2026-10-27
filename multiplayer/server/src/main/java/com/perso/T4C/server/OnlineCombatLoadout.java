@@ -3,13 +3,15 @@ package com.perso.T4C.server;
 import com.perso.T4C.combat.CombatProfile;
 import com.perso.T4C.combat.SkillBonusRules;
 import com.perso.T4C.combat.WeaponDamageRules;
+import com.perso.T4C.combat.WeaponTimingRules;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import com.perso.T4C.player.BodyPart;
 
 /** Derived committed loadout. Active spells/world wards must be integrated before supporting them. */
 record OnlineCombatLoadout(CombatProfile profile, WeaponDamageRules.Stats stats,
-    WeaponDamageRules.Weapon primary, WeaponDamageRules.Weapon secondary, int damageBonus) {
+    WeaponDamageRules.Weapon primary, WeaponDamageRules.Weapon secondary, int damageBonus,
+    long attackCooldownMillis) {
   static OnlineCombatLoadout resolve(CharacterProgress progress, ItemContent content, long now, boolean stunned) {
     if (now < 0 || progress == null) throw new IllegalArgumentException("Missing authoritative combat state");
     if (progress.buffs().stream().anyMatch(buff -> buff.expiresAt() > now)
@@ -37,7 +39,8 @@ record OnlineCombatLoadout(CombatProfile profile, WeaponDamageRules.Stats stats,
     var off = equipment.get(BodyPart.WEAPON2);
     // SHIELD shares occupancy constraints, not the offline WEAPON2 damage input.
     // Secondary visual layers of a two-handed item are not a second owned weapon.
+    double speed = main == null ? 1.0 : WeaponTimingRules.resolve(main.atkDelay(), main.attackSpeed()).attacksPerSecond();
     return new OnlineCombatLoadout(profile, stats, main == null ? null : main.weapon(),
-        off == null ? null : off.weapon(), bonuses.getOrDefault(10, 0));
+        off == null ? null : off.weapon(), bonuses.getOrDefault(10, 0), WeaponTimingRules.cooldownMillis(speed));
   }
 }

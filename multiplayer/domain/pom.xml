@@ -37,6 +37,7 @@
                         <include>com/perso/T4C/combat/CombatResult.java</include>
                         <include>com/perso/T4C/combat/PhysicalAttackRequest.java</include>
                         <include>com/perso/T4C/combat/WeaponDamageRules.java</include>
+                        <include>com/perso/T4C/combat/WeaponTimingRules.java</include>
                         <include>com/perso/T4C/combat/EquipmentBoostRules.java</include>
                         <include>com/perso/T4C/combat/EquipmentEligibilityRules.java</include>
                         <include>com/perso/T4C/combat/SkillBonusRules.java</include>
@@ -55,6 +56,7 @@
                     <testIncludes>
                         <testInclude>com/perso/T4C/combat/CombatResolverTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/WeaponDamageRulesTest.java</testInclude>
+                        <testInclude>com/perso/T4C/combat/WeaponTimingRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/EquipmentBoostRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/DiceFormulaTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/CharacterCreationRulesTest.java</testInclude>
