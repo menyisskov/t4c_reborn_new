@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0228`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0230`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0229 | Online natural regeneration settle (Claude A5) | Multiplayer / Beta combat | In Progress | PR165 | deferred |
+| T4C-0228 | Corpse recovery respects carry limits with per-item partial pickup (Claude L11) | Multiplayer / Beta loot | Done | PR164, eacb3ea3; all checks passed | deferred |
 | T4C-0227 | Measure bounded HTTP application traffic for Beta stability evidence | Multiplayer / Beta reliability | Done (operator groundwork) | this PR; isolated focused and no-DB checks | [2026-10-27](CHANGELOG.md#2026-10-27--bounded-http-application-metrics-t4c-0227) |
 | T4C-0226 | Verify two native sessions stay live during hostile HTTP traffic | Multiplayer / Beta security acceptance | Done (local native adapter check) | this PR; immutable `f6175cc7`, final report `FFD24BFC` | [2026-10-27](CHANGELOG.md#2026-10-27--native-sessions-during-hostile-http-t4c-0226) |
 | T4C-0225 | Integrate durable authored creature-clan combat after peer handoff | Multiplayer / Beta gameplay | Planned | pending Claude handoff | pending |
@@ -33,7 +35,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0215 | Package a clean local QA server runtime and safe lifecycle tools | Multiplayer / Beta operations | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--local-online-server-qa-package-t4c-0215) |
 | T4C-0214 | Design authored starter-route hosting without fabricated portals | Multiplayer / Beta architecture only | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--authored-starter-route-hosting-design-t4c-0214) |
 | T4C-0213 | Verify restored schema checks and read committed state through two native adapters | Multiplayer / Beta reliability | Done | PR148; adapter-read evidence in [ACCEPTANCE](multiplayer/ACCEPTANCE.md) | [2026-10-27](CHANGELOG.md#2026-10-27--backup-check-verification-on-schema-10-t4c-0213) |
-| T4C-0212 | Activate guarded server monster patrol and pursuit in supported hosted regions | Multiplayer / Beta implementation and native-adapter verification | Done | PR157/main `d4dc908a`; 182 isolated tests, two-adapter pursuit/restart PASS; brief two-rendered-client pursuit/reconnect observed 2026-10-27 (see [ACCEPTANCE](multiplayer/ACCEPTANCE.md)); M4/Beta open | [2026-10-27](CHANGELOG.md#2026-10-27--monsters-patrol-and-pursue-in-online-regions-t4c-0212) |
+| T4C-0212 | Activate guarded server monster patrol and pursuit in supported hosted regions | Multiplayer / Beta implementation and native-adapter verification | Done | PR157/main `d4dc908a`; 182 isolated tests, two-adapter pursuit/restart PASS; brief two-rendered-client pursuit/reconnect observed; follow-up native target-handoff probe PASS on immutable `1a659c61` (report `71FFBBAE`, four prior fixture failures retained); M4/Beta open | [2026-10-27](CHANGELOG.md#2026-10-27--monsters-patrol-and-pursue-in-online-regions-t4c-0212) |
 | T4C-0211 | Render authoritative native creature movement and facing | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--native-creature-motion-from-server-snapshots-t4c-0211) |
 | T4C-0210 | Share authored monster acquisition, leash and reach decisions | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-monster-pursuit-decisions-t4c-0210) |
 | T4C-0209 | Authoritative monster pursuit architecture and peer handoff | Multiplayer / Beta design only | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--monster-pursuit-architecture-t4c-0209) |
