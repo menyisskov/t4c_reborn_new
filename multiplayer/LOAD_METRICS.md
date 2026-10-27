@@ -1,14 +1,14 @@
 # Load observations (T4C-0198)
 
-Delivery status (2026-10-27): this document describes pending implementation in the
-working tree based on `397d9ace`. That runtime/tooling is not yet merged. Recorded
-checks apply only to the stated build; this documentation does not mark a milestone
-complete or make the corresponding code available in an earlier release.
+Delivery status (2026-10-27): operator endpoint and load-report integration are implemented and
+verified, being delivered as T4C-0198. These checks do not complete the sustained Beta gate.
 
-Implemented groundwork: `SimulationLoop.metrics()` and
-`new ServerRuntimeMetrics(loop).snapshot()`. These methods are not yet wired to an
-HTTP endpoint or soak report. They do not establish that the sustained 20-player
-Beta performance gate has passed.
+Implemented for T4C-0198: `SimulationLoop.metrics()` and
+`ServerRuntimeMetrics.snapshot()` are exposed through local operator
+`GET /admin/metrics`. The route requires the private shutdown control token and an
+actual loopback peer; it does not enqueue work on the simulation thread. Public
+`GET /health` keeps its existing response. These measurements do not establish that
+the sustained 20-player Beta performance gate has passed.
 
 ## Simulation contract
 
@@ -73,12 +73,27 @@ CPU observations, or a nonpositive time interval. Tick mean is
 `delta(totalTickNanos) / delta(measuredTicks)` for nonzero measured ticks.
 Maxima are lifetime maxima; these aggregates cannot yield percentiles.
 
+## Operator endpoint and soak reporting
+
+`GET /admin/metrics` returns only the bounded scalar process and simulation snapshot
+described above. A missing or invalid bearer credential is refused. The route is
+for local operator use even when the gameplay endpoint uses remote TLS. Do not log,
+publish, or copy the private control token into reports.
+
+The native adapter soak can read the private token file through the optional
+`T4C_SOAK_CONTROL_FILE` environment variable. It samples once at startup and on
+each five-second report cycle, without printing the token or file path. Its JSON
+`serverRuntime` object records availability, successful/failed sample counts,
+and bounded `initial`, `latest`, and numeric lifetime `max` snapshots. Without the
+variable, `available` is false and no operator request is made. A failed operator
+request is recorded as unavailable until a successful sample arrives. A snapshot
+may have `simulation.consistent=false`; treat that sample as approximate and do
+not calculate an exact interval from it.
+
 ## Integration and remaining acceptance evidence
 
-The parent task still needs to expose a bounded, appropriately authorized operator
-observation route and record samples in the 20-client soak harness. Keep all player,
-account, session, host, and credential identifiers out of this snapshot. This is
-operator data, not public gameplay state.
+Keep all player, account, session, host, and credential identifiers out of this
+snapshot. This is operator data, not public gameplay state.
 
 Still required: network request/response byte counts and throughput, database
 operation latency/error and pool-wait observations, process resident/native memory
@@ -86,3 +101,24 @@ if required by the capacity budget, and sustained native-client load evidence wi
 latency/deadline observations and reconnect/restart checks. A wall-clock ticks-per-
 second proxy alone cannot substitute for these measurements. CPU/memory snapshots
 and the scheduler counters here are groundwork, not a completed benchmark.
+
+## Reproduction and recorded evidence
+
+Full PostgreSQL reactor `mvn -B -f multiplayer/pom.xml verify` passed: 18 domain and 83 server
+checks, zero failures/errors/skips. Simulation tests deterministically inject a 600 ms stall and
+callback failure, preserving fixed gameplay deltas and measuring actual debt/reset behavior.
+The existing HTTP suite verifies private-token refusal, valid scalar units, no token echo and
+unchanged public health. Log: `$env:TEMP/t4c-0198-integrated-verify.log`.
+
+After restart, a 20-second 20-native-adapter run with the operator file recorded five successful
+samples, zero metric/adapter failures and no credential/path in the report. All 20 were connected
+for 19.012 seconds. A separate 10-second run without that variable reported metrics unavailable,
+samples 0/failures 0 and normal gameplay; all 20 were connected for 9.097 seconds. Reports:
+`target/native-adapter-soak-0198-metrics-smoke.json` and
+`target/native-adapter-soak-0198-no-control-smoke.json`. These validate reporting, not sustained play.
+
+A focused HTTP shim reproduced a 200-header/stalled-body response exceeding the old 2 s request
+setting: 5.123 seconds. Explicit future deadline/cancellation reduced the same check to 2.021 seconds
+and one failed metric sample. Reproduce using `tools/NativeAdapterSoakDeadlineProbe.java` as
+shown in tools/NATIVE_ADAPTER_SOAK.md. The response cap is 64 KiB and token-file reads are bounded;
+raw errors, credentials and file paths are not included in reports. No mutation retries are added.

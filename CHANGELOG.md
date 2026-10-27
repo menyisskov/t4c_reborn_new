@@ -6,6 +6,14 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Private server runtime observations (T4C-0198)
+
+### Added
+- Local operators can inspect simulation delays, tick workload, memory and CPU observations through a private authenticated endpoint. Load reports can collect these measurements without exposing credentials or player data.
+
+### Fixed
+- A stalled diagnostic response can no longer keep the load checker waiting beyond its bounded response deadline.
+
 ## 2026-10-27 — Online database reliability (T4C-0197)
 
 ### Fixed

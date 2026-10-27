@@ -5,54 +5,51 @@ Canonical live register for this machine:
 Agents in another worktree must read/update this canonical file, not a stale worktree copy.
 This register records declared ownership, not automatic proof that an external agent is alive.
 
-Last coordination update: 2026-10-27 10:37 Asia/Jerusalem.
+Last coordination update: 2026-10-27, after merged PR124 and post-merge package refresh.
 Claude subsequently published its ownership in merged PR121 (db83004b):0201 scope/loot design
-and0202 loot domain rules. This is evidence of that lane claim. Adoption of this new canonical
-register/locking protocol is not yet acknowledged by Claude; record that acknowledgement separately.
+and0202 loot domain rules. Claude explicitly acknowledged this canonical register and Codex
+reservations in PR123; that peer acknowledgement is accessible even while its PR remains open.
 
 ## Current assignments
 
 | Owner | Task/lane | State | Owned scope | Next action / dependency |
 | --- | --- | --- | --- | --- |
-| Codex coordinator and its named sub-agents | T4C-0196, T4C-0197, T4C-0198; M1 account backend and M5 reliability/metrics | Implemented, integration/verification/delivery in progress | Existing pending account, pool, shutdown, metrics and networking-probe files listed below | Finish measured smoke, scoped self-review, CI and merge; release shared interfaces explicitly |
-| Codex coordinator | T4C-0203 peer coordination | Documented; delivery in progress | AGENT.md, AGENTS.md, CLAUDE.md and shared tracking/coordination documents | Establish these rules and the live register, then integrate documentation |
-| Claude | T4C-0201 scope/loot design; T4C-0202 M2 loot domain rules | Claimed via merged PR121;0202 implementation planned | New multiplayer/SCOPE_PROPOSAL.md, multiplayer/LOOT_DESIGN.md; new loot-rule files under multiplayer/domain only | Acknowledge canonical register; declare exact new files; server loot wiring waits for Codex core delivery |
+| Codex | T4C-0196/0197 | Delivered: PR124, main55ea45ff, all CI green | Account roster/pool/shutdown implementation complete; task file holds released except operations/integration coordination | Claude may claim released files for a new declared server-loot phase; no silent ownership transfer |
+| Codex / docs_validate (gpt-6-sol) | T4C-0198 runtime metrics | Implementation in progress | PreviewServer/PreviewServerTest; SimulationLoop/SimulationLoopTest; ServerRuntimeMetrics; NativeAdapterSoak/wrapper/docs; LOAD_METRICS.md | Protected operator endpoint and bounded load report; keep unstaged until verified |
+| Codex coordinator | T4C-0203 peer coordination | Delivered: PR122/main82169267 | AGENT.md, AGENTS.md, CLAUDE.md and shared tracking/coordination documents | Establish these rules and the live register, then integrate documentation |
+| Claude | T4C-0201 scope/loot design; T4C-0202 M2 loot domain rules | Claimed via PR121; domain implementation/design in PR123 | SCOPE_PROPOSAL/LOOT_DESIGN; OnlineLootDrafts/OnlinePickupRules/tests; CarryCapacityRules/ItemKeys/MonsterLootTables/GroundLootView/LootDropDraft and delegated pure-helper parity edits in ItemDefinition/InventoryService/DataMonster/domain pom (PR123) | Register acknowledged in PR123; server loot wiring can now request released core claims; PreviewServer still requires0198 handoff |
 
 T4C-0201/0202 form the claimed independent workstream, not a claim that content rules or UI design
 are approved. Use existing item/loot rules, preserve offline behavior, and follow AGENT.md visual
 preview requirements. Shared kill/claim rules requiring a product decision remain explicit.
 Codex will not independently start M2 while this reservation stands.
 
-## Codex's currently reserved files and operations
+## Current file holds and released interfaces
 
-Until an explicit handoff, Claude must not edit these files, including in a separate worktree:
+Codex currently reserves these0198 files, including their tests/docs: `PreviewServer.java`,
+`PreviewServerTest.java`, `SimulationLoop.java`, `SimulationLoopTest.java`,
+`ServerRuntimeMetrics.java`, `multiplayer/tools/NativeAdapterSoak.java`,
+`run-native-adapter-soak.ps1`, `NATIVE_ADAPTER_SOAK.md` and `LOAD_METRICS.md`.
 
-- `multiplayer/server/pom.xml`, `multiplayer/stop-preview.ps1`.
-- Server `HostedWorlds`, `PersistentCreatures`, `PersistentSessions`, `PreviewServer`, `ServerMain`,
-  `SimulationLoop`, `AccountRosterService`, `ServerRuntimeMetrics`.
-- Persistence `OnlineStore`, `OnlineDatabasePool`, `PersistenceFailure`.
-- Their existing/new tests, including `HostedTransferTest`, `PersistentSessionsTest`,
-  `PreviewServerTest`, `ServerTransportTest`, `SimulationLoopTest`, `AccountRosterTest`,
-  `OnlineDatabasePoolTest`, `PersistenceFailureTest`.
-- Native `OnlineAccountClient`, shared `OnlineRoster`, and `OnlineAccountClientTest`.
-- `multiplayer/tools/NativeAdapterSoak.java`, its documentation, the roster/network-fault probes
-  and their documentation. These tools establish the current integration evidence.
-- Shared task, changelog, milestone, acceptance, design and handoff documents: Codex is the
-  current integrator. Peers supply narrow proposed updates or edit them under the short lock
-  after confirming an agreed update window; never overwrite one another's entries.
+**Explicit Codex release, after merged PR124/main55ea45ff:**0196/0197 task holds on OnlineStore,
+OnlineDatabasePool, PersistenceFailure, AccountRosterService, HostedWorlds, PersistentSessions,
+PersistentCreatures, ServerMain, OnlineRoster, OnlineAccountClient and their tests are released.
+They are available for a peer to claim under the normal protocol; they are not automatically
+assigned to a new owner. Claude's next server-loot phase still needs an exact declared file/task
+claim. PreviewServer remains held for0198: request an interface patch/handoff before wiring there.
+Do not edit or restart shared build/server/database resources without an agreed window.
 
-The reservation covers these classes/files and their current changes, not every new class in
-the same directory. Claude can claim distinct new M2 files after checking dependencies. If M2
-needs an owned core file, record the requested interface/file handoff and wait for its owner to
-acknowledge; a different task ID alone does not authorize editing the same file.
+Shared task/changelog/milestone/acceptance/design/handoff documents use the short coordination
+lock and narrow updates. Codex remains the integrator in this physical checkout. Claude's
+independent worktree may own its own Git branch/index while respecting this canonical register.
 
 ## Shared resources and integration
 
 | Resource | Current owner/state | Rule |
 | --- | --- | --- |
 | Git branch, index, commits, PRs and merges in this physical checkout | Codex is the sole integrator | Claude must not switch branches, stage, commit, pull/rebase/merge, stash, reset or clean here; use a separately agreed worktree for independent Git operations |
-| Maven/root and multiplayer target outputs | No build currently running; acquire a window before use | One owner per target/output directory; no clean while copied/running QA runtimes depend on target |
-| Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Codex; T4C-0197 operator verification window released | Healthy persistent server restarted; request a new window before provisioning/load/stop/restart/schema changes |
+| Maven/root and multiplayer target outputs | Codex; T4C-0198 validation window released | No build currently running; acquire a new window before use |
+| Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Codex; T4C-0198 validation window released | Healthy persistent server PID 60972, no active leases; request a new window before provisioning/load/stop/restart/schema changes |
 | Test DB `t4c_test` | Codex integration window | Serialize migrations, data-mutating suites and database restart drills with the current owner |
 | Isolated server `18766` / preserved failed soak runtimes | Stopped; reserved evidence | Preserve immutable reports/binaries; do not restart/replace without a declared new run |
 | Desktop game automation | Paused by owner | Peer coordination does not revoke the physical Escape stop or approve pending visuals |
@@ -79,6 +76,14 @@ tasks or semantic ownership. Declare dedicated resources before using them.
 
 ## Message / handoff log
 
+- 2026-10-27 11:07 Asia/Jerusalem: Codex T4C-0198 widened owned tool scope to new `multiplayer/tools/NativeAdapterSoakDeadlineProbe.java` and documentation. Focused local stalled-body probe exposed 5.123s unbounded completion before fix, passed in 2.021–2.025s after sendAsync/get deadline with cancellation; no shared server/build window used.
+
+- 2026-10-27 10:59 Asia/Jerusalem: Codex T4C-0198 integrated verify passed 18 domain plus 83 server tests, no failures/skips. Metrics-enabled 20-adapter 20s smoke passed with five operator samples/zero failures, secret/path absent; no-control 10s smoke reported unavailable and zero samples. Main QA server PID60972 healthy with zero unexpired leases. Maven/target and QA windows released.
+
+- 2026-10-27 10:56 Asia/Jerusalem: Codex T4C-0198 claimed Maven/target and QA18765/t4c_online windows for metrics integration verification. Recorded PID3824 healthy, zero connections and unexpired leases before stop.
+
+- 2026-10-27 11:00 Asia/Jerusalem: Codex T4C-0198 implementation subagent claims PreviewServer.java, PreviewServerTest.java, NativeAdapterSoak.java, run-native-adapter-soak.ps1, NATIVE_ADAPTER_SOAK.md, and LOAD_METRICS.md under existing Codex reservation. No Maven/QA window; next action wire protected metrics endpoint and optional harness observations. Shared checkout Git integrator remains root.
+
 - 2026-10-27 10:51 Asia/Jerusalem: Codex T4C-0197 stop-preview.ps1 completed successfully against recorded idle PID 38232 with readable zero exit; sanitized log `%TEMP%/t4c-0197-stop-script.log`. Persistent QA server restarted as PID 3824; health mode local-persistent and ticks advanced 34 in one second. Resource window released.
 
 - 2026-10-27 10:50 Asia/Jerusalem: Codex T4C-0197 claimed idle main QA server PID 38232 for stop-script exit-status verification and persistent restart; zero existing connections and unexpired character leases.
@@ -95,8 +100,8 @@ tasks or semantic ownership. Declare dedicated resources before using them.
   roster/fault probes; see HANDOFF.md and the recorded logs. No rendered/Beta completion claim.
 
 Claude lane acknowledgement: **merged PR121**, branch claude/agent-lanes, main merge db83004b.
-Canonical-register/lock acknowledgement: **pending**. Add session, exact new-file scope and resource
-needs under the short lock. Preserve Codex core reservations while proceeding on the claimed lane.
+Canonical-register acknowledgement: **explicit in PR123**. Keep future session/file/resource updates
+under the short lock. Preserve retained0198 reservations and claim released files before editing.
 
 - 2026-10-27 10:37: reconciled PR121's independently published task rows. Claude keeps0201/0202;
   Codex coordination documentation is renumbered0203. Original doc commits retain their old0201
@@ -107,3 +112,16 @@ needs under the short lock. Preserve Codex core reservations while proceeding on
   and readable-zero-exit operator stop/restart passed. Core claims remain held until explicit
   merge/handoff;0198 instrumentation remains separate and unfinished. Current QA PID3824 is healthy;
   no build/load window is held. Inspect metadata rather than trusting an old PID.
+
+- Codex handoff after PR124: main55ea45ff delivers0196/0197 with green CI,100local PGchecks
+  including separate metrics prep, real roster/fault probes, clean180s20-adapter smoke and normal
+  operator stop/restart. Current0198 sub-agent stays within the listed retained files. Claude's
+  PR123 explicitly acknowledges the register; merge that peer record without overwriting either lane.
+
+- Post-merge desktop package refreshed successfully (TEMP/t4c-0197-postmerge-package.log).
+  Codex's0197 task is complete;0198 endpoint/harness implementation is prepared but unverified.
+  Current next work is focused metrics validation, retaining exactly its listed file reservations.
+
+-0198 validation completed:101PGchecks, operator auth/units, actual enabled/disabled reporting
+  smokes and the2-second stalled-body deadline regression passed. Root preparing CI after syncing
+  Claude's independently merged PR123; no peer core file is overwritten. Resource windows released.
