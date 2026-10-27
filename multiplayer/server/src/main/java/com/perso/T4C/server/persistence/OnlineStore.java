@@ -1,6 +1,9 @@
 package com.perso.T4C.server.persistence;
 
 import com.perso.T4C.online.model.CharacterProgress;
+import com.perso.T4C.online.model.ItemContent;
+import com.perso.T4C.online.model.LootDropDraft;
+import com.perso.T4C.server.OnlinePickupRules;
 
 import java.sql.*;
 import java.nio.charset.StandardCharsets;
@@ -21,6 +24,21 @@ public final class OnlineStore implements AutoCloseable {
     }
   }
   public record RewardResult(boolean applied, CharacterState character) {}
+  /** Proposed ground-loot policy (LOOT_DESIGN.md section 3), in database milliseconds; pending owner approval. */
+  public static final long LOOT_OWNER_WINDOW_MILLIS = 60_000L;
+  public static final long LOOT_LIFETIME_MILLIS = 15L * 60_000L;
+  public static final int GROUND_LOOT_LIST_LIMIT = 256;
+  /** Internal view; {@code ownerCharacter} is null once the owner window has closed. Never expose it to clients. */
+  public record GroundLoot(UUID id, int world, double x, double y, String key, int quantity, int charges,
+      UUID ownerCharacter, long ownerRemainingMillis) {}
+  /** Inclusive tile rectangle. */
+  public record TileRect(double minX, double minY, double maxX, double maxY) {
+    public TileRect {
+      if (!Double.isFinite(minX) || !Double.isFinite(minY) || !Double.isFinite(maxX) || !Double.isFinite(maxY)
+          || minX>maxX || minY>maxY) throw new IllegalArgumentException("Invalid loot rectangle");
+    }
+  }
+  public record ExpiredLoot(UUID id, int world) {}
   public record SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt,
       Integer health, UUID targetCharacter, long nextAttackAt) {}
   public record CreatureProvocation(String key, UUID life, UUID targetCharacter, long nextAttackAt) {
@@ -101,7 +119,7 @@ public final class OnlineStore implements AutoCloseable {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 9) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 10) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -186,6 +204,41 @@ public final class OnlineStore implements AutoCloseable {
           s.execute("ALTER TABLE online_characters ADD COLUMN location_epoch bigint NOT NULL DEFAULT 0 CHECK(location_epoch>=0), ADD COLUMN portal_cooldown_until bigint NOT NULL DEFAULT 0 CHECK(portal_cooldown_until>=0)");
           s.execute("CREATE TABLE online_transfer_events(event_id uuid PRIMARY KEY,character_id uuid NOT NULL REFERENCES online_characters(id),payload_hash varchar(64) NOT NULL,created_at timestamptz NOT NULL DEFAULT now())");
           s.execute("INSERT INTO online_schema(version) VALUES (9)");
+        }
+        if (version < 10) {
+          // Additive only: no existing row changes. Ground drops are server-owned, single-unit and
+          // claimed by exactly one receipt; their lifetime is database time, never client time.
+          s.execute("""
+              CREATE TABLE online_ground_loot (
+                id uuid PRIMARY KEY,
+                source_event uuid NOT NULL REFERENCES online_world_rewards(event_id),
+                drop_index integer NOT NULL CHECK (drop_index >= 0),
+                world integer NOT NULL CHECK (world >= 0),
+                x double precision NOT NULL CHECK (x >= 0 AND x < 'Infinity'::float8),
+                y double precision NOT NULL CHECK (y >= 0 AND y < 'Infinity'::float8),
+                item_key varchar(256) NOT NULL CHECK (item_key ~ '^item\\.[a-z0-9_]+$'),
+                quantity integer NOT NULL CHECK (quantity > 0),
+                charges integer NOT NULL CHECK (charges >= 0),
+                owner_character uuid NOT NULL REFERENCES online_characters(id),
+                owner_until timestamptz NOT NULL,
+                expires_at timestamptz NOT NULL CHECK (expires_at >= owner_until),
+                state varchar(10) NOT NULL DEFAULT 'ON_GROUND' CHECK (state IN ('ON_GROUND','CLAIMED','EXPIRED')),
+                claimed_by uuid REFERENCES online_characters(id),
+                claim_event uuid UNIQUE,
+                created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+                UNIQUE (source_event, drop_index),
+                CHECK ((state = 'CLAIMED') = (claimed_by IS NOT NULL AND claim_event IS NOT NULL)))
+              """);
+          s.execute("CREATE INDEX online_ground_loot_live ON online_ground_loot(world, expires_at) WHERE state = 'ON_GROUND'");
+          s.execute("""
+              CREATE TABLE online_loot_claims (
+                event_id uuid PRIMARY KEY,
+                character_id uuid NOT NULL REFERENCES online_characters(id),
+                loot_id uuid NOT NULL UNIQUE REFERENCES online_ground_loot(id),
+                payload_hash varchar(64) NOT NULL CHECK (payload_hash ~ '^[0-9a-f]{64}$'),
+                created_at timestamptz NOT NULL DEFAULT now())
+              """);
+          s.execute("INSERT INTO online_schema(version) VALUES (10)");
         }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
@@ -442,23 +495,46 @@ public final class OnlineStore implements AutoCloseable {
 
   public RewardResult commitCreatureStrike(Session session, long revision, UUID event, long gold,
       long experience, CharacterProgress progress, CreatureStrike strike, CreatureProvocation provocation) throws SQLException {
+    return commitCreatureStrike(session,revision,event,gold,experience,progress,strike,provocation,java.util.List.of());
+  }
+
+  /**
+   * A lethal strike also commits its rolled ground drops in the same transaction as the reward. Drops
+   * are never accepted for a hit that does not kill: they would have no source life to remain attached to.
+   */
+  public RewardResult commitCreatureStrike(Session session, long revision, UUID event, long gold,
+      long experience, CharacterProgress progress, CreatureStrike strike, CreatureProvocation provocation,
+      java.util.List<LootDropDraft> drops) throws SQLException {
     if(revision<0) throw new IllegalArgumentException("Invalid revision");
-    Objects.requireNonNull(strike); Objects.requireNonNull(event);
+    Objects.requireNonNull(strike); Objects.requireNonNull(event); Objects.requireNonNull(drops);
     boolean lethal=strike.after()==0;
     if(lethal!=event.equals(strike.life())) throw new IllegalArgumentException("Invalid strike event identity");
     if(provocation!=null && (!provocation.key().equals(strike.key()) || !provocation.life().equals(strike.life()))) throw new IllegalArgumentException("Different provoked life");
-    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),lethal,strike,provocation);
+    if(!drops.isEmpty() && !lethal) throw new IllegalArgumentException("Loot requires a lethal strike");
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),lethal,strike,provocation,drops);
   }
 
   private RewardResult applyReward(Session session, UUID event, long gold, long experience,
       Long revision, CharacterProgress progress, boolean worldReward, CreatureStrike strike,
       CreatureProvocation provocation) throws SQLException {
+    return applyReward(session,event,gold,experience,revision,progress,worldReward,strike,provocation,java.util.List.of());
+  }
+
+  private RewardResult applyReward(Session session, UUID event, long gold, long experience,
+      Long revision, CharacterProgress progress, boolean worldReward, CreatureStrike strike,
+      CreatureProvocation provocation, java.util.List<LootDropDraft> drops) throws SQLException {
     Objects.requireNonNull(event);
     if(provocation!=null && !provocation.targetCharacter().equals(session.characterId())) throw new IllegalArgumentException("Invalid provocation owner");
     if (gold < 0 || experience < 0) throw new IllegalArgumentException("Negative reward");
+    drops=java.util.List.copyOf(drops);
+    for (int i=0;i<drops.size();i++) if (drops.get(i).index()!=i) throw new IllegalArgumentException("Invalid loot index");
+    if (!drops.isEmpty() && (!worldReward || strike==null || strike.after()!=0)) throw new IllegalArgumentException("Loot requires a lethal strike");
     String encoded=progress==null ? null : encodeProgress(progress);
-    String fingerprint=encoded==null ? null : fingerprint(strike==null ? encoded
-        : encoded+"\ncreature-strike-v1\n"+JSON.toJson(canonical(JSON.toJsonTree(strike))));
+    String base=encoded==null ? null : strike==null ? encoded
+        : encoded+"\ncreature-strike-v1\n"+JSON.toJson(canonical(JSON.toJsonTree(strike)));
+    // Only a kill with drops adds this segment, so every gold-only receipt keeps its existing hash.
+    if (base!=null && !drops.isEmpty()) base=base+"\nloot-drops-v1\n"+JSON.toJson(canonical(JSON.toJsonTree(drops)));
+    String fingerprint=base==null ? null : fingerprint(base);
     if(provocation!=null) fingerprint=fingerprint(fingerprint+"\nprovocation-v1\n"+JSON.toJson(provocation));
     UUID account = session.accountId(), character = session.characterId();
     try (var c = connections.open()) {
@@ -525,6 +601,21 @@ public final class OnlineStore implements AutoCloseable {
           try (var s = c.prepareStatement("INSERT INTO online_world_rewards(event_id,character_id) VALUES (?,?) ON CONFLICT (event_id) DO NOTHING")) {
             s.setObject(1,event); s.setObject(2,character);
             if (s.executeUpdate()!=1) throw new Conflict("World event already awarded");
+          }
+        }
+        if (!drops.isEmpty()) {
+          // Database time starts both windows, so a rolled-back kill never leaves loot behind.
+          try (var s = c.prepareStatement("""
+              INSERT INTO online_ground_loot(id,source_event,drop_index,world,x,y,item_key,quantity,charges,owner_character,owner_until,expires_at)
+              VALUES (?,?,?,?,?,?,?,?,?,?,clock_timestamp()+(? * interval '1 millisecond'),clock_timestamp()+(? * interval '1 millisecond'))
+              """)) {
+            for (var drop : drops) {
+              s.setObject(1,drop.id()); s.setObject(2,event); s.setInt(3,drop.index()); s.setInt(4,drop.world());
+              s.setDouble(5,drop.x()); s.setDouble(6,drop.y()); s.setString(7,drop.key()); s.setInt(8,drop.quantity());
+              s.setInt(9,drop.charges()); s.setObject(10,character); s.setLong(11,LOOT_OWNER_WINDOW_MILLIS);
+              s.setLong(12,LOOT_LIFETIME_MILLIS); s.addBatch();
+            }
+            for (int changed : s.executeBatch()) if (changed!=1) throw new Conflict("Loot drop not created");
           }
         }
         try (var s = c.prepareStatement("UPDATE online_characters SET gold=gold+?, experience=experience+?, progress=COALESCE(?::jsonb,progress), revision=revision+1, updated_at=now() WHERE id=?")) {
@@ -671,6 +762,126 @@ public final class OnlineStore implements AutoCloseable {
         try(var q=c.prepareStatement("UPDATE online_corpses SET recovered=true WHERE id=?")) { q.setObject(1,corpseId);q.executeUpdate(); }
         state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  /**
+   * Atomic pickup of one ground drop. The receipt is bound to this character, this loot and this event.
+   * A replay returns the committed result before the revision check. Every refusal raises before any
+   * write, so the loot and the inventory stay exactly as they were.
+   */
+  public RewardResult claimGroundLoot(Session session, long revision, UUID event, UUID lootId,
+      int world, double x, double y, ItemContent content) throws SQLException {
+    Objects.requireNonNull(session); Objects.requireNonNull(event); Objects.requireNonNull(lootId); Objects.requireNonNull(content);
+    position(world,x,y);
+    if (revision<0) throw new IllegalArgumentException("Invalid revision");
+    String digest=fingerprint("ground-loot-claim-v1\n"+lootId);
+    try (var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        var state=lockSession(c,session);
+        try (var q=c.prepareStatement("SELECT character_id,loot_id,payload_hash FROM online_loot_claims WHERE event_id=?")) {
+          q.setObject(1,event);
+          try (var rows=q.executeQuery()) { if (rows.next()) {
+            if (!session.characterId().equals(rows.getObject(1,UUID.class)) || !lootId.equals(rows.getObject(2,UUID.class))
+                || !digest.equals(rows.getString(3))) throw new Conflict("Loot claim payload mismatch");
+            c.commit(); return new RewardResult(false,state);
+          } }
+        }
+        if (state.revision()!=revision) throw new Conflict("Stale pickup");
+        var progress=state.progress();
+        if (progress==null) throw new Conflict(OnlinePickupRules.Refusal.LOOT_UNAVAILABLE.code());
+        // Character lock precedes loot lock. Times are read in the same statement as the locked row.
+        String key; int quantity, charges; UUID owner; long ownerUntil, expiresAt, now;
+        try (var q=c.prepareStatement("""
+            SELECT item_key,quantity,charges,world,x,y,owner_character,state,
+              floor(extract(epoch FROM owner_until)*1000)::bigint AS owner_until_ms,
+              floor(extract(epoch FROM expires_at)*1000)::bigint AS expires_ms,
+              floor(extract(epoch FROM clock_timestamp())*1000)::bigint AS now_ms
+            FROM online_ground_loot WHERE id=? FOR UPDATE
+            """)) {
+          q.setObject(1,lootId);
+          try (var rows=q.executeQuery()) {
+            if (!rows.next() || !"ON_GROUND".equals(rows.getString("state"))) throw new Conflict(OnlinePickupRules.Refusal.LOOT_UNAVAILABLE.code());
+            key=rows.getString("item_key"); quantity=rows.getInt("quantity"); charges=rows.getInt("charges");
+            owner=rows.getObject("owner_character",UUID.class); ownerUntil=rows.getLong("owner_until_ms");
+            expiresAt=rows.getLong("expires_ms"); now=rows.getLong("now_ms");
+            var loot=new OnlinePickupRules.Loot(lootId,key,rows.getInt("world"),rows.getDouble("x"),rows.getDouble("y"),owner,ownerUntil,expiresAt);
+            var pickup=new OnlinePickupRules.Pickup(session.characterId(),world,x,y,now);
+            java.util.Optional<OnlinePickupRules.Refusal> refusal;
+            try { refusal=OnlinePickupRules.refusal(loot,pickup,progress,content); }
+            catch (IllegalArgumentException unsupported) { throw new Conflict("unsupported_pickup"); }
+            if (refusal.isPresent()) throw new Conflict(refusal.get().code());
+          }
+        }
+        boolean alreadyOwned=progress.inventory().stream().anyMatch(item -> item.id().equals(lootId))
+            || progress.storage().stream().anyMatch(item -> item.id().equals(lootId))
+            || progress.equipment().containsValue(lootId);
+        if (alreadyOwned) throw new Conflict("Loot already owned");
+        var inventory=new java.util.ArrayList<>(progress.inventory());
+        inventory.add(new CharacterProgress.Item(lootId,key,quantity,charges));
+        var p=progress;
+        var next=new CharacterProgress(p.version(),p.characterClass(),p.gender(),p.attributes(),p.vitals(),p.advancement(),inventory,p.equipment(),p.skills(),p.spells(),p.questFlags(),p.storage(),p.storageGold(),p.respawn(),p.buffs(),p.cooldowns(),p.hiddenUntil(),p.companion());
+        try (var q=c.prepareStatement("UPDATE online_ground_loot SET state='CLAIMED',claimed_by=?,claim_event=? WHERE id=? AND state='ON_GROUND'")) {
+          q.setObject(1,session.characterId()); q.setObject(2,event); q.setObject(3,lootId);
+          if (q.executeUpdate()!=1) throw new Conflict(OnlinePickupRules.Refusal.LOOT_UNAVAILABLE.code());
+        }
+        try (var q=c.prepareStatement("INSERT INTO online_loot_claims(event_id,character_id,loot_id,payload_hash) VALUES (?,?,?,?)")) {
+          q.setObject(1,event); q.setObject(2,session.characterId()); q.setObject(3,lootId); q.setString(4,digest); q.executeUpdate();
+        }
+        try (var q=c.prepareStatement("UPDATE online_characters SET progress=?::jsonb, revision=revision+1, updated_at=now() WHERE id=?")) {
+          q.setString(1,encodeProgress(next)); q.setObject(2,session.characterId()); q.executeUpdate();
+        }
+        state=load(c,session.accountId(),session.characterId(),false);
+        c.commit(); return new RewardResult(true,state);
+      } catch (SQLException|RuntimeException failure) { c.rollback(); throw failure; }
+    }
+  }
+
+  /** Live drops in a rectangle of one region, oldest first. Expired or claimed rows never appear. */
+  public java.util.List<GroundLoot> listGroundLoot(int world, TileRect area) throws SQLException {
+    if (world<0) throw new IllegalArgumentException("Invalid loot world");
+    Objects.requireNonNull(area);
+    try (var c=connections.open(); var s=c.prepareStatement("""
+        SELECT id,world,x,y,item_key,quantity,charges,owner_character,
+          owner_until>clock_timestamp() AS owner_open,
+          GREATEST(0::bigint,floor(extract(epoch FROM (owner_until-clock_timestamp()))*1000)::bigint) AS owner_remaining_ms
+        FROM online_ground_loot
+        WHERE state='ON_GROUND' AND world=? AND expires_at>clock_timestamp()
+          AND x BETWEEN ? AND ? AND y BETWEEN ? AND ?
+        ORDER BY created_at,id LIMIT ?
+        """)) {
+      s.setInt(1,world); s.setDouble(2,area.minX()); s.setDouble(3,area.maxX());
+      s.setDouble(4,area.minY()); s.setDouble(5,area.maxY()); s.setInt(6,GROUND_LOOT_LIST_LIMIT);
+      try (var rows=s.executeQuery()) {
+        var result=new java.util.ArrayList<GroundLoot>();
+        while (rows.next()) {
+          boolean open=rows.getBoolean("owner_open");
+          result.add(new GroundLoot(rows.getObject("id",UUID.class),rows.getInt("world"),rows.getDouble("x"),rows.getDouble("y"),
+              rows.getString("item_key"),rows.getInt("quantity"),rows.getInt("charges"),
+              open ? rows.getObject("owner_character",UUID.class) : null,open ? rows.getLong("owner_remaining_ms") : 0L));
+        }
+        return java.util.List.copyOf(result);
+      }
+    }
+  }
+
+  /** Bounded sweep: marks due drops expired and returns them so the simulation can publish removals. */
+  public java.util.List<ExpiredLoot> expireGroundLoot(int limit) throws SQLException {
+    if (limit<1 || limit>GROUND_LOOT_LIST_LIMIT) throw new IllegalArgumentException("Invalid expiry batch");
+    try (var c=connections.open(); var s=c.prepareStatement("""
+        UPDATE online_ground_loot SET state='EXPIRED'
+        WHERE id IN (SELECT id FROM online_ground_loot WHERE state='ON_GROUND' AND expires_at<=clock_timestamp()
+                     ORDER BY expires_at,id LIMIT ? FOR UPDATE SKIP LOCKED)
+          AND state='ON_GROUND'
+        RETURNING id,world
+        """)) {
+      s.setInt(1,limit);
+      try (var rows=s.executeQuery()) {
+        var result=new java.util.ArrayList<ExpiredLoot>();
+        while (rows.next()) result.add(new ExpiredLoot(rows.getObject(1,UUID.class),rows.getInt(2)));
+        return java.util.List.copyOf(result);
+      }
     }
   }
 
