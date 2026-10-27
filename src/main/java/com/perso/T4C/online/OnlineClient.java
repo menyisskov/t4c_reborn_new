@@ -58,7 +58,7 @@ public final class OnlineClient extends ApplicationAdapter {
   private long renderedEpoch=-1;
 
   private static final class CreatureAvatar {
-    final Vector2 position = new Vector2();
+    final OnlineCreatureMotion motion = new OnlineCreatureMotion();
     final MonsterAnimations animation;
     CreatureView state;
 
@@ -322,7 +322,7 @@ public final class OnlineClient extends ApplicationAdapter {
             creatures.put(actor.id(), creature);
           }
           creature.state = actor;
-          creature.position.set((float) (view.map().originX() + actor.x()) * GRID_W,
+          creature.motion.snapshot((float) (view.map().originX() + actor.x()) * GRID_W,
               (float) (view.map().originY() + actor.y()) * GRID_H);
         }
         creatures.keySet().retainAll(presentCreatures);
@@ -333,7 +333,10 @@ public final class OnlineClient extends ApplicationAdapter {
         creatures.clear();
       }
     }
-    if (view == null) avatars.values().forEach(a -> a.moving = false);
+    if (view == null) {
+      avatars.values().forEach(a -> a.moving = false);
+      creatures.values().forEach(c -> c.motion.stop());
+    }
     camera.update();
     if (renderer != null) {
       int x = (int) (camera.position.x / GRID_W), y = (int) (camera.position.y / GRID_H);
@@ -359,11 +362,12 @@ public final class OnlineClient extends ApplicationAdapter {
         actors.add(item);
       }
       for (var creature : creatures.values()) {
-        creature.animation.update(Math.min(Gdx.graphics.getDeltaTime(), 0.1f), false);
+        creature.animation.update(Math.min(Gdx.graphics.getDeltaTime(), 0.1f), creature.motion.moving());
         var item = new ObjectRenderer.RenderItem();
-        item.y = (float) Math.floor(creature.position.y / GRID_H) + 2f;
-        item.renderAction = () -> creature.animation.render(decor, creature.position, "000", false,
-            false, false, null, (float) creature.state.health() / creature.state.maxHealth());
+        item.y = (float) Math.floor(creature.motion.position().y / GRID_H) + 2f;
+        item.renderAction = () -> creature.animation.render(decor, creature.motion.position(),
+            creature.motion.angle(), creature.motion.flipX(), creature.motion.moving(),
+            false, null, (float) creature.state.health() / creature.state.maxHealth());
         actors.add(item);
       }
       renderer.renderEntitiesWithDecors(camera, -1, -1, x0, x1, y0, y1, actors);

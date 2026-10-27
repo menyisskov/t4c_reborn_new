@@ -48,8 +48,8 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass; visible controls/creation incomplete | T4C-0192, 0195, 0196 | Native selection/creation and NPC controls; account lifecycle integration |
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; T4C-0201, 0202 (design and pickup/drop rules only) | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
-| M4 — Supported combat and abilities | Restricted melee/physical retaliation and brief rendered attack/death check; pursuit design and offline-preserving pure decisions extracted, with no online pursuit | T4C-0189, 0190, 0209, 0210 | Server pursuit/AI and the declared classes' required abilities and state |
-| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, short operator-metrics checks, isolated two-adapter server restart and database-crash probes, and brief rendered reconnect pass; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208 | Current integrated database recovery, broader rendered restart, failure drills, sustained measured stability and abuse checks |
+| M4 — Supported combat and abilities | Restricted melee/physical retaliation and brief rendered attack/death check; pure pursuit decisions and snapshot-driven native creature animation prepared, with no server pursuit | T4C-0189, 0190, 0209, 0210, 0211 | Server pursuit/AI and the declared classes' required abilities and state |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, short operator-metrics checks, isolated two-adapter server restart and schema-9/schema-10 database-crash probes, and brief rendered reconnect pass; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208 | Broader gameplay recovery, rendered restart, failure drills, sustained measured stability and abuse checks |
 | M6 — Package and native acceptance | Create-only package, headless integrity checks and brief two-window local bundle smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
@@ -134,6 +134,8 @@ Required behavior:
   required peer handoffs; no online pursuit behavior or M4 completion follows from that document.
   T4C-0210 extracted offline-preserving scalar decisions and included the pure rule in the
   multiplayer domain module; the moving server implementation awaits separate peer handoffs.
+  T4C-0211 chooses native facing/walk from committed position deltas; no moving server
+  snapshot or rendered pursuit verification is claimed yet.
 - [ ] Server validates movement speed/collision, attack/cast timing, range, sight, sanctuary,
   resource costs, attribute eligibility, effects and any applicable interruption rules.
 - [ ] Required skills/spells, mana, charges, buffs, cooldowns and advancement are usable through
@@ -162,8 +164,8 @@ Required behavior:
 - [ ] Database unavailability/recovery fails safely and resumes from committed state. Test actual
   database recovery separately from an HTTP timeout or a mocked SQL failure.
   T4C-0208 passed a narrow two-adapter opening-letter drill against a newly created schema-9
-  PostgreSQL cluster with real process crash/recovery; the current integrated runtime and
-  broader committed gameplay cases still need this gate.
+  PostgreSQL cluster with real process crash/recovery. An unchanged probe also passed a
+  separate clean committed-source schema-10 run; broader gameplay and rendered checks remain open.
 - [ ] Crash/lost acknowledgement around reward, pickup, quest turn-in, death and transfer produces
   no duplicated value or lost acknowledged progress. An unacknowledged commit is discoverable on rejoin.
 - [ ] Account-key rotation/foreign ownership, stale/reordered/duplicate commands, speed/stat/item
