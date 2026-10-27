@@ -39,6 +39,9 @@ final class OnlineMelee {
     if (pendingTargets.contains(target)) throw rejected("creature_busy");
     var spawn=world.creatureSpawns().stream().filter(s -> s.id()==target).findFirst()
         .orElseThrow(() -> rejected("creature_unavailable"));
+    // Authored stationary actors are protected, matching BaseMonster.canBeAttackedByPlayer.
+    // The preview's lack of AI movement does not change this authored flag.
+    if (spawn.spawn().stationary()) throw rejected("protected_target");
     var life=creatures.life(target);
     if (life.recipient()!=null) throw rejected("creature_unavailable");
     var definition=spawn.definition();
