@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online window stability (T4C-0189)
+
+### Fixed
+- Switching focus directly between online Windows clients no longer uses another game window's private state. Single-player keeps its existing windowing library.
+
 ## 2026-10-27 — Protected online targets (T4C-0188)
 
 ### Fixed
