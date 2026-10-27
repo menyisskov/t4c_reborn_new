@@ -11,7 +11,7 @@ final class PersistentCreatures implements AutoCloseable {
   private static final class Entry {
     final PreviewWorld.CreatureSpawn spawn;
     OnlineStore.SpawnState saved;
-    boolean pending, recovering;
+    boolean pending, recovering, reserved, reloadAfterPending;
     Entry(PreviewWorld.CreatureSpawn spawn, OnlineStore.SpawnState saved) { this.spawn=spawn; this.saved=saved; }
   }
   private record Completion(long id, OnlineStore.SpawnState saved) {}
@@ -37,9 +37,12 @@ final class PersistentCreatures implements AutoCloseable {
 
   OnlineStore.SpawnState life(long id) {
     var entry=entries.get(id);
-    if (entry==null || entry.pending || entry.recovering) throw new PreviewWorld.Rejected(409,"creature_unavailable");
+    if (entry==null || entry.pending || entry.recovering || entry.reserved) throw new PreviewWorld.Rejected(409,"creature_unavailable");
     return entry.saved;
   }
+
+  void reserve(long id) { life(id); entries.get(id).reserved=true; }
+  void release(long id) { var entry=entries.get(id); if (entry!=null) entry.reserved=false; }
 
   /** Called only after a world-reward transaction commits. */
   void rewardCommitted(long id) {
@@ -51,18 +54,28 @@ final class PersistentCreatures implements AutoCloseable {
     reload(id,false);
   }
 
+  void characterDied(java.util.UUID character) {
+    for (var entry:entries.values())
+      if (character.equals(entry.saved.targetCharacter())) reload(entry.spawn.id(),false);
+  }
+
   private void reload(long id, boolean hide) {
     var entry=entries.get(id);
     if (entry==null) throw new IllegalArgumentException("Unknown creature");
     if (hide) world.creatureActive(id,false);
     entry.recovering=true;
-    if (!entry.pending) submit(entry);
+    if (!entry.pending) submit(entry); else entry.reloadAfterPending=true;
   }
 
   void step() {
     Completion result;
     while ((result=completed.poll())!=null) {
       var entry=entries.get(result.id()); entry.pending=false;
+      if (entry.reloadAfterPending) {
+        entry.reloadAfterPending=false;
+        submit(entry);
+        continue; // This read may have begun before the newest committed mutation.
+      }
       if (result.saved()!=null) {
         entry.saved=result.saved(); entry.recovering=false;
         world.creatureHealth(result.id(),entry.saved.health());

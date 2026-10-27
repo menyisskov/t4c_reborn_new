@@ -1,5 +1,7 @@
 # Multiplayer Alpha work
 
+For model/session continuation, start with [HANDOFF.md](HANDOFF.md).
+
 For optional saved native characters, follow [persistent-mode setup](PERSISTENCE.md#running-persistent-native-clients).
 
 Release evidence and remaining gates are tracked in [ACCEPTANCE.md](ACCEPTANCE.md).
@@ -20,7 +22,9 @@ input from the previous window. Close one window to disconnect. If the server is
 press R to reconnect. Escape closes only that online client. The normal `launch.bat` still
 starts single-player.
 
-This is a native movement slice, not complete Alpha. In the default preview, characters are temporary and
+Persistent profiles now also support restricted melee: Space attacks nearest, guards retaliate in reach, HP/rewards/death persist, and E recovers a nearby owned corpse. The HUD shows committed health, XP, gold and nearest corpse distance/contents. Physical retaliation currently uses authored stationary positions; pursuit, spells, general loot, quests and map transfer remain unfinished. Two rendered-client retaliation validation is still pending after the owner stopped desktop control. See [ACCEPTANCE.md](ACCEPTANCE.md).
+
+The default temporary mode remains a native movement slice, not complete Alpha. In the default preview, characters are temporary and
 use default appearances (male/female alternating by temporary ID). No saved character is
 imported. The native entry point shares the actual game renderer and animations, but does
 not initialize the offline gameplay screen, combat, inventory, quests or saving. It inherits
