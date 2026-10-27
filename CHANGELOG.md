@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Shared-world reward protection (T4C-0182)
+
+### Added
+- Online reward storage can now enforce one recipient for a shared-world reward, including competing claims and retries after reconnect. Creature kills and loot delivery are not connected yet.
+
 ## 2026-10-27 — Online command flood limits (T4C-0181)
 
 ### Added

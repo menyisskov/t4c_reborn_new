@@ -36,7 +36,7 @@ final class PersistentSessions {
       this.token=token; this.session=session; this.saved=session.character(); this.position=position;
     }
   }
-  private record GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress,
+  private record GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
       CompletableFuture<OnlineStore.RewardResult> result) {}
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
       long allowedUntil, OnlineStore.RewardResult reward, Exception error) {}
@@ -82,13 +82,23 @@ final class PersistentSessions {
    */
   CompletionStage<OnlineStore.RewardResult> commitGameplayEvent(String token, long expectedRevision,
       UUID eventId, long gold, long experience, CharacterProgress progress) {
+    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,false);
+  }
+
+  CompletionStage<OnlineStore.RewardResult> commitWorldReward(String token, long expectedRevision,
+      UUID eventId, long gold, long experience, CharacterProgress progress) {
+    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,true);
+  }
+
+  private CompletionStage<OnlineStore.RewardResult> commitEvent(String token, long expectedRevision,
+      UUID eventId, long gold, long experience, CharacterProgress progress, boolean worldReward) {
     var binding=active(token);
     if (binding.event!=null) throw new PreviewWorld.Rejected(409,"busy");
     if (binding.saved.revision()!=expectedRevision) throw new PreviewWorld.Rejected(409,"revision");
     if (gold<0 || experience<0) throw new IllegalArgumentException("Negative reward");
     var result=new CompletableFuture<OnlineStore.RewardResult>();
     binding.event=new GameplayEvent(Objects.requireNonNull(eventId),gold,experience,
-        Objects.requireNonNull(progress),result);
+        Objects.requireNonNull(progress),worldReward,result);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
   }
@@ -131,7 +141,9 @@ final class PersistentSessions {
           if (event==null) {
             saved=store.checkpoint(binding.session,revision,0,map.originX+position.x(),map.originY+position.y());
           } else {
-            reward=store.commitGameplayEvent(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress());
+            reward=event.worldReward()
+                ? store.commitWorldReward(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress())
+                : store.commitGameplayEvent(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress());
             saved=reward.character();
           }
           if (finalSave) store.release(binding.session);

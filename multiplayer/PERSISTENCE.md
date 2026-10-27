@@ -1,5 +1,9 @@
 # Online persistence foundation
 
+Schema version five adds `online_world_rewards`, a unique world-event claim referencing its winning character receipt. `commitWorldReward` commits the claim, receipt, balances and gameplay payload together and uses the existing simulation persistence queue. Competing recipients conflict; matching retries by the winner do not reapply the award. Failed transactions retain neither claim nor receipt. Keep this table in whole-database backups and never expire claims independently of the associated world lifecycle. Earlier servers reject the newer schema; rollback requires a compatible server or restoring a matching backup, not dropping claim data.
+
+World-event identities must come from durable server-owned spawn/generation state and remain stable across recovery. That lifecycle and live combat producers are not implemented yet. Ordinary per-character reward APIs are not substitutes for the world-claim path, and clients must never choose event IDs, recipients or reward values.
+
 The server has PostgreSQL storage, account/session ownership, background checkpoints and real-database
 CI coverage. The default movement preview remains temporary. **Opt-in persistent mode now saves
 native-client movement across reconnects and server restarts.** It is still movement-only Alpha.

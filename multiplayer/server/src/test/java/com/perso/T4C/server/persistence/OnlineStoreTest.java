@@ -17,6 +17,44 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Runs against PostgreSQL, including in CI; no in-memory substitute for transaction semantics. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class OnlineStoreTest {
+  @Test void sharedWorldEventHasOneRecipientAndSurvivesReconnectWithoutAnotherAward() throws Exception {
+    var key=store.provisionAccount();
+    var first=store.create(key.accountId(),"World contender one",0,10,20);
+    var second=store.create(key.accountId(),"World contender two",0,10,20);
+    var one=store.acquire(key.secret(),first.id());
+    var two=store.acquire(key.secret(),second.id());
+    var progress=CharacterProgressTest.sample();
+    UUID event=UUID.randomUUID();
+    var start=new java.util.concurrent.CountDownLatch(1);
+    try (var executor=Executors.newFixedThreadPool(2)) {
+      var actions=new ArrayList<java.util.concurrent.Future<Boolean>>();
+      for (var session:java.util.List.of(one,two)) actions.add(executor.submit(() -> {
+        start.await();
+        try { return store.commitWorldReward(session,0,event,7,11,progress).applied(); }
+        catch (OnlineStore.Conflict expectedLoser) { return false; }
+      }));
+      start.countDown();
+      assertNotEquals(actions.get(0).get(),actions.get(1).get(),"Exactly one contender must commit");
+    }
+    var firstSaved=store.load(key.accountId(),first.id());
+    var secondSaved=store.load(key.accountId(),second.id());
+    assertEquals(7,firstSaved.gold()+secondSaved.gold());
+    assertEquals(11,firstSaved.experience()+secondSaved.experience());
+    try (var c=testConnection(); var s=c.prepareStatement("SELECT count(*) FROM online_rewards WHERE event_id=?")) {
+      s.setObject(1,event);
+      try (var rows=s.executeQuery()) { assertTrue(rows.next()); assertEquals(1,rows.getInt(1)); }
+    }
+    var winner=firstSaved.gold()==7 ? one : two;
+    var loser=winner==one ? two : one;
+    assertEquals(loser.character(),store.load(key.accountId(),loser.characterId()),"Losing claim rolls back payload and receipt");
+    store.release(winner);
+    var restarted=OnlineStore.fromEnvironment(); restarted.migrate();
+    var replacement=restarted.acquire(key.secret(),winner.characterId());
+    assertFalse(restarted.commitWorldReward(replacement,0,event,7,11,progress).applied());
+    assertThrows(OnlineStore.Conflict.class,() -> restarted.commitWorldReward(loser,0,event,7,11,progress));
+    assertThrows(OnlineStore.Conflict.class,() -> restarted.commitWorldReward(replacement,0,event,8,11,progress));
+  }
+
   private OnlineStore store;
   @BeforeEach void setup() throws Exception { store = OnlineStore.fromEnvironment(); store.migrate(); }
 
@@ -93,10 +131,10 @@ class OnlineStoreTest {
     var session = store.acquire(key.secret(), created.id());
     var before=store.reward(session, UUID.randomUUID(), Long.MAX_VALUE, 0).character();
     var progress=CharacterProgressTest.sample();
-    assertThrows(SQLException.class, () -> store.commitGameplayEvent(session,before.revision(),failedEvent,1,0,progress));
+    assertThrows(SQLException.class, () -> store.commitWorldReward(session,before.revision(),failedEvent,1,0,progress));
     assertEquals(before,store.load(account,created.id()),"Failed balance update must not publish items or quest progress");
     // If the failed transaction left its receipt behind, this retry would conflict or be ignored.
-    assertTrue(store.commitGameplayEvent(session,before.revision(),failedEvent,0,3,progress).applied());
+    assertTrue(store.commitWorldReward(session,before.revision(),failedEvent,0,3,progress).applied());
     var state=store.load(account, created.id());
     assertEquals(Long.MAX_VALUE, state.gold()); assertEquals(3, state.experience());
     assertEquals(progress,state.progress());

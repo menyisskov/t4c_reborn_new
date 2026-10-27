@@ -59,7 +59,7 @@ public final class OnlineStore {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 4) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 5) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -108,6 +108,14 @@ public final class OnlineStore {
         if (version < 4) {
           s.execute("ALTER TABLE online_rewards ADD COLUMN payload_hash varchar(64) CHECK (payload_hash IS NULL OR payload_hash ~ '^[0-9a-f]{64}$')");
           s.execute("INSERT INTO online_schema(version) VALUES (4)");
+        }
+        if (version < 5) {
+          s.execute("""
+              CREATE TABLE online_world_rewards (
+                event_id uuid PRIMARY KEY, character_id uuid NOT NULL,
+                FOREIGN KEY(character_id,event_id) REFERENCES online_rewards(character_id,event_id))
+              """);
+          s.execute("INSERT INTO online_schema(version) VALUES (5)");
         }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
@@ -253,18 +261,25 @@ public final class OnlineStore {
 
   /** Event IDs and amounts must originate from authoritative gameplay, never a client request. */
   public RewardResult reward(Session session, UUID event, long gold, long experience) throws SQLException {
-    return applyReward(session,event,gold,experience,null,null);
+    return applyReward(session,event,gold,experience,null,null,false);
   }
 
   /** Server-owned quest/loot/progression result; receipt, balances and gameplay state commit once. */
   public RewardResult commitGameplayEvent(Session session, long revision, UUID event, long gold,
       long experience, CharacterProgress progress) throws SQLException {
     if (revision<0) throw new IllegalArgumentException("Invalid revision");
-    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress));
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),false);
+  }
+
+  /** One recipient across the realm for a durable server-generated world event identity. */
+  public RewardResult commitWorldReward(Session session, long revision, UUID event, long gold,
+      long experience, CharacterProgress progress) throws SQLException {
+    if (revision < 0) throw new IllegalArgumentException("Invalid revision");
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),true);
   }
 
   private RewardResult applyReward(Session session, UUID event, long gold, long experience,
-      Long revision, CharacterProgress progress) throws SQLException {
+      Long revision, CharacterProgress progress, boolean worldReward) throws SQLException {
     Objects.requireNonNull(event);
     if (gold < 0 || experience < 0) throw new IllegalArgumentException("Negative reward");
     String encoded=progress==null ? null : encodeProgress(progress);
@@ -284,10 +299,23 @@ public final class OnlineStore {
             state = read(rows);
           }
         }
+        boolean claimed = false;
+        if (worldReward) {
+          try (var s = c.prepareStatement("SELECT character_id FROM online_world_rewards WHERE event_id=?")) {
+            s.setObject(1,event);
+            try (var rows = s.executeQuery()) {
+              if (rows.next()) {
+                if (!character.equals(rows.getObject(1,UUID.class))) throw new Conflict("World event already awarded");
+                claimed = true;
+              }
+            }
+          }
+        }
         try (var s = c.prepareStatement("SELECT gold, experience, payload_hash FROM online_rewards WHERE character_id=? AND event_id=?")) {
           s.setObject(1, character); s.setObject(2, event);
           try (var rows = s.executeQuery()) {
             if (rows.next()) {
+              if (worldReward && !claimed) throw new Conflict("Event was not a world reward");
               if (rows.getLong(1) != gold || rows.getLong(2) != experience
                   || !Objects.equals(fingerprint,rows.getString(3))) throw new Conflict("Reward event payload mismatch");
               c.commit(); return new RewardResult(false, state);
@@ -298,6 +326,12 @@ public final class OnlineStore {
         try (var s = c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES (?,?,?,?,?)")) {
           s.setObject(1, character); s.setObject(2, event); s.setLong(3, gold); s.setLong(4, experience);
           s.setString(5,fingerprint); s.executeUpdate();
+        }
+        if (worldReward) {
+          try (var s = c.prepareStatement("INSERT INTO online_world_rewards(event_id,character_id) VALUES (?,?) ON CONFLICT (event_id) DO NOTHING")) {
+            s.setObject(1,event); s.setObject(2,character);
+            if (s.executeUpdate()!=1) throw new Conflict("World event already awarded");
+          }
         }
         try (var s = c.prepareStatement("UPDATE online_characters SET gold=gold+?, experience=experience+?, progress=COALESCE(?::jsonb,progress), revision=revision+1, updated_at=now() WHERE id=?")) {
           s.setLong(1, gold); s.setLong(2, experience); s.setString(3,encoded); s.setObject(4, character); s.executeUpdate();
