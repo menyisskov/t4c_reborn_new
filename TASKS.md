@@ -17,8 +17,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0202 | M2 general monster loot and claim rules: domain rules first (Claude lane) | Multiplayer / Beta | Planned | pending | pending |
-| T4C-0201 | Two-player scope proposal and M2 loot design docs (Claude lane) | Multiplayer / Beta | In Progress | pending | pending |
+| T4C-0202 | M2 general monster loot and claim rules: domain rules first (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--online-loot-rules-t4c-0201-t4c-0202) |
+| T4C-0201 | Two-player scope proposal and M2 loot design docs (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--online-loot-rules-t4c-0201-t4c-0202) |
 | T4C-0200 | Centralize owner model routing and instruction references | Process/Tooling | Done | `b88ac040` | [2026-10-27](CHANGELOG.md#2026-10-27--agent-model-routing-t4c-0200) |
 | T4C-0199 | Define exact two-player milestone completion criteria | Process/Tooling | Done | `b88ac040` | [2026-10-27](CHANGELOG.md#2026-10-27--multiplayer-milestone-checklist-t4c-0199) |
 | T4C-0198 | Measure server scheduler debt and runtime resources | Multiplayer / Beta | In Progress | pending | pending |
