@@ -179,3 +179,17 @@ Two agent families work in parallel. The canonical live assignments and serializ
 - **Codex lane:** T4C-0196 roster/native account, T4C-0197 DB pool/shutdown, T4C-0198 runtime metrics, their uncommitted files in the main checkout (all of multiplayer/server persistence, SimulationLoop, HostedWorlds, PersistentSessions, OnlineStore), soak/load gates (M5), operator tooling.
 - **Claude lane:** T4C-0201 scope + loot design docs (new files SCOPE_PROPOSAL.md, LOOT_DESIGN.md), T4C-0202 M2 loot domain rules (new files under multiplayer/domain only). Server-side loot wiring waits until the Codex lane's pending server changes are merged.
 - Unclaimed: M1 native UI, M3 quest service, M4 abilities. Whoever claims first posts the row; ask the owner if both want it.
+
+## T4C-0196/0197 delivery checkpoint
+
+User selected a fully implemented task; Codex finished0197 bounded database reuse and safe shutdown,
+including readable-zero-exit enforcement in the operator script. Final local checks passed:
+100PGtests including pending separate metrics prep;20focuseddesktoptests; real native roster and
+lost-committed-reply recovery probes;180-second20-adapter smoke with120acceptedattacks,35HPchanges,
+10reconnects and zero adapter/invariant/health failures; real operator graceful stop/restart.
+The smoke report is target/native-adapter-soak-0197-pooled-smoke.json; operational settings and
+failure/recovery contracts are in DATABASE_RUNTIME.md. Scope includes the coordinated0196 account
+roster/service/adapter but not rendered account UI.0198metrics source remains unstaged/separate.
+Self-review handled the slow-worker teardown and operator exit-status findings. CI/merge is next;
+claims on shared core files remain held until the corresponding explicit release in PEER_WORK.md.
+Claude's0201/0202 scope/loot lane remains distinct; the coordinator documentation is0203, not0201.

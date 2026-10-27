@@ -338,7 +338,7 @@ final class PersistentSessions {
         if(binding.event!=null && (binding.event.death()!=null || binding.event.transfer()!=null)) hosted.reloadTargets(binding.saved.id());
         if (binding.event!=null) binding.event.result().completeExceptionally(new IllegalStateException("Persistence unavailable"));
         binding.closed.completeExceptionally(new IllegalStateException("Persistence unavailable"));
-        System.err.println("Online persistence failed ("+failureCategory(completed.error())+"); character disconnected. Recover after lease expiry.");
+        System.err.println("Online persistence failed ("+com.perso.T4C.server.persistence.PersistenceFailure.describe(completed.error())+"); character disconnected. Recover after lease expiry.");
       } else {
         binding.saved=completed.saved();
         publishHealth(binding);
@@ -372,27 +372,26 @@ final class PersistentSessions {
     if (progress!=null) binding.region.world.health(binding.token,progress.vitals().hp(),progress.vitals().maxHp());
   }
 
-  /** Class/state only: exception messages can contain SQL values, private identifiers or credentials. */
-  private static String failureCategory(Exception failure) {
-    if(failure instanceof RejectedExecutionException) return "queue_rejected";
-    String type=failure.getClass().getSimpleName();
-    if(!type.matches("[A-Za-z0-9_$]{1,80}")) type="Exception";
-    String state=failure instanceof java.sql.SQLException sql ? sql.getSQLState() : null;
-    return "class="+type+", sqlstate="+(state!=null && state.matches("[A-Z0-9]{5}") ? state : "unavailable");
-  }
-
   /** Runs on the simulation owner after ticking stops. Bounded graceful flush; never invent a save. */
   void shutdown() {
-    for (var binding:new ArrayList<>(bindings.values())) leave(binding.token);
-    long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(12);
+    shutdown(TimeUnit.SECONDS.toNanos(12),TimeUnit.SECONDS.toNanos(12));
+  }
+
+  /** Shorter budgets are a test seam; production retains the twelve-second accepted-write drain. */
+  void shutdown(long flushNanos,long terminationNanos) {
+    var closing=new ArrayList<CompletableFuture<Void>>();
+    for (var binding:new ArrayList<>(bindings.values())) closing.add(leave(binding.token));
+    long deadline=System.nanoTime()+flushNanos;
+    boolean interrupted=Thread.interrupted();
+    boolean incomplete=false,workersStopped=false;
     try {
       while (!bindings.isEmpty() && System.nanoTime()<deadline) {
-        step(); Thread.sleep(10);
+        step();
+        try { Thread.sleep(10); } catch(InterruptedException signal) { interrupted=true; }
       }
-    } catch (InterruptedException error) { Thread.currentThread().interrupt(); }
-    finally {
-      writes.shutdownNow();
-      lookups.shutdownNow();
+    } finally {
+      incomplete=!bindings.isEmpty() || closing.stream().anyMatch(CompletableFuture::isCompletedExceptionally);
+      writes.shutdownNow();lookups.shutdownNow();
       for (var binding:bindings.values()) {
         invalidateRead(binding);
         var error=new IllegalStateException("Server stopped before persistence completed");
@@ -400,11 +399,18 @@ final class PersistentSessions {
         if (binding.event!=null) binding.event.result().completeExceptionally(error);
       }
       bindings.clear();
-      try {
-        long remaining=deadline-System.nanoTime();
-        if(remaining>0) lookups.awaitTermination(remaining,TimeUnit.NANOSECONDS);
-      } catch(InterruptedException interrupted) { Thread.currentThread().interrupt(); }
-      reads.clear();
+      deadline=System.nanoTime()+terminationNanos;
+      for(var executor:java.util.List.of(writes,lookups)) {
+        while(!executor.isTerminated() && System.nanoTime()<deadline) {
+          try { executor.awaitTermination(Math.max(1,deadline-System.nanoTime()),TimeUnit.NANOSECONDS); }
+          catch(InterruptedException signal) { interrupted=true; }
+        }
+      }
+      workersStopped=writes.isTerminated() && lookups.isTerminated();
+      reads.clear();completions.clear();
+      if(interrupted) Thread.currentThread().interrupt();
     }
+    if(!workersStopped) throw new IllegalStateException("Persistence workers did not terminate; shutdown requires forced database abort");
+    if(incomplete) throw new IllegalStateException("Persistence flush incomplete; recover from last committed state after lease expiry");
   }
 }

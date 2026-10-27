@@ -42,6 +42,9 @@ or the report. To resume those same isolated characters, pass `-Profiles <that-d
 The default JSON report is under ignored `target/`, updated every five seconds and at exit.
 Existing report files are rejected. Run this wrapper in a hidden background PowerShell process
 with redirected logs when unattended work is required; preserve its PID and report path.
+For graceful operator cancellation, set `T4C_SOAK_STOP_FILE` to an initially absent private local
+path before launch, then create that file to stop. All adapters close through their normal logout
+path and the report remains `finished: false` when the requested duration did not complete.
 
 The driver routes movement through the real collision map, distributes targets across available
 creatures, rotates assignments every thirty seconds, attacks at bounded intervals, prioritizes

@@ -204,6 +204,18 @@ class PreviewServerTest {
         long end=start;
         for (int i=0;i<5;i++) end=object(client.send(request(server.url(),"/state",token,null),HttpResponse.BodyHandlers.ofString())).get("tick").getAsLong();
         assertTrue(end>start,"World must continue while storage is blocked");
+        try(var closers=java.util.concurrent.Executors.newFixedThreadPool(2)) {
+          var calling=new java.util.concurrent.CountDownLatch(2);
+          var first=closers.submit(()-> { calling.countDown();server.close(); });
+          var second=closers.submit(()-> { calling.countDown();server.close(); });
+          try {
+            assertTrue(calling.await(2,java.util.concurrent.TimeUnit.SECONDS));
+            assertThrows(java.util.concurrent.TimeoutException.class,()->first.get(100,java.util.concurrent.TimeUnit.MILLISECONDS));
+            assertThrows(java.util.concurrent.TimeoutException.class,()->second.get(100,java.util.concurrent.TimeUnit.MILLISECONDS));
+          } finally { pause.set(false);release.countDown(); }
+          first.get(5,java.util.concurrent.TimeUnit.SECONDS);second.get(5,java.util.concurrent.TimeUnit.SECONDS);
+        }
+        var recovered=store.acquire(key.secret(),character.id());store.release(recovered);
       } finally { release.countDown(); }
     }
   }

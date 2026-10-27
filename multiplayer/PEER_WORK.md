@@ -52,7 +52,7 @@ acknowledge; a different task ID alone does not authorize editing the same file.
 | --- | --- | --- |
 | Git branch, index, commits, PRs and merges in this physical checkout | Codex is the sole integrator | Claude must not switch branches, stage, commit, pull/rebase/merge, stash, reset or clean here; use a separately agreed worktree for independent Git operations |
 | Maven/root and multiplayer target outputs | No build currently running; acquire a window before use | One owner per target/output directory; no clean while copied/running QA runtimes depend on target |
-| Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Codex T4C-0197 pooled smoke window; PID 38232, 2026-10-27 10:34 Asia/Jerusalem | 180-second 20-adapter smoke and target report output reserved; no concurrent QA provisioning/load/stop/restart/schema changes |
+| Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Codex; T4C-0197 operator verification window released | Healthy persistent server restarted; request a new window before provisioning/load/stop/restart/schema changes |
 | Test DB `t4c_test` | Codex integration window | Serialize migrations, data-mutating suites and database restart drills with the current owner |
 | Isolated server `18766` / preserved failed soak runtimes | Stopped; reserved evidence | Preserve immutable reports/binaries; do not restart/replace without a declared new run |
 | Desktop game automation | Paused by owner | Peer coordination does not revoke the physical Escape stop or approve pending visuals |
@@ -79,6 +79,12 @@ tasks or semantic ownership. Declare dedicated resources before using them.
 
 ## Message / handoff log
 
+- 2026-10-27 10:51 Asia/Jerusalem: Codex T4C-0197 stop-preview.ps1 completed successfully against recorded idle PID 38232 with readable zero exit; sanitized log `%TEMP%/t4c-0197-stop-script.log`. Persistent QA server restarted as PID 3824; health mode local-persistent and ticks advanced 34 in one second. Resource window released.
+
+- 2026-10-27 10:50 Asia/Jerusalem: Codex T4C-0197 claimed idle main QA server PID 38232 for stop-script exit-status verification and persistent restart; zero existing connections and unexpired character leases.
+
+- 2026-10-27 10:40 Asia/Jerusalem: Codex T4C-0197 pooled 180-second 20-adapter smoke passed; `target/native-adapter-soak-0197-pooled-smoke.json`. Exit 0, 184 attacks/120 accepted, 35 HP changes, ten reconnects, 147.121 seconds with all twenty, observed 33.974 Hz, zero adapter/health failures. Main server healthy afterward; zero unexpired leases and established connections. Shared QA window released.
+
 - 2026-10-27 10:34 Asia/Jerusalem: Codex T4C-0197 pooled smoke window claimed for main QA server PID 38232, `t4c_online`, and `target/native-adapter-soak-0197-pooled-smoke.json`; health ticks advanced 34/s, zero established TCP connections and zero unexpired character leases before launch. Release after report.
 
 
@@ -95,3 +101,9 @@ needs under the short lock. Preserve Codex core reservations while proceeding on
 - 2026-10-27 10:37: reconciled PR121's independently published task rows. Claude keeps0201/0202;
   Codex coordination documentation is renumbered0203. Original doc commits retain their old0201
   message as history; no rewrite/force-push. The task descriptions and lane split are preserved.
+
+- 2026-10-27:0196/0197 implementation and final validation complete; Codex preparing CI/merge.
+  Full100PGtests (includes separate metrics prep), real roster/fault probes,180s20-adapter smoke
+  and readable-zero-exit operator stop/restart passed. Core claims remain held until explicit
+  merge/handoff;0198 instrumentation remains separate and unfinished. Current QA PID3824 is healthy;
+  no build/load window is held. Inspect metadata rather than trusting an old PID.

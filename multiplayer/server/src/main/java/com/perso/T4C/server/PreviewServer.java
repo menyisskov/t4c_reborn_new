@@ -29,6 +29,7 @@ public final class PreviewServer implements AutoCloseable {
       8, 8, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(128),
       Thread.ofPlatform().name("preview-http-", 0).factory(), new ThreadPoolExecutor.AbortPolicy());
   private final ArrayBlockingQueue<Runnable> commands = new ArrayBlockingQueue<>(128);
+  private final AccountRosterService accounts;
   private final HostedWorlds hosted;
   private final PreviewWorld world;
   private final OnlineStore store;
@@ -40,6 +41,11 @@ public final class PreviewServer implements AutoCloseable {
   private final SimulationLoop loop;
   private final Thread simulation;
   private final AtomicBoolean closed = new AtomicBoolean();
+  private final AtomicBoolean disposed = new AtomicBoolean();
+  private final CountDownLatch terminated = new CountDownLatch(1);
+  private final Object lifecycle = new Object();
+  private final boolean ownsStore;
+  private boolean started;
   private final Map<String, String> strings;
   private final String mapJson;
   private volatile Throwable failure;
@@ -61,6 +67,11 @@ public final class PreviewServer implements AutoCloseable {
   }
 
   PreviewServer(HostedRegionPlan plan,int port,OnlineStore store,String controlToken,ServerTransport transport) throws IOException {
+    this(plan,port,store,controlToken,transport,false);
+  }
+
+  PreviewServer(HostedRegionPlan plan,int port,OnlineStore store,String controlToken,ServerTransport transport,boolean ownsStore) throws IOException {
+    this.ownsStore=ownsStore;
     this.transport=java.util.Objects.requireNonNull(transport);
     if (controlToken!=null && !controlToken.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("Invalid control token");
     this.controlToken=controlToken;
@@ -69,11 +80,12 @@ public final class PreviewServer implements AutoCloseable {
     items = ItemCatalog.loadBundled(); // Validate packaged equipment before accepting sessions.
     try { hosted=new HostedWorlds(plan,store,items,MonsterCatalog.loadBundled()); }
     catch(java.sql.SQLException recovery) { throw new IOException("Could not recover hosted regions",recovery); }
+    accounts=store==null ? null : new AccountRosterService(store,plan);
     var initial=hosted.regions.getFirst();world=initial.world;persistent=hosted.sessions;
     persistentCreatures=initial.creatures;melee=initial.melee;retaliation=initial.retaliation;
     mapJson=mapJson(initial,0);
     try { http = transport.create(port); }
-    catch(IOException|RuntimeException failure) { hosted.close();throw failure; }
+    catch(IOException|RuntimeException failure) { if(accounts!=null) accounts.close();hosted.close();throw failure; }
     loop = new SimulationLoop(PreviewWorld.TICK_RATE, tick -> {
       for (int i = 0; i < 128; i++) {
         Runnable command = commands.poll();
@@ -86,8 +98,8 @@ public final class PreviewServer implements AutoCloseable {
       try { loop.run(Long.MAX_VALUE); }
       catch (Throwable error) { failure = error; }
       finally {
-        close();
-        hosted.close();
+        requestStop();
+        finishShutdown();
       }
     }, "preview-world");
     http.setExecutor(requests);
@@ -109,7 +121,13 @@ public final class PreviewServer implements AutoCloseable {
 
   public String url() { return transport.origin(http.getAddress().getPort()); }
 
-  public void start() { http.start(); simulation.start(); }
+  public void start() {
+    synchronized(lifecycle) {
+      if(started || closed.get()) throw new IllegalStateException("Server already started or stopped");
+      try { http.start();simulation.start();started=true; }
+      catch(RuntimeException failure) { requestStop();throw failure; }
+    }
+  }
 
   public void await() throws InterruptedException {
     simulation.join();
@@ -152,7 +170,7 @@ public final class PreviewServer implements AutoCloseable {
         throw new PreviewWorld.Rejected(403, "origin");
       String method = exchange.getRequestMethod();
       String path = exchange.getRequestURI().getRawPath();
-      if (exchange.getRequestURI().getRawQuery() != null)
+      if (exchange.getRequestURI().getRawQuery() != null && !("GET".equals(method) && "/account/characters".equals(path)))
         throw new PreviewWorld.Rejected(400, "input");
       if ("POST".equals(method)) {
         if (!transport.acceptsOrigin(exchange.getRequestHeaders().getFirst("Origin"),http.getAddress().getPort()))
@@ -293,6 +311,24 @@ public final class PreviewServer implements AutoCloseable {
           case "/client.js" -> resource(exchange, "client.js", "text/javascript; charset=utf-8");
           case "/style.css" -> resource(exchange, "style.css", "text/css; charset=utf-8");
           case "/strings" -> json(exchange, 200, strings);
+          case "/account/characters" -> {
+            if(accounts==null) throw new PreviewWorld.Rejected(404,"route");
+            var versions=exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
+            if(versions==null || versions.size()!=1 || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
+              throw new PreviewWorld.Rejected(426,"protocol");
+            String query=exchange.getRequestURI().getRawQuery();java.util.UUID after=null;
+            if(query!=null) {
+              if(!query.matches("after=[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) throw new PreviewWorld.Rejected(400,"input");
+              after=java.util.UUID.fromString(query.substring(6));
+            }
+            var authorization=exchange.getRequestHeaders().get("Authorization");
+            if(authorization==null || authorization.size()!=1 || !authorization.getFirst().matches("Bearer [0-9a-f]{64}"))
+              throw new PreviewWorld.Rejected(401,"account");
+            var pending=accounts.request(exchange.getRemoteAddress().getAddress().getHostAddress(),authorization.getFirst().substring(7),after);
+            try { json(exchange,200,pending.get(3,TimeUnit.SECONDS)); }
+            catch(ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected;throw error; }
+            catch(TimeoutException timeout) { pending.cancel(false);throw new PreviewWorld.Rejected(503,"account_busy"); }
+          }
           case "/map" -> {
             String authorization=exchange.getRequestHeaders().getFirst("Authorization");
             String description=authorization==null ? mapJson : onWorld(() -> { String token=token(exchange);var context=admit(token,null);
@@ -380,14 +416,50 @@ public final class PreviewServer implements AutoCloseable {
     exchange.getResponseBody().write(data);
   }
 
-  @Override public void close() {
-    if (!closed.compareAndSet(false, true)) return;
-    loop.close();
-    http.stop(0);
-    requests.shutdownNow();
-    if (Thread.currentThread() != simulation) {
-      try { simulation.join(15000); }
-      catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+  private void requestStop() {
+    boolean withoutSimulation;
+    synchronized(lifecycle) {
+      if(closed.compareAndSet(false,true)) { loop.close();http.stop(0);requests.shutdownNow(); }
+      withoutSimulation=!started;
     }
+    if(withoutSimulation) finishShutdown();
+  }
+
+  private void finishShutdown() {
+    if(!disposed.compareAndSet(false,true)) return;
+    try {
+      try { requests.awaitTermination(2,TimeUnit.SECONDS); }
+      catch(InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+      try { if(accounts!=null) accounts.close(); }
+      finally { hosted.close(); }
+    } catch(Throwable shutdownFailure) { if(failure==null) failure=shutdownFailure; }
+    finally {
+      try {
+        if(ownsStore && store!=null) {
+          if(failure!=null) System.err.println("Server shutdown failed; closing owned database pool after incomplete teardown. Recover from committed state.");
+          store.close();
+        }
+      } catch(Throwable poolFailure) { if(failure==null) failure=poolFailure; }
+      finally { terminated.countDown(); }
+    }
+  }
+
+  @Override public void close() {
+    requestStop();
+    if(Thread.currentThread()==simulation) return;
+    // Every concurrent closer waits for the same drain, including a JVM shutdown hook racing
+    // the admin endpoint. Interruption cannot turn an unfinished flush into apparent success.
+    boolean interrupted=false;
+    long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(90);
+    try {
+      while(terminated.getCount()!=0) {
+        long remaining=deadline-System.nanoTime();
+        if(remaining<=0) throw new IllegalStateException("Server drain incomplete; owned pool remains open until teardown finishes");
+        try { terminated.await(remaining,TimeUnit.NANOSECONDS); }
+        catch(InterruptedException signal) { interrupted=true; }
+      }
+      if(failure!=null) throw new IllegalStateException("Server teardown reported a failure ("+
+          com.perso.T4C.server.persistence.PersistenceFailure.describe(failure)+")");
+    } finally { if(interrupted) Thread.currentThread().interrupt(); }
   }
 }

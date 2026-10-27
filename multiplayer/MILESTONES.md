@@ -45,11 +45,11 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 
 | Milestone | Current status | Existing related tasks | Main outstanding work |
 | --- | --- | --- | --- |
-| M1 — Enter and interact | Partial; backend/adapter evidence, visible controls incomplete | T4C-0192, 0195, 0196 | Native selection/creation and NPC controls; account lifecycle integration |
+| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass; visible controls/creation incomplete | T4C-0192, 0195, 0196 | Native selection/creation and NPC controls; account lifecycle integration |
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; child task IDs to be claimed | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation | T4C-0189, 0190 | Pursuit/AI and the declared classes' required abilities and state |
-| M5 — Reliability and anti-cheat | Partial; important unverified recovery/load gates | T4C-0191, 0197, 0198 | Correct shutdown, failure drills, measured stability and abuse checks |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes and short20-adapter smoke pass; broader recovery/load/abuse gates open | T4C-0191, 0197, 0198 | Correct shutdown, failure drills, measured stability and abuse checks |
 | M6 — Package and native acceptance | Earlier rendered movement/melee evidence only | Cross-cutting; child task IDs to be claimed | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.

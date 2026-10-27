@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /** Server-only PostgreSQL persistence. Call from a bounded persistence worker, never the tick thread. */
-public final class OnlineStore {
+public final class OnlineStore implements AutoCloseable {
   private static final com.google.gson.Gson JSON = new com.google.gson.Gson();
   @FunctionalInterface public interface Connections { Connection open() throws SQLException; }
   public record CharacterState(UUID id, UUID accountId, String name, int world, double x, double y,
@@ -61,9 +61,20 @@ public final class OnlineStore {
     public Conflict(String message) { super(message); }
   }
   private final Connections connections;
+  private final OnlineDatabasePool ownedPool;
 
-  public OnlineStore(Connections connections) { this.connections = Objects.requireNonNull(connections); }
+  /** Injected connection factories remain caller-owned; each operation closes its borrowed handle. */
+  public OnlineStore(Connections connections) { this.connections=Objects.requireNonNull(connections);this.ownedPool=null; }
+  private OnlineStore(OnlineDatabasePool pool) { this.connections=pool;this.ownedPool=pool; }
 
+  /** Long-lived realm factory. Close only after its server has stopped and flushed accepted writes. */
+  public static OnlineStore pooledFromEnvironment() {
+    return new OnlineStore(new OnlineDatabasePool(required("T4C_DB_URL"),required("T4C_DB_USER"),required("T4C_DB_PASSWORD")));
+  }
+
+  @Override public void close() { if(ownedPool!=null) ownedPool.close(); }
+
+  /** Short-lived operator commands and existing injected/test lifetimes need no persistent pool. */
   public static OnlineStore fromEnvironment() {
     String url = required("T4C_DB_URL"), user = required("T4C_DB_USER"), password = required("T4C_DB_PASSWORD");
     if (!url.startsWith("jdbc:postgresql://")) throw new IllegalArgumentException("PostgreSQL URL required");
@@ -234,6 +245,31 @@ public final class OnlineStore {
       s.setObject(1, account); s.setString(2, hash(secret)); s.executeUpdate();
     }
     return new AccountKey(account, secret);
+  }
+
+  public record RosterEntry(CharacterState character,boolean inUse) {}
+  /** Read-only account authentication; neither a character lease nor a realm slot is acquired. */
+  public java.util.List<RosterEntry> roster(String secret,UUID after) throws SQLException {
+    String verifier=hash(secret);
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        UUID account;
+        // Same account-first lock order as rotation. Rotation cannot interleave this owner read.
+        try(var q=c.prepareStatement("SELECT id FROM online_accounts WHERE access_hash=? FOR SHARE")) {
+          q.setQueryTimeout(2);q.setString(1,verifier);try(var rows=q.executeQuery()) {
+            if(!rows.next()) throw new Conflict("Account unavailable");account=rows.getObject(1,UUID.class);
+          }
+        }
+        var result=new java.util.ArrayList<RosterEntry>();
+        try(var q=c.prepareStatement("SELECT *,session_id IS NOT NULL AND session_until>clock_timestamp() AS in_use FROM online_characters WHERE account_id=? AND (?::uuid IS NULL OR id>?::uuid) ORDER BY id LIMIT ?")) {
+          q.setQueryTimeout(2);q.setObject(1,account);q.setObject(2,after);q.setObject(3,after);
+          q.setInt(4,com.perso.T4C.online.model.OnlineRoster.PAGE_SIZE+1);
+          try(var rows=q.executeQuery()) { while(rows.next()) result.add(new RosterEntry(read(rows),rows.getBoolean("in_use"))); }
+        }
+        c.commit();return java.util.List.copyOf(result);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
   }
 
   /** Operator-only rotation also fences all existing sessions before returning the new key. */
